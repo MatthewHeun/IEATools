@@ -4,7 +4,7 @@
 \name{AllIEAData}
 \alias{AllIEAData}
 \title{International Energy Agency data}
-\format{A data frame with 719473 rows and 9 variables:
+\format{A data frame with 719,473 rows and 9 variables:
 \describe{
   \item{Country}{Two-letter ISO country codes}
   \item{Ledger.side}{Supply or Consumption}

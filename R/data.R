@@ -4,7 +4,7 @@
 #' to the best of our ability.  
 #' See \code{IEAData::AllIEAData_prior_to_fix} for the same data before it has been "fixed."
 #'
-#' @format A data frame with 719473 rows and 9 variables:
+#' @format A data frame with 719,473 rows and 9 variables:
 #' \describe{
 #'   \item{Country}{Two-letter ISO country codes}
 #'   \item{Ledger.side}{Supply or Consumption}
@@ -24,7 +24,7 @@
 #' to the best of our ability.  
 #' See \code{IEAData::AllIEAData} for the same data after it has been "fixed."
 #'
-#' @format A data frame with 719473 rows and 9 variables:
+#' @format A data frame with 700,111 rows and 9 variables:
 #' \describe{
 #'   \item{Country}{Two-letter ISO country codes}
 #'   \item{Ledger.side}{Supply or Consumption}
