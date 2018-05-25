@@ -2,7 +2,7 @@
 #'
 #' A dataset containing all IEA data after it has been "fixed"
 #' to the best of our ability.  
-#' See \code{IEA-Data::AllIEAData_prior_to_fix} for the same data before it has been "fixed."
+#' See \code{IEAData::AllIEAData_prior_to_fix} for the same data before it has been "fixed."
 #'
 #' @format A data frame with 719473 rows and 9 variables:
 #' \describe{
@@ -22,7 +22,7 @@
 #'
 #' A dataset containing all IEA data before it has been "fixed"
 #' to the best of our ability.  
-#' See \code{IEA-Data::AllIEAData} for the same data after it has been "fixed."
+#' See \code{IEAData::AllIEAData} for the same data after it has been "fixed."
 #'
 #' @format A data frame with 719473 rows and 9 variables:
 #' \describe{

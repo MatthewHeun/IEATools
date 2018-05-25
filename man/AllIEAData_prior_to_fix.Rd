@@ -23,6 +23,6 @@ AllIEAData_prior_to_fix
 \description{
 A dataset containing all IEA data before it has been "fixed"
 to the best of our ability.  
-See \code{IEA-Data::AllIEAData} for the same data after it has been "fixed."
+See \code{IEAData::AllIEAData} for the same data after it has been "fixed."
 }
 \keyword{datasets}
