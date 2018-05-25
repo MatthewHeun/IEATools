@@ -1,0 +1,23 @@
+Package: IEAData
+Type: Package
+Title: Distribute IEA data
+Version: 0.1.0
+Date: 2018-05-25
+Authors@R: c(person("Matthew", "Heun", role = c("aut", "cre"),
+                     email = "matthew.heun@me.com"))
+Author: Matthew Heun [aut, cre]
+Maintainer: Matthew Kuperus Heun <matthew.heun@me.com>
+Description: Distributes IEA data to multiple analyses in easy-to-use package format
+License: None
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Depends: R (>= 2.10)
+Imports:
+    dplyr,
+    magrittr,
+Suggests:
+    knitr, 
+    testthat
+VignetteBuilder: 
+    knitr
