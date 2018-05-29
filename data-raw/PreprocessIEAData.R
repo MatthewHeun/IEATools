@@ -144,8 +144,6 @@ source(file = file.path("data-raw", "FixIEAData.R"))
 #
 # Save AllIEAData as an R object for later retrieval
 #
-# saveRDS(AllIEAData, file.path("munge_big_data", "AllIEAData.rds"))
-
 use_data(AllIEAData, overwrite = TRUE)
 
 
