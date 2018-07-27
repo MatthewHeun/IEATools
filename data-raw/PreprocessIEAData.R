@@ -24,6 +24,7 @@
 library(dplyr)
 library(tidyr)
 library(countrycode)
+library(devtools)
 
 # This script assumes that the working directory is set to the project directory.
 # When that is true, 
