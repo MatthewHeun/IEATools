@@ -368,41 +368,48 @@ FixedHNFuels <- read.delim(file = file.path("data-raw", "FixedHNFuels.tsv"),
   )
 
 AllIEAData4 <- AllIEAData3 %>% 
-  # Remove rows from AllIEAData that need to be fixed due to issues with distributions and allocations.
-  # These rows will be replaced with new data from FixedHNFuels.
+  # Remove rows from AllIEAData that need to be fixed due to issues with distributions and allocations 
+  # These rows will be replaced with new data from FixedHNFuels
   filter(
     # Remove All LPG flows
     # Data is inconsistent due to the emergence of non-specified industry in 1998
     # and commercial and public services in 2000
-    !(Country == "HN" &
-        Ledger.side == "Consumption" &
-        Flow.aggregation.point %in% c("Agriculture/forestry",
-                                      "Commercial and public services",
-                                      "Non-specified (industry)",
-                                      "Residential",
-                                      "Road") &
-        Product == "Liquefied petroleum gases (LPG)"),
-    !(Country == "HN" &
-        Ledger.side == "Consumption" &
-        Flow.aggregation.point %in% c("Agriculture/forestry",
-                                      "Autoproducer electricity plants",
-                                      "Commercial and public services",
-                                      "Non-specified (industry)",
-                                      "Non-specified (other)") &
-        Product == "Gas/diesel oil excl. biofuels"),
-    !(Country == "HN" &
-        Ledger.side == "Consumption" &
-        Flow.aggregation.point %in% c("Agriculture/forestry",
-                                      "Commercial and public services",
-                                      "Non-specified (industry)",
-                                      "Non-specified (other)") &
-        Product == "Fuel oil"),
-    !(Country == "HN" &
-        Ledger.side %in% c("Supply", "Consumption") &
-        Product == "Coke oven coke")
+    !((Country == "HN" &
+         Ledger.side == "Consumption" &
+         Flow %in% c("Agriculture/forestry",
+                     "Commercial and public services",
+                     "Non-specified (industry)",
+                     "Residential",
+                     "Road") &
+         Product == "Liquefied petroleum gases (LPG)") |
+        # Remove diesel rows (excl. Road and oil refineries)
+        # These rows will be reallocated to smooth out some changes and
+        # redistribute Non-specified (other)
+        (Country == "HN" &
+           Ledger.side == "Consumption" &
+           Flow %in% c("Agriculture/forestry",
+                       "Autoproducer electricity plants",
+                       "Commercial and public services",
+                       "Non-specified (industry)",
+                       "Non-specified (other)") &
+           Product == "Gas/diesel oil excl. biofuels") |
+        # Remove Fuel oil rows to eliminate Non-specified (other)
+        (Country == "HN" &
+           Ledger.side == "Consumption" &
+           Flow %in% c("Agriculture/forestry",
+                       "Commercial and public services",
+                       "Non-specified (industry)",
+                       "Non-specified (other)") &
+           Product == "Fuel oil") |
+        # Remove Coke oven coke rows, these will be changed based on
+        # data from the Honduran national energy balance
+        (Country == "HN" &
+           Ledger.side %in% c("Supply", "Consumption") &
+           Product == "Coke oven coke") )
   ) %>% 
-  # Replace the removed rows
+  # Replace them
   bind_rows(FixedHNFuels)
+
 
 
 
