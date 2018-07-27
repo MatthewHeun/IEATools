@@ -9,6 +9,17 @@
 # 
 # (3) Save as tab-deliminted text files somewhere besides this repository. 
 #     (The files are too big.)
+#     
+# Then, this script munges the data into tidy format.
+# 
+# Thereafter, corrections are made for countries we have studied.
+# 
+# Finally, all data are saved to locations where they become part of the package.
+# 
+# The workflow for this package should be as follows:
+# 
+# (1) Source this script.  (This script sources the "FixIEAData.R" script, so no need to source "FixIEAData.R".)
+# (2) Build the package.
 
 library(dplyr)
 library(tidyr)
