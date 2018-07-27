@@ -174,7 +174,8 @@ mutate(
 AllIEAData2 <- AllIEAData1
 
 # Clean up the environment
-rm(IEAZACoalLiquefactionDataTo2000, IEAZACoalLiquefactionDataFrom2001, NewCoalProductionRowsTo1977, NewCTLRowsTo2000, NewCTLRowsFrom2001)
+rm(IEAZACoalLiquefactionDataTo2000, IEAZACoalLiquefactionDataFrom2001, 
+   NewCoalProductionRowsTo1977, NewCTLRowsTo2000, NewCTLRowsFrom2001)
 
 # # Here is some code to look at effect of fixing ZA CTL data.
 # 
@@ -248,6 +249,7 @@ rm(IEAZACoalLiquefactionDataTo2000, IEAZACoalLiquefactionDataFrom2001, NewCoalPr
 #                      "Other bituminous coal"
 #     )
 #   )
+
 
 #
 # Clean up Ghana industry electricity information
@@ -352,13 +354,65 @@ AllIEAData3 <- AllIEAData2 %>%
 #   )
 # 
 
+
+# Code to fix Honduran data.
+# See 
+FixedHNFuels <- read.delim(file = file.path("data-raw", "FixedHNFuels.tsv"), 
+                           check.names = FALSE, stringsAsFactors = FALSE) %>% 
+  # Gather the year columns which start with "19" or "20".
+  gather(key = Year, value = E.ktoe, starts_with("19"), starts_with("20")) %>% 
+  # Eliminate rows that have 0 energy.
+  filter(E.ktoe != 0) %>% 
+  mutate(
+    Year = as.numeric(Year)
+  )
+
+AllIEAData4 <- AllIEAData3 %>% 
+  # Remove rows from AllIEAData that need to be fixed due to issues with distributions and allocations.
+  # These rows will be replaced with new data from FixedHNFuels.
+  filter(
+    # Remove All LPG flows
+    # Data is inconsistent due to the emergence of non-specified industry in 1998
+    # and commercial and public services in 2000
+    !(Country == "HN" &
+        Ledger.side == "Consumption" &
+        Flow.aggregation.point %in% c("Agriculture/forestry",
+                                      "Commercial and public services",
+                                      "Non-specified (industry)",
+                                      "Residential",
+                                      "Road") &
+        Product == "Liquefied petroleum gases (LPG)"),
+    !(Country == "HN" &
+        Ledger.side == "Consumption" &
+        Flow.aggregation.point %in% c("Agriculture/forestry",
+                                      "Autoproducer electricity plants",
+                                      "Commercial and public services",
+                                      "Non-specified (industry)",
+                                      "Non-specified (other)") &
+        Product == "Gas/diesel oil excl. biofuels"),
+    !(Country == "HN" &
+        Ledger.side == "Consumption" &
+        Flow.aggregation.point %in% c("Agriculture/forestry",
+                                      "Commercial and public services",
+                                      "Non-specified (industry)",
+                                      "Non-specified (other)") &
+        Product == "Fuel oil"),
+    !(Country == "HN" &
+        Ledger.side %in% c("Supply", "Consumption") &
+        Product == "Coke oven coke")
+  ) %>% 
+  # Replace the removed rows
+  bind_rows(FixedHNFuels)
+
+
+
 # 
 # IEA data are not quite balanced.  In fact, production and consumption are often wrong by many ktoe
 # for any given Product in a Country in a Year.
 # Ensure that the balance is perfect by adjusting the "Statistical differences" Flow
 # on a per-product basis.
 #
-IEAStatDiffs <- AllIEAData3 %>%
+IEAStatDiffs <- AllIEAData4 %>%
   filter(Flow == "Statistical differences") %>%
   mutate(
     Ledger.side = NULL,
@@ -370,7 +424,7 @@ IEAStatDiffs <- AllIEAData3 %>%
     `Statistical differences` = E.ktoe
   )
 
-MyStatDiffs <- AllIEAData3 %>%
+MyStatDiffs <- AllIEAData4 %>%
   filter(!Flow == "Statistical differences") %>% 
   group_by(Country, Ledger.side, Product, Year) %>% 
   summarise(E.ktoe = sum(E.ktoe)) %>% 
@@ -393,14 +447,14 @@ NewStatDiffs <- bind_rows(MyStatDiffs, IEAStatDiffs) %>%
   ) %>% 
   filter(Actual != 0)
 
-AllIEAData4 <- AllIEAData3 %>%
+AllIEAData5 <- AllIEAData4 %>%
   # Delete the old Statistical differences data
   filter(Flow != "Statistical differences") %>%
   # Replace with the new Statistical differences data
   bind_rows(NewStatDiffs %>% select(-IEA, -DeltaStatDiffs) %>% rename(E.ktoe = Actual))
 
 # Verify that the new Statistical differences bring all Products into perfect balance.
-VerifyStatDiffs <- AllIEAData4 %>%
+VerifyStatDiffs <- AllIEAData5 %>%
   group_by(Country, Ledger.side, Product, Year) %>%
   summarise(E.ktoe = sum(E.ktoe)) %>%
   spread(key = Ledger.side, value = E.ktoe, fill = 0) %>%
@@ -411,7 +465,7 @@ VerifyStatDiffs <- AllIEAData4 %>%
 
 stopifnot(all(VerifyStatDiffs$Imbalance == 0))
 
-AllIEAData <- AllIEAData4
+AllIEAData <- AllIEAData5
 
 #
 # Clean up the environment
