@@ -32,9 +32,9 @@ library(devtools)
 
 # Paths of raw data files may need to be edited.
 # R apparently does not follow aliases!
-oecd_path <- file.path("~", "OneDrive - Calvin College", "Calvin stuff", "Useful Work", "IEA Data", 
+oecd_path <- file.path("~", "Documents", "Calvin stuff", "Useful Work", "IEA Data", 
                        "All Countries", "energy-balances-oecd-extended-energy.txt")
-nonoecd_path <- file.path("~", "OneDrive - Calvin College", "Calvin stuff", "Useful Work", "IEA Data", 
+nonoecd_path <- file.path("~", "Documents", "Calvin stuff", "Useful Work", "IEA Data", 
                           "All Countries", "energy-balances-nonoecd-extended-energy.txt")
 
 # Define latest year to be evaluated
@@ -127,7 +127,14 @@ IEAData4 <- IEAData3 %>%
   rename(
     Name = Country,
     Country = iso2c
-  ) %>%
+  ) %>% 
+  mutate(
+    Country = case_when(
+      # Add "World" to the Country column to preserve that data.
+      Name == "World" ~ "World", 
+      TRUE ~ Country
+    )
+  ) %>% 
   # The effect of the next line is to eliminate non-countries from the data set.
   # For example, OECD, IEA, etc. are not Countries, so they are dropped here.
   filter(!is.na(Country))

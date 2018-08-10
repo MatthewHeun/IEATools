@@ -1,5 +1,15 @@
 # News for `IEAData`
 
+## IEAData 0.1.5 (2018-08-10)
+
+* Trying again. Doesn't seem like data were pushed to GitHub.
+
+
+## IEAData 0.1.4 (2018-08-10)
+
+* Now includes "World" as a country.
+
+
 ## IEAData 0.1.3 (2018-07-29)
 
 * New version of FixedHNFuels.tsv file from Noah Ver Beek.
