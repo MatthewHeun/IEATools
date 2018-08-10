@@ -6,7 +6,7 @@
 #'
 #' @format A data frame with 719,473 rows and 9 variables:
 #' \describe{
-#'   \item{Country}{Two-letter ISO country codes}
+#'   \item{Country}{Two-letter ISO country codes or "World" for the entire world.}
 #'   \item{Ledger.side}{Supply or Consumption}
 #'   \item{Flow.aggregation.point}{tells where each row should be aggregated}
 #'   \item{Flow}{the Industry or Sector involved in this flow}
@@ -26,7 +26,7 @@
 #'
 #' @format A data frame with 700,111 rows and 9 variables:
 #' \describe{
-#'   \item{Country}{Two-letter ISO country codes}
+#'   \item{Country}{Two-letter ISO country codes or "World" for the entire world.}
 #'   \item{Ledger.side}{Supply or Consumption}
 #'   \item{Flow.aggregation.point}{tells where each row should be aggregated}
 #'   \item{Flow}{the Industry or Sector involved in this flow}
