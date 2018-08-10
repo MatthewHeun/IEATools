@@ -1,7 +1,7 @@
 Package: IEAData
 Type: Package
 Title: Distribute IEA data
-Version: 0.1.4
+Version: 0.1.5
 Date: 2018-08-10
 Authors@R: c(person("Matthew", "Heun", role = c("aut", "cre"),
                      email = "matthew.heun@me.com"))
