@@ -30,6 +30,9 @@ build the package yourself.
 
 Purchase the IEA extended energy balances product from 
 
+```{r pressure, echo=FALSE, fig.cap="A caption", out.width = '100%'}
+knitr::include_graphics("figs/original_header.pdf")
+```
 
 ## Prepare the IEA data
 
