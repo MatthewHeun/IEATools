@@ -1,4 +1,43 @@
-initialize_iea_data <- function(file){
+iea_df <- function(iea_file){
+  conn <- file(iea_file, open="rt")
+  header <- conn %>% readLines(n = 2) #read in header
+  close(conn)
+  # Check whether the conversion has already happened.
+  if (header[[1]] %>% startsWith("COUNTRY,FLOW,PRODUCT,")) {
+    # slurp the file
+    IEAData_raw <- data.table::fread(iea_file, header = TRUE)
+  } else if (header[[1]] %>% startsWith(",,TIME,") & header[[2]] == "COUNTRY,FLOW,PRODUCT") {
+  } else {
+    # Looks like this is not a good file.
+  }
+  # Slurp the file
+  IEAData_temp <- data.table::fread(iea_file, header = FALSE, sep = ",", verbose = TRUE)
+  # Create column names
+  cnames <- gsub(pattern = ",,TIME,", replacement = "COUNTRY,FLOW,PRODUCT,", header[[1]])
+  IEAData_raw <- IEAData_temp %>% 
+    magrittr::set_names(cnames %>% strsplit(",") %>% unlist())
+  
+  
+  
+  header <- 
+  headerlines <- strsplit(unfixed_header, split = newlinechar) %>% unlist()
+  nlines <- length(headerlines)
+  # Reject this input if it doesn't have 1 or 2 lines.
+  assertthat::assert_that(nlines %in% c(1,2), msg = paste("unfixed_header should have only 1 or 2 lines:", nlines, "lines were found."))
+  
+  # Check to see if this header is already "fixed"
+  if (nlines == 1 & unfixed_header %>% startsWith(correct_first_line_lead)) {
+    return(unfixed_header)
+  }
+  
+  if (nlines == 2 & headerlines[[1]] %>% startsWith(correct_first_line_lead) & headerlines[[2]] %>% startsWith(correct_first_line_lead)) {
+    # Return only the first line.
+    return(headerlines[[1]])
+  }
+  # Ensure that we have 2 lines
+  assertthat::assert_that(nlines == 2, msg = "length of unfixed_header != 2 in fix_header()")
+  out <- gsub(pattern = incorrect_first_line_lead, replacement = correct_first_line_lead, x = headerlines[[1]])
+  return(out)
   
 }
 

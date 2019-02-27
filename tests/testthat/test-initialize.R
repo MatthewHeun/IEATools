@@ -3,6 +3,10 @@ context("Initialize package")
 ###########################################################
 
 test_that("fix_header works", {
+  iea_file <- file.path("~/Documents/Calvin stuff/Useful Work/IEA Data/Extended-Energy-Balances-2018/Extended-Energy-Balances-2018-full-ktoe.csv")
+  
+  
+  
   expect_error(fix_header("abc\n123\nxyz"), "unfixed_header should have only 1 or 2 lines: 3 lines were found")
   expect_error(fix_header("abc"))
 
