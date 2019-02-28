@@ -15,7 +15,8 @@ iea_df(iea_file = NULL, text = NULL,
 
 \item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is "\code{,,TIME}".}
 
-\item{expected_2nd_line}{the expected second line of \code{iea_file}. Default is "\code{COUNTRY,FLOW,PRODUCT}".}
+\item{expected_2nd_line}{the expected second line of \code{iea_file}. Default is "\code{COUNTRY,FLOW,PRODUCT}".
+Note that no additional commas are expected at the end of this line.}
 }
 \value{
 a data frame containing the as-read IEA data
@@ -37,7 +38,8 @@ because column names are constructed from the first line of \code{iea_file} (whi
 The data frame returned from this function is not ready to be used in R, 
 because rows are not unique, and 
 several empty cells are filled with ".." or "x".
-Call \code{augment_iea_data()} to prepare the data frame for use.
+To further prepre the data frame for use, call \code{augment_iea_data()}
+with the output of this function.
 }
 \examples{
 iea_df(text = ",,TIME,1960,1961\\nCOUNTRY,FLOW,PRODUCT\\nWorld,Production,Hard coal,42,43")

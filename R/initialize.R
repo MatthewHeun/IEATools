@@ -15,12 +15,15 @@
 #' The data frame returned from this function is not ready to be used in R, 
 #' because rows are not unique, and 
 #' several empty cells are filled with ".." or "x".
-#' Call \code{augment_iea_data()} to prepare the data frame for use.
+#' To further prepre the data frame for use, call \code{augment_iea_data()}
+#' with the output of this function.
 #'
 #' @param iea_file a string containing the path to a .csv file of extended energy balances from the IEA
-#' @param text a character string that can be parsed as IEA extended energy balances
+#' @param text a character string that can be parsed as IEA extended energy balances. 
+#'        (This argument is useful for testing.)
 #' @param expected_1st_line_start the expected start of the first line of \code{iea_file}. Default is "\code{,,TIME}".
 #' @param expected_2nd_line the expected second line of \code{iea_file}. Default is "\code{COUNTRY,FLOW,PRODUCT}".
+#'        Note that no additional commas are expected at the end of this line.
 #'
 #' @return a data frame containing the as-read IEA data
 #' 
