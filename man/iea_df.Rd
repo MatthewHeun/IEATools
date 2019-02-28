@@ -16,8 +16,7 @@ iea_df(iea_file = NULL, text = NULL,
 
 \item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is "\code{,,TIME}".}
 
-\item{expected_2nd_line}{the expected second line of \code{iea_file}. Default is "\code{COUNTRY,FLOW,PRODUCT}".
-Note that no additional commas are expected at the end of this line.}
+\item{expected_2nd_line_start}{the expected start of the second line of \code{iea_file}. Default is "\code{COUNTRY,FLOW,PRODUCT}".}
 }
 \value{
 a data frame containing the as-read IEA data
@@ -28,20 +27,27 @@ converts it to a data frame with appropriately-labelled columns.
 One of \code{iea_file} or \code{text} must be specified, but not both.
 The first line of \code{iea_file} or \code{text} 
 is expected to start with \code{expected_start_1st_line}, and
-the second line is expected to be \code{expected_2nd_line}.
-If those conditions are not met, execution is halted.
+the second line is expected to start with \code{expected_2nd_line_start}, and
+it may have any number of commas appended.
+(The extra commas might come from opening and re-saving the file in Excel.)
+If those conditions are not met, execution is halted, and
+an error message is given.
 }
 \details{
 This function is expected to work even as more years are added
 as columns at the right of \code{iea_file}, 
-because column names are constructed from the first line of \code{iea_file} (which contains years).
+because column names are constructed from the first two lines of \code{iea_file} 
+(which contain years and country, flow, product information).
 
 The data frame returned from this function is not ready to be used in R, 
 because rows are not unique, and 
 several empty cells are filled with ".." or "x".
 To further prepre the data frame for use, call \code{augment_iea_data()}
-with the output of this function.
+with the output of this function as the only argument.
 }
 \examples{
+# In original format
 iea_df(text = ",,TIME,1960,1961\\nCOUNTRY,FLOW,PRODUCT\\nWorld,Production,Hard coal,42,43")
+# With extra commas on the 2nd line
+iea_df(text = ",,TIME,1960,1961\\nCOUNTRY,FLOW,PRODUCT,,\\nWorld,Production,Hard coal,42,43")
 }

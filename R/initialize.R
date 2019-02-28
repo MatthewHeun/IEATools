@@ -5,32 +5,38 @@
 #' One of \code{iea_file} or \code{text} must be specified, but not both.
 #' The first line of \code{iea_file} or \code{text} 
 #' is expected to start with \code{expected_start_1st_line}, and
-#' the second line is expected to be \code{expected_2nd_line}.
-#' If those conditions are not met, execution is halted.
+#' the second line is expected to start with \code{expected_2nd_line_start}, and
+#' it may have any number of commas appended.
+#' (The extra commas might come from opening and re-saving the file in Excel.)
+#' If those conditions are not met, execution is halted, and
+#' an error message is given.
 #' 
 #' This function is expected to work even as more years are added
 #' as columns at the right of \code{iea_file}, 
-#' because column names are constructed from the first line of \code{iea_file} (which contains years).
+#' because column names are constructed from the first two lines of \code{iea_file} 
+#' (which contain years and country, flow, product information).
 #' 
 #' The data frame returned from this function is not ready to be used in R, 
 #' because rows are not unique, and 
 #' several empty cells are filled with ".." or "x".
 #' To further prepre the data frame for use, call \code{augment_iea_data()}
-#' with the output of this function.
+#' with the output of this function as the only argument.
 #'
 #' @param iea_file a string containing the path to a .csv file of extended energy balances from the IEA
 #' @param text a character string that can be parsed as IEA extended energy balances. 
 #'        (This argument is useful for testing.)
 #' @param expected_1st_line_start the expected start of the first line of \code{iea_file}. Default is "\code{,,TIME}".
-#' @param expected_2nd_line the expected second line of \code{iea_file}. Default is "\code{COUNTRY,FLOW,PRODUCT}".
-#'        Note that no additional commas are expected at the end of this line.
+#' @param expected_2nd_line_start the expected start of the second line of \code{iea_file}. Default is "\code{COUNTRY,FLOW,PRODUCT}".
 #'
 #' @return a data frame containing the as-read IEA data
 #' 
 #' @export
 #' 
 #' @examples 
+#' # In original format
 #' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43")
+#' # With extra commas on the 2nd line
+#' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal,42,43")
 iea_df <- function(iea_file = NULL, text = NULL, expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT"){
   assertthat::assert_that(xor(is.null(iea_file), is.null(text)), 
                           msg = "need to supply one but not both of iea_file and text arguments to iea_df")
