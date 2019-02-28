@@ -31,7 +31,7 @@
 #' 
 #' @examples 
 #' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43")
-iea_df <- function(iea_file = NULL, text = NULL, expected_1st_line_start = ",,TIME", expected_2nd_line = "COUNTRY,FLOW,PRODUCT"){
+iea_df <- function(iea_file = NULL, text = NULL, expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT"){
   assertthat::assert_that(xor(is.null(iea_file), is.null(text)), 
                           msg = "need to supply one but not both of iea_file and text arguments to iea_df")
   if (!is.null(iea_file)) {
@@ -44,23 +44,31 @@ iea_df <- function(iea_file = NULL, text = NULL, expected_1st_line_start = ",,TI
   close(conn)
   # Check whether header has the form we expect.
   assertthat::assert_that(length(header) == 2, msg = "couldn't read 2 lines in iea_df")
-  assertthat::assert_that(header[[1]] %>% startsWith(expected_1st_line_start) & header[[2]] == expected_2nd_line, 
-                          msg = paste0("In iea_df, input data didn't start with '", expected_1st_line_start, "' or second line wasn't '", expected_2nd_line, "'")) 
+  if (header[[2]] %>% startsWith(expected_2nd_line_start) & header[[2]] %>% endsWith(",")) {
+    # The may have been opened in Excel and resaved.
+    # When that occurs, many commas are appended to the 2nd line.
+    # Strip out these commas before proceeding further.
+    # The pattern ,*$ means "match any number (*) of commas (,) at the end of the line ($)".
+    header[[2]] <- gsub(pattern = ",*$", replacement = "", header[[2]])
+  }
+  assertthat::assert_that(header[[1]] %>% startsWith(expected_1st_line_start) & header[[2]] %>% startsWith(expected_2nd_line_start), 
+                          msg = paste0("In iea_df, input data didn't start with '", expected_1st_line_start, 
+                                       "' or second line didn't start with '", expected_2nd_line_start, "'")) 
   if (!is.null(iea_file)) {
     # Slurp the file. This slurping ignores the header, which fread deems to be the first 2 lines.
     # Note that I'm using data.table::fread at the recommendation of
     # https://statcompute.wordpress.com/2014/02/11/efficiency-of-importing-large-csv-files-in-r/
     # which indicates this function is significantly faster than other options.
-    IEAData_noheader <- data.table::fread(file = iea_file, header = FALSE, sep = ",")
+    IEAData_noheader <- data.table::fread(file = iea_file, header = FALSE, sep = ",", skip = 2)
   } else {
-    IEAData_noheader <- data.table::fread(text = text, header = FALSE, sep = ",")
+    IEAData_noheader <- data.table::fread(text = text, header = FALSE, sep = ",", skip = 2)
   }
   # At this point, the IEAData_noheader data frame has default (meaningless) column names, V1, V2, V3, ...  
-  # Create column names from the first two lines of the file. 
+  # Create column names from the header lines that we read previously.
   # The code here should be robust to adding more years through time,
   # because it simply replaces the first 3 items of the first line 
   # with appropriate values from the 2nd line.
-  colnames <- gsub(pattern = expected_1st_line_start, replacement = paste0(expected_2nd_line), header[[1]]) %>% 
+  colnames <- gsub(pattern = expected_1st_line_start, replacement = expected_2nd_line_start, header[[1]]) %>% 
     strsplit(",") %>% 
     unlist()
   IEAData_noheader %>% 

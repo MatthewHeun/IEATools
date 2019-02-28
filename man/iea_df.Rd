@@ -6,12 +6,13 @@
 \usage{
 iea_df(iea_file = NULL, text = NULL,
   expected_1st_line_start = ",,TIME",
-  expected_2nd_line = "COUNTRY,FLOW,PRODUCT")
+  expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT")
 }
 \arguments{
 \item{iea_file}{a string containing the path to a .csv file of extended energy balances from the IEA}
 
-\item{text}{a character string that can be parsed as IEA extended energy balances}
+\item{text}{a character string that can be parsed as IEA extended energy balances. 
+(This argument is useful for testing.)}
 
 \item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is "\code{,,TIME}".}
 
