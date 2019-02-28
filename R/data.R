@@ -15,7 +15,7 @@
 #'   \item{E.ktoe}{the magnitude of this energy flow}
 #' }
 #' @source \url{http://http://www.iea.org}
-"AllIEAData"
+# "AllIEAData"
 
 
 #' Raw International Energy Agency data
@@ -35,4 +35,4 @@
 #'   \item{E.ktoe}{the magnitude of this energy flow}
 #' }
 #' @source \url{http://http://www.iea.org}
-"AllIEAData_prior_to_fix"
+# "AllIEAData_prior_to_fix"
