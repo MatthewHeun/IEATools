@@ -4,12 +4,13 @@
 \alias{iea_df}
 \title{Load IEA data from csv file}
 \usage{
-iea_df(iea_file = NULL, text = NULL,
+iea_df(.iea_file = NULL, text = NULL,
   expected_1st_line_start = ",,TIME",
-  expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT")
+  expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT",
+  year_colname_pattern = "^\\\\d*$", missing_data = c("..", "x"))
 }
 \arguments{
-\item{iea_file}{a string containing the path to a .csv file of extended energy balances from the IEA}
+\item{.iea_file}{a string containing the path to a .csv file of extended energy balances from the IEA}
 
 \item{text}{a character string that can be parsed as IEA extended energy balances. 
 (This argument is useful for testing.)}
@@ -17,6 +18,11 @@ iea_df(iea_file = NULL, text = NULL,
 \item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is "\code{,,TIME}".}
 
 \item{expected_2nd_line_start}{the expected start of the second line of \code{iea_file}. Default is "\code{COUNTRY,FLOW,PRODUCT}".}
+
+\item{year_colname_pattern}{a regex that identifies columns with year titles. 
+Default is "\code{^\\d*$}" which identifies columns whose names are exclusively digits.}
+
+\item{missing_data}{a vector containing strings that identify missing data. Default is \code{c("..", "x")}.}
 }
 \value{
 a data frame containing the as-read IEA data
@@ -46,7 +52,7 @@ To further prepre the data frame for use, call \code{augment_iea_data()},
 passing the output of this function in the \code{.iea_df} argument \code{augment_iea_data()}.
 }
 \examples{
-# In original format
+# Original file format
 iea_df(text = ",,TIME,1960,1961\\nCOUNTRY,FLOW,PRODUCT\\nWorld,Production,Hard coal,42,43")
 # With extra commas on the 2nd line
 iea_df(text = ",,TIME,1960,1961\\nCOUNTRY,FLOW,PRODUCT,,\\nWorld,Production,Hard coal,42,43")

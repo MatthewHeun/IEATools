@@ -22,26 +22,31 @@
 #' To further prepre the data frame for use, call \code{augment_iea_data()},
 #' passing the output of this function in the \code{.iea_df} argument \code{augment_iea_data()}.
 #'
-#' @param iea_file a string containing the path to a .csv file of extended energy balances from the IEA
+#' @param .iea_file a string containing the path to a .csv file of extended energy balances from the IEA
 #' @param text a character string that can be parsed as IEA extended energy balances. 
 #'        (This argument is useful for testing.)
 #' @param expected_1st_line_start the expected start of the first line of \code{iea_file}. Default is "\code{,,TIME}".
 #' @param expected_2nd_line_start the expected start of the second line of \code{iea_file}. Default is "\code{COUNTRY,FLOW,PRODUCT}".
+#' @param year_colname_pattern a regex that identifies columns with year titles. 
+#'        Default is "\code{^\\d*$}" which identifies columns whose names are exclusively digits.
+#' @param missing_data a vector containing strings that identify missing data. Default is \code{c("..", "x")}.
 #'
 #' @return a data frame containing the as-read IEA data
 #' 
 #' @export
 #' 
 #' @examples 
-#' # In original format
+#' # Original file format
 #' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43")
 #' # With extra commas on the 2nd line
 #' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal,42,43")
-iea_df <- function(iea_file = NULL, text = NULL, expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT"){
-  assertthat::assert_that(xor(is.null(iea_file), is.null(text)), 
+iea_df <- function(.iea_file = NULL, text = NULL, 
+                   expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
+                   year_colname_pattern = "^\\d*$", missing_data = c("..", "x")){
+  assertthat::assert_that(xor(is.null(.iea_file), is.null(text)), 
                           msg = "need to supply one but not both of iea_file and text arguments to iea_df")
-  if (!is.null(iea_file)) {
-    conn <- file(iea_file, open = "rt") # open file connection
+  if (!is.null(.iea_file)) {
+    conn <- file(.iea_file, open = "rt") # open file connection
   } else {
     # text has been provided
     conn <- textConnection(text)
@@ -60,12 +65,12 @@ iea_df <- function(iea_file = NULL, text = NULL, expected_1st_line_start = ",,TI
   assertthat::assert_that(header[[1]] %>% startsWith(expected_1st_line_start) & header[[2]] %>% startsWith(expected_2nd_line_start), 
                           msg = paste0("In iea_df, input data didn't start with '", expected_1st_line_start, 
                                        "' or second line didn't start with '", expected_2nd_line_start, "'")) 
-  if (!is.null(iea_file)) {
+  if (!is.null(.iea_file)) {
     # Slurp the file. This slurping ignores the header, which fread deems to be the first 2 lines.
     # Note that I'm using data.table::fread at the recommendation of
     # https://statcompute.wordpress.com/2014/02/11/efficiency-of-importing-large-csv-files-in-r/
     # which indicates this function is significantly faster than other options.
-    IEAData_noheader <- data.table::fread(file = iea_file, header = FALSE, sep = ",", skip = 2)
+    IEAData_noheader <- data.table::fread(file = .iea_file, header = FALSE, sep = ",", skip = 2)
   } else {
     IEAData_noheader <- data.table::fread(text = text, header = FALSE, sep = ",", skip = 2)
   }
@@ -79,8 +84,15 @@ iea_df <- function(iea_file = NULL, text = NULL, expected_1st_line_start = ",,TI
     unlist()
   IEAData_noheader %>% 
     magrittr::set_names(colnames) %>% 
+    # Clean up data in year columns
+    mutate_at(dplyr::vars(dplyr::matches(year_colname_pattern)),
+              function(x){
+                replace(x, x %in% missing_data, 0)
+              }
+    ) %>% 
     # Convert all year columns (columns whose names are all numbers) to numeric
-    mutate_at(vars(matches("^\\d*$")), as.numeric) %>% 
+    dplyr::mutate_at(dplyr::vars(dplyr::matches(year_colname_pattern)), as.numeric) %>% 
+    # Convert to a data frame.
     as.data.frame()
 }
 

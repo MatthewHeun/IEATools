@@ -35,5 +35,6 @@ test_that("augment_iea_df works", {
   IEADF <- file.path("extdata", "IEA-2Countries.csv") %>% 
     system.file(package = "IEAData") %>% 
     iea_df()
+    
   
 })
