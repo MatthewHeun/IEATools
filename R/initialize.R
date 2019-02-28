@@ -130,7 +130,9 @@ iea_df <- function(.iea_file = NULL, text = NULL,
 #' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43") %>% 
 #'   augment_iea_df()
 augment_iea_df <- function(.iea_df, ledger_side = "Ledger.side", flow_aggregation_point = "Flow.aggregation.point", 
-                           country = "COUNTRY", flow = "FLOW", losses = "Losses"){
+                           country = "COUNTRY", flow = "FLOW", losses = "Losses", 
+                           supply = "Supply", consumption = "Consumption",
+                           .rownum = ".rownum"){
   # The split between Supply and Consumption ledger sides occurs where Flow == Losses and Flow == Total final consumption.
   # Find this dividing line in .iea_df. 
   # Then create the Ledger.side column. 
@@ -142,14 +144,28 @@ augment_iea_df <- function(.iea_df, ledger_side = "Ledger.side", flow_aggregatio
       # At this point, 
       # ctry_tbl is the subset of rows in this country's group, and
       # ctry is a data frame with one country column and one country row containing the country.
-      .rownum <- ".rownum"
-      last_loss_row <- ctry_tbl %>% 
+      with_row_nums <- ctry_tbl %>% 
         tibble::rownames_to_column(var = .rownum) %>% 
+        mutate(
+          !!as.name(.rownum) := as.numeric(!!as.name(.rownum))
+        )
+      last_loss_row <- with_row_nums %>% 
         dplyr::filter(!!as.name(flow) == losses) %>% 
-        dplyr::select(!!as.name(.rownum)) %>% 
+        magrittr::extract2(.rownum) %>% 
         max()
-      print(last_loss_row)
-    })
+      with_row_nums %>% 
+        dplyr::mutate(
+          !!as.name(ledger_side) := case_when(
+            !!as.name(.rownum) <= last_loss_row ~ supply,
+            TRUE ~ consumption
+          )
+        )
+    }) %>% 
+    # Reorder the columns and remove the .rownum column
+    select(ledger_side,  everything()) %>% 
+    select(-.rownum)
+  
+
   
       
       

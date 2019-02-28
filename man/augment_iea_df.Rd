@@ -6,7 +6,9 @@
 \usage{
 augment_iea_df(.iea_df, ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
-  country = "COUNTRY", flow = "FLOW", losses = "Losses")
+  country = "COUNTRY", flow = "FLOW", losses = "Losses",
+  supply = "Supply", consumption = "Consumption",
+  .rownum = ".rownum")
 }
 \arguments{
 \item{.iea_df}{a data frame produced by the \link{iea_df} function}
