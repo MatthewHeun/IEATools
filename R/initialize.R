@@ -79,6 +79,8 @@ iea_df <- function(iea_file = NULL, text = NULL, expected_1st_line_start = ",,TI
     unlist()
   IEAData_noheader %>% 
     magrittr::set_names(colnames) %>% 
+    # Convert all year columns (columns whose names are all numbers) to numeric
+    mutate_at(vars(matches("^\\d*$")), as.numeric) %>% 
     as.data.frame()
 }
 
@@ -117,28 +119,26 @@ iea_df <- function(iea_file = NULL, text = NULL, expected_1st_line_start = ",,TI
 #'   augment_iea_df()
 augment_iea_df <- function(.iea_df, ledger_side = "Ledger.side", flow_aggregation_point = "Flow.aggregation.point", 
                            country = "COUNTRY", flow = "FLOW", losses = "Losses"){
-  .rownum <- ".rownum"
-  temp <- .iea_df %>% 
-    # Eliminate rownames, leaving only numbers
-    tibble::remove_rownames() %>% 
-    tibble::rownames_to_column(var = .rownum)
   # The split between Supply and Consumption ledger sides occurs where Flow == Losses and Flow == Total final consumption.
   # Find this dividing line in .iea_df. 
   # Then create the Ledger.side column. 
-
-  
-  
-    
-  last_supply_rows <- temp %>% 
+  temp <- .iea_df %>% 
+    # Eliminate rownames, leaving only numbers
+    tibble::remove_rownames() %>% 
     dplyr::group_by(!!as.name(country)) %>% 
-    dplyr::group_map(function(.x, .y){
+    dplyr::group_map(function(ctry_tbl, ctry){
       # At this point, 
-      # .x is the subset of rows in the group, and
-      # .y is a data frame with one country column and one country row containing the country.
-      print(.x)
-      print(.y)
-      .x
+      # ctry_tbl is the subset of rows in this country's group, and
+      # ctry is a data frame with one country column and one country row containing the country.
+      .rownum <- ".rownum"
+      last_loss_row <- ctry_tbl %>% 
+        tibble::rownames_to_column(var = .rownum) %>% 
+        dplyr::filter(!!as.name(flow) == losses) %>% 
+        dplyr::select(!!as.name(.rownum)) %>% 
+        max()
+      print(last_loss_row)
     })
+  
       
       
   
