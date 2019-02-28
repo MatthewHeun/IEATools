@@ -35,7 +35,7 @@ iea_df <- function(iea_file = NULL, text = NULL, expected_1st_line_start = ",,TI
   # Check whether header has the form we expect.
   assertthat::assert_that(length(header) == 2, msg = "couldn't read 2 lines in iea_df")
   assertthat::assert_that(header[[1]] %>% startsWith(expected_1st_line_start) & header[[2]] == expected_2nd_line, 
-                          msg = paste0("In iea_df, input data didn't start with '", expected_start_1st_line, "' or second line wasn't '", expected_2nd_line, "'")) 
+                          msg = paste0("In iea_df, input data didn't start with '", expected_1st_line_start, "' or second line wasn't '", expected_2nd_line, "'")) 
   if (!is.null(iea_file)) {
     # Slurp the file. This slurping ignores the header, which fread deems to be the first 2 lines.
     # Note that I'm using data.table::fread at the recommendation of
