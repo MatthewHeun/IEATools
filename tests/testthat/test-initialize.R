@@ -13,6 +13,7 @@ test_that("iea_df works", {
                            check.names = FALSE, stringsAsFactors = FALSE) 
   expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43"), expectedDF)
   # This is in a format that would arise IF someone opened the .csv file and resaved it.
+  # (Extra commas are present on the 2nd line.)
   expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal,42,43"), expectedDF)
   # Test with a full IEA data file in the correct format
   IEADF <- file.path("extdata", "IEA-2Countries.csv") %>% 
