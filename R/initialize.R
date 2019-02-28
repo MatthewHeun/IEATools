@@ -19,8 +19,8 @@
 #' The data frame returned from this function is not ready to be used in R, 
 #' because rows are not unique, and 
 #' several empty cells are filled with ".." or "x".
-#' To further prepre the data frame for use, call \code{augment_iea_data()}
-#' with the output of this function as the only argument.
+#' To further prepre the data frame for use, call \code{augment_iea_data()},
+#' passing the output of this function in the \code{.iea_df} argument \code{augment_iea_data()}.
 #'
 #' @param iea_file a string containing the path to a .csv file of extended energy balances from the IEA
 #' @param text a character string that can be parsed as IEA extended energy balances. 
@@ -84,6 +84,62 @@ iea_df <- function(iea_file = NULL, text = NULL, expected_1st_line_start = ",,TI
 
 
 
-augment_iea_df <- function(.iea_df){
+#' Augment IEA data frame
+#' 
+#' This function prepares an IEA data frame created by \link{iea_df} for use in R.
+#' 
+#' This function solves several problems.
+#' The first problem is that metadata in the \code{COUNTRY}, \code{FLOW}, and \code{PRODUCT}
+#' collumns of an IEA data table are not unique.
+#' To solve this problem, two additional columns are added: \code{Ledger.side} and \code{Flow.aggregation.point}.
+#' \code{Ledger.side} can be one of "\code{Supply}" or "\code{Consumption}", corresponding to the top or bottom of the IEA's tables, respectively.
+#' \code{Flow.aggregation.point} indicates the next level of aggregation for these data. 
+#' \code{Flow.aggregation.point} can be one of 
+#' "\code{Total primary energy supply}", "\code{Transformation processes}", "\code{Energy industry own use}", or "\code{TFC compare}"
+#' on the \code{Supply} side of the ledger.
+#' On the \code{Consumption} side of the ledger, \code{Flow.aggregation.point} can be one of 
+#' "\code{Industry}", "\code{Transport}", "\code{Other}", or "\code{Non-energy use}".
+#' The second problem is that missing data are indicated by character string ("\code{..}" or "\code{x}".
+#' To solve this problem, missing data are converted to \code{NA}.
+#' The third problem is that the countries are given by their (long) full name. 
+#' To solve this problem, the country column is filled with 2-letter ISO abbreviations.
+#'
+#' @param .iea_df a data frame produced by the \link{iea_df} function
+#' @param ledger_side the name of the ledger side column. Default is "\code{Ledger.side}".
+#' @param flow_aggregation_point the name of the flow aggregation point column. Default is "\code{Flow.aggregation.point}".
+#'
+#' @return \code{.ieadf} with additional columns named \code{ledger_side} and \code{flow_aggregation_point}
+#' 
+#' @export
+#'
+#' @examples
+#' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43") %>% 
+#'   augment_iea_df()
+augment_iea_df <- function(.iea_df, ledger_side = "Ledger.side", flow_aggregation_point = "Flow.aggregation.point", 
+                           country = "COUNTRY", flow = "FLOW", losses = "Losses"){
+  .rownum <- ".rownum"
+  temp <- .iea_df %>% 
+    # Eliminate rownames, leaving only numbers
+    tibble::remove_rownames() %>% 
+    tibble::rownames_to_column(var = .rownum)
+  # The split between Supply and Consumption ledger sides occurs where Flow == Losses and Flow == Total final consumption.
+  # Find this dividing line in .iea_df. 
+  # Then create the Ledger.side column. 
+
+  
+  
+    
+  last_supply_rows <- temp %>% 
+    dplyr::group_by(!!as.name(country)) %>% 
+    dplyr::group_map(function(.x, .y){
+      # At this point, 
+      # .x is the subset of rows in the group, and
+      # .y is a data frame with one country column and one country row containing the country.
+      print(.x)
+      print(.y)
+      .x
+    })
+      
+      
   
 }

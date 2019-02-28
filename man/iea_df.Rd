@@ -42,8 +42,8 @@ because column names are constructed from the first two lines of \code{iea_file}
 The data frame returned from this function is not ready to be used in R, 
 because rows are not unique, and 
 several empty cells are filled with ".." or "x".
-To further prepre the data frame for use, call \code{augment_iea_data()}
-with the output of this function as the only argument.
+To further prepre the data frame for use, call \code{augment_iea_data()},
+passing the output of this function in the \code{.iea_df} argument \code{augment_iea_data()}.
 }
 \examples{
 # In original format
