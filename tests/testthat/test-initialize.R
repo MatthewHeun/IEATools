@@ -14,6 +14,8 @@ test_that("iea_df works", {
 })
 
 test_that("augment_iea_df works", {
-  iea_file <- file.path("~/Documents/Calvin stuff/Useful Work/IEA Data/Extended-Energy-Balances-2018/Extended-Energy-Balances-2018-full-ktoe.csv")
+  IEADF <- file.path("extdata", "IEA-2Countries.csv") %>% 
+    system.file(package = "IEAData") %>% 
+    iea_df()
   
 })
