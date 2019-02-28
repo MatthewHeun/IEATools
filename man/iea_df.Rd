@@ -9,30 +9,36 @@ iea_df(iea_file = NULL, text = NULL,
   expected_2nd_line = "COUNTRY,FLOW,PRODUCT")
 }
 \arguments{
-\item{iea_file}{a string containing the path to a .csv file of extended energy balances from the IEA.}
+\item{iea_file}{a string containing the path to a .csv file of extended energy balances from the IEA}
 
-\item{text}{a connection to \code{iea_file}.}
+\item{text}{a character string that can be parsed as IEA extended energy balances}
 
 \item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is "\code{,,TIME}".}
 
 \item{expected_2nd_line}{the expected second line of \code{iea_file}. Default is "\code{COUNTRY,FLOW,PRODUCT}".}
 }
 \value{
-a data frame containing the as-read IEA data file
+a data frame containing the as-read IEA data
 }
 \description{
 This function reads an IEA extended energy balances file and
-converts it to a data frame with appropriatly-labelled columns.
-Either \code{iea_file} or \code{text} can be specified, but not both.
-The first line of \code{iea_file} is expected to start with \code{expected_start_1st_line}, and
+converts it to a data frame with appropriately-labelled columns.
+One of \code{iea_file} or \code{text} must be specified, but not both.
+The first line of \code{iea_file} or \code{text} 
+is expected to start with \code{expected_start_1st_line}, and
 the second line is expected to be \code{expected_2nd_line}.
+If those conditions are not met, execution is halted.
 }
 \details{
-This function is expected to work even as more years are added at the right of \code{iea_file}, 
+This function is expected to work even as more years are added
+as columns at the right of \code{iea_file}, 
 because column names are constructed from the first line of \code{iea_file} (which contains years).
 
 The data frame returned from this function is not ready to be used in R, 
 because rows are not unique, and 
 several empty cells are filled with ".." or "x".
-Call \code{augment_iea_data()} to ready the data frame for use.
+Call \code{augment_iea_data()} to prepare the data frame for use.
+}
+\examples{
+iea_df(text = ",,TIME,1960,1961\\nCOUNTRY,FLOW,PRODUCT\\nWorld,Production,Hard coal,42,43")
 }
