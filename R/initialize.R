@@ -169,13 +169,13 @@ augment_iea_df <- function(.iea_df, ledger_side = "Ledger.side", flow_aggregatio
                            country = "COUNTRY", flow = "FLOW", 
                            losses = "Losses", supply = "Supply", consumption = "Consumption",
                            .rownum = ".rownum"){
-  # The split between Supply and Consumption ledger sides occurs where Flow == Losses and Flow == Total final consumption.
-  # Find this dividing line in .iea_df. 
-  # Then create the Ledger.side column. 
-  temp <- .iea_df %>% 
+  WithLedgerSide <- .iea_df %>% 
     # Eliminate rownames, leaving only numbers
     tibble::remove_rownames() %>% 
     dplyr::group_by(!!as.name(country)) %>% 
+    # The split between Supply and Consumption ledger sides occurs where Flow == Losses and Flow == Total final consumption.
+    # Find this dividing line in .iea_df. 
+    # Then create the Ledger.side column. 
     dplyr::group_map(function(ctry_tbl, ctry){
       # At this point, 
       # ctry_tbl is the rows for this country, and
@@ -197,8 +197,12 @@ augment_iea_df <- function(.iea_df, ledger_side = "Ledger.side", flow_aggregatio
             TRUE ~ consumption
           )
         )
-    }) %>% 
-    # Reorder the columns and remove the .rownum column
+    }) 
+  # Now add the Flow.aggregation.point column
+  WithFAP <- WithLedgerSide
+    
+  # Finally, reorder the columns, remove the .rownum column, and return
+  WithFAP %>% 
     dplyr::select(ledger_side,  dplyr::everything()) %>% 
     dplyr::select(-.rownum)
 }
