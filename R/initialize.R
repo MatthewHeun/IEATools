@@ -116,7 +116,7 @@ iea_df <- function(.iea_file = NULL, text = NULL,
   IEAData_withheader[IEAData_withheader == not_applicable_data] <- 0
   # However, missing data should be tagged as "not available", because calculations 
   # with unavaiable data should fail.
-  IEAData_withheader[IEAData_withheader == missing_data] <- NA_real_
+  IEAData_withheader[IEAData_withheader == missing_data] <- 0
   # Convert all year columns (columns whose names are all numbers) to numeric, 
   # convert into a data frame, and 
   # return.
@@ -192,13 +192,13 @@ augment_iea_df <- function(.iea_df, ledger_side = "Ledger.side", flow_aggregatio
         max()
       with_row_nums %>% 
         dplyr::mutate(
-          !!as.name(ledger_side) := case_when(
+          !!as.name(ledger_side) := dplyr::case_when(
             !!as.name(.rownum) <= last_loss_row ~ supply,
             TRUE ~ consumption
           )
         )
     }) %>% 
     # Reorder the columns and remove the .rownum column
-    dplyr::select(ledger_side,  everything()) %>% 
+    dplyr::select(ledger_side,  dplyr::everything()) %>% 
     dplyr::select(-.rownum)
 }

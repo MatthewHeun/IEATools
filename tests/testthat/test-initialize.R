@@ -16,9 +16,16 @@ test_that("iea_df works", {
   # (Extra commas are present on the 2nd line.)
   expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal,42,43"), expectedDF)
   # Test with a full IEA data file in the correct format
-  IEADF <- file.path("extdata", "IEA-2Countries.csv") %>% 
-    system.file(package = "IEAData") %>% 
-    iea_df()
+  IEAfile <- file.path("extdata", "IEA-2Countries-full2ndrow.csv") %>% 
+    system.file(package = "IEAData")
+  IEAtext <- readChar(IEAfile, file.info(IEAfile)$size)
+  # Eliminate all series of commas at ends of lines
+  # The pattern ,*$ means "match any number (*) of commas (,) at the end of a line ($)".
+  IEAtext <- IEAtext %>% gsub(pattern = ",*$", replacement = "", IEAtext)
+  IEADF <- iea_df(text = IEAtext)
+  # IEADF <- file.path("extdata", "IEA-2Countries.csv") %>% 
+  #   system.file(package = "IEAData") %>% 
+  #   iea_df()
   expect_equal(nrow(IEADF), 14688)
   expect_equal(ncol(IEADF), 61)
   expect_equal(colnames(IEADF)[[61]], "2017")
@@ -32,7 +39,9 @@ test_that("iea_df works", {
 })
 
 test_that("iea_df works with .. and x", {
-  
+  expectedDF <- data.frame(COUNTRY = "World", FLOW = "Production", PRODUCT = "Hard coal", `1960` = 0, `1961` = 0, 
+                           check.names = FALSE, stringsAsFactors = FALSE) 
+  expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,..,x"), expectedDF)
 })
 
 test_that("augment_iea_df works", {
