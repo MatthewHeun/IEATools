@@ -31,8 +31,12 @@ test_that("iea_df works", {
   expect_equal(colnames(IEADF2)[[61]], "2017")
 })
 
+test_that("iea_df works with .. and x", {
+  
+})
+
 test_that("augment_iea_df works", {
-  IEADF <- file.path("extdata", "IEA-2Countries.csv") %>% 
+  IEADF_augmented <- file.path("extdata", "IEA-2Countries.csv") %>% 
     system.file(package = "IEAData") %>% 
     iea_df() %>% 
     augment_iea_df()

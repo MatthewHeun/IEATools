@@ -2,7 +2,7 @@
 % Please edit documentation in R/initialize.R
 \name{augment_iea_df}
 \alias{augment_iea_df}
-\title{Augment IEA data frame}
+\title{Augment an IEA data frame}
 \usage{
 augment_iea_df(.iea_df, ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
@@ -11,7 +11,7 @@ augment_iea_df(.iea_df, ledger_side = "Ledger.side",
   .rownum = ".rownum")
 }
 \arguments{
-\item{.iea_df}{a data frame produced by the \link{iea_df} function}
+\item{.iea_df}{a data frame produced by the \code{\link[=iea_df]{iea_df()}} function}
 
 \item{ledger_side}{the name of the ledger side column. Default is "\code{Ledger.side}".}
 
@@ -27,9 +27,9 @@ augment_iea_df(.iea_df, ledger_side = "Ledger.side",
 
 \item{consumption}{the string that indicates consumption in the \code{ledger_side} column. Default is "\code{Consumption}".}
 
-\item{.rownum}{the name of a column created (and destroyed) internally by this function. 
+\item{.rownum}{the name of a column created (and destroyed) internally by this function.
 The \code{.rownum} column temporarily holds row numbers for internal calculations.
-The \code{.rownum} column is deleted before returning.#'}
+The \code{.rownum} column is deleted before returning.}
 
 \item{country}{the name of the country column in \code{.iea_df}. Default is "\code{COUNTRY}".}
 }
@@ -37,7 +37,7 @@ The \code{.rownum} column is deleted before returning.#'}
 \code{.ieadf} with additional columns named \code{ledger_side} and \code{flow_aggregation_point}
 }
 \description{
-This function prepares an IEA data frame created by \link{iea_df} for use in R.
+This function prepares an IEA data frame created by \code{\link[=iea_df]{iea_df()}} for use in R.
 }
 \details{
 This function solves several problems.
@@ -45,15 +45,13 @@ The first problem is that metadata in the \code{COUNTRY}, \code{FLOW}, and \code
 collumns of an IEA data table are not unique.
 To solve this problem, two additional columns are added: \code{Ledger.side} and \code{Flow.aggregation.point}.
 \code{Ledger.side} can be one of "\code{Supply}" or "\code{Consumption}", corresponding to the top or bottom of the IEA's tables, respectively.
-\code{Flow.aggregation.point} indicates the next level of aggregation for these data. 
-\code{Flow.aggregation.point} can be one of 
+\code{Flow.aggregation.point} indicates the next level of aggregation for these data.
+\code{Flow.aggregation.point} can be one of
 "\code{Total primary energy supply}", "\code{Transformation processes}", "\code{Energy industry own use}", or "\code{TFC compare}"
 on the \code{Supply} side of the ledger.
-On the \code{Consumption} side of the ledger, \code{Flow.aggregation.point} can be one of 
+On the \code{Consumption} side of the ledger, \code{Flow.aggregation.point} can be one of
 "\code{Industry}", "\code{Transport}", "\code{Other}", or "\code{Non-energy use}".
-The second problem is that missing data are indicated by character string ("\code{..}" or "\code{x}".
-To solve this problem, missing data are converted to \code{NA}.
-The third problem is that the countries are given by their (long) full name. 
+The second problem is that the countries are given by their (long) full name.
 To solve this problem, the country column is filled with 2-letter ISO abbreviations.
 }
 \examples{

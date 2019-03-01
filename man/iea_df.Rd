@@ -2,36 +2,41 @@
 % Please edit documentation in R/initialize.R
 \name{iea_df}
 \alias{iea_df}
-\title{Load IEA data from csv file}
+\title{Load IEA data from an extended enegy balances csv file}
 \usage{
 iea_df(.iea_file = NULL, text = NULL,
   expected_1st_line_start = ",,TIME",
   expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT",
-  year_colname_pattern = "^\\\\d*$", missing_data = c("..", "x"))
+  year_colname_pattern = "^\\\\d*$", missing_data = "..",
+  not_applicable_data = "x")
 }
 \arguments{
 \item{.iea_file}{a string containing the path to a .csv file of extended energy balances from the IEA}
 
-\item{text}{a character string that can be parsed as IEA extended energy balances. 
+\item{text}{a character string that can be parsed as IEA extended energy balances.
 (This argument is useful for testing.)}
 
 \item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is "\code{,,TIME}".}
 
 \item{expected_2nd_line_start}{the expected start of the second line of \code{iea_file}. Default is "\code{COUNTRY,FLOW,PRODUCT}".}
 
-\item{year_colname_pattern}{a regex that identifies columns with year titles. 
+\item{year_colname_pattern}{a regex that identifies columns with year titles.
 Default is "\code{^\\d*$}" which identifies columns whose names are exclusively digits.}
 
-\item{missing_data}{a vector containing strings that identify missing data. Default is \code{c("..", "x")}.}
+\item{missing_data}{a string that identifies missing data. Default is "\code{..}".
+Entries of "\code{missing_data}" are coded as `0`` in output.}
+
+\item{not_appliable_data}{a string that identifies not-applicable data.
+Entries of "\code{not_applicable_data}" are coded as \code{0} in output.}
 }
 \value{
-a data frame containing the as-read IEA data
+a data frame containing the IEA extended energy balances data
 }
 \description{
 This function reads an IEA extended energy balances file and
 converts it to a data frame with appropriately-labelled columns.
 One of \code{iea_file} or \code{text} must be specified, but not both.
-The first line of \code{iea_file} or \code{text} 
+The first line of \code{iea_file} or \code{text}
 is expected to start with \code{expected_start_1st_line}, and
 the second line is expected to start with \code{expected_2nd_line_start}, and
 it may have any number of commas appended.
@@ -40,17 +45,40 @@ If those conditions are not met, execution is halted, and
 an error message is given.
 }
 \details{
-Missing data (by default "\code{..}" and "\code{x}") are converted to \code{0}.
-
 This function is designed to work even as more years are added
-as columns at the right of \code{iea_file}, 
-because column names in the output are constructed from the first two lines of \code{iea_file} 
+in columns at the right of \code{.iea_file},
+because column names in the output are constructed from the first two lines of \code{iea_file}
 (which contain years and country, flow, product information).
 
-The data frame returned from this function is not ready to be used in R, 
+The IEA data have indicators for
+not applicable values ("\code{x}") and for
+unavailable values ("\code{..}").
+(See "World Energy Balances: Database Documentation (2018 edition)" at
+\url{http://wds.iea.org/wds/pdf/worldbal_documentation.pdf}.)
+\code{R} has three concepts that could be used for "\code{x}" and "\code{..}":
+\code{0} would indicate value known to be zero.
+\code{NULL} would indicate an undefined value.
+\code{NA} would indicate a value that is unavailable.
+In theory, mapping from the IEA's indicators to \code{R} should proceed as follows:
+"\code{..}" (unavailable) in the IEA data would be converted to \code{NA} in \code{R}.
+"\code{x}" (not applicable) in the IEA data would be converted to \code{0} in \code{R}.
+"\code{NULL}" would not be used.
+However, the IEA are not consistent with their coding.
+In some places "\code{..}" is used for not applicable values
+(e.g., World Anthracite supply in 1971).
+World Anthracite supply in 1971 is actually not applicable, because Anthracite was
+classified under "Hard coal (if no detail)" in 1971.
+On the other hand, "\code{..}" is used for data in the most recent year
+when those data have not yet been incorporated into the database.
+In the face of IEA’s inconsistencies,
+the only rational way to proceed is to convert
+both "\code{x}" and "\code{..}" to "\code{0}"
+in this function.
+
+The data frame returned from this function is not ready to be used in R,
 because rows are not unique.
 To further prepre the data frame for use, call \code{augment_iea_data()},
-passing the output of this function in the \code{.iea_df} argument \code{augment_iea_data()}.
+passing the output of this function in the \code{.iea_df} argument of \code{augment_iea_data()}.
 }
 \examples{
 # Original file format

@@ -1,38 +1,64 @@
-#' Load IEA data from csv file
+#' Load IEA data from an extended enegy balances csv file
 #'
 #' This function reads an IEA extended energy balances file and
 #' converts it to a data frame with appropriately-labelled columns.
-#' One of \code{iea_file} or \code{text} must be specified, but not both.
-#' The first line of \code{iea_file} or \code{text} 
-#' is expected to start with \code{expected_start_1st_line}, and
-#' the second line is expected to start with \code{expected_2nd_line_start}, and
+#' One of `iea_file` or `text` must be specified, but not both.
+#' The first line of `iea_file` or `text`
+#' is expected to start with `expected_start_1st_line`, and
+#' the second line is expected to start with `expected_2nd_line_start`, and
 #' it may have any number of commas appended.
 #' (The extra commas might come from opening and re-saving the file in Excel.)
 #' If those conditions are not met, execution is halted, and
 #' an error message is given.
 #' 
-#' Missing data (by default "\code{..}" and "\code{x}") are converted to \code{0}. 
-#' 
 #' This function is designed to work even as more years are added
-#' as columns at the right of \code{iea_file}, 
-#' because column names in the output are constructed from the first two lines of \code{iea_file} 
+#' in columns at the right of `.iea_file`, 
+#' because column names in the output are constructed from the first two lines of `iea_file` 
 #' (which contain years and country, flow, product information).
+#' 
+#' The IEA data have indicators for 
+#' not applicable values ("`x`") and for
+#' unavailable values ("`..`"). 
+#' (See "World Energy Balances: Database Documentation (2018 edition)" at
+#' <http://wds.iea.org/wds/pdf/worldbal_documentation.pdf>.)
+#' `R` has three concepts that could be used for "`x`" and "`..`":
+#' `0` would indicate value known to be zero.
+#' `NULL` would indicate an undefined value.
+#' `NA` would indicate a value that is unavailable.
+#' In theory, mapping from the IEA's indicators to `R` should proceed as follows:
+#' "`..`" (unavailable) in the IEA data would be converted to `NA` in `R`.
+#' "`x`" (not applicable) in the IEA data would be converted to `0` in `R`.
+#' "`NULL`" would not be used.
+#' However, the IEA are not consistent with their coding. 
+#' In some places "`..`" is used for not applicable values
+#' (e.g., World Anthracite supply in 1971). 
+#' World Anthracite supply in 1971 is actually not applicable, because Anthracite was
+#' classified under "Hard coal (if no detail)" in 1971.
+#' On the other hand, "`..`" is used for data in the most recent year 
+#' when those data have not yet been incorporated into the database. 
+#' In the face of IEA’s inconsistencies, 
+#' the only rational way to proceed is to convert 
+#' both "`x`" and "`..`" to "`0`"
+#' in this function.
 #' 
 #' The data frame returned from this function is not ready to be used in R, 
 #' because rows are not unique.
-#' To further prepre the data frame for use, call \code{augment_iea_data()},
-#' passing the output of this function in the \code{.iea_df} argument \code{augment_iea_data()}.
+#' To further prepre the data frame for use, call `augment_iea_data()`,
+#' passing the output of this function in the `.iea_df` argument of `augment_iea_data()`.
 #'
 #' @param .iea_file a string containing the path to a .csv file of extended energy balances from the IEA
 #' @param text a character string that can be parsed as IEA extended energy balances. 
 #'        (This argument is useful for testing.)
-#' @param expected_1st_line_start the expected start of the first line of \code{iea_file}. Default is "\code{,,TIME}".
-#' @param expected_2nd_line_start the expected start of the second line of \code{iea_file}. Default is "\code{COUNTRY,FLOW,PRODUCT}".
+#' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is "`,,TIME`".
+#' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "`COUNTRY,FLOW,PRODUCT`".
 #' @param year_colname_pattern a regex that identifies columns with year titles. 
-#'        Default is "\code{^\\d*$}" which identifies columns whose names are exclusively digits.
-#' @param missing_data a vector containing strings that identify missing data. Default is \code{c("..", "x")}.
+#'        Default is "`^\\d*$`" which identifies columns whose names are exclusively digits.
+#' @param missing_data a string that identifies missing data. Default is "`..`".
+#'        Entries of "`missing_data`" are coded as `0`` in output.
+#' @param not_appliable_data a string that identifies not-applicable data.
+#'        Entries of "`not_applicable_data`" are coded as `0` in output.
 #'
-#' @return a data frame containing the as-read IEA data
+#' @return a data frame containing the IEA extended energy balances data
 #' 
 #' @export
 #' 
@@ -43,7 +69,7 @@
 #' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal,42,43")
 iea_df <- function(.iea_file = NULL, text = NULL, 
                    expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
-                   year_colname_pattern = "^\\d*$", missing_data = c("..", "x")){
+                   year_colname_pattern = "^\\d*$", missing_data = "..", not_applicable_data = "x"){
   assertthat::assert_that(xor(is.null(.iea_file), is.null(text)), 
                           msg = "need to supply one but not both of iea_file and text arguments to iea_df")
   if (!is.null(.iea_file)) {
@@ -83,56 +109,56 @@ iea_df <- function(.iea_file = NULL, text = NULL,
   colnames <- gsub(pattern = expected_1st_line_start, replacement = expected_2nd_line_start, header[[1]]) %>% 
     strsplit(",") %>% 
     unlist()
-  IEAData_noheader %>% 
-    magrittr::set_names(colnames) %>% 
-    # Clean up data in year columns
-    dplyr::mutate_at(dplyr::vars(dplyr::matches(year_colname_pattern)),
-              function(x){
-                replace(x, x %in% missing_data, 0)
-              }
-    ) %>% 
-    # Convert all year columns (columns whose names are all numbers) to numeric
+  IEAData_withheader <- IEAData_noheader %>% 
+    magrittr::set_names(colnames)
+  # Data tagged as not-applicable in the IEA database should be coded as 0.
+  # We still want to allow calculations with these data.
+  IEAData_withheader[IEAData_withheader == not_applicable_data] <- 0
+  # However, missing data should be tagged as "not available", because calculations 
+  # with unavaiable data should fail.
+  IEAData_withheader[IEAData_withheader == missing_data] <- NA_real_
+  # Convert all year columns (columns whose names are all numbers) to numeric, 
+  # convert into a data frame, and 
+  # return.
+  IEAData_withheader %>% 
     dplyr::mutate_at(dplyr::vars(dplyr::matches(year_colname_pattern)), as.numeric) %>% 
-    # Convert to a data frame.
     as.data.frame()
 }
 
 
 
-#' Augment IEA data frame
+#' Augment an IEA data frame
 #' 
-#' This function prepares an IEA data frame created by \link{iea_df} for use in R.
+#' This function prepares an IEA data frame created by [iea_df()] for use in R.
 #' 
 #' This function solves several problems.
-#' The first problem is that metadata in the \code{COUNTRY}, \code{FLOW}, and \code{PRODUCT}
+#' The first problem is that metadata in the `COUNTRY`, `FLOW`, and `PRODUCT`
 #' collumns of an IEA data table are not unique.
-#' To solve this problem, two additional columns are added: \code{Ledger.side} and \code{Flow.aggregation.point}.
-#' \code{Ledger.side} can be one of "\code{Supply}" or "\code{Consumption}", corresponding to the top or bottom of the IEA's tables, respectively.
-#' \code{Flow.aggregation.point} indicates the next level of aggregation for these data. 
-#' \code{Flow.aggregation.point} can be one of 
-#' "\code{Total primary energy supply}", "\code{Transformation processes}", "\code{Energy industry own use}", or "\code{TFC compare}"
-#' on the \code{Supply} side of the ledger.
-#' On the \code{Consumption} side of the ledger, \code{Flow.aggregation.point} can be one of 
-#' "\code{Industry}", "\code{Transport}", "\code{Other}", or "\code{Non-energy use}".
-#' The second problem is that missing data are indicated by character string ("\code{..}" or "\code{x}".
-#' To solve this problem, missing data are converted to \code{NA}.
-#' The third problem is that the countries are given by their (long) full name. 
+#' To solve this problem, two additional columns are added: `Ledger.side` and `Flow.aggregation.point`.
+#' `Ledger.side` can be one of "`Supply`" or "`Consumption`", corresponding to the top or bottom of the IEA's tables, respectively.
+#' `Flow.aggregation.point` indicates the next level of aggregation for these data. 
+#' `Flow.aggregation.point` can be one of 
+#' "`Total primary energy supply`", "`Transformation processes`", "`Energy industry own use`", or "`TFC compare`"
+#' on the `Supply` side of the ledger.
+#' On the `Consumption` side of the ledger, `Flow.aggregation.point` can be one of 
+#' "`Industry`", "`Transport`", "`Other`", or "`Non-energy use`".
+#' The second problem is that the countries are given by their (long) full name. 
 #' To solve this problem, the country column is filled with 2-letter ISO abbreviations.
 #'
-#' @param .iea_df a data frame produced by the \link{iea_df} function
-#' @param ledger_side the name of the ledger side column. Default is "\code{Ledger.side}".
-#' @param flow_aggregation_point the name of the flow aggregation point column. Default is "\code{Flow.aggregation.point}".
-#' @param country the name of the country column in \code{.iea_df}. Default is "\code{COUNTRY}".
-#' @param flow the name of the flow column in \code{.iea_df}. Default is "\code{FLOW}".
-#' @param country the name of the country column in \code{.iea_df}. Default is "\code{COUNTRY}".
-#' @param losses the string that indicates losses in the \code{flow} column. Default is "\code{Losses}".
-#' @param supply the string that indicates supply in the \code{ledger_side} column. Default is "\code{Supply}".
-#' @param consumption the string that indicates consumption in the \code{ledger_side} column. Default is "\code{Consumption}".
+#' @param .iea_df a data frame produced by the [iea_df()] function
+#' @param ledger_side the name of the ledger side column. Default is "`Ledger.side`".
+#' @param flow_aggregation_point the name of the flow aggregation point column. Default is "`Flow.aggregation.point`".
+#' @param country the name of the country column in `.iea_df`. Default is "`COUNTRY`".
+#' @param flow the name of the flow column in `.iea_df`. Default is "`FLOW`".
+#' @param country the name of the country column in `.iea_df`. Default is "`COUNTRY`".
+#' @param losses the string that indicates losses in the `flow` column. Default is "`Losses`".
+#' @param supply the string that indicates supply in the `ledger_side` column. Default is "`Supply`".
+#' @param consumption the string that indicates consumption in the `ledger_side` column. Default is "`Consumption`".
 #' @param .rownum the name of a column created (and destroyed) internally by this function. 
-#'        The \code{.rownum} column temporarily holds row numbers for internal calculations.
-#'        The \code{.rownum} column is deleted before returning.#' 
+#'        The `.rownum` column temporarily holds row numbers for internal calculations.
+#'        The `.rownum` column is deleted before returning. 
 #'
-#' @return \code{.ieadf} with additional columns named \code{ledger_side} and \code{flow_aggregation_point}
+#' @return `.ieadf` with additional columns named `ledger_side` and `flow_aggregation_point`
 #' 
 #' @export
 #'
