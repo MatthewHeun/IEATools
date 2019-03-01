@@ -11,14 +11,15 @@
 #' If those conditions are not met, execution is halted, and
 #' an error message is given.
 #' 
-#' This function is expected to work even as more years are added
+#' Missing data (by default "\code{..}" and "\code{x}") are converted to \code{0}. 
+#' 
+#' This function is designed to work even as more years are added
 #' as columns at the right of \code{iea_file}, 
-#' because column names are constructed from the first two lines of \code{iea_file} 
+#' because column names in the output are constructed from the first two lines of \code{iea_file} 
 #' (which contain years and country, flow, product information).
 #' 
 #' The data frame returned from this function is not ready to be used in R, 
-#' because rows are not unique, and 
-#' several empty cells are filled with ".." or "x".
+#' because rows are not unique.
 #' To further prepre the data frame for use, call \code{augment_iea_data()},
 #' passing the output of this function in the \code{.iea_df} argument \code{augment_iea_data()}.
 #'
@@ -48,21 +49,21 @@ iea_df <- function(.iea_file = NULL, text = NULL,
   if (!is.null(.iea_file)) {
     conn <- file(.iea_file, open = "rt") # open file connection
   } else {
-    # text has been provided
+    # text has been provided, probably for testing purposes.
     conn <- textConnection(text)
   }
-  header <- conn %>% readLines(n = 2) # read in header
+  header <- conn %>% readLines(n = 2) # read header
   close(conn)
   # Check whether header has the form we expect.
   assertthat::assert_that(length(header) == 2, msg = "couldn't read 2 lines in iea_df")
   if (header[[2]] %>% startsWith(expected_2nd_line_start) & header[[2]] %>% endsWith(",")) {
-    # The may have been opened in Excel and resaved.
+    # The file may have been opened in Excel and resaved.
     # When that occurs, many commas are appended to the 2nd line.
     # Strip out these commas before proceeding further.
     # The pattern ,*$ means "match any number (*) of commas (,) at the end of the line ($)".
     header[[2]] <- gsub(pattern = ",*$", replacement = "", header[[2]])
   }
-  assertthat::assert_that(header[[1]] %>% startsWith(expected_1st_line_start) & header[[2]] %>% startsWith(expected_2nd_line_start), 
+  assertthat::assert_that(header[[1]] %>% startsWith(expected_1st_line_start) & header[[2]] == expected_2nd_line_start, 
                           msg = paste0("In iea_df, input data didn't start with '", expected_1st_line_start, 
                                        "' or second line didn't start with '", expected_2nd_line_start, "'")) 
   if (!is.null(.iea_file)) {
@@ -85,7 +86,7 @@ iea_df <- function(.iea_file = NULL, text = NULL,
   IEAData_noheader %>% 
     magrittr::set_names(colnames) %>% 
     # Clean up data in year columns
-    mutate_at(dplyr::vars(dplyr::matches(year_colname_pattern)),
+    dplyr::mutate_at(dplyr::vars(dplyr::matches(year_colname_pattern)),
               function(x){
                 replace(x, x %in% missing_data, 0)
               }
@@ -121,6 +122,15 @@ iea_df <- function(.iea_file = NULL, text = NULL,
 #' @param .iea_df a data frame produced by the \link{iea_df} function
 #' @param ledger_side the name of the ledger side column. Default is "\code{Ledger.side}".
 #' @param flow_aggregation_point the name of the flow aggregation point column. Default is "\code{Flow.aggregation.point}".
+#' @param country the name of the country column in \code{.iea_df}. Default is "\code{COUNTRY}".
+#' @param flow the name of the flow column in \code{.iea_df}. Default is "\code{FLOW}".
+#' @param country the name of the country column in \code{.iea_df}. Default is "\code{COUNTRY}".
+#' @param losses the string that indicates losses in the \code{flow} column. Default is "\code{Losses}".
+#' @param supply the string that indicates supply in the \code{ledger_side} column. Default is "\code{Supply}".
+#' @param consumption the string that indicates consumption in the \code{ledger_side} column. Default is "\code{Consumption}".
+#' @param .rownum the name of a column created (and destroyed) internally by this function. 
+#'        The \code{.rownum} column temporarily holds row numbers for internal calculations.
+#'        The \code{.rownum} column is deleted before returning.#' 
 #'
 #' @return \code{.ieadf} with additional columns named \code{ledger_side} and \code{flow_aggregation_point}
 #' 
@@ -130,8 +140,8 @@ iea_df <- function(.iea_file = NULL, text = NULL,
 #' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43") %>% 
 #'   augment_iea_df()
 augment_iea_df <- function(.iea_df, ledger_side = "Ledger.side", flow_aggregation_point = "Flow.aggregation.point", 
-                           country = "COUNTRY", flow = "FLOW", losses = "Losses", 
-                           supply = "Supply", consumption = "Consumption",
+                           country = "COUNTRY", flow = "FLOW", 
+                           losses = "Losses", supply = "Supply", consumption = "Consumption",
                            .rownum = ".rownum"){
   # The split between Supply and Consumption ledger sides occurs where Flow == Losses and Flow == Total final consumption.
   # Find this dividing line in .iea_df. 
@@ -142,13 +152,14 @@ augment_iea_df <- function(.iea_df, ledger_side = "Ledger.side", flow_aggregatio
     dplyr::group_by(!!as.name(country)) %>% 
     dplyr::group_map(function(ctry_tbl, ctry){
       # At this point, 
-      # ctry_tbl is the subset of rows in this country's group, and
+      # ctry_tbl is the rows for this country, and
       # ctry is a data frame with one country column and one country row containing the country.
       with_row_nums <- ctry_tbl %>% 
         tibble::rownames_to_column(var = .rownum) %>% 
-        mutate(
+        dplyr::mutate(
           !!as.name(.rownum) := as.numeric(!!as.name(.rownum))
         )
+      # Calculate the last row of Losses. last_loss_row is the last row of the supply side of the ledger.
       last_loss_row <- with_row_nums %>% 
         dplyr::filter(!!as.name(flow) == losses) %>% 
         magrittr::extract2(.rownum) %>% 
@@ -162,12 +173,6 @@ augment_iea_df <- function(.iea_df, ledger_side = "Ledger.side", flow_aggregatio
         )
     }) %>% 
     # Reorder the columns and remove the .rownum column
-    select(ledger_side,  everything()) %>% 
-    select(-.rownum)
-  
-
-  
-      
-      
-  
+    dplyr::select(ledger_side,  everything()) %>% 
+    dplyr::select(-.rownum)
 }

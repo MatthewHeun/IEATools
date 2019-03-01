@@ -16,6 +16,22 @@ augment_iea_df(.iea_df, ledger_side = "Ledger.side",
 \item{ledger_side}{the name of the ledger side column. Default is "\code{Ledger.side}".}
 
 \item{flow_aggregation_point}{the name of the flow aggregation point column. Default is "\code{Flow.aggregation.point}".}
+
+\item{country}{the name of the country column in \code{.iea_df}. Default is "\code{COUNTRY}".}
+
+\item{flow}{the name of the flow column in \code{.iea_df}. Default is "\code{FLOW}".}
+
+\item{losses}{the string that indicates losses in the \code{flow} column. Default is "\code{Losses}".}
+
+\item{supply}{the string that indicates supply in the \code{ledger_side} column. Default is "\code{Supply}".}
+
+\item{consumption}{the string that indicates consumption in the \code{ledger_side} column. Default is "\code{Consumption}".}
+
+\item{.rownum}{the name of a column created (and destroyed) internally by this function. 
+The \code{.rownum} column temporarily holds row numbers for internal calculations.
+The \code{.rownum} column is deleted before returning.#'}
+
+\item{country}{the name of the country column in \code{.iea_df}. Default is "\code{COUNTRY}".}
 }
 \value{
 \code{.ieadf} with additional columns named \code{ledger_side} and \code{flow_aggregation_point}

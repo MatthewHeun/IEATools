@@ -40,14 +40,15 @@ If those conditions are not met, execution is halted, and
 an error message is given.
 }
 \details{
-This function is expected to work even as more years are added
+Missing data (by default "\code{..}" and "\code{x}") are converted to \code{0}.
+
+This function is designed to work even as more years are added
 as columns at the right of \code{iea_file}, 
-because column names are constructed from the first two lines of \code{iea_file} 
+because column names in the output are constructed from the first two lines of \code{iea_file} 
 (which contain years and country, flow, product information).
 
 The data frame returned from this function is not ready to be used in R, 
-because rows are not unique, and 
-several empty cells are filled with ".." or "x".
+because rows are not unique.
 To further prepre the data frame for use, call \code{augment_iea_data()},
 passing the output of this function in the \code{.iea_df} argument \code{augment_iea_data()}.
 }
