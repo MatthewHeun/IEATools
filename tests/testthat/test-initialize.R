@@ -45,7 +45,7 @@ test_that("iea_df works with .. and x", {
 })
 
 test_that("augment_iea_df works", {
-  IEADF_augmented <- file.path("extdata", "IEA-2Countries.csv") %>% 
+  IEADF_augmented <- file.path("extdata", "IEA-2Countries-full2ndrow.csv") %>% 
     system.file(package = "IEAData") %>% 
     iea_df() %>% 
     augment_iea_df()
