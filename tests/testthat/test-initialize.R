@@ -22,10 +22,10 @@ test_that("iea_df works", {
   # Eliminate all series of commas at ends of lines
   # The pattern ,*$ means "match any number (*) of commas (,) at the end of a line ($)".
   IEAtext <- IEAtext %>% gsub(pattern = ",*$", replacement = "", IEAtext)
+  # Ensure that commas have been removed from the end of a line.
+  # The pattern ",$" means "match any commas (,) at the end of a line ($)
+  expect_false(grepl(pattern = ",$", x = IEAtext))
   IEADF <- iea_df(text = IEAtext)
-  # IEADF <- file.path("extdata", "IEA-2Countries.csv") %>% 
-  #   system.file(package = "IEAData") %>% 
-  #   iea_df()
   expect_equal(nrow(IEADF), 14688)
   expect_equal(ncol(IEADF), 61)
   expect_equal(colnames(IEADF)[[61]], "2017")
