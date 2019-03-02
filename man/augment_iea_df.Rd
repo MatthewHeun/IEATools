@@ -8,6 +8,16 @@ augment_iea_df(.iea_df, ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
   country = "COUNTRY", flow = "FLOW", losses = "Losses",
   supply = "Supply", consumption = "Consumption",
+  tpes_flows = c("Production", "Imports", "Exports",
+  "International marine bunkers", "International aviation bunkers",
+  "Stock changes"), tpes = "Total primary energy supply",
+  tfc_compare_flows = c("Total primary energy supply", "Transfers",
+  "Statistical differences", "Transformation processes",
+  "Energy industry own use", "Losses"), tfc_compare = "TFC compare",
+  tp_flows_suffix = "(transf.)",
+  nstp_flows_suffix = "(transformation)",
+  transformation_processes = "Transformation processes",
+  eiou_flows_suffix = "(energy)", eiou = "Energy industry own use",
   .rownum = ".rownum")
 }
 \arguments{
