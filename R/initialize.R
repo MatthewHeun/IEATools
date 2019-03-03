@@ -177,6 +177,16 @@ augment_iea_df <- function(.iea_df, ledger_side = "Ledger.side", flow_aggregatio
                            transformation_processes = "Transformation processes",
                            eiou_flows_suffix = "(energy)",
                            eiou = "Energy industry own use",
+                           tfc_flows = c("Industry", "Transport", "Other", "Non-energy use"),
+                           tfc = "Total final consumption",
+                           industry_flows = c("Iron and steel", "Chemical and petrochemical", "Non-ferrous metals", "Non-metallic minerals", "Transport equipment", "Machinery", "Mining and quarrying", "Food and tobacco", "Paper, pulp and print", "Wood and wood products", "Construction", "Textile and leather", "Non-specified (industry)"), 
+                           industry = "Industry",
+                           transport_flows = c("Domestic aviation", "Road", "Rail", "Pipeline transport", "Domestic navigation", "Non-specified (transport)"),
+                           transport = "Transport",
+                           other_flows = c("Residential", "Commercial and public services", "Agriculture/forestry", "Fishing", "Non-specified (other)"),
+                           other = "Other",
+                           non_energy_flows = c("Non-energy use industry/transformation/energy", "Non-energy use in transport", "Non-energy use in other"),
+                           non_energy = "Non-energy use",
                            .rownum = ".rownum"){
   WithLedgerSide <- .iea_df %>% 
     # Eliminate rownames, leaving only numbers
@@ -209,13 +219,18 @@ augment_iea_df <- function(.iea_df, ledger_side = "Ledger.side", flow_aggregatio
     }) 
   # Now add the Flow.aggregation.point column
   WithFAP <- WithLedgerSide %>% 
-    mutate(
-      !!as.name(flow_aggregation_point) := case_when(
+    dplyr::mutate(
+      !!as.name(flow_aggregation_point) := dplyr::case_when(
         !!as.name(ledger_side) == supply & !!as.name(flow) %in% tpes_flows ~ tpes, 
         !!as.name(ledger_side) == supply & !!as.name(flow) %in% tfc_compare_flows ~ tfc_compare,
         !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), tp_flows_suffix) ~ transformation_processes,
         !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), nstp_flows_suffix) ~ transformation_processes,
         !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), eiou_flows_suffix) ~ eiou,
+        !!as.name(ledger_side) == consumption & !!as.name(flow) == tfc ~ NA_character_,
+        !!as.name(ledger_side) == consumption & !!as.name(flow) %in% tfc_flows ~ tfc,
+        !!as.name(ledger_side) == consumption & !!as.name(flow) %in% industry_flows ~ industry,
+        !!as.name(ledger_side) == consumption & !!as.name(flow) %in% transport_flows ~ transport,
+        !!as.name(ledger_side) == consumption & !!as.name(flow) %in% other_flows ~ other,
         TRUE ~ NA_character_
       )
     )

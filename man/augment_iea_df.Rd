@@ -18,7 +18,22 @@ augment_iea_df(.iea_df, ledger_side = "Ledger.side",
   nstp_flows_suffix = "(transformation)",
   transformation_processes = "Transformation processes",
   eiou_flows_suffix = "(energy)", eiou = "Energy industry own use",
-  .rownum = ".rownum")
+  tfc_flows = c("Industry", "Transport", "Other", "Non-energy use"),
+  tfc = "Total final consumption", industry_flows = c("Iron and steel",
+  "Chemical and petrochemical", "Non-ferrous metals",
+  "Non-metallic minerals", "Transport equipment", "Machinery",
+  "Mining and quarrying", "Food and tobacco", "Paper, pulp and print",
+  "Wood and wood products", "Construction", "Textile and leather",
+  "Non-specified (industry)"), industry = "Industry",
+  transport_flows = c("Domestic aviation", "Road", "Rail",
+  "Pipeline transport", "Domestic navigation",
+  "Non-specified (transport)"), transport = "Transport",
+  other_flows = c("Residential", "Commercial and public services",
+  "Agriculture/forestry", "Fishing", "Non-specified (other)"),
+  other = "Other",
+  non_energy_flows = c("Non-energy use industry/transformation/energy",
+  "Non-energy use in transport", "Non-energy use in other"),
+  non_energy = "Non-energy use", .rownum = ".rownum")
 }
 \arguments{
 \item{.iea_df}{a data frame produced by the \code{\link[=iea_df]{iea_df()}} function}
