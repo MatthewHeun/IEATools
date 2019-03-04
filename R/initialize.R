@@ -187,6 +187,10 @@ augment_iea_df <- function(.iea_df, ledger_side = "Ledger.side", flow_aggregatio
                            other = "Other",
                            non_energy_flows = c("Non-energy use industry/transformation/energy", "Non-energy use in transport", "Non-energy use in other"),
                            non_energy = "Non-energy use",
+                           electricity_output_flows_prefix = "Electricity output (GWh)-",
+                           electricity_output = "Electricity output (GWh)",
+                           heat_output_flows_prefix = "Heat output-",
+                           heat_output = "Heat output",
                            .rownum = ".rownum"){
   WithLedgerSide <- .iea_df %>% 
     # Eliminate rownames, leaving only numbers
@@ -231,6 +235,8 @@ augment_iea_df <- function(.iea_df, ledger_side = "Ledger.side", flow_aggregatio
         !!as.name(ledger_side) == consumption & !!as.name(flow) %in% industry_flows ~ industry,
         !!as.name(ledger_side) == consumption & !!as.name(flow) %in% transport_flows ~ transport,
         !!as.name(ledger_side) == consumption & !!as.name(flow) %in% other_flows ~ other,
+        !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), electricity_output_flows_prefix) ~ electricity_output,
+        !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), heat_output_flows_prefix) ~ heat_output,
         TRUE ~ NA_character_
       )
     )
