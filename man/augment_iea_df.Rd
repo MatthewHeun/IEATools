@@ -33,7 +33,11 @@ augment_iea_df(.iea_df, ledger_side = "Ledger.side",
   other = "Other",
   non_energy_flows = c("Non-energy use industry/transformation/energy",
   "Non-energy use in transport", "Non-energy use in other"),
-  non_energy = "Non-energy use", .rownum = ".rownum")
+  non_energy = "Non-energy use",
+  electricity_output_flows_prefix = "Electricity output (GWh)-",
+  electricity_output = "Electricity output (GWh)",
+  heat_output_flows_prefix = "Heat output-",
+  heat_output = "Heat output", .rownum = ".rownum")
 }
 \arguments{
 \item{.iea_df}{a data frame produced by the \code{\link[=iea_df]{iea_df()}} function}
