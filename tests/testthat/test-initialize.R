@@ -66,5 +66,4 @@ test_that("augment_iea_df works", {
   # So delete that column first.
   expect_false(any(IEADF_augmented %>% dplyr::select(-Flow.aggregation.point) == ".."))
   expect_false(any(IEADF_augmented %>% dplyr::select(-Flow.aggregation.point) == "x"))
-  
 })
