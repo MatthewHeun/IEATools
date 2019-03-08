@@ -45,23 +45,30 @@ test_that("iea_df works with .. and x", {
   expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,..,x"), expectedDF)
 })
 
+test_that("rename_iea_df_cols works", {
+  renamed <- iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43") %>% 
+    rename_iea_df_cols()
+  expect_equal(names(renamed), c("Country", "Flow", "Product", "1960", "1961"))
+})
+
 test_that("augment_iea_df works", {
   IEADF_augmented <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
     system.file(package = "IEAData") %>% 
     iea_df() %>% 
+    rename_iea_df_cols() %>% 
     augment_iea_df()
   # Check column types
   clses <- lapply(IEADF_augmented, class)
   expect_equal(clses$Ledger.side, "character")  
   expect_equal(clses$Flow.aggregation.point, "character")  
-  expect_equal(clses$COUNTRY, "character")  
-  expect_equal(clses$FLOW, "character")  
-  expect_equal(clses$PRODUCT, "character")  
+  expect_equal(clses$Country, "character")  
+  expect_equal(clses$Flow, "character")  
+  expect_equal(clses$Product, "character")  
   clses["Ledger.side"] <- NULL
   clses["Flow.aggregation.point"] <- NULL
-  clses["COUNTRY"] <- NULL
-  clses["FLOW"] <- NULL
-  clses["PRODUCT"] <- NULL
+  clses["Country"] <- NULL
+  clses["Flow"] <- NULL
+  clses["Product"] <- NULL
   expect_true(all(clses == "numeric"))
   # Ensure that there are no remaining .. or x.
   # This test fails if there are any NA items.

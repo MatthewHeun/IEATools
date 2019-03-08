@@ -4,10 +4,10 @@
 \alias{augment_iea_df}
 \title{Augment an IEA data frame}
 \usage{
-augment_iea_df(.iea_df, ledger_side = "Ledger.side",
-  flow_aggregation_point = "Flow.aggregation.point",
-  country = "COUNTRY", flow = "FLOW", losses = "Losses",
-  supply = "Supply", consumption = "Consumption",
+augment_iea_df(.iea_df, country = "Country",
+  ledger_side = "Ledger.side",
+  flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
+  losses = "Losses", supply = "Supply", consumption = "Consumption",
   tpes_flows = c("Production", "Imports", "Exports",
   "International marine bunkers", "International aviation bunkers",
   "Stock changes"), tpes = "Total primary energy supply",
@@ -40,11 +40,11 @@ augment_iea_df(.iea_df, ledger_side = "Ledger.side",
 \arguments{
 \item{.iea_df}{a data frame produced by the \code{\link[=iea_df]{iea_df()}} function}
 
+\item{country}{the name of the country column in \code{.iea_df}. Default is "\code{COUNTRY}".}
+
 \item{ledger_side}{the name of the ledger side column. Default is "\code{Ledger.side}".}
 
 \item{flow_aggregation_point}{the name of the flow aggregation point column. Default is "\code{Flow.aggregation.point}".}
-
-\item{country}{the name of the country column in \code{.iea_df}. Default is "\code{COUNTRY}".}
 
 \item{flow}{the name of the flow column in \code{.iea_df}. Default is "\code{FLOW}".}
 
@@ -83,5 +83,6 @@ To solve this problem, the country column is filled with 2-letter ISO abbreviati
 }
 \examples{
 iea_df(text = ",,TIME,1960,1961\\nCOUNTRY,FLOW,PRODUCT\\nWorld,Production,Hard coal,42,43") \%>\% 
+  rename_iea_df_cols() \%>\% 
   augment_iea_df()
 }

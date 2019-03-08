@@ -2,4 +2,5 @@
 
 export(augment_iea_df)
 export(iea_df)
+export(rename_iea_df_cols)
 export(write_fu_templates)

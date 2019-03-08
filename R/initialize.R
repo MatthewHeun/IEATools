@@ -125,7 +125,36 @@ iea_df <- function(.iea_file = NULL, text = NULL,
     as.data.frame()
 }
 
-
+#' Rename columns of an IEA data frame
+#' 
+#' The IEA data has columns named `COUNTRY`, `FLOW`, and `PRODUCT`.
+#' This function turns off the shouting, 
+#' renaming the columms (by default) to `Country`, `Flow`, and `Product`.
+#'
+#' @param .iea_df a data frame produced by [iea_df()]
+#' @param country the original name for the country column. (Default is `COUNTRY`.)
+#' @param new_country the new name for the country column. (Default is `Country`.)
+#' @param flow the original name for the flow column. (Default is `FLOW`.)
+#' @param new_flow the new name for the flow column. (Default is `Flow`.)
+#' @param product the original name for the product column. (Default is `PRODUCT`.)
+#' @param new_product the new name for the product column. (Default is `Product`.)
+#'
+#' @return `.iea_df` with renamed columns
+#' 
+#' @export
+#'
+#' @examples
+#' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43") %>% 
+#'   rename_iea_df_cols()
+rename_iea_df_cols <- function(.iea_df, 
+                               country = "COUNTRY", new_country = "Country", 
+                               flow = "FLOW", new_flow = "Flow", 
+                               product = "PRODUCT", new_product = "Product"){
+  .iea_df %>% 
+    dplyr::rename(!!new_country := !!country,
+                  !!new_flow := flow,
+                  !!new_product := product)
+}
 
 #' Augment an IEA data frame
 #' 
@@ -164,9 +193,11 @@ iea_df <- function(.iea_file = NULL, text = NULL,
 #'
 #' @examples
 #' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43") %>% 
+#'   rename_iea_df_cols() %>% 
 #'   augment_iea_df()
-augment_iea_df <- function(.iea_df, ledger_side = "Ledger.side", flow_aggregation_point = "Flow.aggregation.point", 
-                           country = "COUNTRY", flow = "FLOW", 
+augment_iea_df <- function(.iea_df, country = "Country", 
+                           ledger_side = "Ledger.side", flow_aggregation_point = "Flow.aggregation.point", 
+                           flow = "Flow", 
                            losses = "Losses", supply = "Supply", consumption = "Consumption",
                            tpes_flows = c("Production", "Imports", "Exports", "International marine bunkers", "International aviation bunkers", "Stock changes"),
                            tpes = "Total primary energy supply", 
