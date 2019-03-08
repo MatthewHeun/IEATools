@@ -61,7 +61,7 @@ The \code{.rownum} column is deleted before returning.}
 \item{country}{the name of the country column in \code{.iea_df}. Default is "\code{COUNTRY}".}
 }
 \value{
-\code{.ieadf} with additional columns named \code{ledger_side} and \code{flow_aggregation_point}
+\code{.iea_df} with additional columns named \code{ledger_side} and \code{flow_aggregation_point}
 }
 \description{
 This function prepares an IEA data frame created by \code{\link[=iea_df]{iea_df()}} for use in R.

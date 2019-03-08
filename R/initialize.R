@@ -158,7 +158,7 @@ iea_df <- function(.iea_file = NULL, text = NULL,
 #'        The `.rownum` column temporarily holds row numbers for internal calculations.
 #'        The `.rownum` column is deleted before returning. 
 #'
-#' @return `.ieadf` with additional columns named `ledger_side` and `flow_aggregation_point`
+#' @return `.iea_df` with additional columns named `ledger_side` and `flow_aggregation_point`
 #' 
 #' @export
 #'
