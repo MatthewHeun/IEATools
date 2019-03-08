@@ -55,7 +55,7 @@
 #'        Default is "`^\\d*$`" which identifies columns whose names are exclusively digits.
 #' @param missing_data a string that identifies missing data. Default is "`..`".
 #'        Entries of "`missing_data`" are coded as `0`` in output.
-#' @param not_appliable_data a string that identifies not-applicable data.
+#' @param not_applicable_data a string that identifies not-applicable data.
 #'        Entries of "`not_applicable_data`" are coded as `0` in output.
 #'
 #' @return a data frame containing the IEA extended energy balances data
