@@ -14,21 +14,25 @@
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   remove_agg_memo_flows()
-remove_agg_memo_flows <- function(.iea_df,
-                                  flow = "Flow",
-                                  agg_flows = c(
-                                    "Total primary energy supply",
-                                    "Total final consumption", 
-                                    "Transformation processes", 
-                                    "Energy industry own use",
-                                    "Industry",
-                                    "Transport",
-                                    "Other",
-                                    "Non-energy use"),
-                                  memo_flow_prefixes = c("Memo: ", "Electricity output (GWh)", "Heat output")){
+remove_agg_memo <- function(.iea_df,
+                            flow = "Flow",
+                            product = "Product",
+                            agg_flows = c(
+                              "Total primary energy supply",
+                              "Total final consumption", 
+                              "Transformation processes", 
+                              "Energy industry own use",
+                              "Industry",
+                              "Transport",
+                              "Other",
+                              "Non-energy use"),
+                            memo_flow_prefixes = c("Memo: ", "Electricity output (GWh)", "Heat output"), 
+                            memo_product_prefixes = "Memo: "){
   .iea_df %>% 
-    # Remove aggregations
-    filter(!!as.name(flow) %in% agg_flows)
+    # Remove Flow aggregations
+    filter(!startsWith(!!as.name(flow), agg_flows) %>% 
+    # Remove Product aggregations
+    filter(!!as.name(product) %in% agg_flows) %>% 
 }
 
 
