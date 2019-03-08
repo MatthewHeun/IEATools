@@ -55,12 +55,16 @@ test_that("augment_iea_df works", {
   expect_equal(clses$FLOW, "character")  
   expect_equal(clses$PRODUCT, "character")  
   clses["Ledger.side"] <- NULL
+  clses["Flow.aggregation.point"] <- NULL
   clses["COUNTRY"] <- NULL
   clses["FLOW"] <- NULL
   clses["PRODUCT"] <- NULL
   expect_true(all(clses == "numeric"))
   # Ensure that there are no remaining .. or x.
-  expect_false(any(IEADF_augmented == ".."))
-  expect_false(any(IEADF_augmented == "x"))
+  # This test fails if there are any NA items.
+  # We know that NA items appear in the Flow.aggregation.point column.
+  # So delete that column first.
+  expect_false(any(IEADF_augmented %>% dplyr::select(-Flow.aggregation.point) == ".."))
+  expect_false(any(IEADF_augmented %>% dplyr::select(-Flow.aggregation.point) == "x"))
   
 })
