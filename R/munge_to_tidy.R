@@ -31,9 +31,10 @@ munge_aug_iea_to_tidy <- function(.aug_iea_df,
   # )
 
   out <- .aug_iea_df %>% 
+    # Eliminate aggregation rows.  We'll do our own aggregation if we need it.  
+    
     # Gather into a tidy data frame.
     tidyr::gather(!!as.name(year), !!as.name(energy), -c(country, ledger_side, flow_aggregation_point, flow, product)) %>% 
-    # Eliminate aggregation rows.  We'll do our own aggregation if we need it.  
  
     
   
