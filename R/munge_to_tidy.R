@@ -1,3 +1,38 @@
+#' Title
+#'
+#' @param .iea_df 
+#' @param flow 
+#' @param agg_flows 
+#' @param memo_flow_prefixes 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+#'   system.file(package = "IEAData") %>% 
+#'   iea_df() %>%
+#'   rename_iea_df_cols() %>% 
+#'   remove_agg_memo_flows()
+remove_agg_memo_flows <- function(.iea_df,
+                                  flow = "Flow",
+                                  agg_flows = c(
+                                    "Total primary energy supply",
+                                    "Total final consumption", 
+                                    "Transformation processes", 
+                                    "Energy industry own use",
+                                    "Industry",
+                                    "Transport",
+                                    "Other",
+                                    "Non-energy use"),
+                                  memo_flow_prefixes = c("Memo: ", "Electricity output (GWh)", "Heat output")){
+  .iea_df %>% 
+    # Remove aggregations
+    filter(!!as.name(flow) %in% agg_flows)
+}
+
+
+
 munge_aug_iea_to_tidy <- function(.aug_iea_df, 
                                   country = "Country", year = "Year", ledger_side = "Ledger.side", 
                                   flow_aggregation_point = "Flow.aggregation.point", 
@@ -34,7 +69,7 @@ munge_aug_iea_to_tidy <- function(.aug_iea_df,
     # Eliminate aggregation rows.  We'll do our own aggregation if we need it.  
     
     # Gather into a tidy data frame.
-    tidyr::gather(!!as.name(year), !!as.name(energy), -c(country, ledger_side, flow_aggregation_point, flow, product)) %>% 
+    tidyr::gather(!!as.name(year), !!as.name(energy), -c(country, ledger_side, flow_aggregation_point, flow, product))
  
     
   

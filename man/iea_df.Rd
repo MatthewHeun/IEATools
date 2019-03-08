@@ -26,7 +26,7 @@ Default is "\code{^\\d*$}" which identifies columns whose names are exclusively 
 \item{missing_data}{a string that identifies missing data. Default is "\code{..}".
 Entries of "\code{missing_data}" are coded as `0`` in output.}
 
-\item{not_appliable_data}{a string that identifies not-applicable data.
+\item{not_applicable_data}{a string that identifies not-applicable data.
 Entries of "\code{not_applicable_data}" are coded as \code{0} in output.}
 }
 \value{
