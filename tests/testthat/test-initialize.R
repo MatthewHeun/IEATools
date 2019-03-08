@@ -16,7 +16,8 @@ test_that("iea_df works", {
   # (Extra commas are present on the 2nd line.)
   expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal,42,43"), expectedDF)
   # Test with a full IEA data file in the correct format
-  IEAfile <- file.path("extdata", "IEA-2Countries-full2ndrow.csv") %>% 
+  # IEAfile <- file.path("extdata", "IEA-2Countries-full2ndrow.csv") %>% 
+  IEAfile <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
     system.file(package = "IEAData")
   IEAtext <- readChar(IEAfile, file.info(IEAfile)$size)
   # Eliminate all series of commas at ends of lines
@@ -27,15 +28,15 @@ test_that("iea_df works", {
   expect_false(grepl(pattern = ",$", x = IEAtext))
   IEADF <- iea_df(text = IEAtext)
   expect_equal(nrow(IEADF), 14688)
-  expect_equal(ncol(IEADF), 61)
-  expect_equal(colnames(IEADF)[[61]], "2017")
+  expect_equal(ncol(IEADF), 5)
+  expect_equal(colnames(IEADF)[[5]], "2000")
   # Test with an IEA data file with extra commas on the 2nd line.
-  IEADF2 <- file.path("extdata", "IEA-2Countries-full2ndrow.csv") %>% 
+  IEADF2 <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
     system.file(package = "IEAData") %>% 
     iea_df()
   expect_equal(nrow(IEADF2), 14688)
-  expect_equal(ncol(IEADF2), 61)
-  expect_equal(colnames(IEADF2)[[61]], "2017")
+  expect_equal(ncol(IEADF2), 5)
+  expect_equal(colnames(IEADF2)[[5]], "2000")
 })
 
 test_that("iea_df works with .. and x", {
@@ -45,13 +46,15 @@ test_that("iea_df works with .. and x", {
 })
 
 test_that("augment_iea_df works", {
-  IEADF_augmented <- file.path("extdata", "IEA-2Countries-full2ndrow.csv") %>% 
+  IEADF_augmented <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
     system.file(package = "IEAData") %>% 
     iea_df() %>% 
     augment_iea_df()
   # Check column types
   clses <- lapply(IEADF_augmented, class)
   expect_equal(clses$Ledger.side, "character")  
+  expect_equal(clses$Flow.aggregation.point, "character")  
+  expect_equal(clses$COUNTRY, "character")  
   expect_equal(clses$FLOW, "character")  
   expect_equal(clses$PRODUCT, "character")  
   clses["Ledger.side"] <- NULL

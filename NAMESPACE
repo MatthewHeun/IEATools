@@ -2,3 +2,4 @@
 
 export(augment_iea_df)
 export(iea_df)
+export(write_fu_templates)
