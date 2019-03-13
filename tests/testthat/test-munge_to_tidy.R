@@ -43,3 +43,14 @@ test_that("munge_aug_iea_to_tidy works as expected", {
     munge_aug_iea_to_tidy()
   
 })
+
+test_that("use_iso_countries works as expected", {
+  iso <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+    system.file(package = "IEAData") %>% 
+    iea_df() %>% 
+    rename_iea_df_cols() %>% 
+    use_iso_countries()
+  expect_false(any(iso$Country == "South Africa"))
+  expect_true(any(iso$Country == "ZA"))
+
+})

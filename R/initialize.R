@@ -162,7 +162,7 @@ rename_iea_df_cols <- function(.iea_df,
 #' 
 #' This function solves several problems.
 #' The first problem is that metadata in the `COUNTRY`, `FLOW`, and `PRODUCT`
-#' collumns of an IEA data table are not unique.
+#' columns of an IEA data table are not unique.
 #' To solve this problem, two additional columns are added: `Ledger.side` and `Flow.aggregation.point`.
 #' `Ledger.side` can be one of "`Supply`" or "`Consumption`", corresponding to the top or bottom of the IEA's tables, respectively.
 #' `Flow.aggregation.point` indicates the next level of aggregation for these data. 
@@ -171,8 +171,20 @@ rename_iea_df_cols <- function(.iea_df,
 #' on the `Supply` side of the ledger.
 #' On the `Consumption` side of the ledger, `Flow.aggregation.point` can be one of 
 #' "`Industry`", "`Transport`", "`Other`", or "`Non-energy use`".
-#' The second problem is that the countries are given by their (long) full name. 
-#' To solve this problem, the country column is filled with 2-letter ISO abbreviations.
+#' 
+#' The second problem this function solves is that energy type and units are not specified in IEA data.
+#' An `Energy.type` column is added with the value of `energy_type_val`. 
+#' (Default is `E`, for energy, as opposed to `X`, which would be exergy.)
+#' A `Units` column is added with the value of `units_val`.
+#' (Default is `ktoe`, although any string can be specified in `units_val`.)
+#' 
+#' Note that this function decides where to divide `Supply` from `Consumption`. 
+#' To do so, it first looks for rows in which `Flow` is "`Losses`".
+#' The last "`Losses`" row is the last row of the `Supply` side of the ledger. 
+#' If "`Losses`" rows are not found, the function looks for rows in which `Flow` is "`Total final consumption`".
+#' The first "`Total final consumption`" row is the first row of the `Consumption` side of the ledger.
+#' If neither "`Losses`" nor "`Total final consumption`" `Flow`s are present, 
+#' an error is generated.
 #'
 #' @param .iea_df a data frame produced by the [iea_df()] function
 #' @param country the name of the country column. Default is "`Country`".
@@ -217,7 +229,10 @@ rename_iea_df_cols <- function(.iea_df,
 #' @export
 #'
 #' @examples
-#' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43") %>% 
+#' iea_df(text = paste0(",,TIME,1960,1961\n",
+#'                        "COUNTRY,FLOW,PRODUCT\n",
+#'                        "World,Production,Hard coal (if no detail),42,43\n",
+#'                        "World,Losses,Hard coal (if no detail),1,2")) %>% 
 #'   rename_iea_df_cols() %>% 
 #'   augment_iea_df()
 augment_iea_df <- function(.iea_df, 

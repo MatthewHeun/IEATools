@@ -121,7 +121,7 @@ This function prepares an IEA data frame created by \code{\link[=iea_df]{iea_df(
 \details{
 This function solves several problems.
 The first problem is that metadata in the \code{COUNTRY}, \code{FLOW}, and \code{PRODUCT}
-collumns of an IEA data table are not unique.
+columns of an IEA data table are not unique.
 To solve this problem, two additional columns are added: \code{Ledger.side} and \code{Flow.aggregation.point}.
 \code{Ledger.side} can be one of "\code{Supply}" or "\code{Consumption}", corresponding to the top or bottom of the IEA's tables, respectively.
 \code{Flow.aggregation.point} indicates the next level of aggregation for these data.
@@ -130,11 +130,26 @@ To solve this problem, two additional columns are added: \code{Ledger.side} and 
 on the \code{Supply} side of the ledger.
 On the \code{Consumption} side of the ledger, \code{Flow.aggregation.point} can be one of
 "\code{Industry}", "\code{Transport}", "\code{Other}", or "\code{Non-energy use}".
-The second problem is that the countries are given by their (long) full name.
-To solve this problem, the country column is filled with 2-letter ISO abbreviations.
+
+The second problem this function solves is that energy type and units are not specified in IEA data.
+An \code{Energy.type} column is added with the value of \code{energy_type_val}.
+(Default is \code{E}, for energy, as opposed to \code{X}, which would be exergy.)
+A \code{Units} column is added with the value of \code{units_val}.
+(Default is \code{ktoe}, although any string can be specified in \code{units_val}.)
+
+Note that this function decides where to divide \code{Supply} from \code{Consumption}.
+To do so, it first looks for rows in which \code{Flow} is "\code{Losses}".
+The last "\code{Losses}" row is the last row of the \code{Supply} side of the ledger.
+If "\code{Losses}" rows are not found, the function looks for rows in which \code{Flow} is "\code{Total final consumption}".
+The first "\code{Total final consumption}" row is the first row of the \code{Consumption} side of the ledger.
+If neither "\code{Losses}" nor "\code{Total final consumption}" \code{Flow}s are present,
+an error is generated.
 }
 \examples{
-iea_df(text = ",,TIME,1960,1961\\nCOUNTRY,FLOW,PRODUCT\\nWorld,Production,Hard coal (if no detail),42,43") \%>\% 
+iea_df(text = paste0(",,TIME,1960,1961\\n",
+                       "COUNTRY,FLOW,PRODUCT\\n",
+                       "World,Production,Hard coal (if no detail),42,43\\n",
+                       "World,Losses,Hard coal (if no detail),1,2")) \%>\% 
   rename_iea_df_cols() \%>\% 
   augment_iea_df()
 }
