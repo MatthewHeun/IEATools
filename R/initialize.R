@@ -182,11 +182,32 @@ rename_iea_df_cols <- function(.iea_df,
 #' @param energy_type_val the value to put in the `energy_type` column. Default is "`E`".
 #' @param units the name of the units column to be added to `.iea_df`. Default is "`Units`".
 #' @param units_val the value to put in the `units` column. Default is "`ktoe`" for kilotons of oil equivalent.
-#' @param supply the string that identifies supply 
-
-#' @param losses the string that indicates losses in the `flow` column. Default is "`Losses`".
-#' @param supply the string that indicates supply in the `ledger_side` column. Default is "`Supply`".
-#' @param consumption the string that indicates consumption in the `ledger_side` column. Default is "`Consumption`".
+#' @param supply the string that identifies supply `Ledger.side`. Default is "`Supply`".
+#' @param consumption the string that identifies consumption `Ledger.side`. Default is "`Consumption`".
+#' @param tpes the string that identifies total primary energy supply `Flow.aggregation.point`. Default is "`Total primary energy supply`.
+#' @param tpes_flows a vector of strings that give flows that are aggregated to `Total primary energy supply`. 
+#' @param tfc_compare a string that identifies the `TFC compare` flow aggregation point. Default is `TFC compare`.
+#' @param tfc_compare_flows a vector of strings that give `Flow`s that are aggregated to `TFC compare`.
+#' @param losses the string that indicates losses in the `Flow` column. Default is "`Losses`".
+#' @param transformation_processes the string that indicates transformation processes in the `Flow` column. Default is "`Transformation processes`".
+#' @param tp_flows_suffix the suffix for transformation processes in the `Flow` column. Default is "`(transf.)`".
+#' @param nstp_flows_suffix the suffix for non-specified transformation processes in the `Flow` column. Default is "`(transformation)`".
+#' @param eoiu the string that identifies energy industry own use in the `Flow` column. Default is "`Energy industry own use`".
+#' @param eiou_flows_suffix the suffix for energy industry own use in the `Flow` column. Default is "`(energy)`".
+#' @param tfc the string that identifies total final consumption in the `Flow` column. Default is "`Total final consumption`".
+#' @param tfc_flows a vector of strings that give total final consumption in the `Flow` column.
+#' @param industry a string that names the industry `Flow.aggregation.point`. Default is "`Industry`".
+#' @param industry_flows a vector of strings representing `Flow`s to be aggregated in the `Industry` `Flow.aggregation.point`. 
+#' @param transport a string that names the transport `Flow.aggregation.point`. Default is "`Transport`".
+#' @param transport_flows a vector of strings representing `Flow`s to be aggregated in the `Transport` `Flow.aggregation.point`. 
+#' @param other a string that names the other `Flow.aggregation.point`. Default is "`Other`".
+#' @param other_flows a vector of strings representing `Flow`s to be aggregated in the `Other` `Flow.aggregation.point`. 
+#' @param non_energy a string that names the non-energy `Flow.aggregation.point`. Default is "`Non-energy use`".
+#' @param non_energy_prefix a string prefix for `Flow`s to be aggregated in the `Non-energy use` `Flow.aggregation.point`. 
+#' @param electricity_output a string that names the electricity output `Flow`. Default is "`Electricity output (GWh)`". 
+#' @param electricity_output_flows_prefix a string prefix for `Flow`s to be aggregated in electricity output. Default is "`Electricity output (GWh)-`".
+#' @param heat_output a string that names the heat output `Flow`. Default is "`Heat output`". 
+#' @param heat_output_prefix a string prefix for `Flow`s to be aggregated in heat output. Default is "`Heat output-`".
 #' @param .rownum the name of a column created (and destroyed) internally by this function. 
 #'        The `.rownum` column temporarily holds row numbers for internal calculations.
 #'        The `.rownum` column is deleted before returning. 
@@ -246,15 +267,32 @@ augment_iea_df <- function(.iea_df,
         dplyr::mutate(
           !!as.name(.rownum) := as.numeric(!!as.name(.rownum))
         )
-      # Calculate the last row of Losses. last_loss_row is the last row of the supply side of the ledger.
-      last_loss_row <- with_row_nums %>% 
-        dplyr::filter(!!as.name(flow) == losses) %>% 
-        magrittr::extract2(.rownum) %>% 
-        max()
+      # Find the break point between the Supply side and the Consumption side of the ledger.
+      # We'll find the break point by identifying the last supply row in the data frame.
+      # We'll take two runs at this.
+      # One by looking for "Losses" in the Flow column (the end of the supply side) and 
+      # the other by looking for "Total final consumption" in the Flow column (the beginning of the consumption side).
+      loss_rows <- with_row_nums %>% 
+        dplyr::filter(!!as.name(flow) == losses)
+      if (nrow(loss_rows) > 0) {
+        # First, calculate the last row of Losses. last_loss_row is the last row of the supply side of the ledger.
+        last_supply_row <- loss_rows %>% magrittr::extract2(.rownum) %>% max()
+      } else {
+        # Look for the first row that is Total final consumption and subtract one.
+        tfc_rows <- with_row_nums %>% 
+          dplyr::filter(!!as.name(flow) == tfc)
+        if (nrow(tfc_rows) > 0) {
+          last_supply_row <- tfc_rows %>% magrittr::extract2(.rownum) %>% min() - 1
+        } else {
+          # Everything failed. Throw an error
+          stop(paste("Found neither", losses, "nor", tfc, "in the", flow, "column."))
+        }
+      }
+      
       with_row_nums %>% 
         dplyr::mutate(
           !!as.name(ledger_side) := dplyr::case_when(
-            !!as.name(.rownum) <= last_loss_row ~ supply,
+            !!as.name(.rownum) <= last_supply_row ~ supply,
             TRUE ~ consumption
           )
         )

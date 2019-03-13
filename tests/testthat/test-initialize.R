@@ -52,6 +52,30 @@ test_that("rename_iea_df_cols works", {
 })
 
 test_that("augment_iea_df works", {
+  # Try with a bogus set of data without a Losses row or a Total final consumption row.
+  expect_error(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43") %>% 
+    rename_iea_df_cols() %>% 
+    augment_iea_df(), 
+    "Found neither Losses nor Total final consumption in the Flow column.")
+  # Try with bogus data WITH a Losses row.
+  simple_with_losses_df <- iea_df(text = paste0(",,TIME,1960,1961\n",
+                                                "COUNTRY,FLOW,PRODUCT\n",
+                                                "World,Production,Hard coal (if no detail),42,43\n",
+                                                "World,Losses,Hard coal (if no detail),1,2")) %>% 
+    rename_iea_df_cols() %>% 
+    augment_iea_df()
+  expect_equal(simple_with_losses_df$Ledger.side, c("Supply", "Supply"))
+  expect_equal(simple_with_losses_df$Flow.aggregation.point, c("Total primary energy supply", "TFC compare"))
+  # Try with bogus data with a Total final consumption row.
+  simple_with_tfc_df <- iea_df(text = paste0(",,TIME,1960,1961\n",
+                                             "COUNTRY,FLOW,PRODUCT\n",
+                                             "World,Production,Hard coal (if no detail),42,43\n",
+                                             "World,Total final consumption,Hard coal (if no detail),1,2")) %>% 
+    rename_iea_df_cols() %>% 
+    augment_iea_df()
+  expect_equal(simple_with_tfc_df$Ledger.side, c("Supply", "Consumption"))
+  expect_equal(simple_with_tfc_df$Flow.aggregation.point, c("Total primary energy supply", NA_character_))
+  
   IEADF_augmented <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
     system.file(package = "IEAData") %>% 
     iea_df() %>% 
@@ -66,13 +90,7 @@ test_that("augment_iea_df works", {
   expect_equal(clses$Units, "character")
   expect_equal(clses$Flow, "character")  
   expect_equal(clses$Product, "character")  
-  clses["Ledger.side"] <- NULL
-  clses["Flow.aggregation.point"] <- NULL
-  clses["Country"] <- NULL
-  clses["Energy.type"] <- NULL
-  clses["Units"] <- NULL
-  clses["Flow"] <- NULL
-  clses["Product"] <- NULL
+  clses[c("Ledger.side", "Flow.aggregation.point", "Country", "Energy.type", "Units", "Flow", "Product")] <- NULL
   expect_true(all(clses == "numeric"))
   # Ensure that there are no remaining .. or x.
   # This test fails if there are any NA items.
