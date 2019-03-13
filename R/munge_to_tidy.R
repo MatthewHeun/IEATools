@@ -58,13 +58,18 @@ remove_agg_memo_flows <- function(.iea_df,
 #' @export
 #'
 #' @examples
+#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+#'   system.file(package = "IEAData") %>% 
+#'   iea_df() %>%
+#'   rename_iea_df_cols() %>% 
+#'   use_iso_countries()
 use_iso_countries <- function(.iea_df, 
                               country = "Country"){
   # Load country code information
   CountryInfo <- countrycode::codelist %>% 
     dplyr::select(country.name.en, iso2c) %>% 
     dplyr::rename(
-      Country = country.name.en
+      !!as.name(country) := country.name.en
     )
   # There are some "Countries" in the IEA data set that do not have corresponding
   # iso2c abbreviations in the countrycode database.  
@@ -86,7 +91,21 @@ use_iso_countries <- function(.iea_df,
   #                          "C\x99te d'Iviore"),
   #   iso2c = c("SO", "YU", "VN", "TZ", "VE", "IR", "CD", "KP", "CN", "CI"))
   # )
-  
+  .iea_df %>%
+    dplyr::left_join(CountryInfo, by = c("Country")) %>% # left_join preserves all rows of IEA data
+    dplyr::mutate(
+      iso2c := case_when(
+        # Add "World" to the Country column to preserve world data, if present.
+        !!as.name(country) == "World" ~ "World", 
+        TRUE ~ iso2c
+      )
+    ) %>% 
+    dplyr::select(-!!as.name(country)) %>% 
+    dplyr::rename(!!as.name(country) := iso2c) %>% 
+    dplyr::select(!!as.name(country), everything()) %>% 
+    # The effect of the next line is to eliminate non-countries from the data set.
+    # For example, OECD, IEA, etc. are not Countries, so they are dropped here.
+    filter(!is.na(Country))
 }
 
 

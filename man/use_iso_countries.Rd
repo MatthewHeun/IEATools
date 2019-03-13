@@ -18,3 +18,10 @@ use_iso_countries(.iea_df, country = "Country")
 The IEA uses full country names, but it is more concise to use the 2-letter ISO abbreviations.
 This function replaces the full country names with ISO abbreviations where possible.
 }
+\examples{
+file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
+  system.file(package = "IEAData") \%>\% 
+  iea_df() \%>\%
+  rename_iea_df_cols() \%>\% 
+  use_iso_countries()
+}

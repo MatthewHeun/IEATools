@@ -52,5 +52,20 @@ test_that("use_iso_countries works as expected", {
     use_iso_countries()
   expect_false(any(iso$Country == "South Africa"))
   expect_true(any(iso$Country == "ZA"))
-
+  expect_false(any(iso$Country == "Ghana"))
+  expect_true(any(iso$Country == "GH"))
+  
+  # Try with a data frame that contains a World country.
+  world <- iea_df(text = paste0(",,TIME,1960,1961\n",
+                                "COUNTRY,FLOW,PRODUCT\n",
+                                "World,Production,Hard coal (if no detail),42,43\n",
+                                "World,Losses,Hard coal (if no detail),1,2")) %>% 
+    rename_iea_df_cols() %>% 
+    augment_iea_df() %>% 
+    use_iso_countries()
+  # Ensure that a "World" country is present.
+  n_world_rows <- world %>% 
+    dplyr::filter(Country == "World") %>% 
+    nrow()
+  expect_equal(n_world_rows, 2)
 })

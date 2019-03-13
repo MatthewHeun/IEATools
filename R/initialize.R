@@ -337,5 +337,7 @@ augment_iea_df <- function(.iea_df,
     ) %>% 
     # Finally, reorder the columns, remove the .rownum column, and return
     dplyr::select(-.rownum) %>% 
-    dplyr::select(country, ledger_side, flow_aggregation_point, energy_type, units, dplyr::everything())
+    dplyr::select(country, ledger_side, flow_aggregation_point, energy_type, units, dplyr::everything()) %>% 
+    # Remove the grouping that we created.
+    dplyr::ungroup()
 }
