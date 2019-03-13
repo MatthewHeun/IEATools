@@ -22,6 +22,16 @@ test_that("remove_agg_memo_flows works as expected", {
                     Flow == "Non-energy use") %>% 
     nrow()
   expect_equal(n_agg_rows, 0)
+  # Verify that none of the memo flows are present
+  n_memo_flows <- cleaned %>% 
+    dplyr::filter(startsWith(Flow, "Memo:")) %>% 
+    nrow()
+  expect_equal(n_memo_flows, 0)
+  # Verify that none of the memo products are present
+  n_memo_products <- cleaned %>% 
+    dplyr::filter(startsWith(Product, "Memo:")) %>% 
+    nrow()
+  expect_equal(n_memo_products, 0)
 })
 
 test_that("munge_aug_iea_to_tidy works as expected", {

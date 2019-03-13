@@ -9,7 +9,7 @@ remove_agg_memo_flows(.iea_df, flow = "Flow", product = "Product",
   "Transformation processes", "Energy industry own use", "Industry",
   "Transport", "Other", "Non-energy use"),
   memo_flow_prefixes = c("Memo: ", "Electricity output (GWh)",
-  "Heat output"), memo_product_prefixes = "Memo: ")
+  "Heat output"), memo_product_prefix = "Memo: ")
 }
 \arguments{
 \item{.iea_df}{}
