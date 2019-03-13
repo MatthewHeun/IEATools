@@ -175,14 +175,39 @@ rename_iea_df_cols <- function(.iea_df,
 #' To solve this problem, the country column is filled with 2-letter ISO abbreviations.
 #'
 #' @param .iea_df a data frame produced by the [iea_df()] function
+#' @param country the name of the country column. Default is "`Country`".
 #' @param ledger_side the name of the ledger side column. Default is "`Ledger.side`".
 #' @param flow_aggregation_point the name of the flow aggregation point column. Default is "`Flow.aggregation.point`".
-#' @param country the name of the country column in `.iea_df`. Default is "`COUNTRY`".
-#' @param flow the name of the flow column in `.iea_df`. Default is "`FLOW`".
-#' @param country the name of the country column in `.iea_df`. Default is "`COUNTRY`".
-#' @param losses the string that indicates losses in the `flow` column. Default is "`Losses`".
-#' @param supply the string that indicates supply in the `ledger_side` column. Default is "`Supply`".
-#' @param consumption the string that indicates consumption in the `ledger_side` column. Default is "`Consumption`".
+#' @param energy_type the name of the energy type column to be added to `.iea_df`. Default is "`Energy.type`.
+#' @param energy_type_val the value to put in the `energy_type` column. Default is "`E`".
+#' @param units the name of the units column to be added to `.iea_df`. Default is "`Units`".
+#' @param units_val the value to put in the `units` column. Default is "`ktoe`" for kilotons of oil equivalent.
+#' @param supply the string that identifies supply `Ledger.side`. Default is "`Supply`".
+#' @param consumption the string that identifies consumption `Ledger.side`. Default is "`Consumption`".
+#' @param tpes the string that identifies total primary energy supply `Flow.aggregation.point`. Default is "`Total primary energy supply`.
+#' @param tpes_flows a vector of strings that give flows that are aggregated to `Total primary energy supply`. 
+#' @param tfc_compare a string that identifies the `TFC compare` flow aggregation point. Default is `TFC compare`.
+#' @param tfc_compare_flows a vector of strings that give `Flow`s that are aggregated to `TFC compare`.
+#' @param losses the string that indicates losses in the `Flow` column. Default is "`Losses`".
+#' @param transformation_processes the string that indicates transformation processes in the `Flow` column. Default is "`Transformation processes`".
+#' @param tp_flows_suffix the suffix for transformation processes in the `Flow` column. Default is "`(transf.)`".
+#' @param nstp_flows_suffix the suffix for non-specified transformation processes in the `Flow` column. Default is "`(transformation)`".
+#' @param eoiu the string that identifies energy industry own use in the `Flow` column. Default is "`Energy industry own use`".
+#' @param eiou_flows_suffix the suffix for energy industry own use in the `Flow` column. Default is "`(energy)`".
+#' @param tfc the string that identifies total final consumption in the `Flow` column. Default is "`Total final consumption`".
+#' @param tfc_flows a vector of strings that give total final consumption in the `Flow` column.
+#' @param industry a string that names the industry `Flow.aggregation.point`. Default is "`Industry`".
+#' @param industry_flows a vector of strings representing `Flow`s to be aggregated in the `Industry` `Flow.aggregation.point`. 
+#' @param transport a string that names the transport `Flow.aggregation.point`. Default is "`Transport`".
+#' @param transport_flows a vector of strings representing `Flow`s to be aggregated in the `Transport` `Flow.aggregation.point`. 
+#' @param other a string that names the other `Flow.aggregation.point`. Default is "`Other`".
+#' @param other_flows a vector of strings representing `Flow`s to be aggregated in the `Other` `Flow.aggregation.point`. 
+#' @param non_energy a string that names the non-energy `Flow.aggregation.point`. Default is "`Non-energy use`".
+#' @param non_energy_prefix a string prefix for `Flow`s to be aggregated in the `Non-energy use` `Flow.aggregation.point`. 
+#' @param electricity_output a string that names the electricity output `Flow`. Default is "`Electricity output (GWh)`". 
+#' @param electricity_output_flows_prefix a string prefix for `Flow`s to be aggregated in electricity output. Default is "`Electricity output (GWh)-`".
+#' @param heat_output a string that names the heat output `Flow`. Default is "`Heat output`". 
+#' @param heat_output_prefix a string prefix for `Flow`s to be aggregated in heat output. Default is "`Heat output-`".
 #' @param .rownum the name of a column created (and destroyed) internally by this function. 
 #'        The `.rownum` column temporarily holds row numbers for internal calculations.
 #'        The `.rownum` column is deleted before returning. 
@@ -192,38 +217,41 @@ rename_iea_df_cols <- function(.iea_df,
 #' @export
 #'
 #' @examples
-#' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43") %>% 
+#' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43") %>% 
 #'   rename_iea_df_cols() %>% 
 #'   augment_iea_df()
-augment_iea_df <- function(.iea_df, country = "Country", 
-                           ledger_side = "Ledger.side", flow_aggregation_point = "Flow.aggregation.point", 
-                           flow = "Flow", 
-                           losses = "Losses", supply = "Supply", consumption = "Consumption",
-                           tpes_flows = c("Production", "Imports", "Exports", "International marine bunkers", "International aviation bunkers", "Stock changes"),
+augment_iea_df <- function(.iea_df, 
+                           country = "Country", 
+                           ledger_side = "Ledger.side", flow_aggregation_point = "Flow.aggregation.point", flow = "Flow", 
+                           energy_type = "Energy.type", energy_type_val = "E",
+                           units = "Units", units_val = "ktoe",
+                           supply = "Supply", consumption = "Consumption",
                            tpes = "Total primary energy supply", 
-                           tfc_compare_flows = c("Total primary energy supply", "Transfers", "Statistical differences", "Transformation processes", "Energy industry own use", "Losses"),
+                           tpes_flows = c("Production", "Imports", "Exports", "International marine bunkers", "International aviation bunkers", "Stock changes"),
                            tfc_compare = "TFC compare",
+                           tfc_compare_flows = c("Total primary energy supply", "Transfers", "Statistical differences", "Transformation processes", "Energy industry own use", "Losses"),
+                           losses = "Losses", 
+                           transformation_processes = "Transformation processes",
                            tp_flows_suffix = "(transf.)",
                            nstp_flows_suffix = "(transformation)",
-                           transformation_processes = "Transformation processes",
-                           eiou_flows_suffix = "(energy)",
                            eiou = "Energy industry own use",
-                           tfc_flows = c("Industry", "Transport", "Other", "Non-energy use"),
+                           eiou_flows_suffix = "(energy)",
                            tfc = "Total final consumption",
-                           industry_flows = c("Iron and steel", "Chemical and petrochemical", "Non-ferrous metals", "Non-metallic minerals", "Transport equipment", "Machinery", "Mining and quarrying", "Food and tobacco", "Paper, pulp and print", "Wood and wood products", "Construction", "Textile and leather", "Non-specified (industry)"), 
+                           tfc_flows = c("Industry", "Transport", "Other", "Non-energy use"),
                            industry = "Industry",
-                           transport_flows = c("World aviation bunkers", "Domestic aviation", "Road", "Rail", "Pipeline transport", "World marine bunkers", "Domestic navigation", "Non-specified (transport)"),
+                           industry_flows = c("Iron and steel", "Chemical and petrochemical", "Non-ferrous metals", "Non-metallic minerals", "Transport equipment", "Machinery", "Mining and quarrying", "Food and tobacco", "Paper, pulp and print", "Wood and wood products", "Construction", "Textile and leather", "Non-specified (industry)"), 
                            transport = "Transport",
-                           other_flows = c("Residential", "Commercial and public services", "Agriculture/forestry", "Fishing", "Non-specified (other)"),
+                           transport_flows = c("World aviation bunkers", "Domestic aviation", "Road", "Rail", "Pipeline transport", "World marine bunkers", "Domestic navigation", "Non-specified (transport)"),
                            other = "Other",
-                           non_energy_prefix = "Non-energy use",
+                           other_flows = c("Residential", "Commercial and public services", "Agriculture/forestry", "Fishing", "Non-specified (other)"),
                            non_energy = "Non-energy use",
-                           electricity_output_flows_prefix = "Electricity output (GWh)-",
+                           non_energy_prefix = "Non-energy use",
                            electricity_output = "Electricity output (GWh)",
-                           heat_output_flows_prefix = "Heat output-",
+                           electricity_output_flows_prefix = "Electricity output (GWh)-",
                            heat_output = "Heat output",
+                           heat_output_flows_prefix = "Heat output-",
                            .rownum = ".rownum"){
-  WithLedgerSide <- .iea_df %>% 
+  .iea_df %>% 
     # Eliminate rownames, leaving only numbers
     tibble::remove_rownames() %>% 
     dplyr::group_by(!!as.name(country)) %>% 
@@ -239,22 +267,38 @@ augment_iea_df <- function(.iea_df, country = "Country",
         dplyr::mutate(
           !!as.name(.rownum) := as.numeric(!!as.name(.rownum))
         )
-      # Calculate the last row of Losses. last_loss_row is the last row of the supply side of the ledger.
-      last_loss_row <- with_row_nums %>% 
-        dplyr::filter(!!as.name(flow) == losses) %>% 
-        magrittr::extract2(.rownum) %>% 
-        max()
+      # Find the break point between the Supply side and the Consumption side of the ledger.
+      # We'll find the break point by identifying the last supply row in the data frame.
+      # We'll take two runs at this.
+      # One by looking for "Losses" in the Flow column (the end of the supply side) and 
+      # the other by looking for "Total final consumption" in the Flow column (the beginning of the consumption side).
+      loss_rows <- with_row_nums %>% 
+        dplyr::filter(!!as.name(flow) == losses)
+      if (nrow(loss_rows) > 0) {
+        # First, calculate the last row of Losses. last_loss_row is the last row of the supply side of the ledger.
+        last_supply_row <- loss_rows %>% magrittr::extract2(.rownum) %>% max()
+      } else {
+        # Look for the first row that is Total final consumption and subtract one.
+        tfc_rows <- with_row_nums %>% 
+          dplyr::filter(!!as.name(flow) == tfc)
+        if (nrow(tfc_rows) > 0) {
+          last_supply_row <- tfc_rows %>% magrittr::extract2(.rownum) %>% min() - 1
+        } else {
+          # Everything failed. Throw an error
+          stop(paste("Found neither", losses, "nor", tfc, "in the", flow, "column."))
+        }
+      }
+      
       with_row_nums %>% 
         dplyr::mutate(
           !!as.name(ledger_side) := dplyr::case_when(
-            !!as.name(.rownum) <= last_loss_row ~ supply,
+            !!as.name(.rownum) <= last_supply_row ~ supply,
             TRUE ~ consumption
           )
         )
-    }) 
-  # Now add the Flow.aggregation.point column
-  WithFAP <- WithLedgerSide %>% 
+    }) %>% 
     dplyr::mutate(
+      # Now add the Flow.aggregation.point column
       !!as.name(flow_aggregation_point) := dplyr::case_when(
         !!as.name(ledger_side) == supply & !!as.name(flow) %in% tpes_flows ~ tpes, 
         !!as.name(ledger_side) == supply & !!as.name(flow) %in% tfc_compare_flows ~ tfc_compare,
@@ -270,11 +314,13 @@ augment_iea_df <- function(.iea_df, country = "Country",
         !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), electricity_output_flows_prefix) ~ electricity_output,
         !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), heat_output_flows_prefix) ~ heat_output,
         TRUE ~ NA_character_
-      )
-    )
-    
-  # Finally, reorder the columns, remove the .rownum column, and return
-  WithFAP %>% 
+      ), 
+      # Add energy type column
+      !!energy_type := energy_type_val,
+      # Add the Units column
+      !!units := units_val
+    ) %>% 
+    # Finally, reorder the columns, remove the .rownum column, and return
     dplyr::select(-.rownum) %>% 
-    dplyr::select(country, ledger_side, flow_aggregation_point, dplyr::everything())
+    dplyr::select(country, ledger_side, flow_aggregation_point, energy_type, units, dplyr::everything())
 }

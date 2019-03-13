@@ -28,11 +28,11 @@ remove_agg_memo_flows <- function(.iea_df,
                                     "Non-energy use"),
                                   memo_flow_prefixes = c("Memo: ", "Electricity output (GWh)", "Heat output"), 
                                   memo_product_prefixes = "Memo: "){
-  .iea_df %>%
+  .iea_df %>% 
     # Remove Flow aggregations
-    filter(!startsWith(!!as.name(flow), agg_flows) %>%
-             # Remove Product aggregations
-             filter(!!as.name(product) %in% agg_flows))
+    dplyr::filter(!startsWith(!!as.name(flow), agg_flows)) %>% 
+    # Remove Product aggregations
+    dplyr::filter(!!as.name(product) %in% agg_flows)
 }
 
 

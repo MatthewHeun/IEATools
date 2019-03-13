@@ -4,12 +4,12 @@
 \alias{remove_agg_memo_flows}
 \title{Title}
 \usage{
-remove_agg_memo_flows(.iea_df, flow = "Flow",
+remove_agg_memo_flows(.iea_df, flow = "Flow", product = "Product",
   agg_flows = c("Total primary energy supply", "Total final consumption",
   "Transformation processes", "Energy industry own use", "Industry",
   "Transport", "Other", "Non-energy use"),
   memo_flow_prefixes = c("Memo: ", "Electricity output (GWh)",
-  "Heat output"))
+  "Heat output"), memo_product_prefixes = "Memo: ")
 }
 \arguments{
 \item{.iea_df}{}
