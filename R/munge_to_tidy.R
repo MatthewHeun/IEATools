@@ -30,9 +30,9 @@ remove_agg_memo_flows <- function(.iea_df,
                                   memo_product_prefixes = "Memo: "){
   .iea_df %>% 
     # Remove Flow aggregations
-    filter(!startsWith(!!as.name(flow), agg_flows)) %>% 
+    dplyr::filter(!startsWith(!!as.name(flow), agg_flows)) %>% 
     # Remove Product aggregations
-    filter(!!as.name(product) %in% agg_flows)
+    dplyr::filter(!!as.name(product) %in% agg_flows)
 }
 
 
