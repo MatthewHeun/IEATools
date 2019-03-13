@@ -2,7 +2,7 @@
 % Please edit documentation in R/munge_to_tidy.R
 \name{remove_agg_memo_flows}
 \alias{remove_agg_memo_flows}
-\title{Title}
+\title{Remove aggregation and memo rows from data frames of IEA data}
 \usage{
 remove_agg_memo_flows(.iea_df, flow = "Flow", product = "Product",
   agg_flows = c("Total primary energy supply", "Total final consumption",
@@ -12,16 +12,25 @@ remove_agg_memo_flows(.iea_df, flow = "Flow", product = "Product",
   "Heat output"), memo_product_prefix = "Memo: ")
 }
 \arguments{
-\item{.iea_df}{}
+\item{.iea_df}{a data frame of IEA data}
 
-\item{flow}{}
+\item{flow}{the name of the flow column in \code{iea_df}. Default is "\code{Flow}".}
 
-\item{agg_flows}{}
+\item{product}{the name of the product columns in \code{iea_df}. Default is "\code{Product}".}
 
-\item{memo_flow_prefixes}{}
+\item{agg_flows}{a vector of strings identifying \code{Flow}s that are aggregations.}
+
+\item{memo_flow_prefixes}{a vector of string prefixes for flow memo rows in \code{.iea_df}}
+
+\item{memo_product_prefix}{a string prefix for product memo rows in \code{.iea_df}.}
+}
+\value{
+\code{.iea_df} less aggregation rows
 }
 \description{
-Title
+Aggregation and memo rows are included with IEA data.
+Sometimes, it is convenient to remove those rows.
+This function does so, using default identifying strings for aggregations and memos.
 }
 \examples{
 file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 

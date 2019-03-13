@@ -1,11 +1,18 @@
-#' Title
+#' Remove aggregation and memo rows from data frames of IEA data
+#' 
+#' Aggregation and memo rows are included with IEA data.
+#' Sometimes, it is convenient to remove those rows. 
+#' This function does so, using default identifying strings for aggregations and memos.
 #'
-#' @param .iea_df 
-#' @param flow 
-#' @param agg_flows 
-#' @param memo_flow_prefixes 
+#' @param .iea_df a data frame of IEA data
+#' @param flow the name of the flow column in `iea_df`. Default is "`Flow`".
+#' @param product the name of the product columns in `iea_df`. Default is "`Product`".
+#' @param agg_flows a vector of strings identifying `Flow`s that are aggregations.
+#' @param memo_flow_prefixes a vector of string prefixes for flow memo rows in `.iea_df`
+#' @param memo_product_prefix a string prefix for product memo rows in `.iea_df`.
 #'
-#' @return
+#' @return `.iea_df` less aggregation rows
+#' 
 #' @export
 #'
 #' @examples
@@ -35,6 +42,25 @@ remove_agg_memo_flows <- function(.iea_df,
     dplyr::filter(!!as.name(product) %in% agg_flows) %>% 
     # Remove memo flows
     dplyr::filter(!startsWith(!!as.name(product)), memo_product_prefix)
+}
+
+
+#' Replace country names with 2-letter ISO abbreviations
+#' 
+#' The IEA uses full country names, but it is more concise to use the 2-letter ISO abbreviations.
+#' This function replaces the full country names with ISO abbreviations where possible.
+#'
+#' @param .iea_df a data frame containing a `country` column
+#' @param country the name of the country column in `.iea_df`. Default is "`Country`".
+#'
+#' @return `.iea_df` with 2-letter ISO country abbreviations
+#' 
+#' @export
+#'
+#' @examples
+use_iso_countries <- function(.iea_df, 
+                              country = "Country"){
+  
 }
 
 
