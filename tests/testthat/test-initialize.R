@@ -9,12 +9,12 @@ test_that("iea_df works", {
   expect_error(iea_df(text = "abc\n123"), "In iea_df, input data didn't start with ',,TIME' or second line didn't start with 'COUNTRY,FLOW,PRODUCT'")
   # Test with text that is expected to parse correctly.
   # This is the format of the original .csv files.
-  expectedDF <- data.frame(COUNTRY = "World", FLOW = "Production", PRODUCT = "Hard coal", `1960` = 42, `1961` = 43, 
+  expectedDF <- data.frame(COUNTRY = "World", FLOW = "Production", PRODUCT = "Hard coal (if no detail)", `1960` = 42, `1961` = 43, 
                            check.names = FALSE, stringsAsFactors = FALSE) 
-  expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43"), expectedDF)
+  expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43"), expectedDF)
   # This is in a format that would arise IF someone opened the .csv file and resaved it.
   # (Extra commas are present on the 2nd line.)
-  expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal,42,43"), expectedDF)
+  expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal (if no detail),42,43"), expectedDF)
   # Test with a full IEA data file in the correct format
   # IEAfile <- file.path("extdata", "IEA-2Countries-full2ndrow.csv") %>% 
   IEAfile <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
@@ -40,13 +40,13 @@ test_that("iea_df works", {
 })
 
 test_that("iea_df works with .. and x", {
-  expectedDF <- data.frame(COUNTRY = "World", FLOW = "Production", PRODUCT = "Hard coal", `1960` = 0, `1961` = 0, 
+  expectedDF <- data.frame(COUNTRY = "World", FLOW = "Production", PRODUCT = "Hard coal (if no detail)", `1960` = 0, `1961` = 0, 
                            check.names = FALSE, stringsAsFactors = FALSE) 
-  expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,..,x"), expectedDF)
+  expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),..,x"), expectedDF)
 })
 
 test_that("rename_iea_df_cols works", {
-  renamed <- iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43") %>% 
+  renamed <- iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43") %>% 
     rename_iea_df_cols()
   expect_equal(names(renamed), c("Country", "Flow", "Product", "1960", "1961"))
 })
@@ -62,11 +62,15 @@ test_that("augment_iea_df works", {
   expect_equal(clses$Ledger.side, "character")  
   expect_equal(clses$Flow.aggregation.point, "character")  
   expect_equal(clses$Country, "character")  
+  expect_equal(clses$Energy.type, "character")
+  expect_equal(clses$Units, "character")
   expect_equal(clses$Flow, "character")  
   expect_equal(clses$Product, "character")  
   clses["Ledger.side"] <- NULL
   clses["Flow.aggregation.point"] <- NULL
   clses["Country"] <- NULL
+  clses["Energy.type"] <- NULL
+  clses["Units"] <- NULL
   clses["Flow"] <- NULL
   clses["Product"] <- NULL
   expect_true(all(clses == "numeric"))
