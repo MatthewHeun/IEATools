@@ -108,6 +108,7 @@ IEA_data %>%
 
 ```{r}
 IEA_data %>% 
+  rename_iea_df_cols() %>% 
   use_iso_countries() %>% 
   head(5)
 ```
@@ -117,9 +118,11 @@ IEA_data %>%
 
 ```{r}
 IEA_data %>% 
+  rename_iea_df_cols() %>% 
   filter(Flow == "Total primary energy supply") %>% 
   head(5)
 IEA_data %>% 
+  rename_iea_df_cols() %>% 
   remove_agg_memo_flows() %>% 
   filter(Flow == "Total primary energy supply")
 ```
