@@ -3,6 +3,11 @@
 #' Aggregation and memo rows are included with IEA data.
 #' Sometimes, it is convenient to remove those rows. 
 #' This function does so, using default identifying strings for aggregations and memos.
+#' 
+#' Note that the IEA data somtimes includes a variable number of spaces 
+#' before the "Memo: " string. 
+#' This function ignores all leading spaces in the `Flow` and `Product` columns
+#' before searching for `Flow` and `Product` prefixes.
 #'
 #' @param .iea_df a data frame of IEA data
 #' @param flow the name of the flow column in `iea_df`. Default is "`Flow`".
@@ -34,14 +39,19 @@ remove_agg_memo_flows <- function(.iea_df,
                                     "Other",
                                     "Non-energy use"),
                                   memo_flow_prefixes = c("Memo: ", "Electricity output (GWh)", "Heat output"), 
-                                  memo_product_prefix = "Memo: "){
+                                  memo_product_prefixes = c("Memo: ", "Total")){
   .iea_df %>% 
+    dplyr::mutate(
+      # These regular expression patterns match any number (+) of spaces ( ) at the beginning of the strings (^).
+      !!as.name(flow) := gsub(pattern = "^ +", replacement = "", x = !!as.name(flow)),
+      !!as.name(product) := gsub(pattern = "^ +", replacement = "", x = !!as.name(product))
+    ) %>% 
     # Remove Flow aggregations
-    dplyr::filter(!`%in%`(!!as.name(flow), agg_flows)) %>%
-    # Remove memo flows
-    dplyr::filter(!startsWith(!!as.name(flow), memo_flow_prefixes)) %>% 
-    # Remove Product aggregations
-    dplyr::filter(!startsWith(!!as.name(product), memo_product_prefix))
+    dplyr::filter(!(!!as.name(flow) %in% agg_flows)) %>%
+    # Remove Flow memos
+    dplyr::filter(!starts_with_any_of(!!as.name(flow), memo_flow_prefixes)) %>% 
+    # Remove Product memos
+    dplyr::filter(!starts_with_any_of(!!as.name(product), memo_product_prefixes))
 }
 
 
@@ -140,7 +150,7 @@ make_iea_tidy <- function(.aug_iea_df,
                           ex = "EX"){
   out <- .aug_iea_df %>% 
     # Gather into a tidy data frame.
-    tidyr::gather(!!as.name(year), !!as.name(energy), -c(country, ledger_side, flow_aggregation_point, flow, product,
+    tidyr::gather(!!as.name(year), !!as.name(ex), -c(country, ledger_side, flow_aggregation_point, flow, product,
                                                          energy_type, units))
   
   
