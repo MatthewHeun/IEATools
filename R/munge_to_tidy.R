@@ -120,18 +120,30 @@ use_iso_countries <- function(.iea_df,
 
 
 
-#' Title
+#' Creates a tidy IEA data frame
+#' 
+#' Data from the IEA have years in columns, 
+#' but the [tidy data format](https://doi.org/10.18637/jss.v059.i10)
+#' requires one row for each datum.
+#' This function uses [tidyr::gather()] to 
+#' make an IEA data frame tidy.
+#' 
+#' Default argument values assume that [rename_iea_df_cols()] has been called on `.iea_df`.
 #'
-#' @param .aug_iea_df 
-#' @param country 
-#' @param year 
-#' @param ledger_side 
-#' @param flow_aggregation_point 
-#' @param flow 
-#' @param product 
-#' @param energy 
+#' @param .iea_df a IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
+#' @param year the name of the year column created in `.iea_df` by this function. (Default is "`Year`".)
+#' @param year the name of the energy/exergy value column createdin `.iea_df` by this function. (Default is "`EX`".)
+#' @param country the name of the country column in `.iea_df`. (Default is "`Country`".)
+#' @param ledger_side the name of the ledger side in `.iea_df`. (Default is "`Ledger.side`".)
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.iea_df`. (Default is "`Flow.aggregation.point`".)
+#' @param energy_type the name of the energy type column in `.iea_df`. (Default is "`Energy.type`".)
+#' @param units the name of the units column in `.iea_df`. (Default is "`Units`".)
+#' @param flow the name of the flow column in `.iea_df`. (Default is "`Flow`".)
+#' @param product the name of the product column in `.iea_df`. (Default is "`Product`".)
+#' @param remove_zeroes a logical indicating whether data points with the value `0` are to be removed from the output. (Default is `TRUE`.)
 #'
-#' @return
+#' @return a tidy version of `.iea_df` containing new columns `year` and `ex` and, optionally, `0` values removed
+#' 
 #' @export
 #'
 #' @examples
@@ -142,22 +154,22 @@ use_iso_countries <- function(.iea_df,
 #'   remove_agg_memo_flows() %>% 
 #'   use_iso_countries() %>% 
 #'   tidy_iea()
-tidy_iea <- function(.aug_iea_df, 
-                          country = "Country", year = "Year", ledger_side = "Ledger.side", 
-                          flow_aggregation_point = "Flow.aggregation.point", 
-                          flow = "Flow", product = "Product",
-                          energy_type = "Energy.type", units = "Units", 
-                          ex = "EX"){
-  out <- .aug_iea_df %>% 
+tidy_iea <- function(.iea_df, 
+                     year = "Year", ex = "EX", 
+                     country = "Country", ledger_side = "Ledger.side", 
+                     flow_aggregation_point = "Flow.aggregation.point", 
+                     energy_type = "Energy.type", units = "Units", 
+                     flow = "Flow", product = "Product",
+                     remove_zeroes = TRUE){
+  out <- .iea_df %>% 
     # Gather into a tidy data frame.
-    tidyr::gather(!!as.name(year), !!as.name(ex), -c(country, ledger_side, flow_aggregation_point, flow, product,
-                                                         energy_type, units))
-  
-  
-  
-  
-  
-  # IEAData2 <- IEAData1 %>%
-  #   tidyr::gather(year, energy, -c(Country, Ledger.side, Flow, Flow.aggregation.point, Product))
-  
+    tidyr::gather(key = !!as.name(year), value = !!as.name(ex), -c(country, ledger_side, flow_aggregation_point, flow, product,
+                                                                   energy_type, units)) %>% 
+    # Set the column order to something rational
+    dplyr::select(country, year, ledger_side, flow_aggregation_point, energy_type, units, flow, product, ex)
+  if (remove_zeroes) {
+    out <- out %>% 
+      filter(!(!!as.name(ex) == 0))
+  }
+  return(out)
 }

@@ -73,16 +73,6 @@ test_that("remove_agg_memo_flows works as expected", {
   expect_true(IEA_data %>% filter(startsWith(Product, memo_product_prefix)) %>% nrow() > 0)
 })
 
-test_that("munge_aug_iea_to_tidy works as expected", {
-  tidy_iea_df <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEAData") %>% 
-    iea_df() %>%
-    rename_iea_df_cols() %>% 
-    augment_iea_df() %>% 
-    tidy_iea()
-  
-})
-
 test_that("use_iso_countries works as expected", {
   iso <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
     system.file(package = "IEAData") %>% 
@@ -109,3 +99,24 @@ test_that("use_iso_countries works as expected", {
   expect_equal(n_world_rows, 2)
 })
 
+test_that("tidy_iea works as expected", {
+  iea_tidy_df <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+    system.file(package = "IEAData") %>% 
+    iea_df() %>%
+    rename_iea_df_cols() %>% 
+    remove_agg_memo_flows() %>% 
+    augment_iea_df() %>% 
+    tidy_iea()
+  # Verify column names and order
+  expect_equal(names(iea_tidy_df), c("Country", "Year", "Ledger.side", "Flow.aggregation.point", 
+                                     "Energy.type", "Units", "Flow", "Product", "EX"))
+  # This is a energy exclusive data frame
+  expect_true(all(iea_tidy_df$Energy.type == "E"))
+  # This is a completely ktoe data frame
+  expect_true(all(iea_tidy_df$Units == "ktoe"))
+  # Ledger.side can be only Supply or Consumption
+  expect_true(all(iea_tidy_df$Ledger.side %in% c("Supply", "Consumption")))
+  
+  
+  
+})

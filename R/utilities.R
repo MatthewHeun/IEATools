@@ -27,7 +27,7 @@
 #'                    target = c("Production", "Imports"))
 starts_with_any_of <- function(x, target){
   sapply(x, FUN = function(one_x){
-    grepl(paste(paste0("^", Hmisc::escapeRegex(target)), collapse = "|"), one_x)
+    any(startsWith(x = one_x, prefix = target))
   }) %>%
     magrittr::set_names(NULL)
 }

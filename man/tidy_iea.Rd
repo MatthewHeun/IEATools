@@ -2,33 +2,49 @@
 % Please edit documentation in R/munge_to_tidy.R
 \name{tidy_iea}
 \alias{tidy_iea}
-\title{Title}
+\title{Creates a tidy IEA data frame}
 \usage{
-tidy_iea(.aug_iea_df, country = "Country", year = "Year",
+tidy_iea(.iea_df, year = "Year", ex = "EX", country = "Country",
   ledger_side = "Ledger.side",
-  flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
-  product = "Product", energy_type = "Energy.type", units = "Units",
-  ex = "EX")
+  flow_aggregation_point = "Flow.aggregation.point",
+  energy_type = "Energy.type", units = "Units", flow = "Flow",
+  product = "Product", remove_zeroes = TRUE)
 }
 \arguments{
-\item{.aug_iea_df}{}
+\item{.iea_df}{a IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
 
-\item{country}{}
+\item{year}{the name of the year column created in \code{.iea_df} by this function. (Default is "\code{Year}".)}
 
-\item{year}{}
+\item{country}{the name of the country column in \code{.iea_df}. (Default is "\code{Country}".)}
 
-\item{ledger_side}{}
+\item{ledger_side}{the name of the ledger side in \code{.iea_df}. (Default is "\code{Ledger.side}".)}
 
-\item{flow_aggregation_point}{}
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.iea_df}. (Default is "\code{Flow.aggregation.point}".)}
 
-\item{flow}{}
+\item{energy_type}{the name of the energy type column in \code{.iea_df}. (Default is "\code{Energy.type}".)}
 
-\item{product}{}
+\item{units}{the name of the units column in \code{.iea_df}. (Default is "\code{Units}".)}
 
-\item{energy}{}
+\item{flow}{the name of the flow column in \code{.iea_df}. (Default is "\code{Flow}".)}
+
+\item{product}{the name of the product column in \code{.iea_df}. (Default is "\code{Product}".)}
+
+\item{remove_zeroes}{a logical indicating whether data points with the value \code{0} are to be removed from the output. (Default is \code{TRUE}.)}
+
+\item{year}{the name of the energy/exergy value column createdin \code{.iea_df} by this function. (Default is "\code{EX}".)}
+}
+\value{
+a tidy version of \code{.iea_df} containing new columns \code{year} and \code{ex} and, optionally, \code{0} values removed
 }
 \description{
-Title
+Data from the IEA have years in columns,
+but the \href{https://doi.org/10.18637/jss.v059.i10}{tidy data format}
+requires one row for each datum.
+This function uses \code{\link[tidyr:gather]{tidyr::gather()}} to
+make an IEA data frame tidy.
+}
+\details{
+Default argument values assume that \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}} has been called on \code{.iea_df}.
 }
 \examples{
 file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
