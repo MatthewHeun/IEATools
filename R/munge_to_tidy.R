@@ -104,7 +104,7 @@ use_iso_countries <- function(.iea_df,
   .iea_df %>%
     dplyr::left_join(CountryInfo, by = c("Country")) %>% # left_join preserves all rows of IEA data
     dplyr::mutate(
-      iso2c := case_when(
+      iso2c := dplyr::case_when(
         # Add "World" to the Country column to preserve world data, if present.
         !!as.name(country) == "World" ~ "World", 
         TRUE ~ iso2c
@@ -112,10 +112,10 @@ use_iso_countries <- function(.iea_df,
     ) %>% 
     dplyr::select(-!!as.name(country)) %>% 
     dplyr::rename(!!as.name(country) := iso2c) %>% 
-    dplyr::select(!!as.name(country), everything()) %>% 
+    dplyr::select(!!as.name(country), dplyr::everything()) %>% 
     # The effect of the next line is to eliminate non-countries from the data set.
     # For example, OECD, IEA, etc. are not Countries, so they are dropped here.
-    filter(!is.na(Country))
+    dplyr::filter(!is.na(country))
 }
 
 

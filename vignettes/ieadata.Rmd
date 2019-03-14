@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(dplyr)
 library(magrittr)
 ```
 
@@ -46,6 +47,7 @@ knitr::include_graphics("figs/original_header.pdf")
 Example data from two countries for two years are provided in the package.
 
 ```{r}
+library(dplyr)
 library(IEAData)
 # Define the file location
 IEA_path <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
@@ -104,11 +106,23 @@ IEA_data %>%
 
 ### Change to ISO countries
 
+```{r}
+IEA_data %>% 
+  use_iso_countries() %>% 
+  head(5)
+```
 
 
 ### Remove aggregation and memo data
 
-
+```{r}
+IEA_data %>% 
+  filter(Flow == "Total primary energy supply") %>% 
+  head(5)
+IEA_data %>% 
+  remove_agg_memo_flows() %>% 
+  filter(Flow == "Total primary energy supply")
+```
 
 ### Convert to a tidy data frame
 
