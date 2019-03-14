@@ -2,8 +2,9 @@
 
 export(augment_iea_df)
 export(iea_df)
-export(make_iea_tidy)
 export(remove_agg_memo_flows)
 export(rename_iea_df_cols)
+export(starts_with_any_of)
+export(tidy_iea)
 export(use_iso_countries)
 export(write_fu_templates)

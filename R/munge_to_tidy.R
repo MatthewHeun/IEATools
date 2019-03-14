@@ -141,8 +141,8 @@ use_iso_countries <- function(.iea_df,
 #'   rename_iea_df_cols() %>% 
 #'   remove_agg_memo_flows() %>% 
 #'   use_iso_countries() %>% 
-#'   make_iea_tidy()
-make_iea_tidy <- function(.aug_iea_df, 
+#'   tidy_iea()
+tidy_iea <- function(.aug_iea_df, 
                           country = "Country", year = "Year", ledger_side = "Ledger.side", 
                           flow_aggregation_point = "Flow.aggregation.point", 
                           flow = "Flow", product = "Product",

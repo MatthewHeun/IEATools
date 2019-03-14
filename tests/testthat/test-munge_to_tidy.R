@@ -79,7 +79,7 @@ test_that("munge_aug_iea_to_tidy works as expected", {
     iea_df() %>%
     rename_iea_df_cols() %>% 
     augment_iea_df() %>% 
-    make_iea_tidy()
+    tidy_iea()
   
 })
 
