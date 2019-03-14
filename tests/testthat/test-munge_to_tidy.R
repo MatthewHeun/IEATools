@@ -69,3 +69,45 @@ test_that("use_iso_countries works as expected", {
     nrow()
   expect_equal(n_world_rows, 2)
 })
+
+test_that("remove_agg_memo_flows works as expected", {
+  IEA_data <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+    system.file(package = "IEAData") %>% 
+    iea_df() %>%
+    rename_iea_df_cols() %>% 
+    augment_iea_df()
+  # Verify that aggregation flows exist
+  agg_flows <- c("Total primary energy supply", "Total final consumption", "Transformation processes", "Energy industry own use", "Industry", "Transport", "Other", "Non-energy use")
+  expect_true(lapply(agg_flows, 
+    FUN = function(s){
+      expect_true(IEA_data %>% filter(Flow == s) %>% nrow() > 0)
+    }) %>% as.logical() %>% all())
+  # Verify that flow memos exist
+  memo_flow_prefixes <- c("Memo: ", "Electricity output (GWh)", "Heat output")
+  expect_true(lapply(memo_flow_prefixes, 
+    FUN = function(s){
+      expect_true(IEA_data %>% filter(startsWith(Flow, s)) %>% nrow() > 0)
+    }) %>% as.logical() %>% all())
+  # Verify that product memos exist
+  memo_product_prefix <- "Memo: "
+  expect_true(IEA_data %>% filter(startsWith(Product, memo_product_prefix)) %>% nrow() > 0)
+  
+  # Now clean the aggregation flows and see if they're gone.
+  Cleaned <- IEA_data %>% 
+   remove_agg_memo_flows()
+  # Ensure that aggregation flows were removed.
+  expect_true(lapply(agg_flows, 
+    FUN = function(s){
+      expect_true(Cleaned %>% filter(Flow == s) %>% nrow() == 0)
+    }) %>% as.logical() %>% all())
+  # Ensure that flow memos were removed
+  expect_true(lapply(memo_flow_prefixes, 
+    FUN = function(s){
+      expect_true(Cleaned %>% filter(startsWith(Flow, s)) %>% nrow() == 0)
+    }) %>% as.logical() %>% all())
+  # Ensure that product memos were removed
+  expect_true(IEA_data %>% filter(startsWith(Product, memo_product_prefix)) %>% nrow() > 0)
+  
+  
+
+})

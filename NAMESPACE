@@ -2,6 +2,7 @@
 
 export(augment_iea_df)
 export(iea_df)
+export(make_iea_tidy)
 export(remove_agg_memo_flows)
 export(rename_iea_df_cols)
 export(use_iso_countries)

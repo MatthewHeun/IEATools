@@ -37,11 +37,11 @@ remove_agg_memo_flows <- function(.iea_df,
                                   memo_product_prefix = "Memo: "){
   .iea_df %>% 
     # Remove Flow aggregations
-    dplyr::filter(!startsWith(!!as.name(flow), agg_flows)) %>% 
-    # Remove Product aggregations
-    dplyr::filter(!!as.name(product) %in% agg_flows) %>% 
+    dplyr::filter(!`%in%`(!!as.name(flow), agg_flows)) %>%
     # Remove memo flows
-    dplyr::filter(!startsWith(!!as.name(product)), memo_product_prefix)
+    dplyr::filter(!startsWith(!!as.name(flow), memo_flow_prefixes)) %>% 
+    # Remove Product aggregations
+    dplyr::filter(!startsWith(!!as.name(product), memo_product_prefix))
 }
 
 
@@ -110,43 +110,38 @@ use_iso_countries <- function(.iea_df,
 
 
 
-munge_aug_iea_to_tidy <- function(.aug_iea_df, 
-                                  country = "Country", year = "Year", ledger_side = "Ledger.side", 
-                                  flow_aggregation_point = "Flow.aggregation.point", 
-                                  flow = "Flow", product = "Product",
-                                  energy = "E.ktoe"){
-  # Load country code information
-  CountryInfo <- countrycode::codelist %>% 
-    dplyr::select(country.name.en, iso2c) %>% 
-    dplyr::rename(
-      Country = country.name.en
-    )
-  # There are some "Countries" in the IEA data set that do not have corresponding
-  # iso2c abbreviations in the countrycode database.  
-  # None of these countries are of interest to us now (March 2018),
-  # so we will not try any corrections at this time.
-  # Later, we can add additional rows to the CountryInfo data frame to pick up ISO abbreviations
-  # for missing countries.
-  # The code might look something like this:
-  # bind_rows(
-  #   data.frame(Country = c("Former Soviet Union (if no detail)",
-  #                          "Former Yugoslavia (if no detail)",
-  #                          "Republic of Vietnam",
-  #                          "Tanzania",
-  #                          "Venezuela",
-  #                          "Islamic Republic of Iran",
-  #                          "Dem. Republic of the Congo",
-  #                          "Dem. People's Rep. of Korea",
-  #                          "People's Republic of China",
-  #                          "C\x99te d'Iviore"),
-  #   iso2c = c("SO", "YU", "VN", "TZ", "VE", "IR", "CD", "KP", "CN", "CI"))
-  # )
-  
+#' Title
+#'
+#' @param .aug_iea_df 
+#' @param country 
+#' @param year 
+#' @param ledger_side 
+#' @param flow_aggregation_point 
+#' @param flow 
+#' @param product 
+#' @param energy 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+#'   system.file(package = "IEAData") %>% 
+#'   iea_df() %>%
+#'   rename_iea_df_cols() %>% 
+#'   remove_agg_memo_flows() %>% 
+#'   use_iso_countries() %>% 
+#'   make_iea_tidy()
+make_iea_tidy <- function(.aug_iea_df, 
+                          country = "Country", year = "Year", ledger_side = "Ledger.side", 
+                          flow_aggregation_point = "Flow.aggregation.point", 
+                          flow = "Flow", product = "Product",
+                          energy_type = "Energy.type", units = "Units", 
+                          ex = "EX"){
   out <- .aug_iea_df %>% 
-    # Eliminate aggregation rows.  We'll do our own aggregation if we need it.  
-    
     # Gather into a tidy data frame.
-    tidyr::gather(!!as.name(year), !!as.name(energy), -c(country, ledger_side, flow_aggregation_point, flow, product))
+    tidyr::gather(!!as.name(year), !!as.name(energy), -c(country, ledger_side, flow_aggregation_point, flow, product,
+                                                         energy_type, units))
   
   
   
