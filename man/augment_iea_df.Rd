@@ -42,11 +42,13 @@ augment_iea_df(.iea_df, country = "Country",
 \arguments{
 \item{.iea_df}{a data frame produced by the \code{\link[=iea_df]{iea_df()}} function}
 
-\item{country}{the name of the country column. Default is "\code{Country}".}
+\item{country}{the name of the country column in \code{.iea_df}. Default is "\code{Country}".}
 
-\item{ledger_side}{the name of the ledger side column. Default is "\code{Ledger.side}".}
+\item{ledger_side}{the name of the ledger side column to be added to \code{.iea_df}. Default is "\code{Ledger.side}".}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column. Default is "\code{Flow.aggregation.point}".}
+\item{flow_aggregation_point}{the name of the flow aggregation point column to be added to \code{.iea_df}. Default is "\code{Flow.aggregation.point}".}
+
+\item{flow}{the name of the flow column in \code{.iea_df}.  Default is "\code{Flow}".}
 
 \item{energy_type}{the name of the energy type column to be added to \code{.iea_df}. Default is "\code{Energy.type}.}
 
@@ -76,6 +78,8 @@ augment_iea_df(.iea_df, country = "Country",
 
 \item{nstp_flows_suffix}{the suffix for non-specified transformation processes in the \code{Flow} column. Default is "\code{(transformation)}".}
 
+\item{eiou}{the string that identifies energy industry own use in the \code{Flow} column. Default is "\code{Energy industry own use}".}
+
 \item{eiou_flows_suffix}{the suffix for energy industry own use in the \code{Flow} column. Default is "\code{(energy)}".}
 
 \item{tfc}{the string that identifies total final consumption in the \code{Flow} column. Default is "\code{Total final consumption}".}
@@ -104,16 +108,14 @@ augment_iea_df(.iea_df, country = "Country",
 
 \item{heat_output}{a string that names the heat output \code{Flow}. Default is "\code{Heat output}".}
 
+\item{heat_output_flows_prefix}{a string prefix for \code{Flow}s to be aggregated in heat output. Default is "\code{Heat output-}".}
+
 \item{.rownum}{the name of a column created (and destroyed) internally by this function.
 The \code{.rownum} column temporarily holds row numbers for internal calculations.
 The \code{.rownum} column is deleted before returning.}
-
-\item{eoiu}{the string that identifies energy industry own use in the \code{Flow} column. Default is "\code{Energy industry own use}".}
-
-\item{heat_output_prefix}{a string prefix for \code{Flow}s to be aggregated in heat output. Default is "\code{Heat output-}".}
 }
 \value{
-\code{.iea_df} with additional columns named \code{ledger_side} and \code{flow_aggregation_point}
+\code{.iea_df} with additional columns named \code{ledger_side}, \code{flow_aggregation_point}, \code{energy_type}, and \code{units}.
 }
 \description{
 This function prepares an IEA data frame created by \code{\link[=iea_df]{iea_df()}} for use in R.

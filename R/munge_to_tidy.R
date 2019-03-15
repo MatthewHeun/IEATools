@@ -14,7 +14,7 @@
 #' @param product the name of the product columns in `iea_df`. Default is "`Product`".
 #' @param agg_flows a vector of strings identifying `Flow`s that are aggregations.
 #' @param memo_flow_prefixes a vector of string prefixes for flow memo rows in `.iea_df`
-#' @param memo_product_prefix a string prefix for product memo rows in `.iea_df`.
+#' @param memo_product_prefixes a string prefix for product memo rows in `.iea_df`.
 #'
 #' @return `.iea_df` less aggregation rows
 #' 
@@ -76,6 +76,8 @@ remove_agg_memo_flows <- function(.iea_df,
 use_iso_countries <- function(.iea_df, 
                               country = "Country"){
   # Load country code information
+  country.name.en <- as.name("country.name.en") # Eliminates a warning.
+  iso2c <- as.name("iso2c")
   CountryInfo <- countrycode::codelist %>% 
     dplyr::select(country.name.en, iso2c) %>% 
     dplyr::rename(
@@ -132,7 +134,7 @@ use_iso_countries <- function(.iea_df,
 #'
 #' @param .iea_df a IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
 #' @param year the name of the year column created in `.iea_df` by this function. (Default is "`Year`".)
-#' @param year the name of the energy/exergy value column createdin `.iea_df` by this function. (Default is "`EX`".)
+#' @param ex the name of the energy/exergy value column created in `.iea_df` by this function. (Default is "`EX`".)
 #' @param country the name of the country column in `.iea_df`. (Default is "`Country`".)
 #' @param ledger_side the name of the ledger side in `.iea_df`. (Default is "`Ledger.side`".)
 #' @param flow_aggregation_point the name of the flow aggregation point column in `.iea_df`. (Default is "`Flow.aggregation.point`".)
@@ -153,8 +155,9 @@ use_iso_countries <- function(.iea_df,
 #'   rename_iea_df_cols() %>% 
 #'   remove_agg_memo_flows() %>% 
 #'   use_iso_countries() %>% 
-#'   tidy_iea_data()
-tidy_iea_data <- function(.iea_df, 
+#'   augment_iea_df() %>% 
+#'   tidy_iea_df()
+tidy_iea_df <- function(.iea_df, 
                           year = "Year", ex = "EX", 
                           country = "Country", ledger_side = "Ledger.side", 
                           flow_aggregation_point = "Flow.aggregation.point", 
@@ -169,7 +172,7 @@ tidy_iea_data <- function(.iea_df,
     dplyr::select(country, year, ledger_side, flow_aggregation_point, energy_type, units, flow, product, ex)
   if (remove_zeroes) {
     out <- out %>% 
-      filter(!(!!as.name(ex) == 0))
+      dplyr::filter(!(!!as.name(ex) == 0))
   }
   return(out)
 }

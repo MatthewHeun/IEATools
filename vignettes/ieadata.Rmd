@@ -201,8 +201,8 @@ The [tidy format](https://doi.org/10.18637/jss.v059.i10) for data
 is a data frame where each datum is located on its own row.
 As delivered, the IEA's data are not tidy: years are spread out as columns rather than 
 being a column to themselves so that each datum occupies one row.
-The `tidy_iea_data()` function converts to a tidy format.
-By default, `tidy_iea_data()` removes zeroes from the data frame,
+The `tidy_iea_df()` function converts to a tidy format.
+By default, `tidy_iea_df()` removes zeroes from the data frame,
 thereby reducing memory footprint.
 
 ```{r}
@@ -211,7 +211,7 @@ IEA_data %>%
   use_iso_countries() %>% 
   remove_agg_memo_flows() %>% 
   augment_iea_df() %>% 
-  tidy_iea_data() %>% 
+  tidy_iea_df() %>% 
   glimpse()
 ```
 

@@ -187,9 +187,10 @@ rename_iea_df_cols <- function(.iea_df,
 #' an error is generated.
 #'
 #' @param .iea_df a data frame produced by the [iea_df()] function
-#' @param country the name of the country column. Default is "`Country`".
-#' @param ledger_side the name of the ledger side column. Default is "`Ledger.side`".
-#' @param flow_aggregation_point the name of the flow aggregation point column. Default is "`Flow.aggregation.point`".
+#' @param country the name of the country column in `.iea_df`. Default is "`Country`".
+#' @param ledger_side the name of the ledger side column to be added to `.iea_df`. Default is "`Ledger.side`".
+#' @param flow_aggregation_point the name of the flow aggregation point column to be added to `.iea_df`. Default is "`Flow.aggregation.point`".
+#' @param flow the name of the flow column in `.iea_df`.  Default is "`Flow`".
 #' @param energy_type the name of the energy type column to be added to `.iea_df`. Default is "`Energy.type`.
 #' @param energy_type_val the value to put in the `energy_type` column. Default is "`E`".
 #' @param units the name of the units column to be added to `.iea_df`. Default is "`Units`".
@@ -204,7 +205,7 @@ rename_iea_df_cols <- function(.iea_df,
 #' @param transformation_processes the string that indicates transformation processes in the `Flow` column. Default is "`Transformation processes`".
 #' @param tp_flows_suffix the suffix for transformation processes in the `Flow` column. Default is "`(transf.)`".
 #' @param nstp_flows_suffix the suffix for non-specified transformation processes in the `Flow` column. Default is "`(transformation)`".
-#' @param eoiu the string that identifies energy industry own use in the `Flow` column. Default is "`Energy industry own use`".
+#' @param eiou the string that identifies energy industry own use in the `Flow` column. Default is "`Energy industry own use`".
 #' @param eiou_flows_suffix the suffix for energy industry own use in the `Flow` column. Default is "`(energy)`".
 #' @param tfc the string that identifies total final consumption in the `Flow` column. Default is "`Total final consumption`".
 #' @param tfc_flows a vector of strings that give total final consumption in the `Flow` column.
@@ -219,12 +220,12 @@ rename_iea_df_cols <- function(.iea_df,
 #' @param electricity_output a string that names the electricity output `Flow`. Default is "`Electricity output (GWh)`". 
 #' @param electricity_output_flows_prefix a string prefix for `Flow`s to be aggregated in electricity output. Default is "`Electricity output (GWh)-`".
 #' @param heat_output a string that names the heat output `Flow`. Default is "`Heat output`". 
-#' @param heat_output_prefix a string prefix for `Flow`s to be aggregated in heat output. Default is "`Heat output-`".
+#' @param heat_output_flows_prefix a string prefix for `Flow`s to be aggregated in heat output. Default is "`Heat output-`".
 #' @param .rownum the name of a column created (and destroyed) internally by this function. 
 #'        The `.rownum` column temporarily holds row numbers for internal calculations.
 #'        The `.rownum` column is deleted before returning. 
 #'
-#' @return `.iea_df` with additional columns named `ledger_side` and `flow_aggregation_point`
+#' @return `.iea_df` with additional columns named `ledger_side`, `flow_aggregation_point`, `energy_type`, and `units`.
 #' 
 #' @export
 #'

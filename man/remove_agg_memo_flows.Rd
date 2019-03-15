@@ -22,7 +22,7 @@ remove_agg_memo_flows(.iea_df, flow = "Flow", product = "Product",
 
 \item{memo_flow_prefixes}{a vector of string prefixes for flow memo rows in \code{.iea_df}}
 
-\item{memo_product_prefix}{a string prefix for product memo rows in \code{.iea_df}.}
+\item{memo_product_prefixes}{a string prefix for product memo rows in \code{.iea_df}.}
 }
 \value{
 \code{.iea_df} less aggregation rows
