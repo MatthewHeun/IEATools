@@ -116,7 +116,4 @@ test_that("tidy_iea works as expected", {
   expect_true(all(iea_tidy_df$Units == "ktoe"))
   # Ledger.side can be only Supply or Consumption
   expect_true(all(iea_tidy_df$Ledger.side %in% c("Supply", "Consumption")))
-  
-  
-  
 })
