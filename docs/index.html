@@ -18,7 +18,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-home">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -71,8 +71,47 @@
 
       
       </header><div class="row">
-  <div class="contents col-md-9">
-Functions for munging and manipulating IEA extended energy balance data.
+  <div class="col-md-9 contents">
+    
+
+    
+    
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+<div id="ieadata" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#ieadata" class="anchor"></a>IEAData</h1></div>
+<p>The <code>R</code> package <code>IEAData</code> provides ways to interact with data from the <a href="http://www.iea.org">International Energy Agency (IEA)</a>.</p>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h2>
+<!-- You can install `IEAData` from CRAN with: -->
+<!-- ```{r CRAN-installation, eval = FALSE} -->
+<!-- install.packages("IEAData") -->
+<!-- ``` -->
+<!-- You can install a recent development version of `IEAData` from github with: -->
+<p>You can install <code>IEAData</code> from github with:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install devtools if not already installed</span>
+<span class="co"># install.packages("devtools")</span>
+devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"MatthewHeun/IEAData"</span>)
+<span class="co"># To build vignettes locally, use</span>
+devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"MatthewHeun/IEAData"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span>)</code></pre></div>
+</div>
+<div id="history" class="section level2">
+<h2 class="hasAnchor">
+<a href="#history" class="anchor"></a>History</h2>
+<p>The functions in this package were used in <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">Heun et al. <span class="citation">[-@Heun:2018]</span></a>.</p>
+</div>
+<div id="more-information" class="section level2">
+<h2 class="hasAnchor">
+<a href="#more-information" class="anchor"></a>More Information</h2>
+<p>Find more information, including vignettes and function documentation, at <a href="https://MatthewHeun.github.io/IEAData/" class="uri">https://MatthewHeun.github.io/IEAData/</a>.</p>
+</div>
+<div id="references" class="section level2">
+<h2 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h2>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -91,8 +130,19 @@ Functions for munging and manipulating IEA extended energy balance data.
 </ul>
 </div>
 
-  </div>
+      <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=IEAData"><img src="https://www.r-pkg.org/badges/version/IEAData" alt="CRAN status"></a></li>
+<li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="lifecycle"></a></li>
+<li><a href="https://travis-ci.org/MatthewHeun/IEAData"><img src="https://travis-ci.org/MatthewHeun/IEAData.svg?branch=master" alt="Travis-CI Build Status"></a></li>
+<li><a href="https://codecov.io/github/MatthewHeun/IEAData?branch=master"><img src="https://codecov.io/gh/MatthewHeun/IEAData/branch/master/graph/badge.svg" alt="Coverage status"></a></li>
+</ul>
 </div>
+</div>
+
+</div>
+
 
       <footer><div class="copyright">
   <p>Developed by Matthew Heun.</p>
