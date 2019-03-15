@@ -26,6 +26,7 @@ fix_IEA_df_energy_balance <- function(.tidy_iea_df,
                                       units = "Units",
                                       source = ".source",
                                       .iea = "IEA"){
+  # Extract the IEA's statistical differences.
   IEAStatDiffs <- .tidy_iea_df %>%
     dplyr::filter(!!as.name(flow) == statistical_differences) %>%
     dplyr::select(dplyr::group_vars(.tidy_iea_df), ex, units) %>% 
