@@ -106,7 +106,7 @@ test_that("tidy_iea works as expected", {
     rename_iea_df_cols() %>% 
     remove_agg_memo_flows() %>% 
     augment_iea_df() %>% 
-    tidy_iea()
+    tidy_iea_data()
   # Verify column names and order
   expect_equal(names(iea_tidy_df), c("Country", "Year", "Ledger.side", "Flow.aggregation.point", 
                                      "Energy.type", "Units", "Flow", "Product", "EX"))

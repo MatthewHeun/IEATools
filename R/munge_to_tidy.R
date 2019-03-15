@@ -153,14 +153,14 @@ use_iso_countries <- function(.iea_df,
 #'   rename_iea_df_cols() %>% 
 #'   remove_agg_memo_flows() %>% 
 #'   use_iso_countries() %>% 
-#'   tidy_iea()
-tidy_iea <- function(.iea_df, 
-                     year = "Year", ex = "EX", 
-                     country = "Country", ledger_side = "Ledger.side", 
-                     flow_aggregation_point = "Flow.aggregation.point", 
-                     energy_type = "Energy.type", units = "Units", 
-                     flow = "Flow", product = "Product",
-                     remove_zeroes = TRUE){
+#'   tidy_iea_data()
+tidy_iea_data <- function(.iea_df, 
+                          year = "Year", ex = "EX", 
+                          country = "Country", ledger_side = "Ledger.side", 
+                          flow_aggregation_point = "Flow.aggregation.point", 
+                          energy_type = "Energy.type", units = "Units", 
+                          flow = "Flow", product = "Product",
+                          remove_zeroes = TRUE){
   out <- .iea_df %>% 
     # Gather into a tidy data frame.
     tidyr::gather(key = !!as.name(year), value = !!as.name(ex), -c(country, ledger_side, flow_aggregation_point, flow, product,
