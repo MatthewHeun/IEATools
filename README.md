@@ -1,12 +1,9 @@
 
-<!-- *********** -->
-<!-- Note: README.md is generated from README.Rmd.   -->
-<!-- Be sure to edit README.Rmd and generate the README.md file by Cmd/Ctl-shift-K -->
-<!-- *********** -->
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN status](https://www.r-pkg.org/badges/version/IEAData)](https://cran.r-project.org/package=IEAData) [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#experimental) [![Travis-CI Build Status](https://travis-ci.org/MatthewHeun/IEAData.svg?branch=master)](https://travis-ci.org/MatthewHeun/IEAData) [![Coverage status](https://codecov.io/gh/MatthewHeun/IEAData/branch/master/graph/badge.svg)](https://codecov.io/github/MatthewHeun/IEAData?branch=master)
 
-matsindf
-========
+IEAData
+=======
 
 The `R` package `IEAData` provides ways to interact with data from the [International Energy Agency (IEA)](http://www.iea.org).
 
@@ -17,7 +14,8 @@ Installation
 <!-- ```{r CRAN-installation, eval = FALSE} -->
 <!-- install.packages("IEAData") -->
 <!-- ``` -->
-You can install a recent development version of `IEAData` from github with:
+<!-- You can install a recent development version of `IEAData` from github with: -->
+You can install `IEAData` from github with:
 
 ``` r
 # install devtools if not already installed

@@ -3,10 +3,7 @@ output: github_document
 # bibliography: vignettes/References.bib
 ---
 
-<!-- *********** -->
-<!-- Note: README.md is generated from README.Rmd.   -->
-<!-- Be sure to edit README.Rmd and generate the README.md file by Cmd/Ctl-shift-K -->
-<!-- *********** -->
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 [![CRAN status](https://www.r-pkg.org/badges/version/IEAData)](https://cran.r-project.org/package=IEAData)
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#experimental)
@@ -14,7 +11,16 @@ output: github_document
 [![Coverage status](https://codecov.io/gh/MatthewHeun/IEAData/branch/master/graph/badge.svg)](https://codecov.io/github/MatthewHeun/IEAData?branch=master)
 
 
-# matsindf
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# IEAData
 
 The `R` package `IEAData` provides 
 ways to interact with data from the [International Energy Agency (IEA)](http://www.iea.org). 
@@ -28,7 +34,9 @@ ways to interact with data from the [International Energy Agency (IEA)](http://w
 <!-- install.packages("IEAData") -->
 <!-- ``` -->
 
-You can install a recent development version of `IEAData` from github with:
+<!-- You can install a recent development version of `IEAData` from github with: -->
+You can install `IEAData` from github with:
+
 ```{r gh-installation, eval = FALSE}
 # install devtools if not already installed
 # install.packages("devtools")
@@ -48,6 +56,11 @@ The functions in this package were used in
 
 Find more information, including vignettes and function documentation, at 
 <https://MatthewHeun.github.io/IEAData/>.
+
+
+
+
+
 
 
 ## References
