@@ -12,7 +12,7 @@ test_that("calc_tidy_iea_df_balance works correctly", {
     augment_iea_df() %>% 
     tidy_iea_df() %>% 
     group_by(Country, Year, Energy.type, Units, Product) %>% 
-    calc_tidy_iea_df_balance()
+    calc_tidy_iea_df_balances()
   expect_false(all(Ebal$balance_OK))
   expect_true(Ebal %>% filter(Country == "GH", Year == 1971, Product == "Aviation gasoline") %>% extract2("balance_OK"))
   expect_false(Ebal %>% filter(Country == "GH", Year == 1971, Product == "Electricity") %>% extract2("balance_OK"))
@@ -30,7 +30,7 @@ test_that("fix_IEA_df_energy_balance works correctly", {
     augment_iea_df() %>% 
     tidy_iea_df() %>% 
     group_by(Country, Year, Energy.type, Units, Product) %>% 
-    calc_tidy_iea_df_balance() %>% 
+    calc_tidy_iea_df_balances() %>% 
     tidy_iea_df_balanced()
   expect_false(unbalanced)
 })

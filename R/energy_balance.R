@@ -1,15 +1,20 @@
 #' Fix IEA energy balances
 #' 
-#' IEA data are not quite balanced.  
-#' In fact, production and consumption are often wrong by a few ktoe
+#' IEA extended energy balance data are not quite balanced.  
+#' In fact, supply and consumption are often wrong by a few ktoe
 #' for any given Product in a Country in a Year.
 #' This function ensures that the balance is perfect
 #' by adjusting the `Statistical differences` flow
 #' on a per-product basis.
 #' 
 #' This function assumes that `.tidy_iea_df` is grouped appropriately.
-#' Typical grouping variables would include 
-#' `Country`, `Year`, `Energy.type`, `Last.stage`, `Product`, etc.
+#' So be sure to group `.tidy_iea_df` by appropriate variables
+#' before calling this function.
+#' Grouping should _definitely_ be done on the `Product` column.
+#' Typically, grouping is also done on 
+#' `Country`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
+#' Grouping should _not_ be done on the `Flow` column.
+
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA data
 #'
@@ -19,7 +24,7 @@
 #' @export
 #'
 #' @examples
-fix_iea_df_balance <- function(.tidy_iea_df,
+fix_tidy_iea_df_balance <- function(.tidy_iea_df,
                                flow = "Flow",
                                statistical_differences = "Statistical differences",
                                e_dot = "E.dot", 
@@ -157,9 +162,9 @@ fix_iea_df_balance <- function(.tidy_iea_df,
 #'   augment_iea_df() %>% 
 #'   tidy_iea_df() %>% 
 #'   group_by(Country, Year, Energy.type, Units, Product) %>% 
-#'   calc_tidy_iea_df_balance()
+#'   calc_tidy_iea_df_balances()
 #' head(Ebal, 5)
-calc_tidy_iea_df_balance <- function(.tidy_iea_df, 
+calc_tidy_iea_df_balances <- function(.tidy_iea_df, 
                             # Input column names
                             ledger_side = "Ledger.side",
                             e_dot = "E.dot",
@@ -220,8 +225,8 @@ calc_tidy_iea_df_balance <- function(.tidy_iea_df,
 #'   group_by(Country, Year, Energy.type, Units, Product) %>% 
 #'   calc_tidy_iea_df_balance() %>% 
 #'   tidy_iea_df_balanced()
-tidy_iea_df_balanced <- function(.tidy_iea_df_balance,
+tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
                             # Input column names
                             balance_OK = "balance_OK"){
-  all(.tidy_iea_df_balance[[balance_OK]])
+  all(.tidy_iea_df_balances[[balance_OK]])
 }

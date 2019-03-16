@@ -4,14 +4,14 @@
 \alias{tidy_iea_df_balanced}
 \title{Tell whether all rows of a tidy IEA data frame conserve energy.}
 \usage{
-tidy_iea_df_balanced(.tidy_iea_df_balance, balance_OK = "balance_OK")
+tidy_iea_df_balanced(.tidy_iea_df_balances, balance_OK = "balance_OK")
 }
 \arguments{
-\item{.tidy_iea_df_balance}{an IEA-style data frame containing a column that indicates whether
-each row is in balance.}
-
 \item{balance_OK}{the name of a new logical column that tells whether a row's energy balance is OK.
 Default is "\code{balance_OK}".}
+
+\item{.tidy_iea_df_balance}{an IEA-style data frame containing a column that indicates whether
+each row is in balance.}
 }
 \value{
 \code{TRUE} if all rows of \code{.tidy_iea_df_balance} are balanceed, \code{FALSE} otherwise.
