@@ -19,3 +19,16 @@ test_that("S_units_from_tidy works as expected", {
     expect_true(all(su[ , "ktoe"] == 1))
   }
 })
+
+test_that("add_psut_matnames works as expected", {
+  WithMatnames <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+    system.file(package = "IEAData") %>% 
+    iea_df() %>%
+    rename_iea_df_cols() %>% 
+    use_iso_countries() %>% 
+    remove_agg_memo_flows() %>% 
+    augment_iea_df() %>% 
+    tidy_iea_df() %>% 
+    group_by(Country, Year, Energy.type) %>% 
+    add_psut_matnames()
+})

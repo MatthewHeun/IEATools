@@ -3,6 +3,7 @@
 export("%>%")
 export(":=")
 export(.data)
+export(add_psut_matnames)
 export(augment_iea_df)
 export(calc_tidy_iea_df_balances)
 export(extract_S_units_from_tidy)
