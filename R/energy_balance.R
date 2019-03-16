@@ -94,7 +94,7 @@ fix_iea_df_balance <- function(.tidy_iea_df,
 #' `Country`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
 #' Grouping should _not_ be done on the `Flow` column.
 #' To test whether all balances are OK, 
-#' use the [iea_df_balanced()] function.
+#' use the [tidy_iea_df_balanced()] function.
 #' 
 #' Supply side and consumption side energy flows are aggregated to a 
 #' `supply_sum` and a `consumption_sum` column.
@@ -193,38 +193,19 @@ calc_tidy_iea_df_balance <- function(.tidy_iea_df,
 }
 
 
-#' Tell whether a tidy IEA data frame conserves energy.
+#' Tell whether all rows of a tidy IEA data frame conserve energy.
 #'
-#' Energy balances are confirmed (within \code{tol}) for every combination of
-#' grouping variables in \code{.tidy_iea_df}.
+#' This function provides a handy way to tell if all rows of `.tidy_iea_df_balance`
+#' are in balance.
+#' Argument `.tidy_iea_df_balance` should be set to the value of a call to
+#' [calc_tidy_iea_df_balance()].
 #'
-#' Be sure to group \code{.ieatidydata} prior to calling this function,
-#' as shown in the example.
+#' @param .tidy_iea_df_balance an IEA-style data frame containing a column that indicates whether
+#'        each row is in balance. 
+#' @param balance_OK the name of a new logical column that tells whether a row's energy balance is OK.
+#'        Default is "`balance_OK`".
 #'
-#' If energy is in balance for every group, a data frame with additional column \code{err}
-#' is returned.
-#' If energy balance is not observed for one or more of the groups,
-#' a warning is emitted.
-#'
-#' @param .tidy_iea_df an IEA-style data frame containing grouping columns
-#'        (typically \code{Country}, \code{Year}, \code{Product}, and others),
-#'        a \code{Ledger.side} column, and
-#'        an energy column (\code{E.ktoe}).
-#'        \code{.ieatidydata} should be grouped prior to sending to this function.
-#' @param ledger_side the name of the column in \code{.ieatidydata}
-#'        that contains ledger side information (a string). Default is "\code{Ledger.side}".
-#' @param energy the name of the column in \code{.ieatidydata}
-#'        that contains energy data (a string). Default is "\code{E.ktoe}".
-#' @param supply the identifier for supply data in the \code{ledger.side} column (a string).
-#'        Default is "\code{Supply}".
-#' @param consumption the identifier for consumption data in the \code{ledger.side} column (a string).
-#'        Default is "\code{Consumption}".
-#' @param err the name of the error column in the output. Default is "\code{.err}".
-#' @param tol the maximum amount by which Supply and Consumption can be out of balance
-#'
-#' @return a data frame containing with grouping variables and
-#'         an additional column whose name is the value of \code{err}.
-#'         The \code{err} column should be 0.
+#' @return `TRUE` if all rows of `.tidy_iea_df_balance` are balanceed, `FALSE` otherwise. 
 #'
 #' @export
 #'
@@ -238,8 +219,8 @@ calc_tidy_iea_df_balance <- function(.tidy_iea_df,
 #'   tidy_iea_df() %>% 
 #'   group_by(Country, Year, Energy.type, Units, Product) %>% 
 #'   calc_tidy_iea_df_balance() %>% 
-#'   iea_df_balanced()
-iea_df_balanced <- function(.tidy_iea_df_balance,
+#'   tidy_iea_df_balanced()
+tidy_iea_df_balanced <- function(.tidy_iea_df_balance,
                             # Input column names
                             balance_OK = "balance_OK"){
   all(.tidy_iea_df_balance[[balance_OK]])

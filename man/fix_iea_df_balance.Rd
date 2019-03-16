@@ -6,7 +6,7 @@
 \usage{
 fix_iea_df_balance(.tidy_iea_df, flow = "Flow",
   statistical_differences = "Statistical differences", e_dot = "E.dot",
-  units = "Units", source = ".source", .iea = "IEA")
+  units = "Units", source = ".source", .iea = "IEA", max = 10)
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA data}
@@ -17,7 +17,7 @@ the data are in perfect energy balance.
 }
 \description{
 IEA data are not quite balanced.
-In fact, production and consumption are often wrong by many ktoe
+In fact, production and consumption are often wrong by a few ktoe
 for any given Product in a Country in a Year.
 This function ensures that the balance is perfect
 by adjusting the \code{Statistical differences} flow
