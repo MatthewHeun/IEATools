@@ -1,5 +1,6 @@
 * Now includes sample data from 2 countries and 2 years.
-* Converted to functions for all tasks so more general..
+* Converted to functions for all tasks so more general.
+* Added function to create an S_units matrix from tidy data.
 
 
 # IEAData 0.1.5 (2018-08-10)

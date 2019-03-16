@@ -268,7 +268,7 @@ Tidy_IEA_df %>%
 ## Unit summation matrices (`S_units`)
 
 Unit summation matrices (`S_units`) can be extracted from 
-a tidy data frame with the `extract_S_units_from_tidy()` function .
+a tidy data frame with the `extract_S_units_from_tidy()` function.
 
 ```{r}
 S_units_mats <- Tidy_IEA_df %>% 

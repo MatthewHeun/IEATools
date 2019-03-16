@@ -22,10 +22,16 @@
 #'
 #' @examples
 #' library(dplyr)
-#' library(matsindf)
-#' UKEnergy2000tidy %>%
-#'   group_by("Country", "Year", "Energy.type", "Last.stage") %>%
-#'   S_units_from_tidy()
+#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+#'   system.file(package = "IEAData") %>% 
+#'   iea_df() %>%
+#'   rename_iea_df_cols() %>% 
+#'   use_iso_countries() %>% 
+#'   remove_agg_memo_flows() %>% 
+#'   augment_iea_df() %>% 
+#'   tidy_iea_df() %>%
+#'   group_by(Country, Year, Energy.type) %>% 
+#'   extract_S_units_from_tidy()
 extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = "Unit", s_units = "S_units",
                               val = ".val", rowtype = ".rowtype", coltype = ".coltype"){
   matsindf::verify_cols_missing(.tidy_iea_df, c(s_units, val, rowtype, coltype))

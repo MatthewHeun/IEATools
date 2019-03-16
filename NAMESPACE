@@ -2,6 +2,7 @@
 
 export("%>%")
 export(":=")
+export(.data)
 export(augment_iea_df)
 export(calc_tidy_iea_df_balances)
 export(extract_S_units_from_tidy)
@@ -16,3 +17,4 @@ export(use_iso_countries)
 export(write_fu_templates)
 importFrom(magrittr,"%>%")
 importFrom(rlang,":=")
+importFrom(rlang,.data)
