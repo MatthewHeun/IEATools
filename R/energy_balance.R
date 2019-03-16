@@ -155,10 +155,11 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
 #'        Default is "`supply_minus_consumption`". 
 #' @param balance_OK the name of a new logical column that tells whether a row's energy balance is OK.
 #'        Default is "`balance_OK`".
+#' @param err the name of a new column that indicates the energy balance error for each group. Default is "`err`".
 #' @param tol if the difference between supply and consumption is greater than `tol`, 
 #'        `balance_OK` will be set to `FALSE`. Default is `1e-6`.
 #'
-#' @return `.tidy_iea_df` with additional columns `supply_sum`, `consumption_sum`, `supply_minus_consumption`, and `balance_OK`.
+#' @return `.tidy_iea_df` with additional columns `supply_sum`, `consumption_sum`, `supply_minus_consumption`, `balance_OK`, and `err`.
 #' 
 #' @export
 #'
@@ -217,15 +218,15 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
 #'
 #' This function provides a handy way to tell if all rows of `.tidy_iea_df_balance`
 #' are in balance.
-#' Argument `.tidy_iea_df_balance` should be set to the value of a call to
-#' [calc_tidy_iea_df_balance()].
+#' Argument `.tidy_iea_df_balances` should be set to the value of a call to
+#' [calc_tidy_iea_df_balances()].
 #'
-#' @param .tidy_iea_df_balance an IEA-style data frame containing a column that indicates whether
+#' @param .tidy_iea_df_balances an IEA-style data frame containing a column that indicates whether
 #'        each row is in balance. 
 #' @param balance_OK the name of a new logical column that tells whether a row's energy balance is OK.
 #'        Default is "`balance_OK`".
 #'
-#' @return `TRUE` if all rows of `.tidy_iea_df_balance` are balanceed, `FALSE` otherwise. 
+#' @return `TRUE` if all groups of `.tidy_iea_df_balances` are balanceed, `FALSE` otherwise. 
 #'
 #' @export
 #'
@@ -239,7 +240,7 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
 #'   augment_iea_df() %>% 
 #'   tidy_iea_df() %>% 
 #'   group_by(Country, Year, Energy.type, Units, Product) %>% 
-#'   calc_tidy_iea_df_balance() %>% 
+#'   calc_tidy_iea_df_balances() %>% 
 #'   tidy_iea_df_balanced()
 tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
                             # Input column names

@@ -7,20 +7,20 @@
 tidy_iea_df_balanced(.tidy_iea_df_balances, balance_OK = "balance_OK")
 }
 \arguments{
+\item{.tidy_iea_df_balances}{an IEA-style data frame containing a column that indicates whether
+each row is in balance.}
+
 \item{balance_OK}{the name of a new logical column that tells whether a row's energy balance is OK.
 Default is "\code{balance_OK}".}
-
-\item{.tidy_iea_df_balance}{an IEA-style data frame containing a column that indicates whether
-each row is in balance.}
 }
 \value{
-\code{TRUE} if all rows of \code{.tidy_iea_df_balance} are balanceed, \code{FALSE} otherwise.
+\code{TRUE} if all groups of \code{.tidy_iea_df_balances} are balanceed, \code{FALSE} otherwise.
 }
 \description{
 This function provides a handy way to tell if all rows of \code{.tidy_iea_df_balance}
 are in balance.
-Argument \code{.tidy_iea_df_balance} should be set to the value of a call to
-\code{\link[=calc_tidy_iea_df_balance]{calc_tidy_iea_df_balance()}}.
+Argument \code{.tidy_iea_df_balances} should be set to the value of a call to
+\code{\link[=calc_tidy_iea_df_balances]{calc_tidy_iea_df_balances()}}.
 }
 \examples{
 library(dplyr)
@@ -32,6 +32,6 @@ file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\%
   augment_iea_df() \%>\% 
   tidy_iea_df() \%>\% 
   group_by(Country, Year, Energy.type, Units, Product) \%>\% 
-  calc_tidy_iea_df_balance() \%>\% 
+  calc_tidy_iea_df_balances() \%>\% 
   tidy_iea_df_balanced()
 }

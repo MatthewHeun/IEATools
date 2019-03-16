@@ -205,6 +205,10 @@ Default is "<code>supply_minus_consumption</code>".</p></td>
 Default is "<code>balance_OK</code>".</p></td>
     </tr>
     <tr>
+      <th>err</th>
+      <td><p>the name of a new column that indicates the energy balance error for each group. Default is "<code>err</code>".</p></td>
+    </tr>
+    <tr>
       <th>tol</th>
       <td><p>if the difference between supply and consumption is greater than <code>tol</code>,
 <code>balance_OK</code> will be set to <code>FALSE</code>. Default is <code>1e-6</code>.</p></td>
@@ -213,7 +217,7 @@ Default is "<code>balance_OK</code>".</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.tidy_iea_df</code> with additional columns <code>supply_sum</code>, <code>consumption_sum</code>, <code>supply_minus_consumption</code>, and <code>balance_OK</code>.</p>
+    <p><code>.tidy_iea_df</code> with additional columns <code>supply_sum</code>, <code>consumption_sum</code>, <code>supply_minus_consumption</code>, <code>balance_OK</code>, and <code>err</code>.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 

@@ -44,11 +44,13 @@ Default is "\code{supply_minus_consumption}".}
 \item{balance_OK}{the name of a new logical column that tells whether a row's energy balance is OK.
 Default is "\code{balance_OK}".}
 
+\item{err}{the name of a new column that indicates the energy balance error for each group. Default is "\code{err}".}
+
 \item{tol}{if the difference between supply and consumption is greater than \code{tol},
 \code{balance_OK} will be set to \code{FALSE}. Default is \code{1e-6}.}
 }
 \value{
-\code{.tidy_iea_df} with additional columns \code{supply_sum}, \code{consumption_sum}, \code{supply_minus_consumption}, and \code{balance_OK}.
+\code{.tidy_iea_df} with additional columns \code{supply_sum}, \code{consumption_sum}, \code{supply_minus_consumption}, \code{balance_OK}, and \code{err}.
 }
 \description{
 It is important to know whether energy flows are balanced before
