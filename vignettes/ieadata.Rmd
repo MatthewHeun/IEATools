@@ -206,22 +206,36 @@ By default, `tidy_iea_df()` removes zeroes from the data frame,
 thereby reducing memory footprint.
 
 ```{r}
-IEA_data %>% 
+Tidy_IEA_df <- IEA_data %>% 
   rename_iea_df_cols() %>% 
   use_iso_countries() %>% 
   remove_agg_memo_flows() %>% 
   augment_iea_df() %>% 
-  tidy_iea_df() %>% 
+  tidy_iea_df()
+Tidy_IEA_df %>% 
   glimpse()
 ```
 
-At this point, the IEA data are ready for analyses.
+At this point, the integrity of the IEA data can be checked.
 
 
-## Analyses
+# Check data integrity
+
+The IEA extended energy balance data are usually close to balanced, but not quite.
+To check the integrity of the energy balances,
+use the `verify_IEA_df_energy_balance()` function.
+
+```{r}
+Tidy_IEA_df %>% 
+  group_by(Country, Year, Energy.type, Product) %>% 
+  calc_IEA_df_bal()
+```
 
 
-## Conclusion
+# Analyses
+
+
+# Conclusion
 
 
 

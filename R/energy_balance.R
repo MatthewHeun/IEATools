@@ -1,7 +1,7 @@
 #' Fix IEA energy balances
 #' 
 #' IEA data are not quite balanced.  
-#' In fact, production and consumption are often wrong by many ktoe
+#' In fact, production and consumption are often wrong by a few ktoe
 #' for any given Product in a Country in a Year.
 #' This function ensures that the balance is perfect
 #' by adjusting the `Statistical differences` flow
@@ -9,7 +9,7 @@
 #' 
 #' This function assumes that `.tidy_iea_df` is grouped appropriately.
 #' Typical grouping variables would include 
-#' `Country`, `Year`, `Product`, `Energy.type`, `Energy.stage`, etc.
+#' `Country`, `Year`, `Energy.type`, `Last.stage`, `Product`, etc.
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA data
 #'
@@ -19,13 +19,14 @@
 #' @export
 #'
 #' @examples
-fix_IEA_df_energy_balance <- function(.tidy_iea_df,
-                                      flow = "Flow",
-                                      statistical_differences = "Statistical differences",
-                                      ex = "EX", 
-                                      units = "Units",
-                                      source = ".source",
-                                      .iea = "IEA"){
+fix_iea_df_balance <- function(.tidy_iea_df,
+                               flow = "Flow",
+                               statistical_differences = "Statistical differences",
+                               e_dot = "E.dot", 
+                               units = "Units",
+                               source = ".source",
+                               .iea = "IEA", 
+                               max = 10){
   # Extract the IEA's statistical differences.
   IEAStatDiffs <- .tidy_iea_df %>%
     dplyr::filter(!!as.name(flow) == statistical_differences) %>%
@@ -80,8 +81,119 @@ fix_IEA_df_energy_balance <- function(.tidy_iea_df,
 }
 
 
+#' Calculate balances on a tidy IEA data frame
+#' 
+#' It is important to know whether energy flows are balanced before
+#' proceeding with further analyses.
+#' This function calculates energy balances 
+#' by groups in `.tidy_iea_df`.
+#' So be sure to group `.tidy_iea_df` by appropriate variables
+#' before calling this function.
+#' Grouping should _definitely_ be done on the `Product` column.
+#' Typically, grouping is also done on 
+#' `Country`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
+#' Grouping should _not_ be done on the `Flow` column.
+#' To test whether all balances are OK, 
+#' use the [iea_df_balanced()] function.
+#' 
+#' Supply side and consumption side energy flows are aggregated to a 
+#' `supply_sum` and a `consumption_sum` column.
+#' There are two possibilities:
+#' 1. A Product appears only on the supply side,
+#'    because it is completely transformed before reaching the consumption side of the ledger.
+#'    In this case, the `consumption_sum` column will have an 
+#'    `NA` value, and the `supply_minus_consumption` column
+#'    will also have an `NA` value.
+#' 2. A Product appears on both the supply and the demand sides of the ledger
+#'    and, therefore, is not `NA` in the `consumption_sum` column and the
+#'    `supply_minus_consumption` column. 
+#' The column `balance_OK` is calculated as follows:
+#' 1. For the first situation, `consumption_sum` will be `0` (within `tol`)
+#'    if the Product is balanced and 
+#'    `balance_OK` will have a value of `TRUE`.
+#'    If not, `balance_OK` will have a value of `FALSE`.
+#' 2. In the second situation, the difference between `supply_sum` and `consumption_sum` is calculated
+#'    (`supply_minus_consumption`).
+#'    If the product is balanced,
+#'    `supply_minus_consumption` will be `0` (within `tol`)
+#'    and `balance_OK` will be `TRUE`. 
+#'    If not, `balance_OK` will be `FALSE`. 
+#'
+#' @param .tidy_iea_df an IEA-style data frame containing a `ledger_side`, `product`, 
+#'        `flow`, and energy rate (`e_dot`) columns along with  
+#'        grouping columns, typically `Country`, `Year`, `Product`, etc. 
+#'        a `Ledger.side` column.
+#' @param ledger_side the name of the column in `.tidy_iea_data`
+#'        that contains ledger side information (a string). Default is "`Ledger.side`".
+#' @param supply the identifier for supply data in the `ledger_side` column (a string).
+#'        Default is "`Supply`".
+#' @param consumption the identifier for consumption data in the `ledger_side` column (a string).
+#'        Default is "`Consumption`".
+#' @param e_dot the name of the column in `.tidy_iea_data`
+#'        that contains energy flow data. Default is "`E.dot`".
+#' @param units the name of the colum in `.tidy_iea_data`
+#'        that contains the units for the energy flow data. Default is "`Units`".
+#' @param supply_sum the name of a new column that will contain the sum of all supply for that group.
+#'        Default is "`supply_sum`".
+#' @param consumption_sum the name of a new column that will contain the sum of all consumption for that group.
+#'        Default is "`consumption_sum`".
+#' @param supply_minus_consumption the name of a new column that will contain the difference between supply and consumption for that group.
+#'        Default is "`supply_minus_consumption`". 
+#' @param balance_OK the name of a new logical column that tells whether a row's energy balance is OK.
+#'        Default is "`balance_OK`".
+#' @param tol if the difference between supply and consumption is greater than `tol`, 
+#'        `balance_OK` will be set to `FALSE`. Default is `1e-6`.
+#'
+#' @return `.tidy_iea_df` with additional columns `supply_sum`, `consumption_sum`, `supply_minus_consumption`, and `balance_OK`.
+#' 
+#' @export
+#'
+#' @examples
+#' Ebal <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+#'   system.file(package = "IEAData") %>% 
+#'   iea_df() %>%
+#'   rename_iea_df_cols() %>% 
+#'   remove_agg_memo_flows() %>% 
+#'   augment_iea_df() %>% 
+#'   tidy_iea_df() %>% 
+#'   group_by(Country, Year, Energy.type, Units, Product) %>% 
+#'   calc_tidy_iea_df_balance()
+#' head(Ebal, 5)
+calc_tidy_iea_df_balance <- function(.tidy_iea_df, 
+                            # Input column names
+                            ledger_side = "Ledger.side",
+                            e_dot = "E.dot",
+                            units = "Units",
+                            # ledger.side identifiers
+                            supply = "Supply",
+                            consumption = "Consumption",
+                            # Output column names
+                            supply_sum = "supply_sum",
+                            consumption_sum = "consumption_sum",
+                            supply_minus_consumption = "supply_minus_consumption", 
+                            balance_OK = "balance_OK", 
+                            tol = 1e-6){
+  # Calculate the supply sum on a per-group basis
+  SupplySum <- .tidy_iea_df %>%
+    dplyr::filter(!!as.name(ledger_side) == supply) %>%
+    dplyr::summarise(!!as.name(supply_sum) := sum(!!as.name(e_dot)))
+  # Calculate the sonsumption sum on a per-group basis
+  ConsumptionSum <- .tidy_iea_df %>%
+    dplyr::filter(!!as.name(ledger_side) == consumption) %>%
+    dplyr::summarise(!!as.name(consumption_sum) := sum(!!as.name(e_dot)))
+  # Return the difference between supply and consumption
+  dplyr::full_join(SupplySum, ConsumptionSum, by = dplyr::group_vars(.tidy_iea_df)) %>% 
+    dplyr::mutate(
+      !!as.name(supply_minus_consumption) := !!as.name(supply_sum) - !!as.name(consumption_sum), 
+      !!as.name(balance_OK) := case_when(
+        is.na(!!as.name(consumption_sum)) ~ abs(!!as.name(supply_sum)) <= tol,
+        TRUE ~ abs(!!as.name(supply_sum) - !!as.name(consumption_sum)) <= tol
+      )
+    )
+}
 
-#' Confirm that a tidy IEA-style data frame conserves energy.
+
+#' Tell whether a tidy IEA data frame conserves energy.
 #'
 #' Energy balances are confirmed (within \code{tol}) for every combination of
 #' grouping variables in \code{.tidy_iea_df}.
@@ -117,57 +229,18 @@ fix_IEA_df_energy_balance <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
-verify_IEA_df_energy_balance <- function(.tidy_iea_df,
-                                         # Input column names
-                                         ledger_side = "Ledger.side",
-                                         ex = "EX",
-                                         units = "Units",
-                                         # ledger.side identifiers
-                                         supply = "Supply",
-                                         consumption = "Consumption",
-                                         # Temporary column names
-                                         esupply = ".esupply",
-                                         econsumption = ".econsumption",
-                                         # Output column names
-                                         err = ".err",
-                                         # Tolerance
-                                         tol = 1e-6){
-
-  EnergyCheck <- dplyr::full_join(
-    .tidy_iea_df %>%
-      dplyr::filter(!!as.name(ledger_side) == supply) %>%
-      dplyr::summarise(!!as.name(esupply) := sum(!!as.name(ex))),
-    .tidy_iea_df %>%
-      dplyr::filter(!!as.name(ledger_side) == consumption) %>%
-      dplyr::summarise(!!as.name(econsumption) := sum(!!as.name(ex))),
-    by = dplyr::group_vars(.tidy_iea_df)
-  ) %>%
-    dplyr::mutate(
-      !!as.name(err) := !!as.name(esupply) - !!as.name(econsumption)
-    )
-  
-  # There are two options here.
-  # (a) the Product appears on both Supply and Demand sides
-  #     and, therefore, has a value for err
-  # (b) the Product appears only on Supply side
-  #     (because it is completely transformed
-  #     before reaching the Consumption side of the ledger)
-  #     and, therefore, has err = NA
-  # If (a), then err should be zero (within tol).
-  # If (b), then esupply should be zero (within tol).
-  # Check that both of these are true.
-  
-  # Option (a)
-  EnergyCheck_err <- EnergyCheck %>% dplyr::filter(!is.na(!!as.name(err)))
-  assertthat::assert_that(all(abs(EnergyCheck_err[[err]]) < tol),
-                          msg = paste("Energy not balanced in verify_IEA_df_energy_balance.",
-                                      "Check return value for non-zero", err, "column."))
-  
-  # Option (b)
-  EnergyCheck_supply <- EnergyCheck %>% dplyr::filter(is.na(!!as.name(err)))
-  assertthat::assert_that(all(abs(EnergyCheck_supply[[esupply]]) < tol),
-                          msg = paste("Energy not balanced in verify_IEA_df_energy_balance.",
-                                      "Check return value for non-zero", esupply, "column."))
-  
-  return(EnergyCheck)
+#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+#'   system.file(package = "IEAData") %>% 
+#'   iea_df() %>%
+#'   rename_iea_df_cols() %>% 
+#'   remove_agg_memo_flows() %>% 
+#'   augment_iea_df() %>% 
+#'   tidy_iea_df() %>% 
+#'   group_by(Country, Year, Energy.type, Units, Product) %>% 
+#'   calc_tidy_iea_df_balance() %>% 
+#'   iea_df_balanced()
+iea_df_balanced <- function(.tidy_iea_df_balance,
+                            # Input column names
+                            balance_OK = "balance_OK"){
+  all(.tidy_iea_df_balance[[balance_OK]])
 }

@@ -4,8 +4,8 @@
 \alias{tidy_iea_df}
 \title{Creates a tidy IEA data frame}
 \usage{
-tidy_iea_df(.iea_df, year = "Year", ex = "EX", country = "Country",
-  ledger_side = "Ledger.side",
+tidy_iea_df(.iea_df, year = "Year", e_dot = "E.dot",
+  country = "Country", ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
   energy_type = "Energy.type", units = "Units", flow = "Flow",
   product = "Product", remove_zeroes = TRUE)
@@ -15,7 +15,7 @@ tidy_iea_df(.iea_df, year = "Year", ex = "EX", country = "Country",
 
 \item{year}{the name of the year column created in \code{.iea_df} by this function. (Default is "\code{Year}".)}
 
-\item{ex}{the name of the energy/exergy value column created in \code{.iea_df} by this function. (Default is "\code{EX}".)}
+\item{e_dot}{the name of the energy/exergy value column created in \code{.iea_df} by this function. (Default is "\code{E.dot}".)}
 
 \item{country}{the name of the country column in \code{.iea_df}. (Default is "\code{Country}".)}
 
