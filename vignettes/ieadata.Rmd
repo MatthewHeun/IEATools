@@ -223,12 +223,43 @@ At this point, the integrity of the IEA data can be checked.
 
 The IEA extended energy balance data are usually close to balanced, but not quite.
 To check the integrity of the energy balances,
-use the `verify_IEA_df_energy_balance()` function.
+use the `calc_tidy_iea_df_balances()` function.
+`calc_tidy_iea_df_balances()` adds several new columns to the IEA data frame,
+including:
+
+* `supply_sum` (the sum of all flows on the supply side of the ledger),
+* `consumption_sum` (the sum of all flows on the consumption side of the ledger),
+* `supply_minus_consumption` (the difference between supply and consumption), 
+* `balance_OK` (a logical telling whether the energy balance is acceptable), and 
+* `err` (supply sum when `consumption_sum` is `NA` or 
+  `supply_minus_consumption` when `consumption_sum` is not `NA`).
 
 ```{r}
 Tidy_IEA_df %>% 
   group_by(Country, Year, Energy.type, Product) %>% 
-  calc_tidy_iea_df_balances()
+  calc_tidy_iea_df_balances() %>% 
+  glimpse()
+Tidy_IEA_df %>% 
+  group_by(Country, Year, Energy.type, Product) %>% 
+  calc_tidy_iea_df_balances() %>% 
+  tidy_iea_df_balanced()
+```
+
+Be sure to group the IEA data by appropriate variables
+before calling `calc_tidy_iea_df_balances()`. 
+Grouping should _definitely_ be done on the `Product` column.
+Typically, grouping is also done on 
+`Country`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
+Grouping should _not_ be done on the `Flow` column or the `Ledger.side` column.
+
+IEA data can be adjusted to perfect balance with the `fix_tidy_iea_df_balances()` function.
+
+```{r}
+Tidy_IEA_df %>% 
+  group_by(Country, Year, Energy.type, Units, Product) %>% 
+  fix_tidy_iea_df_balances() %>% 
+  calc_tidy_iea_df_balances() %>% 
+  tidy_iea_df_balanced()
 ```
 
 
