@@ -128,8 +128,8 @@ make an IEA data frame tidy.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>tidy_iea_df</span>(<span class='no'>.iea_df</span>, <span class='kw'>year</span> <span class='kw'>=</span> <span class='st'>"Year"</span>, <span class='kw'>ex</span> <span class='kw'>=</span> <span class='st'>"EX"</span>, <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
+    <pre class="usage"><span class='fu'>tidy_iea_df</span>(<span class='no'>.iea_df</span>, <span class='kw'>year</span> <span class='kw'>=</span> <span class='st'>"Year"</span>, <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
+  <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>, <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
   <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
   <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='st'>"Energy.type"</span>, <span class='kw'>units</span> <span class='kw'>=</span> <span class='st'>"Units"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
   <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>remove_zeroes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
@@ -146,8 +146,8 @@ make an IEA data frame tidy.</p>
       <td><p>the name of the year column created in <code>.iea_df</code> by this function. (Default is "<code>Year</code>".)</p></td>
     </tr>
     <tr>
-      <th>ex</th>
-      <td><p>the name of the energy/exergy value column created in <code>.iea_df</code> by this function. (Default is "<code>EX</code>".)</p></td>
+      <th>e_dot</th>
+      <td><p>the name of the energy/exergy value column created in <code>.iea_df</code> by this function. (Default is "<code>E.dot</code>".)</p></td>
     </tr>
     <tr>
       <th>country</th>
@@ -213,7 +213,7 @@ make an IEA data frame tidy.</p>
 #&gt; </span><span style='color: #555555;'> 8</span><span> GH      1971  Supply      Total primary e… E           ktoe  Expo… Motor …
 #&gt; </span><span style='color: #555555;'> 9</span><span> GH      1971  Supply      Total primary e… E           ktoe  Expo… Other …
 #&gt; </span><span style='color: #555555;'>10</span><span> GH      1971  Supply      Total primary e… E           ktoe  Expo… Fuel o…
-#&gt; </span><span style='color: #555555;'># … with 389 more rows, and 1 more variable: EX </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+#&gt; </span><span style='color: #555555;'># … with 389 more rows, and 1 more variable: E.dot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -77,7 +77,7 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
     )
   
   .tidy_iea_df %>% 
-    dplyr::full_join(e_bal_errors, by = c(group_vars(.tidy_iea_df), ledger_side, flow_aggregation_point, flow)) %>% 
+    dplyr::full_join(e_bal_errors, by = c(dplyr::group_vars(.tidy_iea_df), ledger_side, flow_aggregation_point, flow)) %>% 
     dplyr::mutate(
       # If IEA thought things were in balance (even if they aren't), there will be an 
       # NA in the e_dot column in the Statistical differences row. 
@@ -91,7 +91,7 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
         TRUE ~ !!as.name(e_dot)
       )
     ) %>% 
-    select(-err)
+    dplyr::select(-err)
 }
 
 
@@ -201,11 +201,11 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
   dplyr::full_join(SupplySum, ConsumptionSum, by = dplyr::group_vars(.tidy_iea_df)) %>% 
     dplyr::mutate(
       !!as.name(supply_minus_consumption) := !!as.name(supply_sum) - !!as.name(consumption_sum), 
-      !!as.name(balance_OK) := case_when(
+      !!as.name(balance_OK) := dplyr::case_when(
         is.na(!!as.name(consumption_sum)) ~ abs(!!as.name(supply_sum)) <= tol,
         TRUE ~ abs(!!as.name(supply_sum) - !!as.name(consumption_sum)) <= tol
       ),
-      !!as.name(err) := case_when(
+      !!as.name(err) := dplyr::case_when(
         is.na(!!as.name(consumption_sum)) ~ !!as.name(supply_sum),
         TRUE ~ !!as.name(supply_minus_consumption)
       )
