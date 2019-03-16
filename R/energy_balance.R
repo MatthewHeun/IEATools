@@ -1,6 +1,6 @@
 #' Fix IEA energy balances
 #' 
-#' IEA extended energy balance data are not quite balanced.  
+#' IEA extended energy balance data are sometimes not quite balanced.  
 #' In fact, supply and consumption are often wrong by a few ktoe
 #' for any given Product in a Country in a Year.
 #' This function ensures that the balance is perfect
@@ -13,76 +13,85 @@
 #' Grouping should _definitely_ be done on the `Product` column.
 #' Typically, grouping is also done on 
 #' `Country`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
-#' Grouping should _not_ be done on the `Flow` column.
-
+#' Grouping should _not_ be done on the `flow` column or the `ledger_side` column.
+#' 
+#' Internally, this function calls [calc_tidy_iea_df_balances()]
+#' and adjusts `Statistical differences` by any imbalances that are present.
 #'
-#' @param .tidy_iea_df a tidy data frame containing IEA data
+#' @param .tidy_iea_df a tidy data frame containing IEA data, typically the output
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "`Ledger.side`".
+#' @param supply a string indicating the supply side of the ledger in the `ledger_side` column. Default is "`Supply`".
+#' @param consumption a string indicating the consumption side of the ledger in the `ledger_side` column. Default is "`Consumption`".
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
+#' @param tfc_compare a string indicating the Total final consumption comparison flow aggregation point. Default is "`TFC compare`".
+#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
+#' @param statistical_differences a string indicating statistical differences in the `flow` column. Default is "`Statistical differences`".
+#' @param product the name of the product column in `.tidy_iea_df`. Default is "`Product`".
+#' @param e_dot the name of the energy flow column in `.tidy_iea_df`. Default is "`E.dot`".
+#' @param err the name of a temporary error column added to `.tidy_iea_df`. Default is "`.err`".
 #'
 #' @return `.tidy_iea_df` with adjusted `Statistical differences` flows such that 
-#'         the data are in perfect energy balance.
+#'         the data for each product are in perfect energy balance.
 #'         
 #' @export
 #'
 #' @examples
-fix_tidy_iea_df_balance <- function(.tidy_iea_df,
-                               flow = "Flow",
-                               statistical_differences = "Statistical differences",
-                               e_dot = "E.dot", 
-                               units = "Units",
-                               source = ".source",
-                               .iea = "IEA", 
-                               max = 10){
-  # Extract the IEA's statistical differences.
-  IEAStatDiffs <- .tidy_iea_df %>%
-    dplyr::filter(!!as.name(flow) == statistical_differences) %>%
-    dplyr::select(dplyr::group_vars(.tidy_iea_df), ex, units) %>% 
+#' library(dplyr)
+#' unbalanced <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+#'   system.file(package = "IEAData") %>% 
+#'   iea_df() %>%
+#'   rename_iea_df_cols() %>% 
+#'   use_iso_countries() %>% 
+#'   remove_agg_memo_flows() %>% 
+#'   augment_iea_df() %>% 
+#'   tidy_iea_df()
+#' # This will not be balanced, because the IEA data are not in perfect balance
+#' unbalanced %>% 
+#'   group_by(Country, Year, Energy.type, Units, Product) %>% 
+#'   calc_tidy_iea_df_balances() %>% 
+#'   tidy_iea_df_balanced()
+#' # This will be balanced, becasue we fix the imbalances.
+#' unbalanced %>% 
+#'   group_by(Country, Year, Energy.type, Units, Product) %>% 
+#'   fix_tidy_iea_df_balances() %>% 
+#'   calc_tidy_iea_df_balances() %>% 
+#'   tidy_iea_df_balanced()
+fix_tidy_iea_df_balances <- function(.tidy_iea_df,
+                                     ledger_side = "Ledger.side",
+                                     supply = "Supply", 
+                                     consumption = "Consumption",
+                                     flow_aggregation_point = "Flow.aggregation.point",
+                                     tfc_compare = "TFC compare",
+                                     flow = "Flow",
+                                     statistical_differences = "Statistical differences",
+                                     product = "Product",
+                                     e_dot = "E.dot", 
+                                     err = ".err"){
+  e_bal_errors <- .tidy_iea_df %>% 
+    calc_tidy_iea_df_balances(err = err) %>% 
+    dplyr::select(dplyr::group_vars(.tidy_iea_df), err) %>% 
     dplyr::mutate(
-      !!as.name(source) := .iea
-    ) %>% 
-    rename(
-      !!as.name(statistical_differences) := ex
+      !!as.name(flow) := statistical_differences, 
+      !!as.name(ledger_side) := supply,
+      !!as.name(flow_aggregation_point) := tfc_compare
     )
   
-  # MyStatDiffs <- AllIEAData4 %>%
-  #   filter(!Flow == "Statistical differences") %>% 
-  #   group_by(Country, Ledger.side, Product, Year) %>% 
-  #   summarise(E.ktoe = sum(E.ktoe)) %>% 
-  #   spread(key = Ledger.side, value = E.ktoe, fill = 0) %>% 
-  #   mutate(
-  #     Source = "Actual",
-  #     `Statistical differences` = Consumption - Supply, 
-  #     Consumption = NULL,
-  #     Supply = NULL
-  #   )
-  # 
-  # NewStatDiffs <- bind_rows(MyStatDiffs, IEAStatDiffs) %>% 
-  #   spread(key = Source, `Statistical differences`, fill = 0) %>% 
-  #   mutate(
-  #     # DeltaStatDiffs should be added to the IEA's Statistical differences to perfectly balance the table.
-  #     DeltaStatDiffs = Actual - IEA,
-  #     Ledger.side = "Supply", 
-  #     Flow.aggregation.point = "TFC compare",
-  #     Flow = "Statistical differences"
-  #   ) %>% 
-  #   filter(Actual != 0)
-  # 
-  # AllIEAData5 <- AllIEAData4 %>%
-  #   # Delete the old Statistical differences data
-  #   filter(Flow != "Statistical differences") %>%
-  #   # Replace with the new Statistical differences data
-  #   bind_rows(NewStatDiffs %>% select(-IEA, -DeltaStatDiffs) %>% rename(E.ktoe = Actual))
-  # 
-  # # Verify that the new Statistical differences bring all Products into perfect balance.
-  # VerifyStatDiffs <- AllIEAData5 %>%
-  #   group_by(Country, Ledger.side, Product, Year) %>%
-  #   summarise(E.ktoe = sum(E.ktoe)) %>%
-  #   spread(key = Ledger.side, value = E.ktoe, fill = 0) %>%
-  #   mutate(
-  #     Source = "Actual",
-  #     Imbalance = Consumption - Supply
-  #   )
-  # 
-  # stopifnot(all(VerifyStatDiffs$Imbalance == 0))
+  .tidy_iea_df %>% 
+    dplyr::full_join(e_bal_errors, by = c(group_vars(.tidy_iea_df), ledger_side, flow_aggregation_point, flow)) %>% 
+    dplyr::mutate(
+      # If IEA thought things were in balance (even if they aren't), there will be an 
+      # NA in the e_dot column in the Statistical differences row. 
+      # Replace these NAs with zeroes.
+      !!as.name(e_dot) := dplyr::case_when(
+        is.na(!!as.name(e_dot)) & !is.na(!!as.name(err)) ~ 0,
+        TRUE ~ !!as.name(e_dot)
+      ),
+      !!as.name(e_dot) := dplyr::case_when(
+        !!as.name(flow) == statistical_differences ~ !!as.name(e_dot) - !!as.name(err), 
+        TRUE ~ !!as.name(e_dot)
+      )
+    ) %>% 
+    select(-err)
 }
 
 
@@ -97,7 +106,7 @@ fix_tidy_iea_df_balance <- function(.tidy_iea_df,
 #' Grouping should _definitely_ be done on the `Product` column.
 #' Typically, grouping is also done on 
 #' `Country`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
-#' Grouping should _not_ be done on the `Flow` column.
+#' Grouping should _not_ be done on the `Ledger.side` column or the `Flow` column.
 #' To test whether all balances are OK, 
 #' use the [tidy_iea_df_balanced()] function.
 #' 
@@ -154,6 +163,7 @@ fix_tidy_iea_df_balance <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' Ebal <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
 #'   system.file(package = "IEAData") %>% 
 #'   iea_df() %>%
@@ -177,6 +187,7 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
                             consumption_sum = "consumption_sum",
                             supply_minus_consumption = "supply_minus_consumption", 
                             balance_OK = "balance_OK", 
+                            err = "err",
                             tol = 1e-6){
   # Calculate the supply sum on a per-group basis
   SupplySum <- .tidy_iea_df %>%
@@ -193,6 +204,10 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
       !!as.name(balance_OK) := case_when(
         is.na(!!as.name(consumption_sum)) ~ abs(!!as.name(supply_sum)) <= tol,
         TRUE ~ abs(!!as.name(supply_sum) - !!as.name(consumption_sum)) <= tol
+      ),
+      !!as.name(err) := case_when(
+        is.na(!!as.name(consumption_sum)) ~ !!as.name(supply_sum),
+        TRUE ~ !!as.name(supply_minus_consumption)
       )
     )
 }
@@ -215,6 +230,7 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
 #'   system.file(package = "IEAData") %>% 
 #'   iea_df() %>%

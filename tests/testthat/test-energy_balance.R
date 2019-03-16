@@ -1,3 +1,6 @@
+library(dplyr)
+library(magrittr)
+
 ###########################################################
 context("IEA energy balance")
 ###########################################################
@@ -20,7 +23,7 @@ test_that("calc_tidy_iea_df_balance works correctly", {
   expect_false(Ebal %>% filter(Country == "ZA", Year == 2000, Product == "Other bituminous coal") %>% extract2("balance_OK"))
 })
 
-test_that("fix_IEA_df_energy_balance works correctly", {
+test_that("fix_tidy_iea_df_balance works correctly", {
   unbalanced <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
     system.file(package = "IEAData") %>% 
     iea_df() %>%
@@ -28,11 +31,20 @@ test_that("fix_IEA_df_energy_balance works correctly", {
     use_iso_countries() %>% 
     remove_agg_memo_flows() %>% 
     augment_iea_df() %>% 
-    tidy_iea_df() %>% 
+    tidy_iea_df()
+  # This should fail.
+  unbalanced %>% 
     group_by(Country, Year, Energy.type, Units, Product) %>% 
     calc_tidy_iea_df_balances() %>% 
-    tidy_iea_df_balanced()
-  expect_false(unbalanced)
+    tidy_iea_df_balanced() %>% 
+    expect_false()
+  # But if we fix the energy balances, it should come back balanced.
+  unbalanced %>% 
+    group_by(Country, Year, Energy.type, Units, Product) %>% 
+    fix_tidy_iea_df_balances() %>% 
+    calc_tidy_iea_df_balances() %>% 
+    tidy_iea_df_balanced() %>% 
+    expect_true()
 })
 
 

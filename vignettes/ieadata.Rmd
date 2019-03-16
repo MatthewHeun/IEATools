@@ -228,7 +228,7 @@ use the `verify_IEA_df_energy_balance()` function.
 ```{r}
 Tidy_IEA_df %>% 
   group_by(Country, Year, Energy.type, Product) %>% 
-  calc_IEA_df_bal()
+  calc_tidy_iea_df_balances()
 ```
 
 

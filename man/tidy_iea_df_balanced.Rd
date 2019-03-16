@@ -23,6 +23,7 @@ Argument \code{.tidy_iea_df_balance} should be set to the value of a call to
 \code{\link[=calc_tidy_iea_df_balance]{calc_tidy_iea_df_balance()}}.
 }
 \examples{
+library(dplyr)
 file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
   system.file(package = "IEAData") \%>\% 
   iea_df() \%>\%

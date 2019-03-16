@@ -9,7 +9,7 @@ calc_tidy_iea_df_balances(.tidy_iea_df, ledger_side = "Ledger.side",
   consumption = "Consumption", supply_sum = "supply_sum",
   consumption_sum = "consumption_sum",
   supply_minus_consumption = "supply_minus_consumption",
-  balance_OK = "balance_OK", tol = 1e-06)
+  balance_OK = "balance_OK", err = "err", tol = 1e-06)
 }
 \arguments{
 \item{.tidy_iea_df}{an IEA-style data frame containing a \code{ledger_side}, \code{product},
@@ -60,7 +60,7 @@ before calling this function.
 Grouping should \emph{definitely} be done on the \code{Product} column.
 Typically, grouping is also done on
 \code{Country}, \code{Year}, \code{Energy.type}, \code{Last.stage}, etc. columns.
-Grouping should \emph{not} be done on the \code{Flow} column.
+Grouping should \emph{not} be done on the \code{Ledger.side} column or the \code{Flow} column.
 To test whether all balances are OK,
 use the \code{\link[=tidy_iea_df_balanced]{tidy_iea_df_balanced()}} function.
 }
@@ -91,6 +91,7 @@ If not, \code{balance_OK} will be \code{FALSE}.
 }
 }
 \examples{
+library(dplyr)
 Ebal <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
   system.file(package = "IEAData") \%>\% 
   iea_df() \%>\%
