@@ -69,32 +69,30 @@ extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = 
 #' Internally, this function adds a temporary column to `.tidy_iea_df` called "`.R`".
 #' An error will occur if `.tidy_iea_df` already has a column named "`.R`".
 #'
-#' @param .tidy_iea_df a data frame with \code{ledger_side}, \code{energy}, \code{flow_aggregation_point},
-#'        and \code{flow} columns.
-#' @param ledger_side the name of the column in \code{.DF} that contains ledger side
+#' @param .tidy_iea_df a data frame with `ledger_side`, `flow_aggregation_point`, `flow`, and `e_dot` columns.
+#' @param ledger_side the name of the column in `.tidy_iea_df` that contains ledger side
 #'        (a string). Default is "\code{Ledger.side}".
-#' @param energy the name of the column in \code{.DF} that contains energy and exergy values
-#'        (a string). Default is "\code{EX.ktoe}".
-#' @param flow_aggregation_point the name of the column in \code{.DF} that contains flow aggregation point information.
-#'        Default is "\code{Flow.aggregation.point}".
-#' @param flow the name of the column in \code{.DF} that contains flow information.
-#'        Default is "\code{Flow}".
-#' @param supply_side the identifier for items on the supply side of the ledger (a string).
-#'        Default is "\code{Supply}".
-#' @param consumption_side the identifier for items on the consumption side
-#'        of the ledger (a string). Default is "\code{Consumption}".
+#' @param e_dot the name of the column in `.tidy_iea_df` that contains energy and exergy values
+#'        (a string). Default is "`E.dot`".
+#' @param flow_aggregation_point the name of the column in `.tidy_iea_df` that contains flow aggregation point information.
+#'        Default is "`Flow.aggregation.point`".
+#' @param flow the name of the column in `.tidy_iea_df` that contains flow information.
+#'        Default is "`Flow`".
+#' @param supply the identifier for items on the supply side of the ledger (a string).
+#'        Default is "`Supply`".
+#' @param consumption the identifier for items on the consumption side
+#'        of the ledger (a string). Default is "`Consumption`".
 #' @param eiou the identifier for items that are energy industry own use.
-#'        Default is "\code{"Energy industry own use"}.
-#' @param neg_supply_in_fd identifiers for \code{flow} items that, when negative,
-#'        are entries in the final demand (\code{Y}) matrix.
-#' @param use_R tells whether to use a separate resources matrix (\code{R}). Default is "\code{FALSE}", for now.
+#'        Default is "`Energy industry own use`".
+#' @param neg_supply_in_fd identifiers for flow items that, when negative,
+#'        are entries in the final demand (`Y`) matrix.
 #' @param matname the name of the output column containing the name of the matrix
-#'        to which a row's value belongs (a string). Default is "\code{matname}".
-#' @param U_excl_EIOU the name for the use matrix that excludes energy industry own use (a string). Default is "\code{U_excl_EIOU}".
-#' @param U_EIOU the name for the energy industry own use matrix. Default is "\code{U_EIOU}".
-#' @param R the name for the resource matrix (a string). Default is "\code{R}".
-#' @param V the name for the make matrix (a string). Default is "\code{V}".
-#' @param Y the name for the final demand matrix (a string). Default is "\code{Y}".
+#'        to which a row's value belongs (a string). Default is "`matname`".
+#' @param U_excl_EIOU the name for the use matrix that excludes energy industry own use (a string). Default is "`U_excl_EIOU`".
+#' @param U_EIOU the name for the energy industry own use matrix. Default is "`U_EIOU`".
+#' @param R the name for the resource matrix (a string). Default is "`R`".
+#' @param V the name for the make matrix (a string). Default is "`V`".
+#' @param Y the name for the final demand matrix (a string). Default is "`Y`".
 #'
 #' @return `.tidy_iea_df` with an added column `matname`.
 #'

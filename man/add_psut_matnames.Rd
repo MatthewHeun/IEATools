@@ -14,22 +14,30 @@ add_psut_matnames(.tidy_iea_df, ledger_side = "Ledger.side",
   U_EIOU = "U_EIOU", R = "R", V = "V", Y = "Y", .R = ".R")
 }
 \arguments{
-\item{.tidy_iea_df}{a data frame with \code{ledger_side}, \code{energy}, \code{flow_aggregation_point},
-and \code{flow} columns.}
+\item{.tidy_iea_df}{a data frame with \code{ledger_side}, \code{flow_aggregation_point}, \code{flow}, and \code{e_dot} columns.}
 
-\item{ledger_side}{the name of the column in \code{.DF} that contains ledger side
+\item{ledger_side}{the name of the column in \code{.tidy_iea_df} that contains ledger side
 (a string). Default is "\code{Ledger.side}".}
 
-\item{flow_aggregation_point}{the name of the column in \code{.DF} that contains flow aggregation point information.
+\item{e_dot}{the name of the column in \code{.tidy_iea_df} that contains energy and exergy values
+(a string). Default is "\code{E.dot}".}
+
+\item{flow_aggregation_point}{the name of the column in \code{.tidy_iea_df} that contains flow aggregation point information.
 Default is "\code{Flow.aggregation.point}".}
 
-\item{flow}{the name of the column in \code{.DF} that contains flow information.
+\item{flow}{the name of the column in \code{.tidy_iea_df} that contains flow information.
 Default is "\code{Flow}".}
 
-\item{eiou}{the identifier for items that are energy industry own use.
-Default is "\code{"Energy industry own use"}.}
+\item{supply}{the identifier for items on the supply side of the ledger (a string).
+Default is "\code{Supply}".}
 
-\item{neg_supply_in_fd}{identifiers for \code{flow} items that, when negative,
+\item{consumption}{the identifier for items on the consumption side
+of the ledger (a string). Default is "\code{Consumption}".}
+
+\item{eiou}{the identifier for items that are energy industry own use.
+Default is "\code{Energy industry own use}".}
+
+\item{neg_supply_in_fd}{identifiers for flow items that, when negative,
 are entries in the final demand (\code{Y}) matrix.}
 
 \item{matname}{the name of the output column containing the name of the matrix
@@ -44,17 +52,6 @@ to which a row's value belongs (a string). Default is "\code{matname}".}
 \item{V}{the name for the make matrix (a string). Default is "\code{V}".}
 
 \item{Y}{the name for the final demand matrix (a string). Default is "\code{Y}".}
-
-\item{energy}{the name of the column in \code{.DF} that contains energy and exergy values
-(a string). Default is "\code{EX.ktoe}".}
-
-\item{supply_side}{the identifier for items on the supply side of the ledger (a string).
-Default is "\code{Supply}".}
-
-\item{consumption_side}{the identifier for items on the consumption side
-of the ledger (a string). Default is "\code{Consumption}".}
-
-\item{use_R}{tells whether to use a separate resources matrix (\code{R}). Default is "\code{FALSE}", for now.}
 }
 \value{
 \code{.tidy_iea_df} with an added column \code{matname}.
