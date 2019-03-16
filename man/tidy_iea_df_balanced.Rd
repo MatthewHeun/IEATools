@@ -31,7 +31,7 @@ file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\%
   remove_agg_memo_flows() \%>\% 
   augment_iea_df() \%>\% 
   tidy_iea_df() \%>\% 
-  group_by(Country, Year, Energy.type, Units, Product) \%>\% 
+  group_by(Country, Year, Energy.type, Unit, Product) \%>\% 
   calc_tidy_iea_df_balances() \%>\% 
   tidy_iea_df_balanced()
 }

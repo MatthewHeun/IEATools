@@ -109,11 +109,11 @@ test_that("tidy_iea works as expected", {
     tidy_iea_df()
   # Verify column names and order
   expect_equal(names(iea_tidy_df), c("Country", "Year", "Ledger.side", "Flow.aggregation.point", 
-                                     "Energy.type", "Units", "Flow", "Product", "E.dot"))
+                                     "Energy.type", "Unit", "Flow", "Product", "E.dot"))
   # This is a energy exclusive data frame
   expect_true(all(iea_tidy_df$Energy.type == "E"))
   # This is a completely ktoe data frame
-  expect_true(all(iea_tidy_df$Units == "ktoe"))
+  expect_true(all(iea_tidy_df$Unit == "ktoe"))
   # Ledger.side can be only Supply or Consumption
   expect_true(all(iea_tidy_df$Ledger.side %in% c("Supply", "Consumption")))
 })

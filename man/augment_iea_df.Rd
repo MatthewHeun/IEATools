@@ -7,12 +7,12 @@
 augment_iea_df(.iea_df, country = "Country",
   ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
-  energy_type = "Energy.type", energy_type_val = "E",
-  units = "Units", units_val = "ktoe", supply = "Supply",
-  consumption = "Consumption", tpes = "Total primary energy supply",
-  tpes_flows = c("Production", "Imports", "Exports",
-  "International marine bunkers", "International aviation bunkers",
-  "Stock changes"), tfc_compare = "TFC compare",
+  energy_type = "Energy.type", energy_type_val = "E", unit = "Unit",
+  unit_val = "ktoe", supply = "Supply", consumption = "Consumption",
+  tpes = "Total primary energy supply", tpes_flows = c("Production",
+  "Imports", "Exports", "International marine bunkers",
+  "International aviation bunkers", "Stock changes"),
+  tfc_compare = "TFC compare",
   tfc_compare_flows = c("Total primary energy supply", "Transfers",
   "Statistical differences", "Transformation processes",
   "Energy industry own use", "Losses"), losses = "Losses",
@@ -54,9 +54,9 @@ augment_iea_df(.iea_df, country = "Country",
 
 \item{energy_type_val}{the value to put in the \code{energy_type} column. Default is "\code{E}".}
 
-\item{units}{the name of the units column to be added to \code{.iea_df}. Default is "\code{Units}".}
+\item{unit}{the name of the unit column to be added to \code{.iea_df}. Default is "\code{Unit}".}
 
-\item{units_val}{the value to put in the \code{units} column. Default is "\code{ktoe}" for kilotons of oil equivalent.}
+\item{unit_val}{the value to put in the \code{unit} column. Default is "\code{ktoe}" for kilotons of oil equivalent.}
 
 \item{supply}{the string that identifies supply \code{Ledger.side}. Default is "\code{Supply}".}
 
@@ -115,7 +115,7 @@ The \code{.rownum} column temporarily holds row numbers for internal calculation
 The \code{.rownum} column is deleted before returning.}
 }
 \value{
-\code{.iea_df} with additional columns named \code{ledger_side}, \code{flow_aggregation_point}, \code{energy_type}, and \code{units}.
+\code{.iea_df} with additional columns named \code{ledger_side}, \code{flow_aggregation_point}, \code{energy_type}, and \code{unit}.
 }
 \description{
 This function prepares an IEA data frame created by \code{\link[=iea_df]{iea_df()}} for use in R.
@@ -136,8 +136,8 @@ On the \code{Consumption} side of the ledger, \code{Flow.aggregation.point} can 
 The second problem this function solves is that energy type and units are not specified in IEA data.
 An \code{Energy.type} column is added with the value of \code{energy_type_val}.
 (Default is \code{E}, for energy, as opposed to \code{X}, which would be exergy.)
-A \code{Units} column is added with the value of \code{units_val}.
-(Default is \code{ktoe}, although any string can be specified in \code{units_val}.)
+A \code{Unit} column is added with the value of \code{unit_val}.
+(Default is \code{ktoe}, although any string can be specified in \code{unit_val}.)
 
 Note that this function decides where to divide \code{Supply} from \code{Consumption}.
 To do so, it first looks for rows in which \code{Flow} is "\code{Losses}".

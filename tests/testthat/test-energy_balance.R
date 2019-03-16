@@ -14,7 +14,7 @@ test_that("calc_tidy_iea_df_balance works correctly", {
     remove_agg_memo_flows() %>% 
     augment_iea_df() %>% 
     tidy_iea_df() %>% 
-    group_by(Country, Year, Energy.type, Units, Product) %>% 
+    group_by(Country, Year, Energy.type, Unit, Product) %>% 
     calc_tidy_iea_df_balances()
   expect_false(all(Ebal$balance_OK))
   expect_true(Ebal %>% filter(Country == "GH", Year == 1971, Product == "Aviation gasoline") %>% extract2("balance_OK"))
@@ -34,13 +34,13 @@ test_that("fix_tidy_iea_df_balance works correctly", {
     tidy_iea_df()
   # This should fail.
   unbalanced %>% 
-    group_by(Country, Year, Energy.type, Units, Product) %>% 
+    group_by(Country, Year, Energy.type, Unit, Product) %>% 
     calc_tidy_iea_df_balances() %>% 
     tidy_iea_df_balanced() %>% 
     expect_false()
   # But if we fix the energy balances, it should come back balanced.
   unbalanced %>% 
-    group_by(Country, Year, Energy.type, Units, Product) %>% 
+    group_by(Country, Year, Energy.type, Unit, Product) %>% 
     fix_tidy_iea_df_balances() %>% 
     calc_tidy_iea_df_balances() %>% 
     tidy_iea_df_balanced() %>% 

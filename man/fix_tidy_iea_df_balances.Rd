@@ -70,12 +70,12 @@ unbalanced <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.c
   tidy_iea_df()
 # This will not be balanced, because the IEA data are not in perfect balance
 unbalanced \%>\% 
-  group_by(Country, Year, Energy.type, Units, Product) \%>\% 
+  group_by(Country, Year, Energy.type, Unit, Product) \%>\% 
   calc_tidy_iea_df_balances() \%>\% 
   tidy_iea_df_balanced()
 # This will be balanced, becasue we fix the imbalances.
 unbalanced \%>\% 
-  group_by(Country, Year, Energy.type, Units, Product) \%>\% 
+  group_by(Country, Year, Energy.type, Unit, Product) \%>\% 
   fix_tidy_iea_df_balances() \%>\% 
   calc_tidy_iea_df_balances() \%>\% 
   tidy_iea_df_balanced()

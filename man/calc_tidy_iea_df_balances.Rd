@@ -5,7 +5,7 @@
 \title{Calculate balances on a tidy IEA data frame}
 \usage{
 calc_tidy_iea_df_balances(.tidy_iea_df, ledger_side = "Ledger.side",
-  e_dot = "E.dot", units = "Units", supply = "Supply",
+  e_dot = "E.dot", unit = "Unit", supply = "Supply",
   consumption = "Consumption", supply_sum = "supply_sum",
   consumption_sum = "consumption_sum",
   supply_minus_consumption = "supply_minus_consumption",
@@ -23,8 +23,8 @@ that contains ledger side information (a string). Default is "\code{Ledger.side}
 \item{e_dot}{the name of the column in \code{.tidy_iea_data}
 that contains energy flow data. Default is "\code{E.dot}".}
 
-\item{units}{the name of the colum in \code{.tidy_iea_data}
-that contains the units for the energy flow data. Default is "\code{Units}".}
+\item{unit}{the name of the colum in \code{.tidy_iea_data}
+that contains the units for the energy flow data. Default is "\code{Unit}".}
 
 \item{supply}{the identifier for supply data in the \code{ledger_side} column (a string).
 Default is "\code{Supply}".}
@@ -101,7 +101,7 @@ Ebal <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \
   remove_agg_memo_flows() \%>\% 
   augment_iea_df() \%>\% 
   tidy_iea_df() \%>\% 
-  group_by(Country, Year, Energy.type, Units, Product) \%>\% 
+  group_by(Country, Year, Energy.type, Unit, Product) \%>\% 
   calc_tidy_iea_df_balances()
 head(Ebal, 5)
 }

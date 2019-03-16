@@ -47,12 +47,12 @@
 #'   tidy_iea_df()
 #' # This will not be balanced, because the IEA data are not in perfect balance
 #' unbalanced %>% 
-#'   group_by(Country, Year, Energy.type, Units, Product) %>% 
+#'   group_by(Country, Year, Energy.type, Unit, Product) %>% 
 #'   calc_tidy_iea_df_balances() %>% 
 #'   tidy_iea_df_balanced()
 #' # This will be balanced, becasue we fix the imbalances.
 #' unbalanced %>% 
-#'   group_by(Country, Year, Energy.type, Units, Product) %>% 
+#'   group_by(Country, Year, Energy.type, Unit, Product) %>% 
 #'   fix_tidy_iea_df_balances() %>% 
 #'   calc_tidy_iea_df_balances() %>% 
 #'   tidy_iea_df_balanced()
@@ -145,8 +145,8 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
 #'        Default is "`Consumption`".
 #' @param e_dot the name of the column in `.tidy_iea_data`
 #'        that contains energy flow data. Default is "`E.dot`".
-#' @param units the name of the colum in `.tidy_iea_data`
-#'        that contains the units for the energy flow data. Default is "`Units`".
+#' @param unit the name of the colum in `.tidy_iea_data`
+#'        that contains the units for the energy flow data. Default is "`Unit`".
 #' @param supply_sum the name of a new column that will contain the sum of all supply for that group.
 #'        Default is "`supply_sum`".
 #' @param consumption_sum the name of a new column that will contain the sum of all consumption for that group.
@@ -172,14 +172,14 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
 #'   remove_agg_memo_flows() %>% 
 #'   augment_iea_df() %>% 
 #'   tidy_iea_df() %>% 
-#'   group_by(Country, Year, Energy.type, Units, Product) %>% 
+#'   group_by(Country, Year, Energy.type, Unit, Product) %>% 
 #'   calc_tidy_iea_df_balances()
 #' head(Ebal, 5)
 calc_tidy_iea_df_balances <- function(.tidy_iea_df, 
                             # Input column names
                             ledger_side = "Ledger.side",
                             e_dot = "E.dot",
-                            units = "Units",
+                            unit = "Unit",
                             # ledger.side identifiers
                             supply = "Supply",
                             consumption = "Consumption",
@@ -239,7 +239,7 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
 #'   remove_agg_memo_flows() %>% 
 #'   augment_iea_df() %>% 
 #'   tidy_iea_df() %>% 
-#'   group_by(Country, Year, Energy.type, Units, Product) %>% 
+#'   group_by(Country, Year, Energy.type, Unit, Product) %>% 
 #'   calc_tidy_iea_df_balances() %>% 
 #'   tidy_iea_df_balanced()
 tidy_iea_df_balanced <- function(.tidy_iea_df_balances,

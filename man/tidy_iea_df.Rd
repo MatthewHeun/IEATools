@@ -7,7 +7,7 @@
 tidy_iea_df(.iea_df, year = "Year", e_dot = "E.dot",
   country = "Country", ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
-  energy_type = "Energy.type", units = "Units", flow = "Flow",
+  energy_type = "Energy.type", unit = "Unit", flow = "Flow",
   product = "Product", remove_zeroes = TRUE)
 }
 \arguments{
@@ -25,7 +25,7 @@ tidy_iea_df(.iea_df, year = "Year", e_dot = "E.dot",
 
 \item{energy_type}{the name of the energy type column in \code{.iea_df}. (Default is "\code{Energy.type}".)}
 
-\item{units}{the name of the units column in \code{.iea_df}. (Default is "\code{Units}".)}
+\item{unit}{the name of the unit column in \code{.iea_df}. (Default is "\code{Units}".)}
 
 \item{flow}{the name of the flow column in \code{.iea_df}. (Default is "\code{Flow}".)}
 
@@ -34,7 +34,7 @@ tidy_iea_df(.iea_df, year = "Year", e_dot = "E.dot",
 \item{remove_zeroes}{a logical indicating whether data points with the value \code{0} are to be removed from the output. (Default is \code{TRUE}.)}
 }
 \value{
-a tidy version of \code{.iea_df} containing new columns \code{year} and \code{ex} and, optionally, \code{0} values removed
+a tidy version of \code{.iea_df} containing new columns \code{year} and \code{e_dot} and, optionally, \code{0} values removed
 }
 \description{
 Data from the IEA have years in columns,

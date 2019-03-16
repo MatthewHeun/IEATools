@@ -175,8 +175,8 @@ rename_iea_df_cols <- function(.iea_df,
 #' The second problem this function solves is that energy type and units are not specified in IEA data.
 #' An `Energy.type` column is added with the value of `energy_type_val`. 
 #' (Default is `E`, for energy, as opposed to `X`, which would be exergy.)
-#' A `Units` column is added with the value of `units_val`.
-#' (Default is `ktoe`, although any string can be specified in `units_val`.)
+#' A `Unit` column is added with the value of `unit_val`.
+#' (Default is `ktoe`, although any string can be specified in `unit_val`.)
 #' 
 #' Note that this function decides where to divide `Supply` from `Consumption`. 
 #' To do so, it first looks for rows in which `Flow` is "`Losses`".
@@ -193,8 +193,8 @@ rename_iea_df_cols <- function(.iea_df,
 #' @param flow the name of the flow column in `.iea_df`.  Default is "`Flow`".
 #' @param energy_type the name of the energy type column to be added to `.iea_df`. Default is "`Energy.type`.
 #' @param energy_type_val the value to put in the `energy_type` column. Default is "`E`".
-#' @param units the name of the units column to be added to `.iea_df`. Default is "`Units`".
-#' @param units_val the value to put in the `units` column. Default is "`ktoe`" for kilotons of oil equivalent.
+#' @param unit the name of the unit column to be added to `.iea_df`. Default is "`Unit`".
+#' @param unit_val the value to put in the `unit` column. Default is "`ktoe`" for kilotons of oil equivalent.
 #' @param supply the string that identifies supply `Ledger.side`. Default is "`Supply`".
 #' @param consumption the string that identifies consumption `Ledger.side`. Default is "`Consumption`".
 #' @param tpes the string that identifies total primary energy supply `Flow.aggregation.point`. Default is "`Total primary energy supply`.
@@ -225,7 +225,7 @@ rename_iea_df_cols <- function(.iea_df,
 #'        The `.rownum` column temporarily holds row numbers for internal calculations.
 #'        The `.rownum` column is deleted before returning. 
 #'
-#' @return `.iea_df` with additional columns named `ledger_side`, `flow_aggregation_point`, `energy_type`, and `units`.
+#' @return `.iea_df` with additional columns named `ledger_side`, `flow_aggregation_point`, `energy_type`, and `unit`.
 #' 
 #' @export
 #'
@@ -240,7 +240,7 @@ augment_iea_df <- function(.iea_df,
                            country = "Country", 
                            ledger_side = "Ledger.side", flow_aggregation_point = "Flow.aggregation.point", flow = "Flow", 
                            energy_type = "Energy.type", energy_type_val = "E",
-                           units = "Units", units_val = "ktoe",
+                           unit = "Unit", unit_val = "ktoe",
                            supply = "Supply", consumption = "Consumption",
                            tpes = "Total primary energy supply", 
                            tpes_flows = c("Production", "Imports", "Exports", "International marine bunkers", "International aviation bunkers", "Stock changes"),
@@ -333,12 +333,12 @@ augment_iea_df <- function(.iea_df,
       ), 
       # Add energy type column
       !!energy_type := energy_type_val,
-      # Add the Units column
-      !!units := units_val
+      # Add the Unit column
+      !!unit := unit_val
     ) %>% 
     # Finally, reorder the columns, remove the .rownum column, and return
     dplyr::select(-.rownum) %>% 
-    dplyr::select(country, ledger_side, flow_aggregation_point, energy_type, units, dplyr::everything()) %>% 
+    dplyr::select(country, ledger_side, flow_aggregation_point, energy_type, unit, dplyr::everything()) %>% 
     # Remove the grouping that we created.
     dplyr::ungroup()
 }

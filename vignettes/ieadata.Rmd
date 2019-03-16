@@ -184,7 +184,7 @@ To clarify these issues and make later aggregation calculations possible,
 call the `augment_iea_data()` function.
 `augment_iea_df()` has many default arguments that work fine for the as-delivered data.
 `augment_iea_df()` adds new columns 
-`Ledger.side`, `Flow.aggregation.point`, `Energy.type`, and `Units`.
+`Ledger.side`, `Flow.aggregation.point`, `Energy.type`, and `Unit`.
 
 ```{r}
 IEA_data %>% 
@@ -256,12 +256,27 @@ IEA data can be adjusted to perfect balance with the `fix_tidy_iea_df_balances()
 
 ```{r}
 Tidy_IEA_df %>% 
-  group_by(Country, Year, Energy.type, Units, Product) %>% 
+  group_by(Country, Year, Energy.type, Unit, Product) %>% 
   fix_tidy_iea_df_balances() %>% 
   calc_tidy_iea_df_balances() %>% 
   tidy_iea_df_balanced()
 ```
 
+
+# Extract matrices for PSUT analysis
+
+## Unit summation matrices (`S_units`)
+
+Unit summation matrices (`S_units`) can be extracted from 
+a tidy data frame with the `extract_S_units_from_tidy()` function .
+
+```{r}
+S_units_mats <- Tidy_IEA_df %>% 
+  group_by(Country, Year, Energy.type) %>% 
+  extract_S_units_from_tidy()
+glimpse(S_units_mats)
+S_units_mats$S_units[[1]]
+```
 
 # Analyses
 

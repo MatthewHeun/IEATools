@@ -87,10 +87,10 @@ test_that("augment_iea_df works", {
   expect_equal(clses$Flow.aggregation.point, "character")  
   expect_equal(clses$Country, "character")  
   expect_equal(clses$Energy.type, "character")
-  expect_equal(clses$Units, "character")
+  expect_equal(clses$Unit, "character")
   expect_equal(clses$Flow, "character")  
   expect_equal(clses$Product, "character")  
-  clses[c("Ledger.side", "Flow.aggregation.point", "Country", "Energy.type", "Units", "Flow", "Product")] <- NULL
+  clses[c("Ledger.side", "Flow.aggregation.point", "Country", "Energy.type", "Unit", "Flow", "Product")] <- NULL
   expect_true(all(clses == "numeric"))
   # Ensure that there are no remaining .. or x.
   # This test fails if there are any NA items.
