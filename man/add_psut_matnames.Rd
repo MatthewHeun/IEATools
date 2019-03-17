@@ -5,8 +5,9 @@
 \title{Add a column of matrix names to tidy data frame}
 \usage{
 add_psut_matnames(.tidy_iea_df, ledger_side = "Ledger.side",
-  e_dot = "E.dot", flow_aggregation_point = "Flow.aggregation.point",
-  flow = "Flow", supply = "Supply", consumption = "Consumption",
+  supply = "Supply", consumption = "Consumption",
+  flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
+  product = "Product", e_dot = "E.dot",
   eiou = "Energy industry own use", neg_supply_in_fd = c("Exports",
   "International aviation bunkers", "International marine bunkers",
   "Losses", "Statistical differences", "Stock changes"),
@@ -19,8 +20,11 @@ add_psut_matnames(.tidy_iea_df, ledger_side = "Ledger.side",
 \item{ledger_side}{the name of the column in \code{.tidy_iea_df} that contains ledger side
 (a string). Default is "\code{Ledger.side}".}
 
-\item{e_dot}{the name of the column in \code{.tidy_iea_df} that contains energy and exergy values
-(a string). Default is "\code{E.dot}".}
+\item{supply}{the identifier for items on the supply side of the ledger (a string).
+Default is "\code{Supply}".}
+
+\item{consumption}{the identifier for items on the consumption side
+of the ledger (a string). Default is "\code{Consumption}".}
 
 \item{flow_aggregation_point}{the name of the column in \code{.tidy_iea_df} that contains flow aggregation point information.
 Default is "\code{Flow.aggregation.point}".}
@@ -28,11 +32,8 @@ Default is "\code{Flow.aggregation.point}".}
 \item{flow}{the name of the column in \code{.tidy_iea_df} that contains flow information.
 Default is "\code{Flow}".}
 
-\item{supply}{the identifier for items on the supply side of the ledger (a string).
-Default is "\code{Supply}".}
-
-\item{consumption}{the identifier for items on the consumption side
-of the ledger (a string). Default is "\code{Consumption}".}
+\item{e_dot}{the name of the column in \code{.tidy_iea_df} that contains energy and exergy values
+(a string). Default is "\code{E.dot}".}
 
 \item{eiou}{the identifier for items that are energy industry own use.
 Default is "\code{Energy industry own use}".}
@@ -61,6 +62,16 @@ This function adds a column of matrix names to a tidy data frame
 wherein each row of \code{.tidy_iea_df} is a single value in an energy conversion chain.
 The default argument values assume that \code{.tidy_iea_df} uses IEA-style nomenclature
 and terminology, although \code{.tidy_iea_df} does not necessarily need to contain IEA data.
+}
+\details{
+In a reasonable workflow, this function would be followed by a call to
+\code{\link[=add_row_col_meta]{add_row_col_meta()}} and \code{\link[matsindf:collapse_to_matrices]{matsindf::collapse_to_matrices()}}.
+
+This function respects groups when identifying entries in the resource matrix (\code{R}).
+So be sure to group \code{.tidy_iea_df} before calling this function.
+
+Internally, this function adds a temporary column to \code{.tidy_iea_df} called "\code{.R}".
+An error will occur if \code{.tidy_iea_df} already has a column named "\code{.R}".
 }
 \examples{
 library(dplyr)

@@ -1,7 +1,7 @@
 #' Extract a unit summation matrix from a tidy data frame
 #'
 #' Unit summation matrices have products in rows and units in columns, with
-#' `1`s where a product is expressed in the unit and `0` otherwise.
+#' `1`s where a product is expressed in the unit and `0`s otherwise.
 #' 
 #' `.tidy_iea_df` should be grouped as needed, typically on 
 #' `Country`, `Year`, `Energy.type`, `Last.stage`, etc., but
@@ -61,7 +61,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = 
 #' and terminology, although `.tidy_iea_df` does not necessarily need to contain IEA data.
 #'
 #' In a reasonable workflow, this function would be followed by a call to
-#' [add_row_col_meta()]} and [matsindf::collapse_to_matrices()].
+#' [add_row_col_meta()] and [matsindf::collapse_to_matrices()].
 #'
 #' This function respects groups when identifying entries in the resource matrix (`R`).
 #' So be sure to group `.tidy_iea_df` before calling this function.
@@ -105,34 +105,35 @@ extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = 
 #'   add_matnames_iea() %>%
 #'   glimpse()
 add_psut_matnames <- function(.tidy_iea_df,
-                             # Input columns
-                             ledger_side = "Ledger.side",
-                             e_dot = "E.dot",
-                             flow_aggregation_point = "Flow.aggregation.point",
-                             flow = "Flow",
-                             # Input identifiers for supply, consumption, and EIOU
-                             supply = "Supply",
-                             consumption = "Consumption",
-                             eiou = "Energy industry own use",
-                             neg_supply_in_fd = c("Exports",
-                                                  "International aviation bunkers",
-                                                  "International marine bunkers",
-                                                  "Losses",
-                                                  "Statistical differences",
-                                                  "Stock changes"),
-                             # Output column
-                             matname = "matname",
-                             # Ouput identifiers for
-                             # use matrix excluding EIOU (U_excl_EIOU),
-                             # use matrix energy industry own use items (U_EIOU),
-                             # make (V), and
-                             # final demand (Y)
-                             # matrices.
-                             U_excl_EIOU = "U_excl_EIOU", U_EIOU = "U_EIOU",
-                             R = "R", V = "V", Y = "Y", 
-                             .R = ".R"){
+                              # Input columns
+                              ledger_side = "Ledger.side",
+                              supply = "Supply",
+                              consumption = "Consumption",
+                              flow_aggregation_point = "Flow.aggregation.point",
+                              flow = "Flow",
+                              product = "Product", 
+                              e_dot = "E.dot",
+                              # Input identifiers for supply, consumption, and EIOU
+                              eiou = "Energy industry own use",
+                              neg_supply_in_fd = c("Exports",
+                                                   "International aviation bunkers",
+                                                   "International marine bunkers",
+                                                   "Losses",
+                                                   "Statistical differences",
+                                                   "Stock changes"),
+                              # Output column
+                              matname = "matname",
+                              # Ouput identifiers for
+                              # use matrix excluding EIOU (U_excl_EIOU),
+                              # use matrix energy industry own use items (U_EIOU),
+                              # make (V), and
+                              # final demand (Y)
+                              # matrices.
+                              U_excl_EIOU = "U_excl_EIOU", U_EIOU = "U_EIOU",
+                              R = "R", V = "V", Y = "Y", 
+                              .R = ".R"){
   matsindf::verify_cols_missing(.tidy_iea_df, matname)
-
+  
   out <- .tidy_iea_df %>%
     dplyr::mutate(
       !!matname := dplyr::case_when(
@@ -166,13 +167,13 @@ add_psut_matnames <- function(.tidy_iea_df,
     )
   # Resource industries are those industries (Flows) that have outputs but no inputs.
   industries_with_outputs <- output_rows %>%
-    dplyr::select(!!!as.name(gvars), !!as.name(flow))
+    dplyr::select(!!!gvars, !!flow, !!product)
   industries_with_inputs <- input_rows %>%
-    dplyr::select(!!!as.name(gvars), !!as.name(flow)) %>%
+    dplyr::select(!!!gvars, !!flow, !!product) %>%
     unique()
   # The next line subtracts (by group!) all industries with inputs from the industries_with_outputs data frame,
   # leaving only industries who have outputs but no inputs.
-  resource_rows <- dplyr::anti_join(industries_with_outputs, industries_with_inputs, by = c(gvars, flow)) %>%
+  resource_rows <- dplyr::anti_join(industries_with_outputs, industries_with_inputs, by = c(gvars, flow, product)) %>%
     dplyr::mutate(
       # The rows in the resource_rows data frame belong in the resources matrix,
       # so we give them the R matrix name.
@@ -182,7 +183,7 @@ add_psut_matnames <- function(.tidy_iea_df,
   # The .R column will have TRUE where matname needs to be changed from its current value to R
   # The .R column will have NA where matname should not be changed.
   matsindf::verify_cols_missing(out, as.name(.R))
-  out <- dplyr::full_join(out, resource_rows, by = c(gvars, flow)) %>%
+  out <- dplyr::full_join(out, resource_rows, by = c(gvars, flow, product)) %>%
     dplyr::mutate(
       !!matname := dplyr::case_when(
         !!as.name(.R) ~ R,

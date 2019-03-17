@@ -29,6 +29,7 @@ test_that("add_psut_matnames works as expected", {
     remove_agg_memo_flows() %>% 
     augment_iea_df() %>% 
     tidy_iea_df() %>% 
+    filter(Country == "GH", Year == 1971) %>% 
     group_by(Country, Year, Energy.type) %>% 
     add_psut_matnames()
 })

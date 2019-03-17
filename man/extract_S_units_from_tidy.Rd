@@ -28,7 +28,7 @@ a data frame containing grouping variables and a new column of unit summation ma
 }
 \description{
 Unit summation matrices have products in rows and units in columns, with
-\code{1}s where a product is expressed in the unit and \code{0} otherwise.
+\code{1}s where a product is expressed in the unit and \code{0}s otherwise.
 }
 \details{
 \code{.tidy_iea_df} should be grouped as needed, typically on
