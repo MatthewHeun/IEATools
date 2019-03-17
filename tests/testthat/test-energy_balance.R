@@ -45,6 +45,15 @@ test_that("fix_tidy_iea_df_balance works correctly", {
     calc_tidy_iea_df_balances() %>% 
     tidy_iea_df_balanced() %>% 
     expect_true()
+  # We can also try the calculation overall (not per Product) by changing the grouping.
+  unbalanced %>% 
+    group_by(Country, Year, Energy.type, Unit, Product) %>% 
+    fix_tidy_iea_df_balances() %>% 
+    # Change grouping. Now, we're calculating energy balances at the country level, not at the product level within countries.
+    group_by(Country, Year, Energy.type, Unit) %>% 
+    calc_tidy_iea_df_balances() %>% 
+    tidy_iea_df_balanced() %>% 
+    expect_true()
 })
 
 
