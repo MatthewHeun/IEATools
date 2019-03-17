@@ -9,7 +9,8 @@ fix_tidy_iea_df_balances(.tidy_iea_df, ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
   tfc_compare = "TFC compare", flow = "Flow",
   statistical_differences = "Statistical differences",
-  product = "Product", e_dot = "E.dot", err = ".err")
+  product = "Product", e_dot = "E.dot", err = ".err",
+  remove_zeroes = TRUE)
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA data, typically the output}
@@ -33,6 +34,8 @@ fix_tidy_iea_df_balances(.tidy_iea_df, ledger_side = "Ledger.side",
 \item{e_dot}{the name of the energy flow column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
 
 \item{err}{the name of a temporary error column added to \code{.tidy_iea_df}. Default is "\code{.err}".}
+
+\item{remove_zeroes}{a logical telling whether to remove \code{0}s after balancing.}
 }
 \value{
 \code{.tidy_iea_df} with adjusted \code{Statistical differences} flows such that
