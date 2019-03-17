@@ -69,7 +69,7 @@
 #' @examples
 #' library(dplyr)
 #' Ebal <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEAData") %>% 
+#'   system.file(package = "IEATools") %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   remove_agg_memo_flows() %>% 
@@ -136,7 +136,7 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
 #' @examples
 #' library(dplyr)
 #' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEAData") %>% 
+#'   system.file(package = "IEATools") %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   remove_agg_memo_flows() %>% 
@@ -193,7 +193,7 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' @examples
 #' library(dplyr)
 #' unbalanced <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEAData") %>% 
+#'   system.file(package = "IEATools") %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   use_iso_countries() %>% 

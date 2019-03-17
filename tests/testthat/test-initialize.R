@@ -18,7 +18,7 @@ test_that("iea_df works", {
   # Test with a full IEA data file in the correct format
   # IEAfile <- file.path("extdata", "IEA-2Countries-full2ndrow.csv") %>% 
   IEAfile <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEAData")
+    system.file(package = "IEATools")
   IEAtext <- readChar(IEAfile, file.info(IEAfile)$size)
   # Eliminate all series of commas at ends of lines
   # The pattern ,*$ means "match any number (*) of commas (,) at the end of a line ($)".
@@ -32,7 +32,7 @@ test_that("iea_df works", {
   expect_equal(colnames(IEADF)[[5]], "2000")
   # Test with an IEA data file with extra commas on the 2nd line.
   IEADF2 <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEAData") %>% 
+    system.file(package = "IEATools") %>% 
     iea_df()
   expect_equal(nrow(IEADF2), 14688)
   expect_equal(ncol(IEADF2), 5)
@@ -77,7 +77,7 @@ test_that("augment_iea_df works", {
   expect_equal(simple_with_tfc_df$Flow.aggregation.point, c("Total primary energy supply", NA_character_))
   
   IEADF_augmented <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEAData") %>% 
+    system.file(package = "IEATools") %>% 
     iea_df() %>% 
     rename_iea_df_cols() %>% 
     augment_iea_df()

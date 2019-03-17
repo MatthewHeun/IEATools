@@ -20,7 +20,7 @@ This function replaces the full country names with ISO abbreviations where possi
 }
 \examples{
 file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
-  system.file(package = "IEAData") \%>\% 
+  system.file(package = "IEATools") \%>\% 
   iea_df() \%>\%
   rename_iea_df_cols() \%>\% 
   use_iso_countries()

@@ -23,7 +23,7 @@
 #' @examples
 #' library(dplyr)
 #' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEAData") %>% 
+#'   system.file(package = "IEATools") %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   use_iso_countries() %>% 
@@ -72,16 +72,18 @@ extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = 
 #' @param .tidy_iea_df a data frame with `ledger_side`, `flow_aggregation_point`, `flow`, and `e_dot` columns.
 #' @param ledger_side the name of the column in `.tidy_iea_df` that contains ledger side
 #'        (a string). Default is "\code{Ledger.side}".
-#' @param e_dot the name of the column in `.tidy_iea_df` that contains energy and exergy values
-#'        (a string). Default is "`E.dot`".
-#' @param flow_aggregation_point the name of the column in `.tidy_iea_df` that contains flow aggregation point information.
-#'        Default is "`Flow.aggregation.point`".
-#' @param flow the name of the column in `.tidy_iea_df` that contains flow information.
-#'        Default is "`Flow`".
 #' @param supply the identifier for items on the supply side of the ledger (a string).
 #'        Default is "`Supply`".
 #' @param consumption the identifier for items on the consumption side
 #'        of the ledger (a string). Default is "`Consumption`".
+#' @param flow_aggregation_point the name of the column in `.tidy_iea_df` that contains flow aggregation point information.
+#'        Default is "`Flow.aggregation.point`".
+#' @param flow the name of the column in `.tidy_iea_df` that contains flow information.
+#'        Default is "`Flow`".
+#' @param product the name of the column in `.tidy_iea_df` that contains flow information.
+#'        Default is "`Product`".
+#' @param e_dot the name of the column in `.tidy_iea_df` that contains energy and exergy values
+#'        (a string). Default is "`E.dot`".
 #' @param eiou the identifier for items that are energy industry own use.
 #'        Default is "`Energy industry own use`".
 #' @param neg_supply_in_fd identifiers for flow items that, when negative,
@@ -93,6 +95,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = 
 #' @param R the name for the resource matrix (a string). Default is "`R`".
 #' @param V the name for the make matrix (a string). Default is "`V`".
 #' @param Y the name for the final demand matrix (a string). Default is "`Y`".
+#' @param .R the name for a temporary column used internally for calculations. Default is "`.R`".
 #'
 #' @return `.tidy_iea_df` with an added column `matname`.
 #'
@@ -100,9 +103,15 @@ extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = 
 #'
 #' @examples
 #' library(dplyr)
-#' UKEnergy2000tidy %>%
-#'   group_by(Country, Year, Energy.type, Last.stage) %>%
-#'   add_matnames_iea() %>%
+#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+#'   system.file(package = "IEATools") %>% 
+#'   iea_df() %>%
+#'   rename_iea_df_cols() %>% 
+#'   use_iso_countries() %>% 
+#'   remove_agg_memo_flows() %>% 
+#'   augment_iea_df() %>% 
+#'   tidy_iea_df() %>%
+#'   add_psut_matnames() %>%
 #'   glimpse()
 add_psut_matnames <- function(.tidy_iea_df,
                               # Input columns

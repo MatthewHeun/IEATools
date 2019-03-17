@@ -1,5 +1,5 @@
 ---
-title: "IEAData"
+title: "IEATools"
 author: "Matthew Kuperus Heun"
 date: "`r Sys.Date()`"
 output: 
@@ -22,7 +22,7 @@ library(magrittr)
 
 ## Introduction
 
-`IEAData` is an `R` package that provides functions to analyze 
+`IEATools` is an `R` package that provides functions to analyze 
 extended energy balance data from the 
 [International Energy Agency (IEA)](https://www.iea.org).
 The IEA's data are not free. 
@@ -48,10 +48,10 @@ Example data from two countries for two years are provided in the package.
 
 ```{r}
 library(dplyr)
-library(IEAData)
+library(IEATools)
 # Define the file location
 IEA_path <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-  system.file(package = "IEAData")
+  system.file(package = "IEATools")
 readChar(IEA_path, nchars = 251)
 ```
 
@@ -110,7 +110,7 @@ It would be nicer if countries were identified by their [2-letter ISO codes](htt
 4. How data should be aggregated is unclear to new users. 
 5. The data are not in [tidy format](https://doi.org/10.18637/jss.v059.i10).
 
-The `IEAData` package has functions to address each of these issues.
+The `IEATools` package has functions to address each of these issues.
 
 
 ### Fix column titles
@@ -136,7 +136,7 @@ IEA_data %>%
   glimpse()
 ```
 
-The default arguments are consistent throughout the `IEAData` package.
+The default arguments are consistent throughout the `IEATools` package.
 Thus, it is recommended that you use the default argument values,
 wherever possible.
 

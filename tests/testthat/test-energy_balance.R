@@ -7,7 +7,7 @@ context("IEA energy balance")
 
 test_that("calc_tidy_iea_df_balance works correctly", {
   Ebal <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEAData") %>% 
+    system.file(package = "IEATools") %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
     use_iso_countries() %>% 
@@ -25,7 +25,7 @@ test_that("calc_tidy_iea_df_balance works correctly", {
 
 test_that("fix_tidy_iea_df_balance works correctly", {
   unbalanced <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEAData") %>% 
+    system.file(package = "IEATools") %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
     use_iso_countries() %>% 

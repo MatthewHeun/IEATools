@@ -6,7 +6,7 @@ context("Testing munge_to_tidy")
 
 test_that("remove_agg_memo_flows works as expected", {
   Cleaned <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEAData") %>% 
+    system.file(package = "IEATools") %>% 
     iea_df() %>% 
     rename_iea_df_cols() %>% 
     remove_agg_memo_flows()
@@ -36,7 +36,7 @@ test_that("remove_agg_memo_flows works as expected", {
   # Try again with a different approach. 
   # This time, ensure that rows we want to clean are present first.
   IEA_data <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEAData") %>% 
+    system.file(package = "IEATools") %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
     augment_iea_df()
@@ -75,7 +75,7 @@ test_that("remove_agg_memo_flows works as expected", {
 
 test_that("use_iso_countries works as expected", {
   iso <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEAData") %>% 
+    system.file(package = "IEATools") %>% 
     iea_df() %>% 
     rename_iea_df_cols() %>% 
     use_iso_countries()
@@ -101,7 +101,7 @@ test_that("use_iso_countries works as expected", {
 
 test_that("tidy_iea works as expected", {
   iea_tidy_df <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEAData") %>% 
+    system.file(package = "IEATools") %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
     remove_agg_memo_flows() %>% 

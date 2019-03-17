@@ -32,6 +32,9 @@ Default is "\code{Flow.aggregation.point}".}
 \item{flow}{the name of the column in \code{.tidy_iea_df} that contains flow information.
 Default is "\code{Flow}".}
 
+\item{product}{the name of the column in \code{.tidy_iea_df} that contains flow information.
+Default is "\code{Product}".}
+
 \item{e_dot}{the name of the column in \code{.tidy_iea_df} that contains energy and exergy values
 (a string). Default is "\code{E.dot}".}
 
@@ -53,6 +56,8 @@ to which a row's value belongs (a string). Default is "\code{matname}".}
 \item{V}{the name for the make matrix (a string). Default is "\code{V}".}
 
 \item{Y}{the name for the final demand matrix (a string). Default is "\code{Y}".}
+
+\item{.R}{the name for a temporary column used internally for calculations. Default is "\code{.R}".}
 }
 \value{
 \code{.tidy_iea_df} with an added column \code{matname}.
@@ -75,8 +80,14 @@ An error will occur if \code{.tidy_iea_df} already has a column named "\code{.R}
 }
 \examples{
 library(dplyr)
-UKEnergy2000tidy \%>\%
-  group_by(Country, Year, Energy.type, Last.stage) \%>\%
-  add_matnames_iea() \%>\%
+file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
+  system.file(package = "IEATools") \%>\% 
+  iea_df() \%>\%
+  rename_iea_df_cols() \%>\% 
+  use_iso_countries() \%>\% 
+  remove_agg_memo_flows() \%>\% 
+  augment_iea_df() \%>\% 
+  tidy_iea_df() \%>\%
+  add_psut_matnames() \%>\%
   glimpse()
 }

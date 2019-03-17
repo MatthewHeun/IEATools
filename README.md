@@ -1,20 +1,32 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![CRAN status](https://www.r-pkg.org/badges/version/IEAData)](https://cran.r-project.org/package=IEAData) [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#experimental) [![Travis-CI Build Status](https://travis-ci.org/MatthewHeun/IEAData.svg?branch=master)](https://travis-ci.org/MatthewHeun/IEAData) [![Coverage status](https://codecov.io/gh/MatthewHeun/IEAData/branch/master/graph/badge.svg)](https://codecov.io/github/MatthewHeun/IEAData?branch=master)
 
-IEAData
-=======
+[![CRAN
+status](https://www.r-pkg.org/badges/version/IEATools)](https://cran.r-project.org/package=IEATools)
+[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Travis-CI Build
+Status](https://travis-ci.org/MatthewHeun/IEATools.svg?branch=master)](https://travis-ci.org/MatthewHeun/IEATools)
+[![Coverage
+status](https://codecov.io/gh/MatthewHeun/IEATools/branch/master/graph/badge.svg)](https://codecov.io/github/MatthewHeun/IEATools?branch=master)
 
-The `R` package `IEAData` provides ways to interact with data from the [International Energy Agency (IEA)](http://www.iea.org).
+# IEAData
 
-Installation
-------------
+The `R` package `IEAData` provides ways to interact with data from the
+[International Energy Agency
+(IEA)](http://www.iea.org).
+
+## Installation
 
 <!-- You can install `IEAData` from CRAN with: -->
+
 <!-- ```{r CRAN-installation, eval = FALSE} -->
+
 <!-- install.packages("IEAData") -->
+
 <!-- ``` -->
+
 <!-- You can install a recent development version of `IEAData` from github with: -->
+
 You can install `IEAData` from github with:
 
 ``` r
@@ -25,15 +37,14 @@ devtools::install_github("MatthewHeun/IEAData")
 devtools::install_github("MatthewHeun/IEAData", build_vignettes = TRUE)
 ```
 
-History
--------
+## History
 
-The functions in this package were used in [Heun et al. \[-@Heun:2018\]](https://doi.org/10.1016/j.apenergy.2018.05.109).
+The functions in this package were used in [Heun et al.
+\[-@Heun:2018\]](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
-More Information
-----------------
+## More Information
 
-Find more information, including vignettes and function documentation, at <https://MatthewHeun.github.io/IEAData/>.
+Find more information, including vignettes and function documentation,
+at <https://MatthewHeun.github.io/IEAData/>.
 
-References
-----------
+## References

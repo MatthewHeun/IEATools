@@ -1,13 +1,13 @@
-Package: IEAData
+Package: IEATools
 Type: Package
-Title: Distribute IEA data
+Title: Tools for IEA data
 Version: 0.1.5
 Date: 2018-08-10
 Authors@R: c(person("Matthew", "Heun", role = c("aut", "cre"),
                      email = "matthew.heun@me.com"))
 Author: Matthew Heun [aut, cre]
 Maintainer: Matthew Kuperus Heun <matthew.heun@me.com>
-Description: Functions for munging and manipulating IEA extended energy balance data.
+Description: Tools for munging and manipulating IEA extended energy balance data.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

@@ -1,4 +1,4 @@
 library(testthat)
-library(IEAData)
+library(IEATools)
 
-test_check("IEAData")
+test_check("IEATools")

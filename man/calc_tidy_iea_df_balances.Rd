@@ -95,7 +95,7 @@ If not, \code{balance_OK} will be \code{FALSE}.
 \examples{
 library(dplyr)
 Ebal <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
-  system.file(package = "IEAData") \%>\% 
+  system.file(package = "IEATools") \%>\% 
   iea_df() \%>\%
   rename_iea_df_cols() \%>\% 
   remove_agg_memo_flows() \%>\% 

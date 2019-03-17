@@ -39,7 +39,7 @@ Unit summation matrices have products in rows and units in columns, with
 \examples{
 library(dplyr)
 file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
-  system.file(package = "IEAData") \%>\% 
+  system.file(package = "IEATools") \%>\% 
   iea_df() \%>\%
   rename_iea_df_cols() \%>\% 
   use_iso_countries() \%>\% 

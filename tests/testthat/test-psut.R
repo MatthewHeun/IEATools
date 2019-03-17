@@ -4,7 +4,7 @@ context("PSUT functions")
 
 test_that("S_units_from_tidy works as expected", {
   S_units <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEAData") %>% 
+    system.file(package = "IEATools") %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
     use_iso_countries() %>% 
@@ -22,7 +22,7 @@ test_that("S_units_from_tidy works as expected", {
 
 test_that("add_psut_matnames works as expected", {
   WithMatnames <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEAData") %>% 
+    system.file(package = "IEATools") %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
     use_iso_countries() %>% 

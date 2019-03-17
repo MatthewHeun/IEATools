@@ -44,7 +44,7 @@ rename_iea_df_cols <- function(.iea_df,
 #'
 #' @examples
 #' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEAData") %>% 
+#'   system.file(package = "IEATools") %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   use_iso_countries()
@@ -120,7 +120,7 @@ use_iso_countries <- function(.iea_df,
 #'
 #' @examples
 #' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEAData") %>% 
+#'   system.file(package = "IEATools") %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   remove_agg_memo_flows()
@@ -369,7 +369,7 @@ augment_iea_df <- function(.iea_df,
 #'
 #' @examples
 #' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEAData") %>% 
+#'   system.file(package = "IEATools") %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   remove_agg_memo_flows() %>% 

@@ -64,7 +64,7 @@ and adjusts \code{Statistical differences} by any imbalances that are present.
 \examples{
 library(dplyr)
 unbalanced <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
-  system.file(package = "IEAData") \%>\% 
+  system.file(package = "IEATools") \%>\% 
   iea_df() \%>\%
   rename_iea_df_cols() \%>\% 
   use_iso_countries() \%>\% 
