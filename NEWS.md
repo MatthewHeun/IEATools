@@ -1,7 +1,8 @@
-* Rename package to IEATools to better reflect its purpose.
+* Added constants `coal_and_coal_products`, `oil_and_oil_products`, `renewable_products`, `biofuel_and_waste_products`.
+* Rename package from `IEAData` to `IEATools` to better reflect its purpose.
   Users can't get data from this package, anyway. 
   This package will do more than distribute data. 
-  It will allow users to also manipulate data and extend to useful stage.
+  This package allows users to also manipulate data and extend to useful stage.
 * Now includes sample data from 2 countries and 2 years.
 * Converted to functions for all tasks so more general.
 * Added function to create an S_units matrix from tidy data.
