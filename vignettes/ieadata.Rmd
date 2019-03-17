@@ -247,14 +247,39 @@ Tidy_IEA_df %>%
 
 Be sure to group the IEA data by appropriate variables
 before calling `calc_tidy_iea_df_balances()`. 
-Grouping should _definitely_ be done on the `Product` column.
+Grouping should be done on the `Product` column
+if per-product balances are desired.
 Typically, grouping is also done on 
 `Country`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
 Grouping should _not_ be done on the `Flow` column or the `Ledger.side` column.
 
+The following code demonstrates the difference between
+country-level balance calculations and product-level balance calculations.
+
+```{r}
+# Country-level balances
+Tidy_IEA_df %>% 
+  group_by(Country, Year, Energy.type) %>% 
+  calc_tidy_iea_df_balances() %>% 
+  glimpse()
+# Product-level balances within each country
+Tidy_IEA_df %>% 
+  group_by(Country, Year, Energy.type, Product) %>% 
+  calc_tidy_iea_df_balances() %>% 
+  glimpse()
+```
+
 IEA data can be adjusted to perfect balance with the `fix_tidy_iea_df_balances()` function.
 
 ```{r}
+# Country level balances
+Tidy_IEA_df %>% 
+  group_by(Country, Year, Energy.type, Unit, Product) %>% 
+  fix_tidy_iea_df_balances() %>% 
+  group_by(Country, Year, Energy.type, Unit) %>% 
+  calc_tidy_iea_df_balances() %>% 
+  glimpse()
+# Product-level balances within each country
 Tidy_IEA_df %>% 
   group_by(Country, Year, Energy.type, Unit, Product) %>% 
   fix_tidy_iea_df_balances() %>% 
