@@ -204,6 +204,15 @@ add_psut_matnames <- function(.tidy_iea_df,
   return(out)
 }
 
+
+add_resource_industries <- function(.tidy_iea_df){
+  
+}
+
+
+
+
+
 #' Add row, column, row type, and column type metadata
 #'
 #' @param .DF a data frame containing \code{matname_colname}.
