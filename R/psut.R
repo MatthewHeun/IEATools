@@ -153,44 +153,44 @@ add_psut_matnames <- function(.tidy_iea_df,
         TRUE ~ NA_character_
       )
     )
-  # Now separate R matrix from V matrix.
-  gvars <- dplyr::group_vars(out)
-  # Need to split R matrix entries from V matrix entries.
-  # Find all the rows that identify outputs of an ECC industry.
-  output_rows <- out %>%
-    dplyr::filter(!!as.name(matname) == V)
-  # Find all the rows that identify inputs to an ECC industry.
-  input_rows <- out %>%
-    dplyr::filter(!!as.name(matname) == Y | !!as.name(e_dot) < 0) %>%
-    dplyr::mutate(
-      !!as.name(e_dot) := abs(!!as.name(e_dot))
-    )
-  # Resource industries are those industries (Flows) that have outputs but no inputs.
-  industries_with_outputs <- output_rows %>%
-    dplyr::select(!!!gvars, !!flow, !!product)
-  industries_with_inputs <- input_rows %>%
-    dplyr::select(!!!gvars, !!flow, !!product) %>%
-    unique()
-  # The next line subtracts (by group!) all industries with inputs from the industries_with_outputs data frame,
-  # leaving only industries who have outputs but no inputs.
-  resource_rows <- dplyr::anti_join(industries_with_outputs, industries_with_inputs, by = c(gvars, flow, product)) %>%
-    dplyr::mutate(
-      # The rows in the resource_rows data frame belong in the resources matrix,
-      # so we give them the R matrix name.
-      !!as.name(.R) := TRUE
-    )
-  # The following full_join puts a .R column in the out data frame.
-  # The .R column will have TRUE where matname needs to be changed from its current value to R
-  # The .R column will have NA where matname should not be changed.
-  matsindf::verify_cols_missing(out, as.name(.R))
-  out <- dplyr::full_join(out, resource_rows, by = c(gvars, flow, product)) %>%
-    dplyr::mutate(
-      !!matname := dplyr::case_when(
-        !!as.name(.R) ~ R,
-        TRUE ~ matname
-      )
-    ) %>%
-    dplyr::select(-!!as.name(.R))
+  # # Now separate R matrix from V matrix.
+  # gvars <- dplyr::group_vars(out)
+  # # Need to split R matrix entries from V matrix entries.
+  # # Find all the rows that identify outputs of an ECC industry.
+  # output_rows <- out %>%
+  #   dplyr::filter(!!as.name(matname) == V)
+  # # Find all the rows that identify inputs to an ECC industry.
+  # input_rows <- out %>%
+  #   dplyr::filter(!!as.name(matname) == Y | !!as.name(e_dot) < 0) %>%
+  #   dplyr::mutate(
+  #     !!as.name(e_dot) := abs(!!as.name(e_dot))
+  #   )
+  # # Resource industries are those industries (Flows) that have outputs but no inputs.
+  # industries_with_outputs <- output_rows %>%
+  #   dplyr::select(!!!gvars, !!flow, !!product)
+  # industries_with_inputs <- input_rows %>%
+  #   dplyr::select(!!!gvars, !!flow, !!product) %>%
+  #   unique()
+  # # The next line subtracts (by group!) all industries with inputs from the industries_with_outputs data frame,
+  # # leaving only industries who have outputs but no inputs.
+  # resource_rows <- dplyr::anti_join(industries_with_outputs, industries_with_inputs, by = c(gvars, flow, product)) %>%
+  #   dplyr::mutate(
+  #     # The rows in the resource_rows data frame belong in the resources matrix,
+  #     # so we give them the R matrix name.
+  #     !!as.name(.R) := TRUE
+  #   )
+  # # The following full_join puts a .R column in the out data frame.
+  # # The .R column will have TRUE where matname needs to be changed from its current value to R
+  # # The .R column will have NA where matname should not be changed.
+  # matsindf::verify_cols_missing(out, as.name(.R))
+  # out <- dplyr::full_join(out, resource_rows, by = c(gvars, flow, product)) %>%
+  #   dplyr::mutate(
+  #     !!matname := dplyr::case_when(
+  #       !!as.name(.R) ~ R,
+  #       TRUE ~ matname
+  #     )
+  #   ) %>%
+  #   dplyr::select(-!!as.name(.R))
   
   return(out)
 }
