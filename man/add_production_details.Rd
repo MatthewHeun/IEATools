@@ -8,7 +8,7 @@ add_production_details(.iea_df, flow = "Flow",
   production = "Production", product = "Product")
 }
 \arguments{
-\item{.iea_df}{}
+\item{.iea_df}{a IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
 
 \item{flow}{the name of the flow column in \code{.iea_df}.  Default is "\code{Flow}".}
 
