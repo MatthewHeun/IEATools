@@ -129,7 +129,7 @@ IEAData4 <- IEAData3 %>%
     Country = iso2c
   ) %>% 
   mutate(
-    Country = case_when(
+    Country = dplyr::case_when(
       # Add "World" to the Country column to preserve that data.
       Name == "World" ~ "World", 
       TRUE ~ Country
