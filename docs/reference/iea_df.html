@@ -133,7 +133,7 @@ an error message is given.</p>
   <span class='kw'>expected_1st_line_start</span> <span class='kw'>=</span> <span class='st'>",,TIME"</span>,
   <span class='kw'>expected_2nd_line_start</span> <span class='kw'>=</span> <span class='st'>"COUNTRY,FLOW,PRODUCT"</span>,
   <span class='kw'>year_colname_pattern</span> <span class='kw'>=</span> <span class='st'>"^\\d*$"</span>, <span class='kw'>missing_data</span> <span class='kw'>=</span> <span class='st'>".."</span>,
-  <span class='kw'>not_applicable_data</span> <span class='kw'>=</span> <span class='st'>"x"</span>)</pre>
+  <span class='kw'>not_applicable_data</span> <span class='kw'>=</span> <span class='st'>"x"</span>, <span class='kw'>confidential_data</span> <span class='kw'>=</span> <span class='st'>"c"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -170,6 +170,11 @@ Entries of "<code>missing_data</code>" are coded as `0`` in output.</p></td>
       <td><p>a string that identifies not-applicable data.
 Entries of "<code>not_applicable_data</code>" are coded as <code>0</code> in output.</p></td>
     </tr>
+    <tr>
+      <th>confidential_data</th>
+      <td><p>a string that identifies confidential data.
+Entries of "<code>confidential_data</code>" are coded as <code>0</code> in output.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -205,7 +210,9 @@ when those data have not yet been incorporated into the database.
 In the face of IEA’s inconsistencies,
 the only rational way to proceed is to convert
 both "<code>x</code>" and "<code>..</code>" to "<code>0</code>"
-in this function.</p>
+in this function.
+Furthermore, confidential data (coded by the IEA as "<code>c</code>") is also interpreted as <code>0</code>.
+(What else can we do?)</p>
 <p>The data frame returned from this function is not ready to be used in R,
 because rows are not unique.
 To further prepre the data frame for use, call <code>augment_iea_data()</code>,

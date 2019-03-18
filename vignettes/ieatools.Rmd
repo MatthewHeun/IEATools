@@ -26,7 +26,7 @@ library(magrittr)
 extended energy balance data from the 
 [International Energy Agency (IEA)](https://www.iea.org).
 The IEA's data are not free. 
-But if you have access to the data, you can following the instructions in this vignette to 
+But if you have access to the data, you can follow the instructions in this vignette to 
 analyze IEA data.
 
 
