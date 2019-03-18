@@ -7,7 +7,7 @@
 add_psut_matnames(.tidy_iea_df, ledger_side = "Ledger.side",
   supply = "Supply", consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
-  product = "Product", e_dot = "E.dot",
+  production = "Production", product = "Product", e_dot = "E.dot",
   eiou = "Energy industry own use", neg_supply_in_fd = c("Exports",
   "International aviation bunkers", "International marine bunkers",
   "Losses", "Statistical differences", "Stock changes"),

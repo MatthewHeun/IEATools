@@ -106,6 +106,7 @@ add_psut_matnames <- function(.tidy_iea_df,
                               consumption = "Consumption",
                               flow_aggregation_point = "Flow.aggregation.point",
                               flow = "Flow",
+                              production = "Production",
                               product = "Product", 
                               e_dot = "E.dot",
                               # Input identifiers for supply, consumption, and EIOU
@@ -134,7 +135,9 @@ add_psut_matnames <- function(.tidy_iea_df,
       !!matname := dplyr::case_when(
         # All Consumption items belong in the final demand (Y) matrix.
         !!as.name(ledger_side) == consumption ~ Y,
-        # All positive values on the Supply side of the ledger belong in the make (V) matrix.
+        # All production items belong in the resources (R) matrix.
+        !!as.name(flow) == production ~ R,
+        # All other positive values on the Supply side of the ledger belong in the make (V) matrix.
         !!as.name(ledger_side) == supply & !!as.name(e_dot) > 0 ~ V,
         # Negative values on the supply side of the ledger with Flow == "Energy industry own use"
         # are put into the U_EIOU matrix
