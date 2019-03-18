@@ -328,6 +328,10 @@ remove_agg_memo_flows <- function(.iea_df,
 #' @param flow the name of the flow column in `.iea_df`.  Default is "`Flow`".
 #' @param energy_type the name of the energy type column to be added to `.iea_df`. Default is "`Energy.type`.
 #' @param energy_type_val the value to put in the `energy_type` column. Default is "`E`".
+#' @param method the name of the method column to be added to `.iea_df`. Default is "`Method`.
+#' @param method_val the value to put in the `method` column. Default is "`PCM`" (Physical Content Method, which is used by the IEA).
+#' @param last_stage the name of the last stage column to be added to `.iea_df`. Default is "`Last.stage`.
+#' @param last_stage_val the value to put in the `last_stage` column. Default is "`Final`" (which is the last stage supplied by the IEA).
 #' @param unit the name of the unit column to be added to `.iea_df`. Default is "`Unit`".
 #' @param unit_val the value to put in the `unit` column. Default is "`ktoe`" for kilotons of oil equivalent.
 #' @param supply the string that identifies supply `Ledger.side`. Default is "`Supply`".
@@ -375,6 +379,8 @@ augment_iea_df <- function(.iea_df,
                            country = "Country", 
                            ledger_side = "Ledger.side", flow_aggregation_point = "Flow.aggregation.point", flow = "Flow", 
                            energy_type = "Energy.type", energy_type_val = "E",
+                           method = "Method", method_val = "PCM",
+                           last_stage = "Last.stage", last_stage_val = "Final",
                            unit = "Unit", unit_val = "ktoe",
                            supply = "Supply", consumption = "Consumption",
                            tpes = "Total primary energy supply", 
@@ -466,6 +472,10 @@ augment_iea_df <- function(.iea_df,
         !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), heat_output_flows_prefix) ~ heat_output,
         TRUE ~ NA_character_
       ), 
+      # Add method column
+      !!method := method_val,
+      # Add last stage column
+      !!last_stage := last_stage_val,
       # Add energy type column
       !!energy_type := energy_type_val,
       # Add the Unit column
@@ -515,18 +525,21 @@ augment_iea_df <- function(.iea_df,
 #'   augment_iea_df() %>% 
 #'   tidy_iea_df()
 tidy_iea_df <- function(.iea_df, 
-                          year = "Year", e_dot = "E.dot", 
-                          country = "Country", ledger_side = "Ledger.side", 
-                          flow_aggregation_point = "Flow.aggregation.point", 
-                          energy_type = "Energy.type", unit = "Unit", 
-                          flow = "Flow", product = "Product",
-                          remove_zeroes = TRUE){
+                        year = "Year", e_dot = "E.dot", 
+                        method = "Method", 
+                        last_stage = "Last.stage",
+                        country = "Country", 
+                        ledger_side = "Ledger.side", 
+                        flow_aggregation_point = "Flow.aggregation.point", 
+                        energy_type = "Energy.type", unit = "Unit", 
+                        flow = "Flow", product = "Product",
+                        remove_zeroes = TRUE){
   out <- .iea_df %>% 
     # Gather into a tidy data frame.
-    tidyr::gather(key = !!as.name(year), value = !!as.name(e_dot), -c(country, ledger_side, flow_aggregation_point, flow, product,
-                                                                   energy_type, unit)) %>% 
+    tidyr::gather(key = !!as.name(year), value = !!as.name(e_dot), -c(method, country, last_stage, ledger_side, 
+                                                                      flow_aggregation_point, flow, product, energy_type, unit)) %>% 
     # Set the column order to something rational
-    dplyr::select(country, year, ledger_side, flow_aggregation_point, energy_type, unit, flow, product, e_dot)
+    dplyr::select(method, last_stage, country, year, ledger_side, flow_aggregation_point, energy_type, unit, flow, product, e_dot)
   if (remove_zeroes) {
     out <- out %>% 
       dplyr::filter(!(!!as.name(e_dot) == 0))

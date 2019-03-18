@@ -7,8 +7,10 @@
 augment_iea_df(.iea_df, country = "Country",
   ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
-  energy_type = "Energy.type", energy_type_val = "E", unit = "Unit",
-  unit_val = "ktoe", supply = "Supply", consumption = "Consumption",
+  energy_type = "Energy.type", energy_type_val = "E",
+  method = "Method", method_val = "PCM", last_stage = "Last.stage",
+  last_stage_val = "Final", unit = "Unit", unit_val = "ktoe",
+  supply = "Supply", consumption = "Consumption",
   tpes = "Total primary energy supply", tpes_flows = c("Production",
   "Imports", "Exports", "International marine bunkers",
   "International aviation bunkers", "Stock changes"),
@@ -53,6 +55,14 @@ augment_iea_df(.iea_df, country = "Country",
 \item{energy_type}{the name of the energy type column to be added to \code{.iea_df}. Default is "\code{Energy.type}.}
 
 \item{energy_type_val}{the value to put in the \code{energy_type} column. Default is "\code{E}".}
+
+\item{method}{the name of the method column to be added to \code{.iea_df}. Default is "\code{Method}.}
+
+\item{method_val}{the value to put in the \code{method} column. Default is "\code{PCM}" (Physical Content Method, which is used by the IEA).}
+
+\item{last_stage}{the name of the last stage column to be added to \code{.iea_df}. Default is "\code{Last.stage}.}
+
+\item{last_stage_val}{the value to put in the \code{last_stage} column. Default is "\code{Final}" (which is the last stage supplied by the IEA).}
 
 \item{unit}{the name of the unit column to be added to \code{.iea_df}. Default is "\code{Unit}".}
 

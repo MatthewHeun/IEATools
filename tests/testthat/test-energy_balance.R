@@ -6,8 +6,8 @@ context("IEA energy balance")
 ###########################################################
 
 test_that("calc_tidy_iea_df_balance works correctly", {
-  Ebal <- load_tidy_iea_df() %>% 
-    group_by(Country, Year, Energy.type, Unit, Product) %>% 
+  Ebal <- load_tidy_iea_df() %>%
+    group_by(Method, Last.stage, Country, Year, Energy.type, Unit, Product) %>% 
     calc_tidy_iea_df_balances()
   expect_false(all(Ebal$balance_OK))
   expect_true(Ebal %>% filter(Country == "GH", Year == 1971, Product == "Aviation gasoline") %>% extract2("balance_OK"))

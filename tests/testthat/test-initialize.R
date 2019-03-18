@@ -83,14 +83,16 @@ test_that("augment_iea_df works", {
     augment_iea_df()
   # Check column types
   clses <- lapply(IEADF_augmented, class)
+  expect_equal(clses$Method, "character")  
+  expect_equal(clses$Last.stage, "character")  
+  expect_equal(clses$Country, "character")  
   expect_equal(clses$Ledger.side, "character")  
   expect_equal(clses$Flow.aggregation.point, "character")  
-  expect_equal(clses$Country, "character")  
   expect_equal(clses$Energy.type, "character")
   expect_equal(clses$Unit, "character")
   expect_equal(clses$Flow, "character")  
   expect_equal(clses$Product, "character")  
-  clses[c("Ledger.side", "Flow.aggregation.point", "Country", "Energy.type", "Unit", "Flow", "Product")] <- NULL
+  clses[c("Method", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Country", "Energy.type", "Unit", "Flow", "Product")] <- NULL
   expect_true(all(clses == "numeric"))
   # Ensure that there are no remaining .. or x.
   # This test fails if there are any NA items.
@@ -202,7 +204,7 @@ test_that("use_iso_countries works as expected", {
 test_that("tidy_iea works as expected", {
   iea_tidy_df <- load_tidy_iea_df()
   # Verify column names and order
-  expect_equal(names(iea_tidy_df), c("Country", "Year", "Ledger.side", "Flow.aggregation.point", 
+  expect_equal(names(iea_tidy_df), c("Method", "Last.stage", "Country", "Year", "Ledger.side", "Flow.aggregation.point", 
                                      "Energy.type", "Unit", "Flow", "Product", "E.dot"))
   # This is a energy exclusive data frame
   expect_true(all(iea_tidy_df$Energy.type == "E"))

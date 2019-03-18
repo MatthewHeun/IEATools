@@ -5,7 +5,8 @@
 \title{Creates a tidy IEA data frame}
 \usage{
 tidy_iea_df(.iea_df, year = "Year", e_dot = "E.dot",
-  country = "Country", ledger_side = "Ledger.side",
+  method = "Method", last_stage = "Last.stage", country = "Country",
+  ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
   energy_type = "Energy.type", unit = "Unit", flow = "Flow",
   product = "Product", remove_zeroes = TRUE)
