@@ -539,12 +539,13 @@ tidy_iea_df <- function(.iea_df,
 #' 
 #' Loads an IEA extended energy balance data file in `.csv` format from disk and converts to a tidy format.
 #' This function bundles several others:
-#' [iea_df()], 
-#' [rename_iea_df_cols()],  
-#' [use_iso_countries()],
-#' [remove_agg_memo_flows()],
-#' [augment_iea_df()], and 
-#' [tidy_iea_df()].
+#' 1. [iea_df()], 
+#' 2. [rename_iea_df_cols()],  
+#' 3. [use_iso_countries()],
+#' 4. [remove_agg_memo_flows()],
+#' 5. [augment_iea_df()], and 
+#' 6. [tidy_iea_df()].
+#' 
 #' Each is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
 #' 

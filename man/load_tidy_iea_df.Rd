@@ -17,12 +17,16 @@ a tidy, augmented data frame of IEA extended energy balance data.
 \description{
 Loads an IEA extended energy balance data file in \code{.csv} format from disk and converts to a tidy format.
 This function bundles several others:
-\code{\link[=iea_df]{iea_df()}},
-\code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}},
-\code{\link[=use_iso_countries]{use_iso_countries()}},
-\code{\link[=remove_agg_memo_flows]{remove_agg_memo_flows()}},
-\code{\link[=augment_iea_df]{augment_iea_df()}}, and
-\code{\link[=tidy_iea_df]{tidy_iea_df()}}.
+\enumerate{
+\item \code{\link[=iea_df]{iea_df()}},
+\item \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}},
+\item \code{\link[=use_iso_countries]{use_iso_countries()}},
+\item \code{\link[=remove_agg_memo_flows]{remove_agg_memo_flows()}},
+\item \code{\link[=augment_iea_df]{augment_iea_df()}}, and
+\item \code{\link[=tidy_iea_df]{tidy_iea_df()}}.
+}
+}
+\details{
 Each is called in turn using default arguments.
 See examples for two ways to achieve the same result.
 }
