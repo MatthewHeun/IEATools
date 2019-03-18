@@ -43,10 +43,19 @@
   </a>
 </li>
 <li>
-  <a href="../articles/IEATools.html">Get started</a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="../articles/ieatools.html">IEATools</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -67,10 +76,10 @@
       <h1>IEATools</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2019-03-17</h4>
+            <h4 class="date">2019-03-18</h4>
       
       
-      <div class="hidden name"><code>IEATools.Rmd</code></div>
+      <div class="hidden name"><code>ieatools.Rmd</code></div>
 
     </div>
 
@@ -280,27 +289,26 @@ IEA extended energy balance data format.
 <li>
 <code>err</code> (supply sum when <code>consumption_sum</code> is <code>NA</code> or <code>supply_minus_consumption</code> when <code>consumption_sum</code> is not <code>NA</code>).</li>
 </ul>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">Tidy_IEA_df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">Balances &lt;-<span class="st"> </span>Tidy_IEA_df <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb10-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(Country, Year, Energy.type, Product) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/calc_tidy_iea_df_balances.html">calc_tidy_iea_df_balances</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">#&gt; Observations: 78</span></a>
-<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#&gt; Variables: 9</span></a>
-<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#&gt; Groups: Country, Year, Energy.type [4]</span></a>
-<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co">#&gt; $ Country                  &lt;chr&gt; "GH", "GH", "GH", "GH", "GH", "GH", "GH…</span></a>
-<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co">#&gt; $ Year                     &lt;chr&gt; "1971", "1971", "1971", "1971", "1971",…</span></a>
-<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co">#&gt; $ Energy.type              &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E",…</span></a>
-<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="co">#&gt; $ Product                  &lt;chr&gt; "Aviation gasoline", "Charcoal", "Crude…</span></a>
-<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="co">#&gt; $ supply_sum               &lt;dbl&gt; 0, 119, 0, 236, 94, 219, 0, -1, 3, 18, …</span></a>
-<a class="sourceLine" id="cb10-13" data-line-number="13"><span class="co">#&gt; $ consumption_sum          &lt;dbl&gt; NA, 119, NA, 235, 95, 217, NA, NA, 3, 1…</span></a>
-<a class="sourceLine" id="cb10-14" data-line-number="14"><span class="co">#&gt; $ supply_minus_consumption &lt;dbl&gt; NA, 0, NA, 1, -1, 2, NA, NA, 0, 0, 1, 0…</span></a>
-<a class="sourceLine" id="cb10-15" data-line-number="15"><span class="co">#&gt; $ balance_OK               &lt;lgl&gt; TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, …</span></a>
-<a class="sourceLine" id="cb10-16" data-line-number="16"><span class="co">#&gt; $ err                      &lt;dbl&gt; 0, 0, 0, 1, -1, 2, 0, -1, 0, 0, 1, 0, 0…</span></a>
-<a class="sourceLine" id="cb10-17" data-line-number="17">Tidy_IEA_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb10-18" data-line-number="18"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(Country, Year, Energy.type, Product) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb10-19" data-line-number="19"><span class="st">  </span><span class="kw"><a href="../reference/calc_tidy_iea_df_balances.html">calc_tidy_iea_df_balances</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb10-20" data-line-number="20"><span class="st">  </span><span class="kw"><a href="../reference/tidy_iea_df_balanced.html">tidy_iea_df_balanced</a></span>()</a>
-<a class="sourceLine" id="cb10-21" data-line-number="21"><span class="co">#&gt; [1] FALSE</span></a></code></pre></div>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="../reference/calc_tidy_iea_df_balances.html">calc_tidy_iea_df_balances</a></span>()</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">Balances <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#&gt; Observations: 78</span></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#&gt; Variables: 9</span></a>
+<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co">#&gt; Groups: Country, Year, Energy.type [4]</span></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co">#&gt; $ Country                  &lt;chr&gt; "GH", "GH", "GH", "GH", "GH", "GH", "GH…</span></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co">#&gt; $ Year                     &lt;chr&gt; "1971", "1971", "1971", "1971", "1971",…</span></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="co">#&gt; $ Energy.type              &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E",…</span></a>
+<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="co">#&gt; $ Product                  &lt;chr&gt; "Aviation gasoline", "Charcoal", "Crude…</span></a>
+<a class="sourceLine" id="cb10-13" data-line-number="13"><span class="co">#&gt; $ supply_sum               &lt;dbl&gt; 0, 119, 0, 236, 94, 219, 0, -1, 3, 18, …</span></a>
+<a class="sourceLine" id="cb10-14" data-line-number="14"><span class="co">#&gt; $ consumption_sum          &lt;dbl&gt; NA, 119, NA, 235, 95, 217, NA, NA, 3, 1…</span></a>
+<a class="sourceLine" id="cb10-15" data-line-number="15"><span class="co">#&gt; $ supply_minus_consumption &lt;dbl&gt; NA, 0, NA, 1, -1, 2, NA, NA, 0, 0, 1, 0…</span></a>
+<a class="sourceLine" id="cb10-16" data-line-number="16"><span class="co">#&gt; $ balance_OK               &lt;lgl&gt; TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, …</span></a>
+<a class="sourceLine" id="cb10-17" data-line-number="17"><span class="co">#&gt; $ err                      &lt;dbl&gt; 0, 0, 0, 1, -1, 2, 0, -1, 0, 0, 1, 0, 0…</span></a>
+<a class="sourceLine" id="cb10-18" data-line-number="18">Balances <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-19" data-line-number="19"><span class="st">  </span><span class="kw"><a href="../reference/tidy_iea_df_balanced.html">tidy_iea_df_balanced</a></span>()</a>
+<a class="sourceLine" id="cb10-20" data-line-number="20"><span class="co">#&gt; [1] FALSE</span></a></code></pre></div>
 <p>Be sure to group the IEA data by appropriate variables before calling <code><a href="../reference/calc_tidy_iea_df_balances.html">calc_tidy_iea_df_balances()</a></code>. Grouping should be done on the <code>Product</code> column if per-product balances are desired. Typically, grouping is also done on <code>Country</code>, <code>Year</code>, <code>Energy.type</code>, <code>Last.stage</code>, etc. columns. Grouping should <em>not</em> be done on the <code>Flow</code> column or the <code>Ledger.side</code> column.</p>
 <p>The following code demonstrates the difference between country-level balance calculations and product-level balance calculations.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co"># Country-level balances</span></a>

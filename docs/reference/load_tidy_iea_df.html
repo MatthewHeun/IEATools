@@ -40,8 +40,7 @@ use_iso_countries(),
 remove_agg_memo_flows(),
 augment_iea_df(), and
 tidy_iea_df().
-Each is called in turn using default arguments.
-See examples for two ways to achieve the same result." />
+" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -85,10 +84,19 @@ See examples for two ways to achieve the same result." />
   </a>
 </li>
 <li>
-  <a href="../articles/IEATools.html">Get started</a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/ieatools.html">IEATools</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -117,15 +125,14 @@ See examples for two ways to achieve the same result." />
     <div class="ref-description">
     
     <p>Loads an IEA extended energy balance data file in <code>.csv</code> format from disk and converts to a tidy format.
-This function bundles several others:
-<code><a href='iea_df.html'>iea_df()</a></code>,
-<code><a href='rename_iea_df_cols.html'>rename_iea_df_cols()</a></code>,
-<code><a href='use_iso_countries.html'>use_iso_countries()</a></code>,
-<code><a href='remove_agg_memo_flows.html'>remove_agg_memo_flows()</a></code>,
-<code><a href='augment_iea_df.html'>augment_iea_df()</a></code>, and
-<code><a href='tidy_iea_df.html'>tidy_iea_df()</a></code>.
-Each is called in turn using default arguments.
-See examples for two ways to achieve the same result.</p>
+This function bundles several others:</p><ol>
+<li><p><code><a href='iea_df.html'>iea_df()</a></code>,</p></li>
+<li><p><code><a href='rename_iea_df_cols.html'>rename_iea_df_cols()</a></code>,</p></li>
+<li><p><code><a href='use_iso_countries.html'>use_iso_countries()</a></code>,</p></li>
+<li><p><code><a href='remove_agg_memo_flows.html'>remove_agg_memo_flows()</a></code>,</p></li>
+<li><p><code><a href='augment_iea_df.html'>augment_iea_df()</a></code>, and</p></li>
+<li><p><code><a href='tidy_iea_df.html'>tidy_iea_df()</a></code>.</p></li>
+</ol>
     
     </div>
 
@@ -146,6 +153,11 @@ See examples for two ways to achieve the same result.</p>
 
     <p>a tidy, augmented data frame of IEA extended energy balance data.</p>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Each is called in turn using default arguments.
+See examples for two ways to achieve the same result.</p>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>simple</span> <span class='kw'>&lt;-</span> <span class='fu'>load_tidy_iea_df</span>()
@@ -165,6 +177,8 @@ See examples for two ways to achieve the same result.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
