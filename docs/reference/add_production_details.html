@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Creates a tidy IEA data frame — tidy_iea_df • IEATools</title>
+<title>Add products to production industry names — add_production_details • IEATools</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,13 +30,18 @@
 
 
 
-<meta property="og:title" content="Creates a tidy IEA data frame — tidy_iea_df" />
+<meta property="og:title" content="Add products to production industry names — add_production_details" />
 
-<meta property="og:description" content="Data from the IEA have years in columns,
-but the tidy data format
-requires one row for each datum.
-This function uses tidyr::gather() to
-make an IEA data frame tidy." />
+<meta property="og:description" content="The IEA specify all extraction processes as &quot;Production&quot;.
+When combined with an input-output view of the world
+within the Physical Supply-Use Table (PSUT) framework,
+production of any one resource implies production of all other resources.
+That's clearly non-physical,
+as production of some Crude oil does not imply harvesting of Solar energy.
+The solution to this problem is to rename the Flow values to be
+Production (Product).
+For example, the industry that produces Crude oil will be renamed to
+Production (Crude oil)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -104,26 +109,28 @@ make an IEA data frame tidy." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Creates a tidy IEA data frame</h1>
+    <h1>Add products to production industry names</h1>
     
-    <div class="hidden name"><code>tidy_iea_df.Rd</code></div>
+    <div class="hidden name"><code>add_production_details.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Data from the IEA have years in columns,
-but the <a href='https://doi.org/10.18637/jss.v059.i10'>tidy data format</a>
-requires one row for each datum.
-This function uses <code><a href='https://tidyr.tidyverse.org/reference/gather.html'>tidyr::gather()</a></code> to
-make an IEA data frame tidy.</p>
+    <p>The IEA specify all extraction processes as "<code>Production</code>".
+When combined with an input-output view of the world
+within the Physical Supply-Use Table (PSUT) framework,
+production of any one resource implies production of all other resources.
+That's clearly non-physical,
+as production of some Crude oil does not imply harvesting of Solar energy.
+The solution to this problem is to rename the <code>Flow</code> values to be
+<code>Production (Product)</code>.
+For example, the industry that produces Crude oil will be renamed to
+<code>Production (Crude oil)</code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>tidy_iea_df</span>(<span class='no'>.iea_df</span>, <span class='kw'>year</span> <span class='kw'>=</span> <span class='st'>"Year"</span>, <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
-  <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>, <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='st'>"Energy.type"</span>, <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>remove_zeroes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>add_production_details</span>(<span class='no'>.iea_df</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
+  <span class='kw'>production</span> <span class='kw'>=</span> <span class='st'>"Production"</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -133,54 +140,27 @@ make an IEA data frame tidy.</p>
       <td><p>a IEA data frame whose columns have been renamed by <code><a href='rename_iea_df_cols.html'>rename_iea_df_cols()</a></code></p></td>
     </tr>
     <tr>
-      <th>year</th>
-      <td><p>the name of the year column created in <code>.iea_df</code> by this function. (Default is "<code>Year</code>".)</p></td>
-    </tr>
-    <tr>
-      <th>e_dot</th>
-      <td><p>the name of the energy/exergy value column created in <code>.iea_df</code> by this function. (Default is "<code>E.dot</code>".)</p></td>
-    </tr>
-    <tr>
-      <th>country</th>
-      <td><p>the name of the country column in <code>.iea_df</code>. (Default is "<code>Country</code>".)</p></td>
-    </tr>
-    <tr>
-      <th>ledger_side</th>
-      <td><p>the name of the ledger side in <code>.iea_df</code>. (Default is "<code>Ledger.side</code>".)</p></td>
-    </tr>
-    <tr>
-      <th>flow_aggregation_point</th>
-      <td><p>the name of the flow aggregation point column in <code>.iea_df</code>. (Default is "<code>Flow.aggregation.point</code>".)</p></td>
-    </tr>
-    <tr>
-      <th>energy_type</th>
-      <td><p>the name of the energy type column in <code>.iea_df</code>. (Default is "<code>Energy.type</code>".)</p></td>
-    </tr>
-    <tr>
-      <th>unit</th>
-      <td><p>the name of the unit column in <code>.iea_df</code>. (Default is "<code>Units</code>".)</p></td>
-    </tr>
-    <tr>
       <th>flow</th>
-      <td><p>the name of the flow column in <code>.iea_df</code>. (Default is "<code>Flow</code>".)</p></td>
+      <td><p>the name of the flow column in <code>.iea_df</code>.  Default is "<code>Flow</code>".</p></td>
+    </tr>
+    <tr>
+      <th>production</th>
+      <td><p>a string that identifies production in the flow column. Default is "<code>Production</code>".</p></td>
     </tr>
     <tr>
       <th>product</th>
-      <td><p>the name of the product column in <code>.iea_df</code>. (Default is "<code>Product</code>".)</p></td>
-    </tr>
-    <tr>
-      <th>remove_zeroes</th>
-      <td><p>a logical indicating whether data points with the value <code>0</code> are to be removed from the output. (Default is <code>TRUE</code>.)</p></td>
+      <td><p>the name of the product column in <code>.iea_df</code>.  Default is "<code>Product</code>".</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a tidy version of <code>.iea_df</code> containing new columns <code>year</code> and <code>e_dot</code> and, optionally, <code>0</code> values removed</p>
+    <p>.iea_df with detailed production industries</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Default argument values assume that <code><a href='rename_iea_df_cols.html'>rename_iea_df_cols()</a></code> has been called on <code>.iea_df</code>.</p>
+    <p>If the suffix of the value of the <code>Flow</code> column is already "<code>(Product)</code>",
+no changes to the value in the <code>Flow</code> column will be made.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -188,22 +168,22 @@ make an IEA data frame tidy.</p>
   <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"IEATools"</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='iea_df.html'>iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='rename_iea_df_cols.html'>rename_iea_df_cols</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='remove_agg_memo_flows.html'>remove_agg_memo_flows</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='use_iso_countries.html'>use_iso_countries</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='augment_iea_df.html'>augment_iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>tidy_iea_df</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 399 x 9</span><span>
+  <span class='fu'><a href='remove_agg_memo_flows.html'>remove_agg_memo_flows</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='tidy_iea_df.html'>tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'>add_production_details</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 399 x 9</span><span>
 #&gt;    Country Year  Ledger.side Flow.aggregatio… Energy.type Unit  Flow  Product
 #&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  
-#&gt; </span><span style='color: #555555;'> 1</span><span> GH      1971  Supply      Total primary e… E           ktoe  Prod… Primar…
-#&gt; </span><span style='color: #555555;'> 2</span><span> GH      1971  Supply      Total primary e… E           ktoe  Prod… Hydro  
-#&gt; </span><span style='color: #555555;'> 3</span><span> GH      1971  Supply      Total primary e… E           ktoe  Impo… Crude …
-#&gt; </span><span style='color: #555555;'> 4</span><span> GH      1971  Supply      Total primary e… E           ktoe  Impo… Aviati…
-#&gt; </span><span style='color: #555555;'> 5</span><span> GH      1971  Supply      Total primary e… E           ktoe  Impo… Kerose…
-#&gt; </span><span style='color: #555555;'> 6</span><span> GH      1971  Supply      Total primary e… E           ktoe  Impo… Other …
-#&gt; </span><span style='color: #555555;'> 7</span><span> GH      1971  Supply      Total primary e… E           ktoe  Impo… Lubric…
-#&gt; </span><span style='color: #555555;'> 8</span><span> GH      1971  Supply      Total primary e… E           ktoe  Expo… Motor …
-#&gt; </span><span style='color: #555555;'> 9</span><span> GH      1971  Supply      Total primary e… E           ktoe  Expo… Other …
-#&gt; </span><span style='color: #555555;'>10</span><span> GH      1971  Supply      Total primary e… E           ktoe  Expo… Fuel o…
+#&gt; </span><span style='color: #555555;'> 1</span><span> Ghana   1971  Supply      Total primary e… E           ktoe  Prod… Primar…
+#&gt; </span><span style='color: #555555;'> 2</span><span> Ghana   1971  Supply      Total primary e… E           ktoe  Prod… Hydro  
+#&gt; </span><span style='color: #555555;'> 3</span><span> Ghana   1971  Supply      Total primary e… E           ktoe  Impo… Crude …
+#&gt; </span><span style='color: #555555;'> 4</span><span> Ghana   1971  Supply      Total primary e… E           ktoe  Impo… Aviati…
+#&gt; </span><span style='color: #555555;'> 5</span><span> Ghana   1971  Supply      Total primary e… E           ktoe  Impo… Kerose…
+#&gt; </span><span style='color: #555555;'> 6</span><span> Ghana   1971  Supply      Total primary e… E           ktoe  Impo… Other …
+#&gt; </span><span style='color: #555555;'> 7</span><span> Ghana   1971  Supply      Total primary e… E           ktoe  Impo… Lubric…
+#&gt; </span><span style='color: #555555;'> 8</span><span> Ghana   1971  Supply      Total primary e… E           ktoe  Expo… Motor …
+#&gt; </span><span style='color: #555555;'> 9</span><span> Ghana   1971  Supply      Total primary e… E           ktoe  Expo… Other …
+#&gt; </span><span style='color: #555555;'>10</span><span> Ghana   1971  Supply      Total primary e… E           ktoe  Expo… Fuel o…
 #&gt; </span><span style='color: #555555;'># … with 389 more rows, and 1 more variable: E.dot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Augment an IEA data frame — augment_iea_df • IEAData</title>
+<title>Augment an IEA data frame — augment_iea_df • IEATools</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -62,7 +62,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">IEAData</a>
+        <a class="navbar-link" href="../index.html">IEATools</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
       </span>
     </div>
@@ -76,19 +76,10 @@
   </a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../articles/IEATools.html">Get started</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/ieadata.html">IEAData</a>
-    </li>
-  </ul>
+<li>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -123,12 +114,12 @@
     <pre class="usage"><span class='fu'>augment_iea_df</span>(<span class='no'>.iea_df</span>, <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>,
   <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
   <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='st'>"Energy.type"</span>, <span class='kw'>energy_type_val</span> <span class='kw'>=</span> <span class='st'>"E"</span>,
-  <span class='kw'>units</span> <span class='kw'>=</span> <span class='st'>"Units"</span>, <span class='kw'>units_val</span> <span class='kw'>=</span> <span class='st'>"ktoe"</span>, <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>,
-  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>, <span class='kw'>tpes</span> <span class='kw'>=</span> <span class='st'>"Total primary energy supply"</span>,
-  <span class='kw'>tpes_flows</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Production"</span>, <span class='st'>"Imports"</span>, <span class='st'>"Exports"</span>,
-  <span class='st'>"International marine bunkers"</span>, <span class='st'>"International aviation bunkers"</span>,
-  <span class='st'>"Stock changes"</span>), <span class='kw'>tfc_compare</span> <span class='kw'>=</span> <span class='st'>"TFC compare"</span>,
+  <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='st'>"Energy.type"</span>, <span class='kw'>energy_type_val</span> <span class='kw'>=</span> <span class='st'>"E"</span>, <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>,
+  <span class='kw'>unit_val</span> <span class='kw'>=</span> <span class='st'>"ktoe"</span>, <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>, <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
+  <span class='kw'>tpes</span> <span class='kw'>=</span> <span class='st'>"Total primary energy supply"</span>, <span class='kw'>tpes_flows</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Production"</span>,
+  <span class='st'>"Imports"</span>, <span class='st'>"Exports"</span>, <span class='st'>"International marine bunkers"</span>,
+  <span class='st'>"International aviation bunkers"</span>, <span class='st'>"Stock changes"</span>),
+  <span class='kw'>tfc_compare</span> <span class='kw'>=</span> <span class='st'>"TFC compare"</span>,
   <span class='kw'>tfc_compare_flows</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Total primary energy supply"</span>, <span class='st'>"Transfers"</span>,
   <span class='st'>"Statistical differences"</span>, <span class='st'>"Transformation processes"</span>,
   <span class='st'>"Energy industry own use"</span>, <span class='st'>"Losses"</span>), <span class='kw'>losses</span> <span class='kw'>=</span> <span class='st'>"Losses"</span>,
@@ -187,12 +178,12 @@
       <td><p>the value to put in the <code>energy_type</code> column. Default is "<code>E</code>".</p></td>
     </tr>
     <tr>
-      <th>units</th>
-      <td><p>the name of the units column to be added to <code>.iea_df</code>. Default is "<code>Units</code>".</p></td>
+      <th>unit</th>
+      <td><p>the name of the unit column to be added to <code>.iea_df</code>. Default is "<code>Unit</code>".</p></td>
     </tr>
     <tr>
-      <th>units_val</th>
-      <td><p>the value to put in the <code>units</code> column. Default is "<code>ktoe</code>" for kilotons of oil equivalent.</p></td>
+      <th>unit_val</th>
+      <td><p>the value to put in the <code>unit</code> column. Default is "<code>ktoe</code>" for kilotons of oil equivalent.</p></td>
     </tr>
     <tr>
       <th>supply</th>
@@ -308,7 +299,7 @@ The <code>.rownum</code> column is deleted before returning.</p></td>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.iea_df</code> with additional columns named <code>ledger_side</code>, <code>flow_aggregation_point</code>, <code>energy_type</code>, and <code>units</code>.</p>
+    <p><code>.iea_df</code> with additional columns named <code>ledger_side</code>, <code>flow_aggregation_point</code>, <code>energy_type</code>, and <code>unit</code>.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -326,8 +317,8 @@ On the <code>Consumption</code> side of the ledger, <code>Flow.aggregation.point
 <p>The second problem this function solves is that energy type and units are not specified in IEA data.
 An <code>Energy.type</code> column is added with the value of <code>energy_type_val</code>.
 (Default is <code>E</code>, for energy, as opposed to <code>X</code>, which would be exergy.)
-A <code>Units</code> column is added with the value of <code>units_val</code>.
-(Default is <code>ktoe</code>, although any string can be specified in <code>units_val</code>.)</p>
+A <code>Unit</code> column is added with the value of <code>unit_val</code>.
+(Default is <code>ktoe</code>, although any string can be specified in <code>unit_val</code>.)</p>
 <p>Note that this function decides where to divide <code>Supply</code> from <code>Consumption</code>.
 To do so, it first looks for rows in which <code>Flow</code> is "<code>Losses</code>".
 The last "<code>Losses</code>" row is the last row of the <code>Supply</code> side of the ledger.
@@ -344,7 +335,7 @@ an error is generated.</p>
                        <span class='st'>"World,Losses,Hard coal (if no detail),1,2"</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='rename_iea_df_cols.html'>rename_iea_df_cols</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>augment_iea_df</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 2 x 9</span><span>
-#&gt;   Country Ledger.side Flow.aggregatio… Energy.type Units Flow  Product `1960`
+#&gt;   Country Ledger.side Flow.aggregatio… Energy.type Unit  Flow  Product `1960`
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #555555;'>1</span><span> World   Supply      Total primary e… E           ktoe  Prod… Hard c…     42
 #&gt; </span><span style='color: #555555;'>2</span><span> World   Supply      TFC compare      E           ktoe  Loss… Hard c…      1

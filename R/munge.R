@@ -24,13 +24,7 @@
 #' @export
 #'
 #' @examples
-#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEATools") %>% 
-#'   iea_df() %>% 
-#'   rename_iea_df_cols() %>% 
-#'   augment_iea_df() %>% 
-#'   remove_agg_memo_flows() %>% 
-#'   tidy_iea_df() %>% 
+#' load_tidy_iea_df() %>% 
 #'   add_production_details()
 add_production_details <- function(.iea_df, flow = "Flow", production = "Production", product = "Product"){
   .iea_df %>% 

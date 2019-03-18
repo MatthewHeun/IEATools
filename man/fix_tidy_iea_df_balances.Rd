@@ -63,14 +63,7 @@ and adjusts \code{Statistical differences} by any imbalances that are present.
 }
 \examples{
 library(dplyr)
-unbalanced <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
-  system.file(package = "IEATools") \%>\% 
-  iea_df() \%>\%
-  rename_iea_df_cols() \%>\% 
-  use_iso_countries() \%>\% 
-  remove_agg_memo_flows() \%>\% 
-  augment_iea_df() \%>\% 
-  tidy_iea_df()
+unbalanced <- load_tidy_iea_df()
 # This will not be balanced, because the IEA data are not in perfect balance
 unbalanced \%>\% 
   group_by(Country, Year, Energy.type, Unit, Product) \%>\% 

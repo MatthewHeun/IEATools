@@ -200,13 +200,7 @@ test_that("use_iso_countries works as expected", {
 })
 
 test_that("tidy_iea works as expected", {
-  iea_tidy_df <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEATools") %>% 
-    iea_df() %>%
-    rename_iea_df_cols() %>% 
-    remove_agg_memo_flows() %>% 
-    augment_iea_df() %>% 
-    tidy_iea_df()
+  iea_tidy_df <- load_tidy_iea_df()
   # Verify column names and order
   expect_equal(names(iea_tidy_df), c("Country", "Year", "Ledger.side", "Flow.aggregation.point", 
                                      "Energy.type", "Unit", "Flow", "Product", "E.dot"))
@@ -216,4 +210,17 @@ test_that("tidy_iea works as expected", {
   expect_true(all(iea_tidy_df$Unit == "ktoe"))
   # Ledger.side can be only Supply or Consumption
   expect_true(all(iea_tidy_df$Ledger.side %in% c("Supply", "Consumption")))
+})
+
+test_that("load_tidy_iea_df works as expected", {
+  simple <- load_tidy_iea_df()
+  complicated <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+    system.file(package = "IEATools") %>% 
+    iea_df() %>%
+    rename_iea_df_cols() %>% 
+    remove_agg_memo_flows() %>% 
+    use_iso_countries() %>% 
+    augment_iea_df() %>% 
+    tidy_iea_df()
+  expect_true(all(simple == complicated))
 })

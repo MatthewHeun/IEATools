@@ -22,14 +22,7 @@
 #'
 #' @examples
 #' library(dplyr)
-#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEATools") %>% 
-#'   iea_df() %>%
-#'   rename_iea_df_cols() %>% 
-#'   use_iso_countries() %>% 
-#'   remove_agg_memo_flows() %>% 
-#'   augment_iea_df() %>% 
-#'   tidy_iea_df() %>%
+#' load_tidy_iea_df() %>% 
 #'   group_by(Country, Year, Energy.type) %>% 
 #'   extract_S_units_from_tidy()
 extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = "Unit", s_units = "S_units",
@@ -103,14 +96,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = 
 #'
 #' @examples
 #' library(dplyr)
-#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEATools") %>% 
-#'   iea_df() %>%
-#'   rename_iea_df_cols() %>% 
-#'   use_iso_countries() %>% 
-#'   remove_agg_memo_flows() %>% 
-#'   augment_iea_df() %>% 
-#'   tidy_iea_df() %>%
+#' load_tidy_iea_df() %>% 
 #'   add_psut_matnames() %>%
 #'   glimpse()
 add_psut_matnames <- function(.tidy_iea_df,

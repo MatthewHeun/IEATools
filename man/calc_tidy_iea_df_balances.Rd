@@ -94,13 +94,7 @@ If not, \code{balance_OK} will be \code{FALSE}.
 }
 \examples{
 library(dplyr)
-Ebal <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
-  system.file(package = "IEATools") \%>\% 
-  iea_df() \%>\%
-  rename_iea_df_cols() \%>\% 
-  remove_agg_memo_flows() \%>\% 
-  augment_iea_df() \%>\% 
-  tidy_iea_df() \%>\% 
+Ebal <- load_tidy_iea_df() \%>\% 
   group_by(Country, Year, Energy.type, Unit, Product) \%>\% 
   calc_tidy_iea_df_balances()
 head(Ebal, 5)

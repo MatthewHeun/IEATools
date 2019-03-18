@@ -24,13 +24,7 @@ Argument \code{.tidy_iea_df_balances} should be set to the value of a call to
 }
 \examples{
 library(dplyr)
-file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
-  system.file(package = "IEATools") \%>\% 
-  iea_df() \%>\%
-  rename_iea_df_cols() \%>\% 
-  remove_agg_memo_flows() \%>\% 
-  augment_iea_df() \%>\% 
-  tidy_iea_df() \%>\% 
+load_tidy_iea_df() \%>\% 
   group_by(Country, Year, Energy.type, Unit, Product) \%>\% 
   calc_tidy_iea_df_balances() \%>\% 
   tidy_iea_df_balanced()

@@ -38,14 +38,7 @@ Unit summation matrices have products in rows and units in columns, with
 }
 \examples{
 library(dplyr)
-file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
-  system.file(package = "IEATools") \%>\% 
-  iea_df() \%>\%
-  rename_iea_df_cols() \%>\% 
-  use_iso_countries() \%>\% 
-  remove_agg_memo_flows() \%>\% 
-  augment_iea_df() \%>\% 
-  tidy_iea_df() \%>\%
+load_tidy_iea_df() \%>\% 
   group_by(Country, Year, Energy.type) \%>\% 
   extract_S_units_from_tidy()
 }

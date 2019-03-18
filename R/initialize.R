@@ -40,6 +40,8 @@
 #' the only rational way to proceed is to convert 
 #' both "`x`" and "`..`" to "`0`"
 #' in this function.
+#' Furthermore, confidential data (coded by the IEA as "`c`") is also interpreted as `0`.
+#' (What else can we do?)
 #' 
 #' The data frame returned from this function is not ready to be used in R, 
 #' because rows are not unique.
@@ -57,6 +59,8 @@
 #'        Entries of "`missing_data`" are coded as `0`` in output.
 #' @param not_applicable_data a string that identifies not-applicable data.
 #'        Entries of "`not_applicable_data`" are coded as `0` in output.
+#' @param confidential_data a string that identifies confidential data.
+#'        Entries of "`confidential_data`" are coded as `0` in output.
 #'
 #' @return a data frame containing the IEA extended energy balances data
 #' 
@@ -69,7 +73,8 @@
 #' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal,42,43")
 iea_df <- function(.iea_file = NULL, text = NULL, 
                    expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
-                   year_colname_pattern = "^\\d*$", missing_data = "..", not_applicable_data = "x"){
+                   year_colname_pattern = "^\\d*$", 
+                   missing_data = "..", not_applicable_data = "x", confidential_data = "c"){
   assertthat::assert_that(xor(is.null(.iea_file), is.null(text)), 
                           msg = "need to supply one but not both of iea_file and text arguments to iea_df")
   if (!is.null(.iea_file)) {
@@ -111,12 +116,17 @@ iea_df <- function(.iea_file = NULL, text = NULL,
     unlist()
   IEAData_withheader <- IEAData_noheader %>% 
     magrittr::set_names(colnames)
+  
   # Data tagged as not-applicable in the IEA database should be coded as 0.
   # We still want to allow calculations with these data.
   IEAData_withheader[IEAData_withheader == not_applicable_data] <- 0
   # However, missing data should be tagged as "not available", because calculations 
   # with unavaiable data should fail.
   IEAData_withheader[IEAData_withheader == missing_data] <- 0
+  # Data tagged as confidential are converted to 0.
+  # What else can we do?
+  IEAData_withheader[IEAData_withheader == confidential_data] <- 0
+  
   # Convert all year columns (columns whose names are all numbers) to numeric, 
   # convert into a data frame, and 
   # return.
@@ -525,7 +535,38 @@ tidy_iea_df <- function(.iea_df,
 }
 
 
-load_tidy_iea_df <- function(file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% system.file(package = "IEATools")){
+#' Load IEA extended energy balance data into tidy format
+#' 
+#' Loads an IEA extended energy balance data file in `.csv` format from disk and converts to a tidy format.
+#' This function bundles several others:
+#' [iea_df()], 
+#' [rename_iea_df_cols()],  
+#' [use_iso_countries()],
+#' [remove_agg_memo_flows()],
+#' [augment_iea_df()], and 
+#' [tidy_iea_df()].
+#' Each is called in turn using default arguments.
+#' See examples for two ways to achieve the same result.
+#' 
+#' @param file_path the path of the file to be loaded. Default loads example data bundled with the package.
+#'
+#' @return a tidy, augmented data frame of IEA extended energy balance data.
+#' 
+#' @export
+#'
+#' @examples
+#' simple <- load_tidy_iea_df()
+#' complicated <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+#'   system.file(package = "IEATools") %>% 
+#'   iea_df() %>%
+#'   rename_iea_df_cols() %>% 
+#'   remove_agg_memo_flows() %>% 
+#'   use_iso_countries() %>% 
+#'   augment_iea_df() %>% 
+#'   tidy_iea_df()
+#' all(simple == complicated)
+load_tidy_iea_df <- function(file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+                               system.file(package = "IEATools")){
   file_path %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 

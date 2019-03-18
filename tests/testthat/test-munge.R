@@ -1,15 +1,7 @@
 library(dplyr)
 
-
-
 test_that("add_production_details works as expected", {
-  Prod_details <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEATools") %>% 
-    iea_df() %>% 
-    rename_iea_df_cols() %>% 
-    augment_iea_df() %>% 
-    remove_agg_memo_flows() %>% 
-    tidy_iea_df() %>% 
+  Prod_details <- load_tidy_iea_df() %>% 
     add_production_details()
   expect_false(any(Prod_details$Flow == "Production"))
   Production <- Prod_details %>% filter(startsWith(Flow, "Production"))

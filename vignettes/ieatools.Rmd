@@ -52,7 +52,7 @@ library(IEATools)
 # Define the file location
 IEA_path <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
   system.file(package = "IEATools")
-readChar(IEA_path, nchars = 251)
+readChar(IEA_path, nchars = 256)
 ```
 
 
@@ -167,6 +167,8 @@ IEA_data %>%
   rename_iea_df_cols() %>% 
   filter(Flow == "Total primary energy supply") %>% 
   glimpse()
+# Total primary energy supply is an aggregation row,
+# so its rows should be absent after calling remove_agg_memo_flows().
 IEA_data %>% 
   rename_iea_df_cols() %>% 
   remove_agg_memo_flows() %>% 
@@ -194,7 +196,6 @@ IEA_data %>%
 ```
 
 
-
 ### Convert to a tidy data frame
 
 The [tidy format](https://doi.org/10.18637/jss.v059.i10) for data 
@@ -214,6 +215,28 @@ Tidy_IEA_df <- IEA_data %>%
   tidy_iea_df()
 Tidy_IEA_df %>% 
   glimpse()
+```
+
+
+### Load a `.csv` file to a tidy IEA data frame
+
+For simplicity, 
+the above functions are rolled into `load_tidy_iea_df()`.
+`load_tidy_iea_df()` loads the sample data bundled with the package and 
+converts it to a tidy IEA data frame, 
+assuming default arguments for all functions. 
+
+```{r}
+simple <- load_tidy_iea_df()
+complicated <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+  system.file(package = "IEATools") %>% 
+  iea_df() %>%
+  rename_iea_df_cols() %>% 
+  remove_agg_memo_flows() %>% 
+  use_iso_countries() %>% 
+  augment_iea_df() %>% 
+  tidy_iea_df()
+all(simple == complicated)
 ```
 
 At this point, the integrity of the IEA data can be checked.

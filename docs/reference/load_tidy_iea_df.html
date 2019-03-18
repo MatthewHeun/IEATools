@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Rename columns of an IEA data frame — rename_iea_df_cols • IEATools</title>
+<title>Load IEA extended energy balance data into tidy format — load_tidy_iea_df • IEATools</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,18 @@
 
 
 
-<meta property="og:title" content="Rename columns of an IEA data frame — rename_iea_df_cols" />
+<meta property="og:title" content="Load IEA extended energy balance data into tidy format — load_tidy_iea_df" />
 
-<meta property="og:description" content="The IEA data has columns named COUNTRY, FLOW, and PRODUCT.
-This function turns off the shouting,
-renaming the columms (by default) to Country, Flow, and Product." />
+<meta property="og:description" content="Loads an IEA extended energy balance data file in .csv format from disk and converts to a tidy format.
+This function bundles several others:
+iea_df(),
+rename_iea_df_cols(),
+use_iso_countries(),
+remove_agg_memo_flows(),
+augment_iea_df(), and
+tidy_iea_df().
+Each is called in turn using default arguments.
+See examples for two ways to achieve the same result." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -102,65 +109,55 @@ renaming the columms (by default) to Country, Flow, and Product." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Rename columns of an IEA data frame</h1>
+    <h1>Load IEA extended energy balance data into tidy format</h1>
     
-    <div class="hidden name"><code>rename_iea_df_cols.Rd</code></div>
+    <div class="hidden name"><code>load_tidy_iea_df.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>The IEA data has columns named <code>COUNTRY</code>, <code>FLOW</code>, and <code>PRODUCT</code>.
-This function turns off the shouting,
-renaming the columms (by default) to <code>Country</code>, <code>Flow</code>, and <code>Product</code>.</p>
+    <p>Loads an IEA extended energy balance data file in <code>.csv</code> format from disk and converts to a tidy format.
+This function bundles several others:
+<code><a href='iea_df.html'>iea_df()</a></code>,
+<code><a href='rename_iea_df_cols.html'>rename_iea_df_cols()</a></code>,
+<code><a href='use_iso_countries.html'>use_iso_countries()</a></code>,
+<code><a href='remove_agg_memo_flows.html'>remove_agg_memo_flows()</a></code>,
+<code><a href='augment_iea_df.html'>augment_iea_df()</a></code>, and
+<code><a href='tidy_iea_df.html'>tidy_iea_df()</a></code>.
+Each is called in turn using default arguments.
+See examples for two ways to achieve the same result.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>rename_iea_df_cols</span>(<span class='no'>.iea_df</span>, <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"COUNTRY"</span>,
-  <span class='kw'>new_country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"FLOW"</span>, <span class='kw'>new_flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"PRODUCT"</span>, <span class='kw'>new_product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>)</pre>
+    <pre class="usage"><span class='fu'>load_tidy_iea_df</span>(<span class='kw'>file_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/file.path'>file.path</a></span>(<span class='st'>"extdata"</span>,
+  <span class='st'>"GH-ZA-ktoe-Extended-Energy-Balances-sample.csv"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"IEATools"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.iea_df</th>
-      <td><p>a data frame produced by <code><a href='iea_df.html'>iea_df()</a></code></p></td>
-    </tr>
-    <tr>
-      <th>country</th>
-      <td><p>the original name for the country column. (Default is <code>COUNTRY</code>.)</p></td>
-    </tr>
-    <tr>
-      <th>new_country</th>
-      <td><p>the new name for the country column. (Default is <code>Country</code>.)</p></td>
-    </tr>
-    <tr>
-      <th>flow</th>
-      <td><p>the original name for the flow column. (Default is <code>FLOW</code>.)</p></td>
-    </tr>
-    <tr>
-      <th>new_flow</th>
-      <td><p>the new name for the flow column. (Default is <code>Flow</code>.)</p></td>
-    </tr>
-    <tr>
-      <th>product</th>
-      <td><p>the original name for the product column. (Default is <code>PRODUCT</code>.)</p></td>
-    </tr>
-    <tr>
-      <th>new_product</th>
-      <td><p>the new name for the product column. (Default is <code>Product</code>.)</p></td>
+      <th>file_path</th>
+      <td><p>the path of the file to be loaded. Default loads example data bundled with the package.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.iea_df</code> with renamed columns</p>
+    <p>a tidy, augmented data frame of IEA extended energy balance data.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='iea_df.html'>iea_df</a></span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='st'>",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>rename_iea_df_cols</span>()</div><div class='output co'>#&gt;   Country       Flow   Product 1960 1961
-#&gt; 1   World Production Hard coal   42   43</div></pre>
+    <pre class="examples"><div class='input'><span class='no'>simple</span> <span class='kw'>&lt;-</span> <span class='fu'>load_tidy_iea_df</span>()
+<span class='no'>complicated</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/file.path'>file.path</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"GH-ZA-ktoe-Extended-Energy-Balances-sample.csv"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"IEATools"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='iea_df.html'>iea_df</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='rename_iea_df_cols.html'>rename_iea_df_cols</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='remove_agg_memo_flows.html'>remove_agg_memo_flows</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='use_iso_countries.html'>use_iso_countries</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='augment_iea_df.html'>augment_iea_df</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='tidy_iea_df.html'>tidy_iea_df</a></span>()
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/all'>all</a></span>(<span class='no'>simple</span> <span class='kw'>==</span> <span class='no'>complicated</span>)</div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

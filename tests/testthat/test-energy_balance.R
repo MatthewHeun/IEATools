@@ -6,14 +6,7 @@ context("IEA energy balance")
 ###########################################################
 
 test_that("calc_tidy_iea_df_balance works correctly", {
-  Ebal <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEATools") %>% 
-    iea_df() %>%
-    rename_iea_df_cols() %>% 
-    use_iso_countries() %>% 
-    remove_agg_memo_flows() %>% 
-    augment_iea_df() %>% 
-    tidy_iea_df() %>% 
+  Ebal <- load_tidy_iea_df() %>% 
     group_by(Country, Year, Energy.type, Unit, Product) %>% 
     calc_tidy_iea_df_balances()
   expect_false(all(Ebal$balance_OK))
@@ -24,14 +17,7 @@ test_that("calc_tidy_iea_df_balance works correctly", {
 })
 
 test_that("fix_tidy_iea_df_balance works correctly", {
-  unbalanced <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEATools") %>% 
-    iea_df() %>%
-    rename_iea_df_cols() %>% 
-    use_iso_countries() %>% 
-    remove_agg_memo_flows() %>% 
-    augment_iea_df() %>% 
-    tidy_iea_df()
+  unbalanced <- load_tidy_iea_df()
   # This should fail.
   unbalanced %>% 
     group_by(Country, Year, Energy.type, Unit, Product) %>% 

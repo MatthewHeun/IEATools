@@ -8,7 +8,7 @@ iea_df(.iea_file = NULL, text = NULL,
   expected_1st_line_start = ",,TIME",
   expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT",
   year_colname_pattern = "^\\\\d*$", missing_data = "..",
-  not_applicable_data = "x")
+  not_applicable_data = "x", confidential_data = "c")
 }
 \arguments{
 \item{.iea_file}{a string containing the path to a .csv file of extended energy balances from the IEA}
@@ -28,6 +28,9 @@ Entries of "\code{missing_data}" are coded as `0`` in output.}
 
 \item{not_applicable_data}{a string that identifies not-applicable data.
 Entries of "\code{not_applicable_data}" are coded as \code{0} in output.}
+
+\item{confidential_data}{a string that identifies confidential data.
+Entries of "\code{confidential_data}" are coded as \code{0} in output.}
 }
 \value{
 a data frame containing the IEA extended energy balances data
@@ -74,6 +77,8 @@ In the face of IEA’s inconsistencies,
 the only rational way to proceed is to convert
 both "\code{x}" and "\code{..}" to "\code{0}"
 in this function.
+Furthermore, confidential data (coded by the IEA as "\code{c}") is also interpreted as \code{0}.
+(What else can we do?)
 
 The data frame returned from this function is not ready to be used in R,
 because rows are not unique.

@@ -68,13 +68,7 @@
 #'
 #' @examples
 #' library(dplyr)
-#' Ebal <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEATools") %>% 
-#'   iea_df() %>%
-#'   rename_iea_df_cols() %>% 
-#'   remove_agg_memo_flows() %>% 
-#'   augment_iea_df() %>% 
-#'   tidy_iea_df() %>% 
+#' Ebal <- load_tidy_iea_df() %>% 
 #'   group_by(Country, Year, Energy.type, Unit, Product) %>% 
 #'   calc_tidy_iea_df_balances()
 #' head(Ebal, 5)
@@ -135,13 +129,7 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
 #'
 #' @examples
 #' library(dplyr)
-#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEATools") %>% 
-#'   iea_df() %>%
-#'   rename_iea_df_cols() %>% 
-#'   remove_agg_memo_flows() %>% 
-#'   augment_iea_df() %>% 
-#'   tidy_iea_df() %>% 
+#' load_tidy_iea_df() %>% 
 #'   group_by(Country, Year, Energy.type, Unit, Product) %>% 
 #'   calc_tidy_iea_df_balances() %>% 
 #'   tidy_iea_df_balanced()
@@ -192,14 +180,7 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #'
 #' @examples
 #' library(dplyr)
-#' unbalanced <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEATools") %>% 
-#'   iea_df() %>%
-#'   rename_iea_df_cols() %>% 
-#'   use_iso_countries() %>% 
-#'   remove_agg_memo_flows() %>% 
-#'   augment_iea_df() %>% 
-#'   tidy_iea_df()
+#' unbalanced <- load_tidy_iea_df()
 #' # This will not be balanced, because the IEA data are not in perfect balance
 #' unbalanced %>% 
 #'   group_by(Country, Year, Energy.type, Unit, Product) %>% 
