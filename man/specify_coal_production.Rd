@@ -8,10 +8,10 @@ specify_coal_production(.tidy_iea_df,
   flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
   production = "Production",
   transformation_processes = "Transformation processes",
-  product = "Product", coal_mines = "Coal mines",
-  coal_mines_eiou = paste(coal_mines, "(energy)"),
-  coals = coal_and_coal_products, resources_coal = "Resources (Coal)",
-  e_dot = "E.dot")
+  eiou = "Energy industry own use", product = "Product",
+  coal_mines = "Coal mines", coal_mines_eiou = paste(coal_mines,
+  "(energy)"), coals = coal_and_coal_products,
+  resources_coal = "Resources (Coal)", e_dot = "E.dot")
 }
 \arguments{
 \item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
