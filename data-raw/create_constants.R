@@ -77,3 +77,10 @@ biofuel_and_waste_products <- c(
 )
 
 usethis::use_data(biofuel_and_waste_products)
+
+# Create a data frame that specifies how to re-route EIOU flows
+# to Production industries.
+EIOU_industries <- list(
+  `Coal mines` = coal_and_coal_products,
+  `Oil `
+)

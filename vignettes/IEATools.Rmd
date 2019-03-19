@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 library(dplyr)
-library(magrittr)
+library(IEATools)
 ```
 
 ## Introduction

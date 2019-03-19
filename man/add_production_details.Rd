@@ -4,17 +4,17 @@
 \alias{add_production_details}
 \title{Add products to production industry names}
 \usage{
-add_production_details(.iea_df, flow = "Flow",
+add_production_details(.tidy_iea_df, flow = "Flow",
   production = "Production", product = "Product")
 }
 \arguments{
-\item{.iea_df}{a IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
-
 \item{flow}{the name of the flow column in \code{.iea_df}.  Default is "\code{Flow}".}
 
 \item{production}{a string that identifies production in the flow column. Default is "\code{Production}".}
 
 \item{product}{the name of the product column in \code{.iea_df}.  Default is "\code{Product}".}
+
+\item{.iea_df}{a IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
 }
 \value{
 .iea_df with detailed production industries

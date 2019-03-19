@@ -26,8 +26,8 @@
 #' @examples
 #' load_tidy_iea_df() %>% 
 #'   add_production_details()
-add_production_details <- function(.iea_df, flow = "Flow", production = "Production", product = "Product"){
-  .iea_df %>% 
+add_production_details <- function(.tidy_iea_df, flow = "Flow", production = "Production", product = "Product"){
+  .tidy_iea_df %>% 
     dplyr::mutate(
       !!as.name(flow) := dplyr::case_when(
         !!as.name(flow) == production & !endsWith(!!as.name(flow), paste0("(", !!as.name(product), ")")) 

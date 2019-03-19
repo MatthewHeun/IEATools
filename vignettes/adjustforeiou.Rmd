@@ -1,0 +1,82 @@
+---
+title: "Adjust EIOU Industries and Flows"
+author: "Matthew Kuperus Heun"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(dplyr)
+library(IEATools)
+```
+
+## Introduction
+
+The IEA extended energy balance data include 
+some `Flow`s that identify `Energy industry own use` (EIOU), 
+the consumption of energy by energy-producing industries.
+The list of `EIOU`-consuming industries can be found by the following code.
+
+```{r}
+library(dplyr)
+library(IEATools)
+EIOU_flows <- load_tidy_iea_df() %>% 
+  filter(Flow.aggregation.point == "Energy industry own use")
+EIOU_flows %>% 
+  glimpse()
+```
+
+The list of energy-producing industries that consume energy 
+can be found as shown in the following code.
+
+```{r}
+EIOU_flows %>% 
+  select(Flow.aggregation.point, Flow, Product) %>% 
+  unique()
+```
+
+Note that one of the industries that receives EIOU is `Coal mines`, 
+but coal is not produced by `Coal mines` in the IEA data. 
+Rather, coal (of various types) first appears in `Production` rows.
+
+```{r}
+load_tidy_iea_df() %>% 
+  filter(Flow.aggregation.point == "Total primary energy supply", Product %in% coal_and_coal_products) %>% 
+  select(Country, Flow.aggregation.point, Flow, Product) %>% 
+  unique()
+```
+
+There are two problems with this approach.
+
+* Assigning all originating flows to `Production` (as the IEA does)
+  means that some EIOU is routed to an industry that does not produce anything.
+  In the example above, `Electricity` is routed to `Coal mines`, but
+  coal is produced by `Production`.
+* Furthermore, if all primary energy carriers originate at `Production`,
+  there will be problems with "upstream swims" in an Input-Output analysis:
+  demand for one primary energy carrier will imply proportional demand from other primary energy carriers.
+  
+To solve these problems,
+generic `Production` `Flow`s need to be specified.
+In the example above, 
+`coal_and_coal_product`s should be produced by `Coal mines`, 
+not the generic `Production` industry. 
+The `specify_production()` function accomplishes this task.
+
+## `specify_production()`
+
+```{r}
+load_tidy_iea_df() %>% 
+  specify_production() %>% 
+  filter(Flow == "Coal mines") %>% 
+  select(Country, Year, Flow.aggregation.point, Flow, Product, E.dot)
+```
+
