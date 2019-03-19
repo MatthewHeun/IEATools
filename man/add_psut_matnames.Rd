@@ -7,7 +7,8 @@
 add_psut_matnames(.tidy_iea_df, ledger_side = "Ledger.side",
   supply = "Supply", consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
-  production = "Production", product = "Product", e_dot = "E.dot",
+  production = "Production", resources = "Resources",
+  product = "Product", e_dot = "E.dot",
   eiou = "Energy industry own use", neg_supply_in_fd = c("Exports",
   "International aviation bunkers", "International marine bunkers",
   "Losses", "Statistical differences", "Stock changes"),
@@ -31,6 +32,10 @@ Default is "\code{Flow.aggregation.point}".}
 
 \item{flow}{the name of the column in \code{.tidy_iea_df} that contains flow information.
 Default is "\code{Flow}".}
+
+\item{production}{a string identifying production in the flow column. Default is \code{Production}.}
+
+\item{resources}{a string identifying resources in the flow column. Default is \code{Resources}.}
 
 \item{product}{the name of the column in \code{.tidy_iea_df} that contains flow information.
 Default is "\code{Product}".}

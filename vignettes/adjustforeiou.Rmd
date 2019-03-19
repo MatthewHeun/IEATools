@@ -75,8 +75,11 @@ The `specify_production()` function accomplishes this task.
 
 ```{r}
 load_tidy_iea_df() %>% 
-  specify_production() %>% 
-  filter(Flow %in% c("Resources (Coal)", "Coal mines")) %>% 
-  select(Country, Year, Flow.aggregation.point, Flow, Product, E.dot)
+  group_by(Method, Last.stage, Country, Year) %>% 
+  specify_coal_production() %>% 
+  ungroup() %>% 
+  add_psut_matnames() %>% 
+  filter(Flow %in% c("Resources (Coal)", "Coal mines")) %>%
+  select(-Method, -Last.stage, -Ledger.side, -Unit)
 ```
 

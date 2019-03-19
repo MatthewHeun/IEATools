@@ -73,6 +73,8 @@ extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = 
 #'        Default is "`Flow.aggregation.point`".
 #' @param flow the name of the column in `.tidy_iea_df` that contains flow information.
 #'        Default is "`Flow`".
+#' @param production a string identifying production in the flow column. Default is `Production`.
+#' @param resources a string identifying resources in the flow column. Default is `Resources`.
 #' @param product the name of the column in `.tidy_iea_df` that contains flow information.
 #'        Default is "`Product`".
 #' @param e_dot the name of the column in `.tidy_iea_df` that contains energy and exergy values
@@ -107,6 +109,7 @@ add_psut_matnames <- function(.tidy_iea_df,
                               flow_aggregation_point = "Flow.aggregation.point",
                               flow = "Flow",
                               production = "Production",
+                              resources = "Resources",
                               product = "Product", 
                               e_dot = "E.dot",
                               # Input identifiers for supply, consumption, and EIOU
@@ -136,7 +139,7 @@ add_psut_matnames <- function(.tidy_iea_df,
         # All Consumption items belong in the final demand (Y) matrix.
         !!as.name(ledger_side) == consumption ~ Y,
         # All production items belong in the resources (R) matrix.
-        !!as.name(flow) == production ~ R,
+        !!as.name(flow) %>% starts_with_any_of(c(production, resources)) ~ R,
         # All other positive values on the Supply side of the ledger belong in the make (V) matrix.
         !!as.name(ledger_side) == supply & !!as.name(e_dot) > 0 ~ V,
         # Negative values on the supply side of the ledger with Flow == "Energy industry own use"
