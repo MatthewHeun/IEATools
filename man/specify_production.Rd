@@ -4,9 +4,12 @@
 \alias{specify_production}
 \title{Specify production industries}
 \usage{
-specify_production(.tidy_iea_data, flow = "Flow", product = "Product",
-  production = "Production", coal_mines = "Coal mines",
-  coals = coal_and_coal_products)
+specify_production(.tidy_iea_data,
+  flow_aggregation_point = "Flow.aggregation.point",
+  transformation_processes = "Transformation processes", flow = "Flow",
+  product = "Product", production = "Production",
+  coal_mines = "Coal mines", coals = coal_and_coal_products,
+  resources_coal = "Resources (Coal)", e_dot = "E.dot")
 }
 \arguments{
 \item{.tidy_iea_data}{}
@@ -22,5 +25,22 @@ specify_production(.tidy_iea_data, flow = "Flow", product = "Product",
 \item{coals}{}
 }
 \description{
-Specify production industries
+The IEA extended energy balance data include
+some \code{Flow}s that identify \code{Energy industry own use} (EIOU),
+the consumption of energy by energy-producing industries.
+But some industries that receive EIOU do not produce anything.
+For example, \code{Coal mines} receive electricity
+but there are no \code{Coal mines} that produce coal.
+Rather, the generic \code{Production} industry produces coal.
+This function solves that problem by
+replacing the generic \code{Production} industry with
+specific industries.
+}
+\details{
+In particular, the following changes are made:
+\itemize{
+\item The \code{Production} industry for \code{coal_and_coal_products}
+is replaced by \code{Coal mines}.
+\item A \code{Resources (coal)} industry is created.
+}
 }

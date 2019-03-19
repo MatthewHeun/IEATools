@@ -76,7 +76,7 @@ The `specify_production()` function accomplishes this task.
 ```{r}
 load_tidy_iea_df() %>% 
   specify_production() %>% 
-  filter(Flow == "Coal mines") %>% 
+  filter(Flow %in% c("Resources (Coal)", "Coal mines")) %>% 
   select(Country, Year, Flow.aggregation.point, Flow, Product, E.dot)
 ```
 
