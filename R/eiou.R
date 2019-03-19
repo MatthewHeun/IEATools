@@ -188,7 +188,12 @@ specify_production <- function(.tidy_iea_df,
       # We have no EIOU for this eiou_dest.
       # We need only to change Flow from Production to Resources (prod_short_name)
       .tidy_iea_df %>% 
-        # Replace Production with Resources (prod_short_name)
+        # Replace Production with Resource_rows
+        # **************** Need to get this working.
+        # **************** Why duplicate the work we already did?
+        # **************** Probably remove the Production rows above (with anti_join)
+        # **************** and then replace with Resource_rows. 
+        # **************** If nrow(EIOU) == 0, just return. Otherwise, carry on by adding other rows.
         dplyr::mutate(
           !!as.name(flow) := case_when(
             !!as.name(flow) == production & !!as.name(product) %in% prod ~ res_name,
@@ -217,8 +222,9 @@ specify_production <- function(.tidy_iea_df,
   # my_func(eiou_destinations[[1]], production_products[[1]], production_products_short_names[[1]])
 
   # Need to figure out why Map isn't working.
-  .tidy_iea_df %>% 
-    Map(my_func, eiou_dest = eiou_destinations, prod = production_products, prod_short_names = production_products_short_names)
+  
+  Map(my_func, eiou_destinations, production_products, production_products_short_names)
+  
 }
 
 
