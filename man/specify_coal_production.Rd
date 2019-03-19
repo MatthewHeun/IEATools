@@ -4,29 +4,41 @@
 \alias{specify_coal_production}
 \title{Specify production industries}
 \usage{
-specify_coal_production(.tidy_iea_data,
-  flow_aggregation_point = "Flow.aggregation.point",
-  transformation_processes = "Transformation processes", flow = "Flow",
-  product = "Product", production = "Production",
-  coal_mines = "Coal mines", coal_mines_eiou = paste(coal_mines,
-  "(energy)"), coals = coal_and_coal_products,
-  resources_coal = "Resources (Coal)", e_dot = "E.dot")
+specify_coal_production(.tidy_iea_df,
+  flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
+  production = "Production",
+  transformation_processes = "Transformation processes",
+  product = "Product", coal_mines = "Coal mines",
+  coal_mines_eiou = paste(coal_mines, "(energy)"),
+  coals = coal_and_coal_products, resources_coal = "Resources (Coal)",
+  e_dot = "E.dot")
 }
 \arguments{
-\item{.tidy_iea_data}{}
+\item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
 
-\item{flow}{}
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
 
-\item{product}{}
+\item{flow}{the name of the flow column in \code{.tidy_iea_df}.  Default is "\code{Flow}".}
 
-\item{production}{}
+\item{production}{a string identifying production in the flow column. Default is "\code{Production}".}
 
-\item{coal_mines}{}
+\item{transformation_processes}{a string identifying transformation processes in the flow column of \code{.tidy_iea_df}. Default is "\code{Transformation processes}".}
 
-\item{coals}{}
+\item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
+
+\item{coal_mines}{a string identifying coal mines in the flow column. Default is "\code{Coal mines}".}
+
+\item{coal_mines_eiou}{a string identifying energy industry by coal mines. Default is "\code{coal_mines} + \code{(energy)}".}
+
+\item{coals}{a vector of strings identifying coal and coal products. Default is \code{coal_and_coal_products}.}
+
+\item{e_dot}{the name of the energy column in \code{.tidy_eia_df}. Default is "\code{E.dot}".}
+}
+\value{
+\code{.tidy_iea_df} with adjusted coal and coal mine information
 }
 \description{
-The IEA extended energy balance data include
+The IEA extended energy balances include
 some \code{Flow}s that identify \code{Energy industry own use} (EIOU),
 the consumption of energy by energy-producing industries.
 But some industries that receive EIOU do not produce anything.
@@ -38,10 +50,20 @@ replacing the generic \code{Production} industry with
 specific industries.
 }
 \details{
-In particular, the following changes are made:
+The following changes are made to \code{.tidy_iea_df}:
 \itemize{
 \item The \code{Production} industry for \code{coal_and_coal_products}
 is replaced by \code{Coal mines}.
-\item A \code{Resources (coal)} industry is created.
+\item A \code{Resources (coal)} industry is created which becomes the
+originator of \code{coal_and_coal_products} in the energy conversion chain.
+\item Flows from \code{Resources (Coal)} to \code{Coal mines} are added.
+\item The \code{Coal mines (energy)} \code{Flow} is replaced by \code{Coal mines}.
 }
+}
+\examples{
+load_tidy_iea_df() \%>\% 
+  specify_coal_production() \%>\% 
+  add_psut_matnames() \%>\% 
+  filter(Flow \%in\% c("Resources (Coal)", "Coal mines")) \%>\%
+  select(-Method, -Last.stage, -Ledger.side, -Unit)
 }
