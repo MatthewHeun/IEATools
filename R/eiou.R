@@ -151,7 +151,7 @@ specify_coal_production <- function(.tidy_iea_df,
 #'   select(-Method, -Last.stage, -Ledger.side, -Unit)
 specify_production <- function(.tidy_iea_df,
                                eiou_destinations = c("Coal mines", "Oil and gas extraction"),
-                               production_products = list(coal_and_coal_products, oil_and_oil_products),
+                               production_products = list(coal_and_coal_products, c(oil_and_oil_products, "Natural gas")),
                                production_products_short_names = c("Coal", "Oil and NG"),
                                flow_aggregation_point = "Flow.aggregation.point",
                                flow = "Flow", 
@@ -162,7 +162,7 @@ specify_production <- function(.tidy_iea_df,
                                eiou_suffix = "(energy)",
                                e_dot = "E.dot",
                                product = "Product"){
-  f <- function(eiou_dest, prod, prod_short_name){
+  my_func <- function(eiou_dest, prod_prods, prod_short_name){
     # Find rows of EIOU received by eiou_dest
     # eiou_dest will be something like "Coal mines".
     # But in .tidy_iea_df, it will appear as
@@ -173,75 +173,52 @@ specify_production <- function(.tidy_iea_df,
       eiou_dest <- paste(eiou_dest, eiou_suffix)
     }
     EIOU <- .tidy_iea_df %>% 
-      dplyr::filter(!!as.name(flow) == eiou_dest_string)
+      dplyr::filter(!!as.name(flow) == eiou_dest)
     # Find rows of production of prods
     Production_rows <- .tidy_iea_df %>% 
-      dplyr::filter(!!as.name(flow) == production & !!as.name(product) %in% prods)
+      dplyr::filter(!!as.name(flow) == production & !!as.name(product) %in% prod_prods)
     # Convert from Production to Resources (prod_short_name)
     # For example, Production Anthracite becomes Resources (Coal) Anthracite
+    res_name <- paste0(resources, " (", prod_short_name, ")")
     Resource_rows <- Production_rows %>% 
       dplyr::mutate(
-        !!as.name(flow) := paste0(resources, " (", prod_short_name, ")")
+        !!as.name(flow) := res_name
       )
-    # 
-  }
-    
-    
-  .tidy_iea_df %>% 
-    Map(f, eiou_destinations, production_products)
-  
-  
-  
-  # Find rows of EIOU by Coal mines
-  CoalMine_EIOU <- .tidy_iea_df %>% 
-    filter(!!as.name(flow) == coal_mines_eiou)
-  # Find rows of Production of coals 
-  Coal_production <- .tidy_iea_df %>% 
-    dplyr::filter(!!as.name(flow) == production & !!as.name(product) %in% coals)
-  # Make resource rows for these rows.
-  Coal_resources <- Coal_production %>% 
-    dplyr::mutate(
-      !!as.name(flow) := resources_coal
-    )
-  if (nrow(CoalMine_EIOU) == 0) {
-    # We have no EIOU for coal mines.
-    # We need only to change Production to Resources (Coal)
-    .tidy_iea_df %>% 
-      # Replace Production with Resources (Coal)
+    if (nrow(EIOU) == 0) {
+      # We have no EIOU for this eiou_dest.
+      # We need only to change Flow from Production to Resources (prod_short_name)
+      .tidy_iea_df %>% 
+        # Replace Production with Resources (prod_short_name)
+        dplyr::mutate(
+          !!as.name(flow) := case_when(
+            !!as.name(flow) == production & !!as.name(product) %in% prod ~ res_name,
+            TRUE ~ !!as.name(flow)
+          )
+        ) %>% 
+        return()
+    }
+    # We have EIOU rows, so we have more work to do.
+    # Make rows for input of prod into eiou_dest
+    Input <- Production_rows %>% 
       dplyr::mutate(
-        !!as.name(flow) := case_when(
-          !!as.name(flow) == production & !!as.name(product) %in% coals ~ resources_coal,
-          TRUE ~ !!as.name(flow)
-        )
-      ) %>% 
-      return()
-  }
-  # We have EIOU rows, so we have more work to do.
-  # Make rows for input of coal into mines
-  Mine_input <- Coal_production %>% 
-    dplyr::mutate(
-      !!as.name(flow_aggregation_point) := transformation_processes,
-      !!as.name(flow) := coal_mines,
-      !!as.name(e_dot) := -!!as.name(e_dot)
-    )
-  # Make rows for production of coal by coal mines
-  Mine_output <- Mine_input %>% 
-    dplyr::mutate(
-      !!as.name(e_dot) := -!!as.name(e_dot)
-    )
-  
-  # Bundle everything and return
-  .tidy_iea_df %>% 
-    # Replace the "Coal mines (energy)" Flow in EIOU with "Coal mines"
-    dplyr::mutate(
-      !!as.name(flow) := case_when(
-        !!as.name(flow) == "Coal mines (energy)" ~ "Coal mines"
+        !!as.name(flow_aggregation_point) := transformation_processes,
+        !!as.name(flow) := eiou_dest,
+        # Convert to an input (negative)
+        !!as.name(e_dot) := -!!as.name(e_dot)
       )
-    ) %>% 
-    # Delete the original Coal production rows
-    dplyr::anti_join(Coal_production, by = names(.tidy_iea_df)) %>% 
-    # And bind the replacements.
-    dplyr::bind_rows(Coal_resources, Mine_input, Mine_output)
+    # Make rows for production of prod by eiou_dest
+    Output <- Input %>% 
+      dplyr::mutate(
+        !!as.name(e_dot) := -!!as.name(e_dot)
+      )
+    # Need to figure out how to bundle and change .iea_tidy_df.
+  }
+  
+  # my_func(eiou_destinations[[1]], production_products[[1]], production_products_short_names[[1]])
+
+  # Need to figure out why Map isn't working.
+  .tidy_iea_df %>% 
+    Map(my_func, eiou_dest = eiou_destinations, prod = production_products, prod_short_names = production_products_short_names)
 }
 
 
