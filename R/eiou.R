@@ -162,7 +162,22 @@ specify_production <- function(.tidy_iea_df,
                                eiou_suffix = "(energy)",
                                e_dot = "E.dot",
                                product = "Product"){
-  my_func <- function(eiou_dest, prod_prods, prod_short_name){
+  specify_func <- function(.tidf, eiou_dest, prod_prods, prod_short_name){
+    # Convert from Production to Resources (prod_short_name)
+    # For example, Production Anthracite becomes Resources (Coal) Anthracite
+    res_name <- resources
+    if (!endsWith(resources, paste0("(", prod_short_name, ")"))) {
+      res_name <- paste0(res_name, " (", prod_short_name, ")")
+    }
+    # Replace Production with res_name in Production rows
+    .tidf <- .tidf %>% 
+      dplyr::mutate(
+        !!as.name(flow) := dplyr::case_when(
+          !!as.name(flow) == production & !!as.name(product) %in% prod_prods ~ res_name,
+          TRUE ~ !!as.name(flow)
+        )
+      )
+
     # Find rows of EIOU received by eiou_dest
     # eiou_dest will be something like "Coal mines".
     # But in .tidy_iea_df, it will appear as
@@ -172,59 +187,45 @@ specify_production <- function(.tidy_iea_df,
     if (!endsWith(eiou_dest, eiou_suffix)) {
       eiou_dest <- paste(eiou_dest, eiou_suffix)
     }
-    EIOU <- .tidy_iea_df %>% 
+    EIOU <- .tidf %>% 
       dplyr::filter(!!as.name(flow) == eiou_dest)
-    # Find rows of production of prods
-    Production_rows <- .tidy_iea_df %>% 
-      dplyr::filter(!!as.name(flow) == production & !!as.name(product) %in% prod_prods)
-    # Convert from Production to Resources (prod_short_name)
-    # For example, Production Anthracite becomes Resources (Coal) Anthracite
-    res_name <- paste0(resources, " (", prod_short_name, ")")
-    Resource_rows <- Production_rows %>% 
-      dplyr::mutate(
-        !!as.name(flow) := res_name
-      )
-    if (nrow(EIOU) == 0) {
-      # We have no EIOU for this eiou_dest.
-      # We need only to change Flow from Production to Resources (prod_short_name)
-      .tidy_iea_df %>% 
-        # Replace Production with Resource_rows
-        # **************** Need to get this working.
-        # **************** Why duplicate the work we already did?
-        # **************** Probably remove the Production rows above (with anti_join)
-        # **************** and then replace with Resource_rows. 
-        # **************** If nrow(EIOU) == 0, just return. Otherwise, carry on by adding other rows.
+    if (nrow(EIOU) > 0) {
+      # We have EIOU rows, so we have more work to do.
+      # Find rows of production of prods
+      Resource_rows <- .tidf %>% 
+        dplyr::filter(!!as.name(flow) == res_name & !!as.name(product) %in% prod_prods)
+      # Make rows for input of prod into eiou_dest
+      Input <- Resource_rows %>% 
         dplyr::mutate(
-          !!as.name(flow) := case_when(
-            !!as.name(flow) == production & !!as.name(product) %in% prod ~ res_name,
-            TRUE ~ !!as.name(flow)
-          )
-        ) %>% 
-        return()
+          !!as.name(flow_aggregation_point) := transformation_processes,
+          !!as.name(flow) := eiou_dest,
+          # Convert to an input (negative)
+          !!as.name(e_dot) := -!!as.name(e_dot)
+        )
+      # Make rows for production of prod by eiou_dest
+      Output <- Input %>% 
+        dplyr::mutate(
+          !!as.name(e_dot) := -!!as.name(e_dot)
+        )
+      # Add these rows to .tidy_iea_df
+      .tidf <- .tidf %>% 
+        dplyr::bind_rows(Input, Output)
     }
-    # We have EIOU rows, so we have more work to do.
-    # Make rows for input of prod into eiou_dest
-    Input <- Production_rows %>% 
-      dplyr::mutate(
-        !!as.name(flow_aggregation_point) := transformation_processes,
-        !!as.name(flow) := eiou_dest,
-        # Convert to an input (negative)
-        !!as.name(e_dot) := -!!as.name(e_dot)
-      )
-    # Make rows for production of prod by eiou_dest
-    Output <- Input %>% 
-      dplyr::mutate(
-        !!as.name(e_dot) := -!!as.name(e_dot)
-      )
-    # Need to figure out how to bundle and change .iea_tidy_df.
+    return(NULL)
   }
-  
-  # my_func(eiou_destinations[[1]], production_products[[1]], production_products_short_names[[1]])
 
-  # Need to figure out why Map isn't working.
+  # Map(specify_func, eiou_destinations, production_products, production_products_short_names)
   
-  Map(my_func, eiou_destinations, production_products, production_products_short_names)
-  
+  # specify_func is called for its side effect of modifying .tidy_iea_df,
+  # so we don't assign the result to any value.
+  # Rather, we simply return the modified version of .tidy_iea_df.
+  for (i in 1:length(eiou_destinations)) {
+    .tidy_iea_df <- specify_func(.tidf = .tidy_iea_df, 
+                                 eiou_dest = eiou_destinations[[i]], 
+                                 prod_prods = production_products[[i]],
+                                 prod_short_name = production_products_short_names[[i]])
+  }
+  return(.tidy_iea_df)
 }
 
 
