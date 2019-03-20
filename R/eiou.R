@@ -211,7 +211,7 @@ specify_production <- function(.tidy_iea_df,
       .tidf <- .tidf %>% 
         dplyr::bind_rows(Input, Output)
     }
-    return(NULL)
+    return(.tidf)
   }
 
   # Map(specify_func, eiou_destinations, production_products, production_products_short_names)
@@ -220,7 +220,7 @@ specify_production <- function(.tidy_iea_df,
   # so we don't assign the result to any value.
   # Rather, we simply return the modified version of .tidy_iea_df.
   for (i in 1:length(eiou_destinations)) {
-    .tidy_iea_df <- specify_func(.tidf = .tidy_iea_df, 
+    .tidy_iea_df <- specify_func(.tidf = .tidy_iea_df,
                                  eiou_dest = eiou_destinations[[i]], 
                                  prod_prods = production_products[[i]],
                                  prod_short_name = production_products_short_names[[i]])
