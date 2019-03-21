@@ -69,17 +69,40 @@ generic `Production` `Flow`s need to be specified.
 In the example above, 
 `coal_and_coal_product`s should be produced by `Coal mines`, 
 not the generic `Production` industry. 
-The `specify_production()` function accomplishes this task.
+The `specify_primary_production()` function accomplishes this task.
 
-## `specify_production()`
+## `specify_primary_production()`
+
+By default, the `specify_primary_produciton()` function
+performs the following actions:
+
+* The `Production` industry for `coal_and_coal_products` 
+  is replaced by `Coal mines`.
+* A `Resources (Coal)` industry is created which becomes the 
+  source of all primary `coal_and_coal_products` in the energy conversion chain.
+* Flows from `Resources (Coal)` to `Coal mines` are added.
+* The `Coal mines (energy)` EIOU `Flow` is replaced by `Coal mines`.
+* The `Production` industry for `oil_and_oil_products` and `Natural gas`
+  is replaced by `Oil and gas extraction`.
+* A `Resources (Oil and natural gas)` industry is created which becomes the 
+  source of all primary `oil_and_oil_products` and `Natural gas` in the energy conversion chain.
+* Flows from `Resources (Oil and natural gas)` to `Oil and gas extraction` are added.
+* The `Oil and gas extraction (energy)` EIOU `Flow` is replaced by `Oil and gas extraction`.
 
 ```{r}
-load_tidy_iea_df() %>% 
-  group_by(Method, Last.stage, Country, Year) %>% 
-  specify_coal_production() %>% 
-  ungroup() %>% 
-  add_psut_matnames() %>% 
-  filter(Flow %in% c("Resources (Coal)", "Coal mines")) %>%
-  select(-Method, -Last.stage, -Ledger.side, -Unit)
+Specific_primary_production <- load_tidy_iea_df() %>% 
+  specify_primary_production() %>% 
+  add_psut_matnames()
+Specific_primary_production %>% 
+  filter(Flow %in% c("Resources (Coal)", "Resources (Oil and natural gas)")) %>%
+  select(-Method, -Last.stage, -Energy.type, -Ledger.side, -Unit) %>% 
+  as.data.frame()
+Specific_primary_production %>% 
+  filter(Flow %in% c("Coal mines", "Oil and gas extraction"))
+  
+
 ```
+
+
+## `specify_intermediate_production()`
 
