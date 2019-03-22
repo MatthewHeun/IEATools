@@ -6,8 +6,8 @@
 \usage{
 specify_primary_production(.tidy_iea_df,
   eiou_destinations = c("Coal mines", "Oil and gas extraction"),
-  production_products = list(coal_and_coal_products,
-  c(oil_and_oil_products, "Natural gas")),
+  production_products = list(IEATools::coal_and_coal_products,
+  c(IEATools::oil_and_oil_products, "Natural gas")),
   production_products_short_names = c("Coal", "Oil and natural gas"),
   flow_aggregation_point = "Flow.aggregation.point",
   eiou = "Energy industry own use",
@@ -86,6 +86,7 @@ source of all primary \code{oil_and_oil_products} and \code{Natural gas} in the 
 Users can specify other changes by adjusting the default argument values.
 }
 \examples{
+library(dplyr)
 load_tidy_iea_df() \%>\% 
   specify_primary_production() \%>\% 
   add_psut_matnames() \%>\% 

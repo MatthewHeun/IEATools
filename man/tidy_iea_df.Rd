@@ -18,6 +18,10 @@ tidy_iea_df(.iea_df, year = "Year", e_dot = "E.dot",
 
 \item{e_dot}{the name of the energy/exergy value column created in \code{.iea_df} by this function. (Default is "\code{E.dot}".)}
 
+\item{method}{the name of the method column created in \code{.iea_df} by this function. (Default is "\code{Method}".)}
+
+\item{last_stage}{the name of the last stage column created in \code{.iea_df} by this function. (Default is "\code{Last.stage}".)}
+
 \item{country}{the name of the country column in \code{.iea_df}. (Default is "\code{Country}".)}
 
 \item{ledger_side}{the name of the ledger side in \code{.iea_df}. (Default is "\code{Ledger.side}".)}

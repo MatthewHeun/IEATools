@@ -501,6 +501,8 @@ augment_iea_df <- function(.iea_df,
 #'
 #' @param .iea_df a IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
 #' @param year the name of the year column created in `.iea_df` by this function. (Default is "`Year`".)
+#' @param method the name of the method column created in `.iea_df` by this function. (Default is "`Method`".)
+#' @param last_stage the name of the last stage column created in `.iea_df` by this function. (Default is "`Last.stage`".)
 #' @param e_dot the name of the energy/exergy value column created in `.iea_df` by this function. (Default is "`E.dot`".)
 #' @param country the name of the country column in `.iea_df`. (Default is "`Country`".)
 #' @param ledger_side the name of the ledger side in `.iea_df`. (Default is "`Ledger.side`".)
