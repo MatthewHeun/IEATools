@@ -28,5 +28,4 @@ Suggests:
     knitr,
     testthat,
     rmarkdown
-VignetteBuilder: 
-    knitr
+VignetteBuilder: knitr

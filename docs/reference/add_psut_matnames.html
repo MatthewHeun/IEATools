@@ -84,6 +84,21 @@ and terminology, although .tidy_iea_df does not necessarily need to contain IEA 
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/adjustforeiou.html">Adjust EIOU Industries and Flows</a>
+    </li>
+    <li>
+      <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -120,6 +135,7 @@ and terminology, although <code>.tidy_iea_df</code> does not necessarily need to
     <pre class="usage"><span class='fu'>add_psut_matnames</span>(<span class='no'>.tidy_iea_df</span>, <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
   <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>, <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
   <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
+  <span class='kw'>production</span> <span class='kw'>=</span> <span class='st'>"Production"</span>, <span class='kw'>resources</span> <span class='kw'>=</span> <span class='st'>"Resources"</span>,
   <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
   <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>, <span class='kw'>neg_supply_in_fd</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Exports"</span>,
   <span class='st'>"International aviation bunkers"</span>, <span class='st'>"International marine bunkers"</span>,
@@ -158,6 +174,14 @@ Default is "<code>Flow.aggregation.point</code>".</p></td>
       <th>flow</th>
       <td><p>the name of the column in <code>.tidy_iea_df</code> that contains flow information.
 Default is "<code>Flow</code>".</p></td>
+    </tr>
+    <tr>
+      <th>production</th>
+      <td><p>a string identifying production in the flow column. Default is <code>Production</code>.</p></td>
+    </tr>
+    <tr>
+      <th>resources</th>
+      <td><p>a string identifying resources in the flow column. Default is <code>Resources</code>.</p></td>
     </tr>
     <tr>
       <th>product</th>
@@ -235,8 +259,10 @@ An error will occur if <code>.tidy_iea_df</code> already has a column named "<co
 #&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>add_psut_matnames</span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>glimpse</a></span>()</div><div class='output co'>#&gt; Observations: 399
-#&gt; Variables: 10
-#&gt; $ Country                <span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH"…
+#&gt; Variables: 12
+#&gt; $ Method                 <span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…
+#&gt; $ Last.stage             </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Final", "Final", "Final", "Final", "Final", "…
+#&gt; $ Country                </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH"…
 #&gt; $ Year                   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "1971", "1971", "1971", "1971", "1971", "1971"…
 #&gt; $ Ledger.side            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Supply", "Supply", "Supply", "Supply", "Suppl…
 #&gt; $ Flow.aggregation.point </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Total primary energy supply", "Total primary …
@@ -245,7 +271,7 @@ An error will occur if <code>.tidy_iea_df</code> already has a column named "<co
 #&gt; $ Flow                   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Production", "Production", "Imports", "Import…
 #&gt; $ Product                </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Primary solid biofuels", "Hydro", "Crude oil"…
 #&gt; $ E.dot                  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> 2088, 250, 916, 1, 21, 1, 18, -4, -4, -178, -2…
-#&gt; $ matname                </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "V", "V", "V", "V", "V", "V", "V", "Y", "Y", "…</div></span></pre>
+#&gt; $ matname                </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "R", "R", "V", "V", "V", "V", "V", "Y", "Y", "…</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -218,13 +218,16 @@ Tidy_IEA_df %>%
 ```
 
 
-### Load a `.csv` file to a tidy IEA data frame
+## The `load_tidy_iea_df()` function
 
 For simplicity, 
-the above functions are rolled into `load_tidy_iea_df()`.
-`load_tidy_iea_df()` loads the sample data bundled with the package and 
+all steps above are rolled into `load_tidy_iea_df()`.
+By default, `load_tidy_iea_df()` 
+loads the sample data bundled with the package and 
 converts it to a tidy IEA data frame, 
 assuming default arguments for all functions. 
+But you can supply the path to any IEA data file
+as an argument to `load_tidy_iea_df()`.
 
 ```{r}
 simple <- load_tidy_iea_df()
@@ -242,7 +245,7 @@ all(simple == complicated)
 At this point, the integrity of the IEA data can be checked.
 
 
-# Check data integrity
+## Check data integrity
 
 The IEA extended energy balance data are usually close to balanced, but not quite.
 To check the integrity of the energy balances,
@@ -310,25 +313,12 @@ Tidy_IEA_df %>%
 ```
 
 
-# Extract matrices for PSUT analysis
-
-## Unit summation matrices (`S_units`)
-
-Unit summation matrices (`S_units`) can be extracted from 
-a tidy data frame with the `extract_S_units_from_tidy()` function.
-
-```{r}
-S_units_mats <- Tidy_IEA_df %>% 
-  group_by(Country, Year, Energy.type) %>% 
-  extract_S_units_from_tidy()
-glimpse(S_units_mats)
-S_units_mats$S_units[[1]]
-```
-
-# Analyses
-
-
 # Conclusion
 
+At this point, the data have been imported to `R` and
+are ready to be used for analyses. 
+The next step could be to prepare for analysis with the
+physical supply-use table (PSUT) framework.
+See (http://prep_psut.html).
 
 
