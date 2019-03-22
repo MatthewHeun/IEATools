@@ -93,17 +93,12 @@ specify_primary_production <- function(.tidy_iea_df,
         )
       )
 
-    # Find rows of EIOU received by eiou_dest
-    # eiou_dest will be something like "Coal mines".
-    # But in .tidy_iea_df, it will appear as
-    # "Coal mines (energy)".
-    # Form the complete string.
-    # For example, "Coal mines" becomes "Coal mines (energy)"
-    if (!endsWith(eiou_dest, eiou_suffix)) {
-      eiou_dest <- paste(eiou_dest, eiou_suffix)
+    # If the user supplies "eiou_dest eiou_suffix" by mistake, trim off the suffix.
+    if (endsWith(eiou_dest, eiou_suffix)) {
+      eiou_dest <- gsub(pattern = eiou_suffix, replacement = "", eiou_dest)
     }
     EIOU <- .tidf %>% 
-      dplyr::filter(!!as.name(flow) == eiou_dest)
+      dplyr::filter(!!as.name(flow) == paste(eiou_dest, eiou_suffix))
     if (nrow(EIOU) > 0) {
       # We have EIOU rows, so we have more work to do.
       # Find rows of production of prods
