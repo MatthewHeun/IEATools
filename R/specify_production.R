@@ -143,7 +143,44 @@ specify_primary_production <- function(.tidy_iea_df,
                                          prod_prods = production_products[[i]],
                                          prod_short_name = production_products_short_names[[i]])
   }
-  # Also take any remaining "Production" rows and convert them to Resources (Product).
+  return(.tidy_iea_df)
+}
+
+
+#' Convert Production Flows to Resource Flows
+#' 
+#' The IEA gives resource extraction in rows where the `Flow` is "`Production`".
+#' This function changes the "`Production`" string 
+#' to "`Resources (product)`", 
+#' where `product` is the name of the energy carrier for this resource.
+#' 
+#' This function should be called _after_ `specify_primary_resources()`,
+#' which adjusts for energy industry own use 
+#' of some primary energy producing industries.
+#' If this function is called first, 
+#' EIOU will not be accounted correctly.
+#'
+#' @param .tidy_iea_df an IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
+#' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
+#' @param production a string identifying production in the flow column. Default is "`Production`".
+#' @param resources a string identifying resource industries to be added to `.tidy_iea_df`. 
+#'        Default is "`Resources`".
+#' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
+#'
+#' @return `.tidy_iea_df` with `Production` changed to `Resources (product)`
+#' 
+#' @export
+#'
+#' @examples
+#' load_tidy_iea_df() %>% 
+#'   specify_primary_production() %>% 
+#'   production_to_resources()
+production_to_resources <- function(.tidy_iea_df, 
+                                    flow = "Flow",
+                                    product = "Product",
+                                    production = "Production",
+                                    resources = "Resources"){
+  # Take any remaining "Production" rows and convert them to Resources (Product).
   .tidy_iea_df <- .tidy_iea_df %>% 
     dplyr::mutate(
       !!as.name(flow) := dplyr::case_when(
@@ -151,7 +188,21 @@ specify_primary_production <- function(.tidy_iea_df,
         TRUE ~ !!as.name(flow)
       )
     )
-  return(.tidy_iea_df)
 }
 
 
+#' Prepare for PSUT analysis
+#' 
+#' 
+#'
+#' @param .tidy_iea_df 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+prep_psut <- function(.tidy_iea_df){
+  .tidy_iea_df %>% 
+    specify_primary_production() %>% 
+    production_to_resources()
+}
