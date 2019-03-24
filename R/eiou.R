@@ -79,7 +79,7 @@ specify_primary_production <- function(.tidy_iea_df,
                                        production = "Production", 
                                        e_dot = "E.dot",
                                        product = "Product"){
-  specify_func <- function(.tidf, eiou_dest, prod_prods, prod_short_name){
+  specify_primary_func <- function(.tidf, eiou_dest, prod_prods, prod_short_name){
     # Convert from Production to Resources (prod_short_name)
     # For example, Production Anthracite becomes Resources (Coal) Anthracite
     res_name <- resources
@@ -94,7 +94,7 @@ specify_primary_production <- function(.tidy_iea_df,
           TRUE ~ !!as.name(flow)
         )
       )
-
+    
     # If the user supplies "eiou_dest eiou_suffix" by mistake, trim off the suffix.
     if (endsWith(eiou_dest, eiou_suffix)) {
       eiou_dest <- gsub(pattern = eiou_suffix, replacement = "", eiou_dest)
@@ -133,16 +133,24 @@ specify_primary_production <- function(.tidy_iea_df,
     }
     return(.tidf)
   }
-
+  
   # specify_func is called for its side effect of modifying .tidy_iea_df,
   # so we don't assign the result to any value.
   # Rather, we simply return the modified version of .tidy_iea_df.
   for (i in 1:length(eiou_destinations)) {
-    .tidy_iea_df <- specify_func(.tidf = .tidy_iea_df,
-                                 eiou_dest = eiou_destinations[[i]], 
-                                 prod_prods = production_products[[i]],
-                                 prod_short_name = production_products_short_names[[i]])
+    .tidy_iea_df <- specify_primary_func(.tidf = .tidy_iea_df,
+                                         eiou_dest = eiou_destinations[[i]], 
+                                         prod_prods = production_products[[i]],
+                                         prod_short_name = production_products_short_names[[i]])
   }
+  # Also take any remaining "Production" rows and convert them to Resources (Product).
+  .tidy_iea_df <- .tidy_iea_df %>% 
+    dplyr::mutate(
+      !!as.name(flow) := dplyr::case_when(
+        !!as.name(flow) == production ~ paste0(resources, " (", !!as.name(product), ")"), 
+        TRUE ~ !!as.name(flow)
+      )
+    )
   return(.tidy_iea_df)
 }
 
