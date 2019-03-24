@@ -39,3 +39,15 @@ test_that("Production is replaced correctly", {
                  magrittr::equals("Production") %>% 
                  any())
 })
+
+
+test_that("prep_psut works as expected", {
+  Prepped <- load_tidy_iea_df() %>% 
+    specify_primary_production() %>% 
+    production_to_resources()
+  # There should be no "Production" flows remaining.
+  expect_false(Prepped %>% 
+                 extract2("Flow") %>% 
+                 magrittr::equals("Production") %>% 
+                 any())
+})
