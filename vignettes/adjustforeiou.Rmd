@@ -16,54 +16,80 @@ knitr::opts_chunk$set(
 )
 library(dplyr)
 library(IEATools)
+library(magrittr)
 ```
 
 ## Introduction
 
 The IEA extended energy balance data include 
-some `Flow`s that identify `Energy industry own use` (EIOU), 
+some `Flow`s that are `Energy industry own use` (EIOU), 
 the consumption of energy by energy-producing industries.
-The list of `EIOU`-consuming industries can be found by the following code.
+This vignette demonstrates how to deal with the EIOU flows,
+especially if an analyst is moving toward performing 
+Physical Supply-Use Table (PSUT) analyses
+with the IEA data.
+In particular, this vignette will identify some of the problems with using such flows
+(as they are present in data from the IEA)
+and how to use functions in the `IEATools` package to 
+prepare for PSUT analysis. 
+
+We'll use data supplied with this package and 
+accessed by the `load_tidy_iea_df()` function
+to illustrate.
+
+
+### The IEA approach to Energy Industry Own Use (EIOU) flows
+
+The EIOU flows can be found as shown in the following code.
+The `Flow` column indicates the industry to which EIOU of type `Product` is flowing.
 
 ```{r}
 library(dplyr)
 library(IEATools)
+library(magrittr)
 EIOU_flows <- load_tidy_iea_df() %>% 
   filter(Flow.aggregation.point == "Energy industry own use")
 EIOU_flows %>% 
-  glimpse()
+  select(Country, Year, Flow, Product)
 ```
 
-The list of energy-producing industries that consume energy 
-can be found as shown in the following code.
+And `EIOU`-consuming industries can be found by the following code.
 
 ```{r}
-EIOU_flows %>% 
-  select(Flow.aggregation.point, Flow, Product) %>% 
-  unique()
+EIOU_flows$Flow %>% unique()
 ```
 
-Note that one of the industries that receives EIOU is `Coal mines`, 
-but coal is not produced by `Coal mines` in the IEA data. 
-Rather, coal (of various types) first appears in `Production` rows.
+Note that one of the industries that receives EIOU is `Coal mines (energy)`, 
+but coal is not produced by `Coal mines (energy)` in the IEA data. 
+(The suffix `(energy)` indicates EIOU.)
+Rather, coal (of various types) first appears in 
+rows where the `Flow` is `Production`.
 
 ```{r}
 load_tidy_iea_df() %>% 
-  filter(Flow.aggregation.point == "Total primary energy supply", Product %in% coal_and_coal_products) %>% 
+  filter(Flow.aggregation.point == "Total primary energy supply", 
+         Product %in% coal_and_coal_products) %>% 
   select(Country, Flow.aggregation.point, Flow, Product) %>% 
   unique()
 ```
 
-There are two problems with this approach.
+
+### Problems with the IEA approach to EIOU
+
+There are two problems with the IEA's approach to energy industry own use (EIOU).
 
 * Assigning all originating flows to `Production` (as the IEA does)
   means that some EIOU is routed to an industry that does not produce anything.
-  In the example above, `Electricity` is routed to `Coal mines`, but
+  In the example above, `Electricity` is routed to `Coal mines (energy)`, but
   coal is produced by `Production`.
 * Furthermore, if all primary energy carriers originate at `Production`,
   there will be problems with "upstream swims" in an Input-Output analysis:
-  demand for one primary energy carrier will imply proportional demand from other primary energy carriers.
-  
+  demand for one primary energy carrier will imply proportional demand 
+  for all other primary energy carriers.
+
+
+### Solving the problems presented by the IEA's approach to EIOU
+
 To solve these problems,
 generic `Production` `Flow`s need to be specified.
 In the example above, 
@@ -76,18 +102,28 @@ The `specify_primary_production()` function accomplishes this task.
 By default, the `specify_primary_produciton()` function
 performs the following actions:
 
-* The `Production` industry for `coal_and_coal_products` 
-  is replaced by `Coal mines`.
-* A `Resources (Coal)` industry is created which becomes the 
-  source of all primary `coal_and_coal_products` in the energy conversion chain.
-* Flows from `Resources (Coal)` to `Coal mines` are added.
-* The `Coal mines (energy)` EIOU `Flow` is replaced by `Coal mines`.
-* The `Production` industry for `oil_and_oil_products` and `Natural gas`
-  is replaced by `Oil and gas extraction`.
-* A `Resources (Oil and natural gas)` industry is created which becomes the 
-  source of all primary `oil_and_oil_products` and `Natural gas` in the energy conversion chain.
-* Flows from `Resources (Oil and natural gas)` to `Oil and gas extraction` are added.
-* The `Oil and gas extraction (energy)` EIOU `Flow` is replaced by `Oil and gas extraction`.
+* Coal and coal products
+    * The `Production` industry for `coal_and_coal_products` 
+      is replaced by `Coal mines`.
+    * A `Resources (Coal)` industry is created which becomes the 
+      source of all primary `coal_and_coal_products` in the energy conversion chain.
+    * Flows from `Resources (Coal)` to `Coal mines` are added, 
+      such that `Resources (Coal)` makes primary `coal_and_coal_products` but 
+      doesn't use any energy.
+    * The `Coal mines (energy)` EIOU `Flow` is replaced by `Coal mines`.
+* Oil and oil products and Natural gas
+    * The `Production` industry for `oil_and_oil_products` and `Natural gas`
+      is replaced by `Oil and gas extraction`.
+    * A `Resources (Oil and natural gas)` industry is created which becomes the 
+      source of all primary `oil_and_oil_products` and `Natural gas` in the energy conversion chain.
+    * Flows from `Resources (Oil and natural gas)` to `Oil and gas extraction` are added,
+      such that `Resources (Oil and natural gas)` makes primary `Oil_and_oil_products` and `Natural gas`
+      but doesn't use any energy.
+    * The `Oil and gas extraction (energy)` EIOU `Flow` is replaced by `Oil and gas extraction`.
+
+The code below demonstrates `specify_primary_production()`.
+Note that the `Resources` `Flow`s are tagged as belonging to the Resources matrix (`R`)
+by the `add_psut_matnames()` function.
 
 ```{r}
 Specific_primary_production <- load_tidy_iea_df() %>% 
@@ -97,12 +133,22 @@ Specific_primary_production %>%
   filter(Flow %in% c("Resources (Coal)", "Resources (Oil and natural gas)")) %>%
   select(-Method, -Last.stage, -Energy.type, -Ledger.side, -Unit) %>% 
   as.data.frame()
-Specific_primary_production %>% 
-  filter(Flow %in% c("Coal mines", "Oil and gas extraction"))
-  
+```
 
+Furthermore, the added flows from the `Resource` industries are
+tagged as `Transformation processes` and 
+belong in the `U_excl_EIOU` and `V` matrices. 
+The EIOU flows are shown to belong in the `U_EIOU` matrix.
+
+```{r}
+Specific_primary_production %>% 
+  filter(Flow %in% c("Coal mines", "Oil and gas extraction")) %>% 
+  as.data.frame()
+Specific_primary_production %>% 
+  filter(Flow.aggregation.point == "Energy industry own use" ) %>% 
+  select(Country, Year, Flow, Product, E.dot, matname) %>% 
+  as.data.frame()
 ```
 
 
-## `specify_intermediate_production()`
 

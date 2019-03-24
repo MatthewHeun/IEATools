@@ -119,8 +119,16 @@ specify_primary_production <- function(.tidy_iea_df,
         dplyr::mutate(
           !!as.name(e_dot) := -!!as.name(e_dot)
         )
-      # Add these rows to .tidy_iea_df
+      eiou_suffix_pattern <- paste0(" ", Hmisc::escapeRegex(eiou_suffix))
       .tidf <- .tidf %>% 
+        dplyr::mutate(
+          # Remove "(energy)" suffix from EIOU flows
+          !!as.name(flow) := dplyr::case_when(
+            endsWith(!!as.name(flow), paste0(" ", eiou_suffix)) ~ gsub(pattern = eiou_suffix_pattern, replacement = "", !!as.name(flow)), 
+            TRUE ~ !!as.name(flow)
+          )
+        ) %>% 
+        # Add rows for additional flow from Resources to the EIOU industry to .tidy_iea_df
         dplyr::bind_rows(Input, Output)
     }
     return(.tidf)

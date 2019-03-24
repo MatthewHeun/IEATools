@@ -1,3 +1,4 @@
+* Added `specify_primary_production()` function to fix primary production issues in the IEA data.
 * Added constants `coal_and_coal_products`, `oil_and_oil_products`, `renewable_products`, `biofuel_and_waste_products`.
 * Rename package from `IEAData` to `IEATools` to better reflect its purpose.
   Users can't get data from this package, anyway. 

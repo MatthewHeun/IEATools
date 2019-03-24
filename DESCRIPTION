@@ -19,6 +19,7 @@ Imports:
     countrycode,
     data.table,
     dplyr,
+    Hmisc,
     magrittr, 
     matsindf,
     rlang,

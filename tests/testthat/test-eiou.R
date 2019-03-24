@@ -1,4 +1,5 @@
 library(dplyr)
+library(magrittr)
 
 ###########################################################
 context("EIOU functions")
@@ -19,5 +20,11 @@ test_that("EIOU is replaced correctly", {
   # Check for new rows of Coal mines
   Mines <- Specific_production %>% 
     filter(Flow == "Coal mines")
-  expect_equal(nrow(Mines), 6)
+  expect_equal(nrow(Mines), 8)
+  # Check that EIOU flows correctly remove the "(energy)" suffix.
+  eiou <- Specific_production %>% 
+    filter(Flow.aggregation.point == "Energy industry own use") %>% 
+    extract2("Flow") %>% 
+    unique()
+  expect_false(eiou %>% endsWith("(energy)") %>% any())
 })

@@ -14,6 +14,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(dplyr)
+library(IEATools)
 ```
 
 ## Introduction
@@ -35,6 +37,9 @@ Unit summation matrices (`S_units`) can be extracted from
 a tidy data frame with the `extract_S_units_from_tidy()` function.
 
 ```{r}
+library(dplyr)
+library(IEATools)
+Tidy_IEA_df <- load_tidy_iea_df()
 S_units_mats <- Tidy_IEA_df %>% 
   group_by(Country, Year, Energy.type) %>% 
   extract_S_units_from_tidy()
