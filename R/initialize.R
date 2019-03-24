@@ -541,7 +541,11 @@ tidy_iea_df <- function(.iea_df,
     tidyr::gather(key = !!as.name(year), value = !!as.name(e_dot), -c(method, country, last_stage, ledger_side, 
                                                                       flow_aggregation_point, flow, product, energy_type, unit)) %>% 
     # Set the column order to something rational
-    dplyr::select(method, last_stage, country, year, ledger_side, flow_aggregation_point, energy_type, unit, flow, product, e_dot)
+    dplyr::select(method, last_stage, country, year, ledger_side, flow_aggregation_point, energy_type, unit, flow, product, e_dot) %>% 
+    # Set the year column to be numeric
+    dplyr::mutate(
+      !!as.name(year) := as.numeric(!!as.name(year))
+    )
   if (remove_zeroes) {
     out <- out %>% 
       dplyr::filter(!(!!as.name(e_dot) == 0))

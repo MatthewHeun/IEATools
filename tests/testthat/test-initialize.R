@@ -226,3 +226,8 @@ test_that("load_tidy_iea_df works as expected", {
     tidy_iea_df()
   expect_true(all(simple == complicated))
 })
+
+test_that("converting year to numeric works as expected", {
+  iea_tidy_df <- load_tidy_iea_df()
+  expect_true(is.numeric(iea_tidy_df$Year))
+})
