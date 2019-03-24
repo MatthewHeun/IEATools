@@ -181,7 +181,7 @@ production_to_resources <- function(.tidy_iea_df,
                                     production = "Production",
                                     resources = "Resources"){
   # Take any remaining "Production" rows and convert them to Resources (Product).
-  .tidy_iea_df <- .tidy_iea_df %>% 
+  .tidy_iea_df %>% 
     dplyr::mutate(
       !!as.name(flow) := dplyr::case_when(
         !!as.name(flow) == production ~ paste0(resources, " (", !!as.name(product), ")"), 
@@ -193,14 +193,30 @@ production_to_resources <- function(.tidy_iea_df,
 
 #' Prepare for PSUT analysis
 #' 
+#' This is a convenience function.
+#' This function bundles several others:
 #' 
+#' 1. [specify_primary_production()]
+#' 2. [production_to_resources()]
+#' 
+#' Each bundled function is called in turn using default arguments.
+#' See examples for two ways to achieve the same result.
 #'
 #' @param .tidy_iea_df 
 #'
-#' @return
+#' @return an enhanced and corrected version of `.tidy_iea_df` 
+#'         that is ready for physical supply-use table (PSUT) analysis.
+#' 
 #' @export
 #'
 #' @examples
+#' # Simple
+#' load_tidy_iea_df() %>% 
+#'   prep_psut()
+#' # Complicated
+#' load_tidy_iea_df() %>% 
+#'   specify_primary_production() %>% 
+#'   production_to_resources()
 prep_psut <- function(.tidy_iea_df){
   .tidy_iea_df %>% 
     specify_primary_production() %>% 

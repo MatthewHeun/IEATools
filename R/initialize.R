@@ -561,7 +561,7 @@ tidy_iea_df <- function(.iea_df,
 #' 5. [augment_iea_df()], and 
 #' 6. [tidy_iea_df()].
 #' 
-#' Each is called in turn using default arguments.
+#' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
 #' 
 #' @param file_path the path of the file to be loaded. Default loads example data bundled with the package.

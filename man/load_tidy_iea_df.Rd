@@ -27,7 +27,7 @@ This function bundles several others:
 }
 }
 \details{
-Each is called in turn using default arguments.
+Each bundled function is called in turn using default arguments.
 See examples for two ways to achieve the same result.
 }
 \examples{
