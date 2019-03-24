@@ -21,7 +21,7 @@ coal_and_coal_products <- c(
   "Other recovered gases"
 )
 
-usethis::use_data(coal_and_coal_products)
+usethis::use_data(coal_and_coal_products, overwrite = TRUE)
 
 oil_and_oil_products <- c(
   "Crude/NGL/feedstocks (if no detail)",
@@ -49,7 +49,7 @@ oil_and_oil_products <- c(
   "Other oil products"
 )
 
-usethis::use_data(oil_and_oil_products)
+usethis::use_data(oil_and_oil_products, overwrite = TRUE)
 
 renewable_products <- c(
   "Geothermal",
@@ -61,7 +61,7 @@ renewable_products <- c(
   "Other sources"
 )
 
-usethis::use_data(renewable_products)
+usethis::use_data(renewable_products, overwrite = TRUE)
 
 biofuel_and_waste_products <- c(
   "Industrial waste",
@@ -76,11 +76,34 @@ biofuel_and_waste_products <- c(
   "Charcoal"
 )
 
-usethis::use_data(biofuel_and_waste_products)
+usethis::use_data(biofuel_and_waste_products, overwrite = TRUE)
 
-# Create a data frame that specifies how to re-route EIOU flows
-# to Production industries.
-EIOU_industries <- list(
-  `Coal mines` = coal_and_coal_products,
-  `Oil `
+aggregation_flows <- c(
+  "Total primary energy supply",
+  "Total final consumption", 
+  "Transformation processes", 
+  "Energy industry own use",
+  "Industry",
+  "Transport",
+  "Other",
+  "Non-energy use"
 )
+
+usethis::use_data(aggregation_flows, overwrite = TRUE)
+
+aggregation_countries <- c(
+  "World",
+  "OECD Americas",
+  "OECD Asia Oceania",
+  "OECD Europe",
+  "Africa",
+  "Non-OECD Americas",
+  "Middle East",
+  "Non-OECD Europe and Eurasia",
+  "Non-OECD Asia (excluding China)",
+  "China (P.R. of China and Hong Kong, China)",
+  "World marine bunkers",
+  "World aviation bunkers"
+)
+
+usethis::use_data(aggregation_countries, overwrite = TRUE)
