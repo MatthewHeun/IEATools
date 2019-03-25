@@ -5,11 +5,9 @@
 \title{Remove aggregation and memo rows from data frames of IEA data}
 \usage{
 remove_agg_memo_flows(.iea_df, flow = "Flow", product = "Product",
-  agg_flows = c("Total primary energy supply", "Total final consumption",
-  "Transformation processes", "Energy industry own use", "Industry",
-  "Transport", "Other", "Non-energy use"),
-  memo_flow_prefixes = c("Memo: ", "Electricity output (GWh)",
-  "Heat output"), memo_product_prefixes = c("Memo: ", "Total"))
+  agg_flows = aggregation_flows,
+  memo_flow_prefixes = memo_aggregation_flow_prefixes,
+  memo_product_prefixes = memo_aggregation_product_prefixes)
 }
 \arguments{
 \item{.iea_df}{a data frame of IEA data}

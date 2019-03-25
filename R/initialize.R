@@ -196,41 +196,32 @@ use_iso_countries <- function(.iea_df,
     dplyr::rename(
       !!as.name(country) := country.name.en
     )
-  # There are some "Countries" in the IEA data set that do not have corresponding
-  # iso2c abbreviations in the countrycode database.  
-  # None of these countries are of interest to us now (March 2018),
-  # so we will not try any corrections at this time.
-  # Later, we can add additional rows to the CountryInfo data frame to pick up ISO abbreviations
-  # for missing countries.
-  # The code might look something like this:
-  # bind_rows(
-  #   data.frame(Country = c("Former Soviet Union (if no detail)",
-  #                          "Former Yugoslavia (if no detail)",
-  #                          "Republic of Vietnam",
-  #                          "Tanzania",
-  #                          "Venezuela",
-  #                          "Islamic Republic of Iran",
-  #                          "Dem. Republic of the Congo",
-  #                          "Dem. People's Rep. of Korea",
-  #                          "People's Republic of China",
-  #                          "C\x99te d'Iviore"),
-  #   iso2c = c("SO", "YU", "VN", "TZ", "VE", "IR", "CD", "KP", "CN", "CI"))
-  # )
   .iea_df %>%
     dplyr::left_join(CountryInfo, by = c("Country")) %>% # left_join preserves all rows of IEA data
+    # dplyr::mutate(
+    #   iso2c := dplyr::case_when(
+    #     # Add "World" to the Country column to preserve world data, if present.
+    #     !!as.name(country) == "World" ~ "World", 
+    #     TRUE ~ iso2c
+    #   )
+    # ) %>% 
+    # If there is no ISO abbreviation for the country name, 
+    # we set the ios2c column to be the same as the country column.
     dplyr::mutate(
-      iso2c := dplyr::case_when(
-        # Add "World" to the Country column to preserve world data, if present.
-        !!as.name(country) == "World" ~ "World", 
-        TRUE ~ iso2c
+      !!as.name(iso2c) := case_when(
+        is.na(!!as.name(iso2c)) ~ !!as.name(country), 
+        TRUE ~ !!as.name(iso2c)
       )
     ) %>% 
+    # Now we can get rid of the country column.
     dplyr::select(-!!as.name(country)) %>% 
+    # And rename the iso2c column to be country
     dplyr::rename(!!as.name(country) := iso2c) %>% 
-    dplyr::select(!!as.name(country), dplyr::everything()) %>% 
+    # And put the country column first.
+    dplyr::select(!!as.name(country), dplyr::everything()) # %>% 
     # The effect of the next line is to eliminate non-countries from the data set.
     # For example, OECD, IEA, etc. are not Countries, so they are dropped here.
-    dplyr::filter(!is.na(country))
+    # dplyr::filter(!is.na(country))
 }
 
 
@@ -265,17 +256,9 @@ use_iso_countries <- function(.iea_df,
 remove_agg_memo_flows <- function(.iea_df,
                                   flow = "Flow",
                                   product = "Product",
-                                  agg_flows = c(
-                                    "Total primary energy supply",
-                                    "Total final consumption", 
-                                    "Transformation processes", 
-                                    "Energy industry own use",
-                                    "Industry",
-                                    "Transport",
-                                    "Other",
-                                    "Non-energy use"),
-                                  memo_flow_prefixes = c("Memo: ", "Electricity output (GWh)", "Heat output"), 
-                                  memo_product_prefixes = c("Memo: ", "Total")){
+                                  agg_flows = aggregation_flows,
+                                  memo_flow_prefixes = memo_aggregation_flow_prefixes, 
+                                  memo_product_prefixes = memo_aggregation_product_prefixes){
   .iea_df %>% 
     dplyr::mutate(
       # These regular expression patterns match any number (+) of spaces ( ) at the beginning of the strings (^).

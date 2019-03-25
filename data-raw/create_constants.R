@@ -91,19 +91,17 @@ aggregation_flows <- c(
 
 usethis::use_data(aggregation_flows, overwrite = TRUE)
 
-aggregation_countries <- c(
-  "World",
-  "OECD Americas",
-  "OECD Asia Oceania",
-  "OECD Europe",
-  "Africa",
-  "Non-OECD Americas",
-  "Middle East",
-  "Non-OECD Europe and Eurasia",
-  "Non-OECD Asia (excluding China)",
-  "China (P.R. of China and Hong Kong, China)",
-  "World marine bunkers",
-  "World aviation bunkers"
+memo_aggregation_flow_prefixes = c(
+  "Memo: ", 
+  "Electricity output (GWh)", 
+  "Heat output"
+  )
+
+usethis::use_data(memo_aggregation_flow_prefixes, overwrite = TRUE)
+
+memo_aggregation_product_prefixes = c(
+  "Memo: ", 
+  "Total"
 )
 
-usethis::use_data(aggregation_countries, overwrite = TRUE)
+usethis::use_data(memo_aggregation_product_prefixes, overwrite = TRUE)
