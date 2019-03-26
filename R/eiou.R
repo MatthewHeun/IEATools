@@ -17,15 +17,15 @@
 #' 4. EIOU classified as `non_spec_energy` is sent to `nonspecenergy_reclassify`.
 #'
 #' @param .tidy_iea_df an IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
-#' @param flow 
-#' @param own_use_elect_chp_heat 
-#' @param flow_aggregation_point 
-#' @param eiou 
-#' @param pumped_storage 
-#' @param nuclear_industry 
-#' @param non_spec_energy 
-#' @param nonspecenergy_reclassify 
-#' @param main_act_producer_elect 
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
+#' @param eiou a string identifying energy industry own use in the flow aggregation point column. Default is "`Energy industry own use`".
+#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
+#' @param own_use_elect_chp_heat a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "`Own use in electricity, CHP and heat plants`".
+#' @param pumped_storage a string identifying pumped storage plants in the flow column. Default is "`Pumped storage plants`".
+#' @param nuclear_industry a string identifying nuclear plants in the flow column. Default is "`Nuclear industry`".
+#' @param main_act_producer_elect a string identifying main activity producer electricity plants. Default is "`Main activity producter electricity plants`".
+#' @param non_spec_energy a string identifying non-specified energy in the flow solumn. Default is "`Non-specified (energy)`".
+#' @param nonspecenergy_reclassify a string identifying the reclassified non-specified (energy) industry. Default is "`Oil and gas extraction`".
 #'
 #' @return a modified version of `.tidy_iea_df`
 #' 
@@ -37,7 +37,7 @@
 #'   specify_eiou_tp() %>% 
 #'   filter(Flow.aggregation.point == "Energy industry own use" & 
 #'            Flow == "Main activity producer electricity plants")
-specify_eiou_tp <- function(.tidy_iea_df,
+specify_tp_eiou <- function(.tidy_iea_df,
                             flow_aggregation_point = "Flow.aggregation.point",
                             eiou = "Energy industry own use",
                             flow = "Flow", 
