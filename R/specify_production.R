@@ -48,8 +48,6 @@
 #' @param transformation_processes a string identifying transformation processes in the flow column of `.tidy_iea_df`. 
 #'        Default is "`Transformation processes`".
 #' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
-#' @param eiou_suffix the string suffix identifying energy industry own use in the `Flow` column of `.tidy_iea_df`.
-#'        Default is "`(energy)`".
 #' @param resources a string identifying resource industries to be added to `.tidy_iea_df`. 
 #'        Default is "`Resources`".
 #' @param production a string identifying production in the flow column. Default is "`Production`".
@@ -77,7 +75,7 @@ specify_primary_production <- function(.tidy_iea_df,
                                        eiou = "Energy industry own use",
                                        transformation_processes = "Transformation processes",
                                        flow = "Flow", 
-                                       eiou_suffix = "(energy)",
+                                       # eiou_suffix = "(energy)",
                                        resources = "Resources",
                                        production = "Production", 
                                        e_dot = "E.dot",
@@ -98,12 +96,7 @@ specify_primary_production <- function(.tidy_iea_df,
         )
       )
     
-    # If the user supplies "eiou_dest eiou_suffix" by mistake, trim off the suffix.
-    if (endsWith(eiou_dest, eiou_suffix)) {
-      eiou_dest <- gsub(pattern = Hmisc::escapeRegex(paste0(" ", eiou_suffix)), replacement = "", x = eiou_dest)
-    }
     EIOU <- .tidf %>% 
-      # dplyr::filter(!!as.name(flow) == paste(eiou_dest, eiou_suffix))
       dplyr::filter(!!as.name(flow_aggregation_point) == eiou & 
                       !!as.name(flow) == eiou_dest)
     if (nrow(EIOU) > 0) {
@@ -124,15 +117,8 @@ specify_primary_production <- function(.tidy_iea_df,
         dplyr::mutate(
           !!as.name(e_dot) := -!!as.name(e_dot)
         )
-      eiou_suffix_pattern <- paste0(" ", Hmisc::escapeRegex(eiou_suffix))
+      # Put it all together
       .tidf <- .tidf %>% 
-        dplyr::mutate(
-          # Remove "(energy)" suffix from EIOU flows
-          !!as.name(flow) := dplyr::case_when(
-            endsWith(!!as.name(flow), paste0(" ", eiou_suffix)) ~ gsub(pattern = eiou_suffix_pattern, replacement = "", !!as.name(flow)), 
-            TRUE ~ !!as.name(flow)
-          )
-        ) %>% 
         # Add rows for additional flow from Resources to the EIOU industry to .tidy_iea_df
         dplyr::bind_rows(Input, Output)
     }

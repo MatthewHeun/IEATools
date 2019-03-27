@@ -12,8 +12,8 @@ specify_primary_production(.tidy_iea_df,
   flow_aggregation_point = "Flow.aggregation.point",
   eiou = "Energy industry own use",
   transformation_processes = "Transformation processes", flow = "Flow",
-  eiou_suffix = "(energy)", resources = "Resources",
-  production = "Production", e_dot = "E.dot", product = "Product")
+  resources = "Resources", production = "Production",
+  e_dot = "E.dot", product = "Product")
 }
 \arguments{
 \item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
@@ -37,9 +37,6 @@ Default is "\code{Energy industry own use}".}
 Default is "\code{Transformation processes}".}
 
 \item{flow}{the name of the flow column in \code{.tidy_iea_df}.  Default is "\code{Flow}".}
-
-\item{eiou_suffix}{the string suffix identifying energy industry own use in the \code{Flow} column of \code{.tidy_iea_df}.
-Default is "\code{(energy)}".}
 
 \item{resources}{a string identifying resource industries to be added to \code{.tidy_iea_df}.
 Default is "\code{Resources}".}
