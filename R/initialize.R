@@ -281,7 +281,13 @@ remove_agg_memo_flows <- function(.iea_df,
 #' This function solves several problems.
 #' The first problem is that metadata in the `COUNTRY`, `FLOW`, and `PRODUCT`
 #' columns of an IEA data table are not unique.
-#' To solve this problem, two additional columns are added: `Ledger.side` and `Flow.aggregation.point`.
+#' A second problem is that the `FLOW` column contains both industries to which energy is flowing _and_ 
+#' the type of flow that is involved.  
+#' (E.g., the suffix "`(energy)`" means that the flow is an own use by the energy industry.
+#' The "`(transf.)`" suffix means that a flow is involved in a transformation process
+#' between primary and final energy. 
+#'
+#' To solve these problems, two additional columns are added: `Ledger.side` and `Flow.aggregation.point`.
 #' `Ledger.side` can be one of "`Supply`" or "`Consumption`", corresponding to the top or bottom of the IEA's tables, respectively.
 #' `Flow.aggregation.point` indicates the next level of aggregation for these data. 
 #' `Flow.aggregation.point` can be one of 
@@ -289,8 +295,11 @@ remove_agg_memo_flows <- function(.iea_df,
 #' on the `Supply` side of the ledger.
 #' On the `Consumption` side of the ledger, `Flow.aggregation.point` can be one of 
 #' "`Industry`", "`Transport`", "`Other`", or "`Non-energy use`".
+#' When the `Flow.aggregation.point` column is present, 
+#' the need for the "`(energy)`" and "`(transf.)`" suffixes is eliminated,
+#' so they are deleted.
 #' 
-#' The second problem this function solves is that energy type and units are not specified in IEA data.
+#' The third problem this function solves is that energy type and units are not specified in IEA data.
 #' An `Energy.type` column is added with the value of `energy_type_val`. 
 #' (Default is `E`, for energy, as opposed to `X`, which would be exergy.)
 #' A `Unit` column is added with the value of `unit_val`.
@@ -458,6 +467,8 @@ augment_iea_df <- function(.iea_df,
         !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), heat_output_flows_prefix) ~ heat_output,
         TRUE ~ NA_character_
       ), 
+      # Now that Flow.aggregation.point is present, we no longer need the (energy) and (transf.) suffixes, so delete them.
+      ################## Add code here to delete the suffixes.
       # Add method column
       !!method := method_val,
       # Add last stage column
