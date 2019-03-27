@@ -1,4 +1,5 @@
 library(dplyr)
+library(magrittr)
 
 ###########################################################
 context("Specify EIOU")
@@ -65,5 +66,5 @@ test_that("specify_tp_eiou works for sample data", {
     specify_tp_eiou() %>% 
     filter(Flow.aggregation.point == "Energy industry own use" & 
              Flow == "Main activity producer electricity plants")
-  expect_equal(nrow(specified), 4)
+  expect_equal(nrow(specified), 5)
 })

@@ -30,6 +30,9 @@
 #' * The `Oil and gas extraction (energy)` EIOU `Flow` is replaced by `Oil and gas extraction`.
 #' 
 #' Users can specify other changes by adjusting the default argument values.
+#' 
+#' Be sure to call this function _after_ calling `augment_iea_df()` or
+#' `load_tidy_iea_df()`.
 #'
 #' @param .tidy_iea_df an IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
 #' @param eiou_destinations a vector of destinations for EIOU for primary production of coal and coal products and oil and natural gas.
@@ -97,10 +100,12 @@ specify_primary_production <- function(.tidy_iea_df,
     
     # If the user supplies "eiou_dest eiou_suffix" by mistake, trim off the suffix.
     if (endsWith(eiou_dest, eiou_suffix)) {
-      eiou_dest <- gsub(pattern = eiou_suffix, replacement = "", eiou_dest)
+      eiou_dest <- gsub(pattern = Hmisc::escapeRegex(paste0(" ", eiou_suffix)), replacement = "", x = eiou_dest)
     }
     EIOU <- .tidf %>% 
-      dplyr::filter(!!as.name(flow) == paste(eiou_dest, eiou_suffix))
+      # dplyr::filter(!!as.name(flow) == paste(eiou_dest, eiou_suffix))
+      dplyr::filter(!!as.name(flow_aggregation_point) == eiou & 
+                      !!as.name(flow) == eiou_dest)
     if (nrow(EIOU) > 0) {
       # We have EIOU rows, so we have more work to do.
       # Find rows of production of prods

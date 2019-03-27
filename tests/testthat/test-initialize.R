@@ -76,10 +76,11 @@ test_that("augment_iea_df works", {
   expect_equal(simple_with_tfc_df$Ledger.side, c("Supply", "Consumption"))
   expect_equal(simple_with_tfc_df$Flow.aggregation.point, c("Total primary energy supply", NA_character_))
   
-  IEADF_augmented <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+  IEADF_unaugmented <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
     system.file(package = "IEATools") %>% 
     iea_df() %>% 
-    rename_iea_df_cols() %>% 
+    rename_iea_df_cols()
+  IEADF_augmented <- IEADF_unaugmented %>% 
     augment_iea_df()
   # Check column types
   clses <- lapply(IEADF_augmented, class)
@@ -100,6 +101,20 @@ test_that("augment_iea_df works", {
   # So delete that column first.
   expect_false(any(IEADF_augmented %>% dplyr::select(-Flow.aggregation.point) == ".."))
   expect_false(any(IEADF_augmented %>% dplyr::select(-Flow.aggregation.point) == "x"))
+  
+  # Check that the original has flows that end in "(transf.)"
+  expect_true(nrow(IEADF_unaugmented %>% filter(endsWith(Flow, "(transf.)"))) > 0)
+  # Check that the original has flows that end in "(transformation)"
+  expect_true(nrow(IEADF_unaugmented %>% filter(endsWith(Flow, "(transformation)"))) > 0)
+  # Check that the original has flows that end in "(energy)"
+  expect_true(nrow(IEADF_unaugmented %>% filter(endsWith(Flow, "(energy)"))) > 0)
+  
+  # Check that all "(transf.)" have been removed from the Flow column
+  expect_equal(nrow(IEADF_augmented %>% filter(endsWith(Flow, "(transf.)"))), 0)
+  # Check that all "(transformation)" have been removed from the Flow column
+  expect_equal(nrow(IEADF_augmented %>% filter(endsWith(Flow, "(transformation)"))), 0)
+  # Check that all "(energy)" have been removed from the Flow column
+  expect_equal(nrow(IEADF_augmented %>% filter(endsWith(Flow, "(energy)"))), 0)
 })
 
 ###########################################################

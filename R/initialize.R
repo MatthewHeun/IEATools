@@ -48,7 +48,8 @@
 #' To further prepre the data frame for use, call `augment_iea_data()`,
 #' passing the output of this function in the `.iea_df` argument of `augment_iea_data()`.
 #'
-#' @param .iea_file a string containing the path to a .csv file of extended energy balances from the IEA
+#' @param .iea_file a string containing the path to a .csv file of extended energy balances from the IEA.
+#'        Default is the path to a sample IEA file provided in this package.
 #' @param text a character string that can be parsed as IEA extended energy balances. 
 #'        (This argument is useful for testing.)
 #' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is "`,,TIME`".
@@ -71,7 +72,8 @@
 #' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43")
 #' # With extra commas on the 2nd line
 #' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal,42,43")
-iea_df <- function(.iea_file = NULL, text = NULL, 
+iea_df <- function(.iea_file = NULL, 
+                   text = NULL, 
                    expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
                    year_colname_pattern = "^\\d*$", 
                    missing_data = "..", not_applicable_data = "x", confidential_data = "c"){
@@ -468,7 +470,15 @@ augment_iea_df <- function(.iea_df,
         TRUE ~ NA_character_
       ), 
       # Now that Flow.aggregation.point is present, we no longer need the (energy) and (transf.) suffixes, so delete them.
-      ################## Add code here to delete the suffixes.
+      !!as.name(flow) := dplyr::case_when(
+        # Delete the " (transf.)" suffix
+        endsWith(!!as.name(flow), tp_flows_suffix) ~ gsub(pattern = Hmisc::escapeRegex(paste0(" ", tp_flows_suffix)), replacement = "", x = !!as.name(flow)), 
+        # Delete the " (transformation)" suffix
+        endsWith(!!as.name(flow), nstp_flows_suffix) ~ gsub(pattern = Hmisc::escapeRegex(paste0(" ", nstp_flows_suffix)), replacement = "", x = !!as.name(flow)), 
+        # Delete the " (energy)" suffix
+        endsWith(!!as.name(flow), eiou_flows_suffix) ~ gsub(pattern = Hmisc::escapeRegex(paste0(" ", eiou_flows_suffix)), replacement = "", x = !!as.name(flow)),
+        TRUE ~ !!as.name(flow)
+      ),
       # Add method column
       !!method := method_val,
       # Add last stage column

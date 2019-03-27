@@ -84,6 +84,9 @@ source of all primary \code{oil_and_oil_products} and \code{Natural gas} in the 
 }
 
 Users can specify other changes by adjusting the default argument values.
+
+Be sure to call this function \emph{after} calling \code{augment_iea_df()} or
+\code{load_tidy_iea_df()}.
 }
 \examples{
 library(dplyr)
