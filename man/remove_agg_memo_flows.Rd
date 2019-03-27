@@ -5,9 +5,9 @@
 \title{Remove aggregation and memo rows from data frames of IEA data}
 \usage{
 remove_agg_memo_flows(.iea_df, flow = "Flow", product = "Product",
-  agg_flows = aggregation_flows,
-  memo_flow_prefixes = memo_aggregation_flow_prefixes,
-  memo_product_prefixes = memo_aggregation_product_prefixes)
+  agg_flows = IEATools::aggregation_flows,
+  memo_flow_prefixes = IEATools::memo_aggregation_flow_prefixes,
+  memo_product_prefixes = IEATools::memo_aggregation_product_prefixes)
 }
 \arguments{
 \item{.iea_df}{a data frame of IEA data}

@@ -208,7 +208,7 @@ use_iso_countries <- function(.iea_df,
     # If there is no ISO abbreviation for the country name, 
     # we set the ios2c column to be the same as the country column.
     dplyr::mutate(
-      !!as.name(iso2c) := case_when(
+      !!as.name(iso2c) := dplyr::case_when(
         is.na(!!as.name(iso2c)) ~ !!as.name(country), 
         TRUE ~ !!as.name(iso2c)
       )
@@ -256,9 +256,9 @@ use_iso_countries <- function(.iea_df,
 remove_agg_memo_flows <- function(.iea_df,
                                   flow = "Flow",
                                   product = "Product",
-                                  agg_flows = aggregation_flows,
-                                  memo_flow_prefixes = memo_aggregation_flow_prefixes, 
-                                  memo_product_prefixes = memo_aggregation_product_prefixes){
+                                  agg_flows = IEATools::aggregation_flows,
+                                  memo_flow_prefixes = IEATools::memo_aggregation_flow_prefixes, 
+                                  memo_product_prefixes = IEATools::memo_aggregation_product_prefixes){
   .iea_df %>% 
     dplyr::mutate(
       # These regular expression patterns match any number (+) of spaces ( ) at the beginning of the strings (^).

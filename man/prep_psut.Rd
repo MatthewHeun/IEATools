@@ -7,7 +7,7 @@
 prep_psut(.tidy_iea_df)
 }
 \arguments{
-\item{.tidy_iea_df}{}
+\item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
 }
 \value{
 an enhanced and corrected version of \code{.tidy_iea_df}

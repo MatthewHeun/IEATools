@@ -61,7 +61,7 @@ The following changes are made to the \code{.tidy_iea_df} data frame:
 \examples{
 library(dplyr)
 load_tidy_iea_df() \%>\% 
-  specify_eiou_tp() \%>\% 
+  specify_tp_eiou() \%>\% 
   filter(Flow.aggregation.point == "Energy industry own use" & 
            Flow == "Main activity producer electricity plants")
 }

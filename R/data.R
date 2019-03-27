@@ -28,3 +28,26 @@
 #' 
 #' @format A string vector with 10 entries
 "biofuel_and_waste_products"
+
+#' Aggregation flows
+#'
+#' A string vector containing names of industries whose purpose in IEA extended energy balance `Flow`s is to provide aggregations.
+#' 
+#' @format A string vector with 8 entries
+"aggregation_flows"
+
+#' Memo and aggregation flow prefixes
+#'
+#' A string vector containing names of `Flow`s that provide memos and aggregations.
+#' 
+#' @format A string vector with 3 entries
+"memo_aggregation_flow_prefixes"
+
+#' Memo and aggregation product prefixes
+#'
+#' A string vector containing names of `Product`s that provide memos and aggregations.
+#' 
+#' @format A string vector with 2 entries
+"memo_aggregation_product_prefixes"
+
+

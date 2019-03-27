@@ -202,7 +202,7 @@ production_to_resources <- function(.tidy_iea_df,
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
 #'
-#' @param .tidy_iea_df 
+#' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
 #'
 #' @return an enhanced and corrected version of `.tidy_iea_df` 
 #'         that is ready for physical supply-use table (PSUT) analysis.
