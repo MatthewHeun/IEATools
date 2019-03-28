@@ -224,59 +224,77 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' Find transformation sinks
 #' 
 #' In the IEA extended energy balance data, 
-#' transformation processes are expected to both consume and make energy.
-#' But some transformation processes consume energy without making any energy.
-#' Those transformation processes are called "transformation sinks."
-#' This function finds and identifies transformation sinks.
+#' transformation processes ought to both consume and produce energy.
+#' But some transformation processes consume energy without producing any energy.
+#' Those transformation processes can be called "transformation sinks."
+#' This function finds and identifies industries that act as transformation sinks.
 #' 
 #' It is important to identify transformation sinks, 
-#' because they cause two problems for input-output analysis. 
-#' First, when swimming upstream, we cannot "see" the sunk energy carriers,
-#' because tjhey have no downstream effects.
+#' because they cause two problems for physical supply-use table (PSUT) analysis. 
+#' First, when swimming upstream, a PSUT analysis cannot "see" the sunk energy carriers,
+#' because they have no downstream effects.
 #' Thus, upstream swims cannot conserve energy.
 #' Second, when calculating embodied energy for each downstream energy carrier,
-#' the Fuel oil, LPG, or Gas/diesel oil excl. biofuels cannot be embodied.
+#' the sunk energy carriers cannot be embodied in any final demand energy carriers.
 #' Thus, embodied energy calculations cannot conserve energy.
 #' 
-#' Transformation sinks are identified on a per-group basis by the following algorithm:
+#' Transformation sinks are identified by the following algorithm:
 #' 
 #' 1. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that consume energy (negative value for `E.dot`).
 #'    Energy consumption can be for the transformation process itself or for Energy industry own use.
 #' 2. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that produce energy (positive value for `E.dot`).
-#' 3. Take the set difference between the two (consumers less producers). 
-#'    The set difference represents transformation sinks.
+#' 3. Take the set difference between the two (producers less consumers). 
+#'    The set difference is the list of transformation sinks.
 #' 
-#' Be sure to [dplyr::group_by()] the `.tidy_iea_df` data frame _before_ calling this function.
+#' [transformation_sinks()] is a function not unlike [dplyr::summarise()];
+#' it returns a summary containing grouping variables and industries that are transformation sinks.
+#' So be sure to [dplyr::group_by()] the `.tidy_iea_df` data frame _before_ calling this function.
 #' Typical grouping variables are `Method`, `Last.stage`, `Country`, `Year`, `Energy.type`.
-#' If grouping is not provided data from different countries, 
-#' the various `Flow`s will be aggregated together, possibly leading to missed transformation sinks.
+#' If groups are not set, 
+#' `flow`s will be analyzed together, possibly leading to missed transformation sinks.
 #' 
-#' Note that this function only identifies the problem, it does not fix the problem. 
-#' [transformation_sinks()] is a function not unlike [dplyr::filter()]: 
-#' it returns rows that represent energy consumed by transformation sinks.
-#' The [tp_sinks_to_nonenergy()] function uses the output of [transformation_sinks()]
+#' The various `specify_*()` functions should also be called _before_ calling [transformation_sinks()].
+#' The `specify_*()` functions clean up the IEA data, ensuring that energy is routed to the right places.
+#' 
+#' Note that this function only identifies the problem of transformation sinks;
+#' it does not fix the problem. 
+#' To solve the problem of transformation sinks, 
+#' see the [tp_sinks_to_nonenergy()] function.
+#' [tp_sinks_to_nonenergy()] uses the output of [transformation_sinks()]
 #' to route energy consumed by transformation sinks to `Non-energy use industry/transformation/energy`.
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
 #'
-#' @return the rows of `.tidy_iea_df` that represent energy consumed by transformation sinks
+#' @return the grouping columns of `.tidy_iea_df` plus the `flow` column, 
+#'         with one row for each industry that is a transformation sink.
+#'         Industries that are transformation sinks are named in the `flow` column.
 #' 
 #' @export
 #'
 #' @examples
 #' library(dplyr)
 #' load_tidy_iea_df() %>% 
+#'   specify_primary_production() %>% 
+#'   specify_interface_industries() %>% 
+#'   specify_tp_eiou() %>% 
 #'   group_by(Method, Last.stage, Country, Year, Energy.type) %>% 
 #'   transformation_sinks()
 transformation_sinks <- function(.tidy_iea_df, 
                                  flow_aggregation_point = "Flow.aggregation.point",
                                  transformation_processes = "Transformation processes",
+                                 eiou = "Energy industry own use",
                                  flow = "Flow", 
                                  e_ktoe = "E.dot"){
-  producers <- .tidy_iea_df %>% 
-    dplyr::filter(!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_ktoe) > 0) %>% 
-    magrittr::extract2(flow) %>% 
+  consumer_rows <- .tidy_iea_df %>% 
+    dplyr::filter((!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_ktoe) < 0) |
+                    (!!as.name(flow_aggregation_point) == eiou & !!as.name(e_ktoe) < 0)) %>% 
+    dplyr::select(c(dplyr::group_vars(.tidy_iea_df), flow)) %>% 
     unique()
+  producer_rows <- .tidy_iea_df %>% 
+    dplyr::filter(!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_ktoe) > 0) %>% 
+    dplyr::select(c(dplyr::group_vars(.tidy_iea_df), flow)) %>% 
+    unique()
+  dplyr::setdiff(consumer_rows, producer_rows)  
 }
 
 

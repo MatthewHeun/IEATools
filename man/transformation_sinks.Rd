@@ -6,30 +6,32 @@
 \usage{
 transformation_sinks(.tidy_iea_df,
   flow_aggregation_point = "Flow.aggregation.point",
-  transformation_processes = "Transformation processes", flow = "Flow",
-  e_ktoe = "E.dot")
+  transformation_processes = "Transformation processes",
+  eiou = "Energy industry own use", flow = "Flow", e_ktoe = "E.dot")
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
 }
 \value{
-the rows of \code{.tidy_iea_df} that represent energy consumed by transformation sinks
+the grouping columns of \code{.tidy_iea_df} plus the \code{flow} column,
+with one row for each industry that is a transformation sink.
+Industries that are transformation sinks are named in the \code{flow} column.
 }
 \description{
 In the IEA extended energy balance data,
-transformation processes are expected to both consume and make energy.
-But some transformation processes consume energy without making any energy.
-Those transformation processes are called "transformation sinks."
-This function finds and identifies transformation sinks.
+transformation processes ought to both consume and produce energy.
+But some transformation processes consume energy without producing any energy.
+Those transformation processes can be called "transformation sinks."
+This function finds and identifies industries that act as transformation sinks.
 }
 \details{
 It is important to identify transformation sinks,
-because they cause two problems for input-output analysis.
-First, when swimming upstream, we cannot "see" the sunk energy carriers,
-because tjhey have no downstream effects.
+because they cause two problems for physical supply-use table (PSUT) analysis.
+First, when swimming upstream, a PSUT analysis cannot "see" the sunk energy carriers,
+because they have no downstream effects.
 Thus, upstream swims cannot conserve energy.
 Second, when calculating embodied energy for each downstream energy carrier,
-the Fuel oil, LPG, or Gas/diesel oil excl. biofuels cannot be embodied.
+the sunk energy carriers cannot be embodied in any final demand energy carriers.
 Thus, embodied energy calculations cannot conserve energy.
 
 Transformation sinks are identified on a per-group basis by the following algorithm:
@@ -38,23 +40,32 @@ Transformation sinks are identified on a per-group basis by the following algori
 Energy consumption can be for the transformation process itself or for Energy industry own use.
 \item Identify (per group in \code{.tidy_iea_df}) all \code{Transformation processes} that produce energy (positive value for \code{E.dot}).
 \item Take the set difference between the two (consumers less producers).
-The set difference represents transformation sinks.
+The set difference is the list of transformation sinks.
 }
 
-Be sure to \code{\link[dplyr:group_by]{dplyr::group_by()}} the \code{.tidy_iea_df} data frame \emph{before} calling this function.
+\code{\link[=transformation_sinks]{transformation_sinks()}} is a function not unlike \code{\link[dplyr:summarise]{dplyr::summarise()}}:
+it returns a summary of grouping variables and industries that are transformation sinks.
+So be sure to \code{\link[dplyr:group_by]{dplyr::group_by()}} the \code{.tidy_iea_df} data frame \emph{before} calling this function.
 Typical grouping variables are \code{Method}, \code{Last.stage}, \code{Country}, \code{Year}, \code{Energy.type}.
-If grouping is not provided data from different countries,
-the various \code{Flow}s will be aggregated together, possibly leading to missed transformation sinks.
+If groups are not set,
+\code{flow}s will be analyzed together, possibly leading to missed transformation sinks.
 
-Note that this function only identifies the problem, it does not fix the problem.
-\code{\link[=transformation_sinks]{transformation_sinks()}} is a function not unlike \code{\link[dplyr:filter]{dplyr::filter()}}:
-it returns rows that represent energy consumed by transformation sinks.
-The \code{\link[=tp_sinks_to_nonenergy]{tp_sinks_to_nonenergy()}} function uses the output of \code{\link[=transformation_sinks]{transformation_sinks()}}
+The various \code{specify_*()} functions should also be called \emph{before} calling \code{\link[=transformation_sinks]{transformation_sinks()}}.
+The \code{specify_*()} functions clean up the IEA data, ensuring that energy is routed to the right places.
+
+Note that this function only identifies the problem of transformation sinks;
+it does not fix the problem.
+To solve the problem of transformation sinks,
+see the \code{\link[=tp_sinks_to_nonenergy]{tp_sinks_to_nonenergy()}} function.
+\code{\link[=tp_sinks_to_nonenergy]{tp_sinks_to_nonenergy()}} uses the output of \code{\link[=transformation_sinks]{transformation_sinks()}}
 to route energy consumed by transformation sinks to \code{Non-energy use industry/transformation/energy}.
 }
 \examples{
 library(dplyr)
 load_tidy_iea_df() \%>\% 
+  specify_primary_production() \%>\% 
+  specify_interface_industries() \%>\% 
+  specify_tp_eiou() \%>\% 
   group_by(Method, Last.stage, Country, Year, Energy.type) \%>\% 
   transformation_sinks()
 }
