@@ -4,7 +4,7 @@
 \alias{transformation_sinks}
 \title{Find transformation sinks}
 \usage{
-transformation_sinks(.tidy_iea_data)
+transformation_sinks(.tidy_iea_df)
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
@@ -28,6 +28,18 @@ Thus, upstream swims cannot conserve energy.
 Second, when calculating embodied energy for each downstream energy carrier,
 the Fuel oil, LPG, or Gas/diesel oil excl. biofuels cannot be embodied.
 Thus, embodied energy calculations cannot conserve energy.
+
+Transformation sinks are identified on a per-group basis by the following algorithm:
+\enumerate{
+\item Identify (per group in \code{.tidy_iea_df}) all \code{Transformation processes} that consume energy (negative value for \code{E.dot}).
+Energy consumption can be for the transformation process itself or for Energy industry own use.
+\item Identify (per group in \code{.tidy_iea_df}) all \code{Transformation processes} that produce energy (positive value for \code{E.dot}).
+\item Take the set difference between the two (consumers less producers).
+The set difference represents transformation sinks.
+}
+
+Be sure to group the \code{.tidy_iea_df} \emph{before} calling this function.
+Typical grouping variables are \code{Medhod}, \code{Last.stage}, \code{Country}, \code{Year}, \code{Energy.type}.
 
 Note that this function only identifies the problem, it does not fix the problem.
 \code{\link[=transformation_sinks]{transformation_sinks()}} is a function not unlike \code{\link[dplyr:filter]{dplyr::filter()}}:

@@ -238,6 +238,17 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' the Fuel oil, LPG, or Gas/diesel oil excl. biofuels cannot be embodied.
 #' Thus, embodied energy calculations cannot conserve energy.
 #' 
+#' Transformation sinks are identified on a per-group basis by the following algorithm:
+#' 
+#' 1. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that consume energy (negative value for `E.dot`).
+#'    Energy consumption can be for the transformation process itself or for Energy industry own use.
+#' 2. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that produce energy (positive value for `E.dot`).
+#' 3. Take the set difference between the two (consumers less producers). 
+#'    The set difference represents transformation sinks.
+#' 
+#' Be sure to group the `.tidy_iea_df` _before_ calling this function.
+#' Typical grouping variables are `Medhod`, `Last.stage`, `Country`, `Year`, `Energy.type`.
+#' 
 #' Note that this function only identifies the problem, it does not fix the problem. 
 #' [transformation_sinks()] is a function not unlike [dplyr::filter()]: 
 #' it returns rows that represent energy consumed by transformation sinks.
@@ -253,7 +264,7 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' @examples
 #' load_tidy_iea_df() %>% 
 #'   transformation_sinks()
-transformation_sinks <- function(.tidy_iea_data){
+transformation_sinks <- function(.tidy_iea_df){
   
 }
 
