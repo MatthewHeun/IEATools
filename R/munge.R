@@ -36,17 +36,3 @@ add_production_details <- function(.tidy_iea_df, flow = "Flow", production = "Pr
       )
     )
 }
-
-
-
-
-add_resource_industries <- function(.tidy_iea_df, 
-                                    flow = "Flow", 
-                                    production = "Production",
-                                    product = "Product"){
-  # Create a table of resource industries and flows for each Production 
-  .tidy_iea_df %>% 
-    dplyr::mutate(
-      
-    )
-}

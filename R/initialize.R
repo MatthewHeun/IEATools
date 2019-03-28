@@ -200,15 +200,9 @@ use_iso_countries <- function(.iea_df,
     )
   .iea_df %>%
     dplyr::left_join(CountryInfo, by = c("Country")) %>% # left_join preserves all rows of IEA data
-    # dplyr::mutate(
-    #   iso2c := dplyr::case_when(
-    #     # Add "World" to the Country column to preserve world data, if present.
-    #     !!as.name(country) == "World" ~ "World", 
-    #     TRUE ~ iso2c
-    #   )
-    # ) %>% 
     # If there is no ISO abbreviation for the country name, 
     # we set the ios2c column to be the same as the country column.
+    # This step preserves all countries, even if they don't have a 2-letter ISO abbreviation.
     dplyr::mutate(
       !!as.name(iso2c) := dplyr::case_when(
         is.na(!!as.name(iso2c)) ~ !!as.name(country), 

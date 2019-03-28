@@ -105,3 +105,11 @@ memo_aggregation_product_prefixes = c(
 )
 
 usethis::use_data(memo_aggregation_product_prefixes, overwrite = TRUE)
+
+interface_industries = c("Imports",
+                         "Exports", 
+                         "International aviation bunkers",
+                         "International marine bunkers",
+                         "Stock changes")
+
+usethis::use_data(interface_industries, overwrite = TRUE)

@@ -197,11 +197,6 @@ add_psut_matnames <- function(.tidy_iea_df,
 }
 
 
-add_resource_industries <- function(.tidy_iea_df){
-  
-}
-
-
 
 
 

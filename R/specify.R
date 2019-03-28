@@ -181,6 +181,45 @@ production_to_resources <- function(.tidy_iea_df,
     )
 }
 
+#' Specify interface industries
+#' 
+#' An interface industry is one that moves energy resources in or out of a country.
+#' When `Flow` is any of the interface industries, we need to be more specific.
+#' If we don't separate these Flows, we run into trouble with
+#' upstream swims (e.g., all `Product`s are produced even if only one is needed) and
+#' embodied energy calculations (many types of energy are embodied, even if only one sould be).
+#' This function adds a suffix ` (Product)` to each of these interface industries.
+#' 
+#' Note that "`Production`" also needs to be specified, 
+#' but that is accomplished in the [specify_primary_production()] and
+#' [production_to_resources()] functions.
+#'
+#' @param .tidy_iea_df 
+#' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
+#' @param int_industries a string vector of industries involved in exchanges with other countries,
+#'        bunkers, or stock changes. Default is [interface_industries].
+#' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
+#'
+#' @return a modified version of `.tidy_iea_df` with specified interface industries
+#' 
+#' @export
+#'
+#' @examples
+#' load_tidy_iea_df() %>% 
+#'   specify_interface_industries()
+specify_interface_industries <- function(.tidy_iea_df,
+                                         flow = "Flow", 
+                                         int_industries = interface_industries,
+                                         product = "Product"){
+  .tidy_iea_df %>% 
+    dplyr::mutate(
+      !!as.name(flow) := dplyr::case_when(
+        !!as.name(flow) %in% int_industries ~ paste0(!!as.name(flow), " (", !!as.name(product), ")"),
+        TRUE ~ !!as.name(flow)
+      )
+    )
+}
+
 
 #' Prepare for PSUT analysis
 #' 
@@ -189,6 +228,7 @@ production_to_resources <- function(.tidy_iea_df,
 #' 
 #' 1. [specify_primary_production()]
 #' 2. [production_to_resources()]
+#' 3. [specify_interface_industries()]
 #' 
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
@@ -211,5 +251,6 @@ production_to_resources <- function(.tidy_iea_df,
 prep_psut <- function(.tidy_iea_df){
   .tidy_iea_df %>% 
     specify_primary_production() %>% 
-    production_to_resources()
+    production_to_resources() %>% 
+    specify_interface_industries()
 }

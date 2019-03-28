@@ -50,4 +50,9 @@
 #' @format A string vector with 2 entries
 "memo_aggregation_product_prefixes"
 
-
+#' Interface industries
+#'
+#' A string vector containing names of `Flow`s that interface with the world outside of the economy.
+#' 
+#' @format A string vector with 5 entries
+"interface_industries"

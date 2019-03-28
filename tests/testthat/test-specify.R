@@ -2,7 +2,7 @@ library(dplyr)
 library(magrittr)
 
 ###########################################################
-context("Specify production functions")
+context("Specify flows")
 ###########################################################
 
 test_that("EIOU is replaced correctly", {
@@ -29,7 +29,7 @@ test_that("EIOU is replaced correctly", {
   expect_false(eiou %>% endsWith("(energy)") %>% any())
 })
 
-test_that("Production is replaced correctly", {
+test_that("Production is converted to Resources correctly", {
   Specific_production <- load_tidy_iea_df() %>% 
     production_to_resources()
   # There should be no "Production" flows remaining.
@@ -39,11 +39,25 @@ test_that("Production is replaced correctly", {
                  any())
 })
 
+test_that("Interface industries are correctly specified", {
+  specified <- load_tidy_iea_df() %>% 
+    specify_interface_industries()
+  # We should have no more Imports, Exports, International aviation bunkers, International marine bunkers, or Stock changes.
+  # Rather, everything should be specified as X (Product).
+  for (i in interface_industries) {
+    # Ensure that there are no interface_industries remaining
+    expect_equal(nrow(specified %>% filter(Flow == i)), 0)
+    # Ensure that every interface_industry ends with ")", indicating that it has been specified.
+    expect_true(specified %>% filter(startsWith(Flow, i) & endsWith(Flow, ")")) %>% nrow() > 0)
+  }
+})
+
 test_that("prep_psut works as expected", {
   Simple <- load_tidy_iea_df() %>% 
     prep_psut()
   Complicated <- load_tidy_iea_df() %>% 
     specify_primary_production() %>% 
-    production_to_resources()
+    production_to_resources() %>% 
+    specify_interface_industries()
   expect_equal(Simple, Complicated)
 })
