@@ -221,6 +221,43 @@ specify_interface_industries <- function(.tidy_iea_df,
 }
 
 
+#' Find transformation sinks
+#' 
+#' In the IEA extended energy balance data, 
+#' transformation processes are expected to both consume and make energy.
+#' But some transformation processes consume energy without making any energy.
+#' Those transformation processes are called "transformation sinks."
+#' This function finds and identifies transformation sinks.
+#' 
+#' It is important to identify transformation sinks, 
+#' because they cause two problems for input-output analysis. 
+#' First, when swimming upstream, we cannot "see" the sunk energy carriers,
+#' because tjhey have no downstream effects.
+#' Thus, upstream swims cannot conserve energy.
+#' Second, when calculating embodied energy for each downstream energy carrier,
+#' the Fuel oil, LPG, or Gas/diesel oil excl. biofuels cannot be embodied.
+#' Thus, embodied energy calculations cannot conserve energy.
+#' 
+#' Note that this function only identifies the problem, it does not fix the problem. 
+#' [transformation_sinks()] is a function not unlike [dplyr::filter()]: 
+#' it returns rows that represent energy consumed by transformation sinks.
+#' The [tp_sinks_to_nonenergy()] function uses the output of [transformation_sinks()]
+#' to route energy consumed by transformation sinks to `Non-energy use industry/transformation/energy`.
+#'
+#' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
+#'
+#' @return the rows of `.tidy_iea_df` that represent energy consumed by transformation sinks
+#' 
+#' @export
+#'
+#' @examples
+#' load_tidy_iea_df() %>% 
+#'   transformation_sinks()
+transformation_sinks <- function(.tidy_iea_data){
+  
+}
+
+
 #' Prepare for PSUT analysis
 #' 
 #' This is a convenience function.

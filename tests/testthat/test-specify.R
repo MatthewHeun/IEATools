@@ -5,7 +5,7 @@ library(magrittr)
 context("Specify flows")
 ###########################################################
 
-test_that("EIOU is replaced correctly", {
+test_that("eiou is replaced correctly", {
   Specific_production <- load_tidy_iea_df() %>% 
     specify_primary_production()
   Prod_coal_oilng <- Specific_production %>% 
@@ -29,7 +29,7 @@ test_that("EIOU is replaced correctly", {
   expect_false(eiou %>% endsWith("(energy)") %>% any())
 })
 
-test_that("Production is converted to Resources correctly", {
+test_that("production is converted to resources correctly", {
   Specific_production <- load_tidy_iea_df() %>% 
     production_to_resources()
   # There should be no "Production" flows remaining.
@@ -39,7 +39,7 @@ test_that("Production is converted to Resources correctly", {
                  any())
 })
 
-test_that("Interface industries are correctly specified", {
+test_that("interface industries are correctly specified", {
   specified <- load_tidy_iea_df() %>% 
     specify_interface_industries()
   # We should have no more Imports, Exports, International aviation bunkers, International marine bunkers, or Stock changes.
@@ -60,4 +60,8 @@ test_that("prep_psut works as expected", {
     production_to_resources() %>% 
     specify_interface_industries()
   expect_equal(Simple, Complicated)
+})
+
+test_that("transformation_sinks works as expected", {
+  
 })
