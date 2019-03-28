@@ -246,8 +246,10 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' 3. Take the set difference between the two (consumers less producers). 
 #'    The set difference represents transformation sinks.
 #' 
-#' Be sure to group the `.tidy_iea_df` _before_ calling this function.
-#' Typical grouping variables are `Medhod`, `Last.stage`, `Country`, `Year`, `Energy.type`.
+#' Be sure to [dplyr::group_by()] the `.tidy_iea_df` data frame _before_ calling this function.
+#' Typical grouping variables are `Method`, `Last.stage`, `Country`, `Year`, `Energy.type`.
+#' If grouping is not provided data from different countries, 
+#' the various `Flow`s will be aggregated together, possibly leading to missed transformation sinks.
 #' 
 #' Note that this function only identifies the problem, it does not fix the problem. 
 #' [transformation_sinks()] is a function not unlike [dplyr::filter()]: 
@@ -262,10 +264,19 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' load_tidy_iea_df() %>% 
+#'   group_by(Method, Last.stage, Country, Year, Energy.type) %>% 
 #'   transformation_sinks()
-transformation_sinks <- function(.tidy_iea_df){
-  
+transformation_sinks <- function(.tidy_iea_df, 
+                                 flow_aggregation_point = "Flow.aggregation.point",
+                                 transformation_processes = "Transformation processes",
+                                 flow = "Flow", 
+                                 e_ktoe = "E.dot"){
+  producers <- .tidy_iea_df %>% 
+    dplyr::filter(!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_ktoe) > 0) %>% 
+    magrittr::extract2(flow) %>% 
+    unique()
 }
 
 

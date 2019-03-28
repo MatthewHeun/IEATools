@@ -63,5 +63,8 @@ test_that("prep_psut works as expected", {
 })
 
 test_that("transformation_sinks works as expected", {
+  sink_industries <- load_tidy_iea_df() %>% 
+    group_by(Method, Last.stage, Country, Year, Energy.type) %>% 
+    transformation_sinks()
   
 })

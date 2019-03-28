@@ -4,7 +4,10 @@
 \alias{transformation_sinks}
 \title{Find transformation sinks}
 \usage{
-transformation_sinks(.tidy_iea_df)
+transformation_sinks(.tidy_iea_df,
+  flow_aggregation_point = "Flow.aggregation.point",
+  transformation_processes = "Transformation processes", flow = "Flow",
+  e_ktoe = "E.dot")
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
@@ -38,8 +41,10 @@ Energy consumption can be for the transformation process itself or for Energy in
 The set difference represents transformation sinks.
 }
 
-Be sure to group the \code{.tidy_iea_df} \emph{before} calling this function.
-Typical grouping variables are \code{Medhod}, \code{Last.stage}, \code{Country}, \code{Year}, \code{Energy.type}.
+Be sure to \code{\link[dplyr:group_by]{dplyr::group_by()}} the \code{.tidy_iea_df} data frame \emph{before} calling this function.
+Typical grouping variables are \code{Method}, \code{Last.stage}, \code{Country}, \code{Year}, \code{Energy.type}.
+If grouping is not provided data from different countries,
+the various \code{Flow}s will be aggregated together, possibly leading to missed transformation sinks.
 
 Note that this function only identifies the problem, it does not fix the problem.
 \code{\link[=transformation_sinks]{transformation_sinks()}} is a function not unlike \code{\link[dplyr:filter]{dplyr::filter()}}:
@@ -48,6 +53,8 @@ The \code{\link[=tp_sinks_to_nonenergy]{tp_sinks_to_nonenergy()}} function uses 
 to route energy consumed by transformation sinks to \code{Non-energy use industry/transformation/energy}.
 }
 \examples{
+library(dplyr)
 load_tidy_iea_df() \%>\% 
+  group_by(Method, Last.stage, Country, Year, Energy.type) \%>\% 
   transformation_sinks()
 }
