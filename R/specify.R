@@ -194,7 +194,7 @@ production_to_resources <- function(.tidy_iea_df,
 #' but that is accomplished in the [specify_primary_production()] and
 #' [production_to_resources()] functions.
 #'
-#' @param .tidy_iea_df 
+#' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
 #' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
 #' @param int_industries a string vector of industries involved in exchanges with other countries,
 #'        bunkers, or stock changes. Default is [interface_industries].
@@ -209,7 +209,7 @@ production_to_resources <- function(.tidy_iea_df,
 #'   specify_interface_industries()
 specify_interface_industries <- function(.tidy_iea_df,
                                          flow = "Flow", 
-                                         int_industries = interface_industries,
+                                         int_industries = IEATools::interface_industries,
                                          product = "Product"){
   .tidy_iea_df %>% 
     dplyr::mutate(
