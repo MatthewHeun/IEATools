@@ -170,6 +170,38 @@ rename_iea_df_cols <- function(.iea_df,
 }
 
 
+#' Clean whitespace from Flow and Product strings
+#' 
+#' Occasionally, in the IEA extended energy balance data, 
+#' extra whitespace characters are found at the beginning or end of `Flow` and `Product` strings.
+#' This function removes all leading and trailing whitespece.
+#'
+#' @param .iea_df a data frame containing `Flow` and `Product` columns
+#' @param flow the name of the flow column in `iea_df`. Default is "`Flow`".
+#' @param product the name of the product columns in `iea_df`. Default is "`Product`".
+#'
+#' @return `.iea_df` with leading and trailing whitespace removed from `Flow` and `Product` column strings
+#' 
+#' @export
+#'
+#' @examples
+#' data.frame(Flow = "  a flow   ", Product = "   a product   ", stringsAsFactors = FALSE) %>% 
+#'   clean_iea_whitespace()
+clean_iea_whitespace <- function(.iea_df, 
+                                 flow = "Flow", 
+                                 product = "Product"){
+  .iea_df %>% 
+    dplyr::mutate(
+      # These regular expression patterns match any number (+) of whitespace characters (\\s) at the beginning of the strings (^).
+      !!as.name(flow) := gsub(pattern = "^\\s+", replacement = "", x = !!as.name(flow)),
+      !!as.name(product) := gsub(pattern = "^\\s+", replacement = "", x = !!as.name(product)),
+      # These regular expression patterns match any number (+) of whitespace characters (\\s) at the end of the strings ($).
+      !!as.name(flow) := gsub(pattern = "\\s+$", replacement = "", x = !!as.name(flow)),
+      !!as.name(product) := gsub(pattern = "\\s+$", replacement = "", x = !!as.name(product))
+    )
+}
+
+
 #' Replace country names with 2-letter ISO abbreviations
 #' 
 #' The IEA uses full country names, but it is more concise to use the 2-letter ISO abbreviations.
@@ -229,8 +261,8 @@ use_iso_countries <- function(.iea_df,
 #' 
 #' Note that the IEA data somtimes includes a variable number of spaces 
 #' before the "Memo: " string. 
-#' This function ignores all leading spaces in the `Flow` and `Product` columns
-#' before searching for `Flow` and `Product` prefixes.
+#' There are several places where trailing spaces are found, such as "Nuclear industry ".
+#' This function strips all leading and trailing spaces in the `Flow` and `Product` columns.
 #'
 #' @param .iea_df a data frame of IEA data
 #' @param flow the name of the flow column in `iea_df`. Default is "`Flow`".
@@ -256,11 +288,6 @@ remove_agg_memo_flows <- function(.iea_df,
                                   memo_flow_prefixes = IEATools::memo_aggregation_flow_prefixes, 
                                   memo_product_prefixes = IEATools::memo_aggregation_product_prefixes){
   .iea_df %>% 
-    dplyr::mutate(
-      # These regular expression patterns match any number (+) of spaces ( ) at the beginning of the strings (^).
-      !!as.name(flow) := gsub(pattern = "^ +", replacement = "", x = !!as.name(flow)),
-      !!as.name(product) := gsub(pattern = "^ +", replacement = "", x = !!as.name(product))
-    ) %>% 
     # Remove Flow aggregations
     dplyr::filter(!(!!as.name(flow) %in% agg_flows)) %>%
     # Remove Flow memos
@@ -581,6 +608,7 @@ tidy_iea_df <- function(.iea_df,
 #'   system.file(package = "IEATools") %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
+#'   clean_iea_whitespace() %>% 
 #'   remove_agg_memo_flows() %>% 
 #'   use_iso_countries() %>% 
 #'   augment_iea_df() %>% 
@@ -591,6 +619,7 @@ load_tidy_iea_df <- function(file_path = file.path("extdata", "GH-ZA-ktoe-Extend
   file_path %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
+    clean_iea_whitespace() %>% 
     remove_agg_memo_flows() %>% 
     use_iso_countries() %>% 
     augment_iea_df() %>% 

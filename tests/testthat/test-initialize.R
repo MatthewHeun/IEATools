@@ -1,5 +1,5 @@
 ###########################################################
-context("Initialize package")
+context("Initialize IEA data")
 ###########################################################
 
 test_that("iea_df works", {
@@ -229,20 +229,28 @@ test_that("tidy_iea works as expected", {
   expect_true(all(iea_tidy_df$Ledger.side %in% c("Supply", "Consumption")))
 })
 
+test_that("converting year to numeric works as expected", {
+  iea_tidy_df <- load_tidy_iea_df()
+  expect_true(is.numeric(iea_tidy_df$Year))
+})
+
+test_that("trimming white space works", {
+  cleaned <- data.frame(Flow = "  a flow   ", Product = "   a product   ", stringsAsFactors = FALSE) %>% 
+    clean_iea_whitespace()
+  expect_equal(cleaned$Flow[[1]], "a flow")
+  expect_equal(cleaned$Product[[1]], "a product")
+})
+
 test_that("load_tidy_iea_df works as expected", {
   simple <- load_tidy_iea_df()
   complicated <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
     system.file(package = "IEATools") %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
+    clean_iea_whitespace() %>% 
     remove_agg_memo_flows() %>% 
     use_iso_countries() %>% 
     augment_iea_df() %>% 
     tidy_iea_df()
   expect_true(all(simple == complicated))
-})
-
-test_that("converting year to numeric works as expected", {
-  iea_tidy_df <- load_tidy_iea_df()
-  expect_true(is.numeric(iea_tidy_df$Year))
 })

@@ -36,6 +36,7 @@ complicated <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.
   system.file(package = "IEATools") \%>\% 
   iea_df() \%>\%
   rename_iea_df_cols() \%>\% 
+  clean_iea_whitespace() \%>\% 
   remove_agg_memo_flows() \%>\% 
   use_iso_countries() \%>\% 
   augment_iea_df() \%>\% 

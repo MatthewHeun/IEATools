@@ -33,8 +33,8 @@ This function does so, using default identifying strings for aggregations and me
 \details{
 Note that the IEA data somtimes includes a variable number of spaces
 before the "Memo: " string.
-This function ignores all leading spaces in the \code{Flow} and \code{Product} columns
-before searching for \code{Flow} and \code{Product} prefixes.
+There are several places where trailing spaces are found, such as "Nuclear industry ".
+This function strips all leading and trailing spaces in the \code{Flow} and \code{Product} columns.
 }
 \examples{
 file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
