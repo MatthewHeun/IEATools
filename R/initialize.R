@@ -490,14 +490,18 @@ augment_iea_df <- function(.iea_df,
         !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), heat_output_flows_prefix) ~ heat_output,
         TRUE ~ NA_character_
       ), 
-      # Now that Flow.aggregation.point is present, we no longer need the (energy) and (transf.) suffixes, so delete them.
+      # Now that Flow.aggregation.point is present, we no longer need the (energy),  (transf.), and (transformation) suffixes, so delete them.
+      # The string "\s+" means to match any number (+) of whitespace (\\s) characters.
       !!as.name(flow) := dplyr::case_when(
         # Delete the " (transf.)" suffix
-        endsWith(!!as.name(flow), tp_flows_suffix) ~ gsub(pattern = Hmisc::escapeRegex(paste0(" ", tp_flows_suffix)), replacement = "", x = !!as.name(flow)), 
+        # endsWith(!!as.name(flow), tp_flows_suffix) ~ gsub(pattern = Hmisc::escapeRegex(paste0(" ", tp_flows_suffix)), replacement = "", x = !!as.name(flow)), 
+        endsWith(!!as.name(flow), tp_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(tp_flows_suffix)), replacement = "", x = !!as.name(flow)), 
         # Delete the " (transformation)" suffix
-        endsWith(!!as.name(flow), nstp_flows_suffix) ~ gsub(pattern = Hmisc::escapeRegex(paste0(" ", nstp_flows_suffix)), replacement = "", x = !!as.name(flow)), 
+        # endsWith(!!as.name(flow), nstp_flows_suffix) ~ gsub(pattern = Hmisc::escapeRegex(paste0(" ", nstp_flows_suffix)), replacement = "", x = !!as.name(flow)), 
+        endsWith(!!as.name(flow), nstp_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(nstp_flows_suffix)), replacement = "", x = !!as.name(flow)), 
         # Delete the " (energy)" suffix
-        endsWith(!!as.name(flow), eiou_flows_suffix) ~ gsub(pattern = Hmisc::escapeRegex(paste0(" ", eiou_flows_suffix)), replacement = "", x = !!as.name(flow)),
+        # endsWith(!!as.name(flow), eiou_flows_suffix) ~ gsub(pattern = Hmisc::escapeRegex(paste0(" ", eiou_flows_suffix)), replacement = "", x = !!as.name(flow)),
+        endsWith(!!as.name(flow), eiou_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(eiou_flows_suffix)), replacement = "", x = !!as.name(flow)),
         TRUE ~ !!as.name(flow)
       ),
       # Add method column

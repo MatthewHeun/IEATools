@@ -115,6 +115,23 @@ test_that("augment_iea_df works", {
   expect_equal(nrow(IEADF_augmented %>% filter(endsWith(Flow, "(transformation)"))), 0)
   # Check that all "(energy)" have been removed from the Flow column
   expect_equal(nrow(IEADF_augmented %>% filter(endsWith(Flow, "(energy)"))), 0)
+  
+  
+  # Try a bogus data frame with extra spaces before the suffix.
+  Cleaned <- data.frame(Flow = c("Nuclear industry      (transf.)", 
+                                 "Nuclear industry    (transformation)",
+                                 "Nuclear industry        (energy)",
+                                 "Losses"), 
+                        stringsAsFactors = FALSE) %>% 
+    mutate(
+      Country = "US",
+      Product = "Heat",
+      E.dot = 200
+    ) %>% 
+    augment_iea_df()
+  for (i in 1:3) {
+    expect_equal(Cleaned$Flow[[i]], "Nuclear industry")
+  }
 })
 
 ###########################################################
