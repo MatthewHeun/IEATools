@@ -31,7 +31,7 @@ test_that("eiou is replaced correctly", {
 
 test_that("production is converted to resources correctly", {
   Specific_production <- load_tidy_iea_df() %>% 
-    production_to_resources()
+    specify_production_to_resources()
   # There should be no "Production" flows remaining.
   expect_false(Specific_production %>% 
                  extract2("Flow") %>% 
@@ -52,21 +52,20 @@ test_that("interface industries are correctly specified", {
   }
 })
 
-test_that("prep_psut works as expected", {
+test_that("specify_all works as expected", {
   Simple <- load_tidy_iea_df() %>% 
-    prep_psut()
+    specify_all()
   Complicated <- load_tidy_iea_df() %>% 
     specify_primary_production() %>% 
-    production_to_resources() %>% 
+    specify_production_to_resources() %>% 
+    specify_tp_eiou() %>% 
     specify_interface_industries()
   expect_equal(Simple, Complicated)
 })
 
 test_that("transformation_sinks works as expected", {
   sink_industries <- load_tidy_iea_df() %>% 
-    specify_primary_production() %>% 
-    specify_interface_industries() %>% 
-    specify_tp_eiou() %>% 
+    specify_all() %>% 
     group_by(Method, Last.stage, Country, Year, Energy.type) %>% 
     transformation_sinks()
   

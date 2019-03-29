@@ -34,19 +34,21 @@ Second, when calculating embodied energy for each downstream energy carrier,
 the sunk energy carriers cannot be embodied in any final demand energy carriers.
 Thus, embodied energy calculations cannot conserve energy.
 
-Transformation sinks are identified on a per-group basis by the following algorithm:
+Transformation sinks are identified by the following algorithm:
 \enumerate{
 \item Identify (per group in \code{.tidy_iea_df}) all \code{Transformation processes} that consume energy (negative value for \code{E.dot}).
 Energy consumption can be for the transformation process itself or for Energy industry own use.
 \item Identify (per group in \code{.tidy_iea_df}) all \code{Transformation processes} that produce energy (positive value for \code{E.dot}).
-\item Take the set difference between the two (consumers less producers).
+\item Take the set difference between the two (producers less consumers).
 The set difference is the list of transformation sinks.
 }
 
-\code{\link[=transformation_sinks]{transformation_sinks()}} is a function not unlike \code{\link[dplyr:summarise]{dplyr::summarise()}}:
-it returns a summary of grouping variables and industries that are transformation sinks.
+\code{\link[=transformation_sinks]{transformation_sinks()}} is a function not unlike \code{\link[dplyr:summarise]{dplyr::summarise()}};
+it returns a summary containing grouping variables and industries that are transformation sinks.
 So be sure to \code{\link[dplyr:group_by]{dplyr::group_by()}} the \code{.tidy_iea_df} data frame \emph{before} calling this function.
 Typical grouping variables are \code{Method}, \code{Last.stage}, \code{Country}, \code{Year}, \code{Energy.type}.
+Don't group on \code{Flow.aggregation.point}, because energy from different aggregation points
+(\code{Energy industry own use} and \code{Transformation processes}) flows into each machine.
 If groups are not set,
 \code{flow}s will be analyzed together, possibly leading to missed transformation sinks.
 
