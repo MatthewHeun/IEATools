@@ -344,6 +344,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #' Typical grouping variables are `Method`, `Last.stage`, `Country`, `Year`, `Energy.type`.
 #' Don't group on `Flow.aggregation.point`, because energy from different aggregation points
 #' (`Energy industry own use` and `Transformation processes`) flows into each machine.
+#' Don't group on `Flow`, `Product`, or `E.dot`, either.
 #' If groups are not set, 
 #' `flow`s will be analyzed together, possibly leading to missed transformation sinks.
 #' 
@@ -358,6 +359,12 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #' to route energy consumed by transformation sinks to `Non-energy use industry/transformation/energy`.
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
+#' @param transformation_processes a string that identifies transformation processes in the `flow_aggregation_point` column. Default is "`Transformation processes`".
+#' @param eiou a string that identifies energy industry own use in the `flow_aggregation_point` column. Default is "`Energy industry own use`".
+#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
+#' @param product the name of the product column in `.tidy_iea_df`. Default is "`Product`".
+#' @param e_dot the name of the energy rate column in `.tidy_iea_df`. Default is "`E.dot`".
 #'
 #' @return the grouping columns of `.tidy_iea_df` plus the `flow` column, 
 #'         with one row for each industry that is a transformation sink.
@@ -378,15 +385,22 @@ transformation_sinks <- function(.tidy_iea_df,
                                  transformation_processes = "Transformation processes",
                                  eiou = "Energy industry own use",
                                  flow = "Flow", 
-                                 e_ktoe = "E.dot"){
+                                 product = "Product",
+                                 e_dot = "E.dot"){
+  group_variables <- dplyr::group_vars(.tidy_iea_df)
+  assertthat::assert_that(length(group_variables) > 0, msg = ".tidy_iea_df is not grouped in transformation_sinks()")
+  assertthat::assert_that(!(flow_aggregation_point %in% group_variables), msg = paste(flow_aggregation_point, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
+  assertthat::assert_that(!(product %in% group_variables), msg = paste(product, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
+  
+  assertthat::assert_that(!(flow %in% group_variables), msg = paste(flow, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
   consumer_rows <- .tidy_iea_df %>% 
-    dplyr::filter((!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_ktoe) < 0) |
-                    (!!as.name(flow_aggregation_point) == eiou & !!as.name(e_ktoe) < 0)) %>% 
-    dplyr::select(c(dplyr::group_vars(.tidy_iea_df), flow)) %>% 
+    dplyr::filter((!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_dot) < 0) |
+                    (!!as.name(flow_aggregation_point) == eiou & !!as.name(e_dot) < 0)) %>% 
+    dplyr::select(c(group_variables, flow)) %>% 
     unique()
   producer_rows <- .tidy_iea_df %>% 
-    dplyr::filter(!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_ktoe) > 0) %>% 
-    dplyr::select(c(dplyr::group_vars(.tidy_iea_df), flow)) %>% 
+    dplyr::filter(!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_dot) > 0) %>% 
+    dplyr::select(c(group_variables, flow)) %>% 
     unique()
   dplyr::setdiff(consumer_rows, producer_rows)  
 }

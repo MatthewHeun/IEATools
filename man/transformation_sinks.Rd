@@ -7,10 +7,23 @@
 transformation_sinks(.tidy_iea_df,
   flow_aggregation_point = "Flow.aggregation.point",
   transformation_processes = "Transformation processes",
-  eiou = "Energy industry own use", flow = "Flow", e_ktoe = "E.dot")
+  eiou = "Energy industry own use", flow = "Flow",
+  product = "Product", e_dot = "E.dot")
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
+
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
+
+\item{transformation_processes}{a string that identifies transformation processes in the \code{flow_aggregation_point} column. Default is "\code{Transformation processes}".}
+
+\item{eiou}{a string that identifies energy industry own use in the \code{flow_aggregation_point} column. Default is "\code{Energy industry own use}".}
+
+\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "\code{Flow}".}
+
+\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "\code{Product}".}
+
+\item{e_dot}{the name of the energy rate column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
 }
 \value{
 the grouping columns of \code{.tidy_iea_df} plus the \code{flow} column,
@@ -49,6 +62,7 @@ So be sure to \code{\link[dplyr:group_by]{dplyr::group_by()}} the \code{.tidy_ie
 Typical grouping variables are \code{Method}, \code{Last.stage}, \code{Country}, \code{Year}, \code{Energy.type}.
 Don't group on \code{Flow.aggregation.point}, because energy from different aggregation points
 (\code{Energy industry own use} and \code{Transformation processes}) flows into each machine.
+Don't group on \code{Flow}, \code{Product}, or \code{E.dot}, either.
 If groups are not set,
 \code{flow}s will be analyzed together, possibly leading to missed transformation sinks.
 
