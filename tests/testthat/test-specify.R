@@ -74,27 +74,28 @@ test_that("specify_all works as expected", {
 })
 
 test_that("transformation_sinks works as expected", {
-  # Try to send an ungrouped data frame into the function. Should fail.
-  expect_error(load_tidy_iea_df() %>% 
+  # Try to send an ungrouped data frame into the function. Should give 0 rows.
+  expect_equal(load_tidy_iea_df() %>% 
                  specify_all() %>% 
-                 transformation_sinks(), ".tidy_iea_df is not grouped in transformation_sinks()")
+                 transformation_sinks(grouping_vars = NULL) %>% 
+                 nrow(), 0)
   # Try to group on Flow.aggregation.point. Should fail.
   expect_error(load_tidy_iea_df() %>% 
                  specify_all() %>% 
                  group_by(Flow.aggregation.point) %>% 
-                 transformation_sinks(), "Flow.aggregation.point cannot be a grouping variable of .tidy_iea_df in transformation_sinks()")
+                 transformation_sinks(grouping_vars = "Flow.aggregation.point"), "Flow.aggregation.point cannot be a grouping variable of .tidy_iea_df in transformation_sinks()")
   # Try to group on Flow.aggregation.point. Should fail.
   expect_error(load_tidy_iea_df() %>% 
                  specify_all() %>% 
                  group_by(Flow) %>% 
-                 transformation_sinks(), "Flow cannot be a grouping variable of .tidy_iea_df in transformation_sinks()")
+                 transformation_sinks(grouping_vars = "Flow"), "Flow cannot be a grouping variable of .tidy_iea_df in transformation_sinks()")
   # Try with the built-in data set in which there are no transformation sinks.
   sink_industries <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     group_by(Method, Last.stage, Country, Year, Energy.type) %>% 
     transformation_sinks()
   expect_equal(nrow(sink_industries), 0)
-  # Try with a made-up data set
+  # Try with a simple, made-up data set
   Tidy <- data.frame(Flow.aggregation.point = c("Transformation processes", "Transformation processes", "Transformation processes"), 
                      Flow = c("Automobiles", "Automobiles", "Furnaces"),
                      E.dot = c(-1, 1, -2), 
@@ -106,6 +107,46 @@ test_that("transformation_sinks works as expected", {
     group_by(Country) %>% 
     specify_all()
   # Automobiles are fine, but Furnaces don't make anything and are, therefore, a transformation sink.
-  expect_equal(Tidy %>% transformation_sinks(), 
+  expect_equal(Tidy %>% transformation_sinks(grouping_vars = "Country"), 
                data.frame(Country = "Bogus", Flow = "Furnaces", stringsAsFactors = FALSE))
+})
+
+
+###########################################################
+context("Trying skip")
+###########################################################
+
+test_that("transformation_sinks works for all IEA data",{
+  
+  skip("Skipping transformation_sinks() test for all IEA data")
+  
+  iea_path <- "~/Documents/Calvin stuff/Useful Work/IEA Data/Extended-Energy-Balances-2018/Extended-Energy-Balances-2018-full-ktoe.csv"
+  
+  Transformation_sinks <- load_tidy_iea_df(iea_path) %>% 
+    specify_all() %>% 
+    group_by()
+    transformation_sinks()
+
+  Manual_transformation_sinks <- iea_df(iea_path) %>% 
+    rename_iea_df_cols() %>% 
+    use_iso_countries() %>% 
+    group_by(Country) %>% 
+    gather(key = "Year", value = "E.dot", -Country, -Flow, -Product) %>% 
+    filter(E.dot != 0, Product != "Total") %>% 
+    filter(!startsWith(Product, "Memo:")) %>% 
+    filter(endsWith(Flow, "(transf.)") | endsWith(Flow, "(transformation)") | endsWith(Flow, "(energy)")) %>% 
+    specify_tp_eiou() %>% 
+    specify_interface_industries()
+  
+    
+    
+    
+  
+  # This test will only work when access is provided to an IEA data file.
+  expect_true(TRUE)
+  print("Before skip")
+  skip("Skipping everything after this")
+  print("After skip")
+  expect_true(FALSE)
+  expect_true(FALSE)
 })

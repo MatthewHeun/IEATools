@@ -8,7 +8,8 @@ transformation_sinks(.tidy_iea_df,
   flow_aggregation_point = "Flow.aggregation.point",
   transformation_processes = "Transformation processes",
   eiou = "Energy industry own use", flow = "Flow",
-  product = "Product", e_dot = "E.dot")
+  product = "Product", e_dot = "E.dot", grouping_vars = c("Method",
+  "Last.stage", "Country", "Year", "Energy.type"))
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
@@ -24,9 +25,11 @@ transformation_sinks(.tidy_iea_df,
 \item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "\code{Product}".}
 
 \item{e_dot}{the name of the energy rate column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
+
+\item{grouping_vars}{a string vector of column names by which \code{.tidy_iea_df} will be grouped before finding transformation sinks. Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type")}.}
 }
 \value{
-the grouping columns of \code{.tidy_iea_df} plus the \code{flow} column,
+the \code{grouping_vars} of \code{.tidy_iea_df} plus the \code{flow} column,
 with one row for each industry that is a transformation sink.
 Industries that are transformation sinks are named in the \code{flow} column.
 }
@@ -58,7 +61,8 @@ The set difference is the list of transformation sinks.
 
 \code{\link[=transformation_sinks]{transformation_sinks()}} is a function not unlike \code{\link[dplyr:summarise]{dplyr::summarise()}};
 it returns a summary containing grouping variables and industries that are transformation sinks.
-So be sure to \code{\link[dplyr:group_by]{dplyr::group_by()}} the \code{.tidy_iea_df} data frame \emph{before} calling this function.
+So be sure to specify (or accept with the defaults)
+the \code{grouping_vars} argument.
 Typical grouping variables are \code{Method}, \code{Last.stage}, \code{Country}, \code{Year}, \code{Energy.type}.
 Don't group on \code{Flow.aggregation.point}, because energy from different aggregation points
 (\code{Energy industry own use} and \code{Transformation processes}) flows into each machine.

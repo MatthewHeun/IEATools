@@ -10,7 +10,8 @@ fix_tidy_iea_df_balances(.tidy_iea_df, ledger_side = "Ledger.side",
   tfc_compare = "TFC compare", flow = "Flow",
   statistical_differences = "Statistical differences",
   product = "Product", e_dot = "E.dot", err = ".err",
-  remove_zeroes = TRUE)
+  remove_zeroes = TRUE, grouping_vars = c("Method", "Last.stage",
+  "Country", "Year", "Energy.type", "Unit", "Product"))
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA data, typically the output}
@@ -36,6 +37,9 @@ fix_tidy_iea_df_balances(.tidy_iea_df, ledger_side = "Ledger.side",
 \item{err}{the name of a temporary error column added to \code{.tidy_iea_df}. Default is "\code{.err}".}
 
 \item{remove_zeroes}{a logical telling whether to remove \code{0}s after balancing.}
+
+\item{grouping_vars}{a string vector of names of columns by which energy balance calculations should be performed.
+Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")}.}
 }
 \value{
 \code{.tidy_iea_df} with adjusted \code{Statistical differences} flows such that
@@ -66,12 +70,12 @@ library(dplyr)
 unbalanced <- load_tidy_iea_df()
 # This will not be balanced, because the IEA data are not in perfect balance
 unbalanced \%>\% 
-  group_by(Country, Year, Energy.type, Unit, Product) \%>\% 
+  # group_by(Country, Year, Energy.type, Unit, Product) \%>\% 
   calc_tidy_iea_df_balances() \%>\% 
   tidy_iea_df_balanced()
 # This will be balanced, becasue we fix the imbalances.
 unbalanced \%>\% 
-  group_by(Country, Year, Energy.type, Unit, Product) \%>\% 
+ #  group_by(Country, Year, Energy.type, Unit, Product) \%>\% 
   fix_tidy_iea_df_balances() \%>\% 
   calc_tidy_iea_df_balances() \%>\% 
   tidy_iea_df_balanced()

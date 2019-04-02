@@ -340,7 +340,8 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #' 
 #' [transformation_sinks()] is a function not unlike [dplyr::summarise()];
 #' it returns a summary containing grouping variables and industries that are transformation sinks.
-#' So be sure to [dplyr::group_by()] the `.tidy_iea_df` data frame _before_ calling this function.
+#' So be sure to specify (or accept with the defaults) 
+#' the `grouping_vars` argument.
 #' Typical grouping variables are `Method`, `Last.stage`, `Country`, `Year`, `Energy.type`.
 #' Don't group on `Flow.aggregation.point`, because energy from different aggregation points
 #' (`Energy industry own use` and `Transformation processes`) flows into each machine.
@@ -365,8 +366,9 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
 #' @param product the name of the product column in `.tidy_iea_df`. Default is "`Product`".
 #' @param e_dot the name of the energy rate column in `.tidy_iea_df`. Default is "`E.dot`".
+#' @param grouping_vars a string vector of column names by which `.tidy_iea_df` will be grouped before finding transformation sinks. Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
 #'
-#' @return the grouping columns of `.tidy_iea_df` plus the `flow` column, 
+#' @return the `grouping_vars` of `.tidy_iea_df` plus the `flow` column, 
 #'         with one row for each industry that is a transformation sink.
 #'         Industries that are transformation sinks are named in the `flow` column.
 #' 
@@ -386,23 +388,24 @@ transformation_sinks <- function(.tidy_iea_df,
                                  eiou = "Energy industry own use",
                                  flow = "Flow", 
                                  product = "Product",
-                                 e_dot = "E.dot"){
-  group_variables <- dplyr::group_vars(.tidy_iea_df)
-  assertthat::assert_that(length(group_variables) > 0, msg = ".tidy_iea_df is not grouped in transformation_sinks()")
-  assertthat::assert_that(!(flow_aggregation_point %in% group_variables), msg = paste(flow_aggregation_point, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
-  assertthat::assert_that(!(product %in% group_variables), msg = paste(product, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
-  
-  assertthat::assert_that(!(flow %in% group_variables), msg = paste(flow, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
+                                 e_dot = "E.dot", 
+                                 grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type")){
+  assertthat::assert_that(!(flow_aggregation_point %in% grouping_vars), msg = paste(flow_aggregation_point, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
+  assertthat::assert_that(!(flow %in% grouping_vars), msg = paste(flow, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
+  assertthat::assert_that(!(product %in% grouping_vars), msg = paste(product, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
+  assertthat::assert_that(!(e_dot %in% grouping_vars), msg = paste(e_dot, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
   consumer_rows <- .tidy_iea_df %>% 
-    dplyr::filter((!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_dot) < 0) |
-                    (!!as.name(flow_aggregation_point) == eiou & !!as.name(e_dot) < 0)) %>% 
-    dplyr::select(c(group_variables, flow)) %>% 
+    dplyr::group_by(!!!lapply(grouping_vars, as.name)) %>% 
+    dplyr::filter(!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_dot) < 0) %>% 
+    dplyr::select(group_cols(), flow) %>% 
     unique()
   producer_rows <- .tidy_iea_df %>% 
+    dplyr::group_by(!!!lapply(grouping_vars, as.name)) %>% 
     dplyr::filter(!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_dot) > 0) %>% 
-    dplyr::select(c(group_variables, flow)) %>% 
+    dplyr::select(group_cols(), flow) %>% 
     unique()
-  dplyr::setdiff(consumer_rows, producer_rows)  
+  dplyr::setdiff(consumer_rows, producer_rows) %>% 
+    dplyr::ungroup()
 }
 
 
