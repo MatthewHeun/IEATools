@@ -208,15 +208,26 @@ test_that("remove_agg_memo_flows works as expected", {
 })
 
 test_that("use_iso_countries works as expected", {
-  iso <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+  iso3 <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
     system.file(package = "IEATools") %>% 
     iea_df() %>% 
     rename_iea_df_cols() %>% 
     use_iso_countries()
-  expect_false(any(iso$Country == "South Africa"))
-  expect_true(any(iso$Country == "ZAF"))
-  expect_false(any(iso$Country == "Ghana"))
-  expect_true(any(iso$Country == "GHA"))
+  expect_false(any(iso3$Country == "South Africa"))
+  expect_true(any(iso3$Country == "ZAF"))
+  expect_false(any(iso3$Country == "Ghana"))
+  expect_true(any(iso3$Country == "GHA"))
+
+  # Try with 2-letter vs. 3-letter abbreviations
+  iso2 <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+    system.file(package = "IEATools") %>% 
+    iea_df() %>% 
+    rename_iea_df_cols() %>% 
+    use_iso_countries(iso_abbrev_type = 2)
+  expect_false(any(iso2$Country == "South Africa"))
+  expect_true(any(iso2$Country == "ZA"))
+  expect_false(any(iso2$Country == "Ghana"))
+  expect_true(any(iso2$Country == "GH"))
   
   # Try with a data frame that contains a World country.
   world <- iea_df(text = paste0(",,TIME,1960,1961\n",
