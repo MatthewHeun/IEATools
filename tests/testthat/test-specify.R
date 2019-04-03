@@ -39,7 +39,7 @@ test_that("eiou is replaced correctly", {
   expect_equal(nrow(Res_coal_oilng), 6)
   expect_true(all(Res_coal_oilng$Flow.aggregation.point == "Total primary energy supply"))
   # There are none of these flows for Ghana (GH)
-  expect_true(all(Res_coal_oilng$Country == "ZA"))
+  expect_true(all(Res_coal_oilng$Country == "ZAF"))
   # Check for new rows of Coal mines
   Mines <- Specific_production %>% 
     filter(Flow == "Coal mines")
@@ -123,13 +123,29 @@ test_that("transformation_sinks works for all IEA data", {
     transformation_sinks()
 
   RawIEA <- iea_df(iea_path)
-  Manual_transformation_sinks <- RawIEA %>% 
+  Temp <- RawIEA %>% 
     rename_iea_df_cols() %>% 
     use_iso_countries() %>% 
     filter(endsWith(Flow, "(transf.)") | endsWith(Flow, "(transformation)")) %>% 
     gather(key = "Year", value = "E.dot", -Country, -Flow, -Product) %>% 
-    filter(E.dot != 0, Product != "Total", !startsWith(Product, "Memo:")) %>% 
-    group_by(Country, Year, Flow)
+    filter(E.dot != 0, Product != "Total", !startsWith(Product, "Memo:"), !startsWith(Country, "Memo:"))
+  Pos <- Temp %>% 
+    filter(E.dot > 0) %>% 
+    group_by(Country, Flow, Year) %>% 
+    summarise(E.dot = sum(E.dot)) %>% 
+    rename(E.dot.make = E.dot)
+  Neg <- Temp %>% 
+    filter(E.dot < 0) %>% 
+    group_by(Country, Flow, Year) %>% 
+    summarise(E.dot = sum(E.dot)) %>% 
+    rename(E.dot.use = E.dot)
+  Manual <- full_join(Neg, Pos, by = c("Country", "Flow", "Year"))
+  Manual_transformation_sinks <- Manual %>% 
+    filter(is.na(E.dot.make))
+  Manual_transformation_sources <- Manual %>% 
+    filter(is.na(E.dot.use))
+  
+  
     
     
     

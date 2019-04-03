@@ -214,9 +214,9 @@ test_that("use_iso_countries works as expected", {
     rename_iea_df_cols() %>% 
     use_iso_countries()
   expect_false(any(iso$Country == "South Africa"))
-  expect_true(any(iso$Country == "ZA"))
+  expect_true(any(iso$Country == "ZAF"))
   expect_false(any(iso$Country == "Ghana"))
-  expect_true(any(iso$Country == "GH"))
+  expect_true(any(iso$Country == "GHA"))
   
   # Try with a data frame that contains a World country.
   world <- iea_df(text = paste0(",,TIME,1960,1961\n",

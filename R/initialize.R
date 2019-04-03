@@ -209,6 +209,7 @@ clean_iea_whitespace <- function(.iea_df,
 #'
 #' @param .iea_df a data frame containing a `country` column
 #' @param country the name of the country column in `.iea_df`. Default is "`Country`".
+#' @param iso_abbrev_type an integer, either `2` for 2-letter abbreviations or `3` for 3-letter abbreviations. Default is 3.
 #'
 #' @return `.iea_df` with 2-letter ISO country abbreviations
 #' 
@@ -221,12 +222,18 @@ clean_iea_whitespace <- function(.iea_df,
 #'   rename_iea_df_cols() %>% 
 #'   use_iso_countries()
 use_iso_countries <- function(.iea_df, 
-                              country = "Country"){
+                              country = "Country",
+                              iso_abbrev_type = 3){
   # Load country code information
-  country.name.en <- as.name("country.name.en") # Eliminates a warning.
-  iso2c <- as.name("iso2c")
-  CountryInfo <- countrycode::codelist %>% 
-    dplyr::select(country.name.en, iso2c) %>% 
+  country.name.en <- "country.name.en" # Eliminates a warning.
+  assertthat::assert_that(iso_abbrev_type %in% c(2, 3))
+  if (iso_abbrev_type == 2) {
+    iso_type = "iso2c"
+  } else if (iso_abbrev_type == 3) {
+    iso_type = "iso3c"
+  } 
+  CountryInfo <- countrycode::codelist %>%
+    dplyr::select(!!as.name(country.name.en), !!as.name(iso_type)) %>% 
     dplyr::rename(
       !!as.name(country) := country.name.en
     )
@@ -236,20 +243,17 @@ use_iso_countries <- function(.iea_df,
     # we set the ios2c column to be the same as the country column.
     # This step preserves all countries, even if they don't have a 2-letter ISO abbreviation.
     dplyr::mutate(
-      !!as.name(iso2c) := dplyr::case_when(
-        is.na(!!as.name(iso2c)) ~ !!as.name(country), 
-        TRUE ~ !!as.name(iso2c)
+      !!as.name(iso_type) := dplyr::case_when(
+        is.na(!!as.name(iso_type)) ~ !!as.name(country), 
+        TRUE ~ !!as.name(iso_type)
       )
     ) %>% 
     # Now we can get rid of the country column.
     dplyr::select(-!!as.name(country)) %>% 
-    # And rename the iso2c column to be country
-    dplyr::rename(!!as.name(country) := iso2c) %>% 
+    # And rename the iso_type column to be country
+    dplyr::rename(!!as.name(country) := iso_type) %>% 
     # And put the country column first.
-    dplyr::select(!!as.name(country), dplyr::everything()) # %>% 
-    # The effect of the next line is to eliminate non-countries from the data set.
-    # For example, OECD, IEA, etc. are not Countries, so they are dropped here.
-    # dplyr::filter(!is.na(country))
+    dplyr::select(!!as.name(country), dplyr::everything())
 }
 
 

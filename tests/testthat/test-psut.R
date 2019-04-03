@@ -14,6 +14,6 @@ test_that("S_units_from_tidy works as expected", {
 
 test_that("add_psut_matnames works as expected", {
   WithMatnames <- load_tidy_iea_df() %>% 
-    filter(Country == "GH", Year == 1971) %>% 
+    filter(Country == "GHA", Year == 1971) %>% 
     add_psut_matnames()
 })

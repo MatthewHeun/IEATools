@@ -4,12 +4,14 @@
 \alias{use_iso_countries}
 \title{Replace country names with 2-letter ISO abbreviations}
 \usage{
-use_iso_countries(.iea_df, country = "Country")
+use_iso_countries(.iea_df, country = "Country", iso_abbrev_type = 2)
 }
 \arguments{
 \item{.iea_df}{a data frame containing a \code{country} column}
 
 \item{country}{the name of the country column in \code{.iea_df}. Default is "\code{Country}".}
+
+\item{iso_abbrev_type}{an integer, either \code{2} for 2-letter abbreviations or \code{3} for 3-letter abbreviations. Default is 3.}
 }
 \value{
 \code{.iea_df} with 2-letter ISO country abbreviations
