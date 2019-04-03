@@ -9,10 +9,10 @@ test_that("calc_tidy_iea_df_balance works correctly", {
   Ebal <- load_tidy_iea_df() %>%
     calc_tidy_iea_df_balances()
   expect_false(all(Ebal$balance_OK))
-  expect_true(Ebal %>% filter(Country == "GH", Year == 1971, Product == "Aviation gasoline") %>% extract2("balance_OK"))
-  expect_false(Ebal %>% filter(Country == "GH", Year == 1971, Product == "Electricity") %>% extract2("balance_OK"))
-  expect_true(Ebal %>% filter(Country == "ZA", Year == 1971, Product == "Hydro") %>% extract2("balance_OK"))
-  expect_false(Ebal %>% filter(Country == "ZA", Year == 2000, Product == "Other bituminous coal") %>% extract2("balance_OK"))
+  expect_true(Ebal %>% filter(Country == "GHA", Year == 1971, Product == "Aviation gasoline") %>% extract2("balance_OK"))
+  expect_false(Ebal %>% filter(Country == "GHA", Year == 1971, Product == "Electricity") %>% extract2("balance_OK"))
+  expect_true(Ebal %>% filter(Country == "ZAF", Year == 1971, Product == "Hydro") %>% extract2("balance_OK"))
+  expect_false(Ebal %>% filter(Country == "ZAF", Year == 2000, Product == "Other bituminous coal") %>% extract2("balance_OK"))
 })
 
 test_that("fix_tidy_iea_df_balance works correctly", {
