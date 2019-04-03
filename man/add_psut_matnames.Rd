@@ -12,7 +12,8 @@ add_psut_matnames(.tidy_iea_df, ledger_side = "Ledger.side",
   eiou = "Energy industry own use", neg_supply_in_fd = c("Exports",
   "International aviation bunkers", "International marine bunkers",
   "Losses", "Statistical differences", "Stock changes"),
-  matname = "matname", U_excl_EIOU = "U_excl_EIOU",
+  grouping_vars = c("Method", "Last.stage", "Country", "Year",
+  "Energy.type"), matname = "matname", U_excl_EIOU = "U_excl_EIOU",
   U_EIOU = "U_EIOU", R = "R", V = "V", Y = "Y", .R = ".R")
 }
 \arguments{
@@ -48,6 +49,9 @@ Default is "\code{Energy industry own use}".}
 
 \item{neg_supply_in_fd}{identifiers for flow items that, when negative,
 are entries in the final demand (\code{Y}) matrix.}
+
+\item{grouping_vars}{a string vector of names of columns by which rows should be grouped when matrix names are added.
+Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")}.}
 
 \item{matname}{the name of the output column containing the name of the matrix
 to which a row's value belongs (a string). Default is "\code{matname}".}

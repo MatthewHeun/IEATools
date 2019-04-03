@@ -15,6 +15,8 @@
 #' @param val the name of a temporary column to be created in `.tidy_iea_df`. Deafult is "`.val`".
 #' @param rowtype the name of a temporary rowype column created in `.tidy_iea_df`. Default is "`rowtype`".
 #' @param coltype the name of a temporary colype column created in `.tidy_iea_df`. Default is "`coltype`".
+#' @param grouping_vars a string vector of column names in `.tidy_iea_df` by which S_units matrix extraction should be performed. 
+#'        Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
 #'
 #' @return a data frame containing grouping variables and a new column of unit summation matrices called `s_unit`.
 #'
@@ -23,13 +25,15 @@
 #' @examples
 #' library(dplyr)
 #' load_tidy_iea_df() %>% 
-#'   group_by(Country, Year, Energy.type) %>% 
 #'   extract_S_units_from_tidy()
 extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = "Unit", s_units = "S_units",
-                              val = ".val", rowtype = ".rowtype", coltype = ".coltype"){
+                              val = ".val", rowtype = ".rowtype", coltype = ".coltype",
+                              # Analysis groups
+                              grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type")){
   matsindf::verify_cols_missing(.tidy_iea_df, c(s_units, val, rowtype, coltype))
   .tidy_iea_df %>% 
-    dplyr::select(!!!dplyr::groups(.tidy_iea_df), !!as.name(product), !!as.name(unit)) %>%
+    dplyr::group_by(!!!lapply(grouping_vars, as.name)) %>% 
+    dplyr::select(!!!grouping_vars, !!as.name(product), !!as.name(unit)) %>%
     dplyr::do(unique(.data)) %>%
     dplyr::mutate(
       !!as.name(val) := 1,
@@ -83,6 +87,8 @@ extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = 
 #'        Default is "`Energy industry own use`".
 #' @param neg_supply_in_fd identifiers for flow items that, when negative,
 #'        are entries in the final demand (`Y`) matrix.
+#' @param grouping_vars a string vector of names of columns by which rows should be grouped when matrix names are added.
+#'        Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")`.
 #' @param matname the name of the output column containing the name of the matrix
 #'        to which a row's value belongs (a string). Default is "`matname`".
 #' @param U_excl_EIOU the name for the use matrix that excludes energy industry own use (a string). Default is "`U_excl_EIOU`".
@@ -120,6 +126,8 @@ add_psut_matnames <- function(.tidy_iea_df,
                                                    "Losses",
                                                    "Statistical differences",
                                                    "Stock changes"),
+                              # Grouping variables
+                              grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type"),
                               # Output column
                               matname = "matname",
                               # Ouput identifiers for
@@ -134,6 +142,7 @@ add_psut_matnames <- function(.tidy_iea_df,
   matsindf::verify_cols_missing(.tidy_iea_df, matname)
   
   out <- .tidy_iea_df %>%
+    dplyr::group_by(!!!lapply(grouping_vars, as.name)) %>% 
     dplyr::mutate(
       !!matname := dplyr::case_when(
         # All Consumption items belong in the final demand (Y) matrix.

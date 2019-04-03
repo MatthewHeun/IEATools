@@ -82,17 +82,14 @@ test_that("transformation_sinks works as expected", {
   # Try to group on Flow.aggregation.point. Should fail.
   expect_error(load_tidy_iea_df() %>% 
                  specify_all() %>% 
-                 group_by(Flow.aggregation.point) %>% 
                  transformation_sinks(grouping_vars = "Flow.aggregation.point"), "Flow.aggregation.point cannot be a grouping variable of .tidy_iea_df in transformation_sinks()")
   # Try to group on Flow.aggregation.point. Should fail.
   expect_error(load_tidy_iea_df() %>% 
                  specify_all() %>% 
-                 group_by(Flow) %>% 
                  transformation_sinks(grouping_vars = "Flow"), "Flow cannot be a grouping variable of .tidy_iea_df in transformation_sinks()")
   # Try with the built-in data set in which there are no transformation sinks.
   sink_industries <- load_tidy_iea_df() %>% 
     specify_all() %>% 
-    group_by(Method, Last.stage, Country, Year, Energy.type) %>% 
     transformation_sinks()
   expect_equal(nrow(sink_industries), 0)
   # Try with a simple, made-up data set
@@ -104,7 +101,6 @@ test_that("transformation_sinks works as expected", {
       Country = "Bogus",
       Product = "Petrol"
     ) %>% 
-    group_by(Country) %>% 
     specify_all()
   # Automobiles are fine, but Furnaces don't make anything and are, therefore, a transformation sink.
   expect_equal(Tidy %>% transformation_sinks(grouping_vars = "Country"), 
@@ -124,7 +120,6 @@ test_that("transformation_sinks works for all IEA data",{
   
   Transformation_sinks <- load_tidy_iea_df(iea_path) %>% 
     specify_all() %>% 
-    group_by()
     transformation_sinks()
 
   Manual_transformation_sinks <- iea_df(iea_path) %>% 

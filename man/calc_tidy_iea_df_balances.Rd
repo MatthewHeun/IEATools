@@ -99,7 +99,6 @@ If not, \code{balance_OK} will be \code{FALSE}.
 \examples{
 library(dplyr)
 Ebal <- load_tidy_iea_df() \%>\% 
-  group_by(Country, Year, Energy.type, Unit, Product) \%>\% 
   calc_tidy_iea_df_balances()
 head(Ebal, 5)
 }

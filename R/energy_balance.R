@@ -71,7 +71,6 @@
 #' @examples
 #' library(dplyr)
 #' Ebal <- load_tidy_iea_df() %>% 
-#'   group_by(Country, Year, Energy.type, Unit, Product) %>% 
 #'   calc_tidy_iea_df_balances()
 #' head(Ebal, 5)
 calc_tidy_iea_df_balances <- function(.tidy_iea_df, 
@@ -191,12 +190,10 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' unbalanced <- load_tidy_iea_df()
 #' # This will not be balanced, because the IEA data are not in perfect balance
 #' unbalanced %>% 
-#'   # group_by(Country, Year, Energy.type, Unit, Product) %>% 
 #'   calc_tidy_iea_df_balances() %>% 
 #'   tidy_iea_df_balanced()
 #' # This will be balanced, becasue we fix the imbalances.
 #' unbalanced %>% 
-#'  #  group_by(Country, Year, Energy.type, Unit, Product) %>% 
 #'   fix_tidy_iea_df_balances() %>% 
 #'   calc_tidy_iea_df_balances() %>% 
 #'   tidy_iea_df_balanced()
@@ -214,7 +211,7 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
                                      # Name used for error column internally
                                      err = ".err", 
                                      remove_zeroes = TRUE, 
-                                     # Input groups
+                                     # Analysis groups
                                      grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")){
   e_bal_errors <- .tidy_iea_df %>% 
     calc_tidy_iea_df_balances(grouping_vars = grouping_vars, err = err) %>% 

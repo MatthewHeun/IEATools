@@ -262,7 +262,6 @@ including:
 
 ```{r}
 Balances <- Tidy_IEA_df %>% 
-  group_by(Country, Year, Energy.type, Product) %>% 
   calc_tidy_iea_df_balances()
 Balances %>% 
   glimpse()
@@ -282,34 +281,31 @@ The following code demonstrates the difference between
 country-level balance calculations and product-level balance calculations.
 
 ```{r}
-# Country-level balances
+# Product-level balances within each country are calculated by default
 Tidy_IEA_df %>% 
-  group_by(Country, Year, Energy.type) %>% 
   calc_tidy_iea_df_balances() %>% 
   glimpse()
-# Product-level balances within each country
+# Country-level balances can be calculated by setting the `grouping_vars` argument
 Tidy_IEA_df %>% 
-  group_by(Country, Year, Energy.type, Product) %>% 
-  calc_tidy_iea_df_balances() %>% 
+  calc_tidy_iea_df_balances(grouping_vars = c("Method", "Last.stage", "Country",
+                                              "Year", "Energy.type", "Unit")) %>% 
   glimpse()
 ```
 
 IEA data can be adjusted to perfect balance with the `fix_tidy_iea_df_balances()` function.
 
 ```{r}
-# Country level balances
+# Fix product-level balances within each country
 Tidy_IEA_df %>% 
-  group_by(Country, Year, Energy.type, Unit, Product) %>% 
   fix_tidy_iea_df_balances() %>% 
-  group_by(Country, Year, Energy.type, Unit) %>% 
   calc_tidy_iea_df_balances() %>% 
   glimpse()
-# Product-level balances within each country
+# Country level is also balanced
 Tidy_IEA_df %>% 
-  group_by(Country, Year, Energy.type, Unit, Product) %>% 
   fix_tidy_iea_df_balances() %>% 
-  calc_tidy_iea_df_balances() %>% 
-  tidy_iea_df_balanced()
+  calc_tidy_iea_df_balances(grouping_vars = c("Method", "Last.stage", "Country",
+                                              "Year", "Energy.type", "Unit")) %>% 
+  glimpse()
 ```
 
 
