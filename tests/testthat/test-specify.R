@@ -112,7 +112,7 @@ test_that("transformation_sinks works as expected", {
 context("Trying skip")
 ###########################################################
 
-test_that("transformation_sinks works for all IEA data",{
+test_that("transformation_sinks works for all IEA data", {
   
   skip("Skipping transformation_sinks() test for all IEA data")
   
@@ -122,17 +122,14 @@ test_that("transformation_sinks works for all IEA data",{
     specify_all() %>% 
     transformation_sinks()
 
-  Manual_transformation_sinks <- iea_df(iea_path) %>% 
+  RawIEA <- iea_df(iea_path)
+  Manual_transformation_sinks <- RawIEA %>% 
     rename_iea_df_cols() %>% 
     use_iso_countries() %>% 
-    group_by(Country) %>% 
+    filter(endsWith(Flow, "(transf.)") | endsWith(Flow, "(transformation)")) %>% 
     gather(key = "Year", value = "E.dot", -Country, -Flow, -Product) %>% 
-    filter(E.dot != 0, Product != "Total") %>% 
-    filter(!startsWith(Product, "Memo:")) %>% 
-    filter(endsWith(Flow, "(transf.)") | endsWith(Flow, "(transformation)") | endsWith(Flow, "(energy)")) %>% 
-    specify_tp_eiou() %>% 
-    specify_interface_industries()
-  
+    filter(E.dot != 0, Product != "Total", !startsWith(Product, "Memo:")) %>% 
+    group_by(Country, Year, Flow)
     
     
     
