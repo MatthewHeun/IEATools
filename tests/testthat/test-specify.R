@@ -145,16 +145,6 @@ test_that("transformation_sinks works for all IEA data", {
   Manual_transformation_sources <- Manual %>% 
     filter(is.na(E.dot.use))
   
-  
-    
-    
-    
-  
-  # This test will only work when access is provided to an IEA data file.
-  expect_true(TRUE)
-  print("Before skip")
-  skip("Skipping everything after this")
-  print("After skip")
-  expect_true(FALSE)
-  expect_true(FALSE)
+  # Compare the manual version of Transformation_sinks and the automatic version.
+  expect_equal(Transformation_sinks, Manual_transformation_sinks)
 })
