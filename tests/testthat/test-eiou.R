@@ -52,7 +52,7 @@ test_that("specify_tp_eiou works as expected for non-specified (energy)", {
                      stringsAsFactors = FALSE)
   EIOU_fixed <- specify_tp_eiou(EIOU)
   # The first row is expected to change, because its Product is "Electricity"
-  expect_equal(EIOU_fixed$Flow[[1]], "Oil and gas extraction")
+  expect_equal(EIOU_fixed$Flow[[1]], "Non-specified (transformation)")
   # The second row will not change, because its Product is "Nothing"
   expect_equal(EIOU_fixed$Flow[[2]], "Non-specified (energy)")
 })

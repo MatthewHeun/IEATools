@@ -4,7 +4,7 @@
 \alias{use_iso_countries}
 \title{Replace country names with 2-letter ISO abbreviations}
 \usage{
-use_iso_countries(.iea_df, country = "Country", iso_abbrev_type = 2)
+use_iso_countries(.iea_df, country = "Country", iso_abbrev_type = 3)
 }
 \arguments{
 \item{.iea_df}{a data frame containing a \code{country} column}

@@ -20,7 +20,8 @@ This function bundles several others:
 \details{
 \enumerate{
 \item \code{\link[=specify_primary_production]{specify_primary_production()}}
-\item \code{\link[=production_to_resources]{production_to_resources()}}
+\item \code{\link[=specify_production_to_resources]{specify_production_to_resources()}}
+\item \code{\link[=specify_tp_eiou]{specify_tp_eiou()}}
 \item \code{\link[=specify_interface_industries]{specify_interface_industries()}}
 }
 

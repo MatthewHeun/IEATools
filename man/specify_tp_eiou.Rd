@@ -10,9 +10,11 @@ specify_tp_eiou(.tidy_iea_df,
   own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
   pumped_storage = "Pumped storage plants",
   nuclear_industry = "Nuclear industry",
-  main_act_producer_elect = "Main activity producer electricity plants",
+  liquefaction_regas = "Liquefaction (LNG) / regasification plants",
   non_spec_energy = "Non-specified (energy)",
-  nonspecenergy_reclassify = "Oil and gas extraction")
+  main_act_producer_elect = "Main activity producer electricity plants",
+  liquefaction_regas_reclassify = "Oil refineries",
+  nonspecenergy_reclassify = "Non-specified (transformation)")
 }
 \arguments{
 \item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
@@ -29,11 +31,15 @@ specify_tp_eiou(.tidy_iea_df,
 
 \item{nuclear_industry}{a string identifying nuclear plants in the flow column. Default is "\code{Nuclear industry}".}
 
-\item{main_act_producer_elect}{a string identifying main activity producer electricity plants. Default is "\code{Main activity producter electricity plants}".}
+\item{liquefaction_regas}{a string identify liquefaction and regasification plants. Default is "\code{Liquefaction (LNG) / regasification plants}".}
 
 \item{non_spec_energy}{a string identifying non-specified energy in the flow solumn. Default is "\code{Non-specified (energy)}".}
 
-\item{nonspecenergy_reclassify}{a string identifying the reclassified non-specified (energy) industry. Default is "\code{Oil and gas extraction}".}
+\item{main_act_producer_elect}{a string identifying main activity producer electricity plants. Default is "\code{Main activity producter electricity plants}".}
+
+\item{liquefaction_regas_reclassify}{a string identifying the reclassified liquefaction and regasification industry. Default is "\code{Oil refineries}".}
+
+\item{nonspecenergy_reclassify}{a string identifying the reclassified non-specified (energy) industry. Default is "\code{Non-specified (transformation)}".}
 }
 \value{
 a modified version of \code{.tidy_iea_df}
@@ -55,6 +61,7 @@ The following changes are made to the \code{.tidy_iea_df} data frame:
 \item EIOU classified as \code{own_use_elect_chp_heat} is sent to \code{main_act_producer_elect}.
 \item EIOU classified as \code{pumped_storage} is sent to \code{main_act_producer_elect}.
 \item EIOU classified as \code{nuclear_industry} is sent to \code{main_act_producer_elect}.
+\item EIOU classified as \code{liquefaction_regas} is sent to \code{liquefaction_regas_reclassify}.
 \item EIOU classified as \code{non_spec_energy} is sent to \code{nonspecenergy_reclassify}.
 }
 }

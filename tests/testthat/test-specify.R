@@ -109,42 +109,99 @@ test_that("transformation_sinks works as expected", {
 
 
 ###########################################################
-context("Trying skip")
+context("Transformation sinks")
 ###########################################################
 
 test_that("transformation_sinks works for all IEA data", {
-  
-  skip("Skipping transformation_sinks() test for all IEA data")
-  
-  iea_path <- "~/Documents/Calvin stuff/Useful Work/IEA Data/Extended-Energy-Balances-2018/Extended-Energy-Balances-2018-full-ktoe.csv"
-  
-  Transformation_sinks <- load_tidy_iea_df(iea_path) %>% 
-    specify_all() %>% 
+
+  testthat::skip_on_cran()
+
+  iea_path <- "~/Documents/Calvin stuff/Useful Work/IEA Data/Extended-Energy-Balances-2018/UK-ktoe-Extended-Energy-Balances-sample.csv"
+
+  Tidy <- load_tidy_iea_df(iea_path)
+  Transformation_sinks <- Tidy %>%
+    specify_all() %>%
     transformation_sinks()
 
-  RawIEA <- iea_df(iea_path)
-  Temp <- RawIEA %>% 
-    rename_iea_df_cols() %>% 
-    use_iso_countries() %>% 
-    filter(endsWith(Flow, "(transf.)") | endsWith(Flow, "(transformation)")) %>% 
-    gather(key = "Year", value = "E.dot", -Country, -Flow, -Product) %>% 
-    filter(E.dot != 0, Product != "Total", !startsWith(Product, "Memo:"), !startsWith(Country, "Memo:"))
-  Pos <- Temp %>% 
-    filter(E.dot > 0) %>% 
-    group_by(Country, Flow, Year) %>% 
-    summarise(E.dot = sum(E.dot)) %>% 
-    rename(E.dot.make = E.dot)
-  Neg <- Temp %>% 
-    filter(E.dot < 0) %>% 
-    group_by(Country, Flow, Year) %>% 
-    summarise(E.dot = sum(E.dot)) %>% 
-    rename(E.dot.use = E.dot)
-  Manual <- full_join(Neg, Pos, by = c("Country", "Flow", "Year"))
-  Manual_transformation_sinks <- Manual %>% 
-    filter(is.na(E.dot.make))
-  Manual_transformation_sources <- Manual %>% 
-    filter(is.na(E.dot.use))
+
   
-  # Compare the manual version of Transformation_sinks and the automatic version.
-  expect_equal(Transformation_sinks, Manual_transformation_sinks)
+  RawIEA <- iea_df(iea_path)
+  Temp <- RawIEA %>%
+    rename_iea_df_cols() %>%
+    use_iso_countries() %>%
+    dplyr::mutate(
+      Flow.aggregation.point = case_when(
+        endsWith(Flow, "(transf.)") | endsWith(Flow, "(transformation)") ~ "Transformation processes",
+        endsWith(Flow, "(energy)") ~ "Energy industry own use",
+        TRUE ~ NA_character_
+      )
+    ) %>%
+    tidyr::gather(key = "Year", value = "E.dot", -Country, -Flow.aggregation.point, -Flow, -Product) %>%
+    dplyr::filter(E.dot != 0, Product != "Total", !startsWith(Product, "Memo:")) %>%
+    mutate(
+      Year = as.numeric(Year)
+    ) %>% 
+    filter(Country == "GBR", Year == 1973)
+
+  
+    
+
+  # RawIEA <- iea_df(iea_path)
+  # Temp <- RawIEA %>%
+  #   rename_iea_df_cols() %>%
+  #   use_iso_countries() %>%
+  #   dplyr::filter(endsWith(Flow, "(transf.)") | endsWith(Flow, "(transformation)") | endsWith(Flow, "(energy)")) %>%
+  #   dplyr::mutate(
+  #     Flow.aggregation.point = case_when(
+  #       endsWith(Flow, "(transf.)") | endsWith(Flow, "(transformation)") ~ "Transformation processes",
+  #       endsWith(Flow, "(energy)") ~ "Energy industry own use",
+  #       TRUE ~ NA_character_
+  #     )
+  #   ) %>%
+  #   tidyr::gather(key = "Year", value = "E.dot", -Country, -Flow.aggregation.point, -Flow, -Product) %>%
+  #   dplyr::filter(E.dot != 0, Product != "Total", !startsWith(Product, "Memo:")) %>%
+  #   mutate(
+  #     Year = as.numeric(Year),
+  #     Flow = dplyr::case_when(
+  #       # Delete the " (transf.)" suffix
+  #       endsWith(Flow, "(transf.)") ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex("(transf.)")), replacement = "", x = Flow),
+  #       # Delete the " (transformation)" suffix
+  #       endsWith(Flow, "(transformation)") ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex("(transformation)")), replacement = "", x = Flow),
+  #       # Delete the " (energy)" suffix
+  #       endsWith(Flow, "(energy)") ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex("(energy)")), replacement = "", x = Flow)
+  #     )
+  #   ) %>%
+  #   # Need to specify EIOU
+  #   specify_primary_production() %>%
+  #   specify_tp_eiou()
+  # Pos <- Temp %>%
+  #   dplyr::filter(E.dot > 0) %>%
+  #   dplyr::group_by(Country, Flow, Year) %>%
+  #   dplyr::summarise(E.dot = sum(E.dot)) %>%
+  #   dplyr::rename(E.dot.make = E.dot)
+  # Neg <- Temp %>%
+  #   dplyr::filter(E.dot < 0) %>%
+  #   dplyr::group_by(Country, Flow, Year) %>%
+  #   dplyr::summarise(E.dot = sum(E.dot)) %>%
+  #   dplyr::rename(E.dot.use = E.dot)
+  # Manual <- dplyr::full_join(Neg, Pos, by = c("Country", "Flow", "Year")) %>%
+  #   dplyr::ungroup()
+  # Manual_transformation_sinks <- Manual %>%
+  #   dplyr::filter(is.na(E.dot.make)) %>%
+  #   dplyr::select(-E.dot.use, -E.dot.make) %>%
+  #   dplyr::select(Country, Year, Flow) %>%
+  #   unique() %>%
+  #   dplyr::arrange(Country, Year, Flow)
+  # Manual_transformation_sources <- Manual %>%
+  #   dplyr::filter(is.na(E.dot.use)) %>%
+  #   dplyr::select(-E.dot.use, -E.dot.make) %>%
+  #   dplyr::select(Country, Year, Flow) %>%
+  #   unique() %>%
+  #   dplyr::arrange(Country, Year, Flow)
+  # 
+  # 
+  # # Compare the manual version of Transformation_sinks and the automatic version.
+  # expect_equal(nrow(Transformation_sinks), nrow(Manual_transformation_sinks))
+  # # Find the differences.  There should be none.
+  # expect_equal(nrow(dplyr::setdiff(Transformation_sinks, Manual_transformation_sinks)), 0)
 })

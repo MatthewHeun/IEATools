@@ -238,6 +238,7 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' 1. EIOU classified as `own_use_elect_chp_heat` is sent to `main_act_producer_elect`.
 #' 2. EIOU classified as `pumped_storage` is sent to `main_act_producer_elect`.
 #' 3. EIOU classified as `nuclear_industry` is sent to `main_act_producer_elect`.
+#' 4. EIOU classified as `liquefaction_regas` is sent to `liquefaction_regas_reclassify`.
 #' 4. EIOU classified as `non_spec_energy` is sent to `nonspecenergy_reclassify`.
 #'
 #' @param .tidy_iea_df an IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
@@ -247,9 +248,11 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' @param own_use_elect_chp_heat a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "`Own use in electricity, CHP and heat plants`".
 #' @param pumped_storage a string identifying pumped storage plants in the flow column. Default is "`Pumped storage plants`".
 #' @param nuclear_industry a string identifying nuclear plants in the flow column. Default is "`Nuclear industry`".
-#' @param main_act_producer_elect a string identifying main activity producer electricity plants. Default is "`Main activity producter electricity plants`".
+#' @param liquefaction_regas a string identify liquefaction and regasification plants. Default is "`Liquefaction (LNG) / regasification plants`".
 #' @param non_spec_energy a string identifying non-specified energy in the flow solumn. Default is "`Non-specified (energy)`".
-#' @param nonspecenergy_reclassify a string identifying the reclassified non-specified (energy) industry. Default is "`Oil and gas extraction`".
+#' @param main_act_producer_elect a string identifying main activity producer electricity plants. Default is "`Main activity producter electricity plants`".
+#' @param liquefaction_regas_reclassify a string identifying the reclassified liquefaction and regasification industry. Default is "`Oil refineries`".
+#' @param nonspecenergy_reclassify a string identifying the reclassified non-specified (energy) industry. Default is "`Non-specified (transformation)`".
 #'
 #' @return a modified version of `.tidy_iea_df`
 #' 
@@ -265,12 +268,16 @@ specify_tp_eiou <- function(.tidy_iea_df,
                             flow_aggregation_point = "Flow.aggregation.point",
                             eiou = "Energy industry own use",
                             flow = "Flow", 
+                            # Industries that receive EIOU but are not in Transformation processes
                             own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
                             pumped_storage = "Pumped storage plants",
                             nuclear_industry = "Nuclear industry",
-                            main_act_producer_elect = "Main activity producer electricity plants",
+                            liquefaction_regas = "Liquefaction (LNG) / regasification plants",
                             non_spec_energy = "Non-specified (energy)",
-                            nonspecenergy_reclassify = "Oil and gas extraction"){
+                            # Places where the EIOU will e reassigned
+                            main_act_producer_elect = "Main activity producer electricity plants",
+                            liquefaction_regas_reclassify = "Oil refineries",
+                            nonspecenergy_reclassify = "Non-specified (transformation)"){
   .tidy_iea_df %>% 
     dplyr::mutate(
       !!as.name(flow) := dplyr::case_when(
@@ -297,6 +304,12 @@ specify_tp_eiou <- function(.tidy_iea_df,
         # If Nuclear is used, we need to reclassify EIOU by Nuclear plants
         # to Main activity producer electricity plants.
         !!as.name(flow) == nuclear_industry & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
+        
+        # Some EIOU flows into "Liquefaction (LNG) / regasification plants".
+        # But there is no "Liquefaction (LNG) / regasification plants" in Transformation processes.
+        # So this EIOU flow needs to be reassigned.
+        # We choose to reassign "Liquefaction (LNG) / regasification plants" to liquefaction_regas_reclassify.
+        !!as.name(flow) == liquefaction_regas & !!as.name(flow_aggregation_point) == eiou ~ liquefaction_regas_reclassify,
         
         # Non-specified (energy) is an Industry that receives EIOU.
         # However, Non-specified (energy) is not an Industry that makes anything.
@@ -393,17 +406,18 @@ transformation_sinks <- function(.tidy_iea_df,
   assertthat::assert_that(!(flow %in% grouping_vars), msg = paste(flow, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
   assertthat::assert_that(!(product %in% grouping_vars), msg = paste(product, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
   assertthat::assert_that(!(e_dot %in% grouping_vars), msg = paste(e_dot, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
-  consumer_rows <- .tidy_iea_df %>% 
+  use_rows <- .tidy_iea_df %>% 
     dplyr::group_by(!!!lapply(grouping_vars, as.name)) %>% 
-    dplyr::filter(!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_dot) < 0) %>% 
-    dplyr::select(group_cols(), flow) %>% 
+    dplyr::filter((!!as.name(flow_aggregation_point) == transformation_processes | !!as.name(flow_aggregation_point) == eiou) & !!as.name(e_dot) < 0) %>% 
+    dplyr::select(dplyr::group_cols(), flow) %>% 
     unique()
-  producer_rows <- .tidy_iea_df %>% 
+  make_rows <- .tidy_iea_df %>% 
     dplyr::group_by(!!!lapply(grouping_vars, as.name)) %>% 
     dplyr::filter(!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_dot) > 0) %>% 
-    dplyr::select(group_cols(), flow) %>% 
+    dplyr::select(dplyr::group_cols(), flow) %>% 
     unique()
-  dplyr::setdiff(consumer_rows, producer_rows) %>% 
+  # setdiff gives the rows that are IN use_rows but not in make_rows.
+  dplyr::setdiff(use_rows, make_rows) %>% 
     dplyr::ungroup()
 }
 
@@ -414,8 +428,9 @@ transformation_sinks <- function(.tidy_iea_df,
 #' This function bundles several others:
 #' 
 #' 1. [specify_primary_production()]
-#' 2. [production_to_resources()]
-#' 3. [specify_interface_industries()]
+#' 2. [specify_production_to_resources()]
+#' 3. [specify_tp_eiou()]
+#' 4. [specify_interface_industries()]
 #' 
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
