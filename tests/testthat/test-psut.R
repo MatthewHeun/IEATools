@@ -45,3 +45,41 @@ test_that("add_psut_matnames works as expected", {
   expect_true(With_matnames %>% filter(startsWith(Flow, "Transfers") & E.dot < 0) %>% extract2("matname") %>% equals("U_excl_EIOU") %>% all())
   expect_true(With_matnames %>% filter(startsWith(Flow, "Transfers") & E.dot > 0) %>% extract2("matname") %>% equals("V") %>% all())
 })
+
+test_that("add_row_col_meta works as expected", {
+  With_meta <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    add_psut_matnames() %>% 
+    add_row_col_meta()
+  # Ensure that every row is filled in the new columns.
+  expect_false(any(is.na(With_meta$rowname)))
+  expect_false(any(is.na(With_meta$colname)))
+  expect_false(any(is.na(With_meta$rowtype)))
+  expect_false(any(is.na(With_meta$coltype)))
+  # Ensure that row and column types are correct
+  expect_true(With_meta %>% filter(matname == "R" | matname == "V") %>% extract2("rowtype") %>% equals("Industry") %>% all())
+  expect_true(With_meta %>% filter(matname == "R" | matname == "V") %>% extract2("coltype") %>% equals("Product") %>% all())
+  expect_true(With_meta %>% filter(startsWith(matname, "U") | matname == "Y") %>% extract2("rowtype") %>% equals("Product") %>% all())
+  expect_true(With_meta %>% filter(startsWith(matname, "U") | matname == "Y") %>% extract2("coltype") %>% equals("Industry") %>% all())
+  # Ensure that row and column identifiers are correct
+  # Rows of R and V are the Flow names
+  magrittr::equals(With_meta %>% filter(matname == "R" | matname == "V") %>% magrittr::extract2("rowname"), 
+                   With_meta %>% filter(matname == "R" | matname == "V") %>% magrittr::extract2("Flow")) %>% 
+    all() %>% 
+    expect_true()
+  # Columns of R and V are the Product names
+  magrittr::equals(With_meta %>% filter(matname == "R" | matname == "V") %>% magrittr::extract2("colname"), 
+                   With_meta %>% filter(matname == "R" | matname == "V") %>% magrittr::extract2("Product")) %>% 
+    all() %>% 
+    expect_true()
+  # Rows of U and Y are the Product names
+  magrittr::equals(With_meta %>% filter(matname == "U" | matname == "Y") %>% magrittr::extract2("rowname"), 
+                   With_meta %>% filter(matname == "U" | matname == "Y") %>% magrittr::extract2("Product")) %>% 
+    all() %>% 
+    expect_true()
+  # Columns of U and Y are the Flow names
+  magrittr::equals(With_meta %>% filter(matname == "U" | matname == "Y") %>% magrittr::extract2("colname"), 
+                   With_meta %>% filter(matname == "U" | matname == "Y") %>% magrittr::extract2("Flow")) %>% 
+    all() %>% 
+    expect_true()
+})
