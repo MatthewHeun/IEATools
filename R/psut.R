@@ -46,7 +46,8 @@ extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = 
                                    rowtypes = rowtype, coltypes = coltype) %>%
     dplyr::rename(
       !!as.name(s_units) := !!as.name(val)
-    )
+    ) %>% 
+    dplyr::ungroup()
 }
 
 
@@ -168,8 +169,12 @@ add_psut_matnames <- function(.tidy_iea_df,
 
 
 #' Add row, column, row type, and column type metadata
+#' 
+#' After calling [add_psut_matnames()], call this function
+#' to add row, column, row type, and column type 
+#' information to `.tidy_iea_df`.
 #'
-#' @param .tidy_iea_df a data frame containing `matname`.
+#' @param .tidy_iea_df a data frame containing `matname`
 #' @param matname the name of the column in `.tidy_iea_df` that contains names of matrices
 #'        (a string).  Default is "`matname`".
 #' @param U the name for use matrices (a string). Default is "`U`".
@@ -255,4 +260,57 @@ add_row_col_meta <- function(.tidy_iea_df,
         TRUE ~ NA_character_
       )
     )
+}
+
+
+#' Collapse a tidy data frame of IEA data to a tidy PSUT data frame
+#' 
+#' Call this function after calling [add_row_col_meta()]
+#' to collapse `.tidy_iea_df` into a tidy PSUT data frame. 
+#'
+#' @param .tidy_iea_df a data frame containing `matname` and several other columns
+#' @param matname the name of a column in `.tidy_iea_df` containing matrix names. Default is "`matname`".
+#' @param e_dot the name of a column in `.tidy_iea_df` containing energy flow rates. Default is "`E.dot`".
+#' @param rowname the name of a column to be added to `.tidy_iea_df` for row names. Default is "`rowname`".
+#' @param colname the name of a column to be added to `.tidy_iea_df` for column names. Default is "`colname`".
+#' @param rowtype the name of a column to be added to `.tidy_iea_df` for row types. Default is "`rowtype`".
+#' @param coltype the name of a column to be added to `.tidy_iea_df` for column types. Default is "`coltype`".
+#' @param matval the name of a column to be added to `.tidy_iea_df` for matrices. Default is "`matval`".
+#' @param grouping_vars the columns in `.tidy_iea_df` by which you want to group matrices. 
+#'        Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
+#'
+#' @return `.tidy_iea_df` with all values converted to matrices in the `matval` column
+#' 
+#' @export
+#'
+#' @examples
+#' load_tidy_iea_df() %>% 
+#'   specify_all() %>% 
+#'   add_psut_matnames() %>% 
+#'   add_row_col_meta() %>% 
+#'   collapse_to_tidy_psut()
+collapse_to_tidy_psut <- function(.tidy_iea_df,
+                                  # Name of the input columns containing matrix names
+                                  matname = "matname",
+                                  e_dot = "E.dot",
+                                  rowname = "rowname", colname = "colname",
+                                  rowtype = "rowtype", coltype = "coltype", 
+                                  # Name of output column of matrices
+                                  matval = "matval", 
+                                  # Analysis groups
+                                  grouping_vars = c("Method", "Energy.type", "Last.stage", "Country", "Year")){
+  .tidy_iea_df %>% 
+    dplyr::select(!!!grouping_vars, !!as.name(matname), 
+                  !!as.name(rowname), !!as.name(colname), 
+                  !!as.name(rowtype), !!as.name(coltype), 
+                  !!as.name(e_dot)) %>% 
+    dplyr::group_by(!!!lapply(grouping_vars, as.name), !!as.name(matname)) %>% 
+    matsindf::collapse_to_matrices(matnames = matname, matvals = e_dot,
+                                   rownames = rowname, colnames = colname,
+                                   rowtypes = rowtype, coltypes = coltype) %>% 
+    dplyr::rename(
+      !!as.name(matval) := !!as.name(e_dot)
+    ) %>% 
+    ungroup()
+  
 }

@@ -12,7 +12,7 @@ add_row_col_meta(.tidy_iea_df, matname = "matname",
   colname = "colname", rowtype = "rowtype", coltype = "coltype")
 }
 \arguments{
-\item{.tidy_iea_df}{a data frame containing \code{matname}.}
+\item{.tidy_iea_df}{a data frame containing \code{matname}}
 
 \item{matname}{the name of the column in \code{.tidy_iea_df} that contains names of matrices
 (a string).  Default is "\code{matname}".}
@@ -63,7 +63,9 @@ Default is "\code{Industry}".}
 \code{rowtype}, and \code{coltype}.
 }
 \description{
-Add row, column, row type, and column type metadata
+After calling \code{\link[=add_psut_matnames]{add_psut_matnames()}}, call this function
+to add row, column, row type, and column type
+information to \code{.tidy_iea_df}.
 }
 \examples{
 library(dplyr)
