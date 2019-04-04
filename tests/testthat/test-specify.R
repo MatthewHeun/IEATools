@@ -108,8 +108,7 @@ test_that("tp_sinks_sources() works as expected", {
     dplyr::mutate(
       Country = "Bogus",
       Product = "Petrol"
-    ) %>% 
-    specify_all()
+    )
   # Automobiles are fine, but Furnaces don't make anything and are, therefore, a transformation sink.
   expect_equal(Tidy %>% tp_sinks_sources(grouping_vars = "Country"), 
                data.frame(Country = "Bogus", Flow = "Furnaces", stringsAsFactors = FALSE))
@@ -142,103 +141,35 @@ test_that('tp_sinks_sources(type = "sources") works as expected', {
     dplyr::mutate(
       Country = "Bogus",
       Product = "Petrol"
-    ) %>% 
-    specify_all()
+    )
   # Automobiles are fine, but Furnaces make Petrol without consuming any energy, and are, therefore, a transformation source.
   expect_equal(Tidy %>% tp_sinks_sources(type = "sources", grouping_vars = "Country"), 
                data.frame(Country = "Bogus", Flow = "Furnaces", stringsAsFactors = FALSE))
 })
 
-test_that("transformation_sinks works for all IEA data", {
-
-  testthat::skip_on_cran()
-
-  iea_path <- "~/Documents/Calvin stuff/Useful Work/IEA Data/Extended-Energy-Balances-2018/UK-ktoe-Extended-Energy-Balances-sample.csv"
-
-  Tidy <- load_tidy_iea_df(iea_path)
-  Transformation_sinks <- Tidy %>%
-    specify_all() %>%
-    tp_sinks_sources()
-
-
-  
-  RawIEA <- iea_df(iea_path)
-  Temp <- RawIEA %>%
-    rename_iea_df_cols() %>%
-    use_iso_countries() %>%
+test_that("tp_sinks_to_nonenergy works as expected", {
+  # Make a simple data frame to test this function.
+  Tidy <- data.frame(
+    Ledger.side = c("Supply", "Supply", "Supply", "Consumption"),
+    Flow.aggregation.point = c("Transformation processes", "Transformation processes", "Transformation processes", "Non-energy use"), 
+    Flow = c("Automobiles", "Automobiles", "Furnaces", "Non-energy use industry/transformation/energy"),
+    Product = c("Petrol", "MD", "Coal", "Coal"),
+    E.dot = c(-1, 1, -2, 8), 
+    stringsAsFactors = FALSE) %>% 
     dplyr::mutate(
-      Flow.aggregation.point = case_when(
-        endsWith(Flow, "(transf.)") | endsWith(Flow, "(transformation)") ~ "Transformation processes",
-        endsWith(Flow, "(energy)") ~ "Energy industry own use",
-        TRUE ~ NA_character_
-      )
-    ) %>%
-    tidyr::gather(key = "Year", value = "E.dot", -Country, -Flow.aggregation.point, -Flow, -Product) %>%
-    dplyr::filter(E.dot != 0, Product != "Total", !startsWith(Product, "Memo:")) %>%
-    mutate(
-      Year = as.numeric(Year)
-    ) %>% 
-    filter(Country == "GBR", Year == 1973)
-
-  
-    
-
-  # RawIEA <- iea_df(iea_path)
-  # Temp <- RawIEA %>%
-  #   rename_iea_df_cols() %>%
-  #   use_iso_countries() %>%
-  #   dplyr::filter(endsWith(Flow, "(transf.)") | endsWith(Flow, "(transformation)") | endsWith(Flow, "(energy)")) %>%
-  #   dplyr::mutate(
-  #     Flow.aggregation.point = case_when(
-  #       endsWith(Flow, "(transf.)") | endsWith(Flow, "(transformation)") ~ "Transformation processes",
-  #       endsWith(Flow, "(energy)") ~ "Energy industry own use",
-  #       TRUE ~ NA_character_
-  #     )
-  #   ) %>%
-  #   tidyr::gather(key = "Year", value = "E.dot", -Country, -Flow.aggregation.point, -Flow, -Product) %>%
-  #   dplyr::filter(E.dot != 0, Product != "Total", !startsWith(Product, "Memo:")) %>%
-  #   mutate(
-  #     Year = as.numeric(Year),
-  #     Flow = dplyr::case_when(
-  #       # Delete the " (transf.)" suffix
-  #       endsWith(Flow, "(transf.)") ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex("(transf.)")), replacement = "", x = Flow),
-  #       # Delete the " (transformation)" suffix
-  #       endsWith(Flow, "(transformation)") ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex("(transformation)")), replacement = "", x = Flow),
-  #       # Delete the " (energy)" suffix
-  #       endsWith(Flow, "(energy)") ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex("(energy)")), replacement = "", x = Flow)
-  #     )
-  #   ) %>%
-  #   # Need to specify EIOU
-  #   specify_primary_production() %>%
-  #   specify_tp_eiou()
-  # Pos <- Temp %>%
-  #   dplyr::filter(E.dot > 0) %>%
-  #   dplyr::group_by(Country, Flow, Year) %>%
-  #   dplyr::summarise(E.dot = sum(E.dot)) %>%
-  #   dplyr::rename(E.dot.make = E.dot)
-  # Neg <- Temp %>%
-  #   dplyr::filter(E.dot < 0) %>%
-  #   dplyr::group_by(Country, Flow, Year) %>%
-  #   dplyr::summarise(E.dot = sum(E.dot)) %>%
-  #   dplyr::rename(E.dot.use = E.dot)
-  # Manual <- dplyr::full_join(Neg, Pos, by = c("Country", "Flow", "Year")) %>%
-  #   dplyr::ungroup()
-  # Manual_transformation_sinks <- Manual %>%
-  #   dplyr::filter(is.na(E.dot.make)) %>%
-  #   dplyr::select(-E.dot.use, -E.dot.make) %>%
-  #   dplyr::select(Country, Year, Flow) %>%
-  #   unique() %>%
-  #   dplyr::arrange(Country, Year, Flow)
-  # Manual_transformation_sources <- Manual %>%
-  #   dplyr::filter(is.na(E.dot.use)) %>%
-  #   dplyr::select(-E.dot.use, -E.dot.make) %>%
-  #   dplyr::select(Country, Year, Flow) %>%
-  #   unique() %>%
-  #   dplyr::arrange(Country, Year, Flow)
-  # 
-  # 
-  # # Compare the manual version of Transformation_sinks and the automatic version.
-  # expect_equal(nrow(Transformation_sinks), nrow(Manual_transformation_sinks))
-  # # Find the differences.  There should be none.
-  # expect_equal(nrow(dplyr::setdiff(Transformation_sinks, Manual_transformation_sinks)), 0)
+      Method = "PCM", 
+      Last.stage = "Final",
+      Energy.type = "E",
+      Country = "Bogus",
+      Year = 1971
+    )
+  Result <- Tidy %>% 
+    tp_sinks_to_nonenergy()
+  # We expect that the original 4 rows are now down to 3.
+  expect_equal(nrow(Result), 3)
+  # Check that the sink energy was correctly added to existing Non-energy use.
+  expect_equal(Result %>% filter(Flow.aggregation.point == "Non-energy use") %>% extract2("E.dot"), 10)
+  # Check that the original rows are unchanged
+  expect_equal(Result %>% filter(Flow == "Automobiles", Product == "Petrol") %>% extract2("E.dot"), -1)
+  expect_equal(Result %>% filter(Flow == "Automobiles", Product == "MD") %>% extract2("E.dot"), 1)
 })

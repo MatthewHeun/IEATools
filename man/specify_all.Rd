@@ -2,7 +2,7 @@
 % Please edit documentation in R/specify.R
 \name{specify_all}
 \alias{specify_all}
-\title{Prepare for PSUT analysis}
+\title{Specify all industries}
 \usage{
 specify_all(.tidy_iea_df)
 }

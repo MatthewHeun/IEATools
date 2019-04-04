@@ -408,14 +408,14 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #'   specify_tp_eiou() %>% 
 #'   tp_sinks_sources(type = "sources")
 tp_sinks_sources <- function(.tidy_iea_df, 
-                                 type = c("sinks", "sources"),
-                                 flow_aggregation_point = "Flow.aggregation.point",
-                                 transformation_processes = "Transformation processes",
-                                 eiou = "Energy industry own use",
-                                 flow = "Flow", 
-                                 product = "Product",
-                                 e_dot = "E.dot", 
-                                 grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type")){
+                             type = c("sinks", "sources"),
+                             flow_aggregation_point = "Flow.aggregation.point",
+                             transformation_processes = "Transformation processes",
+                             eiou = "Energy industry own use",
+                             flow = "Flow", 
+                             product = "Product",
+                             e_dot = "E.dot", 
+                             grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type")){
   type <- match.arg(type)
   assertthat::assert_that(!(flow_aggregation_point %in% grouping_vars), msg = paste(flow_aggregation_point, "cannot be a grouping variable of .tidy_iea_df in tp_sinks_sources()"))
   assertthat::assert_that(!(flow %in% grouping_vars), msg = paste(flow, "cannot be a grouping variable of .tidy_iea_df in tp_sinks_sources()"))
@@ -442,7 +442,77 @@ tp_sinks_sources <- function(.tidy_iea_df,
 }
 
 
-#' Prepare for PSUT analysis
+#' Reassign Transformation process sinks to Non-energy use
+#'
+#' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
+#' @param transformation_processes a string that identifies transformation processes in the `flow_aggregation_point` column. Default is "`Transformation processes`".
+#' @param eiou a string that identifies energy industry own use in the `flow_aggregation_point` column. Default is "`Energy industry own use`".
+#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
+#' @param product the name of the product column in `.tidy_iea_df`. Default is "`Product`".
+#' @param e_dot the name of the energy rate column in `.tidy_iea_df`. Default is "`E.dot`".
+#' @param grouping_vars a string vector of column names by which `.tidy_iea_df` will be grouped before finding transformation sinks. Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
+#'
+#' @return `.tidy_iea_df` with energy sunk in Transformation processes sinks reassigned to Non-energy use
+#' 
+#' @export
+#'
+#' @examples
+#' 
+tp_sinks_to_nonenergy <- function(.tidy_iea_df, 
+                                  ledger_side = "Ledger.side",
+                                  consumption = "Consumption",
+                                  flow_aggregation_point = "Flow.aggregation.point",
+                                  non_energy_flow_agg_point = "Non-energy use",
+                                  transformation_processes = "Transformation processes",
+                                  eiou = "Energy industry own use",
+                                  flow = "Flow", 
+                                  non_energy_flow = "Non-energy use industry/transformation/energy",
+                                  product = "Product",
+                                  e_dot = "E.dot", 
+                                  grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type")){
+  # First step is to find all Transformation process sinks.
+  # These items need to removed from the IEAData data frame, eventually.
+  Sinks <- .tidy_iea_df %>% 
+    tp_sinks_sources(type = "sinks", 
+                     flow_aggregation_point = flow_aggregation_point,
+                     transformation_processes = transformation_processes,
+                     eiou = eiou,
+                     flow = flow, 
+                     product = product,
+                     e_dot = e_dot, 
+                     grouping_vars = grouping_vars)
+  # Figure out which rows have sinks in them.
+  # They will need to be removed later.
+  # But a modified version of Sinks will be routed to final demand.
+  # (semi_join keeps only those rows in .tidy_iea_df that match rows in Sinks.)
+  Remove_later <- dplyr::semi_join(.tidy_iea_df, Sinks, by = names(Sinks))
+  # When modified, the rows in Remove_later will be added to final demand
+  # Change the metadata for these items.
+  To_add_to_final_demand <- Remove_later %>% 
+    dplyr::mutate(
+      !!as.name(ledger_side) := consumption, 
+      !!as.name(flow_aggregation_point) := non_energy_flow_agg_point,
+      !!as.name(flow) := non_energy_flow,
+      # The Remove_later entries are all negative 
+      # (because they were on the Consumption side of the ledger in Transformation processes). 
+      # But they need to be positive when they are moved to final demand.
+      !!as.name(e_dot) := abs(!!as.name(e_dot))
+    )
+  .tidy_iea_df %>% 
+    # Eliminate rows in .tidy_iea_df that match Remove_later,
+    dplyr::anti_join(Remove_later, by = names(Remove_later)) %>% 
+    # rbind the new rows to the data frame
+    dplyr::bind_rows(To_add_to_final_demand) %>% 
+    # Group by all columns except for E.dot and summarise
+    # This has the effect of adding the new Non-energy use to any existing non-energy use
+    dplyr::group_by(!!!lapply(base::setdiff(names(.tidy_iea_df), e_dot), as.name)) %>% 
+    dplyr::summarise(!!as.name(e_dot) := sum(!!as.name(e_dot))) %>% 
+    dplyr::ungroup()
+}
+
+
+#' Specify all industries
 #' 
 #' This is a convenience function.
 #' This function bundles several others:
