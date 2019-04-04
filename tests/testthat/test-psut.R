@@ -84,11 +84,15 @@ test_that("add_row_col_meta works as expected", {
     expect_true()
 })
 
-
 test_that("collapse_to_psut works expected", {
   With_mats <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     add_psut_matnames() %>% 
     add_row_col_meta() %>% 
     collapse_to_tidy_psut()
+  expect_equal(nrow(With_mats), 20)
+})
+
+test_that("prep_psut works as expected", {
+  
 })

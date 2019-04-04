@@ -311,6 +311,43 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
     dplyr::rename(
       !!as.name(matval) := !!as.name(e_dot)
     ) %>% 
-    ungroup()
-  
+    dplyr::ungroup()
+}
+
+
+#' Prepare for PSUT analysis
+#' 
+#' Converts a tidy IEA data frame into a PSUT data frame
+#' by collapsing the IEA data into PSUT matrices (R, U, V, and Y).
+#'
+#' @param .tidy_iea_df a tidy data frame that has been specified with [specify_all()].
+#'
+#' @return a tidy PSUT data frame
+#' 
+#' @export
+#'
+#' @examples
+#' Simple <- load_tidy_iea_df() %>% 
+#'   specify_all() %>% 
+#'   prep_psut()
+#' Complicated <- load_tidy_iea_df() %>% 
+#'   specify_all() %>% 
+#'   add_psut_matnames() %>% 
+#'   add_row_col_meta() %>% 
+#'   collapse_to_tidy_psut()
+#' all(Simple == Complicated)
+prep_psut <- function(.tidy_iea_df, 
+                      product = "Product", 
+                      unit = "Unit", 
+                      ledger_side = "Legder.side",
+                      ){
+  S_units <- extract_S_units_from_tidy(.tidy_iea_df, 
+                                       product = product, 
+                                       unit = unit)
+  Tidy_psut_df <- .tidy_iea_df %>% 
+    add_psut_matnames(ledger_side = ledger_side) %>% 
+    add_row_col_meta() %>% 
+    collapse_to_tidy_psut() %>% 
+    spread()
+  dplyr::left_join(Tidy_psut_df, S_units)
 }
