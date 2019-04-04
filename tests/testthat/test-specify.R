@@ -116,7 +116,7 @@ test_that("transformation_sinks works for all IEA data", {
 
   testthat::skip_on_cran()
 
-  iea_path <- "~/Documents/Calvin stuff/Useful Work/IEA Data/Extended-Energy-Balances-2018/UK-ktoe-Extended-Energy-Balances-sample.csv"
+  iea_path <- "~/Documents/Calvin stuff/Useful Work/IEA Data/Extended-Energy-Balances-2018/Extended-Energy-Balances-2018-full-ktoe.csv"
 
   Tidy <- load_tidy_iea_df(iea_path)
   Transformation_sinks <- Tidy %>%
