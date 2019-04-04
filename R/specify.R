@@ -348,7 +348,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #' 1. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that consume energy (negative value for `E.dot`).
 #'    Energy consumption can be for the transformation process itself or for Energy industry own use.
 #' 2. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that produce energy (positive value for `E.dot`).
-#' 3. Take the set difference between the two (producers less consumers). 
+#' 3. Take the set difference between the two (consumers less producers). 
 #'    The set difference is the list of transformation sinks.
 #' 
 #' [transformation_sinks()] is a function not unlike [dplyr::summarise()];
@@ -381,7 +381,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #' @param e_dot the name of the energy rate column in `.tidy_iea_df`. Default is "`E.dot`".
 #' @param grouping_vars a string vector of column names by which `.tidy_iea_df` will be grouped before finding transformation sinks. Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
 #'
-#' @return the `grouping_vars` of `.tidy_iea_df` plus the `flow` column, 
+#' @return the `grouping_vars` and the `flow` column, 
 #'         with one row for each industry that is a transformation sink.
 #'         Industries that are transformation sinks are named in the `flow` column.
 #' 
@@ -402,23 +402,161 @@ transformation_sinks <- function(.tidy_iea_df,
                                  product = "Product",
                                  e_dot = "E.dot", 
                                  grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type")){
-  assertthat::assert_that(!(flow_aggregation_point %in% grouping_vars), msg = paste(flow_aggregation_point, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
-  assertthat::assert_that(!(flow %in% grouping_vars), msg = paste(flow, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
-  assertthat::assert_that(!(product %in% grouping_vars), msg = paste(product, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
-  assertthat::assert_that(!(e_dot %in% grouping_vars), msg = paste(e_dot, "cannot be a grouping variable of .tidy_iea_df in transformation_sinks()"))
+  use_rows <- tp_make_use_rows(.tidy_iea_df, 
+                               flow_aggregation_point = flow_aggregation_point,
+                               transformation_processes = transformation_processes,
+                               eiou = eiou,
+                               flow = flow, 
+                               product = product,
+                               e_dot = e_dot, 
+                               grouping_vars = grouping_vars) %>% 
+    magrittr::extract2("use")
+  make_rows <- tp_make_use_rows(.tidy_iea_df, 
+                                flow_aggregation_point = flow_aggregation_point,
+                                transformation_processes = transformation_processes,
+                                eiou = eiou,
+                                flow = flow, 
+                                product = product,
+                                e_dot = e_dot, 
+                                grouping_vars = grouping_vars) %>% 
+    magrittr::extract2("make")
+  # setdiff gives the rows that are IN use_rows but NOT in make_rows.
+  dplyr::setdiff(use_rows, make_rows)
+}
+
+
+#' Find transformation sources
+#' 
+#' In the IEA extended energy balance data, 
+#' transformation processes ought to both consume and produce energy.
+#' But some transformation processes produce energy without consuming any energy.
+#' Those transformation processes can be called "transformation sources."
+#' This function finds and identifies industries that act as transformation sources.
+#' 
+#' It is important to identify transformation sources, 
+#' because they cause problems for physical supply-use table (PSUT) analysis. 
+#' In particular, when swimming upstream, a PSUT analysis will "see" the energy sources,
+#' but might not see the associated primary energy carriers associated with the sourced energy.
+#' 
+#' Transformation sources are identified by the following algorithm:
+#' 
+#' 1. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that consume energy (negative value for `E.dot`).
+#'    Energy consumption can be for the transformation process itself or for Energy industry own use.
+#' 2. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that produce energy (positive value for `E.dot`).
+#' 3. Take the set difference between the two (producers less consumers). 
+#'    The set difference is the list of transformation sources.
+#' 
+#' [transformation_sources()] is a function not unlike [dplyr::summarise()];
+#' it returns a summary containing grouping variables and industries that are transformation sources.
+#' So be sure to specify (or accept with the defaults) 
+#' the `grouping_vars` argument.
+#' Typical grouping variables are `Method`, `Last.stage`, `Country`, `Year`, `Energy.type`.
+#' Don't group on `Flow.aggregation.point`, because energy from different aggregation points
+#' (`Energy industry own use` and `Transformation processes`) flows into each machine.
+#' Don't group on `Flow`, `Product`, or `E.dot`, either.
+#' If groups are not set, 
+#' `flow`s will be analyzed together, possibly leading to missed transformation sinks.
+#' 
+#' The various `specify_*()` functions should also be called _before_ calling [transformation_sources()].
+#' The `specify_*()` functions clean up the IEA data, ensuring that energy is routed to the right places.
+#' 
+#' Note that this function only identifies the problem of transformation sources;
+#' it does not fix the problems.
+#'
+#' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
+#' @param transformation_processes a string that identifies transformation processes in the `flow_aggregation_point` column. Default is "`Transformation processes`".
+#' @param eiou a string that identifies energy industry own use in the `flow_aggregation_point` column. Default is "`Energy industry own use`".
+#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
+#' @param product the name of the product column in `.tidy_iea_df`. Default is "`Product`".
+#' @param e_dot the name of the energy rate column in `.tidy_iea_df`. Default is "`E.dot`".
+#' @param grouping_vars a string vector of column names by which `.tidy_iea_df` will be grouped before finding transformation sinks. Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
+#'
+#' @return the `grouping_vars` and the `flow` column, 
+#'         with one row for each industry that is a transformation source.
+#'         Industries that are transformation sources are named in the `flow` column.
+#' 
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' load_tidy_iea_df() %>% 
+#'   specify_primary_production() %>% 
+#'   specify_interface_industries() %>% 
+#'   specify_tp_eiou() %>% 
+#'   transformation_sources()
+transformation_sources <- function(.tidy_iea_df, 
+                                   flow_aggregation_point = "Flow.aggregation.point",
+                                   transformation_processes = "Transformation processes",
+                                   eiou = "Energy industry own use",
+                                   flow = "Flow", 
+                                   product = "Product",
+                                   e_dot = "E.dot", 
+                                   grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type")){
+  use_rows <- tp_make_use_rows(.tidy_iea_df, 
+                               flow_aggregation_point = flow_aggregation_point,
+                               transformation_processes = transformation_processes,
+                               eiou = eiou,
+                               flow = flow, 
+                               product = product,
+                               e_dot = e_dot, 
+                               grouping_vars = grouping_vars) %>% 
+    magrittr::extract2("use")
+  make_rows <- tp_make_use_rows(.tidy_iea_df, 
+                                flow_aggregation_point = flow_aggregation_point,
+                                transformation_processes = transformation_processes,
+                                eiou = eiou,
+                                flow = flow, 
+                                product = product,
+                                e_dot = e_dot, 
+                                grouping_vars = grouping_vars) %>% 
+    magrittr::extract2("make")
+  # setdiff gives the rows that are IN make_rows but NOT in use_rows.
+  dplyr::setdiff(make_rows, use_rows)
+  
+}
+
+
+#' Transformation process make and use rows
+#' 
+#' An internal function that identifies making and using transformation process rows from `.tidy_iea_df`.
+#'
+#' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
+#' @param transformation_processes a string that identifies transformation processes in the `flow_aggregation_point` column. Default is "`Transformation processes`".
+#' @param eiou a string that identifies energy industry own use in the `flow_aggregation_point` column. Default is "`Energy industry own use`".
+#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
+#' @param product the name of the product column in `.tidy_iea_df`. Default is "`Product`".
+#' @param e_dot the name of the energy rate column in `.tidy_iea_df`. Default is "`E.dot`".
+#' @param grouping_vars a string vector of column names by which `.tidy_iea_df` will be grouped before finding transformation sinks. Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
+#'
+#' @return a list containing two data frames. "`make`" contains making Transformation process rows of `.tidy_iea_df`.
+#'         "`use`" contains using Transformation process rows of `.tidy_iea_df`.
+tp_make_use_rows <- function(.tidy_iea_df, 
+                             flow_aggregation_point = "Flow.aggregation.point",
+                             transformation_processes = "Transformation processes",
+                             eiou = "Energy industry own use",
+                             flow = "Flow", 
+                             product = "Product",
+                             e_dot = "E.dot", 
+                             grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type")){
+  assertthat::assert_that(!(flow_aggregation_point %in% grouping_vars), msg = paste(flow_aggregation_point, "cannot be a grouping variable of .tidy_iea_df in tp_make_use_rows()"))
+  assertthat::assert_that(!(flow %in% grouping_vars), msg = paste(flow, "cannot be a grouping variable of .tidy_iea_df in tp_make_use_rows()"))
+  assertthat::assert_that(!(product %in% grouping_vars), msg = paste(product, "cannot be a grouping variable of .tidy_iea_df in tp_make_use_rows()"))
+  assertthat::assert_that(!(e_dot %in% grouping_vars), msg = paste(e_dot, "cannot be a grouping variable of .tidy_iea_df in tp_make_use_rows()"))
   use_rows <- .tidy_iea_df %>% 
     dplyr::group_by(!!!lapply(grouping_vars, as.name)) %>% 
     dplyr::filter((!!as.name(flow_aggregation_point) == transformation_processes | !!as.name(flow_aggregation_point) == eiou) & !!as.name(e_dot) < 0) %>% 
     dplyr::select(dplyr::group_cols(), flow) %>% 
-    unique()
+    unique() %>% 
+    dplyr::ungroup()
   make_rows <- .tidy_iea_df %>% 
     dplyr::group_by(!!!lapply(grouping_vars, as.name)) %>% 
     dplyr::filter(!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_dot) > 0) %>% 
     dplyr::select(dplyr::group_cols(), flow) %>% 
-    unique()
-  # setdiff gives the rows that are IN use_rows but not in make_rows.
-  dplyr::setdiff(use_rows, make_rows) %>% 
+    unique() %>% 
     dplyr::ungroup()
+  return(list(use = use_rows, make = make_rows))
 }
 
 
