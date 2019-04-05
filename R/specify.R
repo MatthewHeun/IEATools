@@ -16,18 +16,20 @@
 #' 
 #' By default, the following changes are made to `.tidy_iea_df`:
 #' 
-#' * The `Production` industry for `coal_and_coal_products` 
-#'   is replaced by `Coal mines`.
-#' * A `Resources (Coal)` industry is created which becomes the 
-#'   source of all primary `coal_and_coal_products` in the energy conversion chain.
-#' * Flows from `Resources (Coal)` to `Coal mines` are added.
-#' * The `Coal mines (energy)` EIOU `Flow` is replaced by `Coal mines`.
-#' * The `Production` industry for `oil_and_oil_products` and `Natural gas`
-#'   is replaced by `Oil and gas extraction`.
-#' * A `Resources (Oil and natural gas)` industry is created which becomes the 
-#'   source of all primary `oil_and_oil_products` and `Natural gas` in the energy conversion chain.
-#' * Flows from `Resources (Oil and natural gas)` to `Oil and gas extraction` are added.
-#' * The `Oil and gas extraction (energy)` EIOU `Flow` is replaced by `Oil and gas extraction`.
+#' 1. Energy industry own use for `Liquefaction (LNG) / regasification plants` is 
+#'    reassigned to `Oil and gas extraction`.
+#' 2. The `Production` industry for `coal_and_coal_products` 
+#'    is replaced by `Coal mines`.
+#' 3. A `Resources (Coal)` industry is created which becomes the 
+#'    source of all primary `coal_and_coal_products` in the energy conversion chain.
+#' 4. Flows from `Resources (Coal)` to `Coal mines` are added.
+#' 5. The `Coal mines (energy)` EIOU `Flow` is replaced by `Coal mines`.
+#' 6. The `Production` industry for `oil_and_oil_products` and `Natural gas`
+#'    is replaced by `Oil and gas extraction`.
+#' 7. A `Resources (Oil and natural gas)` industry is created which becomes the 
+#'    source of all primary `oil_and_oil_products` and `Natural gas` in the energy conversion chain.
+#' 8. Flows from `Resources (Oil and natural gas)` to `Oil and gas extraction` are added.
+#' 9. The `Oil and gas extraction (energy)` EIOU `Flow` is replaced by `Oil and gas extraction`.
 #' 
 #' Users can specify other changes by adjusting the default argument values.
 #' 
@@ -37,6 +39,9 @@
 #' @param .tidy_iea_df an IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
 #' @param eiou_destinations a vector of destinations for EIOU for primary production of coal and coal products and oil and natural gas.
 #'        Default is `c("Coal mines", "Oil and gas extraction")`.
+#' @param liquefaction_regas a string identifying liquefaction and regasification plants. Default is "`Liquefaction (LNG) / regasification plants`".
+#' @param liquefaction_regas_reassign a string identifying the industry to which EIOU into `liquefaction_regas` will be reassigned.
+#'        Default is "`Oil and gas extraction`".
 #' @param production_products a list of products for which we want to specify primary industries.
 #'        Default is `list(coal_and_coal_products, c(oil_and_oil_products, "Natural gas"))`.
 #' @param production_products_short_names a vector of short names for primary industries. 
@@ -66,8 +71,19 @@
 #'   add_psut_matnames() %>% 
 #'   filter(Flow %in% c("Resources (Coal)", "Coal mines")) %>%
 #'   select(-Method, -Last.stage, -Ledger.side, -Unit)
+#' # EIOU by "Liquefaction (LNG) / regasification plants" is reassigned to "Oil and gas extraction"
+#' data.frame(
+#'   Flow.aggregation.point = c("Energy industry own use"),
+#'   Flow = c("Liquefaction (LNG) / regasification plants"), 
+#'   Product = c("Natural gas"),
+#'   E.dot = c(-42), 
+#'   stringsAsFactors = FALSE
+#' ) %>% 
+#'   specify_primary_production()
 specify_primary_production <- function(.tidy_iea_df,
                                        eiou_destinations = c("Coal mines", "Oil and gas extraction"),
+                                       liquefaction_regas = "Liquefaction (LNG) / regasification plants",
+                                       liquefaction_regas_reassign = "Oil and gas extraction",
                                        production_products = list(IEATools::coal_and_coal_products, 
                                                                   c(IEATools::oil_and_oil_products, "Natural gas")),
                                        production_products_short_names = c("Coal", "Oil and natural gas"),
@@ -75,7 +91,6 @@ specify_primary_production <- function(.tidy_iea_df,
                                        eiou = "Energy industry own use",
                                        transformation_processes = "Transformation processes",
                                        flow = "Flow", 
-                                       # eiou_suffix = "(energy)",
                                        resources = "Resources",
                                        production = "Production", 
                                        e_dot = "E.dot",
@@ -125,6 +140,21 @@ specify_primary_production <- function(.tidy_iea_df,
     return(.tidf)
   }
   
+  # The first task is to reassign EIOU tagged as "Liquefaction (LNG) / regasification plants" to 
+  # the Oil and gas extraction sector.
+  .tidy_iea_df <- .tidy_iea_df %>% 
+    dplyr::mutate(
+      !!as.name(flow) := dplyr::case_when(
+        !!as.name(flow) == liquefaction_regas ~ liquefaction_regas_reassign, 
+        TRUE ~ !!as.name(flow)
+      )
+    ) %>% 
+    # After reassigning, we may have multiple rows of liequfaction_regas_reassign,
+    # so we need to sum those rows.
+    dplyr::group_by(!!!lapply(base::setdiff(names(.tidy_iea_df), e_dot), as.name)) %>% 
+    dplyr::summarise(!!as.name(e_dot) := sum(!!as.name(e_dot))) %>% 
+    dplyr::ungroup()
+
   # specify_func is called for its side effect of modifying .tidy_iea_df,
   # so we don't assign the result to any value.
   # Rather, we simply return the modified version of .tidy_iea_df.
@@ -248,10 +278,8 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' @param own_use_elect_chp_heat a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "`Own use in electricity, CHP and heat plants`".
 #' @param pumped_storage a string identifying pumped storage plants in the flow column. Default is "`Pumped storage plants`".
 #' @param nuclear_industry a string identifying nuclear plants in the flow column. Default is "`Nuclear industry`".
-#' @param liquefaction_regas a string identify liquefaction and regasification plants. Default is "`Liquefaction (LNG) / regasification plants`".
 #' @param non_spec_energy a string identifying non-specified energy in the flow solumn. Default is "`Non-specified (energy)`".
 #' @param main_act_producer_elect a string identifying main activity producer electricity plants. Default is "`Main activity producter electricity plants`".
-#' @param liquefaction_regas_reclassify a string identifying the reclassified liquefaction and regasification industry. Default is "`Oil refineries`".
 #' @param nonspecenergy_reclassify a string identifying the reclassified non-specified (energy) industry. Default is "`Non-specified (transformation)`".
 #'
 #' @return a modified version of `.tidy_iea_df`
@@ -272,11 +300,9 @@ specify_tp_eiou <- function(.tidy_iea_df,
                             own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
                             pumped_storage = "Pumped storage plants",
                             nuclear_industry = "Nuclear industry",
-                            liquefaction_regas = "Liquefaction (LNG) / regasification plants",
                             non_spec_energy = "Non-specified (energy)",
                             # Places where the EIOU will e reassigned
                             main_act_producer_elect = "Main activity producer electricity plants",
-                            liquefaction_regas_reclassify = "Oil refineries",
                             nonspecenergy_reclassify = "Non-specified (transformation)"){
   .tidy_iea_df %>% 
     dplyr::mutate(
@@ -309,7 +335,10 @@ specify_tp_eiou <- function(.tidy_iea_df,
         # But there is no "Liquefaction (LNG) / regasification plants" in Transformation processes.
         # So this EIOU flow needs to be reassigned.
         # We choose to reassign "Liquefaction (LNG) / regasification plants" to liquefaction_regas_reclassify.
-        !!as.name(flow) == liquefaction_regas & !!as.name(flow_aggregation_point) == eiou ~ liquefaction_regas_reclassify,
+        # 
+        # !!! Note this is now addressed in the primary function, as this flow goes into Oil and gas extraction. !!!
+        # 
+        # !!as.name(flow) == liquefaction_regas & !!as.name(flow_aggregation_point) == eiou ~ liquefaction_regas_reclassify,
         
         # Non-specified (energy) is an Industry that receives EIOU.
         # However, Non-specified (energy) is not an Industry that makes anything.

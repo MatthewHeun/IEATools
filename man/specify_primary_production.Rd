@@ -6,6 +6,8 @@
 \usage{
 specify_primary_production(.tidy_iea_df,
   eiou_destinations = c("Coal mines", "Oil and gas extraction"),
+  liquefaction_regas = "Liquefaction (LNG) / regasification plants",
+  liquefaction_regas_reassign = "Oil and gas extraction",
   production_products = list(IEATools::coal_and_coal_products,
   c(IEATools::oil_and_oil_products, "Natural gas")),
   production_products_short_names = c("Coal", "Oil and natural gas"),
@@ -20,6 +22,11 @@ specify_primary_production(.tidy_iea_df,
 
 \item{eiou_destinations}{a vector of destinations for EIOU for primary production of coal and coal products and oil and natural gas.
 Default is \code{c("Coal mines", "Oil and gas extraction")}.}
+
+\item{liquefaction_regas}{a string identifying liquefaction and regasification plants. Default is "\code{Liquefaction (LNG) / regasification plants}".}
+
+\item{liquefaction_regas_reassign}{a string identifying the industry to which EIOU into \code{liquefaction_regas} will be reassigned.
+Default is "\code{Oil and gas extraction}".}
 
 \item{production_products}{a list of products for which we want to specify primary industries.
 Default is \code{list(coal_and_coal_products, c(oil_and_oil_products, "Natural gas"))}.}
@@ -65,7 +72,9 @@ specific industries.
 }
 \details{
 By default, the following changes are made to \code{.tidy_iea_df}:
-\itemize{
+\enumerate{
+\item Energy industry own use for \code{Liquefaction (LNG) / regasification plants} is
+reassigned to \code{Oil and gas extraction}.
 \item The \code{Production} industry for \code{coal_and_coal_products}
 is replaced by \code{Coal mines}.
 \item A \code{Resources (Coal)} industry is created which becomes the
@@ -92,4 +101,13 @@ load_tidy_iea_df() \%>\%
   add_psut_matnames() \%>\% 
   filter(Flow \%in\% c("Resources (Coal)", "Coal mines")) \%>\%
   select(-Method, -Last.stage, -Ledger.side, -Unit)
+# EIOU by "Liquefaction (LNG) / regasification plants" is reassigned to "Oil and gas extraction"
+data.frame(
+  Flow.aggregation.point = c("Energy industry own use"),
+  Flow = c("Liquefaction (LNG) / regasification plants"), 
+  Product = c("Natural gas"),
+  E.dot = c(-42), 
+  stringsAsFactors = FALSE
+) \%>\% 
+  specify_primary_production()
 }

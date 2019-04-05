@@ -13,6 +13,17 @@ test_that("production is converted to resources correctly", {
                  extract2("Flow") %>% 
                  magrittr::equals("Production") %>% 
                  any())
+  # Now try with an EIOU flow of "Liquefaction (LNG) / regasification plants"
+  # First, make a bogus data frame.
+  DF <- tibble::tibble(
+    Flow.aggregation.point = c("Energy industry own use"),
+    Flow = c("Liquefaction (LNG) / regasification plants"), 
+    Product = c("Natural gas"),
+    E.dot = c(-42)
+  ) %>% 
+    specify_primary_production()
+  # Expect that Flow has been reassigned.
+  expect_equal(DF$Flow[[1]], "Oil and gas extraction")
 })
 
 test_that("interface industries are correctly specified", {

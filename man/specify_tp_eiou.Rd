@@ -10,10 +10,8 @@ specify_tp_eiou(.tidy_iea_df,
   own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
   pumped_storage = "Pumped storage plants",
   nuclear_industry = "Nuclear industry",
-  liquefaction_regas = "Liquefaction (LNG) / regasification plants",
   non_spec_energy = "Non-specified (energy)",
   main_act_producer_elect = "Main activity producer electricity plants",
-  liquefaction_regas_reclassify = "Oil refineries",
   nonspecenergy_reclassify = "Non-specified (transformation)")
 }
 \arguments{
@@ -31,13 +29,9 @@ specify_tp_eiou(.tidy_iea_df,
 
 \item{nuclear_industry}{a string identifying nuclear plants in the flow column. Default is "\code{Nuclear industry}".}
 
-\item{liquefaction_regas}{a string identify liquefaction and regasification plants. Default is "\code{Liquefaction (LNG) / regasification plants}".}
-
 \item{non_spec_energy}{a string identifying non-specified energy in the flow solumn. Default is "\code{Non-specified (energy)}".}
 
 \item{main_act_producer_elect}{a string identifying main activity producer electricity plants. Default is "\code{Main activity producter electricity plants}".}
-
-\item{liquefaction_regas_reclassify}{a string identifying the reclassified liquefaction and regasification industry. Default is "\code{Oil refineries}".}
 
 \item{nonspecenergy_reclassify}{a string identifying the reclassified non-specified (energy) industry. Default is "\code{Non-specified (transformation)}".}
 }
