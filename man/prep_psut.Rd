@@ -4,7 +4,11 @@
 \alias{prep_psut}
 \title{Prepare for PSUT analysis}
 \usage{
-prep_psut(.tidy_iea_df)
+prep_psut(.tidy_iea_df, ledger_side = "Ledger.side", supply = "Supply",
+  consumption = "Consumption", flow = "Flow", product = "Product",
+  unit = "Unit", e_dot = "E.dot", matname = "matname",
+  matval = "matval", grouping_vars = c("Method", "Energy.type",
+  "Last.stage", "Country", "Year"))
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame that has been specified with \code{\link[=specify_all]{specify_all()}}.}

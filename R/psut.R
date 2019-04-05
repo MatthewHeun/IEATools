@@ -89,15 +89,14 @@ extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = 
 #' @param neg_supply_in_fd identifiers for flow items that, when negative,
 #'        are entries in the final demand (`Y`) matrix.
 #' @param grouping_vars a string vector of names of columns by which rows should be grouped when matrix names are added.
-#'        Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")`.
+#'        Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
 #' @param matname the name of the output column containing the name of the matrix
 #'        to which a row's value belongs (a string). Default is "`matname`".
+#' @param R the name for the resource matrix (a string). Default is "`R`".
 #' @param U_excl_EIOU the name for the use matrix that excludes energy industry own use (a string). Default is "`U_excl_EIOU`".
 #' @param U_EIOU the name for the energy industry own use matrix. Default is "`U_EIOU`".
-#' @param R the name for the resource matrix (a string). Default is "`R`".
 #' @param V the name for the make matrix (a string). Default is "`V`".
 #' @param Y the name for the final demand matrix (a string). Default is "`Y`".
-#' @param .R the name for a temporary column used internally for calculations. Default is "`.R`".
 #'
 #' @return `.tidy_iea_df` with an added column `matname`.
 #'
@@ -137,15 +136,13 @@ add_psut_matnames <- function(.tidy_iea_df,
                               # make (V), and
                               # final demand (Y)
                               # matrices.
-                              U_excl_EIOU = "U_excl_EIOU", U_EIOU = "U_EIOU",
-                              R = "R", V = "V", Y = "Y", 
-                              .R = ".R"){
+                              R = "R", U_excl_EIOU = "U_excl_EIOU", U_EIOU = "U_EIOU",
+                              V = "V", Y = "Y"){
   matsindf::verify_cols_missing(.tidy_iea_df, matname)
   
-  out <- .tidy_iea_df %>%
-    dplyr::group_by(!!!lapply(grouping_vars, as.name)) %>% 
+  .tidy_iea_df %>%
     dplyr::mutate(
-      !!matname := dplyr::case_when(
+      !!as.name(matname) := dplyr::case_when(
         # All Consumption items belong in the final demand (Y) matrix.
         !!as.name(ledger_side) == consumption ~ Y,
         # All production items belong in the resources (R) matrix.
@@ -164,7 +161,6 @@ add_psut_matnames <- function(.tidy_iea_df,
         TRUE ~ NA_character_
       )
     )
-  return(out)
 }
 
 
@@ -299,6 +295,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
                                   matval = "matval", 
                                   # Analysis groups
                                   grouping_vars = c("Method", "Energy.type", "Last.stage", "Country", "Year")){
+  matsindf::verify_cols_missing(.tidy_iea_df, matval)
   .tidy_iea_df %>% 
     dplyr::select(!!!grouping_vars, !!as.name(matname), 
                   !!as.name(rowname), !!as.name(colname), 
@@ -311,7 +308,8 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
     dplyr::rename(
       !!as.name(matval) := !!as.name(e_dot)
     ) %>% 
-    dplyr::ungroup()
+    dplyr::ungroup() %>% 
+    select(grouping_vars, tidyselect::everything())
 }
 
 
@@ -337,17 +335,47 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #'   collapse_to_tidy_psut()
 #' all(Simple == Complicated)
 prep_psut <- function(.tidy_iea_df, 
+                      ledger_side = "Ledger.side", 
+                      supply = "Supply", 
+                      consumption = "Consumption", 
+                      flow = "Flow",
                       product = "Product", 
                       unit = "Unit", 
-                      ledger_side = "Legder.side",
-                      ){
+                      e_dot = "E.dot", 
+                      matname = "matname",
+                      matval = "matval", 
+                      grouping_vars = c("Method", "Energy.type", "Last.stage", "Country", "Year")){
   S_units <- extract_S_units_from_tidy(.tidy_iea_df, 
                                        product = product, 
                                        unit = unit)
-  Tidy_psut_df <- .tidy_iea_df %>% 
-    add_psut_matnames(ledger_side = ledger_side) %>% 
-    add_row_col_meta() %>% 
-    collapse_to_tidy_psut() %>% 
-    spread()
-  dplyr::left_join(Tidy_psut_df, S_units)
+  # Tidy_psut_df <- .tidy_iea_df %>% 
+  #   add_psut_matnames(ledger_side = ledger_side, supply = supply, consumption = consumption, 
+  #                     grouping_vars = grouping_vars) %>% 
+  #   add_row_col_meta(flow = flow, product = product, matname = matname) %>% 
+  #   collapse_to_tidy_psut(e_dot = e_dot, matname = matname, matval = matval, grouping_vars = grouping_vars)
+  # 
+  # PSUTmats <- Tidy_psut_df %>% 
+  #   tidyr::spread(key = matname, value = matval)
+  # 
+  # out <- full_join(PSUTmats, S_units, by = grouping_vars)
+  #   
+  # return(out)
+
+  # Bundle functions together
+  Temp <- .tidy_iea_df %>% 
+    # Add matrix names
+    add_psut_matnames(ledger_side = ledger_side, supply = supply, consumption = consumption, 
+                      grouping_vars = grouping_vars) %>% 
+    # Add additional metadata
+    add_row_col_meta(flow = flow, product = product, matname = matname) %>% 
+    # Now collapse to matrices
+    collapse_to_tidy_psut(e_dot = e_dot, matname = matname, matval = matval, grouping_vars = grouping_vars) %>% 
+    # Spread to put each matrix into its own column
+    tidyr::spread(key = matname, value = matval) %>% 
+    # Add the S_units matrix
+    dplyr::full_join(S_units, by = grouping_vars)
+  
+  Temp %>% 
+    # Now gather everything back together so the outgoing data frame is tidy
+    tidyr::gather(key = matname, value = matval, !!!setdiff(names(.), grouping_vars))
 }
