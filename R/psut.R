@@ -317,6 +317,14 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' 
 #' Converts a tidy IEA data frame into a PSUT data frame
 #' by collapsing the IEA data into PSUT matrices (R, U, V, and Y).
+#' 
+#' This function bundles several others:
+#' 1. [add_psut_matnames()]
+#' 2. [add_row_col_meta()]
+#' 3. [collapse_to_tidy_psut()]
+#' 
+#' Furthermore, it extracts `S_units` matrices using [extract_S_units_from_tidy()]
+#' and adds those matrices to the data frame.
 #'
 #' @param .tidy_iea_df a tidy data frame that has been specified with [specify_all()].
 #' @param ledger_side the name of the ledger side column. Default is "`Ledger.side`". 

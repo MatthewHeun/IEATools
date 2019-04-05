@@ -541,8 +541,7 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #' Specify all industries
 #' 
 #' This is a convenience function.
-#' This function bundles several others:
-#' 
+#' It bundles several others:
 #' 1. [specify_primary_production()]
 #' 2. [specify_production_to_resources()]
 #' 3. [specify_tp_eiou()]

@@ -40,6 +40,17 @@ a tidy PSUT data frame
 Converts a tidy IEA data frame into a PSUT data frame
 by collapsing the IEA data into PSUT matrices (R, U, V, and Y).
 }
+\details{
+This function bundles several others:
+\enumerate{
+\item \code{\link[=add_psut_matnames]{add_psut_matnames()}}
+\item \code{\link[=add_row_col_meta]{add_row_col_meta()}}
+\item \code{\link[=collapse_to_tidy_psut]{collapse_to_tidy_psut()}}
+}
+
+Furthermore, it extracts \code{S_units} matrices using \code{\link[=extract_S_units_from_tidy]{extract_S_units_from_tidy()}}
+and adds those matrices to the data frame.
+}
 \examples{
 library(dplyr)
 library(tidyr)

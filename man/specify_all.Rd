@@ -15,16 +15,15 @@ that is ready for physical supply-use table (PSUT) analysis.
 }
 \description{
 This is a convenience function.
-This function bundles several others:
-}
-\details{
+It bundles several others:
 \enumerate{
 \item \code{\link[=specify_primary_production]{specify_primary_production()}}
 \item \code{\link[=specify_production_to_resources]{specify_production_to_resources()}}
 \item \code{\link[=specify_tp_eiou]{specify_tp_eiou()}}
 \item \code{\link[=specify_interface_industries]{specify_interface_industries()}}
 }
-
+}
+\details{
 Each bundled function is called in turn using default arguments.
 See examples for two ways to achieve the same result.
 }
