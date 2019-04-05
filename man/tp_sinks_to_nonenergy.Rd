@@ -17,13 +17,21 @@ tp_sinks_to_nonenergy(.tidy_iea_df, ledger_side = "Ledger.side",
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
 
+\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "\code{Ledger.side}".}
+
+\item{consumption}{a string identifying the consumption side of the ledger. Default is "\code{Consumption}".}
+
 \item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
+
+\item{non_energy_flow_agg_point}{the name of the aggregation point where transforamtion process sinks will be reassigned. Default is "\code{Non-energy use}".}
 
 \item{transformation_processes}{a string that identifies transformation processes in the \code{flow_aggregation_point} column. Default is "\code{Transformation processes}".}
 
 \item{eiou}{a string that identifies energy industry own use in the \code{flow_aggregation_point} column. Default is "\code{Energy industry own use}".}
 
 \item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "\code{Flow}".}
+
+\item{non_energy_flow}{a sting identifying non-energy flows. Default is "\code{Non-energy use industry/transformation/energy}".}
 
 \item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "\code{Product}".}
 
@@ -38,5 +46,27 @@ tp_sinks_to_nonenergy(.tidy_iea_df, ledger_side = "Ledger.side",
 Reassign Transformation process sinks to Non-energy use
 }
 \examples{
-
+library(dplyr)
+DF <- data.frame(
+  Ledger.side = c("Supply", "Supply", "Supply", "Consumption"),
+  Flow.aggregation.point = c("Transformation processes", 
+                             "Transformation processes", 
+                             "Transformation processes", 
+                             "Non-energy use"), 
+  Flow = c("Automobiles", "Automobiles", "Furnaces", 
+           "Non-energy use industry/transformation/energy"),
+  Product = c("Petrol", "MD", "Coal", "Coal"),
+  E.dot = c(-1, 1, -2, 8), 
+  stringsAsFactors = FALSE
+) \%>\% 
+  mutate(
+    Method = "PCM", 
+    Last.stage = "Final",
+    Energy.type = "E",
+    Country = "Bogus",
+    Year = 1971
+  )
+DF
+DF \%>\% 
+  tp_sinks_to_nonenergy()
 }

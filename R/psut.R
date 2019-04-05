@@ -309,7 +309,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
       !!as.name(matval) := !!as.name(e_dot)
     ) %>% 
     dplyr::ungroup() %>% 
-    select(grouping_vars, tidyselect::everything())
+    dplyr::select(grouping_vars, dplyr::everything())
 }
 
 
@@ -319,21 +319,51 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' by collapsing the IEA data into PSUT matrices (R, U, V, and Y).
 #'
 #' @param .tidy_iea_df a tidy data frame that has been specified with [specify_all()].
+#' @param ledger_side the name of the ledger side column. Default is "`Ledger.side`". 
+#' @param supply the string identifying the supply side of the ledger. Default is "`Supply`".
+#' @param consumption the string identifying the consumption side of the ledger. Default is "`Consumption`".
+#' @param flow the name of the flow column. Default is "`Flow`".
+#' @param product the name of the product column. Default is "`Product`".
+#' @param unit the name of the unit column. Default is "`Unit`".
+#' @param e_dot the name of the energy rate column. Default is "E.dot".
+#' @param matname the name of the matrix names column added by this function. Default is "`matname`".
+#' @param matval the name of the matrix value column added by this function. Default is "`matval`".
+#' @param grouping_vars a string vector of columns by which matrices are grouped. Default is `c("Method", "Energy.type", "Last.stage", "Country", "Year")`.
 #'
 #' @return a tidy PSUT data frame
 #' 
 #' @export
 #'
 #' @examples
+#' library(dplyr)
+#' library(tidyr)
 #' Simple <- load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
-#'   prep_psut()
+#'   prep_psut() %>% 
+#'   rename(matval_simple = matval)
+#' S_units <- load_tidy_iea_df() %>% 
+#'   extract_S_units_from_tidy()
 #' Complicated <- load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
 #'   add_psut_matnames() %>% 
 #'   add_row_col_meta() %>% 
-#'   collapse_to_tidy_psut()
-#' all(Simple == Complicated)
+#'   collapse_to_tidy_psut() %>% 
+#'   spread(key = matname, value = matval) %>% 
+#'   full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
+#'                             "Country", "Year")) %>% 
+#'   gather(key = matname, value = matval, R, U_EIOU, U_excl_EIOU, 
+#'                                         V, Y, S_units) %>% 
+#'   rename(matval_complicated = matval)
+#' # Simple and Complicated are same.
+#' full_join(Simple, Complicated, by = c("Method", "Energy.type", 
+#'                                       "Last.stage", "Country", 
+#'                                       "Year", "matname")) %>% 
+#'   dplyr::mutate(
+#'     same = matsbyname::equal_byname(matval_simple, matval_complicated)
+#'   ) %>% 
+#'   magrittr::extract2("same") %>% 
+#'   as.logical() %>% 
+#'   all()
 prep_psut <- function(.tidy_iea_df, 
                       ledger_side = "Ledger.side", 
                       supply = "Supply", 
@@ -348,19 +378,6 @@ prep_psut <- function(.tidy_iea_df,
   S_units <- extract_S_units_from_tidy(.tidy_iea_df, 
                                        product = product, 
                                        unit = unit)
-  # Tidy_psut_df <- .tidy_iea_df %>% 
-  #   add_psut_matnames(ledger_side = ledger_side, supply = supply, consumption = consumption, 
-  #                     grouping_vars = grouping_vars) %>% 
-  #   add_row_col_meta(flow = flow, product = product, matname = matname) %>% 
-  #   collapse_to_tidy_psut(e_dot = e_dot, matname = matname, matval = matval, grouping_vars = grouping_vars)
-  # 
-  # PSUTmats <- Tidy_psut_df %>% 
-  #   tidyr::spread(key = matname, value = matval)
-  # 
-  # out <- full_join(PSUTmats, S_units, by = grouping_vars)
-  #   
-  # return(out)
-
   # Bundle functions together
   Temp <- .tidy_iea_df %>% 
     # Add matrix names
@@ -377,5 +394,5 @@ prep_psut <- function(.tidy_iea_df,
   
   Temp %>% 
     # Now gather everything back together so the outgoing data frame is tidy
-    tidyr::gather(key = matname, value = matval, !!!setdiff(names(.), grouping_vars))
+    tidyr::gather(key = matname, value = matval, !!!base::setdiff(names(Temp), grouping_vars))
 }

@@ -12,6 +12,26 @@ prep_psut(.tidy_iea_df, ledger_side = "Ledger.side", supply = "Supply",
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame that has been specified with \code{\link[=specify_all]{specify_all()}}.}
+
+\item{ledger_side}{the name of the ledger side column. Default is "\code{Ledger.side}".}
+
+\item{supply}{the string identifying the supply side of the ledger. Default is "\code{Supply}".}
+
+\item{consumption}{the string identifying the consumption side of the ledger. Default is "\code{Consumption}".}
+
+\item{flow}{the name of the flow column. Default is "\code{Flow}".}
+
+\item{product}{the name of the product column. Default is "\code{Product}".}
+
+\item{unit}{the name of the unit column. Default is "\code{Unit}".}
+
+\item{e_dot}{the name of the energy rate column. Default is "E.dot".}
+
+\item{matname}{the name of the matrix names column added by this function. Default is "\code{matname}".}
+
+\item{matval}{the name of the matrix value column added by this function. Default is "\code{matval}".}
+
+\item{grouping_vars}{a string vector of columns by which matrices are grouped. Default is \code{c("Method", "Energy.type", "Last.stage", "Country", "Year")}.}
 }
 \value{
 a tidy PSUT data frame
@@ -21,13 +41,33 @@ Converts a tidy IEA data frame into a PSUT data frame
 by collapsing the IEA data into PSUT matrices (R, U, V, and Y).
 }
 \examples{
+library(dplyr)
+library(tidyr)
 Simple <- load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 
-  prep_psut()
+  prep_psut() \%>\% 
+  rename(matval_simple = matval)
+S_units <- load_tidy_iea_df() \%>\% 
+  extract_S_units_from_tidy()
 Complicated <- load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 
   add_psut_matnames() \%>\% 
   add_row_col_meta() \%>\% 
-  collapse_to_tidy_psut()
-all(Simple == Complicated)
+  collapse_to_tidy_psut() \%>\% 
+  spread(key = matname, value = matval) \%>\% 
+  full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
+                            "Country", "Year")) \%>\% 
+  gather(key = matname, value = matval, R, U_EIOU, U_excl_EIOU, 
+                                        V, Y, S_units) \%>\% 
+  rename(matval_complicated = matval)
+# Simple and Complicated are same.
+full_join(Simple, Complicated, by = c("Method", "Energy.type", 
+                                      "Last.stage", "Country", 
+                                      "Year", "matname")) \%>\% 
+  dplyr::mutate(
+    same = matsbyname::equal_byname(matval_simple, matval_complicated)
+  ) \%>\% 
+  magrittr::extract2("same") \%>\% 
+  as.logical() \%>\% 
+  all()
 }

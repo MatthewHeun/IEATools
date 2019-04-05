@@ -31,7 +31,7 @@ This function adds a suffix \code{ (Product)} to each of these interface industr
 \details{
 Note that "\code{Production}" also needs to be specified,
 but that is accomplished in the \code{\link[=specify_primary_production]{specify_primary_production()}} and
-\code{\link[=production_to_resources]{production_to_resources()}} functions.
+\code{\link[=specify_production_to_resources]{specify_production_to_resources()}} functions.
 }
 \examples{
 load_tidy_iea_df() \%>\% 

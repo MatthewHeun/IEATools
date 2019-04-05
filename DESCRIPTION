@@ -21,6 +21,7 @@ Imports:
     dplyr,
     Hmisc,
     magrittr, 
+    matsbyname,
     matsindf,
     rlang,
     tibble,

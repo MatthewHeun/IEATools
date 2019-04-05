@@ -39,5 +39,5 @@ EIOU will not be accounted correctly.
 \examples{
 load_tidy_iea_df() \%>\% 
   specify_primary_production() \%>\% 
-  production_to_resources()
+  specify_production_to_resources()
 }

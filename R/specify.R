@@ -165,7 +165,7 @@ specify_primary_production <- function(.tidy_iea_df,
 #' @examples
 #' load_tidy_iea_df() %>% 
 #'   specify_primary_production() %>% 
-#'   production_to_resources()
+#'   specify_production_to_resources()
 specify_production_to_resources <- function(.tidy_iea_df, 
                                     flow = "Flow",
                                     product = "Product",
@@ -193,7 +193,7 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' 
 #' Note that "`Production`" also needs to be specified, 
 #' but that is accomplished in the [specify_primary_production()] and
-#' [production_to_resources()] functions.
+#' [specify_production_to_resources()] functions.
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
 #' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
@@ -375,7 +375,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #' it does not fix the problem. 
 #' To solve the problem of transformation sinks, 
 #' see the [tp_sinks_to_nonenergy()] function.
-#' [tp_sinks_to_nonenergy()] uses the output of [transformation_sinks()]
+#' [tp_sinks_to_nonenergy()] uses the output of [tp_sinks_sources()]
 #' to route energy consumed by transformation sinks to `Non-energy use industry/transformation/energy`.
 #' There is no function to solve the problem of transformation sources at this time.
 #'
@@ -445,10 +445,14 @@ tp_sinks_sources <- function(.tidy_iea_df,
 #' Reassign Transformation process sinks to Non-energy use
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "`Ledger.side`".
+#' @param consumption a string identifying the consumption side of the ledger. Default is "`Consumption`".
 #' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
+#' @param non_energy_flow_agg_point the name of the aggregation point where transforamtion process sinks will be reassigned. Default is "`Non-energy use`".
 #' @param transformation_processes a string that identifies transformation processes in the `flow_aggregation_point` column. Default is "`Transformation processes`".
 #' @param eiou a string that identifies energy industry own use in the `flow_aggregation_point` column. Default is "`Energy industry own use`".
 #' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
+#' @param non_energy_flow a sting identifying non-energy flows. Default is "`Non-energy use industry/transformation/energy`".
 #' @param product the name of the product column in `.tidy_iea_df`. Default is "`Product`".
 #' @param e_dot the name of the energy rate column in `.tidy_iea_df`. Default is "`E.dot`".
 #' @param grouping_vars a string vector of column names by which `.tidy_iea_df` will be grouped before finding transformation sinks. Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
@@ -458,7 +462,29 @@ tp_sinks_sources <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
-#' 
+#' library(dplyr)
+#' DF <- data.frame(
+#'   Ledger.side = c("Supply", "Supply", "Supply", "Consumption"),
+#'   Flow.aggregation.point = c("Transformation processes", 
+#'                              "Transformation processes", 
+#'                              "Transformation processes", 
+#'                              "Non-energy use"), 
+#'   Flow = c("Automobiles", "Automobiles", "Furnaces", 
+#'            "Non-energy use industry/transformation/energy"),
+#'   Product = c("Petrol", "MD", "Coal", "Coal"),
+#'   E.dot = c(-1, 1, -2, 8), 
+#'   stringsAsFactors = FALSE
+#' ) %>% 
+#'   mutate(
+#'     Method = "PCM", 
+#'     Last.stage = "Final",
+#'     Energy.type = "E",
+#'     Country = "Bogus",
+#'     Year = 1971
+#'   )
+#' DF
+#' DF %>% 
+#'   tp_sinks_to_nonenergy()
 tp_sinks_to_nonenergy <- function(.tidy_iea_df, 
                                   ledger_side = "Ledger.side",
                                   consumption = "Consumption",

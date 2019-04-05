@@ -85,7 +85,7 @@ Note that this function only identifies transformation sinks or sources;
 it does not fix the problem.
 To solve the problem of transformation sinks,
 see the \code{\link[=tp_sinks_to_nonenergy]{tp_sinks_to_nonenergy()}} function.
-\code{\link[=tp_sinks_to_nonenergy]{tp_sinks_to_nonenergy()}} uses the output of \code{\link[=transformation_sinks]{transformation_sinks()}}
+\code{\link[=tp_sinks_to_nonenergy]{tp_sinks_to_nonenergy()}} uses the output of \code{\link[=tp_sinks_sources]{tp_sinks_sources()}}
 to route energy consumed by transformation sinks to \code{Non-energy use industry/transformation/energy}.
 There is no function to solve the problem of transformation sources at this time.
 }
