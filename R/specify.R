@@ -560,16 +560,27 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
       # But they need to be positive when they are moved to final demand.
       !!as.name(e_dot) := abs(!!as.name(e_dot))
     )
-  .tidy_iea_df %>% 
+  Temp <- .tidy_iea_df %>% 
     # Eliminate rows in .tidy_iea_df that match Remove_later,
     dplyr::anti_join(Remove_later, by = names(Remove_later)) %>% 
     # rbind the new rows to the data frame
-    dplyr::bind_rows(To_add_to_final_demand) %>% 
-    # Group by all columns except for E.dot and summarise
-    # This has the effect of adding the new Non-energy use to any existing non-energy use
-    dplyr::group_by(!!!lapply(base::setdiff(names(.tidy_iea_df), e_dot), as.name)) %>% 
-    dplyr::summarise(!!as.name(e_dot) := sum(!!as.name(e_dot))) %>% 
+    dplyr::bind_rows(To_add_to_final_demand)
+  # Look at Temp to find the rows Non-energy use rows
+  Nonenergy <- Temp %>% 
+    dplyr::filter(!!as.name(flow) == non_energy_flow)
+  # Summarize these Non-energy flows
+  # This has the effect of adding the new Non-energy use to any existing non-energy use
+  # in the same group.
+  SummarizedNonenergy <- Nonenergy %>% 
+    # Group by all columns except for E.dot
+    dplyr::group_by(!!!lapply(base::setdiff(names(Nonenergy), e_dot), as.name)) %>% 
+    dplyr::summarise(!!as.name(e_dot) := sum(!!as.name(e_dot))) %>%
     dplyr::ungroup()
+  # Return after removing the non-summarized Non-energy flows and inserting the summarized Non-energy flows.
+  Temp %>% 
+    # Remove the Nonenergy rows
+    dplyr::anti_join(Nonenergy, by = names(Temp)) %>% 
+    dplyr::bind_rows(SummarizedNonenergy)
 }
 
 

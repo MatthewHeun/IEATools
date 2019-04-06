@@ -94,6 +94,21 @@ test_that("collapse_to_psut works expected", {
 })
 
 test_that("prep_psut works as expected", {
+  # S_units <- load_tidy_iea_df() %>% 
+  #   extract_S_units_from_tidy()
+  # Simple <- load_tidy_iea_df() %>% 
+  #   specify_all() %>% 
+  #   prep_psut()
+  # Complicated <- load_tidy_iea_df() %>% 
+  #   specify_all() %>% 
+  #   add_psut_matnames() %>% 
+  #   add_row_col_meta() %>% 
+  #   collapse_to_tidy_psut()
+  # all(Simple == Complicated)
+  # 
+  # 
+  
+  
   Simple <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     prep_psut() %>% 
@@ -106,12 +121,11 @@ test_that("prep_psut works as expected", {
     add_row_col_meta() %>% 
     collapse_to_tidy_psut() %>% 
     tidyr::spread(key = matname, value = matval) %>% 
-    # Add the S_units matrices
     dplyr::full_join(S_units, by = c("Method", "Energy.type", "Last.stage", "Country", "Year")) %>% 
     tidyr::gather(key = matname, value = matval, R, U_EIOU, U_excl_EIOU, V, Y, S_units) %>% 
     dplyr::rename(matval_complicated = matval)
-  
-  full_join(Simple, Complicated, by = c("Method", "Energy.type", "Last.stage", "Country", "Year", "matname")) %>% 
+  # Simple and Complicated ought to be the same.
+  dplyr::full_join(Simple, Complicated, by = c("Method", "Energy.type", "Last.stage", "Country", "Year", "matname")) %>% 
     dplyr::mutate(
       same = matsbyname::equal_byname(matval_simple, matval_complicated)
     ) %>% 
@@ -119,4 +133,5 @@ test_that("prep_psut works as expected", {
     as.logical() %>% 
     all() %>% 
     expect_true()
+
 })
