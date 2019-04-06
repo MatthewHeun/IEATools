@@ -175,7 +175,7 @@ specify_primary_production <- function(.tidy_iea_df,
 #' to "`Resources (product)`", 
 #' where `product` is the name of the energy carrier for this resource.
 #' 
-#' This function should be called _after_ `specify_primary_resources()`,
+#' This function should be called _after_ `specify_primary_production()`,
 #' which adjusts for energy industry own use 
 #' of some primary energy producing industries.
 #' If this function is called first, 
