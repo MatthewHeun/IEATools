@@ -350,11 +350,11 @@ DF %>%
 `specify_all()` is a convenience function that 
 bundles several others:
 
-1. [specify_primary_production()]
-2. [specify_production_to_resources()]
-3. [specify_tp_eiou()]
-4. [specify_interface_industries()]
-5. [tp_sinks_to_nonenergy()]
+1. `specify_primary_production()`
+2. `specify_production_to_resources()`
+3. `specify_tp_eiou()`
+4. `specify_interface_industries()`
+5. `tp_sinks_to_nonenergy()`
 
 Each bundled function is called in turn using default arguments.
 
@@ -372,5 +372,6 @@ all(Simple == Complicated)
 
 ## Conclusion
 
+This vignette demonstrated how to specify details of primary and transformation process flows.
 The next step could be to prepare the IEA data for use within the PSUT framework.
-For details see http://prep_psut.html.
+For details, see the [Prep PSUT](http://prep_psut.html) vignette.
