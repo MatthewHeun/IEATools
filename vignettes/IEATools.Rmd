@@ -336,8 +336,7 @@ Tidy_IEA_df %>%
 At this point, IEA extended energy balance 
 data have been imported to `R` and
 are ready to be used. 
-The next step could be to prepare for analysis within the
-physical supply-use table (PSUT) framework.
-See http://prep_psut.html for details.
+The next step could be to specify some of the IEA energy flows.
+See http://specify.html for details.
 
 
