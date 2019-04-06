@@ -21,6 +21,7 @@ It bundles several others:
 \item \code{\link[=specify_production_to_resources]{specify_production_to_resources()}}
 \item \code{\link[=specify_tp_eiou]{specify_tp_eiou()}}
 \item \code{\link[=specify_interface_industries]{specify_interface_industries()}}
+\item \code{\link[=tp_sinks_to_nonenergy]{tp_sinks_to_nonenergy()}}
 }
 }
 \details{
@@ -36,5 +37,6 @@ load_tidy_iea_df() \%>\%
   specify_primary_production() \%>\% 
   specify_production_to_resources() \%>\% 
   specify_tp_eiou() \%>\% 
-  specify_interface_industries()
+  specify_interface_industries() \%>\% 
+  tp_sinks_to_nonenergy()
 }

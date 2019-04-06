@@ -43,7 +43,11 @@ tp_sinks_to_nonenergy(.tidy_iea_df, ledger_side = "Ledger.side",
 \code{.tidy_iea_df} with energy sunk in Transformation processes sinks reassigned to Non-energy use
 }
 \description{
-Reassign Transformation process sinks to Non-energy use
+Transformation processes that consume energy without producing any energy are called
+"transformation process sinks".
+See \code{\link[=tp_sinks_sources]{tp_sinks_sources()}} for information about why transformation process sinks are problematic.
+This function reclassifies energy flowing into transformation process sinks
+as \code{non_energy_flow}, by default "Non-energy use in industry/transformation/energy".
 }
 \examples{
 library(dplyr)

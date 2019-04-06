@@ -153,7 +153,7 @@ Specific_primary_production %>%
 
 ## `specify_production_to_resources()`
 
-The IEA gives resource extraction in rows where the `Flow` is "`Production`".
+The IEA extended energy balances give resource extraction in rows where the `Flow` is "`Production`".
 `specify_production_to_resources()` changes the "`Production`" string 
 to "`Resources (product)`", 
 where `product` is the name of the energy carrier for this resource.
@@ -172,16 +172,203 @@ load_tidy_iea_df() %>%
 ```
 
 
-## `specify_tp_eiou()`
-
-
-
 ## `specify_interface_industries()`
 
+An interface industry is one that moves energy carriers into or out of a country.
+When `Flow` is any of the interface industries, we need to be more specific.
+If we don't separate these `Flow`s by `Product`, we run into trouble 
+in the PSUT framework:
+
+* upstream swims will result in all `Product`s being produced even if only one is needed and
+* embodied energy calculations will result in many types of energy being embodied, even if only one sould be.
+
+To solve these problems, `specify_interface_industries()`
+adds a suffix ` (Product)` to each of these interface industries.
+ 
+Note that "`Production`" `Flow`s also needs to be specified, 
+but that is accomplished in the `specify_primary_production()` and
+`specify_production_to_resources()` functions.
+
+```{r}
+load_tidy_iea_df() %>% 
+  specify_interface_industries() %>% 
+  filter(starts_with_any_of(Flow, IEATools::interface_industries)) %>% 
+  glimpse()
+```
+
+
+## `specify_tp_eiou()`
+
+The extended energy balance data from the IEA includes 
+"Energy industry own use" (EIOU) for many transformation processes.
+Unfortunately, in some cases
+the EIOU flows into industries that aren't included in transformation processes.
+For example, `Electricity` is consumed by 
+`Own use in electricity, CHP and heat plants`, 
+which is not a transformation process.
+We have to make some decisions to ensure that 
+EIOU is routed to actual transformation processes.
+Changes made to the `.tidy_iea_df` data frame are:
+ 
+1. EIOU classified as `own_use_elect_chp_heat` (by default "Own use in electricity, CHP and heat plants")
+   is sent to `main_act_producer_elect` (by default "Main activity producer electricity plants").
+2. EIOU classified as `pumped_storage` (by default "Pumped storage plants"") 
+   is sent to `main_act_producer_elect`.
+3. EIOU classified as `nuclear_industry` (by default "Nuclear industry") is sent to `main_act_producer_elect`.
+4. EIOU classified as `non_spec_energy` (by default "Non-specified (energy)") 
+   is sent to `nonspecenergy_reclassify` (by default "Non-specified (transformation)").
+
+```{r}
+load_tidy_iea_df() %>% 
+  specify_tp_eiou() %>% 
+  filter(Flow.aggregation.point == "Energy industry own use" & 
+           Flow == "Main activity producer electricity plants") %>% 
+  glimpse()
+```
+
+
+## `tp_sinks_sources()`
+
+In the IEA extended energy balance data, 
+transformation processes (tp) ought to both consume and produce energy.
+But some transformation processes consume energy without producing any energy; 
+others produce without consuming.
+Such transformation processes can be called "transformation sinks" and 
+"transformation sources," respectively.
+This function finds and identifies transformation processes that act as sinks or sources.
+
+It is important to identify transformation sinks, 
+because they cause two problems for physical supply-use table (PSUT) analysis. 
+First, when swimming upstream, a PSUT analysis cannot "see" the sunk energy carriers,
+because they have no downstream effects.
+Thus, upstream swims cannot conserve energy.
+Second, when calculating embodied energy for each downstream energy carrier,
+the sunk energy carriers cannot be embodied in any final demand energy carriers.
+Thus, embodied energy calculations cannot conserve energy.
+ 
+Transformation sources can also cause problems for physical supply-use table (PSUT) analysis. 
+In particular, when swimming upstream, a PSUT analysis will "see" the final energy sources,
+but cannot see any associated primary energy carriers.
+
+Transformation sinks and sources are identified by the following algorithm:
+ 
+1. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that consume energy (negative value for `E.dot`).
+   Energy consumption can be for the transformation process itself or for Energy industry own use.
+2. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that produce energy (positive value for `E.dot`).
+3. Take the set difference between the two (consumers less producers for sinks and producers less consumers for sources). 
+   The set difference is the list of transformation sinks or sources, respectively.
+ 
+`tp_sinks_sources()` is a function not unlike `dplyr::summarise()`;
+it returns a summary containing grouping variables and industries that are transformation sinks or sources.
+So be sure to specify (or accept defaults for) 
+the `grouping_vars` argument.
+Typical grouping variables are `Method`, `Last.stage`, `Country`, `Year`, `Energy.type`.
+Don't group on `Flow.aggregation.point`, because energy from different aggregation points
+(`Energy industry own use` and `Transformation processes`) flows into each machine.
+Don't group on `Flow`, `Product`, or `E.dot`, either.
+If groups are not set, 
+`Flow`s will be analyzed together, possibly leading to missed transformation sinks or sources.
+ 
+The various `specify_*()` functions should also be called _before_ calling [tp_sinks_sources()].
+The `specify_*()` functions clean up the IEA data, ensuring that energy is routed to the right places.
+ 
+Note that this function only identifies transformation sinks or sources;
+it does not fix the problem. 
+To solve the problem of transformation sinks, 
+see the [tp_sinks_to_nonenergy()] function.
+`tp_sinks_to_nonenergy()` uses the output of `tp_sinks_sources()`
+to route energy consumed by transformation sinks to `Non-energy use industry/transformation/energy`.
+There is no function to solve the problem of transformation sources at this time.
+
+`tp_sinks_sources()` returns `grouping_vars` and the `Flow` column.
+The `Flow` column contains industries that are sinks or sources,
+depending on the value of the `type` argument.
+
+```{r}
+# The included data sets to not have any transformation process sinks or sources.
+# Demonstrate with a made-up data set.
+data.frame(Flow = c("Automobiles", "Automobiles", "Furnaces"),
+                   E.dot = c(-1, 1, 2), 
+                   stringsAsFactors = FALSE) %>% 
+  dplyr::mutate(
+    Country = "A country",
+    Flow.aggregation.point = "Transformation processes",
+    Product = "A product"
+  ) %>% 
+  # Automobiles both consume and produce energy, 
+  # so Automobiles are not reported by tp_sinks_sources.
+  # However, Furnaces make Product without consuming any energy, 
+  # and are, therefore, a transformation source.
+  tp_sinks_sources(type = "sources", grouping_vars = "Country")
+```
+
+
+## `tp_sinks_to_nonenergy()` 
+
+This function reclassifies energy flowing into transformation process sinks
+as `non_energy_flow`, by default "Non-energy use in industry/transformation/energy".
+If there was already some Non-energy use, 
+the new Non-energy use is added to the existing Non-energy use.
+
+`tp_sinks_to_nonenergy()` uses the `tp_sinks_sources()` function
+internally to identify transformation process sinks.
+
+```{r}
+DF <- data.frame(
+  Ledger.side = c("Supply", "Supply", "Supply", "Consumption"),
+  Flow.aggregation.point = c("Transformation processes", 
+                             "Transformation processes", 
+                             "Transformation processes", 
+                             "Non-energy use"), 
+  Flow = c("Automobiles", "Automobiles", "Furnaces", 
+           "Non-energy use industry/transformation/energy"),
+  Product = c("Petrol", "MD", "Coal", "Coal"),
+  E.dot = c(-1, 1, -2, 8), 
+  stringsAsFactors = FALSE
+) %>% 
+  mutate(
+    Method = "PCM", 
+    Last.stage = "Final",
+    Energy.type = "E",
+    Country = "Bogus",
+    Year = 1971
+  )
+DF
+# In this example, Furnaces are a transformation process sink:
+# they consume Coal but produce nothing.
+# There are already 8 units of Coal consumption for Non-energy uses.
+# The 2 units of Coal are added to the existing 8 units
+# Non-energy consumption to make 10 units of Non-energy consumption. 
+DF %>% 
+  tp_sinks_to_nonenergy() %>% 
+  as.data.frame()
+```
 
 
 ## `specify_all()`
 
+`specify_all()` is a convenience function that 
+bundles several others:
+
+1. [specify_primary_production()]
+2. [specify_production_to_resources()]
+3. [specify_tp_eiou()]
+4. [specify_interface_industries()]
+5. [tp_sinks_to_nonenergy()]
+
+Each bundled function is called in turn using default arguments.
+
+```{r}
+Simple <- load_tidy_iea_df() %>% 
+  specify_all()
+Complicated <- load_tidy_iea_df() %>% 
+  specify_primary_production() %>% 
+  specify_production_to_resources() %>% 
+  specify_tp_eiou() %>% 
+  specify_interface_industries() %>% 
+  tp_sinks_to_nonenergy()
+all(Simple == Complicated)
+```
 
 ## Conclusion
 

@@ -80,7 +80,8 @@ test_that("specify_all works as expected", {
     specify_primary_production() %>% 
     specify_production_to_resources() %>% 
     specify_tp_eiou() %>% 
-    specify_interface_industries()
+    specify_interface_industries() %>% 
+    tp_sinks_to_nonenergy()
   expect_equal(Simple, Complicated)
 })
 
@@ -95,7 +96,10 @@ test_that("tp_sinks_sources() works as expected", {
                  tp_sinks_sources(type = "bogus"))
   # Try to send an ungrouped data frame into the function. Should give 0 rows.
   expect_equal(load_tidy_iea_df() %>% 
-                 specify_all() %>% 
+                 specify_primary_production() %>% 
+                 specify_production_to_resources() %>% 
+                 specify_tp_eiou() %>% 
+                 specify_interface_industries() %>% 
                  tp_sinks_sources(grouping_vars = NULL) %>% 
                  nrow(), 0)
   # Try to group on Flow.aggregation.point. Should fail.

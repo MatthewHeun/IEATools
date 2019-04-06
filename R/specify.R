@@ -214,12 +214,12 @@ specify_production_to_resources <- function(.tidy_iea_df,
 
 #' Specify interface industries
 #' 
-#' An interface industry is one that moves energy resources in or out of a country.
+#' An interface industry is one that moves energy carriers into or out of a country.
 #' When `Flow` is any of the interface industries, we need to be more specific.
-#' If we don't separate these Flows, we run into trouble with
+#' If we don't separate these `Flow`s by `Product`, we run into trouble with
 #' upstream swims (e.g., all `Product`s are produced even if only one is needed) and
 #' embodied energy calculations (many types of energy are embodied, even if only one sould be).
-#' This function adds a suffix ` (Product)` to each of these interface industries.
+#' This function adds a suffix `(Product)` to each of these interface industries.
 #' 
 #' Note that "`Production`" also needs to be specified, 
 #' but that is accomplished in the [specify_primary_production()] and
@@ -228,7 +228,7 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
 #' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
 #' @param int_industries a string vector of industries involved in exchanges with other countries,
-#'        bunkers, or stock changes. Default is [interface_industries].
+#'        bunkers, or stock changes. Default is [IEATools::interface_industries].
 #' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
 #'
 #' @return a modified version of `.tidy_iea_df` with specified interface industries
@@ -256,19 +256,19 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' 
 #' The extended energy balance data from the IEA includes 
 #' Energy industry own use (EIOU) for many transformation processes.
-#' Unfortunately, the EIOU flows into industries that aren't included in transformation processes.
+#' Unfortunately, in some cases
+#' the EIOU flows into industries that aren't included in transformation processes.
 #' For example, `Electricity` is consumed by 
 #' `Own use in electricity, CHP and heat plants`, 
-#' which is not transformation process.
+#' which is not a transformation process.
 #' We have to make some decisions to ensure that 
 #' EIOU is routed to actual transformation processes.
-#' See details for a list of actual changes made to the `.tidy_iea_df` data frame.
+#' See details for a list of changes made to the `.tidy_iea_df` data frame.
 #' 
 #' The following changes are made to the `.tidy_iea_df` data frame:
 #' 1. EIOU classified as `own_use_elect_chp_heat` is sent to `main_act_producer_elect`.
 #' 2. EIOU classified as `pumped_storage` is sent to `main_act_producer_elect`.
 #' 3. EIOU classified as `nuclear_industry` is sent to `main_act_producer_elect`.
-#' 4. EIOU classified as `liquefaction_regas` is sent to `liquefaction_regas_reclassify`.
 #' 4. EIOU classified as `non_spec_energy` is sent to `nonspecenergy_reclassify`.
 #'
 #' @param .tidy_iea_df an IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
@@ -358,10 +358,10 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #' Find transformation sinks and sources
 #' 
 #' In the IEA extended energy balance data, 
-#' transformation processes ought to both consume and produce energy.
+#' transformation processes (tp) ought to both consume and produce energy.
 #' But some transformation processes consume energy without producing any energy; 
-#' others produce without consuming any energy.
-#' Those transformation processes can be called "transformation sinks" and 
+#' others produce without consuming.
+#' Such transformation processes can be called "transformation sinks" and 
 #' "transformation sources," respectively.
 #' This function finds and identifies transformation processes that act as sinks or sources.
 #' 
@@ -376,7 +376,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #' 
 #' Transformation sources can also cause problems for physical supply-use table (PSUT) analysis. 
 #' In particular, when swimming upstream, a PSUT analysis will "see" the final energy sources,
-#' but cannot see the associated primary energy carriers.
+#' but cannot see any associated primary energy carriers.
 #' 
 #' Transformation sinks and sources are identified by the following algorithm:
 #' 
@@ -472,6 +472,12 @@ tp_sinks_sources <- function(.tidy_iea_df,
 
 
 #' Reassign Transformation process sinks to Non-energy use
+#' 
+#' Transformation processes that consume energy without producing any energy are called 
+#' "transformation process sinks".
+#' See [tp_sinks_sources()] for information about why transformation process sinks are problematic.
+#' This function reclassifies energy flowing into transformation process sinks
+#' as `non_energy_flow`, by default "Non-energy use in industry/transformation/energy".
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
 #' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "`Ledger.side`".
@@ -575,6 +581,7 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #' 2. [specify_production_to_resources()]
 #' 3. [specify_tp_eiou()]
 #' 4. [specify_interface_industries()]
+#' 5. [tp_sinks_to_nonenergy()]
 #' 
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
@@ -595,11 +602,13 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #'   specify_primary_production() %>% 
 #'   specify_production_to_resources() %>% 
 #'   specify_tp_eiou() %>% 
-#'   specify_interface_industries()
+#'   specify_interface_industries() %>% 
+#'   tp_sinks_to_nonenergy()
 specify_all <- function(.tidy_iea_df){
   .tidy_iea_df %>% 
     specify_primary_production() %>% 
     specify_production_to_resources() %>% 
     specify_tp_eiou() %>% 
-    specify_interface_industries()
+    specify_interface_industries() %>% 
+    tp_sinks_to_nonenergy()
 }

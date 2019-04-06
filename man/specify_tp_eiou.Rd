@@ -41,13 +41,14 @@ a modified version of \code{.tidy_iea_df}
 \description{
 The extended energy balance data from the IEA includes
 Energy industry own use (EIOU) for many transformation processes.
-Unfortunately, the EIOU flows into industries that aren't included in transformation processes.
+Unfortunately, in some cases
+the EIOU flows into industries that aren't included in transformation processes.
 For example, \code{Electricity} is consumed by
 \code{Own use in electricity, CHP and heat plants},
-which is not transformation process.
+which is not a transformation process.
 We have to make some decisions to ensure that
 EIOU is routed to actual transformation processes.
-See details for a list of actual changes made to the \code{.tidy_iea_df} data frame.
+See details for a list of changes made to the \code{.tidy_iea_df} data frame.
 }
 \details{
 The following changes are made to the \code{.tidy_iea_df} data frame:
@@ -55,7 +56,6 @@ The following changes are made to the \code{.tidy_iea_df} data frame:
 \item EIOU classified as \code{own_use_elect_chp_heat} is sent to \code{main_act_producer_elect}.
 \item EIOU classified as \code{pumped_storage} is sent to \code{main_act_producer_elect}.
 \item EIOU classified as \code{nuclear_industry} is sent to \code{main_act_producer_elect}.
-\item EIOU classified as \code{liquefaction_regas} is sent to \code{liquefaction_regas_reclassify}.
 \item EIOU classified as \code{non_spec_energy} is sent to \code{nonspecenergy_reclassify}.
 }
 }

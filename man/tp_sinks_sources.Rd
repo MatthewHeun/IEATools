@@ -37,10 +37,10 @@ Industries that are transformation sinks or sources are named in the \code{flow}
 }
 \description{
 In the IEA extended energy balance data,
-transformation processes ought to both consume and produce energy.
+transformation processes (tp) ought to both consume and produce energy.
 But some transformation processes consume energy without producing any energy;
-others produce without consuming any energy.
-Those transformation processes can be called "transformation sinks" and
+others produce without consuming.
+Such transformation processes can be called "transformation sinks" and
 "transformation sources," respectively.
 This function finds and identifies transformation processes that act as sinks or sources.
 }
@@ -56,7 +56,7 @@ Thus, embodied energy calculations cannot conserve energy.
 
 Transformation sources can also cause problems for physical supply-use table (PSUT) analysis.
 In particular, when swimming upstream, a PSUT analysis will "see" the final energy sources,
-but cannot see the associated primary energy carriers.
+but cannot see any associated primary energy carriers.
 
 Transformation sinks and sources are identified by the following algorithm:
 \enumerate{

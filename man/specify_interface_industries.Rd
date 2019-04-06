@@ -13,7 +13,7 @@ specify_interface_industries(.tidy_iea_df, flow = "Flow",
 \item{flow}{the name of the flow column in \code{.tidy_iea_df}.  Default is "\code{Flow}".}
 
 \item{int_industries}{a string vector of industries involved in exchanges with other countries,
-bunkers, or stock changes. Default is \link{interface_industries}.}
+bunkers, or stock changes. Default is \link[IEATools:interface_industries]{IEATools::interface_industries}.}
 
 \item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
 }
@@ -21,12 +21,12 @@ bunkers, or stock changes. Default is \link{interface_industries}.}
 a modified version of \code{.tidy_iea_df} with specified interface industries
 }
 \description{
-An interface industry is one that moves energy resources in or out of a country.
+An interface industry is one that moves energy carriers into or out of a country.
 When \code{Flow} is any of the interface industries, we need to be more specific.
-If we don't separate these Flows, we run into trouble with
+If we don't separate these \code{Flow}s by \code{Product}, we run into trouble with
 upstream swims (e.g., all \code{Product}s are produced even if only one is needed) and
 embodied energy calculations (many types of energy are embodied, even if only one sould be).
-This function adds a suffix \code{ (Product)} to each of these interface industries.
+This function adds a suffix \code{(Product)} to each of these interface industries.
 }
 \details{
 Note that "\code{Production}" also needs to be specified,
