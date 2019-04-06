@@ -155,17 +155,19 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' on a per-product basis.
 #' 
 #' This function assumes that `.tidy_iea_df` is grouped appropriately.
-#' So be sure to group `.tidy_iea_df` by appropriate variables
+#' So be sure to set the `grouping_vars` argument
 #' before calling this function.
-#' Grouping should _definitely_ be done on the `Product` column.
+#' The default `grouping_vars` fixes energy balances on a per-year, per-product basis.
+#' The `Product` column should definitely be included in `grouping_vars`, 
+#' but any other grouping level is fine. 
 #' Typically, grouping is also done on 
 #' `Country`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
-#' Grouping should _not_ be done on the `flow` column or the `ledger_side` column.
+#' Grouping should _not_ be done on the `flow` or the `ledger_side` columns.
 #' 
 #' Internally, this function calls [calc_tidy_iea_df_balances()]
-#' and adjusts `Statistical differences` by any imbalances that are present.
+#' and adjusts `Statistical differences` to compensate for any imbalances that are present.
 #'
-#' @param .tidy_iea_df a tidy data frame containing IEA data, typically the output
+#' @param .tidy_iea_df a tidy data frame containing IEA extended energy balanc data
 #' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "`Ledger.side`".
 #' @param supply a string indicating the supply side of the ledger in the `ledger_side` column. Default is "`Supply`".
 #' @param consumption a string indicating the consumption side of the ledger in the `ledger_side` column. Default is "`Consumption`".

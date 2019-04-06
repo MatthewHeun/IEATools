@@ -58,13 +58,14 @@ readChar(IEA_path, nchars = 256)
 
 ### Convert the IEA data into an R data frame
 
-The extended energy balance data can be pulled directly into an `R` data frame 
+Extended energy balance data can be pulled directly into an `R` data frame 
 by the `iea_df()` function. 
 `iea_df()` fixes the header shown in the figure above,
-conveting the header into a single row.
-Furthermore, the IEA data have indicators for 
-not applicable values ("`x`") and for
-unavailable values ("`..`"). 
+conveting it to a single row.
+Furthermore, `iea_df()` deals with the IEA's indicators for 
+not applicable values ("`x`"),
+for unavailable values ("`..`"), and
+for confidential values ("`c`").
 (See "World Energy Balances: Database Documentation (2018 edition)" at
 (http://wds.iea.org/wds/pdf/worldbal_documentation.pdf).)
 
@@ -73,21 +74,21 @@ unavailable values ("`..`").
 `NULL` would indicate an undefined value.
 `NA` would indicate a value that is unavailable.
 
-In theory, mapping from the IEA's indicators to `R` should proceed as follows:
-"`..`" (unavailable) in the IEA data would be converted to `NA` in `R`.
-"`x`" (not applicable) in the IEA data would be converted to `0` in `R`.
+In theory, mapping from the IEA's indicators to `R` should be done as follows:
+"`..`" (unavailable) and "`c`" (confidential) would be converted to `NA` in `R`.
+"`x`" (not applicable) would be converted to `0` in `R`.
 "`NULL`" would not be used.
 However, the IEA are not consistent with their coding. 
-In some places "`..`" is used for not applicable values
-(e.g., World Anthracite supply in 1971). 
-World Anthracite supply in 1971 is actually not applicable, because Anthracite was
-classified under "Hard coal (if no detail)" in 1971.
-On the other hand, "`..`" is used for data in the most recent year 
+In some places "`..`" (unavailable) is used for not applicable values,
+e.g. World Anthracite supply in 1971. 
+(World Anthracite supply in 1971 is actually not applicable ("`x`"), 
+because Anthracite was classified under "Hard coal (if no detail)" in 1971.)
+On the other hand, "`..`" is used correctly for data in the most recent year 
 when those data have not yet been incorporated into the database. 
 
 In the face of IEA’s inconsistencies, 
 the only rational way to proceed is to convert 
-both "`x`" and "`..`" to "`0`".
+"`x`", "`..`", and "`c`" to "`0`".
 `iea_df()` performs that task.
 
 ```{r}
@@ -105,9 +106,9 @@ data are not convenient for immediate use.
 
 1. Column titles are SHOUTING.
 2. The `COUNTRY` column contains full (long) country names. 
-It would be nicer if countries were identified by their [2-letter ISO codes](https://en.wikipedia.org/wiki/ISO_3166-1).
+It would be nicer if countries were identified by their [2- or 3-letter ISO codes](https://en.wikipedia.org/wiki/ISO_3166-1).
 3. The demarcation between the supply and consumptions sides of the ledger is unclear to new users.
-4. How data should be aggregated is unclear to new users. 
+4. How data should be aggregated is unclear to new users.
 5. The data are not in [tidy format](https://doi.org/10.18637/jss.v059.i10).
 
 The `IEATools` package has functions to address each of these issues.
@@ -116,7 +117,6 @@ The `IEATools` package has functions to address each of these issues.
 ### Fix column titles
 
 To unshout the column titles, use the `rename_iea_df_cols()` function.
-Column names changed by `rename_iea_df_cols()` are the defaults for arguments to other functions.
 
 ```{r}
 IEA_data %>% 
@@ -141,16 +141,26 @@ Thus, it is recommended that you use the default argument values,
 wherever possible.
 
 
-### Change to 2-letter ISO country abbreviations
+### Change to 3-letter ISO country abbreviations
 
 To reduce the length of character strings representing countries, 
 the `use_iso_countries()` function replaces country character strings
-with each country's 2-letter abbreviation.
+with each country's 3-letter abbreviation.
 
 ```{r}
 IEA_data %>% 
   rename_iea_df_cols() %>% 
   use_iso_countries() %>% 
+  glimpse()
+```
+
+If the 2-letter abbreviations are preferred, set the `iso_abbrev_type = 2`
+as shown below.
+
+```{r}
+IEA_data %>% 
+  rename_iea_df_cols() %>% 
+  use_iso_countries(iso_abbrev_type = 2) %>% 
   glimpse()
 ```
 
@@ -178,13 +188,19 @@ IEA_data %>%
 
 ### Augment with ledger side and aggregation point information
 
-In the IEA's extended energy balance data can be confusing for first-time users to understand.
-In particular, the demarcation between the supply and consumption sides of the ledger
-is unclear.
-And how data should be aggregated is also unclear.
+The IEA's extended energy balance data can be confusing for first-time users to understand.
+In particular, both 
+
+(a) the demarcation between the supply and consumption sides of the ledger and
+(b) how data should be aggregated
+
+are unclear.
+
 To clarify these issues and make later aggregation calculations possible,
 call the `augment_iea_data()` function.
-`augment_iea_df()` has many default arguments that work fine for the as-delivered data.
+`augment_iea_df()` has many default arguments that work fine 
+for as-delivered IEA extended energy balance data 
+in kilotons of oil equivalent units.
 `augment_iea_df()` adds new columns 
 `Ledger.side`, `Flow.aggregation.point`, `Energy.type`, and `Unit`.
 
@@ -198,10 +214,12 @@ IEA_data %>%
 
 ### Convert to a tidy data frame
 
-The [tidy format](https://doi.org/10.18637/jss.v059.i10) for data 
-is a data frame where each datum is located on its own row.
-As delivered, the IEA's data are not tidy: years are spread out as columns rather than 
-being a column to themselves so that each datum occupies one row.
+The [tidy format](https://doi.org/10.18637/jss.v059.i10) 
+is a data frame where each datum is located on its own row
+and columns provide metadata for each datum.
+As delivered, the IEA's data are not tidy: 
+years are spread to the right 
+rather than being a single column.
 The `tidy_iea_df()` function converts to a tidy format.
 By default, `tidy_iea_df()` removes zeroes from the data frame,
 thereby reducing memory footprint.
@@ -227,11 +245,11 @@ loads the sample data bundled with the package and
 converts it to a tidy IEA data frame, 
 assuming default arguments for all functions. 
 But you can supply the path to any IEA data file
-as an argument to `load_tidy_iea_df()`.
+in the `file_path` argument to `load_tidy_iea_df()`.
 
 ```{r}
-simple <- load_tidy_iea_df()
-complicated <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+Simple <- load_tidy_iea_df()
+Complicated <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
   system.file(package = "IEATools") %>% 
   iea_df() %>%
   rename_iea_df_cols() %>% 
@@ -239,7 +257,7 @@ complicated <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.
   use_iso_countries() %>% 
   augment_iea_df() %>% 
   tidy_iea_df()
-all(simple == complicated)
+all(Simple == Complicated)
 ```
 
 At this point, the integrity of the IEA data can be checked.
@@ -250,7 +268,7 @@ At this point, the integrity of the IEA data can be checked.
 The IEA extended energy balance data are usually close to balanced, but not quite.
 To check the integrity of the energy balances,
 use the `calc_tidy_iea_df_balances()` function.
-`calc_tidy_iea_df_balances()` adds several new columns to the IEA data frame,
+`calc_tidy_iea_df_balances()` adds several new columns to the tidy IEA data frame,
 including:
 
 * `supply_sum` (the sum of all flows on the supply side of the ledger),
@@ -269,30 +287,34 @@ Balances %>%
   tidy_iea_df_balanced()
 ```
 
-Be sure to group the IEA data by appropriate variables
-before calling `calc_tidy_iea_df_balances()`. 
+Data are grouped internal to `calc_tidy_iea_df_balances()`
+using the `grouping_vars` argument whose default value is
+`c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")`.
 Grouping should be done on the `Product` column
 if per-product balances are desired.
-Typically, grouping is also done on 
-`Country`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
 Grouping should _not_ be done on the `Flow` column or the `Ledger.side` column.
 
 The following code demonstrates the difference between
-country-level balance calculations and product-level balance calculations.
+country-level energy balance calculations and product-level balance calculations.
 
 ```{r}
 # Product-level balances within each country are calculated by default
 Tidy_IEA_df %>% 
   calc_tidy_iea_df_balances() %>% 
   glimpse()
-# Country-level balances can be calculated by setting the `grouping_vars` argument
+# Country-level balances can be calculated by setting the grouping_vars argument,
+# without "Product".
 Tidy_IEA_df %>% 
   calc_tidy_iea_df_balances(grouping_vars = c("Method", "Last.stage", "Country",
                                               "Year", "Energy.type", "Unit")) %>% 
   glimpse()
 ```
 
-IEA data can be adjusted to perfect balance with the `fix_tidy_iea_df_balances()` function.
+Notice that the country-level IEA data are not quite energy balanced.
+To fix the enery balance, use the `fix_tidy_iea_df_balances()` function.
+`fix_tidy_iea_df_balances()` adjusts the `Statistical differences` flow
+to achieve perfect energy balance.
+By default, .
 
 ```{r}
 # Fix product-level balances within each country
@@ -300,7 +322,7 @@ Tidy_IEA_df %>%
   fix_tidy_iea_df_balances() %>% 
   calc_tidy_iea_df_balances() %>% 
   glimpse()
-# Country level is also balanced
+# Country level data are also balanced
 Tidy_IEA_df %>% 
   fix_tidy_iea_df_balances() %>% 
   calc_tidy_iea_df_balances(grouping_vars = c("Method", "Last.stage", "Country",
@@ -311,10 +333,11 @@ Tidy_IEA_df %>%
 
 # Conclusion
 
-At this point, the data have been imported to `R` and
-are ready to be used for analyses. 
-The next step could be to prepare for analysis with the
+At this point, IEA extended energy balance 
+data have been imported to `R` and
+are ready to be used. 
+The next step could be to prepare for analysis within the
 physical supply-use table (PSUT) framework.
-See (http://prep_psut.html).
+See http://prep_psut.html for details.
 
 
