@@ -97,7 +97,7 @@ In the example above,
 not the generic `Production` industry. 
 The `specify_primary_production()` function accomplishes this task.
 
-## `specify_primary_production()`
+## Identify primary production (`specify_primary_production()`)
 
 By default, the `specify_primary_produciton()` function
 performs the following actions:
@@ -151,7 +151,7 @@ Specific_primary_production %>%
 ```
 
 
-## `specify_production_to_resources()`
+## Convert `Production` to `Resources` (`specify_production_to_resources()`)
 
 The IEA extended energy balances give resource extraction in rows where the `Flow` is "`Production`".
 `specify_production_to_resources()` changes the "`Production`" string 
@@ -172,7 +172,7 @@ load_tidy_iea_df() %>%
 ```
 
 
-## `specify_interface_industries()`
+## Be more specific about interface industries (`specify_interface_industries()`)
 
 An interface industry is one that moves energy carriers into or out of a country.
 When `Flow` is any of the interface industries, we need to be more specific.
@@ -197,7 +197,7 @@ load_tidy_iea_df() %>%
 ```
 
 
-## `specify_tp_eiou()`
+## Be more specific about Transformation process Energy industry own use (`specify_tp_eiou()`)
 
 The extended energy balance data from the IEA includes 
 "Energy industry own use" (EIOU) for many transformation processes.
@@ -227,7 +227,7 @@ load_tidy_iea_df() %>%
 ```
 
 
-## `tp_sinks_sources()`
+## Identify Transformation process sinks and sources (`tp_sinks_sources()`)
 
 In the IEA extended energy balance data, 
 transformation processes (tp) ought to both consume and produce energy.
@@ -303,7 +303,7 @@ data.frame(Flow = c("Automobiles", "Automobiles", "Furnaces"),
 ```
 
 
-## `tp_sinks_to_nonenergy()` 
+## Convert Transformation process sinks to Non-energy flows (`tp_sinks_to_nonenergy()` )
 
 This function reclassifies energy flowing into transformation process sinks
 as `non_energy_flow`, by default "Non-energy use in industry/transformation/energy".
@@ -345,7 +345,7 @@ DF %>%
 ```
 
 
-## `specify_all()`
+## Put it all together (`specify_all()`)
 
 `specify_all()` is a convenience function that 
 bundles several others:
@@ -374,4 +374,4 @@ all(Simple == Complicated)
 
 This vignette demonstrated how to specify details of primary and transformation process flows.
 The next step could be to prepare the IEA data for use within the PSUT framework.
-For details, see the [Prep PSUT](http://prep_psut.html) vignette.
+For details, see the [Prep PSUT](prep_psut.html) vignette.

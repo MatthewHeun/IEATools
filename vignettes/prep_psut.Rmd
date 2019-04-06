@@ -16,48 +16,143 @@ knitr::opts_chunk$set(
 )
 library(dplyr)
 library(IEATools)
+library(tidyr)
 ```
 
 ## Introduction
 
 After loading IEA data and ensuring that the data are balanced 
-(see (http://IEATools.html)),
-the analyst can prepare for further work.
-One option might be preparation 
-for physical supply-use table (PSUT) analysis.
+(see the [vignette about loading data](http://IEATools.html)) and
+specifying many of the flows
+(see the [vignette about specifying flows](http://specify.html)),
+the analyst can prepare for physical supply-use table (PSUT) analysis
+of an energy conversion chain.
 This vignette shows how to use the functions in the `IEATools` package
 for that purpose.
 
 
-## Extract matrices for PSUT analysis
+## Adding PSUT matrix names (`add_psut_matnames()`)
 
-### Unit summation matrices (`S_units`)
-
-Unit summation matrices (`S_units`) can be extracted from 
-a tidy data frame with the `extract_S_units_from_tidy()` function.
+The first step to converting the IEA extended energy balance data into PSUT matrices
+is identifying the matrix in which each datum belongs.
+The `add_psut_matnames()` function performs this task.
+It adds a column named "matname" (by default but changeable by the user)
+that contains one of `R`, `U`, `V`, or `Y` to identify the 
+Resources, Use, Make, or Final demand matrix.
 
 ```{r}
-library(dplyr)
-library(IEATools)
-Tidy_IEA_df <- load_tidy_iea_df()
-S_units_mats <- Tidy_IEA_df %>% 
-  extract_S_units_from_tidy()
-glimpse(S_units_mats)
-S_units_mats$S_units[[1]]
+load_tidy_iea_df() %>% 
+  add_psut_matnames() %>%
+  glimpse()
 ```
 
 
-### Add `matnames` column
+## Add matrix metadata (`add_row_col_meta()`)
+
+The next step is to add information to identify the rows and columns 
+for each datum. 
+The `add_row_col_meta()` function performs this task
+by adding `rowname`, `colname`, `rowtype`, and `coltype` 
+columns which identify the names and types of rows and columns in the PSUT matrices.
+`add_row_col_meta()` should be called after 
+calling `add_psut_matnames()`, 
+because it relies on the the `matname` column to 
+determine names and types.
+
+```{r}
+load_tidy_iea_df() %>% 
+  add_psut_matnames() %>%
+  add_row_col_meta() %>% 
+  glimpse()
+```
 
 
+## Collapse to matrices (`collapse_to_tidy_psut()`)
 
-## Adjust primary production
+After identifying row and column names and types, 
+the next step is to collapse the data into PSUT matrices.
+The `collapse_to_tidy_psut()` function performs this task
+using the `matsindf::collapse_to_matrices()` function internally.
+The `matval` column is added to the data frame and
+contains a matrix for each set of grouping variables
+which are specified in the `grouping_vars` argument.
+
+```{r}
+Tidy_PSUT <- 
+load_tidy_iea_df() %>% 
+  specify_all() %>% 
+  add_psut_matnames() %>% 
+  add_row_col_meta() %>% 
+  collapse_to_tidy_psut()
+Tidy_PSUT %>% 
+  glimpse()
+class(Tidy_PSUT$matval[[1]])
+Tidy_PSUT$matval[[1]]
+```
 
 
+## Generate `S_units` matrices (`extract_S_units_from_tidy()`)
+
+A matrix of Products and Units can be obtained from a tidy IEA data frame
+with the `extract_S_units_from_tidy()` function.
+
+```{r}
+S_units_df <- load_tidy_iea_df() %>% 
+  extract_S_units_from_tidy()
+S_units_df %>% 
+  glimpse()
+S_units_df$S_units[[1]]
+```
 
 
-## Specify source of product flows
+## Putting it all together (`prep_psut()`)
+
+`prep_psut()` is a convenience function.
+It converts a tidy IEA data frame
+that has gone through `specify_all()`
+into a PSUT data frame
+by collapsing the IEA data into PSUT matrices (R, U, V, and Y).
+
+This function bundles several others:
+1. `add_psut_matnames()`
+2. `add_row_col_meta()`
+3. `collapse_to_tidy_psut()`
+
+Furthermore, it extracts `S_units` matrices using `extract_S_units_from_tidy()`
+and adds those matrices to the data frame.
+
+```{r}
+Simple <- load_tidy_iea_df() %>% 
+  specify_all() %>% 
+  prep_psut() %>% 
+  rename(matval_simple = matval)
+S_units <- load_tidy_iea_df() %>% 
+  extract_S_units_from_tidy()
+Complicated <- load_tidy_iea_df() %>% 
+  specify_all() %>% 
+  add_psut_matnames() %>% 
+  add_row_col_meta() %>% 
+  collapse_to_tidy_psut() %>% 
+  spread(key = matname, value = matval) %>% 
+  full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
+                            "Country", "Year")) %>% 
+  gather(key = matname, value = matval, R, U_EIOU, U_excl_EIOU, 
+         V, Y, S_units) %>% 
+  rename(matval_complicated = matval)
+# Simple and Complicated are same.
+full_join(Simple, Complicated, by = c("Method", "Energy.type", 
+                                      "Last.stage", "Country", 
+                                      "Year", "matname")) %>% 
+  dplyr::mutate(
+    same = matsbyname::equal_byname(matval_simple, matval_complicated)
+  ) %>% 
+  magrittr::extract2("same") %>% 
+  as.logical() %>% 
+  all()
+Simple %>% 
+  glimpse()
+```
 
 
+## Conclusion
 
-## `prep_psut()` function

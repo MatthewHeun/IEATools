@@ -56,7 +56,7 @@ readChar(IEA_path, nchars = 256)
 ```
 
 
-### Convert the IEA data into an R data frame
+### Convert the IEA data into an R data frame (`iea_df()`)
 
 Extended energy balance data can be pulled directly into an `R` data frame 
 by the `iea_df()` function. 
@@ -114,7 +114,7 @@ It would be nicer if countries were identified by their [2- or 3-letter ISO code
 The `IEATools` package has functions to address each of these issues.
 
 
-### Fix column titles
+### Fix column titles (`rename_iea_df_cols()`)
 
 To unshout the column titles, use the `rename_iea_df_cols()` function.
 
@@ -141,7 +141,7 @@ Thus, it is recommended that you use the default argument values,
 wherever possible.
 
 
-### Change to 3-letter ISO country abbreviations
+### Change to 3-letter ISO country abbreviations (`use_iso_countries()`)
 
 To reduce the length of character strings representing countries, 
 the `use_iso_countries()` function replaces country character strings
@@ -165,7 +165,7 @@ IEA_data %>%
 ```
 
 
-### Remove aggregation and memo data
+### Remove aggregation and memo data (`remove_agg_memo_flows()`)
 
 The IEA's extended energy balances contain many memos and aggregations in the data itself.
 For the purposes of manipulations and calculations, 
@@ -186,7 +186,7 @@ IEA_data %>%
 ```
 
 
-### Augment with ledger side and aggregation point information
+### Augment with ledger side and aggregation point information (`augment_iea_df()`)
 
 The IEA's extended energy balance data can be confusing for first-time users to understand.
 In particular, both 
@@ -212,7 +212,7 @@ IEA_data %>%
 ```
 
 
-### Convert to a tidy data frame
+### Convert to a tidy data frame (`tidy_iea_df()`)
 
 The [tidy format](https://doi.org/10.18637/jss.v059.i10) 
 is a data frame where each datum is located on its own row
@@ -337,6 +337,6 @@ At this point, IEA extended energy balance
 data have been imported to `R` and
 are ready to be used. 
 The next step could be to specify some of the IEA energy flows.
-See http://specify.html for details.
+See the [specify](specify.html) vignette for details.
 
 
