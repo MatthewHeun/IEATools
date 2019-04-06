@@ -1,10 +1,10 @@
 ---
-title: "Adjust EIOU Industries and Flows"
+title: "Specify EIOU Industries and Flows"
 author: "Matthew Kuperus Heun"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Specify EIOU Industries and Flows}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

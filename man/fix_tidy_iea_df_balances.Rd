@@ -14,7 +14,7 @@ fix_tidy_iea_df_balances(.tidy_iea_df, ledger_side = "Ledger.side",
   "Country", "Year", "Energy.type", "Unit", "Product"))
 }
 \arguments{
-\item{.tidy_iea_df}{a tidy data frame containing IEA data, typically the output}
+\item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balanc data}
 
 \item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "\code{Ledger.side}".}
 
@@ -55,15 +55,17 @@ on a per-product basis.
 }
 \details{
 This function assumes that \code{.tidy_iea_df} is grouped appropriately.
-So be sure to group \code{.tidy_iea_df} by appropriate variables
+So be sure to set the \code{grouping_vars} argument
 before calling this function.
-Grouping should \emph{definitely} be done on the \code{Product} column.
+The default \code{grouping_vars} fixes energy balances on a per-year, per-product basis.
+The \code{Product} column should definitely be included in \code{grouping_vars},
+but any other grouping level is fine.
 Typically, grouping is also done on
 \code{Country}, \code{Year}, \code{Energy.type}, \code{Last.stage}, etc. columns.
-Grouping should \emph{not} be done on the \code{flow} column or the \code{ledger_side} column.
+Grouping should \emph{not} be done on the \code{flow} or the \code{ledger_side} columns.
 
 Internally, this function calls \code{\link[=calc_tidy_iea_df_balances]{calc_tidy_iea_df_balances()}}
-and adjusts \code{Statistical differences} by any imbalances that are present.
+and adjusts \code{Statistical differences} to compensate for any imbalances that are present.
 }
 \examples{
 library(dplyr)
