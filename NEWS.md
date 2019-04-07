@@ -1,4 +1,4 @@
-# IEAData 0.1.6 (2019-04-06)
+# IEATools 0.1.6 (2019-04-06)
 
 * Updated all three vignettes to reflect the new functions and demonstrate their use.
 * New function `augment_iea_df()` now removes ` (energy)`, ` (transf.)`, and ` (transformation)` suffixes 
