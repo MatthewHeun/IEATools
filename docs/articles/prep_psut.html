@@ -56,10 +56,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/adjustforeiou.html">Adjust EIOU Industries and Flows</a>
+      <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
     <li>
-      <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
+      <a href="../articles/specify.html">Specify EIOU Industries and Flows</a>
     </li>
   </ul>
 </li>
@@ -82,7 +82,7 @@
       <h1>Prepare for PSUT analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2019-03-24</h4>
+            <h4 class="date">2019-04-06</h4>
       
       
       <div class="hidden name"><code>prep_psut.Rmd</code></div>
@@ -94,65 +94,214 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>After loading IEA data and ensuring that the data are balanced (see (<a href="http://IEATools.html" class="uri">http://IEATools.html</a>)), the analyst can prepare for further work. One option might be preparation for physical supply-use table (PSUT) analysis. This vignette shows how to use the functions in the <code>IEATools</code> package for that purpose.</p>
+<p>After loading IEA data and ensuring that the data are balanced (see the <a href="http://IEATools.html">vignette about loading data</a>) and specifying many of the flows (see the <a href="http://specify.html">vignette about specifying flows</a>), the analyst can prepare for physical supply-use table (PSUT) analysis of an energy conversion chain. This vignette shows how to use the functions in the <code>IEATools</code> package for that purpose.</p>
 </div>
-<div id="extract-matrices-for-psut-analysis" class="section level2">
+<div id="adding-psut-matrix-names-add_psut_matnames" class="section level2">
 <h2 class="hasAnchor">
-<a href="#extract-matrices-for-psut-analysis" class="anchor"></a>Extract matrices for PSUT analysis</h2>
-<div id="unit-summation-matrices-s_units" class="section level3">
-<h3 class="hasAnchor">
-<a href="#unit-summation-matrices-s_units" class="anchor"></a>Unit summation matrices (<code>S_units</code>)</h3>
-<p>Unit summation matrices (<code>S_units</code>) can be extracted from a tidy data frame with the <code><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy()</a></code> function.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(IEATools)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">Tidy_IEA_df &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>()</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">S_units_mats &lt;-<span class="st"> </span>Tidy_IEA_df <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(Country, Year, Energy.type) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy</a></span>()</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(S_units_mats)</a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="co">#&gt; Observations: 4</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co">#&gt; Variables: 4</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">#&gt; $ Country     &lt;chr&gt; "GH", "GH", "ZA", "ZA"</span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="co">#&gt; $ Year        &lt;chr&gt; "1971", "2000", "1971", "2000"</span></a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E"</span></a>
-<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[21 x 1…</span></a>
-<a class="sourceLine" id="cb1-14" data-line-number="14">S_units_mats<span class="op">$</span>S_units[[<span class="dv">1</span>]]</a>
-<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co">#&gt;                                       ktoe</span></a>
-<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co">#&gt; Aviation gasoline                        1</span></a>
-<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="co">#&gt; Charcoal                                 1</span></a>
-<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="co">#&gt; Crude oil                                1</span></a>
-<a class="sourceLine" id="cb1-19" data-line-number="19"><span class="co">#&gt; Electricity                              1</span></a>
-<a class="sourceLine" id="cb1-20" data-line-number="20"><span class="co">#&gt; Fuel oil                                 1</span></a>
-<a class="sourceLine" id="cb1-21" data-line-number="21"><span class="co">#&gt; Gas/diesel oil excl. biofuels            1</span></a>
-<a class="sourceLine" id="cb1-22" data-line-number="22"><span class="co">#&gt; Hydro                                    1</span></a>
-<a class="sourceLine" id="cb1-23" data-line-number="23"><span class="co">#&gt; Kerosene type jet fuel excl. biofuels    1</span></a>
-<a class="sourceLine" id="cb1-24" data-line-number="24"><span class="co">#&gt; Liquefied petroleum gases (LPG)          1</span></a>
-<a class="sourceLine" id="cb1-25" data-line-number="25"><span class="co">#&gt; Lubricants                               1</span></a>
-<a class="sourceLine" id="cb1-26" data-line-number="26"><span class="co">#&gt; Motor gasoline excl. biofuels            1</span></a>
-<a class="sourceLine" id="cb1-27" data-line-number="27"><span class="co">#&gt; Other kerosene                           1</span></a>
-<a class="sourceLine" id="cb1-28" data-line-number="28"><span class="co">#&gt; Primary solid biofuels                   1</span></a>
-<a class="sourceLine" id="cb1-29" data-line-number="29"><span class="co">#&gt; Refinery gas                             1</span></a>
-<a class="sourceLine" id="cb1-30" data-line-number="30"><span class="co">#&gt; attr(,"rowtype")</span></a>
-<a class="sourceLine" id="cb1-31" data-line-number="31"><span class="co">#&gt; [1] "Product"</span></a>
-<a class="sourceLine" id="cb1-32" data-line-number="32"><span class="co">#&gt; attr(,"coltype")</span></a>
-<a class="sourceLine" id="cb1-33" data-line-number="33"><span class="co">#&gt; [1] "Unit"</span></a></code></pre></div>
+<a href="#adding-psut-matrix-names-add_psut_matnames" class="anchor"></a>Adding PSUT matrix names (<code><a href="../reference/add_psut_matnames.html">add_psut_matnames()</a></code>)</h2>
+<p>The first step to converting the IEA extended energy balance data into PSUT matrices is identifying the matrix in which each datum belongs. The <code><a href="../reference/add_psut_matnames.html">add_psut_matnames()</a></code> function performs this task. It adds a column named “matname” (by default but changeable by the user) that contains one of <code>R</code>, <code>U</code>, <code>V</code>, or <code>Y</code> to identify the Resources, Use, Make, or Final demand matrix.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/add_psut_matnames.html">add_psut_matnames</a></span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">glimpse</span>()
+<span class="co">#&gt; Observations: 399</span>
+<span class="co">#&gt; Variables: 12</span>
+<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM",…</span>
+<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Fina…</span>
+<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA",…</span>
+<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971,…</span>
+<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "…</span>
+<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total pri…</span>
+<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "…</span>
+<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "…</span>
+<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Production", "Production", "Imports", "I…</span>
+<span class="co">#&gt; $ Product                &lt;chr&gt; "Primary solid biofuels", "Hydro", "Crude…</span>
+<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 2088, 250, 916, 1, 21, 1, 18, -4, -4, -17…</span>
+<span class="co">#&gt; $ matname                &lt;chr&gt; "R", "R", "V", "V", "V", "V", "V", "Y", "…</span></code></pre></div>
 </div>
-<div id="add-matnames-column" class="section level3">
-<h3 class="hasAnchor">
-<a href="#add-matnames-column" class="anchor"></a>Add <code>matnames</code> column</h3>
-</div>
-</div>
-<div id="adjust-primary-production" class="section level2">
+<div id="add-matrix-metadata-add_row_col_meta" class="section level2">
 <h2 class="hasAnchor">
-<a href="#adjust-primary-production" class="anchor"></a>Adjust primary production</h2>
+<a href="#add-matrix-metadata-add_row_col_meta" class="anchor"></a>Add matrix metadata (<code><a href="../reference/add_row_col_meta.html">add_row_col_meta()</a></code>)</h2>
+<p>The next step is to add information to identify the rows and columns for each datum. The <code><a href="../reference/add_row_col_meta.html">add_row_col_meta()</a></code> function performs this task by adding <code>rowname</code>, <code>colname</code>, <code>rowtype</code>, and <code>coltype</code> columns which identify the names and types of rows and columns in the PSUT matrices. <code><a href="../reference/add_row_col_meta.html">add_row_col_meta()</a></code> should be called after calling <code><a href="../reference/add_psut_matnames.html">add_psut_matnames()</a></code>, because it relies on the the <code>matname</code> column to determine names and types.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/add_psut_matnames.html">add_psut_matnames</a></span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="../reference/add_row_col_meta.html">add_row_col_meta</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">glimpse</span>()
+<span class="co">#&gt; Observations: 399</span>
+<span class="co">#&gt; Variables: 16</span>
+<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM",…</span>
+<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Fina…</span>
+<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA",…</span>
+<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971,…</span>
+<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "…</span>
+<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total pri…</span>
+<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "…</span>
+<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "…</span>
+<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Production", "Production", "Imports", "I…</span>
+<span class="co">#&gt; $ Product                &lt;chr&gt; "Primary solid biofuels", "Hydro", "Crude…</span>
+<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 2088, 250, 916, 1, 21, 1, 18, -4, -4, -17…</span>
+<span class="co">#&gt; $ matname                &lt;chr&gt; "R", "R", "V", "V", "V", "V", "V", "Y", "…</span>
+<span class="co">#&gt; $ rowname                &lt;chr&gt; "Production", "Production", "Imports", "I…</span>
+<span class="co">#&gt; $ colname                &lt;chr&gt; "Primary solid biofuels", "Hydro", "Crude…</span>
+<span class="co">#&gt; $ rowtype                &lt;chr&gt; "Industry", "Industry", "Industry", "Indu…</span>
+<span class="co">#&gt; $ coltype                &lt;chr&gt; "Product", "Product", "Product", "Product…</span></code></pre></div>
 </div>
-<div id="specify-source-of-product-flows" class="section level2">
+<div id="collapse-to-matrices-collapse_to_tidy_psut" class="section level2">
 <h2 class="hasAnchor">
-<a href="#specify-source-of-product-flows" class="anchor"></a>Specify source of product flows</h2>
+<a href="#collapse-to-matrices-collapse_to_tidy_psut" class="anchor"></a>Collapse to matrices (<code><a href="../reference/collapse_to_tidy_psut.html">collapse_to_tidy_psut()</a></code>)</h2>
+<p>After identifying row and column names and types, the next step is to collapse the data into PSUT matrices. The <code><a href="../reference/collapse_to_tidy_psut.html">collapse_to_tidy_psut()</a></code> function performs this task using the <code><a href="https://www.rdocumentation.org/packages/matsindf/topics/collapse_to_matrices">matsindf::collapse_to_matrices()</a></code> function internally. The <code>matval</code> column is added to the data frame and contains a matrix for each set of grouping variables which are specified in the <code>grouping_vars</code> argument. <code><a href="../reference/collapse_to_tidy_psut.html">collapse_to_tidy_psut()</a></code> ensures that all entries in each matrix are non-negative.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Tidy_PSUT &lt;-<span class="st"> </span>
+<span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/add_psut_matnames.html">add_psut_matnames</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/add_row_col_meta.html">add_row_col_meta</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/collapse_to_tidy_psut.html">collapse_to_tidy_psut</a></span>()
+Tidy_PSUT <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">glimpse</span>()
+<span class="co">#&gt; Observations: 20</span>
+<span class="co">#&gt; Variables: 7</span>
+<span class="co">#&gt; $ Method      &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PC…</span>
+<span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
+<span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "Final"…</span>
+<span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GH…</span>
+<span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 2000, 2000, 2000, 2000…</span>
+<span class="co">#&gt; $ matname     &lt;chr&gt; "R", "U_EIOU", "U_excl_EIOU", "V", "Y", "R", "U_EIOU…</span>
+<span class="co">#&gt; $ matval      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[4 x 3]&gt;,…</span>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/class">class</a></span>(Tidy_PSUT<span class="op">$</span>matval[[<span class="dv">1</span>]])
+<span class="co">#&gt; [1] "matrix"</span>
+Tidy_PSUT<span class="op">$</span>matval[[<span class="dv">1</span>]]
+<span class="co">#&gt;                                    Hydro Primary solid biofuels</span>
+<span class="co">#&gt; Resources (Hydro)                    250                      0</span>
+<span class="co">#&gt; Resources (Primary solid biofuels)     0                   2088</span>
+<span class="co">#&gt; attr(,"rowtype")</span>
+<span class="co">#&gt; [1] "Industry"</span>
+<span class="co">#&gt; attr(,"coltype")</span>
+<span class="co">#&gt; [1] "Product"</span></code></pre></div>
 </div>
-<div id="prep_psut-function" class="section level2">
+<div id="generate-s_units-matrices-extract_s_units_from_tidy" class="section level2">
 <h2 class="hasAnchor">
-<a href="#prep_psut-function" class="anchor"></a><code>prep_psut()</code> function</h2>
+<a href="#generate-s_units-matrices-extract_s_units_from_tidy" class="anchor"></a>Generate <code>S_units</code> matrices (<code><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy()</a></code>)</h2>
+<p>A matrix of Products and Units can be obtained from a tidy IEA data frame with the <code><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy()</a></code> function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">S_units_df &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy</a></span>()
+S_units_df <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">glimpse</span>()
+<span class="co">#&gt; Observations: 4</span>
+<span class="co">#&gt; Variables: 6</span>
+<span class="co">#&gt; $ Method      &lt;chr&gt; "PCM", "PCM", "PCM", "PCM"</span>
+<span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final"</span>
+<span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF"</span>
+<span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
+<span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E"</span>
+<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[21 x 1…</span>
+S_units_df<span class="op">$</span>S_units[[<span class="dv">1</span>]]
+<span class="co">#&gt;                                       ktoe</span>
+<span class="co">#&gt; Aviation gasoline                        1</span>
+<span class="co">#&gt; Charcoal                                 1</span>
+<span class="co">#&gt; Crude oil                                1</span>
+<span class="co">#&gt; Electricity                              1</span>
+<span class="co">#&gt; Fuel oil                                 1</span>
+<span class="co">#&gt; Gas/diesel oil excl. biofuels            1</span>
+<span class="co">#&gt; Hydro                                    1</span>
+<span class="co">#&gt; Kerosene type jet fuel excl. biofuels    1</span>
+<span class="co">#&gt; Liquefied petroleum gases (LPG)          1</span>
+<span class="co">#&gt; Lubricants                               1</span>
+<span class="co">#&gt; Motor gasoline excl. biofuels            1</span>
+<span class="co">#&gt; Other kerosene                           1</span>
+<span class="co">#&gt; Primary solid biofuels                   1</span>
+<span class="co">#&gt; Refinery gas                             1</span>
+<span class="co">#&gt; attr(,"rowtype")</span>
+<span class="co">#&gt; [1] "Product"</span>
+<span class="co">#&gt; attr(,"coltype")</span>
+<span class="co">#&gt; [1] "Unit"</span></code></pre></div>
+</div>
+<div id="putting-it-all-together-prep_psut" class="section level2">
+<h2 class="hasAnchor">
+<a href="#putting-it-all-together-prep_psut" class="anchor"></a>Putting it all together (<code><a href="../reference/prep_psut.html">prep_psut()</a></code>)</h2>
+<p><code><a href="../reference/prep_psut.html">prep_psut()</a></code> is a convenience function. It converts a tidy IEA data frame that has gone through <code><a href="../reference/specify_all.html">specify_all()</a></code> into a PSUT data frame by collapsing the IEA data into PSUT matrices (R, U, V, and Y).</p>
+<p>This function bundles several others: 1. <code><a href="../reference/add_psut_matnames.html">add_psut_matnames()</a></code> 2. <code><a href="../reference/add_row_col_meta.html">add_row_col_meta()</a></code> 3. <code><a href="../reference/collapse_to_tidy_psut.html">collapse_to_tidy_psut()</a></code></p>
+<p>Furthermore, it extracts <code>S_units</code> matrices using <code><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy()</a></code> and adds those matrices to the data frame.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Simple &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/prep_psut.html">prep_psut</a></span>()
+S_units &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy</a></span>()
+Complicated &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/add_psut_matnames.html">add_psut_matnames</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/add_row_col_meta.html">add_row_col_meta</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/collapse_to_tidy_psut.html">collapse_to_tidy_psut</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> matname, <span class="dt">value =</span> matval) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">full_join</span>(S_units, <span class="dt">by =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Method"</span>, <span class="st">"Energy.type"</span>, <span class="st">"Last.stage"</span>, 
+                            <span class="st">"Country"</span>, <span class="st">"Year"</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> matname, <span class="dt">value =</span> matval, R, U_EIOU, U_excl_EIOU, 
+         V, Y, S_units)
+<span class="co"># Simple and Complicated are same.</span>
+<span class="kw">full_join</span>(Simple <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">matval_simple =</span> matval), 
+          Complicated <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">matval_complicated =</span> matval), 
+          <span class="dt">by =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Method"</span>, <span class="st">"Energy.type"</span>, <span class="st">"Last.stage"</span>, <span class="st">"Country"</span>, <span class="st">"Year"</span>, <span class="st">"matname"</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
+    <span class="dt">same =</span> matsbyname<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/matsbyname/topics/equal_byname">equal_byname</a></span>(matval_simple, matval_complicated)
+  ) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>magrittr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/magrittr/topics/aliases">extract2</a></span>(<span class="st">"same"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/logical">as.logical</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/all">all</a></span>()
+<span class="co">#&gt; [1] TRUE</span>
+Simple <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">glimpse</span>()
+<span class="co">#&gt; Observations: 24</span>
+<span class="co">#&gt; Variables: 7</span>
+<span class="co">#&gt; $ Method      &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PC…</span>
+<span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
+<span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "Final"…</span>
+<span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF", "GHA", "GHA", "ZAF", "ZA…</span>
+<span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000, 1971, 2000, 1971, 2000, 1971…</span>
+<span class="co">#&gt; $ matname     &lt;chr&gt; "R", "R", "R", "R", "U_EIOU", "U_EIOU", "U_EIOU", "U…</span>
+<span class="co">#&gt; $ matval      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[3 x 3]&gt;,…</span>
+<span class="co"># U_EIOU for Ghana in 1971</span>
+Simple<span class="op">$</span>matval[[<span class="dv">5</span>]]
+<span class="co">#&gt;              Main activity producer electricity plants Oil refineries</span>
+<span class="co">#&gt; Electricity                                          2              0</span>
+<span class="co">#&gt; Refinery gas                                         0             20</span>
+<span class="co">#&gt; attr(,"rowtype")</span>
+<span class="co">#&gt; [1] "Product"</span>
+<span class="co">#&gt; attr(,"coltype")</span>
+<span class="co">#&gt; [1] "Industry"</span></code></pre></div>
+</div>
+<div id="conclusion" class="section level2">
+<h2 class="hasAnchor">
+<a href="#conclusion" class="anchor"></a>Conclusion</h2>
+<p>Taken together, the functions in this package make it possible to prepare IEA extended energy balance data for use with PSUT analysis techniques. A sequence of three function calls are all that is required.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Tidy_PSUT_mats &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="../reference/prep_psut.html">prep_psut</a></span>()
+Tidy_PSUT_mats <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">glimpse</span>()
+<span class="co">#&gt; Observations: 24</span>
+<span class="co">#&gt; Variables: 7</span>
+<span class="co">#&gt; $ Method      &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PC…</span>
+<span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
+<span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "Final"…</span>
+<span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF", "GHA", "GHA", "ZAF", "ZA…</span>
+<span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000, 1971, 2000, 1971, 2000, 1971…</span>
+<span class="co">#&gt; $ matname     &lt;chr&gt; "R", "R", "R", "R", "U_EIOU", "U_EIOU", "U_EIOU", "U…</span>
+<span class="co">#&gt; $ matval      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[3 x 3]&gt;,…</span></code></pre></div>
+<p>If calculations are to be performed, the matrices can be spread so that each matrix is in its own column.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Tidy_PSUT_mats <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> matname, <span class="dt">value =</span> matval) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">glimpse</span>()
+<span class="co">#&gt; Observations: 4</span>
+<span class="co">#&gt; Variables: 11</span>
+<span class="co">#&gt; $ Method      &lt;chr&gt; "PCM", "PCM", "PCM", "PCM"</span>
+<span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E"</span>
+<span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final"</span>
+<span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF"</span>
+<span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
+<span class="co">#&gt; $ R           &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[3 x 3]&gt;,…</span>
+<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[21 x 1…</span>
+<span class="co">#&gt; $ U_EIOU      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 3]&gt;,…</span>
+<span class="co">#&gt; $ U_excl_EIOU &lt;list&gt; [&lt;matrix[4 x 3]&gt;, &lt;matrix[3 x 3]&gt;, &lt;matrix[6 x 10]&gt;…</span>
+<span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[10 x 12]&gt;, &lt;matrix[14 x 14]&gt;, &lt;matrix[13 x…</span>
+<span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[12 x 21]&gt;, &lt;matrix[13 x 20]&gt;, &lt;matrix[18 x…</span></code></pre></div>
 </div>
   </div>
 
@@ -162,10 +311,12 @@
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#introduction">Introduction</a></li>
-      <li><a href="#extract-matrices-for-psut-analysis">Extract matrices for PSUT analysis</a></li>
-      <li><a href="#adjust-primary-production">Adjust primary production</a></li>
-      <li><a href="#specify-source-of-product-flows">Specify source of product flows</a></li>
-      <li><a href="#prep_psut-function"><code>prep_psut()</code> function</a></li>
+      <li><a href="#adding-psut-matrix-names-add_psut_matnames">Adding PSUT matrix names (<code><a href="--/reference/add_psut_matnames-html">add_psut_matnames()</a></code>)</a></li>
+      <li><a href="#add-matrix-metadata-add_row_col_meta">Add matrix metadata (<code><a href="--/reference/add_row_col_meta-html">add_row_col_meta()</a></code>)</a></li>
+      <li><a href="#collapse-to-matrices-collapse_to_tidy_psut">Collapse to matrices (<code><a href="--/reference/collapse_to_tidy_psut-html">collapse_to_tidy_psut()</a></code>)</a></li>
+      <li><a href="#generate-s_units-matrices-extract_s_units_from_tidy">Generate <code>S_units</code> matrices (<code><a href="--/reference/extract_S_units_from_tidy-html">extract_S_units_from_tidy()</a></code>)</a></li>
+      <li><a href="#putting-it-all-together-prep_psut">Putting it all together (<code><a href="--/reference/prep_psut-html">prep_psut()</a></code>)</a></li>
+      <li><a href="#conclusion">Conclusion</a></li>
       </ul>
 </div>
       </div>

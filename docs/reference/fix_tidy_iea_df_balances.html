@@ -94,10 +94,10 @@ on a per-product basis." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/adjustforeiou.html">Adjust EIOU Industries and Flows</a>
+      <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
     <li>
-      <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
+      <a href="../articles/specify.html">Specify EIOU Industries and Flows</a>
     </li>
   </ul>
 </li>
@@ -142,14 +142,15 @@ on a per-product basis.</p>
   <span class='kw'>tfc_compare</span> <span class='kw'>=</span> <span class='st'>"TFC compare"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
   <span class='kw'>statistical_differences</span> <span class='kw'>=</span> <span class='st'>"Statistical differences"</span>,
   <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>".err"</span>,
-  <span class='kw'>remove_zeroes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>remove_zeroes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>grouping_vars</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Method"</span>, <span class='st'>"Last.stage"</span>,
+  <span class='st'>"Country"</span>, <span class='st'>"Year"</span>, <span class='st'>"Energy.type"</span>, <span class='st'>"Unit"</span>, <span class='st'>"Product"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.tidy_iea_df</th>
-      <td><p>a tidy data frame containing IEA data, typically the output</p></td>
+      <td><p>a tidy data frame containing IEA extended energy balanc data</p></td>
     </tr>
     <tr>
       <th>ledger_side</th>
@@ -195,6 +196,11 @@ on a per-product basis.</p>
       <th>remove_zeroes</th>
       <td><p>a logical telling whether to remove <code>0</code>s after balancing.</p></td>
     </tr>
+    <tr>
+      <th>grouping_vars</th>
+      <td><p>a string vector of names of columns by which energy balance calculations should be performed.
+Default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")</a></code>.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -205,14 +211,16 @@ the data for each product are in perfect energy balance.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function assumes that <code>.tidy_iea_df</code> is grouped appropriately.
-So be sure to group <code>.tidy_iea_df</code> by appropriate variables
+So be sure to set the <code>grouping_vars</code> argument
 before calling this function.
-Grouping should <em>definitely</em> be done on the <code>Product</code> column.
+The default <code>grouping_vars</code> fixes energy balances on a per-year, per-product basis.
+The <code>Product</code> column should definitely be included in <code>grouping_vars</code>,
+but any other grouping level is fine.
 Typically, grouping is also done on
 <code>Country</code>, <code>Year</code>, <code>Energy.type</code>, <code>Last.stage</code>, etc. columns.
-Grouping should <em>not</em> be done on the <code>flow</code> column or the <code>ledger_side</code> column.</p>
+Grouping should <em>not</em> be done on the <code>flow</code> or the <code>ledger_side</code> columns.</p>
 <p>Internally, this function calls <code><a href='calc_tidy_iea_df_balances.html'>calc_tidy_iea_df_balances()</a></code>
-and adjusts <code>Statistical differences</code> by any imbalances that are present.</p>
+and adjusts <code>Statistical differences</code> to compensate for any imbalances that are present.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -220,11 +228,9 @@ and adjusts <code>Statistical differences</code> by any imbalances that are pres
 <span class='no'>unbalanced</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>()
 <span class='co'># This will not be balanced, because the IEA data are not in perfect balance</span>
 <span class='no'>unbalanced</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Country</span>, <span class='no'>Year</span>, <span class='no'>Energy.type</span>, <span class='no'>Unit</span>, <span class='no'>Product</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='calc_tidy_iea_df_balances.html'>calc_tidy_iea_df_balances</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='tidy_iea_df_balanced.html'>tidy_iea_df_balanced</a></span>()</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='co'># This will be balanced, becasue we fix the imbalances.</span>
 <span class='no'>unbalanced</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Country</span>, <span class='no'>Year</span>, <span class='no'>Energy.type</span>, <span class='no'>Unit</span>, <span class='no'>Product</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>fix_tidy_iea_df_balances</span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='calc_tidy_iea_df_balances.html'>calc_tidy_iea_df_balances</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='tidy_iea_df_balanced.html'>tidy_iea_df_balanced</a></span>()</div><div class='output co'>#&gt; [1] TRUE</div></pre>

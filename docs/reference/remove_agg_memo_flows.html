@@ -91,10 +91,10 @@ This function does so, using default identifying strings for aggregations and me
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/adjustforeiou.html">Adjust EIOU Industries and Flows</a>
+      <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
     <li>
-      <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
+      <a href="../articles/specify.html">Specify EIOU Industries and Flows</a>
     </li>
   </ul>
 </li>
@@ -131,11 +131,9 @@ This function does so, using default identifying strings for aggregations and me
     </div>
 
     <pre class="usage"><span class='fu'>remove_agg_memo_flows</span>(<span class='no'>.iea_df</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
-  <span class='kw'>agg_flows</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Total primary energy supply"</span>, <span class='st'>"Total final consumption"</span>,
-  <span class='st'>"Transformation processes"</span>, <span class='st'>"Energy industry own use"</span>, <span class='st'>"Industry"</span>,
-  <span class='st'>"Transport"</span>, <span class='st'>"Other"</span>, <span class='st'>"Non-energy use"</span>),
-  <span class='kw'>memo_flow_prefixes</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Memo: "</span>, <span class='st'>"Electricity output (GWh)"</span>,
-  <span class='st'>"Heat output"</span>), <span class='kw'>memo_product_prefixes</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Memo: "</span>, <span class='st'>"Total"</span>))</pre>
+  <span class='kw'>agg_flows</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://www.rdocumentation.org/packages/IEATools/topics/aggregation_flows'>aggregation_flows</a></span>,
+  <span class='kw'>memo_flow_prefixes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://www.rdocumentation.org/packages/IEATools/topics/memo_aggregation_flow_prefixes'>memo_aggregation_flow_prefixes</a></span>,
+  <span class='kw'>memo_product_prefixes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://www.rdocumentation.org/packages/IEATools/topics/memo_aggregation_product_prefixes'>memo_aggregation_product_prefixes</a></span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,8 +172,8 @@ This function does so, using default identifying strings for aggregations and me
 
     <p>Note that the IEA data somtimes includes a variable number of spaces
 before the "Memo: " string.
-This function ignores all leading spaces in the <code>Flow</code> and <code>Product</code> columns
-before searching for <code>Flow</code> and <code>Product</code> prefixes.</p>
+There are several places where trailing spaces are found, such as "Nuclear industry ".
+This function strips all leading and trailing spaces in the <code>Flow</code> and <code>Product</code> columns.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

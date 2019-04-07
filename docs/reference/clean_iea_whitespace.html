@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract a unit summation matrix from a tidy data frame — extract_S_units_from_tidy • IEATools</title>
+<title>Clean whitespace from Flow and Product strings — clean_iea_whitespace • IEATools</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,11 @@
 
 
 
-<meta property="og:title" content="Extract a unit summation matrix from a tidy data frame — extract_S_units_from_tidy" />
+<meta property="og:title" content="Clean whitespace from Flow and Product strings — clean_iea_whitespace" />
 
-<meta property="og:description" content="Unit summation matrices have products in rows and units in columns, with
-1s where a product is expressed in the unit and 0s otherwise." />
+<meta property="og:description" content="Occasionally, in the IEA extended energy balance data,
+extra whitespace characters are found at the beginning or end of Flow and Product strings.
+This function removes all leading and trailing whitespece." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -116,87 +117,47 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract a unit summation matrix from a tidy data frame</h1>
+    <h1>Clean whitespace from Flow and Product strings</h1>
     
-    <div class="hidden name"><code>extract_S_units_from_tidy.Rd</code></div>
+    <div class="hidden name"><code>clean_iea_whitespace.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Unit summation matrices have products in rows and units in columns, with
-<code>1</code>s where a product is expressed in the unit and <code>0</code>s otherwise.</p>
+    <p>Occasionally, in the IEA extended energy balance data,
+extra whitespace characters are found at the beginning or end of <code>Flow</code> and <code>Product</code> strings.
+This function removes all leading and trailing whitespece.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>extract_S_units_from_tidy</span>(<span class='no'>.tidy_iea_df</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
-  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>, <span class='kw'>s_units</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>, <span class='kw'>val</span> <span class='kw'>=</span> <span class='st'>".val"</span>,
-  <span class='kw'>rowtype</span> <span class='kw'>=</span> <span class='st'>".rowtype"</span>, <span class='kw'>coltype</span> <span class='kw'>=</span> <span class='st'>".coltype"</span>,
-  <span class='kw'>grouping_vars</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Method"</span>, <span class='st'>"Last.stage"</span>, <span class='st'>"Country"</span>, <span class='st'>"Year"</span>,
-  <span class='st'>"Energy.type"</span>))</pre>
+    <pre class="usage"><span class='fu'>clean_iea_whitespace</span>(<span class='no'>.iea_df</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.tidy_iea_df</th>
-      <td><p>the tidy data frame from which a unit summation <code>S_units</code> matrix is to be formed.</p></td>
+      <th>.iea_df</th>
+      <td><p>a data frame containing <code>Flow</code> and <code>Product</code> columns</p></td>
+    </tr>
+    <tr>
+      <th>flow</th>
+      <td><p>the name of the flow column in <code>iea_df</code>. Default is "<code>Flow</code>".</p></td>
     </tr>
     <tr>
       <th>product</th>
-      <td><p>the name of the product column in <code>.tidy_iea_df</code>. Default is "<code>Product</code>".</p></td>
-    </tr>
-    <tr>
-      <th>unit</th>
-      <td><p>the name of the unit column in "<code>.tidy_iea_df</code>". Default is "<code>Unit</code>".</p></td>
-    </tr>
-    <tr>
-      <th>s_units</th>
-      <td><p>the name of the unit summation column to be added to <code>.tidy_iea_df</code>. Default is "<code>S_unit</code>".</p></td>
-    </tr>
-    <tr>
-      <th>val</th>
-      <td><p>the name of a temporary column to be created in <code>.tidy_iea_df</code>. Deafult is "<code>.val</code>".</p></td>
-    </tr>
-    <tr>
-      <th>rowtype</th>
-      <td><p>the name of a temporary rowype column created in <code>.tidy_iea_df</code>. Default is "<code>rowtype</code>".</p></td>
-    </tr>
-    <tr>
-      <th>coltype</th>
-      <td><p>the name of a temporary colype column created in <code>.tidy_iea_df</code>. Default is "<code>coltype</code>".</p></td>
-    </tr>
-    <tr>
-      <th>grouping_vars</th>
-      <td><p>a string vector of column names in <code>.tidy_iea_df</code> by which S_units matrix extraction should be performed.
-Default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("Method", "Last.stage", "Country", "Year", "Energy.type")</a></code>.</p></td>
+      <td><p>the name of the product columns in <code>iea_df</code>. Default is "<code>Product</code>".</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a data frame containing grouping variables and a new column of unit summation matrices called <code>s_unit</code>.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p><code>.tidy_iea_df</code> should be grouped as needed, typically on
-<code>Country</code>, <code>Year</code>, <code>Energy.type</code>, <code>Last.stage</code>, etc., but
-<em>not</em> on <code>Unit</code>, <code>Flow</code> or <code>Product</code>.
-<code>.tidy_iea_df</code> is typically obtained from <code><a href='tidy_iea_df.html'>tidy_iea_df()</a></code>.</p>
+    <p><code>.iea_df</code> with leading and trailing whitespace removed from <code>Flow</code> and <code>Product</code> column strings</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>extract_S_units_from_tidy</span>()</div><div class='output co'>#&gt;   Method Last.stage Country Year Energy.type
-#&gt; 1    PCM      Final     GHA 1971           E
-#&gt; 2    PCM      Final     GHA 2000           E
-#&gt; 3    PCM      Final     ZAF 1971           E
-#&gt; 4    PCM      Final     ZAF 2000           E
-#&gt;                                                                           S_units
-#&gt; 1                                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-#&gt; 2                                  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-#&gt; 3                   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-#&gt; 4 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>Flow</span> <span class='kw'>=</span> <span class='st'>"  a flow   "</span>, <span class='kw'>Product</span> <span class='kw'>=</span> <span class='st'>"   a product   "</span>, <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>clean_iea_whitespace</span>()</div><div class='output co'>#&gt;     Flow   Product
+#&gt; 1 a flow a product</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -204,8 +165,6 @@ Default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

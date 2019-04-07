@@ -1,3 +1,4 @@
+* Updated all three vignettes to reflect the new functions and demonstrate their use.
 * New function `augment_iea_df()` now removes ` (energy)`, ` (transf.)`, and ` (transformation)` suffixes 
   from the `Flow` column after adding the `Flow.aggregation.point` column.
 * No longer removing countries that lack a 2-letter ISO abbreviation.

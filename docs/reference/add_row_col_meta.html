@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add products to production industry names — add_production_details • IEATools</title>
+<title>Add row, column, row type, and column type metadata — add_row_col_meta • IEATools</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,18 +30,11 @@
 
 
 
-<meta property="og:title" content="Add products to production industry names — add_production_details" />
+<meta property="og:title" content="Add row, column, row type, and column type metadata — add_row_col_meta" />
 
-<meta property="og:description" content="The IEA specify all extraction processes as &quot;Production&quot;.
-When combined with an input-output view of the world
-within the Physical Supply-Use Table (PSUT) framework,
-production of any one resource implies production of all other resources.
-That's clearly non-physical,
-as production of some Crude oil does not imply harvesting of Solar energy.
-The solution to this problem is to rename the Flow values to be
-Production (Product).
-For example, the industry that produces Crude oil will be renamed to
-Production (Crude oil)." />
+<meta property="og:description" content="After calling add_psut_matnames(), call this function
+to add row, column, row type, and column type
+information to .tidy_iea_df." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -124,63 +117,122 @@ Production (Crude oil)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add products to production industry names</h1>
+    <h1>Add row, column, row type, and column type metadata</h1>
     
-    <div class="hidden name"><code>add_production_details.Rd</code></div>
+    <div class="hidden name"><code>add_row_col_meta.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>The IEA specify all extraction processes as "<code>Production</code>".
-When combined with an input-output view of the world
-within the Physical Supply-Use Table (PSUT) framework,
-production of any one resource implies production of all other resources.
-That's clearly non-physical,
-as production of some Crude oil does not imply harvesting of Solar energy.
-The solution to this problem is to rename the <code>Flow</code> values to be
-<code>Production (Product)</code>.
-For example, the industry that produces Crude oil will be renamed to
-<code>Production (Crude oil)</code>.</p>
+    <p>After calling <code><a href='add_psut_matnames.html'>add_psut_matnames()</a></code>, call this function
+to add row, column, row type, and column type
+information to <code>.tidy_iea_df</code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>add_production_details</span>(<span class='no'>.tidy_iea_df</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>production</span> <span class='kw'>=</span> <span class='st'>"Production"</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>)</pre>
+    <pre class="usage"><span class='fu'>add_row_col_meta</span>(<span class='no'>.tidy_iea_df</span>, <span class='kw'>matname</span> <span class='kw'>=</span> <span class='st'>"matname"</span>,
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='st'>"U_EIOU"</span>,
+  <span class='kw'>R</span> <span class='kw'>=</span> <span class='st'>"R"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>industry_type</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>,
+  <span class='kw'>product_type</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>sector_type</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>,
+  <span class='kw'>resource_type</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>, <span class='kw'>rowname</span> <span class='kw'>=</span> <span class='st'>"rowname"</span>,
+  <span class='kw'>colname</span> <span class='kw'>=</span> <span class='st'>"colname"</span>, <span class='kw'>rowtype</span> <span class='kw'>=</span> <span class='st'>"rowtype"</span>, <span class='kw'>coltype</span> <span class='kw'>=</span> <span class='st'>"coltype"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.tidy_iea_df</th>
-      <td><p>an IEA data frame whose columns have been renamed by <code><a href='rename_iea_df_cols.html'>rename_iea_df_cols()</a></code></p></td>
+      <td><p>a data frame containing <code>matname</code></p></td>
     </tr>
     <tr>
-      <th>flow</th>
-      <td><p>the name of the flow column in <code>.tidy_iea_df</code>.  Default is "<code>Flow</code>".</p></td>
-    </tr>
-    <tr>
-      <th>production</th>
-      <td><p>a string that identifies production in the flow column. Default is "<code>Production</code>".</p></td>
+      <th>matname</th>
+      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains names of matrices
+(a string).  Default is "<code>matname</code>".</p></td>
     </tr>
     <tr>
       <th>product</th>
-      <td><p>the name of the product column in <code>.iea_df</code>.  Default is "<code>Product</code>".</p></td>
+      <td><p>the name of the column in <code>.tidy_iea_df</code> where Product names
+is found (a string). Default is "<code>Product</code>".</p></td>
+    </tr>
+    <tr>
+      <th>flow</th>
+      <td><p>the name of the column in <code>.tidy_iea_df</code> where Flow names
+is found (a string). Default is "<code>Flow</code>".</p></td>
+    </tr>
+    <tr>
+      <th>U</th>
+      <td><p>the name for use matrices (a string). Default is "<code>U</code>".</p></td>
+    </tr>
+    <tr>
+      <th>U_EIOU</th>
+      <td><p>the name for energy industry own use matrices (a string). Default is "<code>U_EIOU</code>".</p></td>
+    </tr>
+    <tr>
+      <th>R</th>
+      <td><p>the name for resource matrices (a string). Default is "<code>R</code>".</p></td>
+    </tr>
+    <tr>
+      <th>V</th>
+      <td><p>the name for make matrices (a string). Default is "<code>V</code>".</p></td>
+    </tr>
+    <tr>
+      <th>Y</th>
+      <td><p>the name for final demand matrices (a string). Default is "<code>Y</code>".</p></td>
+    </tr>
+    <tr>
+      <th>industry_type</th>
+      <td><p>the name that identifies production industries and
+and transformation processes (a string). Default is "<code>Industry</code>".</p></td>
+    </tr>
+    <tr>
+      <th>product_type</th>
+      <td><p>the name that identifies energy carriers (a string).
+Default is "<code>Product</code>".</p></td>
+    </tr>
+    <tr>
+      <th>sector_type</th>
+      <td><p>the name that identifies final demand sectors (a string).
+Default is "<code>Industry</code>".</p></td>
+    </tr>
+    <tr>
+      <th>resource_type</th>
+      <td><p>the name that identifies resource sectors (a string).
+Default is "<code>Industry</code>".</p></td>
+    </tr>
+    <tr>
+      <th>rowname</th>
+      <td><p>the name of the output column that contains row names for matrices
+(a string). Default is "<code>rowname</code>".</p></td>
+    </tr>
+    <tr>
+      <th>colname</th>
+      <td><p>the name of the output column that contains column names for matrices
+(a string). Default is "<code>colname</code>".</p></td>
+    </tr>
+    <tr>
+      <th>rowtype</th>
+      <td><p>the name of the output column that contains row types for matrices
+(a string). Default is "<code>rowtype</code>".</p></td>
+    </tr>
+    <tr>
+      <th>coltype</th>
+      <td><p>the name of the output column that contains column types for matrices
+(a string). Default is "<code>coltype</code>".</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>.iea_df with detailed production industries</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>If the suffix of the value of the <code>Flow</code> column is already "<code>(Product)</code>",
-no changes to the value in the <code>Flow</code> column will be made.</p>
+    <p><code>.tidy_iea_df</code> with additional columns named
+<code>rowname</code>, <code>colname</code>,
+<code>rowtype</code>, and <code>coltype</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>add_production_details</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 399 x 11</span><span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
+<span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='add_psut_matnames.html'>add_psut_matnames</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'>add_row_col_meta</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 399 x 16</span><span>
 #&gt;    Method Last.stage Country  Year Ledger.side Flow.aggregatio… Energy.type
 #&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      
 #&gt; </span><span style='color: #555555;'> 1</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
@@ -193,8 +245,9 @@ no changes to the value in the <code>Flow</code> column will be made.</p>
 #&gt; </span><span style='color: #555555;'> 8</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
 #&gt; </span><span style='color: #555555;'> 9</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
 #&gt; </span><span style='color: #555555;'>10</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'># … with 389 more rows, and 4 more variables: Unit </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Flow </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,
-#&gt; #   Product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, E.dot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+#&gt; </span><span style='color: #555555;'># … with 389 more rows, and 9 more variables: Unit </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Flow </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,
+#&gt; #   Product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, E.dot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, matname </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, rowname </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, colname </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,
+#&gt; #   rowtype </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, coltype </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -202,8 +255,6 @@ no changes to the value in the <code>Flow</code> column will be made.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

@@ -89,10 +89,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/adjustforeiou.html">Adjust EIOU Industries and Flows</a>
+      <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
     <li>
-      <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
+      <a href="../articles/specify.html">Specify EIOU Industries and Flows</a>
     </li>
   </ul>
 </li>
@@ -339,15 +339,23 @@ The <code>.rownum</code> column is deleted before returning.</p></td>
     <p>This function solves several problems.
 The first problem is that metadata in the <code>COUNTRY</code>, <code>FLOW</code>, and <code>PRODUCT</code>
 columns of an IEA data table are not unique.
-To solve this problem, two additional columns are added: <code>Ledger.side</code> and <code>Flow.aggregation.point</code>.
+A second problem is that the <code>FLOW</code> column contains both industries to which energy is flowing <em>and</em>
+the type of flow that is involved.
+(E.g., the suffix "<code>(energy)</code>" means that the flow is an own use by the energy industry.
+The "<code>(transf.)</code>" suffix means that a flow is involved in a transformation process
+between primary and final energy.</p>
+<p>To solve these problems, two additional columns are added: <code>Ledger.side</code> and <code>Flow.aggregation.point</code>.
 <code>Ledger.side</code> can be one of "<code>Supply</code>" or "<code>Consumption</code>", corresponding to the top or bottom of the IEA's tables, respectively.
 <code>Flow.aggregation.point</code> indicates the next level of aggregation for these data.
 <code>Flow.aggregation.point</code> can be one of
 "<code>Total primary energy supply</code>", "<code>Transformation processes</code>", "<code>Energy industry own use</code>", or "<code>TFC compare</code>"
 on the <code>Supply</code> side of the ledger.
 On the <code>Consumption</code> side of the ledger, <code>Flow.aggregation.point</code> can be one of
-"<code>Industry</code>", "<code>Transport</code>", "<code>Other</code>", or "<code>Non-energy use</code>".</p>
-<p>The second problem this function solves is that energy type and units are not specified in IEA data.
+"<code>Industry</code>", "<code>Transport</code>", "<code>Other</code>", or "<code>Non-energy use</code>".
+When the <code>Flow.aggregation.point</code> column is present,
+the need for the "<code>(energy)</code>" and "<code>(transf.)</code>" suffixes is eliminated,
+so they are deleted.</p>
+<p>The third problem this function solves is that energy type and units are not specified in IEA data.
 An <code>Energy.type</code> column is added with the value of <code>energy_type_val</code>.
 (Default is <code>E</code>, for energy, as opposed to <code>X</code>, which would be exergy.)
 A <code>Unit</code> column is added with the value of <code>unit_val</code>.

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add products to production industry names — add_production_details • IEATools</title>
+<title>Convert Production Flows to Resource Flows — specify_production_to_resources • IEATools</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,18 +30,12 @@
 
 
 
-<meta property="og:title" content="Add products to production industry names — add_production_details" />
+<meta property="og:title" content="Convert Production Flows to Resource Flows — specify_production_to_resources" />
 
-<meta property="og:description" content="The IEA specify all extraction processes as &quot;Production&quot;.
-When combined with an input-output view of the world
-within the Physical Supply-Use Table (PSUT) framework,
-production of any one resource implies production of all other resources.
-That's clearly non-physical,
-as production of some Crude oil does not imply harvesting of Solar energy.
-The solution to this problem is to rename the Flow values to be
-Production (Product).
-For example, the industry that produces Crude oil will be renamed to
-Production (Crude oil)." />
+<meta property="og:description" content="The IEA gives resource extraction in rows where the Flow is &quot;Production&quot;.
+This function changes the &quot;Production&quot; string
+to &quot;Resources (product)&quot;,
+where product is the name of the energy carrier for this resource." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -124,28 +118,23 @@ Production (Crude oil)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add products to production industry names</h1>
+    <h1>Convert Production Flows to Resource Flows</h1>
     
-    <div class="hidden name"><code>add_production_details.Rd</code></div>
+    <div class="hidden name"><code>specify_production_to_resources.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>The IEA specify all extraction processes as "<code>Production</code>".
-When combined with an input-output view of the world
-within the Physical Supply-Use Table (PSUT) framework,
-production of any one resource implies production of all other resources.
-That's clearly non-physical,
-as production of some Crude oil does not imply harvesting of Solar energy.
-The solution to this problem is to rename the <code>Flow</code> values to be
-<code>Production (Product)</code>.
-For example, the industry that produces Crude oil will be renamed to
-<code>Production (Crude oil)</code>.</p>
+    <p>The IEA gives resource extraction in rows where the <code>Flow</code> is "<code>Production</code>".
+This function changes the "<code>Production</code>" string
+to "<code>Resources (product)</code>",
+where <code>product</code> is the name of the energy carrier for this resource.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>add_production_details</span>(<span class='no'>.tidy_iea_df</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>production</span> <span class='kw'>=</span> <span class='st'>"Production"</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>)</pre>
+    <pre class="usage"><span class='fu'>specify_production_to_resources</span>(<span class='no'>.tidy_iea_df</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>production</span> <span class='kw'>=</span> <span class='st'>"Production"</span>,
+  <span class='kw'>resources</span> <span class='kw'>=</span> <span class='st'>"Resources"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -159,41 +148,50 @@ For example, the industry that produces Crude oil will be renamed to
       <td><p>the name of the flow column in <code>.tidy_iea_df</code>.  Default is "<code>Flow</code>".</p></td>
     </tr>
     <tr>
-      <th>production</th>
-      <td><p>a string that identifies production in the flow column. Default is "<code>Production</code>".</p></td>
+      <th>product</th>
+      <td><p>the name of the product column in <code>.tidy_iea_df</code>.  Default is "<code>Product</code>".</p></td>
     </tr>
     <tr>
-      <th>product</th>
-      <td><p>the name of the product column in <code>.iea_df</code>.  Default is "<code>Product</code>".</p></td>
+      <th>production</th>
+      <td><p>a string identifying production in the flow column. Default is "<code>Production</code>".</p></td>
+    </tr>
+    <tr>
+      <th>resources</th>
+      <td><p>a string identifying resource industries to be added to <code>.tidy_iea_df</code>.
+Default is "<code>Resources</code>".</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>.iea_df with detailed production industries</p>
+    <p><code>.tidy_iea_df</code> with <code>Production</code> changed to <code>Resources (product)</code></p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If the suffix of the value of the <code>Flow</code> column is already "<code>(Product)</code>",
-no changes to the value in the <code>Flow</code> column will be made.</p>
+    <p>This function should be called <em>after</em> <code><a href='specify_primary_production.html'>specify_primary_production()</a></code>,
+which adjusts for energy industry own use
+of some primary energy producing industries.
+If this function is called first,
+EIOU will not be accounted correctly.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>add_production_details</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 399 x 11</span><span>
+  <span class='fu'><a href='specify_primary_production.html'>specify_primary_production</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'>specify_production_to_resources</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 405 x 11</span><span>
 #&gt;    Method Last.stage Country  Year Ledger.side Flow.aggregatio… Energy.type
 #&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      
-#&gt; </span><span style='color: #555555;'> 1</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 2</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 3</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 4</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 5</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 6</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 7</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 8</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 9</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'>10</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'># … with 389 more rows, and 4 more variables: Unit </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Flow </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,
+#&gt; </span><span style='color: #555555;'> 1</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry         E          
+#&gt; </span><span style='color: #555555;'> 2</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry         E          
+#&gt; </span><span style='color: #555555;'> 3</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry         E          
+#&gt; </span><span style='color: #555555;'> 4</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry         E          
+#&gt; </span><span style='color: #555555;'> 5</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry         E          
+#&gt; </span><span style='color: #555555;'> 6</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry         E          
+#&gt; </span><span style='color: #555555;'> 7</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry         E          
+#&gt; </span><span style='color: #555555;'> 8</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Non-energy use   E          
+#&gt; </span><span style='color: #555555;'> 9</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other            E          
+#&gt; </span><span style='color: #555555;'>10</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other            E          
+#&gt; </span><span style='color: #555555;'># … with 395 more rows, and 4 more variables: Unit </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Flow </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,
 #&gt; #   Product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, E.dot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

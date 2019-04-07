@@ -97,10 +97,10 @@ tidy_iea_df().
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/adjustforeiou.html">Adjust EIOU Industries and Flows</a>
+      <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
     <li>
-      <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
+      <a href="../articles/specify.html">Specify EIOU Industries and Flows</a>
     </li>
   </ul>
 </li>
@@ -161,7 +161,7 @@ This function bundles several others:</p><ol>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Each is called in turn using default arguments.
+    <p>Each bundled function is called in turn using default arguments.
 See examples for two ways to achieve the same result.</p>
     
 
@@ -171,6 +171,7 @@ See examples for two ways to achieve the same result.</p>
   <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"IEATools"</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='iea_df.html'>iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='rename_iea_df_cols.html'>rename_iea_df_cols</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='clean_iea_whitespace.html'>clean_iea_whitespace</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='remove_agg_memo_flows.html'>remove_agg_memo_flows</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='use_iso_countries.html'>use_iso_countries</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='augment_iea_df.html'>augment_iea_df</a></span>() <span class='kw'>%&gt;%</span>
