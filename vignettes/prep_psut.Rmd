@@ -76,6 +76,8 @@ using the `matsindf::collapse_to_matrices()` function internally.
 The `matval` column is added to the data frame and
 contains a matrix for each set of grouping variables
 which are specified in the `grouping_vars` argument.
+`collapse_to_tidy_psut()` ensures that all 
+entries in each matrix are non-negative.
 
 ```{r}
 Tidy_PSUT <- 
@@ -156,3 +158,23 @@ Simple$matval[[5]]
 
 ## Conclusion
 
+Taken together, 
+the functions in this package make it possible to prepare IEA extended energy balance data
+for use with PSUT analysis techniques. 
+A sequence of three function calls are all that is required.
+
+```{r}
+Tidy_PSUT_mats <- load_tidy_iea_df() %>% 
+  specify_all() %>% 
+  prep_psut()
+Tidy_PSUT_mats %>% 
+  glimpse()
+```
+
+If calculations are to be performed, the matrices can be spread so that each matrix is in its own column.
+
+```{r}
+Tidy_PSUT_mats %>% 
+  spread(key = matname, value = matval) %>% 
+  glimpse()
+```
