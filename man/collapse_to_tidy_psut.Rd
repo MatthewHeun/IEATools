@@ -37,6 +37,10 @@ Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type")}.}
 Call this function after calling \code{\link[=add_row_col_meta]{add_row_col_meta()}}
 to collapse \code{.tidy_iea_df} into a tidy PSUT data frame.
 }
+\details{
+This function ensures that all energy flow numbers are positive
+before creating the matrices.
+}
 \examples{
 load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 

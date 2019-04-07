@@ -124,8 +124,7 @@ and adds those matrices to the data frame.
 ```{r}
 Simple <- load_tidy_iea_df() %>% 
   specify_all() %>% 
-  prep_psut() %>% 
-  rename(matval_simple = matval)
+  prep_psut()
 S_units <- load_tidy_iea_df() %>% 
   extract_S_units_from_tidy()
 Complicated <- load_tidy_iea_df() %>% 
@@ -137,12 +136,11 @@ Complicated <- load_tidy_iea_df() %>%
   full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
                             "Country", "Year")) %>% 
   gather(key = matname, value = matval, R, U_EIOU, U_excl_EIOU, 
-         V, Y, S_units) %>% 
-  rename(matval_complicated = matval)
+         V, Y, S_units)
 # Simple and Complicated are same.
-full_join(Simple, Complicated, by = c("Method", "Energy.type", 
-                                      "Last.stage", "Country", 
-                                      "Year", "matname")) %>% 
+full_join(Simple %>% rename(matval_simple = matval), 
+          Complicated %>% rename(matval_complicated = matval), 
+          by = c("Method", "Energy.type", "Last.stage", "Country", "Year", "matname")) %>% 
   dplyr::mutate(
     same = matsbyname::equal_byname(matval_simple, matval_complicated)
   ) %>% 
@@ -151,6 +149,8 @@ full_join(Simple, Complicated, by = c("Method", "Energy.type",
   all()
 Simple %>% 
   glimpse()
+# U_EIOU for Ghana in 1971
+Simple$matval[[5]]
 ```
 
 

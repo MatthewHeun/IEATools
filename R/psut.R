@@ -263,6 +263,9 @@ add_row_col_meta <- function(.tidy_iea_df,
 #' 
 #' Call this function after calling [add_row_col_meta()]
 #' to collapse `.tidy_iea_df` into a tidy PSUT data frame. 
+#' 
+#' This function ensures that all energy flow numbers are positive
+#' before creating the matrices.
 #'
 #' @param .tidy_iea_df a data frame containing `matname` and several other columns
 #' @param matname the name of a column in `.tidy_iea_df` containing matrix names. Default is "`matname`".
@@ -297,6 +300,9 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
                                   grouping_vars = c("Method", "Energy.type", "Last.stage", "Country", "Year")){
   matsindf::verify_cols_missing(.tidy_iea_df, matval)
   .tidy_iea_df %>% 
+    dplyr::mutate(
+      !!as.name(e_dot) := abs(!!as.name(e_dot))
+    ) %>%
     dplyr::select(!!!grouping_vars, !!as.name(matname), 
                   !!as.name(rowname), !!as.name(colname), 
                   !!as.name(rowtype), !!as.name(coltype), 

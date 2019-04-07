@@ -91,24 +91,18 @@ test_that("collapse_to_psut works expected", {
     add_row_col_meta() %>% 
     collapse_to_tidy_psut()
   expect_equal(nrow(With_mats), 20)
+  # Ensure that all values in the matrices are positive.
+  With_mats %>%
+    mutate(
+      gezero = matsbyname::compare_byname(matval, ">=", 0) %>% matsbyname::all_byname()
+    ) %>% 
+    extract2("gezero") %>% 
+    as.logical() %>% 
+    all() %>% 
+    expect_true()
 })
 
 test_that("prep_psut works as expected", {
-  # S_units <- load_tidy_iea_df() %>% 
-  #   extract_S_units_from_tidy()
-  # Simple <- load_tidy_iea_df() %>% 
-  #   specify_all() %>% 
-  #   prep_psut()
-  # Complicated <- load_tidy_iea_df() %>% 
-  #   specify_all() %>% 
-  #   add_psut_matnames() %>% 
-  #   add_row_col_meta() %>% 
-  #   collapse_to_tidy_psut()
-  # all(Simple == Complicated)
-  # 
-  # 
-  
-  
   Simple <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     prep_psut() %>% 
@@ -133,5 +127,4 @@ test_that("prep_psut works as expected", {
     as.logical() %>% 
     all() %>% 
     expect_true()
-
 })
