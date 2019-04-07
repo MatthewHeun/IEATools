@@ -14,8 +14,8 @@
 #' If the suffix of the value of the `Flow` column is already "`(Product)`", 
 #' no changes to the value in the `Flow` column will be made.
 #'
-#' @param .iea_df a IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
-#' @param flow the name of the flow column in `.iea_df`.  Default is "`Flow`".
+#' @param .tidy_iea_df an IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
+#' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
 #' @param production a string that identifies production in the flow column. Default is "`Production`".
 #' @param product the name of the product column in `.iea_df`.  Default is "`Product`". 
 #'
@@ -36,8 +36,3 @@ add_production_details <- function(.tidy_iea_df, flow = "Flow", production = "Pr
       )
     )
 }
-
-
-
-
-

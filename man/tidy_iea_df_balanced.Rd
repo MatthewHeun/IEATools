@@ -25,7 +25,6 @@ Argument \code{.tidy_iea_df_balances} should be set to the value of a call to
 \examples{
 library(dplyr)
 load_tidy_iea_df() \%>\% 
-  group_by(Country, Year, Energy.type, Unit, Product) \%>\% 
   calc_tidy_iea_df_balances() \%>\% 
   tidy_iea_df_balanced()
 }

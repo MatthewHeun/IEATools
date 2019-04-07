@@ -85,6 +85,21 @@ make an IEA data frame tidy." />
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
+    </li>
+    <li>
+      <a href="../articles/specify.html">Specify EIOU Industries and Flows</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -120,7 +135,8 @@ make an IEA data frame tidy.</p>
     </div>
 
     <pre class="usage"><span class='fu'>tidy_iea_df</span>(<span class='no'>.iea_df</span>, <span class='kw'>year</span> <span class='kw'>=</span> <span class='st'>"Year"</span>, <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
-  <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>, <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"Method"</span>, <span class='kw'>last_stage</span> <span class='kw'>=</span> <span class='st'>"Last.stage"</span>, <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>,
+  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
   <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
   <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='st'>"Energy.type"</span>, <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
   <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>remove_zeroes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
@@ -139,6 +155,14 @@ make an IEA data frame tidy.</p>
     <tr>
       <th>e_dot</th>
       <td><p>the name of the energy/exergy value column created in <code>.iea_df</code> by this function. (Default is "<code>E.dot</code>".)</p></td>
+    </tr>
+    <tr>
+      <th>method</th>
+      <td><p>the name of the method column created in <code>.iea_df</code> by this function. (Default is "<code>Method</code>".)</p></td>
+    </tr>
+    <tr>
+      <th>last_stage</th>
+      <td><p>the name of the last stage column created in <code>.iea_df</code> by this function. (Default is "<code>Last.stage</code>".)</p></td>
     </tr>
     <tr>
       <th>country</th>
@@ -191,20 +215,21 @@ make an IEA data frame tidy.</p>
   <span class='fu'><a href='remove_agg_memo_flows.html'>remove_agg_memo_flows</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='use_iso_countries.html'>use_iso_countries</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='augment_iea_df.html'>augment_iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>tidy_iea_df</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 399 x 9</span><span>
-#&gt;    Country Year  Ledger.side Flow.aggregatio… Energy.type Unit  Flow  Product
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  
-#&gt; </span><span style='color: #555555;'> 1</span><span> GH      1971  Supply      Total primary e… E           ktoe  Prod… Primar…
-#&gt; </span><span style='color: #555555;'> 2</span><span> GH      1971  Supply      Total primary e… E           ktoe  Prod… Hydro  
-#&gt; </span><span style='color: #555555;'> 3</span><span> GH      1971  Supply      Total primary e… E           ktoe  Impo… Crude …
-#&gt; </span><span style='color: #555555;'> 4</span><span> GH      1971  Supply      Total primary e… E           ktoe  Impo… Aviati…
-#&gt; </span><span style='color: #555555;'> 5</span><span> GH      1971  Supply      Total primary e… E           ktoe  Impo… Kerose…
-#&gt; </span><span style='color: #555555;'> 6</span><span> GH      1971  Supply      Total primary e… E           ktoe  Impo… Other …
-#&gt; </span><span style='color: #555555;'> 7</span><span> GH      1971  Supply      Total primary e… E           ktoe  Impo… Lubric…
-#&gt; </span><span style='color: #555555;'> 8</span><span> GH      1971  Supply      Total primary e… E           ktoe  Expo… Motor …
-#&gt; </span><span style='color: #555555;'> 9</span><span> GH      1971  Supply      Total primary e… E           ktoe  Expo… Other …
-#&gt; </span><span style='color: #555555;'>10</span><span> GH      1971  Supply      Total primary e… E           ktoe  Expo… Fuel o…
-#&gt; </span><span style='color: #555555;'># … with 389 more rows, and 1 more variable: E.dot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+  <span class='fu'>tidy_iea_df</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 399 x 11</span><span>
+#&gt;    Method Last.stage Country  Year Ledger.side Flow.aggregatio… Energy.type
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      
+#&gt; </span><span style='color: #555555;'> 1</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
+#&gt; </span><span style='color: #555555;'> 2</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
+#&gt; </span><span style='color: #555555;'> 3</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
+#&gt; </span><span style='color: #555555;'> 4</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
+#&gt; </span><span style='color: #555555;'> 5</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
+#&gt; </span><span style='color: #555555;'> 6</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
+#&gt; </span><span style='color: #555555;'> 7</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
+#&gt; </span><span style='color: #555555;'> 8</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
+#&gt; </span><span style='color: #555555;'> 9</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
+#&gt; </span><span style='color: #555555;'>10</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
+#&gt; </span><span style='color: #555555;'># … with 389 more rows, and 4 more variables: Unit </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Flow </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,
+#&gt; #   Product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, E.dot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

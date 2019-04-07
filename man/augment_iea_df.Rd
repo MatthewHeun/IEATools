@@ -134,7 +134,13 @@ This function prepares an IEA data frame created by \code{\link[=iea_df]{iea_df(
 This function solves several problems.
 The first problem is that metadata in the \code{COUNTRY}, \code{FLOW}, and \code{PRODUCT}
 columns of an IEA data table are not unique.
-To solve this problem, two additional columns are added: \code{Ledger.side} and \code{Flow.aggregation.point}.
+A second problem is that the \code{FLOW} column contains both industries to which energy is flowing \emph{and}
+the type of flow that is involved.
+(E.g., the suffix "\code{(energy)}" means that the flow is an own use by the energy industry.
+The "\code{(transf.)}" suffix means that a flow is involved in a transformation process
+between primary and final energy.
+
+To solve these problems, two additional columns are added: \code{Ledger.side} and \code{Flow.aggregation.point}.
 \code{Ledger.side} can be one of "\code{Supply}" or "\code{Consumption}", corresponding to the top or bottom of the IEA's tables, respectively.
 \code{Flow.aggregation.point} indicates the next level of aggregation for these data.
 \code{Flow.aggregation.point} can be one of
@@ -142,8 +148,11 @@ To solve this problem, two additional columns are added: \code{Ledger.side} and 
 on the \code{Supply} side of the ledger.
 On the \code{Consumption} side of the ledger, \code{Flow.aggregation.point} can be one of
 "\code{Industry}", "\code{Transport}", "\code{Other}", or "\code{Non-energy use}".
+When the \code{Flow.aggregation.point} column is present,
+the need for the "\code{(energy)}" and "\code{(transf.)}" suffixes is eliminated,
+so they are deleted.
 
-The second problem this function solves is that energy type and units are not specified in IEA data.
+The third problem this function solves is that energy type and units are not specified in IEA data.
 An \code{Energy.type} column is added with the value of \code{energy_type_val}.
 (Default is \code{E}, for energy, as opposed to \code{X}, which would be exergy.)
 A \code{Unit} column is added with the value of \code{unit_val}.

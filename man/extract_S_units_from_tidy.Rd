@@ -6,7 +6,9 @@
 \usage{
 extract_S_units_from_tidy(.tidy_iea_df, product = "Product",
   unit = "Unit", s_units = "S_units", val = ".val",
-  rowtype = ".rowtype", coltype = ".coltype")
+  rowtype = ".rowtype", coltype = ".coltype",
+  grouping_vars = c("Method", "Last.stage", "Country", "Year",
+  "Energy.type"))
 }
 \arguments{
 \item{.tidy_iea_df}{the tidy data frame from which a unit summation \code{S_units} matrix is to be formed.}
@@ -22,6 +24,9 @@ extract_S_units_from_tidy(.tidy_iea_df, product = "Product",
 \item{rowtype}{the name of a temporary rowype column created in \code{.tidy_iea_df}. Default is "\code{rowtype}".}
 
 \item{coltype}{the name of a temporary colype column created in \code{.tidy_iea_df}. Default is "\code{coltype}".}
+
+\item{grouping_vars}{a string vector of column names in \code{.tidy_iea_df} by which S_units matrix extraction should be performed.
+Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type")}.}
 }
 \value{
 a data frame containing grouping variables and a new column of unit summation matrices called \code{s_unit}.
@@ -39,6 +44,5 @@ Unit summation matrices have products in rows and units in columns, with
 \examples{
 library(dplyr)
 load_tidy_iea_df() \%>\% 
-  group_by(Country, Year, Energy.type) \%>\% 
   extract_S_units_from_tidy()
 }

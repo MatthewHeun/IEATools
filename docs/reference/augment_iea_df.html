@@ -81,6 +81,21 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
+    </li>
+    <li>
+      <a href="../articles/specify.html">Specify EIOU Industries and Flows</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -114,8 +129,10 @@
     <pre class="usage"><span class='fu'>augment_iea_df</span>(<span class='no'>.iea_df</span>, <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>,
   <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
   <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='st'>"Energy.type"</span>, <span class='kw'>energy_type_val</span> <span class='kw'>=</span> <span class='st'>"E"</span>, <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>,
-  <span class='kw'>unit_val</span> <span class='kw'>=</span> <span class='st'>"ktoe"</span>, <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>, <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
+  <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='st'>"Energy.type"</span>, <span class='kw'>energy_type_val</span> <span class='kw'>=</span> <span class='st'>"E"</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"Method"</span>, <span class='kw'>method_val</span> <span class='kw'>=</span> <span class='st'>"PCM"</span>, <span class='kw'>last_stage</span> <span class='kw'>=</span> <span class='st'>"Last.stage"</span>,
+  <span class='kw'>last_stage_val</span> <span class='kw'>=</span> <span class='st'>"Final"</span>, <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>, <span class='kw'>unit_val</span> <span class='kw'>=</span> <span class='st'>"ktoe"</span>,
+  <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>, <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
   <span class='kw'>tpes</span> <span class='kw'>=</span> <span class='st'>"Total primary energy supply"</span>, <span class='kw'>tpes_flows</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Production"</span>,
   <span class='st'>"Imports"</span>, <span class='st'>"Exports"</span>, <span class='st'>"International marine bunkers"</span>,
   <span class='st'>"International aviation bunkers"</span>, <span class='st'>"Stock changes"</span>),
@@ -176,6 +193,22 @@
     <tr>
       <th>energy_type_val</th>
       <td><p>the value to put in the <code>energy_type</code> column. Default is "<code>E</code>".</p></td>
+    </tr>
+    <tr>
+      <th>method</th>
+      <td><p>the name of the method column to be added to <code>.iea_df</code>. Default is "<code>Method</code>.</p></td>
+    </tr>
+    <tr>
+      <th>method_val</th>
+      <td><p>the value to put in the <code>method</code> column. Default is "<code>PCM</code>" (Physical Content Method, which is used by the IEA).</p></td>
+    </tr>
+    <tr>
+      <th>last_stage</th>
+      <td><p>the name of the last stage column to be added to <code>.iea_df</code>. Default is "<code>Last.stage</code>.</p></td>
+    </tr>
+    <tr>
+      <th>last_stage_val</th>
+      <td><p>the value to put in the <code>last_stage</code> column. Default is "<code>Final</code>" (which is the last stage supplied by the IEA).</p></td>
     </tr>
     <tr>
       <th>unit</th>
@@ -306,15 +339,23 @@ The <code>.rownum</code> column is deleted before returning.</p></td>
     <p>This function solves several problems.
 The first problem is that metadata in the <code>COUNTRY</code>, <code>FLOW</code>, and <code>PRODUCT</code>
 columns of an IEA data table are not unique.
-To solve this problem, two additional columns are added: <code>Ledger.side</code> and <code>Flow.aggregation.point</code>.
+A second problem is that the <code>FLOW</code> column contains both industries to which energy is flowing <em>and</em>
+the type of flow that is involved.
+(E.g., the suffix "<code>(energy)</code>" means that the flow is an own use by the energy industry.
+The "<code>(transf.)</code>" suffix means that a flow is involved in a transformation process
+between primary and final energy.</p>
+<p>To solve these problems, two additional columns are added: <code>Ledger.side</code> and <code>Flow.aggregation.point</code>.
 <code>Ledger.side</code> can be one of "<code>Supply</code>" or "<code>Consumption</code>", corresponding to the top or bottom of the IEA's tables, respectively.
 <code>Flow.aggregation.point</code> indicates the next level of aggregation for these data.
 <code>Flow.aggregation.point</code> can be one of
 "<code>Total primary energy supply</code>", "<code>Transformation processes</code>", "<code>Energy industry own use</code>", or "<code>TFC compare</code>"
 on the <code>Supply</code> side of the ledger.
 On the <code>Consumption</code> side of the ledger, <code>Flow.aggregation.point</code> can be one of
-"<code>Industry</code>", "<code>Transport</code>", "<code>Other</code>", or "<code>Non-energy use</code>".</p>
-<p>The second problem this function solves is that energy type and units are not specified in IEA data.
+"<code>Industry</code>", "<code>Transport</code>", "<code>Other</code>", or "<code>Non-energy use</code>".
+When the <code>Flow.aggregation.point</code> column is present,
+the need for the "<code>(energy)</code>" and "<code>(transf.)</code>" suffixes is eliminated,
+so they are deleted.</p>
+<p>The third problem this function solves is that energy type and units are not specified in IEA data.
 An <code>Energy.type</code> column is added with the value of <code>energy_type_val</code>.
 (Default is <code>E</code>, for energy, as opposed to <code>X</code>, which would be exergy.)
 A <code>Unit</code> column is added with the value of <code>unit_val</code>.
@@ -334,12 +375,12 @@ an error is generated.</p>
                        <span class='st'>"World,Production,Hard coal (if no detail),42,43\n"</span>,
                        <span class='st'>"World,Losses,Hard coal (if no detail),1,2"</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='rename_iea_df_cols.html'>rename_iea_df_cols</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>augment_iea_df</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 2 x 9</span><span>
+  <span class='fu'>augment_iea_df</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 2 x 11</span><span>
 #&gt;   Country Ledger.side Flow.aggregatio… Energy.type Unit  Flow  Product `1960`
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #555555;'>1</span><span> World   Supply      Total primary e… E           ktoe  Prod… Hard c…     42
 #&gt; </span><span style='color: #555555;'>2</span><span> World   Supply      TFC compare      E           ktoe  Loss… Hard c…      1
-#&gt; </span><span style='color: #555555;'># … with 1 more variable: `1961` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+#&gt; </span><span style='color: #555555;'># … with 3 more variables: `1961` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Method </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Last.stage </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

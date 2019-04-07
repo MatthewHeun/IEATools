@@ -7,12 +7,14 @@
 add_psut_matnames(.tidy_iea_df, ledger_side = "Ledger.side",
   supply = "Supply", consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
-  production = "Production", product = "Product", e_dot = "E.dot",
+  production = "Production", resources = "Resources",
+  product = "Product", e_dot = "E.dot",
   eiou = "Energy industry own use", neg_supply_in_fd = c("Exports",
   "International aviation bunkers", "International marine bunkers",
   "Losses", "Statistical differences", "Stock changes"),
-  matname = "matname", U_excl_EIOU = "U_excl_EIOU",
-  U_EIOU = "U_EIOU", R = "R", V = "V", Y = "Y", .R = ".R")
+  grouping_vars = c("Method", "Last.stage", "Country", "Year",
+  "Energy.type"), matname = "matname", R = "R",
+  U_excl_EIOU = "U_excl_EIOU", U_EIOU = "U_EIOU", V = "V", Y = "Y")
 }
 \arguments{
 \item{.tidy_iea_df}{a data frame with \code{ledger_side}, \code{flow_aggregation_point}, \code{flow}, and \code{e_dot} columns.}
@@ -32,6 +34,10 @@ Default is "\code{Flow.aggregation.point}".}
 \item{flow}{the name of the column in \code{.tidy_iea_df} that contains flow information.
 Default is "\code{Flow}".}
 
+\item{production}{a string identifying production in the flow column. Default is \code{Production}.}
+
+\item{resources}{a string identifying resources in the flow column. Default is \code{Resources}.}
+
 \item{product}{the name of the column in \code{.tidy_iea_df} that contains flow information.
 Default is "\code{Product}".}
 
@@ -44,20 +50,21 @@ Default is "\code{Energy industry own use}".}
 \item{neg_supply_in_fd}{identifiers for flow items that, when negative,
 are entries in the final demand (\code{Y}) matrix.}
 
+\item{grouping_vars}{a string vector of names of columns by which rows should be grouped when matrix names are added.
+Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type")}.}
+
 \item{matname}{the name of the output column containing the name of the matrix
 to which a row's value belongs (a string). Default is "\code{matname}".}
+
+\item{R}{the name for the resource matrix (a string). Default is "\code{R}".}
 
 \item{U_excl_EIOU}{the name for the use matrix that excludes energy industry own use (a string). Default is "\code{U_excl_EIOU}".}
 
 \item{U_EIOU}{the name for the energy industry own use matrix. Default is "\code{U_EIOU}".}
 
-\item{R}{the name for the resource matrix (a string). Default is "\code{R}".}
-
 \item{V}{the name for the make matrix (a string). Default is "\code{V}".}
 
 \item{Y}{the name for the final demand matrix (a string). Default is "\code{Y}".}
-
-\item{.R}{the name for a temporary column used internally for calculations. Default is "\code{.R}".}
 }
 \value{
 \code{.tidy_iea_df} with an added column \code{matname}.

@@ -48,6 +48,8 @@
 #'        Default is "`Consumption`".
 #' @param e_dot the name of the column in `.tidy_iea_data`
 #'        that contains energy flow data. Default is "`E.dot`".
+#' @param grouping_vars a string vector of names of columns by which energy balance calculations should be performed. 
+#'        Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")`.
 #' @param unit the name of the colum in `.tidy_iea_data`
 #'        that contains the units for the energy flow data. Default is "`Unit`".
 #' @param supply_sum the name of a new column that will contain the sum of all supply for that group.
@@ -69,7 +71,6 @@
 #' @examples
 #' library(dplyr)
 #' Ebal <- load_tidy_iea_df() %>% 
-#'   group_by(Country, Year, Energy.type, Unit, Product) %>% 
 #'   calc_tidy_iea_df_balances()
 #' head(Ebal, 5)
 calc_tidy_iea_df_balances <- function(.tidy_iea_df, 
@@ -77,6 +78,8 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
                             ledger_side = "Ledger.side",
                             e_dot = "E.dot",
                             unit = "Unit",
+                            # Input groups
+                            grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product"),
                             # ledger.side identifiers
                             supply = "Supply",
                             consumption = "Consumption",
@@ -87,16 +90,18 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
                             balance_OK = "balance_OK", 
                             err = "err",
                             tol = 1e-6){
-  # Calculate the supply sum on a per-group basis
-  SupplySum <- .tidy_iea_df %>%
+  # Calculate sums on a per-group basis
+  Tidy <- .tidy_iea_df %>% 
+    dplyr::group_by(!!!lapply(grouping_vars, as.name))
+  SupplySum <- Tidy %>%
     dplyr::filter(!!as.name(ledger_side) == supply) %>%
     dplyr::summarise(!!as.name(supply_sum) := sum(!!as.name(e_dot)))
   # Calculate the sonsumption sum on a per-group basis
-  ConsumptionSum <- .tidy_iea_df %>%
+  ConsumptionSum <- Tidy %>%
     dplyr::filter(!!as.name(ledger_side) == consumption) %>%
     dplyr::summarise(!!as.name(consumption_sum) := sum(!!as.name(e_dot)))
   # Return the difference between supply and consumption
-  dplyr::full_join(SupplySum, ConsumptionSum, by = dplyr::group_vars(.tidy_iea_df)) %>% 
+  dplyr::full_join(SupplySum, ConsumptionSum, by = grouping_vars) %>% 
     dplyr::mutate(
       !!as.name(supply_minus_consumption) := !!as.name(supply_sum) - !!as.name(consumption_sum), 
       !!as.name(balance_OK) := dplyr::case_when(
@@ -107,7 +112,8 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
         is.na(!!as.name(consumption_sum)) ~ !!as.name(supply_sum),
         TRUE ~ !!as.name(supply_minus_consumption)
       )
-    )
+    ) %>% 
+    dplyr::ungroup()
 }
 
 
@@ -130,7 +136,6 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
 #' @examples
 #' library(dplyr)
 #' load_tidy_iea_df() %>% 
-#'   group_by(Country, Year, Energy.type, Unit, Product) %>% 
 #'   calc_tidy_iea_df_balances() %>% 
 #'   tidy_iea_df_balanced()
 tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
@@ -150,17 +155,19 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' on a per-product basis.
 #' 
 #' This function assumes that `.tidy_iea_df` is grouped appropriately.
-#' So be sure to group `.tidy_iea_df` by appropriate variables
+#' So be sure to set the `grouping_vars` argument
 #' before calling this function.
-#' Grouping should _definitely_ be done on the `Product` column.
+#' The default `grouping_vars` fixes energy balances on a per-year, per-product basis.
+#' The `Product` column should definitely be included in `grouping_vars`, 
+#' but any other grouping level is fine. 
 #' Typically, grouping is also done on 
 #' `Country`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
-#' Grouping should _not_ be done on the `flow` column or the `ledger_side` column.
+#' Grouping should _not_ be done on the `flow` or the `ledger_side` columns.
 #' 
 #' Internally, this function calls [calc_tidy_iea_df_balances()]
-#' and adjusts `Statistical differences` by any imbalances that are present.
+#' and adjusts `Statistical differences` to compensate for any imbalances that are present.
 #'
-#' @param .tidy_iea_df a tidy data frame containing IEA data, typically the output
+#' @param .tidy_iea_df a tidy data frame containing IEA extended energy balanc data
 #' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "`Ledger.side`".
 #' @param supply a string indicating the supply side of the ledger in the `ledger_side` column. Default is "`Supply`".
 #' @param consumption a string indicating the consumption side of the ledger in the `ledger_side` column. Default is "`Consumption`".
@@ -172,6 +179,8 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' @param e_dot the name of the energy flow column in `.tidy_iea_df`. Default is "`E.dot`".
 #' @param err the name of a temporary error column added to `.tidy_iea_df`. Default is "`.err`".
 #' @param remove_zeroes a logical telling whether to remove `0`s after balancing.
+#' @param grouping_vars a string vector of names of columns by which energy balance calculations should be performed. 
+#'        Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")`.
 #'
 #' @return `.tidy_iea_df` with adjusted `Statistical differences` flows such that 
 #'         the data for each product are in perfect energy balance.
@@ -183,16 +192,15 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' unbalanced <- load_tidy_iea_df()
 #' # This will not be balanced, because the IEA data are not in perfect balance
 #' unbalanced %>% 
-#'   group_by(Country, Year, Energy.type, Unit, Product) %>% 
 #'   calc_tidy_iea_df_balances() %>% 
 #'   tidy_iea_df_balanced()
 #' # This will be balanced, becasue we fix the imbalances.
 #' unbalanced %>% 
-#'   group_by(Country, Year, Energy.type, Unit, Product) %>% 
 #'   fix_tidy_iea_df_balances() %>% 
 #'   calc_tidy_iea_df_balances() %>% 
 #'   tidy_iea_df_balanced()
 fix_tidy_iea_df_balances <- function(.tidy_iea_df,
+                                     # Input columns and values
                                      ledger_side = "Ledger.side",
                                      supply = "Supply", 
                                      consumption = "Consumption",
@@ -202,11 +210,14 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
                                      statistical_differences = "Statistical differences",
                                      product = "Product",
                                      e_dot = "E.dot", 
+                                     # Name used for error column internally
                                      err = ".err", 
-                                     remove_zeroes = TRUE){
+                                     remove_zeroes = TRUE, 
+                                     # Analysis groups
+                                     grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")){
   e_bal_errors <- .tidy_iea_df %>% 
-    calc_tidy_iea_df_balances(err = err) %>% 
-    dplyr::select(dplyr::group_vars(.tidy_iea_df), err) %>% 
+    calc_tidy_iea_df_balances(grouping_vars = grouping_vars, err = err) %>% 
+    dplyr::select(grouping_vars, err) %>% 
     dplyr::mutate(
       !!as.name(flow) := statistical_differences, 
       !!as.name(ledger_side) := supply,
@@ -214,7 +225,7 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
     )
   
   out <- .tidy_iea_df %>% 
-    dplyr::full_join(e_bal_errors, by = c(dplyr::group_vars(.tidy_iea_df), ledger_side, flow_aggregation_point, flow)) %>% 
+    dplyr::full_join(e_bal_errors, by = c(grouping_vars, ledger_side, flow_aggregation_point, flow)) %>% 
     dplyr::mutate(
       # If IEA thought things were in balance (even if they aren't), there will be an 
       # NA in the e_dot column in the Statistical differences row. 

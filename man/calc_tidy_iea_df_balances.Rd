@@ -5,9 +5,10 @@
 \title{Calculate balances on a tidy IEA data frame}
 \usage{
 calc_tidy_iea_df_balances(.tidy_iea_df, ledger_side = "Ledger.side",
-  e_dot = "E.dot", unit = "Unit", supply = "Supply",
-  consumption = "Consumption", supply_sum = "supply_sum",
-  consumption_sum = "consumption_sum",
+  e_dot = "E.dot", unit = "Unit", grouping_vars = c("Method",
+  "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product"),
+  supply = "Supply", consumption = "Consumption",
+  supply_sum = "supply_sum", consumption_sum = "consumption_sum",
   supply_minus_consumption = "supply_minus_consumption",
   balance_OK = "balance_OK", err = "err", tol = 1e-06)
 }
@@ -25,6 +26,9 @@ that contains energy flow data. Default is "\code{E.dot}".}
 
 \item{unit}{the name of the colum in \code{.tidy_iea_data}
 that contains the units for the energy flow data. Default is "\code{Unit}".}
+
+\item{grouping_vars}{a string vector of names of columns by which energy balance calculations should be performed.
+Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")}.}
 
 \item{supply}{the identifier for supply data in the \code{ledger_side} column (a string).
 Default is "\code{Supply}".}
@@ -95,7 +99,6 @@ If not, \code{balance_OK} will be \code{FALSE}.
 \examples{
 library(dplyr)
 Ebal <- load_tidy_iea_df() \%>\% 
-  group_by(Country, Year, Energy.type, Unit, Product) \%>\% 
   calc_tidy_iea_df_balances()
 head(Ebal, 5)
 }

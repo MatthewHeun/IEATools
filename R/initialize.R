@@ -48,7 +48,8 @@
 #' To further prepre the data frame for use, call `augment_iea_data()`,
 #' passing the output of this function in the `.iea_df` argument of `augment_iea_data()`.
 #'
-#' @param .iea_file a string containing the path to a .csv file of extended energy balances from the IEA
+#' @param .iea_file a string containing the path to a .csv file of extended energy balances from the IEA.
+#'        Default is the path to a sample IEA file provided in this package.
 #' @param text a character string that can be parsed as IEA extended energy balances. 
 #'        (This argument is useful for testing.)
 #' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is "`,,TIME`".
@@ -71,7 +72,8 @@
 #' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43")
 #' # With extra commas on the 2nd line
 #' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal,42,43")
-iea_df <- function(.iea_file = NULL, text = NULL, 
+iea_df <- function(.iea_file = NULL, 
+                   text = NULL, 
                    expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
                    year_colname_pattern = "^\\d*$", 
                    missing_data = "..", not_applicable_data = "x", confidential_data = "c"){
@@ -168,6 +170,38 @@ rename_iea_df_cols <- function(.iea_df,
 }
 
 
+#' Clean whitespace from Flow and Product strings
+#' 
+#' Occasionally, in the IEA extended energy balance data, 
+#' extra whitespace characters are found at the beginning or end of `Flow` and `Product` strings.
+#' This function removes all leading and trailing whitespece.
+#'
+#' @param .iea_df a data frame containing `Flow` and `Product` columns
+#' @param flow the name of the flow column in `iea_df`. Default is "`Flow`".
+#' @param product the name of the product columns in `iea_df`. Default is "`Product`".
+#'
+#' @return `.iea_df` with leading and trailing whitespace removed from `Flow` and `Product` column strings
+#' 
+#' @export
+#'
+#' @examples
+#' data.frame(Flow = "  a flow   ", Product = "   a product   ", stringsAsFactors = FALSE) %>% 
+#'   clean_iea_whitespace()
+clean_iea_whitespace <- function(.iea_df, 
+                                 flow = "Flow", 
+                                 product = "Product"){
+  .iea_df %>% 
+    dplyr::mutate(
+      # These regular expression patterns match any number (+) of whitespace characters (\\s) at the beginning of the strings (^).
+      !!as.name(flow) := gsub(pattern = "^\\s+", replacement = "", x = !!as.name(flow)),
+      !!as.name(product) := gsub(pattern = "^\\s+", replacement = "", x = !!as.name(product)),
+      # These regular expression patterns match any number (+) of whitespace characters (\\s) at the end of the strings ($).
+      !!as.name(flow) := gsub(pattern = "\\s+$", replacement = "", x = !!as.name(flow)),
+      !!as.name(product) := gsub(pattern = "\\s+$", replacement = "", x = !!as.name(product))
+    )
+}
+
+
 #' Replace country names with 2-letter ISO abbreviations
 #' 
 #' The IEA uses full country names, but it is more concise to use the 2-letter ISO abbreviations.
@@ -175,6 +209,7 @@ rename_iea_df_cols <- function(.iea_df,
 #'
 #' @param .iea_df a data frame containing a `country` column
 #' @param country the name of the country column in `.iea_df`. Default is "`Country`".
+#' @param iso_abbrev_type an integer, either `2` for 2-letter abbreviations or `3` for 3-letter abbreviations. Default is 3.
 #'
 #' @return `.iea_df` with 2-letter ISO country abbreviations
 #' 
@@ -187,50 +222,38 @@ rename_iea_df_cols <- function(.iea_df,
 #'   rename_iea_df_cols() %>% 
 #'   use_iso_countries()
 use_iso_countries <- function(.iea_df, 
-                              country = "Country"){
+                              country = "Country",
+                              iso_abbrev_type = 3){
   # Load country code information
-  country.name.en <- as.name("country.name.en") # Eliminates a warning.
-  iso2c <- as.name("iso2c")
-  CountryInfo <- countrycode::codelist %>% 
-    dplyr::select(country.name.en, iso2c) %>% 
+  country.name.en <- "country.name.en" # Eliminates a warning.
+  assertthat::assert_that(iso_abbrev_type %in% c(2, 3))
+  if (iso_abbrev_type == 2) {
+    iso_type = "iso2c"
+  } else if (iso_abbrev_type == 3) {
+    iso_type = "iso3c"
+  } 
+  CountryInfo <- countrycode::codelist %>%
+    dplyr::select(!!as.name(country.name.en), !!as.name(iso_type)) %>% 
     dplyr::rename(
       !!as.name(country) := country.name.en
     )
-  # There are some "Countries" in the IEA data set that do not have corresponding
-  # iso2c abbreviations in the countrycode database.  
-  # None of these countries are of interest to us now (March 2018),
-  # so we will not try any corrections at this time.
-  # Later, we can add additional rows to the CountryInfo data frame to pick up ISO abbreviations
-  # for missing countries.
-  # The code might look something like this:
-  # bind_rows(
-  #   data.frame(Country = c("Former Soviet Union (if no detail)",
-  #                          "Former Yugoslavia (if no detail)",
-  #                          "Republic of Vietnam",
-  #                          "Tanzania",
-  #                          "Venezuela",
-  #                          "Islamic Republic of Iran",
-  #                          "Dem. Republic of the Congo",
-  #                          "Dem. People's Rep. of Korea",
-  #                          "People's Republic of China",
-  #                          "C\x99te d'Iviore"),
-  #   iso2c = c("SO", "YU", "VN", "TZ", "VE", "IR", "CD", "KP", "CN", "CI"))
-  # )
   .iea_df %>%
     dplyr::left_join(CountryInfo, by = c("Country")) %>% # left_join preserves all rows of IEA data
+    # If there is no ISO abbreviation for the country name, 
+    # we set the ios2c column to be the same as the country column.
+    # This step preserves all countries, even if they don't have a 2-letter ISO abbreviation.
     dplyr::mutate(
-      iso2c := dplyr::case_when(
-        # Add "World" to the Country column to preserve world data, if present.
-        !!as.name(country) == "World" ~ "World", 
-        TRUE ~ iso2c
+      !!as.name(iso_type) := dplyr::case_when(
+        is.na(!!as.name(iso_type)) ~ !!as.name(country), 
+        TRUE ~ !!as.name(iso_type)
       )
     ) %>% 
+    # Now we can get rid of the country column.
     dplyr::select(-!!as.name(country)) %>% 
-    dplyr::rename(!!as.name(country) := iso2c) %>% 
-    dplyr::select(!!as.name(country), dplyr::everything()) %>% 
-    # The effect of the next line is to eliminate non-countries from the data set.
-    # For example, OECD, IEA, etc. are not Countries, so they are dropped here.
-    dplyr::filter(!is.na(country))
+    # And rename the iso_type column to be country
+    dplyr::rename(!!as.name(country) := iso_type) %>% 
+    # And put the country column first.
+    dplyr::select(!!as.name(country), dplyr::everything())
 }
 
 
@@ -242,8 +265,8 @@ use_iso_countries <- function(.iea_df,
 #' 
 #' Note that the IEA data somtimes includes a variable number of spaces 
 #' before the "Memo: " string. 
-#' This function ignores all leading spaces in the `Flow` and `Product` columns
-#' before searching for `Flow` and `Product` prefixes.
+#' There are several places where trailing spaces are found, such as "Nuclear industry ".
+#' This function strips all leading and trailing spaces in the `Flow` and `Product` columns.
 #'
 #' @param .iea_df a data frame of IEA data
 #' @param flow the name of the flow column in `iea_df`. Default is "`Flow`".
@@ -265,23 +288,10 @@ use_iso_countries <- function(.iea_df,
 remove_agg_memo_flows <- function(.iea_df,
                                   flow = "Flow",
                                   product = "Product",
-                                  agg_flows = c(
-                                    "Total primary energy supply",
-                                    "Total final consumption", 
-                                    "Transformation processes", 
-                                    "Energy industry own use",
-                                    "Industry",
-                                    "Transport",
-                                    "Other",
-                                    "Non-energy use"),
-                                  memo_flow_prefixes = c("Memo: ", "Electricity output (GWh)", "Heat output"), 
-                                  memo_product_prefixes = c("Memo: ", "Total")){
+                                  agg_flows = IEATools::aggregation_flows,
+                                  memo_flow_prefixes = IEATools::memo_aggregation_flow_prefixes, 
+                                  memo_product_prefixes = IEATools::memo_aggregation_product_prefixes){
   .iea_df %>% 
-    dplyr::mutate(
-      # These regular expression patterns match any number (+) of spaces ( ) at the beginning of the strings (^).
-      !!as.name(flow) := gsub(pattern = "^ +", replacement = "", x = !!as.name(flow)),
-      !!as.name(product) := gsub(pattern = "^ +", replacement = "", x = !!as.name(product))
-    ) %>% 
     # Remove Flow aggregations
     dplyr::filter(!(!!as.name(flow) %in% agg_flows)) %>%
     # Remove Flow memos
@@ -298,7 +308,13 @@ remove_agg_memo_flows <- function(.iea_df,
 #' This function solves several problems.
 #' The first problem is that metadata in the `COUNTRY`, `FLOW`, and `PRODUCT`
 #' columns of an IEA data table are not unique.
-#' To solve this problem, two additional columns are added: `Ledger.side` and `Flow.aggregation.point`.
+#' A second problem is that the `FLOW` column contains both industries to which energy is flowing _and_ 
+#' the type of flow that is involved.  
+#' (E.g., the suffix "`(energy)`" means that the flow is an own use by the energy industry.
+#' The "`(transf.)`" suffix means that a flow is involved in a transformation process
+#' between primary and final energy. 
+#'
+#' To solve these problems, two additional columns are added: `Ledger.side` and `Flow.aggregation.point`.
 #' `Ledger.side` can be one of "`Supply`" or "`Consumption`", corresponding to the top or bottom of the IEA's tables, respectively.
 #' `Flow.aggregation.point` indicates the next level of aggregation for these data. 
 #' `Flow.aggregation.point` can be one of 
@@ -306,8 +322,11 @@ remove_agg_memo_flows <- function(.iea_df,
 #' on the `Supply` side of the ledger.
 #' On the `Consumption` side of the ledger, `Flow.aggregation.point` can be one of 
 #' "`Industry`", "`Transport`", "`Other`", or "`Non-energy use`".
+#' When the `Flow.aggregation.point` column is present, 
+#' the need for the "`(energy)`" and "`(transf.)`" suffixes is eliminated,
+#' so they are deleted.
 #' 
-#' The second problem this function solves is that energy type and units are not specified in IEA data.
+#' The third problem this function solves is that energy type and units are not specified in IEA data.
 #' An `Energy.type` column is added with the value of `energy_type_val`. 
 #' (Default is `E`, for energy, as opposed to `X`, which would be exergy.)
 #' A `Unit` column is added with the value of `unit_val`.
@@ -377,12 +396,15 @@ remove_agg_memo_flows <- function(.iea_df,
 #'   augment_iea_df()
 augment_iea_df <- function(.iea_df, 
                            country = "Country", 
-                           ledger_side = "Ledger.side", flow_aggregation_point = "Flow.aggregation.point", flow = "Flow", 
+                           ledger_side = "Ledger.side", 
+                           flow_aggregation_point = "Flow.aggregation.point", 
+                           flow = "Flow", 
                            energy_type = "Energy.type", energy_type_val = "E",
                            method = "Method", method_val = "PCM",
                            last_stage = "Last.stage", last_stage_val = "Final",
                            unit = "Unit", unit_val = "ktoe",
-                           supply = "Supply", consumption = "Consumption",
+                           supply = "Supply", 
+                           consumption = "Consumption",
                            tpes = "Total primary energy supply", 
                            tpes_flows = c("Production", "Imports", "Exports", "International marine bunkers", "International aviation bunkers", "Stock changes"),
                            tfc_compare = "TFC compare",
@@ -472,6 +494,17 @@ augment_iea_df <- function(.iea_df,
         !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), heat_output_flows_prefix) ~ heat_output,
         TRUE ~ NA_character_
       ), 
+      # Now that Flow.aggregation.point is present, we no longer need the (energy),  (transf.), and (transformation) suffixes, so delete them.
+      # The string "\s+" means to match any number (+) of whitespace (\\s) characters.
+      !!as.name(flow) := dplyr::case_when(
+        # Delete the " (transf.)" suffix
+        endsWith(!!as.name(flow), tp_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(tp_flows_suffix)), replacement = "", x = !!as.name(flow)), 
+        # Delete the " (transformation)" suffix
+        endsWith(!!as.name(flow), nstp_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(nstp_flows_suffix)), replacement = "", x = !!as.name(flow)), 
+        # Delete the " (energy)" suffix
+        endsWith(!!as.name(flow), eiou_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(eiou_flows_suffix)), replacement = "", x = !!as.name(flow)),
+        TRUE ~ !!as.name(flow)
+      ),
       # Add method column
       !!method := method_val,
       # Add last stage column
@@ -501,6 +534,8 @@ augment_iea_df <- function(.iea_df,
 #'
 #' @param .iea_df a IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
 #' @param year the name of the year column created in `.iea_df` by this function. (Default is "`Year`".)
+#' @param method the name of the method column created in `.iea_df` by this function. (Default is "`Method`".)
+#' @param last_stage the name of the last stage column created in `.iea_df` by this function. (Default is "`Last.stage`".)
 #' @param e_dot the name of the energy/exergy value column created in `.iea_df` by this function. (Default is "`E.dot`".)
 #' @param country the name of the country column in `.iea_df`. (Default is "`Country`".)
 #' @param ledger_side the name of the ledger side in `.iea_df`. (Default is "`Ledger.side`".)
@@ -539,7 +574,11 @@ tidy_iea_df <- function(.iea_df,
     tidyr::gather(key = !!as.name(year), value = !!as.name(e_dot), -c(method, country, last_stage, ledger_side, 
                                                                       flow_aggregation_point, flow, product, energy_type, unit)) %>% 
     # Set the column order to something rational
-    dplyr::select(method, last_stage, country, year, ledger_side, flow_aggregation_point, energy_type, unit, flow, product, e_dot)
+    dplyr::select(method, last_stage, country, year, ledger_side, flow_aggregation_point, energy_type, unit, flow, product, e_dot) %>% 
+    # Set the year column to be numeric
+    dplyr::mutate(
+      !!as.name(year) := as.numeric(!!as.name(year))
+    )
   if (remove_zeroes) {
     out <- out %>% 
       dplyr::filter(!(!!as.name(e_dot) == 0))
@@ -559,7 +598,7 @@ tidy_iea_df <- function(.iea_df,
 #' 5. [augment_iea_df()], and 
 #' 6. [tidy_iea_df()].
 #' 
-#' Each is called in turn using default arguments.
+#' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
 #' 
 #' @param file_path the path of the file to be loaded. Default loads example data bundled with the package.
@@ -574,6 +613,7 @@ tidy_iea_df <- function(.iea_df,
 #'   system.file(package = "IEATools") %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
+#'   clean_iea_whitespace() %>% 
 #'   remove_agg_memo_flows() %>% 
 #'   use_iso_countries() %>% 
 #'   augment_iea_df() %>% 
@@ -584,6 +624,7 @@ load_tidy_iea_df <- function(file_path = file.path("extdata", "GH-ZA-ktoe-Extend
   file_path %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
+    clean_iea_whitespace() %>% 
     remove_agg_memo_flows() %>% 
     use_iso_countries() %>% 
     augment_iea_df() %>% 

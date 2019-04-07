@@ -11,7 +11,8 @@ iea_df(.iea_file = NULL, text = NULL,
   not_applicable_data = "x", confidential_data = "c")
 }
 \arguments{
-\item{.iea_file}{a string containing the path to a .csv file of extended energy balances from the IEA}
+\item{.iea_file}{a string containing the path to a .csv file of extended energy balances from the IEA.
+Default is the path to a sample IEA file provided in this package.}
 
 \item{text}{a character string that can be parsed as IEA extended energy balances.
 (This argument is useful for testing.)}
