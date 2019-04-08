@@ -4,7 +4,8 @@
 * New function `augment_iea_df()` now removes ` (energy)`, ` (transf.)`, and ` (transformation)` suffixes 
   from the `Flow` column after adding the `Flow.aggregation.point` column.
 * No longer removing countries that lack a 2-letter ISO abbreviation.
-* Added `prep_psut()` function to bundle several data munging steps into one.
+* New function `prep_psut()` bundles several PSUT-related functions together.
+* Added functions to generate PSUT matrices
 * Added `production_to_resources()` function to convert `Production` to `Resources (product)`.
 * Added `specify_primary_production()` function to fix primary production issues in the IEA data.
 * Added constants `coal_and_coal_products`, `oil_and_oil_products`, `renewable_products`, `biofuel_and_waste_products`.
