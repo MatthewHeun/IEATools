@@ -1,3 +1,10 @@
+* `specify_tp_eiou()` now aggregates inputs and outputs separately
+   at the end of its specification process.
+   Doing so avoids a situation where resource extraction industries
+   would look like a Transformation process sink industry when 
+   inputsand outputs were netted together.
+
+
 # IEATools 0.1.6 (2019-04-06)
 
 * Updated all three vignettes to reflect the new functions and demonstrate their use.
