@@ -23,6 +23,7 @@ Imports:
     magrittr, 
     matsbyname,
     matsindf,
+    openxlsx,
     rlang,
     tibble,
     tidyr

@@ -4,26 +4,31 @@
 \alias{write_fu_templates}
 \title{Write blank final-to-useful templates}
 \usage{
-write_fu_templates(.iea_df, dir)
+write_fu_templates(.tidy_iea_df, path)
 }
 \arguments{
-\item{.iea_df}{a data frame as discussed in Details}
+\item{.tidy_iea_df}{a data frame as discussed in Details}
 
-\item{dir}{the directory into which blank templates will be written}
+\item{path}{the file path into which the blank template file will be written.
+Include both folder and file name.
+If not present, the ".xlsx" extension is added.}
 }
 \value{
 a data frame containing the blank template
 }
 \description{
-The analyst often starts with data covering primary and final energy stages.
-This function writes blank template files that, when filled,
+The analyst often starts with IEA extended energy balance data covering primary and final energy stages.
+This function writes a blank Excel template file that, when filled,
 allow the energy conversion chain to be extended to the useful stage.
 }
 \details{
-\code{.iea_df} should have columns
-
 This function returns a data frame that is the template that needs to be filled.
 Use the function \code{write.csv()} or similar to save to disk.
 The analyst must supply allocation and efficiency data.
 Allocations are to be placed in \code{c} rows and efficiencies are to be placed in \code{eta} rows.
+}
+\examples{
+load_tidy_iea_df() \%>\% 
+  specify_all() \%>\% 
+  write_fu_templates()
 }
