@@ -55,12 +55,12 @@ eiou_fu_template <- function(.tidy_iea_df,
   # Ensure that the incoming data frame has exclusively "E" as the Energy.type.
   assertthat::assert_that(.tidy_iea_df %>% 
                             magrittr::extract2(energy_type) %>% 
-                            equals(energy) %>% 
+                            magrittr::equals(energy) %>% 
                             all())
   # Ensure that the incoming data frame has exclusively "Final" as the Last.stage.
   assertthat::assert_that(.tidy_iea_df %>% 
                             magrittr::extract2(last_stage) %>% 
-                            equals(final) %>% 
+                            magrittr::equals(final) %>% 
                             all())
   Totals <- .tidy_iea_df %>% 
     dplyr::filter(!!as.name(flow_aggregation_point) == tpes) %>% 
@@ -73,7 +73,7 @@ eiou_fu_template <- function(.tidy_iea_df,
     dplyr::rename(
       !!as.name(destination) := !!as.name(flow)
     ) %>% 
-    mutate(
+    dplyr::mutate(
       !!as.name(ledger_side) := NULL
     ) %>% 
     tidyr::spread(key = !!as.name(year), value = e_dot)

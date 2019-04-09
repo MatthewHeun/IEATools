@@ -10,6 +10,7 @@ test_that("specify_tp_eiou works as expected for Own use in electricity, CHP and
   EIOU <- data.frame(Country = c("US", "US"), 
                      Flow.aggregation.point = c("Energy industry own use", "nothing"),
                      Flow = c("Own use in electricity, CHP and heat plants", "Own use in electricity, CHP and heat plants"), 
+                     E.dot = c(-10, -10),
                      stringsAsFactors = FALSE)
   EIOU_fixed <- specify_tp_eiou(EIOU)
   # The first row is expected to change, because its Product is "Electricity"
@@ -23,6 +24,7 @@ test_that("specify_tp_eiou works as expected for pumped storage plants", {
   EIOU <- data.frame(Country = c("US", "US"), 
                      Flow.aggregation.point = c("Energy industry own use", "Nothing"),
                      Flow = c("Pumped storage plants", "Pumped storage plants"), 
+                     E.dot = c(-20, -20),
                      stringsAsFactors = FALSE)
   EIOU_fixed <- specify_tp_eiou(EIOU)
   # The first row is expected to change, because its Product is "Electricity"
@@ -36,6 +38,7 @@ test_that("specify_tp_eiou works as expected for nuclear industry", {
   EIOU <- data.frame(Country = c("US", "US"), 
                      Flow.aggregation.point = c("Energy industry own use", "Nothing"),
                      Flow = c("Nuclear industry", "Nuclear industry"), 
+                     E.dot = c(-30, -30),
                      stringsAsFactors = FALSE)
   EIOU_fixed <- specify_tp_eiou(EIOU)
   # The first row is expected to change, because its Product is "Electricity"
@@ -49,6 +52,7 @@ test_that("specify_tp_eiou works as expected for non-specified (energy)", {
   EIOU <- data.frame(Country = c("US", "US"), 
                      Flow.aggregation.point = c("Energy industry own use", "Nothing"),
                      Flow = c("Non-specified (energy)", "Non-specified (energy)"), 
+                     E.dot = c(-40, -40),
                      stringsAsFactors = FALSE)
   EIOU_fixed <- specify_tp_eiou(EIOU)
   # The first row is expected to change, because its Product is "Electricity"
@@ -66,5 +70,5 @@ test_that("specify_tp_eiou works for sample data", {
     specify_tp_eiou() %>% 
     filter(Flow.aggregation.point == "Energy industry own use" & 
              Flow == "Main activity producer electricity plants")
-  expect_equal(nrow(specified), 5)
+  expect_equal(nrow(specified), 4)
 })

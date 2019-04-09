@@ -10,7 +10,8 @@ specify_tp_eiou(.tidy_iea_df,
   own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
   pumped_storage = "Pumped storage plants",
   nuclear_industry = "Nuclear industry",
-  non_spec_energy = "Non-specified (energy)",
+  non_spec_energy = "Non-specified (energy)", e_dot = "E.dot",
+  negzeropos = ".negzeropos",
   main_act_producer_elect = "Main activity producer electricity plants",
   nonspecenergy_reclassify = "Non-specified (transformation)")
 }
@@ -30,6 +31,10 @@ specify_tp_eiou(.tidy_iea_df,
 \item{nuclear_industry}{a string identifying nuclear plants in the flow column. Default is "\code{Nuclear industry}".}
 
 \item{non_spec_energy}{a string identifying non-specified energy in the flow solumn. Default is "\code{Non-specified (energy)}".}
+
+\item{e_dot}{the name of the energy flow column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
+
+\item{negzeropos}{the name of a temporary column created in \code{.tidy_iea_df}. Default is "\code{.negzeropos}".}
 
 \item{main_act_producer_elect}{a string identifying main activity producer electricity plants. Default is "\code{Main activity producter electricity plants}".}
 
@@ -58,6 +63,11 @@ The following changes are made to the \code{.tidy_iea_df} data frame:
 \item EIOU classified as \code{nuclear_industry} is sent to \code{main_act_producer_elect}.
 \item EIOU classified as \code{non_spec_energy} is sent to \code{nonspecenergy_reclassify}.
 }
+
+After the changes are made, reassigned EIOU may double-up pre-existing EIOU.
+For example, a country may already have "\code{Electricity}" EIOU for "\code{Main activity poducer electricity plants}"
+before "\code{Nuclear industry}" "\code{Electricity}" EIOU is reassigned to "\code{Main activity poducer electricity plants}".
+To avoid double rows, all like rows are summed before returning.
 }
 \examples{
 library(dplyr)

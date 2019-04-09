@@ -3,7 +3,6 @@
 export("%>%")
 export(":=")
 export(.data)
-export(add_production_details)
 export(add_psut_matnames)
 export(add_row_col_meta)
 export(augment_iea_df)

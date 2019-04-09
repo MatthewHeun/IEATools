@@ -67,10 +67,12 @@ test_that("eiou is replaced correctly", {
   unspecified <- data.frame(Country = c("HU", "HU"), 
                             Flow.aggregation.point = c("Energy industry own use", "Energy industry own use"),
                             Flow = c("Nuclear industry", "Nuclear industry"), 
+                            E.dot = c(-10, -10),
                             stringsAsFactors = FALSE)
   specified <- unspecified %>% 
     specify_tp_eiou()
-  expect_equal(specified$Flow, c("Main activity producer electricity plants", "Main activity producer electricity plants"))
+  expect_equal(specified$Flow, "Main activity producer electricity plants")
+  expect_equal(specified$E.dot, -20)
 })
 
 test_that("specify_all works as expected", {
@@ -101,7 +103,8 @@ test_that("tp_sinks_sources() works as expected", {
                  specify_tp_eiou() %>% 
                  specify_interface_industries() %>% 
                  tp_sinks_sources(grouping_vars = NULL) %>% 
-                 nrow(), 0)
+                 nrow(), 
+               0)
   # Try to group on Flow.aggregation.point. Should fail.
   expect_error(load_tidy_iea_df() %>% 
                  specify_all() %>% 

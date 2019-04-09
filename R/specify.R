@@ -270,6 +270,11 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' 2. EIOU classified as `pumped_storage` is sent to `main_act_producer_elect`.
 #' 3. EIOU classified as `nuclear_industry` is sent to `main_act_producer_elect`.
 #' 4. EIOU classified as `non_spec_energy` is sent to `nonspecenergy_reclassify`.
+#' 
+#' After the changes are made, reassigned EIOU may double-up pre-existing EIOU.
+#' For example, a country may already have "`Electricity`" EIOU for "`Main activity poducer electricity plants`"
+#' before "`Nuclear industry`" "`Electricity`" EIOU is reassigned to "`Main activity poducer electricity plants`".
+#' To avoid double rows, all like rows are summed before returning.
 #'
 #' @param .tidy_iea_df an IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
 #' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
@@ -279,6 +284,8 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' @param pumped_storage a string identifying pumped storage plants in the flow column. Default is "`Pumped storage plants`".
 #' @param nuclear_industry a string identifying nuclear plants in the flow column. Default is "`Nuclear industry`".
 #' @param non_spec_energy a string identifying non-specified energy in the flow solumn. Default is "`Non-specified (energy)`".
+#' @param e_dot the name of the energy flow column in `.tidy_iea_df`. Default is "`E.dot`".
+#' @param negzeropos the name of a temporary column created in `.tidy_iea_df`. Default is "`.negzeropos`".
 #' @param main_act_producer_elect a string identifying main activity producer electricity plants. Default is "`Main activity producter electricity plants`".
 #' @param nonspecenergy_reclassify a string identifying the reclassified non-specified (energy) industry. Default is "`Non-specified (transformation)`".
 #'
@@ -301,9 +308,13 @@ specify_tp_eiou <- function(.tidy_iea_df,
                             pumped_storage = "Pumped storage plants",
                             nuclear_industry = "Nuclear industry",
                             non_spec_energy = "Non-specified (energy)",
+                            e_dot = "E.dot",
+                            negzeropos = ".negzeropos",
                             # Places where the EIOU will e reassigned
                             main_act_producer_elect = "Main activity producer electricity plants",
                             nonspecenergy_reclassify = "Non-specified (transformation)"){
+  .tidy_iea_df %>% 
+    matsindf::verify_cols_missing(negzeropos)
   .tidy_iea_df %>% 
     dplyr::mutate(
       !!as.name(flow) := dplyr::case_when(
@@ -351,7 +362,29 @@ specify_tp_eiou <- function(.tidy_iea_df,
         # Otherwise, just keep the same value for the flow column.
         TRUE ~ !!as.name(flow)
       )
-    )
+    ) %>% 
+    dplyr::mutate(
+      # Add a column that tells whether E.dot is negative, zero, or positive.
+      # The goa is to sum like input or like outputs of a Transformation process.
+      # Unless we differentiate by the sign of E.dot, 
+      # we'll be getting net energy flows, which we don't want.
+      !!as.name(negzeropos) := dplyr::case_when(
+        !!as.name(e_dot) < 0 ~ "neg", 
+        !!as.name(e_dot) == 0 ~ "zero",
+        !!as.name(e_dot) > 0 ~ "pos"
+      )
+    ) %>% 
+    # Now sum similar rows using summarise.
+    # Group by everything except the energy flow rate column, "E.dot".
+    dplyr::group_by(!!!lapply(base::setdiff(names(.tidy_iea_df), e_dot), as.name), !!as.name(negzeropos)) %>% 
+    dplyr::summarise(
+      !!as.name(e_dot) := sum(!!as.name(e_dot))
+    ) %>% 
+    dplyr::mutate(
+      # Eliminate the column we added.
+      !!as.name(negzeropos) := NULL
+    ) %>% 
+    dplyr::ungroup()
 }
 
 
