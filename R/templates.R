@@ -51,6 +51,8 @@ eiou_fu_template <- function(.tidy_iea_df,
                              flow = "Flow", 
                              destination = "Destination",
                              e_dot = "E.dot",
+                             e_dot_total = paste0(e_dot, ".total"),
+                             e_dot_perc = paste0(e_dot, ".perc"),
                              grouping_vars = c("Method", "Last.stage", "Country", "Year", "Unit")){
   # Ensure that the incoming data frame has exclusively "E" as the Energy.type.
   assertthat::assert_that(.tidy_iea_df %>% 
@@ -62,27 +64,25 @@ eiou_fu_template <- function(.tidy_iea_df,
                             magrittr::extract2(last_stage) %>% 
                             magrittr::equals(final) %>% 
                             all())
-  Totals <- .tidy_iea_df %>% 
-    dplyr::filter(!!as.name(flow_aggregation_point) == tpes) %>% 
+  Totals_eiou <- .tidy_iea_df %>% 
+    dplyr::filter(!!as.name(flow_aggregation_point) == eiou) %>% 
     dplyr::group_by(!!!lapply(grouping_vars, as.name)) %>% 
-    dplyr::summarise(!!as.name(e_dot) := sum(!!as.name(e_dot)))
+    dplyr::summarise(!!as.name(e_dot_total) := sum(!!as.name(e_dot)))
   
   # Extract the EIOU data
-  EIOU <- .tidy_iea_df %>% 
+  Tidy_EIOU <- .tidy_iea_df %>% 
     dplyr::filter(!!as.name(flow_aggregation_point) == eiou) %>% 
-    dplyr::rename(
-      !!as.name(destination) := !!as.name(flow)
-    ) %>% 
+    dplyr::left_join(Totals_eiou, by = grouping_vars) %>% 
     dplyr::mutate(
+      !!as.name(e_dot_perc) := !!as.name(e_dot) / !!as.name(e_dot_total) * 100, 
+      !!as.name(e_dot_total) := NULL, 
       !!as.name(ledger_side) := NULL
     ) %>% 
-    tidyr::spread(key = !!as.name(year), value = e_dot)
+    dplyr::rename(
+      !!as.name(destination) := !!as.name(flow)
+    )
   
-    
-  
-  .tidy_iea_df %>% 
-    dplyr::filter(!!as.name(flow_aggregation_point) == eiou)
-    
+
 }
 
 # # Writes an efficiency table with blanks where the final to useful data are required.

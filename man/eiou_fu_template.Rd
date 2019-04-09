@@ -11,7 +11,9 @@ eiou_fu_template(.tidy_iea_df, energy_type = "Energy.type",
   eiou = "Energy industry own use",
   tpes = "Total primary energy supply", flow = "Flow",
   destination = "Destination", e_dot = "E.dot",
-  grouping_vars = c("Method", "Last.stage", "Country", "Year", "Unit"))
+  e_dot_total = paste0(e_dot, ".total"), e_dot_perc = paste0(e_dot,
+  ".perc"), grouping_vars = c("Method", "Last.stage", "Country", "Year",
+  "Unit"))
 }
 \arguments{
 \item{.tidy_iea_df}{}
