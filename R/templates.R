@@ -53,6 +53,8 @@ eiou_fu_template <- function(.tidy_iea_df,
                              e_dot = "E.dot",
                              e_dot_total = paste0(e_dot, ".total"),
                              e_dot_perc = paste0(e_dot, ".perc"),
+                             allocation_var = "C",
+                             n_allocation_rows = 3,
                              grouping_vars = c("Method", "Last.stage", "Country", "Year", "Unit")){
   # Ensure that the incoming data frame has exclusively "E" as the Energy.type.
   assertthat::assert_that(.tidy_iea_df %>% 
@@ -75,12 +77,22 @@ eiou_fu_template <- function(.tidy_iea_df,
     dplyr::left_join(Totals_eiou, by = grouping_vars) %>% 
     dplyr::mutate(
       !!as.name(e_dot_perc) := !!as.name(e_dot) / !!as.name(e_dot_total) * 100, 
-      !!as.name(e_dot_total) := NULL, 
-      !!as.name(ledger_side) := NULL
+      !!as.name(e_dot_total) := NULL 
     ) %>% 
     dplyr::rename(
       !!as.name(destination) := !!as.name(flow)
     )
+  c_cols <- paste0("C.", 1:n_allocation_rows, " [%]")
+  for (i in 1:n_allocation_rows) {
+    Tidy_EIOU <- Tidy_EIOU %>% 
+      dplyr::mutate(
+        !!as.name(c_cols[[i]]) := ""
+      )
+  }
+  
+  Tidy_EIOU %>% 
+    tidyr::gather(key = quantity, value = val, E.dot, E.dot.perc, !!!lapply(c_cols, as.name)) %>% 
+    tidyr::spread(key = Year, value = val) %>% View
   
 
 }
