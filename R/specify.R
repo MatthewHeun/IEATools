@@ -151,7 +151,8 @@ specify_primary_production <- function(.tidy_iea_df,
     ) %>% 
     # After reassigning, we may have multiple rows of liequfaction_regas_reassign,
     # so we need to sum those rows.
-    dplyr::group_by(!!!lapply(base::setdiff(names(.tidy_iea_df), e_dot), as.name)) %>% 
+    # dplyr::group_by(!!!lapply(base::setdiff(names(.tidy_iea_df), e_dot), as.name)) %>% 
+    matsindf::group_by_everything_except(e_dot) %>% 
     dplyr::summarise(!!as.name(e_dot) := sum(!!as.name(e_dot))) %>% 
     dplyr::ungroup()
 
