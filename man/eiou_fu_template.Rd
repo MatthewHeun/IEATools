@@ -10,12 +10,13 @@ eiou_fu_template(.tidy_iea_df, energy_type = "Energy.type",
   flow_aggregation_point = "Flow.aggregation.point",
   eiou = "Energy industry own use",
   tpes = "Total primary energy supply", flow = "Flow",
-  destination = "Destination", e_dot = "E.dot",
-  e_dot_total = paste0(e_dot, ".total"), e_dot_perc = paste0(e_dot,
-  ".perc"), e_dot_max = paste0(e_dot, ".max"),
+  product = "Product", destination = "Destination",
+  quantity = "Quantity", e_dot = "E.dot", e_dot_total = paste0(e_dot,
+  ".total"), e_dot_perc = paste0(e_dot, ".perc"),
+  e_dot_max = paste0(e_dot, ".max"),
   e_dot_perc_max = paste0(e_dot_perc, ".max"), allocation_var = "C_",
-  n_allocation_rows = 3, val = ".value", grouping_vars = c("Method",
-  "Last.stage", "Country", "Year", "Unit"))
+  n_allocation_rows = 3, maximum_values = "Maximum values",
+  .value = ".value")
 }
 \arguments{
 \item{.tidy_iea_df}{}

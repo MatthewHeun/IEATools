@@ -49,7 +49,9 @@ eiou_fu_template <- function(.tidy_iea_df,
                              eiou = "Energy industry own use", 
                              tpes = "Total primary energy supply",
                              flow = "Flow", 
+                             product = "Product",
                              destination = "Destination",
+                             quantity = "Quantity",
                              e_dot = "E.dot",
                              e_dot_total = paste0(e_dot, ".total"),
                              e_dot_perc = paste0(e_dot, ".perc"),
@@ -57,8 +59,8 @@ eiou_fu_template <- function(.tidy_iea_df,
                              e_dot_perc_max = paste0(e_dot_perc, ".max"),
                              allocation_var = "C_",
                              n_allocation_rows = 3,
-                             val = ".value",
-                             grouping_vars = c("Method", "Last.stage", "Country", "Year", "Unit")){
+                             maximum_values = "Maximum values",
+                             .value = ".value"){
   # Ensure that the incoming data frame has exclusively "E" as the Energy.type.
   assertthat::assert_that(.tidy_iea_df %>% 
                             magrittr::extract2(energy_type) %>% 
@@ -72,14 +74,14 @@ eiou_fu_template <- function(.tidy_iea_df,
   # Calculate total EIOU energy consumption for each year
   Totals_eiou <- .tidy_iea_df %>% 
     dplyr::filter(!!as.name(flow_aggregation_point) == eiou) %>% 
-    dplyr::group_by(!!!lapply(grouping_vars, as.name)) %>% 
+    matsindf::group_by_everything_except(ledger_side, flow_aggregation_point, flow, product, e_dot) %>% 
     dplyr::summarise(!!as.name(e_dot_total) := sum(!!as.name(e_dot)))
-  # Calculate a Tidy EIOU data frame
+  # Calculate a Tidy EIOU data frame with percentages.
   Tidy_EIOU <- .tidy_iea_df %>% 
     # Extract the EIOU data
     dplyr::filter(!!as.name(flow_aggregation_point) == eiou) %>% 
     # Add the totals to the data frame in preparation for calculating percentages
-    dplyr::left_join(Totals_eiou, by = grouping_vars) %>% 
+    dplyr::left_join(Totals_eiou, by = base::setdiff(names(.tidy_iea_df), c(ledger_side, flow_aggregation_point, flow, product, e_dot))) %>% 
     dplyr::mutate(
       # Calculate percentage of all EIOU for that country and year
       !!as.name(e_dot_perc) := !!as.name(e_dot) / !!as.name(e_dot_total) * 100, 
@@ -95,10 +97,18 @@ eiou_fu_template <- function(.tidy_iea_df,
   Max <- Tidy_EIOU %>% 
     matsindf::group_by_everything_except(year, e_dot, e_dot_perc) %>%
     dplyr::summarise(
-      !!as.name(e_dot_max) := max(!!as.name(e_dot)), 
-      !!as.name(e_dot_perc_max) := max(!!as.name(e_dot_perc))
+      # !!as.name(e_dot_max) := max(!!as.name(e_dot)), 
+      # !!as.name(e_dot_perc_max) := max(!!as.name(e_dot_perc))
+      !!as.name(e_dot) := max(!!as.name(e_dot)), 
+      !!as.name(e_dot_perc) := max(!!as.name(e_dot_perc))
     ) %>% 
-    tidyr::gather(key = !!as.name(year), value = !!as.name(val), !!as.name(e_dot_max), !!as.name(e_dot_perc_max))
+    # tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot_max), !!as.name(e_dot_perc_max)) %>% 
+    tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot), !!as.name(e_dot_perc)) %>% 
+    dplyr::mutate(
+      !!as.name(year) := 0,
+      # Need to make this into a character column so that we can add it to "" in the C_ columns later.
+      !!as.name(.value) := as.character(!!as.name(.value))
+    )
   
   # Create a vector of allocation percentages
   c_cols <- paste0(allocation_var, 1:n_allocation_rows, " [%]")
@@ -111,12 +121,16 @@ eiou_fu_template <- function(.tidy_iea_df,
   }
   # Reshape the data frame into the format that we want for an Excel spreadsheet
   Tidy_EIOU %>% 
+    tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot), !!as.name(e_dot_perc), !!!lapply(c_cols, as.name)) %>% 
+    dplyr::bind_rows(Max) %>%
     # First, gather all of the columns that we want to spread across the sheet
-    tidyr::gather(key = quantity, value = val, E.dot, E.dot.perc, !!!lapply(c_cols, as.name)) %>% 
+    # tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot), !!as.name(e_dot_perc), !!!lapply(c_cols, as.name)) %>% 
     # Now spread by years across the spreadsheet.
-    tidyr::spread(key = Year, value = val) %>% View
-  
-
+    tidyr::spread(key = Year, value = .value) %>% 
+    dplyr::rename(
+      # Rename the year 0 column
+      !!as.name(maximum_values) := `0`
+    )
 }
 
 # # Writes an efficiency table with blanks where the final to useful data are required.
