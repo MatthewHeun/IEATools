@@ -151,7 +151,6 @@ specify_primary_production <- function(.tidy_iea_df,
     ) %>% 
     # After reassigning, we may have multiple rows of liequfaction_regas_reassign,
     # so we need to sum those rows.
-    # dplyr::group_by(!!!lapply(base::setdiff(names(.tidy_iea_df), e_dot), as.name)) %>% 
     matsindf::group_by_everything_except(e_dot) %>% 
     dplyr::summarise(!!as.name(e_dot) := sum(!!as.name(e_dot))) %>% 
     dplyr::ungroup()
@@ -377,7 +376,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
     ) %>% 
     # Now sum similar rows using summarise.
     # Group by everything except the energy flow rate column, "E.dot".
-    dplyr::group_by(!!!lapply(base::setdiff(names(.tidy_iea_df), e_dot), as.name), !!as.name(negzeropos)) %>% 
+    matsindf::group_by_everything_except(e_dot) %>% 
     dplyr::summarise(
       !!as.name(e_dot) := sum(!!as.name(e_dot))
     ) %>% 
@@ -607,7 +606,7 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
   # in the same group.
   SummarizedNonenergy <- Nonenergy %>% 
     # Group by all columns except for E.dot
-    dplyr::group_by(!!!lapply(base::setdiff(names(Nonenergy), e_dot), as.name)) %>% 
+    matsindf::group_by_everything_except(e_dot) %>% 
     dplyr::summarise(!!as.name(e_dot) := sum(!!as.name(e_dot))) %>%
     dplyr::ungroup()
   # Return after removing the non-summarized Non-energy flows and inserting the summarized Non-energy flows.

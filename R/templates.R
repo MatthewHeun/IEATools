@@ -93,7 +93,7 @@ eiou_fu_template <- function(.tidy_iea_df,
     )
   # Calculate the maximum energy consumption across all years
   Max <- Tidy_EIOU %>% 
-    dplyr::group_by(!!!lapply(setdiff(names(Tidy_EIOU), c(year, e_dot, e_dot_perc)), as.name)) %>%
+    matsindf::group_by_everything_except(year, e_dot, e_dot_perc) %>%
     dplyr::summarise(
       !!as.name(e_dot_max) := max(!!as.name(e_dot)), 
       !!as.name(e_dot_perc_max) := max(!!as.name(e_dot_perc))
