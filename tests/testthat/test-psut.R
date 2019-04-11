@@ -106,7 +106,7 @@ test_that("prep_psut works as expected", {
   Simple <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     prep_psut() %>% 
-    rename(matval_simple = matvals)
+    dplyr::rename(matval_simple = matvals)
   S_units <- load_tidy_iea_df() %>% 
     extract_S_units_from_tidy()
   Complicated <- load_tidy_iea_df() %>% 
