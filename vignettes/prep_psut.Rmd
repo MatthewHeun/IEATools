@@ -74,8 +74,7 @@ the next step is to collapse the data into PSUT matrices.
 The `collapse_to_tidy_psut()` function performs this task
 using the `matsindf::collapse_to_matrices()` function internally.
 The `matvals` column is added to the data frame and
-contains a matrix for each set of grouping variables
-which are specified in the `grouping_vars` argument.
+contain matrix names for each row of the data frame.
 `collapse_to_tidy_psut()` ensures that all 
 entries in each matrix are non-negative.
 
