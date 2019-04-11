@@ -20,30 +20,30 @@ test_that("add_psut_matnames works as expected", {
   expect_false(any(is.na(With_matnames$matnames)))
   # Specific checks
   # Resources
-  expect_true(With_matnames %>% filter(startsWith(Flow, "Resources")) %>% extract2("matnames") %>% equals("R") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Resources")) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
   # Imports
-  expect_true(With_matnames %>% filter(startsWith(Flow, "Imports")) %>% extract2("matnames") %>% equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Imports")) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   # Exports
-  expect_true(With_matnames %>% filter(startsWith(Flow, "Exports")) %>% extract2("matnames") %>% equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Exports")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
   # International marine bunkers
-  expect_true(With_matnames %>% filter(startsWith(Flow, "International marine bunkers") & E.dot < 0) %>% extract2("matnames") %>% equals("Y") %>% all())
-  expect_true(With_matnames %>% filter(startsWith(Flow, "International marine bunkers") & E.dot > 0) %>% extract2("matnames") %>% equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   # International aviation bunkers
-  expect_true(With_matnames %>% filter(startsWith(Flow, "International aviation bunkers") & E.dot < 0) %>% extract2("matnames") %>% equals("Y") %>% all())
-  expect_true(With_matnames %>% filter(startsWith(Flow, "International aviation bunkers") & E.dot > 0) %>% extract2("matnames") %>% equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   # Stock changes
-  expect_true(With_matnames %>% filter(startsWith(Flow, "Stock changes") & E.dot < 0) %>% extract2("matnames") %>% equals("Y") %>% all())
-  expect_true(With_matnames %>% filter(startsWith(Flow, "Stock changes") & E.dot > 0) %>% extract2("matnames") %>% equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   # Transformation processes
-  expect_true(With_matnames %>% filter(startsWith(Flow.aggregation.point, "Transformation processes") & E.dot < 0) %>% extract2("matnames") %>% equals("U_excl_EIOU") %>% all())
-  expect_true(With_matnames %>% filter(startsWith(Flow.aggregation.point, "Transformation processes") & E.dot > 0) %>% extract2("matnames") %>% equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow.aggregation.point, "Transformation processes") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_excl_EIOU") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow.aggregation.point, "Transformation processes") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   # EIOU
-  expect_true(With_matnames %>% filter(startsWith(Flow.aggregation.point, "Energy industry own use") & E.dot < 0) %>% extract2("matnames") %>% equals("U_EIOU") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow.aggregation.point, "Energy industry own use") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_EIOU") %>% all())
   # Consumption
-  expect_true(With_matnames %>% filter(startsWith(Ledger.side, "Consumption")) %>% extract2("matnames") %>% equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Ledger.side, "Consumption")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
   # Transfers
-  expect_true(With_matnames %>% filter(startsWith(Flow, "Transfers") & E.dot < 0) %>% extract2("matnames") %>% equals("U_excl_EIOU") %>% all())
-  expect_true(With_matnames %>% filter(startsWith(Flow, "Transfers") & E.dot > 0) %>% extract2("matnames") %>% equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_excl_EIOU") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
 })
 
 test_that("add_row_col_meta works as expected", {
@@ -57,29 +57,29 @@ test_that("add_row_col_meta works as expected", {
   expect_false(any(is.na(With_meta$rowtypes)))
   expect_false(any(is.na(With_meta$coltypes)))
   # Ensure that row and column types are correct
-  expect_true(With_meta %>% filter(matnames == "R" | matnames == "V") %>% extract2("rowtypes") %>% equals("Industry") %>% all())
-  expect_true(With_meta %>% filter(matnames == "R" | matnames == "V") %>% extract2("coltypes") %>% equals("Product") %>% all())
-  expect_true(With_meta %>% filter(startsWith(matnames, "U") | matnames == "Y") %>% extract2("rowtypes") %>% equals("Product") %>% all())
-  expect_true(With_meta %>% filter(startsWith(matnames, "U") | matnames == "Y") %>% extract2("coltypes") %>% equals("Industry") %>% all())
+  expect_true(With_meta %>% dplyr::filter(matnames == "R" | matnames == "V") %>% magrittr::extract2("rowtypes") %>% magrittr::equals("Industry") %>% all())
+  expect_true(With_meta %>% dplyr::filter(matnames == "R" | matnames == "V") %>% magrittr::extract2("coltypes") %>% magrittr::equals("Product") %>% all())
+  expect_true(With_meta %>% dplyr::filter(startsWith(matnames, "U") | matnames == "Y") %>% magrittr::extract2("rowtypes") %>% magrittr::equals("Product") %>% all())
+  expect_true(With_meta %>% dplyr::filter(startsWith(matnames, "U") | matnames == "Y") %>% magrittr::extract2("coltypes") %>% magrittr::equals("Industry") %>% all())
   # Ensure that row and column identifiers are correct
   # Rows of R and V are the Flow names
-  magrittr::equals(With_meta %>% filter(matnames == "R" | matnames == "V") %>% magrittr::extract2("rownames"), 
-                   With_meta %>% filter(matnames == "R" | matnames == "V") %>% magrittr::extract2("Flow")) %>% 
+  magrittr::equals(With_meta %>% dplyr::filter(matnames == "R" | matnames == "V") %>% magrittr::extract2("rownames"), 
+                   With_meta %>% dplyr::filter(matnames == "R" | matnames == "V") %>% magrittr::extract2("Flow")) %>% 
     all() %>% 
     expect_true()
   # Columns of R and V are the Product names
-  magrittr::equals(With_meta %>% filter(matnames == "R" | matnames == "V") %>% magrittr::extract2("colnames"), 
-                   With_meta %>% filter(matnames == "R" | matnames == "V") %>% magrittr::extract2("Product")) %>% 
+  magrittr::equals(With_meta %>% dplyr::filter(matnames == "R" | matnames == "V") %>% magrittr::extract2("colnames"), 
+                   With_meta %>% dplyr::filter(matnames == "R" | matnames == "V") %>% magrittr::extract2("Product")) %>% 
     all() %>% 
     expect_true()
   # Rows of U and Y are the Product names
-  magrittr::equals(With_meta %>% filter(matnames == "U" | matnames == "Y") %>% magrittr::extract2("rownames"), 
-                   With_meta %>% filter(matnames == "U" | matnames == "Y") %>% magrittr::extract2("Product")) %>% 
+  magrittr::equals(With_meta %>% dplyr::filter(matnames == "U" | matnames == "Y") %>% magrittr::extract2("rownames"), 
+                   With_meta %>% dplyr::filter(matnames == "U" | matnames == "Y") %>% magrittr::extract2("Product")) %>% 
     all() %>% 
     expect_true()
   # Columns of U and Y are the Flow names
-  magrittr::equals(With_meta %>% filter(matnames == "U" | matnames == "Y") %>% magrittr::extract2("colnames"), 
-                   With_meta %>% filter(matnames == "U" | matnames == "Y") %>% magrittr::extract2("Flow")) %>% 
+  magrittr::equals(With_meta %>% dplyr::filter(matnames == "U" | matnames == "Y") %>% magrittr::extract2("colnames"), 
+                   With_meta %>% dplyr::filter(matnames == "U" | matnames == "Y") %>% magrittr::extract2("Flow")) %>% 
     all() %>% 
     expect_true()
 })
@@ -93,7 +93,7 @@ test_that("collapse_to_psut works expected", {
   expect_equal(nrow(With_mats), 20)
   # Ensure that all values in the matrices are positive.
   With_mats %>%
-    mutate(
+    dplyr::mutate(
       gezero = matsbyname::compare_byname(matvals, ">=", 0) %>% matsbyname::all_byname()
     ) %>% 
     extract2("gezero") %>% 

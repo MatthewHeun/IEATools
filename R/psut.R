@@ -290,28 +290,41 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
                                   e_dot = "E.dot",
                                   rownames = "rownames", colnames = "colnames",
                                   rowtypes = "rowtypes", coltypes = "coltypes", 
+                                  # Other IEA variables that are no longer needed after collapsing
+                                  ledger_side = "Ledger.side",
+                                  flow_aggregation_point = "Flow.aggregation.point", 
+                                  unit = "Unit",
+                                  flow = "Flow", 
+                                  product = "Product",
                                   # Name of output column of matrices
-                                  matvals = "matvals", 
-                                  # Analysis groups
-                                  grouping_vars = c("Method", "Energy.type", "Last.stage", "Country", "Year")){
+                                  matvals = "matvals"){
   matsindf::verify_cols_missing(.tidy_iea_df, matvals)
   .tidy_iea_df %>% 
     dplyr::mutate(
+      # All values in the matrices must be positive
       !!as.name(e_dot) := abs(!!as.name(e_dot))
     ) %>%
-    dplyr::select(!!!grouping_vars, !!as.name(matnames), 
-                  !!as.name(rownames), !!as.name(colnames), 
-                  !!as.name(rowtypes), !!as.name(coltypes), 
-                  !!as.name(e_dot)) %>% 
-    dplyr::group_by(!!!lapply(grouping_vars, as.name), !!as.name(matnames)) %>% 
+    dplyr::mutate(
+      # Eliminate columns that we no longer need.
+      # Set to NULL in mutate, because if the columns are missing, 
+      # perhaps because the caller already deleted them,
+      # no errors are given.
+      !!as.name(ledger_side) := NULL,
+      !!as.name(flow_aggregation_point) := NULL,
+      !!as.name(unit) := NULL,
+      !!as.name(flow) := NULL,
+      !!as.name(product) := NULL
+    ) %>% 
+    # We assume that everything remaining is a metadata column.
+    matsindf::group_by_everything_except(e_dot, rownames, colnames, rowtypes, coltypes) %>% 
+    # Now we can collapse!
     matsindf::collapse_to_matrices(matnames = matnames, matvals = e_dot,
                                    rownames = rownames, colnames = colnames,
-                                   rowtypes = rowtypes, coltypes = coltypes) %>% 
+                                   rowtypes = rowtypes, coltypes = coltypes) %>%
     dplyr::rename(
       !!as.name(matvals) := !!as.name(e_dot)
     ) %>% 
-    dplyr::ungroup() %>% 
-    dplyr::select(grouping_vars, dplyr::everything())
+    dplyr::ungroup()
 }
 
 
@@ -402,9 +415,7 @@ prep_psut <- function(.tidy_iea_df,
     # Now collapse to matrices
     # collapse_to_tidy_psut(e_dot = e_dot, matname = matname, matval = matval, grouping_vars = grouping_vars) %>% 
     collapse_to_tidy_psut(e_dot = e_dot, matnames = matnames, matvals = matvals, rownames = rownames, colnames = colnames,
-                          rowtypes = rowtypes, coltypes = coltypes, 
-                          grouping_vars = matsindf::everything_except(Temp, ledger_side, flow_aggregation_point, unit, flow, product, e_dot, 
-                                                                      matnames, rownames, colnames, rowtypes, coltypes, .symbols = FALSE))
+                          rowtypes = rowtypes, coltypes = coltypes) 
   # Get a list of matrix names for future use
   matrix_names <- Collapsed[[matnames]] %>% 
     unique()

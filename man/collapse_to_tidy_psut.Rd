@@ -6,9 +6,10 @@
 \usage{
 collapse_to_tidy_psut(.tidy_iea_df, matnames = "matnames",
   e_dot = "E.dot", rownames = "rownames", colnames = "colnames",
-  rowtypes = "rowtypes", coltypes = "coltypes", matvals = "matvals",
-  grouping_vars = c("Method", "Energy.type", "Last.stage", "Country",
-  "Year"))
+  rowtypes = "rowtypes", coltypes = "coltypes",
+  ledger_side = "Ledger.side",
+  flow_aggregation_point = "Flow.aggregation.point", unit = "Unit",
+  flow = "Flow", product = "Product", matvals = "matvals")
 }
 \arguments{
 \item{.tidy_iea_df}{a data frame containing \code{matnames} and several other columns}
