@@ -5,10 +5,12 @@
 \title{Prepare for PSUT analysis}
 \usage{
 prep_psut(.tidy_iea_df, ledger_side = "Ledger.side", supply = "Supply",
-  consumption = "Consumption", flow = "Flow", product = "Product",
-  unit = "Unit", e_dot = "E.dot", matname = "matname",
-  matval = "matval", grouping_vars = c("Method", "Energy.type",
-  "Last.stage", "Country", "Year"))
+  consumption = "Consumption",
+  flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
+  product = "Product", unit = "Unit", e_dot = "E.dot",
+  matnames = "matnames", matvals = "matvals", rownames = "rownames",
+  colnames = "colnames", rowtypes = "rowtypes",
+  coltypes = "coltypes")
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame that has been specified with \code{\link[=specify_all]{specify_all()}}.}
@@ -27,9 +29,9 @@ prep_psut(.tidy_iea_df, ledger_side = "Ledger.side", supply = "Supply",
 
 \item{e_dot}{the name of the energy rate column. Default is "E.dot".}
 
-\item{matname}{the name of the matrix names column added by this function. Default is "\code{matname}".}
+\item{matnames}{the name of the matrix names column added by this function. Default is "\code{matnames}".}
 
-\item{matval}{the name of the matrix value column added by this function. Default is "\code{matval}".}
+\item{matvals}{the name of the matrix value column added by this function. Default is "\code{matvals}".}
 
 \item{grouping_vars}{a string vector of columns by which matrices are grouped. Default is \code{c("Method", "Energy.type", "Last.stage", "Country", "Year")}.}
 }
@@ -65,16 +67,16 @@ Complicated <- load_tidy_iea_df() \%>\%
   add_psut_matnames() \%>\% 
   add_row_col_meta() \%>\% 
   collapse_to_tidy_psut() \%>\% 
-  spread(key = matname, value = matval) \%>\% 
+  spread(key = matnames, value = matvals) \%>\% 
   full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
                             "Country", "Year")) \%>\% 
-  gather(key = matname, value = matval, R, U_EIOU, U_excl_EIOU, 
+  gather(key = matname, value = matvals, R, U_EIOU, U_excl_EIOU, 
                                         V, Y, S_units) \%>\% 
-  rename(matval_complicated = matval)
+  rename(matval_complicated = matvals)
 # Simple and Complicated are same.
 full_join(Simple, Complicated, by = c("Method", "Energy.type", 
                                       "Last.stage", "Country", 
-                                      "Year", "matname")) \%>\% 
+                                      "Year", "matnames")) \%>\% 
   dplyr::mutate(
     same = matsbyname::equal_byname(matval_simple, matval_complicated)
   ) \%>\% 

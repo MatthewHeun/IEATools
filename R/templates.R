@@ -83,7 +83,7 @@ eiou_fu_template <- function(.tidy_iea_df,
     # Extract the EIOU data
     dplyr::filter(!!as.name(flow_aggregation_point) == eiou) %>% 
     # Add the totals to the data frame in preparation for calculating percentages
-    dplyr::left_join(Totals_eiou, by = base::setdiff(names(.tidy_iea_df), c(ledger_side, flow_aggregation_point, flow, product, e_dot))) %>% 
+    dplyr::left_join(Totals_eiou, by = matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, .symbols = FALSE)) %>% 
     dplyr::mutate(
       # Calculate percentage of all EIOU for that country and year
       !!as.name(e_dot_perc) := !!as.name(e_dot) / !!as.name(e_dot_total) * 100, 

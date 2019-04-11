@@ -4,34 +4,34 @@
 \alias{collapse_to_tidy_psut}
 \title{Collapse a tidy data frame of IEA data to a tidy PSUT data frame}
 \usage{
-collapse_to_tidy_psut(.tidy_iea_df, matname = "matname",
-  e_dot = "E.dot", rowname = "rowname", colname = "colname",
-  rowtype = "rowtype", coltype = "coltype", matval = "matval",
+collapse_to_tidy_psut(.tidy_iea_df, matnames = "matnames",
+  e_dot = "E.dot", rownames = "rownames", colnames = "colnames",
+  rowtypes = "rowtypes", coltypes = "coltypes", matvals = "matvals",
   grouping_vars = c("Method", "Energy.type", "Last.stage", "Country",
   "Year"))
 }
 \arguments{
-\item{.tidy_iea_df}{a data frame containing \code{matname} and several other columns}
+\item{.tidy_iea_df}{a data frame containing \code{matnames} and several other columns}
 
-\item{matname}{the name of a column in \code{.tidy_iea_df} containing matrix names. Default is "\code{matname}".}
+\item{matnames}{the name of a column in \code{.tidy_iea_df} containing matrix names. Default is "\code{matname}".}
 
 \item{e_dot}{the name of a column in \code{.tidy_iea_df} containing energy flow rates. Default is "\code{E.dot}".}
 
-\item{rowname}{the name of a column to be added to \code{.tidy_iea_df} for row names. Default is "\code{rowname}".}
+\item{rownames}{the name of a column to be added to \code{.tidy_iea_df} for row names. Default is "\code{rownames}".}
 
-\item{colname}{the name of a column to be added to \code{.tidy_iea_df} for column names. Default is "\code{colname}".}
+\item{colnames}{the name of a column to be added to \code{.tidy_iea_df} for column names. Default is "\code{colnames}".}
 
-\item{rowtype}{the name of a column to be added to \code{.tidy_iea_df} for row types. Default is "\code{rowtype}".}
+\item{rowtypes}{the name of a column to be added to \code{.tidy_iea_df} for row types. Default is "\code{rowtypes}".}
 
-\item{coltype}{the name of a column to be added to \code{.tidy_iea_df} for column types. Default is "\code{coltype}".}
+\item{coltypes}{the name of a column to be added to \code{.tidy_iea_df} for column types. Default is "\code{coltypes}".}
 
-\item{matval}{the name of a column to be added to \code{.tidy_iea_df} for matrices. Default is "\code{matval}".}
+\item{matvals}{the name of a column to be added to \code{.tidy_iea_df} for matrices. Default is "\code{matvals}".}
 
 \item{grouping_vars}{the columns in \code{.tidy_iea_df} by which you want to group matrices.
 Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type")}.}
 }
 \value{
-\code{.tidy_iea_df} with all values converted to matrices in the \code{matval} column
+\code{.tidy_iea_df} with all values converted to matrices in the \code{matvals} column
 }
 \description{
 Call this function after calling \code{\link[=add_row_col_meta]{add_row_col_meta()}}

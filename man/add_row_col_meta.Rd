@@ -4,18 +4,19 @@
 \alias{add_row_col_meta}
 \title{Add row, column, row type, and column type metadata}
 \usage{
-add_row_col_meta(.tidy_iea_df, matname = "matname",
+add_row_col_meta(.tidy_iea_df, matnames = "matnames",
   product = "Product", flow = "Flow", U = "U", U_EIOU = "U_EIOU",
   R = "R", V = "V", Y = "Y", industry_type = "Industry",
   product_type = "Product", sector_type = "Industry",
-  resource_type = "Industry", rowname = "rowname",
-  colname = "colname", rowtype = "rowtype", coltype = "coltype")
+  resource_type = "Industry", rownames = "rownames",
+  colnames = "colnames", rowtypes = "rowtypes",
+  coltypes = "coltypes")
 }
 \arguments{
-\item{.tidy_iea_df}{a data frame containing \code{matname}}
+\item{.tidy_iea_df}{a data frame containing column \code{matnames}}
 
-\item{matname}{the name of the column in \code{.tidy_iea_df} that contains names of matrices
-(a string).  Default is "\code{matname}".}
+\item{matnames}{the name of the column in \code{.tidy_iea_df} that contains names of matrices
+(a string).  Default is "\code{matnames}".}
 
 \item{product}{the name of the column in \code{.tidy_iea_df} where Product names
 is found (a string). Default is "\code{Product}".}
@@ -45,16 +46,16 @@ Default is "\code{Industry}".}
 \item{resource_type}{the name that identifies resource sectors (a string).
 Default is "\code{Industry}".}
 
-\item{rowname}{the name of the output column that contains row names for matrices
+\item{rownames}{the name of the output column that contains row names for matrices
 (a string). Default is "\code{rowname}".}
 
-\item{colname}{the name of the output column that contains column names for matrices
+\item{colnames}{the name of the output column that contains column names for matrices
 (a string). Default is "\code{colname}".}
 
-\item{rowtype}{the name of the output column that contains row types for matrices
+\item{rowtypes}{the name of the output column that contains row types for matrices
 (a string). Default is "\code{rowtype}".}
 
-\item{coltype}{the name of the output column that contains column types for matrices
+\item{coltypes}{the name of the output column that contains column types for matrices
 (a string). Default is "\code{coltype}".}
 }
 \value{

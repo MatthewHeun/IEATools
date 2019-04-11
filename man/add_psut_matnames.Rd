@@ -12,9 +12,8 @@ add_psut_matnames(.tidy_iea_df, ledger_side = "Ledger.side",
   eiou = "Energy industry own use", neg_supply_in_fd = c("Exports",
   "International aviation bunkers", "International marine bunkers",
   "Losses", "Statistical differences", "Stock changes"),
-  grouping_vars = c("Method", "Last.stage", "Country", "Year",
-  "Energy.type"), matname = "matname", R = "R",
-  U_excl_EIOU = "U_excl_EIOU", U_EIOU = "U_EIOU", V = "V", Y = "Y")
+  matnames = "matnames", R = "R", U_excl_EIOU = "U_excl_EIOU",
+  U_EIOU = "U_EIOU", V = "V", Y = "Y")
 }
 \arguments{
 \item{.tidy_iea_df}{a data frame with \code{ledger_side}, \code{flow_aggregation_point}, \code{flow}, and \code{e_dot} columns.}
@@ -50,11 +49,8 @@ Default is "\code{Energy industry own use}".}
 \item{neg_supply_in_fd}{identifiers for flow items that, when negative,
 are entries in the final demand (\code{Y}) matrix.}
 
-\item{grouping_vars}{a string vector of names of columns by which rows should be grouped when matrix names are added.
-Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type")}.}
-
-\item{matname}{the name of the output column containing the name of the matrix
-to which a row's value belongs (a string). Default is "\code{matname}".}
+\item{matnames}{the name of the output column containing the name of the matrix
+to which a row's value belongs (a string). Default is "\code{matnames}".}
 
 \item{R}{the name for the resource matrix (a string). Default is "\code{R}".}
 
@@ -65,9 +61,12 @@ to which a row's value belongs (a string). Default is "\code{matname}".}
 \item{V}{the name for the make matrix (a string). Default is "\code{V}".}
 
 \item{Y}{the name for the final demand matrix (a string). Default is "\code{Y}".}
+
+\item{grouping_vars}{a string vector of names of columns by which rows should be grouped when matrix names are added.
+Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type")}.}
 }
 \value{
-\code{.tidy_iea_df} with an added column \code{matname}.
+\code{.tidy_iea_df} with an added column \code{matnames}.
 }
 \description{
 This function adds a column of matrix names to a tidy data frame

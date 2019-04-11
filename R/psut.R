@@ -90,15 +90,15 @@ extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = 
 #'        are entries in the final demand (`Y`) matrix.
 #' @param grouping_vars a string vector of names of columns by which rows should be grouped when matrix names are added.
 #'        Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
-#' @param matname the name of the output column containing the name of the matrix
-#'        to which a row's value belongs (a string). Default is "`matname`".
+#' @param matnames the name of the output column containing the name of the matrix
+#'        to which a row's value belongs (a string). Default is "`matnames`".
 #' @param R the name for the resource matrix (a string). Default is "`R`".
 #' @param U_excl_EIOU the name for the use matrix that excludes energy industry own use (a string). Default is "`U_excl_EIOU`".
 #' @param U_EIOU the name for the energy industry own use matrix. Default is "`U_EIOU`".
 #' @param V the name for the make matrix (a string). Default is "`V`".
 #' @param Y the name for the final demand matrix (a string). Default is "`Y`".
 #'
-#' @return `.tidy_iea_df` with an added column `matname`.
+#' @return `.tidy_iea_df` with an added column `matnames`.
 #'
 #' @export
 #'
@@ -126,10 +126,8 @@ add_psut_matnames <- function(.tidy_iea_df,
                                                    "Losses",
                                                    "Statistical differences",
                                                    "Stock changes"),
-                              # Grouping variables
-                              grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type"),
                               # Output column
-                              matname = "matname",
+                              matnames = "matnames",
                               # Ouput identifiers for
                               # use matrix excluding EIOU (U_excl_EIOU),
                               # use matrix energy industry own use items (U_EIOU),
@@ -138,11 +136,11 @@ add_psut_matnames <- function(.tidy_iea_df,
                               # matrices.
                               R = "R", U_excl_EIOU = "U_excl_EIOU", U_EIOU = "U_EIOU",
                               V = "V", Y = "Y"){
-  matsindf::verify_cols_missing(.tidy_iea_df, matname)
+  matsindf::verify_cols_missing(.tidy_iea_df, matnames)
   
   .tidy_iea_df %>%
     dplyr::mutate(
-      !!as.name(matname) := dplyr::case_when(
+      !!as.name(matnames) := dplyr::case_when(
         # All Consumption items belong in the final demand (Y) matrix.
         !!as.name(ledger_side) == consumption ~ Y,
         # All production items belong in the resources (R) matrix.
@@ -170,9 +168,9 @@ add_psut_matnames <- function(.tidy_iea_df,
 #' to add row, column, row type, and column type 
 #' information to `.tidy_iea_df`.
 #'
-#' @param .tidy_iea_df a data frame containing `matname`
-#' @param matname the name of the column in `.tidy_iea_df` that contains names of matrices
-#'        (a string).  Default is "`matname`".
+#' @param .tidy_iea_df a data frame containing column `matnames`
+#' @param matnames the name of the column in `.tidy_iea_df` that contains names of matrices
+#'        (a string).  Default is "`matnames`".
 #' @param U the name for use matrices (a string). Default is "`U`".
 #' @param U_EIOU the name for energy industry own use matrices (a string). Default is "`U_EIOU`".
 #' @param R the name for resource matrices (a string). Default is "`R`".
@@ -190,13 +188,13 @@ add_psut_matnames <- function(.tidy_iea_df,
 #'        Default is "`Industry`".
 #' @param resource_type the name that identifies resource sectors (a string).
 #'        Default is "`Industry`".
-#' @param rowname the name of the output column that contains row names for matrices
+#' @param rownames the name of the output column that contains row names for matrices
 #'        (a string). Default is "`rowname`".
-#' @param colname the name of the output column that contains column names for matrices
+#' @param colnames the name of the output column that contains column names for matrices
 #'        (a string). Default is "`colname`".
-#' @param rowtype the name of the output column that contains row types for matrices
+#' @param rowtypes the name of the output column that contains row types for matrices
 #'        (a string). Default is "`rowtype`".
-#' @param coltype the name of the output column that contains column types for matrices
+#' @param coltypes the name of the output column that contains column types for matrices
 #'        (a string). Default is "`coltype`".
 #'
 #' @return `.tidy_iea_df` with additional columns named
@@ -212,47 +210,47 @@ add_psut_matnames <- function(.tidy_iea_df,
 #'   add_row_col_meta()
 add_row_col_meta <- function(.tidy_iea_df,
                              # Name of the input column containing matrix names
-                             matname = "matname",
+                             matnames = "matnames",
                              # Column names for Product and Flow
                              product = "Product", flow = "Flow",
-                             # Expected matrix names in the matname column
+                             # Expected matrix names in the matnames column
                              U = "U", U_EIOU = "U_EIOU",
                              R = "R", V = "V", Y = "Y",
                              # Row and column Type identifiers
                              industry_type = "Industry", product_type = "Product",
                              sector_type = "Industry", resource_type = "Industry",
                              # Output columns
-                             rowname = "rowname", colname = "colname",
-                             rowtype = "rowtype", coltype = "coltype"){
-  matsindf::verify_cols_missing(.tidy_iea_df, c(rowname, colname, rowtype, coltype))
+                             rownames = "rownames", colnames = "colnames",
+                             rowtypes = "rowtypes", coltypes = "coltypes"){
+  matsindf::verify_cols_missing(.tidy_iea_df, c(rownames, colnames, rowtypes, coltypes))
   .tidy_iea_df %>%
     dplyr::mutate(
-      !!as.name(rowname) := dplyr::case_when(
-        startsWith(!!as.name(matname), U) ~ !!as.name(product),
-        !!as.name(matname) == R ~ !!as.name(flow),
-        !!as.name(matname) == V ~ !!as.name(flow),
-        !!as.name(matname) == Y ~ !!as.name(product),
+      !!as.name(rownames) := dplyr::case_when(
+        startsWith(!!as.name(matnames), U) ~ !!as.name(product),
+        !!as.name(matnames) == R ~ !!as.name(flow),
+        !!as.name(matnames) == V ~ !!as.name(flow),
+        !!as.name(matnames) == Y ~ !!as.name(product),
         TRUE ~ NA_character_
       ),
-      !!colname := dplyr::case_when(
-        startsWith(!!as.name(matname), U) ~ !!as.name(flow),
-        !!as.name(matname) == V ~ !!as.name(product),
-        !!as.name(matname) == R ~ !!as.name(product),
-        !!as.name(matname) == Y ~ !!as.name(flow),
+      !!as.name(colnames) := dplyr::case_when(
+        startsWith(!!as.name(matnames), U) ~ !!as.name(flow),
+        !!as.name(matnames) == V ~ !!as.name(product),
+        !!as.name(matnames) == R ~ !!as.name(product),
+        !!as.name(matnames) == Y ~ !!as.name(flow),
         TRUE ~ NA_character_
       ),
-      !!as.name(rowtype) := dplyr::case_when(
-        startsWith(!!as.name(matname), U) ~ product_type,
-        !!as.name(matname) == R ~ resource_type,
-        !!as.name(matname) == V ~ industry_type,
-        !!as.name(matname) == Y ~ product_type,
+      !!as.name(rowtypes) := dplyr::case_when(
+        startsWith(!!as.name(matnames), U) ~ product_type,
+        !!as.name(matnames) == R ~ resource_type,
+        !!as.name(matnames) == V ~ industry_type,
+        !!as.name(matnames) == Y ~ product_type,
         TRUE ~ NA_character_
       ),
-      !!as.name(coltype) := dplyr::case_when(
-        startsWith(!!as.name(matname), U) ~ industry_type,
-        !!as.name(matname) == R ~ product_type,
-        !!as.name(matname) == V ~ product_type,
-        !!as.name(matname) == Y ~ sector_type,
+      !!as.name(coltypes) := dplyr::case_when(
+        startsWith(!!as.name(matnames), U) ~ industry_type,
+        !!as.name(matnames) == R ~ product_type,
+        !!as.name(matnames) == V ~ product_type,
+        !!as.name(matnames) == Y ~ sector_type,
         TRUE ~ NA_character_
       )
     )
@@ -267,18 +265,18 @@ add_row_col_meta <- function(.tidy_iea_df,
 #' This function ensures that all energy flow numbers are positive
 #' before creating the matrices.
 #'
-#' @param .tidy_iea_df a data frame containing `matname` and several other columns
-#' @param matname the name of a column in `.tidy_iea_df` containing matrix names. Default is "`matname`".
+#' @param .tidy_iea_df a data frame containing `matnames` and several other columns
+#' @param matnames the name of a column in `.tidy_iea_df` containing matrix names. Default is "`matname`".
 #' @param e_dot the name of a column in `.tidy_iea_df` containing energy flow rates. Default is "`E.dot`".
-#' @param rowname the name of a column to be added to `.tidy_iea_df` for row names. Default is "`rowname`".
-#' @param colname the name of a column to be added to `.tidy_iea_df` for column names. Default is "`colname`".
-#' @param rowtype the name of a column to be added to `.tidy_iea_df` for row types. Default is "`rowtype`".
-#' @param coltype the name of a column to be added to `.tidy_iea_df` for column types. Default is "`coltype`".
-#' @param matval the name of a column to be added to `.tidy_iea_df` for matrices. Default is "`matval`".
+#' @param rownames the name of a column to be added to `.tidy_iea_df` for row names. Default is "`rownames`".
+#' @param colnames the name of a column to be added to `.tidy_iea_df` for column names. Default is "`colnames`".
+#' @param rowtypes the name of a column to be added to `.tidy_iea_df` for row types. Default is "`rowtypes`".
+#' @param coltypes the name of a column to be added to `.tidy_iea_df` for column types. Default is "`coltypes`".
+#' @param matvals the name of a column to be added to `.tidy_iea_df` for matrices. Default is "`matvals`".
 #' @param grouping_vars the columns in `.tidy_iea_df` by which you want to group matrices. 
 #'        Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
 #'
-#' @return `.tidy_iea_df` with all values converted to matrices in the `matval` column
+#' @return `.tidy_iea_df` with all values converted to matrices in the `matvals` column
 #' 
 #' @export
 #'
@@ -290,29 +288,29 @@ add_row_col_meta <- function(.tidy_iea_df,
 #'   collapse_to_tidy_psut()
 collapse_to_tidy_psut <- function(.tidy_iea_df,
                                   # Name of the input columns containing matrix names
-                                  matname = "matname",
+                                  matnames = "matnames",
                                   e_dot = "E.dot",
-                                  rowname = "rowname", colname = "colname",
-                                  rowtype = "rowtype", coltype = "coltype", 
+                                  rownames = "rownames", colnames = "colnames",
+                                  rowtypes = "rowtypes", coltypes = "coltypes", 
                                   # Name of output column of matrices
-                                  matval = "matval", 
+                                  matvals = "matvals", 
                                   # Analysis groups
                                   grouping_vars = c("Method", "Energy.type", "Last.stage", "Country", "Year")){
-  matsindf::verify_cols_missing(.tidy_iea_df, matval)
+  matsindf::verify_cols_missing(.tidy_iea_df, matvals)
   .tidy_iea_df %>% 
     dplyr::mutate(
       !!as.name(e_dot) := abs(!!as.name(e_dot))
     ) %>%
-    dplyr::select(!!!grouping_vars, !!as.name(matname), 
-                  !!as.name(rowname), !!as.name(colname), 
-                  !!as.name(rowtype), !!as.name(coltype), 
+    dplyr::select(!!!grouping_vars, !!as.name(matnames), 
+                  !!as.name(rownames), !!as.name(colnames), 
+                  !!as.name(rowtypes), !!as.name(coltypes), 
                   !!as.name(e_dot)) %>% 
-    dplyr::group_by(!!!lapply(grouping_vars, as.name), !!as.name(matname)) %>% 
-    matsindf::collapse_to_matrices(matnames = matname, matvals = e_dot,
-                                   rownames = rowname, colnames = colname,
-                                   rowtypes = rowtype, coltypes = coltype) %>% 
+    dplyr::group_by(!!!lapply(grouping_vars, as.name), !!as.name(matnames)) %>% 
+    matsindf::collapse_to_matrices(matnames = matnames, matvals = e_dot,
+                                   rownames = rownames, colnames = colnames,
+                                   rowtypes = rowtypes, coltypes = coltypes) %>% 
     dplyr::rename(
-      !!as.name(matval) := !!as.name(e_dot)
+      !!as.name(matvals) := !!as.name(e_dot)
     ) %>% 
     dplyr::ungroup() %>% 
     dplyr::select(grouping_vars, dplyr::everything())
@@ -340,8 +338,8 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' @param product the name of the product column. Default is "`Product`".
 #' @param unit the name of the unit column. Default is "`Unit`".
 #' @param e_dot the name of the energy rate column. Default is "E.dot".
-#' @param matname the name of the matrix names column added by this function. Default is "`matname`".
-#' @param matval the name of the matrix value column added by this function. Default is "`matval`".
+#' @param matnames the name of the matrix names column added by this function. Default is "`matnames`".
+#' @param matvals the name of the matrix value column added by this function. Default is "`matvals`".
 #' @param grouping_vars a string vector of columns by which matrices are grouped. Default is `c("Method", "Energy.type", "Last.stage", "Country", "Year")`.
 #'
 #' @return a tidy PSUT data frame
@@ -362,16 +360,16 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #'   add_psut_matnames() %>% 
 #'   add_row_col_meta() %>% 
 #'   collapse_to_tidy_psut() %>% 
-#'   spread(key = matname, value = matval) %>% 
+#'   spread(key = matnames, value = matvals) %>% 
 #'   full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
 #'                             "Country", "Year")) %>% 
-#'   gather(key = matname, value = matval, R, U_EIOU, U_excl_EIOU, 
+#'   gather(key = matname, value = matvals, R, U_EIOU, U_excl_EIOU, 
 #'                                         V, Y, S_units) %>% 
-#'   rename(matval_complicated = matval)
+#'   rename(matval_complicated = matvals)
 #' # Simple and Complicated are same.
 #' full_join(Simple, Complicated, by = c("Method", "Energy.type", 
 #'                                       "Last.stage", "Country", 
-#'                                       "Year", "matname")) %>% 
+#'                                       "Year", "matnames")) %>% 
 #'   dplyr::mutate(
 #'     same = matsbyname::equal_byname(matval_simple, matval_complicated)
 #'   ) %>% 
@@ -382,31 +380,46 @@ prep_psut <- function(.tidy_iea_df,
                       ledger_side = "Ledger.side", 
                       supply = "Supply", 
                       consumption = "Consumption", 
+                      flow_aggregation_point = "Flow.aggregation.point",
                       flow = "Flow",
                       product = "Product", 
                       unit = "Unit", 
                       e_dot = "E.dot", 
-                      matname = "matname",
-                      matval = "matval", 
-                      grouping_vars = c("Method", "Energy.type", "Last.stage", "Country", "Year")){
+                      matnames = "matnames",
+                      matvals = "matvals", 
+                      rownames = "rownames", 
+                      colnames = "colnames", 
+                      rowtypes = "rowtypes", 
+                      coltypes = "coltypes"){
   S_units <- extract_S_units_from_tidy(.tidy_iea_df, 
                                        product = product, 
                                        unit = unit)
   # Bundle functions together
   Temp <- .tidy_iea_df %>% 
     # Add matrix names
-    add_psut_matnames(ledger_side = ledger_side, supply = supply, consumption = consumption, 
-                      grouping_vars = grouping_vars) %>% 
+    add_psut_matnames(ledger_side = ledger_side, supply = supply, consumption = consumption) %>% 
     # Add additional metadata
-    add_row_col_meta(flow = flow, product = product, matname = matname) %>% 
+    add_row_col_meta(flow = flow, product = product, matnames = matnames)
+  Collapsed <- Temp %>% 
     # Now collapse to matrices
-    collapse_to_tidy_psut(e_dot = e_dot, matname = matname, matval = matval, grouping_vars = grouping_vars) %>% 
-    # Spread to put each matrix into its own column
-    tidyr::spread(key = matname, value = matval) %>% 
+    # collapse_to_tidy_psut(e_dot = e_dot, matname = matname, matval = matval, grouping_vars = grouping_vars) %>% 
+    collapse_to_tidy_psut(e_dot = e_dot, matnames = matnames, matvals = matvals, rownames = rownames, colnames = colnames,
+                          rowtypes = rowtypes, coltypes = coltypes, 
+                          grouping_vars = matsindf::everything_except(Temp, ledger_side, flow_aggregation_point, unit, flow, product, e_dot, 
+                                                                      matnames, rownames, colnames, rowtypes, coltypes, .symbols = FALSE))
+  # Get a list of matrix names for future use
+  matrix_names <- Collapsed[[matnames]] %>% 
+    unique()
+  # Spread to put each matrix into its own column
+  CollapsedSpread <- Collapsed %>% 
+    tidyr::spread(key = matnames, value = matvals)
+  meta_cols <- matsindf::everything_except(CollapsedSpread, matrix_names, .symbols = FALSE)
+  WithS_units <- CollapsedSpread %>%  
     # Add the S_units matrix
-    dplyr::full_join(S_units, by = grouping_vars)
-  
-  Temp %>% 
-    # Now gather everything back together so the outgoing data frame is tidy
-    tidyr::gather(key = matname, value = matval, !!!base::setdiff(names(Temp), grouping_vars))
+    dplyr::full_join(S_units, by = matsindf::everything_except(CollapsedSpread, matrix_names, .symbols = FALSE))
+  matrix_names_with_S_units <- WithS_units %>% 
+    matsindf::everything_except(meta_cols, .symbols = FALSE)
+  # Now gather everything back together so the outgoing data frame is tidy
+  WithS_units %>% 
+    tidyr::gather(key = matnames, value = matvals, !!!matrix_names_with_S_units)
 }

@@ -146,7 +146,7 @@ Specific_primary_production %>%
   as.data.frame()
 Specific_primary_production %>% 
   filter(Flow.aggregation.point == "Energy industry own use" ) %>% 
-  select(Country, Year, Flow, Product, E.dot, matname) %>% 
+  select(Country, Year, Flow, Product, E.dot, matnames) %>% 
   as.data.frame()
 ```
 
