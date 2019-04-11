@@ -55,10 +55,13 @@ eiou_fu_template <- function(.tidy_iea_df,
                              e_dot = "E.dot",
                              e_dot_total = paste0(e_dot, ".total"),
                              e_dot_perc = paste0(e_dot, ".perc"),
-                             allocation_var = "C_",
-                             n_allocation_rows = 3,
                              maximum_values = "Maximum values",
                              year_for_maximum_values = 0,
+                             ef_product = "Ef product",
+                             allocation_var = "C_",
+                             n_allocation_rows = 3,
+                             machine = "Machine",
+                             eu_product = "Eu product",
                              .value = ".value"){
   # Ensure that the incoming data frame has exclusively "E" as the Energy.type.
   assertthat::assert_that(.tidy_iea_df %>% 
@@ -117,7 +120,7 @@ eiou_fu_template <- function(.tidy_iea_df,
       )
   }
   # Reshape the data frame into the format that we want for an Excel spreadsheet
-  Tidy_EIOU %>% 
+  out <- Tidy_EIOU %>% 
     # Gather all of the columns that we want to spread across the sheet
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot), !!as.name(e_dot_perc), !!!lapply(c_cols, as.name)) %>% 
     # Add the Max data frame so that we can include its numbers
@@ -130,14 +133,31 @@ eiou_fu_template <- function(.tidy_iea_df,
     tidyr::spread(key = Year, value = .value) %>% 
     dplyr::rename(
       # Rename the year 0 column
-      !!as.name(maximum_values) := !!as.name(year_for_maximum_values)
+      !!as.name(maximum_values) := !!as.name(year_for_maximum_values), 
+      # Rename the product column: it is really a final energy product
+      !!as.name(ef_product) := !!as.name(product)
     ) %>% 
     dplyr::mutate(
       !!as.name(maximum_values) := dplyr::case_when(
         is.na(!!as.name(maximum_values)) ~ "",
         TRUE ~ !!as.name(maximum_values)
-      )
+      ), 
+      !!as.name(machine) := "",
+      !!as.name(eu_product) := ""
     )
+  # Figure out the order for the columns
+  colnames <- names(out)
+  # Figure out which columns are years, sort them, and save for later.
+  year_colname_indices <- which(grepl(pattern = "^\\d+$", colnames))
+  year_colnames <- as.numeric(colnames[year_colname_indices]) %>% sort() %>% as.character()
+  machine_and_product_columns <- c(ef_product, machine, eu_product, destination, quantity, maximum_values)
+  # Figure out the metadata columns
+  meta_cols <- setdiff(colnames, year_colnames) %>% 
+    setdiff(machine_and_product_columns)
+  # Now put the column names together in the desired order
+  col_order <- c(meta_cols, machine_and_product_columns, year_colnames)
+  out %>% 
+    dplyr::select(col_order)
 }
 
 # # Writes an efficiency table with blanks where the final to useful data are required.

@@ -13,9 +13,10 @@ eiou_fu_template(.tidy_iea_df, energy_type = "Energy.type",
   product = "Product", destination = "Destination",
   quantity = "Quantity", e_dot = "E.dot", e_dot_total = paste0(e_dot,
   ".total"), e_dot_perc = paste0(e_dot, ".perc"),
-  allocation_var = "C_", n_allocation_rows = 3,
   maximum_values = "Maximum values", year_for_maximum_values = 0,
-  .value = ".value")
+  ef_product = "Ef product", allocation_var = "C_",
+  n_allocation_rows = 3, machine = "Machine",
+  eu_product = "Eu product", .value = ".value")
 }
 \arguments{
 \item{.tidy_iea_df}{}

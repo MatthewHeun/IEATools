@@ -3,9 +3,13 @@ context("Template functions")
 ###########################################################
 
 test_that("eiou_fu_template works as expected", {
-  load_tidy_iea_df() %>% 
+  template <- load_tidy_iea_df() %>% 
     specify_all() %>%
     eiou_fu_template()
+  expected_colorder <- c("Method", "Last.stage", "Country", "Ledger.side", "Flow.aggregation.point", "Energy.type", "Unit",
+                         "Ef product", "Machine", "Eu product", "Destination", 
+                         "Quantity", "Maximum values", "1971", "2000")
+  expect_equal(names(template), expected_colorder)
 })
 
 test_that("openxlsx works as expected", {
