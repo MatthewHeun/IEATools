@@ -55,11 +55,10 @@ eiou_fu_template <- function(.tidy_iea_df,
                              e_dot = "E.dot",
                              e_dot_total = paste0(e_dot, ".total"),
                              e_dot_perc = paste0(e_dot, ".perc"),
-                             e_dot_max = paste0(e_dot, ".max"),
-                             e_dot_perc_max = paste0(e_dot_perc, ".max"),
                              allocation_var = "C_",
                              n_allocation_rows = 3,
                              maximum_values = "Maximum values",
+                             year_for_maximum_values = 0,
                              .value = ".value"){
   # Ensure that the incoming data frame has exclusively "E" as the Energy.type.
   assertthat::assert_that(.tidy_iea_df %>% 
@@ -97,15 +96,13 @@ eiou_fu_template <- function(.tidy_iea_df,
   Max <- Tidy_EIOU %>% 
     matsindf::group_by_everything_except(year, e_dot, e_dot_perc) %>%
     dplyr::summarise(
-      # !!as.name(e_dot_max) := max(!!as.name(e_dot)), 
-      # !!as.name(e_dot_perc_max) := max(!!as.name(e_dot_perc))
       !!as.name(e_dot) := max(!!as.name(e_dot)), 
       !!as.name(e_dot_perc) := max(!!as.name(e_dot_perc))
     ) %>% 
-    # tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot_max), !!as.name(e_dot_perc_max)) %>% 
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot), !!as.name(e_dot_perc)) %>% 
     dplyr::mutate(
-      !!as.name(year) := 0,
+      # Set the year for max values to 0 so that the max values will appear as the earliest year.
+      !!as.name(year) := year_for_maximum_values,
       # Need to make this into a character column so that we can add it to "" in the C_ columns later.
       !!as.name(.value) := as.character(!!as.name(.value))
     )
@@ -121,15 +118,25 @@ eiou_fu_template <- function(.tidy_iea_df,
   }
   # Reshape the data frame into the format that we want for an Excel spreadsheet
   Tidy_EIOU %>% 
+    # Gather all of the columns that we want to spread across the sheet
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot), !!as.name(e_dot_perc), !!!lapply(c_cols, as.name)) %>% 
+    # Add the Max data frame so that we can include its numbers
     dplyr::bind_rows(Max) %>%
-    # First, gather all of the columns that we want to spread across the sheet
-    # tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot), !!as.name(e_dot_perc), !!!lapply(c_cols, as.name)) %>% 
+    # Set levels for the quantity column so that we can get the right order when we spread the years
+    dplyr::mutate(
+      !!as.name(quantity) := factor(!!as.name(quantity), levels = c(e_dot, e_dot_perc, c_cols))
+    ) %>% 
     # Now spread by years across the spreadsheet.
     tidyr::spread(key = Year, value = .value) %>% 
     dplyr::rename(
       # Rename the year 0 column
-      !!as.name(maximum_values) := `0`
+      !!as.name(maximum_values) := !!as.name(year_for_maximum_values)
+    ) %>% 
+    dplyr::mutate(
+      !!as.name(maximum_values) := dplyr::case_when(
+        is.na(!!as.name(maximum_values)) ~ "",
+        TRUE ~ !!as.name(maximum_values)
+      )
     )
 }
 
