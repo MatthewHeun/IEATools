@@ -88,8 +88,6 @@ extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = 
 #'        Default is "`Energy industry own use`".
 #' @param neg_supply_in_fd identifiers for flow items that, when negative,
 #'        are entries in the final demand (`Y`) matrix.
-#' @param grouping_vars a string vector of names of columns by which rows should be grouped when matrix names are added.
-#'        Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
 #' @param matnames the name of the output column containing the name of the matrix
 #'        to which a row's value belongs (a string). Default is "`matnames`".
 #' @param R the name for the resource matrix (a string). Default is "`R`".
@@ -352,7 +350,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' Simple <- load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
 #'   prep_psut() %>% 
-#'   rename(matval_simple = matval)
+#'   rename(matval_simple = matvals)
 #' S_units <- load_tidy_iea_df() %>% 
 #'   extract_S_units_from_tidy()
 #' Complicated <- load_tidy_iea_df() %>% 
@@ -363,7 +361,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #'   spread(key = matnames, value = matvals) %>% 
 #'   full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
 #'                             "Country", "Year")) %>% 
-#'   gather(key = matname, value = matvals, R, U_EIOU, U_excl_EIOU, 
+#'   gather(key = matnames, value = matvals, R, U_EIOU, U_excl_EIOU, 
 #'                                         V, Y, S_units) %>% 
 #'   rename(matval_complicated = matvals)
 #' # Simple and Complicated are same.

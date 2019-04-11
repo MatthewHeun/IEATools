@@ -130,7 +130,7 @@ eiou_fu_template <- function(.tidy_iea_df,
       !!as.name(quantity) := factor(!!as.name(quantity), levels = c(e_dot, e_dot_perc, c_cols))
     ) %>% 
     # Now spread by years across the spreadsheet.
-    tidyr::spread(key = Year, value = .value) %>% 
+    tidyr::spread(key = year, value = .value) %>% 
     dplyr::rename(
       # Rename the year 0 column
       !!as.name(maximum_values) := !!as.name(year_for_maximum_values), 

@@ -61,9 +61,6 @@ to which a row's value belongs (a string). Default is "\code{matnames}".}
 \item{V}{the name for the make matrix (a string). Default is "\code{V}".}
 
 \item{Y}{the name for the final demand matrix (a string). Default is "\code{Y}".}
-
-\item{grouping_vars}{a string vector of names of columns by which rows should be grouped when matrix names are added.
-Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type")}.}
 }
 \value{
 \code{.tidy_iea_df} with an added column \code{matnames}.

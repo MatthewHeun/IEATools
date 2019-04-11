@@ -59,7 +59,7 @@ library(tidyr)
 Simple <- load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 
   prep_psut() \%>\% 
-  rename(matval_simple = matval)
+  rename(matval_simple = matvals)
 S_units <- load_tidy_iea_df() \%>\% 
   extract_S_units_from_tidy()
 Complicated <- load_tidy_iea_df() \%>\% 
@@ -70,7 +70,7 @@ Complicated <- load_tidy_iea_df() \%>\%
   spread(key = matnames, value = matvals) \%>\% 
   full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
                             "Country", "Year")) \%>\% 
-  gather(key = matname, value = matvals, R, U_EIOU, U_excl_EIOU, 
+  gather(key = matnames, value = matvals, R, U_EIOU, U_excl_EIOU, 
                                         V, Y, S_units) \%>\% 
   rename(matval_complicated = matvals)
 # Simple and Complicated are same.
