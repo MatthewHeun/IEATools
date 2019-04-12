@@ -62,34 +62,35 @@ write_fu_templates <- function(.tidy_iea_df, path){
 #' @examples
 #' load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
-#'   eiou_fu_template()
-eiou_fu_template <- function(.tidy_iea_df,
-                             template_type = c("tfc", "eiou"),
-                             energy_type = "Energy.type",
-                             energy = "E",
-                             last_stage = "Last.stage",
-                             final = "Final",
-                             year = "Year",
-                             ledger_side = "Ledger.side",
-                             flow_aggregation_point = "Flow.aggregation.point", 
-                             eiou = "Energy industry own use", 
-                             tfc = "Total final consumption",
-                             tpes = "Total primary energy supply",
-                             flow = "Flow", 
-                             product = "Product",
-                             destination = "Destination",
-                             quantity = "Quantity",
-                             e_dot = "E.dot",
-                             e_dot_total = paste0(e_dot, ".total"),
-                             e_dot_perc = paste0(e_dot, ".perc"),
-                             maximum_values = "Maximum values",
-                             year_for_maximum_values = 0,
-                             ef_product = "Ef product",
-                             allocation_var = "C_",
-                             n_allocation_rows = 3,
-                             machine = "Machine",
-                             eu_product = "Eu product",
-                             .value = ".value"){
+#'   fu_template(template_type = "eiou")
+fu_template <- function(.tidy_iea_df,
+                        template_type = c("tfc", "eiou"),
+                        energy_type = "Energy.type",
+                        energy = "E",
+                        last_stage = "Last.stage",
+                        final = "Final",
+                        year = "Year",
+                        ledger_side = "Ledger.side",
+                        consumption = "Consumption",
+                        flow_aggregation_point = "Flow.aggregation.point", 
+                        eiou = "Energy industry own use", 
+                        tfc = "Total final consumption",
+                        tpes = "Total primary energy supply",
+                        flow = "Flow", 
+                        product = "Product",
+                        destination = "Destination",
+                        quantity = "Quantity",
+                        e_dot = "E.dot",
+                        e_dot_total = paste0(e_dot, ".total"),
+                        e_dot_perc = paste0(e_dot, ".perc"),
+                        maximum_values = "Maximum values",
+                        year_for_maximum_values = 0,
+                        ef_product = "Ef product",
+                        allocation_var = "C_",
+                        n_allocation_rows = 3,
+                        machine = "Machine",
+                        eu_product = "Eu product",
+                        .value = ".value"){
   template_type <- match.arg(template_type)
   # Ensure that the incoming data frame has exclusively "E" as the Energy.type.
   assertthat::assert_that(.tidy_iea_df %>% 
@@ -102,18 +103,24 @@ eiou_fu_template <- function(.tidy_iea_df,
                             magrittr::equals(final) %>% 
                             all())
   # Calculate total EIOU energy consumption for each year
-  Totals_eiou <- .tidy_iea_df %>% 
-    dplyr::filter(!!as.name(flow_aggregation_point) == eiou) %>% 
+  # Totals <- .tidy_iea_df %>% 
+  #   dplyr::filter(!!as.name(flow_aggregation_point) == eiou) %>% 
+  if (template_type == "tfc") {
+    # tfc
+    Filtered <- dplyr::filter(.tidy_iea_df, !!as.name(ledger_side) == consumption)
+  } else {
+    # eiou
+    Filtered <- dplyr::filter(.tidy_iea_df, !!as.name(flow_aggregation_point) == eiou)
+  }
+  Totals <- Filtered %>% 
     matsindf::group_by_everything_except(ledger_side, flow_aggregation_point, flow, product, e_dot) %>% 
     dplyr::summarise(!!as.name(e_dot_total) := sum(!!as.name(e_dot)))
-  # Calculate a Tidy EIOU data frame with percentages.
-  Tidy_EIOU <- .tidy_iea_df %>% 
-    # Extract the EIOU data
-    dplyr::filter(!!as.name(flow_aggregation_point) == eiou) %>% 
+  # Calculate a Tidy data frame with percentages.
+  Tidy <- Filtered %>% 
     # Add the totals to the data frame in preparation for calculating percentages
-    dplyr::left_join(Totals_eiou, by = matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, .symbols = FALSE)) %>% 
+    dplyr::left_join(Totals, by = matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, .symbols = FALSE)) %>% 
     dplyr::mutate(
-      # Calculate percentage of all EIOU for that country and year
+      # Calculate percentage of all energy flows for that country and year
       !!as.name(e_dot_perc) := !!as.name(e_dot) / !!as.name(e_dot_total) * 100, 
       !!as.name(e_dot) := abs(!!as.name(e_dot)), 
       # Eliminate the total column: we don't need it any more
@@ -124,7 +131,7 @@ eiou_fu_template <- function(.tidy_iea_df,
       !!as.name(destination) := !!as.name(flow)
     )
   # Calculate the maximum energy consumption across all years
-  Max <- Tidy_EIOU %>% 
+  Max <- Tidy %>% 
     matsindf::group_by_everything_except(year, e_dot, e_dot_perc) %>%
     dplyr::summarise(
       !!as.name(e_dot) := max(!!as.name(e_dot)), 
@@ -142,13 +149,13 @@ eiou_fu_template <- function(.tidy_iea_df,
   c_cols <- paste0(allocation_var, 1:n_allocation_rows, " [%]")
   # Add allocation columns to the data frame
   for (i in 1:n_allocation_rows) {
-    Tidy_EIOU <- Tidy_EIOU %>% 
+    Tidy <- Tidy %>% 
       dplyr::mutate(
         !!as.name(c_cols[[i]]) := ""
       )
   }
   # Reshape the data frame into the format that we want for an Excel spreadsheet
-  out <- Tidy_EIOU %>% 
+  out <- Tidy %>% 
     # Gather all of the columns that we want to spread across the sheet
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot), !!as.name(e_dot_perc), !!!lapply(c_cols, as.name)) %>% 
     # Add the Max data frame so that we can include its numbers

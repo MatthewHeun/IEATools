@@ -2,10 +2,10 @@
 context("Template functions")
 ###########################################################
 
-test_that("eiou_fu_template works as expected", {
+test_that("eiou fu_template works as expected", {
   template <- load_tidy_iea_df() %>% 
     specify_all() %>%
-    eiou_fu_template()
+    fu_template(template_type = "eiou")
   expected_colorder <- c("Method", "Last.stage", "Country", "Ledger.side", "Flow.aggregation.point", "Energy.type", "Unit",
                          "Ef product", "Machine", "Eu product", "Destination", 
                          "Quantity", "Maximum values", "1971", "2000")
