@@ -2,7 +2,7 @@
 % Please edit documentation in R/templates.R
 \name{fu_template}
 \alias{fu_template}
-\title{Create an energy industry own use final-to-useful template}
+\title{Create a \code{.xlsx} template for analysis of final-to-useful transformation processes}
 \usage{
 fu_template(.tidy_iea_df, template_type = c("tfc", "eiou"),
   energy_type = "Energy.type", energy = "E",
@@ -75,7 +75,15 @@ Default is \code{0}.}
 a data frame containing the EIOU template
 }
 \description{
-Create an energy industry own use final-to-useful template
+This function creates a blank template for final-to-useful energy transformation processes analysis.
+The template is derived from IEA extended energy balance data which gives both
+energy industry own use and final demand for final energy carriers.
+From the IEA's final energy information, templates are created for conversion to
+useful energy carriers.
+Final energy consumed by each final demand sector or transformation process machines
+is allocated to final-to-useful machines and converted to useful energy at some efficiency.
+The allocation fractions and efficiencies are to be supplied by the analyst by filling blanks in
+the template.
 }
 \examples{
 load_tidy_iea_df() \%>\% 
