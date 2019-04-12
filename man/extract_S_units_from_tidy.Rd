@@ -13,7 +13,15 @@ extract_S_units_from_tidy(.tidy_iea_df, ledger_side = "Ledger.side",
 \arguments{
 \item{.tidy_iea_df}{the tidy data frame from which a unit summation \code{S_units} matrix is to be formed.}
 
+\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "\code{Ledger.side}".}
+
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
+
+\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "\code{Flow}".}
+
 \item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "\code{Product}".}
+
+\item{e_dot}{the name of the energy flow rate column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
 
 \item{unit}{the name of the unit column in "\code{.tidy_iea_df}". Default is "\code{Unit}".}
 
@@ -24,9 +32,6 @@ extract_S_units_from_tidy(.tidy_iea_df, ledger_side = "Ledger.side",
 \item{rowtype}{the name of a temporary rowype column created in \code{.tidy_iea_df}. Default is "\code{rowtype}".}
 
 \item{coltype}{the name of a temporary colype column created in \code{.tidy_iea_df}. Default is "\code{coltype}".}
-
-\item{grouping_vars}{a string vector of column names in \code{.tidy_iea_df} by which S_units matrix extraction should be performed.
-Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type")}.}
 }
 \value{
 a data frame containing grouping variables and a new column of unit summation matrices called \code{s_unit}.

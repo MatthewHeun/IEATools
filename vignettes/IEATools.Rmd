@@ -287,46 +287,16 @@ Balances %>%
   tidy_iea_df_balanced()
 ```
 
-Data are grouped internal to `calc_tidy_iea_df_balances()`
-using the `grouping_vars` argument whose default value is
-`c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")`.
-Grouping should be done on the `Product` column
-if per-product balances are desired.
-Grouping should _not_ be done on the `Flow` column or the `Ledger.side` column.
-
-The following code demonstrates the difference between
-country-level energy balance calculations and product-level balance calculations.
-
-```{r}
-# Product-level balances within each country are calculated by default
-Tidy_IEA_df %>% 
-  calc_tidy_iea_df_balances() %>% 
-  glimpse()
-# Country-level balances can be calculated by setting the grouping_vars argument,
-# without "Product".
-Tidy_IEA_df %>% 
-  calc_tidy_iea_df_balances(grouping_vars = c("Method", "Last.stage", "Country",
-                                              "Year", "Energy.type", "Unit")) %>% 
-  glimpse()
-```
-
-Notice that the country-level IEA data are not quite energy balanced.
+Notice that the IEA data are not quite energy balanced.
 To fix the enery balance, use the `fix_tidy_iea_df_balances()` function.
 `fix_tidy_iea_df_balances()` adjusts the `Statistical differences` flow
 to achieve perfect energy balance.
-By default, .
 
 ```{r}
 # Fix product-level balances within each country
 Tidy_IEA_df %>% 
   fix_tidy_iea_df_balances() %>% 
   calc_tidy_iea_df_balances() %>% 
-  glimpse()
-# Country level data are also balanced
-Tidy_IEA_df %>% 
-  fix_tidy_iea_df_balances() %>% 
-  calc_tidy_iea_df_balances(grouping_vars = c("Method", "Last.stage", "Country",
-                                              "Year", "Energy.type", "Unit")) %>% 
   glimpse()
 ```
 

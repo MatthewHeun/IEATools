@@ -19,7 +19,56 @@ eiou_fu_template(.tidy_iea_df, energy_type = "Energy.type",
   eu_product = "Eu product", .value = ".value")
 }
 \arguments{
-\item{.tidy_iea_df}{}
+\item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
+
+\item{energy_type}{the name of the energy type column. Default is "\code{Energy.type}".}
+
+\item{energy}{the string identifier for energy (as opposed to exergy). Default is "\code{E}".}
+
+\item{last_stage}{the name of the last stage column. Default is "\code{Last.stage}".}
+
+\item{final}{the string identifier for final energy (as \code{Last.stage}). Default is "\code{Final}".}
+
+\item{year}{the name of the year column. Default is "\code{Year}".}
+
+\item{ledger_side}{the name of the ledger side column. Default is "\code{Ldeger.side}".}
+
+\item{flow_aggregation_point}{the name of the flow aggregation point column. Default is "\code{Flow.aggregation.point}".}
+
+\item{eiou}{the string identifier for energy industry own use. Default is "\code{Energy industry own use}".}
+
+\item{tpes}{the string identifier for total primary energy supply. Default is "\code{Total primary energy supply}".}
+
+\item{flow}{the name of the flow column. Default is "\code{Flow}".}
+
+\item{product}{the name of the product column. Default is "\code{Product}".}
+
+\item{destination}{the name for the destination column. Default is "\code{Destination}".}
+
+\item{quantity}{the name of the quantity column. Default is "\code{Quantity}".}
+
+\item{e_dot}{the name of the energy flow rate column. Default is "\code{E.dot}".}
+
+\item{e_dot_total}{the string identifier for total energy. Default is "\code{E.dot.total}".}
+
+\item{e_dot_perc}{the string identifier for energy percentage. Default is "\code{E.dot.perc}".}
+
+\item{maximum_values}{the name for the maximum energy values column. Default is "\code{Maximum values}".}
+
+\item{year_for_maximum_values}{an integer for the first year (in which maximum values will be stored before renaming the column to \code{maximum_values}).
+Default is \code{0}.}
+
+\item{ef_product}{the name of the final energy carrier column. Default is "\code{Ef product}".}
+
+\item{allocation_var}{the string identifier for the allocation percentage column. Default is "\code{C_}".}
+
+\item{n_allocation_rows}{an integer stating how many allocation rows are desired. Default is \code{3}.}
+
+\item{machine}{the name of the column of final-to-useful transformation process machines. Default is "\code{Machine}".}
+
+\item{eu_product}{the name of the useful energy carrier column. Default is "\code{Eu product}".}
+
+\item{.value}{the name of the value column added to \code{.tidy_iea_df}. Default is "\code{.value}".}
 }
 \value{
 a data frame containing the EIOU template

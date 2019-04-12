@@ -9,14 +9,16 @@
 #' `.tidy_iea_df` is typically obtained from [tidy_iea_df()].
 #'
 #' @param .tidy_iea_df the tidy data frame from which a unit summation `S_units` matrix is to be formed.
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "`Ledger.side`".
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
+#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
 #' @param product the name of the product column in `.tidy_iea_df`. Default is "`Product`".
+#' @param e_dot the name of the energy flow rate column in `.tidy_iea_df`. Default is "`E.dot`".
 #' @param unit the name of the unit column in "`.tidy_iea_df`". Default is "`Unit`".
 #' @param s_units the name of the unit summation column to be added to `.tidy_iea_df`. Default is "`S_unit`".
 #' @param val the name of a temporary column to be created in `.tidy_iea_df`. Deafult is "`.val`".
 #' @param rowtype the name of a temporary rowype column created in `.tidy_iea_df`. Default is "`rowtype`".
 #' @param coltype the name of a temporary colype column created in `.tidy_iea_df`. Default is "`coltype`".
-#' @param grouping_vars a string vector of column names in `.tidy_iea_df` by which S_units matrix extraction should be performed. 
-#'        Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
 #'
 #' @return a data frame containing grouping variables and a new column of unit summation matrices called `s_unit`.
 #'
@@ -275,15 +277,18 @@ add_row_col_meta <- function(.tidy_iea_df,
 #' before creating the matrices.
 #'
 #' @param .tidy_iea_df a data frame containing `matnames` and several other columns
-#' @param matnames the name of a column in `.tidy_iea_df` containing matrix names. Default is "`matname`".
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "`Ledger.side`".
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
+#' @param unit the name of the unit column in `.tidy_iea_df`. Default is "`Unit`".
+#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
+#' @param product the name of the product column in `.tidy_iea_df`. Default is "`Product`".
 #' @param e_dot the name of a column in `.tidy_iea_df` containing energy flow rates. Default is "`E.dot`".
+#' @param matnames the name of a column in `.tidy_iea_df` containing matrix names. Default is "`matname`".
 #' @param rownames the name of a column to be added to `.tidy_iea_df` for row names. Default is "`rownames`".
 #' @param colnames the name of a column to be added to `.tidy_iea_df` for column names. Default is "`colnames`".
 #' @param rowtypes the name of a column to be added to `.tidy_iea_df` for row types. Default is "`rowtypes`".
 #' @param coltypes the name of a column to be added to `.tidy_iea_df` for column types. Default is "`coltypes`".
 #' @param matvals the name of a column to be added to `.tidy_iea_df` for matrices. Default is "`matvals`".
-#' @param grouping_vars the columns in `.tidy_iea_df` by which you want to group matrices. 
-#'        Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
 #'
 #' @return `.tidy_iea_df` with all values converted to matrices in the `matvals` column
 #' 
@@ -354,6 +359,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #'
 #' @param .tidy_iea_df a tidy data frame that has been specified with [specify_all()].
 #' @param ledger_side the name of the ledger side column. Default is "`Ledger.side`". 
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
 #' @param supply the string identifying the supply side of the ledger. Default is "`Supply`".
 #' @param consumption the string identifying the consumption side of the ledger. Default is "`Consumption`".
 #' @param flow the name of the flow column. Default is "`Flow`".
@@ -362,7 +368,10 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' @param e_dot the name of the energy rate column. Default is "E.dot".
 #' @param matnames the name of the matrix names column added by this function. Default is "`matnames`".
 #' @param matvals the name of the matrix value column added by this function. Default is "`matvals`".
-#' @param grouping_vars a string vector of columns by which matrices are grouped. Default is `c("Method", "Energy.type", "Last.stage", "Country", "Year")`.
+#' @param rownames the name of the rownames column passed to `collapse_to_tidy_psut()`. Default is "`rownames`".
+#' @param colnames the name of the colnames column passed to `collapse_to_tidy_psut()`. Default is "`colnames`".
+#' @param rowtypes the name of the rowtypes column passed to `collapse_to_tidy_psut()`. Default is "`rowtypes`".
+#' @param coltypes the name of the coltypes column passed to `collapse_to_tidy_psut()`. Default is "`coltypes`".
 #'
 #' @return a tidy PSUT data frame
 #' 

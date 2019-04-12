@@ -36,9 +36,6 @@ fix_tidy_iea_df_balances(.tidy_iea_df, ledger_side = "Ledger.side",
 \item{err}{the name of a temporary error column added to \code{.tidy_iea_df}. Default is "\code{.err}".}
 
 \item{remove_zeroes}{a logical telling whether to remove \code{0}s after balancing.}
-
-\item{grouping_vars}{a string vector of names of columns by which energy balance calculations should be performed.
-Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")}.}
 }
 \value{
 \code{.tidy_iea_df} with adjusted \code{Statistical differences} flows such that

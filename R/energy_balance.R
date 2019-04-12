@@ -46,10 +46,12 @@
 #'        Default is "`Supply`".
 #' @param consumption the identifier for consumption data in the `ledger_side` column (a string).
 #'        Default is "`Consumption`".
+#' @param flow_aggregation_point the name of the column in `.tidy_iea_df` that contains flow aggregation point information.
+#'        Default is "`Flow.aggregation.point`".
+#' @param flow the name of the column in `.tidy_iea_df` that contains flows. Default is "`Flow`".
+#' @param product the name of the column in `.tidy_iea_df` that contains products. Default is "`Product`".
 #' @param e_dot the name of the column in `.tidy_iea_data`
 #'        that contains energy flow data. Default is "`E.dot`".
-#' @param grouping_vars a string vector of names of columns by which energy balance calculations should be performed. 
-#'        Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")`.
 #' @param unit the name of the colum in `.tidy_iea_data`
 #'        that contains the units for the energy flow data. Default is "`Unit`".
 #' @param supply_sum the name of a new column that will contain the sum of all supply for that group.
@@ -181,8 +183,6 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' @param e_dot the name of the energy flow column in `.tidy_iea_df`. Default is "`E.dot`".
 #' @param err the name of a temporary error column added to `.tidy_iea_df`. Default is "`.err`".
 #' @param remove_zeroes a logical telling whether to remove `0`s after balancing.
-#' @param grouping_vars a string vector of names of columns by which energy balance calculations should be performed. 
-#'        Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")`.
 #'
 #' @return `.tidy_iea_df` with adjusted `Statistical differences` flows such that 
 #'         the data for each product are in perfect energy balance.

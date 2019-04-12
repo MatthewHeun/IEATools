@@ -35,8 +35,6 @@ tp_sinks_to_nonenergy(.tidy_iea_df, ledger_side = "Ledger.side",
 \item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "\code{Product}".}
 
 \item{e_dot}{the name of the energy rate column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
-
-\item{grouping_vars}{a string vector of column names by which \code{.tidy_iea_df} will be grouped before finding transformation sinks. Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type")}.}
 }
 \value{
 \code{.tidy_iea_df} with energy sunk in Transformation processes sinks reassigned to Non-energy use

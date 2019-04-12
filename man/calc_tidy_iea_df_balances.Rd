@@ -21,11 +21,18 @@ a \code{Ledger.side} column.}
 \item{ledger_side}{the name of the column in \code{.tidy_iea_data}
 that contains ledger side information (a string). Default is "\code{Ledger.side}".}
 
+\item{flow_aggregation_point}{the name of the column in \code{.tidy_iea_df} that contains flow aggregation point information.
+Default is "\code{Flow.aggregation.point}".}
+
 \item{supply}{the identifier for supply data in the \code{ledger_side} column (a string).
 Default is "\code{Supply}".}
 
 \item{consumption}{the identifier for consumption data in the \code{ledger_side} column (a string).
 Default is "\code{Consumption}".}
+
+\item{flow}{the name of the column in \code{.tidy_iea_df} that contains flows. Default is "\code{Flow}".}
+
+\item{product}{the name of the column in \code{.tidy_iea_df} that contains products. Default is "\code{Product}".}
 
 \item{e_dot}{the name of the column in \code{.tidy_iea_data}
 that contains energy flow data. Default is "\code{E.dot}".}
@@ -49,9 +56,6 @@ Default is "\code{balance_OK}".}
 
 \item{tol}{if the difference between supply and consumption is greater than \code{tol},
 \code{balance_OK} will be set to \code{FALSE}. Default is \code{1e-6}.}
-
-\item{grouping_vars}{a string vector of names of columns by which energy balance calculations should be performed.
-Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")}.}
 }
 \value{
 \code{.tidy_iea_df} with additional columns \code{supply_sum}, \code{consumption_sum}, \code{supply_minus_consumption}, \code{balance_OK}, and \code{err}.

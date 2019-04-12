@@ -21,6 +21,8 @@ prep_psut(.tidy_iea_df, ledger_side = "Ledger.side", supply = "Supply",
 
 \item{consumption}{the string identifying the consumption side of the ledger. Default is "\code{Consumption}".}
 
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
+
 \item{flow}{the name of the flow column. Default is "\code{Flow}".}
 
 \item{product}{the name of the product column. Default is "\code{Product}".}
@@ -33,7 +35,13 @@ prep_psut(.tidy_iea_df, ledger_side = "Ledger.side", supply = "Supply",
 
 \item{matvals}{the name of the matrix value column added by this function. Default is "\code{matvals}".}
 
-\item{grouping_vars}{a string vector of columns by which matrices are grouped. Default is \code{c("Method", "Energy.type", "Last.stage", "Country", "Year")}.}
+\item{rownames}{the name of the rownames column passed to \code{collapse_to_tidy_psut()}. Default is "\code{rownames}".}
+
+\item{colnames}{the name of the colnames column passed to \code{collapse_to_tidy_psut()}. Default is "\code{colnames}".}
+
+\item{rowtypes}{the name of the rowtypes column passed to \code{collapse_to_tidy_psut()}. Default is "\code{rowtypes}".}
+
+\item{coltypes}{the name of the coltypes column passed to \code{collapse_to_tidy_psut()}. Default is "\code{coltypes}".}
 }
 \value{
 a tidy PSUT data frame

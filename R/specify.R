@@ -449,7 +449,6 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
 #' @param product the name of the product column in `.tidy_iea_df`. Default is "`Product`".
 #' @param e_dot the name of the energy rate column in `.tidy_iea_df`. Default is "`E.dot`".
-#' @param grouping_vars a string vector of column names by which `.tidy_iea_df` will be grouped before finding transformation sinks. Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
 #'
 #' @return the `grouping_vars` and the `flow` column, 
 #'         with one row for each industry that is a transformation sink or source.
@@ -526,7 +525,6 @@ tp_sinks_sources <- function(.tidy_iea_df,
 #' @param non_energy_flow a sting identifying non-energy flows. Default is "`Non-energy use industry/transformation/energy`".
 #' @param product the name of the product column in `.tidy_iea_df`. Default is "`Product`".
 #' @param e_dot the name of the energy rate column in `.tidy_iea_df`. Default is "`E.dot`".
-#' @param grouping_vars a string vector of column names by which `.tidy_iea_df` will be grouped before finding transformation sinks. Default is `c("Method", "Last.stage", "Country", "Year", "Energy.type")`.
 #'
 #' @return `.tidy_iea_df` with energy sunk in Transformation processes sinks reassigned to Non-energy use
 #' 

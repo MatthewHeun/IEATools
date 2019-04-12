@@ -26,10 +26,17 @@ collapse_to_tidy_psut(.tidy_iea_df, matnames = "matnames",
 
 \item{coltypes}{the name of a column to be added to \code{.tidy_iea_df} for column types. Default is "\code{coltypes}".}
 
-\item{matvals}{the name of a column to be added to \code{.tidy_iea_df} for matrices. Default is "\code{matvals}".}
+\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "\code{Ledger.side}".}
 
-\item{grouping_vars}{the columns in \code{.tidy_iea_df} by which you want to group matrices.
-Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type")}.}
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
+
+\item{unit}{the name of the unit column in \code{.tidy_iea_df}. Default is "\code{Unit}".}
+
+\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "\code{Flow}".}
+
+\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "\code{Product}".}
+
+\item{matvals}{the name of a column to be added to \code{.tidy_iea_df} for matrices. Default is "\code{matvals}".}
 }
 \value{
 \code{.tidy_iea_df} with all values converted to matrices in the \code{matvals} column
