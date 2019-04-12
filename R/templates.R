@@ -26,7 +26,18 @@ write_fu_templates <- function(.tidy_iea_df, path){
   # TODO: fill this function
 }
 
-#' Create an energy industry own use final-to-useful template
+
+#' Create a `.xlsx` template for analysis of final-to-useful transformation processes
+#' 
+#' This function creates a blank template for final-to-useful energy transformation processes analysis.
+#' The template is derived from IEA extended energy balance data which gives both 
+#' energy industry own use and final demand for final energy carriers.
+#' From the IEA's final energy information, templates are created for conversion to 
+#' useful energy carriers.
+#' Final energy consumed by each final demand sector or transformation process machines
+#' is allocated to final-to-useful machines and converted to useful energy at some efficiency.
+#' The allocation fractions and efficiencies are to be supplied by the analyst by filling blanks in 
+#' the template. 
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
 #' @param energy_type the name of the energy type column. Default is "`Energy.type`".
