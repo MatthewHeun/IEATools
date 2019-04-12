@@ -64,6 +64,7 @@ write_fu_templates <- function(.tidy_iea_df, path){
 #'   specify_all() %>% 
 #'   eiou_fu_template()
 eiou_fu_template <- function(.tidy_iea_df,
+                             template_type = c("tfc", "eiou"),
                              energy_type = "Energy.type",
                              energy = "E",
                              last_stage = "Last.stage",
@@ -72,6 +73,7 @@ eiou_fu_template <- function(.tidy_iea_df,
                              ledger_side = "Ledger.side",
                              flow_aggregation_point = "Flow.aggregation.point", 
                              eiou = "Energy industry own use", 
+                             tfc = "Total final consumption",
                              tpes = "Total primary energy supply",
                              flow = "Flow", 
                              product = "Product",
@@ -88,6 +90,7 @@ eiou_fu_template <- function(.tidy_iea_df,
                              machine = "Machine",
                              eu_product = "Eu product",
                              .value = ".value"){
+  template_type <- match.arg(template_type)
   # Ensure that the incoming data frame has exclusively "E" as the Energy.type.
   assertthat::assert_that(.tidy_iea_df %>% 
                             magrittr::extract2(energy_type) %>% 
