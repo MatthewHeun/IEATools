@@ -8,8 +8,7 @@ tp_sinks_sources(.tidy_iea_df, type = c("sinks", "sources"),
   flow_aggregation_point = "Flow.aggregation.point",
   transformation_processes = "Transformation processes",
   eiou = "Energy industry own use", flow = "Flow",
-  product = "Product", e_dot = "E.dot", grouping_vars = c("Method",
-  "Last.stage", "Country", "Year", "Energy.type"))
+  product = "Product", e_dot = "E.dot")
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}

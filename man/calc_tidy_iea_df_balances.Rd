@@ -5,10 +5,10 @@
 \title{Calculate balances on a tidy IEA data frame}
 \usage{
 calc_tidy_iea_df_balances(.tidy_iea_df, ledger_side = "Ledger.side",
-  e_dot = "E.dot", unit = "Unit", grouping_vars = c("Method",
-  "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product"),
-  supply = "Supply", consumption = "Consumption",
-  supply_sum = "supply_sum", consumption_sum = "consumption_sum",
+  flow_aggregation_point = "Flow.aggregation.point", supply = "Supply",
+  consumption = "Consumption", flow = "Flow", product = "Product",
+  e_dot = "E.dot", unit = "Unit", supply_sum = "supply_sum",
+  consumption_sum = "consumption_sum",
   supply_minus_consumption = "supply_minus_consumption",
   balance_OK = "balance_OK", err = "err", tol = 1e-06)
 }
@@ -21,20 +21,17 @@ a \code{Ledger.side} column.}
 \item{ledger_side}{the name of the column in \code{.tidy_iea_data}
 that contains ledger side information (a string). Default is "\code{Ledger.side}".}
 
-\item{e_dot}{the name of the column in \code{.tidy_iea_data}
-that contains energy flow data. Default is "\code{E.dot}".}
-
-\item{unit}{the name of the colum in \code{.tidy_iea_data}
-that contains the units for the energy flow data. Default is "\code{Unit}".}
-
-\item{grouping_vars}{a string vector of names of columns by which energy balance calculations should be performed.
-Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")}.}
-
 \item{supply}{the identifier for supply data in the \code{ledger_side} column (a string).
 Default is "\code{Supply}".}
 
 \item{consumption}{the identifier for consumption data in the \code{ledger_side} column (a string).
 Default is "\code{Consumption}".}
+
+\item{e_dot}{the name of the column in \code{.tidy_iea_data}
+that contains energy flow data. Default is "\code{E.dot}".}
+
+\item{unit}{the name of the colum in \code{.tidy_iea_data}
+that contains the units for the energy flow data. Default is "\code{Unit}".}
 
 \item{supply_sum}{the name of a new column that will contain the sum of all supply for that group.
 Default is "\code{supply_sum}".}
@@ -52,6 +49,9 @@ Default is "\code{balance_OK}".}
 
 \item{tol}{if the difference between supply and consumption is greater than \code{tol},
 \code{balance_OK} will be set to \code{FALSE}. Default is \code{1e-6}.}
+
+\item{grouping_vars}{a string vector of names of columns by which energy balance calculations should be performed.
+Default is \code{c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")}.}
 }
 \value{
 \code{.tidy_iea_df} with additional columns \code{supply_sum}, \code{consumption_sum}, \code{supply_minus_consumption}, \code{balance_OK}, and \code{err}.

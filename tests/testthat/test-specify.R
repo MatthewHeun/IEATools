@@ -95,24 +95,17 @@ test_that("tp_sinks_sources() works as expected", {
   # Check when type is neither "sinks" nor "sources"
   expect_error(load_tidy_iea_df() %>% 
                  specify_all() %>% 
-                 tp_sinks_sources(type = "bogus"))
+                 tp_sinks_sources(type = "bogus"), 
+               msg = "'arg' should be one of ")
   # Try to send an ungrouped data frame into the function. Should give 0 rows.
   expect_equal(load_tidy_iea_df() %>% 
                  specify_primary_production() %>% 
                  specify_production_to_resources() %>% 
                  specify_tp_eiou() %>% 
                  specify_interface_industries() %>% 
-                 tp_sinks_sources(grouping_vars = NULL) %>% 
+                 tp_sinks_sources() %>%
                  nrow(), 
                0)
-  # Try to group on Flow.aggregation.point. Should fail.
-  expect_error(load_tidy_iea_df() %>% 
-                 specify_all() %>% 
-                 tp_sinks_sources(grouping_vars = "Flow.aggregation.point"), "Flow.aggregation.point cannot be a grouping variable of .tidy_iea_df in tp_sinks_sources()")
-  # Try to group on Flow. Should fail.
-  expect_error(load_tidy_iea_df() %>% 
-                 specify_all() %>% 
-                 tp_sinks_sources(grouping_vars = "Flow"), "Flow cannot be a grouping variable of .tidy_iea_df in tp_sinks_sources()")
   # Try with the built-in data set in which there are no transformation sinks.
   sink_industries <- load_tidy_iea_df() %>% 
     specify_all() %>% 
@@ -128,7 +121,8 @@ test_that("tp_sinks_sources() works as expected", {
       Product = "Petrol"
     )
   # Automobiles are fine, but Furnaces don't make anything and are, therefore, a transformation sink.
-  expect_equal(Tidy %>% tp_sinks_sources(grouping_vars = "Country"), 
+  # expect_equal(Tidy %>% tp_sinks_sources(grouping_vars = "Country"), 
+  expect_equal(Tidy %>% tp_sinks_sources(), 
                data.frame(Country = "Bogus", Flow = "Furnaces", stringsAsFactors = FALSE))
 })
 
@@ -136,16 +130,8 @@ test_that('tp_sinks_sources(type = "sources") works as expected', {
   # Try to send an ungrouped data frame into the function. Should give 0 rows.
   expect_equal(load_tidy_iea_df() %>% 
                  specify_all() %>% 
-                 tp_sinks_sources(type = "sources", grouping_vars = NULL) %>% 
+                 tp_sinks_sources(type = "sources") %>% 
                  nrow(), 0)
-  # Try to group on Flow.aggregation.point. Should fail.
-  expect_error(load_tidy_iea_df() %>% 
-                 specify_all() %>% 
-                 tp_sinks_sources(type = "sources", grouping_vars = "Flow.aggregation.point"), "Flow.aggregation.point cannot be a grouping variable of .tidy_iea_df in tp_sinks_sources()")
-  # Try to group on Flow. Should fail.
-  expect_error(load_tidy_iea_df() %>% 
-                 specify_all() %>% 
-                 tp_sinks_sources(type = "sources", grouping_vars = "Flow"), "Flow cannot be a grouping variable of .tidy_iea_df in tp_sinks_sources()")
   # Try with the built-in data set in which there are no transformation sources.
   source_industries <- load_tidy_iea_df() %>% 
     specify_all() %>% 
@@ -161,7 +147,7 @@ test_that('tp_sinks_sources(type = "sources") works as expected', {
       Product = "Petrol"
     )
   # Automobiles are fine, but Furnaces make Petrol without consuming any energy, and are, therefore, a transformation source.
-  expect_equal(Tidy %>% tp_sinks_sources(type = "sources", grouping_vars = "Country"), 
+  expect_equal(Tidy %>% tp_sinks_sources(type = "sources"), 
                data.frame(Country = "Bogus", Flow = "Furnaces", stringsAsFactors = FALSE))
 })
 

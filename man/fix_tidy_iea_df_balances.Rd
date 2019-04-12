@@ -10,8 +10,7 @@ fix_tidy_iea_df_balances(.tidy_iea_df, ledger_side = "Ledger.side",
   tfc_compare = "TFC compare", flow = "Flow",
   statistical_differences = "Statistical differences",
   product = "Product", e_dot = "E.dot", err = ".err",
-  remove_zeroes = TRUE, grouping_vars = c("Method", "Last.stage",
-  "Country", "Year", "Energy.type", "Unit", "Product"))
+  remove_zeroes = TRUE)
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balanc data}

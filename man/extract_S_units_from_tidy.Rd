@@ -4,11 +4,11 @@
 \alias{extract_S_units_from_tidy}
 \title{Extract a unit summation matrix from a tidy data frame}
 \usage{
-extract_S_units_from_tidy(.tidy_iea_df, product = "Product",
-  unit = "Unit", s_units = "S_units", val = ".val",
-  rowtype = ".rowtype", coltype = ".coltype",
-  grouping_vars = c("Method", "Last.stage", "Country", "Year",
-  "Energy.type"))
+extract_S_units_from_tidy(.tidy_iea_df, ledger_side = "Ledger.side",
+  flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
+  product = "Product", e_dot = "E.dot", unit = "Unit",
+  s_units = "S_units", val = ".val", rowtype = ".rowtype",
+  coltype = ".coltype")
 }
 \arguments{
 \item{.tidy_iea_df}{the tidy data frame from which a unit summation \code{S_units} matrix is to be formed.}

@@ -76,13 +76,13 @@
 calc_tidy_iea_df_balances <- function(.tidy_iea_df, 
                             # Input column names
                             ledger_side = "Ledger.side",
-                            e_dot = "E.dot",
-                            unit = "Unit",
-                            # Input groups
-                            grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product"),
-                            # ledger.side identifiers
+                            flow_aggregation_point = "Flow.aggregation.point",
                             supply = "Supply",
                             consumption = "Consumption",
+                            flow = "Flow",
+                            product = "Product",
+                            e_dot = "E.dot",
+                            unit = "Unit",
                             # Output column names
                             supply_sum = "supply_sum",
                             consumption_sum = "consumption_sum",
@@ -91,8 +91,10 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
                             err = "err",
                             tol = 1e-6){
   # Calculate sums on a per-group basis
+  grouping_names <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot)
+  grouping_strings <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot, .symbols = FALSE)
   Tidy <- .tidy_iea_df %>% 
-    dplyr::group_by(!!!lapply(grouping_vars, as.name))
+    dplyr::group_by(!!!grouping_names)
   SupplySum <- Tidy %>%
     dplyr::filter(!!as.name(ledger_side) == supply) %>%
     dplyr::summarise(!!as.name(supply_sum) := sum(!!as.name(e_dot)))
@@ -101,7 +103,7 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
     dplyr::filter(!!as.name(ledger_side) == consumption) %>%
     dplyr::summarise(!!as.name(consumption_sum) := sum(!!as.name(e_dot)))
   # Return the difference between supply and consumption
-  dplyr::full_join(SupplySum, ConsumptionSum, by = grouping_vars) %>% 
+  dplyr::full_join(SupplySum, ConsumptionSum, by = grouping_strings) %>% 
     dplyr::mutate(
       !!as.name(supply_minus_consumption) := !!as.name(supply_sum) - !!as.name(consumption_sum), 
       !!as.name(balance_OK) := dplyr::case_when(
@@ -212,12 +214,12 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
                                      e_dot = "E.dot", 
                                      # Name used for error column internally
                                      err = ".err", 
-                                     remove_zeroes = TRUE, 
-                                     # Analysis groups
-                                     grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")){
+                                     remove_zeroes = TRUE){
+  grouping_names <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot)
+  grouping_strings <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot, .symbols = FALSE)
   e_bal_errors <- .tidy_iea_df %>% 
-    calc_tidy_iea_df_balances(grouping_vars = grouping_vars, err = err) %>% 
-    dplyr::select(grouping_vars, err) %>% 
+    calc_tidy_iea_df_balances(err = err) %>% 
+    dplyr::select(!!!grouping_names, err) %>% 
     dplyr::mutate(
       !!as.name(flow) := statistical_differences, 
       !!as.name(ledger_side) := supply,
@@ -225,7 +227,7 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
     )
   
   out <- .tidy_iea_df %>% 
-    dplyr::full_join(e_bal_errors, by = c(grouping_vars, ledger_side, flow_aggregation_point, flow)) %>% 
+    dplyr::full_join(e_bal_errors, by = matsindf::everything_except(.tidy_iea_df, e_dot, .symbols = FALSE)) %>% 
     dplyr::mutate(
       # If IEA thought things were in balance (even if they aren't), there will be an 
       # NA in the e_dot column in the Statistical differences row. 

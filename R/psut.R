@@ -26,13 +26,24 @@
 #' library(dplyr)
 #' load_tidy_iea_df() %>% 
 #'   extract_S_units_from_tidy()
-extract_S_units_from_tidy <- function(.tidy_iea_df, product = "Product", unit = "Unit", s_units = "S_units",
-                              val = ".val", rowtype = ".rowtype", coltype = ".coltype",
-                              # Analysis groups
-                              grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type")){
+extract_S_units_from_tidy <- function(.tidy_iea_df, 
+                                      # Column names in .tidy_iea_df
+                                      ledger_side = "Ledger.side", 
+                                      flow_aggregation_point = "Flow.aggregation.point", 
+                                      flow = "Flow", 
+                                      product = "Product", 
+                                      e_dot = "E.dot",
+                                      unit = "Unit", 
+                                      # Output column name
+                                      s_units = "S_units",
+                                      # Intermediate column names
+                                      val = ".val", 
+                                      rowtype = ".rowtype", 
+                                      coltype = ".coltype"){
+  grouping_vars <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, unit, flow, product, e_dot)
   matsindf::verify_cols_missing(.tidy_iea_df, c(s_units, val, rowtype, coltype))
   .tidy_iea_df %>% 
-    dplyr::group_by(!!!lapply(grouping_vars, as.name)) %>% 
+    dplyr::group_by(!!!grouping_vars) %>% 
     dplyr::select(!!!grouping_vars, !!as.name(product), !!as.name(unit)) %>%
     dplyr::do(unique(.data)) %>%
     dplyr::mutate(
