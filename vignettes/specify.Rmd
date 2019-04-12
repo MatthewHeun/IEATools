@@ -260,15 +260,6 @@ Transformation sinks and sources are identified by the following algorithm:
  
 `tp_sinks_sources()` is a function not unlike `dplyr::summarise()`;
 it returns a summary containing grouping variables and industries that are transformation sinks or sources.
-So be sure to specify (or accept defaults for) 
-the `grouping_vars` argument.
-Typical grouping variables are `Method`, `Last.stage`, `Country`, `Year`, `Energy.type`.
-Don't group on `Flow.aggregation.point`, because energy from different aggregation points
-(`Energy industry own use` and `Transformation processes`) flows into each machine.
-Don't group on `Flow`, `Product`, or `E.dot`, either.
-If groups are not set, 
-`Flow`s will be analyzed together, possibly leading to missed transformation sinks or sources.
- 
 The various `specify_*()` functions should also be called _before_ calling [tp_sinks_sources()].
 The `specify_*()` functions clean up the IEA data, ensuring that energy is routed to the right places.
  
@@ -280,7 +271,7 @@ see the [tp_sinks_to_nonenergy()] function.
 to route energy consumed by transformation sinks to `Non-energy use industry/transformation/energy`.
 There is no function to solve the problem of transformation sources at this time.
 
-`tp_sinks_sources()` returns `grouping_vars` and the `Flow` column.
+`tp_sinks_sources()` returns metadata columns and the `Flow` column.
 The `Flow` column contains industries that are sinks or sources,
 depending on the value of the `type` argument.
 
@@ -299,7 +290,7 @@ data.frame(Flow = c("Automobiles", "Automobiles", "Furnaces"),
   # so Automobiles are not reported by tp_sinks_sources.
   # However, Furnaces make Product without consuming any energy, 
   # and are, therefore, a transformation source.
-  tp_sinks_sources(type = "sources", grouping_vars = "Country")
+  tp_sinks_sources(type = "sources")
 ```
 
 
