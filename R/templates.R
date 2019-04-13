@@ -13,8 +13,20 @@
 #' @param path the file path into which the blank template file will be written. 
 #'        Include both folder and file name. 
 #'        If not present, the ".xlsx" extension is added.
+#' @param allocations_tab_name the name of the tab on which the template will be written. Default is "`Allocations`".
+#' @param quantity the name of the quantity column to be created on output. Default is "`Quantity`".
+#' @param e_dot the name of the energy flow rate column in `.tidy_iea_df` and the name of the energy flow rate rows to be included in the Excel file that is written by this function.
+#'        Default is "`E.dot`".
+#' @param e_dot_perc the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
+#'        Default is "`E.dot.perc`".
+#' @param energy_row_font_color a hex string representing the font color to be used for `e_dot` and `e_dot_perc` rows in the Excel file that is written by this function.
+#'        Default is "`#104273`", a light blue color.
+#' @param energy_row_shading_color a hex string representing the font color to be used for `e_dot` and `e_dot_perc` rows in the Excel file that is written by this function.
+#'        Default is "`#104273`".
+#' @param overwrite 
+#' @param .rownum 
 #'
-#' @return a data frame containing the blank template
+#' @return the value of the `path` argument
 #' 
 #' @export
 #' 
@@ -22,17 +34,54 @@
 #' load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
 #'   write_fu_templates()
-write_fu_allocation_templates <- function(.tidy_iea_df, 
-                                          path, 
-                                          fd_allocations_tab = "Final.demand.allocations",
-                                          eiou_allocations_tab = "EIOU.allocations"){
-  FD_allocation_template <- .tidy_iea_df %>% 
-    fu_allocation_template(template_type = "Final demand")
-  EIOU_allocation_template <- .tidy_iea_df %>% 
-    fu_allocation_template(template_type = "Energy industry own use")
-  tab_list <- list(FD_allocation_template, EIOU_allocation_template) %>% 
-    rlang::set_names(fd_allocations_tab, eiou_allocations_tab)
-  openxlsx::write.xlsx(tab_list, file = path)
+write_fu_allocation_template <- function(.tidy_iea_df, 
+                                         path, 
+                                         allocations_tab_name = "Allocations",
+                                         quantity = "Quantity", 
+                                         e_dot = "E.dot",
+                                         e_dot_perc = paste0(e_dot, ".perc"), 
+                                         energy_row_font_color = "#104273",
+                                         energy_row_shading_color = "#B8D8F5", 
+                                         overwrite = FALSE,
+                                         .rownum = ".rownum"){
+  # Create the template data frame
+  Allocation_template <- .tidy_iea_df %>% 
+    fu_allocation_template()
+  matsindf::verify_cols_missing(Allocation_template, .rownum)
+  
+  # Create the Excel file and add formatting
+  
+  # First, figure out which rows are energy rows that need their background color changed
+  # e_rows_df gives the row numbers in the data frame, 
+  # where 0 is the header row 
+  # and 1 is the first data row
+  e_rows_df <- Allocation_template %>% 
+    # Get rid of rownames so that we have only row numbers
+    tibble::remove_rownames() %>% 
+    # Move the row numbers into a column
+    tibble::rownames_to_column(var = .rownum) %>% 
+    # Keep only those rows that have e_dot or e_dot_perc in the Quantity column
+    dplyr::filter(!!as.name(quantity) == e_dot | !!as.name(quantity) == e_dot_perc) %>% 
+    magrittr::extract2(.rownum) %>% 
+    as.numeric()
+  # e_rows_excel is the row number in the Excel spreadsheet.
+  # In this case, 
+  # 1 is the header row and
+  # 2 is the first data row.
+  # So 1 must be added to e_rows_df
+  e_rows_excel <- e_rows_df + 1
+  
+  # Create the workbook, add the worksheet, and stuff the data into the worksheet
+  fu_wb <- openxlsx::createWorkbook()
+  openxlsx::addWorksheet(fu_wb, allocations_tab_name)
+  openxlsx::writeData(fu_wb, allocations_tab_name, Allocation_template)
+  # Apply formatting style for energy rows
+  energy_row_style <- openxlsx::createStyle(fontColour = energy_row_font_color, fgFill = energy_row_shading_color)
+  openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style, rows = e_rows_excel, cols = 1:ncol(Allocation_template), gridExpand = TRUE)
+  # Now save it!
+  openxlsx::saveWorkbook(fu_wb, path, overwrite = overwrite)
+  # And return the path
+  return(path)
 }
 
 
@@ -93,7 +142,7 @@ write_fu_allocation_templates <- function(.tidy_iea_df,
 #'   specify_all() %>% 
 #'   fu_allocation_template(template_type = "Energy industry own use")
 fu_allocation_template <- function(.tidy_iea_df,
-                        template_type = c("Final demand", "Energy industry own use"),
+                        # template_type = c("Final demand", "Energy industry own use"),
                         energy_type = "Energy.type",
                         energy = "E",
                         last_stage = "Last.stage",
@@ -120,7 +169,7 @@ fu_allocation_template <- function(.tidy_iea_df,
                         machine = "Machine",
                         eu_product = "Eu.product",
                         .value = ".value"){
-  template_type <- match.arg(template_type)
+  # template_type <- match.arg(template_type)
   # Ensure that the incoming data frame has exclusively "E" as the Energy.type.
   assertthat::assert_that(.tidy_iea_df %>% 
                             magrittr::extract2(energy_type) %>% 
@@ -131,16 +180,18 @@ fu_allocation_template <- function(.tidy_iea_df,
                             magrittr::extract2(last_stage) %>% 
                             magrittr::equals(final) %>% 
                             all())
-  # Calculate total EIOU energy consumption for each year
-  if (template_type == "Final demand") {
-    # Final demand
-    Filtered <- dplyr::filter(.tidy_iea_df, !!as.name(ledger_side) == consumption)
-  } else {
-    # Energy industry own use
-    Filtered <- dplyr::filter(.tidy_iea_df, !!as.name(flow_aggregation_point) == eiou)
-  }
-  Totals <- Filtered %>% 
-    matsindf::group_by_everything_except(ledger_side, flow_aggregation_point, flow, product, e_dot) %>% 
+  # Gather appropriate rows of the .tidy_iea_df
+  # if (template_type == "Final demand") {
+  #   # Final demand
+  #   Filtered <- dplyr::filter(.tidy_iea_df, !!as.name(ledger_side) == consumption)
+  # } else {
+  #   # Energy industry own use
+  #   Filtered <- dplyr::filter(.tidy_iea_df, !!as.name(flow_aggregation_point) == eiou)
+  # }
+  Filtered <- .tidy_iea_df %>% 
+    dplyr::filter(!!as.name(ledger_side) == consumption | !!as.name(flow_aggregation_point) == eiou)
+  Totals <- Filtered %>%
+    matsindf::group_by_everything_except(ledger_side, flow_aggregation_point, flow, product, e_dot) %>%
     dplyr::summarise(!!as.name(e_dot_total) := sum(!!as.name(e_dot)))
   # Calculate a Tidy data frame with percentages.
   Tidy <- Filtered %>% 
