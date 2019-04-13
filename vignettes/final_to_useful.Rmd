@@ -1,0 +1,69 @@
+---
+title: "Final to Useful Analysis"
+author: "Matthew Kuperus Heun"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    fig_caption: yes
+vignette: >
+  %\VignetteIndexEntry{Final to Useful Analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(dplyr)
+library(IEATools)
+```
+
+
+## Introduction
+
+Extended energy balance data from the 
+[International Energy Agency (IEA)](https://www.iea.org)
+provides both primary and final energy information.
+(Primary energy is extracted from the biosphere, and 
+final energy is sold to consumers.)
+But consumers don't buy final energy for its own sake.
+They buy final energy so they can convert it to useful energy 
+(heat, light, work) that, 
+when combined with infrastrucure 
+(buildings, roads, etc.),
+provides energy services
+(heated and cooled space, passenger and freight transport, etc.).
+
+So some energy conversion chain analyses extend the final energy provided by the IEA 
+to useful energy through a process that involves
+
+(a) allocating final energy to final-to-useful energy conversion machines,
+(b) defining the efficiency of those final-to-useful energy conversion machines, and
+(c) calculating the useful energy injected into the economy.
+
+The `IEATools` package provides several functions to assist with the 
+final-to-useful analysis process, and
+this vignette demonstrates their use.
+
+
+## Allocation
+
+Extending the IEA's extended energy balance data to the useful stage begins 
+with defining allocations from final energy carriers to final-to-useful energy conversion machines.
+To demonstrate this process, we'll use the data bundled with this package.
+
+```{r}
+library(dplyr)
+library(IEATools)
+Tidy_iea_data <- load_tidy_iea_df() %>% 
+  specify_all() %>% 
+  glimpse()
+```
+
+The next step is to develop a blank final-to-useful allocation table.
+
+```{r}
+
+```
