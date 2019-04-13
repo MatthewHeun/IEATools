@@ -248,6 +248,7 @@ fu_allocation_template <- function(.tidy_iea_df,
       !!as.name(ef_product) := !!as.name(product)
     ) %>% 
     dplyr::mutate(
+      # Get rid of NA values in the maximum_values, machine, and eu_product columns.
       !!as.name(maximum_values) := dplyr::case_when(
         is.na(!!as.name(maximum_values)) ~ "",
         TRUE ~ !!as.name(maximum_values)
