@@ -29,8 +29,8 @@ write_fu_templates <- function(.tidy_iea_df, path){
 
 #' Create a `.xlsx` template for analysis of final-to-useful transformation processes
 #' 
-#' This function creates a blank template for final-to-useful energy transformation processes analysis.
-#' The template is derived from IEA extended energy balance data which gives both 
+#' This function creates a blank template for final-to-useful energy transformation process analysis.
+#' The template is derived from IEA extended energy balance data (`.tidy_iea_df`) which gives both 
 #' energy industry own use and final demand for final energy carriers.
 #' From the IEA's final energy information, templates are created for conversion to 
 #' useful energy carriers.
@@ -40,14 +40,18 @@ write_fu_templates <- function(.tidy_iea_df, path){
 #' the template. 
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
+#' @param template_type one of "`Final consumption`" or "`Energy industry own use`" for final consumption or energy industry own use, respectively. 
+#'        Default is "`Final consumption`".
 #' @param energy_type the name of the energy type column. Default is "`Energy.type`".
 #' @param energy the string identifier for energy (as opposed to exergy). Default is "`E`".
 #' @param last_stage the name of the last stage column. Default is "`Last.stage`".
 #' @param final the string identifier for final energy (as `Last.stage`). Default is "`Final`".
 #' @param year the name of the year column. Default is "`Year`".
 #' @param ledger_side the name of the ledger side column. Default is "`Ldeger.side`".
+#' @param consumption the string identifier for the consumption side of the ledger. Default is "`Consumption`".
 #' @param flow_aggregation_point the name of the flow aggregation point column. Default is "`Flow.aggregation.point`".
 #' @param eiou the string identifier for energy industry own use. Default is "`Energy industry own use`".
+#' @param tfc the string identifier for total final consumption. Default is "`Total final consumption`".
 #' @param tpes the string identifier for total primary energy supply. Default is "`Total primary energy supply`".
 #' @param flow the name of the flow column. Default is "`Flow`".
 #' @param product the name of the product column. Default is "`Product`".
@@ -75,7 +79,7 @@ write_fu_templates <- function(.tidy_iea_df, path){
 #'   specify_all() %>% 
 #'   fu_template(template_type = "eiou")
 fu_template <- function(.tidy_iea_df,
-                        template_type = c("tfc", "eiou"),
+                        template_type = c("Final consumption", "Energy industry own use"),
                         energy_type = "Energy.type",
                         energy = "E",
                         last_stage = "Last.stage",
@@ -116,11 +120,11 @@ fu_template <- function(.tidy_iea_df,
   # Calculate total EIOU energy consumption for each year
   # Totals <- .tidy_iea_df %>% 
   #   dplyr::filter(!!as.name(flow_aggregation_point) == eiou) %>% 
-  if (template_type == "tfc") {
-    # tfc
+  if (template_type == "Final consumption") {
+    # Final consumption
     Filtered <- dplyr::filter(.tidy_iea_df, !!as.name(ledger_side) == consumption)
   } else {
-    # eiou
+    # Energy industry own use
     Filtered <- dplyr::filter(.tidy_iea_df, !!as.name(flow_aggregation_point) == eiou)
   }
   Totals <- Filtered %>% 

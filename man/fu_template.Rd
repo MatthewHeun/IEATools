@@ -4,10 +4,11 @@
 \alias{fu_template}
 \title{Create a \code{.xlsx} template for analysis of final-to-useful transformation processes}
 \usage{
-fu_template(.tidy_iea_df, template_type = c("tfc", "eiou"),
-  energy_type = "Energy.type", energy = "E",
-  last_stage = "Last.stage", final = "Final", year = "Year",
-  ledger_side = "Ledger.side", consumption = "Consumption",
+fu_template(.tidy_iea_df, template_type = c("Final consumption",
+  "Energy industry own use"), energy_type = "Energy.type",
+  energy = "E", last_stage = "Last.stage", final = "Final",
+  year = "Year", ledger_side = "Ledger.side",
+  consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point",
   eiou = "Energy industry own use", tfc = "Total final consumption",
   tpes = "Total primary energy supply", flow = "Flow",
@@ -22,6 +23,9 @@ fu_template(.tidy_iea_df, template_type = c("tfc", "eiou"),
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
 
+\item{template_type}{one of "\code{Final consumption}" or "\code{Energy industry own use}" for final consumption or energy industry own use, respectively.
+Default is "\code{Final consumption}".}
+
 \item{energy_type}{the name of the energy type column. Default is "\code{Energy.type}".}
 
 \item{energy}{the string identifier for energy (as opposed to exergy). Default is "\code{E}".}
@@ -34,9 +38,13 @@ fu_template(.tidy_iea_df, template_type = c("tfc", "eiou"),
 
 \item{ledger_side}{the name of the ledger side column. Default is "\code{Ldeger.side}".}
 
+\item{consumption}{the string identifier for the consumption side of the ledger. Default is "\code{Consumption}".}
+
 \item{flow_aggregation_point}{the name of the flow aggregation point column. Default is "\code{Flow.aggregation.point}".}
 
 \item{eiou}{the string identifier for energy industry own use. Default is "\code{Energy industry own use}".}
+
+\item{tfc}{the string identifier for total final consumption. Default is "\code{Total final consumption}".}
 
 \item{tpes}{the string identifier for total primary energy supply. Default is "\code{Total primary energy supply}".}
 
@@ -75,8 +83,8 @@ Default is \code{0}.}
 a data frame containing the EIOU template
 }
 \description{
-This function creates a blank template for final-to-useful energy transformation processes analysis.
-The template is derived from IEA extended energy balance data which gives both
+This function creates a blank template for final-to-useful energy transformation process analysis.
+The template is derived from IEA extended energy balance data (\code{.tidy_iea_df}) which gives both
 energy industry own use and final demand for final energy carriers.
 From the IEA's final energy information, templates are created for conversion to
 useful energy carriers.
