@@ -1,8 +1,11 @@
+* Added `fu_allocation_template()` function that makes templates for 
+  deciding allocations to final-to-useful machines in
+  Final consumption or Energy industry own use.
 * `specify_tp_eiou()` now aggregates inputs and outputs separately
-   at the end of its specification process.
-   Doing so avoids a situation where resource extraction industries
-   would look like a Transformation process sink industry when 
-   inputsand outputs were netted together.
+  at the end of its specification process.
+  Doing so avoids a situation where resource extraction industries
+  would look like a Transformation process sink industry when 
+  inputsand outputs were netted together.
 
 
 # IEATools 0.1.6 (2019-04-06)
