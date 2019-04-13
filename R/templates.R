@@ -41,7 +41,8 @@ write_fu_allocation_template <- function(.tidy_iea_df,
                                          allocations_tab_name = "Allocations",
                                          quantity = "Quantity", 
                                          e_dot = "E.dot",
-                                         e_dot_perc = paste0(e_dot, ".perc"), 
+                                         e_dot_perc = paste(e_dot, "[%]"), 
+                                         maximum_values = "Maximum.values",
                                          energy_row_font_color = "#104273",
                                          energy_row_shading_color = "#B8D8F5", 
                                          overwrite = FALSE,
@@ -51,35 +52,41 @@ write_fu_allocation_template <- function(.tidy_iea_df,
     fu_allocation_template()
   matsindf::verify_cols_missing(Allocation_template, .rownum)
   
-  # Create the Excel file and add formatting
-  
-  # First, figure out which rows are energy rows that need their background color changed
-  # e_rows_df gives the row numbers in the data frame, 
-  # where 0 is the header row 
-  # and 1 is the first data row
-  e_rows_df <- Allocation_template %>% 
-    # Get rid of rownames so that we have only row numbers
-    tibble::remove_rownames() %>% 
-    # Move the row numbers into a column
-    tibble::rownames_to_column(var = .rownum) %>% 
-    # Keep only those rows that have e_dot or e_dot_perc in the Quantity column
-    dplyr::filter(!!as.name(quantity) == e_dot | !!as.name(quantity) == e_dot_perc) %>% 
-    magrittr::extract2(.rownum) %>% 
-    as.numeric()
-  # e_rows_excel is the row number in the Excel spreadsheet.
-  # In this case, 
-  # 1 is the header row and
-  # 2 is the first data row.
-  # So 1 must be added to e_rows_df
-  e_rows_excel <- e_rows_df + 1
-  
   # Create the workbook, add the worksheet, and stuff the data into the worksheet
   fu_wb <- openxlsx::createWorkbook()
   openxlsx::addWorksheet(fu_wb, allocations_tab_name)
   openxlsx::writeData(fu_wb, allocations_tab_name, Allocation_template)
-  # Apply formatting style for energy rows
+
+  # Prepare for formatting some of the data
+  quantity_rows <- function(which_quantity){
+    Allocation_template %>% 
+      # Get rid of rownames so that we have only row numbers and put those row numbers into a column
+      tibble::remove_rownames() %>% 
+      tibble::rownames_to_column(var = .rownum) %>% 
+      # Keep only those rows with e_dot in the Quantity column
+      dplyr::filter(!!as.name(quantity) == which_quantity) %>% 
+      magrittr::extract2(.rownum) %>% 
+      # + 1 returns the rows as they appear in the Excel spreadsheet,
+      # remembering that row 1 in Excel is the header of the table
+      as.numeric() + 1
+  }
+  
+  # First, figure out which some zones of the worksheet
+  e_dot_rows <- quantity_rows(e_dot)
+  e_dot_perc_rows <- quantity_rows(e_dot_perc)
+  max_values_col_index <- which(names(Allocation_template) == maximum_values)
+  year_cols_indices <- year_cols(Allocation_template)
+  
+  # Apply color formatting style for energy and energy percentage rows
   energy_row_style <- openxlsx::createStyle(fontColour = energy_row_font_color, fgFill = energy_row_shading_color)
-  openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style, rows = e_rows_excel, cols = 1:ncol(Allocation_template), gridExpand = TRUE)
+  openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style, rows = union(e_dot_rows, e_dot_perc_rows), cols = 1:ncol(Allocation_template), gridExpand = TRUE)
+  
+  # Set the number of decimal places for e_dot_perc rows.
+  # e_dot_perc_style <- openxlsx::createStyle(numFmt = "0.00")
+  e_dot_perc_style <- openxlsx::createStyle(numFmt = "PERCENTAGE")
+  openxlsx::addStyle(fu_wb, allocations_tab_name, style = e_dot_perc_style, 
+                     rows = e_dot_perc_rows, cols = c(max_values_col_index, year_cols_indices), gridExpand = TRUE)
+  
   # Now save it!
   if (!endsWith(path, ".xlsx")) {
     path <- paste0(path, ".xlsx")
@@ -196,7 +203,9 @@ fu_allocation_template <- function(.tidy_iea_df,
     dplyr::left_join(Totals, by = matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, .symbols = FALSE)) %>% 
     dplyr::mutate(
       # Calculate percentage of all energy flows for that country and year
-      !!as.name(e_dot_perc) := !!as.name(e_dot) / !!as.name(e_dot_total) * 100, 
+      # Don't need to multiply by 100 here, because we'll 
+      # change to percentage formatting when we write to Excel.
+      !!as.name(e_dot_perc) := !!as.name(e_dot) / !!as.name(e_dot_total), 
       !!as.name(e_dot) := abs(!!as.name(e_dot)), 
       # Eliminate the total column: we don't need it any more
       !!as.name(e_dot_total) := NULL 
@@ -215,9 +224,9 @@ fu_allocation_template <- function(.tidy_iea_df,
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot), !!as.name(e_dot_perc)) %>% 
     dplyr::mutate(
       # Set the year for max values to 0 so that the max values will appear as the earliest year.
-      !!as.name(year) := year_for_maximum_values,
+      !!as.name(year) := year_for_maximum_values #,
       # Need to make this into a character column so that we can add it to "" in the C_ columns later.
-      !!as.name(.value) := as.character(!!as.name(.value))
+      # !!as.name(.value) := as.character(!!as.name(.value))
     )
   
   # Create a vector of allocation percentages
@@ -226,7 +235,7 @@ fu_allocation_template <- function(.tidy_iea_df,
   for (i in 1:n_allocation_rows) {
     Tidy <- Tidy %>% 
       dplyr::mutate(
-        !!as.name(c_cols[[i]]) := ""
+        !!as.name(c_cols[[i]]) := NA_real_
       )
   }
   # Reshape the data frame into the format that we want for an Excel spreadsheet
@@ -248,13 +257,10 @@ fu_allocation_template <- function(.tidy_iea_df,
       !!as.name(ef_product) := !!as.name(product)
     ) %>% 
     dplyr::mutate(
-      # Get rid of NA values in the maximum_values, machine, and eu_product columns.
-      !!as.name(maximum_values) := dplyr::case_when(
-        is.na(!!as.name(maximum_values)) ~ "",
-        TRUE ~ !!as.name(maximum_values)
-      ), 
-      !!as.name(machine) := "",
-      !!as.name(eu_product) := ""
+      # Get rid of the factor that we created earlier.
+      !!as.name(quantity) := as.character(!!as.name(quantity)),
+      !!as.name(machine) := NA_real_,
+      !!as.name(eu_product) := NA_real_
     )
   # Figure out the order for the columns
   colnames <- names(out)
@@ -265,6 +271,8 @@ fu_allocation_template <- function(.tidy_iea_df,
   # Figure out the metadata columns
   meta_cols <- setdiff(colnames, year_colnames) %>% 
     setdiff(machine_and_product_columns)
+  # Change type to numeric for the maximum_values and year columns.
+  # out[c(maximum_values, year_colnames)] <- as.numeric(out[c(maximum_values, year_colnames)])
   # Now put the column names together in the desired order
   col_order <- c(meta_cols, machine_and_product_columns, year_colnames)
   out %>% 
@@ -277,14 +285,13 @@ fu_allocation_template <- function(.tidy_iea_df,
 #' Using a final-to-useful allocation table, 
 #' this function generates a blank template for final-to-useful machine efficiencies.
 #'
-#' @param .fd_fu_allocations a data frame containing a completed final-to-useful allocation template for final demand.
-#' @param .eiou_fu_allocations a data frame containing a completed final-to-useful allocation template for energy industry own use.
+#' @param .fu_allocations a data frame containing a completed final-to-useful allocation template for final demand.
 #'
 #' @return a data frame containing a blank template for final-to-useful machine efficiencies.
 #' 
 #' @export
 #'
 #' @examples
-eta_template <- function(.fd_fu_allocations, .eiou_fu_allocations){
+eta_template <- function(.fu_allocations){
   
 }

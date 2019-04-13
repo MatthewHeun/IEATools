@@ -31,3 +31,36 @@ starts_with_any_of <- function(x, target){
   }) %>%
     magrittr::set_names(NULL)
 }
+
+
+#' Find year columns
+#' 
+#' It is sometimes helpful to know which columns are years.
+#' This function returns a set of indices 
+#' (or, optionally, the names) of columns in `.fu_df` that represent years.
+#' 
+#' The default `year_pattern` is "`^-?\\d+$`", which matches columns whose names
+#' have zero or one negative signs followed by any number of digits.
+#'
+#' @param .df a non-tidy data frame with years spread to the right in columns.
+#' @param year_pattern a regex pattern that identifies years. Default is "`^-?\\d+$`".
+#' @param return_names a boolean which tells whether names are returned instead of column indices. 
+#'        Default is `FALSE`.
+#'
+#' @return a vector of column indices (when `return_names = FALSE`, the default) or a vector of column names (when `return_names = TRUE`)
+#'         for those columns that represent years.
+#' 
+#' @export
+#'
+#' @examples
+#' DF <- data.frame(a = c(1, 2), `1967` = c(3, 4), `-10` = c(5, 6), check.names = FALSE)
+#' DF %>% year_cols()
+#' DF %>% year_cols(return_names = TRUE)
+year_cols <- function(.df, year_pattern = "^-?\\d+$", return_names = FALSE){
+  colnames <- names(.df)
+  indices <- which(grepl(year_pattern, x = colnames))
+  if (return_names) {
+    return(colnames[indices])
+  }
+  return(indices)
+}

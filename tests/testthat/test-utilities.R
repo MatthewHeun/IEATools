@@ -14,3 +14,9 @@ test_that("starts_with_any_of works properly", {
                                   target = c("Production", "Imports")),
                c(TRUE, TRUE, FALSE, FALSE))
 })
+
+test_that("year_cols works as expected", {
+  DF <- data.frame(a = c(1, 2), `1967` = c(3, 4), `-10` = c(5, 6), check.names = FALSE)
+  expect_equal(DF %>% year_cols(), c(2, 3))
+  expect_equal(DF %>% year_cols(return_names = TRUE), c("1967", "-10"))
+})

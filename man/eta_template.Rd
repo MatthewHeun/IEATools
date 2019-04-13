@@ -4,12 +4,10 @@
 \alias{eta_template}
 \title{Final-to-useful efficiency template}
 \usage{
-eta_template(.fd_fu_allocations, .eiou_fu_allocations)
+eta_template(.fu_allocations)
 }
 \arguments{
-\item{.fd_fu_allocations}{a data frame containing a completed final-to-useful allocation template for final demand.}
-
-\item{.eiou_fu_allocations}{a data frame containing a completed final-to-useful allocation template for energy industry own use.}
+\item{.fu_allocations}{a data frame containing a completed final-to-useful allocation template for final demand.}
 }
 \value{
 a data frame containing a blank template for final-to-useful machine efficiencies.

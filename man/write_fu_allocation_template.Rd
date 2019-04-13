@@ -6,8 +6,8 @@
 \usage{
 write_fu_allocation_template(.tidy_iea_df, path,
   allocations_tab_name = "Allocations", quantity = "Quantity",
-  e_dot = "E.dot", e_dot_perc = paste0(e_dot, ".perc"),
-  energy_row_font_color = "#104273",
+  e_dot = "E.dot", e_dot_perc = paste(e_dot, "[\%]"),
+  maximum_values = "Maximum.values", energy_row_font_color = "#104273",
   energy_row_shading_color = "#B8D8F5", overwrite = FALSE,
   .rownum = ".rownum")
 }
