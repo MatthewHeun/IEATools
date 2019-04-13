@@ -24,6 +24,14 @@ write_fu_allocation_template(.tidy_iea_df, path,
 Include both folder and file name.
 If not present, the ".xlsx" extension is added.}
 
+\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "\code{Ledger.side}".}
+
+\item{consumption}{the string identifier for consumption in the \code{ledger_side} column.  Default is "\code{Consumption}".}
+
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
+
+\item{eiou}{the string identifier for energy industry own use in the \code{flow_aggregation_point} column. Default is "\code{Energy industry own use}".}
+
 \item{allocations_tab_name}{the name of the tab on which the template will be written. Default is "\code{Allocations}".}
 
 \item{quantity}{the name of the quantity column to be created on output. Default is "\code{Quantity}".}
@@ -34,20 +42,28 @@ Default is "\code{E.dot}".}
 \item{e_dot_perc}{the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
 Default is "\code{E.dot.perc}".}
 
+\item{maximum_values}{the name of the maximum values column in output. Default is "\code{Maximum.values}".}
+
+\item{energy_row_font_color_fd}{a hex string representing the font color to be used for \code{e_dot} and \code{e_dot_perc} final demand rows in the Excel file that is written by this function.
+Default is "\code{#104273}", a dark blue color.}
+
+\item{energy_row_shading_color_fd}{a hex string representing the font color to be used for \code{e_dot} and \code{e_dot_perc} final demand rows in the Excel file that is written by this function.
+Default is "\code{#104273}", a light blue color.}
+
+\item{energy_row_font_color_eiou}{a hex string representing the font color to be used for \code{e_dot} and \code{e_dot_perc} energy industry own use rows in the Excel file that is written by this function.
+Default is "\code{#104273}", a dark yellow color.}
+
+\item{energy_row_shading_color_eiou}{a hex string representing the font color to be used for \code{e_dot} and \code{e_dot_perc} energy industry own use rows in the Excel file that is written by this function.
+Default is "\code{#104273}", a light yellow color.}
+
 \item{overwrite}{a boolean that tells whether an existing file at \code{path} will be overwritten. Default is "\code{FALSE}".
 If \code{path} already exists and \code{overwrite = FALSE}, an error is given.}
 
 \item{.rownum}{a temporary column created internally. \code{.rownum} must not exist in \code{.tidy_iea_df} when \code{write_fu_allocation_template} is called.
 Default is "\code{.rownum}".}
-
-\item{energy_row_font_color}{a hex string representing the font color to be used for \code{e_dot} and \code{e_dot_perc} rows in the Excel file that is written by this function.
-Default is "\code{#104273}", a light blue color.}
-
-\item{energy_row_shading_color}{a hex string representing the font color to be used for \code{e_dot} and \code{e_dot_perc} rows in the Excel file that is written by this function.
-Default is "\code{#104273}".}
 }
 \value{
-the value of the \code{path} argument, regardless of the value of \code{overwrite}.
+the value of the \code{path} argument
 }
 \description{
 The analyst often starts with IEA extended energy balance data covering primary and final energy stages.
@@ -61,7 +77,11 @@ The analyst must supply allocation and efficiency data.
 Allocations are to be placed in \code{c} rows and efficiencies are to be placed in \code{eta} rows.
 }
 \examples{
+f <- tempfile(fileext = ".xlsx")
 load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 
-  write_fu_templates()
+  write_fu_allocation_template(f)
+if (file.exists(f)) {
+  file.remove(f)
+}
 }

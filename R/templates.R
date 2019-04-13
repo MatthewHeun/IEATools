@@ -13,29 +13,42 @@
 #' @param path the file path into which the blank template file will be written. 
 #'        Include both folder and file name. 
 #'        If not present, the ".xlsx" extension is added.
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "`Ledger.side`".
+#' @param consumption the string identifier for consumption in the `ledger_side` column.  Default is "`Consumption`".
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
+#' @param eiou the string identifier for energy industry own use in the `flow_aggregation_point` column. Default is "`Energy industry own use`".
 #' @param allocations_tab_name the name of the tab on which the template will be written. Default is "`Allocations`".
 #' @param quantity the name of the quantity column to be created on output. Default is "`Quantity`".
 #' @param e_dot the name of the energy flow rate column in `.tidy_iea_df` and the name of the energy flow rate rows to be included in the Excel file that is written by this function.
 #'        Default is "`E.dot`".
 #' @param e_dot_perc the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
 #'        Default is "`E.dot.perc`".
-#' @param energy_row_font_color a hex string representing the font color to be used for `e_dot` and `e_dot_perc` rows in the Excel file that is written by this function.
+#' @param maximum_values the name of the maximum values column in output. Default is "`Maximum.values`".
+#' @param energy_row_font_color_fd a hex string representing the font color to be used for `e_dot` and `e_dot_perc` final demand rows in the Excel file that is written by this function.
+#'        Default is "`#104273`", a dark blue color.
+#' @param energy_row_shading_color_fd a hex string representing the font color to be used for `e_dot` and `e_dot_perc` final demand rows in the Excel file that is written by this function.
 #'        Default is "`#104273`", a light blue color.
-#' @param energy_row_shading_color a hex string representing the font color to be used for `e_dot` and `e_dot_perc` rows in the Excel file that is written by this function.
-#'        Default is "`#104273`".
+#' @param energy_row_font_color_eiou a hex string representing the font color to be used for `e_dot` and `e_dot_perc` energy industry own use rows in the Excel file that is written by this function.
+#'        Default is "`#104273`", a dark yellow color.
+#' @param energy_row_shading_color_eiou a hex string representing the font color to be used for `e_dot` and `e_dot_perc` energy industry own use rows in the Excel file that is written by this function.
+#'        Default is "`#104273`", a light yellow color.
 #' @param overwrite a boolean that tells whether an existing file at `path` will be overwritten. Default is "`FALSE`".
 #'        If `path` already exists and `overwrite = FALSE`, an error is given.
 #' @param .rownum a temporary column created internally. `.rownum` must not exist in `.tidy_iea_df` when `write_fu_allocation_template` is called.
 #'        Default is "`.rownum`".
 #'
-#' @return the value of the `path` argument, regardless of the value of `overwrite`.
+#' @return the value of the `path` argument
 #' 
 #' @export
 #' 
 #' @examples
+#' f <- tempfile(fileext = ".xlsx")
 #' load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
-#'   write_fu_templates()
+#'   write_fu_allocation_template(f)
+#' if (file.exists(f)) {
+#'   file.remove(f)
+#' }
 write_fu_allocation_template <- function(.tidy_iea_df, 
                                          path, 
                                          ledger_side = "Ledger.side",
@@ -131,10 +144,10 @@ write_fu_allocation_template <- function(.tidy_iea_df,
 #' is allocated to final-to-useful machines and converted to useful energy at some efficiency.
 #' The allocation fractions and efficiencies are to be supplied by the analyst by filling blanks in 
 #' the template. 
+#' 
+#' Non-energy use is removed from `.tidy_iea_df` before creating the template.
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
-#' @param template_type one of "`Final demand`" or "`Energy industry own use`" for final consumption or energy industry own use, respectively. 
-#'        Default is "`Final demand`".
 #' @param energy_type the name of the energy type column. Default is "`Energy.type`".
 #' @param energy the string identifier for energy (as opposed to exergy). Default is "`E`".
 #' @param last_stage the name of the last stage column. Default is "`Last.stage`".
@@ -143,7 +156,8 @@ write_fu_allocation_template <- function(.tidy_iea_df,
 #' @param ledger_side the name of the ledger side column. Default is "`Ldeger.side`".
 #' @param consumption the string identifier for the consumption side of the ledger. Default is "`Consumption`".
 #' @param flow_aggregation_point the name of the flow aggregation point column. Default is "`Flow.aggregation.point`".
-#' @param eiou the string identifier for energy industry own use. Default is "`Energy industry own use`".
+#' @param eiou the string identifier for energy industry own use in `flow_aggregation_point`. Default is "`Energy industry own use`".
+#' @param non_energy_use string identifier for non-energy use in `flow_aggregation_point`. Default is "`Non-energy use`".
 #' @param tfc the string identifier for total final consumption. Default is "`Total final consumption`".
 #' @param tpes the string identifier for total primary energy supply. Default is "`Total primary energy supply`".
 #' @param flow the name of the flow column. Default is "`Flow`".
@@ -152,6 +166,7 @@ write_fu_allocation_template <- function(.tidy_iea_df,
 #' @param quantity the name of the quantity column. Default is "`Quantity`".
 #' @param e_dot the name of the energy flow rate column. Default is "`E.dot`".
 #' @param e_dot_total the string identifier for total energy. Default is "`E.dot.total`".
+#' @param perc_unit_string the string used to indicate percentages. Default is "`[%]`".
 #' @param e_dot_perc the string identifier for energy percentage. Default is "`E.dot.perc`".
 #' @param maximum_values the name for the maximum energy values column. Default is "`Maximum values`".
 #' @param year_for_maximum_values an integer for the first year (in which maximum values will be stored before renaming the column to `maximum_values`). 
@@ -168,14 +183,9 @@ write_fu_allocation_template <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
-#' # By default, gives a template for Final consumption
 #' load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
 #'   fu_allocation_template()
-#' # You can specify if you want a template for Energy industry own use
-#' load_tidy_iea_df() %>% 
-#'   specify_all() %>% 
-#'   fu_allocation_template(template_type = "Energy industry own use")
 fu_allocation_template <- function(.tidy_iea_df,
                         energy_type = "Energy.type",
                         energy = "E",
@@ -186,6 +196,7 @@ fu_allocation_template <- function(.tidy_iea_df,
                         consumption = "Consumption",
                         flow_aggregation_point = "Flow.aggregation.point", 
                         eiou = "Energy industry own use", 
+                        non_energy_use = "Non-energy use",
                         tfc = "Total final consumption",
                         tpes = "Total primary energy supply",
                         flow = "Flow", 
@@ -216,7 +227,8 @@ fu_allocation_template <- function(.tidy_iea_df,
                             magrittr::equals(final) %>% 
                             all())
   Filtered <- .tidy_iea_df %>% 
-    dplyr::filter(!!as.name(ledger_side) == consumption | !!as.name(flow_aggregation_point) == eiou)
+    dplyr::filter(!!as.name(ledger_side) == consumption | !!as.name(flow_aggregation_point) == eiou) %>% 
+    dplyr::filter(!!as.name(flow_aggregation_point) != non_energy_use)
   Totals <- Filtered %>%
     matsindf::group_by_everything_except(ledger_side, flow_aggregation_point, flow, product, e_dot) %>%
     dplyr::summarise(!!as.name(e_dot_total) := sum(!!as.name(e_dot)))
@@ -287,9 +299,7 @@ fu_allocation_template <- function(.tidy_iea_df,
     )
   # Figure out the order for the columns
   colnames <- names(out)
-  # Figure out which columns are years, sort them, and save for later.
-  year_colname_indices <- which(grepl(pattern = "^\\d+$", colnames))
-  year_colnames <- as.numeric(colnames[year_colname_indices]) %>% sort() %>% as.character()
+  year_colnames <- year_cols(out, return_names = TRUE)
   machine_and_product_columns <- c(ef_product, machine, eu_product, destination, quantity, maximum_values)
   # Figure out the metadata columns
   meta_cols <- setdiff(colnames, year_colnames) %>% 

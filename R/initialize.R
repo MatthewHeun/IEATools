@@ -54,8 +54,6 @@
 #'        (This argument is useful for testing.)
 #' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is "`,,TIME`".
 #' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "`COUNTRY,FLOW,PRODUCT`".
-#' @param year_colname_pattern a regex that identifies columns with year titles. 
-#'        Default is "`^\\d*$`" which identifies columns whose names are exclusively digits.
 #' @param missing_data a string that identifies missing data. Default is "`..`".
 #'        Entries of "`missing_data`" are coded as `0`` in output.
 #' @param not_applicable_data a string that identifies not-applicable data.
@@ -75,7 +73,6 @@
 iea_df <- function(.iea_file = NULL, 
                    text = NULL, 
                    expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
-                   year_colname_pattern = "^\\d*$", 
                    missing_data = "..", not_applicable_data = "x", confidential_data = "c"){
   assertthat::assert_that(xor(is.null(.iea_file), is.null(text)), 
                           msg = "need to supply one but not both of iea_file and text arguments to iea_df")
@@ -132,9 +129,9 @@ iea_df <- function(.iea_file = NULL,
   # Convert all year columns (columns whose names are all numbers) to numeric, 
   # convert into a data frame, and 
   # return.
-  IEAData_withheader %>% 
-    dplyr::mutate_at(dplyr::vars(dplyr::matches(year_colname_pattern)), as.numeric) %>% 
-    as.data.frame()
+  IEAData_withheader %>%
+      dplyr::mutate_at(dplyr::vars(year_cols(IEAData_withheader)), as.numeric) %>%
+      as.data.frame()
 }
 
 

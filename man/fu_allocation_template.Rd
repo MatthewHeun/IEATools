@@ -9,7 +9,8 @@ fu_allocation_template(.tidy_iea_df, energy_type = "Energy.type",
   year = "Year", ledger_side = "Ledger.side",
   consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point",
-  eiou = "Energy industry own use", tfc = "Total final consumption",
+  eiou = "Energy industry own use", non_energy_use = "Non-energy use",
+  tfc = "Total final consumption",
   tpes = "Total primary energy supply", flow = "Flow",
   product = "Product", destination = "Destination",
   quantity = "Quantity", e_dot = "E.dot", e_dot_total = paste0(e_dot,
@@ -38,7 +39,9 @@ fu_allocation_template(.tidy_iea_df, energy_type = "Energy.type",
 
 \item{flow_aggregation_point}{the name of the flow aggregation point column. Default is "\code{Flow.aggregation.point}".}
 
-\item{eiou}{the string identifier for energy industry own use. Default is "\code{Energy industry own use}".}
+\item{eiou}{the string identifier for energy industry own use in \code{flow_aggregation_point}. Default is "\code{Energy industry own use}".}
+
+\item{non_energy_use}{string identifier for non-energy use in \code{flow_aggregation_point}. Default is "\code{Non-energy use}".}
 
 \item{tfc}{the string identifier for total final consumption. Default is "\code{Total final consumption}".}
 
@@ -55,6 +58,8 @@ fu_allocation_template(.tidy_iea_df, energy_type = "Energy.type",
 \item{e_dot}{the name of the energy flow rate column. Default is "\code{E.dot}".}
 
 \item{e_dot_total}{the string identifier for total energy. Default is "\code{E.dot.total}".}
+
+\item{perc_unit_string}{the string used to indicate percentages. Default is "\code{[\%]}".}
 
 \item{e_dot_perc}{the string identifier for energy percentage. Default is "\code{E.dot.perc}".}
 
@@ -74,9 +79,6 @@ Default is \code{0}.}
 \item{eu_product}{the name of the useful energy carrier column. Default is "\code{Eu product}".}
 
 \item{.value}{the name of the value column added to \code{.tidy_iea_df}. Default is "\code{.value}".}
-
-\item{template_type}{one of "\code{Final demand}" or "\code{Energy industry own use}" for final consumption or energy industry own use, respectively.
-Default is "\code{Final demand}".}
 }
 \value{
 a data frame containing the EIOU template
@@ -92,13 +94,11 @@ is allocated to final-to-useful machines and converted to useful energy at some 
 The allocation fractions and efficiencies are to be supplied by the analyst by filling blanks in
 the template.
 }
+\details{
+Non-energy use is removed from \code{.tidy_iea_df} before creating the template.
+}
 \examples{
-# By default, gives a template for Final consumption
 load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 
   fu_allocation_template()
-# You can specify if you want a template for Energy industry own use
-load_tidy_iea_df() \%>\% 
-  specify_all() \%>\% 
-  fu_allocation_template(template_type = "Energy industry own use")
 }
