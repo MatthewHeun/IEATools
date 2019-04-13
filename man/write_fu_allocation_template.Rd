@@ -5,10 +5,16 @@
 \title{Write blank final-to-useful templates}
 \usage{
 write_fu_allocation_template(.tidy_iea_df, path,
+  ledger_side = "Ledger.side", consumption = "Consumption",
+  flow_aggregation_point = "Flow.aggregation.point",
+  eiou = "Energy industry own use",
   allocations_tab_name = "Allocations", quantity = "Quantity",
   e_dot = "E.dot", e_dot_perc = paste(e_dot, "[\%]"),
-  maximum_values = "Maximum.values", energy_row_font_color = "#104273",
-  energy_row_shading_color = "#B8D8F5", overwrite = FALSE,
+  maximum_values = "Maximum.values",
+  energy_row_font_color_fd = "#104273",
+  energy_row_shading_color_fd = "#B8D8F5",
+  energy_row_font_color_eiou = "#918700",
+  energy_row_shading_color_eiou = "#FCFCAB", overwrite = FALSE,
   .rownum = ".rownum")
 }
 \arguments{
@@ -28,17 +34,17 @@ Default is "\code{E.dot}".}
 \item{e_dot_perc}{the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
 Default is "\code{E.dot.perc}".}
 
-\item{energy_row_font_color}{a hex string representing the font color to be used for \code{e_dot} and \code{e_dot_perc} rows in the Excel file that is written by this function.
-Default is "\code{#104273}", a light blue color.}
-
-\item{energy_row_shading_color}{a hex string representing the font color to be used for \code{e_dot} and \code{e_dot_perc} rows in the Excel file that is written by this function.
-Default is "\code{#104273}".}
-
 \item{overwrite}{a boolean that tells whether an existing file at \code{path} will be overwritten. Default is "\code{FALSE}".
 If \code{path} already exists and \code{overwrite = FALSE}, an error is given.}
 
 \item{.rownum}{a temporary column created internally. \code{.rownum} must not exist in \code{.tidy_iea_df} when \code{write_fu_allocation_template} is called.
 Default is "\code{.rownum}".}
+
+\item{energy_row_font_color}{a hex string representing the font color to be used for \code{e_dot} and \code{e_dot_perc} rows in the Excel file that is written by this function.
+Default is "\code{#104273}", a light blue color.}
+
+\item{energy_row_shading_color}{a hex string representing the font color to be used for \code{e_dot} and \code{e_dot_perc} rows in the Excel file that is written by this function.
+Default is "\code{#104273}".}
 }
 \value{
 the value of the \code{path} argument, regardless of the value of \code{overwrite}.

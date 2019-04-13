@@ -38,13 +38,19 @@
 #'   write_fu_templates()
 write_fu_allocation_template <- function(.tidy_iea_df, 
                                          path, 
+                                         ledger_side = "Ledger.side",
+                                         consumption = "Consumption",
+                                         flow_aggregation_point = "Flow.aggregation.point",
+                                         eiou = "Energy industry own use",
                                          allocations_tab_name = "Allocations",
                                          quantity = "Quantity", 
                                          e_dot = "E.dot",
                                          e_dot_perc = paste(e_dot, "[%]"), 
                                          maximum_values = "Maximum.values",
-                                         energy_row_font_color = "#104273",
-                                         energy_row_shading_color = "#B8D8F5", 
+                                         energy_row_font_color_fd = "#104273",
+                                         energy_row_shading_color_fd = "#B8D8F5", 
+                                         energy_row_font_color_eiou = "#918700",
+                                         energy_row_shading_color_eiou = "#FCFCAB", 
                                          overwrite = FALSE,
                                          .rownum = ".rownum"){
   # Create the template data frame
@@ -56,13 +62,24 @@ write_fu_allocation_template <- function(.tidy_iea_df,
   fu_wb <- openxlsx::createWorkbook()
   openxlsx::addWorksheet(fu_wb, allocations_tab_name)
   openxlsx::writeData(fu_wb, allocations_tab_name, Allocation_template)
-
-  # Prepare for formatting some of the data
-  quantity_rows <- function(which_quantity){
-    Allocation_template %>% 
-      # Get rid of rownames so that we have only row numbers and put those row numbers into a column
+  
+  # A function to identify some rows of the spreadsheet
+  quantity_rows <- function(which_quantity = c(e_dot, e_dot_perc), which_type = c("fd", "eiou")){
+    which_quantity <- match.arg(which_quantity)
+    which_type <- match.arg(which_type)
+    # Get rid of rownames so that we have only row numbers and put those row numbers into a column
+    keep_rows <- Allocation_template %>% 
       tibble::remove_rownames() %>% 
-      tibble::rownames_to_column(var = .rownum) %>% 
+      tibble::rownames_to_column(var = .rownum)
+    if (which_type == "fd") {
+      keep_rows <- keep_rows %>% 
+        dplyr::filter(!!as.name(ledger_side) == consumption)
+    } else {
+      # which_type is "eiou"
+      keep_rows <- keep_rows %>% 
+        dplyr::filter(!!as.name(flow_aggregation_point) == eiou)
+    }
+    keep_rows %>% 
       # Keep only those rows with e_dot in the Quantity column
       dplyr::filter(!!as.name(quantity) == which_quantity) %>% 
       magrittr::extract2(.rownum) %>% 
@@ -72,20 +89,26 @@ write_fu_allocation_template <- function(.tidy_iea_df,
   }
   
   # First, figure out which some zones of the worksheet
-  e_dot_rows <- quantity_rows(e_dot)
-  e_dot_perc_rows <- quantity_rows(e_dot_perc)
+  e_dot_rows_fd <- quantity_rows(which_quantity = e_dot, which_type = "fd")
+  e_dot_perc_rows_fd <- quantity_rows(which_quantity = e_dot_perc, which_type = "fd")
+  e_dot_rows_eiou <- quantity_rows(which_quantity = e_dot, which_type = "eiou")
+  e_dot_perc_rows_eiou <- quantity_rows(which_quantity = e_dot_perc, which_type = "eiou")
   max_values_col_index <- which(names(Allocation_template) == maximum_values)
   year_cols_indices <- year_cols(Allocation_template)
   
   # Apply color formatting style for energy and energy percentage rows
-  energy_row_style <- openxlsx::createStyle(fontColour = energy_row_font_color, fgFill = energy_row_shading_color)
-  openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style, rows = union(e_dot_rows, e_dot_perc_rows), cols = 1:ncol(Allocation_template), gridExpand = TRUE)
+  energy_row_style_fd <- openxlsx::createStyle(fontColour = energy_row_font_color_fd, fgFill = energy_row_shading_color_fd)
+  openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style_fd, rows = union(e_dot_rows_fd, e_dot_perc_rows_fd), cols = 1:ncol(Allocation_template), gridExpand = TRUE)
+  energy_row_style_eiou <- openxlsx::createStyle(fontColour = energy_row_font_color_eiou, fgFill = energy_row_shading_color_eiou)
+  openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style_eiou, rows = union(e_dot_rows_eiou, e_dot_perc_rows_eiou), cols = 1:ncol(Allocation_template), gridExpand = TRUE)
   
-  # Set the number of decimal places for e_dot_perc rows.
-  # e_dot_perc_style <- openxlsx::createStyle(numFmt = "0.00")
+  # Set percentage format for numbers in the e_dot_perc rows.
   e_dot_perc_style <- openxlsx::createStyle(numFmt = "PERCENTAGE")
   openxlsx::addStyle(fu_wb, allocations_tab_name, style = e_dot_perc_style, 
-                     rows = e_dot_perc_rows, cols = c(max_values_col_index, year_cols_indices), gridExpand = TRUE)
+                     rows = c(e_dot_perc_rows_fd, e_dot_perc_rows_eiou), cols = c(max_values_col_index, year_cols_indices), gridExpand = TRUE, stack = TRUE)
+  
+  # Set column widths to something intelligent
+  openxlsx::setColWidths(fu_wb, allocations_tab_name, cols = 1:ncol(Allocation_template), widths = "auto")
   
   # Now save it!
   if (!endsWith(path, ".xlsx")) {
