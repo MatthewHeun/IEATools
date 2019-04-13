@@ -3,30 +3,33 @@ context("Template functions")
 ###########################################################
 
 test_that("fu_allocation_template works as expected", {
-  EIOU_template <- load_tidy_iea_df() %>% 
+  Allocation_template <- load_tidy_iea_df() %>% 
     specify_all() %>%
-    # fu_allocation_template(template_type = "Energy industry own use")
     fu_allocation_template()
   expected_colorder <- c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit",
                          "Ef.product", "Machine", "Eu.product", "Destination", 
                          "Quantity", "Maximum.values", "1971", "2000")
-  expect_equal(names(EIOU_template), expected_colorder)
-  expect_true(all(EIOU_template$Ledger.side == "Consumption" | EIOU_template$Flow.aggregation.point == "Energy industry own use"))
+  expect_equal(names(Allocation_template), expected_colorder)
+  expect_true(all(Allocation_template$Ledger.side == "Consumption" | Allocation_template$Flow.aggregation.point == "Energy industry own use"))
 })
 
 test_that("write_fu_allocation_template works as expected", {
   Tidy_iea_df <- load_tidy_iea_df() %>% 
     specify_all()
   # Get a temporary file in which to write two data frames on different tabs.
-  f <- tempfile(fileext = ".xslx")
-  Tidy_iea_df %>% 
+  f <- tempfile(fileext = ".xlsx")
+  p <- Tidy_iea_df %>% 
     write_fu_allocation_template(f)  
+  expect_equal(p, f)
   # Now read the tabs back in
   Allocations <- openxlsx::read.xlsx(f, sheet = "Allocations")
   # Check the tabs to make sure they're the same
   Expected_allocations <- Tidy_iea_df %>% 
     fu_allocation_template()
   expect_true(all(Allocations == Expected_allocations, na.rm = TRUE))
+  # Now try to write it again.
+  expect_true(file.exists(f))
+  expect_error(Tidy_iea_df %>% write_fu_allocation_template(p), "File already exists!")
   # Clean up
   if (file.exists(f)) {
     file.remove(f)

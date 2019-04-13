@@ -23,10 +23,12 @@
 #'        Default is "`#104273`", a light blue color.
 #' @param energy_row_shading_color a hex string representing the font color to be used for `e_dot` and `e_dot_perc` rows in the Excel file that is written by this function.
 #'        Default is "`#104273`".
-#' @param overwrite 
-#' @param .rownum 
+#' @param overwrite a boolean that tells whether an existing file at `path` will be overwritten. Default is "`FALSE`".
+#'        If `path` already exists and `overwrite = FALSE`, an error is given.
+#' @param .rownum a temporary column created internally. `.rownum` must not exist in `.tidy_iea_df` when `write_fu_allocation_template` is called.
+#'        Default is "`.rownum`".
 #'
-#' @return the value of the `path` argument
+#' @return the value of the `path` argument, regardless of the value of `overwrite`.
 #' 
 #' @export
 #' 
@@ -79,17 +81,20 @@ write_fu_allocation_template <- function(.tidy_iea_df,
   energy_row_style <- openxlsx::createStyle(fontColour = energy_row_font_color, fgFill = energy_row_shading_color)
   openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style, rows = e_rows_excel, cols = 1:ncol(Allocation_template), gridExpand = TRUE)
   # Now save it!
+  if (!endsWith(path, ".xlsx")) {
+    path <- paste0(path, ".xlsx")
+  }
   openxlsx::saveWorkbook(fu_wb, path, overwrite = overwrite)
   # And return the path
   return(path)
 }
 
 
-#' Create a `.xlsx` template for analysis of final-to-useful transformation processes
+#' Create a template for analysis of final-to-useful transformation processes
 #' 
 #' This function creates a blank template for final-to-useful energy transformation process analysis.
-#' The template is derived from IEA extended energy balance data (`.tidy_iea_df`) which gives both 
-#' energy industry own use and final demand for final energy carriers.
+#' The template is a data frame derived from IEA extended energy balance data (`.tidy_iea_df`),
+#' which give both energy industry own use and final demand for final energy carriers.
 #' From the IEA's final energy information, templates are created for conversion to 
 #' useful energy carriers.
 #' Final energy consumed by each final demand sector or transformation process machines
@@ -142,7 +147,6 @@ write_fu_allocation_template <- function(.tidy_iea_df,
 #'   specify_all() %>% 
 #'   fu_allocation_template(template_type = "Energy industry own use")
 fu_allocation_template <- function(.tidy_iea_df,
-                        # template_type = c("Final demand", "Energy industry own use"),
                         energy_type = "Energy.type",
                         energy = "E",
                         last_stage = "Last.stage",
@@ -160,7 +164,8 @@ fu_allocation_template <- function(.tidy_iea_df,
                         quantity = "Quantity",
                         e_dot = "E.dot",
                         e_dot_total = paste0(e_dot, ".total"),
-                        e_dot_perc = paste0(e_dot, ".perc"),
+                        perc_unit_string = "[%]",
+                        e_dot_perc = paste(e_dot, perc_unit_string),
                         maximum_values = "Maximum.values",
                         year_for_maximum_values = 0,
                         ef_product = "Ef.product",
@@ -180,14 +185,6 @@ fu_allocation_template <- function(.tidy_iea_df,
                             magrittr::extract2(last_stage) %>% 
                             magrittr::equals(final) %>% 
                             all())
-  # Gather appropriate rows of the .tidy_iea_df
-  # if (template_type == "Final demand") {
-  #   # Final demand
-  #   Filtered <- dplyr::filter(.tidy_iea_df, !!as.name(ledger_side) == consumption)
-  # } else {
-  #   # Energy industry own use
-  #   Filtered <- dplyr::filter(.tidy_iea_df, !!as.name(flow_aggregation_point) == eiou)
-  # }
   Filtered <- .tidy_iea_df %>% 
     dplyr::filter(!!as.name(ledger_side) == consumption | !!as.name(flow_aggregation_point) == eiou)
   Totals <- Filtered %>%
@@ -224,7 +221,7 @@ fu_allocation_template <- function(.tidy_iea_df,
     )
   
   # Create a vector of allocation percentages
-  c_cols <- paste0(allocation_var, 1:n_allocation_rows, " [%]")
+  c_cols <- paste0(allocation_var, 1:n_allocation_rows, " ", perc_unit_string)
   # Add allocation columns to the data frame
   for (i in 1:n_allocation_rows) {
     Tidy <- Tidy %>% 
@@ -237,7 +234,7 @@ fu_allocation_template <- function(.tidy_iea_df,
     # Gather all of the columns that we want to spread across the sheet
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot), !!as.name(e_dot_perc), !!!lapply(c_cols, as.name)) %>% 
     # Add the Max data frame so that we can include its numbers
-    dplyr::bind_rows(Max) %>%
+    dplyr::bind_rows(Max) %>% 
     # Set levels for the quantity column so that we can get the right order when we spread the years
     dplyr::mutate(
       !!as.name(quantity) := factor(!!as.name(quantity), levels = c(e_dot, e_dot_perc, c_cols))

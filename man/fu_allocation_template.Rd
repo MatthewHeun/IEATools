@@ -2,7 +2,7 @@
 % Please edit documentation in R/templates.R
 \name{fu_allocation_template}
 \alias{fu_allocation_template}
-\title{Create a \code{.xlsx} template for analysis of final-to-useful transformation processes}
+\title{Create a template for analysis of final-to-useful transformation processes}
 \usage{
 fu_allocation_template(.tidy_iea_df, energy_type = "Energy.type",
   energy = "E", last_stage = "Last.stage", final = "Final",
@@ -13,10 +13,10 @@ fu_allocation_template(.tidy_iea_df, energy_type = "Energy.type",
   tpes = "Total primary energy supply", flow = "Flow",
   product = "Product", destination = "Destination",
   quantity = "Quantity", e_dot = "E.dot", e_dot_total = paste0(e_dot,
-  ".total"), e_dot_perc = paste0(e_dot, ".perc"),
-  maximum_values = "Maximum.values", year_for_maximum_values = 0,
-  ef_product = "Ef.product", allocation_var = "C_",
-  n_allocation_rows = 3, machine = "Machine",
+  ".total"), perc_unit_string = "[\%]", e_dot_perc = paste(e_dot,
+  perc_unit_string), maximum_values = "Maximum.values",
+  year_for_maximum_values = 0, ef_product = "Ef.product",
+  allocation_var = "C_", n_allocation_rows = 3, machine = "Machine",
   eu_product = "Eu.product", .value = ".value")
 }
 \arguments{
@@ -83,8 +83,8 @@ a data frame containing the EIOU template
 }
 \description{
 This function creates a blank template for final-to-useful energy transformation process analysis.
-The template is derived from IEA extended energy balance data (\code{.tidy_iea_df}) which gives both
-energy industry own use and final demand for final energy carriers.
+The template is a data frame derived from IEA extended energy balance data (\code{.tidy_iea_df}),
+which give both energy industry own use and final demand for final energy carriers.
 From the IEA's final energy information, templates are created for conversion to
 useful energy carriers.
 Final energy consumed by each final demand sector or transformation process machines

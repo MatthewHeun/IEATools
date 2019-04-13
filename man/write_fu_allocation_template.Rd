@@ -34,12 +34,14 @@ Default is "\code{#104273}", a light blue color.}
 \item{energy_row_shading_color}{a hex string representing the font color to be used for \code{e_dot} and \code{e_dot_perc} rows in the Excel file that is written by this function.
 Default is "\code{#104273}".}
 
-\item{overwrite}{}
+\item{overwrite}{a boolean that tells whether an existing file at \code{path} will be overwritten. Default is "\code{FALSE}".
+If \code{path} already exists and \code{overwrite = FALSE}, an error is given.}
 
-\item{.rownum}{}
+\item{.rownum}{a temporary column created internally. \code{.rownum} must not exist in \code{.tidy_iea_df} when \code{write_fu_allocation_template} is called.
+Default is "\code{.rownum}".}
 }
 \value{
-the value of the \code{path} argument
+the value of the \code{path} argument, regardless of the value of \code{overwrite}.
 }
 \description{
 The analyst often starts with IEA extended energy balance data covering primary and final energy stages.
