@@ -15,10 +15,10 @@ fu_template(.tidy_iea_df, template_type = c("Final consumption",
   product = "Product", destination = "Destination",
   quantity = "Quantity", e_dot = "E.dot", e_dot_total = paste0(e_dot,
   ".total"), e_dot_perc = paste0(e_dot, ".perc"),
-  maximum_values = "Maximum values", year_for_maximum_values = 0,
-  ef_product = "Ef product", allocation_var = "C_",
+  maximum_values = "Maximum.values", year_for_maximum_values = 0,
+  ef_product = "Ef.product", allocation_var = "C_",
   n_allocation_rows = 3, machine = "Machine",
-  eu_product = "Eu product", .value = ".value")
+  eu_product = "Eu.product", .value = ".value")
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}

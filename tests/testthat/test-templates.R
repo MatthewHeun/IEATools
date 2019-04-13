@@ -6,9 +6,9 @@ test_that("eiou fu_template works as expected", {
   EIOU_template <- load_tidy_iea_df() %>% 
     specify_all() %>%
     fu_template(template_type = "Energy industry own use")
-  expected_colorder <- c("Method", "Last.stage", "Country", "Ledger.side", "Flow.aggregation.point", "Energy.type", "Unit",
-                         "Ef product", "Machine", "Eu product", "Destination", 
-                         "Quantity", "Maximum values", "1971", "2000")
+  expected_colorder <- c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit",
+                         "Ef.product", "Machine", "Eu.product", "Destination", 
+                         "Quantity", "Maximum.values", "1971", "2000")
   expect_equal(names(EIOU_template), expected_colorder)
   expect_true(all(EIOU_template$Flow.aggregation.point == "Energy industry own use"))
 })
@@ -17,9 +17,9 @@ test_that("final consumption fu_template works as expected", {
   TFC_template <- load_tidy_iea_df() %>% 
     specify_all() %>%
     fu_template(template_type = "Final consumption")
-  expected_colorder <- c("Method", "Last.stage", "Country", "Ledger.side", "Flow.aggregation.point", "Energy.type", "Unit",
-                         "Ef product", "Machine", "Eu product", "Destination", 
-                         "Quantity", "Maximum values", "1971", "2000")
+  expected_colorder <- c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit",
+                         "Ef.product", "Machine", "Eu.product", "Destination", 
+                         "Quantity", "Maximum.values", "1971", "2000")
   expect_equal(names(TFC_template), expected_colorder)
   expect_true(all(TFC_template$Ledger.side == "Consumption"))
 })

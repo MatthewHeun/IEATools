@@ -98,13 +98,13 @@ fu_template <- function(.tidy_iea_df,
                         e_dot = "E.dot",
                         e_dot_total = paste0(e_dot, ".total"),
                         e_dot_perc = paste0(e_dot, ".perc"),
-                        maximum_values = "Maximum values",
+                        maximum_values = "Maximum.values",
                         year_for_maximum_values = 0,
-                        ef_product = "Ef product",
+                        ef_product = "Ef.product",
                         allocation_var = "C_",
                         n_allocation_rows = 3,
                         machine = "Machine",
-                        eu_product = "Eu product",
+                        eu_product = "Eu.product",
                         .value = ".value"){
   template_type <- match.arg(template_type)
   # Ensure that the incoming data frame has exclusively "E" as the Energy.type.
@@ -209,53 +209,3 @@ fu_template <- function(.tidy_iea_df,
   out %>% 
     dplyr::select(col_order)
 }
-
-# # Writes an efficiency table with blanks where the final to useful data are required.
-# # The format of the file provides blanks for all information required to map final energy to useful energy.
-# # To use this file, first run the analysis you're interested in, 
-# # making sure that all years and countries of interest are in the IEAFoodFeedWithUVY data frame.
-# 
-# folder <- file.path("data-raw", "Blank-TFC-Table")
-# 
-# dir.create(folder, recursive = TRUE, showWarnings = FALSE)
-# 
-# IEAData <- AllIEAData %>% 
-#   filter(Country %in% Countries) %>%
-#   add_matnames_iea(energy = "E.ktoe") %>% 
-#   rename(
-#     Industry = Flow
-#   )
-# 
-# Y <- IEAData %>% 
-#   filter(UVY == "Y") %>% # Focus on final demand
-#   select(Country, Year, Industry, Product, E.ktoe)
-# 
-# Totals <- Y %>% 
-#   group_by(Country, Year) %>% 
-#   summarise(totalE.ktoe = sum(E.ktoe))
-# 
-# Out <- full_join(Y, Totals, by = c("Country", "Year")) %>% 
-#   # Add empty columns
-#   mutate(
-#     `Consumption fraction` = E.ktoe/totalE.ktoe,
-#     Machine = "",
-#     `Eu product` = "",
-#     C = "",
-#     eta = "",
-#     phi_product = ""
-#   ) %>%
-#   select(-totalE.ktoe) %>% 
-#   # Gather columns
-#   gather(key = Quantity, value = Value, E.ktoe, `Consumption fraction`,
-#          C, eta, phi_product) %>% 
-#   spread(key = Year, value = Value, fill = "") %>% 
-#   mutate(
-#     Quantity = factor(Quantity, levels = c("E.ktoe", "Consumption fraction", "C", "eta", "phi_product"))
-#   ) %>%
-#   select(Country, Industry, Product, Machine, `Eu product`, Quantity, `1971`:`2013`) %>%
-#   arrange(Country, Industry, Product, Machine, `Eu product`, Quantity) %>% 
-#   filter(!Industry %in% c("Exports", "International aviation bunkers", "International marine bunkers", 
-#                           "Losses", "Statistical differences", "Stock changes"))
-#   
-#   Out %>% 
-#     write.csv(file = file.path(folder, "BlankUsefulWorkEfficienciesTable.csv"), row.names = FALSE)
