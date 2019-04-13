@@ -26,17 +26,32 @@ write_fu_templates <- function(.tidy_iea_df, path){
   # TODO: fill this function
 }
 
-#' Create an energy industry own use final-to-useful template
+
+#' Create a `.xlsx` template for analysis of final-to-useful transformation processes
+#' 
+#' This function creates a blank template for final-to-useful energy transformation process analysis.
+#' The template is derived from IEA extended energy balance data (`.tidy_iea_df`) which gives both 
+#' energy industry own use and final demand for final energy carriers.
+#' From the IEA's final energy information, templates are created for conversion to 
+#' useful energy carriers.
+#' Final energy consumed by each final demand sector or transformation process machines
+#' is allocated to final-to-useful machines and converted to useful energy at some efficiency.
+#' The allocation fractions and efficiencies are to be supplied by the analyst by filling blanks in 
+#' the template. 
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
+#' @param template_type one of "`Final consumption`" or "`Energy industry own use`" for final consumption or energy industry own use, respectively. 
+#'        Default is "`Final consumption`".
 #' @param energy_type the name of the energy type column. Default is "`Energy.type`".
 #' @param energy the string identifier for energy (as opposed to exergy). Default is "`E`".
 #' @param last_stage the name of the last stage column. Default is "`Last.stage`".
 #' @param final the string identifier for final energy (as `Last.stage`). Default is "`Final`".
 #' @param year the name of the year column. Default is "`Year`".
 #' @param ledger_side the name of the ledger side column. Default is "`Ldeger.side`".
+#' @param consumption the string identifier for the consumption side of the ledger. Default is "`Consumption`".
 #' @param flow_aggregation_point the name of the flow aggregation point column. Default is "`Flow.aggregation.point`".
 #' @param eiou the string identifier for energy industry own use. Default is "`Energy industry own use`".
+#' @param tfc the string identifier for total final consumption. Default is "`Total final consumption`".
 #' @param tpes the string identifier for total primary energy supply. Default is "`Total primary energy supply`".
 #' @param flow the name of the flow column. Default is "`Flow`".
 #' @param product the name of the product column. Default is "`Product`".
@@ -60,36 +75,42 @@ write_fu_templates <- function(.tidy_iea_df, path){
 #' @export
 #'
 #' @examples
+#' # By default, gives a template for Final consumption
 #' load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
-#'   eiou_fu_template()
-eiou_fu_template <- function(.tidy_iea_df,
-                             template_type = c("tfc", "eiou"),
-                             energy_type = "Energy.type",
-                             energy = "E",
-                             last_stage = "Last.stage",
-                             final = "Final",
-                             year = "Year",
-                             ledger_side = "Ledger.side",
-                             flow_aggregation_point = "Flow.aggregation.point", 
-                             eiou = "Energy industry own use", 
-                             tfc = "Total final consumption",
-                             tpes = "Total primary energy supply",
-                             flow = "Flow", 
-                             product = "Product",
-                             destination = "Destination",
-                             quantity = "Quantity",
-                             e_dot = "E.dot",
-                             e_dot_total = paste0(e_dot, ".total"),
-                             e_dot_perc = paste0(e_dot, ".perc"),
-                             maximum_values = "Maximum values",
-                             year_for_maximum_values = 0,
-                             ef_product = "Ef product",
-                             allocation_var = "C_",
-                             n_allocation_rows = 3,
-                             machine = "Machine",
-                             eu_product = "Eu product",
-                             .value = ".value"){
+#'   fu_allocation_template()
+#' # You can specify if you want a template for Energy industry own use
+#' load_tidy_iea_df() %>% 
+#'   specify_all() %>% 
+#'   fu_allocation_template(template_type = "Energy industry own use")
+fu_allocation_template <- function(.tidy_iea_df,
+                        template_type = c("Final consumption", "Energy industry own use"),
+                        energy_type = "Energy.type",
+                        energy = "E",
+                        last_stage = "Last.stage",
+                        final = "Final",
+                        year = "Year",
+                        ledger_side = "Ledger.side",
+                        consumption = "Consumption",
+                        flow_aggregation_point = "Flow.aggregation.point", 
+                        eiou = "Energy industry own use", 
+                        tfc = "Total final consumption",
+                        tpes = "Total primary energy supply",
+                        flow = "Flow", 
+                        product = "Product",
+                        destination = "Destination",
+                        quantity = "Quantity",
+                        e_dot = "E.dot",
+                        e_dot_total = paste0(e_dot, ".total"),
+                        e_dot_perc = paste0(e_dot, ".perc"),
+                        maximum_values = "Maximum.values",
+                        year_for_maximum_values = 0,
+                        ef_product = "Ef.product",
+                        allocation_var = "C_",
+                        n_allocation_rows = 3,
+                        machine = "Machine",
+                        eu_product = "Eu.product",
+                        .value = ".value"){
   template_type <- match.arg(template_type)
   # Ensure that the incoming data frame has exclusively "E" as the Energy.type.
   assertthat::assert_that(.tidy_iea_df %>% 
@@ -102,18 +123,24 @@ eiou_fu_template <- function(.tidy_iea_df,
                             magrittr::equals(final) %>% 
                             all())
   # Calculate total EIOU energy consumption for each year
-  Totals_eiou <- .tidy_iea_df %>% 
-    dplyr::filter(!!as.name(flow_aggregation_point) == eiou) %>% 
+  # Totals <- .tidy_iea_df %>% 
+  #   dplyr::filter(!!as.name(flow_aggregation_point) == eiou) %>% 
+  if (template_type == "Final consumption") {
+    # Final consumption
+    Filtered <- dplyr::filter(.tidy_iea_df, !!as.name(ledger_side) == consumption)
+  } else {
+    # Energy industry own use
+    Filtered <- dplyr::filter(.tidy_iea_df, !!as.name(flow_aggregation_point) == eiou)
+  }
+  Totals <- Filtered %>% 
     matsindf::group_by_everything_except(ledger_side, flow_aggregation_point, flow, product, e_dot) %>% 
     dplyr::summarise(!!as.name(e_dot_total) := sum(!!as.name(e_dot)))
-  # Calculate a Tidy EIOU data frame with percentages.
-  Tidy_EIOU <- .tidy_iea_df %>% 
-    # Extract the EIOU data
-    dplyr::filter(!!as.name(flow_aggregation_point) == eiou) %>% 
+  # Calculate a Tidy data frame with percentages.
+  Tidy <- Filtered %>% 
     # Add the totals to the data frame in preparation for calculating percentages
-    dplyr::left_join(Totals_eiou, by = matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, .symbols = FALSE)) %>% 
+    dplyr::left_join(Totals, by = matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, .symbols = FALSE)) %>% 
     dplyr::mutate(
-      # Calculate percentage of all EIOU for that country and year
+      # Calculate percentage of all energy flows for that country and year
       !!as.name(e_dot_perc) := !!as.name(e_dot) / !!as.name(e_dot_total) * 100, 
       !!as.name(e_dot) := abs(!!as.name(e_dot)), 
       # Eliminate the total column: we don't need it any more
@@ -124,7 +151,7 @@ eiou_fu_template <- function(.tidy_iea_df,
       !!as.name(destination) := !!as.name(flow)
     )
   # Calculate the maximum energy consumption across all years
-  Max <- Tidy_EIOU %>% 
+  Max <- Tidy %>% 
     matsindf::group_by_everything_except(year, e_dot, e_dot_perc) %>%
     dplyr::summarise(
       !!as.name(e_dot) := max(!!as.name(e_dot)), 
@@ -142,13 +169,13 @@ eiou_fu_template <- function(.tidy_iea_df,
   c_cols <- paste0(allocation_var, 1:n_allocation_rows, " [%]")
   # Add allocation columns to the data frame
   for (i in 1:n_allocation_rows) {
-    Tidy_EIOU <- Tidy_EIOU %>% 
+    Tidy <- Tidy %>% 
       dplyr::mutate(
         !!as.name(c_cols[[i]]) := ""
       )
   }
   # Reshape the data frame into the format that we want for an Excel spreadsheet
-  out <- Tidy_EIOU %>% 
+  out <- Tidy %>% 
     # Gather all of the columns that we want to spread across the sheet
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot), !!as.name(e_dot_perc), !!!lapply(c_cols, as.name)) %>% 
     # Add the Max data frame so that we can include its numbers
@@ -187,53 +214,3 @@ eiou_fu_template <- function(.tidy_iea_df,
   out %>% 
     dplyr::select(col_order)
 }
-
-# # Writes an efficiency table with blanks where the final to useful data are required.
-# # The format of the file provides blanks for all information required to map final energy to useful energy.
-# # To use this file, first run the analysis you're interested in, 
-# # making sure that all years and countries of interest are in the IEAFoodFeedWithUVY data frame.
-# 
-# folder <- file.path("data-raw", "Blank-TFC-Table")
-# 
-# dir.create(folder, recursive = TRUE, showWarnings = FALSE)
-# 
-# IEAData <- AllIEAData %>% 
-#   filter(Country %in% Countries) %>%
-#   add_matnames_iea(energy = "E.ktoe") %>% 
-#   rename(
-#     Industry = Flow
-#   )
-# 
-# Y <- IEAData %>% 
-#   filter(UVY == "Y") %>% # Focus on final demand
-#   select(Country, Year, Industry, Product, E.ktoe)
-# 
-# Totals <- Y %>% 
-#   group_by(Country, Year) %>% 
-#   summarise(totalE.ktoe = sum(E.ktoe))
-# 
-# Out <- full_join(Y, Totals, by = c("Country", "Year")) %>% 
-#   # Add empty columns
-#   mutate(
-#     `Consumption fraction` = E.ktoe/totalE.ktoe,
-#     Machine = "",
-#     `Eu product` = "",
-#     C = "",
-#     eta = "",
-#     phi_product = ""
-#   ) %>%
-#   select(-totalE.ktoe) %>% 
-#   # Gather columns
-#   gather(key = Quantity, value = Value, E.ktoe, `Consumption fraction`,
-#          C, eta, phi_product) %>% 
-#   spread(key = Year, value = Value, fill = "") %>% 
-#   mutate(
-#     Quantity = factor(Quantity, levels = c("E.ktoe", "Consumption fraction", "C", "eta", "phi_product"))
-#   ) %>%
-#   select(Country, Industry, Product, Machine, `Eu product`, Quantity, `1971`:`2013`) %>%
-#   arrange(Country, Industry, Product, Machine, `Eu product`, Quantity) %>% 
-#   filter(!Industry %in% c("Exports", "International aviation bunkers", "International marine bunkers", 
-#                           "Losses", "Statistical differences", "Stock changes"))
-#   
-#   Out %>% 
-#     write.csv(file = file.path(folder, "BlankUsefulWorkEfficienciesTable.csv"), row.names = FALSE)

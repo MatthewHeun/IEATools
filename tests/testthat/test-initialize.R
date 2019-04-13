@@ -247,8 +247,8 @@ test_that("use_iso_countries works as expected", {
 test_that("tidy_iea works as expected", {
   iea_tidy_df <- load_tidy_iea_df()
   # Verify column names and order
-  expect_equal(names(iea_tidy_df), c("Method", "Last.stage", "Country", "Year", "Ledger.side", "Flow.aggregation.point", 
-                                     "Energy.type", "Unit", "Flow", "Product", "E.dot"))
+  expect_equal(names(iea_tidy_df), c("Country", "Method", "Energy.type", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", 
+                                     "Flow", "Product", "Unit", "E.dot"))
   # This is a energy exclusive data frame
   expect_true(all(iea_tidy_df$Energy.type == "E"))
   # This is a completely ktoe data frame

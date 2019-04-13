@@ -7,10 +7,10 @@
 augment_iea_df(.iea_df, country = "Country",
   ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
-  energy_type = "Energy.type", energy_type_val = "E",
-  method = "Method", method_val = "PCM", last_stage = "Last.stage",
-  last_stage_val = "Final", unit = "Unit", unit_val = "ktoe",
-  supply = "Supply", consumption = "Consumption",
+  product = "Product", energy_type = "Energy.type",
+  energy_type_val = "E", method = "Method", method_val = "PCM",
+  last_stage = "Last.stage", last_stage_val = "Final", unit = "Unit",
+  unit_val = "ktoe", supply = "Supply", consumption = "Consumption",
   tpes = "Total primary energy supply", tpes_flows = c("Production",
   "Imports", "Exports", "International marine bunkers",
   "International aviation bunkers", "Stock changes"),
@@ -51,6 +51,8 @@ augment_iea_df(.iea_df, country = "Country",
 \item{flow_aggregation_point}{the name of the flow aggregation point column to be added to \code{.iea_df}. Default is "\code{Flow.aggregation.point}".}
 
 \item{flow}{the name of the flow column in \code{.iea_df}.  Default is "\code{Flow}".}
+
+\item{product}{the name of the product column in \code{.iea_df}.  Default is "\code{Product}".}
 
 \item{energy_type}{the name of the energy type column to be added to \code{.iea_df}. Default is "\code{Energy.type}.}
 

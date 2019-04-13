@@ -345,6 +345,7 @@ remove_agg_memo_flows <- function(.iea_df,
 #' @param ledger_side the name of the ledger side column to be added to `.iea_df`. Default is "`Ledger.side`".
 #' @param flow_aggregation_point the name of the flow aggregation point column to be added to `.iea_df`. Default is "`Flow.aggregation.point`".
 #' @param flow the name of the flow column in `.iea_df`.  Default is "`Flow`".
+#' @param product the name of the product column in `.iea_df`.  Default is "`Product`".
 #' @param energy_type the name of the energy type column to be added to `.iea_df`. Default is "`Energy.type`.
 #' @param energy_type_val the value to put in the `energy_type` column. Default is "`E`".
 #' @param method the name of the method column to be added to `.iea_df`. Default is "`Method`.
@@ -399,6 +400,7 @@ augment_iea_df <- function(.iea_df,
                            ledger_side = "Ledger.side", 
                            flow_aggregation_point = "Flow.aggregation.point", 
                            flow = "Flow", 
+                           product = "Product",
                            energy_type = "Energy.type", energy_type_val = "E",
                            method = "Method", method_val = "PCM",
                            last_stage = "Last.stage", last_stage_val = "Final",
@@ -516,7 +518,7 @@ augment_iea_df <- function(.iea_df,
     ) %>% 
     # Finally, reorder the columns, remove the .rownum column, and return
     dplyr::select(-.rownum) %>% 
-    dplyr::select(country, ledger_side, flow_aggregation_point, energy_type, unit, dplyr::everything()) %>% 
+    dplyr::select(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product, unit, dplyr::everything()) %>% 
     # Remove the grouping that we created.
     dplyr::ungroup()
 }
@@ -574,7 +576,7 @@ tidy_iea_df <- function(.iea_df,
     tidyr::gather(key = !!as.name(year), value = !!as.name(e_dot), -c(method, country, last_stage, ledger_side, 
                                                                       flow_aggregation_point, flow, product, energy_type, unit)) %>% 
     # Set the column order to something rational
-    dplyr::select(method, last_stage, country, year, ledger_side, flow_aggregation_point, energy_type, unit, flow, product, e_dot) %>% 
+    dplyr::select(country, method, energy_type, last_stage, year, ledger_side, flow_aggregation_point, flow, product, unit, e_dot) %>% 
     # Set the year column to be numeric
     dplyr::mutate(
       !!as.name(year) := as.numeric(!!as.name(year))
