@@ -5,7 +5,7 @@ context("Template functions")
 test_that("eiou fu_template works as expected", {
   EIOU_template <- load_tidy_iea_df() %>% 
     specify_all() %>%
-    fu_template(template_type = "Energy industry own use")
+    fu_allocation_template(template_type = "Energy industry own use")
   expected_colorder <- c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit",
                          "Ef.product", "Machine", "Eu.product", "Destination", 
                          "Quantity", "Maximum.values", "1971", "2000")
@@ -16,7 +16,7 @@ test_that("eiou fu_template works as expected", {
 test_that("final consumption fu_template works as expected", {
   TFC_template <- load_tidy_iea_df() %>% 
     specify_all() %>%
-    fu_template(template_type = "Final consumption")
+    fu_allocation_template(template_type = "Final consumption")
   expected_colorder <- c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit",
                          "Ef.product", "Machine", "Eu.product", "Destination", 
                          "Quantity", "Maximum.values", "1971", "2000")

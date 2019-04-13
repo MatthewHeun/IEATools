@@ -75,10 +75,15 @@ write_fu_templates <- function(.tidy_iea_df, path){
 #' @export
 #'
 #' @examples
+#' # By default, gives a template for Final consumption
 #' load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
-#'   fu_template(template_type = "eiou")
-fu_template <- function(.tidy_iea_df,
+#'   fu_allocation_template()
+#' # You can specify if you want a template for Energy industry own use
+#' load_tidy_iea_df() %>% 
+#'   specify_all() %>% 
+#'   fu_allocation_template(template_type = "Energy industry own use")
+fu_allocation_template <- function(.tidy_iea_df,
                         template_type = c("Final consumption", "Energy industry own use"),
                         energy_type = "Energy.type",
                         energy = "E",
