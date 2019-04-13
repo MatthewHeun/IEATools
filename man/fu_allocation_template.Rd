@@ -4,11 +4,11 @@
 \alias{fu_allocation_template}
 \title{Create a \code{.xlsx} template for analysis of final-to-useful transformation processes}
 \usage{
-fu_allocation_template(.tidy_iea_df,
-  template_type = c("Final consumption", "Energy industry own use"),
-  energy_type = "Energy.type", energy = "E",
-  last_stage = "Last.stage", final = "Final", year = "Year",
-  ledger_side = "Ledger.side", consumption = "Consumption",
+fu_allocation_template(.tidy_iea_df, template_type = c("Final demand",
+  "Energy industry own use"), energy_type = "Energy.type",
+  energy = "E", last_stage = "Last.stage", final = "Final",
+  year = "Year", ledger_side = "Ledger.side",
+  consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point",
   eiou = "Energy industry own use", tfc = "Total final consumption",
   tpes = "Total primary energy supply", flow = "Flow",
@@ -23,8 +23,8 @@ fu_allocation_template(.tidy_iea_df,
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
 
-\item{template_type}{one of "\code{Final consumption}" or "\code{Energy industry own use}" for final consumption or energy industry own use, respectively.
-Default is "\code{Final consumption}".}
+\item{template_type}{one of "\code{Final demand}" or "\code{Energy industry own use}" for final consumption or energy industry own use, respectively.
+Default is "\code{Final demand}".}
 
 \item{energy_type}{the name of the energy type column. Default is "\code{Energy.type}".}
 

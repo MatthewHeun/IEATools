@@ -22,8 +22,17 @@
 #' load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
 #'   write_fu_templates()
-write_fu_templates <- function(.tidy_iea_df, path){
-  # TODO: fill this function
+write_fu_allocation_templates <- function(.tidy_iea_df, 
+                                          path, 
+                                          fd_allocations_tab = "Final.demand.allocations",
+                                          eiou_allocations_tab = "EIOU.allocations"){
+  FD_allocation_template <- .tidy_iea_df %>% 
+    fu_allocation_template(template_type = "Final demand")
+  EIOU_allocation_template <- .tidy_iea_df %>% 
+    fu_allocation_template(template_type = "Energy industry own use")
+  tab_list <- list(FD_allocation_template, EIOU_allocation_template) %>% 
+    rlang::set_names(fd_allocations_tab, eiou_allocations_tab)
+  openxlsx::write.xlsx(tab_list, file = path)
 }
 
 
@@ -40,8 +49,8 @@ write_fu_templates <- function(.tidy_iea_df, path){
 #' the template. 
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
-#' @param template_type one of "`Final consumption`" or "`Energy industry own use`" for final consumption or energy industry own use, respectively. 
-#'        Default is "`Final consumption`".
+#' @param template_type one of "`Final demand`" or "`Energy industry own use`" for final consumption or energy industry own use, respectively. 
+#'        Default is "`Final demand`".
 #' @param energy_type the name of the energy type column. Default is "`Energy.type`".
 #' @param energy the string identifier for energy (as opposed to exergy). Default is "`E`".
 #' @param last_stage the name of the last stage column. Default is "`Last.stage`".
@@ -84,7 +93,7 @@ write_fu_templates <- function(.tidy_iea_df, path){
 #'   specify_all() %>% 
 #'   fu_allocation_template(template_type = "Energy industry own use")
 fu_allocation_template <- function(.tidy_iea_df,
-                        template_type = c("Final consumption", "Energy industry own use"),
+                        template_type = c("Final demand", "Energy industry own use"),
                         energy_type = "Energy.type",
                         energy = "E",
                         last_stage = "Last.stage",
@@ -123,10 +132,8 @@ fu_allocation_template <- function(.tidy_iea_df,
                             magrittr::equals(final) %>% 
                             all())
   # Calculate total EIOU energy consumption for each year
-  # Totals <- .tidy_iea_df %>% 
-  #   dplyr::filter(!!as.name(flow_aggregation_point) == eiou) %>% 
-  if (template_type == "Final consumption") {
-    # Final consumption
+  if (template_type == "Final demand") {
+    # Final demand
     Filtered <- dplyr::filter(.tidy_iea_df, !!as.name(ledger_side) == consumption)
   } else {
     # Energy industry own use
@@ -213,4 +220,22 @@ fu_allocation_template <- function(.tidy_iea_df,
   col_order <- c(meta_cols, machine_and_product_columns, year_colnames)
   out %>% 
     dplyr::select(col_order)
+}
+
+
+#' Final-to-useful efficiency template
+#' 
+#' Using a final-to-useful allocation table, 
+#' this function generates a blank template for final-to-useful machine efficiencies.
+#'
+#' @param .fd_fu_allocations a data frame containing a completed final-to-useful allocation template for final demand.
+#' @param .eiou_fu_allocations a data frame containing a completed final-to-useful allocation template for energy industry own use.
+#'
+#' @return a data frame containing a blank template for final-to-useful machine efficiencies.
+#' 
+#' @export
+#'
+#' @examples
+eta_template <- function(.fd_fu_allocations, .eiou_fu_allocations){
+  
 }
