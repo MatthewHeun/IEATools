@@ -8,14 +8,15 @@ write_fu_allocation_template(.tidy_iea_df, path,
   ledger_side = "Ledger.side", consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point",
   eiou = "Energy industry own use",
-  allocations_tab_name = "Allocations", quantity = "Quantity",
-  e_dot = "E.dot", e_dot_perc = paste(e_dot, "[\%]"),
-  maximum_values = "Maximum.values",
+  allocations_tab_name = "Allocations", machine = "Machine",
+  eu_product = "Eu.product", quantity = "Quantity", e_dot = "E.dot",
+  e_dot_perc = paste(e_dot, "[\%]"), maximum_values = "Maximum.values",
   energy_row_font_color_fd = "#104273",
   energy_row_shading_color_fd = "#B8D8F5",
   energy_row_font_color_eiou = "#918700",
-  energy_row_shading_color_eiou = "#FCFCAB", overwrite = FALSE,
-  .rownum = ".rownum")
+  energy_row_shading_color_eiou = "#FCFCAB",
+  dont_fill_shading_color = "#A8A8A8", overwrite = FALSE,
+  .rownum = ".rownum", .year = ".year", .value = ".value")
 }
 \arguments{
 \item{.tidy_iea_df}{a data frame as discussed in Details}
@@ -44,17 +45,20 @@ Default is "\code{E.dot.perc}".}
 
 \item{maximum_values}{the name of the maximum values column in output. Default is "\code{Maximum.values}".}
 
-\item{energy_row_font_color_fd}{a hex string representing the font color to be used for \code{e_dot} and \code{e_dot_perc} final demand rows in the Excel file that is written by this function.
+\item{energy_row_font_color_fd}{a hex string representing the font color for \code{e_dot} and \code{e_dot_perc} final demand rows in the Excel file that is written by this function.
 Default is "\code{#104273}", a dark blue color.}
 
-\item{energy_row_shading_color_fd}{a hex string representing the font color to be used for \code{e_dot} and \code{e_dot_perc} final demand rows in the Excel file that is written by this function.
+\item{energy_row_shading_color_fd}{a hex string representing the shading color for \code{e_dot} and \code{e_dot_perc} final demand rows in the Excel file that is written by this function.
 Default is "\code{#104273}", a light blue color.}
 
-\item{energy_row_font_color_eiou}{a hex string representing the font color to be used for \code{e_dot} and \code{e_dot_perc} energy industry own use rows in the Excel file that is written by this function.
+\item{energy_row_font_color_eiou}{a hex string representing the font color for \code{e_dot} and \code{e_dot_perc} energy industry own use rows in the Excel file that is written by this function.
 Default is "\code{#104273}", a dark yellow color.}
 
-\item{energy_row_shading_color_eiou}{a hex string representing the font color to be used for \code{e_dot} and \code{e_dot_perc} energy industry own use rows in the Excel file that is written by this function.
+\item{energy_row_shading_color_eiou}{a hex string representing the shading color for \code{e_dot} and \code{e_dot_perc} energy industry own use rows in the Excel file that is written by this function.
 Default is "\code{#104273}", a light yellow color.}
+
+\item{dont_fill_shading_color}{a hex string representing the shading color for cells that don't require inputs.
+Default is "\code{#A8A8A8}", a medim gray color.}
 
 \item{overwrite}{a boolean that tells whether an existing file at \code{path} will be overwritten. Default is "\code{FALSE}".
 If \code{path} already exists and \code{overwrite = FALSE}, an error is given.}

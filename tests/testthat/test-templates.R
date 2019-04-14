@@ -19,7 +19,7 @@ test_that("write_fu_allocation_template works as expected", {
   # Get a temporary file in which to write two data frames on different tabs.
   f <- tempfile(fileext = ".xlsx")
   p <- Tidy_iea_df %>% 
-    write_fu_allocation_template(f)  
+    write_fu_allocation_template(f)
   expect_equal(p, f)
   # Now read the tabs back in
   Allocations <- openxlsx::read.xlsx(f, sheet = "Allocations") %>% 

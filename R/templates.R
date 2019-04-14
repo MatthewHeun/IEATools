@@ -24,14 +24,16 @@
 #' @param e_dot_perc the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
 #'        Default is "`E.dot.perc`".
 #' @param maximum_values the name of the maximum values column in output. Default is "`Maximum.values`".
-#' @param energy_row_font_color_fd a hex string representing the font color to be used for `e_dot` and `e_dot_perc` final demand rows in the Excel file that is written by this function.
+#' @param energy_row_font_color_fd a hex string representing the font color for `e_dot` and `e_dot_perc` final demand rows in the Excel file that is written by this function.
 #'        Default is "`#104273`", a dark blue color.
-#' @param energy_row_shading_color_fd a hex string representing the font color to be used for `e_dot` and `e_dot_perc` final demand rows in the Excel file that is written by this function.
+#' @param energy_row_shading_color_fd a hex string representing the shading color for `e_dot` and `e_dot_perc` final demand rows in the Excel file that is written by this function.
 #'        Default is "`#104273`", a light blue color.
-#' @param energy_row_font_color_eiou a hex string representing the font color to be used for `e_dot` and `e_dot_perc` energy industry own use rows in the Excel file that is written by this function.
+#' @param energy_row_font_color_eiou a hex string representing the font color for `e_dot` and `e_dot_perc` energy industry own use rows in the Excel file that is written by this function.
 #'        Default is "`#104273`", a dark yellow color.
-#' @param energy_row_shading_color_eiou a hex string representing the font color to be used for `e_dot` and `e_dot_perc` energy industry own use rows in the Excel file that is written by this function.
+#' @param energy_row_shading_color_eiou a hex string representing the shading color for `e_dot` and `e_dot_perc` energy industry own use rows in the Excel file that is written by this function.
 #'        Default is "`#104273`", a light yellow color.
+#' @param dont_fill_shading_color a hex string representing the shading color for cells that don't require inputs. 
+#'        Default is "`#A8A8A8`", a medim gray color.
 #' @param overwrite a boolean that tells whether an existing file at `path` will be overwritten. Default is "`FALSE`".
 #'        If `path` already exists and `overwrite = FALSE`, an error is given.
 #' @param .rownum a temporary column created internally. `.rownum` must not exist in `.tidy_iea_df` when `write_fu_allocation_template` is called.
@@ -56,6 +58,8 @@ write_fu_allocation_template <- function(.tidy_iea_df,
                                          flow_aggregation_point = "Flow.aggregation.point",
                                          eiou = "Energy industry own use",
                                          allocations_tab_name = "Allocations",
+                                         machine = "Machine",
+                                         eu_product = "Eu.product",
                                          quantity = "Quantity", 
                                          e_dot = "E.dot",
                                          e_dot_perc = paste(e_dot, "[%]"), 
@@ -64,8 +68,11 @@ write_fu_allocation_template <- function(.tidy_iea_df,
                                          energy_row_shading_color_fd = "#B8D8F5", 
                                          energy_row_font_color_eiou = "#918700",
                                          energy_row_shading_color_eiou = "#FCFCAB", 
+                                         dont_fill_shading_color = "#A8A8A8",
                                          overwrite = FALSE,
-                                         .rownum = ".rownum"){
+                                         .rownum = ".rownum", 
+                                         .year = ".year",
+                                         .value = ".value"){
   # Create the template data frame
   Allocation_template <- .tidy_iea_df %>% 
     fu_allocation_template()
@@ -77,7 +84,7 @@ write_fu_allocation_template <- function(.tidy_iea_df,
   openxlsx::writeData(fu_wb, allocations_tab_name, Allocation_template)
   
   # A function to identify some rows of the spreadsheet
-  quantity_rows <- function(which_quantity = c(e_dot, e_dot_perc), which_type = c("fd", "eiou")){
+  e_rows <- function(which_quantity = c(e_dot, e_dot_perc), which_type = c("fd", "eiou")){
     which_quantity <- match.arg(which_quantity)
     which_type <- match.arg(which_type)
     # Get rid of rownames so that we have only row numbers and put those row numbers into a column
@@ -102,18 +109,35 @@ write_fu_allocation_template <- function(.tidy_iea_df,
   }
   
   # First, figure out which some zones of the worksheet
-  e_dot_rows_fd <- quantity_rows(which_quantity = e_dot, which_type = "fd")
-  e_dot_perc_rows_fd <- quantity_rows(which_quantity = e_dot_perc, which_type = "fd")
-  e_dot_rows_eiou <- quantity_rows(which_quantity = e_dot, which_type = "eiou")
-  e_dot_perc_rows_eiou <- quantity_rows(which_quantity = e_dot_perc, which_type = "eiou")
+  e_dot_rows_fd <- e_rows(which_quantity = e_dot, which_type = "fd")
+  e_dot_perc_rows_fd <- e_rows(which_quantity = e_dot_perc, which_type = "fd")
+  e_dot_rows_eiou <- e_rows(which_quantity = e_dot, which_type = "eiou")
+  e_dot_perc_rows_eiou <- e_rows(which_quantity = e_dot_perc, which_type = "eiou")
   max_values_col_index <- which(names(Allocation_template) == maximum_values)
   year_cols_indices <- year_cols(Allocation_template)
+  # Note the "1" is for row 1, which we don't want to color gray.
+  c_rows_indices <- base::setdiff(1:(nrow(Allocation_template) + 1), c(1, e_dot_rows_fd, e_dot_perc_rows_fd, e_dot_rows_eiou, e_dot_perc_rows_eiou))
   
   # Apply color formatting style for energy and energy percentage rows
   energy_row_style_fd <- openxlsx::createStyle(fontColour = energy_row_font_color_fd, fgFill = energy_row_shading_color_fd)
-  openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style_fd, rows = union(e_dot_rows_fd, e_dot_perc_rows_fd), cols = 1:ncol(Allocation_template), gridExpand = TRUE)
   energy_row_style_eiou <- openxlsx::createStyle(fontColour = energy_row_font_color_eiou, fgFill = energy_row_shading_color_eiou)
+  openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style_fd, rows = union(e_dot_rows_fd, e_dot_perc_rows_fd), cols = 1:ncol(Allocation_template), gridExpand = TRUE)
   openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style_eiou, rows = union(e_dot_rows_eiou, e_dot_perc_rows_eiou), cols = 1:ncol(Allocation_template), gridExpand = TRUE)
+  
+  # Apply shading for cells that don't need to be filled
+  # First, tackle the cells in the Maximum.values column.
+  dont_fill_style <- openxlsx::createStyle(fgFill = dont_fill_shading_color)
+  openxlsx::addStyle(fu_wb, allocations_tab_name, style = dont_fill_style, rows = c_rows_indices, cols = max_values_col_index, gridExpand = TRUE)
+  # Now work on the year columns. 
+  # Find all the E.dot rows
+  E_dot_NA <- Allocation_template %>% 
+    dplyr::filter(!!as.name(quantity) == e_dot) %>% 
+    tidyr::gather(key = !!as.name(.year), value = !!as.name(.value), !!!year_cols_indices) %>% 
+    dplyr::select(-!!as.name(machine), -!!as.name(eu_product), -!!maximum_values) %>% 
+    dplyr::filter(is.na(.value))
+  
+  
+  
   
   # Set percentage format for numbers in the e_dot_perc rows.
   e_dot_perc_style <- openxlsx::createStyle(numFmt = "PERCENTAGE")
