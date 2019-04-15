@@ -113,3 +113,10 @@ interface_industries = c("Imports",
                          "Stock changes")
 
 usethis::use_data(interface_industries, overwrite = TRUE)
+
+ledger_side_iea_order <- c(
+  "Supply", 
+  "Consumption"
+)
+
+usethis::use_data(ledger_side_iea_order, overwrite = TRUE)
