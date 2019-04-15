@@ -65,7 +65,7 @@ test_that("augment_iea_df works", {
     rename_iea_df_cols() %>% 
     augment_iea_df()
   expect_equal(simple_with_losses_df$Ledger.side, c("Supply", "Supply"))
-  expect_equal(simple_with_losses_df$Flow.aggregation.point, c("Total primary energy supply", "TFC compare"))
+  expect_equal(simple_with_losses_df$Flow.aggregation.point, c("Total primary energy supply", "TFC compare (Losses)"))
   # Try with bogus data with a Total final consumption row.
   simple_with_tfc_df <- iea_df(text = paste0(",,TIME,1960,1961\n",
                                              "COUNTRY,FLOW,PRODUCT\n",
