@@ -70,6 +70,7 @@ write_fu_allocation_template <- function(.tidy_iea_df,
                                          energy_row_shading_color_eiou = "#FCFCAB", 
                                          dont_fill_shading_color = "#A8A8A8",
                                          overwrite = FALSE,
+                                         n_allocation_rows = 3,
                                          .rownum = ".rownum", 
                                          .year = ".year",
                                          .value = ".value"){
@@ -115,6 +116,7 @@ write_fu_allocation_template <- function(.tidy_iea_df,
   e_dot_perc_rows_eiou <- e_rows(which_quantity = e_dot_perc, which_type = "eiou")
   max_values_col_index <- which(names(Allocation_template) == maximum_values)
   year_cols_indices <- year_cols(Allocation_template)
+  year_cols_names <- year_cols(Allocation_template, return_names = TRUE)
   # Note the "1" is for row 1, which we don't want to color gray.
   c_rows_indices <- base::setdiff(1:(nrow(Allocation_template) + 1), c(1, e_dot_rows_fd, e_dot_perc_rows_fd, e_dot_rows_eiou, e_dot_perc_rows_eiou))
   
@@ -130,14 +132,42 @@ write_fu_allocation_template <- function(.tidy_iea_df,
   openxlsx::addStyle(fu_wb, allocations_tab_name, style = dont_fill_style, rows = c_rows_indices, cols = max_values_col_index, gridExpand = TRUE)
   # Now work on the year columns. 
   # Find all the E.dot rows
-  E_dot_NA <- Allocation_template %>% 
-    dplyr::filter(!!as.name(quantity) == e_dot) %>% 
-    tidyr::gather(key = !!as.name(.year), value = !!as.name(.value), !!!year_cols_indices) %>% 
-    dplyr::select(-!!as.name(machine), -!!as.name(eu_product), -!!maximum_values) %>% 
-    dplyr::filter(is.na(.value))
-  
-  
-  
+  for (yr_index in 1:length(year_cols_indices)) {
+    col_index <- year_cols_indices[[yr_index]]
+    col_name <- year_cols_names[[yr_index]]
+    # Find the rows with NA in the e_dot column
+    e_dot_NA_rownums_in_Excel <- Allocation_template %>% 
+      # Make a column of row numbers
+      tibble::remove_rownames() %>% tibble::rownames_to_column(var = .rownum) %>% dplyr::mutate(!!as.name(.rownum) := as.numeric(!!as.name(.rownum))) %>% 
+      # Filter to get only e_dot rows
+      dplyr::filter(!!as.name(quantity) == e_dot) %>% 
+      # Find only those rows that are NA in the year of interest. 
+      # These rows represent Flows that are zero in this year. 
+      dplyr::filter(is.na(!!as.name(col_name))) %>% 
+      # Grab the .rownum column.
+      # These are the row indices that are zero in this year.
+      magrittr::extract2(.rownum) %>% 
+      # At this point, we have the row numbers in the data.frame, but
+      # we need the row numbers in the Excel spreadsheet.
+      # So we need to add 1 to get the row numbers in the Excel spreadsheet.
+      # (The first row in the Excel spreadsheet is the header row, 
+      # which is not counted in the data frame.)
+      magrittr::add(1)
+    # We don't want to gray the e_dot cells. 
+    # We want to gray the C (allocation fraction) cells that are beneath the e_dot cells.
+    # Beneath the e_dot cells, we have the e_dot_perc cells.
+    # Then, we have n_allocation_rows of C rows.
+    # So, we need to add to the indices we just found.
+    gray_rows_for_year_col_index <- c()
+    for (i in 1:n_allocation_rows) {
+      # The 1 is to jump across the e_dot_perc row.
+      # The i is for the allocation rows.
+      gray_rows_for_year_col_index <- c(gray_rows_for_year_col_index, e_dot_NA_rownums_in_Excel + 1 + i)
+    }
+    # Now make these cells gray.
+    openxlsx::addStyle(fu_wb, allocations_tab_name, style = dont_fill_style, 
+                       rows = gray_rows_for_year_col_index, cols = col_index, stack = TRUE)
+  }
   
   # Set percentage format for numbers in the e_dot_perc rows.
   e_dot_perc_style <- openxlsx::createStyle(numFmt = "PERCENTAGE")

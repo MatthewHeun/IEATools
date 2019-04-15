@@ -16,7 +16,8 @@ write_fu_allocation_template(.tidy_iea_df, path,
   energy_row_font_color_eiou = "#918700",
   energy_row_shading_color_eiou = "#FCFCAB",
   dont_fill_shading_color = "#A8A8A8", overwrite = FALSE,
-  .rownum = ".rownum", .year = ".year", .value = ".value")
+  n_allocation_rows = 3, .rownum = ".rownum", .year = ".year",
+  .value = ".value")
 }
 \arguments{
 \item{.tidy_iea_df}{a data frame as discussed in Details}
