@@ -484,14 +484,12 @@ tp_sinks_sources <- function(.tidy_iea_df,
   # assertthat::assert_that(!(product %in% grouping_vars), msg = paste(product, "cannot be a grouping variable of .tidy_iea_df in tp_sinks_sources()"))
   # assertthat::assert_that(!(e_dot %in% grouping_vars), msg = paste(e_dot, "cannot be a grouping variable of .tidy_iea_df in tp_sinks_sources()"))
   use_rows <- .tidy_iea_df %>% 
-    # dplyr::group_by(!!!lapply(grouping_vars, as.name)) %>% 
     dplyr::group_by(!!!grouping_vars) %>% 
     dplyr::filter((!!as.name(flow_aggregation_point) == transformation_processes | !!as.name(flow_aggregation_point) == eiou) & !!as.name(e_dot) < 0) %>% 
     dplyr::select(dplyr::group_cols(), flow) %>% 
     unique() %>% 
     dplyr::ungroup()
   make_rows <- .tidy_iea_df %>% 
-    # dplyr::group_by(!!!lapply(grouping_vars, as.name)) %>% 
     dplyr::group_by(!!!grouping_vars) %>% 
     dplyr::filter(!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_dot) > 0) %>% 
     dplyr::select(dplyr::group_cols(), flow) %>% 

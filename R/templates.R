@@ -451,34 +451,41 @@ arrange_iea_fu_allocation_template_cols <- function(.fu_allocation_template,
 #'   fu_allocation_template() %>% 
 #'   arrange_iea_fu_allocation_template_rows()
 arrange_iea_fu_allocation_template_rows <- function(.fu_allocation_template,
-                             flow_aggregation_point = "Flow.aggregation.point",
-                             destionation = "Destionation",
-                             fap_dest_order = IEATools::fap_flow_iea_order,
-                             product = "Product",
-                             product_order = IEATools::product_iea_order, 
-                             ef_product = "Ef.product",
-                             machine = "Machine",
-                             eu_product = "Eu.product",
-                             destination = "Destination",
-                             quantity = "Quantity",
-                             maximum_values = "Maximum.values",
-                             .temp_sort = ".fap_flow"){
+                                                    ledger_side = "Ledger.side", 
+                                                    flow_aggregation_point = "Flow.aggregation.point",
+                                                    destionation = "Destionation",
+                                                    unit = "Unit",
+                                                    fap_dest_order = IEATools::fap_flow_iea_order,
+                                                    product = "Product",
+                                                    product_order = IEATools::product_iea_order, 
+                                                    ef_product = "Ef.product",
+                                                    machine = "Machine",
+                                                    eu_product = "Eu.product",
+                                                    destination = "Destination",
+                                                    quantity = "Quantity",
+                                                    maximum_values = "Maximum.values",
+                                                    .temp_sort = ".fap_flow"){
   matsindf::verify_cols_missing(.fu_allocation_template, .temp_sort)
   # Figure out which columns are metadata columns.
   colnames <- names(.fu_allocation_template)
   year_colnames <- year_cols(.fu_allocation_template, return_names = TRUE)
-  machine_and_product_columns <- c(flow_aggregation_point, ef_product, machine, eu_product, destination, quantity, maximum_values)
+  machine_and_product_columns <- c(ledger_side, flow_aggregation_point, unit, ef_product, machine, eu_product, 
+                                   destination, quantity, maximum_values)
   # Columns that are not years and are not machine_and_product_columns are metadata columns.
-  meta_cols <- setdiff(colnames, year_colnames) %>% 
-    setdiff(machine_and_product_columns)
-  
+  # We group by these columns later.
+  # meta_cols <- setdiff(colnames, year_colnames) %>% 
+  #   setdiff(machine_and_product_columns)
+  meta_cols <- .fu_allocation_template %>% 
+    matsindf::everything_except(c(year_colnames, machine_and_product_columns))  
+
   .fu_allocation_template %>% 
     tidyr::unite(col = !!as.name(.temp_sort), !!as.name(flow_aggregation_point), !!as.name(destination), sep = "_", remove = FALSE) %>% 
     dplyr::mutate(
       !!as.name(.temp_sort) := factor(!!as.name(.temp_sort), levels = fap_flow_iea_order),
       !!as.name(ef_product) := factor(!!as.name(ef_product), levels = product_order)
     ) %>% 
-    dplyr::arrange(.temp_sort, ef_product, .by_group = TRUE) %>% 
+    dplyr::group_by(!!!meta_cols) %>% 
+    dplyr::arrange(!!as.name(.temp_sort), !!as.name(ef_product), .by_group = TRUE) %>% 
     dplyr::mutate(
       !!as.name(.temp_sort) := NULL
     )

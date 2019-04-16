@@ -5,8 +5,9 @@
 \title{Arrange the rows of an fu_allocation template}
 \usage{
 arrange_iea_fu_allocation_template_rows(.fu_allocation_template,
+  ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
-  destionation = "Destionation",
+  destionation = "Destionation", unit = "Unit",
   fap_dest_order = IEATools::fap_flow_iea_order, product = "Product",
   product_order = IEATools::product_iea_order,
   ef_product = "Ef.product", machine = "Machine",
