@@ -120,3 +120,37 @@ ledger_side_iea_order <- c(
 )
 
 usethis::use_data(ledger_side_iea_order, overwrite = TRUE)
+
+fap_flow_iea_order <- iea_df(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+                               system.file(package = "IEATools")) %>% 
+  rename_iea_df_cols() %>% 
+  clean_iea_whitespace() %>% 
+  use_iso_countries() %>% 
+  augment_iea_df() %>% 
+  # Select only one country from our sample data
+  dplyr::filter(Country == "GHA") %>% 
+  dplyr::select(Flow.aggregation.point, Flow) %>% 
+  # Unite the Flow.aggregation.point and Flow columns putting an "_" between them.
+  # tidyr::unite(col = fap_flow_iea_order, Flow.aggregation.point, Flow) %>% 
+  tidyr::unite(col = Flow.aggregation.point_Flow, Flow.aggregation.point, Flow, sep = "_", remove = TRUE) %>% 
+  unique() %>% 
+  unlist() %>%
+  as.vector()
+
+usethis::use_data(fap_flow_iea_order, overwrite = TRUE)
+
+product_iea_order <- iea_df(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+                              system.file(package = "IEATools")) %>% 
+  rename_iea_df_cols() %>% 
+  clean_iea_whitespace() %>% 
+  use_iso_countries() %>% 
+  augment_iea_df() %>% 
+  # Select only one country from our sample data
+  dplyr::filter(Country == "GHA") %>% 
+  dplyr::select(Product) %>% 
+  unique() %>% 
+  unlist() %>%
+  as.vector()
+
+usethis::use_data(product_iea_order, overwrite = TRUE)
+ 

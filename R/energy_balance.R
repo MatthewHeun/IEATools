@@ -223,7 +223,7 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
     dplyr::mutate(
       !!as.name(flow) := statistical_differences, 
       !!as.name(ledger_side) := supply,
-      !!as.name(flow_aggregation_point) := paste0(tfc_compare, " (", statistical_differences, ")")
+      !!as.name(flow_aggregation_point) := tfc_compare
     )
   
   out <- .tidy_iea_df %>% 

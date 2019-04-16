@@ -4,13 +4,20 @@
 \alias{eta_template}
 \title{Final-to-useful efficiency template}
 \usage{
-eta_template(.fu_allocations)
+eta_template(.fu_allocation_template)
 }
 \arguments{
-\item{.fu_allocations}{a data frame containing a completed final-to-useful allocation template for final demand.}
+\item{.fu_allocation_template}{a data frame containing a completed final-to-useful allocation template for final demand.}
+
+\item{row_order}{the desired row order. Default is \code{IEATools::fap_flow_iea_order}.}
+
+\item{product_order}{the desired product order. Default is \code{IEATools::product_iea_order}.}
+
+\item{.temp_sort}{a temporary column created in \code{.fu_allocation_template}.
+No column with this name can be present in \code{.fu_allocation_template}.}
 }
 \value{
-a data frame containing a blank template for final-to-useful machine efficiencies.
+a data frame containing row-ordered blank template for final-to-useful machine efficiencies.
 }
 \description{
 Using a final-to-useful allocation table,

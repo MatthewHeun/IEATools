@@ -328,7 +328,7 @@ fu_allocation_template <- function(.tidy_iea_df,
       )
   }
   # Reshape the data frame into the format that we want for an Excel spreadsheet
-  out <- Tidy %>% 
+  Tidy %>% 
     # Gather all of the columns that we want to spread across the sheet
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot), !!as.name(e_dot_perc), !!!lapply(c_cols, as.name)) %>% 
     # Add the Max data frame so that we can include its numbers
@@ -351,34 +351,79 @@ fu_allocation_template <- function(.tidy_iea_df,
       !!as.name(machine) := NA_real_,
       !!as.name(eu_product) := NA_real_
     )
+}
+
+
+#' Arrange the columns of an fu_template
+#' 
+#' It is helpful to sort rows and columns of a final-to-useful allocation template
+#' in reasonable ways to assist analysts with final-to-useful 
+#' allocations.
+#' This function uses a left-to-right approach:
+#' metadata columns proceed from 
+#' final energy product (`Ef.product`) to
+#' Machine (the final-to-useful transformation process) to
+#' useful energy product (`Eu.product`) to 
+#' destination where the useful energy now flows.
+#' Further to the right, years (in columns) and 
+#' allocations (C_x rows) can be found.
+#'
+#' @param .fu_template the final-to-useful allocation template created by `fu_allocation_template()`
+#' @param ef_product the name of the final energy column. Default is "`Ef.product`".
+#' @param machine the name of the machine column. Default is "`Machine`".
+#' @param eu_product the name of the useful energy product column. Default is "`Eu.product`".
+#'
+#' @return An column-ordered data frame with columns and rows in (more-or-less) IEA order
+#' @export
+#'
+#' @examples
+arrange_iea_fu_allocation_template_cols <- function(.fu_allocation_template, 
+                                                    ef_product = "Ef.product",
+                                                    machine = "Machine",
+                                                    eu_product = "Eu.product",
+                                                    destination = "Destination",
+                                                    quantity = "Quantity",
+                                                    maximum_values = "Maximum.values"){
   # Figure out the order for the columns
-  colnames <- names(out)
-  year_colnames <- year_cols(out, return_names = TRUE)
+  colnames <- names(.fu_allocation_template)
+  year_colnames <- year_cols(.fu_allocation_template, return_names = TRUE)
   machine_and_product_columns <- c(ef_product, machine, eu_product, destination, quantity, maximum_values)
-  # Figure out the metadata columns
+  # Figure out the metadata columns.
+  # Columns that are not years and are not machine_and_product_columns are metadata columns.
   meta_cols <- setdiff(colnames, year_colnames) %>% 
     setdiff(machine_and_product_columns)
   # Change type to numeric for the maximum_values and year columns.
   # out[c(maximum_values, year_colnames)] <- as.numeric(out[c(maximum_values, year_colnames)])
   # Now put the column names together in the desired order
   col_order <- c(meta_cols, machine_and_product_columns, year_colnames)
-  out %>% 
+  .fu_allocation_template %>% 
     dplyr::select(col_order)
+  # Figure out the order for the rows.
+  # out %>% 
+  #   tidyr::unite(col = .temp_sort, flow_aggregation_point, flow, sep = "_", remove = FALSE) %>% 
+  #   
+  #   dplyr::mutate(
+  #     !!as.name(flow_aggregation_point)
+  #   )
+  
 }
-
 
 #' Final-to-useful efficiency template
 #' 
 #' Using a final-to-useful allocation table, 
 #' this function generates a blank template for final-to-useful machine efficiencies.
 #'
-#' @param .fu_allocations a data frame containing a completed final-to-useful allocation template for final demand.
+#' @param .fu_allocation_template a data frame containing a completed final-to-useful allocation template for final demand.
+#' @param row_order the desired row order. Default is `IEATools::fap_flow_iea_order`.
+#' @param product_order the desired product order. Default is `IEATools::product_iea_order`.
+#' @param .temp_sort a temporary column created in `.fu_allocation_template`. 
+#'        No column with this name can be present in `.fu_allocation_template`.
 #'
-#' @return a data frame containing a blank template for final-to-useful machine efficiencies.
+#' @return a data frame containing row-ordered blank template for final-to-useful machine efficiencies.
 #' 
 #' @export
 #'
 #' @examples
-eta_template <- function(.fu_allocations){
+eta_template <- function(.fu_allocation_template){
   
 }
