@@ -2,7 +2,7 @@
 % Please edit documentation in R/templates.R
 \name{arrange_iea_fu_allocation_template_cols}
 \alias{arrange_iea_fu_allocation_template_cols}
-\title{Arrange the columns of an fu_template}
+\title{Arrange the columns of an fu_allocation template}
 \usage{
 arrange_iea_fu_allocation_template_cols(.fu_allocation_template,
   ef_product = "Ef.product", machine = "Machine",
@@ -10,27 +10,37 @@ arrange_iea_fu_allocation_template_cols(.fu_allocation_template,
   quantity = "Quantity", maximum_values = "Maximum.values")
 }
 \arguments{
-\item{ef_product}{the name of the final energy column. Default is "\code{Ef.product}".}
+\item{ef_product}{the name of the final energy column in \code{.fu_template}. Default is "\code{Ef.product}".}
 
-\item{machine}{the name of the machine column. Default is "\code{Machine}".}
+\item{machine}{the name of the machine columnin \code{.fu_template}. Default is "\code{Machine}".}
 
-\item{eu_product}{the name of the useful energy product column. Default is "\code{Eu.product}".}
+\item{eu_product}{the name of the useful energy product column in \code{.fu_template}. Default is "\code{Eu.product}".}
 
 \item{.fu_template}{the final-to-useful allocation template created by \code{fu_allocation_template()}}
 }
 \value{
-An column-ordered data frame with columns and rows in (more-or-less) IEA order
+An column-ordered version of \code{.fu_allocation_template}
 }
 \description{
-It is helpful to sort rows and columns of a final-to-useful allocation template
+It is helpful to sort columns of a final-to-useful allocation template
 in reasonable ways to assist analysts with final-to-useful
 allocations.
-This function uses a left-to-right approach:
-metadata columns proceed from
-final energy product (\code{Ef.product}) to
-Machine (the final-to-useful transformation process) to
-useful energy product (\code{Eu.product}) to
-destination where the useful energy now flows.
-Further to the right, years (in columns) and
-allocations (C_x rows) can be found.
+This function sorts columns (left-to-right) in the order of energy flow through the energy conversion chain:
+\itemize{
+\item metadata columns,
+\item final energy product (\code{Ef.product}).
+\item Machine (the final-to-useful transformation process),
+\item useful energy product (\code{Eu.product}),
+\item destination where the useful energy now flows,
+\item years (in columns), and
+\item allocations (C_x rows).
+}
+}
+\examples{
+Template <- load_tidy_iea_df() \%>\% 
+  specify_all() \%>\%
+  fu_allocation_template()
+Template
+Template \%>\% 
+  arrange_iea_fu_allocation_template_cols()
 }

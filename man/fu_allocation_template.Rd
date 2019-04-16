@@ -18,7 +18,7 @@ fu_allocation_template(.tidy_iea_df, energy_type = "Energy.type",
   perc_unit_string), maximum_values = "Maximum.values",
   year_for_maximum_values = 0, ef_product = "Ef.product",
   allocation_var = "C_", n_allocation_rows = 3, machine = "Machine",
-  eu_product = "Eu.product", .value = ".value")
+  eu_product = "Eu.product", arrrange = TRUE, .value = ".value")
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
@@ -78,7 +78,12 @@ Default is \code{0}.}
 
 \item{eu_product}{the name of the useful energy carrier column. Default is "\code{Eu product}".}
 
-\item{.value}{the name of the value column added to \code{.tidy_iea_df}. Default is "\code{.value}".}
+\item{.value}{the name of a temproary value column added to \code{.tidy_iea_df}.
+A \code{.value} column must not be present in \code{.tidy_iea_df}. Default is "\code{.value}".}
+
+\item{arrange}{a boolean telling whether to arranged the rows and columns
+(using \code{arrange_iea_fu_allocation_template_rows()} and \code{arrange_iea_fu_allocation_template_cols()}) before returning.
+Default is \code{TRUE}.}
 }
 \value{
 a data frame containing the EIOU template

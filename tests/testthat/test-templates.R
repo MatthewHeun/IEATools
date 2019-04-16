@@ -6,7 +6,8 @@ test_that("fu_allocation_template works as expected", {
   Allocation_template <- load_tidy_iea_df() %>% 
     specify_all() %>%
     fu_allocation_template() %>% 
-    arrange_iea_fu_allocation_template_cols()
+    arrange_iea_fu_allocation_template_cols() %>% 
+    arrange_iea_fu_allocation_template_rows()
   expected_colorder <- c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit",
                          "Ef.product", "Machine", "Eu.product", "Destination", 
                          "Quantity", "Maximum.values", "1971", "2000")
