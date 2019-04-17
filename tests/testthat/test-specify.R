@@ -186,23 +186,23 @@ test_that("spreading by years works as expected at each step of specify_all()", 
   Year_spread_1 <- Tidy %>% 
     specify_primary_production() %>% 
     tidyr::spread(key = Year, value = E.dot)
-  expect_true("1971" %in% names(year_spread_1))
-  expect_true("2000" %in% names(year_spread_1))
+  expect_true("1971" %in% names(Year_spread_1))
+  expect_true("2000" %in% names(Year_spread_1))
   
   Year_spread_2 <- Tidy %>% 
     specify_primary_production() %>% 
     specify_production_to_resources() %>% 
     tidyr::spread(key = Year, value = E.dot)
-  expect_true("1971" %in% names(year_spread_1))
-  expect_true("2000" %in% names(year_spread_1))
+  expect_true("1971" %in% names(Year_spread_2))
+  expect_true("2000" %in% names(Year_spread_2))
   
   Year_spread_3 <- Tidy %>% 
     specify_primary_production() %>% 
     specify_production_to_resources() %>% 
     specify_tp_eiou() %>% 
     tidyr::spread(key = Year, value = E.dot)
-  expect_true("1971" %in% names(year_spread_1))
-  expect_true("2000" %in% names(year_spread_1))
+  expect_true("1971" %in% names(Year_spread_3))
+  expect_true("2000" %in% names(Year_spread_3))
   
   Year_spread_4 <- Tidy %>% 
     specify_primary_production() %>% 
@@ -210,8 +210,8 @@ test_that("spreading by years works as expected at each step of specify_all()", 
     specify_tp_eiou() %>% 
     specify_interface_industries() %>% 
     tidyr::spread(key = Year, value = E.dot)
-  expect_true("1971" %in% names(year_spread_1))
-  expect_true("2000" %in% names(year_spread_1))
+  expect_true("1971" %in% names(Year_spread_4))
+  expect_true("2000" %in% names(Year_spread_4))
   
   Year_spread_5 <- Tidy %>% 
     specify_primary_production() %>% 
@@ -220,7 +220,7 @@ test_that("spreading by years works as expected at each step of specify_all()", 
     specify_interface_industries() %>% 
     tp_sinks_to_nonenergy() %>% 
     tidyr::spread(key = Year, value = E.dot)
-  expect_true("1971" %in% names(year_spread_1))
-  expect_true("2000" %in% names(year_spread_1))
+  expect_true("1971" %in% names(Year_spread_5))
+  expect_true("2000" %in% names(Year_spread_5))
 })
 
