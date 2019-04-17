@@ -10,7 +10,7 @@ test_that("production is converted to resources correctly", {
     specify_production_to_resources()
   # There should be no "Production" flows remaining.
   expect_false(Specific_production %>% 
-                 extract2("Flow") %>% 
+                 magrittr::extract2("Flow") %>% 
                  magrittr::equals("Production") %>% 
                  any())
   # Now try with an EIOU flow of "Liquefaction (LNG) / regasification plants"

@@ -121,15 +121,12 @@ ledger_side_iea_order <- c(
 
 usethis::use_data(ledger_side_iea_order, overwrite = TRUE)
 
-fap_flow_iea_order <- iea_df(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-                               system.file(package = "IEATools")) %>% 
-  rename_iea_df_cols() %>% 
-  clean_iea_whitespace() %>% 
-  use_iso_countries() %>% 
-  augment_iea_df() %>%
-  specify_all() %>% 
+fap_flow_iea_order <- load_tidy_iea_df(remove_zeroes = FALSE) %>% 
   # Select only one country from our sample data
-  dplyr::filter(Country == "GHA") %>% 
+  augment_iea_df() %>% 
+  # This approach is NO GOOD, because specify_all messes with the ordering!
+  specify_all() %>% 
+  tidyr::spread(key = Year, value = E.dot) %>% 
   dplyr::select(Flow.aggregation.point, Flow) %>% 
   # Unite the Flow.aggregation.point and Flow columns putting an "_" between them.
   # tidyr::unite(col = fap_flow_iea_order, Flow.aggregation.point, Flow) %>% 

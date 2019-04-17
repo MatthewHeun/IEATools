@@ -603,6 +603,7 @@ tidy_iea_df <- function(.iea_df,
 #' See examples for two ways to achieve the same result.
 #' 
 #' @param file_path the path of the file to be loaded. Default loads example data bundled with the package.
+#' @param remove_zeroes a logical indicating whether data points with the value `0` are to be removed from the output. (Default is `TRUE`.)
 #'
 #' @return a tidy, augmented data frame of IEA extended energy balance data.
 #' 
@@ -621,7 +622,8 @@ tidy_iea_df <- function(.iea_df,
 #'   tidy_iea_df()
 #' all(simple == complicated)
 load_tidy_iea_df <- function(file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-                               system.file(package = "IEATools")){
+                               system.file(package = "IEATools"), 
+                             remove_zeroes = TRUE){
   file_path %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
@@ -629,6 +631,6 @@ load_tidy_iea_df <- function(file_path = file.path("extdata", "GH-ZA-ktoe-Extend
     remove_agg_memo_flows() %>% 
     use_iso_countries() %>% 
     augment_iea_df() %>% 
-    tidy_iea_df()
+    tidy_iea_df(remove_zeroes = remove_zeroes)
 }
 
