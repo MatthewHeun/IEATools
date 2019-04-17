@@ -130,7 +130,8 @@ specify_primary_production <- function(.tidy_iea_df,
       # Make rows for production of prod by eiou_dest
       Output <- Input %>% 
         dplyr::mutate(
-          !!as.name(e_dot) := -!!as.name(e_dot)
+          !!as.name(e_dot) := -!!as.name(e_dot),
+          !!as.name(product) := paste0(!!as.name(product), " (", !!as.name(flow), ")")
         )
       # Put it all together
       .tidf <- .tidf %>% 
