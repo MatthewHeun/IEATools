@@ -7,15 +7,16 @@
 arrange_iea_fu_allocation_template_rows(.fu_allocation_template,
   ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
-  destionation = "Destionation", unit = "Unit",
+  destination = "Destination", unit = "Unit",
   fap_dest_order = IEATools::fap_flow_iea_order, product = "Product",
   product_order = IEATools::product_iea_order,
   ef_product = "Ef.product", machine = "Machine",
-  eu_product = "Eu.product", destination = "Destination",
-  quantity = "Quantity", maximum_values = "Maximum.values",
-  .temp_sort = ".fap_flow")
+  eu_product = "Eu.product", quantity = "Quantity",
+  maximum_values = "Maximum.values", .temp_sort = ".fap_flow")
 }
 \arguments{
+\item{destination}{}
+
 \item{product}{}
 
 \item{product_order}{}
@@ -25,8 +26,6 @@ arrange_iea_fu_allocation_template_rows(.fu_allocation_template,
 \item{machine}{}
 
 \item{eu_product}{}
-
-\item{destination}{}
 
 \item{quantity}{}
 
@@ -47,7 +46,7 @@ It is helpful to sort rows of a final-to-useful allocation template
 to match the row order in the IEA's extended energy balance data to assist analysts with final-to-useful
 allocations.
 This function sorts rows (top-to-bottom) by default in the same order as appears in the IEA extended energy balance data.
-Other orderings can be specified with the \code{fap_flow_order} and \code{product_order} arguments.
+Other orderings can be specified with the \code{fap_flow_order} and \code{ef_product_order} arguments.
 }
 \details{
 The \code{flow_allocation_point}, \code{flow}, and \code{product} columns are considered for the ordering.

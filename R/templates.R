@@ -374,12 +374,28 @@ fu_allocation_template <- function(.tidy_iea_df,
 #' * years (in columns), and 
 #' * allocations (C_x rows).
 #'
-#' @param .fu_template the final-to-useful allocation template created by `fu_allocation_template()`
-#' @param ef_product the name of the final energy column in `.fu_template`. Default is "`Ef.product`".
-#' @param machine the name of the machine columnin `.fu_template`. Default is "`Machine`".
-#' @param eu_product the name of the useful energy product column in `.fu_template`. Default is "`Eu.product`".
 #'
-#' @return An column-ordered version of `.fu_allocation_template`
+#'
+#'
+#'
+#' @param .fu_allocation_template the final-to-useful allocation template created by `fu_allocation_template()`
+#' @param rowcol one of "`both`", "`row`", or "`col`" to indicate whether rows, columns, or both should be arranged. Default is "`both`".
+#' @param ledger_side the ledger side column in `.fu_allocation_template`. Default is "`Ledger.side`".
+#' @param flow_aggregation_point the flow aggregation point column in `.fu_allocation_template`. Default is "`Flow.aggregation.point`".
+#' @param ef_product the name of the final energy column in `.fu_allocation_template`. Default is "`Ef.product`".
+#' @param machine the name of the machine columnin `.fu_allocation_template`. Default is "`Machine`".
+#' @param eu_product the name of the useful energy product column in `.fu_allocation_template`. Default is "`Eu.product`".
+#' @param destination the name of the destination column in `.fu_allocation_template`. Default is "`Destination`".
+#' @param unit the name of the unit in `.fu_allocation_template`. Default is "`Unit`".
+#' @param fap_dest_order the desired order for the combination of `flow_aggregation_point` and `destination` columns. Default is `IEATools::fap_flow_iea_order`.
+#' @param ef_product_order the desired order for final energy products in `.fu_allocation_template`. Default is "`Ef.product`".
+#' @param quantity the name of the quantity column in `.fu_allocation_template`. Default is "`Quantity`".
+#' @param maximum_values the name of the maximum value column `.fu_allocation_template`. Default is "`Unit`".
+#' @param .temp_sort the name of a temporary column to be added to `.fu_allocation_template`. 
+#'        Default is "`.fap_flow`".
+#'        This column must not be present in `.fu_allocation_template`.
+#'
+#' @return An row- and/or column-ordered version of `.fu_allocation_template`
 #' 
 #' @export
 #'
@@ -389,28 +405,70 @@ fu_allocation_template <- function(.tidy_iea_df,
 #'   fu_allocation_template()
 #' Template
 #' Template %>% 
-#'   arrange_iea_fu_allocation_template_cols()
-arrange_iea_fu_allocation_template_cols <- function(.fu_allocation_template, 
-                                                    ef_product = "Ef.product",
-                                                    machine = "Machine",
-                                                    eu_product = "Eu.product",
-                                                    destination = "Destination",
-                                                    quantity = "Quantity",
-                                                    maximum_values = "Maximum.values"){
-  # Figure out the order for the columns
-  colnames <- names(.fu_allocation_template)
-  year_colnames <- year_cols(.fu_allocation_template, return_names = TRUE)
-  machine_and_product_columns <- c(ef_product, machine, eu_product, destination, quantity, maximum_values)
-  # Figure out the metadata columns.
-  # Columns that are not years and are not machine_and_product_columns are metadata columns.
-  meta_cols <- setdiff(colnames, year_colnames) %>% 
-    setdiff(machine_and_product_columns)
-  # Change type to numeric for the maximum_values and year columns.
-  # out[c(maximum_values, year_colnames)] <- as.numeric(out[c(maximum_values, year_colnames)])
-  # Now put the column names together in the desired order
-  col_order <- c(meta_cols, machine_and_product_columns, year_colnames)
-  .fu_allocation_template %>% 
-    dplyr::select(col_order)
+#'   arrange_iea_fu_allocation_template()
+arrange_iea_fu_allocation_template <- function(.fu_allocation_template, 
+                                               rowcol = c("both", "row", "col"),
+                                               ledger_side = "Ledger.side", 
+                                               flow_aggregation_point = "Flow.aggregation.point",
+                                               ef_product = "Ef.product",
+                                               machine = "Machine",
+                                               eu_product = "Eu.product",
+                                               destination = "Destination",
+                                               unit = "Unit",
+                                               fap_dest_order = IEATools::fap_flow_iea_order,
+                                               ef_product_order = IEATools::product_iea_order, 
+                                               quantity = "Quantity",
+                                               maximum_values = "Maximum.values", 
+                                               .temp_sort = ".fap_flow"){
+  rowcol <- match.arg(rowcol)
+  out <- .fu_allocation_template
+  # Work on row order
+  if (rowcol == "both" | rowcol == "row") {
+    matsindf::verify_cols_missing(out, .temp_sort)
+    # Figure out which columns are metadata columns.
+    colnames <- names(out)
+    year_colnames <- year_cols(out, return_names = TRUE)
+    machine_and_product_columns <- c(ledger_side, flow_aggregation_point, unit, ef_product, machine, eu_product, 
+                                     destination, quantity, maximum_values)
+    # Columns that are not years and are not machine_and_product_columns are metadata columns.
+    # We group by these columns later.
+    # meta_cols <- setdiff(colnames, year_colnames) %>% 
+    #   setdiff(machine_and_product_columns)
+    meta_cols <- out %>% 
+      matsindf::everything_except(c(year_colnames, machine_and_product_columns))  
+    
+    out <- out %>% 
+      tidyr::unite(col = !!as.name(.temp_sort), !!as.name(flow_aggregation_point), !!as.name(destination), sep = "_", remove = FALSE) %>% 
+      dplyr::mutate(
+        !!as.name(.temp_sort) := factor(!!as.name(.temp_sort), levels = fap_flow_iea_order),
+        !!as.name(ef_product) := factor(!!as.name(ef_product), levels = ef_product_order)
+      ) %>% 
+      dplyr::group_by(!!!meta_cols) %>% 
+      dplyr::arrange(!!as.name(.temp_sort), !!as.name(ef_product), .by_group = TRUE) %>% 
+      dplyr::mutate(
+        !!as.name(.temp_sort) := NULL, 
+        # Undo the factorization of the Ef.product column.
+        !!as.name(ef_product) := as.character(!!as.name(ef_product))
+      ) %>% 
+      # Undo the grouping that we performed above.
+      ungroup()
+  }
+  # Work on column order
+  if (rowcol == "both" | rowcol == "col"){
+    # Figure out the order for the columns
+    colnames <- names(out)
+    year_colnames <- year_cols(out, return_names = TRUE)
+    machine_and_product_columns <- c(ef_product, machine, eu_product, destination, quantity, maximum_values)
+    # Figure out the metadata columns.
+    # Columns that are not years and are not machine_and_product_columns are metadata columns.
+    meta_cols <- out %>% 
+      matsindf::everything_except(c(year_colnames, machine_and_product_columns))
+    # Now put the column names together in the desired order
+    col_order <- c(meta_cols, machine_and_product_columns, year_colnames)
+    out <- out %>% 
+      dplyr::select(!!!col_order)
+  }
+  return(out)
 }
 
 
@@ -420,7 +478,7 @@ arrange_iea_fu_allocation_template_cols <- function(.fu_allocation_template,
 #' to match the row order in the IEA's extended energy balance data to assist analysts with final-to-useful 
 #' allocations.
 #' This function sorts rows (top-to-bottom) by default in the same order as appears in the IEA extended energy balance data.
-#' Other orderings can be specified with the `fap_flow_order` and `product_order` arguments.
+#' Other orderings can be specified with the `fap_flow_order` and `ef_product_order` arguments.
 #' 
 #' The `flow_allocation_point`, `flow`, and `product` columns are considered for the ordering.
 #' 
@@ -453,7 +511,7 @@ arrange_iea_fu_allocation_template_cols <- function(.fu_allocation_template,
 arrange_iea_fu_allocation_template_rows <- function(.fu_allocation_template,
                                                     ledger_side = "Ledger.side", 
                                                     flow_aggregation_point = "Flow.aggregation.point",
-                                                    destionation = "Destionation",
+                                                    destination = "Destination",
                                                     unit = "Unit",
                                                     fap_dest_order = IEATools::fap_flow_iea_order,
                                                     product = "Product",
@@ -461,7 +519,6 @@ arrange_iea_fu_allocation_template_rows <- function(.fu_allocation_template,
                                                     ef_product = "Ef.product",
                                                     machine = "Machine",
                                                     eu_product = "Eu.product",
-                                                    destination = "Destination",
                                                     quantity = "Quantity",
                                                     maximum_values = "Maximum.values",
                                                     .temp_sort = ".fap_flow"){

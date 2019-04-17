@@ -126,7 +126,8 @@ fap_flow_iea_order <- iea_df(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Ba
   rename_iea_df_cols() %>% 
   clean_iea_whitespace() %>% 
   use_iso_countries() %>% 
-  augment_iea_df() %>% 
+  augment_iea_df() %>%
+  specify_all() %>% 
   # Select only one country from our sample data
   dplyr::filter(Country == "GHA") %>% 
   dplyr::select(Flow.aggregation.point, Flow) %>% 

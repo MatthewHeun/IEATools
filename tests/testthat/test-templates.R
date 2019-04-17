@@ -6,8 +6,18 @@ test_that("fu_allocation_template works as expected", {
   Allocation_template <- load_tidy_iea_df() %>% 
     specify_all() %>%
     fu_allocation_template() %>% 
-    arrange_iea_fu_allocation_template_cols() %>% 
-    arrange_iea_fu_allocation_template_rows()
+    arrange_iea_fu_allocation_template()
+
+  # Check rows
+  expect_equal(Allocation_template$Flow.aggregation.point[[1]], "Energy industry own use")
+  expect_equal(Allocation_template$Ef.product[[1]], "Refinery gas")
+  expect_equal(Allocation_template$Destination[[1]], "Oil refineries")
+  last_row <- nrow(Allocation_template)
+  expect_equal(Allocation_template$Flow.aggregation.point[[last_row]], "Energy industry own use")
+  
+  
+  
+  # Check columns
   expected_colorder <- c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit",
                          "Ef.product", "Machine", "Eu.product", "Destination", 
                          "Quantity", "Maximum.values", "1971", "2000")

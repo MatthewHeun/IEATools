@@ -177,3 +177,50 @@ test_that("tp_sinks_to_nonenergy works as expected", {
   expect_equal(Result %>% filter(Flow == "Automobiles", Product == "Petrol") %>% extract2("E.dot"), -1)
   expect_equal(Result %>% filter(Flow == "Automobiles", Product == "MD") %>% extract2("E.dot"), 1)
 })
+
+test_that("spreading by years works as expected at each step of specify_all()", {
+  # It should be possible to spread by years after any of these function calls.
+  # If we can't do so, it means there are duplicated rows
+  # in the data frame.
+  Tidy <- load_tidy_iea_df()
+  Year_spread_1 <- Tidy %>% 
+    specify_primary_production() %>% 
+    tidyr::spread(key = Year, value = E.dot)
+  expect_true("1971" %in% names(year_spread_1))
+  expect_true("2000" %in% names(year_spread_1))
+  
+  Year_spread_2 <- Tidy %>% 
+    specify_primary_production() %>% 
+    specify_production_to_resources() %>% 
+    tidyr::spread(key = Year, value = E.dot)
+  expect_true("1971" %in% names(year_spread_1))
+  expect_true("2000" %in% names(year_spread_1))
+  
+  Year_spread_3 <- Tidy %>% 
+    specify_primary_production() %>% 
+    specify_production_to_resources() %>% 
+    specify_tp_eiou() %>% 
+    tidyr::spread(key = Year, value = E.dot)
+  expect_true("1971" %in% names(year_spread_1))
+  expect_true("2000" %in% names(year_spread_1))
+  
+  Year_spread_4 <- Tidy %>% 
+    specify_primary_production() %>% 
+    specify_production_to_resources() %>% 
+    specify_tp_eiou() %>% 
+    specify_interface_industries() %>% 
+    tidyr::spread(key = Year, value = E.dot)
+  expect_true("1971" %in% names(year_spread_1))
+  expect_true("2000" %in% names(year_spread_1))
+  
+  Year_spread_5 <- Tidy %>% 
+    specify_primary_production() %>% 
+    specify_production_to_resources() %>% 
+    specify_tp_eiou() %>% 
+    specify_interface_industries() %>% 
+    tp_sinks_to_nonenergy() %>% 
+    tidyr::spread(key = Year, value = E.dot)
+  expect_true("1971" %in% names(year_spread_1))
+  expect_true("2000" %in% names(year_spread_1))
+})
+
