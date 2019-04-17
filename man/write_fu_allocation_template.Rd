@@ -4,7 +4,7 @@
 \alias{write_fu_allocation_template}
 \title{Write blank final-to-useful templates}
 \usage{
-write_fu_allocation_template(.tidy_iea_df, path,
+write_fu_allocation_template(.fu_allocation_template, path,
   ledger_side = "Ledger.side", consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point",
   eiou = "Energy industry own use",
@@ -20,7 +20,7 @@ write_fu_allocation_template(.tidy_iea_df, path,
   .value = ".value")
 }
 \arguments{
-\item{.tidy_iea_df}{a data frame as discussed in Details}
+\item{.fu_allocation_template}{a data frame produced by ``fu_allocation_template()`}
 
 \item{path}{the file path into which the blank template file will be written.
 Include both folder and file name.
@@ -74,17 +74,27 @@ the value of the \code{path} argument
 The analyst often starts with IEA extended energy balance data covering primary and final energy stages.
 This function writes a blank Excel template file that, when filled,
 allow the energy conversion chain to be extended to the useful stage.
+This function saves an Excel workbook to \code{path} that contains an analyst's template.
 }
 \details{
-This function returns a data frame that is the template that needs to be filled.
-Use the function \code{write.csv()} or similar to save to disk.
-The analyst must supply allocation and efficiency data.
-Allocations are to be placed in \code{c} rows and efficiencies are to be placed in \code{eta} rows.
+Allocations are to be placed in \code{C_x} rows of the template.
+
+Formatting is applied to the template:
+\itemize{
+\item Gray cells indicate cells that will be ignored when the template is read later.
+Analysts may fill those cells, but it is not necessary to do so.
+\item Blue cells indicate final demand energy consumption.
+\item Yellow cells indicate energy industry own use energy consumption.
+\item Rows are written in same order as EIA extended energy balance data.
+\item Columns are written in a reasonable order, namely that left-to-right order
+approximates flow through the energy conversion chain.
+}
 }
 \examples{
 f <- tempfile(fileext = ".xlsx")
 load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 
+  fu_allocation_template() \%>\% 
   write_fu_allocation_template(f)
 if (file.exists(f)) {
   file.remove(f)

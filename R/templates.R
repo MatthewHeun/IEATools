@@ -3,13 +3,20 @@
 #' The analyst often starts with IEA extended energy balance data covering primary and final energy stages.
 #' This function writes a blank Excel template file that, when filled,
 #' allow the energy conversion chain to be extended to the useful stage.
+#' This function saves an Excel workbook to `path` that contains an analyst's template.
 #' 
-#' This function returns a data frame that is the template that needs to be filled. 
-#' Use the function `write.csv()` or similar to save to disk.
-#' The analyst must supply allocation and efficiency data.
-#' Allocations are to be placed in `c` rows and efficiencies are to be placed in `eta` rows.
+#' Allocations are to be placed in `C_x` rows of the template.
+#' 
+#' Formatting is applied to the template:
+#' * Gray cells indicate cells that will be ignored when the template is read later.
+#'   Analysts may fill those cells, but it is not necessary to do so.
+#' * Blue cells indicate final demand energy consumption.
+#' * Yellow cells indicate energy industry own use energy consumption.
+#' * Rows are written in same order as EIA extended energy balance data.
+#' * Columns are written in a reasonable order, namely that left-to-right order
+#'   approximates flow through the energy conversion chain.
 #'
-#' @param .tidy_iea_df a data frame as discussed in Details
+#' @param .fu_allocation_template a data frame produced by ``fu_allocation_template()`
 #' @param path the file path into which the blank template file will be written. 
 #'        Include both folder and file name. 
 #'        If not present, the ".xlsx" extension is added.
@@ -47,11 +54,12 @@
 #' f <- tempfile(fileext = ".xlsx")
 #' load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
+#'   fu_allocation_template() %>% 
 #'   write_fu_allocation_template(f)
 #' if (file.exists(f)) {
 #'   file.remove(f)
 #' }
-write_fu_allocation_template <- function(.tidy_iea_df, 
+write_fu_allocation_template <- function(.fu_allocation_template, 
                                          path, 
                                          ledger_side = "Ledger.side",
                                          consumption = "Consumption",
@@ -75,21 +83,19 @@ write_fu_allocation_template <- function(.tidy_iea_df,
                                          .year = ".year",
                                          .value = ".value"){
   # Create the template data frame
-  Allocation_template <- .tidy_iea_df %>% 
-    fu_allocation_template()
-  matsindf::verify_cols_missing(Allocation_template, .rownum)
+  matsindf::verify_cols_missing(.fu_allocation_template, .rownum)
   
-  # Create the workbook, add the worksheet, and stuff the data into the worksheet
+  # Create the workbook, add the worksheet, and stuff the temmplate into the worksheet
   fu_wb <- openxlsx::createWorkbook()
   openxlsx::addWorksheet(fu_wb, allocations_tab_name)
-  openxlsx::writeData(fu_wb, allocations_tab_name, Allocation_template)
+  openxlsx::writeData(fu_wb, allocations_tab_name, .fu_allocation_template)
   
-  # A function to identify some rows of the spreadsheet
+  # A function to identify some rows of the spreadsheet (e_rows means "energy rows")
   e_rows <- function(which_quantity = c(e_dot, e_dot_perc), which_type = c("fd", "eiou")){
     which_quantity <- match.arg(which_quantity)
     which_type <- match.arg(which_type)
     # Get rid of rownames so that we have only row numbers and put those row numbers into a column
-    keep_rows <- Allocation_template %>% 
+    keep_rows <- .fu_allocation_template %>% 
       tibble::remove_rownames() %>% 
       tibble::rownames_to_column(var = .rownum)
     if (which_type == "fd") {
@@ -114,17 +120,17 @@ write_fu_allocation_template <- function(.tidy_iea_df,
   e_dot_perc_rows_fd <- e_rows(which_quantity = e_dot_perc, which_type = "fd")
   e_dot_rows_eiou <- e_rows(which_quantity = e_dot, which_type = "eiou")
   e_dot_perc_rows_eiou <- e_rows(which_quantity = e_dot_perc, which_type = "eiou")
-  max_values_col_index <- which(names(Allocation_template) == maximum_values)
-  year_cols_indices <- year_cols(Allocation_template)
-  year_cols_names <- year_cols(Allocation_template, return_names = TRUE)
+  max_values_col_index <- which(names(.fu_allocation_template) == maximum_values)
+  year_cols_indices <- year_cols(.fu_allocation_template)
+  year_cols_names <- year_cols(.fu_allocation_template, return_names = TRUE)
   # Note the "1" is for row 1, which we don't want to color gray.
-  c_rows_indices <- base::setdiff(1:(nrow(Allocation_template) + 1), c(1, e_dot_rows_fd, e_dot_perc_rows_fd, e_dot_rows_eiou, e_dot_perc_rows_eiou))
+  c_rows_indices <- base::setdiff(1:(nrow(.fu_allocation_template) + 1), c(1, e_dot_rows_fd, e_dot_perc_rows_fd, e_dot_rows_eiou, e_dot_perc_rows_eiou))
   
   # Apply color formatting style for energy and energy percentage rows
   energy_row_style_fd <- openxlsx::createStyle(fontColour = energy_row_font_color_fd, fgFill = energy_row_shading_color_fd)
   energy_row_style_eiou <- openxlsx::createStyle(fontColour = energy_row_font_color_eiou, fgFill = energy_row_shading_color_eiou)
-  openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style_fd, rows = union(e_dot_rows_fd, e_dot_perc_rows_fd), cols = 1:ncol(Allocation_template), gridExpand = TRUE)
-  openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style_eiou, rows = union(e_dot_rows_eiou, e_dot_perc_rows_eiou), cols = 1:ncol(Allocation_template), gridExpand = TRUE)
+  openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style_fd, rows = union(e_dot_rows_fd, e_dot_perc_rows_fd), cols = 1:ncol(.fu_allocation_template), gridExpand = TRUE)
+  openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style_eiou, rows = union(e_dot_rows_eiou, e_dot_perc_rows_eiou), cols = 1:ncol(.fu_allocation_template), gridExpand = TRUE)
   
   # Apply shading for cells that don't need to be filled
   # First, tackle the cells in the Maximum.values column.
@@ -136,7 +142,7 @@ write_fu_allocation_template <- function(.tidy_iea_df,
     col_index <- year_cols_indices[[yr_index]]
     col_name <- year_cols_names[[yr_index]]
     # Find the rows with NA in the e_dot column
-    e_dot_NA_rownums_in_Excel <- Allocation_template %>% 
+    e_dot_NA_rownums_in_Excel <- .fu_allocation_template %>% 
       # Make a column of row numbers
       tibble::remove_rownames() %>% tibble::rownames_to_column(var = .rownum) %>% dplyr::mutate(!!as.name(.rownum) := as.numeric(!!as.name(.rownum))) %>% 
       # Filter to get only e_dot rows
@@ -175,7 +181,7 @@ write_fu_allocation_template <- function(.tidy_iea_df,
                      rows = c(e_dot_perc_rows_fd, e_dot_perc_rows_eiou), cols = c(max_values_col_index, year_cols_indices), gridExpand = TRUE, stack = TRUE)
   
   # Set column widths to something intelligent
-  openxlsx::setColWidths(fu_wb, allocations_tab_name, cols = 1:ncol(Allocation_template), widths = "auto")
+  openxlsx::setColWidths(fu_wb, allocations_tab_name, cols = 1:ncol(.fu_allocation_template), widths = "auto")
   
   # Now save it!
   if (!endsWith(path, ".xlsx")) {
@@ -360,12 +366,22 @@ fu_allocation_template <- function(.tidy_iea_df,
 }
 
 
-#' Arrange the columns of an fu_allocation template
+#' Arrange the fows and/or columns of an fu allocation template
 #' 
-#' It is helpful to sort columns of a final-to-useful allocation template
-#' in reasonable ways to assist analysts with final-to-useful 
-#' allocations.
-#' This function sorts columns (left-to-right) in the order of energy flow through the energy conversion chain:
+#' It is helpful to sort rows and columns of a final-to-useful allocation template
+#' in reasonable ways to assist analysts.
+#' This function sorts rows (top-to-bottom) by default in the same order as appears in the IEA extended energy balance data.
+#' Other orderings can be specified with the `fap_flow_order` and `ef_product_order` arguments.
+#' It sorts columns (left-to-right) in the order of energy flow through the energy conversion chain.
+#' 
+#' Whe sorting rows, 
+#' the `flow_allocation_point`, `flow`, and `product` columns are considered. 
+#' Internally, this function figures out which columns are metadata columns
+#' and groups on those columns before applying the row ordering.
+#' If you want to preserve ordering by metadata, be sure to set factor levels on metadata columns prior to calling this function.
+#' 
+#' When sorting columns, the order of energy flows through the energy conversion chain is considered. 
+#' The column order is:
 #' * metadata columns,
 #' * final energy product (`Ef.product`). 
 #' * Machine (the final-to-useful transformation process),
@@ -374,11 +390,9 @@ fu_allocation_template <- function(.tidy_iea_df,
 #' * years (in columns), and 
 #' * allocations (C_x rows).
 #'
-#'
-#'
-#'
-#'
 #' @param .fu_allocation_template the final-to-useful allocation template created by `fu_allocation_template()`
+#' @param rowcol one of "`both`", "`row`", or "`col`" to indicate whether rows, columns, or both should be arranged.
+#'        Default is "`both`". 
 #' @param rowcol one of "`both`", "`row`", or "`col`" to indicate whether rows, columns, or both should be arranged. Default is "`both`".
 #' @param ledger_side the ledger side column in `.fu_allocation_template`. Default is "`Ledger.side`".
 #' @param flow_aggregation_point the flow aggregation point column in `.fu_allocation_template`. Default is "`Flow.aggregation.point`".
@@ -451,7 +465,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
         !!as.name(ef_product) := as.character(!!as.name(ef_product))
       ) %>% 
       # Undo the grouping that we performed above.
-      ungroup()
+      dplyr::ungroup()
   }
   # Work on column order
   if (rowcol == "both" | rowcol == "col"){
@@ -469,83 +483,6 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
       dplyr::select(!!!col_order)
   }
   return(out)
-}
-
-
-#' Arrange the rows of an fu_allocation template
-#' 
-#' It is helpful to sort rows of a final-to-useful allocation template
-#' to match the row order in the IEA's extended energy balance data to assist analysts with final-to-useful 
-#' allocations.
-#' This function sorts rows (top-to-bottom) by default in the same order as appears in the IEA extended energy balance data.
-#' Other orderings can be specified with the `fap_flow_order` and `ef_product_order` arguments.
-#' 
-#' The `flow_allocation_point`, `flow`, and `product` columns are considered for the ordering.
-#' 
-#' Internally, this function figures out which columns are metadata columns
-#' and groups on those columns before applying the row ordering.
-#' If you want to preserve ordering by metadata, be sure to set factor levels on metadata columns prior to calling this function.
-#'
-#' @param .iea_data 
-#' @param flow_allocation_point 
-#' @param flow 
-#' @param fap_flow_order 
-#' @param product 
-#' @param product_order 
-#' @param ef_product 
-#' @param machine 
-#' @param eu_product 
-#' @param destination 
-#' @param quantity 
-#' @param maximum_values 
-#' @param .temp_sort 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' Allocation_template <- load_tidy_iea_df() %>% 
-#'   specify_all() %>%
-#'   fu_allocation_template() %>% 
-#'   arrange_iea_fu_allocation_template_rows()
-arrange_iea_fu_allocation_template_rows <- function(.fu_allocation_template,
-                                                    ledger_side = "Ledger.side", 
-                                                    flow_aggregation_point = "Flow.aggregation.point",
-                                                    destination = "Destination",
-                                                    unit = "Unit",
-                                                    fap_dest_order = IEATools::fap_flow_iea_order,
-                                                    product = "Product",
-                                                    product_order = IEATools::product_iea_order, 
-                                                    ef_product = "Ef.product",
-                                                    machine = "Machine",
-                                                    eu_product = "Eu.product",
-                                                    quantity = "Quantity",
-                                                    maximum_values = "Maximum.values",
-                                                    .temp_sort = ".fap_flow"){
-  matsindf::verify_cols_missing(.fu_allocation_template, .temp_sort)
-  # Figure out which columns are metadata columns.
-  colnames <- names(.fu_allocation_template)
-  year_colnames <- year_cols(.fu_allocation_template, return_names = TRUE)
-  machine_and_product_columns <- c(ledger_side, flow_aggregation_point, unit, ef_product, machine, eu_product, 
-                                   destination, quantity, maximum_values)
-  # Columns that are not years and are not machine_and_product_columns are metadata columns.
-  # We group by these columns later.
-  # meta_cols <- setdiff(colnames, year_colnames) %>% 
-  #   setdiff(machine_and_product_columns)
-  meta_cols <- .fu_allocation_template %>% 
-    matsindf::everything_except(c(year_colnames, machine_and_product_columns))  
-
-  .fu_allocation_template %>% 
-    tidyr::unite(col = !!as.name(.temp_sort), !!as.name(flow_aggregation_point), !!as.name(destination), sep = "_", remove = FALSE) %>% 
-    dplyr::mutate(
-      !!as.name(.temp_sort) := factor(!!as.name(.temp_sort), levels = fap_flow_iea_order),
-      !!as.name(ef_product) := factor(!!as.name(ef_product), levels = product_order)
-    ) %>% 
-    dplyr::group_by(!!!meta_cols) %>% 
-    dplyr::arrange(!!as.name(.temp_sort), !!as.name(ef_product), .by_group = TRUE) %>% 
-    dplyr::mutate(
-      !!as.name(.temp_sort) := NULL
-    )
 }
 
 

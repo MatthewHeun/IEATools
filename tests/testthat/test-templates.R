@@ -26,11 +26,12 @@ test_that("fu_allocation_template works as expected", {
 })
 
 test_that("write_fu_allocation_template works as expected", {
-  Tidy_iea_df <- load_tidy_iea_df() %>% 
-    specify_all()
+  FU_allocation_template <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    fu_allocation_template()
   # Get a temporary file in which to write two data frames on different tabs.
   f <- tempfile(fileext = ".xlsx")
-  p <- Tidy_iea_df %>% 
+  p <- FU_allocation_template %>% 
     write_fu_allocation_template(f)
   expect_equal(p, f)
   # Now read the tabs back in
@@ -41,8 +42,7 @@ test_that("write_fu_allocation_template works as expected", {
       `2000.reread` = `2000`
     )
   # Check the tabs to make sure they're the same
-  Expected_allocations <- Tidy_iea_df %>% 
-    fu_allocation_template()
+  Expected_allocations <- FU_allocation_template
   Joined <- dplyr::full_join(Allocations, Expected_allocations, by = c("Country", "Method", "Energy.type", 
                                                                        "Last.stage", "Ledger.side", "Flow.aggregation.point", 
                                                                        "Unit", "Ef.product", "Machine", 
@@ -61,7 +61,7 @@ test_that("write_fu_allocation_template works as expected", {
   
   # Now try to write it again.
   expect_true(file.exists(f))
-  expect_error(Tidy_iea_df %>% write_fu_allocation_template(p), "File already exists!")
+  expect_error(FU_allocation_template %>% write_fu_allocation_template(p), "File already exists!")
   # Clean up
   if (file.exists(f)) {
     file.remove(f)

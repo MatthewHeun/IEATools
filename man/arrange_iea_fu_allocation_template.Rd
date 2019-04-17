@@ -2,7 +2,7 @@
 % Please edit documentation in R/templates.R
 \name{arrange_iea_fu_allocation_template}
 \alias{arrange_iea_fu_allocation_template}
-\title{Arrange the columns of an fu_allocation template}
+\title{Arrange the fows and/or columns of an fu allocation template}
 \usage{
 arrange_iea_fu_allocation_template(.fu_allocation_template,
   rowcol = c("both", "row", "col"), ledger_side = "Ledger.side",
@@ -17,7 +17,8 @@ arrange_iea_fu_allocation_template(.fu_allocation_template,
 \arguments{
 \item{.fu_allocation_template}{the final-to-useful allocation template created by \code{fu_allocation_template()}}
 
-\item{rowcol}{one of "\code{both}", "\code{row}", or "\code{col}" to indicate whether rows, columns, or both should be arranged. Default is "\code{both}".}
+\item{rowcol}{one of "\code{both}", "\code{row}", or "\code{col}" to indicate whether rows, columns, or both should be arranged.
+Default is "\code{both}".}
 
 \item{ledger_side}{the ledger side column in \code{.fu_allocation_template}. Default is "\code{Ledger.side}".}
 
@@ -44,15 +45,28 @@ arrange_iea_fu_allocation_template(.fu_allocation_template,
 \item{.temp_sort}{the name of a temporary column to be added to \code{.fu_allocation_template}.
 Default is "\code{.fap_flow}".
 This column must not be present in \code{.fu_allocation_template}.}
+
+\item{rowcol}{one of "\code{both}", "\code{row}", or "\code{col}" to indicate whether rows, columns, or both should be arranged. Default is "\code{both}".}
 }
 \value{
 An row- and/or column-ordered version of \code{.fu_allocation_template}
 }
 \description{
-It is helpful to sort columns of a final-to-useful allocation template
-in reasonable ways to assist analysts with final-to-useful
-allocations.
-This function sorts columns (left-to-right) in the order of energy flow through the energy conversion chain:
+It is helpful to sort rows and columns of a final-to-useful allocation template
+in reasonable ways to assist analysts.
+This function sorts rows (top-to-bottom) by default in the same order as appears in the IEA extended energy balance data.
+Other orderings can be specified with the \code{fap_flow_order} and \code{ef_product_order} arguments.
+It sorts columns (left-to-right) in the order of energy flow through the energy conversion chain.
+}
+\details{
+Whe sorting rows,
+the \code{flow_allocation_point}, \code{flow}, and \code{product} columns are considered.
+Internally, this function figures out which columns are metadata columns
+and groups on those columns before applying the row ordering.
+If you want to preserve ordering by metadata, be sure to set factor levels on metadata columns prior to calling this function.
+
+When sorting columns, the order of energy flows through the energy conversion chain is considered.
+The column order is:
 \itemize{
 \item metadata columns,
 \item final energy product (\code{Ef.product}).
