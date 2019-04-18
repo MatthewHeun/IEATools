@@ -301,7 +301,11 @@ fu_allocation_template <- function(.tidy_iea_df,
       !!as.name(e_dot) := abs(!!as.name(e_dot))
     )
   Totals <- Filtered %>%
-    # matsindf::group_by_everything_except(ledger_side, flow_aggregation_point, flow, product, e_dot) %>%
+    # Group on ledger_side.  Doing so allows the totals to be calculated per ledger_side.
+    # The effect of grouping on ledger_side is the EIOU (Supply) and final consumption (Consumption)
+    # totals are calculated separately. 
+    # That allows the percentages to be calculated independently per ledger_side.
+    # Thus, percentages add to 100% for EIOU and for final consumption!
     matsindf::group_by_everything_except(flow_aggregation_point, flow, product, e_dot) %>%
     dplyr::summarise(!!as.name(e_dot_total) := sum(!!as.name(e_dot)))
   # Calculate a Tidy data frame with percentages.
