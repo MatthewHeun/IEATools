@@ -26,12 +26,15 @@ test_that("production is converted to resources correctly", {
   expect_equal(DF$Flow[[1]], "Oil and gas extraction")
 })
 
-test_that("consumption of renamed products are also renamed", {
+test_that("crenamed products are also consumed", {
   Specific_production <- load_tidy_iea_df() %>% 
-    # Look at only 1 year to make things simpler
+    # Look at only 1 product to make things simpler
     dplyr::filter((startsWith(Product, "Hard coal") | Flow == "Coal mines"), Year == 1971)
   Renamed_primary <- Specific_production %>% 
     specify_primary_production()
+  expect_equal(Renamed_primary %>% dplyr::filter(Flow == "Resources (Coal)") %>% nrow(), 1)
+  expect_equal(Renamed_primary %>% dplyr::filter(Product == "Electricity") %>% nrow(), 1)
+  expect_equal(Renamed_primary %>% dplyr::filter(Product == "Hard coal (if no detail) (Coal mines)") %>% nrow(), 18)
 })
 
 test_that("interface industries are correctly specified", {
@@ -51,22 +54,23 @@ test_that("eiou is replaced correctly", {
   Specific_production <- load_tidy_iea_df() %>% 
     specify_primary_production()
   Prod_coal_oilng <- Specific_production %>% 
-    filter(Flow == "Production" & Product %in% coal_and_coal_products)
+    dplyr::filter(Flow == "Production" & starts_with_any_of(Product, coal_and_coal_products))
+  # There should be no "Production" remaining, only "Resources (Coal)"
   expect_equal(nrow(Prod_coal_oilng), 0)
   Res_coal_oilng <- Specific_production %>% 
-    filter(startsWith(Flow, "Resources") & Product %in% c(coal_and_coal_products, oil_and_oil_products, "Natural gas"))
+    dplyr::filter(startsWith(Flow, "Resources") & starts_with_any_of(Product, c(coal_and_coal_products, oil_and_oil_products, "Natural gas")))
   expect_equal(nrow(Res_coal_oilng), 6)
   expect_true(all(Res_coal_oilng$Flow.aggregation.point == "Total primary energy supply"))
   # There are none of these flows for Ghana (GHA)
   expect_true(all(Res_coal_oilng$Country == "ZAF"))
   # Check for new rows of Coal mines
   Mines <- Specific_production %>% 
-    filter(Flow == "Coal mines")
+    dplyr::filter(Flow == "Coal mines")
   expect_equal(nrow(Mines), 8)
   # Check that EIOU flows correctly remove the "(energy)" suffix.
   eiou <- Specific_production %>% 
-    filter(Flow.aggregation.point == "Energy industry own use") %>% 
-    extract2("Flow") %>% 
+    dplyr::filter(Flow.aggregation.point == "Energy industry own use") %>% 
+    magrittr::extract2("Flow") %>% 
     unique()
   expect_false(eiou %>% endsWith("(energy)") %>% any())
   

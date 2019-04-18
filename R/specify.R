@@ -43,7 +43,7 @@
 #' @param liquefaction_regas_reassign a string identifying the industry to which EIOU into `liquefaction_regas` will be reassigned.
 #'        Default is "`Oil and gas extraction`".
 #' @param production_products a list of products for which we want to specify primary industries.
-#'        Default is `list(coal_and_coal_products, c(oil_and_oil_products, "Natural gas"))`.
+#'        Default is `list(primary_coal_products, c(primary_oil_products, "Natural gas"))`.
 #' @param production_products_short_names a vector of short names for primary industries. 
 #'        Default is `c("Coal", "Oil and natural gas")`.
 #' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. 
@@ -116,7 +116,7 @@ specify_primary_production <- function(.tidy_iea_df,
                       !!as.name(flow) == eiou_dest)
     if (nrow(EIOU) > 0) {
       # We have EIOU rows, so we have more work to do.
-      # 
+      
       # Find the places where the Production energy is consumed,
       # for example, Hard coal (if no detail).2
       # These pieces of consumed energy need to be renamed

@@ -294,7 +294,11 @@ fu_allocation_template <- function(.tidy_iea_df,
                             all())
   Filtered <- .tidy_iea_df %>% 
     dplyr::filter(!!as.name(ledger_side) == consumption | !!as.name(flow_aggregation_point) == eiou) %>% 
-    dplyr::filter(!!as.name(flow_aggregation_point) != non_energy_use)
+    dplyr::filter(!!as.name(flow_aggregation_point) != non_energy_use) %>% 
+    dplyr::mutate(
+      # Ensure that all energy values are positive to calculate totals and percentages accurately.
+      !!as.name(e_dot) := abs(!!as.name(e_dot))
+    )
   Totals <- Filtered %>%
     matsindf::group_by_everything_except(ledger_side, flow_aggregation_point, flow, product, e_dot) %>%
     dplyr::summarise(!!as.name(e_dot_total) := sum(!!as.name(e_dot)))
@@ -307,7 +311,6 @@ fu_allocation_template <- function(.tidy_iea_df,
       # Don't need to multiply by 100 here, because we'll 
       # change to percentage formatting when we write to Excel.
       !!as.name(e_dot_perc) := !!as.name(e_dot) / !!as.name(e_dot_total), 
-      !!as.name(e_dot) := abs(!!as.name(e_dot)), 
       # Eliminate the total column: we don't need it any more
       !!as.name(e_dot_total) := NULL 
     ) %>% 

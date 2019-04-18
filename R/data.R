@@ -14,6 +14,22 @@
 "primary_coal_products"
 
 
+#' Peat and peat products
+#'
+#' A string vector containing names of products classified by the IEA as peat and peat products.
+#' 
+#' @format A string vector with 2 entries
+"peat_and_peat_products"
+
+
+#' Primary peat products
+#'
+#' A string vector containing names of products classified by the IEA as primary peat products.
+#' 
+#' @format A string vector with 1 entries
+"primary_peat_products"
+
+
 #' Oil and oil products
 #'
 #' A string vector containing names of products classified by the IEA as oil and oil products.

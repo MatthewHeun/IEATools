@@ -33,6 +33,15 @@ primary_coal_products <- c(
 )
 usethis::use_data(primary_coal_products, overwrite = TRUE)
 
+peat_and_peat_products <- c(
+  "Peat",
+  "Peat products"
+)
+usethis::use_data(peat_and_peat_products, overwrite = TRUE)
+
+primary_peat_products <- "Peat"
+usethis::use_data(primary_peat_products, overwrite = TRUE)
+
 oil_and_oil_products <- c(
   "Crude/NGL/feedstocks (if no detail)",
   "Crude oil",
@@ -60,9 +69,13 @@ oil_and_oil_products <- c(
 )
 usethis::use_data(oil_and_oil_products, overwrite = TRUE)
 
+
 primary_oil_products <- c(
   "Crude/NGL/feedstocks (if no detail)",
-  "Crude oil"
+  "Crude oil", 
+  "Natural gas liquids",
+  "Additives/blending components",
+  "Other hydrocarbons"
 )
 usethis::use_data(primary_oil_products, overwrite = TRUE)
 
@@ -129,28 +142,35 @@ ledger_side_iea_order <- c(
 )
 usethis::use_data(ledger_side_iea_order, overwrite = TRUE)
 
+# Defining the row order for IEA-style data frames is tricky and requires some manual intervention.
+# In the first step, we use the data frame created from load_tidy_iea_df,
+# creating a united column from Flow.aggregation.point.
 fap_flow_iea_order <- load_tidy_iea_df(remove_zeroes = FALSE) %>% 
-  specify_all() %>% 
-  tidyr::spread(key = Year, value = E.dot) %>% 
-  dplyr::select(Flow.aggregation.point, Flow) %>% 
-  # Unite the Flow.aggregation.point and Flow columns putting an "_" between them.
   tidyr::unite(col = Flow.aggregation.point_Flow, Flow.aggregation.point, Flow, sep = "_", remove = TRUE) %>% 
+  dplyr::select(Flow.aggregation.point_Flow) %>% 
   unique() %>% 
-  unlist() %>%
-  as.vector()
+  unlist() %>% 
+  unname() %>% 
+  # Then we insert a few items manually.
+  # Coal mines and Oil and gas extraction are created in specify_primary_production().
+  insert_after(after = "Total primary energy supply_Production", 
+               values = c("Total primary energy supply_Coal mines", "Total primary energy supply_Oil and gas extraction")) %>% 
+  # Energy industry own use_Own use in electricity, CHP and heat plants, 
+  # Pumped storage plants, and Nuclear industry is reassigned to Main activity producer electricity plants in specify_tp_eiou()
+  insert_after(after = "Energy industry own use_Nuclear industry", 
+               values = "Energy industry own use_Main activity producer electricity plants")
 usethis::use_data(fap_flow_iea_order, overwrite = TRUE)
 
-product_iea_order <- iea_df(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-                              system.file(package = "IEATools")) %>% 
-  rename_iea_df_cols() %>% 
-  clean_iea_whitespace() %>% 
-  use_iso_countries() %>% 
-  augment_iea_df() %>% 
-  # Select only one country from our sample data
-  dplyr::filter(Country == "GHA") %>% 
+product_iea_order <- load_tidy_iea_df(remove_zeroes = FALSE) %>% 
   dplyr::select(Product) %>% 
   unique() %>% 
   unlist() %>%
-  as.vector()
+  unname() %>% 
+  # Insert a few items manually.
+  # In specify_primary_production(), some Products are renamed to account for the fact that they come from a different industry.
+  insert_after(after = primary_coal_products[length(primary_coal_products)], 
+               values = paste(primary_coal_products, "(Coal mines)")) %>% 
+  insert_after(after = primary_oil_products[length(primary_oil_products)], 
+               values = paste(primary_oil_products, "(Oil and gas extraction)"))
 usethis::use_data(product_iea_order, overwrite = TRUE)
  

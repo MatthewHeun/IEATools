@@ -12,10 +12,12 @@ test_that("fu_allocation_template works as expected", {
   expect_equal(Allocation_template$Flow.aggregation.point[[1]], "Energy industry own use")
   expect_equal(Allocation_template$Ef.product[[1]], "Refinery gas")
   expect_equal(Allocation_template$Destination[[1]], "Oil refineries")
+  expect_equal(Allocation_template$Quantity[[1]], "E.dot")
   last_row <- nrow(Allocation_template)
-  expect_equal(Allocation_template$Flow.aggregation.point[[last_row]], "Energy industry own use")
-  
-  
+  expect_equal(Allocation_template$Flow.aggregation.point[[last_row]], "Other")
+  expect_equal(Allocation_template$Ef.product[[last_row]], "Electricity")
+  expect_equal(Allocation_template$Destination[[last_row]], "Non-specified (other)")
+  expect_equal(Allocation_template$Quantity[[last_row]], "C_3 [%]")
   
   # Check columns
   expected_colorder <- c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit",

@@ -29,7 +29,7 @@ Default is \code{c("Coal mines", "Oil and gas extraction")}.}
 Default is "\code{Oil and gas extraction}".}
 
 \item{production_products}{a list of products for which we want to specify primary industries.
-Default is \code{list(coal_and_coal_products, c(oil_and_oil_products, "Natural gas"))}.}
+Default is \code{list(primary_coal_products, c(primary_oil_products, "Natural gas"))}.}
 
 \item{production_products_short_names}{a vector of short names for primary industries.
 Default is \code{c("Coal", "Oil and natural gas")}.}
