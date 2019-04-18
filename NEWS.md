@@ -1,3 +1,5 @@
+* Allocation tempalte now writing rows sorted in IEA order.
+* All specified primary flows now consumed somewhere in the ECC.
 * Now specifying the source of output flows from inserted machines
   at primary level.
   For example, inserting Coal mines into the ECC gives now results in 
