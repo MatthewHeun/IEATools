@@ -1,3 +1,5 @@
+# IEATools 0.1.7 (2019-04-18)
+
 * Allocation template now sorting rows in IEA order.
 * All specified primary flows now consumed somewhere in the ECC.
 * Now specifying the source of output flows from inserted machines
