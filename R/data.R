@@ -1,38 +1,114 @@
-#' International Energy Agency data
+#' Coal and coal products
 #'
-#' A dataset containing all IEA data after it has been "fixed"
-#' to the best of our ability.  
-#' See \code{IEAData::AllIEAData_prior_to_fix} for the same data before it has been "fixed."
-#'
-#' @format A data frame with 719,473 rows and 9 variables:
-#' \describe{
-#'   \item{Country}{Two-letter ISO country codes or "World" for the entire world.}
-#'   \item{Ledger.side}{Supply or Consumption}
-#'   \item{Flow.aggregation.point}{tells where each row should be aggregated}
-#'   \item{Flow}{the Industry or Sector involved in this flow}
-#'   \item{Product}{the energy product involved in this flow}
-#'   \item{Year}{the year for this flow}
-#'   \item{E.ktoe}{the magnitude of this energy flow}
-#' }
-#' @source \url{http://http://www.iea.org}
-"AllIEAData"
+#' A string vector containing names of products classified by the IEA as coal and coal products.
+#' 
+#' @format A string vector with 16 entries
+"coal_and_coal_products"
 
 
-#' Raw International Energy Agency data
+#' Primary coal products
 #'
-#' A dataset containing all IEA data before it has been "fixed"
-#' to the best of our ability.  
-#' See \code{IEAData::AllIEAData} for the same data after it has been "fixed."
+#' A string vector containing names of products classified by the IEA as primary coal products.
+#' 
+#' @format A string vector with 7 entries
+"primary_coal_products"
+
+
+#' Peat and peat products
 #'
-#' @format A data frame with 700,111 rows and 9 variables:
-#' \describe{
-#'   \item{Country}{Two-letter ISO country codes or "World" for the entire world.}
-#'   \item{Ledger.side}{Supply or Consumption}
-#'   \item{Flow.aggregation.point}{tells where each row should be aggregated}
-#'   \item{Flow}{the Industry or Sector involved in this flow}
-#'   \item{Product}{the energy product involved in this flow}
-#'   \item{Year}{the year for this flow}
-#'   \item{E.ktoe}{the magnitude of this energy flow}
-#' }
-#' @source \url{http://http://www.iea.org}
-"AllIEAData_prior_to_fix"
+#' A string vector containing names of products classified by the IEA as peat and peat products.
+#' 
+#' @format A string vector with 2 entries
+"peat_and_peat_products"
+
+
+#' Primary peat products
+#'
+#' A string vector containing names of products classified by the IEA as primary peat products.
+#' 
+#' @format A string vector with 1 entries
+"primary_peat_products"
+
+
+#' Oil and oil products
+#'
+#' A string vector containing names of products classified by the IEA as oil and oil products.
+#' 
+#' @format A string vector with 23 entries
+"oil_and_oil_products"
+
+
+#' Primary oil products
+#'
+#' A string vector containing names of products classified by the IEA as primary oil products.
+#' 
+#' @format A string vector with 2 entries
+"primary_oil_products"
+
+
+#' Renewable products
+#'
+#' A string vector containing names of products classified by the IEA as renewables.
+#' 
+#' @format A string vector with 23 entries
+"renewable_products"
+
+
+#' Biofuel and waste products
+#'
+#' A string vector containing names of products classified by the IEA as biofuel and waste products.
+#' 
+#' @format A string vector with 10 entries
+"biofuel_and_waste_products"
+
+#' Aggregation flows
+#'
+#' A string vector containing names of industries whose purpose in IEA extended energy balance `Flow`s is to provide aggregations.
+#' 
+#' @format A string vector with 8 entries
+"aggregation_flows"
+
+#' Memo and aggregation flow prefixes
+#'
+#' A string vector containing names of `Flow`s that provide memos and aggregations.
+#' 
+#' @format A string vector with 3 entries
+"memo_aggregation_flow_prefixes"
+
+#' Memo and aggregation product prefixes
+#'
+#' A string vector containing names of `Product`s that provide memos and aggregations.
+#' 
+#' @format A string vector with 2 entries
+"memo_aggregation_product_prefixes"
+
+#' Interface industries
+#'
+#' A string vector containing names of `Flow`s that interface with the world outside of the economy.
+#' 
+#' @format A string vector with 5 entries
+"interface_industries"
+
+
+#' IEA order for ledger side
+#'
+#' A string vector containing `Ledger.side` entries in IEA order.
+#' 
+#' @format A string vector
+"ledger_side_iea_order"
+
+
+#' IEA order for combined flow aggregation point and flow 
+#'
+#' A string vector containing entries for a united flow aggregation point and flow column in IEA order.
+#' 
+#' @format A string vector
+"fap_flow_iea_order"
+
+
+#' IEA order for products
+#'
+#' A string vector containing entries for the product column in IEA order.
+#' 
+#' @format A string vector
+"product_iea_order"
