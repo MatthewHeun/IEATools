@@ -25,6 +25,8 @@
 #' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
 #' @param eiou the string identifier for energy industry own use in the `flow_aggregation_point` column. Default is "`Energy industry own use`".
 #' @param allocations_tab_name the name of the tab on which the template will be written. Default is "`Allocations`".
+#' @param machine the name of the machine column in output. Default is "`Machine`"
+#' @param eu_product the name of the useful energy product column in output. Default is "`Eu.product`".
 #' @param quantity the name of the quantity column to be created on output. Default is "`Quantity`".
 #' @param e_dot the name of the energy flow rate column in `.tidy_iea_df` and the name of the energy flow rate rows to be included in the Excel file that is written by this function.
 #'        Default is "`E.dot`".
@@ -43,6 +45,7 @@
 #'        Default is "`#A8A8A8`", a medim gray color.
 #' @param overwrite a boolean that tells whether an existing file at `path` will be overwritten. Default is "`FALSE`".
 #'        If `path` already exists and `overwrite = FALSE`, an error is given.
+#' @param n_allocation_rows the number of allcation rows to write for each final energy product. Default is `3`.
 #' @param .rownum a temporary column created internally. `.rownum` must not exist in `.tidy_iea_df` when `write_fu_allocation_template` is called.
 #'        Default is "`.rownum`".
 #'
@@ -79,9 +82,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
                                          dont_fill_shading_color = "#A8A8A8",
                                          overwrite = FALSE,
                                          n_allocation_rows = 3,
-                                         .rownum = ".rownum", 
-                                         .year = ".year",
-                                         .value = ".value"){
+                                         .rownum = ".rownum"){
   # Create the template data frame
   matsindf::verify_cols_missing(.fu_allocation_template, .rownum)
   

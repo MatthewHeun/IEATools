@@ -16,8 +16,7 @@ write_fu_allocation_template(.fu_allocation_template, path,
   energy_row_font_color_eiou = "#918700",
   energy_row_shading_color_eiou = "#FCFCAB",
   dont_fill_shading_color = "#A8A8A8", overwrite = FALSE,
-  n_allocation_rows = 3, .rownum = ".rownum", .year = ".year",
-  .value = ".value")
+  n_allocation_rows = 3, .rownum = ".rownum")
 }
 \arguments{
 \item{.fu_allocation_template}{a data frame produced by ``fu_allocation_template()`}
@@ -35,6 +34,10 @@ If not present, the ".xlsx" extension is added.}
 \item{eiou}{the string identifier for energy industry own use in the \code{flow_aggregation_point} column. Default is "\code{Energy industry own use}".}
 
 \item{allocations_tab_name}{the name of the tab on which the template will be written. Default is "\code{Allocations}".}
+
+\item{machine}{the name of the machine column in output. Default is "\code{Machine}"}
+
+\item{eu_product}{the name of the useful energy product column in output. Default is "\code{Eu.product}".}
 
 \item{quantity}{the name of the quantity column to be created on output. Default is "\code{Quantity}".}
 
@@ -63,6 +66,8 @@ Default is "\code{#A8A8A8}", a medim gray color.}
 
 \item{overwrite}{a boolean that tells whether an existing file at \code{path} will be overwritten. Default is "\code{FALSE}".
 If \code{path} already exists and \code{overwrite = FALSE}, an error is given.}
+
+\item{n_allocation_rows}{the number of allcation rows to write for each final energy product. Default is \code{3}.}
 
 \item{.rownum}{a temporary column created internally. \code{.rownum} must not exist in \code{.tidy_iea_df} when \code{write_fu_allocation_template} is called.
 Default is "\code{.rownum}".}
