@@ -357,6 +357,8 @@ remove_agg_memo_flows <- function(.iea_df,
 #' @param tpes_flows a vector of strings that give flows that are aggregated to `Total primary energy supply`. 
 #' @param tfc_compare a string that identifies the `TFC compare` flow aggregation point. Default is `TFC compare`.
 #' @param tfc_compare_flows a vector of strings that give `Flow`s that are aggregated to `TFC compare`.
+#' @param transfers = a string that identifies transfers in the flow column. Default is "`Transfers`".
+#' @param statistical_differences a string that identifies statistical differences in flow column. Default is "`Statistical differences`".
 #' @param losses the string that indicates losses in the `Flow` column. Default is "`Losses`".
 #' @param transformation_processes the string that indicates transformation processes in the `Flow` column. Default is "`Transformation processes`".
 #' @param tp_flows_suffix the suffix for transformation processes in the `Flow` column. Default is "`(transf.)`".

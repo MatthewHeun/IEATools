@@ -5,8 +5,7 @@ context("Template functions")
 test_that("fu_allocation_template works as expected", {
   Allocation_template <- load_tidy_iea_df() %>% 
     specify_all() %>%
-    fu_allocation_template() %>% 
-    arrange_iea_fu_allocation_template()
+    fu_allocation_template() 
 
   # Check rows
   expect_equal(Allocation_template$Flow.aggregation.point[[1]], "Energy industry own use")

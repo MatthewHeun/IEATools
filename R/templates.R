@@ -237,7 +237,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
 #' @param machine the name of the column of final-to-useful transformation process machines. Default is "`Machine`".
 #' @param eu_product the name of the useful energy carrier column. Default is "`Eu product`". 
 #' @param arrange a boolean telling whether to arranged the rows and columns 
-#'        (using `arrange_iea_fu_allocation_template_rows()` and `arrange_iea_fu_allocation_template_cols()`) before returning. 
+#'        (using `arrange_iea_fu_allocation_template()`) before returning. 
 #'        Default is `TRUE`.
 #' @param .value the name of a temproary value column added to `.tidy_iea_df`. 
 #'        A `.value` column must not be present in `.tidy_iea_df`. Default is "`.value`".
@@ -278,7 +278,7 @@ fu_allocation_template <- function(.tidy_iea_df,
                         n_allocation_rows = 3,
                         machine = "Machine",
                         eu_product = "Eu.product",
-                        arrrange = TRUE,
+                        arrange = TRUE,
                         .value = ".value"){
   matsindf::verify_cols_missing(.tidy_iea_df, .value)
   # template_type <- match.arg(template_type)
@@ -343,7 +343,7 @@ fu_allocation_template <- function(.tidy_iea_df,
       )
   }
   # Reshape the data frame into the format that we want for an Excel spreadsheet
-  Tidy %>% 
+  out <- Tidy %>% 
     # Gather all of the columns that we want to spread across the sheet
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot), !!as.name(e_dot_perc), !!!lapply(c_cols, as.name)) %>% 
     # Add the Max data frame so that we can include its numbers
@@ -366,6 +366,11 @@ fu_allocation_template <- function(.tidy_iea_df,
       !!as.name(machine) := NA_real_,
       !!as.name(eu_product) := NA_real_
     )
+  if (arrange) {
+    out <- out %>% 
+      arrange_iea_fu_allocation_template()
+  }
+  return(out)
 }
 
 
@@ -396,7 +401,6 @@ fu_allocation_template <- function(.tidy_iea_df,
 #' @param .fu_allocation_template the final-to-useful allocation template created by `fu_allocation_template()`
 #' @param rowcol one of "`both`", "`row`", or "`col`" to indicate whether rows, columns, or both should be arranged.
 #'        Default is "`both`". 
-#' @param rowcol one of "`both`", "`row`", or "`col`" to indicate whether rows, columns, or both should be arranged. Default is "`both`".
 #' @param ledger_side the ledger side column in `.fu_allocation_template`. Default is "`Ledger.side`".
 #' @param flow_aggregation_point the flow aggregation point column in `.fu_allocation_template`. Default is "`Flow.aggregation.point`".
 #' @param ef_product the name of the final energy column in `.fu_allocation_template`. Default is "`Ef.product`".
@@ -461,7 +465,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
     # Convert .temp_sort and ef_product to factors so that they can be arranged (sorted) later.
     out <- out %>% 
       dplyr::mutate(
-        !!as.name(.temp_sort) := factor(!!as.name(.temp_sort), levels = fap_flow_iea_order),
+        !!as.name(.temp_sort) := factor(!!as.name(.temp_sort), levels = fap_dest_order),
         !!as.name(ef_product) := factor(!!as.name(ef_product), levels = ef_product_order)
       ) 
     # Ensure that we have not accidentally created NA values in the .temp_sort or ef_product columns.
@@ -485,7 +489,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
       dplyr::ungroup()
   }
   # Work on column order
-  if (rowcol == "both" | rowcol == "col"){
+  if (rowcol == "both" | rowcol == "col") {
     # Figure out the order for the columns
     colnames <- names(out)
     year_colnames <- year_cols(out, return_names = TRUE)

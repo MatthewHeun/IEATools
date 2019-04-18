@@ -45,8 +45,6 @@ Default is "\code{both}".}
 \item{.temp_sort}{the name of a temporary column to be added to \code{.fu_allocation_template}.
 Default is "\code{.fap_flow}".
 This column must not be present in \code{.fu_allocation_template}.}
-
-\item{rowcol}{one of "\code{both}", "\code{row}", or "\code{col}" to indicate whether rows, columns, or both should be arranged. Default is "\code{both}".}
 }
 \value{
 An row- and/or column-ordered version of \code{.fu_allocation_template}

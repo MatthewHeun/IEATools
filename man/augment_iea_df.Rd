@@ -84,6 +84,10 @@ augment_iea_df(.iea_df, country = "Country",
 
 \item{tfc_compare_flows}{a vector of strings that give \code{Flow}s that are aggregated to \code{TFC compare}.}
 
+\item{transfers}{= a string that identifies transfers in the flow column. Default is "\code{Transfers}".}
+
+\item{statistical_differences}{a string that identifies statistical differences in flow column. Default is "\code{Statistical differences}".}
+
 \item{losses}{the string that indicates losses in the \code{Flow} column. Default is "\code{Losses}".}
 
 \item{transformation_processes}{the string that indicates transformation processes in the \code{Flow} column. Default is "\code{Transformation processes}".}
