@@ -10,7 +10,7 @@ test_that("production is converted to resources correctly", {
     specify_production_to_resources()
   # There should be no "Production" flows remaining.
   expect_false(Specific_production %>% 
-                 extract2("Flow") %>% 
+                 magrittr::extract2("Flow") %>% 
                  magrittr::equals("Production") %>% 
                  any())
   # Now try with an EIOU flow of "Liquefaction (LNG) / regasification plants"
@@ -24,6 +24,17 @@ test_that("production is converted to resources correctly", {
     specify_primary_production()
   # Expect that Flow has been reassigned.
   expect_equal(DF$Flow[[1]], "Oil and gas extraction")
+})
+
+test_that("crenamed products are also consumed", {
+  Specific_production <- load_tidy_iea_df() %>% 
+    # Look at only 1 product to make things simpler
+    dplyr::filter((startsWith(Product, "Hard coal") | Flow == "Coal mines"), Year == 1971)
+  Renamed_primary <- Specific_production %>% 
+    specify_primary_production()
+  expect_equal(Renamed_primary %>% dplyr::filter(Flow == "Resources (Coal)") %>% nrow(), 1)
+  expect_equal(Renamed_primary %>% dplyr::filter(Product == "Electricity") %>% nrow(), 1)
+  expect_equal(Renamed_primary %>% dplyr::filter(Product == "Hard coal (if no detail) (Coal mines)") %>% nrow(), 18)
 })
 
 test_that("interface industries are correctly specified", {
@@ -43,22 +54,23 @@ test_that("eiou is replaced correctly", {
   Specific_production <- load_tidy_iea_df() %>% 
     specify_primary_production()
   Prod_coal_oilng <- Specific_production %>% 
-    filter(Flow == "Production" & Product %in% coal_and_coal_products)
+    dplyr::filter(Flow == "Production" & starts_with_any_of(Product, coal_and_coal_products))
+  # There should be no "Production" remaining, only "Resources (Coal)"
   expect_equal(nrow(Prod_coal_oilng), 0)
   Res_coal_oilng <- Specific_production %>% 
-    filter(startsWith(Flow, "Resources") & Product %in% c(coal_and_coal_products, oil_and_oil_products, "Natural gas"))
+    dplyr::filter(startsWith(Flow, "Resources") & starts_with_any_of(Product, c(coal_and_coal_products, oil_and_oil_products, "Natural gas")))
   expect_equal(nrow(Res_coal_oilng), 6)
   expect_true(all(Res_coal_oilng$Flow.aggregation.point == "Total primary energy supply"))
   # There are none of these flows for Ghana (GHA)
   expect_true(all(Res_coal_oilng$Country == "ZAF"))
   # Check for new rows of Coal mines
   Mines <- Specific_production %>% 
-    filter(Flow == "Coal mines")
+    dplyr::filter(Flow == "Coal mines")
   expect_equal(nrow(Mines), 8)
   # Check that EIOU flows correctly remove the "(energy)" suffix.
   eiou <- Specific_production %>% 
-    filter(Flow.aggregation.point == "Energy industry own use") %>% 
-    extract2("Flow") %>% 
+    dplyr::filter(Flow.aggregation.point == "Energy industry own use") %>% 
+    magrittr::extract2("Flow") %>% 
     unique()
   expect_false(eiou %>% endsWith("(energy)") %>% any())
   
@@ -177,3 +189,50 @@ test_that("tp_sinks_to_nonenergy works as expected", {
   expect_equal(Result %>% filter(Flow == "Automobiles", Product == "Petrol") %>% extract2("E.dot"), -1)
   expect_equal(Result %>% filter(Flow == "Automobiles", Product == "MD") %>% extract2("E.dot"), 1)
 })
+
+test_that("spreading by years works as expected at each step of specify_all()", {
+  # It should be possible to spread by years after any of these function calls.
+  # If we can't do so, it means there are duplicated rows
+  # in the data frame.
+  Tidy <- load_tidy_iea_df()
+  Year_spread_1 <- Tidy %>% 
+    specify_primary_production() %>% 
+    tidyr::spread(key = Year, value = E.dot)
+  expect_true("1971" %in% names(Year_spread_1))
+  expect_true("2000" %in% names(Year_spread_1))
+  
+  Year_spread_2 <- Tidy %>% 
+    specify_primary_production() %>% 
+    specify_production_to_resources() %>% 
+    tidyr::spread(key = Year, value = E.dot)
+  expect_true("1971" %in% names(Year_spread_2))
+  expect_true("2000" %in% names(Year_spread_2))
+  
+  Year_spread_3 <- Tidy %>% 
+    specify_primary_production() %>% 
+    specify_production_to_resources() %>% 
+    specify_tp_eiou() %>% 
+    tidyr::spread(key = Year, value = E.dot)
+  expect_true("1971" %in% names(Year_spread_3))
+  expect_true("2000" %in% names(Year_spread_3))
+  
+  Year_spread_4 <- Tidy %>% 
+    specify_primary_production() %>% 
+    specify_production_to_resources() %>% 
+    specify_tp_eiou() %>% 
+    specify_interface_industries() %>% 
+    tidyr::spread(key = Year, value = E.dot)
+  expect_true("1971" %in% names(Year_spread_4))
+  expect_true("2000" %in% names(Year_spread_4))
+  
+  Year_spread_5 <- Tidy %>% 
+    specify_primary_production() %>% 
+    specify_production_to_resources() %>% 
+    specify_tp_eiou() %>% 
+    specify_interface_industries() %>% 
+    tp_sinks_to_nonenergy() %>% 
+    tidyr::spread(key = Year, value = E.dot)
+  expect_true("1971" %in% names(Year_spread_5))
+  expect_true("2000" %in% names(Year_spread_5))
+})
+

@@ -282,3 +282,12 @@ test_that("load_tidy_iea_df works as expected", {
     tidy_iea_df()
   expect_true(all(simple == complicated))
 })
+
+test_that("spreading by years works as expected after load_tiey_iea_df()", {
+  year_spread <- load_tidy_iea_df() %>% 
+    tidyr::spread(key = Year, value = E.dot)
+  expect_true("1971" %in% names(year_spread))
+  expect_true("2000" %in% names(year_spread))
+})
+
+

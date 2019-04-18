@@ -8,8 +8,8 @@ specify_primary_production(.tidy_iea_df,
   eiou_destinations = c("Coal mines", "Oil and gas extraction"),
   liquefaction_regas = "Liquefaction (LNG) / regasification plants",
   liquefaction_regas_reassign = "Oil and gas extraction",
-  production_products = list(IEATools::coal_and_coal_products,
-  c(IEATools::oil_and_oil_products, "Natural gas")),
+  production_products = list(IEATools::primary_coal_products,
+  c(IEATools::primary_oil_products, "Natural gas")),
   production_products_short_names = c("Coal", "Oil and natural gas"),
   flow_aggregation_point = "Flow.aggregation.point",
   eiou = "Energy industry own use",
@@ -29,7 +29,7 @@ Default is \code{c("Coal mines", "Oil and gas extraction")}.}
 Default is "\code{Oil and gas extraction}".}
 
 \item{production_products}{a list of products for which we want to specify primary industries.
-Default is \code{list(coal_and_coal_products, c(oil_and_oil_products, "Natural gas"))}.}
+Default is \code{list(primary_coal_products, c(primary_oil_products, "Natural gas"))}.}
 
 \item{production_products_short_names}{a vector of short names for primary industries.
 Default is \code{c("Coal", "Oil and natural gas")}.}

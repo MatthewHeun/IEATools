@@ -7,8 +7,8 @@
 iea_df(.iea_file = NULL, text = NULL,
   expected_1st_line_start = ",,TIME",
   expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT",
-  year_colname_pattern = "^\\\\d*$", missing_data = "..",
-  not_applicable_data = "x", confidential_data = "c")
+  missing_data = "..", not_applicable_data = "x",
+  confidential_data = "c")
 }
 \arguments{
 \item{.iea_file}{a string containing the path to a .csv file of extended energy balances from the IEA.
@@ -20,9 +20,6 @@ Default is the path to a sample IEA file provided in this package.}
 \item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is "\code{,,TIME}".}
 
 \item{expected_2nd_line_start}{the expected start of the second line of \code{iea_file}. Default is "\code{COUNTRY,FLOW,PRODUCT}".}
-
-\item{year_colname_pattern}{a regex that identifies columns with year titles.
-Default is "\code{^\\d*$}" which identifies columns whose names are exclusively digits.}
 
 \item{missing_data}{a string that identifies missing data. Default is "\code{..}".
 Entries of "\code{missing_data}" are coded as `0`` in output.}

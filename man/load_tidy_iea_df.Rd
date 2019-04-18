@@ -6,10 +6,12 @@
 \usage{
 load_tidy_iea_df(file_path = file.path("extdata",
   "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\%
-  system.file(package = "IEATools"))
+  system.file(package = "IEATools"), remove_zeroes = TRUE)
 }
 \arguments{
 \item{file_path}{the path of the file to be loaded. Default loads example data bundled with the package.}
+
+\item{remove_zeroes}{a logical indicating whether data points with the value \code{0} are to be removed from the output. (Default is \code{TRUE}.)}
 }
 \value{
 a tidy, augmented data frame of IEA extended energy balance data.

@@ -1,3 +1,11 @@
+* Allocation tempalte now sorting rows in IEA order.
+* All specified primary flows now consumed somewhere in the ECC.
+* Now specifying the source of output flows from inserted machines
+  at primary level.
+  For example, inserting Coal mines into the ECC gives now results in 
+  Hard coal produced by (Coal mines).  
+  For example, 
+  "Hard coal (if no detail)" --> "Hard coal (if no detail) (Coal mines)".
 * Added `fu_allocation_template()` function that makes templates for 
   deciding allocations to final-to-useful machines in
   Final consumption or Energy industry own use.

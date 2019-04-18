@@ -6,12 +6,44 @@
 "coal_and_coal_products"
 
 
+#' Primary coal products
+#'
+#' A string vector containing names of products classified by the IEA as primary coal products.
+#' 
+#' @format A string vector with 7 entries
+"primary_coal_products"
+
+
+#' Peat and peat products
+#'
+#' A string vector containing names of products classified by the IEA as peat and peat products.
+#' 
+#' @format A string vector with 2 entries
+"peat_and_peat_products"
+
+
+#' Primary peat products
+#'
+#' A string vector containing names of products classified by the IEA as primary peat products.
+#' 
+#' @format A string vector with 1 entries
+"primary_peat_products"
+
+
 #' Oil and oil products
 #'
 #' A string vector containing names of products classified by the IEA as oil and oil products.
 #' 
 #' @format A string vector with 23 entries
 "oil_and_oil_products"
+
+
+#' Primary oil products
+#'
+#' A string vector containing names of products classified by the IEA as primary oil products.
+#' 
+#' @format A string vector with 2 entries
+"primary_oil_products"
 
 
 #' Renewable products
@@ -56,3 +88,27 @@
 #' 
 #' @format A string vector with 5 entries
 "interface_industries"
+
+
+#' IEA order for ledger side
+#'
+#' A string vector containing `Ledger.side` entries in IEA order.
+#' 
+#' @format A string vector
+"ledger_side_iea_order"
+
+
+#' IEA order for combined flow aggregation point and flow 
+#'
+#' A string vector containing entries for a united flow aggregation point and flow column in IEA order.
+#' 
+#' @format A string vector
+"fap_flow_iea_order"
+
+
+#' IEA order for products
+#'
+#' A string vector containing entries for the product column in IEA order.
+#' 
+#' @format A string vector
+"product_iea_order"

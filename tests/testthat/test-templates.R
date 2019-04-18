@@ -2,26 +2,72 @@
 context("Template functions")
 ###########################################################
 
-test_that("eiou fu_template works as expected", {
-  EIOU_template <- load_tidy_iea_df() %>% 
+test_that("fu_allocation_template works as expected", {
+  Allocation_template <- load_tidy_iea_df() %>% 
     specify_all() %>%
-    fu_allocation_template(template_type = "Energy industry own use")
+    fu_allocation_template() 
+
+  # Check rows
+  expect_equal(Allocation_template$Flow.aggregation.point[[1]], "Energy industry own use")
+  expect_equal(Allocation_template$Ef.product[[1]], "Refinery gas")
+  expect_equal(Allocation_template$Destination[[1]], "Oil refineries")
+  expect_equal(Allocation_template$Quantity[[1]], "E.dot")
+  last_row <- nrow(Allocation_template)
+  expect_equal(Allocation_template$Flow.aggregation.point[[last_row]], "Other")
+  expect_equal(Allocation_template$Ef.product[[last_row]], "Electricity")
+  expect_equal(Allocation_template$Destination[[last_row]], "Non-specified (other)")
+  expect_equal(Allocation_template$Quantity[[last_row]], "C_3 [%]")
+  
+  # Check columns
   expected_colorder <- c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit",
                          "Ef.product", "Machine", "Eu.product", "Destination", 
                          "Quantity", "Maximum.values", "1971", "2000")
-  expect_equal(names(EIOU_template), expected_colorder)
-  expect_true(all(EIOU_template$Flow.aggregation.point == "Energy industry own use"))
+  expect_equal(names(Allocation_template), expected_colorder)
+  expect_true(all(Allocation_template$Ledger.side == "Consumption" | Allocation_template$Flow.aggregation.point == "Energy industry own use"))
 })
 
-test_that("final consumption fu_template works as expected", {
-  TFC_template <- load_tidy_iea_df() %>% 
-    specify_all() %>%
-    fu_allocation_template(template_type = "Final consumption")
-  expected_colorder <- c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit",
-                         "Ef.product", "Machine", "Eu.product", "Destination", 
-                         "Quantity", "Maximum.values", "1971", "2000")
-  expect_equal(names(TFC_template), expected_colorder)
-  expect_true(all(TFC_template$Ledger.side == "Consumption"))
+test_that("write_fu_allocation_template works as expected", {
+  FU_allocation_template <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    fu_allocation_template() %>% 
+    arrange_iea_fu_allocation_template()
+  # Get a temporary file in which to write two data frames on different tabs.
+  f <- tempfile(fileext = ".xlsx")
+  p <- FU_allocation_template %>% 
+    write_fu_allocation_template(f)
+  expect_equal(p, f)
+  # Now read the tabs back in
+  Allocations <- openxlsx::read.xlsx(f, sheet = "Allocations") %>% 
+    dplyr::rename(
+      Maximum.values.reread = Maximum.values,
+      `1971.reread` = `1971`,
+      `2000.reread` = `2000`
+    )
+  # Check the tabs to make sure they're the same
+  Expected_allocations <- FU_allocation_template
+  Joined <- dplyr::full_join(Allocations, Expected_allocations, by = c("Country", "Method", "Energy.type", 
+                                                                       "Last.stage", "Ledger.side", "Flow.aggregation.point", 
+                                                                       "Unit", "Ef.product", "Machine", 
+                                                                       "Eu.product", "Destination", "Quantity")) %>% 
+    dplyr::mutate(
+      Maximum.values.diff = Maximum.values.reread - Maximum.values,
+      `1971_diff` = `1971.reread` - `1971`,
+      `2000_diff` = `2000.reread` - `2000`, 
+      Maximum.values.OK = abs(Maximum.values.diff) < 1e-6,
+      `1971_diff_OK` = abs(`1971_diff`) < 1e-6,
+      `2000_diff_OK` = abs(`2000_diff`) < 1e-6
+    )
+  expect_true(all(Joined$Maximum.values.OK == TRUE |  is.na(Joined$Maximum.values.OK)))
+  expect_true(all(Joined$`1971_diff_OK` == TRUE |  is.na(Joined$`1971_diff_OK`)))
+  expect_true(all(Joined$`2000_diff_OK` == TRUE |  is.na(Joined$`2000_diff_OK`)))
+  
+  # Now try to write it again.
+  expect_true(file.exists(f))
+  expect_error(FU_allocation_template %>% write_fu_allocation_template(p), "File already exists!")
+  # Clean up
+  if (file.exists(f)) {
+    file.remove(f)
+  }
 })
 
 test_that("openxlsx works as expected", {

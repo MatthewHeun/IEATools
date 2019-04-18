@@ -2,29 +2,26 @@
 % Please edit documentation in R/templates.R
 \name{fu_allocation_template}
 \alias{fu_allocation_template}
-\title{Create a \code{.xlsx} template for analysis of final-to-useful transformation processes}
+\title{Create a template for analysis of final-to-useful transformation processes}
 \usage{
-fu_allocation_template(.tidy_iea_df,
-  template_type = c("Final consumption", "Energy industry own use"),
-  energy_type = "Energy.type", energy = "E",
-  last_stage = "Last.stage", final = "Final", year = "Year",
-  ledger_side = "Ledger.side", consumption = "Consumption",
+fu_allocation_template(.tidy_iea_df, energy_type = "Energy.type",
+  energy = "E", last_stage = "Last.stage", final = "Final",
+  year = "Year", ledger_side = "Ledger.side",
+  consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point",
-  eiou = "Energy industry own use", tfc = "Total final consumption",
+  eiou = "Energy industry own use", non_energy_use = "Non-energy use",
+  tfc = "Total final consumption",
   tpes = "Total primary energy supply", flow = "Flow",
   product = "Product", destination = "Destination",
   quantity = "Quantity", e_dot = "E.dot", e_dot_total = paste0(e_dot,
-  ".total"), e_dot_perc = paste0(e_dot, ".perc"),
-  maximum_values = "Maximum.values", year_for_maximum_values = 0,
-  ef_product = "Ef.product", allocation_var = "C_",
-  n_allocation_rows = 3, machine = "Machine",
-  eu_product = "Eu.product", .value = ".value")
+  ".total"), perc_unit_string = "[\%]", e_dot_perc = paste(e_dot,
+  perc_unit_string), maximum_values = "Maximum.values",
+  year_for_maximum_values = 0, ef_product = "Ef.product",
+  allocation_var = "C_", n_allocation_rows = 3, machine = "Machine",
+  eu_product = "Eu.product", arrange = TRUE, .value = ".value")
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
-
-\item{template_type}{one of "\code{Final consumption}" or "\code{Energy industry own use}" for final consumption or energy industry own use, respectively.
-Default is "\code{Final consumption}".}
 
 \item{energy_type}{the name of the energy type column. Default is "\code{Energy.type}".}
 
@@ -42,7 +39,9 @@ Default is "\code{Final consumption}".}
 
 \item{flow_aggregation_point}{the name of the flow aggregation point column. Default is "\code{Flow.aggregation.point}".}
 
-\item{eiou}{the string identifier for energy industry own use. Default is "\code{Energy industry own use}".}
+\item{eiou}{the string identifier for energy industry own use in \code{flow_aggregation_point}. Default is "\code{Energy industry own use}".}
+
+\item{non_energy_use}{string identifier for non-energy use in \code{flow_aggregation_point}. Default is "\code{Non-energy use}".}
 
 \item{tfc}{the string identifier for total final consumption. Default is "\code{Total final consumption}".}
 
@@ -59,6 +58,8 @@ Default is "\code{Final consumption}".}
 \item{e_dot}{the name of the energy flow rate column. Default is "\code{E.dot}".}
 
 \item{e_dot_total}{the string identifier for total energy. Default is "\code{E.dot.total}".}
+
+\item{perc_unit_string}{the string used to indicate percentages. Default is "\code{[\%]}".}
 
 \item{e_dot_perc}{the string identifier for energy percentage. Default is "\code{E.dot.perc}".}
 
@@ -77,15 +78,20 @@ Default is \code{0}.}
 
 \item{eu_product}{the name of the useful energy carrier column. Default is "\code{Eu product}".}
 
-\item{.value}{the name of the value column added to \code{.tidy_iea_df}. Default is "\code{.value}".}
+\item{arrange}{a boolean telling whether to arranged the rows and columns
+(using \code{arrange_iea_fu_allocation_template()}) before returning.
+Default is \code{TRUE}.}
+
+\item{.value}{the name of a temproary value column added to \code{.tidy_iea_df}.
+A \code{.value} column must not be present in \code{.tidy_iea_df}. Default is "\code{.value}".}
 }
 \value{
 a data frame containing the EIOU template
 }
 \description{
 This function creates a blank template for final-to-useful energy transformation process analysis.
-The template is derived from IEA extended energy balance data (\code{.tidy_iea_df}) which gives both
-energy industry own use and final demand for final energy carriers.
+The template is a data frame derived from IEA extended energy balance data (\code{.tidy_iea_df}),
+which give both energy industry own use and final demand for final energy carriers.
 From the IEA's final energy information, templates are created for conversion to
 useful energy carriers.
 Final energy consumed by each final demand sector or transformation process machines
@@ -93,13 +99,11 @@ is allocated to final-to-useful machines and converted to useful energy at some 
 The allocation fractions and efficiencies are to be supplied by the analyst by filling blanks in
 the template.
 }
+\details{
+Non-energy use is removed from \code{.tidy_iea_df} before creating the template.
+}
 \examples{
-# By default, gives a template for Final consumption
 load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 
   fu_allocation_template()
-# You can specify if you want a template for Energy industry own use
-load_tidy_iea_df() \%>\% 
-  specify_all() \%>\% 
-  fu_allocation_template(template_type = "Energy industry own use")
 }

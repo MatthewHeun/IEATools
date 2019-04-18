@@ -54,8 +54,6 @@
 #'        (This argument is useful for testing.)
 #' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is "`,,TIME`".
 #' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "`COUNTRY,FLOW,PRODUCT`".
-#' @param year_colname_pattern a regex that identifies columns with year titles. 
-#'        Default is "`^\\d*$`" which identifies columns whose names are exclusively digits.
 #' @param missing_data a string that identifies missing data. Default is "`..`".
 #'        Entries of "`missing_data`" are coded as `0`` in output.
 #' @param not_applicable_data a string that identifies not-applicable data.
@@ -75,7 +73,6 @@
 iea_df <- function(.iea_file = NULL, 
                    text = NULL, 
                    expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
-                   year_colname_pattern = "^\\d*$", 
                    missing_data = "..", not_applicable_data = "x", confidential_data = "c"){
   assertthat::assert_that(xor(is.null(.iea_file), is.null(text)), 
                           msg = "need to supply one but not both of iea_file and text arguments to iea_df")
@@ -132,9 +129,9 @@ iea_df <- function(.iea_file = NULL,
   # Convert all year columns (columns whose names are all numbers) to numeric, 
   # convert into a data frame, and 
   # return.
-  IEAData_withheader %>% 
-    dplyr::mutate_at(dplyr::vars(dplyr::matches(year_colname_pattern)), as.numeric) %>% 
-    as.data.frame()
+  IEAData_withheader %>%
+      dplyr::mutate_at(dplyr::vars(year_cols(IEAData_withheader)), as.numeric) %>%
+      as.data.frame()
 }
 
 
@@ -360,6 +357,8 @@ remove_agg_memo_flows <- function(.iea_df,
 #' @param tpes_flows a vector of strings that give flows that are aggregated to `Total primary energy supply`. 
 #' @param tfc_compare a string that identifies the `TFC compare` flow aggregation point. Default is `TFC compare`.
 #' @param tfc_compare_flows a vector of strings that give `Flow`s that are aggregated to `TFC compare`.
+#' @param transfers = a string that identifies transfers in the flow column. Default is "`Transfers`".
+#' @param statistical_differences a string that identifies statistical differences in flow column. Default is "`Statistical differences`".
 #' @param losses the string that indicates losses in the `Flow` column. Default is "`Losses`".
 #' @param transformation_processes the string that indicates transformation processes in the `Flow` column. Default is "`Transformation processes`".
 #' @param tp_flows_suffix the suffix for transformation processes in the `Flow` column. Default is "`(transf.)`".
@@ -411,6 +410,8 @@ augment_iea_df <- function(.iea_df,
                            tpes_flows = c("Production", "Imports", "Exports", "International marine bunkers", "International aviation bunkers", "Stock changes"),
                            tfc_compare = "TFC compare",
                            tfc_compare_flows = c("Total primary energy supply", "Transfers", "Statistical differences", "Transformation processes", "Energy industry own use", "Losses"),
+                           transfers = "Transfers",
+                           statistical_differences = "Statistical differences",
                            losses = "Losses", 
                            transformation_processes = "Transformation processes",
                            tp_flows_suffix = "(transf.)",
@@ -604,6 +605,7 @@ tidy_iea_df <- function(.iea_df,
 #' See examples for two ways to achieve the same result.
 #' 
 #' @param file_path the path of the file to be loaded. Default loads example data bundled with the package.
+#' @param remove_zeroes a logical indicating whether data points with the value `0` are to be removed from the output. (Default is `TRUE`.)
 #'
 #' @return a tidy, augmented data frame of IEA extended energy balance data.
 #' 
@@ -622,7 +624,8 @@ tidy_iea_df <- function(.iea_df,
 #'   tidy_iea_df()
 #' all(simple == complicated)
 load_tidy_iea_df <- function(file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-                               system.file(package = "IEATools")){
+                               system.file(package = "IEATools"), 
+                             remove_zeroes = TRUE){
   file_path %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
@@ -630,6 +633,6 @@ load_tidy_iea_df <- function(file_path = file.path("extdata", "GH-ZA-ktoe-Extend
     remove_agg_memo_flows() %>% 
     use_iso_countries() %>% 
     augment_iea_df() %>% 
-    tidy_iea_df()
+    tidy_iea_df(remove_zeroes = remove_zeroes)
 }
 

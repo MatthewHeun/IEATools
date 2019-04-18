@@ -17,7 +17,9 @@ augment_iea_df(.iea_df, country = "Country",
   tfc_compare = "TFC compare",
   tfc_compare_flows = c("Total primary energy supply", "Transfers",
   "Statistical differences", "Transformation processes",
-  "Energy industry own use", "Losses"), losses = "Losses",
+  "Energy industry own use", "Losses"), transfers = "Transfers",
+  statistical_differences = "Statistical differences",
+  losses = "Losses",
   transformation_processes = "Transformation processes",
   tp_flows_suffix = "(transf.)",
   nstp_flows_suffix = "(transformation)",
@@ -81,6 +83,10 @@ augment_iea_df(.iea_df, country = "Country",
 \item{tfc_compare}{a string that identifies the \code{TFC compare} flow aggregation point. Default is \code{TFC compare}.}
 
 \item{tfc_compare_flows}{a vector of strings that give \code{Flow}s that are aggregated to \code{TFC compare}.}
+
+\item{transfers}{= a string that identifies transfers in the flow column. Default is "\code{Transfers}".}
+
+\item{statistical_differences}{a string that identifies statistical differences in flow column. Default is "\code{Statistical differences}".}
 
 \item{losses}{the string that indicates losses in the \code{Flow} column. Default is "\code{Losses}".}
 
