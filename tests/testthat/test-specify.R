@@ -26,6 +26,14 @@ test_that("production is converted to resources correctly", {
   expect_equal(DF$Flow[[1]], "Oil and gas extraction")
 })
 
+test_that("consumption of renamed products are also renamed", {
+  Specific_production <- load_tidy_iea_df() %>% 
+    # Look at only 1 year to make things simpler
+    dplyr::filter((startsWith(Product, "Hard coal") | Flow == "Coal mines"), Year == 1971)
+  Renamed_primary <- Specific_production %>% 
+    specify_primary_production()
+})
+
 test_that("interface industries are correctly specified", {
   specified <- load_tidy_iea_df() %>% 
     specify_interface_industries()

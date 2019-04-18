@@ -48,7 +48,7 @@ test_that("write_fu_allocation_template works as expected", {
                                                                        "Last.stage", "Ledger.side", "Flow.aggregation.point", 
                                                                        "Unit", "Ef.product", "Machine", 
                                                                        "Eu.product", "Destination", "Quantity")) %>% 
-    mutate(
+    dplyr::mutate(
       Maximum.values.diff = Maximum.values.reread - Maximum.values,
       `1971_diff` = `1971.reread` - `1971`,
       `2000_diff` = `2000.reread` - `2000`, 
