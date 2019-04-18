@@ -301,12 +301,14 @@ fu_allocation_template <- function(.tidy_iea_df,
       !!as.name(e_dot) := abs(!!as.name(e_dot))
     )
   Totals <- Filtered %>%
-    matsindf::group_by_everything_except(ledger_side, flow_aggregation_point, flow, product, e_dot) %>%
+    # matsindf::group_by_everything_except(ledger_side, flow_aggregation_point, flow, product, e_dot) %>%
+    matsindf::group_by_everything_except(flow_aggregation_point, flow, product, e_dot) %>%
     dplyr::summarise(!!as.name(e_dot_total) := sum(!!as.name(e_dot)))
   # Calculate a Tidy data frame with percentages.
   Tidy <- Filtered %>% 
     # Add the totals to the data frame in preparation for calculating percentages
-    dplyr::left_join(Totals, by = matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, .symbols = FALSE)) %>% 
+    # dplyr::left_join(Totals, by = matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, .symbols = FALSE)) %>% 
+    dplyr::left_join(Totals, by = matsindf::everything_except(.tidy_iea_df, flow_aggregation_point, flow, product, e_dot, .symbols = FALSE)) %>% 
     dplyr::mutate(
       # Calculate percentage of all energy flows for that country and year
       # Don't need to multiply by 100 here, because we'll 
@@ -514,10 +516,6 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #' this function generates a blank template for final-to-useful machine efficiencies.
 #'
 #' @param .fu_allocation_template a data frame containing a completed final-to-useful allocation template for final demand.
-#' @param row_order the desired row order. Default is `IEATools::fap_flow_iea_order`.
-#' @param product_order the desired product order. Default is `IEATools::product_iea_order`.
-#' @param .temp_sort a temporary column created in `.fu_allocation_template`. 
-#'        No column with this name can be present in `.fu_allocation_template`.
 #'
 #' @return a data frame containing row-ordered blank template for final-to-useful machine efficiencies.
 #' 
