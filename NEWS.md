@@ -1,4 +1,4 @@
-* Allocation tempalte now sorting rows in IEA order.
+* Allocation template now sorting rows in IEA order.
 * All specified primary flows now consumed somewhere in the ECC.
 * Now specifying the source of output flows from inserted machines
   at primary level.

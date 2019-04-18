@@ -171,6 +171,8 @@ product_iea_order <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   insert_after(after = primary_coal_products[length(primary_coal_products)], 
                values = paste(primary_coal_products, "(Coal mines)")) %>% 
   insert_after(after = primary_oil_products[length(primary_oil_products)], 
-               values = paste(primary_oil_products, "(Oil and gas extraction)"))
+               values = paste(primary_oil_products, "(Oil and gas extraction)")) %>% 
+  insert_after(after = "Natural gas", 
+               values = paste("Natural gas", "(Oil and gas extraction)"))
 usethis::use_data(product_iea_order, overwrite = TRUE)
  
