@@ -2,21 +2,35 @@
 context("Template functions")
 ###########################################################
 
+# This function tests final-to-useful allocation templates, filled or not.
+check_fu_allocation_template <- function(.DF){
+  expect_equal(.DF$Flow.aggregation.point[[1]], "Energy industry own use")
+  expect_equal(.DF$Ef.product[[1]], "Refinery gas")
+  expect_equal(.DF$Destination[[1]], "Oil refineries")
+  expect_equal(.DF$Quantity[[1]], "E.dot")
+  last_row <- nrow(.DF)
+  expect_equal(.DF$Flow.aggregation.point[[last_row]], "Other")
+  expect_equal(.DF$Ef.product[[last_row]], "Electricity")
+  expect_equal(.DF$Destination[[last_row]], "Non-specified (other)")
+  expect_equal(.DF$Quantity[[last_row]], "C_3 [%]")
+}
+
 test_that("fu_allocation_template works as expected", {
   Allocation_template <- load_tidy_iea_df() %>% 
     specify_all() %>%
     fu_allocation_template() 
 
   # Check rows
-  expect_equal(Allocation_template$Flow.aggregation.point[[1]], "Energy industry own use")
-  expect_equal(Allocation_template$Ef.product[[1]], "Refinery gas")
-  expect_equal(Allocation_template$Destination[[1]], "Oil refineries")
-  expect_equal(Allocation_template$Quantity[[1]], "E.dot")
-  last_row <- nrow(Allocation_template)
-  expect_equal(Allocation_template$Flow.aggregation.point[[last_row]], "Other")
-  expect_equal(Allocation_template$Ef.product[[last_row]], "Electricity")
-  expect_equal(Allocation_template$Destination[[last_row]], "Non-specified (other)")
-  expect_equal(Allocation_template$Quantity[[last_row]], "C_3 [%]")
+  # check_fu_allocation_template(Allocation_template)
+  # expect_equal(Allocation_template$Flow.aggregation.point[[1]], "Energy industry own use")
+  # expect_equal(Allocation_template$Ef.product[[1]], "Refinery gas")
+  # expect_equal(Allocation_template$Destination[[1]], "Oil refineries")
+  # expect_equal(Allocation_template$Quantity[[1]], "E.dot")
+  # last_row <- nrow(Allocation_template)
+  # expect_equal(Allocation_template$Flow.aggregation.point[[last_row]], "Other")
+  # expect_equal(Allocation_template$Ef.product[[last_row]], "Electricity")
+  # expect_equal(Allocation_template$Destination[[last_row]], "Non-specified (other)")
+  # expect_equal(Allocation_template$Quantity[[last_row]], "C_3 [%]")
   
   # Check columns
   expected_colorder <- c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit",
@@ -68,6 +82,15 @@ test_that("write_fu_allocation_template works as expected", {
   if (file.exists(f)) {
     file.remove(f)
   }
+})
+
+test_that("load_fu_allocation_data works as expected", {
+  FU_allocation_data <- load_fu_allocation_data()
+})
+
+test_that("eta_template works as expected", {
+  Filled_fu_template <- file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+    system.file(package = "IEATools")
 })
 
 test_that("openxlsx works as expected", {

@@ -16,3 +16,7 @@ a data frame containing row-ordered blank template for final-to-useful machine e
 Using a final-to-useful allocation table,
 this function generates a blank template for final-to-useful machine efficiencies.
 }
+\examples{
+load_fu_allocation_data() \%>\% 
+  eta_template()
+}

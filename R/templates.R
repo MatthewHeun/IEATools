@@ -514,6 +514,34 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 }
 
 
+#' Load final-to-useful allocation data
+#' 
+#' When performing extending an energy conversion chain from useful energy to final energy, 
+#' allocations of final energy consumption to useful energy catagories are defined by the analyst.  
+#' The Excel file at `path` contains those allocations.
+#' 
+#' A final-to-useful allocation template can be 
+#' generated using `fu_allocation_template()` and `write_fu_allocation_template()`.
+#' 
+#' A filled example can be loaded with the default value of `path`.
+#'
+#' @param path the path from which final-to-useful allocation data will be loaded
+#' @param allocations_tab_name the tab in `path` that contains the final-to-useful allocation data. Default is "`Allocations`".
+#'
+#' @return the "`Allocations`" tab in `path` as a data frame.
+#' 
+#' @export
+#'
+#' @examples
+#' file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+#'   system.file(package = "IEATools")
+load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocation-sample.xlsx") %>% 
+                                      system.file(package = "IEATools"), 
+                                    allocations_tab_name = "Allocations"){
+  openxlsx::read.xlsx(path, sheet = allocations_tab_name)
+}
+
+
 #' Final-to-useful efficiency template
 #' 
 #' Using a final-to-useful allocation table, 
@@ -526,6 +554,8 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #' @export
 #'
 #' @examples
+#' load_fu_allocation_data() %>% 
+#'   eta_template()
 eta_template <- function(.fu_allocation_template){
   
 }
