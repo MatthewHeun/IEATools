@@ -19,7 +19,7 @@ write_fu_allocation_template(.fu_allocation_template, path,
   n_allocation_rows = 3, .rownum = ".rownum")
 }
 \arguments{
-\item{.fu_allocation_template}{a data frame produced by ``fu_allocation_template()`}
+\item{.fu_allocation_template}{a data frame produced by \code{fu_allocation_template()}}
 
 \item{path}{the file path into which the blank template file will be written.
 Include both folder and file name.

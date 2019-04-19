@@ -6,7 +6,9 @@
 \usage{
 write_fu_eta_template(.fu_eta_template, path,
   fu_eta_tab_name = "FU etas", overwrite_file = FALSE,
-  overwrite_fu_eta_tab = FALSE)
+  overwrite_fu_eta_tab = FALSE, eta_fu = "eta.fu",
+  eta_row_font_color = "#104273", eta_row_shading_color = "#B8D8F5",
+  quantity = "Quantity", .rownum = ".rownum")
 }
 \arguments{
 \item{path}{}
@@ -14,6 +16,12 @@ write_fu_eta_template(.fu_eta_template, path,
 \item{fu_eta_tab_name}{}
 
 \item{overwrite_file}{}
+
+\item{eta_row_font_color}{a hex string representing the font color for \code{eta} rows in the Excel file that is written by this function.
+Default is "\code{#104273}", a dark blue color.}
+
+\item{eta_row_shading_color}{a hex string representing the shading color for \code{eta} rows in the Excel file that is written by this function.
+Default is "\code{#B8D8F5}", a light blue color.}
 
 \item{overwrite_eta_tab}{}
 }

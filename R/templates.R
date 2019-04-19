@@ -16,7 +16,7 @@
 #' * Columns are written in a reasonable order, namely that left-to-right order
 #'   approximates flow through the energy conversion chain.
 #'
-#' @param .fu_allocation_template a data frame produced by ``fu_allocation_template()`
+#' @param .fu_allocation_template a data frame produced by `fu_allocation_template()`
 #' @param path the file path into which the blank template file will be written. 
 #'        Include both folder and file name. 
 #'        If not present, the ".xlsx" extension is added.
@@ -94,10 +94,9 @@ write_fu_allocation_template <- function(.fu_allocation_template,
   e_rows <- function(which_quantity = c(e_dot, e_dot_perc), which_type = c("fd", "eiou")){
     which_quantity <- match.arg(which_quantity)
     which_type <- match.arg(which_type)
-    # Get rid of rownames so that we have only row numbers and put those row numbers into a column
     keep_rows <- .fu_allocation_template %>% 
-      tibble::remove_rownames() %>% 
-      tibble::rownames_to_column(var = .rownum)
+      # Make a column of row numbers
+      tibble::remove_rownames() %>% tibble::rownames_to_column(var = .rownum)
     if (which_type == "fd") {
       keep_rows <- keep_rows %>% 
         dplyr::filter(!!as.name(ledger_side) == consumption)
@@ -557,30 +556,36 @@ load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocatio
 #' load_fu_allocation_data() %>% 
 #'   eta_template()
 eta_template <- function(.fu_allocation_template, 
-                         ef_product = "Ef.product",
+                         # ef_product = "Ef.product",
+                         country = "Country",
                          machine = "Machine",
                          eu_product = "Eu.product", 
-                         eta = "eta", 
-                         phi = "phi.Eu",
+                         eta_fu = "eta.fu", 
+                         phi_u = "phi.u",
                          quantity = "Quantity", 
-                         ef_order = IEATools::product_iea_order,
+                         # ef_order = IEATools::product_iea_order,
                          eu_order = IEATools::eu_product_order,
                          .value = ".value"){
+  # Grab the years of interest.
   year_colnames <- year_cols(.fu_allocation_template, return_names = TRUE)
+  # Calculate the Energy going into each machine at each year based on the C values
+  # so that we can make a column of importances
+  
   # Eliminate several columns that are not needed.
   out <- .fu_allocation_template %>% 
     # Keep only the columns of interest to us
-    dplyr::select(!!as.name(ef_product), !!as.name(machine), !!as.name(eu_product)) %>% 
+    # dplyr::select(!!as.name(ef_product), !!as.name(machine), !!as.name(eu_product)) %>% 
+    dplyr::select(!!as.name(country), !!as.name(machine), !!as.name(eu_product)) %>% 
     # Eliminate rows where the analyst didn't fill any machines or products
     dplyr::filter(!is.na(!!as.name(machine)) & !is.na(!!as.name(eu_product))) %>% 
     unique() %>% 
     # Add eta and phi columns (which will become rows in a moment)
     dplyr::mutate(
-      !!as.name(eta) := "", 
-      !!as.name(phi) := ""
+      !!as.name(eta_fu) := "", 
+      !!as.name(phi_u) := ""
     ) %>% 
     # Now make them rows
-    tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(eta), !!as.name(phi)) %>% 
+    tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(eta_fu), !!as.name(phi_u)) %>% 
     # Eliminate the temporary .value column
     dplyr::mutate(
       !!as.name(.value) := NULL
@@ -592,14 +597,15 @@ eta_template <- function(.fu_allocation_template,
         !!as.name(col) := NA_real_
       )
   }
-  # And finally rearrange the rows to be in Ef product order defined by the IEA.
+  # And finally sort the rows.
   out %>% 
     dplyr::mutate(
-      !!as.name(ef_product) := factor(!!as.name(ef_product), levels = ef_order),
+      # !!as.name(ef_product) := factor(!!as.name(ef_product), levels = ef_order),
       !!as.name(eu_product) := factor(!!as.name(eu_product), levels = eu_order),
-      !!as.name(quantity) := factor(!!as.name(quantity), levels = c(eta, phi))
+      !!as.name(quantity) := factor(!!as.name(quantity), levels = c(eta_fu, phi_u))
     ) %>% 
-    dplyr::arrange(!!as.name(ef_product), !!as.name(machine), !!as.name(eu_product), !!as.name(quantity))
+    # dplyr::arrange(!!as.name(ef_product), !!as.name(machine), !!as.name(eu_product), !!as.name(quantity))
+    dplyr::arrange(!!as.name(country), !!as.name(machine), !!as.name(eu_product), !!as.name(quantity))
 }
 
 
@@ -610,6 +616,10 @@ eta_template <- function(.fu_allocation_template,
 #' @param fu_eta_tab_name 
 #' @param overwrite_file 
 #' @param overwrite_eta_tab 
+#' @param eta_row_font_color a hex string representing the font color for `eta` rows in the Excel file that is written by this function.
+#'        Default is "`#104273`", a dark blue color.
+#' @param eta_row_shading_color a hex string representing the shading color for `eta` rows in the Excel file that is written by this function.
+#'        Default is "`#B8D8F5`", a light blue color.
 #'
 #' @return
 #' 
@@ -620,11 +630,15 @@ write_fu_eta_template <- function(.fu_eta_template,
                                   path, 
                                   fu_eta_tab_name = "FU etas", 
                                   overwrite_file = FALSE, 
-                                  overwrite_fu_eta_tab = FALSE){
+                                  overwrite_fu_eta_tab = FALSE, 
+                                  eta_fu = "eta.fu",
+                                  eta_row_font_color = "#104273",
+                                  eta_row_shading_color = "#B8D8F5",
+                                  quantity = "Quantity",
+                                  .rownum = ".rownum"){
   # Ensure that path ends in .xlsx
   if (!endsWith(path, ".xlsx")) {
     path <- paste0(path, ".xlsx")
-
   }
   # Check if path and tab exist.
   eta_tab_exists <- FALSE
@@ -641,6 +655,32 @@ write_fu_eta_template <- function(.fu_eta_template,
     openxlsx::addWorksheet(eta_wb, fu_eta_tab_name)
   }
   openxlsx::writeData(eta_wb, .fu_eta_template, sheet = fu_eta_tab_name)
+  
+  # Add colors to rows
+  
+  # Start with the eta rows
+  eta_row_indices <- .fu_eta_template %>% 
+    # Make a column of row numbers
+    tibble::remove_rownames() %>% tibble::rownames_to_column(var = .rownum) %>% 
+    # Filter to keep only the eta rows
+    dplyr::filter(!!as.name(quantity) == eta_fu) %>% 
+    # These row numbers are for the data frame, but the row numbers in Excel are 1 more, 
+    # because the column names are the first row for Excel but the column names are not a row for the data frame.
+    dplyr::mutate(
+      !!as.name(.rownum) := as.numeric(!!as.name(.rownum)),
+      !!as.name(.rownum) := !!as.name(.rownum) + 1
+    ) %>% 
+    dplyr::select(!!as.name(.rownum)) %>% 
+    unlist() %>% 
+    unname()
+  
+  # Define the eta row style
+  eta_row_style <- openxlsx::createStyle(fontColour = eta_row_font_color, fgFill = eta_row_shading_color)
+  # Apply the eta row style at the correct locations
+  openxlsx::addStyle(eta_wb, fu_eta_tab_name, style = eta_row_style, 
+                     rows = eta_row_indices, cols = 1:ncol(.fu_eta_template), gridExpand = TRUE, stack = TRUE)
+  
+  # Set the column widths to "auto" so data can be seen.
   openxlsx::setColWidths(eta_wb, fu_eta_tab_name, cols = 1:ncol(.fu_eta_template), widths = "auto")
   
   # Now save it

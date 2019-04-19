@@ -4,10 +4,9 @@
 \alias{eta_template}
 \title{Final-to-useful efficiency template}
 \usage{
-eta_template(.fu_allocation_template, ef_product = "Ef.product",
-  machine = "Machine", eu_product = "Eu.product", eta = "eta",
-  phi = "phi.Eu", quantity = "Quantity",
-  ef_order = IEATools::product_iea_order,
+eta_template(.fu_allocation_template, country = "Country",
+  machine = "Machine", eu_product = "Eu.product", eta_fu = "eta.fu",
+  phi_u = "phi.u", quantity = "Quantity",
   eu_order = IEATools::eu_product_order, .value = ".value")
 }
 \arguments{
