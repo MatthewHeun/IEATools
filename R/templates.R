@@ -24,7 +24,7 @@
 #' @param consumption the string identifier for consumption in the `ledger_side` column.  Default is "`Consumption`".
 #' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
 #' @param eiou the string identifier for energy industry own use in the `flow_aggregation_point` column. Default is "`Energy industry own use`".
-#' @param allocations_tab_name the name of the tab on which the template will be written. Default is "`Allocations`".
+#' @param fu_allocations_tab_name the name of the tab on which the template will be written. Default is "`FU Allocations`".
 #' @param machine the name of the machine column in output. Default is "`Machine`"
 #' @param eu_product the name of the useful energy product column in output. Default is "`Eu.product`".
 #' @param quantity the name of the quantity column to be created on output. Default is "`Quantity`".
@@ -68,7 +68,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
                                          consumption = "Consumption",
                                          flow_aggregation_point = "Flow.aggregation.point",
                                          eiou = "Energy industry own use",
-                                         allocations_tab_name = "Allocations",
+                                         fu_allocations_tab_name = "FU Allocations",
                                          machine = "Machine",
                                          eu_product = "Eu.product",
                                          quantity = "Quantity", 
@@ -83,13 +83,12 @@ write_fu_allocation_template <- function(.fu_allocation_template,
                                          overwrite = FALSE,
                                          n_allocation_rows = 3,
                                          .rownum = ".rownum"){
-  # Create the template data frame
   matsindf::verify_cols_missing(.fu_allocation_template, .rownum)
   
   # Create the workbook, add the worksheet, and stuff the temmplate into the worksheet
   fu_wb <- openxlsx::createWorkbook()
-  openxlsx::addWorksheet(fu_wb, allocations_tab_name)
-  openxlsx::writeData(fu_wb, allocations_tab_name, .fu_allocation_template)
+  openxlsx::addWorksheet(fu_wb, fu_allocations_tab_name)
+  openxlsx::writeData(fu_wb, fu_allocations_tab_name, .fu_allocation_template)
   
   # A function to identify some rows of the spreadsheet (e_rows means "energy rows")
   e_rows <- function(which_quantity = c(e_dot, e_dot_perc), which_type = c("fd", "eiou")){
@@ -130,13 +129,13 @@ write_fu_allocation_template <- function(.fu_allocation_template,
   # Apply color formatting style for energy and energy percentage rows
   energy_row_style_fd <- openxlsx::createStyle(fontColour = energy_row_font_color_fd, fgFill = energy_row_shading_color_fd)
   energy_row_style_eiou <- openxlsx::createStyle(fontColour = energy_row_font_color_eiou, fgFill = energy_row_shading_color_eiou)
-  openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style_fd, rows = union(e_dot_rows_fd, e_dot_perc_rows_fd), cols = 1:ncol(.fu_allocation_template), gridExpand = TRUE)
-  openxlsx::addStyle(fu_wb, allocations_tab_name, style = energy_row_style_eiou, rows = union(e_dot_rows_eiou, e_dot_perc_rows_eiou), cols = 1:ncol(.fu_allocation_template), gridExpand = TRUE)
+  openxlsx::addStyle(fu_wb, fu_allocations_tab_name, style = energy_row_style_fd, rows = union(e_dot_rows_fd, e_dot_perc_rows_fd), cols = 1:ncol(.fu_allocation_template), gridExpand = TRUE)
+  openxlsx::addStyle(fu_wb, fu_allocations_tab_name, style = energy_row_style_eiou, rows = union(e_dot_rows_eiou, e_dot_perc_rows_eiou), cols = 1:ncol(.fu_allocation_template), gridExpand = TRUE)
   
   # Apply shading for cells that don't need to be filled
   # First, tackle the cells in the Maximum.values column.
   dont_fill_style <- openxlsx::createStyle(fgFill = dont_fill_shading_color)
-  openxlsx::addStyle(fu_wb, allocations_tab_name, style = dont_fill_style, rows = c_rows_indices, cols = max_values_col_index, gridExpand = TRUE)
+  openxlsx::addStyle(fu_wb, fu_allocations_tab_name, style = dont_fill_style, rows = c_rows_indices, cols = max_values_col_index, gridExpand = TRUE)
   # Now work on the year columns. 
   # Find all the E.dot rows
   for (yr_index in 1:length(year_cols_indices)) {
@@ -172,17 +171,17 @@ write_fu_allocation_template <- function(.fu_allocation_template,
       gray_rows_for_year_col_index <- c(gray_rows_for_year_col_index, e_dot_NA_rownums_in_Excel + 1 + i)
     }
     # Now make these cells gray.
-    openxlsx::addStyle(fu_wb, allocations_tab_name, style = dont_fill_style, 
+    openxlsx::addStyle(fu_wb, fu_allocations_tab_name, style = dont_fill_style, 
                        rows = gray_rows_for_year_col_index, cols = col_index, stack = TRUE)
   }
   
   # Set percentage format for numbers in the e_dot_perc rows.
   e_dot_perc_style <- openxlsx::createStyle(numFmt = "PERCENTAGE")
-  openxlsx::addStyle(fu_wb, allocations_tab_name, style = e_dot_perc_style, 
+  openxlsx::addStyle(fu_wb, fu_allocations_tab_name, style = e_dot_perc_style, 
                      rows = c(e_dot_perc_rows_fd, e_dot_perc_rows_eiou), cols = c(max_values_col_index, year_cols_indices), gridExpand = TRUE, stack = TRUE)
   
   # Set column widths to something intelligent
-  openxlsx::setColWidths(fu_wb, allocations_tab_name, cols = 1:ncol(.fu_allocation_template), widths = "auto")
+  openxlsx::setColWidths(fu_wb, fu_allocations_tab_name, cols = 1:ncol(.fu_allocation_template), widths = "auto")
   
   # Now save it!
   if (!endsWith(path, ".xlsx")) {
@@ -526,9 +525,9 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #' A filled example can be loaded with the default value of `path`.
 #'
 #' @param path the path from which final-to-useful allocation data will be loaded
-#' @param allocations_tab_name the tab in `path` that contains the final-to-useful allocation data. Default is "`Allocations`".
+#' @param fu_allocations_tab_name the tab in `path` that contains the final-to-useful allocation data. Default is "`Allocations`".
 #'
-#' @return the "`Allocations`" tab in `path` as a data frame.
+#' @return the `fu_allocations_tab_name` tab in `path` as a data frame.
 #' 
 #' @export
 #'
@@ -537,8 +536,8 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #'   system.file(package = "IEATools")
 load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocation-sample.xlsx") %>% 
                                       system.file(package = "IEATools"), 
-                                    allocations_tab_name = "Allocations"){
-  openxlsx::read.xlsx(path, sheet = allocations_tab_name)
+                                    fu_allocations_tab_name = "FU Allocations"){
+  openxlsx::read.xlsx(path, sheet = fu_allocations_tab_name)
 }
 
 
@@ -548,6 +547,7 @@ load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocatio
 #' this function generates a blank template for final-to-useful machine efficiencies.
 #'
 #' @param .fu_allocation_template a data frame containing a completed final-to-useful allocation template for final demand.
+#' @param fu_allocations_tab_name the name of the tab on which the template will be written. Default is "`FU Allocations`".
 #'
 #' @return a data frame containing row-ordered blank template for final-to-useful machine efficiencies.
 #' 
@@ -601,3 +601,55 @@ eta_template <- function(.fu_allocation_template,
     ) %>% 
     dplyr::arrange(!!as.name(ef_product), !!as.name(machine), !!as.name(eu_product), !!as.name(quantity))
 }
+
+
+#' Write a final-to-useful efficiencies template
+#'
+#' @param .fu_eta_template
+#' @param path 
+#' @param fu_eta_tab_name 
+#' @param overwrite_file 
+#' @param overwrite_eta_tab 
+#'
+#' @return
+#' 
+#' @export
+#'
+#' @examples
+write_fu_eta_template <- function(.fu_eta_template,
+                                  path, 
+                                  fu_eta_tab_name = "FU etas", 
+                                  overwrite_file = FALSE, 
+                                  overwrite_fu_eta_tab = FALSE){
+  # Ensure that path ends in .xlsx
+  if (!endsWith(path, ".xlsx")) {
+    path <- paste0(path, ".xlsx")
+
+  }
+  # Check if path and tab exist.
+  eta_tab_exists <- FALSE
+  if (file.exists(path)) {
+    assertthat::assert_that(overwrite_file, msg = paste(path, "already exists. Try overwrite_file = TRUE?"))
+    eta_wb <- openxlsx::loadWorkbook(path)
+    eta_tab_exists <- fu_eta_tab_name %in% openxlsx::sheets(eta_wb)
+  } else {
+    eta_wb <- openxlsx::createWorkbook()
+  }
+  if (eta_tab_exists) {
+    assertthat::assert_that(overwrite_fu_eta_tab, msg = paste(fu_eta_tab_name, "already exists. Try overwrite_tab = TRUE?"))  
+  } else {
+    openxlsx::addWorksheet(eta_wb, fu_eta_tab_name)
+  }
+  openxlsx::writeData(eta_wb, .fu_eta_template, sheet = fu_eta_tab_name)
+  openxlsx::setColWidths(eta_wb, fu_eta_tab_name, cols = 1:ncol(.fu_eta_template), widths = "auto")
+  
+  # Now save it
+  openxlsx::saveWorkbook(eta_wb, file = path, overwrite = overwrite_file)
+  # And return the path
+  return(path)
+}
+
+
+
+
+

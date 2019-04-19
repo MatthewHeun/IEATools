@@ -4,10 +4,16 @@
 \alias{eta_template}
 \title{Final-to-useful efficiency template}
 \usage{
-eta_template(.fu_allocation_template)
+eta_template(.fu_allocation_template, ef_product = "Ef.product",
+  machine = "Machine", eu_product = "Eu.product", eta = "eta",
+  phi = "phi.Eu", quantity = "Quantity",
+  ef_order = IEATools::product_iea_order,
+  eu_order = IEATools::eu_product_order, .value = ".value")
 }
 \arguments{
 \item{.fu_allocation_template}{a data frame containing a completed final-to-useful allocation template for final demand.}
+
+\item{fu_allocations_tab_name}{the name of the tab on which the template will be written. Default is "\code{FU Allocations}".}
 }
 \value{
 a data frame containing row-ordered blank template for final-to-useful machine efficiencies.

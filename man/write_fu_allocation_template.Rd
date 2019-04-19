@@ -8,7 +8,7 @@ write_fu_allocation_template(.fu_allocation_template, path,
   ledger_side = "Ledger.side", consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point",
   eiou = "Energy industry own use",
-  allocations_tab_name = "Allocations", machine = "Machine",
+  fu_allocations_tab_name = "FU Allocations", machine = "Machine",
   eu_product = "Eu.product", quantity = "Quantity", e_dot = "E.dot",
   e_dot_perc = paste(e_dot, "[\%]"), maximum_values = "Maximum.values",
   energy_row_font_color_fd = "#104273",
@@ -33,7 +33,7 @@ If not present, the ".xlsx" extension is added.}
 
 \item{eiou}{the string identifier for energy industry own use in the \code{flow_aggregation_point} column. Default is "\code{Energy industry own use}".}
 
-\item{allocations_tab_name}{the name of the tab on which the template will be written. Default is "\code{Allocations}".}
+\item{fu_allocations_tab_name}{the name of the tab on which the template will be written. Default is "\code{FU Allocations}".}
 
 \item{machine}{the name of the machine column in output. Default is "\code{Machine}"}
 

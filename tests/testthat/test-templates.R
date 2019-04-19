@@ -42,7 +42,7 @@ test_that("write_fu_allocation_template works as expected", {
     write_fu_allocation_template(f)
   expect_equal(p, f)
   # Now read the tabs back in
-  Allocations <- openxlsx::read.xlsx(f, sheet = "Allocations") %>% 
+  Allocations <- openxlsx::read.xlsx(f, sheet = "FU Allocations") %>% 
     dplyr::rename(
       Maximum.values.reread = Maximum.values,
       `1971.reread` = `1971`,
@@ -81,8 +81,9 @@ test_that("load_fu_allocation_data works as expected", {
 })
 
 test_that("eta_template works as expected", {
-  FU_data <- load_fu_allocation_data() %>% 
-    eta_template() %>% View
+  load_fu_allocation_data() %>% 
+    eta_template() %>% 
+    write_fu_eta_template(path = "~/Desktop/Test.xlsx", overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)
   
 })
 
