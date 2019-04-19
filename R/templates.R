@@ -556,6 +556,48 @@ load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocatio
 #' @examples
 #' load_fu_allocation_data() %>% 
 #'   eta_template()
-eta_template <- function(.fu_allocation_template){
-  
+eta_template <- function(.fu_allocation_template, 
+                         ef_product = "Ef.product",
+                         machine = "Machine",
+                         eu_product = "Eu.product", 
+                         eta = "eta", 
+                         phi = "phi.Eu",
+                         quantity = "Quantity", 
+                         ef_order = IEATools::product_iea_order,
+                         eu_order = IEATools::eu_product_order,
+                         .value = ".value"){
+  year_colnames <- year_cols(.fu_allocation_template, return_names = TRUE)
+  # Eliminate several columns that are not needed.
+  out <- .fu_allocation_template %>% 
+    # Keep only the columns of interest to us
+    dplyr::select(!!as.name(ef_product), !!as.name(machine), !!as.name(eu_product)) %>% 
+    # Eliminate rows where the analyst didn't fill any machines or products
+    dplyr::filter(!is.na(!!as.name(machine)) & !is.na(!!as.name(eu_product))) %>% 
+    unique() %>% 
+    # Add eta and phi columns (which will become rows in a moment)
+    dplyr::mutate(
+      !!as.name(eta) := "", 
+      !!as.name(phi) := ""
+    ) %>% 
+    # Now make them rows
+    tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(eta), !!as.name(phi)) %>% 
+    # Eliminate the temporary .value column
+    dplyr::mutate(
+      !!as.name(.value) := NULL
+    )
+  # Now add a column for each year that came in with .fu_allocation_template.
+  for (col in year_colnames) {
+    out <- out %>% 
+      dplyr::mutate(
+        !!as.name(col) := NA_real_
+      )
+  }
+  # And finally rearrange the rows to be in Ef product order defined by the IEA.
+  out %>% 
+    dplyr::mutate(
+      !!as.name(ef_product) := factor(!!as.name(ef_product), levels = ef_order),
+      !!as.name(eu_product) := factor(!!as.name(eu_product), levels = eu_order),
+      !!as.name(quantity) := factor(!!as.name(quantity), levels = c(eta, phi))
+    ) %>% 
+    dplyr::arrange(!!as.name(ef_product), !!as.name(machine), !!as.name(eu_product), !!as.name(quantity))
 }

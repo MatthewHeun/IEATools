@@ -22,6 +22,7 @@ coal_and_coal_products <- c(
 )
 usethis::use_data(coal_and_coal_products, overwrite = TRUE)
 
+
 primary_coal_products <- c(
   "Hard coal (if no detail)",
   "Brown coal (if no detail)",
@@ -33,14 +34,17 @@ primary_coal_products <- c(
 )
 usethis::use_data(primary_coal_products, overwrite = TRUE)
 
+
 peat_and_peat_products <- c(
   "Peat",
   "Peat products"
 )
 usethis::use_data(peat_and_peat_products, overwrite = TRUE)
 
+
 primary_peat_products <- "Peat"
 usethis::use_data(primary_peat_products, overwrite = TRUE)
+
 
 oil_and_oil_products <- c(
   "Crude/NGL/feedstocks (if no detail)",
@@ -79,6 +83,7 @@ primary_oil_products <- c(
 )
 usethis::use_data(primary_oil_products, overwrite = TRUE)
 
+
 renewable_products <- c(
   "Geothermal",
   "Hydro",
@@ -89,6 +94,7 @@ renewable_products <- c(
   "Other sources"
 )
 usethis::use_data(renewable_products, overwrite = TRUE)
+
 
 biofuel_and_waste_products <- c(
   "Industrial waste",
@@ -104,6 +110,7 @@ biofuel_and_waste_products <- c(
 )
 usethis::use_data(biofuel_and_waste_products, overwrite = TRUE)
 
+
 aggregation_flows <- c(
   "Total primary energy supply",
   "Total final consumption", 
@@ -116,6 +123,7 @@ aggregation_flows <- c(
 )
 usethis::use_data(aggregation_flows, overwrite = TRUE)
 
+
 memo_aggregation_flow_prefixes = c(
   "Memo: ", 
   "Electricity output (GWh)", 
@@ -123,11 +131,13 @@ memo_aggregation_flow_prefixes = c(
   )
 usethis::use_data(memo_aggregation_flow_prefixes, overwrite = TRUE)
 
+
 memo_aggregation_product_prefixes = c(
   "Memo: ", 
   "Total"
 )
 usethis::use_data(memo_aggregation_product_prefixes, overwrite = TRUE)
+
 
 interface_industries = c("Imports",
                          "Exports", 
@@ -136,11 +146,13 @@ interface_industries = c("Imports",
                          "Stock changes")
 usethis::use_data(interface_industries, overwrite = TRUE)
 
+
 ledger_side_iea_order <- c(
   "Supply", 
   "Consumption"
 )
 usethis::use_data(ledger_side_iea_order, overwrite = TRUE)
+
 
 # Defining the row order for IEA-style data frames is tricky and requires some manual intervention.
 # In the first step, we use the data frame created from load_tidy_iea_df,
@@ -161,6 +173,7 @@ fap_flow_iea_order <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
                values = "Energy industry own use_Main activity producer electricity plants")
 usethis::use_data(fap_flow_iea_order, overwrite = TRUE)
 
+
 product_iea_order <- load_tidy_iea_df(remove_zeroes = FALSE) %>% 
   dplyr::select(Product) %>% 
   unique() %>% 
@@ -175,4 +188,14 @@ product_iea_order <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   insert_after(after = "Natural gas", 
                values = paste("Natural gas", "(Oil and gas extraction)"))
 usethis::use_data(product_iea_order, overwrite = TRUE)
- 
+
+
+eu_product_order <- c(
+  "MD", 
+  "Light", 
+  "HTH.600.C", 
+  "MTH.200.C", 
+  "MTH.100.C", 
+  "LTH.20.C"
+)
+usethis::use_data(eu_product_order, overwrite = TRUE)

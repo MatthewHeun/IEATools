@@ -21,17 +21,8 @@ test_that("fu_allocation_template works as expected", {
     fu_allocation_template() 
 
   # Check rows
-  # check_fu_allocation_template(Allocation_template)
-  # expect_equal(Allocation_template$Flow.aggregation.point[[1]], "Energy industry own use")
-  # expect_equal(Allocation_template$Ef.product[[1]], "Refinery gas")
-  # expect_equal(Allocation_template$Destination[[1]], "Oil refineries")
-  # expect_equal(Allocation_template$Quantity[[1]], "E.dot")
-  # last_row <- nrow(Allocation_template)
-  # expect_equal(Allocation_template$Flow.aggregation.point[[last_row]], "Other")
-  # expect_equal(Allocation_template$Ef.product[[last_row]], "Electricity")
-  # expect_equal(Allocation_template$Destination[[last_row]], "Non-specified (other)")
-  # expect_equal(Allocation_template$Quantity[[last_row]], "C_3 [%]")
-  
+  check_fu_allocation_template(Allocation_template)
+
   # Check columns
   expected_colorder <- c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit",
                          "Ef.product", "Machine", "Eu.product", "Destination", 
@@ -85,12 +76,14 @@ test_that("write_fu_allocation_template works as expected", {
 })
 
 test_that("load_fu_allocation_data works as expected", {
-  FU_allocation_data <- load_fu_allocation_data()
+  load_fu_allocation_data() %>% 
+    check_fu_allocation_template()
 })
 
 test_that("eta_template works as expected", {
-  Filled_fu_template <- file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEATools")
+  FU_data <- load_fu_allocation_data() %>% 
+    eta_template() %>% View
+  
 })
 
 test_that("openxlsx works as expected", {
