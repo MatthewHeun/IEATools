@@ -555,24 +555,28 @@ load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocatio
 #' @examples
 #' load_fu_allocation_data() %>% 
 #'   eta_template()
-eta_template <- function(.fu_allocation_template, 
-                         # ef_product = "Ef.product",
-                         country = "Country",
-                         machine = "Machine",
-                         eu_product = "Eu.product", 
-                         eta_fu = "eta.fu", 
-                         phi_u = "phi.u",
-                         quantity = "Quantity", 
-                         # ef_order = IEATools::product_iea_order,
-                         eu_order = IEATools::eu_product_order,
-                         .value = ".value"){
+eta_fu_template <- function(.fu_allocations, 
+                            # ef_product = "Ef.product",
+                            country = "Country",
+                            machine = "Machine",
+                            eu_product = "Eu.product", 
+                            eta_fu = "eta.fu", 
+                            phi_u = "phi.u",
+                            quantity = "Quantity", 
+                            e_dot = "E.dot",
+                            e_dot_perc = paste(e_dot, "[%]"),
+                            maximum_values = "Maximum.values",
+                            # ef_order = IEATools::product_iea_order,
+                            eu_order = IEATools::eu_product_order,
+                            .year = ".year",
+                            .value = ".value"){
   # Grab the years of interest.
-  year_colnames <- year_cols(.fu_allocation_template, return_names = TRUE)
+  year_colnames <- year_cols(.fu_allocations, return_names = TRUE)
   # Calculate the Energy going into each machine at each year based on the C values
   # so that we can make a column of importances
   
   # Eliminate several columns that are not needed.
-  out <- .fu_allocation_template %>% 
+  out <- .fu_allocations %>% 
     # Keep only the columns of interest to us
     # dplyr::select(!!as.name(ef_product), !!as.name(machine), !!as.name(eu_product)) %>% 
     dplyr::select(!!as.name(country), !!as.name(machine), !!as.name(eu_product)) %>% 
@@ -611,9 +615,9 @@ eta_template <- function(.fu_allocation_template,
 
 #' Write a final-to-useful efficiencies template
 #'
-#' @param .fu_eta_template
+#' @param .eta_fu_template
 #' @param path 
-#' @param fu_eta_tab_name 
+#' @param eta_fu_tab_name 
 #' @param overwrite_file 
 #' @param overwrite_eta_tab 
 #' @param eta_row_font_color a hex string representing the font color for `eta` rows in the Excel file that is written by this function.
@@ -626,9 +630,9 @@ eta_template <- function(.fu_allocation_template,
 #' @export
 #'
 #' @examples
-write_fu_eta_template <- function(.fu_eta_template,
+write_eta_fu_template <- function(.eta_fu_template,
                                   path, 
-                                  fu_eta_tab_name = "FU etas", 
+                                  eta_fu_tab_name = "FU etas", 
                                   overwrite_file = FALSE, 
                                   overwrite_fu_eta_tab = FALSE, 
                                   eta_fu = "eta.fu",
@@ -645,21 +649,21 @@ write_fu_eta_template <- function(.fu_eta_template,
   if (file.exists(path)) {
     assertthat::assert_that(overwrite_file, msg = paste(path, "already exists. Try overwrite_file = TRUE?"))
     eta_wb <- openxlsx::loadWorkbook(path)
-    eta_tab_exists <- fu_eta_tab_name %in% openxlsx::sheets(eta_wb)
+    eta_tab_exists <- eta_fu_tab_name %in% openxlsx::sheets(eta_wb)
   } else {
     eta_wb <- openxlsx::createWorkbook()
   }
   if (eta_tab_exists) {
-    assertthat::assert_that(overwrite_fu_eta_tab, msg = paste(fu_eta_tab_name, "already exists. Try overwrite_tab = TRUE?"))  
+    assertthat::assert_that(overwrite_fu_eta_tab, msg = paste(eta_fu_tab_name, "already exists. Try overwrite_tab = TRUE?"))  
   } else {
-    openxlsx::addWorksheet(eta_wb, fu_eta_tab_name)
+    openxlsx::addWorksheet(eta_wb, eta_fu_tab_name)
   }
-  openxlsx::writeData(eta_wb, .fu_eta_template, sheet = fu_eta_tab_name)
+  openxlsx::writeData(eta_wb, .eta_fu_template, sheet = eta_fu_tab_name)
   
   # Add colors to rows
   
   # Start with the eta rows
-  eta_row_indices <- .fu_eta_template %>% 
+  eta_row_indices <- .eta_fu_template %>% 
     # Make a column of row numbers
     tibble::remove_rownames() %>% tibble::rownames_to_column(var = .rownum) %>% 
     # Filter to keep only the eta rows
@@ -677,11 +681,11 @@ write_fu_eta_template <- function(.fu_eta_template,
   # Define the eta row style
   eta_row_style <- openxlsx::createStyle(fontColour = eta_row_font_color, fgFill = eta_row_shading_color)
   # Apply the eta row style at the correct locations
-  openxlsx::addStyle(eta_wb, fu_eta_tab_name, style = eta_row_style, 
-                     rows = eta_row_indices, cols = 1:ncol(.fu_eta_template), gridExpand = TRUE, stack = TRUE)
+  openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = eta_row_style, 
+                     rows = eta_row_indices, cols = 1:ncol(.eta_fu_template), gridExpand = TRUE, stack = TRUE)
   
   # Set the column widths to "auto" so data can be seen.
-  openxlsx::setColWidths(eta_wb, fu_eta_tab_name, cols = 1:ncol(.fu_eta_template), widths = "auto")
+  openxlsx::setColWidths(eta_wb, eta_fu_tab_name, cols = 1:ncol(.eta_fu_template), widths = "auto")
   
   # Now save it
   openxlsx::saveWorkbook(eta_wb, file = path, overwrite = overwrite_file)

@@ -82,8 +82,8 @@ test_that("load_fu_allocation_data works as expected", {
 
 test_that("eta_template works as expected", {
   load_fu_allocation_data() %>% 
-    eta_template() %>% 
-    write_fu_eta_template(path = "~/Desktop/Test.xlsx", overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)
+    eta_fu_template() %>% 
+    write_eta_fu_template(path = "~/Desktop/Test.xlsx", overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)
   
 })
 
