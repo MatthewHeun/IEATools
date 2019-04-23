@@ -18,7 +18,7 @@ check_fu_allocation_template <- function(.DF){
 test_that("fu_allocation_template works as expected", {
   Allocation_template <- load_tidy_iea_df() %>% 
     specify_all() %>%
-    fu_allocation_template() 
+    fu_allocation_template()
 
   # Check rows
   check_fu_allocation_template(Allocation_template)
@@ -34,8 +34,7 @@ test_that("fu_allocation_template works as expected", {
 test_that("write_fu_allocation_template works as expected", {
   FU_allocation_template <- load_tidy_iea_df() %>% 
     specify_all() %>% 
-    fu_allocation_template() %>% 
-    arrange_iea_fu_allocation_template()
+    fu_allocation_template()
   # Get a temporary file in which to write two data frames on different tabs.
   f <- tempfile(fileext = ".xlsx")
   p <- FU_allocation_template %>% 

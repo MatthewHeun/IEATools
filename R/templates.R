@@ -174,10 +174,12 @@ write_fu_allocation_template <- function(.fu_allocation_template,
                        rows = gray_rows_for_year_col_index, cols = col_index, stack = TRUE)
   }
   
-  # Set percentage format for numbers in the e_dot_perc rows.
+  # Set percentage format for numbers in the e_dot_perc and C rows.
   e_dot_perc_style <- openxlsx::createStyle(numFmt = "PERCENTAGE")
   openxlsx::addStyle(fu_wb, fu_allocations_tab_name, style = e_dot_perc_style, 
                      rows = c(e_dot_perc_rows_fd, e_dot_perc_rows_eiou), cols = c(max_values_col_index, year_cols_indices), gridExpand = TRUE, stack = TRUE)
+  openxlsx::addStyle(fu_wb, fu_allocations_tab_name, style = e_dot_perc_style, 
+                     rows = c_rows_indices, cols = year_cols_indices, gridExpand = TRUE, stack = TRUE)
   
   # Set column widths to something intelligent
   openxlsx::setColWidths(fu_wb, fu_allocations_tab_name, cols = 1:ncol(.fu_allocation_template), widths = "auto")
