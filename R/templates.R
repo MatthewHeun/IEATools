@@ -574,8 +574,11 @@ eta_fu_template <- function(.fu_allocations,
                             .value = ".value"){
   # Grab the years of interest.
   year_colnames <- year_cols(.fu_allocations, return_names = TRUE)
-  # Calculate the Energy going into each machine at each year based on the C values
-  # so that we can make a column of importances
+  year_colindices <- year_cols(.fu_allocations)
+  # Calculate the Energy going into each machine at each year based on the E.dot rows and the C values
+  # so that we can make a column that indicates importance.
+  Totals_into_ef_machines <- .fu_allocations
+    
   
   # Eliminate several columns that are not needed.
   out <- .fu_allocations %>% 
