@@ -460,8 +460,6 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
                                      destination, quantity, maximum_values)
     # Columns that are not years and are not machine_and_product_columns are metadata columns.
     # We group by these columns later.
-    # meta_cols <- setdiff(colnames, year_colnames) %>% 
-    #   setdiff(machine_and_product_columns)
     meta_cols <- out %>% 
       matsindf::everything_except(c(year_colnames, machine_and_product_columns))  
     out <- out %>% 
