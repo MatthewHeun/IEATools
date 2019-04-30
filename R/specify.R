@@ -481,13 +481,8 @@ tp_sinks_sources <- function(.tidy_iea_df,
                              flow = "Flow", 
                              product = "Product",
                              e_dot = "E.dot"){
-                             # grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type")){
   type <- match.arg(type)
   grouping_vars <- matsindf::everything_except(.tidy_iea_df, flow_aggregation_point, flow, product, e_dot)
-  # assertthat::assert_that(!(flow_aggregation_point %in% grouping_vars), msg = paste(flow_aggregation_point, "cannot be a grouping variable of .tidy_iea_df in tp_sinks_sources()"))
-  # assertthat::assert_that(!(flow %in% grouping_vars), msg = paste(flow, "cannot be a grouping variable of .tidy_iea_df in tp_sinks_sources()"))
-  # assertthat::assert_that(!(product %in% grouping_vars), msg = paste(product, "cannot be a grouping variable of .tidy_iea_df in tp_sinks_sources()"))
-  # assertthat::assert_that(!(e_dot %in% grouping_vars), msg = paste(e_dot, "cannot be a grouping variable of .tidy_iea_df in tp_sinks_sources()"))
   use_rows <- .tidy_iea_df %>% 
     dplyr::group_by(!!!grouping_vars) %>% 
     dplyr::filter((!!as.name(flow_aggregation_point) == transformation_processes | !!as.name(flow_aggregation_point) == eiou) & !!as.name(e_dot) < 0) %>% 
