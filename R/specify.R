@@ -300,11 +300,9 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' @param own_use_elect_chp_heat a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "`Own use in electricity, CHP and heat plants`".
 #' @param pumped_storage a string identifying pumped storage plants in the flow column. Default is "`Pumped storage plants`".
 #' @param nuclear_industry a string identifying nuclear plants in the flow column. Default is "`Nuclear industry`".
-#' @param non_spec_energy a string identifying non-specified energy in the flow solumn. Default is "`Non-specified (energy)`".
 #' @param e_dot the name of the energy flow column in `.tidy_iea_df`. Default is "`E.dot`".
 #' @param negzeropos the name of a temporary column created in `.tidy_iea_df`. Default is "`.negzeropos`".
 #' @param main_act_producer_elect a string identifying main activity producer electricity plants. Default is "`Main activity producter electricity plants`".
-#' @param nonspecenergy_reclassify a string identifying the reclassified non-specified (energy) industry. Default is "`Non-specified (transformation)`".
 #'
 #' @return a modified version of `.tidy_iea_df`
 #' 
@@ -319,17 +317,16 @@ specify_interface_industries <- function(.tidy_iea_df,
 specify_tp_eiou <- function(.tidy_iea_df,
                             flow_aggregation_point = "Flow.aggregation.point",
                             eiou = "Energy industry own use",
+                            transformation_processes = "Transformation processes",
                             flow = "Flow", 
                             # Industries that receive EIOU but are not in Transformation processes
                             own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
                             pumped_storage = "Pumped storage plants",
                             nuclear_industry = "Nuclear industry",
-                            non_spec_energy = "Non-specified (energy)",
                             e_dot = "E.dot",
                             negzeropos = ".negzeropos",
                             # Places where the EIOU will e reassigned
-                            main_act_producer_elect = "Main activity producer electricity plants",
-                            nonspecenergy_reclassify = "Non-specified (transformation)"){
+                            main_act_producer_elect = "Main activity producer electricity plants"){
   .tidy_iea_df %>% 
     matsindf::verify_cols_missing(negzeropos)
   .tidy_iea_df %>% 
@@ -359,22 +356,13 @@ specify_tp_eiou <- function(.tidy_iea_df,
         # to Main activity producer electricity plants.
         !!as.name(flow) == nuclear_industry & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
         
-        # Some EIOU flows into "Liquefaction (LNG) / regasification plants".
-        # But there is no "Liquefaction (LNG) / regasification plants" in Transformation processes.
-        # So this EIOU flow needs to be reassigned.
-        # We choose to reassign "Liquefaction (LNG) / regasification plants" to liquefaction_regas_reclassify.
-        # 
-        # !!! Note this is now addressed in the primary function, as this flow goes into Oil and gas extraction. !!!
-        # 
-        # !!as.name(flow) == liquefaction_regas & !!as.name(flow_aggregation_point) == eiou ~ liquefaction_regas_reclassify,
-        
         # Non-specified (energy) is an Industry that receives EIOU.
         # However, Non-specified (energy) is not an Industry that makes anything.
         # So, we need to reassign these EIOU flows somwehere.
         # For the UK, the numbers for "Non-sepcified (energy)" are rather small.
         # In the absence of any better information, we apply 
         # "Non-specified (energy)" to nonspecenergy_reclassify.  
-        !!as.name(flow) == non_spec_energy & !!as.name(flow_aggregation_point) == eiou ~ nonspecenergy_reclassify,
+        # !!as.name(flow) == non_spec_energy & !!as.name(flow_aggregation_point) == eiou ~ nonspecenergy_reclassify,
         
         # Otherwise, just keep the same value for the flow column.
         TRUE ~ !!as.name(flow)
