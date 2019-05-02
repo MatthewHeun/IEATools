@@ -715,6 +715,7 @@ eta_fu_template <- function(.fu_allocations,
 #' @param path the file path where the template will be written
 #' @param eta_fu_tab_name the name of the final-to-useful efficiency tab. Default is "`FU etas`".
 #' @param overwrite_file a logical telling whether to overwrite a file, if it already exists. Default is `FALSE`.
+#' @param eta_fu the name of the final-to-useful efficiency rows in `.eta_fu_template`. Default is "`eta.fu`".
 #' @param eta_row_font_color a hex string representing the font color for `eta` rows in the Excel file that is written by this function.
 #'        Default is "`#B03C02`", a dark orange color.
 #' @param eta_row_shading_color a hex string representing the shading color for `eta` rows in the Excel file that is written by this function.
@@ -732,7 +733,8 @@ write_eta_fu_template <- function(.eta_fu_template,
                                   path, 
                                   eta_fu_tab_name = "FU etas", 
                                   overwrite_file = FALSE, 
-                                  overwrite_fu_eta_tab = FALSE, 
+                                  overwrite_fu_eta_tab = FALSE,
+                                  eta_fu = "eta.fu",
                                   eta_row_font_color = "#B03C02",
                                   eta_row_shading_color = "#FCEDE5",
                                   quantity = "Quantity",
@@ -744,7 +746,7 @@ write_eta_fu_template <- function(.eta_fu_template,
   # Check if path and tab exist.
   eta_tab_exists <- FALSE
   if (file.exists(path)) {
-    assertthat::assert_that(overwrite_file, msg = paste(path, "already exists. Try overwrite_file = TRUE?"))
+    assertthat::assert_that(overwrite_file, msg = paste(path, "File already exists!"))
     eta_wb <- openxlsx::loadWorkbook(path)
     eta_tab_exists <- eta_fu_tab_name %in% openxlsx::sheets(eta_wb)
   } else {

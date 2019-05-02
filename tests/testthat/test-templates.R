@@ -2,7 +2,8 @@
 context("Template functions")
 ###########################################################
 
-# This function tests final-to-useful allocation templates, filled or not.
+# This function tests final-to-useful allocation templates
+# created from the default data set, filled or not.
 check_fu_allocation_template <- function(.DF){
   expect_equal(.DF$Flow.aggregation.point[[1]], "Energy industry own use")
   expect_equal(.DF$Ef.product[[1]], "Refinery gas")
@@ -14,6 +15,32 @@ check_fu_allocation_template <- function(.DF){
   expect_equal(.DF$Destination[[last_row]], "Non-specified (other)")
   expect_equal(.DF$Quantity[[last_row]], "C_3 [%]")
 }
+
+test_that("openxlsx works as expected", {
+  # These are just tests for me to understand the openxlsx package.
+  Tidy_iea_df <- load_tidy_iea_df() %>% 
+    specify_all()
+  # Get a temporary file in which to write two data frames on different tabs.
+  f <- tempfile(fileext = ".xslx")
+  # Write the data from both countries, each on its own tab.
+  openxlsx::write.xlsx(list(GHA = Tidy_iea_df %>% 
+                              dplyr::filter(Country == "GHA"), 
+                            ZAF = Tidy_iea_df %>% 
+                              dplyr::filter(Country == "ZAF")),
+                       file = f)
+  # Read the data back in, one sheet at a time.
+  GHA <- openxlsx::read.xlsx(f, sheet = "GHA")
+  ZAF <- openxlsx::read.xlsx(f, sheet = "ZAF")
+  # And recombine into a single Tibble
+  Rebuild <- dplyr::bind_rows(GHA, ZAF) %>% 
+    dplyr::as_tibble()
+  # And we should get back what we wrote.
+  expect_equal(Rebuild, Tidy_iea_df)
+  # Clean up
+  if (file.exists(f)) {
+    file.remove(f)
+  }
+})
 
 test_that("fu_allocation_template works as expected", {
   Allocation_template <- load_tidy_iea_df() %>% 
@@ -75,39 +102,40 @@ test_that("write_fu_allocation_template works as expected", {
 })
 
 test_that("load_fu_allocation_data works as expected", {
+  # Load default data and check the filled table.
   load_fu_allocation_data() %>% 
     check_fu_allocation_template()
 })
 
-test_that("eta_template works as expected", {
-  load_fu_allocation_data() %>% 
-    eta_fu_template() %>% 
-    write_eta_fu_template(path = "~/Desktop/Test.xlsx", overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)
+test_that("write_eta_fu_template works as expected", {
+  Eta_fu_template <- load_fu_allocation_data() %>% 
+    eta_fu_template()
+  # Get a temporary file in which to write the blank template.
+  f <- tempfile(fileext = ".xlsx")
+  p <- Eta_fu_template %>% 
+    write_eta_fu_template(f, overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)
+  # Read the tab back in.
+  Template.reread <- openxlsx::read.xlsx(f, sheet = "FU etas") %>% 
+    dplyr::mutate(
+      Quantity = as.factor(Quantity)
+    ) %>% 
+    dplyr::rename(
+      # But we have to change the name of one column
+      `E.dot_machine_max [%]` = `E.dot_machine_max.[%]`
+    )
+  # Check that it was read back correctly.
+  expect_equal(Template.reread, Eta_fu_template)
+  expect_equal(Template.reread$Machine[[1]], "Wood stoves")
+  expect_equal(Template.reread$Machine[[nrow(Template.reread)]], "Oil furnaces")
+  expect_equal(as.character(Template.reread$Quantity[[1]]), "eta.fu")
+  expect_equal(as.character(Template.reread$Quantity[[nrow(Template.reread)]]), "phi.u")
   
-})
-
-test_that("openxlsx works as expected", {
-  # These are just tests for me to understand the openxlsx package.
-  Tidy_iea_df <- load_tidy_iea_df() %>% 
-    specify_all()
-  # Get a temporary file in which to write two data frames on different tabs.
-  f <- tempfile(fileext = ".xslx")
-  # Write the data from both countries, each on its own tab.
-  openxlsx::write.xlsx(list(GHA = Tidy_iea_df %>% 
-                              dplyr::filter(Country == "GHA"), 
-                            ZAF = Tidy_iea_df %>% 
-                              dplyr::filter(Country == "ZAF")),
-                       file = f)
-  # Read the data back in, one sheet at a time.
-  GHA <- openxlsx::read.xlsx(f, sheet = "GHA")
-  ZAF <- openxlsx::read.xlsx(f, sheet = "ZAF")
-  # And recombine into a single Tibble
-  Rebuild <- dplyr::bind_rows(GHA, ZAF) %>% 
-    dplyr::as_tibble()
-  # And we should get back what we wrote.
-  expect_equal(Rebuild, Tidy_iea_df)
+  # Now try to write it again.
+  expect_true(file.exists(f))
+  expect_error(Eta_fu_template %>% write_eta_fu_template(p), "File already exists!")
   # Clean up
   if (file.exists(f)) {
     file.remove(f)
   }
 })
+
