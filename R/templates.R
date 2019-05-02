@@ -720,7 +720,7 @@ eta_fu_template <- function(.fu_allocations,
       !!as.name(eta_fu) := "", 
       !!as.name(phi_u) := dplyr::case_when(
         !!as.name(eu_product) == md ~ 1, 
-        grepl("TH\\.", !!as.name(eu_product)) & endsWith(!!as.name(eu_product), ".C") ~ -9999
+        grepl("TH\\.", !!as.name(eu_product)) & endsWith(!!as.name(eu_product), ".C") ~ as.numeric(grep(pattern = "TH\\.(.*)\\.C", x = !!as.name(eu_product)))
       )
     ) %>% 
     # Now convert the eta_fu and phi_u columns into rows to be filled by the analyst
