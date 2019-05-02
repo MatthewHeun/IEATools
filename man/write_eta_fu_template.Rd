@@ -7,7 +7,7 @@
 write_eta_fu_template(.eta_fu_template, path,
   eta_fu_tab_name = "FU etas", overwrite_file = FALSE,
   overwrite_fu_eta_tab = FALSE, eta_fu = "eta.fu",
-  eta_row_font_color = "#104273", eta_row_shading_color = "#B8D8F5",
+  eta_row_font_color = "#B03C02", eta_row_shading_color = "#FCEDE5",
   quantity = "Quantity", .rownum = ".rownum")
 }
 \arguments{
