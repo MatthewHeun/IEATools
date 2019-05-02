@@ -4,12 +4,20 @@
 \alias{eta_fu_template}
 \title{Final-to-useful efficiency template}
 \usage{
-eta_fu_template(.fu_allocations, country = "Country",
+eta_fu_template(.fu_allocations, ledger_side = "Ledger.side",
+  flow_aggregation_point = "Flow.aggregation.point",
+  ef_product = "Ef.product", country = "Country",
   machine = "Machine", eu_product = "Eu.product", eta_fu = "eta.fu",
-  phi_u = "phi.u", quantity = "Quantity", e_dot = "E.dot",
-  e_dot_perc = paste(e_dot, "[\%]"), maximum_values = "Maximum.values",
+  phi_u = "phi.u", destination = "Destination",
+  quantity = "Quantity", maximum_values = "Maximum.values",
+  perc = "[\%]", e_dot = "E.dot", c_ = "C_",
+  c_perc = paste(substr(c_, 1, 1), perc),
   eu_order = IEATools::eu_product_order, .year = ".year",
-  .value = ".value")
+  .value = ".value", e_dot_dest = paste0(e_dot, "_dest"),
+  e_dot_machine = paste0(e_dot, "_machine"),
+  e_dot_machine_tot = paste0(e_dot_machine, "_tot"),
+  e_dot_machine_perc = paste(e_dot_machine, perc),
+  e_dot_machine_perc_max = paste0(e_dot_machine, "_max", " ", perc))
 }
 \arguments{
 \item{.fu_allocation_template}{a data frame containing a completed final-to-useful allocation template for final demand.}

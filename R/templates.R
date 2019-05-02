@@ -556,63 +556,137 @@ load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocatio
 #' load_fu_allocation_data() %>% 
 #'   eta_template()
 eta_fu_template <- function(.fu_allocations, 
-                            # ef_product = "Ef.product",
+                            ledger_side = "Ledger.side",
+                            flow_aggregation_point = "Flow.aggregation.point",
+                            ef_product = "Ef.product",
                             country = "Country",
                             machine = "Machine",
                             eu_product = "Eu.product", 
                             eta_fu = "eta.fu", 
                             phi_u = "phi.u",
+                            destination = "Destination",
                             quantity = "Quantity", 
-                            e_dot = "E.dot",
-                            e_dot_perc = paste(e_dot, "[%]"),
                             maximum_values = "Maximum.values",
+                            perc = "[%]",
+                            e_dot = "E.dot",
+                            c_ = "C_",
+                            c_perc = paste(substr(c_, 1, 1), perc),
                             # ef_order = IEATools::product_iea_order,
                             eu_order = IEATools::eu_product_order,
                             .year = ".year",
-                            .value = ".value"){
+                            .value = ".value", 
+                            e_dot_dest = paste0(e_dot, "_dest"),
+                            e_dot_machine = paste0(e_dot, "_machine"), 
+                            e_dot_machine_tot = paste0(e_dot_machine, "_tot"), 
+                            e_dot_machine_perc = paste(e_dot_machine, perc), 
+                            e_dot_machine_perc_max = paste0(e_dot_machine, "_max", " ", perc)){
   # Grab the years of interest.
   year_colnames <- year_cols(.fu_allocations, return_names = TRUE)
   year_colindices <- year_cols(.fu_allocations)
+  # Columns that are not years and are not machine_and_product_columns are metadata columns.
+  # We group by these columns later.
+  meta_cols <- .fu_allocations %>% 
+    matsindf::everything_except(c(year_colnames, ledger_side, flow_aggregation_point, ef_product, machine, eu_product, 
+                                  destination, quantity, maximum_values))  
+  
   # Calculate the Energy going into each machine at each year based on the E.dot rows and the C values
   # so that we can make a column that indicates importance.
   
   
   
   
-  # Join E.dot values
-  # e_dot_info <- .fu_allocations %>% 
-  #   dplyr::filter(!!as.name(quantity) == e_dot) %>% 
-  #   dplyr::select(-maximum_values, -machine, -eu_product, -quantity) %>% 
-  #   tidyr::gather(key = .year, value = !!as.name(paste0(e_dot, "_dest")), year_colnames)
-  # 
-  # c_info <- .fu_allocations %>% 
-  #   dplyr::filter(startsWith(!!as.name(quantity), "C_") & endsWith(!!as.name(quantity), "[%]")) %>% 
-  #   dplyr::filter(!is.na(!!as.name(machine))) %>% 
-  #   dplyr::mutate(
-  #     !!as.name(quantity) := dplyr::case_when(
-  #       startsWith(!!as.name(quantity), "C_") & endsWith(!!as.name(quantity), "[%]") ~ "C [%]", 
-  #       TRUE ~ !!as.name(quantity)
-  #     )
-  #   ) %>% 
-  #   dplyr::select(-maximum_values, -quantity) %>% 
-  #   tidyr::gather(key = .year, value = "C [%]", year_colnames) %>% 
-  #   dplyr::filter(!is.na(`C [%]`))
-  # 
-  # input_energy <- dplyr::full_join(c_info, e_dot_info) %>% 
-  #   dplyr::mutate(
-  #     E.dot_machine = `C [%]`/100 * E.dot_dest
-  #   )
+  # Get the E.dot values
+  e_dot_info <- .fu_allocations %>%
+    dplyr::filter(!!as.name(quantity) == e_dot) %>%
+    dplyr::select(-maximum_values, -machine, -eu_product, -quantity) %>%
+    tidyr::gather(key = .year, value = !!as.name(e_dot_dest), year_colnames) %>% 
+    dplyr::filter(!is.na(!!as.name(e_dot_dest)))
+
+  # And the C values
+  c_info <- .fu_allocations %>%
+    dplyr::filter(startsWith(!!as.name(quantity), c_) & endsWith(!!as.name(quantity), perc)) %>%
+    dplyr::filter(!is.na(!!as.name(machine))) %>%
+    dplyr::mutate(
+      !!as.name(quantity) := dplyr::case_when(
+        startsWith(!!as.name(quantity), c_) & endsWith(!!as.name(quantity), perc) ~ c_perc,
+        TRUE ~ !!as.name(quantity)
+      )
+    ) %>%
+    dplyr::select(-maximum_values, -quantity) %>%
+    tidyr::gather(key = .year, value = !!as.name(c_perc), year_colnames) %>%
+    dplyr::filter(!is.na(!!as.name(c_perc)))
+
+  # Join the E.dot and C values
+  input_energy <- dplyr::full_join(c_info, e_dot_info) %>%
+    dplyr::mutate(
+      # Calcualte the energy flow into each f-->u machine
+      # for each row of the table
+      # (each combination of Ef.product and Machine.
+      !!as.name(e_dot_machine) := !!as.name(c_perc)/100 * !!as.name(e_dot_dest)
+    ) %>% 
+    # Group by the metadata columns and the Machine column
+    dplyr::group_by(!!!meta_cols, !!as.name(machine), !!as.name(.year)) %>% 
+    # Summarise to aggregate the energy going into each machine.
+    dplyr::summarise(
+      !!as.name(e_dot_machine) := sum(!!as.name(e_dot_machine))
+    ) %>% 
+    dplyr::ungroup()
+  # Calculate total input energy for each combination of meta variables
+  input_energy_totals <- input_energy %>% 
+    dplyr::group_by(!!!meta_cols, !!as.name(.year)) %>% 
+    dplyr::summarise(
+      !!as.name(e_dot_machine_tot) := sum(!!as.name(e_dot_machine))
+    ) %>% 
+    dplyr::ungroup()
+  # Now calculation fractions of all input energy entering each fu machine in each year
+  input_energy_percs <- dplyr::full_join(input_energy, input_energy_totals) %>% 
+    dplyr::mutate(
+      !!as.name(e_dot_machine_perc) := !!as.name(e_dot_machine) / !!as.name(e_dot_machine_tot) * 100, 
+      # Eliminate columns we no longer need.
+      !!as.name(e_dot_machine) := NULL,
+      !!as.name(e_dot_machine_tot) := NULL
+    )
+  # Calculate the maximum percentage of all input energy across all years for each machine
+  input_energy_max_percs <- input_energy_percs %>% 
+    dplyr::group_by(!!!meta_cols, !!as.name(machine)) %>% 
+    dplyr::summarise(
+      !!as.name(e_dot_machine_perc_max) := max(!!as.name(e_dot_machine_perc))
+    ) %>% 
+    dplyr::ungroup()
+  
   
     
   
   # Eliminate several columns that are not needed.
+  # out <- .fu_allocations %>% 
+  #   # Keep only the columns of interest to us
+  #   # dplyr::select(!!as.name(ef_product), !!as.name(machine), !!as.name(eu_product)) %>% 
+  #   # dplyr::select(!!as.name(country), !!as.name(machine), !!as.name(eu_product)) %>% 
+  #   dplyr::select(!!!meta_cols, !!as.name(machine), !!as.name(eu_product)) %>% 
+  #   dplyr::left_join(input_energy_max_percs) %>% 
+  #   # Eliminate rows where the analyst didn't fill any machines or products
+  #   dplyr::filter(!is.na(!!as.name(machine)) & !is.na(!!as.name(eu_product))) %>% 
+  #   unique() %>% 
+  #   # Add eta and phi columns (which will become rows in a moment)
+  #   dplyr::mutate(
+  #     !!as.name(eta_fu) := "", 
+  #     !!as.name(phi_u) := ""
+  #   ) %>% 
+  #   # Now make them rows
+  #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(eta_fu), !!as.name(phi_u)) %>% 
+  #   # Eliminate the temporary .value column
+  #   dplyr::mutate(
+  #     !!as.name(.value) := NULL
+  #   )
+
   out <- .fu_allocations %>% 
     # Keep only the columns of interest to us
-    # dplyr::select(!!as.name(ef_product), !!as.name(machine), !!as.name(eu_product)) %>% 
-    dplyr::select(!!as.name(country), !!as.name(machine), !!as.name(eu_product)) %>% 
+    dplyr::select(!!!meta_cols, !!as.name(machine), !!as.name(eu_product)) %>% 
     # Eliminate rows where the analyst didn't fill any machines or products
     dplyr::filter(!is.na(!!as.name(machine)) & !is.na(!!as.name(eu_product))) %>% 
     unique() %>% 
+    # Join with maximum percentages of energy input to the fu machines
+    dplyr::left_join(input_energy_max_percs) %>% 
     # Add eta and phi columns (which will become rows in a moment)
     dplyr::mutate(
       !!as.name(eta_fu) := "", 
@@ -624,6 +698,7 @@ eta_fu_template <- function(.fu_allocations,
     dplyr::mutate(
       !!as.name(.value) := NULL
     )
+  
   # Now add a column for each year that came in with .fu_allocation_template.
   for (col in year_colnames) {
     out <- out %>% 
@@ -635,11 +710,12 @@ eta_fu_template <- function(.fu_allocations,
   out %>% 
     dplyr::mutate(
       # !!as.name(ef_product) := factor(!!as.name(ef_product), levels = ef_order),
-      !!as.name(eu_product) := factor(!!as.name(eu_product), levels = eu_order),
+      # !!as.name(eu_product) := factor(!!as.name(eu_product), levels = eu_order),
       !!as.name(quantity) := factor(!!as.name(quantity), levels = c(eta_fu, phi_u))
     ) %>% 
     # dplyr::arrange(!!as.name(ef_product), !!as.name(machine), !!as.name(eu_product), !!as.name(quantity))
-    dplyr::arrange(!!as.name(country), !!as.name(machine), !!as.name(eu_product), !!as.name(quantity))
+    # dplyr::arrange(!!as.name(country), !!as.name(machine), !!as.name(eu_product), !!as.name(quantity))
+    dplyr::arrange(!!as.name(country), dplyr::desc(!!as.name(e_dot_machine_perc_max)), !!as.name(machine), !!as.name(eu_product), !!as.name(quantity))
 }
 
 
