@@ -717,11 +717,13 @@ eta_fu_template <- function(.fu_allocations,
     dplyr::left_join(input_energy_max_percs) %>% 
     # Add eta and phi columns (which will become rows in a moment)
     dplyr::mutate(
-      !!as.name(eta_fu) := "", 
-      !!as.name(phi_u) := dplyr::case_when(
-        !!as.name(eu_product) == md ~ 1, 
-        grepl("TH\\.", !!as.name(eu_product)) & endsWith(!!as.name(eu_product), ".C") ~ as.numeric(grep(pattern = "TH\\.(.*)\\.C", x = !!as.name(eu_product)))
-      )
+      # temperature = strsplit(!!as.name(eu_product), split = ".", fixed = TRUE) %>% unlist() %>% magrittr::extract(2)
+      temperature = strsplit(!!as.name(eu_product), split = ".", fixed = TRUE) %>% magrittr::extract(2)
+      # !!as.name(eta_fu) := "", 
+      # !!as.name(phi_u) := dplyr::case_when(
+      #   !!as.name(eu_product) == md ~ 1, 
+      #   grepl("TH\\.", !!as.name(eu_product)) & endsWith(!!as.name(eu_product), ".C") ~ as.numeric(grep(pattern = "TH\\.(.*)\\.C", x = !!as.name(eu_product)))
+      # )
     ) %>% 
     # Now convert the eta_fu and phi_u columns into rows to be filled by the analyst
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(eta_fu), !!as.name(phi_u))
