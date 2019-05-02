@@ -557,6 +557,7 @@ load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocatio
 #' @param ef_product the name of the final energy product column in `.fu_allocations`. Default is "`Ef.product`".
 #' @param machine the name of the machine column in `.fu_allocations`. Default is "`Machine`".
 #' @param eu_product the name of the useful energy product column in `.fu_allocations`. Default is "`Eu.product`".
+#' @param md the name of the mechanical drive useful energy carrier in the `eu_product` column. Default is "`MD`".
 #' @param eta_fu the name for final-to-useful energy efficiencies to be entered by the analyst.  Default is "`eta.fu`". 
 #' @param phi_u the name for the exergy-to-energy ratio for useful energy carriers to be entered by the analyst.  Default is "`phi.u`". 
 #' @param destination the name for the destination for final and useful energy (an sector). Default is "`Destination`".
@@ -587,6 +588,9 @@ eta_fu_template <- function(.fu_allocations,
                             ef_product = "Ef.product",
                             machine = "Machine",
                             eu_product = "Eu.product", 
+                            md = "MD", 
+                            th. = "TH.",
+                            degC = ".C",
                             eta_fu = "eta.fu", 
                             phi_u = "phi.u",
                             destination = "Destination",
@@ -673,7 +677,37 @@ eta_fu_template <- function(.fu_allocations,
     dplyr::ungroup()
   
   # Now we're ready to put everything together to make the f-->u efficiencies template.
-  out <- .fu_allocations %>% 
+  # out <- .fu_allocations %>% 
+  #   # Keep only the columns of interest to us
+  #   dplyr::select(!!!meta_cols, !!as.name(machine), !!as.name(eu_product)) %>% 
+  #   # Eliminate rows where the analyst didn't fill any machines or products
+  #   dplyr::filter(!is.na(!!as.name(machine)) & !is.na(!!as.name(eu_product))) %>% 
+  #   unique() %>% 
+  #   # Join with maximum percentages of energy input to the fu machines
+  #   dplyr::left_join(input_energy_max_percs) %>% 
+  #   # Add eta and phi columns (which will become rows in a moment)
+  #   dplyr::mutate(
+  #     !!as.name(eta_fu) := "", 
+  #     !!as.name(phi_u) := dplyr::case_when(
+  #       !!as.name(eu_product) == md ~ 1
+  #     )
+  #   ) %>% 
+  #   # Now make them rows
+  #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(eta_fu), !!as.name(phi_u)) %>% 
+  #   # Eliminate the temporary .value column
+  #   dplyr::mutate(
+  #     !!as.name(.value) := NULL
+  #   )
+  # 
+  # # Now add a column for each year that came in with .fu_allocation_template.
+  # for (col in year_colnames) {
+  #   out <- out %>% 
+  #     dplyr::mutate(
+  #       !!as.name(col) := NA_real_
+  #     )
+  # }
+  
+  prelim_out <- .fu_allocations %>% 
     # Keep only the columns of interest to us
     dplyr::select(!!!meta_cols, !!as.name(machine), !!as.name(eu_product)) %>% 
     # Eliminate rows where the analyst didn't fill any machines or products
@@ -684,24 +718,24 @@ eta_fu_template <- function(.fu_allocations,
     # Add eta and phi columns (which will become rows in a moment)
     dplyr::mutate(
       !!as.name(eta_fu) := "", 
-      !!as.name(phi_u) := ""
-    ) %>% 
-    # Now make them rows
-    tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(eta_fu), !!as.name(phi_u)) %>% 
-    # Eliminate the temporary .value column
-    dplyr::mutate(
-      !!as.name(.value) := NULL
-    )
-  
-  # Now add a column for each year that came in with .fu_allocation_template.
-  for (col in year_colnames) {
-    out <- out %>% 
-      dplyr::mutate(
-        !!as.name(col) := NA_real_
+      !!as.name(phi_u) := dplyr::case_when(
+        !!as.name(eu_product) == md ~ 1, 
+        grepl("TH\\.", !!as.name(eu_product)) & endsWith(!!as.name(eu_product), ".C") ~ -9999
       )
-  }
-  # And finally sort the rows and return the result.
-  out %>% 
+    ) %>% 
+    # Now convert the eta_fu and phi_u columns into rows to be filled by the analyst
+    tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(eta_fu), !!as.name(phi_u))
+  
+  # We need one of the prelim_out data frames for each year
+  lapply(year_colnames, function(yr){
+    prelim_out %>% 
+      dplyr::mutate(
+        !!as.name(.year) := yr
+      )
+  }) %>% 
+    dplyr::bind_rows() %>% 
+    tidyr::spread(key = !!as.name(.year), value = !!as.name(.value)) %>% 
+    # And finally sort the rows and return the result.
     dplyr::mutate(
       !!as.name(quantity) := factor(!!as.name(quantity), levels = c(eta_fu, phi_u))
     ) %>% 

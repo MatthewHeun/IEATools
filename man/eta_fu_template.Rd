@@ -7,10 +7,11 @@
 eta_fu_template(.fu_allocations, ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
   ef_product = "Ef.product", machine = "Machine",
-  eu_product = "Eu.product", eta_fu = "eta.fu", phi_u = "phi.u",
-  destination = "Destination", quantity = "Quantity",
-  maximum_values = "Maximum.values", perc = "[\%]", e_dot = "E.dot",
-  c_ = "C_", c_perc = paste(substr(c_, 1, 1), perc), .year = ".year",
+  eu_product = "Eu.product", md = "MD", th. = "TH.", degC = ".C",
+  eta_fu = "eta.fu", phi_u = "phi.u", destination = "Destination",
+  quantity = "Quantity", maximum_values = "Maximum.values",
+  perc = "[\%]", e_dot = "E.dot", c_ = "C_",
+  c_perc = paste(substr(c_, 1, 1), perc), .year = ".year",
   .value = ".value", e_dot_dest = paste0(e_dot, "_dest"),
   e_dot_machine = paste0(e_dot, "_machine"),
   e_dot_machine_tot = paste0(e_dot_machine, "_tot"),
@@ -29,6 +30,8 @@ eta_fu_template(.fu_allocations, ledger_side = "Ledger.side",
 \item{machine}{the name of the machine column in \code{.fu_allocations}. Default is "\code{Machine}".}
 
 \item{eu_product}{the name of the useful energy product column in \code{.fu_allocations}. Default is "\code{Eu.product}".}
+
+\item{md}{the name of the mechanical drive useful energy carrier in the \code{eu_product} column. Default is "\code{MD}".}
 
 \item{eta_fu}{the name for final-to-useful energy efficiencies to be entered by the analyst.  Default is "\code{eta.fu}".}
 
