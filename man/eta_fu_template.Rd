@@ -6,32 +6,77 @@
 \usage{
 eta_fu_template(.fu_allocations, ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
-  ef_product = "Ef.product", country = "Country",
-  machine = "Machine", eu_product = "Eu.product", eta_fu = "eta.fu",
-  phi_u = "phi.u", destination = "Destination",
-  quantity = "Quantity", maximum_values = "Maximum.values",
-  perc = "[\%]", e_dot = "E.dot", c_ = "C_",
-  c_perc = paste(substr(c_, 1, 1), perc),
-  eu_order = IEATools::eu_product_order, .year = ".year",
+  ef_product = "Ef.product", machine = "Machine",
+  eu_product = "Eu.product", eta_fu = "eta.fu", phi_u = "phi.u",
+  destination = "Destination", quantity = "Quantity",
+  maximum_values = "Maximum.values", perc = "[\%]", e_dot = "E.dot",
+  c_ = "C_", c_perc = paste(substr(c_, 1, 1), perc), .year = ".year",
   .value = ".value", e_dot_dest = paste0(e_dot, "_dest"),
   e_dot_machine = paste0(e_dot, "_machine"),
   e_dot_machine_tot = paste0(e_dot_machine, "_tot"),
   e_dot_machine_perc = paste(e_dot_machine, perc),
-  e_dot_machine_perc_max = paste0(e_dot_machine, "_max", " ", perc))
+  e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc))
 }
 \arguments{
-\item{.fu_allocation_template}{a data frame containing a completed final-to-useful allocation template for final demand.}
+\item{.fu_allocations}{a data frame containing a completed final-to-useful allocation template for final demand.}
 
-\item{fu_allocations_tab_name}{the name of the tab on which the template will be written. Default is "\code{FU Allocations}".}
+\item{ledger_side}{the name of the ledger side column in \code{.fu_allocations}. Default is "\code{Ledger.side}".}
+
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.fu_allocations}. Default is "\code{Flow.aggregation.point}".}
+
+\item{ef_product}{the name of the final energy product column in \code{.fu_allocations}. Default is "\code{Ef.product}".}
+
+\item{machine}{the name of the machine column in \code{.fu_allocations}. Default is "\code{Machine}".}
+
+\item{eu_product}{the name of the useful energy product column in \code{.fu_allocations}. Default is "\code{Eu.product}".}
+
+\item{eta_fu}{the name for final-to-useful energy efficiencies to be entered by the analyst.  Default is "\code{eta.fu}".}
+
+\item{phi_u}{the name for the exergy-to-energy ratio for useful energy carriers to be entered by the analyst.  Default is "\code{phi.u}".}
+
+\item{destination}{the name for the destination for final and useful energy (an sector). Default is "\code{Destination}".}
+
+\item{quantity}{the name for the quantity column in \code{.fu_allocations}. Default is "\code{Quantity}".}
+
+\item{maximum_values}{the name for the maximum values column in \code{.fu_allocations}. Default is "\code{Maximum.values}".}
+
+\item{perc}{a string that gives the units for percent. Default is "\code{[\%]}".}
+
+\item{e_dot}{the name for energy flow rates. Default is "\code{E.dot}".}
+
+\item{c_}{the string prefix for allocation variables. Default is "\code{C_}".}
+
+\item{c_perc}{the string for generic allocation variables in percentage terms. Default is "\code{C [\%]}".}
+
+\item{.year}{the name of a temporary year column. Default is "\code{.year}".}
+
+\item{.value}{the name of a temporary value column. Default is "\code{.value}".}
+
+\item{e_dot_dest}{the name of a temporary column containing energy flows into a destination. Default is "\code{E.dot_dest}".}
+
+\item{e_dot_machine}{the name of a temporary column containing energy flows into a final-to-useful machine. Default is "\code{E.dot_machine}".}
+
+\item{e_dot_machine_tot}{the name of a temporary column containing sums of energy flows into a final-to-useful machines. Default is "\code{E.dot_machine_tot}".}
+
+\item{e_dot_machine_perc}{the name of a temporary column percentages of total energy flow into machines.  Default is "\code{E.dot_machine [\%]}".}
+
+\item{e_dot_machine_max_perc}{the name for a column of maximum percentages (across all years) of total energy flow into machines.  Default is "\code{E.dot_machine_max [\%]}".}
 }
 \value{
 a data frame containing row-ordered blank template for final-to-useful machine efficiencies.
 }
 \description{
-Using a final-to-useful allocation table,
+Using a filled final-to-useful allocation table,
 this function generates a blank template for final-to-useful machine efficiencies.
+}
+\details{
+The template includes a column (\code{e_dot_machine_perc_max})
+that contains the percentage of all energy flowing into final-to-useful machines,
+thereby providing guidance to the analyst about the efficiencies that carry the most weight
+for the entire analysis.
+The template is sorted by metadata column groups and by the values in the \code{e_dot_machine_perc_max} column.
 }
 \examples{
 load_fu_allocation_data() \%>\% 
-  eta_template()
+  eta_fu_template()
 }

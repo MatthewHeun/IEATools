@@ -542,11 +542,37 @@ load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocatio
 
 #' Final-to-useful efficiency template
 #' 
-#' Using a final-to-useful allocation table, 
+#' Using a filled final-to-useful allocation table, 
 #' this function generates a blank template for final-to-useful machine efficiencies.
+#' 
+#' The template includes a column (`e_dot_machine_perc_max`) 
+#' that contains the percentage of all energy flowing into final-to-useful machines,
+#' thereby providing guidance to the analyst about the efficiencies that carry the most weight
+#' for the entire analysis.
+#' The template is sorted by metadata column groups and by the values in the `e_dot_machine_perc_max` column.
 #'
-#' @param .fu_allocation_template a data frame containing a completed final-to-useful allocation template for final demand.
-#' @param fu_allocations_tab_name the name of the tab on which the template will be written. Default is "`FU Allocations`".
+#' @param .fu_allocations a data frame containing a completed final-to-useful allocation template for final demand.
+#' @param ledger_side the name of the ledger side column in `.fu_allocations`. Default is "`Ledger.side`".
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.fu_allocations`. Default is "`Flow.aggregation.point`".
+#' @param ef_product the name of the final energy product column in `.fu_allocations`. Default is "`Ef.product`".
+#' @param machine the name of the machine column in `.fu_allocations`. Default is "`Machine`".
+#' @param eu_product the name of the useful energy product column in `.fu_allocations`. Default is "`Eu.product`".
+#' @param eta_fu the name for final-to-useful energy efficiencies to be entered by the analyst.  Default is "`eta.fu`". 
+#' @param phi_u the name for the exergy-to-energy ratio for useful energy carriers to be entered by the analyst.  Default is "`phi.u`". 
+#' @param destination the name for the destination for final and useful energy (an sector). Default is "`Destination`".
+#' @param quantity the name for the quantity column in `.fu_allocations`. Default is "`Quantity`".
+#' @param maximum_values the name for the maximum values column in `.fu_allocations`. Default is "`Maximum.values`".
+#' @param perc a string that gives the units for percent. Default is "`[%]`".
+#' @param e_dot the name for energy flow rates. Default is "`E.dot`".
+#' @param c_ the string prefix for allocation variables. Default is "`C_`". 
+#' @param c_perc the string for generic allocation variables in percentage terms. Default is "`C [%]`".
+#' @param .year the name of a temporary year column. Default is "`.year`".
+#' @param .value the name of a temporary value column. Default is "`.value`".
+#' @param e_dot_dest the name of a temporary column containing energy flows into a destination. Default is "`E.dot_dest`".
+#' @param e_dot_machine the name of a temporary column containing energy flows into a final-to-useful machine. Default is "`E.dot_machine`".
+#' @param e_dot_machine_tot the name of a temporary column containing sums of energy flows into a final-to-useful machines. Default is "`E.dot_machine_tot`".
+#' @param e_dot_machine_perc the name of a temporary column percentages of total energy flow into machines.  Default is "`E.dot_machine [%]`".
+#' @param e_dot_machine_max_perc the name for a column of maximum percentages (across all years) of total energy flow into machines.  Default is "`E.dot_machine_max [%]`".
 #'
 #' @return a data frame containing row-ordered blank template for final-to-useful machine efficiencies.
 #' 
@@ -554,12 +580,11 @@ load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocatio
 #'
 #' @examples
 #' load_fu_allocation_data() %>% 
-#'   eta_template()
+#'   eta_fu_template()
 eta_fu_template <- function(.fu_allocations, 
                             ledger_side = "Ledger.side",
                             flow_aggregation_point = "Flow.aggregation.point",
                             ef_product = "Ef.product",
-                            country = "Country",
                             machine = "Machine",
                             eu_product = "Eu.product", 
                             eta_fu = "eta.fu", 
@@ -571,38 +596,32 @@ eta_fu_template <- function(.fu_allocations,
                             e_dot = "E.dot",
                             c_ = "C_",
                             c_perc = paste(substr(c_, 1, 1), perc),
-                            # ef_order = IEATools::product_iea_order,
-                            eu_order = IEATools::eu_product_order,
                             .year = ".year",
                             .value = ".value", 
                             e_dot_dest = paste0(e_dot, "_dest"),
                             e_dot_machine = paste0(e_dot, "_machine"), 
                             e_dot_machine_tot = paste0(e_dot_machine, "_tot"), 
                             e_dot_machine_perc = paste(e_dot_machine, perc), 
-                            e_dot_machine_perc_max = paste0(e_dot_machine, "_max", " ", perc)){
+                            e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc)){
+  # Preliminary stuff
+  # Ensure that several columns don't exist already in 
   # Grab the years of interest.
   year_colnames <- year_cols(.fu_allocations, return_names = TRUE)
-  year_colindices <- year_cols(.fu_allocations)
-  # Columns that are not years and are not machine_and_product_columns are metadata columns.
+  # Columns that are not years and are not other specific columns are metadata columns.
   # We group by these columns later.
   meta_cols <- .fu_allocations %>% 
     matsindf::everything_except(c(year_colnames, ledger_side, flow_aggregation_point, ef_product, machine, eu_product, 
                                   destination, quantity, maximum_values))  
   
-  # Calculate the Energy going into each machine at each year based on the E.dot rows and the C values
-  # so that we can make a column that indicates importance.
-  
-  
-  
-  
-  # Get the E.dot values
+  # To create the e_dot_machine_max_perc column, 
+  # we need to calculate the energy flowing into each f-->u machine.
+  # The first step is to isolate the E.dot rows
   e_dot_info <- .fu_allocations %>%
     dplyr::filter(!!as.name(quantity) == e_dot) %>%
     dplyr::select(-maximum_values, -machine, -eu_product, -quantity) %>%
     tidyr::gather(key = .year, value = !!as.name(e_dot_dest), year_colnames) %>% 
     dplyr::filter(!is.na(!!as.name(e_dot_dest)))
-
-  # And the C values
+  # We also isolate the allocation (C) rows
   c_info <- .fu_allocations %>%
     dplyr::filter(startsWith(!!as.name(quantity), c_) & endsWith(!!as.name(quantity), perc)) %>%
     dplyr::filter(!is.na(!!as.name(machine))) %>%
@@ -615,8 +634,7 @@ eta_fu_template <- function(.fu_allocations,
     dplyr::select(-maximum_values, -quantity) %>%
     tidyr::gather(key = .year, value = !!as.name(c_perc), year_colnames) %>%
     dplyr::filter(!is.na(!!as.name(c_perc)))
-
-  # Join the E.dot and C values
+  # Now we join the E.dot and C values and calculate the energy flowing into each machine
   input_energy <- dplyr::full_join(c_info, e_dot_info) %>%
     dplyr::mutate(
       # Calcualte the energy flow into each f-->u machine
@@ -631,7 +649,7 @@ eta_fu_template <- function(.fu_allocations,
       !!as.name(e_dot_machine) := sum(!!as.name(e_dot_machine))
     ) %>% 
     dplyr::ungroup()
-  # Calculate total input energy for each combination of meta variables
+  # Calculate total input energy for each combination of metadata variables
   input_energy_totals <- input_energy %>% 
     dplyr::group_by(!!!meta_cols, !!as.name(.year)) %>% 
     dplyr::summarise(
@@ -650,35 +668,11 @@ eta_fu_template <- function(.fu_allocations,
   input_energy_max_percs <- input_energy_percs %>% 
     dplyr::group_by(!!!meta_cols, !!as.name(machine)) %>% 
     dplyr::summarise(
-      !!as.name(e_dot_machine_perc_max) := max(!!as.name(e_dot_machine_perc))
+      !!as.name(e_dot_machine_max_perc) := max(!!as.name(e_dot_machine_perc))
     ) %>% 
     dplyr::ungroup()
   
-  
-    
-  
-  # Eliminate several columns that are not needed.
-  # out <- .fu_allocations %>% 
-  #   # Keep only the columns of interest to us
-  #   # dplyr::select(!!as.name(ef_product), !!as.name(machine), !!as.name(eu_product)) %>% 
-  #   # dplyr::select(!!as.name(country), !!as.name(machine), !!as.name(eu_product)) %>% 
-  #   dplyr::select(!!!meta_cols, !!as.name(machine), !!as.name(eu_product)) %>% 
-  #   dplyr::left_join(input_energy_max_percs) %>% 
-  #   # Eliminate rows where the analyst didn't fill any machines or products
-  #   dplyr::filter(!is.na(!!as.name(machine)) & !is.na(!!as.name(eu_product))) %>% 
-  #   unique() %>% 
-  #   # Add eta and phi columns (which will become rows in a moment)
-  #   dplyr::mutate(
-  #     !!as.name(eta_fu) := "", 
-  #     !!as.name(phi_u) := ""
-  #   ) %>% 
-  #   # Now make them rows
-  #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(eta_fu), !!as.name(phi_u)) %>% 
-  #   # Eliminate the temporary .value column
-  #   dplyr::mutate(
-  #     !!as.name(.value) := NULL
-  #   )
-
+  # Now we're ready to put everything together to make the f-->u efficiencies template.
   out <- .fu_allocations %>% 
     # Keep only the columns of interest to us
     dplyr::select(!!!meta_cols, !!as.name(machine), !!as.name(eu_product)) %>% 
@@ -706,32 +700,30 @@ eta_fu_template <- function(.fu_allocations,
         !!as.name(col) := NA_real_
       )
   }
-  # And finally sort the rows.
+  # And finally sort the rows and return the result.
   out %>% 
     dplyr::mutate(
-      # !!as.name(ef_product) := factor(!!as.name(ef_product), levels = ef_order),
-      # !!as.name(eu_product) := factor(!!as.name(eu_product), levels = eu_order),
       !!as.name(quantity) := factor(!!as.name(quantity), levels = c(eta_fu, phi_u))
     ) %>% 
-    # dplyr::arrange(!!as.name(ef_product), !!as.name(machine), !!as.name(eu_product), !!as.name(quantity))
-    # dplyr::arrange(!!as.name(country), !!as.name(machine), !!as.name(eu_product), !!as.name(quantity))
-    dplyr::arrange(!!as.name(country), dplyr::desc(!!as.name(e_dot_machine_perc_max)), !!as.name(machine), !!as.name(eu_product), !!as.name(quantity))
+    dplyr::arrange(!!!meta_cols, dplyr::desc(!!as.name(e_dot_machine_max_perc)), !!as.name(machine), !!as.name(eu_product), !!as.name(quantity))
 }
 
 
-#' Write a final-to-useful efficiencies template
+#' Write a final-to-useful efficiencies template to a file
 #'
-#' @param .eta_fu_template
-#' @param path 
-#' @param eta_fu_tab_name 
-#' @param overwrite_file 
-#' @param overwrite_eta_tab 
+#' @param .eta_fu_template a template for final-to-useful energy efficiency values, generated by ``
+#' @param path the file path where the template will be written
+#' @param eta_fu_tab_name the name of the final-to-useful efficiency tab. Default is "`FU etas`".
+#' @param overwrite_file a logical telling whether to overwrite a file, if it already exists. Default is `FALSE`.
 #' @param eta_row_font_color a hex string representing the font color for `eta` rows in the Excel file that is written by this function.
-#'        Default is "`#104273`", a dark blue color.
+#'        Default is "`#B03C02`", a dark orange color.
 #' @param eta_row_shading_color a hex string representing the shading color for `eta` rows in the Excel file that is written by this function.
-#'        Default is "`#B8D8F5`", a light blue color.
+#'        Default is "`#FCEDE5`", a light orange color.
+#' @param overwrite_fu_eta_tab 
+#' @param quantity the name of the quantity column in `.eta_fu_template`. Default is "`Quantity`".
+#' @param .rownum the name of a temporary column containing row numbers. Default is "`.rownum`". 
 #'
-#' @return
+#' @return `path`
 #' 
 #' @export
 #'
@@ -741,7 +733,6 @@ write_eta_fu_template <- function(.eta_fu_template,
                                   eta_fu_tab_name = "FU etas", 
                                   overwrite_file = FALSE, 
                                   overwrite_fu_eta_tab = FALSE, 
-                                  eta_fu = "eta.fu",
                                   eta_row_font_color = "#B03C02",
                                   eta_row_shading_color = "#FCEDE5",
                                   quantity = "Quantity",
