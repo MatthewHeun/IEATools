@@ -659,7 +659,8 @@ eta_fu_template <- function(.fu_allocations,
     ) %>% 
     dplyr::ungroup()
   # Now calculation fractions of all input energy entering each fu machine in each year
-  input_energy_percs <- dplyr::full_join(input_energy, input_energy_totals) %>% 
+  input_energy_percs <- dplyr::full_join(input_energy, input_energy_totals, 
+                                         by = matsindf::everything_except(input_energy_totals, e_dot_machine_tot, .symbols = FALSE)) %>% 
     dplyr::mutate(
       !!as.name(e_dot_machine_perc) := !!as.name(e_dot_machine) / !!as.name(e_dot_machine_tot) * 100, 
       # Eliminate columns we no longer need.
