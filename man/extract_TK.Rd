@@ -29,3 +29,6 @@ It is assumed that the heat type has the following structure:
 
 If \code{heat_type} does not conform to the pattern shown above, \code{NA} is the likely result.
 }
+\examples{
+extract_TK(c("HTH.600.C", "LTH.-20.567.C", "LTH.-40.F", "LTH.-40.C"))
+}

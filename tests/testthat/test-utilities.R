@@ -48,6 +48,7 @@ test_that("extract_TK works as expected", {
   expect_equal(extract_TK("LTH.55.R"), 30.555555555)
   expect_equal(extract_TK("LTH.-79.2.C"), 193.95)
   expect_equal(extract_TK("LTH.1089.15.K"), 1089.15)
+  expect_equal(extract_TK("LTH.-40.F"), extract_TK("LTH.-40.C"))
 })
 
 test_that("carnot_efficiency works as expected", {

@@ -138,6 +138,7 @@ insert_after <- function(x, after = NULL, values, .after_all = TRUE, .equals_fun
 #' @export
 #'
 #' @examples
+#' extract_TK(c("HTH.600.C", "LTH.-20.567.C", "LTH.-40.F", "LTH.-40.C"))
 extract_TK <- function(heat_types){
   # Grab the units
   lens <- nchar(heat_types)
