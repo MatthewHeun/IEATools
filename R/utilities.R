@@ -140,7 +140,7 @@ insert_after <- function(x, after = NULL, values, .after_all = TRUE, .equals_fun
 #' @examples
 extract_TK <- function(heat_types){
   # Grab the units
-  lens <- stringr::str_length(heat_types)
+  lens <- nchar(heat_types)
   units <- Map(substring, heat_types, first = lens, last = lens) %>% unlist() %>% unname()
   # Eliminate the leading *TH.
   # assertthat::assert_that(all(grepl("^.TH\\.", x = heat_types)), msg = "All heat types should begin with the string '*TH.'")
