@@ -449,7 +449,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
   c_rows_indices <- base::setdiff(1:(nrow(.fu_allocation_template) + 1), c(1, e_dot_rows_fd, e_dot_perc_rows_fd, e_dot_rows_eiou, e_dot_perc_rows_eiou))
   
   # Apply color formatting style for the header row
-  header_row_style <- openxlsx::createStyle(fontColour = header_row_font_color, fgFill = header_row_shading_color)
+  header_row_style <- openxlsx::createStyle(fontColour = header_row_font_color, fgFill = header_row_shading_color, textDecoration = c("BOLD"))
   openxlsx::addStyle(fu_wb, fu_allocations_tab_name, style = header_row_style, rows = 1, cols = 1:ncol(.fu_allocation_template), gridExpand = TRUE)
 
   # Apply color formatting style for energy and energy percentage rows
@@ -813,7 +813,7 @@ write_eta_fu_template <- function(.eta_fu_template,
     unname()
   
   # Apply color formatting style for the header row
-  header_row_style <- openxlsx::createStyle(fontColour = header_row_font_color, fgFill = header_row_shading_color)
+  header_row_style <- openxlsx::createStyle(fontColour = header_row_font_color, fgFill = header_row_shading_color, textDecoration = c("BOLD"))
   openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = header_row_style, rows = 1, cols = 1:ncol(.eta_fu_template), gridExpand = TRUE)
   
   # Define the eta row style
