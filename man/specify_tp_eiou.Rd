@@ -21,6 +21,8 @@ specify_tp_eiou(.tidy_iea_df,
 
 \item{eiou}{a string identifying energy industry own use in the flow aggregation point column. Default is "\code{Energy industry own use}".}
 
+\item{transformation_processes}{a string identifying transformation processes in the flow aggregation point column. Default is "\code{Transformation processes}".}
+
 \item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "\code{Flow}".}
 
 \item{own_use_elect_chp_heat}{a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "\code{Own use in electricity, CHP and heat plants}".}

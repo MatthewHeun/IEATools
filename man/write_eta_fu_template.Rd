@@ -19,7 +19,7 @@ write_eta_fu_template(.eta_fu_template, path,
 
 \item{overwrite_file}{a logical telling whether to overwrite a file, if it already exists. Default is \code{FALSE}.}
 
-\item{overwrite_fu_eta_tab}{}
+\item{overwrite_fu_eta_tab}{a logical telling whether to overwrite the final-to-useful efficiency tab, if it already exists. Default is \code{FALSE}.}
 
 \item{eta_fu}{the name of the final-to-useful efficiency rows in \code{.eta_fu_template}. Default is "\code{eta.fu}".}
 
@@ -38,4 +38,13 @@ Default is "\code{#FCEDE5}", a light orange color.}
 }
 \description{
 Write a final-to-useful efficiencies template to a file
+}
+\examples{
+f <- tempfile(fileext = ".xlsx")
+load_fu_allocation_data() \%>\% 
+  eta_fu_template() \%>\% 
+  write_eta_fu_template(f)
+if (file.exists(f)) {
+  file.remove(f)
+}
 }

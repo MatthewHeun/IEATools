@@ -115,7 +115,6 @@ fu_allocation_template <- function(.tidy_iea_df,
   # Calculate a Tidy data frame with percentages.
   Tidy <- Filtered %>% 
     # Add the totals to the data frame in preparation for calculating percentages
-    # dplyr::left_join(Totals, by = matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, .symbols = FALSE)) %>% 
     dplyr::left_join(Totals, by = matsindf::everything_except(.tidy_iea_df, flow_aggregation_point, flow, product, e_dot, .symbols = FALSE)) %>% 
     dplyr::mutate(
       # Calculate percentage of all energy flows for that country and year
@@ -589,8 +588,6 @@ eta_fu_template <- function(.fu_allocations,
                             machine = "Machine",
                             eu_product = "Eu.product", 
                             md = "MD", 
-                            th. = "TH.",
-                            degC = ".C",
                             eta_fu = "eta.fu", 
                             phi_u = "phi.u",
                             destination = "Destination",
@@ -639,7 +636,8 @@ eta_fu_template <- function(.fu_allocations,
     tidyr::gather(key = .year, value = !!as.name(c_perc), year_colnames) %>%
     dplyr::filter(!is.na(!!as.name(c_perc)))
   # Now we join the E.dot and C values and calculate the energy flowing into each machine
-  input_energy <- dplyr::full_join(c_info, e_dot_info) %>%
+  input_energy <- dplyr::full_join(c_info, e_dot_info, 
+                                   by = matsindf::everything_except(e_dot_info, e_dot_dest, .symbols = FALSE)) %>%
     dplyr::mutate(
       # Calcualte the energy flow into each f-->u machine
       # for each row of the table
@@ -683,7 +681,7 @@ eta_fu_template <- function(.fu_allocations,
     dplyr::filter(!is.na(!!as.name(machine)) & !is.na(!!as.name(eu_product))) %>% 
     unique() %>% 
     # Join with maximum percentages of energy input to the fu machines
-    dplyr::left_join(input_energy_max_percs) %>% 
+    dplyr::left_join(input_energy_max_percs, by = matsindf::everything_except(input_energy_max_percs, e_dot_machine_max_perc, .symbols = FALSE)) %>% 
     # Add eta and phi columns (which will become rows in a moment)
     dplyr::mutate(
       # The eta_fu column should be blank, because the analyst will fill it later.
@@ -728,12 +726,12 @@ eta_fu_template <- function(.fu_allocations,
 #' @param path the file path where the template will be written
 #' @param eta_fu_tab_name the name of the final-to-useful efficiency tab. Default is "`FU etas`".
 #' @param overwrite_file a logical telling whether to overwrite a file, if it already exists. Default is `FALSE`.
+#' @param overwrite_fu_eta_tab a logical telling whether to overwrite the final-to-useful efficiency tab, if it already exists. Default is `FALSE`.
 #' @param eta_fu the name of the final-to-useful efficiency rows in `.eta_fu_template`. Default is "`eta.fu`".
 #' @param eta_row_font_color a hex string representing the font color for `eta` rows in the Excel file that is written by this function.
 #'        Default is "`#B03C02`", a dark orange color.
 #' @param eta_row_shading_color a hex string representing the shading color for `eta` rows in the Excel file that is written by this function.
 #'        Default is "`#FCEDE5`", a light orange color.
-#' @param overwrite_fu_eta_tab 
 #' @param quantity the name of the quantity column in `.eta_fu_template`. Default is "`Quantity`".
 #' @param .rownum the name of a temporary column containing row numbers. Default is "`.rownum`". 
 #'
@@ -742,6 +740,13 @@ eta_fu_template <- function(.fu_allocations,
 #' @export
 #'
 #' @examples
+#' f <- tempfile(fileext = ".xlsx")
+#' load_fu_allocation_data() %>% 
+#'   eta_fu_template() %>% 
+#'   write_eta_fu_template(f)
+#' if (file.exists(f)) {
+#'   file.remove(f)
+#' }
 write_eta_fu_template <- function(.eta_fu_template,
                                   path, 
                                   eta_fu_tab_name = "FU etas", 

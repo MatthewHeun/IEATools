@@ -107,6 +107,15 @@ test_that("load_fu_allocation_data works as expected", {
     check_fu_allocation_template()
 })
 
+test_that("eta_fu_template works as expected", {
+  Eta_fu_template <- load_fu_allocation_data() %>% 
+    eta_fu_template()
+  expect_equal(Eta_fu_template$Machine[[1]], "Wood stoves")
+  expect_equal(Eta_fu_template$Machine[[nrow(Eta_fu_template)]], "Oil furnaces")
+  expect_equal(as.character(Eta_fu_template$Quantity[[1]]), "eta.fu")
+  expect_equal(as.character(Eta_fu_template$Quantity[[nrow(Eta_fu_template)]]), "phi.u")
+})
+
 test_that("write_eta_fu_template works as expected", {
   Eta_fu_template <- load_fu_allocation_data() %>% 
     eta_fu_template()

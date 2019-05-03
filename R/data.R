@@ -112,3 +112,11 @@
 #' 
 #' @format A string vector
 "product_iea_order"
+
+
+#' Useful energy carrier order
+#'
+#' A string vector containing entries for ordered useful energy products.
+#' 
+#' @format A string vector
+"eu_product_order"

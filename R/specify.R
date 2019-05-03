@@ -296,6 +296,7 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' @param .tidy_iea_df an IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
 #' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
 #' @param eiou a string identifying energy industry own use in the flow aggregation point column. Default is "`Energy industry own use`".
+#' @param transformation_processes a string identifying transformation processes in the flow aggregation point column. Default is "`Transformation processes`".
 #' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
 #' @param own_use_elect_chp_heat a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "`Own use in electricity, CHP and heat plants`".
 #' @param pumped_storage a string identifying pumped storage plants in the flow column. Default is "`Pumped storage plants`".
