@@ -27,5 +27,5 @@ It is assumed that the heat type has the following structure:
 \item unit (one of ".C", ".F", ".R", or ".K", indicating ° Celsius, ° Fahrenheit, rankine, or kelvin, respectively).
 }
 
-If \code{heat_type} does not conform to the pattern shown above, an error is the likely result.
+If \code{heat_type} does not conform to the pattern shown above, \code{NA} is the likely result.
 }

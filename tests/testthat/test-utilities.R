@@ -58,4 +58,6 @@ test_that("carnot_efficiency works as expected", {
   
   expect_equal(carnot_efficiency("HTH.600.C", T_0 = 500), 1 - 500 / (600 + 273.15))
   expect_equal(carnot_efficiency(c("HTH.600.C", "LTH.600.C"), T_0 = c(298.15, 273.15)), c(1 - 298.15 / (600 + 273.15), 1 - 273.15 / (600 + 273.15)))
+  
+  expect_true(is.na(carnot_efficiency("$$H.50.C")))
 })

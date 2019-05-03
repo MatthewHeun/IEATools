@@ -129,7 +129,7 @@ insert_after <- function(x, after = NULL, values, .after_all = TRUE, .equals_fun
 #' * the temperature value, and
 #' * unit (one of ".C", ".F", ".R", or ".K", indicating ° Celsius, ° Fahrenheit, rankine, or kelvin, respectively).
 #' 
-#' If `heat_type` does not conform to the pattern shown above, an error is the likely result.
+#' If `heat_type` does not conform to the pattern shown above, `NA` is the likely result.
 #' 
 #' @param heat_types a string vector of heat types to be converted to temperatures
 #'
@@ -201,6 +201,9 @@ carnot_efficiency <- function(heat_types, T_0 = 298.15){
   TK <- extract_TK(heat_types)
   # Apply the carnot efficiency equation eta = 1 - T0/TK
   carnot_func <- function(T_kelvin, T0){
+    if (is.na(T_kelvin)) {
+      return(NA_real_)
+    }
     if (T_kelvin > T0) {
       return(1 - T0/T_kelvin)
     }

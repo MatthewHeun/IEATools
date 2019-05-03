@@ -676,37 +676,6 @@ eta_fu_template <- function(.fu_allocations,
     ) %>% 
     dplyr::ungroup()
   
-  # Now we're ready to put everything together to make the f-->u efficiencies template.
-  # out <- .fu_allocations %>% 
-  #   # Keep only the columns of interest to us
-  #   dplyr::select(!!!meta_cols, !!as.name(machine), !!as.name(eu_product)) %>% 
-  #   # Eliminate rows where the analyst didn't fill any machines or products
-  #   dplyr::filter(!is.na(!!as.name(machine)) & !is.na(!!as.name(eu_product))) %>% 
-  #   unique() %>% 
-  #   # Join with maximum percentages of energy input to the fu machines
-  #   dplyr::left_join(input_energy_max_percs) %>% 
-  #   # Add eta and phi columns (which will become rows in a moment)
-  #   dplyr::mutate(
-  #     !!as.name(eta_fu) := "", 
-  #     !!as.name(phi_u) := dplyr::case_when(
-  #       !!as.name(eu_product) == md ~ 1
-  #     )
-  #   ) %>% 
-  #   # Now make them rows
-  #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(eta_fu), !!as.name(phi_u)) %>% 
-  #   # Eliminate the temporary .value column
-  #   dplyr::mutate(
-  #     !!as.name(.value) := NULL
-  #   )
-  # 
-  # # Now add a column for each year that came in with .fu_allocation_template.
-  # for (col in year_colnames) {
-  #   out <- out %>% 
-  #     dplyr::mutate(
-  #       !!as.name(col) := NA_real_
-  #     )
-  # }
-  
   prelim_out <- .fu_allocations %>% 
     # Keep only the columns of interest to us
     dplyr::select(!!!meta_cols, !!as.name(machine), !!as.name(eu_product)) %>% 
@@ -717,13 +686,21 @@ eta_fu_template <- function(.fu_allocations,
     dplyr::left_join(input_energy_max_percs) %>% 
     # Add eta and phi columns (which will become rows in a moment)
     dplyr::mutate(
-      # temperature = strsplit(!!as.name(eu_product), split = ".", fixed = TRUE) %>% unlist() %>% magrittr::extract(2)
-      temperature = strsplit(!!as.name(eu_product), split = ".", fixed = TRUE) %>% magrittr::extract(2)
-      # !!as.name(eta_fu) := "", 
-      # !!as.name(phi_u) := dplyr::case_when(
-      #   !!as.name(eu_product) == md ~ 1, 
-      #   grepl("TH\\.", !!as.name(eu_product)) & endsWith(!!as.name(eu_product), ".C") ~ as.numeric(grep(pattern = "TH\\.(.*)\\.C", x = !!as.name(eu_product)))
-      # )
+      # The eta_fu column should be blank, because the analyst will fill it later.
+      !!as.name(eta_fu) := "",
+      # But the phi_u column can be pre-filled with some exergy/energy ratios.
+      # The first attempt uses the carnot_efficiency function,
+      # which converts the heat type (e.g., HTH.600.C)
+      # to a temperature in kelvin and further
+      # converts to a Carnot efficiency.
+      # Some of the phi_u values will end up as NA, but that's OK.
+      # We'll change them later.
+      !!as.name(phi_u) := carnot_efficiency(!!as.name(eu_product)),
+      !!as.name(phi_u) := dplyr::case_when(
+        # We know that mechanical drive (md) has a phi value of 1.
+        !!as.name(eu_product) == md ~ 1, 
+        TRUE ~ !!as.name(phi_u)
+      )
     ) %>% 
     # Now convert the eta_fu and phi_u columns into rows to be filled by the analyst
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(eta_fu), !!as.name(phi_u))
