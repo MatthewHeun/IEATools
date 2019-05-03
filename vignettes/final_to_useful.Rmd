@@ -110,8 +110,9 @@ After completing the final-to-useful allocation table,
 the analyst must specify the efficiencies of the final-to-useful machines.
 To assist with this task, `eta_fu_template()` can be invoked.
 To demonstrate, we'll use `load_fu_allocation_data()`, 
-a function that reads an allocation table 
-and whose default `path` argument points to a completed final-to-useful allocation table
+a function that reads a completed allocation table out of an excel file.
+The default `path` argument of `load_fu_allocation_data()`
+points to a completed final-to-useful allocation table
 that is provided with `IEATools`.
 
 ```{r}
