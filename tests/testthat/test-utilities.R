@@ -31,3 +31,28 @@ test_that("insert_after works as expected", {
   expect_equal(l %>% insert_after(after = NULL, "1"), list("a", "b", "c", "d", "c", "1"))
   expect_equal(l %>% insert_after(values = "1"), list("a", "b", "c", "d", "c", "1"))
 })
+
+test_that("extract_TK works as expected", {
+  heats1 <- c("HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C", "LTH.-20.C")
+  expect_equal(extract_TK(heats1), c(600, 200, 100, 20, -20) + 273.15)
+  
+  expect_error(extract_TK("MMH.20.C"), "All heat types should begin with the string")
+  expect_error(extract_TK("MTH.100.J"), "All heat types should end with the string")
+  
+  expect_equal(extract_TK("HTH.600.F"), 588.70555556)
+  expect_equal(extract_TK("STH.600.F"), 588.70555556)
+  expect_equal(extract_TK("6TH.600.F"), 588.70555556)
+  expect_equal(extract_TK("$TH.600.F"), 588.70555556)
+  expect_equal(extract_TK("LTH.-104.75.F"), 197.177777778)
+  expect_equal(extract_TK("LTH.55.R"), 30.555555555)
+  expect_equal(extract_TK("LTH.-79.2.C"), 193.95)
+  expect_equal(extract_TK("LTH.1089.15.K"), 1089.15)
+})
+
+test_that("carnot_efficiency works as expected", {
+  expect_equal(carnot_efficiency("HTH.298.15.K"), 0)
+
+  heats1 <- c("HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C", "LTH.-20.C")
+  expect_equal(carnot_efficiency(heats1), c(0.65853519, 0.36986157, 0.20099156, .016770082, .15093074))
+  
+})

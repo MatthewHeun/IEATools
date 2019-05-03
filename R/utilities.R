@@ -115,3 +115,96 @@ insert_after <- function(x, after = NULL, values, .after_all = TRUE, .equals_fun
   return(x)
 }
 
+
+#' Extract temperatures (in Kelvin) from heat types
+#' 
+#' In societal exergy analysis, converting heat to exergy requires knowledge 
+#' of the temperature of that heat.
+#' This function converts heat types (e.g., "`HTH.600.C`")
+#' to temperatures by extracting the temperature from the middle of the string.
+#' 
+#' It is assumed that the heat type has the following structure: 
+#' * a single letter (typically, "H", "M", or "L" for high, medium, or low, although the character doesn't matter)
+#' * the string "TH." (for "temperature heat"), 
+#' * temperature, and
+#' * unit (one of ".C", ".F", ".R", or ".K", indicating ° Celsius, ° Fahrenheit, rankine, or kelvin, respectively).
+#' 
+#' If `heat_type` does not conform to the pattern shown above, `NA` is a likely result.
+#' 
+#' @param heat_types a string vector of heat types to be converted to temperatures
+#'
+#' @return a numeric vector of same length as `heat_types` containing temperatures in Kelvin.
+#' 
+#' @export
+#'
+#' @examples
+extract_TK <- function(heat_types){
+  # Grab the units
+  lens <- stringr::str_length(heat_types)
+  units <- Map(substring, heat_types, first = lens, last = lens) %>% unlist() %>% unname()
+  # Eliminate the leading *TH.
+  assertthat::assert_that(all(grepl("^.TH\\.", x = heat_types)), msg = "All heat types should begin with the string '*TH.'")
+  temporary <- sub(pattern = "^.TH\\.", replacement = "", x = heat_types)
+  # Eliminate the trailing .C, .F, .R, or .K.
+  assertthat::assert_that(all(grepl(pattern = "\\.[C|F|R|K]$", x = heat_types)), msg = "All heat types should end with the string '.C', '.F', '.R', or '.K'")
+  temperatures <- sub(pattern = "\\.[C|F|R|K]$", replacement = "", x = temporary) %>% as.numeric()
+  convert_to_K <- function(rawT, unit){
+    if (unit == "K") {
+      return(rawT)
+    }
+    if (unit == "R") {
+      return(rawT / 1.8)
+    }
+    if (unit == "C") {
+      return(rawT + 273.15)
+    }
+    if (unit == "F") {
+      return((rawT + 459.67) / 1.8)
+    }
+  }
+  # Convert to K based on unit and return
+  Map(convert_to_K, rawT = temperatures, unit = units) %>% unlist() %>% unname()
+}
+
+#' Calculate Carnot efficiencies from heat types
+#' 
+#' In societal exergy analysis, converting heat to exergy requires knowledge 
+#' of the temperature of that heat and application of the Carnot efficiency.
+#' This function first converts heat types (e.g., "`HTH.600.C`")
+#' to temperatures by extracting the temperature from the middle of the string,
+#' in a unit-aware manner.
+#' Then, the Carnot efficiency is calculated from the temperature of the heat
+#' by applying the Carnot efficiency equation: `abs(1 - T_0/T)`,
+#' where T_0 and T are expected to be in kelvin units.
+#' 
+#' When the heat temperature is less than `T_0`, 
+#' the Carnot efficiency is calculated as `1 - (heat temperature)/T_0`.
+#' 
+#' `T_0` can be supplied as a numeric vector of ambient temperatures of
+#' same length as `heat_types`.
+#'
+#' @param heat_types a string vector of heat types of the form "`HTH.600.C`"
+#' @param T_0 dead state temperature in kelvin. Default is `298.15` kelvin (25 C).
+#' 
+#' @seealso [extract_TK()]
+#'
+#' @return a numeric vector of Carnot efficiencies of same length as `heat_types`
+#' 
+#' @export
+#'
+#' @examples
+#' carnot_efficiency(c("HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C", "LTH.-10.C"))
+#' carnot_efficiency("LTH.-30.F")
+carnot_efficiency <- function(heat_types, T_0 = 298.15){
+  # Calculate temperatures in K from heat_types
+  TK <- extract_TK(heat_types)
+  # Apply the carnot efficiency equation eta = 1 - T0/TK
+  carnot_func <- function(T_kelvin, T0){
+    if (T_kelvin > T0) {
+      return(1 - T0/T_kelvin)
+    }
+    1 - T_kelvin/T0
+  }
+  Map(carnot_func, TK, T_0) %>% unlist()
+}
+
