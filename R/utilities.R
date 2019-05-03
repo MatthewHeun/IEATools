@@ -126,10 +126,10 @@ insert_after <- function(x, after = NULL, values, .after_all = TRUE, .equals_fun
 #' It is assumed that the heat type has the following structure: 
 #' * a single letter (typically, "H", "M", or "L" for high, medium, or low, although the character doesn't matter)
 #' * the string "TH." (for "temperature heat"), 
-#' * temperature, and
+#' * the temperature value, and
 #' * unit (one of ".C", ".F", ".R", or ".K", indicating ° Celsius, ° Fahrenheit, rankine, or kelvin, respectively).
 #' 
-#' If `heat_type` does not conform to the pattern shown above, `NA` is a likely result.
+#' If `heat_type` does not conform to the pattern shown above, an error is the likely result.
 #' 
 #' @param heat_types a string vector of heat types to be converted to temperatures
 #'
@@ -143,11 +143,11 @@ extract_TK <- function(heat_types){
   lens <- stringr::str_length(heat_types)
   units <- Map(substring, heat_types, first = lens, last = lens) %>% unlist() %>% unname()
   # Eliminate the leading *TH.
-  assertthat::assert_that(all(grepl("^.TH\\.", x = heat_types)), msg = "All heat types should begin with the string '*TH.'")
+  # assertthat::assert_that(all(grepl("^.TH\\.", x = heat_types)), msg = "All heat types should begin with the string '*TH.'")
   temporary <- sub(pattern = "^.TH\\.", replacement = "", x = heat_types)
   # Eliminate the trailing .C, .F, .R, or .K.
-  assertthat::assert_that(all(grepl(pattern = "\\.[C|F|R|K]$", x = heat_types)), msg = "All heat types should end with the string '.C', '.F', '.R', or '.K'")
-  temperatures <- sub(pattern = "\\.[C|F|R|K]$", replacement = "", x = temporary) %>% as.numeric()
+  # assertthat::assert_that(all(grepl(pattern = "\\.[C|F|R|K]$", x = heat_types)), msg = "All heat types should end with the string '.C', '.F', '.R', or '.K'")
+  temperatures <- suppressWarnings(sub(pattern = "\\.[C|F|R|K]$", replacement = "", x = temporary) %>% as.numeric())
   convert_to_K <- function(rawT, unit){
     if (unit == "K") {
       return(rawT)
@@ -161,6 +161,7 @@ extract_TK <- function(heat_types){
     if (unit == "F") {
       return((rawT + 459.67) / 1.8)
     }
+    return(NA_real_)
   }
   # Convert to K based on unit and return
   Map(convert_to_K, rawT = temperatures, unit = units) %>% unlist() %>% unname()

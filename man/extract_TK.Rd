@@ -23,9 +23,9 @@ It is assumed that the heat type has the following structure:
 \itemize{
 \item a single letter (typically, "H", "M", or "L" for high, medium, or low, although the character doesn't matter)
 \item the string "TH." (for "temperature heat"),
-\item temperature, and
+\item the temperature value, and
 \item unit (one of ".C", ".F", ".R", or ".K", indicating ° Celsius, ° Fahrenheit, rankine, or kelvin, respectively).
 }
 
-If \code{heat_type} does not conform to the pattern shown above, \code{NA} is a likely result.
+If \code{heat_type} does not conform to the pattern shown above, an error is the likely result.
 }

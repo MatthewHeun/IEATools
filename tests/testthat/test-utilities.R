@@ -36,8 +36,9 @@ test_that("extract_TK works as expected", {
   heats1 <- c("HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C", "LTH.-20.C")
   expect_equal(extract_TK(heats1), c(600, 200, 100, 20, -20) + 273.15)
   
-  expect_error(extract_TK("MMH.20.C"), "All heat types should begin with the string")
-  expect_error(extract_TK("MTH.100.J"), "All heat types should end with the string")
+  expect_true(is.na(extract_TK("LMH.20.C")))
+  expect_equal(extract_TK(c("MMH.20.C", "HTH.600.C")), c(NA_real_, 600 + 273.15))
+  expect_true(is.na(extract_TK("MTH.100.J")))
   
   expect_equal(extract_TK("HTH.600.F"), 588.70555556)
   expect_equal(extract_TK("STH.600.F"), 588.70555556)
@@ -53,6 +54,5 @@ test_that("carnot_efficiency works as expected", {
   expect_equal(carnot_efficiency("HTH.298.15.K"), 0)
 
   heats1 <- c("HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C", "LTH.-20.C")
-  expect_equal(carnot_efficiency(heats1), c(0.65853519, 0.36986157, 0.20099156, .016770082, .15093074))
-  
+  expect_equal(carnot_efficiency(heats1), c(0.65853519, 0.36986157, 0.20099156, 0.016770082, 0.15093074))
 })
