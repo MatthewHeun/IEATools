@@ -55,4 +55,7 @@ test_that("carnot_efficiency works as expected", {
 
   heats1 <- c("HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C", "LTH.-20.C")
   expect_equal(carnot_efficiency(heats1), c(0.65853519, 0.36986157, 0.20099156, 0.016770082, 0.15093074))
+  
+  expect_equal(carnot_efficiency("HTH.600.C", T_0 = 500), 1 - 500 / (600 + 273.15))
+  expect_equal(carnot_efficiency(c("HTH.600.C", "LTH.600.C"), T_0 = c(298.15, 273.15)), c(1 - 298.15 / (600 + 273.15), 1 - 273.15 / (600 + 273.15)))
 })
