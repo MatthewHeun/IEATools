@@ -350,6 +350,10 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #' @param e_dot_perc the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
 #'        Default is "`E.dot.perc`".
 #' @param maximum_values the name of the maximum values column in output. Default is "`Maximum.values`".
+#' @param header_row_font_color a hex string representing the font color for the header row in the Excel file that is written by this function.
+#'        Default is "`#FFFFFF`", white.
+#' @param header_row_shading_color a hex string representing the shading color for the header row in the Excel file that is written by this function.
+#'        Default is "`#5A80B8`", medium blue.
 #' @param energy_row_font_color_fd a hex string representing the font color for `e_dot` and `e_dot_perc` final demand rows in the Excel file that is written by this function.
 #'        Default is "`#104273`", a dark blue color.
 #' @param energy_row_shading_color_fd a hex string representing the shading color for `e_dot` and `e_dot_perc` final demand rows in the Excel file that is written by this function.
@@ -392,6 +396,8 @@ write_fu_allocation_template <- function(.fu_allocation_template,
                                          e_dot = "E.dot",
                                          e_dot_perc = paste(e_dot, "[%]"), 
                                          maximum_values = "Maximum.values",
+                                         header_row_font_color = "#FFFFFF",
+                                         header_row_shading_color = "#5A80B8",
                                          energy_row_font_color_fd = "#104273",
                                          energy_row_shading_color_fd = "#B8D8F5", 
                                          energy_row_font_color_eiou = "#918700",
@@ -442,6 +448,10 @@ write_fu_allocation_template <- function(.fu_allocation_template,
   # Note the "1" is for row 1, which we don't want to color gray.
   c_rows_indices <- base::setdiff(1:(nrow(.fu_allocation_template) + 1), c(1, e_dot_rows_fd, e_dot_perc_rows_fd, e_dot_rows_eiou, e_dot_perc_rows_eiou))
   
+  # Apply color formatting style for the header row
+  header_row_style <- openxlsx::createStyle(fontColour = header_row_font_color, fgFill = header_row_shading_color)
+  openxlsx::addStyle(fu_wb, fu_allocations_tab_name, style = header_row_style, rows = 1, cols = 1:ncol(.fu_allocation_template), gridExpand = TRUE)
+
   # Apply color formatting style for energy and energy percentage rows
   energy_row_style_fd <- openxlsx::createStyle(fontColour = energy_row_font_color_fd, fgFill = energy_row_shading_color_fd)
   energy_row_style_eiou <- openxlsx::createStyle(fontColour = energy_row_font_color_eiou, fgFill = energy_row_shading_color_eiou)
@@ -729,6 +739,10 @@ eta_fu_template <- function(.fu_allocations,
 #' @param overwrite_file a logical telling whether to overwrite a file, if it already exists. Default is `FALSE`.
 #' @param overwrite_fu_eta_tab a logical telling whether to overwrite the final-to-useful efficiency tab, if it already exists. Default is `FALSE`.
 #' @param eta_fu the name of the final-to-useful efficiency rows in `.eta_fu_template`. Default is "`eta.fu`".
+#' @param header_row_font_color a hex string representing the font color for the header row in the Excel file that is written by this function.
+#'        Default is "`#FFFFFF`", white.
+#' @param header_row_shading_color a hex string representing the shading color for the header row in the Excel file that is written by this function.
+#'        Default is "`#5A80B8`", medium blue.
 #' @param eta_row_font_color a hex string representing the font color for `eta` rows in the Excel file that is written by this function.
 #'        Default is "`#B03C02`", a dark orange color.
 #' @param eta_row_shading_color a hex string representing the shading color for `eta` rows in the Excel file that is written by this function.
@@ -754,6 +768,8 @@ write_eta_fu_template <- function(.eta_fu_template,
                                   overwrite_file = FALSE, 
                                   overwrite_fu_eta_tab = FALSE,
                                   eta_fu = "eta.fu",
+                                  header_row_font_color = "#FFFFFF",
+                                  header_row_shading_color = "#5A80B8",
                                   eta_row_font_color = "#B03C02",
                                   eta_row_shading_color = "#FCEDE5",
                                   quantity = "Quantity",
@@ -795,6 +811,10 @@ write_eta_fu_template <- function(.eta_fu_template,
     dplyr::select(!!as.name(.rownum)) %>% 
     unlist() %>% 
     unname()
+  
+  # Apply color formatting style for the header row
+  header_row_style <- openxlsx::createStyle(fontColour = header_row_font_color, fgFill = header_row_shading_color)
+  openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = header_row_style, rows = 1, cols = 1:ncol(.eta_fu_template), gridExpand = TRUE)
   
   # Define the eta row style
   eta_row_style <- openxlsx::createStyle(fontColour = eta_row_font_color, fgFill = eta_row_shading_color)
