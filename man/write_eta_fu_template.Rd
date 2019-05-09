@@ -10,6 +10,7 @@ write_eta_fu_template(.eta_fu_template, path,
   header_row_font_color = "#FFFFFF",
   header_row_shading_color = "#5A80B8", eta_row_font_color = "#B03C02",
   eta_row_shading_color = "#FCEDE5", quantity = "Quantity",
+  e_dot_machine_max_perc = paste0("E.dot_machine_max [\%]"),
   .rownum = ".rownum")
 }
 \arguments{

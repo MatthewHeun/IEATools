@@ -4,22 +4,25 @@
 \alias{eta_fu_template}
 \title{Final-to-useful efficiency template}
 \usage{
-eta_fu_template(.fu_allocations, ledger_side = "Ledger.side",
+eta_fu_template(.fu_allocations, T_0 = 298.15,
+  ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
   ef_product = "Ef.product", machine = "Machine",
   eu_product = "Eu.product", md = "MD", eta_fu = "eta.fu",
   phi_u = "phi.u", destination = "Destination",
   quantity = "Quantity", maximum_values = "Maximum.values",
   perc = "[\%]", e_dot = "E.dot", c_ = "C_",
-  c_perc = paste(substr(c_, 1, 1), perc), .year = ".year",
-  .value = ".value", e_dot_dest = paste0(e_dot, "_dest"),
-  e_dot_machine = paste0(e_dot, "_machine"),
+  c_perc = paste(substr(c_, 1, 1), perc), c_ratio = substr(c_, 1, 1),
+  .year = ".year", .value = ".value", e_dot_dest = paste0(e_dot,
+  "_dest"), e_dot_machine = paste0(e_dot, "_machine"),
   e_dot_machine_tot = paste0(e_dot_machine, "_tot"),
   e_dot_machine_perc = paste(e_dot_machine, perc),
   e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc))
 }
 \arguments{
 \item{.fu_allocations}{a data frame containing a completed final-to-useful allocation template for final demand.}
+
+\item{T_0}{the dead state temperature (in kelvin) for calculation of heat exergy. Default is \code{298.15} kelvin.}
 
 \item{ledger_side}{the name of the ledger side column in \code{.fu_allocations}. Default is "\code{Ledger.side}".}
 
@@ -73,11 +76,33 @@ Using a filled final-to-useful allocation table,
 this function generates a blank template for final-to-useful machine efficiencies.
 }
 \details{
-The template includes a column (\code{e_dot_machine_perc_max})
-that contains the percentage of all energy flowing into final-to-useful machines,
+The template produced by this function includes a column (\code{e_dot_machine_perc_max})
+that contains the percentage of all energy flowing into each final-to-useful machines,
 thereby providing guidance to the analyst about the efficiencies that carry the most weight
 for the entire analysis.
-The template is sorted by metadata column groups and by the values in the \code{e_dot_machine_perc_max} column.
+The template is sorted by metadata column groups then by the values in the \code{e_dot_machine_perc_max} column.
+
+The analyst should complete the \code{eta_fu} and \code{phi_u} rows in this template.
+\code{eta_fu} is the final-to-useful energy efficiency of the \code{machine}.
+\code{phi_u} is the exergy-to-energy ratio for the useful product of \code{machine} as specified in the \code{eu_product} column.
+
+Some of the \code{eta_fu} and \code{phi_u} values can be pre-calculated to assist the analyst, and
+the template produced by this function does just that.
+Any row specified with  \code{md} (mechanical drive) as its \code{eu_product} will have its values for \code{phi.u} automatically filled
+with \code{1},
+because mechanical drive is work, which is pure exergy.
+Any row specified with \code{eu_product} being heat ("\code{*TH.xxx.u}") will have its values for \code{phi.u} automatically filled
+with the appropriate Carnot efficiency,
+\code{1 - T_0/xxx}, where \code{xxx} is the temperature of the heat and \code{u} are the units for that temperature (one of "\code{C}", "\code{K}", "\code{F}", or "\code{R}"
+for ° Celsius, kelvin, ° Fahrenheit, or rankine, respectively).
+For heat rows, the value of argument \code{T_0} (assumed to be in kelvin)
+is used to compute the Carnot efficiency for the \code{phi.u} rows.
+The default value for \code{T_0} is \code{298.15 K} (\code{25 °C}).
+
+Note that the rows labeled "\code{C_x [\%]}" are formatted by default as percentage in the Excel file.
+When read, values are ratios, not percentages.
+I.e., the values read by this function are in the range 0 <= x <= 1, not 0 <= x <= 100.
+If any read values in the \code{c_perc} rows are outside of the range 0 <= x <= 1, an error is thrown.
 }
 \examples{
 load_fu_allocation_data() \%>\% 

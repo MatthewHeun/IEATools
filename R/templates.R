@@ -554,13 +554,36 @@ load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocatio
 #' Using a filled final-to-useful allocation table, 
 #' this function generates a blank template for final-to-useful machine efficiencies.
 #' 
-#' The template includes a column (`e_dot_machine_perc_max`) 
-#' that contains the percentage of all energy flowing into final-to-useful machines,
+#' The template produced by this function includes a column (`e_dot_machine_perc_max`) 
+#' that contains the percentage of all energy flowing into each final-to-useful machines,
 #' thereby providing guidance to the analyst about the efficiencies that carry the most weight
 #' for the entire analysis.
-#' The template is sorted by metadata column groups and by the values in the `e_dot_machine_perc_max` column.
+#' The template is sorted by metadata column groups then by the values in the `e_dot_machine_perc_max` column.
+#' 
+#' The analyst should complete the `eta_fu` and `phi_u` rows in this template.
+#' `eta_fu` is the final-to-useful energy efficiency of the `machine`.
+#' `phi_u` is the exergy-to-energy ratio for the useful product of `machine` as specified in the `eu_product` column.
+#' 
+#' Some of the `eta_fu` and `phi_u` values can be pre-calculated to assist the analyst, and
+#' the template produced by this function does just that.
+#' Any row specified with  `md` (mechanical drive) as its `eu_product` will have its values for `phi.u` automatically filled 
+#' with `1`,
+#' because mechanical drive is work, which is pure exergy.
+#' Any row specified with `eu_product` being heat ("`*TH.xxx.u`") will have its values for `phi.u` automatically filled
+#' with the appropriate Carnot efficiency,
+#' `1 - T_0/xxx`, where `xxx` is the temperature of the heat and `u` are the units for that temperature (one of "`C`", "`K`", "`F`", or "`R`"
+#' for ° Celsius, kelvin, ° Fahrenheit, or rankine, respectively).
+#' For heat rows, the value of argument `T_0` (assumed to be in kelvin) 
+#' is used to compute the Carnot efficiency for the `phi.u` rows.
+#' The default value for `T_0` is `298.15 K` (`25 °C`).
+#' 
+#' Note that the rows labeled "`C_x [%]`" are formatted by default as percentage in the Excel file.
+#' When read, values are ratios, not percentages. 
+#' I.e., the values read by this function are in the range 0 <= x <= 1, not 0 <= x <= 100.
+#' If any read values in the `c_perc` rows are outside of the range 0 <= x <= 1, an error is thrown.
 #'
 #' @param .fu_allocations a data frame containing a completed final-to-useful allocation template for final demand.
+#' @param T_0 the dead state temperature (in kelvin) for calculation of heat exergy. Default is `298.15` kelvin.
 #' @param ledger_side the name of the ledger side column in `.fu_allocations`. Default is "`Ledger.side`".
 #' @param flow_aggregation_point the name of the flow aggregation point column in `.fu_allocations`. Default is "`Flow.aggregation.point`".
 #' @param ef_product the name of the final energy product column in `.fu_allocations`. Default is "`Ef.product`".
@@ -592,6 +615,7 @@ load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocatio
 #' load_fu_allocation_data() %>% 
 #'   eta_fu_template()
 eta_fu_template <- function(.fu_allocations, 
+                            T_0 = 298.15, 
                             ledger_side = "Ledger.side",
                             flow_aggregation_point = "Flow.aggregation.point",
                             ef_product = "Ef.product",
@@ -607,6 +631,7 @@ eta_fu_template <- function(.fu_allocations,
                             e_dot = "E.dot",
                             c_ = "C_",
                             c_perc = paste(substr(c_, 1, 1), perc),
+                            c_ratio = substr(c_, 1, 1),
                             .year = ".year",
                             .value = ".value", 
                             e_dot_dest = paste0(e_dot, "_dest"),
@@ -645,17 +670,30 @@ eta_fu_template <- function(.fu_allocations,
     dplyr::select(-maximum_values, -quantity) %>%
     tidyr::gather(key = .year, value = !!as.name(c_perc), year_colnames) %>%
     dplyr::filter(!is.na(!!as.name(c_perc)))
-  # Now we join the E.dot and C values and calculate the energy flowing into each machine
+  # Verify that all C values are between 0 and 1, inclusive.
+  assertthat::assert_that(all(c_info[[c_perc]] >= 0 & c_info[[c_perc]] <= 1), msg = "Not all C values are between 0 and 1 in eta_fu_template.")
+  # Now that we know that every C value is between 0 and 1, inclusive, 
+  # it is not really appropriate to call these "C [%]".  
+  # So, rename the column.
+  c_info <- c_info %>% 
+    dplyr::rename(
+      !!as.name(c_ratio) := !!as.name(c_perc)
+    )
+  # Now we join the E.dot and C values and calculate the energy flowing into each final-to-useful machine
   input_energy <- dplyr::full_join(c_info, e_dot_info, 
                                    by = matsindf::everything_except(e_dot_info, e_dot_dest, .symbols = FALSE)) %>%
+    # There may be cases where the analyst has filled a C value, but there is no corresponding e_dot_dest value.
+    # Get rid of those rows.
+    dplyr::filter(!is.na(!!as.name(e_dot_dest))) %>% 
     dplyr::mutate(
       # Calcualte the energy flow into each f-->u machine
       # for each row of the table
       # (each combination of Ef.product and Machine.
-      !!as.name(e_dot_machine) := !!as.name(c_perc)/100 * !!as.name(e_dot_dest)
+      !!as.name(e_dot_machine) := !!as.name(c_ratio) * !!as.name(e_dot_dest)
     ) %>% 
-    # Group by the metadata columns and the Machine column
-    dplyr::group_by(!!!meta_cols, !!as.name(machine), !!as.name(.year)) %>% 
+    # Group by the metadata columns, year, the Machine column, and the eu_product column, because we want to calculate the 
+    # amount of energy going into each machine in each year for a given purpose.
+    dplyr::group_by(!!!meta_cols, !!as.name(.year), !!as.name(machine), !!as.name(eu_product)) %>% 
     # Summarise to aggregate the energy going into each machine.
     dplyr::summarise(
       !!as.name(e_dot_machine) := sum(!!as.name(e_dot_machine))
@@ -672,14 +710,16 @@ eta_fu_template <- function(.fu_allocations,
   input_energy_percs <- dplyr::full_join(input_energy, input_energy_totals, 
                                          by = matsindf::everything_except(input_energy_totals, e_dot_machine_tot, .symbols = FALSE)) %>% 
     dplyr::mutate(
-      !!as.name(e_dot_machine_perc) := !!as.name(e_dot_machine) / !!as.name(e_dot_machine_tot) * 100, 
+      # Note that this row is called e_dot_machine_perc, but its values are ratios, not percentages.
+      # The intent is that these values will be formatted as percentages when the Excel sheet is written.
+      !!as.name(e_dot_machine_perc) := !!as.name(e_dot_machine) / !!as.name(e_dot_machine_tot), 
       # Eliminate columns we no longer need.
       !!as.name(e_dot_machine) := NULL,
       !!as.name(e_dot_machine_tot) := NULL
     )
-  # Calculate the maximum percentage of all input energy across all years for each machine
+  # Calculate the maximum percentage of all input energy across all years for each machine and eu_product combination
   input_energy_max_percs <- input_energy_percs %>% 
-    dplyr::group_by(!!!meta_cols, !!as.name(machine)) %>% 
+    dplyr::group_by(!!!meta_cols, !!as.name(machine), !!as.name(eu_product)) %>% 
     dplyr::summarise(
       !!as.name(e_dot_machine_max_perc) := max(!!as.name(e_dot_machine_perc))
     ) %>% 
@@ -704,9 +744,10 @@ eta_fu_template <- function(.fu_allocations,
       # converts to a Carnot efficiency.
       # Some of the phi_u values will end up as NA, but that's OK.
       # We'll change them later.
-      !!as.name(phi_u) := carnot_efficiency(!!as.name(eu_product)),
+      !!as.name(phi_u) := carnot_efficiency(!!as.name(eu_product), T_0 = T_0),
+      # All of the md rows will have NA for phi_u, but we know that it should be 1.
       !!as.name(phi_u) := dplyr::case_when(
-        # We know that mechanical drive (md) has a phi value of 1.
+        # We know that mechanical drive (md) has a phi_u value of 1.
         !!as.name(eu_product) == md ~ 1, 
         TRUE ~ !!as.name(phi_u)
       )
@@ -773,6 +814,7 @@ write_eta_fu_template <- function(.eta_fu_template,
                                   eta_row_font_color = "#B03C02",
                                   eta_row_shading_color = "#FCEDE5",
                                   quantity = "Quantity",
+                                  e_dot_machine_max_perc = paste0("E.dot_machine_max [%]"),
                                   .rownum = ".rownum"){
   # Ensure that path ends in .xlsx
   if (!endsWith(path, ".xlsx")) {
@@ -824,6 +866,11 @@ write_eta_fu_template <- function(.eta_fu_template,
   
   # Set the column widths to "auto" so data can be seen.
   openxlsx::setColWidths(eta_wb, eta_fu_tab_name, cols = 1:ncol(.eta_fu_template), widths = "auto")
+  
+  # Add percentage formatting to the E.dot_machine_max [%] column
+  e_dot_perc_style <- openxlsx::createStyle(numFmt = "PERCENTAGE")
+  openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = e_dot_perc_style, 
+                     rows = 2:(nrow(.eta_fu_template) + 1), cols = which(names(.eta_fu_template) == e_dot_machine_max_perc), gridExpand = TRUE, stack = TRUE)
   
   # Now save it
   openxlsx::saveWorkbook(eta_wb, file = path, overwrite = overwrite_file)
