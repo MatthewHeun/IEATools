@@ -111,7 +111,7 @@ test_that("eta_fu_template works as expected", {
   Eta_fu_template <- load_fu_allocation_data() %>% 
     eta_fu_template()
   expect_equal(Eta_fu_template$Machine[[1]], "Wood stoves")
-  expect_equal(Eta_fu_template$Machine[[nrow(Eta_fu_template)]], "Oil furnaces")
+  expect_equal(Eta_fu_template$Machine[[nrow(Eta_fu_template)]], "Gas heaters")
   expect_equal(as.character(Eta_fu_template$Quantity[[1]]), "eta.fu")
   expect_equal(as.character(Eta_fu_template$Quantity[[nrow(Eta_fu_template)]]), "phi.u")
 })
@@ -135,7 +135,7 @@ test_that("write_eta_fu_template works as expected", {
   # Check that it was read back correctly.
   expect_equal(Template.reread, Eta_fu_template)
   expect_equal(Template.reread$Machine[[1]], "Wood stoves")
-  expect_equal(Template.reread$Machine[[nrow(Template.reread)]], "Oil furnaces")
+  expect_equal(Template.reread$Machine[[nrow(Template.reread)]], "Gas heaters")
   expect_equal(as.character(Template.reread$Quantity[[1]]), "eta.fu")
   expect_equal(as.character(Template.reread$Quantity[[nrow(Template.reread)]]), "phi.u")
   
