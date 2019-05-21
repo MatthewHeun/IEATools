@@ -168,6 +168,7 @@ extract_TK <- function(heat_types){
   Map(convert_to_K, rawT = temperatures, unit = units) %>% unlist() %>% unname()
 }
 
+
 #' Calculate Carnot efficiencies from heat types
 #' 
 #' In societal exergy analysis, converting heat to exergy requires knowledge 
@@ -213,3 +214,70 @@ carnot_efficiency <- function(heat_types, T_0 = 298.15){
   Map(carnot_func, TK, T_0) %>% unlist()
 }
 
+
+#' Identify all energy types supplied or consumed by transformation process machines
+#' 
+#' Sometimes, it is helpful to know all types of energy supplied or consumed by transformation processes.
+#' This function (optionally) reads an IEA data file or loads an IEA data frame and builds a named list of energy types 
+#' supplied or consumed by transformation processes.
+#' 
+#' The names in the returned list are the transformation processes in `iea_df`.
+#' The items in the returned list are vectors of energy types consumed by the corresponding transformation process.
+#' 
+#' @seealso `tp_machine_production()`
+#'
+#' @param file_path the path to the IEA data file (optional)
+#' @param iea_df a data frame containing IEA data. Default is `IEATools::load_tidy_iea_df(file_path)`.
+#'
+#' @return a list of string vectors
+#' 
+#' @export
+#'
+#' @examples
+#' tp_products()
+tp_products <- function(file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+                             system.file(package = "IEATools"), 
+                        iea_df = IEATools::load_tidy_iea_df(file_path), 
+                        type = c("Consumption", "Supply"),
+                        flow_aggregation_point = "Flow.aggregation.point", 
+                        transformation_processes = "Transformation processes", 
+                        e_dot = "E.dot", 
+                        flow = "Flow", 
+                        product = "Product"){
+  type <- match.arg(type)
+  # First step is to find all the Transformation processes
+  temp <- iea_df %>% 
+    dplyr::filter(!!as.name(flow_aggregation_point) == transformation_processes)
+  # Second step is to focus on supply or consumption baseed on the type argument
+  if (type == "Consumption") {
+    out <- temp %>% dplyr::filter(!!as.name(e_dot) < 0)
+  } else {
+    # Because we match.arg(type) above, we know the caller is interested in Supply here.
+    out <- temp %>% dplyr::filter(!!as.name(e_dot) > 0)
+  }
+  # Third step is to keep only the flow and product columns and
+  # group by the flow variable which contains the names of the transformation process machines.
+  grouped <- out %>% 
+    dplyr::select(!!as.name(flow), !!as.name(product)) %>% 
+    unique() %>% 
+    dplyr::group_by(!!as.name(flow))
+  # Fourth step is to isolate the machines, which are the groups.
+  machines <- grouped %>% 
+    dplyr::group_keys() %>% 
+    unlist() %>% 
+    as.vector()
+  # Fifth step is to isolate the energy types.
+  # The energy types are obtained via the group_map function, with the default value of keep (FALSE),
+  # which ensures that the grouping variables are lost.
+  grouped %>% 
+    dplyr::group_map(function(grp_tbl, key){
+      # When we get here, grp_tbl is the rows of iea_df that have the value of flow in common.
+      # key is that value of flow.
+      grp_tbl %>% 
+        unlist() %>% 
+        as.vector()
+    }) %>% 
+    # Lastly, we set the names of each list of energy types to the transformation process with which they are associated,
+    # either as inputs or outputs.
+    magrittr::set_names(machines)  
+}
