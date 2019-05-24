@@ -215,45 +215,65 @@ carnot_efficiency <- function(heat_types, T_0 = 298.15){
 }
 
 
-#' Identify all energy types supplied or consumed by transformation process machines
+#' Identify all energy types supplied or consumed by Production, Transformation processes, or Energy industry own use
 #' 
-#' Sometimes, it is helpful to know all types of energy supplied or consumed by transformation processes.
+#' Sometimes, it is helpful to know all types of energy supplied or consumed by Production, Transformation processes, or Energy industry own use.
 #' This function (optionally) reads an IEA data file or loads an IEA data frame and builds a named list of energy types 
-#' supplied or consumed by transformation processes.
+#' supplied or consumed by Production, Transformation processes, or Energy industry own use.
 #' 
-#' The names in the returned list are the transformation processes in `iea_df`.
-#' The items in the returned list are vectors of energy types consumed by the corresponding transformation process.
+#' The names in the returned list are the Production, Transformation processes, or Energy industry own use industries in `iea_df`.
+#' The items in the returned list are vectors of energy types produced or consumed by the corresponding industries.
 #' 
-#' @seealso `tp_machine_production()`
-#'
 #' @param file_path the path to the IEA data file (optional)
 #' @param iea_df a data frame containing IEA data. Default is `IEATools::load_tidy_iea_df(file_path)`.
+#' @param side refers to the "`Consumptiion`" or "`Supply`" side of Production, Transformation processes, or Energy industry own use. 
+#'        One of "`Consumption`" or "`Supply`". Default is "`Consumption`".
+#' @param flow_aggregation_point the flow aggregation point column in `iea_df`. Default is "`Flow.aggregation.point`".
+#' @param production the string indicating the production flow. Default is "`Production`".
+#' @param transformation_processes the string indicating the transformation process stage. Default is "`Transformation processes`".
+#' @param eiou the string indicating the energy industry own use flow. Default is "`Energy industry own use`".
+#' @param stage the string indicating the stage for the analysis. One of `production`, `transformation_processes`, or `eiou`. 
+#'        Default is `production`.
+#' @param e_dot the energy flow rate column in `iea_df`.  Default is "`E.dot`".
+#' @param flow the flow column in `iea_df`. Default is "`Flow`".
+#' @param product the product column in `iea_df`.  Default is "`Product`".
 #'
 #' @return a list of string vectors
 #' 
 #' @export
 #'
 #' @examples
-#' tp_products()
-tp_products <- function(file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-                             system.file(package = "IEATools"), 
-                        iea_df = IEATools::load_tidy_iea_df(file_path), 
-                        type = c("Consumption", "Supply"),
-                        flow_aggregation_point = "Flow.aggregation.point", 
-                        transformation_processes = "Transformation processes", 
-                        e_dot = "E.dot", 
-                        flow = "Flow", 
-                        product = "Product"){
-  type <- match.arg(type)
-  # First step is to find all the Transformation processes
-  temp <- iea_df %>% 
-    dplyr::filter(!!as.name(flow_aggregation_point) == transformation_processes)
-  # Second step is to focus on supply or consumption baseed on the type argument
-  if (type == "Consumption") {
-    out <- temp %>% dplyr::filter(!!as.name(e_dot) < 0)
-  } else {
+#' prod_tp_eiou_energy_carriers()
+prod_tp_eiou_energy_carriers <- function(file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+                                           system.file(package = "IEATools"), 
+                                         iea_df = IEATools::load_tidy_iea_df(file_path), 
+                                         side = c("Consumption", "Supply"),
+                                         flow_aggregation_point = "Flow.aggregation.point", 
+                                         production = "Production", 
+                                         transformation_processes = "Transformation processes", 
+                                         eiou = "Energy industry own use",
+                                         stage = c(production, transformation_processes, eiou),
+                                         e_dot = "E.dot", 
+                                         flow = "Flow", 
+                                         product = "Product"){
+  stage <- match.arg(stage)
+  side <- match.arg(side)
+  # First step is to focus on Supply or Consumption based on the side argument
+  if (side == "Consumption" & stage == production) {
+    # This should give a 0-row table, because Production, by definition, does not use any energy.
+    out <- iea_df %>% dplyr::filter(!!as.name(flow) == stage & !!as.name(e_dot) < 0)
+  } else if (side == "Supply" & stage == production) {
+    out <- iea_df %>% dplyr::filter(!!as.name(flow) == stage & !!as.name(e_dot) > 0)
+  } else if (side == "Consumption" & stage == eiou) {
+    out <- iea_df %>% dplyr::filter(!!as.name(flow_aggregation_point) == eiou & !!as.name(e_dot) < 0)
+  } else if (side == "Consumption" & stage == transformation_processes) {
+    out <- iea_df %>% dplyr::filter(!!as.name(flow_aggregation_point) == stage & !!as.name(e_dot) < 0)
+  } else if (side == "Supply" & stage == transformation_processes) {
     # Because we match.arg(type) above, we know the caller is interested in Supply here.
-    out <- temp %>% dplyr::filter(!!as.name(e_dot) > 0)
+    out <- iea_df %>% dplyr::filter(!!as.name(flow_aggregation_point) == stage & !!as.name(e_dot) > 0)
+  } else if (side == "Supply" & stage == eiou) {
+    # This should give a 0-row table, because, EIOU, by definition, does not produce energy.
+    out <- iea_df %>% dplyr::filter(!!as.name(flow_aggregation_point) == eiou & !!as.name(e_dot) > 0)
   }
   # Third step is to keep only the flow and product columns and
   # group by the flow variable which contains the names of the transformation process machines.

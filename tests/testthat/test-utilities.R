@@ -67,30 +67,55 @@ test_that("tp_products() works as expected", {
   # Try with an invalid value for type
   expect_error(IEATools::tp_products(type = "bogus"))
   
-  # Use the default value of "type," namely "Consumption"
-  consumption <- IEATools::tp_products()
-  expect_equal(consumption[["Charcoal production plants"]], "Primary solid biofuels")
-  expect_equal(consumption[["Coal liquefaction plants"]], c("Hard coal (if no detail)", "Other bituminous coal"))
-  expect_equal(consumption[["Gas works"]], c("Hard coal (if no detail)", "Other bituminous coal"))
-  expect_equal(consumption[["Gas-to-liquids (GTL) plants"]], "Natural gas")
-  expect_equal(consumption[["Coke ovens"]], c("Hard coal (if no detail)", "Coking coal"))
-  expect_equal(consumption[["Oil refineries"]], c("Crude oil", "Natural gas liquids"))
-  expect_equal(consumption[["Main activity producer electricity plants"]], 
+  # Try with default stage (Production) and side (Consumption).
+  # Should get nothing, because "Production" doesn't use anything.
+  consumption_prod <- IEATools::prod_tp_eiou_energy_carriers()
+  expect_equal(length(consumption_prod), 0)
+  expect_equal(length(names(consumption_prod)), 0)
+
+  # Use the default value of "type," namely "Consumption" and the Transformation process stage.
+  consumption_tp <- IEATools::prod_tp_eiou_energy_carriers(stage = "Transformation processes")
+  expect_equal(consumption_tp[["Charcoal production plants"]], "Primary solid biofuels")
+  expect_equal(consumption_tp[["Coal liquefaction plants"]], c("Hard coal (if no detail)", "Other bituminous coal"))
+  expect_equal(consumption_tp[["Gas works"]], c("Hard coal (if no detail)", "Other bituminous coal"))
+  expect_equal(consumption_tp[["Gas-to-liquids (GTL) plants"]], "Natural gas")
+  expect_equal(consumption_tp[["Coke ovens"]], c("Hard coal (if no detail)", "Coking coal"))
+  expect_equal(consumption_tp[["Oil refineries"]], c("Crude oil", "Natural gas liquids"))
+  expect_equal(consumption_tp[["Main activity producer electricity plants"]], 
                c("Gas/diesel oil excl. biofuels", "Hydro", "Hard coal (if no detail)", "Crude oil", "Other bituminous coal", "Nuclear"))
   
-  # Now try with the "type" equal to "Supply".
-  supply <- IEATools::tp_products(type = "Supply")
-  expect_equal(supply[["Autoproducer electricity plants"]], "Electricity")
-  expect_equal(supply[["Blast furnaces"]], "Blast furnace gas")
-  expect_equal(supply[["Charcoal production plants"]], "Charcoal")
-  expect_equal(supply[["Coal liquefaction plants"]], "Other hydrocarbons")
-  expect_equal(supply[["Coke ovens"]], c("Coke oven coke", "Coke oven gas"))
-  expect_equal(supply[["Gas works"]], "Gas works gas")
-  expect_equal(supply[["Gas-to-liquids (GTL) plants"]], "Other hydrocarbons")
-  expect_equal(supply[["Oil refineries"]], 
+  # Use the default value of "type" (Consumption) and EIOU.
+  consumption_eiou <- IEATools::prod_tp_eiou_energy_carriers(stage = "Energy industry own use")
+  expect_equal(consumption_eiou[["Coal mines"]], "Electricity")
+  expect_equal(consumption_eiou[["Oil refineries"]], c("Refinery gas", "Fuel oil", "Gas works gas", "Electricity"))
+  expect_equal(consumption_eiou[["Own use in electricity, CHP and heat plants"]], "Electricity")
+  expect_equal(consumption_eiou[["Pumped storage plants"]], "Electricity")
+  
+  # Now try with the "type" equal to "Supply" at the Production stage
+  supply_prod <- IEATools::prod_tp_eiou_energy_carriers(stage = "Production", side = "Supply")
+  expect_equal(supply_prod[["Production"]], 
+               c("Primary solid biofuels", "Hydro", "Hard coal (if no detail)", "Coking coal",
+                 "Other bituminous coal", "Natural gas", "Crude oil", "Natural gas liquids", "Nuclear"))
+  
+  # Now try with the "type" equal to "Supply" at the Transformation processes stage
+  supply_tp <- IEATools::prod_tp_eiou_energy_carriers(stage = "Transformation processes", side = "Supply")
+  expect_equal(supply_tp[["Autoproducer electricity plants"]], "Electricity")
+  expect_equal(supply_tp[["Blast furnaces"]], "Blast furnace gas")
+  expect_equal(supply_tp[["Charcoal production plants"]], "Charcoal")
+  expect_equal(supply_tp[["Coal liquefaction plants"]], "Other hydrocarbons")
+  expect_equal(supply_tp[["Coke ovens"]], c("Coke oven coke", "Coke oven gas"))
+  expect_equal(supply_tp[["Gas works"]], "Gas works gas")
+  expect_equal(supply_tp[["Gas-to-liquids (GTL) plants"]], "Other hydrocarbons")
+  expect_equal(supply_tp[["Oil refineries"]], 
                c("Refinery gas", "Liquefied petroleum gases (LPG)", "Motor gasoline excl. biofuels",
                  "Kerosene type jet fuel excl. biofuels", "Other kerosene", "Gas/diesel oil excl. biofuels", 
                  "Fuel oil", "Aviation gasoline", "Naphtha", "Bitumen", "Other oil products", 
                  "White spirit & SBP", "Lubricants", "Paraffin waxes"))
+  
+  # Now try with the "type" equal to "Supply" at the EIOU stage.
+  # We should get nothing, because EIOU, by definition, does not produce any energy.
+  supply_eiou <- IEATools::prod_tp_eiou_energy_carriers(stage = "Energy industry own use", side = "Supply")
+  expect_equal(length(supply_eiou), 0)
+  expect_equal(length(names(supply_eiou)), 0)
 })
 
