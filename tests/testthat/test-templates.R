@@ -110,8 +110,8 @@ test_that("load_fu_allocation_data works as expected", {
 test_that("eta_fu_template works as expected", {
   Eta_fu_template <- load_fu_allocation_data() %>% 
     eta_fu_template()
-  expect_equal(Eta_fu_template$Machine[[1]], "Wood stoves")
-  expect_equal(Eta_fu_template$Machine[[nrow(Eta_fu_template)]], "Gas heaters")
+  expect_equal(Eta_fu_template$Machine[[1]], "Automobiles")
+  expect_equal(Eta_fu_template$Machine[[nrow(Eta_fu_template)]], "Oil furnaces")
   expect_equal(as.character(Eta_fu_template$Quantity[[1]]), "eta.fu")
   expect_equal(as.character(Eta_fu_template$Quantity[[nrow(Eta_fu_template)]]), "phi.u")
 })
@@ -126,16 +126,19 @@ test_that("write_eta_fu_template works as expected", {
   # Read the tab back in.
   Template.reread <- openxlsx::read.xlsx(f, sheet = "FU etas") %>% 
     dplyr::mutate(
+      Eu.product = as.factor(Eu.product),
       Quantity = as.factor(Quantity)
-    ) %>% 
+    ) %>%
     dplyr::rename(
       # But we have to change the name of one column
       `E.dot_machine_max [%]` = `E.dot_machine_max.[%]`
     )
   # Check that it was read back correctly.
-  expect_equal(Template.reread, Eta_fu_template)
-  expect_equal(Template.reread$Machine[[1]], "Wood stoves")
-  expect_equal(Template.reread$Machine[[nrow(Template.reread)]], "Gas heaters")
+  # Use expect_equivalent instead of expect_equal to ignore attributes 
+  # (in this case levels) that are different after reading back in.
+  expect_equivalent(Template.reread, Eta_fu_template)
+  expect_equal(Template.reread$Machine[[1]], "Automobiles")
+  expect_equal(Template.reread$Machine[[nrow(Template.reread)]], "Oil furnaces")
   expect_equal(as.character(Template.reread$Quantity[[1]]), "eta.fu")
   expect_equal(as.character(Template.reread$Quantity[[nrow(Template.reread)]]), "phi.u")
   
