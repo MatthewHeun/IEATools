@@ -10,7 +10,7 @@ write_eta_fu_template(.eta_fu_template, path,
   header_row_font_color = "#FFFFFF",
   header_row_shading_color = "#5A80B8", eta_row_font_color = "#8C87A0",
   eta_row_shading_color = "#E3DFEB", quantity = "Quantity",
-  e_dot_machine_max_perc = paste0("E.dot_machine_max [\%]"),
+  e_dot_machine_max_perc = "E.dot_machine_max [\%]",
   .rownum = ".rownum")
 }
 \arguments{
@@ -40,13 +40,15 @@ Default is "\code{#E3DFEB}", a light purple color.}
 
 \item{quantity}{the name of the quantity column in \code{.eta_fu_template}. Default is "\code{Quantity}".}
 
+\item{e_dot_machine_max_perc}{the name of the rows that give maximum percentages. Default is "\code{E.dot_machine_max [\%]}".}
+
 \item{.rownum}{the name of a temporary column containing row numbers. Default is "\code{.rownum}".}
 }
 \value{
 \code{path}
 }
 \description{
-Write a final-to-useful machine efficiencies template to a file
+The template should be created by \code{eta_fu_template()}.
 }
 \examples{
 f <- tempfile(fileext = ".xlsx")

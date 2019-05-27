@@ -8,14 +8,14 @@ eta_fu_template(.fu_allocations, T_0 = 298.15,
   ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
   ef_product = "Ef.product", machine = "Machine",
-  eu_product = "Eu.product", md = "MD", light = "Light",
-  eta_fu = "eta.fu", phi_u = "phi.u", destination = "Destination",
-  quantity = "Quantity", maximum_values = "Maximum.values",
-  perc = "[\%]", e_dot = "E.dot", c_ = "C_",
-  c_perc = paste(substr(c_, 1, 1), perc), c_ratio = substr(c_, 1, 1),
-  .year = ".year", .value = ".value", e_dot_dest = paste0(e_dot,
-  "_dest"), e_dot_machine = paste0(e_dot, "_machine"),
-  e_dot_machine_tot = paste0(e_dot_machine, "_tot"),
+  eu_product = "Eu.product", md = "MD", light = "Light", ke = "KE",
+  heat = "TH", eta_fu = "eta.fu", phi_u = "phi.u",
+  destination = "Destination", quantity = "Quantity",
+  maximum_values = "Maximum.values", perc = "[\%]", e_dot = "E.dot",
+  c_ = "C_", c_perc = paste(substr(c_, 1, 1), perc),
+  c_ratio = substr(c_, 1, 1), .year = ".year", .value = ".value",
+  e_dot_dest = paste0(e_dot, "_dest"), e_dot_machine = paste0(e_dot,
+  "_machine"), e_dot_machine_tot = paste0(e_dot_machine, "_tot"),
   e_dot_machine_perc = paste(e_dot_machine, perc),
   e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc))
 }
@@ -36,6 +36,12 @@ eta_fu_template(.fu_allocations, T_0 = 298.15,
 
 \item{md}{the name of the mechanical drive useful energy carrier in the \code{eu_product} column. Default is "\code{MD}".}
 
+\item{light}{the name of the light useful energy carrier in the \code{eu_product} column. Default is "\code{Light}".}
+
+\item{ke}{the name of the kinetic energy useful energy carrier in the \code{eu_product} column. Default is "\code{KE}".}
+
+\item{heat}{the string that identifies heat useful energy carriers in the \code{eu_product} column.  Default is "\code{TH}" for "temperature heat".}
+
 \item{eta_fu}{the name for final-to-useful energy efficiencies to be entered by the analyst.  Default is "\code{eta.fu}".}
 
 \item{phi_u}{the name for the exergy-to-energy ratio for useful energy carriers to be entered by the analyst.  Default is "\code{phi.u}".}
@@ -53,6 +59,8 @@ eta_fu_template(.fu_allocations, T_0 = 298.15,
 \item{c_}{the string prefix for allocation variables. Default is "\code{C_}".}
 
 \item{c_perc}{the string for generic allocation variables in percentage terms. Default is "\code{C [\%]}".}
+
+\item{c_ratio}{the string for generic allocation variables in ratio terms. Default is "\code{C}".}
 
 \item{.year}{the name of a temporary year column. Default is "\code{.year}".}
 

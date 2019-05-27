@@ -114,6 +114,10 @@ test_that("eta_fu_template works as expected", {
   expect_equal(Eta_fu_template$Machine[[nrow(Eta_fu_template)]], "Oil furnaces")
   expect_equal(as.character(Eta_fu_template$Quantity[[1]]), "eta.fu")
   expect_equal(as.character(Eta_fu_template$Quantity[[nrow(Eta_fu_template)]]), "phi.u")
+  
+  eu_products <- Eta_fu_template$Eu.product %>% unique() %>% as.character()
+  # Check that the order is as expected.
+  expect_equivalent(eu_products, c("MD", "Light", "HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C"))
 })
 
 test_that("write_eta_fu_template works as expected", {
