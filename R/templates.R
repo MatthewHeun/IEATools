@@ -907,7 +907,7 @@ write_eta_fu_template <- function(.eta_fu_template,
   
   # Add number formatting to all phi.u rows. We want to ensure several decimal places.
   # phi_num_style <- openxlsx::createStyle(numFmt = "NUMBER")
-  phi_num_style <- openxlsx::createStyle(numFmt = "0.000000")
+  phi_num_style <- openxlsx::createStyle(numFmt = "0.0#####")
   openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = phi_num_style, 
                      rows = phi_row_indices, cols = year_cols_indices, gridExpand = TRUE)
 
