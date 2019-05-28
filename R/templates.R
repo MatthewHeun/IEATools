@@ -532,16 +532,16 @@ write_fu_allocation_template <- function(.fu_allocation_template,
 #' 
 #' A filled example can be loaded with the default value of `path`.
 #'
-#' @param path the path from which final-to-useful allocation data will be loaded
-#' @param fu_allocations_tab_name the tab in `path` that contains the final-to-useful allocation data. Default is "`Allocations`".
+#' @param path the path from which final-to-useful allocation data will be loaded. Default is the path to allocation data supplied with this package.
+#' @param fu_allocations_tab_name the tab in `path` that contains the final-to-useful allocation data. Default is "`FU Allocations`".
 #'
 #' @return the `fu_allocations_tab_name` tab in `path` as a data frame.
 #' 
 #' @export
 #'
 #' @examples
-#' file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEATools")
+#' # Loads final-to-useful allocation data supplied with the package
+#' load_fu_allocation_data()
 load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocation-sample.xlsx") %>% 
                                       system.file(package = "IEATools"), 
                                     fu_allocations_tab_name = "FU Allocations"){
@@ -866,7 +866,7 @@ write_eta_fu_template <- function(.eta_fu_template,
   
   # Add colors to rows
   
-  # Start with the eta rows
+  # Start with the eta.fu rows
   eta_row_indices <- .eta_fu_template %>% 
     # Make a column of row numbers
     tibble::remove_rownames() %>% tibble::rownames_to_column(var = .rownum) %>% 
@@ -881,24 +881,39 @@ write_eta_fu_template <- function(.eta_fu_template,
     dplyr::select(!!as.name(.rownum)) %>% 
     unlist() %>% 
     unname()
+  # Identify the phi.u rows.
+  phi_row_indices <- eta_row_indices + 1
+  # Identify the year columns.
+  year_cols_indices <- year_cols(.eta_fu_template)
   
+  # Add percentage formatting to the E.dot_machine_max [%] column
+  e_dot_perc_style <- openxlsx::createStyle(numFmt = "PERCENTAGE")
+  openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = e_dot_perc_style, 
+                     rows = 2:(nrow(.eta_fu_template) + 1), cols = which(names(.eta_fu_template) == e_dot_machine_max_perc), gridExpand = TRUE)
+  
+  # Add percentage formatting to all eta.fu rows.
+  eta_perc_style <- openxlsx::createStyle(numFmt = "PERCENTAGE")
+  openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = eta_perc_style, 
+                     rows = eta_row_indices, cols = year_cols_indices, gridExpand = TRUE)
+  
+  # Add number formatting to all phi.u rows
+  phi_num_style <- openxlsx::createStyle(numFmt = "NUMBER")
+  openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = phi_num_style, 
+                     rows = phi_row_indices, cols = year_cols_indices, gridExpand = TRUE)
+
   # Apply color formatting style for the header row
   header_row_style <- openxlsx::createStyle(fontColour = header_row_font_color, fgFill = header_row_shading_color, textDecoration = c("BOLD"))
-  openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = header_row_style, rows = 1, cols = 1:ncol(.eta_fu_template), gridExpand = TRUE)
+  openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = header_row_style, rows = 1, cols = 1:ncol(.eta_fu_template), gridExpand = TRUE, stack = TRUE)
   
   # Define the eta row style
   eta_row_style <- openxlsx::createStyle(fontColour = eta_row_font_color, fgFill = eta_row_shading_color)
   # Apply the eta row style at the correct locations
   openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = eta_row_style, 
-                     rows = eta_row_indices, cols = 1:ncol(.eta_fu_template), gridExpand = TRUE)
+                     rows = eta_row_indices, cols = 1:ncol(.eta_fu_template), gridExpand = TRUE, stack = TRUE)
   
   # Set the column widths to "auto" so data can be seen.
   openxlsx::setColWidths(eta_wb, eta_fu_tab_name, cols = 1:ncol(.eta_fu_template), widths = "auto")
   
-  # Add percentage formatting to the E.dot_machine_max [%] column
-  e_dot_perc_style <- openxlsx::createStyle(numFmt = "PERCENTAGE")
-  openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = e_dot_perc_style, 
-                     rows = 2:(nrow(.eta_fu_template) + 1), cols = which(names(.eta_fu_template) == e_dot_machine_max_perc), gridExpand = TRUE, stack = TRUE)
   
   # Now save it
   openxlsx::saveWorkbook(eta_wb, file = path, overwrite = overwrite_file)
@@ -907,6 +922,30 @@ write_eta_fu_template <- function(.eta_fu_template,
 }
 
 
-
+#' Load final-to-useful machine efficiency data
+#' 
+#' When performing extending an energy conversion chain from useful energy to final energy, 
+#' efficiencies of final-to-useful energy conversion machines are defined by the analyst.  
+#' The Excel file at `path` contains those allocations.
+#' 
+#' A final-to-useful machine efficiencies template can be 
+#' generated using `eta_fu_template()` and `write_eta_fu_template()`.
+#' 
+#' A filled example can be loaded with the default value of `path`.
+#'
+#' @param path the path from which final-to-useful machine efficiency data will be loaded. Default is the path to sample efficiency data supplied with this package.
+#' @param eta_fu_tab_name the tab in `path` that contains the final-to-useful machine efficiency data. Default is "`FU etas`".
+#'
+#' @return the `eta_fu_tab_name` tab in `path` as a data frame.
+#' 
+#' @export
+#'
+#' @examples
+#' load_eta_fu_data()
+load_eta_fu_data <- function(path = file.path("extdata", "GH-ZA-Efficiency-sample.xlsx") %>% 
+                                      system.file(package = "IEATools"), 
+                                    eta_fu_tab_name = "FU etas"){
+  openxlsx::read.xlsx(path, sheet = eta_fu_tab_name)
+}
 
 

@@ -9,9 +9,9 @@ load_fu_allocation_data(path = file.path("extdata",
   fu_allocations_tab_name = "FU Allocations")
 }
 \arguments{
-\item{path}{the path from which final-to-useful allocation data will be loaded}
+\item{path}{the path from which final-to-useful allocation data will be loaded. Default is the path to allocation data supplied with this package.}
 
-\item{fu_allocations_tab_name}{the tab in \code{path} that contains the final-to-useful allocation data. Default is "\code{Allocations}".}
+\item{fu_allocations_tab_name}{the tab in \code{path} that contains the final-to-useful allocation data. Default is "\code{FU Allocations}".}
 }
 \value{
 the \code{fu_allocations_tab_name} tab in \code{path} as a data frame.
@@ -28,6 +28,6 @@ generated using \code{fu_allocation_template()} and \code{write_fu_allocation_te
 A filled example can be loaded with the default value of \code{path}.
 }
 \examples{
-file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
-  system.file(package = "IEATools")
+# Loads final-to-useful allocation data supplied with the package
+load_fu_allocation_data()
 }
