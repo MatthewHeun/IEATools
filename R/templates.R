@@ -779,7 +779,7 @@ eta_fu_template <- function(.fu_allocations,
   eu_product_sort_order <- c(md, ke, light, heat_prods_sorted, leftover_eu_prods)
   
   # We need one of the prelim_out data frames for each year
-  lapply(year_colnames, function(yr){
+  out <- lapply(year_colnames, function(yr){
     prelim_out %>% 
       dplyr::mutate(
         !!as.name(.year) := yr
@@ -794,6 +794,15 @@ eta_fu_template <- function(.fu_allocations,
     ) %>% 
     # And finally sort the rows and return the result.
     dplyr::arrange(!!!meta_cols, !!as.name(eu_product), dplyr::desc(!!as.name(e_dot_machine_max_perc)), !!as.name(machine), !!as.name(quantity))
+  # At this point the year columns are of type character. 
+  # But we want them to be numeric.
+  # First, find the indices of the year columns. 
+  year_col_indices <- year_cols(out)
+  # Change each year column to be type numeric.
+  for (i in year_col_indices) {
+    out[[i]] <- as.numeric(out[[i]])
+  }
+  return(out)
 }
 
 
@@ -896,8 +905,9 @@ write_eta_fu_template <- function(.eta_fu_template,
   openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = eta_perc_style, 
                      rows = eta_row_indices, cols = year_cols_indices, gridExpand = TRUE)
   
-  # Add number formatting to all phi.u rows
-  phi_num_style <- openxlsx::createStyle(numFmt = "NUMBER")
+  # Add number formatting to all phi.u rows. We want to ensure several decimal places.
+  # phi_num_style <- openxlsx::createStyle(numFmt = "NUMBER")
+  phi_num_style <- openxlsx::createStyle(numFmt = "0.000000")
   openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = phi_num_style, 
                      rows = phi_row_indices, cols = year_cols_indices, gridExpand = TRUE)
 

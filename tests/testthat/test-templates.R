@@ -118,6 +118,9 @@ test_that("eta_fu_template works as expected", {
   eu_products <- Eta_fu_template$Eu.product %>% unique() %>% as.character()
   # Check that the order is as expected.
   expect_equivalent(eu_products, c("MD", "Light", "HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C"))
+  # Check the class of the year columns. They should be numeric.
+  expect_true(is.numeric(Eta_fu_template[["1971"]]))
+  expect_true(is.numeric(Eta_fu_template[["2000"]]))
 })
 
 test_that("write_eta_fu_template works as expected", {
