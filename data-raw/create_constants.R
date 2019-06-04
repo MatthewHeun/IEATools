@@ -117,7 +117,7 @@ usethis::use_data(renewable_products, overwrite = TRUE)
 # Biofuels
 # 
 
-biofuel_and_waste_products <- c(
+biofuels_and_waste_products <- c(
   "Industrial waste",
   "Municipal waste (renewable)",
   "Municipal waste (non-renewable)",
@@ -125,11 +125,12 @@ biofuel_and_waste_products <- c(
   "Biogases",
   "Biogasoline",
   "Biodiesels",
+  "Bio jet kerosene",
   "Other liquid biofuels",
   "Non-specified primary biofuels and waste",
   "Charcoal"
 )
-usethis::use_data(biofuel_and_waste_products, overwrite = TRUE)
+usethis::use_data(biofuels_and_waste_products, overwrite = TRUE)
 
 
 # 
@@ -182,7 +183,7 @@ usethis::use_data(ledger_side_iea_order, overwrite = TRUE)
 
 
 # 
-# Sorting orders
+# Sort orders
 # 
 
 # Defining the row order for IEA-style data frames is tricky and requires some manual intervention.
