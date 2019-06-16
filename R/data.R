@@ -59,7 +59,7 @@
 #' A string vector containing names of products classified by the IEA as biofuel and waste products.
 #' 
 #' @format A string vector with 10 entries
-"biofuel_and_waste_products"
+"biofuels_and_waste_products"
 
 #' Aggregation flows
 #'
@@ -112,11 +112,3 @@
 #' 
 #' @format A string vector
 "product_iea_order"
-
-
-#' Useful energy carrier order
-#'
-#' A string vector containing entries for ordered useful energy products.
-#' 
-#' @format A string vector
-"eu_product_order"
