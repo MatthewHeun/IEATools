@@ -13,9 +13,11 @@ eta_fu_template(.fu_allocations, T_0 = 298.15,
   destination = "Destination", quantity = "Quantity",
   maximum_values = "Maximum.values", perc = "[\%]", e_dot = "E.dot",
   c_ = "C_", c_perc = paste(substr(c_, 1, 1), perc),
-  c_ratio = substr(c_, 1, 1), .year = ".year", .value = ".value",
+  c_ratio = substr(c_, 1, 1), .year = ".year",
+  year_for_maximum_values = 0, .value = ".value",
   e_dot_dest = paste0(e_dot, "_dest"), e_dot_machine = paste0(e_dot,
-  "_machine"), e_dot_machine_tot = paste0(e_dot_machine, "_tot"),
+  "_machine"), e_dot_machine_max = paste0(e_dot_machine, "_max"),
+  e_dot_machine_tot = paste0(e_dot_machine, "_tot"),
   e_dot_machine_perc = paste(e_dot_machine, perc),
   e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc))
 }
