@@ -640,9 +640,11 @@ eta_fu_template <- function(.fu_allocations,
                             c_perc = paste(substr(c_, 1, 1), perc),
                             c_ratio = substr(c_, 1, 1),
                             .year = ".year",
+                            year_for_maximum_values = 0,
                             .value = ".value", 
                             e_dot_dest = paste0(e_dot, "_dest"),
                             e_dot_machine = paste0(e_dot, "_machine"), 
+                            e_dot_machine_max = paste0(e_dot_machine, "_max"),
                             e_dot_machine_tot = paste0(e_dot_machine, "_tot"), 
                             e_dot_machine_perc = paste(e_dot_machine, perc), 
                             e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc)){
@@ -705,9 +707,16 @@ eta_fu_template <- function(.fu_allocations,
     dplyr::summarise(
       !!as.name(e_dot_machine) := sum(!!as.name(e_dot_machine))
     ) %>% 
-    dplyr::ungroup()
+    dplyr::ungroup() %>% 
+    dplyr::mutate(
+      !!as.name(.year) := as.numeric(!!as.name(.year))
+    )
   # Calculate total input energy for each combination of metadata variables
   input_energy_totals <- input_energy %>% 
+    # When the e_dot_machine column is NA for a row, the total is also NA. 
+    # That is pretty unforgiving when calculating the totals.
+    # So we remove NA columns when calculating totals. 
+    dplyr::filter(!is.na(!!as.name(e_dot_machine))) %>% 
     dplyr::group_by(!!!meta_cols, !!as.name(.year)) %>% 
     dplyr::summarise(
       !!as.name(e_dot_machine_tot) := sum(!!as.name(e_dot_machine))
@@ -803,6 +812,76 @@ eta_fu_template <- function(.fu_allocations,
     out[[i]] <- as.numeric(out[[i]])
   }
   return(out)
+  
+  
+  
+  
+  
+  
+  
+  
+  # Tidy <- input_energy %>% 
+  #   # Eliminate rows where the analyst didn't fill any machines or products
+  #   dplyr::filter(!is.na(!!as.name(machine)) & !is.na(!!as.name(eu_product))) %>% 
+  #   unique() %>% 
+  #   # Add input energy percentages
+  #   dplyr::left_join(input_energy_percs, 
+  #                    by = matsindf::everything_except(input_energy_percs, e_dot_machine_perc, .symbols = FALSE)) %>% 
+  #   dplyr::mutate(
+  #     # The eta_fu column should be blank, because the analyst will fill it later.
+  #     !!as.name(eta_fu) := "",
+  #     # But the phi_u column can be pre-filled with some exergy/energy ratios.
+  #     # The first attempt uses the carnot_efficiency function,
+  #     # which converts the heat type (e.g., HTH.600.C)
+  #     # to a temperature in kelvin and further
+  #     # converts to a Carnot efficiency.
+  #     # Some of the phi_u values will end up as NA, but that's OK.
+  #     # We'll change them later.
+  #     !!as.name(phi_u) := carnot_efficiency(!!as.name(eu_product), T_0 = T_0),
+  #     # All of the md rows will have NA for phi_u, but we know that it should be 1.
+  #     !!as.name(phi_u) := dplyr::case_when(
+  #       # We know that mechanical drive (md) has a phi_u value of 1.
+  #       !!as.name(eu_product) == md ~ 1, 
+  #       TRUE ~ !!as.name(phi_u)
+  #     )
+  #   )
+  # 
+  # # Calculate the maximum energy input and energy input percentage to each Machine across all years
+  # Max <- Tidy %>% 
+  #   matsindf::group_by_everything_except(.year, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u) %>% 
+  #   dplyr::summarise(
+  #     !!as.name(e_dot_machine) := max(!!as.name(e_dot_machine)), 
+  #     !!as.name(e_dot_machine_perc) := max(!!as.name(e_dot_machine_perc))
+  #   ) %>% 
+  #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc)) %>% 
+  #   dplyr::mutate(
+  #     # Set the year for max values to 0 so that the max values will appear as the earliest year.
+  #     !!as.name(.year) := year_for_maximum_values #,
+  #     # Need to make this into a character column so that we can add it to "" in the C_ columns later.
+  #     # !!as.name(.value) := as.character(!!as.name(.value))
+  #   )
+  # 
+  # # Create columns for eta.fu and phi.u in the Tidy data frame
+  # Tidy <- Tidy %>% 
+  #   dplyr::mutate(
+  #     !!as.name(eta_fu) := NA_real_,
+  #     !!as.name(phi_u) := NA_real_
+  #   )
+  # 
+  # out <- Tidy %>% 
+  #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc), !!as.name(eta_fu), !!as.name(phi_u)) %>%
+  #   dplyr::bind_rows(Max) %>% 
+  #   # Set levels for the quantity column so that we can get the right order when we spread the years
+  #   dplyr::mutate(
+  #     !!as.name(quantity) := factor(!!as.name(quantity), levels = c(e_dot_machine_max, e_dot_machine_max_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u))
+  #   ) %>% 
+  #   # Now spread by years across the spreadsheet.
+  #   tidyr::spread(key = .year, value = .value) %>% 
+  #   dplyr::rename(
+  #     # Rename the year 0 column
+  #     !!as.name(maximum_values) := !!as.name(year_for_maximum_values)
+  #   )
+  
 }
 
 
