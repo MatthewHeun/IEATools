@@ -820,6 +820,9 @@ eta_fu_template <- function(.fu_allocations,
   
   
   
+  
+  
+  
   # Tidy <- input_energy %>% 
   #   # Eliminate rows where the analyst didn't fill any machines or products
   #   dplyr::filter(!is.na(!!as.name(machine)) & !is.na(!!as.name(eu_product))) %>% 
@@ -844,6 +847,11 @@ eta_fu_template <- function(.fu_allocations,
   #       !!as.name(eu_product) == md ~ 1, 
   #       TRUE ~ !!as.name(phi_u)
   #     )
+  #   ) %>% 
+  #   dplyr::mutate(
+  #     # Create columns for eta.fu and phi.u in the Tidy data frame
+  #     !!as.name(eta_fu) := NA_real_,
+  #     !!as.name(phi_u) := NA_real_
   #   )
   # 
   # # Calculate the maximum energy input and energy input percentage to each Machine across all years
@@ -861,14 +869,7 @@ eta_fu_template <- function(.fu_allocations,
   #     # !!as.name(.value) := as.character(!!as.name(.value))
   #   )
   # 
-  # # Create columns for eta.fu and phi.u in the Tidy data frame
-  # Tidy <- Tidy %>% 
-  #   dplyr::mutate(
-  #     !!as.name(eta_fu) := NA_real_,
-  #     !!as.name(phi_u) := NA_real_
-  #   )
-  # 
-  # out <- Tidy %>% 
+  # prelim_out <- Tidy %>% 
   #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc), !!as.name(eta_fu), !!as.name(phi_u)) %>%
   #   dplyr::bind_rows(Max) %>% 
   #   # Set levels for the quantity column so that we can get the right order when we spread the years
@@ -881,6 +882,28 @@ eta_fu_template <- function(.fu_allocations,
   #     # Rename the year 0 column
   #     !!as.name(maximum_values) := !!as.name(year_for_maximum_values)
   #   )
+  # 
+  # # Establish the sort order of Eu.products for the resulting file.
+  # # We need to create a list of all the Eu.products.
+  # eu_prods <- prelim_out[[eu_product]] %>% unique()
+  # # Then find all the ones that are heat useful energy, identified by the 2nd and third characters being "TH".
+  # heat_prods <- eu_prods[which(substring(eu_prods, 2) %>% startsWith(heat))]
+  # # Sort the heat products by temperature
+  # sorted_heat_indices <- heat_prods %>% 
+  #   extract_TK() %>% 
+  #   sort.int(decreasing = TRUE, index.return = TRUE) %>% 
+  #   magrittr::extract2("ix")
+  # heat_prods_sorted <- heat_prods[sorted_heat_indices]
+  # # There may be useful products that we don't know about. Put those at the end, sorted in alphabetical order..
+  # leftover_eu_prods <- sort(setdiff(eu_prods, c(md, light, heat_prods)))
+  # # Now compile the order of Eu.products for this data frame.
+  # eu_product_sort_order <- c(md, ke, light, heat_prods_sorted, leftover_eu_prods)
+  
+  
+  
+  
+  
+  
   
 }
 
