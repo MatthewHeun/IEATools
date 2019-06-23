@@ -14,7 +14,7 @@
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
 #' @param energy_type the name of the energy type column. Default is "`Energy.type`".
-#' @param energy the string identifier for energy (as opposed to exergy). Default is "`E`".
+#' @param energy the string identifier for energy (as opposed to exergy) in the `energy_type` column. Default is "`E`".
 #' @param last_stage the name of the last stage column. Default is "`Last.stage`".
 #' @param final the string identifier for final energy (as `Last.stage`). Default is "`Final`".
 #' @param year the name of the year column. Default is "`Year`".
@@ -138,9 +138,7 @@ fu_allocation_template <- function(.tidy_iea_df,
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot), !!as.name(e_dot_perc)) %>% 
     dplyr::mutate(
       # Set the year for max values to 0 so that the max values will appear as the earliest year.
-      !!as.name(year) := year_for_maximum_values #,
-      # Need to make this into a character column so that we can add it to "" in the C_ columns later.
-      # !!as.name(.value) := as.character(!!as.name(.value))
+      !!as.name(year) := year_for_maximum_values
     )
   
   # Create a vector of allocation percentages

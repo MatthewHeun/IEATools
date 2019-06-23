@@ -25,7 +25,7 @@ fu_allocation_template(.tidy_iea_df, energy_type = "Energy.type",
 
 \item{energy_type}{the name of the energy type column. Default is "\code{Energy.type}".}
 
-\item{energy}{the string identifier for energy (as opposed to exergy). Default is "\code{E}".}
+\item{energy}{the string identifier for energy (as opposed to exergy) in the \code{energy_type} column. Default is "\code{E}".}
 
 \item{last_stage}{the name of the last stage column. Default is "\code{Last.stage}".}
 
