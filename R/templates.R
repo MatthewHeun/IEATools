@@ -747,9 +747,20 @@ eta_fu_template <- function(.fu_allocations,
     ) %>% 
     dplyr::ungroup()
   # Prepare the outgoing data frame.
-  out <- dplyr::full_join(input_energy_max, input_energy_max_percs, by = matsindf::everything_except(input_energy, .year, e_dot_machine, .symbols = FALSE)) %>% 
-    dplyr::full_join(input_energy, by = matsindf::everything_except(input_energy, e_dot_machine, .year, .symbols = FALSE)) %>% 
-    dplyr::full_join(input_energy_percs, by = matsindf::everything_except(input_energy, e_dot_machine, .symbols = FALSE)) %>% 
+   
+  Maxima <- dplyr::full_join(input_energy_max, input_energy_max_percs, by = matsindf::everything_except(input_energy, .year, e_dot_machine, .symbols = FALSE)) %>% 
+    dplyr::rename(
+      !!as.name(e_dot_machine) := !!as.name(e_dot_machine_max),
+      !!as.name(e_dot_machine_perc) := !!as.name(e_dot_machine_max_perc)
+    ) %>% 
+    tidyr::gather(key = !!as.name(quantity), value = !!as.name(maximum_values), !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc))
+  
+  
+  # The following nearly works, except that the macines are not in descending order of importance as we move down.
+  # Need to set the order of Machine/Eu.product from E.dot_machine.
+  
+  # Annual format, including blanks for eta_fu and phi_u
+  Annual <- dplyr::full_join(input_energy, input_energy_percs, by = matsindf::everything_except(input_energy, e_dot_machine, .symbols = FALSE)) %>% 
     dplyr::mutate(
       # The eta_fu column should be blank, because the analyst will fill it later.
       !!as.name(eta_fu) := "",
@@ -770,7 +781,46 @@ eta_fu_template <- function(.fu_allocations,
     ) %>% 
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), 
                   !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc), !!as.name(eta_fu), !!as.name(phi_u)) %>% 
-    tidyr::spread(key = .year, value = .value) %>% View
+    tidyr::spread(key = .year, value = .value)
+  
+  
+  out <- dplyr::full_join(Maxima, Annual, by = matsindf::everything_except(Maxima, maximum_values, .symbols = FALSE)) %>% 
+    dplyr::mutate(
+      !!as.name(quantity) := factor(!!as.name(quantity), levels = c(e_dot_machine, e_dot_machine_perc, eta_fu, phi_u))
+    ) %>% 
+    dplyr::arrange(!!!meta_cols, !!as.name(machine), !!as.name(eu_product), !!as.name(quantity), !!as.name(maximum_values))
+  
+
+  
+  
+     
+  
+  # The following is something that works.
+  # out <- dplyr::full_join(input_energy_max, input_energy_max_percs, by = matsindf::everything_except(input_energy, .year, e_dot_machine, .symbols = FALSE)) %>% 
+  #   # tidyr::gather(key = !!as.name(".key"), value = !!as.name(maximum_values), !!as.name(e_dot_machine_max), !!as.name(e_dot_machine_max_perc)) %>% View
+  #   dplyr::full_join(input_energy, by = matsindf::everything_except(input_energy, e_dot_machine, .year, .symbols = FALSE)) %>% 
+  #   dplyr::full_join(input_energy_percs, by = matsindf::everything_except(input_energy, e_dot_machine, .symbols = FALSE)) %>% 
+  #   dplyr::mutate(
+  #     # The eta_fu column should be blank, because the analyst will fill it later.
+  #     !!as.name(eta_fu) := "",
+  #     # But the phi_u column can be pre-filled with some exergy/energy ratios.
+  #     # The first attempt uses the carnot_efficiency function,
+  #     # which converts the heat type (e.g., HTH.600.C)
+  #     # to a temperature in kelvin and further
+  #     # converts to a Carnot efficiency.
+  #     # Some of the phi_u values will end up as NA, but that's OK.
+  #     # We'll change them later.
+  #     !!as.name(phi_u) := carnot_efficiency(!!as.name(eu_product), T_0 = T_0),
+  #     # All of the mecahnical drive (md) rows will have NA for phi_u, but we know that it should be 1.
+  #     !!as.name(phi_u) := dplyr::case_when(
+  #       # We know that mechanical drive (md) has a phi_u value of 1.
+  #       !!as.name(eu_product) == md ~ 1,
+  #       TRUE ~ !!as.name(phi_u)
+  #     )
+  #   ) %>% 
+  #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), 
+  #                 !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc), !!as.name(eta_fu), !!as.name(phi_u)) %>% 
+  #   tidyr::spread(key = .year, value = .value) %>% View
   
   
   # prelim_out <- .fu_allocations %>% 

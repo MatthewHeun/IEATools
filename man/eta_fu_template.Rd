@@ -70,7 +70,7 @@ eta_fu_template(.fu_allocations, T_0 = 298.15,
 
 \item{e_dot_dest}{the name of a temporary column containing energy flows into a destination. Default is "\code{E.dot_dest}".}
 
-\item{e_dot_machine}{the name of a temporary column containing energy flows into a final-to-useful machine. Default is "\code{E.dot_machine}".}
+\item{e_dot_machine}{the name of a temporary column containing energy flows into final-to-useful machines. Default is "\code{E.dot_machine}".}
 
 \item{e_dot_machine_tot}{the name of a temporary column containing sums of energy flows into a final-to-useful machines. Default is "\code{E.dot_machine_tot}".}
 
