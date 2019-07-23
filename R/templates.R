@@ -603,6 +603,7 @@ load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocatio
 #' @param c_ratio the string for generic allocation variables in ratio terms. Default is "`C`".
 #' @param .year the name of a temporary year column. Default is "`.year`".
 #' @param .value the name of a temporary value column. Default is "`.value`".
+#' @param .row_order the name of a metadata column used internally for determining row order. Default is ".row_order".
 #' @param e_dot_dest the name of a temporary column containing energy flows into a destination. Default is "`E.dot_dest`".
 #' @param e_dot_machine the name of a temporary column containing energy flows into final-to-useful machines. Default is "`E.dot_machine`".
 #' @param e_dot_machine_tot the name of a temporary column containing sums of energy flows into a final-to-useful machines. Default is "`E.dot_machine_tot`".
@@ -640,6 +641,7 @@ eta_fu_template <- function(.fu_allocations,
                             .year = ".year",
                             year_for_maximum_values = 0,
                             .value = ".value", 
+                            .row_order = ".row_order",
                             e_dot_dest = paste0(e_dot, "_dest"),
                             e_dot_machine = paste0(e_dot, "_machine"), 
                             e_dot_machine_max = paste0(e_dot_machine, "_max"),
@@ -746,8 +748,8 @@ eta_fu_template <- function(.fu_allocations,
       !!as.name(e_dot_machine_max_perc) := max(!!as.name(e_dot_machine_perc))
     ) %>% 
     dplyr::ungroup()
-  # Prepare the outgoing data frame.
    
+  # Find the maxima across years for each combination of machine and eu_product
   Maxima <- dplyr::full_join(input_energy_max, input_energy_max_percs, by = matsindf::everything_except(input_energy, .year, e_dot_machine, .symbols = FALSE)) %>% 
     dplyr::rename(
       !!as.name(e_dot_machine) := !!as.name(e_dot_machine_max),
@@ -755,8 +757,16 @@ eta_fu_template <- function(.fu_allocations,
     ) %>% 
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(maximum_values), !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc))
   
-  
-  # The following nearly works, except that the macines are not in descending order of importance as we move down.
+  # Calculate the row order of meta_cols, machine, and eu_product based on maxima across years.
+  row_order <- Maxima %>% 
+    dplyr::filter(!!as.name(quantity) == e_dot_machine) %>% 
+    dplyr::arrange(!!!meta_cols, dplyr::desc(!!as.name(maximum_values))) %>% 
+    dplyr::mutate(
+      !!as.name(.row_order) := paste(!!!meta_cols, !!as.name(machine), !!as.name(eu_product), sep = "+")
+    ) %>% 
+    magrittr::extract2(.row_order)
+    
+  # The following nearly works, except that the machines are not in descending order of importance as we move down.
   # Need to set the order of Machine/Eu.product from E.dot_machine.
   
   # Annual format, including blanks for eta_fu and phi_u
@@ -784,11 +794,19 @@ eta_fu_template <- function(.fu_allocations,
     tidyr::spread(key = .year, value = .value)
   
   
+  # Prepare the outgoing data frame.
   out <- dplyr::full_join(Maxima, Annual, by = matsindf::everything_except(Maxima, maximum_values, .symbols = FALSE)) %>% 
     dplyr::mutate(
-      !!as.name(quantity) := factor(!!as.name(quantity), levels = c(e_dot_machine, e_dot_machine_perc, eta_fu, phi_u))
+      !!as.name(quantity) := factor(!!as.name(quantity), levels = c(e_dot_machine, e_dot_machine_perc, eta_fu, phi_u)), 
+      !!as.name(.row_order) := paste(!!!meta_cols, !!as.name(machine), !!as.name(eu_product), sep = "+"), 
+      !!as.name(.row_order) := factor(!!as.name(.row_order), levels = row_order)
     ) %>% 
-    dplyr::arrange(!!!meta_cols, !!as.name(machine), !!as.name(eu_product), !!as.name(quantity), !!as.name(maximum_values))
+    dplyr::arrange(!!!meta_cols, !!as.name(.row_order), !!as.name(quantity), !!as.name(maximum_values)) %>% 
+    dplyr::mutate(
+      !!as.name(.row_order) := NULL
+    )
+  
+  return(out)
   
 
   

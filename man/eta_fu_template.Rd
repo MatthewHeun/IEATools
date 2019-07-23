@@ -15,8 +15,9 @@ eta_fu_template(.fu_allocations, T_0 = 298.15,
   c_ = "C_", c_perc = paste(substr(c_, 1, 1), perc),
   c_ratio = substr(c_, 1, 1), .year = ".year",
   year_for_maximum_values = 0, .value = ".value",
-  e_dot_dest = paste0(e_dot, "_dest"), e_dot_machine = paste0(e_dot,
-  "_machine"), e_dot_machine_max = paste0(e_dot_machine, "_max"),
+  .row_order = ".row_order", e_dot_dest = paste0(e_dot, "_dest"),
+  e_dot_machine = paste0(e_dot, "_machine"),
+  e_dot_machine_max = paste0(e_dot_machine, "_max"),
   e_dot_machine_tot = paste0(e_dot_machine, "_tot"),
   e_dot_machine_perc = paste(e_dot_machine, perc),
   e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc))
@@ -67,6 +68,8 @@ eta_fu_template(.fu_allocations, T_0 = 298.15,
 \item{.year}{the name of a temporary year column. Default is "\code{.year}".}
 
 \item{.value}{the name of a temporary value column. Default is "\code{.value}".}
+
+\item{.row_order}{the name of a metadata column used internally for determining row order. Default is ".row_order".}
 
 \item{e_dot_dest}{the name of a temporary column containing energy flows into a destination. Default is "\code{E.dot_dest}".}
 
