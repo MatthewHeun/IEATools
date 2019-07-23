@@ -803,8 +803,19 @@ eta_fu_template <- function(.fu_allocations,
     ) %>% 
     dplyr::arrange(!!!meta_cols, !!as.name(.row_order), !!as.name(quantity), !!as.name(maximum_values)) %>% 
     dplyr::mutate(
-      !!as.name(.row_order) := NULL
+      !!as.name(.row_order) := NULL,
+      # Remove the factorization of the quantity column
+      !!as.name(quantity) := as.character(!!as.name(quantity))
     )
+  
+  # At this point the year columns are of type character.
+  # But we want them to be numeric.
+  # First, find the indices of the year columns.
+  year_col_indices <- year_cols(out)
+  # Change each year column to be type numeric.
+  for (i in year_col_indices) {
+    out[[i]] <- as.numeric(out[[i]])
+  }
   
   return(out)
   
