@@ -26,40 +26,63 @@ write_eta_fu_template(.eta_fu_template, path,
 
 \item{path}{the file path where the template will be written}
 
-\item{eta_fu_tab_name}{the name of the final-to-useful efficiency tab. Default is "\code{FU etas}".}
+\item{eta_fu_tab_name}{the name of the final-to-useful efficiency tab. Default is "FU etas".}
 
 \item{overwrite_file}{a logical telling whether to overwrite a file, if it already exists. Default is \code{FALSE}.}
 
 \item{overwrite_fu_eta_tab}{a logical telling whether to overwrite the final-to-useful efficiency tab, if it already exists. Default is \code{FALSE}.}
 
-\item{eta_fu}{the name of the final-to-useful efficiency rows in \code{.eta_fu_template}. Default is "\code{eta.fu}".}
+\item{eta_fu}{the name of the final-to-useful efficiency rows in \code{.eta_fu_template}. Default is "eta.fu".}
+
+\item{e_dot_machine}{a string identifying energy flow into final-to-useful machines. Default is "E.dot_machine".}
+
+\item{perc}{the string identifying percentage quantities. Default is "[\%]".}
+
+\item{e_dot_machine_perc}{a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine [\%]".}
+
+\item{maximum_values}{a string identifying the maximum values column in the outgoing template. Default is "Maxmimum.values".}
 
 \item{header_row_font_color}{a hex string representing the font color for the header row in the Excel file that is written by this function.
-Default is "\code{#FFFFFF}", white.}
+Default is "#FFFFFF", white.}
 
 \item{header_row_shading_color}{a hex string representing the shading color for the header row in the Excel file that is written by this function.
-Default is "\code{#5A80B8}", medium blue.}
+Default is "#5A80B8", medium blue.}
+
+\item{e_dot_machine_row_font_color}{a hex string representing the font color for rows of energy flows into final-to-useful machines in the Excel file that is written by this function.
+Default is "#8C87A0", a dark purple color.}
+
+\item{e_dot_machine_row_shading_color}{a hex string representing the shading color for rows of energy flows into final-to-useful machines in the Excel file that is written by this function.
+Default is "#5A80B8", medium purple color.}
+
+\item{e_dot_machine_perc_row_font_color}{a hex string representing the font color for rows of percentage of energy flows into final-to-useful machines in the Excel file that is written by this function.
+Default is "#8C87A0", a dark purple color.}
+
+\item{e_dot_machine_perc_row_shading_color}{a hex string representing the shading color for rows of percentage of energy flows into final-to-useful machines in the Excel file that is written by this function.
+Default is "#5A80B8", medium purple color.}
 
 \item{eta_row_font_color}{a hex string representing the font color for \code{eta_fu} rows in the Excel file that is written by this function.
-Default is "\code{#8C87A0}", a dark purple color.}
+Default is "#000000", black.}
 
 \item{eta_row_shading_color}{a hex string representing the shading color for \code{eta_fu} rows in the Excel file that is written by this function.
-Default is "\code{#E3DFEB}", a light purple color.}
+Default is "#FFFFFF", white.}
 
 \item{phi_row_font_color}{a hex string representing the font color for \code{phi_u} rows in the Excel file that is written by this function.
-Default is "\code{#8C87A0}", a dark purple color.}
+Default is "#000000", black.}
 
 \item{phi_row_shading_color}{a hex string representing the shading color for \code{phi_u} rows in the Excel file that is written by this function.
-Default is "\code{#E3DFEB}", a light purple color.}
+Default is "#FFFFFF", white.}
 
-\item{quantity}{the name of the quantity column in \code{.eta_fu_template}. Default is "\code{Quantity}".}
+\item{blank_shading_color}{a hex string representing the shading color for blank cells in the \code{maximum_values} column.
+Default is "#808080".}
 
-\item{e_dot_machine_max_perc}{the name of the rows that give maximum percentages. Default is "\code{E.dot_machine_max [\%]}".}
+\item{quantity}{the name of the quantity column in \code{.eta_fu_template}. Default is "Quantity".}
 
-\item{.rownum}{the name of a temporary column containing row numbers. Default is "\code{.rownum}".}
+\item{e_dot_machine_max_perc}{the name of the rows that give maximum percentages. Default is "E.dot_machine_max [\%]".}
+
+\item{.rownum}{the name of a temporary column containing row numbers. Default is ".rownum".}
 }
 \value{
-\code{path}
+the \code{path} argument
 }
 \description{
 The template should be created by \code{eta_fu_template()}.

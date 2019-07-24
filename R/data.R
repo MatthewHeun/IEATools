@@ -14,6 +14,14 @@
 "primary_coal_products"
 
 
+#' Secondary coal products
+#'
+#' A string vector containing names of products classified by the IEA as `coal_and_coal_products` that are not `primary_coal_products`.
+#' 
+#' @format A string vector with 9 entries
+"secondary_coal_products"
+
+
 #' Peat and peat products
 #'
 #' A string vector containing names of products classified by the IEA as peat and peat products.
@@ -26,8 +34,16 @@
 #'
 #' A string vector containing names of products classified by the IEA as primary peat products.
 #' 
-#' @format A string vector with 1 entries
+#' @format A string vector with 1 entry
 "primary_peat_products"
+
+
+#' Secondary peat products
+#'
+#' A string vector containing names of products classified by the IEA as "Peat and peat products" that are not `primary_peat_products`.
+#' 
+#' @format A string vector with 1 entry
+"secondary_peat_products"
 
 
 #' Oil and oil products
@@ -44,6 +60,14 @@
 #' 
 #' @format A string vector with 2 entries
 "primary_oil_products"
+
+
+#' Secondary oil products
+#'
+#' A string vector containing names of products classified by the IEA as `oil_and_oil_products` that are not `primary_coal_products`.
+#' 
+#' @format A string vector with 18 entries
+"secondary_oil_products"
 
 
 #' Renewable products
