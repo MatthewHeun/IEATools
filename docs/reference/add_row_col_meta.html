@@ -65,7 +65,7 @@ information to .tidy_iea_df." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
       </span>
     </div>
 
@@ -90,6 +90,9 @@ information to .tidy_iea_df." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
+    </li>
     <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
@@ -130,24 +133,25 @@ information to <code>.tidy_iea_df</code>.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>add_row_col_meta</span>(<span class='no'>.tidy_iea_df</span>, <span class='kw'>matname</span> <span class='kw'>=</span> <span class='st'>"matname"</span>,
+    <pre class="usage"><span class='fu'>add_row_col_meta</span>(<span class='no'>.tidy_iea_df</span>, <span class='kw'>matnames</span> <span class='kw'>=</span> <span class='st'>"matnames"</span>,
   <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>, <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>, <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='st'>"U_EIOU"</span>,
   <span class='kw'>R</span> <span class='kw'>=</span> <span class='st'>"R"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>, <span class='kw'>industry_type</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>,
   <span class='kw'>product_type</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>sector_type</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>,
-  <span class='kw'>resource_type</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>, <span class='kw'>rowname</span> <span class='kw'>=</span> <span class='st'>"rowname"</span>,
-  <span class='kw'>colname</span> <span class='kw'>=</span> <span class='st'>"colname"</span>, <span class='kw'>rowtype</span> <span class='kw'>=</span> <span class='st'>"rowtype"</span>, <span class='kw'>coltype</span> <span class='kw'>=</span> <span class='st'>"coltype"</span>)</pre>
+  <span class='kw'>resource_type</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>, <span class='kw'>rownames</span> <span class='kw'>=</span> <span class='st'>"rownames"</span>,
+  <span class='kw'>colnames</span> <span class='kw'>=</span> <span class='st'>"colnames"</span>, <span class='kw'>rowtypes</span> <span class='kw'>=</span> <span class='st'>"rowtypes"</span>,
+  <span class='kw'>coltypes</span> <span class='kw'>=</span> <span class='st'>"coltypes"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.tidy_iea_df</th>
-      <td><p>a data frame containing <code>matname</code></p></td>
+      <td><p>a data frame containing column <code>matnames</code></p></td>
     </tr>
     <tr>
-      <th>matname</th>
+      <th>matnames</th>
       <td><p>the name of the column in <code>.tidy_iea_df</code> that contains names of matrices
-(a string).  Default is "<code>matname</code>".</p></td>
+(a string).  Default is "<code>matnames</code>".</p></td>
     </tr>
     <tr>
       <th>product</th>
@@ -200,22 +204,22 @@ Default is "<code>Industry</code>".</p></td>
 Default is "<code>Industry</code>".</p></td>
     </tr>
     <tr>
-      <th>rowname</th>
+      <th>rownames</th>
       <td><p>the name of the output column that contains row names for matrices
 (a string). Default is "<code>rowname</code>".</p></td>
     </tr>
     <tr>
-      <th>colname</th>
+      <th>colnames</th>
       <td><p>the name of the output column that contains column names for matrices
 (a string). Default is "<code>colname</code>".</p></td>
     </tr>
     <tr>
-      <th>rowtype</th>
+      <th>rowtypes</th>
       <td><p>the name of the output column that contains row types for matrices
 (a string). Default is "<code>rowtype</code>".</p></td>
     </tr>
     <tr>
-      <th>coltype</th>
+      <th>coltypes</th>
       <td><p>the name of the output column that contains column types for matrices
 (a string). Default is "<code>coltype</code>".</p></td>
     </tr>
@@ -233,21 +237,21 @@ Default is "<code>Industry</code>".</p></td>
 <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='add_psut_matnames.html'>add_psut_matnames</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>add_row_col_meta</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 399 x 16</span><span>
-#&gt;    Method Last.stage Country  Year Ledger.side Flow.aggregatio… Energy.type
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      
-#&gt; </span><span style='color: #555555;'> 1</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 2</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 3</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 4</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 5</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 6</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 7</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 8</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'> 9</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'>10</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e… E          
-#&gt; </span><span style='color: #555555;'># … with 389 more rows, and 9 more variables: Unit </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Flow </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,
-#&gt; #   Product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, E.dot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, matname </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, rowname </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, colname </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,
-#&gt; #   rowtype </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, coltype </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div></span></pre>
+#&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>           
+#&gt; </span><span style='color: #555555;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e…
+#&gt; </span><span style='color: #555555;'> 2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e…
+#&gt; </span><span style='color: #555555;'> 3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e…
+#&gt; </span><span style='color: #555555;'> 4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e…
+#&gt; </span><span style='color: #555555;'> 5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e…
+#&gt; </span><span style='color: #555555;'> 6</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e…
+#&gt; </span><span style='color: #555555;'> 7</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e…
+#&gt; </span><span style='color: #555555;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e…
+#&gt; </span><span style='color: #555555;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e…
+#&gt; </span><span style='color: #555555;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e…
+#&gt; </span><span style='color: #555555;'># … with 389 more rows, and 9 more variables: Flow </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,
+#&gt; #   Unit </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, E.dot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, matnames </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, rownames </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, colnames </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,
+#&gt; #   rowtypes </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, coltypes </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

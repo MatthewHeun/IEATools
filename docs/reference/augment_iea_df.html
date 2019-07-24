@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
       </span>
     </div>
 
@@ -88,6 +88,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
+    </li>
     <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
@@ -129,17 +132,19 @@
     <pre class="usage"><span class='fu'>augment_iea_df</span>(<span class='no'>.iea_df</span>, <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>,
   <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
   <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='st'>"Energy.type"</span>, <span class='kw'>energy_type_val</span> <span class='kw'>=</span> <span class='st'>"E"</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"Method"</span>, <span class='kw'>method_val</span> <span class='kw'>=</span> <span class='st'>"PCM"</span>, <span class='kw'>last_stage</span> <span class='kw'>=</span> <span class='st'>"Last.stage"</span>,
-  <span class='kw'>last_stage_val</span> <span class='kw'>=</span> <span class='st'>"Final"</span>, <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>, <span class='kw'>unit_val</span> <span class='kw'>=</span> <span class='st'>"ktoe"</span>,
-  <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>, <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='st'>"Energy.type"</span>,
+  <span class='kw'>energy_type_val</span> <span class='kw'>=</span> <span class='st'>"E"</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"Method"</span>, <span class='kw'>method_val</span> <span class='kw'>=</span> <span class='st'>"PCM"</span>,
+  <span class='kw'>last_stage</span> <span class='kw'>=</span> <span class='st'>"Last.stage"</span>, <span class='kw'>last_stage_val</span> <span class='kw'>=</span> <span class='st'>"Final"</span>, <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>,
+  <span class='kw'>unit_val</span> <span class='kw'>=</span> <span class='st'>"ktoe"</span>, <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>, <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
   <span class='kw'>tpes</span> <span class='kw'>=</span> <span class='st'>"Total primary energy supply"</span>, <span class='kw'>tpes_flows</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Production"</span>,
   <span class='st'>"Imports"</span>, <span class='st'>"Exports"</span>, <span class='st'>"International marine bunkers"</span>,
   <span class='st'>"International aviation bunkers"</span>, <span class='st'>"Stock changes"</span>),
   <span class='kw'>tfc_compare</span> <span class='kw'>=</span> <span class='st'>"TFC compare"</span>,
   <span class='kw'>tfc_compare_flows</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Total primary energy supply"</span>, <span class='st'>"Transfers"</span>,
   <span class='st'>"Statistical differences"</span>, <span class='st'>"Transformation processes"</span>,
-  <span class='st'>"Energy industry own use"</span>, <span class='st'>"Losses"</span>), <span class='kw'>losses</span> <span class='kw'>=</span> <span class='st'>"Losses"</span>,
+  <span class='st'>"Energy industry own use"</span>, <span class='st'>"Losses"</span>), <span class='kw'>transfers</span> <span class='kw'>=</span> <span class='st'>"Transfers"</span>,
+  <span class='kw'>statistical_differences</span> <span class='kw'>=</span> <span class='st'>"Statistical differences"</span>,
+  <span class='kw'>losses</span> <span class='kw'>=</span> <span class='st'>"Losses"</span>,
   <span class='kw'>transformation_processes</span> <span class='kw'>=</span> <span class='st'>"Transformation processes"</span>,
   <span class='kw'>tp_flows_suffix</span> <span class='kw'>=</span> <span class='st'>"(transf.)"</span>,
   <span class='kw'>nstp_flows_suffix</span> <span class='kw'>=</span> <span class='st'>"(transformation)"</span>,
@@ -185,6 +190,10 @@
     <tr>
       <th>flow</th>
       <td><p>the name of the flow column in <code>.iea_df</code>.  Default is "<code>Flow</code>".</p></td>
+    </tr>
+    <tr>
+      <th>product</th>
+      <td><p>the name of the product column in <code>.iea_df</code>.  Default is "<code>Product</code>".</p></td>
     </tr>
     <tr>
       <th>energy_type</th>
@@ -241,6 +250,14 @@
     <tr>
       <th>tfc_compare_flows</th>
       <td><p>a vector of strings that give <code>Flow</code>s that are aggregated to <code>TFC compare</code>.</p></td>
+    </tr>
+    <tr>
+      <th>transfers</th>
+      <td><p>= a string that identifies transfers in the flow column. Default is "<code>Transfers</code>".</p></td>
+    </tr>
+    <tr>
+      <th>statistical_differences</th>
+      <td><p>a string that identifies statistical differences in flow column. Default is "<code>Statistical differences</code>".</p></td>
     </tr>
     <tr>
       <th>losses</th>
@@ -376,11 +393,12 @@ an error is generated.</p>
                        <span class='st'>"World,Losses,Hard coal (if no detail),1,2"</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='rename_iea_df_cols.html'>rename_iea_df_cols</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>augment_iea_df</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 2 x 11</span><span>
-#&gt;   Country Ledger.side Flow.aggregatio… Energy.type Unit  Flow  Product `1960`
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'>1</span><span> World   Supply      Total primary e… E           ktoe  Prod… Hard c…     42
-#&gt; </span><span style='color: #555555;'>2</span><span> World   Supply      TFC compare      E           ktoe  Loss… Hard c…      1
-#&gt; </span><span style='color: #555555;'># … with 3 more variables: `1961` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Method </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Last.stage </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div></span></pre>
+#&gt;   Country Method Energy.type Last.stage Ledger.side Flow.aggregatio… Flow 
+#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span> World   PCM    E           Final      Supply      Total primary e… Prod…
+#&gt; </span><span style='color: #555555;'>2</span><span> World   PCM    E           Final      Supply      TFC compare      Loss…
+#&gt; </span><span style='color: #555555;'># … with 4 more variables: Product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Unit </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, `1960` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; #   `1961` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
