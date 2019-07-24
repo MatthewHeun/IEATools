@@ -10,10 +10,14 @@ write_eta_fu_template(.eta_fu_template, path,
   e_dot_machine = "E.dot_machine", perc = "[\%]",
   e_dot_machine_perc = paste(e_dot_machine, perc),
   maximum_values = "Maximum.values", header_row_font_color = "#FFFFFF",
-  header_row_shading_color = "#5A80B8", eta_row_font_color = "#8C87A0",
-  eta_row_shading_color = "#E3DFEB", phi_row_font_color = "#8C87A0",
-  phi_row_shading_color = "#E3DFEB", blank_shading_color = "#808080",
-  quantity = "Quantity",
+  header_row_shading_color = "#5A80B8",
+  e_dot_machine_row_font_color = "#8C87A0",
+  e_dot_machine_row_shading_color = "#E3DFEB",
+  e_dot_machine_perc_row_font_color = "#8C87A0",
+  e_dot_machine_perc_row_shading_color = "#E3DFEB",
+  eta_row_font_color = "#000000", eta_row_shading_color = "#FFFFFF",
+  phi_row_font_color = "#000000", phi_row_shading_color = "#FFFFFF",
+  blank_shading_color = "#808080", quantity = "Quantity",
   e_dot_machine_max_perc = "E.dot_machine_max [\%]",
   .rownum = ".rownum")
 }
@@ -36,10 +40,16 @@ Default is "\code{#FFFFFF}", white.}
 \item{header_row_shading_color}{a hex string representing the shading color for the header row in the Excel file that is written by this function.
 Default is "\code{#5A80B8}", medium blue.}
 
-\item{eta_row_font_color}{a hex string representing the font color for \code{eta} rows in the Excel file that is written by this function.
+\item{eta_row_font_color}{a hex string representing the font color for \code{eta_fu} rows in the Excel file that is written by this function.
 Default is "\code{#8C87A0}", a dark purple color.}
 
-\item{eta_row_shading_color}{a hex string representing the shading color for \code{eta} rows in the Excel file that is written by this function.
+\item{eta_row_shading_color}{a hex string representing the shading color for \code{eta_fu} rows in the Excel file that is written by this function.
+Default is "\code{#E3DFEB}", a light purple color.}
+
+\item{phi_row_font_color}{a hex string representing the font color for \code{phi_u} rows in the Excel file that is written by this function.
+Default is "\code{#8C87A0}", a dark purple color.}
+
+\item{phi_row_shading_color}{a hex string representing the shading color for \code{phi_u} rows in the Excel file that is written by this function.
 Default is "\code{#E3DFEB}", a light purple color.}
 
 \item{quantity}{the name of the quantity column in \code{.eta_fu_template}. Default is "\code{Quantity}".}

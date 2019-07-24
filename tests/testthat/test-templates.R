@@ -108,22 +108,39 @@ test_that("load_fu_allocation_data works as expected", {
 })
 
 test_that("eta_fu_template works as expected", {
+  # Use the default sorting (by Eu.product)
   Eta_fu_template <- load_fu_allocation_data() %>% 
     eta_fu_template()
-  expect_equal(Eta_fu_template$Machine[[1]], "Wood stoves")
-  expect_equal(Eta_fu_template$Machine[[nrow(Eta_fu_template)]], "Gas heaters")
+  expect_equal(Eta_fu_template$Machine[[1]], "Automobiles")
+  expect_equal(Eta_fu_template$Machine[[nrow(Eta_fu_template)]], "Oil furnaces")
   expect_equal(as.character(Eta_fu_template$Quantity[[1]]), "E.dot_machine")
   expect_equal(as.character(Eta_fu_template$Quantity[[nrow(Eta_fu_template)]]), "phi.u")
   
   eu_products <- Eta_fu_template$Eu.product %>% unique() %>% as.character()
   # Check that the order is as expected.
-  expect_equivalent(eu_products, c("MTH.100.C", "MTH.200.C", "MD", "HTH.600.C", "Light", "LTH.20.C"))
+  expect_equivalent(eu_products, c("MD", "Light", "HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C"))
   # Check the class of the year columns. They should be numeric.
   expect_true(is.numeric(Eta_fu_template[["1971"]]))
   expect_true(is.numeric(Eta_fu_template[["2000"]]))
+  
+  # Now try to sort by importance
+  Eta_fu_template2 <- load_fu_allocation_data() %>% 
+    eta_fu_template(sort_by = "importance")
+  expect_equal(Eta_fu_template2$Machine[[1]], "Wood stoves")
+  expect_equal(Eta_fu_template2$Machine[[nrow(Eta_fu_template2)]], "Gas heaters")
+  expect_equal(as.character(Eta_fu_template2$Quantity[[1]]), "E.dot_machine")
+  expect_equal(as.character(Eta_fu_template2$Quantity[[nrow(Eta_fu_template)]]), "phi.u")
+  
+  eu_products2 <- Eta_fu_template2$Eu.product %>% unique() %>% as.character()
+  # Check that the order is as expected.
+  expect_equivalent(eu_products2, c("MTH.100.C", "MTH.200.C", "MD", "HTH.600.C", "Light", "LTH.20.C"))
+  # Check the class of the year columns. They should be numeric.
+  expect_true(is.numeric(Eta_fu_template2[["1971"]]))
+  expect_true(is.numeric(Eta_fu_template2[["2000"]]))
 })
 
 test_that("write_eta_fu_template works as expected", {
+  # Try with default sort order
   Eta_fu_template <- load_fu_allocation_data() %>% 
     eta_fu_template()
   # Get a temporary file in which to write the blank template.
@@ -136,14 +153,40 @@ test_that("write_eta_fu_template works as expected", {
   # Use expect_equivalent instead of expect_equal to ignore attributes 
   # (in this case levels) that are different after reading back in.
   expect_equivalent(Template.reread, Eta_fu_template)
-  expect_equal(Template.reread$Machine[[9]], "Automobiles")
-  expect_equal(Template.reread$Machine[[261]], "Kerosene stoves")
+  expect_equal(Template.reread$Machine[[9]], "Diesel trucks")
+  expect_equal(Template.reread$Machine[[261]], "LPG stoves")
   expect_equal(as.character(Template.reread$Quantity[[9]]), "E.dot_machine")
   expect_equal(as.character(Template.reread$Quantity[[262]]), "E.dot_machine [%]")
   
   # Now try to write it again.
   expect_true(file.exists(f))
   expect_error(Eta_fu_template %>% write_eta_fu_template(p), "File already exists!")
+  # Clean up
+  if (file.exists(f)) {
+    file.remove(f)
+  }
+
+  # Try with "importance" sort order.
+  Eta_fu_template2 <- load_fu_allocation_data() %>% 
+    eta_fu_template(sort_by = "importance")
+  # Get a temporary file in which to write the blank template.
+  f <- tempfile(fileext = ".xlsx")
+  p <- Eta_fu_template2 %>% 
+    write_eta_fu_template(f, overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)
+  # Read the tab back in.
+  Template.reread2 <- openxlsx::read.xlsx(f, sheet = "FU etas")
+  # Check that it was read back correctly.
+  # Use expect_equivalent instead of expect_equal to ignore attributes 
+  # (in this case levels) that are different after reading back in.
+  expect_equivalent(Template.reread2, Eta_fu_template2)
+  expect_equal(Template.reread2$Machine[[9]], "Automobiles")
+  expect_equal(Template.reread2$Machine[[261]], "Kerosene stoves")
+  expect_equal(as.character(Template.reread2$Quantity[[9]]), "E.dot_machine")
+  expect_equal(as.character(Template.reread2$Quantity[[262]]), "E.dot_machine [%]")
+  
+  # Now try to write it again.
+  expect_true(file.exists(f))
+  expect_error(Eta_fu_template2 %>% write_eta_fu_template(p), "File already exists!")
   # Clean up
   if (file.exists(f)) {
     file.remove(f)

@@ -56,37 +56,36 @@
 #'   specify_all() %>% 
 #'   fu_allocation_template()
 fu_allocation_template <- function(.tidy_iea_df,
-                        energy_type = "Energy.type",
-                        energy = "E",
-                        last_stage = "Last.stage",
-                        final = "Final",
-                        year = "Year",
-                        ledger_side = "Ledger.side",
-                        consumption = "Consumption",
-                        flow_aggregation_point = "Flow.aggregation.point", 
-                        eiou = "Energy industry own use", 
-                        non_energy_use = "Non-energy use",
-                        tfc = "Total final consumption",
-                        tpes = "Total primary energy supply",
-                        flow = "Flow", 
-                        product = "Product",
-                        destination = "Destination",
-                        quantity = "Quantity",
-                        e_dot = "E.dot",
-                        e_dot_total = paste0(e_dot, ".total"),
-                        perc_unit_string = "[%]",
-                        e_dot_perc = paste(e_dot, perc_unit_string),
-                        maximum_values = "Maximum.values",
-                        year_for_maximum_values = 0,
-                        ef_product = "Ef.product",
-                        allocation_var = "C_",
-                        n_allocation_rows = 3,
-                        machine = "Machine",
-                        eu_product = "Eu.product",
-                        arrange = TRUE,
-                        .value = ".value"){
+                                   energy_type = "Energy.type",
+                                   energy = "E",
+                                   last_stage = "Last.stage",
+                                   final = "Final",
+                                   year = "Year",
+                                   ledger_side = "Ledger.side",
+                                   consumption = "Consumption",
+                                   flow_aggregation_point = "Flow.aggregation.point", 
+                                   eiou = "Energy industry own use", 
+                                   non_energy_use = "Non-energy use",
+                                   tfc = "Total final consumption",
+                                   tpes = "Total primary energy supply",
+                                   flow = "Flow", 
+                                   product = "Product",
+                                   destination = "Destination",
+                                   quantity = "Quantity",
+                                   e_dot = "E.dot",
+                                   e_dot_total = paste0(e_dot, ".total"),
+                                   perc_unit_string = "[%]",
+                                   e_dot_perc = paste(e_dot, perc_unit_string),
+                                   maximum_values = "Maximum.values",
+                                   year_for_maximum_values = 0,
+                                   ef_product = "Ef.product",
+                                   allocation_var = "C_",
+                                   n_allocation_rows = 3,
+                                   machine = "Machine",
+                                   eu_product = "Eu.product",
+                                   arrange = TRUE,
+                                   .value = ".value"){
   matsindf::verify_cols_missing(.tidy_iea_df, .value)
-  # template_type <- match.arg(template_type)
   # Ensure that the incoming data frame has exclusively "E" as the Energy.type.
   assertthat::assert_that(.tidy_iea_df %>% 
                             magrittr::extract2(energy_type) %>% 
@@ -582,6 +581,12 @@ load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocatio
 #'
 #' @param .fu_allocations a data frame containing a completed final-to-useful allocation template for final demand.
 #' @param T_0 the dead state temperature (in kelvin) for calculation of heat exergy. Default is `298.15` kelvin.
+#' @param sort_by how to sort rows of eta_fu template. 
+#'        Options are (1) by "useful_energy_type" and (2) by "importance". 
+#'        "useful_energy_type" sorts first by `md`, `light`, `ke`, and `heat`, 
+#'        then by magnitude of energy flow into the machine.
+#'        "importance" sorts by magnitude of energy flow into the machine only.
+#'        Default is "useful_energy_type".
 #' @param ledger_side the name of the ledger side column in `.fu_allocations`. Default is "`Ledger.side`".
 #' @param flow_aggregation_point the name of the flow aggregation point column in `.fu_allocations`. Default is "`Flow.aggregation.point`".
 #' @param ef_product the name of the final energy product column in `.fu_allocations`. Default is "`Ef.product`".
@@ -621,6 +626,7 @@ load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocatio
 #'   eta_fu_template()
 eta_fu_template <- function(.fu_allocations, 
                             T_0 = 298.15, 
+                            sort_by = c("useful_energy_type", "importance"),
                             ledger_side = "Ledger.side",
                             flow_aggregation_point = "Flow.aggregation.point",
                             ef_product = "Ef.product",
@@ -650,6 +656,7 @@ eta_fu_template <- function(.fu_allocations,
                             e_dot_machine_tot = paste0(e_dot_machine, "_tot"), 
                             e_dot_machine_perc = paste(e_dot_machine, perc), 
                             e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc)){
+  sort_by <- match.arg(sort_by)
   # Preliminary stuff
   # Ensure that several columns don't exist already in 
   # Grab the years of interest.
@@ -760,13 +767,41 @@ eta_fu_template <- function(.fu_allocations,
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(maximum_values), !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc))
   
   # Calculate the row order of meta_cols, machine, and eu_product based on maxima across years.
-  row_order <- Maxima %>% 
-    dplyr::filter(!!as.name(quantity) == e_dot_machine) %>% 
-    dplyr::arrange(!!!meta_cols, dplyr::desc(!!as.name(maximum_values))) %>% 
-    dplyr::mutate(
-      !!as.name(.row_order) := paste(!!!meta_cols, !!as.name(machine), !!as.name(eu_product), sep = "+")
-    ) %>% 
-    magrittr::extract2(.row_order)
+  if (sort_by == "importance") {
+    row_order <- Maxima %>% 
+      dplyr::filter(!!as.name(quantity) == e_dot_machine_perc) %>% 
+      dplyr::arrange(!!!meta_cols, dplyr::desc(!!as.name(maximum_values))) %>% 
+      dplyr::mutate(
+        !!as.name(.row_order) := paste(!!!meta_cols, !!as.name(machine), !!as.name(eu_product), sep = "+")
+      ) %>% 
+      magrittr::extract2(.row_order)
+  } else if (sort_by == "useful_energy_type") {
+    # We need to create a list of all the Eu.products.
+    eu_prods <- input_energy[[eu_product]] %>% unique()
+    # Then find all the ones that are heat useful energy, identified by the 2nd and third characters being "TH".
+    heat_prods <- eu_prods[which(substring(eu_prods, 2) %>% startsWith(heat))]
+    # Sort the heat products by temperature
+    sorted_heat_indices <- heat_prods %>%
+      extract_TK() %>%
+      sort.int(decreasing = TRUE, index.return = TRUE) %>%
+      magrittr::extract2("ix")
+    heat_prods_sorted <- heat_prods[sorted_heat_indices]
+    # There may be useful products that we don't know about. Put those at the end, sorted in alphabetical order..
+    leftover_eu_prods <- sort(setdiff(eu_prods, c(md, light, heat_prods)))
+    # Now compile the order of Eu.products for this data frame.
+    eu_product_sort_order <- c(md, ke, light, heat_prods_sorted, leftover_eu_prods)
+    # Sort the Maxima data frame to get the order we want.
+    row_order <- Maxima %>% 
+      dplyr::filter(!!as.name(quantity) == e_dot_machine_perc) %>% 
+      dplyr::mutate(
+        !!as.name(eu_product) := factor(!!as.name(eu_product), levels = eu_product_sort_order)
+      ) %>% 
+      dplyr::arrange(!!!meta_cols, !!as.name(eu_product), dplyr::desc(!!as.name(maximum_values))) %>% 
+      dplyr::mutate(
+        !!as.name(.row_order) := paste(!!!meta_cols, !!as.name(machine), !!as.name(eu_product), sep = "+")
+      ) %>% 
+      magrittr::extract2(.row_order)
+  }
     
   # The following nearly works, except that the machines are not in descending order of importance as we move down.
   # Need to set the order of Machine/Eu.product from E.dot_machine.
@@ -1022,9 +1057,13 @@ eta_fu_template <- function(.fu_allocations,
 #'        Default is "`#FFFFFF`", white.
 #' @param header_row_shading_color a hex string representing the shading color for the header row in the Excel file that is written by this function.
 #'        Default is "`#5A80B8`", medium blue.
-#' @param eta_row_font_color a hex string representing the font color for `eta` rows in the Excel file that is written by this function.
+#' @param eta_row_font_color a hex string representing the font color for `eta_fu` rows in the Excel file that is written by this function.
 #'        Default is "`#8C87A0`", a dark purple color.
-#' @param eta_row_shading_color a hex string representing the shading color for `eta` rows in the Excel file that is written by this function.
+#' @param eta_row_shading_color a hex string representing the shading color for `eta_fu` rows in the Excel file that is written by this function.
+#'        Default is "`#E3DFEB`", a light purple color.
+#' @param phi_row_font_color a hex string representing the font color for `phi_u` rows in the Excel file that is written by this function.
+#'        Default is "`#8C87A0`", a dark purple color.
+#' @param phi_row_shading_color a hex string representing the shading color for `phi_u` rows in the Excel file that is written by this function.
 #'        Default is "`#E3DFEB`", a light purple color.
 #' @param quantity the name of the quantity column in `.eta_fu_template`. Default is "`Quantity`".
 #' @param e_dot_machine_max_perc the name of the rows that give maximum percentages. Default is "`E.dot_machine_max [%]`".
@@ -1054,10 +1093,14 @@ write_eta_fu_template <- function(.eta_fu_template,
                                   maximum_values = "Maximum.values",
                                   header_row_font_color = "#FFFFFF",
                                   header_row_shading_color = "#5A80B8",
-                                  eta_row_font_color = "#8C87A0",
-                                  eta_row_shading_color = "#E3DFEB",
-                                  phi_row_font_color = "#8C87A0",
-                                  phi_row_shading_color = "#E3DFEB",
+                                  e_dot_machine_row_font_color = "#8C87A0",
+                                  e_dot_machine_row_shading_color = "#E3DFEB",
+                                  e_dot_machine_perc_row_font_color = "#8C87A0",
+                                  e_dot_machine_perc_row_shading_color = "#E3DFEB",
+                                  eta_row_font_color = "#000000",
+                                  eta_row_shading_color = "#FFFFFF",
+                                  phi_row_font_color = "#000000",
+                                  phi_row_shading_color = "#FFFFFF",
                                   blank_shading_color = "#808080",
                                   quantity = "Quantity",
                                   e_dot_machine_max_perc = "E.dot_machine_max [%]",

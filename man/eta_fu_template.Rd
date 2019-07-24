@@ -5,6 +5,7 @@
 \title{Final-to-useful efficiency template}
 \usage{
 eta_fu_template(.fu_allocations, T_0 = 298.15,
+  sort_by = c("useful_energy_type", "importance"),
   ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
   ef_product = "Ef.product", machine = "Machine",
@@ -26,6 +27,13 @@ eta_fu_template(.fu_allocations, T_0 = 298.15,
 \item{.fu_allocations}{a data frame containing a completed final-to-useful allocation template for final demand.}
 
 \item{T_0}{the dead state temperature (in kelvin) for calculation of heat exergy. Default is \code{298.15} kelvin.}
+
+\item{sort_by}{how to sort rows of eta_fu template.
+Options are (1) by "useful_energy_type" and (2) by "importance".
+"useful_energy_type" sorts first by \code{md}, \code{light}, \code{ke}, and \code{heat},
+then by magnitude of energy flow into the machine.
+"importance" sorts by magnitude of energy flow into the machine only.
+Default is "useful_energy_type".}
 
 \item{ledger_side}{the name of the ledger side column in \code{.fu_allocations}. Default is "\code{Ledger.side}".}
 
