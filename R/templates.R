@@ -1172,6 +1172,18 @@ write_eta_fu_template <- function(.eta_fu_template,
   header_row_style <- openxlsx::createStyle(fontColour = header_row_font_color, fgFill = header_row_shading_color, textDecoration = c("BOLD"))
   openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = header_row_style, rows = 1, cols = 1:ncol(.eta_fu_template), gridExpand = TRUE, stack = TRUE)
   
+  # Define e_dot_machine row style
+  e_dot_machine_row_style <- openxlsx::createStyle(fontColour = e_dot_machine_row_font_color, fgFill = e_dot_machine_row_shading_color)
+  # Apply the e_dot_machine row style at the correct locations
+  openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = e_dot_machine_row_style, 
+                     rows = e_dot_machine_row_indices, cols = 1:ncol(.eta_fu_template), gridExpand = TRUE, stack = TRUE)
+  
+  # Define e_dot_machine_perc row style
+  e_dot_machine_perc_row_style <- openxlsx::createStyle(fontColour = e_dot_machine_perc_row_font_color, fgFill = e_dot_machine_perc_row_shading_color)
+  # Apply the e_dot_machine_perc row style at the correct locations
+  openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = e_dot_machine_perc_row_style, 
+                     rows = e_dot_machine_perc_row_indices, cols = 1:ncol(.eta_fu_template), gridExpand = TRUE, stack = TRUE)
+  
   # Define the eta row style
   eta_row_style <- openxlsx::createStyle(fontColour = eta_row_font_color, fgFill = eta_row_shading_color)
   # Apply the eta row style at the correct locations
