@@ -74,7 +74,7 @@ use the tidy_iea_df_balanced() function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
       </span>
     </div>
 
@@ -99,6 +99,9 @@ use the tidy_iea_df_balanced() function." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
+    </li>
     <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
@@ -149,10 +152,10 @@ use the <code><a href='tidy_iea_df_balanced.html'>tidy_iea_df_balanced()</a></co
     </div>
 
     <pre class="usage"><span class='fu'>calc_tidy_iea_df_balances</span>(<span class='no'>.tidy_iea_df</span>, <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>, <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>, <span class='kw'>grouping_vars</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Method"</span>,
-  <span class='st'>"Last.stage"</span>, <span class='st'>"Country"</span>, <span class='st'>"Year"</span>, <span class='st'>"Energy.type"</span>, <span class='st'>"Unit"</span>, <span class='st'>"Product"</span>),
-  <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>, <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
-  <span class='kw'>supply_sum</span> <span class='kw'>=</span> <span class='st'>"supply_sum"</span>, <span class='kw'>consumption_sum</span> <span class='kw'>=</span> <span class='st'>"consumption_sum"</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>, <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>,
+  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
+  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>, <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>, <span class='kw'>supply_sum</span> <span class='kw'>=</span> <span class='st'>"supply_sum"</span>,
+  <span class='kw'>consumption_sum</span> <span class='kw'>=</span> <span class='st'>"consumption_sum"</span>,
   <span class='kw'>supply_minus_consumption</span> <span class='kw'>=</span> <span class='st'>"supply_minus_consumption"</span>,
   <span class='kw'>balance_OK</span> <span class='kw'>=</span> <span class='st'>"balance_OK"</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"err"</span>, <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>)</pre>
     
@@ -172,19 +175,9 @@ a <code>Ledger.side</code> column.</p></td>
 that contains ledger side information (a string). Default is "<code>Ledger.side</code>".</p></td>
     </tr>
     <tr>
-      <th>e_dot</th>
-      <td><p>the name of the column in <code>.tidy_iea_data</code>
-that contains energy flow data. Default is "<code>E.dot</code>".</p></td>
-    </tr>
-    <tr>
-      <th>unit</th>
-      <td><p>the name of the colum in <code>.tidy_iea_data</code>
-that contains the units for the energy flow data. Default is "<code>Unit</code>".</p></td>
-    </tr>
-    <tr>
-      <th>grouping_vars</th>
-      <td><p>a string vector of names of columns by which energy balance calculations should be performed.
-Default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")</a></code>.</p></td>
+      <th>flow_aggregation_point</th>
+      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains flow aggregation point information.
+Default is "<code>Flow.aggregation.point</code>".</p></td>
     </tr>
     <tr>
       <th>supply</th>
@@ -195,6 +188,24 @@ Default is "<code>Supply</code>".</p></td>
       <th>consumption</th>
       <td><p>the identifier for consumption data in the <code>ledger_side</code> column (a string).
 Default is "<code>Consumption</code>".</p></td>
+    </tr>
+    <tr>
+      <th>flow</th>
+      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains flows. Default is "<code>Flow</code>".</p></td>
+    </tr>
+    <tr>
+      <th>product</th>
+      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains products. Default is "<code>Product</code>".</p></td>
+    </tr>
+    <tr>
+      <th>e_dot</th>
+      <td><p>the name of the column in <code>.tidy_iea_data</code>
+that contains energy flow data. Default is "<code>E.dot</code>".</p></td>
+    </tr>
+    <tr>
+      <th>unit</th>
+      <td><p>the name of the colum in <code>.tidy_iea_data</code>
+that contains the units for the energy flow data. Default is "<code>Unit</code>".</p></td>
     </tr>
     <tr>
       <th>supply_sum</th>
@@ -263,13 +274,13 @@ If not, <code>balance_OK</code> will be <code>FALSE</code>.</p></li>
 <span class='no'>Ebal</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>calc_tidy_iea_df_balances</span>()
 <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/head'>head</a></span>(<span class='no'>Ebal</span>, <span class='fl'>5</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 5 x 12</span><span>
-#&gt;   Method Last.stage Country  Year Energy.type Unit  Product supply_sum
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'>1</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 E           ktoe  Aviati…          0
-#&gt; </span><span style='color: #555555;'>2</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 E           ktoe  Charco…        119
-#&gt; </span><span style='color: #555555;'>3</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 E           ktoe  Crude …          0
-#&gt; </span><span style='color: #555555;'>4</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 E           ktoe  Electr…        236
-#&gt; </span><span style='color: #555555;'>5</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 E           ktoe  Fuel o…         94
+#&gt;   Country Method Energy.type Last.stage  Year Product Unit  supply_sum
+#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Aviati… ktoe           0
+#&gt; </span><span style='color: #555555;'>2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Charco… ktoe         119
+#&gt; </span><span style='color: #555555;'>3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Crude … ktoe           0
+#&gt; </span><span style='color: #555555;'>4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Electr… ktoe         236
+#&gt; </span><span style='color: #555555;'>5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Fuel o… ktoe          94
 #&gt; </span><span style='color: #555555;'># … with 4 more variables: consumption_sum </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
 #&gt; #   supply_minus_consumption </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, balance_OK </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #555555;'>, err </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>

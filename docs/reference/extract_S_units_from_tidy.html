@@ -64,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
       </span>
     </div>
 
@@ -89,6 +89,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
+    </li>
     <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
@@ -128,11 +131,11 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>extract_S_units_from_tidy</span>(<span class='no'>.tidy_iea_df</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
-  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>, <span class='kw'>s_units</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>, <span class='kw'>val</span> <span class='kw'>=</span> <span class='st'>".val"</span>,
-  <span class='kw'>rowtype</span> <span class='kw'>=</span> <span class='st'>".rowtype"</span>, <span class='kw'>coltype</span> <span class='kw'>=</span> <span class='st'>".coltype"</span>,
-  <span class='kw'>grouping_vars</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Method"</span>, <span class='st'>"Last.stage"</span>, <span class='st'>"Country"</span>, <span class='st'>"Year"</span>,
-  <span class='st'>"Energy.type"</span>))</pre>
+    <pre class="usage"><span class='fu'>extract_S_units_from_tidy</span>(<span class='no'>.tidy_iea_df</span>, <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>, <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>,
+  <span class='kw'>s_units</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>, <span class='kw'>val</span> <span class='kw'>=</span> <span class='st'>".val"</span>, <span class='kw'>rowtype</span> <span class='kw'>=</span> <span class='st'>".rowtype"</span>,
+  <span class='kw'>coltype</span> <span class='kw'>=</span> <span class='st'>".coltype"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -142,8 +145,24 @@
       <td><p>the tidy data frame from which a unit summation <code>S_units</code> matrix is to be formed.</p></td>
     </tr>
     <tr>
+      <th>ledger_side</th>
+      <td><p>the name of the ledger side column in <code>.tidy_iea_df</code>. Default is "<code>Ledger.side</code>".</p></td>
+    </tr>
+    <tr>
+      <th>flow_aggregation_point</th>
+      <td><p>the name of the flow aggregation point column in <code>.tidy_iea_df</code>. Default is "<code>Flow.aggregation.point</code>".</p></td>
+    </tr>
+    <tr>
+      <th>flow</th>
+      <td><p>the name of the flow column in <code>.tidy_iea_df</code>. Default is "<code>Flow</code>".</p></td>
+    </tr>
+    <tr>
       <th>product</th>
       <td><p>the name of the product column in <code>.tidy_iea_df</code>. Default is "<code>Product</code>".</p></td>
+    </tr>
+    <tr>
+      <th>e_dot</th>
+      <td><p>the name of the energy flow rate column in <code>.tidy_iea_df</code>. Default is "<code>E.dot</code>".</p></td>
     </tr>
     <tr>
       <th>unit</th>
@@ -165,11 +184,6 @@
       <th>coltype</th>
       <td><p>the name of a temporary colype column created in <code>.tidy_iea_df</code>. Default is "<code>coltype</code>".</p></td>
     </tr>
-    <tr>
-      <th>grouping_vars</th>
-      <td><p>a string vector of column names in <code>.tidy_iea_df</code> by which S_units matrix extraction should be performed.
-Default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("Method", "Last.stage", "Country", "Year", "Energy.type")</a></code>.</p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -187,11 +201,11 @@ Default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>dplyr</span>)
 <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>extract_S_units_from_tidy</span>()</div><div class='output co'>#&gt;   Method Last.stage Country Year Energy.type
-#&gt; 1    PCM      Final     GHA 1971           E
-#&gt; 2    PCM      Final     GHA 2000           E
-#&gt; 3    PCM      Final     ZAF 1971           E
-#&gt; 4    PCM      Final     ZAF 2000           E
+  <span class='fu'>extract_S_units_from_tidy</span>()</div><div class='output co'>#&gt;   Country Method Energy.type Last.stage Year
+#&gt; 1     GHA    PCM           E      Final 1971
+#&gt; 2     GHA    PCM           E      Final 2000
+#&gt; 3     ZAF    PCM           E      Final 1971
+#&gt; 4     ZAF    PCM           E      Final 2000
 #&gt;                                                                           S_units
 #&gt; 1                                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #&gt; 2                                  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1

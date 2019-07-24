@@ -66,7 +66,7 @@ and terminology, although .tidy_iea_df does not necessarily need to contain IEA 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
       </span>
     </div>
 
@@ -91,6 +91,9 @@ and terminology, although .tidy_iea_df does not necessarily need to contain IEA 
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
+    </li>
     <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
@@ -140,9 +143,8 @@ and terminology, although <code>.tidy_iea_df</code> does not necessarily need to
   <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>, <span class='kw'>neg_supply_in_fd</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Exports"</span>,
   <span class='st'>"International aviation bunkers"</span>, <span class='st'>"International marine bunkers"</span>,
   <span class='st'>"Losses"</span>, <span class='st'>"Statistical differences"</span>, <span class='st'>"Stock changes"</span>),
-  <span class='kw'>grouping_vars</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Method"</span>, <span class='st'>"Last.stage"</span>, <span class='st'>"Country"</span>, <span class='st'>"Year"</span>,
-  <span class='st'>"Energy.type"</span>), <span class='kw'>matname</span> <span class='kw'>=</span> <span class='st'>"matname"</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='st'>"R"</span>,
-  <span class='kw'>U_excl_EIOU</span> <span class='kw'>=</span> <span class='st'>"U_excl_EIOU"</span>, <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='st'>"U_EIOU"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>)</pre>
+  <span class='kw'>matnames</span> <span class='kw'>=</span> <span class='st'>"matnames"</span>, <span class='kw'>R</span> <span class='kw'>=</span> <span class='st'>"R"</span>, <span class='kw'>U_excl_EIOU</span> <span class='kw'>=</span> <span class='st'>"U_excl_EIOU"</span>,
+  <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='st'>"U_EIOU"</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>, <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -205,14 +207,9 @@ Default is "<code>Energy industry own use</code>".</p></td>
 are entries in the final demand (<code>Y</code>) matrix.</p></td>
     </tr>
     <tr>
-      <th>grouping_vars</th>
-      <td><p>a string vector of names of columns by which rows should be grouped when matrix names are added.
-Default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("Method", "Last.stage", "Country", "Year", "Energy.type")</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>matname</th>
+      <th>matnames</th>
       <td><p>the name of the output column containing the name of the matrix
-to which a row's value belongs (a string). Default is "<code>matname</code>".</p></td>
+to which a row's value belongs (a string). Default is "<code>matnames</code>".</p></td>
     </tr>
     <tr>
       <th>R</th>
@@ -238,7 +235,7 @@ to which a row's value belongs (a string). Default is "<code>matname</code>".</p
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.tidy_iea_df</code> with an added column <code>matname</code>.</p>
+    <p><code>.tidy_iea_df</code> with an added column <code>matnames</code>.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -262,18 +259,18 @@ An error will occur if <code>.tidy_iea_df</code> already has a column named "<co
   <span class='fu'>add_psut_matnames</span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>glimpse</a></span>()</div><div class='output co'>#&gt; Observations: 399
 #&gt; Variables: 12
-#&gt; $ Method                 <span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…
+#&gt; $ Country                <span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…
+#&gt; $ Method                 </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…
+#&gt; $ Energy.type            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "E", "E", "E", "E", "E", "E", "E", "E", "E", "…
 #&gt; $ Last.stage             </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Final", "Final", "Final", "Final", "Final", "…
-#&gt; $ Country                </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…
 #&gt; $ Year                   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971…
 #&gt; $ Ledger.side            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Supply", "Supply", "Supply", "Supply", "Suppl…
 #&gt; $ Flow.aggregation.point </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Total primary energy supply", "Total primary …
-#&gt; $ Energy.type            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "E", "E", "E", "E", "E", "E", "E", "E", "E", "…
-#&gt; $ Unit                   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…
 #&gt; $ Flow                   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Production", "Production", "Imports", "Import…
 #&gt; $ Product                </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "Primary solid biofuels", "Hydro", "Crude oil"…
+#&gt; $ Unit                   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…
 #&gt; $ E.dot                  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> 2088, 250, 916, 1, 21, 1, 18, -4, -4, -178, -2…
-#&gt; $ matname                </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "R", "R", "V", "V", "V", "V", "V", "Y", "Y", "…</div></span></pre>
+#&gt; $ matnames               </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "R", "R", "V", "V", "V", "V", "V", "Y", "Y", "…</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
