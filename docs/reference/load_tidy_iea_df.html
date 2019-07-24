@@ -71,7 +71,7 @@ tidy_iea_df().
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
       </span>
     </div>
 
@@ -96,6 +96,9 @@ tidy_iea_df().
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
+    </li>
     <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
@@ -144,7 +147,7 @@ This function bundles several others:</p><ol>
 
     <pre class="usage"><span class='fu'>load_tidy_iea_df</span>(<span class='kw'>file_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/file.path'>file.path</a></span>(<span class='st'>"extdata"</span>,
   <span class='st'>"GH-ZA-ktoe-Extended-Energy-Balances-sample.csv"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"IEATools"</span>))</pre>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"IEATools"</span>), <span class='kw'>remove_zeroes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -152,6 +155,10 @@ This function bundles several others:</p><ol>
     <tr>
       <th>file_path</th>
       <td><p>the path of the file to be loaded. Default loads example data bundled with the package.</p></td>
+    </tr>
+    <tr>
+      <th>remove_zeroes</th>
+      <td><p>a logical indicating whether data points with the value <code>0</code> are to be removed from the output. (Default is <code>TRUE</code>.)</p></td>
     </tr>
     </table>
     

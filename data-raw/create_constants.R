@@ -2,25 +2,13 @@
 # If there are any changes to these constants, 
 # source this script before building the package.
 
-coal_and_coal_products <- c(
-  "Hard coal (if no detail)",
-  "Brown coal (if no detail)",
-  "Anthracite",
-  "Coking coal",
-  "Other bituminous coal",
-  "Sub-bituminous coal",
-  "Lignite",
-  "Patent fuel",
-  "Coke oven coke",
-  "Gas coke",
-  "Coal tar",
-  "BKB",
-  "Gas works gas",
-  "Coke oven gas",
-  "Blast furnace gas",
-  "Other recovered gases"
-)
-usethis::use_data(coal_and_coal_products, overwrite = TRUE)
+library(magrittr)
+library(IEATools)
+
+
+#
+# Coal and coal products
+# 
 
 primary_coal_products <- c(
   "Hard coal (if no detail)",
@@ -33,22 +21,58 @@ primary_coal_products <- c(
 )
 usethis::use_data(primary_coal_products, overwrite = TRUE)
 
-peat_and_peat_products <- c(
-  "Peat",
-  "Peat products"
+coal_and_coal_products <- c(
+  primary_coal_products,
+  "Patent fuel",
+  "Coke oven coke",
+  "Gas coke",
+  "Coal tar",
+  "BKB",
+  "Gas works gas",
+  "Coke oven gas",
+  "Blast furnace gas",
+  "Other recovered gases"
 )
-usethis::use_data(peat_and_peat_products, overwrite = TRUE)
+usethis::use_data(coal_and_coal_products, overwrite = TRUE)
+
+secondary_coal_products <- setdiff(coal_and_coal_products, primary_coal_products)
+usethis::use_data(secondary_coal_products, overwrite = TRUE)
+
+
+# 
+# Peat and peat products
+# 
 
 primary_peat_products <- "Peat"
 usethis::use_data(primary_peat_products, overwrite = TRUE)
 
-oil_and_oil_products <- c(
+peat_and_peat_products <- c(
+  primary_peat_products,
+  "Peat products"
+)
+usethis::use_data(peat_and_peat_products, overwrite = TRUE)
+
+secondary_peat_products <- setdiff(peat_and_peat_products, primary_peat_products)
+usethis::use_data(secondary_peat_products, overwrite = TRUE)
+
+
+#
+# Oil and oil products
+# 
+
+primary_oil_products <- c(
   "Crude/NGL/feedstocks (if no detail)",
-  "Crude oil",
+  "Crude oil", 
   "Natural gas liquids",
-  "Refinery feedstocks",
   "Additives/blending components",
-  "Other hydrocarbons",
+  "Other hydrocarbons", 
+  "Oil shale and oil sands"
+)
+usethis::use_data(primary_oil_products, overwrite = TRUE)
+
+oil_and_oil_products <- c(
+  primary_oil_products,
+  "Refinery feedstocks",
   "Refinery gas",
   "Ethane",
   "Liquefied petroleum gases (LPG)",
@@ -69,15 +93,13 @@ oil_and_oil_products <- c(
 )
 usethis::use_data(oil_and_oil_products, overwrite = TRUE)
 
+secondary_oil_products <- setdiff(oil_and_oil_products, primary_oil_products)
+usethis::use_data(secondary_oil_products, overwrite = TRUE)
 
-primary_oil_products <- c(
-  "Crude/NGL/feedstocks (if no detail)",
-  "Crude oil", 
-  "Natural gas liquids",
-  "Additives/blending components",
-  "Other hydrocarbons"
-)
-usethis::use_data(primary_oil_products, overwrite = TRUE)
+
+# 
+# Renewables
+# 
 
 renewable_products <- c(
   "Geothermal",
@@ -90,7 +112,12 @@ renewable_products <- c(
 )
 usethis::use_data(renewable_products, overwrite = TRUE)
 
-biofuel_and_waste_products <- c(
+
+# 
+# Biofuels
+# 
+
+biofuels_and_waste_products <- c(
   "Industrial waste",
   "Municipal waste (renewable)",
   "Municipal waste (non-renewable)",
@@ -98,11 +125,17 @@ biofuel_and_waste_products <- c(
   "Biogases",
   "Biogasoline",
   "Biodiesels",
+  "Bio jet kerosene",
   "Other liquid biofuels",
   "Non-specified primary biofuels and waste",
   "Charcoal"
 )
-usethis::use_data(biofuel_and_waste_products, overwrite = TRUE)
+usethis::use_data(biofuels_and_waste_products, overwrite = TRUE)
+
+
+# 
+# Aggregations
+# 
 
 aggregation_flows <- c(
   "Total primary energy supply",
@@ -129,6 +162,11 @@ memo_aggregation_product_prefixes = c(
 )
 usethis::use_data(memo_aggregation_product_prefixes, overwrite = TRUE)
 
+
+# 
+# Interfaces
+# 
+
 interface_industries = c("Imports",
                          "Exports", 
                          "International aviation bunkers",
@@ -136,11 +174,17 @@ interface_industries = c("Imports",
                          "Stock changes")
 usethis::use_data(interface_industries, overwrite = TRUE)
 
+
 ledger_side_iea_order <- c(
   "Supply", 
   "Consumption"
 )
 usethis::use_data(ledger_side_iea_order, overwrite = TRUE)
+
+
+# 
+# Sort orders
+# 
 
 # Defining the row order for IEA-style data frames is tricky and requires some manual intervention.
 # In the first step, we use the data frame created from load_tidy_iea_df,
@@ -161,6 +205,7 @@ fap_flow_iea_order <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
                values = "Energy industry own use_Main activity producer electricity plants")
 usethis::use_data(fap_flow_iea_order, overwrite = TRUE)
 
+
 product_iea_order <- load_tidy_iea_df(remove_zeroes = FALSE) %>% 
   dplyr::select(Product) %>% 
   unique() %>% 
@@ -175,4 +220,3 @@ product_iea_order <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   insert_after(after = "Natural gas", 
                values = paste("Natural gas", "(Oil and gas extraction)"))
 usethis::use_data(product_iea_order, overwrite = TRUE)
- 

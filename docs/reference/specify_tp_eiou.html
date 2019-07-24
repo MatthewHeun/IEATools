@@ -72,7 +72,7 @@ See details for a list of changes made to the .tidy_iea_df data frame." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
       </span>
     </div>
 
@@ -97,6 +97,9 @@ See details for a list of changes made to the .tidy_iea_df data frame." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
+    </li>
     <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
@@ -146,13 +149,13 @@ See details for a list of changes made to the <code>.tidy_iea_df</code> data fra
 
     <pre class="usage"><span class='fu'>specify_tp_eiou</span>(<span class='no'>.tidy_iea_df</span>,
   <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
+  <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>,
+  <span class='kw'>transformation_processes</span> <span class='kw'>=</span> <span class='st'>"Transformation processes"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
   <span class='kw'>own_use_elect_chp_heat</span> <span class='kw'>=</span> <span class='st'>"Own use in electricity, CHP and heat plants"</span>,
   <span class='kw'>pumped_storage</span> <span class='kw'>=</span> <span class='st'>"Pumped storage plants"</span>,
-  <span class='kw'>nuclear_industry</span> <span class='kw'>=</span> <span class='st'>"Nuclear industry"</span>,
-  <span class='kw'>non_spec_energy</span> <span class='kw'>=</span> <span class='st'>"Non-specified (energy)"</span>,
-  <span class='kw'>main_act_producer_elect</span> <span class='kw'>=</span> <span class='st'>"Main activity producer electricity plants"</span>,
-  <span class='kw'>nonspecenergy_reclassify</span> <span class='kw'>=</span> <span class='st'>"Non-specified (transformation)"</span>)</pre>
+  <span class='kw'>nuclear_industry</span> <span class='kw'>=</span> <span class='st'>"Nuclear industry"</span>, <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
+  <span class='kw'>negzeropos</span> <span class='kw'>=</span> <span class='st'>".negzeropos"</span>,
+  <span class='kw'>main_act_producer_elect</span> <span class='kw'>=</span> <span class='st'>"Main activity producer electricity plants"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,6 +171,10 @@ See details for a list of changes made to the <code>.tidy_iea_df</code> data fra
     <tr>
       <th>eiou</th>
       <td><p>a string identifying energy industry own use in the flow aggregation point column. Default is "<code>Energy industry own use</code>".</p></td>
+    </tr>
+    <tr>
+      <th>transformation_processes</th>
+      <td><p>a string identifying transformation processes in the flow aggregation point column. Default is "<code>Transformation processes</code>".</p></td>
     </tr>
     <tr>
       <th>flow</th>
@@ -186,16 +193,16 @@ See details for a list of changes made to the <code>.tidy_iea_df</code> data fra
       <td><p>a string identifying nuclear plants in the flow column. Default is "<code>Nuclear industry</code>".</p></td>
     </tr>
     <tr>
-      <th>non_spec_energy</th>
-      <td><p>a string identifying non-specified energy in the flow solumn. Default is "<code>Non-specified (energy)</code>".</p></td>
+      <th>e_dot</th>
+      <td><p>the name of the energy flow column in <code>.tidy_iea_df</code>. Default is "<code>E.dot</code>".</p></td>
+    </tr>
+    <tr>
+      <th>negzeropos</th>
+      <td><p>the name of a temporary column created in <code>.tidy_iea_df</code>. Default is "<code>.negzeropos</code>".</p></td>
     </tr>
     <tr>
       <th>main_act_producer_elect</th>
       <td><p>a string identifying main activity producer electricity plants. Default is "<code>Main activity producter electricity plants</code>".</p></td>
-    </tr>
-    <tr>
-      <th>nonspecenergy_reclassify</th>
-      <td><p>a string identifying the reclassified non-specified (energy) industry. Default is "<code>Non-specified (transformation)</code>".</p></td>
     </tr>
     </table>
     
@@ -211,6 +218,10 @@ See details for a list of changes made to the <code>.tidy_iea_df</code> data fra
 <li><p>EIOU classified as <code>nuclear_industry</code> is sent to <code>main_act_producer_elect</code>.</p></li>
 <li><p>EIOU classified as <code>non_spec_energy</code> is sent to <code>nonspecenergy_reclassify</code>.</p></li>
 </ol>
+    <p>After the changes are made, reassigned EIOU may double-up pre-existing EIOU.
+For example, a country may already have "<code>Electricity</code>" EIOU for "<code>Main activity poducer electricity plants</code>"
+before "<code>Nuclear industry</code>" "<code>Electricity</code>" EIOU is reassigned to "<code>Main activity poducer electricity plants</code>".
+To avoid double rows, all like rows are summed before returning.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -218,15 +229,14 @@ See details for a list of changes made to the <code>.tidy_iea_df</code> data fra
 <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>specify_tp_eiou</span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Flow.aggregation.point</span> <span class='kw'>==</span> <span class='st'>"Energy industry own use"</span> <span class='kw'>&amp;</span>
-           <span class='no'>Flow</span> <span class='kw'>==</span> <span class='st'>"Main activity producer electricity plants"</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 5 x 11</span><span>
-#&gt;   Method Last.stage Country  Year Ledger.side Flow.aggregatio… Energy.type Unit 
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>
-#&gt; </span><span style='color: #555555;'>1</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Energy industry… E           ktoe 
-#&gt; </span><span style='color: #555555;'>2</span><span> PCM    Final      ZAF      </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Energy industry… E           ktoe 
-#&gt; </span><span style='color: #555555;'>3</span><span> PCM    Final      GHA      </span><span style='text-decoration: underline;'>2</span><span>000 Supply      Energy industry… E           ktoe 
-#&gt; </span><span style='color: #555555;'>4</span><span> PCM    Final      ZAF      </span><span style='text-decoration: underline;'>2</span><span>000 Supply      Energy industry… E           ktoe 
-#&gt; </span><span style='color: #555555;'>5</span><span> PCM    Final      ZAF      </span><span style='text-decoration: underline;'>2</span><span>000 Supply      Energy industry… E           ktoe 
-#&gt; </span><span style='color: #555555;'># … with 3 more variables: Flow </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, E.dot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+           <span class='no'>Flow</span> <span class='kw'>==</span> <span class='st'>"Main activity producer electricity plants"</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 4 x 11</span><span>
+#&gt;   Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio… Flow 
+#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Energy industry… Main…
+#&gt; </span><span style='color: #555555;'>2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>2</span><span>000 Supply      Energy industry… Main…
+#&gt; </span><span style='color: #555555;'>3</span><span> ZAF     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Energy industry… Main…
+#&gt; </span><span style='color: #555555;'>4</span><span> ZAF     PCM    E           Final       </span><span style='text-decoration: underline;'>2</span><span>000 Supply      Energy industry… Main…
+#&gt; </span><span style='color: #555555;'># … with 3 more variables: Product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Unit </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, E.dot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

@@ -25,7 +25,7 @@ fu_allocation_template(.tidy_iea_df, energy_type = "Energy.type",
 
 \item{energy_type}{the name of the energy type column. Default is "\code{Energy.type}".}
 
-\item{energy}{the string identifier for energy (as opposed to exergy). Default is "\code{E}".}
+\item{energy}{the string identifier for energy (as opposed to exergy) in the \code{energy_type} column. Default is "\code{E}".}
 
 \item{last_stage}{the name of the last stage column. Default is "\code{Last.stage}".}
 
@@ -91,12 +91,12 @@ a data frame containing the EIOU template
 \description{
 This function creates a blank template for final-to-useful energy transformation process analysis.
 The template is a data frame derived from IEA extended energy balance data (\code{.tidy_iea_df}),
-which give both energy industry own use and final demand for final energy carriers.
+which gives both energy industry own use and final demand for final energy carriers.
 From the IEA's final energy information, templates are created for conversion to
 useful energy carriers.
-Final energy consumed by each final demand sector or transformation process machines
+Final energy consumed by each final demand sector or transformation process machine
 is allocated to final-to-useful machines and converted to useful energy at some efficiency.
-The allocation fractions and efficiencies are to be supplied by the analyst by filling blanks in
+The allocation fractions are to be supplied by the analyst by filling blanks in
 the template.
 }
 \details{

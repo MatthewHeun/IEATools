@@ -68,7 +68,7 @@ on a per-product basis." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
       </span>
     </div>
 
@@ -93,6 +93,9 @@ on a per-product basis." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
+    </li>
     <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
@@ -142,8 +145,7 @@ on a per-product basis.</p>
   <span class='kw'>tfc_compare</span> <span class='kw'>=</span> <span class='st'>"TFC compare"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
   <span class='kw'>statistical_differences</span> <span class='kw'>=</span> <span class='st'>"Statistical differences"</span>,
   <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>".err"</span>,
-  <span class='kw'>remove_zeroes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>grouping_vars</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Method"</span>, <span class='st'>"Last.stage"</span>,
-  <span class='st'>"Country"</span>, <span class='st'>"Year"</span>, <span class='st'>"Energy.type"</span>, <span class='st'>"Unit"</span>, <span class='st'>"Product"</span>))</pre>
+  <span class='kw'>remove_zeroes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -195,11 +197,6 @@ on a per-product basis.</p>
     <tr>
       <th>remove_zeroes</th>
       <td><p>a logical telling whether to remove <code>0</code>s after balancing.</p></td>
-    </tr>
-    <tr>
-      <th>grouping_vars</th>
-      <td><p>a string vector of names of columns by which energy balance calculations should be performed.
-Default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("Method", "Last.stage", "Country", "Year", "Energy.type", "Unit", "Product")</a></code>.</p></td>
     </tr>
     </table>
     
