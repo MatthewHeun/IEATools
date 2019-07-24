@@ -7,9 +7,13 @@
 write_eta_fu_template(.eta_fu_template, path,
   eta_fu_tab_name = "FU etas", overwrite_file = FALSE,
   overwrite_fu_eta_tab = FALSE, eta_fu = "eta.fu",
-  header_row_font_color = "#FFFFFF",
+  e_dot_machine = "E.dot_machine", perc = "[\%]",
+  e_dot_machine_perc = paste(e_dot_machine, perc),
+  maximum_values = "Maximum.values", header_row_font_color = "#FFFFFF",
   header_row_shading_color = "#5A80B8", eta_row_font_color = "#8C87A0",
-  eta_row_shading_color = "#E3DFEB", quantity = "Quantity",
+  eta_row_shading_color = "#E3DFEB", phi_row_font_color = "#8C87A0",
+  phi_row_shading_color = "#E3DFEB", blank_shading_color = "#808080",
+  quantity = "Quantity",
   e_dot_machine_max_perc = "E.dot_machine_max [\%]",
   .rownum = ".rownum")
 }

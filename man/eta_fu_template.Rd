@@ -67,6 +67,8 @@ eta_fu_template(.fu_allocations, T_0 = 298.15,
 
 \item{.year}{the name of a temporary year column. Default is "\code{.year}".}
 
+\item{year_for_maximum_values}{the year assumed for the \code{maximum_values} column. Default is \code{0}.}
+
 \item{.value}{the name of a temporary value column. Default is "\code{.value}".}
 
 \item{.row_order}{the name of a metadata column used internally for determining row order. Default is ".row_order".}
@@ -74,6 +76,8 @@ eta_fu_template(.fu_allocations, T_0 = 298.15,
 \item{e_dot_dest}{the name of a temporary column containing energy flows into a destination. Default is "\code{E.dot_dest}".}
 
 \item{e_dot_machine}{the name of a temporary column containing energy flows into final-to-useful machines. Default is "\code{E.dot_machine}".}
+
+\item{e_dot_machine_max}{the name of a temporary column containing maximum energy flows into final-to-useful machines. Default is "E.dot_machine_max".}
 
 \item{e_dot_machine_tot}{the name of a temporary column containing sums of energy flows into a final-to-useful machines. Default is "\code{E.dot_machine_tot}".}
 

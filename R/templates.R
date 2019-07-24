@@ -602,10 +602,12 @@ load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocatio
 #' @param c_perc the string for generic allocation variables in percentage terms. Default is "`C [%]`".
 #' @param c_ratio the string for generic allocation variables in ratio terms. Default is "`C`".
 #' @param .year the name of a temporary year column. Default is "`.year`".
+#' @param year_for_maximum_values the year assumed for the `maximum_values` column. Default is `0`.
 #' @param .value the name of a temporary value column. Default is "`.value`".
 #' @param .row_order the name of a metadata column used internally for determining row order. Default is ".row_order".
 #' @param e_dot_dest the name of a temporary column containing energy flows into a destination. Default is "`E.dot_dest`".
 #' @param e_dot_machine the name of a temporary column containing energy flows into final-to-useful machines. Default is "`E.dot_machine`".
+#' @param e_dot_machine_max the name of a temporary column containing maximum energy flows into final-to-useful machines. Default is "E.dot_machine_max".
 #' @param e_dot_machine_tot the name of a temporary column containing sums of energy flows into a final-to-useful machines. Default is "`E.dot_machine_tot`".
 #' @param e_dot_machine_perc the name of a temporary column percentages of total energy flow into machines.  Default is "`E.dot_machine [%]`".
 #' @param e_dot_machine_max_perc the name for a column of maximum percentages (across all years) of total energy flow into machines.  Default is "`E.dot_machine_max [%]`".
@@ -822,7 +824,9 @@ eta_fu_template <- function(.fu_allocations,
 
   
   
-     
+  # The rest of the commented code here is no longer needed. 
+  # I'm keeping it for historical purposes as of 23 July 2109.   
+  # By Sept 2019, it can probably be removed.
   
   # The following is something that works.
   # out <- dplyr::full_join(input_energy_max, input_energy_max_percs, by = matsindf::everything_except(input_energy, .year, e_dot_machine, .symbols = FALSE)) %>% 
@@ -926,14 +930,6 @@ eta_fu_template <- function(.fu_allocations,
   
   
   
-  
-  
-  
-  
-  
-  
-  
-  
   # Tidy <- input_energy %>% 
   #   # Eliminate rows where the analyst didn't fill any machines or products
   #   dplyr::filter(!is.na(!!as.name(machine)) & !is.na(!!as.name(eu_product))) %>% 
@@ -1009,13 +1005,6 @@ eta_fu_template <- function(.fu_allocations,
   # leftover_eu_prods <- sort(setdiff(eu_prods, c(md, light, heat_prods)))
   # # Now compile the order of Eu.products for this data frame.
   # eu_product_sort_order <- c(md, ke, light, heat_prods_sorted, leftover_eu_prods)
-  
-  
-  
-  
-  
-  
-  
 }
 
 
@@ -1059,10 +1048,17 @@ write_eta_fu_template <- function(.eta_fu_template,
                                   overwrite_file = FALSE, 
                                   overwrite_fu_eta_tab = FALSE,
                                   eta_fu = "eta.fu",
+                                  e_dot_machine = "E.dot_machine",
+                                  perc = "[%]",
+                                  e_dot_machine_perc = paste(e_dot_machine, perc), 
+                                  maximum_values = "Maximum.values",
                                   header_row_font_color = "#FFFFFF",
                                   header_row_shading_color = "#5A80B8",
                                   eta_row_font_color = "#8C87A0",
                                   eta_row_shading_color = "#E3DFEB",
+                                  phi_row_font_color = "#8C87A0",
+                                  phi_row_shading_color = "#E3DFEB",
+                                  blank_shading_color = "#808080",
                                   quantity = "Quantity",
                                   e_dot_machine_max_perc = "E.dot_machine_max [%]",
                                   .rownum = ".rownum"){
@@ -1088,12 +1084,12 @@ write_eta_fu_template <- function(.eta_fu_template,
   
   # Add colors to rows
   
-  # Start with the eta.fu rows
-  eta_row_indices <- .eta_fu_template %>% 
+  # Start with the e_dot_machine rows
+  e_dot_machine_row_indices <- .eta_fu_template %>% 
     # Make a column of row numbers
     tibble::remove_rownames() %>% tibble::rownames_to_column(var = .rownum) %>% 
     # Filter to keep only the eta rows
-    dplyr::filter(!!as.name(quantity) == eta_fu) %>% 
+    dplyr::filter(!!as.name(quantity) == e_dot_machine) %>% 
     # These row numbers are for the data frame, but the row numbers in Excel are 1 more, 
     # because the column names are the first row for Excel but the column names are not a row for the data frame.
     dplyr::mutate(
@@ -1103,23 +1099,28 @@ write_eta_fu_template <- function(.eta_fu_template,
     dplyr::select(!!as.name(.rownum)) %>% 
     unlist() %>% 
     unname()
+  # Identify the e_dot_machine_perc rows
+  e_dot_machine_perc_row_indices <- e_dot_machine_row_indices + 1
+  # Identify the eta_fu rows
+  eta_row_indices <- e_dot_machine_row_indices + 2
   # Identify the phi.u rows.
-  phi_row_indices <- eta_row_indices + 1
+  phi_row_indices <- e_dot_machine_row_indices + 3
   # Identify the year columns.
   year_cols_indices <- year_cols(.eta_fu_template)
+  # Identify the maximum_values column.
+  maximum_values_col_index <- min(year_cols_indices) - 1
   
-  # Add percentage formatting to the E.dot_machine_max [%] column
+  # Add percentage formatting to the E.dot_machine [%] rows
   e_dot_perc_style <- openxlsx::createStyle(numFmt = "PERCENTAGE")
   openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = e_dot_perc_style, 
-                     rows = 2:(nrow(.eta_fu_template) + 1), cols = which(names(.eta_fu_template) == e_dot_machine_max_perc), gridExpand = TRUE)
+                     rows = e_dot_machine_perc_row_indices, cols = c(maximum_values_col_index, year_cols_indices), gridExpand = TRUE)
   
-  # Add percentage formatting to all eta.fu rows.
+  # Add percentage formatting to all eta_fu rows.
   eta_perc_style <- openxlsx::createStyle(numFmt = "PERCENTAGE")
   openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = eta_perc_style, 
-                     rows = eta_row_indices, cols = year_cols_indices, gridExpand = TRUE)
+                     rows = eta_row_indices, cols = c(maximum_values_col_index, year_cols_indices), gridExpand = TRUE)
   
-  # Add number formatting to all phi.u rows. We want to ensure several decimal places.
-  # phi_num_style <- openxlsx::createStyle(numFmt = "NUMBER")
+  # Add number formatting to all phi_u rows. We want to ensure several decimal places.
   phi_num_style <- openxlsx::createStyle(numFmt = "0.0#####")
   openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = phi_num_style, 
                      rows = phi_row_indices, cols = year_cols_indices, gridExpand = TRUE)
@@ -1134,9 +1135,20 @@ write_eta_fu_template <- function(.eta_fu_template,
   openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = eta_row_style, 
                      rows = eta_row_indices, cols = 1:ncol(.eta_fu_template), gridExpand = TRUE, stack = TRUE)
   
+  # Define the phi row style
+  phi_row_style <- openxlsx::createStyle(fontColour = phi_row_font_color, fgFill = phi_row_shading_color)
+  # Apply the phi row style at the correct locations
+  openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = phi_row_style, 
+                     rows = phi_row_indices, cols = 1:ncol(.eta_fu_template), gridExpand = TRUE, stack = TRUE)
+  
+  # Define the blank cell style
+  blank_cell_style <- openxlsx::createStyle(fgFill = blank_shading_color)
+  # Apply gray color for eta_fu and phi_u rows in the maximum_values column
+  openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = blank_cell_style, 
+                     rows = c(eta_row_indices, phi_row_indices), cols = maximum_values_col_index, gridExpand = TRUE, stack = TRUE)
+  
   # Set the column widths to "auto" so data can be seen.
   openxlsx::setColWidths(eta_wb, eta_fu_tab_name, cols = 1:ncol(.eta_fu_template), widths = "auto")
-  
   
   # Now save it
   openxlsx::saveWorkbook(eta_wb, file = path, overwrite = overwrite_file)
