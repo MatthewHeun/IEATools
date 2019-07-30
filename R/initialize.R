@@ -440,7 +440,7 @@ augment_iea_df <- function(.iea_df,
     # The split between Supply and Consumption ledger sides occurs where Flow == Losses and Flow == Total final consumption.
     # Find this dividing line in .iea_df. 
     # Then create the Ledger.side column. 
-    dplyr::group_map(function(ctry_tbl, ctry){
+    dplyr::group_modify(function(ctry_tbl, ctry){
       # At this point, 
       # ctry_tbl is the rows for this country, and
       # ctry is a data frame with one country column and one country row containing the country.
