@@ -2,7 +2,7 @@
 % Please edit documentation in R/templates.R
 \name{arrange_iea_fu_allocation_template}
 \alias{arrange_iea_fu_allocation_template}
-\title{Arrange the fows and/or columns of an fu allocation template}
+\title{Arrange the rows and/or columns of a final-to-useful allocation template}
 \usage{
 arrange_iea_fu_allocation_template(.fu_allocation_template,
   rowcol = c("both", "row", "col"), ledger_side = "Ledger.side",

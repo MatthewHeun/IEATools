@@ -1,3 +1,14 @@
+# IEATools 0.1.8 (2019-07-24)
+
+* Efficiency template now includes energy flows into final-to-useful machines for each year,
+  indicating to analysts which years need no efficiency or exergy-to-energy ratio.
+* New `sort_by` argument for `eta_fu_template()` allows "useful_energy_type" and "importance".
+  "useful_energy_type" sorts first by `md`, `light`, `ke`, and `heat`, 
+  then by magnitude of energy flow into the machine.
+  "importance" sorts by magnitude of energy flow into the machine only.
+  Default is "useful_energy_type".
+  
+
 # IEATools 0.1.7 (2019-04-18)
 
 * Allocation template now sorting rows in IEA order.
@@ -15,7 +26,7 @@
   at the end of its specification process.
   Doing so avoids a situation where resource extraction industries
   would look like a Transformation process sink industry when 
-  inputsand outputs were netted together.
+  inputs and outputs were netted together.
 
 
 # IEATools 0.1.6 (2019-04-06)
@@ -28,7 +39,7 @@
 * Added functions to generate PSUT matrices
 * Added `production_to_resources()` function to convert `Production` to `Resources (product)`.
 * Added `specify_primary_production()` function to fix primary production issues in the IEA data.
-* Added constants `coal_and_coal_products`, `oil_and_oil_products`, `renewable_products`, `biofuel_and_waste_products`.
+* Added constants `coal_and_coal_products`, `oil_and_oil_products`, `renewable_products`, `biofuels_and_waste_products`.
 * Rename package from `IEAData` to `IEATools` to better reflect its purpose.
   Users can't get data from this package, anyway. 
   This package will do more than distribute data. 

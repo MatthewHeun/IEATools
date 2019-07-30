@@ -6,14 +6,13 @@
 \usage{
 specify_tp_eiou(.tidy_iea_df,
   flow_aggregation_point = "Flow.aggregation.point",
-  eiou = "Energy industry own use", flow = "Flow",
+  eiou = "Energy industry own use",
+  transformation_processes = "Transformation processes", flow = "Flow",
   own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
   pumped_storage = "Pumped storage plants",
-  nuclear_industry = "Nuclear industry",
-  non_spec_energy = "Non-specified (energy)", e_dot = "E.dot",
+  nuclear_industry = "Nuclear industry", e_dot = "E.dot",
   negzeropos = ".negzeropos",
-  main_act_producer_elect = "Main activity producer electricity plants",
-  nonspecenergy_reclassify = "Non-specified (transformation)")
+  main_act_producer_elect = "Main activity producer electricity plants")
 }
 \arguments{
 \item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
@@ -21,6 +20,8 @@ specify_tp_eiou(.tidy_iea_df,
 \item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
 
 \item{eiou}{a string identifying energy industry own use in the flow aggregation point column. Default is "\code{Energy industry own use}".}
+
+\item{transformation_processes}{a string identifying transformation processes in the flow aggregation point column. Default is "\code{Transformation processes}".}
 
 \item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "\code{Flow}".}
 
@@ -30,15 +31,11 @@ specify_tp_eiou(.tidy_iea_df,
 
 \item{nuclear_industry}{a string identifying nuclear plants in the flow column. Default is "\code{Nuclear industry}".}
 
-\item{non_spec_energy}{a string identifying non-specified energy in the flow solumn. Default is "\code{Non-specified (energy)}".}
-
 \item{e_dot}{the name of the energy flow column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
 
 \item{negzeropos}{the name of a temporary column created in \code{.tidy_iea_df}. Default is "\code{.negzeropos}".}
 
 \item{main_act_producer_elect}{a string identifying main activity producer electricity plants. Default is "\code{Main activity producter electricity plants}".}
-
-\item{nonspecenergy_reclassify}{a string identifying the reclassified non-specified (energy) industry. Default is "\code{Non-specified (transformation)}".}
 }
 \value{
 a modified version of \code{.tidy_iea_df}

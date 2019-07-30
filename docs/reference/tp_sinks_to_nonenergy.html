@@ -67,7 +67,7 @@ as non_energy_flow, by default &quot;Non-energy use in industry/transformation/e
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
       </span>
     </div>
 
@@ -92,6 +92,9 @@ as non_energy_flow, by default &quot;Non-energy use in industry/transformation/e
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
+    </li>
     <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
@@ -141,8 +144,7 @@ as <code>non_energy_flow</code>, by default "Non-energy use in industry/transfor
   <span class='kw'>transformation_processes</span> <span class='kw'>=</span> <span class='st'>"Transformation processes"</span>,
   <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
   <span class='kw'>non_energy_flow</span> <span class='kw'>=</span> <span class='st'>"Non-energy use industry/transformation/energy"</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>, <span class='kw'>grouping_vars</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Method"</span>,
-  <span class='st'>"Last.stage"</span>, <span class='st'>"Country"</span>, <span class='st'>"Year"</span>, <span class='st'>"Energy.type"</span>))</pre>
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -190,10 +192,6 @@ as <code>non_energy_flow</code>, by default "Non-energy use in industry/transfor
     <tr>
       <th>e_dot</th>
       <td><p>the name of the energy rate column in <code>.tidy_iea_df</code>. Default is "<code>E.dot</code>".</p></td>
-    </tr>
-    <tr>
-      <th>grouping_vars</th>
-      <td><p>a string vector of column names by which <code>.tidy_iea_df</code> will be grouped before finding transformation sinks. Default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("Method", "Last.stage", "Country", "Year", "Energy.type")</a></code>.</p></td>
     </tr>
     </table>
     

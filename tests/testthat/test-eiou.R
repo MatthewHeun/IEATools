@@ -47,20 +47,6 @@ test_that("specify_tp_eiou works as expected for nuclear industry", {
   expect_equal(EIOU_fixed$Flow[[2]], "Nuclear industry")
 })
 
-test_that("specify_tp_eiou works as expected for non-specified (energy)", {
-  # Make a bogus data frame
-  EIOU <- data.frame(Country = c("US", "US"), 
-                     Flow.aggregation.point = c("Energy industry own use", "Nothing"),
-                     Flow = c("Non-specified (energy)", "Non-specified (energy)"), 
-                     E.dot = c(-40, -40),
-                     stringsAsFactors = FALSE)
-  EIOU_fixed <- specify_tp_eiou(EIOU)
-  # The first row is expected to change, because its Product is "Electricity"
-  expect_equal(EIOU_fixed$Flow[[1]], "Non-specified (transformation)")
-  # The second row will not change, because its Product is "Nothing"
-  expect_equal(EIOU_fixed$Flow[[2]], "Non-specified (energy)")
-})
-
 test_that("specify_tp_eiou works for sample data", {
   # This test is failing, because the (energy) suffix is still present in the Flow for Own use in electricity, CHP and heat plants
   # and the function assumes it has been stripped away. 

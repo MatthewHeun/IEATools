@@ -72,7 +72,7 @@ an error message is given." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
       </span>
     </div>
 
@@ -97,6 +97,9 @@ an error message is given." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
+    </li>
     <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
@@ -147,8 +150,8 @@ an error message is given.</p>
     <pre class="usage"><span class='fu'>iea_df</span>(<span class='kw'>.iea_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>text</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>expected_1st_line_start</span> <span class='kw'>=</span> <span class='st'>",,TIME"</span>,
   <span class='kw'>expected_2nd_line_start</span> <span class='kw'>=</span> <span class='st'>"COUNTRY,FLOW,PRODUCT"</span>,
-  <span class='kw'>year_colname_pattern</span> <span class='kw'>=</span> <span class='st'>"^\\d*$"</span>, <span class='kw'>missing_data</span> <span class='kw'>=</span> <span class='st'>".."</span>,
-  <span class='kw'>not_applicable_data</span> <span class='kw'>=</span> <span class='st'>"x"</span>, <span class='kw'>confidential_data</span> <span class='kw'>=</span> <span class='st'>"c"</span>)</pre>
+  <span class='kw'>missing_data</span> <span class='kw'>=</span> <span class='st'>".."</span>, <span class='kw'>not_applicable_data</span> <span class='kw'>=</span> <span class='st'>"x"</span>,
+  <span class='kw'>confidential_data</span> <span class='kw'>=</span> <span class='st'>"c"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -170,11 +173,6 @@ Default is the path to a sample IEA file provided in this package.</p></td>
     <tr>
       <th>expected_2nd_line_start</th>
       <td><p>the expected start of the second line of <code>iea_file</code>. Default is "<code>COUNTRY,FLOW,PRODUCT</code>".</p></td>
-    </tr>
-    <tr>
-      <th>year_colname_pattern</th>
-      <td><p>a regex that identifies columns with year titles.
-Default is "<code>^\d*$</code>" which identifies columns whose names are exclusively digits.</p></td>
     </tr>
     <tr>
       <th>missing_data</th>

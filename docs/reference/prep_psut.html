@@ -64,7 +64,7 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
       </span>
     </div>
 
@@ -89,6 +89,9 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y)." />
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
+    </li>
     <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
@@ -129,10 +132,12 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y).</p>
     </div>
 
     <pre class="usage"><span class='fu'>prep_psut</span>(<span class='no'>.tidy_iea_df</span>, <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>, <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>,
-  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>, <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
-  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>, <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>, <span class='kw'>matname</span> <span class='kw'>=</span> <span class='st'>"matname"</span>,
-  <span class='kw'>matval</span> <span class='kw'>=</span> <span class='st'>"matval"</span>, <span class='kw'>grouping_vars</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Method"</span>, <span class='st'>"Energy.type"</span>,
-  <span class='st'>"Last.stage"</span>, <span class='st'>"Country"</span>, <span class='st'>"Year"</span>))</pre>
+  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>, <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>, <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>, <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
+  <span class='kw'>matnames</span> <span class='kw'>=</span> <span class='st'>"matnames"</span>, <span class='kw'>matvals</span> <span class='kw'>=</span> <span class='st'>"matvals"</span>, <span class='kw'>rownames</span> <span class='kw'>=</span> <span class='st'>"rownames"</span>,
+  <span class='kw'>colnames</span> <span class='kw'>=</span> <span class='st'>"colnames"</span>, <span class='kw'>rowtypes</span> <span class='kw'>=</span> <span class='st'>"rowtypes"</span>,
+  <span class='kw'>coltypes</span> <span class='kw'>=</span> <span class='st'>"coltypes"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,6 +159,10 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y).</p>
       <td><p>the string identifying the consumption side of the ledger. Default is "<code>Consumption</code>".</p></td>
     </tr>
     <tr>
+      <th>flow_aggregation_point</th>
+      <td><p>the name of the flow aggregation point column in <code>.tidy_iea_df</code>. Default is "<code>Flow.aggregation.point</code>".</p></td>
+    </tr>
+    <tr>
       <th>flow</th>
       <td><p>the name of the flow column. Default is "<code>Flow</code>".</p></td>
     </tr>
@@ -170,16 +179,28 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y).</p>
       <td><p>the name of the energy rate column. Default is "E.dot".</p></td>
     </tr>
     <tr>
-      <th>matname</th>
-      <td><p>the name of the matrix names column added by this function. Default is "<code>matname</code>".</p></td>
+      <th>matnames</th>
+      <td><p>the name of the matrix names column added by this function. Default is "<code>matnames</code>".</p></td>
     </tr>
     <tr>
-      <th>matval</th>
-      <td><p>the name of the matrix value column added by this function. Default is "<code>matval</code>".</p></td>
+      <th>matvals</th>
+      <td><p>the name of the matrix value column added by this function. Default is "<code>matvals</code>".</p></td>
     </tr>
     <tr>
-      <th>grouping_vars</th>
-      <td><p>a string vector of columns by which matrices are grouped. Default is <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("Method", "Energy.type", "Last.stage", "Country", "Year")</a></code>.</p></td>
+      <th>rownames</th>
+      <td><p>the name of the rownames column passed to <code><a href='collapse_to_tidy_psut.html'>collapse_to_tidy_psut()</a></code>. Default is "<code>rownames</code>".</p></td>
+    </tr>
+    <tr>
+      <th>colnames</th>
+      <td><p>the name of the colnames column passed to <code><a href='collapse_to_tidy_psut.html'>collapse_to_tidy_psut()</a></code>. Default is "<code>colnames</code>".</p></td>
+    </tr>
+    <tr>
+      <th>rowtypes</th>
+      <td><p>the name of the rowtypes column passed to <code><a href='collapse_to_tidy_psut.html'>collapse_to_tidy_psut()</a></code>. Default is "<code>rowtypes</code>".</p></td>
+    </tr>
+    <tr>
+      <th>coltypes</th>
+      <td><p>the name of the coltypes column passed to <code><a href='collapse_to_tidy_psut.html'>collapse_to_tidy_psut()</a></code>. Default is "<code>coltypes</code>".</p></td>
     </tr>
     </table>
     
@@ -204,7 +225,7 @@ and adds those matrices to the data frame.</p>
 <span class='no'>Simple</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='specify_all.html'>specify_all</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>prep_psut</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>rename</a></span>(<span class='kw'>matval_simple</span> <span class='kw'>=</span> <span class='no'>matval</span>)
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>rename</a></span>(<span class='kw'>matval_simple</span> <span class='kw'>=</span> <span class='no'>matvals</span>)
 <span class='no'>S_units</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='extract_S_units_from_tidy.html'>extract_S_units_from_tidy</a></span>()
 <span class='no'>Complicated</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
@@ -212,22 +233,22 @@ and adds those matrices to the data frame.</p>
   <span class='fu'><a href='add_psut_matnames.html'>add_psut_matnames</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='add_row_col_meta.html'>add_row_col_meta</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='collapse_to_tidy_psut.html'>collapse_to_tidy_psut</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matname</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matval</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matnames</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matvals</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/join.html'>full_join</a></span>(<span class='no'>S_units</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Method"</span>, <span class='st'>"Energy.type"</span>, <span class='st'>"Last.stage"</span>,
                             <span class='st'>"Country"</span>, <span class='st'>"Year"</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/gather.html'>gather</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matname</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matval</span>, <span class='no'>R</span>, <span class='no'>U_EIOU</span>, <span class='no'>U_excl_EIOU</span>,
+  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/gather.html'>gather</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matnames</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matvals</span>, <span class='no'>R</span>, <span class='no'>U_EIOU</span>, <span class='no'>U_excl_EIOU</span>,
                                         <span class='no'>V</span>, <span class='no'>Y</span>, <span class='no'>S_units</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>rename</a></span>(<span class='kw'>matval_complicated</span> <span class='kw'>=</span> <span class='no'>matval</span>)
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>rename</a></span>(<span class='kw'>matval_complicated</span> <span class='kw'>=</span> <span class='no'>matvals</span>)
 <span class='co'># Simple and Complicated are same.</span>
 <span class='fu'><a href='https://dplyr.tidyverse.org/reference/join.html'>full_join</a></span>(<span class='no'>Simple</span>, <span class='no'>Complicated</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"Method"</span>, <span class='st'>"Energy.type"</span>,
                                       <span class='st'>"Last.stage"</span>, <span class='st'>"Country"</span>,
-                                      <span class='st'>"Year"</span>, <span class='st'>"matname"</span>)) <span class='kw'>%&gt;%</span>
+                                      <span class='st'>"Year"</span>, <span class='st'>"matnames"</span>)) <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(
     <span class='kw'>same</span> <span class='kw'>=</span> <span class='kw pkg'>matsbyname</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/matsbyname/topics/equal_byname'>equal_byname</a></span>(<span class='no'>matval_simple</span>, <span class='no'>matval_complicated</span>)
   ) <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>magrittr</span><span class='kw ns'>::</span><span class='fu'><a href='https://www.rdocumentation.org/packages/magrittr/topics/aliases'>extract2</a></span>(<span class='st'>"same"</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/logical'>as.logical</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/all'>all</a></span>()</div><div class='output co'>#&gt; [1] TRUE</div></pre>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/all'>all</a></span>()</div><div class='output co'>#&gt; [1] FALSE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
