@@ -802,10 +802,7 @@ eta_fu_template <- function(.fu_allocations,
       ) %>% 
       magrittr::extract2(.row_order)
   }
-    
-  # The following nearly works, except that the machines are not in descending order of importance as we move down.
-  # Need to set the order of Machine/Eu.product from E.dot_machine.
-  
+
   # Annual format, including blanks for eta_fu and phi_u
   Annual <- dplyr::full_join(input_energy, input_energy_percs, by = matsindf::everything_except(input_energy, e_dot_machine, .symbols = FALSE)) %>% 
     dplyr::mutate(
