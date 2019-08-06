@@ -150,6 +150,11 @@ extract_TK <- function(heat_types){
   # assertthat::assert_that(all(grepl(pattern = "\\.[C|F|R|K]$", x = heat_types)), msg = "All heat types should end with the string '.C', '.F', '.R', or '.K'")
   temperatures <- suppressWarnings(sub(pattern = "\\.[C|F|R|K]$", replacement = "", x = temporary) %>% as.numeric())
   convert_to_K <- function(rawT, unit){
+    if (is.na(unit)) {
+print(heat_types)
+print(units)
+      stop("unit is missing in convert_to_K")
+    }
     if (unit == "K") {
       return(rawT)
     }
