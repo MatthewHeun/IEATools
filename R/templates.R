@@ -852,7 +852,8 @@ eta_fu_template <- function(.fu_allocations,
   
   # Check for errors. If there is a problem somewhere, 
   # we will obtain NA in the Machine column.
-  assertthat::assert_that(!any(out[[machine]] %>% is.na()))
+  assertthat::assert_that(!any(out[[machine]] %>% is.na()), msg = "At least one row of out has NA in the machine column in era_fu_template.
+                          Double-check Machine and Destination names.")
   
   return(out)
   
