@@ -699,7 +699,7 @@ eta_fu_template <- function(.fu_allocations,
     )
   # Now we join the E.dot and C values and calculate the energy flowing into each final-to-useful machine
   input_energy <- dplyr::full_join(c_info, e_dot_info, 
-                                   by = matsindf::everything_except(e_dot_info, e_dot_dest, .symbols = FALSE)) %>%
+                                   by = matsindf::everything_except(e_dot_info, e_dot_dest, .symbols = FALSE)) %>% 
     # There may be cases where the analyst has filled a C value, but there is no corresponding e_dot_dest value.
     # Get rid of those rows.
     dplyr::filter(!is.na(!!as.name(e_dot_dest))) %>% 
@@ -827,7 +827,6 @@ eta_fu_template <- function(.fu_allocations,
                   !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc), !!as.name(eta_fu), !!as.name(phi_u)) %>% 
     tidyr::spread(key = .year, value = .value)
   
-  
   # Prepare the outgoing data frame.
   out <- dplyr::full_join(Maxima, Annual, by = matsindf::everything_except(Maxima, maximum_values, .symbols = FALSE)) %>% 
     dplyr::mutate(
@@ -850,6 +849,10 @@ eta_fu_template <- function(.fu_allocations,
   for (i in year_col_indices) {
     out[[i]] <- as.numeric(out[[i]])
   }
+  
+  # Check for errors. If there is a problem somewhere, 
+  # we will obtain NA in the Machine column.
+  assertthat::assert_that(!any(out[[machine]] %>% is.na()))
   
   return(out)
   
