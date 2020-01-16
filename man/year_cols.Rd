@@ -9,7 +9,7 @@ year_cols(.df, year_pattern = "^-?\\\\d+$", return_names = FALSE)
 \arguments{
 \item{.df}{a non-tidy data frame with years spread to the right in columns.}
 
-\item{year_pattern}{a regex pattern that identifies years. Default is "\code{^-?\\d+$}".}
+\item{year_pattern}{a regex pattern that identifies years. Default is "\verb{^-?\\\\d+$}".}
 
 \item{return_names}{a boolean which tells whether names are returned instead of column indices.
 Default is \code{FALSE}.}
@@ -24,7 +24,7 @@ This function returns a set of indices
 (or, optionally, the names) of columns in \code{.fu_df} that represent years.
 }
 \details{
-The default \code{year_pattern} is "\code{^-?\\d+$}", which matches columns whose names
+The default \code{year_pattern} is "\verb{^-?\\\\d+$}", which matches columns whose names
 have zero or one negative signs followed by any number of digits.
 }
 \examples{

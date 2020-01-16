@@ -4,28 +4,45 @@
 \alias{fu_allocation_template}
 \title{Create a template for analysis of final-to-useful transformation processes}
 \usage{
-fu_allocation_template(.tidy_iea_df, energy_type = "Energy.type",
-  energy = "E", last_stage = "Last.stage", final = "Final",
-  year = "Year", ledger_side = "Ledger.side",
+fu_allocation_template(
+  .tidy_iea_df,
+  energy_type = "Energy.type",
+  energy = "E",
+  last_stage = "Last.stage",
+  final = "Final",
+  year = "Year",
+  ledger_side = "Ledger.side",
   consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point",
-  eiou = "Energy industry own use", non_energy_use = "Non-energy use",
+  eiou = "Energy industry own use",
+  non_energy_use = "Non-energy use",
   tfc = "Total final consumption",
-  tpes = "Total primary energy supply", flow = "Flow",
-  product = "Product", destination = "Destination",
-  quantity = "Quantity", e_dot = "E.dot", e_dot_total = paste0(e_dot,
-  ".total"), perc_unit_string = "[\%]", e_dot_perc = paste(e_dot,
-  perc_unit_string), maximum_values = "Maximum.values",
-  year_for_maximum_values = 0, ef_product = "Ef.product",
-  allocation_var = "C_", n_allocation_rows = 3, machine = "Machine",
-  eu_product = "Eu.product", arrange = TRUE, .value = ".value")
+  tpes = "Total primary energy supply",
+  flow = "Flow",
+  product = "Product",
+  destination = "Destination",
+  quantity = "Quantity",
+  e_dot = "E.dot",
+  e_dot_total = paste0(e_dot, ".total"),
+  perc_unit_string = "[\%]",
+  e_dot_perc = paste(e_dot, perc_unit_string),
+  maximum_values = "Maximum.values",
+  year_for_maximum_values = 0,
+  ef_product = "Ef.product",
+  allocation_var = "C_",
+  n_allocation_rows = 3,
+  machine = "Machine",
+  eu_product = "Eu.product",
+  arrange = TRUE,
+  .value = ".value"
+)
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
 
 \item{energy_type}{the name of the energy type column. Default is "\code{Energy.type}".}
 
-\item{energy}{the string identifier for energy (as opposed to exergy). Default is "\code{E}".}
+\item{energy}{the string identifier for energy (as opposed to exergy) in the \code{energy_type} column. Default is "\code{E}".}
 
 \item{last_stage}{the name of the last stage column. Default is "\code{Last.stage}".}
 
@@ -39,13 +56,13 @@ fu_allocation_template(.tidy_iea_df, energy_type = "Energy.type",
 
 \item{flow_aggregation_point}{the name of the flow aggregation point column. Default is "\code{Flow.aggregation.point}".}
 
-\item{eiou}{the string identifier for energy industry own use in \code{flow_aggregation_point}. Default is "\code{Energy industry own use}".}
+\item{eiou}{the string identifier for energy industry own use in \code{flow_aggregation_point}. Default is "\verb{Energy industry own use}".}
 
-\item{non_energy_use}{string identifier for non-energy use in \code{flow_aggregation_point}. Default is "\code{Non-energy use}".}
+\item{non_energy_use}{string identifier for non-energy use in \code{flow_aggregation_point}. Default is "\verb{Non-energy use}".}
 
-\item{tfc}{the string identifier for total final consumption. Default is "\code{Total final consumption}".}
+\item{tfc}{the string identifier for total final consumption. Default is "\verb{Total final consumption}".}
 
-\item{tpes}{the string identifier for total primary energy supply. Default is "\code{Total primary energy supply}".}
+\item{tpes}{the string identifier for total primary energy supply. Default is "\verb{Total primary energy supply}".}
 
 \item{flow}{the name of the flow column. Default is "\code{Flow}".}
 
@@ -59,16 +76,16 @@ fu_allocation_template(.tidy_iea_df, energy_type = "Energy.type",
 
 \item{e_dot_total}{the string identifier for total energy. Default is "\code{E.dot.total}".}
 
-\item{perc_unit_string}{the string used to indicate percentages. Default is "\code{[\%]}".}
+\item{perc_unit_string}{the string used to indicate percentages. Default is "\verb{[\%]}".}
 
 \item{e_dot_perc}{the string identifier for energy percentage. Default is "\code{E.dot.perc}".}
 
-\item{maximum_values}{the name for the maximum energy values column. Default is "\code{Maximum values}".}
+\item{maximum_values}{the name for the maximum energy values column. Default is "\verb{Maximum values}".}
 
 \item{year_for_maximum_values}{an integer for the first year (in which maximum values will be stored before renaming the column to \code{maximum_values}).
 Default is \code{0}.}
 
-\item{ef_product}{the name of the final energy carrier column. Default is "\code{Ef product}".}
+\item{ef_product}{the name of the final energy carrier column. Default is "\verb{Ef product}".}
 
 \item{allocation_var}{the string identifier for the allocation percentage column. Default is "\code{C_}".}
 
@@ -76,7 +93,7 @@ Default is \code{0}.}
 
 \item{machine}{the name of the column of final-to-useful transformation process machines. Default is "\code{Machine}".}
 
-\item{eu_product}{the name of the useful energy carrier column. Default is "\code{Eu product}".}
+\item{eu_product}{the name of the useful energy carrier column. Default is "\verb{Eu product}".}
 
 \item{arrange}{a boolean telling whether to arranged the rows and columns
 (using \code{arrange_iea_fu_allocation_template()}) before returning.
@@ -91,12 +108,12 @@ a data frame containing the EIOU template
 \description{
 This function creates a blank template for final-to-useful energy transformation process analysis.
 The template is a data frame derived from IEA extended energy balance data (\code{.tidy_iea_df}),
-which give both energy industry own use and final demand for final energy carriers.
+which gives both energy industry own use and final demand for final energy carriers.
 From the IEA's final energy information, templates are created for conversion to
 useful energy carriers.
-Final energy consumed by each final demand sector or transformation process machines
+Final energy consumed by each final demand sector or transformation process machine
 is allocated to final-to-useful machines and converted to useful energy at some efficiency.
-The allocation fractions and efficiencies are to be supplied by the analyst by filling blanks in
+The allocation fractions are to be supplied by the analyst by filling blanks in
 the template.
 }
 \details{

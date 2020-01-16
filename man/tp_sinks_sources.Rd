@@ -4,11 +4,16 @@
 \alias{tp_sinks_sources}
 \title{Find transformation sinks and sources}
 \usage{
-tp_sinks_sources(.tidy_iea_df, type = c("sinks", "sources"),
+tp_sinks_sources(
+  .tidy_iea_df,
+  type = c("sinks", "sources"),
   flow_aggregation_point = "Flow.aggregation.point",
   transformation_processes = "Transformation processes",
-  eiou = "Energy industry own use", flow = "Flow",
-  product = "Product", e_dot = "E.dot")
+  eiou = "Energy industry own use",
+  flow = "Flow",
+  product = "Product",
+  e_dot = "E.dot"
+)
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
@@ -17,9 +22,9 @@ tp_sinks_sources(.tidy_iea_df, type = c("sinks", "sources"),
 
 \item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
 
-\item{transformation_processes}{a string that identifies transformation processes in the \code{flow_aggregation_point} column. Default is "\code{Transformation processes}".}
+\item{transformation_processes}{a string that identifies transformation processes in the \code{flow_aggregation_point} column. Default is "\verb{Transformation processes}".}
 
-\item{eiou}{a string that identifies energy industry own use in the \code{flow_aggregation_point} column. Default is "\code{Energy industry own use}".}
+\item{eiou}{a string that identifies energy industry own use in the \code{flow_aggregation_point} column. Default is "\verb{Energy industry own use}".}
 
 \item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "\code{Flow}".}
 
@@ -57,9 +62,9 @@ but cannot see any associated primary energy carriers.
 
 Transformation sinks and sources are identified by the following algorithm:
 \enumerate{
-\item Identify (per group in \code{.tidy_iea_df}) all \code{Transformation processes} that consume energy (negative value for \code{E.dot}).
+\item Identify (per group in \code{.tidy_iea_df}) all \verb{Transformation processes} that consume energy (negative value for \code{E.dot}).
 Energy consumption can be for the transformation process itself or for Energy industry own use.
-\item Identify (per group in \code{.tidy_iea_df}) all \code{Transformation processes} that produce energy (positive value for \code{E.dot}).
+\item Identify (per group in \code{.tidy_iea_df}) all \verb{Transformation processes} that produce energy (positive value for \code{E.dot}).
 \item Take the set difference between the two (consumers less producers for sinks and producers less consumers for sources).
 The set difference is the list of transformation sinks or sources, respectively.
 }
@@ -70,20 +75,20 @@ So be sure to specify (or accept defaults for)
 the \code{grouping_vars} argument.
 Typical grouping variables are \code{Method}, \code{Last.stage}, \code{Country}, \code{Year}, \code{Energy.type}.
 Don't group on \code{Flow.aggregation.point}, because energy from different aggregation points
-(\code{Energy industry own use} and \code{Transformation processes}) flows into each machine.
+(\verb{Energy industry own use} and \verb{Transformation processes}) flows into each machine.
 Don't group on \code{Flow}, \code{Product}, or \code{E.dot}, either.
 If groups are not set,
 \code{flow}s will be analyzed together, possibly leading to missed transformation sinks or sources.
 
-The various \code{specify_*()} functions should also be called \emph{before} calling \code{\link[=tp_sinks_sources]{tp_sinks_sources()}}.
-The \code{specify_*()} functions clean up the IEA data, ensuring that energy is routed to the right places.
+The various \verb{specify_*()} functions should also be called \emph{before} calling \code{\link[=tp_sinks_sources]{tp_sinks_sources()}}.
+The \verb{specify_*()} functions clean up the IEA data, ensuring that energy is routed to the right places.
 
 Note that this function only identifies transformation sinks or sources;
 it does not fix the problem.
 To solve the problem of transformation sinks,
 see the \code{\link[=tp_sinks_to_nonenergy]{tp_sinks_to_nonenergy()}} function.
 \code{\link[=tp_sinks_to_nonenergy]{tp_sinks_to_nonenergy()}} uses the output of \code{\link[=tp_sinks_sources]{tp_sinks_sources()}}
-to route energy consumed by transformation sinks to \code{Non-energy use industry/transformation/energy}.
+to route energy consumed by transformation sinks to \verb{Non-energy use industry/transformation/energy}.
 There is no function to solve the problem of transformation sources at this time.
 }
 \examples{

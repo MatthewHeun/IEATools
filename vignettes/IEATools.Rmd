@@ -27,7 +27,7 @@ extended energy balance data from the
 [International Energy Agency (IEA)](https://www.iea.org).
 The IEA's data are not free. 
 But if you have access to the data, you can follow the instructions in this vignette to 
-analyze IEA data.
+analyze it.
 
 
 ## Getting started
@@ -44,7 +44,8 @@ in a .csv file format as shown in the following figure.
 knitr::include_graphics("figs/original_header.pdf")
 ```
 
-Example data from two countries for two years are provided in the package.
+Example data from two countries [Ghana (GH) and South Africa (ZA)]
+for two years (1971 and 2000) are provided in the `IEATools` package.
 
 ```{r}
 library(dplyr)

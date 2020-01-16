@@ -4,9 +4,13 @@
 \alias{specify_production_to_resources}
 \title{Convert Production Flows to Resource Flows}
 \usage{
-specify_production_to_resources(.tidy_iea_df, flow = "Flow",
-  product = "Product", production = "Production",
-  resources = "Resources")
+specify_production_to_resources(
+  .tidy_iea_df,
+  flow = "Flow",
+  product = "Product",
+  production = "Production",
+  resources = "Resources"
+)
 }
 \arguments{
 \item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}

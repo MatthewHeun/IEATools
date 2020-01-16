@@ -4,8 +4,13 @@
 \alias{insert_after}
 \title{Insert after an item in a list}
 \usage{
-insert_after(x, after = NULL, values, .after_all = TRUE,
-  .equals_function = `==`)
+insert_after(
+  x,
+  after = NULL,
+  values,
+  .after_all = TRUE,
+  .equals_function = `==`
+)
 }
 \arguments{
 \item{x}{a list into which \code{values} is to be inserted}

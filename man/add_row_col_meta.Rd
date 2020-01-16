@@ -4,13 +4,25 @@
 \alias{add_row_col_meta}
 \title{Add row, column, row type, and column type metadata}
 \usage{
-add_row_col_meta(.tidy_iea_df, matnames = "matnames",
-  product = "Product", flow = "Flow", U = "U", U_EIOU = "U_EIOU",
-  R = "R", V = "V", Y = "Y", industry_type = "Industry",
-  product_type = "Product", sector_type = "Industry",
-  resource_type = "Industry", rownames = "rownames",
-  colnames = "colnames", rowtypes = "rowtypes",
-  coltypes = "coltypes")
+add_row_col_meta(
+  .tidy_iea_df,
+  matnames = "matnames",
+  product = "Product",
+  flow = "Flow",
+  U = "U",
+  U_EIOU = "U_EIOU",
+  R = "R",
+  V = "V",
+  Y = "Y",
+  industry_type = "Industry",
+  product_type = "Product",
+  sector_type = "Industry",
+  resource_type = "Industry",
+  rownames = "rownames",
+  colnames = "colnames",
+  rowtypes = "rowtypes",
+  coltypes = "coltypes"
+)
 }
 \arguments{
 \item{.tidy_iea_df}{a data frame containing column \code{matnames}}

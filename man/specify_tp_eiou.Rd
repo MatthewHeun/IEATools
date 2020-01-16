@@ -4,41 +4,42 @@
 \alias{specify_tp_eiou}
 \title{Specify destinations for energy industry own use flows into transformation processes}
 \usage{
-specify_tp_eiou(.tidy_iea_df,
+specify_tp_eiou(
+  .tidy_iea_df,
   flow_aggregation_point = "Flow.aggregation.point",
-  eiou = "Energy industry own use", flow = "Flow",
+  eiou = "Energy industry own use",
+  transformation_processes = "Transformation processes",
+  flow = "Flow",
   own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
   pumped_storage = "Pumped storage plants",
   nuclear_industry = "Nuclear industry",
-  non_spec_energy = "Non-specified (energy)", e_dot = "E.dot",
+  e_dot = "E.dot",
   negzeropos = ".negzeropos",
-  main_act_producer_elect = "Main activity producer electricity plants",
-  nonspecenergy_reclassify = "Non-specified (transformation)")
+  main_act_producer_elect = "Main activity producer electricity plants"
+)
 }
 \arguments{
 \item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
 
 \item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
 
-\item{eiou}{a string identifying energy industry own use in the flow aggregation point column. Default is "\code{Energy industry own use}".}
+\item{eiou}{a string identifying energy industry own use in the flow aggregation point column. Default is "\verb{Energy industry own use}".}
+
+\item{transformation_processes}{a string identifying transformation processes in the flow aggregation point column. Default is "\verb{Transformation processes}".}
 
 \item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "\code{Flow}".}
 
-\item{own_use_elect_chp_heat}{a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "\code{Own use in electricity, CHP and heat plants}".}
+\item{own_use_elect_chp_heat}{a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "\verb{Own use in electricity, CHP and heat plants}".}
 
-\item{pumped_storage}{a string identifying pumped storage plants in the flow column. Default is "\code{Pumped storage plants}".}
+\item{pumped_storage}{a string identifying pumped storage plants in the flow column. Default is "\verb{Pumped storage plants}".}
 
-\item{nuclear_industry}{a string identifying nuclear plants in the flow column. Default is "\code{Nuclear industry}".}
-
-\item{non_spec_energy}{a string identifying non-specified energy in the flow solumn. Default is "\code{Non-specified (energy)}".}
+\item{nuclear_industry}{a string identifying nuclear plants in the flow column. Default is "\verb{Nuclear industry}".}
 
 \item{e_dot}{the name of the energy flow column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
 
 \item{negzeropos}{the name of a temporary column created in \code{.tidy_iea_df}. Default is "\code{.negzeropos}".}
 
-\item{main_act_producer_elect}{a string identifying main activity producer electricity plants. Default is "\code{Main activity producter electricity plants}".}
-
-\item{nonspecenergy_reclassify}{a string identifying the reclassified non-specified (energy) industry. Default is "\code{Non-specified (transformation)}".}
+\item{main_act_producer_elect}{a string identifying main activity producer electricity plants. Default is "\verb{Main activity producter electricity plants}".}
 }
 \value{
 a modified version of \code{.tidy_iea_df}
@@ -49,7 +50,7 @@ Energy industry own use (EIOU) for many transformation processes.
 Unfortunately, in some cases
 the EIOU flows into industries that aren't included in transformation processes.
 For example, \code{Electricity} is consumed by
-\code{Own use in electricity, CHP and heat plants},
+\verb{Own use in electricity, CHP and heat plants},
 which is not a transformation process.
 We have to make some decisions to ensure that
 EIOU is routed to actual transformation processes.
@@ -65,8 +66,8 @@ The following changes are made to the \code{.tidy_iea_df} data frame:
 }
 
 After the changes are made, reassigned EIOU may double-up pre-existing EIOU.
-For example, a country may already have "\code{Electricity}" EIOU for "\code{Main activity poducer electricity plants}"
-before "\code{Nuclear industry}" "\code{Electricity}" EIOU is reassigned to "\code{Main activity poducer electricity plants}".
+For example, a country may already have "\code{Electricity}" EIOU for "\verb{Main activity poducer electricity plants}"
+before "\verb{Nuclear industry}" "\code{Electricity}" EIOU is reassigned to "\verb{Main activity poducer electricity plants}".
 To avoid double rows, all like rows are summed before returning.
 }
 \examples{

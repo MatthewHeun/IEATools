@@ -4,22 +4,34 @@
 \alias{write_fu_allocation_template}
 \title{Write blank final-to-useful templates}
 \usage{
-write_fu_allocation_template(.fu_allocation_template, path,
-  ledger_side = "Ledger.side", consumption = "Consumption",
+write_fu_allocation_template(
+  .fu_allocation_template,
+  path,
+  ledger_side = "Ledger.side",
+  consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point",
   eiou = "Energy industry own use",
-  allocations_tab_name = "Allocations", machine = "Machine",
-  eu_product = "Eu.product", quantity = "Quantity", e_dot = "E.dot",
-  e_dot_perc = paste(e_dot, "[\%]"), maximum_values = "Maximum.values",
+  fu_allocations_tab_name = "FU Allocations",
+  machine = "Machine",
+  eu_product = "Eu.product",
+  quantity = "Quantity",
+  e_dot = "E.dot",
+  e_dot_perc = paste(e_dot, "[\%]"),
+  maximum_values = "Maximum.values",
+  header_row_font_color = "#FFFFFF",
+  header_row_shading_color = "#5A80B8",
   energy_row_font_color_fd = "#104273",
   energy_row_shading_color_fd = "#B8D8F5",
   energy_row_font_color_eiou = "#918700",
   energy_row_shading_color_eiou = "#FCFCAB",
-  dont_fill_shading_color = "#A8A8A8", overwrite = FALSE,
-  n_allocation_rows = 3, .rownum = ".rownum")
+  dont_fill_shading_color = "#A8A8A8",
+  overwrite = FALSE,
+  n_allocation_rows = 3,
+  .rownum = ".rownum"
+)
 }
 \arguments{
-\item{.fu_allocation_template}{a data frame produced by ``fu_allocation_template()`}
+\item{.fu_allocation_template}{a data frame produced by \code{fu_allocation_template()}}
 
 \item{path}{the file path into which the blank template file will be written.
 Include both folder and file name.
@@ -31,9 +43,9 @@ If not present, the ".xlsx" extension is added.}
 
 \item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
 
-\item{eiou}{the string identifier for energy industry own use in the \code{flow_aggregation_point} column. Default is "\code{Energy industry own use}".}
+\item{eiou}{the string identifier for energy industry own use in the \code{flow_aggregation_point} column. Default is "\verb{Energy industry own use}".}
 
-\item{allocations_tab_name}{the name of the tab on which the template will be written. Default is "\code{Allocations}".}
+\item{fu_allocations_tab_name}{the name of the tab on which the template will be written. Default is "\verb{FU Allocations}".}
 
 \item{machine}{the name of the machine column in output. Default is "\code{Machine}"}
 
@@ -49,20 +61,26 @@ Default is "\code{E.dot.perc}".}
 
 \item{maximum_values}{the name of the maximum values column in output. Default is "\code{Maximum.values}".}
 
+\item{header_row_font_color}{a hex string representing the font color for the header row in the Excel file that is written by this function.
+Default is "\verb{#FFFFFF}", white.}
+
+\item{header_row_shading_color}{a hex string representing the shading color for the header row in the Excel file that is written by this function.
+Default is "\verb{#5A80B8}", medium blue.}
+
 \item{energy_row_font_color_fd}{a hex string representing the font color for \code{e_dot} and \code{e_dot_perc} final demand rows in the Excel file that is written by this function.
-Default is "\code{#104273}", a dark blue color.}
+Default is "\verb{#104273}", a dark blue color.}
 
 \item{energy_row_shading_color_fd}{a hex string representing the shading color for \code{e_dot} and \code{e_dot_perc} final demand rows in the Excel file that is written by this function.
-Default is "\code{#104273}", a light blue color.}
+Default is "\verb{#104273}", a light blue color.}
 
 \item{energy_row_font_color_eiou}{a hex string representing the font color for \code{e_dot} and \code{e_dot_perc} energy industry own use rows in the Excel file that is written by this function.
-Default is "\code{#104273}", a dark yellow color.}
+Default is "\verb{#104273}", a dark yellow color.}
 
 \item{energy_row_shading_color_eiou}{a hex string representing the shading color for \code{e_dot} and \code{e_dot_perc} energy industry own use rows in the Excel file that is written by this function.
-Default is "\code{#104273}", a light yellow color.}
+Default is "\verb{#104273}", a light yellow color.}
 
 \item{dont_fill_shading_color}{a hex string representing the shading color for cells that don't require inputs.
-Default is "\code{#A8A8A8}", a medim gray color.}
+Default is "\verb{#A8A8A8}", a medim gray color.}
 
 \item{overwrite}{a boolean that tells whether an existing file at \code{path} will be overwritten. Default is "\code{FALSE}".
 If \code{path} already exists and \code{overwrite = FALSE}, an error is given.}
