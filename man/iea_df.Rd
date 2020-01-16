@@ -4,11 +4,15 @@
 \alias{iea_df}
 \title{Load IEA data from an extended enegy balances csv file}
 \usage{
-iea_df(.iea_file = NULL, text = NULL,
+iea_df(
+  .iea_file = NULL,
+  text = NULL,
   expected_1st_line_start = ",,TIME",
   expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT",
-  missing_data = "..", not_applicable_data = "x",
-  confidential_data = "c")
+  missing_data = "..",
+  not_applicable_data = "x",
+  confidential_data = "c"
+)
 }
 \arguments{
 \item{.iea_file}{a string containing the path to a .csv file of extended energy balances from the IEA.
@@ -17,9 +21,9 @@ Default is the path to a sample IEA file provided in this package.}
 \item{text}{a character string that can be parsed as IEA extended energy balances.
 (This argument is useful for testing.)}
 
-\item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is "\code{,,TIME}".}
+\item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is "\verb{,,TIME}".}
 
-\item{expected_2nd_line_start}{the expected start of the second line of \code{iea_file}. Default is "\code{COUNTRY,FLOW,PRODUCT}".}
+\item{expected_2nd_line_start}{the expected start of the second line of \code{iea_file}. Default is "\verb{COUNTRY,FLOW,PRODUCT}".}
 
 \item{missing_data}{a string that identifies missing data. Default is "\code{..}".
 Entries of "\code{missing_data}" are coded as `0`` in output.}
@@ -85,7 +89,7 @@ passing the output of this function in the \code{.iea_df} argument of \code{augm
 }
 \examples{
 # Original file format
-iea_df(text = ",,TIME,1960,1961\\nCOUNTRY,FLOW,PRODUCT\\nWorld,Production,Hard coal,42,43")
+iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43")
 # With extra commas on the 2nd line
-iea_df(text = ",,TIME,1960,1961\\nCOUNTRY,FLOW,PRODUCT,,\\nWorld,Production,Hard coal,42,43")
+iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal,42,43")
 }

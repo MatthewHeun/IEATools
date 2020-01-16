@@ -26,7 +26,7 @@ where T_0 and T are expected to be in kelvin units.
 }
 \details{
 When the heat temperature is less than \code{T_0},
-the Carnot efficiency is calculated as \code{1 - (heat temperature)/T_0}.
+the Carnot efficiency is calculated as \verb{1 - (heat temperature)/T_0}.
 
 \code{T_0} can be supplied as a numeric vector of ambient temperatures of
 same length as \code{heat_types}.

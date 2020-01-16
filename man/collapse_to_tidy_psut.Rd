@@ -4,12 +4,21 @@
 \alias{collapse_to_tidy_psut}
 \title{Collapse a tidy data frame of IEA data to a tidy PSUT data frame}
 \usage{
-collapse_to_tidy_psut(.tidy_iea_df, matnames = "matnames",
-  e_dot = "E.dot", rownames = "rownames", colnames = "colnames",
-  rowtypes = "rowtypes", coltypes = "coltypes",
+collapse_to_tidy_psut(
+  .tidy_iea_df,
+  matnames = "matnames",
+  e_dot = "E.dot",
+  rownames = "rownames",
+  colnames = "colnames",
+  rowtypes = "rowtypes",
+  coltypes = "coltypes",
   ledger_side = "Ledger.side",
-  flow_aggregation_point = "Flow.aggregation.point", unit = "Unit",
-  flow = "Flow", product = "Product", matvals = "matvals")
+  flow_aggregation_point = "Flow.aggregation.point",
+  unit = "Unit",
+  flow = "Flow",
+  product = "Product",
+  matvals = "matvals"
+)
 }
 \arguments{
 \item{.tidy_iea_df}{a data frame containing \code{matnames} and several other columns}

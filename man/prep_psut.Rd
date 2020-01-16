@@ -4,13 +4,23 @@
 \alias{prep_psut}
 \title{Prepare for PSUT analysis}
 \usage{
-prep_psut(.tidy_iea_df, ledger_side = "Ledger.side", supply = "Supply",
+prep_psut(
+  .tidy_iea_df,
+  ledger_side = "Ledger.side",
+  supply = "Supply",
   consumption = "Consumption",
-  flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
-  product = "Product", unit = "Unit", e_dot = "E.dot",
-  matnames = "matnames", matvals = "matvals", rownames = "rownames",
-  colnames = "colnames", rowtypes = "rowtypes",
-  coltypes = "coltypes")
+  flow_aggregation_point = "Flow.aggregation.point",
+  flow = "Flow",
+  product = "Product",
+  unit = "Unit",
+  e_dot = "E.dot",
+  matnames = "matnames",
+  matvals = "matvals",
+  rownames = "rownames",
+  colnames = "colnames",
+  rowtypes = "rowtypes",
+  coltypes = "coltypes"
+)
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame that has been specified with \code{\link[=specify_all]{specify_all()}}.}

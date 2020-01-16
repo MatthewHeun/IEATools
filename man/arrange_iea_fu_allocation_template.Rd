@@ -4,15 +4,22 @@
 \alias{arrange_iea_fu_allocation_template}
 \title{Arrange the rows and/or columns of a final-to-useful allocation template}
 \usage{
-arrange_iea_fu_allocation_template(.fu_allocation_template,
-  rowcol = c("both", "row", "col"), ledger_side = "Ledger.side",
+arrange_iea_fu_allocation_template(
+  .fu_allocation_template,
+  rowcol = c("both", "row", "col"),
+  ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
-  ef_product = "Ef.product", machine = "Machine",
-  eu_product = "Eu.product", destination = "Destination",
-  unit = "Unit", fap_dest_order = IEATools::fap_flow_iea_order,
+  ef_product = "Ef.product",
+  machine = "Machine",
+  eu_product = "Eu.product",
+  destination = "Destination",
+  unit = "Unit",
+  fap_dest_order = IEATools::fap_flow_iea_order,
   ef_product_order = IEATools::product_iea_order,
-  quantity = "Quantity", maximum_values = "Maximum.values",
-  .temp_sort = ".fap_flow")
+  quantity = "Quantity",
+  maximum_values = "Maximum.values",
+  .temp_sort = ".fap_flow"
+)
 }
 \arguments{
 \item{.fu_allocation_template}{the final-to-useful allocation template created by \code{fu_allocation_template()}}

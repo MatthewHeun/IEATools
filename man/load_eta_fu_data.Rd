@@ -4,14 +4,16 @@
 \alias{load_eta_fu_data}
 \title{Load final-to-useful machine efficiency data}
 \usage{
-load_eta_fu_data(path = file.path("extdata",
-  "GH-ZA-Efficiency-sample.xlsx") \%>\% system.file(package = "IEATools"),
-  eta_fu_tab_name = "FU etas")
+load_eta_fu_data(
+  path = file.path("extdata", "GH-ZA-Efficiency-sample.xlsx") \%>\% system.file(package
+    = "IEATools"),
+  eta_fu_tab_name = "FU etas"
+)
 }
 \arguments{
 \item{path}{the path from which final-to-useful machine efficiency data will be loaded. Default is the path to sample efficiency data supplied with this package.}
 
-\item{eta_fu_tab_name}{the tab in \code{path} that contains the final-to-useful machine efficiency data. Default is "\code{FU etas}".}
+\item{eta_fu_tab_name}{the tab in \code{path} that contains the final-to-useful machine efficiency data. Default is "\verb{FU etas}".}
 }
 \value{
 the \code{eta_fu_tab_name} tab in \code{path} as a data frame.
