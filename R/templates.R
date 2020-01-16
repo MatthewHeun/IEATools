@@ -1055,8 +1055,8 @@ eta_fu_template <- function(.fu_allocations,
 #' @param overwrite_fu_eta_tab a logical telling whether to overwrite the final-to-useful efficiency tab, if it already exists. Default is `FALSE`.
 #' @param eta_fu the name of the final-to-useful efficiency rows in `.eta_fu_template`. Default is "eta.fu".
 #' @param e_dot_machine a string identifying energy flow into final-to-useful machines. Default is "E.dot_machine".
-#' @param perc the string identifying percentage quantities. Default is "\[\%\]".
-#' @param e_dot_machine_perc a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine \[\%\]".
+#' @param perc the string identifying percentage quantities. Default is "\[%\]".
+#' @param e_dot_machine_perc a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine \[%\]".
 #' @param maximum_values a string identifying the maximum values column in the outgoing template. Default is "Maxmimum.values".
 #' @param header_row_font_color a hex string representing the font color for the header row in the Excel file that is written by this function.
 #'        Default is "#FFFFFF", white.
@@ -1081,7 +1081,7 @@ eta_fu_template <- function(.fu_allocations,
 #' @param blank_shading_color a hex string representing the shading color for blank cells in the `maximum_values` column.
 #'        Default is "#808080".
 #' @param quantity the name of the quantity column in `.eta_fu_template`. Default is "Quantity".
-#' @param e_dot_machine_max_perc the name of the rows that give maximum percentages. Default is "E.dot_machine_max \[\%\]".
+#' @param e_dot_machine_max_perc the name of the rows that give maximum percentages. Default is "E.dot_machine_max \[%\]".
 #' @param .rownum the name of a temporary column containing row numbers. Default is ".rownum". 
 #'
 #' @return the `path` argument
