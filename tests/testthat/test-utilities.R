@@ -38,7 +38,13 @@ test_that("extract_TK() works as expected", {
   
   expect_true(is.na(extract_TK("LMH.20.C")))
   expect_equal(extract_TK(c("MMH.20.C", "HTH.600.C")), c(NA_real_, 600 + 273.15))
+  expect_true(is.na(extract_TK("HTH.600.P"))) # unknown unit
   expect_true(is.na(extract_TK("MTH.100.J")))
+  expect_true(is.na(extract_TK("MTH.XXX.K"))) # bogus temperature numbers
+  expect_true(is.na(extract_TK("MTH.ccc.C")))
+  
+  expect_true(is.na(extract_TK("")))
+  expect_true(is.na(extract_TK("HTH")))
   
   expect_equal(extract_TK("HTH.600.F"), 588.70555556)
   expect_equal(extract_TK("STH.600.F"), 588.70555556)

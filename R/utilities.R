@@ -144,13 +144,14 @@ extract_TK <- function(heat_types){
   lens <- nchar(heat_types)
   units <- Map(substring, heat_types, first = lens, last = lens) %>% unlist() %>% unname()
   # Eliminate the leading *TH.
-  # assertthat::assert_that(all(grepl("^.TH\\.", x = heat_types)), msg = "All heat types should begin with the string '*TH.'")
   temporary <- sub(pattern = "^.TH\\.", replacement = "", x = heat_types)
   # Eliminate the trailing .C, .F, .R, or .K.
-  # assertthat::assert_that(all(grepl(pattern = "\\.[C|F|R|K]$", x = heat_types)), msg = "All heat types should end with the string '.C', '.F', '.R', or '.K'")
   temperatures <- suppressWarnings(sub(pattern = "\\.[C|F|R|K]$", replacement = "", x = temporary) %>% as.numeric())
+  # temperatures <- sub(pattern = "\\.[C|F|R|K]$", replacement = "", x = temporary)
+  # string_temperatures <- sub(pattern = "\\..$", replacement = "", x = temporary)
   convert_to_K <- function(rawT, unit){
-    if (is.na(rawT) & is.na(unit)) {
+    if (is.na(rawT)) {
+      # rawT can't be turned into a numeric.
       return(NA_real_)
     }
     if (unit == "K") {
@@ -165,6 +166,7 @@ extract_TK <- function(heat_types){
     if (unit == "F") {
       return((rawT + 459.67) / 1.8)
     }
+    # If we get here, we had a non-NA rawT, but we don't recognize the unit.
     return(NA_real_)
   }
   # Convert to K based on unit and return
