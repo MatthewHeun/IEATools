@@ -247,5 +247,6 @@ test_that("write_eta_fu_template works as expected", {
 test_that("load_eta_fu_data works as expected", {
   # Load eta_fu data from package
   Eta_fu <- load_eta_fu_data()
+  expect_true(TRUE)
 })
   
