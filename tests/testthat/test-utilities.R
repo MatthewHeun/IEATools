@@ -36,6 +36,7 @@ test_that("extract_TK() works as expected", {
   heats1 <- c("HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C", "LTH.-20.C")
   expect_equal(extract_TK(heats1), c(600, 200, 100, 20, -20) + 273.15)
   
+  expect_equal(extract_TK("MTH.500.K"), 500)
   expect_true(is.na(extract_TK("LMH.20.C")))
   expect_equal(extract_TK(c("MMH.20.C", "HTH.600.C")), c(NA_real_, 600 + 273.15))
   expect_true(is.na(extract_TK("HTH.600.P"))) # unknown unit
