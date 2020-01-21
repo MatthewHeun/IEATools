@@ -1,3 +1,6 @@
+* Integrated with Travis by adding `.travis.yml` file to repository.
+  Now, Travis builds the package automatically after each commit.
+  In addition, test coverage is calculated after each build.
 * Now at 100% test coverage.
   Got to this point by adding new tests to ensure that all parts of the code are being hit.
   And by adjusting the regex strings in `extract_TK()`.
