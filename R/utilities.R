@@ -181,12 +181,12 @@ extract_TK <- function(heat_types, sep = "."){
   # If the string does not start with *TH<sep>, the leading characters will not be eliminated, and
   # an error will occur later in this function.
   temporary <- sub(pattern = paste0("^.TH", sep), replacement = "", x = heat_types)
-  # Grab the temperatures from the strings, which are everything before the last sep.
-  # So delete everything after the last sep.
-  temperature_strings <- sub(pattern = paste0(sep, ".*$"), replacement = "", x = temporary)
+  # Grab the temperatures from the strings, which are everything before the last sep and unit character.
+  # So delete everything including and after the last sep.
+  temperature_strings <- sub(pattern = paste0(sep, ".$"), replacement = "", x = temporary)
   # Grab the units from the strings, which are everything after the last sep.
-  # Se delete everything before the last sep.
-  unit_strings <- sub(pattern = "^.*\\.", replacement = "", x = temporary)
+  # So delete everything before the last sep.
+  unit_strings <- sub(pattern = paste0("^.*", sep), replacement = "", x = temporary)
   # Split the reamining string at sep to obtain the numeric parts and the units
   # parts <- strsplit(temporary, split = sep, fixed = TRUE) %>% 
     # Transpose to get the temperatures and units at the top level of the vector.

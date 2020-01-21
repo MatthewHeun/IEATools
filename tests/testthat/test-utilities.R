@@ -56,6 +56,16 @@ test_that("extract_TK() works as expected", {
   expect_equal(extract_TK("LTH.-79.2.C"), 193.95)
   expect_equal(extract_TK("LTH.1089.15.K"), 1089.15)
   expect_equal(extract_TK("LTH.-40.F"), extract_TK("LTH.-40.C"))
+  
+  # Build a vector that has well-formed and mal-formed strings.
+  weird_temps <- c("HTH.-40.0.F", "MTH.70.K", "ZHH.70.K")
+  kelvins <- extract_TK(weird_temps)
+  expect_equal(kelvins[[1]], -40.0 + 273.15)
+  expect_equal(kelvins[[2]], 70)
+  expect_true(is.na(kelvins[[3]]))
+  
+  # Try with malformed unit string
+  expect_true(is.na(extract_TK("HTH.600.CC")))
 })
 
 test_that("carnot_efficiency works as expected", {
