@@ -1,3 +1,8 @@
+* Now at 100% test coverage.
+  Got to this point by adding new tests to ensure that all parts of the code are being hit.
+  And by adjusting the regex strings in `extract_TK()`.
+
+
 # IEATools 0.1.9 (2020-01-15)
 
 * Added GitHub Pages website.

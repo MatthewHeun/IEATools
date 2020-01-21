@@ -132,6 +132,7 @@ insert_after <- function(x, after = NULL, values, .after_all = TRUE, .equals_fun
 #' If `heat_type` does not conform to the pattern shown above, `NA` is the likely result.
 #' 
 #' @param heat_types a string vector of heat types to be converted to temperatures
+#' @param sep the separator between parts of the `heat_types` string. Defulat is ".".
 #'
 #' @return a numeric vector of same length as `heat_types` containing temperatures in Kelvin.
 #' 
@@ -139,38 +140,88 @@ insert_after <- function(x, after = NULL, values, .after_all = TRUE, .equals_fun
 #'
 #' @examples
 #' extract_TK(c("HTH.600.C", "LTH.-20.567.C", "LTH.-40.F", "LTH.-40.C"))
-extract_TK <- function(heat_types){
-  # Grab the units
-  lens <- nchar(heat_types)
-  units <- Map(substring, heat_types, first = lens, last = lens) %>% unlist() %>% unname()
-  # Eliminate the leading *TH.
-  temporary <- sub(pattern = "^.TH\\.", replacement = "", x = heat_types)
-  # Eliminate the trailing .C, .F, .R, or .K.
-  temperatures <- suppressWarnings(sub(pattern = "\\.[C|F|R|K]$", replacement = "", x = temporary) %>% as.numeric())
-  # temperatures <- sub(pattern = "\\.[C|F|R|K]$", replacement = "", x = temporary)
-  # string_temperatures <- sub(pattern = "\\..$", replacement = "", x = temporary)
-  convert_to_K <- function(rawT, unit){
+extract_TK <- function(heat_types, sep = "."){
+  # # Grab the units
+  # lens <- nchar(heat_types)
+  # units <- Map(substring, heat_types, first = lens, last = lens) %>% unlist() %>% unname()
+  # # Eliminate the leading *TH.
+  # temporary <- sub(pattern = "^.TH\\.", replacement = "", x = heat_types)
+  # # Eliminate the trailing .C, .F, .R, or .K.
+  # temperatures <- suppressWarnings(sub(pattern = "\\.[C|F|R|K]$", replacement = "", x = temporary) %>% as.numeric())
+  # # temperatures <- sub(pattern = "\\.[C|F|R|K]$", replacement = "", x = temporary)
+  # # string_temperatures <- sub(pattern = "\\..$", replacement = "", x = temporary)
+  # convert_to_K <- function(rawT, unit){
+  #   if (is.na(rawT)) {
+  #     # rawT can't be turned into a numeric.
+  #     return(NA_real_)
+  #   }
+  #   if (unit == "K") {
+  #     return(rawT)
+  #   }
+  #   if (unit == "R") {
+  #     return(rawT / 1.8)
+  #   }
+  #   if (unit == "C") {
+  #     return(rawT + 273.15)
+  #   }
+  #   if (unit == "F") {
+  #     return((rawT + 459.67) / 1.8)
+  #   }
+  #   # If we get here, we had a non-NA rawT, but we don't recognize the unit.
+  #   return(NA_real_)
+  # }
+  # # Convert to K based on unit and return
+  # Map(convert_to_K, rawT = temperatures, unit = units) %>% unlist() %>% unname()
+  # 
+  if (sep == ".") {
+    # Be careful with literal dots in the following regex code.
+    sep <- paste0("\\", sep)
+  }
+  # Eliminate the leading *TH<sep>
+  # If the string does not start with *TH<sep>, the leading characters will not be eliminated, and
+  # an error will occur later in this function.
+  temporary <- sub(pattern = paste0("^.TH", sep), replacement = "", x = heat_types)
+  # Grab the temperatures from the strings, which are everything before the last sep and unit character.
+  # So delete everything including and after the last sep.
+  temperature_strings <- sub(pattern = paste0(sep, ".$"), replacement = "", x = temporary)
+  # Grab the units from the strings, which are everything after the last sep.
+  # So delete everything before the last sep.
+  unit_strings <- sub(pattern = paste0("^.*", sep), replacement = "", x = temporary)
+  # Split the reamining string at sep to obtain the numeric parts and the units
+  # parts <- strsplit(temporary, split = sep, fixed = TRUE) %>% 
+    # Transpose to get the temperatures and units at the top level of the vector.
+    # purrr::transpose()
+  # If we get zero length here, heat_types was probably empty. 
+  # In this even, return NA to indicate the problem.
+  # if (length(parts) == 0) {
+  #   return(NA_real_)
+  # }
+  # Extract the temperatures and units separately.
+  # Doing this allows the use of Map later.
+  # temperature_strings <- parts[[1]]
+  # unit_strings <- parts[[2]]
+  convert_to_K <- function(T_string, U_string){
+    rawT <- suppressWarnings(T_string %>% as.numeric())
     if (is.na(rawT)) {
       # rawT can't be turned into a numeric.
       return(NA_real_)
     }
-    if (unit == "K") {
+    if (U_string == "K") {
       return(rawT)
     }
-    if (unit == "R") {
+    if (U_string == "R") {
       return(rawT / 1.8)
     }
-    if (unit == "C") {
+    if (U_string == "C") {
       return(rawT + 273.15)
     }
-    if (unit == "F") {
+    if (U_string == "F") {
       return((rawT + 459.67) / 1.8)
     }
     # If we get here, we had a non-NA rawT, but we don't recognize the unit.
     return(NA_real_)
   }
-  # Convert to K based on unit and return
-  Map(convert_to_K, rawT = temperatures, unit = units) %>% unlist() %>% unname()
+  Map(convert_to_K, T_string = temperature_strings, U_string = unit_strings) %>% unlist() %>% unname()
 }
 
 
