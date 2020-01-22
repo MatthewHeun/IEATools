@@ -1,3 +1,6 @@
+# IEATools 0.1.10 (2020-01-22)
+
+* Integrated with codecov.io by adding `codecov.yml` file to repository.
 * Integrated with Travis by adding `.travis.yml` file to repository.
   Now, Travis builds the package automatically after each commit.
   In addition, test coverage is calculated after each build.
