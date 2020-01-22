@@ -4,9 +4,11 @@
 \alias{load_tidy_iea_df}
 \title{Load IEA extended energy balance data into tidy format}
 \usage{
-load_tidy_iea_df(file_path = file.path("extdata",
-  "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\%
-  system.file(package = "IEATools"), remove_zeroes = TRUE)
+load_tidy_iea_df(
+  file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv")
+    \%>\% system.file(package = "IEATools"),
+  remove_zeroes = TRUE
+)
 }
 \arguments{
 \item{file_path}{the path of the file to be loaded. Default loads example data bundled with the package.}

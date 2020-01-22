@@ -4,13 +4,23 @@
 \alias{calc_tidy_iea_df_balances}
 \title{Calculate balances on a tidy IEA data frame}
 \usage{
-calc_tidy_iea_df_balances(.tidy_iea_df, ledger_side = "Ledger.side",
-  flow_aggregation_point = "Flow.aggregation.point", supply = "Supply",
-  consumption = "Consumption", flow = "Flow", product = "Product",
-  e_dot = "E.dot", unit = "Unit", supply_sum = "supply_sum",
+calc_tidy_iea_df_balances(
+  .tidy_iea_df,
+  ledger_side = "Ledger.side",
+  flow_aggregation_point = "Flow.aggregation.point",
+  supply = "Supply",
+  consumption = "Consumption",
+  flow = "Flow",
+  product = "Product",
+  e_dot = "E.dot",
+  unit = "Unit",
+  supply_sum = "supply_sum",
   consumption_sum = "consumption_sum",
   supply_minus_consumption = "supply_minus_consumption",
-  balance_OK = "balance_OK", err = "err", tol = 1e-06)
+  balance_OK = "balance_OK",
+  err = "err",
+  tol = 1e-06
+)
 }
 \arguments{
 \item{.tidy_iea_df}{an IEA-style data frame containing a \code{ledger_side}, \code{product},

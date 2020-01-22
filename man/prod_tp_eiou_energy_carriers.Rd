@@ -4,17 +4,20 @@
 \alias{prod_tp_eiou_energy_carriers}
 \title{Identify all energy types supplied or consumed by Production, Transformation processes, or Energy industry own use}
 \usage{
-prod_tp_eiou_energy_carriers(file_path = file.path("extdata",
-  "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\%
-  system.file(package = "IEATools"),
+prod_tp_eiou_energy_carriers(
+  file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv")
+    \%>\% system.file(package = "IEATools"),
   iea_df = IEATools::load_tidy_iea_df(file_path),
   side = c("Consumption", "Supply"),
   flow_aggregation_point = "Flow.aggregation.point",
   production = "Production",
   transformation_processes = "Transformation processes",
-  eiou = "Energy industry own use", stage = c(production,
-  transformation_processes, eiou), e_dot = "E.dot", flow = "Flow",
-  product = "Product")
+  eiou = "Energy industry own use",
+  stage = c(production, transformation_processes, eiou),
+  e_dot = "E.dot",
+  flow = "Flow",
+  product = "Product"
+)
 }
 \arguments{
 \item{file_path}{the path to the IEA data file (optional)}
@@ -28,9 +31,9 @@ One of "\code{Consumption}" or "\code{Supply}". Default is "\code{Consumption}".
 
 \item{production}{the string indicating the production flow. Default is "\code{Production}".}
 
-\item{transformation_processes}{the string indicating the transformation process stage. Default is "\code{Transformation processes}".}
+\item{transformation_processes}{the string indicating the transformation process stage. Default is "\verb{Transformation processes}".}
 
-\item{eiou}{the string indicating the energy industry own use flow. Default is "\code{Energy industry own use}".}
+\item{eiou}{the string indicating the energy industry own use flow. Default is "\verb{Energy industry own use}".}
 
 \item{stage}{the string indicating the stage for the analysis. One of \code{production}, \code{transformation_processes}, or \code{eiou}.
 Default is \code{production}.}

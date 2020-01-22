@@ -4,18 +4,23 @@
 \alias{specify_primary_production}
 \title{Specify primary production industries}
 \usage{
-specify_primary_production(.tidy_iea_df,
+specify_primary_production(
+  .tidy_iea_df,
   eiou_destinations = c("Coal mines", "Oil and gas extraction"),
   liquefaction_regas = "Liquefaction (LNG) / regasification plants",
   liquefaction_regas_reassign = "Oil and gas extraction",
   production_products = list(IEATools::primary_coal_products,
-  c(IEATools::primary_oil_products, "Natural gas")),
+    c(IEATools::primary_oil_products, "Natural gas")),
   production_products_short_names = c("Coal", "Oil and natural gas"),
   flow_aggregation_point = "Flow.aggregation.point",
   eiou = "Energy industry own use",
-  transformation_processes = "Transformation processes", flow = "Flow",
-  resources = "Resources", production = "Production",
-  e_dot = "E.dot", product = "Product")
+  transformation_processes = "Transformation processes",
+  flow = "Flow",
+  resources = "Resources",
+  production = "Production",
+  e_dot = "E.dot",
+  product = "Product"
+)
 }
 \arguments{
 \item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
@@ -23,10 +28,10 @@ specify_primary_production(.tidy_iea_df,
 \item{eiou_destinations}{a vector of destinations for EIOU for primary production of coal and coal products and oil and natural gas.
 Default is \code{c("Coal mines", "Oil and gas extraction")}.}
 
-\item{liquefaction_regas}{a string identifying liquefaction and regasification plants. Default is "\code{Liquefaction (LNG) / regasification plants}".}
+\item{liquefaction_regas}{a string identifying liquefaction and regasification plants. Default is "\verb{Liquefaction (LNG) / regasification plants}".}
 
 \item{liquefaction_regas_reassign}{a string identifying the industry to which EIOU into \code{liquefaction_regas} will be reassigned.
-Default is "\code{Oil and gas extraction}".}
+Default is "\verb{Oil and gas extraction}".}
 
 \item{production_products}{a list of products for which we want to specify primary industries.
 Default is \code{list(primary_coal_products, c(primary_oil_products, "Natural gas"))}.}
@@ -38,10 +43,10 @@ Default is \code{c("Coal", "Oil and natural gas")}.}
 Default is "\code{Flow.aggregation.point}".}
 
 \item{eiou}{a string identifying energy industry own use in the \code{Flow.aggregation.point} column of \code{.tidy_iea_df}.
-Default is "\code{Energy industry own use}".}
+Default is "\verb{Energy industry own use}".}
 
 \item{transformation_processes}{a string identifying transformation processes in the flow column of \code{.tidy_iea_df}.
-Default is "\code{Transformation processes}".}
+Default is "\verb{Transformation processes}".}
 
 \item{flow}{the name of the flow column in \code{.tidy_iea_df}.  Default is "\code{Flow}".}
 
@@ -60,11 +65,11 @@ for both coal and coal products and oil and gas extraction
 }
 \description{
 The IEA extended energy balances include
-some \code{Flow}s that identify \code{Energy industry own use} (EIOU),
+some \code{Flow}s that identify \verb{Energy industry own use} (EIOU),
 the consumption of energy by energy-producing industries.
 But some primary production industries that receive EIOU do not produce anything.
-For example, \code{Coal mines} receive electricity
-but there are no \code{Coal mines} that produce coal.
+For example, \verb{Coal mines} receive electricity
+but there are no \verb{Coal mines} that produce coal.
 Rather, the generic \code{Production} industry produces coal.
 This function solves that problem by
 replacing the generic \code{Production} industry with
@@ -73,20 +78,20 @@ specific industries.
 \details{
 By default, the following changes are made to \code{.tidy_iea_df}:
 \enumerate{
-\item Energy industry own use for \code{Liquefaction (LNG) / regasification plants} is
-reassigned to \code{Oil and gas extraction}.
+\item Energy industry own use for \verb{Liquefaction (LNG) / regasification plants} is
+reassigned to \verb{Oil and gas extraction}.
 \item The \code{Production} industry for \code{coal_and_coal_products}
-is replaced by \code{Coal mines}.
+is replaced by \verb{Coal mines}.
 \item A \code{Resources (Coal)} industry is created which becomes the
 source of all primary \code{coal_and_coal_products} in the energy conversion chain.
-\item Flows from \code{Resources (Coal)} to \code{Coal mines} are added.
-\item The \code{Coal mines (energy)} EIOU \code{Flow} is replaced by \code{Coal mines}.
-\item The \code{Production} industry for \code{oil_and_oil_products} and \code{Natural gas}
-is replaced by \code{Oil and gas extraction}.
-\item A \code{Resources (Oil and natural gas)} industry is created which becomes the
-source of all primary \code{oil_and_oil_products} and \code{Natural gas} in the energy conversion chain.
-\item Flows from \code{Resources (Oil and natural gas)} to \code{Oil and gas extraction} are added.
-\item The \code{Oil and gas extraction (energy)} EIOU \code{Flow} is replaced by \code{Oil and gas extraction}.
+\item Flows from \code{Resources (Coal)} to \verb{Coal mines} are added.
+\item The \verb{Coal mines (energy)} EIOU \code{Flow} is replaced by \verb{Coal mines}.
+\item The \code{Production} industry for \code{oil_and_oil_products} and \verb{Natural gas}
+is replaced by \verb{Oil and gas extraction}.
+\item A \verb{Resources (Oil and natural gas)} industry is created which becomes the
+source of all primary \code{oil_and_oil_products} and \verb{Natural gas} in the energy conversion chain.
+\item Flows from \verb{Resources (Oil and natural gas)} to \verb{Oil and gas extraction} are added.
+\item The \verb{Oil and gas extraction (energy)} EIOU \code{Flow} is replaced by \verb{Oil and gas extraction}.
 }
 
 Users can specify other changes by adjusting the default argument values.

@@ -699,7 +699,7 @@ eta_fu_template <- function(.fu_allocations,
     )
   # Now we join the E.dot and C values and calculate the energy flowing into each final-to-useful machine
   input_energy <- dplyr::full_join(c_info, e_dot_info, 
-                                   by = matsindf::everything_except(e_dot_info, e_dot_dest, .symbols = FALSE)) %>%
+                                   by = matsindf::everything_except(e_dot_info, e_dot_dest, .symbols = FALSE)) %>% 
     # There may be cases where the analyst has filled a C value, but there is no corresponding e_dot_dest value.
     # Get rid of those rows.
     dplyr::filter(!is.na(!!as.name(e_dot_dest))) %>% 
@@ -802,10 +802,7 @@ eta_fu_template <- function(.fu_allocations,
       ) %>% 
       magrittr::extract2(.row_order)
   }
-    
-  # The following nearly works, except that the machines are not in descending order of importance as we move down.
-  # Need to set the order of Machine/Eu.product from E.dot_machine.
-  
+
   # Annual format, including blanks for eta_fu and phi_u
   Annual <- dplyr::full_join(input_energy, input_energy_percs, by = matsindf::everything_except(input_energy, e_dot_machine, .symbols = FALSE)) %>% 
     dplyr::mutate(
@@ -830,7 +827,6 @@ eta_fu_template <- function(.fu_allocations,
                   !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc), !!as.name(eta_fu), !!as.name(phi_u)) %>% 
     tidyr::spread(key = .year, value = .value)
   
-  
   # Prepare the outgoing data frame.
   out <- dplyr::full_join(Maxima, Annual, by = matsindf::everything_except(Maxima, maximum_values, .symbols = FALSE)) %>% 
     dplyr::mutate(
@@ -853,6 +849,11 @@ eta_fu_template <- function(.fu_allocations,
   for (i in year_col_indices) {
     out[[i]] <- as.numeric(out[[i]])
   }
+  
+  # Check for errors. If there is a problem somewhere, 
+  # we will obtain NA in the Machine column.
+  assertthat::assert_that(!any(out[[machine]] %>% is.na()), msg = "At least one row of out has NA in the machine column in era_fu_template.
+                          Double-check Machine and Destination names.")
   
   return(out)
   
@@ -1054,8 +1055,8 @@ eta_fu_template <- function(.fu_allocations,
 #' @param overwrite_fu_eta_tab a logical telling whether to overwrite the final-to-useful efficiency tab, if it already exists. Default is `FALSE`.
 #' @param eta_fu the name of the final-to-useful efficiency rows in `.eta_fu_template`. Default is "eta.fu".
 #' @param e_dot_machine a string identifying energy flow into final-to-useful machines. Default is "E.dot_machine".
-#' @param perc the string identifying percentage quantities. Default is "\[\%\]".
-#' @param e_dot_machine_perc a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine \[\%\]".
+#' @param perc the string identifying percentage quantities. Default is "\[%\]".
+#' @param e_dot_machine_perc a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine \[%\]".
 #' @param maximum_values a string identifying the maximum values column in the outgoing template. Default is "Maxmimum.values".
 #' @param header_row_font_color a hex string representing the font color for the header row in the Excel file that is written by this function.
 #'        Default is "#FFFFFF", white.
@@ -1080,7 +1081,7 @@ eta_fu_template <- function(.fu_allocations,
 #' @param blank_shading_color a hex string representing the shading color for blank cells in the `maximum_values` column.
 #'        Default is "#808080".
 #' @param quantity the name of the quantity column in `.eta_fu_template`. Default is "Quantity".
-#' @param e_dot_machine_max_perc the name of the rows that give maximum percentages. Default is "E.dot_machine_max \[\%\]".
+#' @param e_dot_machine_max_perc the name of the rows that give maximum percentages. Default is "E.dot_machine_max \[%\]".
 #' @param .rownum the name of a temporary column containing row numbers. Default is ".rownum". 
 #'
 #' @return the `path` argument

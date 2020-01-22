@@ -4,13 +4,20 @@
 \alias{fix_tidy_iea_df_balances}
 \title{Fix IEA energy balances}
 \usage{
-fix_tidy_iea_df_balances(.tidy_iea_df, ledger_side = "Ledger.side",
-  supply = "Supply", consumption = "Consumption",
+fix_tidy_iea_df_balances(
+  .tidy_iea_df,
+  ledger_side = "Ledger.side",
+  supply = "Supply",
+  consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point",
-  tfc_compare = "TFC compare", flow = "Flow",
+  tfc_compare = "TFC compare",
+  flow = "Flow",
   statistical_differences = "Statistical differences",
-  product = "Product", e_dot = "E.dot", err = ".err",
-  remove_zeroes = TRUE)
+  product = "Product",
+  e_dot = "E.dot",
+  err = ".err",
+  remove_zeroes = TRUE
+)
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balanc data}
@@ -23,11 +30,11 @@ fix_tidy_iea_df_balances(.tidy_iea_df, ledger_side = "Ledger.side",
 
 \item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
 
-\item{tfc_compare}{a string indicating the Total final consumption comparison flow aggregation point. Default is "\code{TFC compare}".}
+\item{tfc_compare}{a string indicating the Total final consumption comparison flow aggregation point. Default is "\verb{TFC compare}".}
 
 \item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "\code{Flow}".}
 
-\item{statistical_differences}{a string indicating statistical differences in the \code{flow} column. Default is "\code{Statistical differences}".}
+\item{statistical_differences}{a string indicating statistical differences in the \code{flow} column. Default is "\verb{Statistical differences}".}
 
 \item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "\code{Product}".}
 
@@ -38,7 +45,7 @@ fix_tidy_iea_df_balances(.tidy_iea_df, ledger_side = "Ledger.side",
 \item{remove_zeroes}{a logical telling whether to remove \code{0}s after balancing.}
 }
 \value{
-\code{.tidy_iea_df} with adjusted \code{Statistical differences} flows such that
+\code{.tidy_iea_df} with adjusted \verb{Statistical differences} flows such that
 the data for each product are in perfect energy balance.
 }
 \description{
@@ -46,7 +53,7 @@ IEA extended energy balance data are sometimes not quite balanced.
 In fact, supply and consumption are often wrong by a few ktoe
 for any given Product in a Country in a Year.
 This function ensures that the balance is perfect
-by adjusting the \code{Statistical differences} flow
+by adjusting the \verb{Statistical differences} flow
 on a per-product basis.
 }
 \details{
@@ -61,7 +68,7 @@ Typically, grouping is also done on
 Grouping should \emph{not} be done on the \code{flow} or the \code{ledger_side} columns.
 
 Internally, this function calls \code{\link[=calc_tidy_iea_df_balances]{calc_tidy_iea_df_balances()}}
-and adjusts \code{Statistical differences} to compensate for any imbalances that are present.
+and adjusts \verb{Statistical differences} to compensate for any imbalances that are present.
 }
 \examples{
 library(dplyr)

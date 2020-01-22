@@ -99,6 +99,18 @@ test_that("write_fu_allocation_template works as expected", {
   if (file.exists(f)) {
     file.remove(f)
   }
+  
+  # Try with a file name that lacks the .xlsx extension.
+  f2 <- tempfile() # No extension
+  p2 <- FU_allocation_template %>% 
+    write_fu_allocation_template(f2)
+  # Check that the .xlsx extension was added to p.
+  expect_true(endsWith(p2, ".xlsx"))
+  expect_true(startsWith(p2, f2))
+  # Clean up
+  if (file.exists(f2)) {
+    file.remove(f2)
+  }
 })
 
 test_that("load_fu_allocation_data works as expected", {
@@ -161,11 +173,24 @@ test_that("write_eta_fu_template works as expected", {
   # Now try to write it again.
   expect_true(file.exists(f))
   expect_error(Eta_fu_template %>% write_eta_fu_template(p), "File already exists!")
+  
   # Clean up
   if (file.exists(f)) {
     file.remove(f)
   }
-
+  
+  # Try without .xlsx extension.
+  f2 <- tempfile() # No extension.
+  p2 <- Eta_fu_template %>% 
+    write_eta_fu_template(f2, overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)
+  # Check that the .xlsx extension was added to p.
+  expect_true(endsWith(p2, ".xlsx"))
+  expect_true(startsWith(p2, f2))
+  # Clean up
+  if (file.exists(f2)) {
+    file.remove(f2)
+  }
+  
   # Try with "importance" sort order.
   Eta_fu_template2 <- load_fu_allocation_data() %>% 
     eta_fu_template(sort_by = "importance")
@@ -191,5 +216,37 @@ test_that("write_eta_fu_template works as expected", {
   if (file.exists(f)) {
     file.remove(f)
   }
+  
+  # Try writing to a file that exists, but the tab doesn't exist.
+  # Test writing the file when the tab doesn't exist.
+  # First, make a file.
+  DF <- data.frame(x = c(1, 2, 3))
+  wb <- openxlsx::createWorkbook()
+  openxlsx::addWorksheet(wb, "temp")
+  openxlsx::writeData(wb, sheet = "temp", x = DF)
+  f3 <- tempfile(fileext = ".xlsx")
+  openxlsx::saveWorkbook(wb, file = f3, overwrite = TRUE)
+  # Now try to add a new tab in this same workbook.
+  p3 <- Eta_fu_template %>% 
+    write_eta_fu_template(path = f3, overwrite_file = TRUE)  
+  # Verify that the tab was written
+  tabnames <- openxlsx::getSheetNames(p3)
+  expect_true("FU etas" %in% tabnames)
+  # Now try to write the tab again
+  p3 <- Eta_fu_template %>% 
+    write_eta_fu_template(path = f3, overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)  
+  expect_error(Eta_fu_template %>% 
+                 write_eta_fu_template(path = f3, overwrite_file = TRUE), "FU etas already exists")
+  # Clean up
+  if (file.exists(f3)) {
+    file.remove(f3)
+  }
 })
 
+
+test_that("load_eta_fu_data works as expected", {
+  # Load eta_fu data from package
+  Eta_fu <- load_eta_fu_data()
+  expect_true(TRUE)
+})
+  

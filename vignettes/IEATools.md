@@ -1,7 +1,7 @@
 ---
 title: "IEATools"
 author: "Matthew Kuperus Heun"
-date: "`r Sys.Date()`"
+date: "2020-01-15"
 output: 
   rmarkdown::html_vignette:
     fig_caption: yes
@@ -11,14 +11,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-library(dplyr)
-library(IEATools)
-```
+
 
 ## Introduction
 
@@ -40,20 +33,20 @@ Purchase the IEA extended energy balances product from (http://data.iea.org).
 Download the complete extended energy balance data for at least one country
 in a .csv file format as shown in the following figure.
 
-```{r, echo=FALSE, fig.cap="IEA extended energy balance data format.", out.width = '100%'}
-knitr::include_graphics("figs/original_header.pdf")
-```
+<embed src="figs/original_header.pdf" title="IEA extended energy balance data format." alt="IEA extended energy balance data format." width="100%" type="application/pdf" />
 
 Example data from two countries [Ghana (GH) and South Africa (ZA)]
 for two years (1971 and 2000) are provided in the `IEATools` package.
 
-```{r}
+
+```r
 library(dplyr)
 library(IEATools)
 # Define the file location
 IEA_path <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
   system.file(package = "IEATools")
 readChar(IEA_path, nchars = 256)
+#> [1] ",,TIME,1971,2000\r\nCOUNTRY,FLOW,PRODUCT,,\r\nGhana,Production,Hard coal (if no detail),0,x\r\nGhana,Production,Brown coal (if no detail),0,x\r\nGhana,Production,Anthracite,..,0\r\nGhana,Production,Coking coal,..,0\r\nGhana,Production,Other bituminous coal,..,0\r\nGhana"
 ```
 
 
@@ -92,11 +85,19 @@ the only rational way to proceed is to convert
 "`x`", "`..`", and "`c`" to "`0`".
 `iea_df()` performs that task.
 
-```{r}
+
+```r
 IEA_data <- IEA_path %>% 
   iea_df()
 IEA_data %>% 
   glimpse()
+#> Observations: 14,688
+#> Variables: 5
+#> $ COUNTRY <chr> "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana"…
+#> $ FLOW    <chr> "Production", "Production", "Production", "Production", "Prod…
+#> $ PRODUCT <chr> "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…
+#> $ `1971`  <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+#> $ `2000`  <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
 ```
 
 
@@ -119,10 +120,18 @@ The `IEATools` package has functions to address each of these issues.
 
 To unshout the column titles, use the `rename_iea_df_cols()` function.
 
-```{r}
+
+```r
 IEA_data %>% 
   rename_iea_df_cols() %>% 
   glimpse()
+#> Observations: 14,688
+#> Variables: 5
+#> $ Country <chr> "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana"…
+#> $ Flow    <chr> "Production", "Production", "Production", "Production", "Prod…
+#> $ Product <chr> "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…
+#> $ `1971`  <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+#> $ `2000`  <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
 ```
 
 Note that the example above uses the `rename_iea_df_cols()` function without arguments,
@@ -131,10 +140,18 @@ as it arrives from the IEA.
 However, both the old and new names can be specified as arguments.
 If you despise both capitals letters and vowels, you could do the following.
 
-```{r}
+
+```r
 IEA_data %>% 
   rename_iea_df_cols(new_country = "cntry", new_flow = "flw", new_product = "prdct")  %>% 
   glimpse()
+#> Observations: 14,688
+#> Variables: 5
+#> $ cntry  <chr> "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana",…
+#> $ flw    <chr> "Production", "Production", "Production", "Production", "Produ…
+#> $ prdct  <chr> "Hard coal (if no detail)", "Brown coal (if no detail)", "Anth…
+#> $ `1971` <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+#> $ `2000` <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
 ```
 
 The default arguments are consistent throughout the `IEATools` package.
@@ -148,21 +165,37 @@ To reduce the length of character strings representing countries,
 the `use_iso_countries()` function replaces country character strings
 with each country's 3-letter abbreviation.
 
-```{r}
+
+```r
 IEA_data %>% 
   rename_iea_df_cols() %>% 
   use_iso_countries() %>% 
   glimpse()
+#> Observations: 14,688
+#> Variables: 5
+#> $ Country <chr> "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"…
+#> $ Flow    <chr> "Production", "Production", "Production", "Production", "Prod…
+#> $ Product <chr> "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…
+#> $ `1971`  <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+#> $ `2000`  <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
 ```
 
 If the 2-letter abbreviations are preferred, set the `iso_abbrev_type = 2`
 as shown below.
 
-```{r}
+
+```r
 IEA_data %>% 
   rename_iea_df_cols() %>% 
   use_iso_countries(iso_abbrev_type = 2) %>% 
   glimpse()
+#> Observations: 14,688
+#> Variables: 5
+#> $ Country <chr> "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "…
+#> $ Flow    <chr> "Production", "Production", "Production", "Production", "Prod…
+#> $ Product <chr> "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…
+#> $ `1971`  <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+#> $ `2000`  <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
 ```
 
 
@@ -173,17 +206,27 @@ For the purposes of manipulations and calculations,
 it is often advisable to remove all memos and aggregations.
 The `remove_agg_memo_flows()` function performs that task.
 
-```{r}
+
+```r
 IEA_data %>% 
   rename_iea_df_cols() %>% 
   filter(Flow == "Total primary energy supply") %>% 
   glimpse()
+#> Observations: 136
+#> Variables: 5
+#> $ Country <chr> "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana"…
+#> $ Flow    <chr> "Total primary energy supply", "Total primary energy supply",…
+#> $ Product <chr> "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…
+#> $ `1971`  <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+#> $ `2000`  <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
 # Total primary energy supply is an aggregation row,
 # so its rows should be absent after calling remove_agg_memo_flows().
 IEA_data %>% 
   rename_iea_df_cols() %>% 
   remove_agg_memo_flows() %>% 
   filter(Flow == "Total primary energy supply")
+#> [1] Country Flow    Product 1971    2000   
+#> <0 rows> (or 0-length row.names)
 ```
 
 
@@ -205,11 +248,25 @@ in kilotons of oil equivalent units.
 `augment_iea_df()` adds new columns 
 `Ledger.side`, `Flow.aggregation.point`, `Energy.type`, and `Unit`.
 
-```{r}
+
+```r
 IEA_data %>% 
   rename_iea_df_cols() %>% 
   augment_iea_df() %>% 
   glimpse()
+#> Observations: 14,688
+#> Variables: 11
+#> $ Country                <chr> "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "…
+#> $ Method                 <chr> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…
+#> $ Energy.type            <chr> "E", "E", "E", "E", "E", "E", "E", "E", "E", "…
+#> $ Last.stage             <chr> "Final", "Final", "Final", "Final", "Final", "…
+#> $ Ledger.side            <chr> "Supply", "Supply", "Supply", "Supply", "Suppl…
+#> $ Flow.aggregation.point <chr> "Total primary energy supply", "Total primary …
+#> $ Flow                   <chr> "Production", "Production", "Production", "Pro…
+#> $ Product                <chr> "Hard coal (if no detail)", "Brown coal (if no…
+#> $ Unit                   <chr> "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…
+#> $ `1971`                 <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+#> $ `2000`                 <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
 ```
 
 
@@ -225,7 +282,8 @@ The `tidy_iea_df()` function converts to a tidy format.
 By default, `tidy_iea_df()` removes zeroes from the data frame,
 thereby reducing memory footprint.
 
-```{r}
+
+```r
 Tidy_IEA_df <- IEA_data %>% 
   rename_iea_df_cols() %>% 
   use_iso_countries() %>% 
@@ -234,6 +292,19 @@ Tidy_IEA_df <- IEA_data %>%
   tidy_iea_df()
 Tidy_IEA_df %>% 
   glimpse()
+#> Observations: 399
+#> Variables: 11
+#> $ Country                <chr> "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…
+#> $ Method                 <chr> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…
+#> $ Energy.type            <chr> "E", "E", "E", "E", "E", "E", "E", "E", "E", "…
+#> $ Last.stage             <chr> "Final", "Final", "Final", "Final", "Final", "…
+#> $ Year                   <dbl> 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971…
+#> $ Ledger.side            <chr> "Supply", "Supply", "Supply", "Supply", "Suppl…
+#> $ Flow.aggregation.point <chr> "Total primary energy supply", "Total primary …
+#> $ Flow                   <chr> "Production", "Production", "Imports", "Import…
+#> $ Product                <chr> "Primary solid biofuels", "Hydro", "Crude oil"…
+#> $ Unit                   <chr> "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…
+#> $ E.dot                  <dbl> 2088, 250, 916, 1, 21, 1, 18, -4, -4, -178, -2…
 ```
 
 
@@ -248,7 +319,8 @@ assuming default arguments for all functions.
 But you can supply the path to any IEA data file
 in the `file_path` argument to `load_tidy_iea_df()`.
 
-```{r}
+
+```r
 Simple <- load_tidy_iea_df()
 Complicated <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
   system.file(package = "IEATools") %>% 
@@ -259,6 +331,7 @@ Complicated <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.
   augment_iea_df() %>% 
   tidy_iea_df()
 all(Simple == Complicated)
+#> [1] TRUE
 ```
 
 At this point, the integrity of the IEA data can be checked.
@@ -279,13 +352,29 @@ including:
 * `err` (supply sum when `consumption_sum` is `NA` or 
   `supply_minus_consumption` when `consumption_sum` is not `NA`).
 
-```{r}
+
+```r
 Balances <- Tidy_IEA_df %>% 
   calc_tidy_iea_df_balances()
 Balances %>% 
   glimpse()
+#> Observations: 78
+#> Variables: 12
+#> $ Country                  <chr> "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "G…
+#> $ Method                   <chr> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "P…
+#> $ Energy.type              <chr> "E", "E", "E", "E", "E", "E", "E", "E", "E",…
+#> $ Last.stage               <chr> "Final", "Final", "Final", "Final", "Final",…
+#> $ Year                     <dbl> 1971, 1971, 1971, 1971, 1971, 1971, 1971, 19…
+#> $ Product                  <chr> "Aviation gasoline", "Charcoal", "Crude oil"…
+#> $ Unit                     <chr> "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "kto…
+#> $ supply_sum               <dbl> 0, 119, 0, 236, 94, 219, 0, -1, 3, 18, 203, …
+#> $ consumption_sum          <dbl> NA, 119, NA, 235, 95, 217, NA, NA, 3, 18, 20…
+#> $ supply_minus_consumption <dbl> NA, 0, NA, 1, -1, 2, NA, NA, 0, 0, 1, 0, 0, …
+#> $ balance_OK               <lgl> TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, TRUE,…
+#> $ err                      <dbl> 0, 0, 0, 1, -1, 2, 0, -1, 0, 0, 1, 0, 0, 0, …
 Balances %>% 
   tidy_iea_df_balanced()
+#> [1] FALSE
 ```
 
 Notice that the IEA data are not quite energy balanced.
@@ -293,12 +382,27 @@ To fix the enery balance, use the `fix_tidy_iea_df_balances()` function.
 `fix_tidy_iea_df_balances()` adjusts the `Statistical differences` flow
 to achieve perfect energy balance.
 
-```{r}
+
+```r
 # Fix product-level balances within each country
 Tidy_IEA_df %>% 
   fix_tidy_iea_df_balances() %>% 
   calc_tidy_iea_df_balances() %>% 
   glimpse()
+#> Observations: 78
+#> Variables: 12
+#> $ Country                  <chr> "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "G…
+#> $ Method                   <chr> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "P…
+#> $ Energy.type              <chr> "E", "E", "E", "E", "E", "E", "E", "E", "E",…
+#> $ Last.stage               <chr> "Final", "Final", "Final", "Final", "Final",…
+#> $ Year                     <dbl> 1971, 1971, 1971, 1971, 1971, 1971, 1971, 19…
+#> $ Product                  <chr> "Aviation gasoline", "Charcoal", "Crude oil"…
+#> $ Unit                     <chr> "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "kto…
+#> $ supply_sum               <dbl> 0, 119, 0, 235, 95, 217, 0, 0, 3, 18, 202, 8…
+#> $ consumption_sum          <dbl> NA, 119, NA, 235, 95, 217, NA, NA, 3, 18, 20…
+#> $ supply_minus_consumption <dbl> NA, 0, NA, 0, 0, 0, NA, NA, 0, 0, 0, 0, 0, N…
+#> $ balance_OK               <lgl> TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TR…
+#> $ err                      <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
 ```
 
 

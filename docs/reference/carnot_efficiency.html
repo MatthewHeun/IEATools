@@ -8,21 +8,25 @@
 
 <title>Calculate Carnot efficiencies from heat types — carnot_efficiency • IEATools</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -30,8 +34,8 @@
 
 
 
-<meta property="og:title" content="Calculate Carnot efficiencies from heat types — carnot_efficiency" />
 
+<meta property="og:title" content="Calculate Carnot efficiencies from heat types — carnot_efficiency" />
 <meta property="og:description" content="In societal exergy analysis, converting heat to exergy requires knowledge
 of the temperature of that heat and application of the Carnot efficiency.
 This function first converts heat types (e.g., &quot;HTH.600.C&quot;)
@@ -44,6 +48,7 @@ where T_0 and T are expected to be in kelvin units." />
 
 
 
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -52,6 +57,7 @@ where T_0 and T are expected to be in kelvin units." />
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 
 
   </head>
@@ -70,7 +76,7 @@ where T_0 and T are expected to be in kelvin units." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.10</span>
       </span>
     </div>
 
@@ -78,7 +84,7 @@ where T_0 and T are expected to be in kelvin units." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -110,7 +116,6 @@ where T_0 and T are expected to be in kelvin units." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
@@ -120,6 +125,7 @@ where T_0 and T are expected to be in kelvin units." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -131,20 +137,18 @@ where T_0 and T are expected to be in kelvin units." />
     </div>
 
     <div class="ref-description">
-    
     <p>In societal exergy analysis, converting heat to exergy requires knowledge
 of the temperature of that heat and application of the Carnot efficiency.
 This function first converts heat types (e.g., "<code>HTH.600.C</code>")
 to temperatures by extracting the temperature from the middle of the string,
 in a unit-aware manner.
 Then, the Carnot efficiency is calculated from the temperature of the heat
-by applying the Carnot efficiency equation: <code><a href='https://www.rdocumentation.org/packages/base/topics/MathFun'>abs(1 - T_0/T)</a></code>,
+by applying the Carnot efficiency equation: <code><a href='https://rdrr.io/r/base/MathFun.html'>abs(1 - T_0/T)</a></code>,
 where T_0 and T are expected to be in kelvin units.</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>carnot_efficiency</span>(<span class='no'>heat_types</span>, <span class='kw'>T_0</span> <span class='kw'>=</span> <span class='fl'>298.15</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -157,42 +161,36 @@ where T_0 and T are expected to be in kelvin units.</p>
       <td><p>dead state temperature in kelvin. Default is <code>298.15</code> kelvin (25 C).</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a numeric vector of Carnot efficiencies of same length as <code>heat_types</code></p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>When the heat temperature is less than <code>T_0</code>,
 the Carnot efficiency is calculated as <code>1 - (heat temperature)/T_0</code>.</p>
 <p><code>T_0</code> can be supplied as a numeric vector of ambient temperatures of
 same length as <code>heat_types</code>.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='extract_TK.html'>extract_TK()</a></code></p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>carnot_efficiency</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"HTH.600.C"</span>, <span class='st'>"MTH.200.C"</span>, <span class='st'>"MTH.100.C"</span>, <span class='st'>"LTH.20.C"</span>, <span class='st'>"LTH.-10.C"</span>))</div><div class='output co'>#&gt; [1] 0.65853519 0.36986157 0.20099156 0.01677008 0.11739058</div><div class='input'><span class='fu'>carnot_efficiency</span>(<span class='st'>"LTH.-30.F"</span>)</div><div class='output co'>#&gt; [1] 0.1993776</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>carnot_efficiency</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"HTH.600.C"</span>, <span class='st'>"MTH.200.C"</span>, <span class='st'>"MTH.100.C"</span>, <span class='st'>"LTH.20.C"</span>, <span class='st'>"LTH.-10.C"</span>))</div><div class='output co'>#&gt; [1] 0.65853519 0.36986157 0.20099156 0.01677008 0.11739058</div><div class='input'><span class='fu'>carnot_efficiency</span>(<span class='st'>"LTH.-30.F"</span>)</div><div class='output co'>#&gt; [1] 0.1993776</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -200,13 +198,16 @@ same length as <code>heat_types</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

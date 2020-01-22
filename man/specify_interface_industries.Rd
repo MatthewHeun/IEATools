@@ -4,8 +4,12 @@
 \alias{specify_interface_industries}
 \title{Specify interface industries}
 \usage{
-specify_interface_industries(.tidy_iea_df, flow = "Flow",
-  int_industries = IEATools::interface_industries, product = "Product")
+specify_interface_industries(
+  .tidy_iea_df,
+  flow = "Flow",
+  int_industries = IEATools::interface_industries,
+  product = "Product"
+)
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}

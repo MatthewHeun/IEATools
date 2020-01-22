@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Final to Useful Analysis • IEATools</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Final to Useful Analysis">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -30,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.10</span>
       </span>
     </div>
 
@@ -38,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -79,13 +80,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Final to Useful Analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2019-07-24</h4>
+            <h4 class="date">2020-01-22</h4>
       
       
       <div class="hidden name"><code>final_to_useful.Rmd</code></div>
@@ -110,24 +112,24 @@
 <h2 class="hasAnchor">
 <a href="#allocation" class="anchor"></a>Allocation</h2>
 <p>Extending the IEA’s extended energy balance data to the useful stage begins with defining allocations from final energy carriers to final-to-useful energy conversion machines. To demonstrate this process, we’ll use the sample IEA data bundled with this package.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(IEATools)</a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(IEATools)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3">Tidy_iea_data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb1-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb1-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</a>
 <a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co">#&gt; Observations: 404</span></a>
 <a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">#&gt; Variables: 11</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA",…</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM",…</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "…</span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Fina…</span></a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971,…</span></a>
-<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumptio…</span></a>
-<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Indu…</span></a>
-<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co">#&gt; $ Flow                   &lt;chr&gt; "Mining and quarrying", "Non-ferrous meta…</span></a>
-<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co">#&gt; $ Product                &lt;chr&gt; "Electricity", "Electricity", "Electricit…</span></a>
-<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "…</span></a>
-<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 17, 170, 22, 88, 39, 146, 1, 2, 30, 9, 9,…</span></a></code></pre></div>
+<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971…</span></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumption", "…</span></a>
+<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Industry"…</span></a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co">#&gt; $ Flow                   &lt;chr&gt; "Mining and quarrying", "Non-ferrous metals", …</span></a>
+<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co">#&gt; $ Product                &lt;chr&gt; "Electricity", "Electricity", "Electricity", "…</span></a>
+<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span></a>
+<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 17, 170, 22, 88, 39, 146, 1, 2, 30, 9, 9, 119,…</span></a></code></pre></div>
 <p>The next step is to develop a blank template for final-to-useful allocations. <code><a href="../reference/fu_allocation_template.html">fu_allocation_template()</a></code> builds a final-to-useful allocation template in which the analyst can provide allocation values (<code>C</code>) in percentages.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">FU_allocation_template &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span></a>
@@ -136,21 +138,21 @@
 <a class="sourceLine" id="cb2-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</a>
 <a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt; Observations: 690</span></a>
 <a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt; Variables: 15</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA",…</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM",…</span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "…</span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Fina…</span></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "…</span></a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Energy industry own use", "Energy indust…</span></a>
-<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "…</span></a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt; $ Ef.product             &lt;chr&gt; "Refinery gas", "Refinery gas", "Refinery…</span></a>
-<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt; $ Machine                &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…</span></a>
-<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt; $ Eu.product             &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…</span></a>
-<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt; $ Destination            &lt;chr&gt; "Oil refineries", "Oil refineries", "Oil …</span></a>
-<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt; $ Quantity               &lt;chr&gt; "E.dot", "E.dot [%]", "C_1 [%]", "C_2 [%]…</span></a>
-<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt; $ Maximum.values         &lt;dbl&gt; 3.900000e+01, 9.090909e-01, NA, NA, NA, 4…</span></a>
-<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co">#&gt; $ `1971`                 &lt;dbl&gt; 2.000000e+01, 9.090909e-01, NA, NA, NA, 2…</span></a>
-<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="co">#&gt; $ `2000`                 &lt;dbl&gt; 39.00000000, 0.90697674, NA, NA, NA, 4.00…</span></a></code></pre></div>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Suppl…</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Energy industry own use", "Energy industry ow…</span></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span></a>
+<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt; $ Ef.product             &lt;chr&gt; "Refinery gas", "Refinery gas", "Refinery gas"…</span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt; $ Machine                &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…</span></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt; $ Eu.product             &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…</span></a>
+<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt; $ Destination            &lt;chr&gt; "Oil refineries", "Oil refineries", "Oil refin…</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt; $ Quantity               &lt;chr&gt; "E.dot", "E.dot [%]", "C_1 [%]", "C_2 [%]", "C…</span></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt; $ Maximum.values         &lt;dbl&gt; 3.900000e+01, 9.090909e-01, NA, NA, NA, 4.0000…</span></a>
+<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co">#&gt; $ `1971`                 &lt;dbl&gt; 2.000000e+01, 9.090909e-01, NA, NA, NA, 2.0000…</span></a>
+<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="co">#&gt; $ `2000`                 &lt;dbl&gt; 39.00000000, 0.90697674, NA, NA, NA, 4.0000000…</span></a></code></pre></div>
 <p>To obtain a nicely-formatted Excel spreadsheet, use the <code><a href="../reference/write_fu_allocation_template.html">write_fu_allocation_template()</a></code> function.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># FU_allocation_template %&gt;% </span></a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#   write_fu_allocation_template("~/Desktop/Test_FU_allocation_template.xlsx")</span></a></code></pre></div>
@@ -169,17 +171,17 @@
 <a class="sourceLine" id="cb4-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</a>
 <a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; Observations: 268</span></a>
 <a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; Variables: 11</span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; $ Country        &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", …</span></a>
-<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt; $ Method         &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", …</span></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt; $ Energy.type    &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E",…</span></a>
-<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt; $ Last.stage     &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "Fin…</span></a>
-<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt; $ Unit           &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "…</span></a>
-<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt; $ Machine        &lt;chr&gt; "Automobiles", "Automobiles", "Automobiles", "Aut…</span></a>
-<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt; $ Eu.product     &lt;chr&gt; "MD", "MD", "MD", "MD", "MD", "MD", "MD", "MD", "…</span></a>
-<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt; $ Quantity       &lt;chr&gt; "E.dot_machine", "E.dot_machine [%]", "eta.fu", "…</span></a>
-<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt; $ Maximum.values &lt;dbl&gt; 619.50000000, 0.11540611, NA, NA, 187.50000000, 0…</span></a>
-<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt; $ `1971`         &lt;dbl&gt; 2.170000e+02, 8.388094e-02, NA, 1.000000e+00, 5.9…</span></a>
-<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt; $ `2000`         &lt;dbl&gt; 619.50000000, 0.11540611, NA, 1.00000000, 187.500…</span></a></code></pre></div>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; $ Country        &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"…</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt; $ Method         &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt; $ Energy.type    &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E",…</span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt; $ Last.stage     &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "Final", …</span></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt; $ Unit           &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt; $ Machine        &lt;chr&gt; "Automobiles", "Automobiles", "Automobiles", "Automobi…</span></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt; $ Eu.product     &lt;chr&gt; "MD", "MD", "MD", "MD", "MD", "MD", "MD", "MD", "MD", …</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt; $ Quantity       &lt;chr&gt; "E.dot_machine", "E.dot_machine [%]", "eta.fu", "phi.u…</span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt; $ Maximum.values &lt;dbl&gt; 6.195000e+02, 1.154061e-01, NA, NA, 1.875000e+02, 3.49…</span></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt; $ `1971`         &lt;dbl&gt; 2.170000e+02, 8.388094e-02, NA, 1.000000e+00, 5.950000…</span></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt; $ `2000`         &lt;dbl&gt; 6.195000e+02, 1.154061e-01, NA, 1.000000e+00, 1.875000…</span></a></code></pre></div>
 <p>To obtain a nicely-formatted Excel spreadsheet, use the <code><a href="../reference/write_fu_allocation_template.html">write_fu_allocation_template()</a></code> function.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># Eta_fu_template %&gt;% </span></a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#  write_eta_fu_template("~/Desktop/Test_eta_fu_template.xlsx")</span></a></code></pre></div>
@@ -187,6 +189,7 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -201,17 +204,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Matthew Heun.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

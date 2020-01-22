@@ -4,24 +4,40 @@
 \alias{eta_fu_template}
 \title{Final-to-useful efficiency template}
 \usage{
-eta_fu_template(.fu_allocations, T_0 = 298.15,
+eta_fu_template(
+  .fu_allocations,
+  T_0 = 298.15,
   sort_by = c("useful_energy_type", "importance"),
   ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
-  ef_product = "Ef.product", machine = "Machine",
-  eu_product = "Eu.product", md = "MD", light = "Light", ke = "KE",
-  heat = "TH", eta_fu = "eta.fu", phi_u = "phi.u",
-  destination = "Destination", quantity = "Quantity",
-  maximum_values = "Maximum.values", perc = "[\%]", e_dot = "E.dot",
-  c_ = "C_", c_perc = paste(substr(c_, 1, 1), perc),
-  c_ratio = substr(c_, 1, 1), .year = ".year",
-  year_for_maximum_values = 0, .value = ".value",
-  .row_order = ".row_order", e_dot_dest = paste0(e_dot, "_dest"),
+  ef_product = "Ef.product",
+  machine = "Machine",
+  eu_product = "Eu.product",
+  md = "MD",
+  light = "Light",
+  ke = "KE",
+  heat = "TH",
+  eta_fu = "eta.fu",
+  phi_u = "phi.u",
+  destination = "Destination",
+  quantity = "Quantity",
+  maximum_values = "Maximum.values",
+  perc = "[\%]",
+  e_dot = "E.dot",
+  c_ = "C_",
+  c_perc = paste(substr(c_, 1, 1), perc),
+  c_ratio = substr(c_, 1, 1),
+  .year = ".year",
+  year_for_maximum_values = 0,
+  .value = ".value",
+  .row_order = ".row_order",
+  e_dot_dest = paste0(e_dot, "_dest"),
   e_dot_machine = paste0(e_dot, "_machine"),
   e_dot_machine_max = paste0(e_dot_machine, "_max"),
   e_dot_machine_tot = paste0(e_dot_machine, "_tot"),
   e_dot_machine_perc = paste(e_dot_machine, perc),
-  e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc))
+  e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc)
+)
 }
 \arguments{
 \item{.fu_allocations}{a data frame containing a completed final-to-useful allocation template for final demand.}
@@ -63,13 +79,13 @@ Default is "useful_energy_type".}
 
 \item{maximum_values}{the name for the maximum values column in \code{.fu_allocations}. Default is "\code{Maximum.values}".}
 
-\item{perc}{a string that gives the units for percent. Default is "\code{[\%]}".}
+\item{perc}{a string that gives the units for percent. Default is "\verb{[\%]}".}
 
 \item{e_dot}{the name for energy flow rates. Default is "\code{E.dot}".}
 
 \item{c_}{the string prefix for allocation variables. Default is "\code{C_}".}
 
-\item{c_perc}{the string for generic allocation variables in percentage terms. Default is "\code{C [\%]}".}
+\item{c_perc}{the string for generic allocation variables in percentage terms. Default is "\verb{C [\%]}".}
 
 \item{c_ratio}{the string for generic allocation variables in ratio terms. Default is "\code{C}".}
 
@@ -89,9 +105,9 @@ Default is "useful_energy_type".}
 
 \item{e_dot_machine_tot}{the name of a temporary column containing sums of energy flows into a final-to-useful machines. Default is "\code{E.dot_machine_tot}".}
 
-\item{e_dot_machine_perc}{the name of a temporary column percentages of total energy flow into machines.  Default is "\code{E.dot_machine [\%]}".}
+\item{e_dot_machine_perc}{the name of a temporary column percentages of total energy flow into machines.  Default is "\verb{E.dot_machine [\%]}".}
 
-\item{e_dot_machine_max_perc}{the name for a column of maximum percentages (across all years) of total energy flow into machines.  Default is "\code{E.dot_machine_max [\%]}".}
+\item{e_dot_machine_max_perc}{the name for a column of maximum percentages (across all years) of total energy flow into machines.  Default is "\verb{E.dot_machine_max [\%]}".}
 }
 \value{
 a data frame containing row-ordered blank template for final-to-useful machine efficiencies.
@@ -116,15 +132,15 @@ the template produced by this function does just that.
 Any row specified with  \code{md} (mechanical drive) as its \code{eu_product} will have its values for \code{phi.u} automatically filled
 with \code{1},
 because mechanical drive is work, which is pure exergy.
-Any row specified with \code{eu_product} being heat ("\code{*TH.xxx.u}") will have its values for \code{phi.u} automatically filled
+Any row specified with \code{eu_product} being heat ("\verb{*TH.xxx.u}") will have its values for \code{phi.u} automatically filled
 with the appropriate Carnot efficiency,
 \code{1 - T_0/xxx}, where \code{xxx} is the temperature of the heat and \code{u} are the units for that temperature (one of "\code{C}", "\code{K}", "\code{F}", or "\code{R}"
 for ° Celsius, kelvin, ° Fahrenheit, or rankine, respectively).
 For heat rows, the value of argument \code{T_0} (assumed to be in kelvin)
 is used to compute the Carnot efficiency for the \code{phi.u} rows.
-The default value for \code{T_0} is \code{298.15 K} (\code{25 °C}).
+The default value for \code{T_0} is \verb{298.15 K} (\verb{25 °C}).
 
-Note that the rows labeled "\code{C_x [\%]}" are formatted by default as percentage in the Excel file.
+Note that the rows labeled "\verb{C_x [\%]}" are formatted by default as percentage in the Excel file.
 When read, values are ratios, not percentages.
 I.e., the values read by this function are in the range 0 <= x <= 1, not 0 <= x <= 100.
 If any read values in the \code{c_perc} rows are outside of the range 0 <= x <= 1, an error is thrown.

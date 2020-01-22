@@ -4,14 +4,19 @@
 \alias{tp_sinks_to_nonenergy}
 \title{Reassign Transformation process sinks to Non-energy use}
 \usage{
-tp_sinks_to_nonenergy(.tidy_iea_df, ledger_side = "Ledger.side",
+tp_sinks_to_nonenergy(
+  .tidy_iea_df,
+  ledger_side = "Ledger.side",
   consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point",
   non_energy_flow_agg_point = "Non-energy use",
   transformation_processes = "Transformation processes",
-  eiou = "Energy industry own use", flow = "Flow",
+  eiou = "Energy industry own use",
+  flow = "Flow",
   non_energy_flow = "Non-energy use industry/transformation/energy",
-  product = "Product", e_dot = "E.dot")
+  product = "Product",
+  e_dot = "E.dot"
+)
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
@@ -22,15 +27,15 @@ tp_sinks_to_nonenergy(.tidy_iea_df, ledger_side = "Ledger.side",
 
 \item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
 
-\item{non_energy_flow_agg_point}{the name of the aggregation point where transforamtion process sinks will be reassigned. Default is "\code{Non-energy use}".}
+\item{non_energy_flow_agg_point}{the name of the aggregation point where transforamtion process sinks will be reassigned. Default is "\verb{Non-energy use}".}
 
-\item{transformation_processes}{a string that identifies transformation processes in the \code{flow_aggregation_point} column. Default is "\code{Transformation processes}".}
+\item{transformation_processes}{a string that identifies transformation processes in the \code{flow_aggregation_point} column. Default is "\verb{Transformation processes}".}
 
-\item{eiou}{a string that identifies energy industry own use in the \code{flow_aggregation_point} column. Default is "\code{Energy industry own use}".}
+\item{eiou}{a string that identifies energy industry own use in the \code{flow_aggregation_point} column. Default is "\verb{Energy industry own use}".}
 
 \item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "\code{Flow}".}
 
-\item{non_energy_flow}{a sting identifying non-energy flows. Default is "\code{Non-energy use industry/transformation/energy}".}
+\item{non_energy_flow}{a sting identifying non-energy flows. Default is "\verb{Non-energy use industry/transformation/energy}".}
 
 \item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "\code{Product}".}
 

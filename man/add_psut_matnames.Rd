@@ -4,16 +4,27 @@
 \alias{add_psut_matnames}
 \title{Add a column of matrix names to tidy data frame}
 \usage{
-add_psut_matnames(.tidy_iea_df, ledger_side = "Ledger.side",
-  supply = "Supply", consumption = "Consumption",
-  flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
-  production = "Production", resources = "Resources",
-  product = "Product", e_dot = "E.dot",
-  eiou = "Energy industry own use", neg_supply_in_fd = c("Exports",
-  "International aviation bunkers", "International marine bunkers",
-  "Losses", "Statistical differences", "Stock changes"),
-  matnames = "matnames", R = "R", U_excl_EIOU = "U_excl_EIOU",
-  U_EIOU = "U_EIOU", V = "V", Y = "Y")
+add_psut_matnames(
+  .tidy_iea_df,
+  ledger_side = "Ledger.side",
+  supply = "Supply",
+  consumption = "Consumption",
+  flow_aggregation_point = "Flow.aggregation.point",
+  flow = "Flow",
+  production = "Production",
+  resources = "Resources",
+  product = "Product",
+  e_dot = "E.dot",
+  eiou = "Energy industry own use",
+  neg_supply_in_fd = c("Exports", "International aviation bunkers",
+    "International marine bunkers", "Losses", "Statistical differences", "Stock changes"),
+  matnames = "matnames",
+  R = "R",
+  U_excl_EIOU = "U_excl_EIOU",
+  U_EIOU = "U_EIOU",
+  V = "V",
+  Y = "Y"
+)
 }
 \arguments{
 \item{.tidy_iea_df}{a data frame with \code{ledger_side}, \code{flow_aggregation_point}, \code{flow}, and \code{e_dot} columns.}
@@ -44,7 +55,7 @@ Default is "\code{Product}".}
 (a string). Default is "\code{E.dot}".}
 
 \item{eiou}{the identifier for items that are energy industry own use.
-Default is "\code{Energy industry own use}".}
+Default is "\verb{Energy industry own use}".}
 
 \item{neg_supply_in_fd}{identifiers for flow items that, when negative,
 are entries in the final demand (\code{Y}) matrix.}
