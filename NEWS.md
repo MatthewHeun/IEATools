@@ -1,3 +1,7 @@
+* `iea_df()` now deletes columns that end with `estimated_year`, whose default value is "E".
+  This feature allows us to process IEA data files with column names such as "2014E".
+
+
 # IEATools 0.1.10 (2020-01-22)
 
 * Integrated with codecov.io by adding `codecov.yml` file to repository.
