@@ -1,5 +1,5 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that README.Rmd -->
+<!-- README.md is generated from README.Rmd. Please edit README.Rmd -->
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/IEATools)](https://cran.r-project.org/package=IEATools)

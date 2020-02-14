@@ -11,7 +11,8 @@ iea_df(
   expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT",
   missing_data = "..",
   not_applicable_data = "x",
-  confidential_data = "c"
+  confidential_data = "c",
+  estimated_year = "E"
 )
 }
 \arguments{
@@ -28,11 +29,16 @@ Default is the path to a sample IEA file provided in this package.}
 \item{missing_data}{a string that identifies missing data. Default is "\code{..}".
 Entries of "\code{missing_data}" are coded as `0`` in output.}
 
-\item{not_applicable_data}{a string that identifies not-applicable data.
+\item{not_applicable_data}{a string that identifies not-applicable data. Default is "x".
 Entries of "\code{not_applicable_data}" are coded as \code{0} in output.}
 
-\item{confidential_data}{a string that identifies confidential data.
+\item{confidential_data}{a string that identifies confidential data. Default is "c".
 Entries of "\code{confidential_data}" are coded as \code{0} in output.}
+
+\item{estimated_year}{a string that identifies an estimated year.
+Default is "E".
+E.g., in "2014E", the "E" indicates that data for 2014 are estimated.
+Data from estimated years is removed from output.}
 }
 \value{
 a data frame containing the IEA extended energy balances data

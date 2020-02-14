@@ -158,7 +158,8 @@ an error message is given.</p>
   <span class='kw'>expected_2nd_line_start</span> <span class='kw'>=</span> <span class='st'>"COUNTRY,FLOW,PRODUCT"</span>,
   <span class='kw'>missing_data</span> <span class='kw'>=</span> <span class='st'>".."</span>,
   <span class='kw'>not_applicable_data</span> <span class='kw'>=</span> <span class='st'>"x"</span>,
-  <span class='kw'>confidential_data</span> <span class='kw'>=</span> <span class='st'>"c"</span>
+  <span class='kw'>confidential_data</span> <span class='kw'>=</span> <span class='st'>"c"</span>,
+  <span class='kw'>estimated_year</span> <span class='kw'>=</span> <span class='st'>"E"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -189,13 +190,20 @@ Entries of "<code>missing_data</code>" are coded as `0`` in output.</p></td>
     </tr>
     <tr>
       <th>not_applicable_data</th>
-      <td><p>a string that identifies not-applicable data.
+      <td><p>a string that identifies not-applicable data. Default is "x".
 Entries of "<code>not_applicable_data</code>" are coded as <code>0</code> in output.</p></td>
     </tr>
     <tr>
       <th>confidential_data</th>
-      <td><p>a string that identifies confidential data.
+      <td><p>a string that identifies confidential data. Default is "c".
 Entries of "<code>confidential_data</code>" are coded as <code>0</code> in output.</p></td>
+    </tr>
+    <tr>
+      <th>estimated_year</th>
+      <td><p>a string that identifies an estimated year.
+Default is "E".
+E.g., in "2014E", the "E" indicates that data for 2014 are estimated.
+Data from estimated years is removed from output.</p></td>
     </tr>
     </table>
 
