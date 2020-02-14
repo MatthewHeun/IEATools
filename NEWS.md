@@ -1,3 +1,5 @@
+# IEATools 0.1.11 (2020-02-14)
+
 * `iea_df()` now deletes columns that end with `estimated_year`, whose default value is "E".
   This feature allows us to process IEA data files with column names such as "2014E".
 
