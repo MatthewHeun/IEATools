@@ -56,10 +56,14 @@
 #' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "`COUNTRY,FLOW,PRODUCT`".
 #' @param missing_data a string that identifies missing data. Default is "`..`".
 #'        Entries of "`missing_data`" are coded as `0`` in output.
-#' @param not_applicable_data a string that identifies not-applicable data.
+#' @param not_applicable_data a string that identifies not-applicable data. Default is "x".
 #'        Entries of "`not_applicable_data`" are coded as `0` in output.
-#' @param confidential_data a string that identifies confidential data.
+#' @param confidential_data a string that identifies confidential data. Default is "c".
 #'        Entries of "`confidential_data`" are coded as `0` in output.
+#' @param estimated_year a string that identifies an estimated year. 
+#'        Default is "E".
+#'        E.g., in "2014E", the "E" indicates that data for 2014 are estimated.
+#'        Data from estimated years is removed from output.
 #'
 #' @return a data frame containing the IEA extended energy balances data
 #' 
@@ -73,7 +77,8 @@
 iea_df <- function(.iea_file = NULL, 
                    text = NULL, 
                    expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
-                   missing_data = "..", not_applicable_data = "x", confidential_data = "c"){
+                   missing_data = "..", not_applicable_data = "x", confidential_data = "c", 
+                   estimated_year = "E"){
   assertthat::assert_that(xor(is.null(.iea_file), is.null(text)), 
                           msg = "need to supply one but not both of iea_file and text arguments to iea_df")
   if (!is.null(.iea_file)) {
@@ -91,7 +96,7 @@ iea_df <- function(.iea_file = NULL,
     # When that occurs, many commas are appended to the 2nd line.
     # Strip out these commas before proceeding further.
     # The pattern ,*$ means "match any number (*) of commas (,) at the end of the line ($)".
-    header[[2]] <- gsub(pattern = ",*$", replacement = "", header[[2]])
+    header[[2]] <- sub(pattern = ",*$", replacement = "", header[[2]])
   }
   assertthat::assert_that(header[[1]] %>% startsWith(expected_1st_line_start) & header[[2]] == expected_2nd_line_start, 
                           msg = paste0("In iea_df, input data didn't start with '", expected_1st_line_start, 
@@ -115,12 +120,19 @@ iea_df <- function(.iea_file = NULL,
     unlist()
   IEAData_withheader <- IEAData_noheader %>% 
     magrittr::set_names(colnames)
+  # At this point, IEAData_withheader may have some column names that end in `estimated_year`.
+  # We should delete those columns.
+  cols_to_delete <- grepl(pattern = paste0(estimated_year, "$"), x = colnames)
+  # cols_to_delete has TRUE for each column to eliminate. But we need true for each column to KEEP.
+  # With [!cols_to_delete], we get the desired effect.
+  IEAData_withheader <- IEAData_withheader[!cols_to_delete]
   
   # Data tagged as not-applicable in the IEA database should be coded as 0.
   # We still want to allow calculations with these data.
   IEAData_withheader[IEAData_withheader == not_applicable_data] <- 0
   # However, missing data should be tagged as "not available", because calculations 
-  # with unavaiable data should fail.
+  # with unavailable data should fail.
+  # However, there are so many pieces of missing data, we code them as "0" for now.
   IEAData_withheader[IEAData_withheader == missing_data] <- 0
   # Data tagged as confidential are converted to 0.
   # What else can we do?

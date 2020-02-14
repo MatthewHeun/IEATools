@@ -45,6 +45,12 @@ test_that("iea_df works with .. and x", {
   expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),..,x"), expectedDF)
 })
 
+test_that("iea_df works with estimated columns postfixed by 'E'", {
+  expectedDF <- data.frame(COUNTRY = "World", FLOW = "Production", PRODUCT = "Hard coal (if no detail)", `1960` = 0, 
+                           check.names = FALSE, stringsAsFactors = FALSE) 
+  expect_equal(iea_df(text = ",,TIME,1960,1961E\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),..,x"), expectedDF)
+})
+
 test_that("rename_iea_df_cols works", {
   renamed <- iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43") %>% 
     rename_iea_df_cols()
