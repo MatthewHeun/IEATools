@@ -121,9 +121,9 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
 }
 
 
-#' Tell whether all rows of a tidy IEA data frame is balanced
+#' Tell whether _all_ rows of a tidy IEA data frame is balanced
 #'
-#' This function provides a handy way to tell if all rows of `.tidy_iea_df_balance`
+#' This function provides a handy way to tell if _all_ rows of `.tidy_iea_df_balance`
 #' are in balance.
 #' Argument `.tidy_iea_df_balances` should be set to the value of a call to
 #' [calc_tidy_iea_df_balances()].
@@ -158,48 +158,60 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' by adjusting the `Statistical differences` flow
 #' on a per-product basis.
 #' 
-#' This function assumes that `.tidy_iea_df` is grouped appropriately.
-#' So be sure to set the `grouping_vars` argument
-#' before calling this function.
-#' The default `grouping_vars` fixes energy balances on a per-year, per-product basis.
+#' This function assumes that `.tidy_iea_df` is grouped appropriately
+#' prior to passing into this function.
 #' The `Product` column should definitely be included in `grouping_vars`, 
 #' but any other grouping level is fine. 
-#' Typically, grouping is also done on 
-#' `Country`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
-#' Grouping should _not_ be done on the `flow` or the `ledger_side` columns.
+#' Typically, grouping should be done by 
+#' `Country`, `Year`, `Energy.type`, `Last.stage`, `Product`, etc. columns.
+#' Grouping should _not_ be done on the `flow_aggregation_point`, `Flow`, or `ledger_side` columns.
 #' 
 #' Internally, this function calls [calc_tidy_iea_df_balances()]
-#' and adjusts `Statistical differences` to compensate for any imbalances that are present.
+#' and adjusts the value of the `statistical_differences` column to compensate for any imbalances that are present.
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balanc data
-#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "`Ledger.side`".
-#' @param supply a string indicating the supply side of the ledger in the `ledger_side` column. Default is "`Supply`".
-#' @param consumption a string indicating the consumption side of the ledger in the `ledger_side` column. Default is "`Consumption`".
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
-#' @param tfc_compare a string indicating the Total final consumption comparison flow aggregation point. Default is "`TFC compare`".
-#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
-#' @param statistical_differences a string indicating statistical differences in the `flow` column. Default is "`Statistical differences`".
-#' @param product the name of the product column in `.tidy_iea_df`. Default is "`Product`".
-#' @param e_dot the name of the energy flow column in `.tidy_iea_df`. Default is "`E.dot`".
-#' @param err the name of a temporary error column added to `.tidy_iea_df`. Default is "`.err`".
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "Ledger.side".
+#' @param supply a string indicating the supply side of the ledger in the `ledger_side` column. Default is "Supply".
+#' @param consumption a string indicating the consumption side of the ledger in the `ledger_side` column. Default is "Consumption".
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
+#' @param tfc_compare a string indicating the Total final consumption comparison flow aggregation point. Default is "TFC compare".
+#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "Flow".
+#' @param statistical_differences a string indicating statistical differences in the `flow` column. Default is "Statistical differences".
+#' @param product the name of the product column in `.tidy_iea_df`. Default is "Product".
+#' @param e_dot the name of the energy flow column in `.tidy_iea_df`. Default is "E.dot".
+#' @param err the name of a temporary error column added to `.tidy_iea_df`. Default is ".err".
 #' @param remove_zeroes a logical telling whether to remove `0`s after balancing.
 #'
-#' @return `.tidy_iea_df` with adjusted `Statistical differences` flows such that 
+#' @return `.tidy_iea_df` with adjusted `statistical_differences` flows such that 
 #'         the data for each product are in perfect energy balance.
 #'         
 #' @export
 #'
 #' @examples
 #' library(dplyr)
-#' unbalanced <- load_tidy_iea_df()
-#' # This will not be balanced, because the IEA data are not in perfect balance
+#' # Balances are calculated for each group.
+#' # Remember that grouping should _not_ be done on
+#' # the `flow_aggregation_point`, `Flow`, or `ledger_side` columns.
+#' grouped_iea_df <- load_tidy_iea_df() %>% 
+#'   group_by(Country, Method, Energy.type, Last.stage, Year, Product)
+#' # unbalanced will not be balanced, because the IEA data are not in perfect balance.
+#' # Because we have grouped by key variables, 
+#' # `calc_tidy_iea_df_balances` provides energy balances 
+#' # on a per-product basis.
+#' # The `err` column shows the magnitude of the imbalances.
+#' unbalanced <- grouped_iea_df %>% 
+#'   calc_tidy_iea_df_balances()
+#' unbalanced
+#' # The `tidy_iea_df_balanced` function returns `TRUE` if and only if `all` of the groups (rows) 
+#' # in `unbalanced` are balanced.
 #' unbalanced %>% 
-#'   calc_tidy_iea_df_balances() %>% 
 #'   tidy_iea_df_balanced()
-#' # This will be balanced, becasue we fix the imbalances.
-#' unbalanced %>% 
+#' # Fix the imbalances.
+#' balanced <- grouped_iea_df %>% 
 #'   fix_tidy_iea_df_balances() %>% 
-#'   calc_tidy_iea_df_balances() %>% 
+#'   calc_tidy_iea_df_balances()
+#' balanced
+#' balanced %>% 
 #'   tidy_iea_df_balanced()
 fix_tidy_iea_df_balances <- function(.tidy_iea_df,
                                      # Input columns and values

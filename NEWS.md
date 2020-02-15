@@ -1,3 +1,8 @@
+* Improved documentation on the energy balance functions, 
+  especially `fix_tidy_iea_df_balances()`, 
+  where clarifying examples are now provided.
+
+
 # IEATools 0.1.11 (2020-02-14)
 
 * `iea_df()` now deletes columns that end with `estimated_year`, whose default value is "E".
