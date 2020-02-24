@@ -1,3 +1,4 @@
+* `iea_df()` now reads files with a clean header line.
 * Improved documentation on the energy balance functions, 
   especially `fix_tidy_iea_df_balances()`, 
   where clarifying examples are now provided.
