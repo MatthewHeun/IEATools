@@ -266,7 +266,7 @@ passing the output of this function to the <code>.iea_df</code> argument of <cod
                      <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))</div><div class='output co'>#&gt;   COUNTRY       FLOW                  PRODUCT 1960 1961
 #&gt; 1   World Production Hard coal (if no detail)   42   43</div><div class='input'><span class='co'># With extra commas on the 2nd line</span>
 <span class='fu'>iea_df</span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>",,TIME,1960,1961\n"</span>,
-                     <span class='st'>"COUNTRY,FLOW,PRODUCT\n"</span>,
+                     <span class='st'>"COUNTRY,FLOW,PRODUCT,,,\n"</span>,
                      <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))</div><div class='output co'>#&gt;   COUNTRY       FLOW                  PRODUCT 1960 1961
 #&gt; 1   World Production Hard coal (if no detail)   42   43</div><div class='input'><span class='co'># With a clean first line</span>
 <span class='fu'>iea_df</span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"COUNTRY,FLOW,PRODUCT,1960,1961\n"</span>,

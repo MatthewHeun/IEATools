@@ -108,7 +108,7 @@ iea_df(text = paste0(",,TIME,1960,1961\n",
                      "World,Production,Hard coal (if no detail),42,43"))
 # With extra commas on the 2nd line
 iea_df(text = paste0(",,TIME,1960,1961\n",
-                     "COUNTRY,FLOW,PRODUCT\n",
+                     "COUNTRY,FLOW,PRODUCT,,,\n",
                      "World,Production,Hard coal (if no detail),42,43"))
 # With a clean first line
 iea_df(text = paste0("COUNTRY,FLOW,PRODUCT,1960,1961\n",
