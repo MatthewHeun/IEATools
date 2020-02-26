@@ -8,7 +8,7 @@
 #' before calling this function.
 #' Grouping should _definitely_ be done on the `Product` column.
 #' Typically, grouping is also done on 
-#' `Country`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
+#' `Country`, `Method`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
 #' Grouping should _not_ be done on the `Ledger.side` column or the `Flow` column.
 #' To test whether all balances are OK, 
 #' use the [tidy_iea_df_balanced()] function.
