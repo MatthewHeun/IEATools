@@ -1,8 +1,8 @@
 Package: IEATools
 Type: Package
 Title: Tools for IEA data
-Version: 0.1.11
-Date: 2020-02-14
+Version: 0.1.12
+Date: 2020-02-26
 Authors@R: c(person("Matthew", "Heun", role = c("aut", "cre"),
                      email = "matthew.heun@me.com"))
 Author: Matthew Heun [aut, cre]
