@@ -1,3 +1,5 @@
+# IEATools 0.1.12 (2020-02-26)
+
 * `iea_df()` now reads files with a clean header line.
 * Improved documentation on the energy balance functions, 
   especially `fix_tidy_iea_df_balances()`, 
