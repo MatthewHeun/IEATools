@@ -6,7 +6,7 @@ test_that("iea_df works", {
   # Test with only 1 line
   expect_error(iea_df(text = "abc"), "couldn't read 2 lines in iea_df")
   # Test with 2 lines but of wrong style.
-  expect_error(iea_df(text = "abc\n123"), "In iea_df, input data didn't start with ',,TIME' or second line didn't start with 'COUNTRY,FLOW,PRODUCT'")
+  expect_error(iea_df(text = "abc\n123"), ".iea_file didn't start with 'COUNTRY,FLOW,PRODUCT' or ',,TIME\nCOUNTRY,FLOW,PRODUCT'.")
   # Test with text that is expected to parse correctly.
   # This is the format of the original .csv files.
   expectedDF <- data.frame(COUNTRY = "World", FLOW = "Production", PRODUCT = "Hard coal (if no detail)", `1960` = 42, `1961` = 43, 
@@ -37,6 +37,21 @@ test_that("iea_df works", {
   expect_equal(nrow(IEADF2), 14688)
   expect_equal(ncol(IEADF2), 5)
   expect_equal(colnames(IEADF2)[[5]], "2000")
+})
+
+test_that("iea_df works with a plain first row", {
+  # This is an alternative format that is sometimes obtained from the IEA.
+  # (Extra commas are present on the 2nd line.)
+  # This is the format of the original .csv files.
+  expectedDF <- data.frame(COUNTRY = "World", FLOW = "Production", PRODUCT = "Hard coal (if no detail)", `1960` = 42, `1961` = 43, 
+                           check.names = FALSE, stringsAsFactors = FALSE) 
+  file_contents <- "COUNTRY,FLOW,PRODUCT,1960,1961\nWorld,Production,Hard coal (if no detail),42,43"
+  expect_equal(iea_df(text = file_contents), expectedDF)
+  
+  # Instead of text, try with a tiny file that is identical to expectedDF.
+  tiny_file <- file.path("extdata", "Tiny-Example-File-Simple-Header.csv") %>% 
+    system.file(package = "IEATools")
+  expect_equal(iea_df(.iea_file = tiny_file), expectedDF)
 })
 
 test_that("iea_df works with .. and x", {

@@ -2,7 +2,7 @@
 % Please edit documentation in R/energy_balance.R
 \name{tidy_iea_df_balanced}
 \alias{tidy_iea_df_balanced}
-\title{Tell whether all rows of a tidy IEA data frame is balanced}
+\title{Tell whether \emph{all} rows of a tidy IEA data frame is balanced}
 \usage{
 tidy_iea_df_balanced(.tidy_iea_df_balances, balance_OK = "balance_OK")
 }
@@ -17,7 +17,7 @@ Default is "\code{balance_OK}".}
 \code{TRUE} if all groups of \code{.tidy_iea_df_balances} are balanceed, \code{FALSE} otherwise.
 }
 \description{
-This function provides a handy way to tell if all rows of \code{.tidy_iea_df_balance}
+This function provides a handy way to tell if \emph{all} rows of \code{.tidy_iea_df_balance}
 are in balance.
 Argument \code{.tidy_iea_df_balances} should be set to the value of a call to
 \code{\link[=calc_tidy_iea_df_balances]{calc_tidy_iea_df_balances()}}.

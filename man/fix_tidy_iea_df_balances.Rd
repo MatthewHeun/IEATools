@@ -22,30 +22,30 @@ fix_tidy_iea_df_balances(
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balanc data}
 
-\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "\code{Ledger.side}".}
+\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "Ledger.side".}
 
-\item{supply}{a string indicating the supply side of the ledger in the \code{ledger_side} column. Default is "\code{Supply}".}
+\item{supply}{a string indicating the supply side of the ledger in the \code{ledger_side} column. Default is "Supply".}
 
-\item{consumption}{a string indicating the consumption side of the ledger in the \code{ledger_side} column. Default is "\code{Consumption}".}
+\item{consumption}{a string indicating the consumption side of the ledger in the \code{ledger_side} column. Default is "Consumption".}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
 
-\item{tfc_compare}{a string indicating the Total final consumption comparison flow aggregation point. Default is "\verb{TFC compare}".}
+\item{tfc_compare}{a string indicating the Total final consumption comparison flow aggregation point. Default is "TFC compare".}
 
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "\code{Flow}".}
+\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "Flow".}
 
-\item{statistical_differences}{a string indicating statistical differences in the \code{flow} column. Default is "\verb{Statistical differences}".}
+\item{statistical_differences}{a string indicating statistical differences in the \code{flow} column. Default is "Statistical differences".}
 
-\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "\code{Product}".}
+\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "Product".}
 
-\item{e_dot}{the name of the energy flow column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
+\item{e_dot}{the name of the energy flow column in \code{.tidy_iea_df}. Default is "E.dot".}
 
-\item{err}{the name of a temporary error column added to \code{.tidy_iea_df}. Default is "\code{.err}".}
+\item{err}{the name of a temporary error column added to \code{.tidy_iea_df}. Default is ".err".}
 
 \item{remove_zeroes}{a logical telling whether to remove \code{0}s after balancing.}
 }
 \value{
-\code{.tidy_iea_df} with adjusted \verb{Statistical differences} flows such that
+\code{.tidy_iea_df} with adjusted \code{statistical_differences} flows such that
 the data for each product are in perfect energy balance.
 }
 \description{
@@ -57,29 +57,41 @@ by adjusting the \verb{Statistical differences} flow
 on a per-product basis.
 }
 \details{
-This function assumes that \code{.tidy_iea_df} is grouped appropriately.
-So be sure to set the \code{grouping_vars} argument
-before calling this function.
-The default \code{grouping_vars} fixes energy balances on a per-year, per-product basis.
+This function assumes that \code{.tidy_iea_df} is grouped appropriately
+prior to passing into this function.
 The \code{Product} column should definitely be included in \code{grouping_vars},
 but any other grouping level is fine.
-Typically, grouping is also done on
-\code{Country}, \code{Year}, \code{Energy.type}, \code{Last.stage}, etc. columns.
-Grouping should \emph{not} be done on the \code{flow} or the \code{ledger_side} columns.
+Typically, grouping should be done by
+\code{Country}, \code{Year}, \code{Energy.type}, \code{Last.stage}, \code{Product}, etc. columns.
+Grouping should \emph{not} be done on the \code{flow_aggregation_point}, \code{Flow}, or \code{ledger_side} columns.
 
 Internally, this function calls \code{\link[=calc_tidy_iea_df_balances]{calc_tidy_iea_df_balances()}}
-and adjusts \verb{Statistical differences} to compensate for any imbalances that are present.
+and adjusts the value of the \code{statistical_differences} column to compensate for any imbalances that are present.
 }
 \examples{
 library(dplyr)
-unbalanced <- load_tidy_iea_df()
-# This will not be balanced, because the IEA data are not in perfect balance
+# Balances are calculated for each group.
+# Remember that grouping should _not_ be done on
+# the `flow_aggregation_point`, `Flow`, or `ledger_side` columns.
+grouped_iea_df <- load_tidy_iea_df() \%>\% 
+  group_by(Country, Method, Energy.type, Last.stage, Year, Product)
+# unbalanced will not be balanced, because the IEA data are not in perfect balance.
+# Because we have grouped by key variables, 
+# `calc_tidy_iea_df_balances` provides energy balances 
+# on a per-product basis.
+# The `err` column shows the magnitude of the imbalances.
+unbalanced <- grouped_iea_df \%>\% 
+  calc_tidy_iea_df_balances()
+unbalanced
+# The `tidy_iea_df_balanced` function returns `TRUE` if and only if `all` of the groups (rows) 
+# in `unbalanced` are balanced.
 unbalanced \%>\% 
-  calc_tidy_iea_df_balances() \%>\% 
   tidy_iea_df_balanced()
-# This will be balanced, becasue we fix the imbalances.
-unbalanced \%>\% 
+# Fix the imbalances.
+balanced <- grouped_iea_df \%>\% 
   fix_tidy_iea_df_balances() \%>\% 
-  calc_tidy_iea_df_balances() \%>\% 
+  calc_tidy_iea_df_balances()
+balanced
+balanced \%>\% 
   tidy_iea_df_balanced()
 }

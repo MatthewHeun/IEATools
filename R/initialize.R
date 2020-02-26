@@ -1,19 +1,21 @@
 #' Load IEA data from an extended enegy balances csv file
 #'
 #' This function reads an IEA extended energy balances file and
-#' converts it to a data frame with appropriately-labelled columns.
+#' converts it to a data frame with appropriately-labeled columns.
 #' One of `iea_file` or `text` must be specified, but not both.
 #' The first line of `iea_file` or `text`
 #' is expected to start with `expected_start_1st_line`, and
 #' the second line is expected to start with `expected_2nd_line_start`, and
 #' it may have any number of commas appended.
 #' (The extra commas might come from opening and re-saving the file in Excel.)
-#' If those conditions are not met, execution is halted, and
-#' an error message is given.
+#' Alternatively, the file may start with `expected_simple_start`.
+#' If none of these conditions are not met, execution is halted, and
+#' an error message is provided.
+#' Files should have a return character at the end of their final line.
 #' 
 #' This function is designed to work even as more years are added
 #' in columns at the right of `.iea_file`, 
-#' because column names in the output are constructed from the first two lines of `iea_file` 
+#' because column names in the output are constructed from the header line(s) of `.iea_file` 
 #' (which contain years and country, flow, product information).
 #' 
 #' The IEA data have indicators for 
@@ -30,40 +32,44 @@
 #' "`x`" (not applicable) in the IEA data would be converted to `0` in `R`.
 #' "`NULL`" would not be used.
 #' However, the IEA are not consistent with their coding. 
-#' In some places "`..`" is used for not applicable values
-#' (e.g., World Anthracite supply in 1971). 
-#' World Anthracite supply in 1971 is actually not applicable, because Anthracite was
-#' classified under "Hard coal (if no detail)" in 1971.
+#' In some places "`..`" (indicating unavailable) is used for not applicable values, 
+#' e.g., World Anthracite supply in 1971. 
+#' (World Anthracite supply in 1971 is actually not applicable, because Anthracite was
+#' classified under "Hard coal (if no detail)" in 1971.)
 #' On the other hand, "`..`" is used for data in the most recent year 
 #' when those data have not yet been incorporated into the database. 
 #' In the face of IEA’s inconsistencies, 
 #' the only rational way to proceed is to convert 
-#' both "`x`" and "`..`" to "`0`"
-#' in this function.
+#' both "`x`" and "`..`" in the IEA files to "`0`" in the output data frame
+#' from this function.
 #' Furthermore, confidential data (coded by the IEA as "`c`") is also interpreted as `0`.
 #' (What else can we do?)
 #' 
 #' The data frame returned from this function is not ready to be used in R, 
 #' because rows are not unique.
-#' To further prepre the data frame for use, call `augment_iea_data()`,
-#' passing the output of this function in the `.iea_df` argument of `augment_iea_data()`.
+#' To further prepare the data frame for use, call [augment_iea_df()],
+#' passing the output of this function to the `.iea_df` argument of [augment_iea_df()].
 #'
 #' @param .iea_file a string containing the path to a .csv file of extended energy balances from the IEA.
 #'        Default is the path to a sample IEA file provided in this package.
 #' @param text a character string that can be parsed as IEA extended energy balances. 
 #'        (This argument is useful for testing.)
-#' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is "`,,TIME`".
-#' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "`COUNTRY,FLOW,PRODUCT`".
+#' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is ",,TIME".
+#' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "COUNTRY,FLOW,PRODUCT".
+#' @param expected_simple_start the expected starting of the first line of `iea_file`. Default is the value of `expected_2nd_line_start`.
+#'        Note that `expected_simple_start` is sometimes encountered in data supplied by the IEA.
+#'        Furthermore, `expected_simple_start` could be the format of the file when somebody "helpfully" fiddles with 
+#'        the raw data from the IEA.
 #' @param missing_data a string that identifies missing data. Default is "`..`".
-#'        Entries of "`missing_data`" are coded as `0`` in output.
+#'        Entries of `missing_data` are coded as `0`` in output.
 #' @param not_applicable_data a string that identifies not-applicable data. Default is "x".
-#'        Entries of "`not_applicable_data`" are coded as `0` in output.
+#'        Entries of `not_applicable_data` are coded as `0` in output.
 #' @param confidential_data a string that identifies confidential data. Default is "c".
-#'        Entries of "`confidential_data`" are coded as `0` in output.
+#'        Entries of `confidential_data` are coded as `0` in output.
 #' @param estimated_year a string that identifies an estimated year. 
 #'        Default is "E".
 #'        E.g., in "2014E", the "E" indicates that data for 2014 are estimated.
-#'        Data from estimated years is removed from output.
+#'        Data from estimated years are removed from output.
 #'
 #' @return a data frame containing the IEA extended energy balances data
 #' 
@@ -71,75 +77,107 @@
 #' 
 #' @examples 
 #' # Original file format
-#' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43")
+#' iea_df(text = paste0(",,TIME,1960,1961\n",
+#'                      "COUNTRY,FLOW,PRODUCT\n",
+#'                      "World,Production,Hard coal (if no detail),42,43"))
 #' # With extra commas on the 2nd line
-#' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal,42,43")
+#' iea_df(text = paste0(",,TIME,1960,1961\n",
+#'                      "COUNTRY,FLOW,PRODUCT,,,\n",
+#'                      "World,Production,Hard coal (if no detail),42,43"))
+#' # With a clean first line
+#' iea_df(text = paste0("COUNTRY,FLOW,PRODUCT,1960,1961\n",
+#'                      "World,Production,Hard coal (if no detail),42,43"))
 iea_df <- function(.iea_file = NULL, 
                    text = NULL, 
                    expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
+                   expected_simple_start = expected_2nd_line_start,
                    missing_data = "..", not_applicable_data = "x", confidential_data = "c", 
                    estimated_year = "E"){
   assertthat::assert_that(xor(is.null(.iea_file), is.null(text)), 
-                          msg = "need to supply one but not both of iea_file and text arguments to iea_df")
+                          msg = "need to supply one but not both of .iea_file and text arguments to iea_df")
   if (!is.null(.iea_file)) {
     conn <- file(.iea_file, open = "rt") # open file connection
   } else {
     # text has been provided, probably for testing purposes.
     conn <- textConnection(text)
   }
-  header <- conn %>% readLines(n = 2) # read header
+  
+  # Check if the first line has the simple format
+  first_two_lines <- conn %>% readLines(n = 2)
   close(conn)
-  # Check whether header has the form we expect.
-  assertthat::assert_that(length(header) == 2, msg = "couldn't read 2 lines in iea_df")
-  if (header[[2]] %>% startsWith(expected_2nd_line_start) & header[[2]] %>% endsWith(",")) {
-    # The file may have been opened in Excel and resaved.
-    # When that occurs, many commas are appended to the 2nd line.
-    # Strip out these commas before proceeding further.
-    # The pattern ,*$ means "match any number (*) of commas (,) at the end of the line ($)".
-    header[[2]] <- sub(pattern = ",*$", replacement = "", header[[2]])
+  assertthat::assert_that(length(first_two_lines) == 2, msg = "couldn't read 2 lines in iea_df")
+  first_line <- first_two_lines[[1]]
+  second_line <- first_two_lines[[2]]
+  # Ensure that we have an expected format for the first line or two in first_two_lines.
+  assertthat::assert_that(first_line %>% startsWith(expected_simple_start) | 
+                            (first_line %>% startsWith(expected_1st_line_start) & second_line %>% startsWith(expected_2nd_line_start)), 
+                          msg = paste0(".iea_file didn't start with '",
+                                 expected_simple_start,
+                                 "' or '",
+                                 expected_1st_line_start,
+                                 "\n",
+                                 expected_2nd_line_start,
+                                 "'."))
+  if (first_line %>% startsWith(expected_simple_start)) {
+    # We have the simple start to the file, so we can assume a one-line header.
+    if (!is.null(.iea_file)) {
+      IEAData_withheader <- data.table::fread(file = .iea_file, header = TRUE, sep = ",")
+    } else {
+      IEAData_withheader <- data.table::fread(text = text, header = TRUE, sep = ",")
+    }
+    cnames <- colnames(IEAData_withheader)
+  } else if (first_line %>% startsWith(expected_1st_line_start) & 
+             second_line %>% startsWith(expected_2nd_line_start)) {
+    # We have the complicated start to the file, so go through some additional work to apply the proper header
+    # to the file.
+    if (second_line %>% endsWith(",")) {
+      # The file may have been opened in Excel and resaved.
+      # When that occurs, many commas are appended to the 2nd line.
+      # Strip out these commas before proceeding further.
+      # The pattern ,*$ means "match any number (*) of commas (,) at the end of the line ($)".
+      second_line <- sub(pattern = ",*$", replacement = "", second_line)
+    }
+    if (!is.null(.iea_file)) {
+      # Slurp the file. This slurping ignores the header, which we know are the first 2 lines.
+      # Note that I'm using data.table::fread at the recommendation of
+      # https://statcompute.wordpress.com/2014/02/11/efficiency-of-importing-large-csv-files-in-r/
+      # which indicates this function is significantly faster than other options.
+      IEAData_noheader <- data.table::fread(file = .iea_file, header = FALSE, sep = ",", skip = 2)
+    } else {
+      IEAData_noheader <- data.table::fread(text = text, header = FALSE, sep = ",", skip = 2)
+    }
+    # At this point, the IEAData_noheader data frame has default (meaningless) column names, V1, V2, V3, ...
+    # Create column names from the header lines that we read previously.
+    # The code here should be robust to adding more years through time,
+    # because it simply replaces the first 3 items of the first line
+    # with appropriate values from the 2nd line.
+    cnames <- gsub(pattern = expected_1st_line_start, replacement = expected_2nd_line_start, first_line) %>%
+      strsplit(",") %>%
+      unlist()
+    IEAData_withheader <- IEAData_noheader %>%
+      magrittr::set_names(cnames)
   }
-  assertthat::assert_that(header[[1]] %>% startsWith(expected_1st_line_start) & header[[2]] == expected_2nd_line_start, 
-                          msg = paste0("In iea_df, input data didn't start with '", expected_1st_line_start, 
-                                       "' or second line didn't start with '", expected_2nd_line_start, "'")) 
-  if (!is.null(.iea_file)) {
-    # Slurp the file. This slurping ignores the header, which fread deems to be the first 2 lines.
-    # Note that I'm using data.table::fread at the recommendation of
-    # https://statcompute.wordpress.com/2014/02/11/efficiency-of-importing-large-csv-files-in-r/
-    # which indicates this function is significantly faster than other options.
-    IEAData_noheader <- data.table::fread(file = .iea_file, header = FALSE, sep = ",", skip = 2)
-  } else {
-    IEAData_noheader <- data.table::fread(text = text, header = FALSE, sep = ",", skip = 2)
-  }
-  # At this point, the IEAData_noheader data frame has default (meaningless) column names, V1, V2, V3, ...  
-  # Create column names from the header lines that we read previously.
-  # The code here should be robust to adding more years through time,
-  # because it simply replaces the first 3 items of the first line 
-  # with appropriate values from the 2nd line.
-  colnames <- gsub(pattern = expected_1st_line_start, replacement = expected_2nd_line_start, header[[1]]) %>% 
-    strsplit(",") %>% 
-    unlist()
-  IEAData_withheader <- IEAData_noheader %>% 
-    magrittr::set_names(colnames)
-  # At this point, IEAData_withheader may have some column names that end in `estimated_year`.
+  
+  # At this point, IEAData_withheader may have some column names that end in estimated_year.
   # We should delete those columns.
-  cols_to_delete <- grepl(pattern = paste0(estimated_year, "$"), x = colnames)
+  cols_to_delete <- grepl(pattern = paste0(estimated_year, "$"), x = cnames)
   # cols_to_delete has TRUE for each column to eliminate. But we need true for each column to KEEP.
   # With [!cols_to_delete], we get the desired effect.
   IEAData_withheader <- IEAData_withheader[!cols_to_delete]
-  
+
   # Data tagged as not-applicable in the IEA database should be coded as 0.
   # We still want to allow calculations with these data.
   IEAData_withheader[IEAData_withheader == not_applicable_data] <- 0
-  # However, missing data should be tagged as "not available", because calculations 
+  # However, missing data should be tagged as "not available", because calculations
   # with unavailable data should fail.
   # However, there are so many pieces of missing data, we code them as "0" for now.
   IEAData_withheader[IEAData_withheader == missing_data] <- 0
   # Data tagged as confidential are converted to 0.
   # What else can we do?
   IEAData_withheader[IEAData_withheader == confidential_data] <- 0
-  
-  # Convert all year columns (columns whose names are all numbers) to numeric, 
-  # convert into a data frame, and 
+
+  # Convert all year columns (columns whose names are all numbers) to numeric,
+  # convert into a data frame, and
   # return.
   IEAData_withheader %>%
       dplyr::mutate_at(dplyr::vars(year_cols(IEAData_withheader)), as.numeric) %>%
