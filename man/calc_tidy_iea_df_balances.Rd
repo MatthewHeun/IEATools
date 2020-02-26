@@ -79,7 +79,7 @@ So be sure to group \code{.tidy_iea_df} by appropriate variables
 before calling this function.
 Grouping should \emph{definitely} be done on the \code{Product} column.
 Typically, grouping is also done on
-\code{Country}, \code{Year}, \code{Energy.type}, \code{Last.stage}, etc. columns.
+\code{Country}, \code{Method}, \code{Year}, \code{Energy.type}, \code{Last.stage}, etc. columns.
 Grouping should \emph{not} be done on the \code{Ledger.side} column or the \code{Flow} column.
 To test whether all balances are OK,
 use the \code{\link[=tidy_iea_df_balanced]{tidy_iea_df_balanced()}} function.
