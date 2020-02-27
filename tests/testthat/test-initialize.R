@@ -2,6 +2,25 @@
 context("Initialize IEA data")
 ###########################################################
 
+test_that("iea_file_OK works", {
+  f <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>%
+    system.file(package = "IEATools") %>% 
+    iea_file_OK()
+  expect_true(length(f) > 1)
+  expect_equal(names(f), c("COUNTRY", "FLOW", "PRODUCT", "1971", "2000"))
+  
+  # Try again using the results of the first call
+  f2 <- iea_file_OK(iea_file_contents = f)
+  expect_true(length(f2) > 1)
+  expect_equal(names(f2), c("COUNTRY", "FLOW", "PRODUCT", "1971", "2000"))
+  
+  # Mess with the file and expect an error, because rows are no longer identical from one country to another.
+  f3 <- f2
+  f3[[1, 3]] <- f2[[2, 3]]
+  f3[[2, 3]] <- f2[[1, 3]]
+  expect_false(iea_file_OK(iea_file_contents = f3))
+})
+
 test_that("iea_df works", {
   # Test with only 1 line
   expect_error(iea_df(text = "abc"), "couldn't read 2 lines in iea_df")
@@ -144,7 +163,7 @@ test_that("augment_iea_df works", {
                                  "Nuclear industry        (energy)",
                                  "Losses"), 
                         stringsAsFactors = FALSE) %>% 
-    mutate(
+    dplyr::mutate(
       Country = "US",
       Product = "Heat",
       E.dot = 200

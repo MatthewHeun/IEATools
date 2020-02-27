@@ -357,3 +357,38 @@ prod_tp_eiou_energy_carriers <- function(file_path = file.path("extdata", "GH-ZA
     # either as inputs or outputs.
     magrittr::set_names(machines)  
 }
+
+
+#' Perform a ternary xor calculation
+#' 
+#' Binary xor returns TRUE iff only one of two arguments is `TRUE`, but not both.
+#' Ternary xor returns TRUE iff only one of three arguments is `TRUE`, but not both.
+#' 
+#' Internally, this function converts all arguments to numeric and sums.
+#' Only when the sum is `1`, the function returns `TRUE`.  
+#'
+#' @param a the first argument (a logical)
+#' @param b the second argument (a logical)
+#' @param c the third argument (a logical)
+#'
+#' @return `TRUE` if only one argument is true, `FALSE` otherwise.
+#' 
+#' @export
+#'
+#' @examples
+#' ternary_xor(TRUE, FALSE, FALSE)
+#' ternary_xor(FALSE, TRUE, FALSE)
+#' ternary_xor(FALSE, FALSE, TRUE)
+#' ternary_xor(TRUE, TRUE, FALSE)
+#' ternary_xor(FALSE, TRUE, TRUE)
+#' ternary_xor(TRUE, FALSE, TRUE)
+#' ternary_xor(TRUE, TRUE, TRUE)
+#' ternary_xor(FALSE, FALSE, FALSE)
+#' \dontrun{
+#'   ternary_xor(1, 0, 0) # error: all arguments need to be logical
+#'   ternary_xor(1, FALSE, FALSE) # error: all arguments need to be logical
+#' }
+ternary_xor <- function(a, b, c) {
+  assertthat::assert_that(is.logical(a) & is.logical(b) & is.logical(c), msg = "All arguments to ternary_xor must be logical")
+  return(as.numeric(a) + as.numeric(b) + as.numeric(c) == 1)
+}

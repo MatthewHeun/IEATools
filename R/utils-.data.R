@@ -1,6 +1,6 @@
 #' Data pronoun
 #'
-#' See \code{rlang::\link[rlang]{.data}} for details.
+#' See [rlang::.data] for details.
 #'
 #' @name .data
 #' @rdname data
