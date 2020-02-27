@@ -58,6 +58,19 @@ test_that("iea_df works", {
   expect_equal(colnames(IEADF2)[[5]], "2000")
 })
 
+test_that("iea_df works after first loading the file with iea_file_OK", {
+  DF1 <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>%
+    system.file(package = "IEATools") %>% 
+    iea_file_OK()
+  DF2 <- iea_df(iea_file_contents = DF1)
+  # Verify that we got the right types of columns
+  expect_true(inherits(DF2$COUNTRY, "character"))
+  expect_true(inherits(DF2$FLOW, "character"))
+  expect_true(inherits(DF2$PRODUCT, "character"))
+  expect_true(inherits(DF2$`1971`, "numeric"))
+  expect_true(inherits(DF2$`2000`, "numeric"))
+})
+
 test_that("iea_df works with a plain first row", {
   # This is an alternative format that is sometimes obtained from the IEA.
   # (Extra commas are present on the 2nd line.)
