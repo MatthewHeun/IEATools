@@ -57,6 +57,25 @@ readChar(IEA_path, nchars = 256)
 ```
 
 
+### Check the integrity of the IEA data file (`iea_file_OK()`)
+
+When starting to work with an IEA data file, 
+it is important to verify its integrity.
+`iea_file_OK()` performs This function performs some validation tests on its argument.
+Specifically, this function confirms that every country has the same `FLOW` and `PRODUCT` 
+rows in the same order.
+Note that the IEA data file is read internally with `data.table::fread()` 
+*without* stripping white space.
+Also, if the IEA data file passes the integrity checks, 
+a data frame representing the file (without modification) is returned.
+
+```{r}
+IEA_path %>% 
+  iea_file_OK() %>% 
+  glimpse()
+```
+
+
 ### Convert the IEA data into an R data frame (`iea_df()`)
 
 Extended energy balance data can be pulled directly into an `R` data frame 
@@ -96,6 +115,13 @@ the only rational way to proceed is to convert
 IEA_data <- IEA_path %>% 
   iea_df()
 IEA_data %>% 
+  glimpse()
+```
+
+The output of `iea_file_OK()` can be read by `iea_df()`, too.
+
+```{r}
+iea_df(iea_file_contents = iea_file_OK(IEA_path)) %>% 
   glimpse()
 ```
 
