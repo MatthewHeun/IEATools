@@ -216,7 +216,6 @@ iea_df <- function(.iea_file = NULL,
       } else {
         IEAData_withheader <- data.table::fread(text = text, header = TRUE, sep = ",")
       }
-      cnames <- colnames(IEAData_withheader)
     } else if (first_line %>% startsWith(expected_1st_line_start) & 
                second_line %>% startsWith(expected_2nd_line_start)) {
       # We have the complicated start to the file, so go through some additional work to apply the proper header
@@ -256,6 +255,7 @@ iea_df <- function(.iea_file = NULL,
   
   # At this point, IEAData_withheader may have some column names that end in estimated_year.
   # We should delete those columns.
+  cnames <- colnames(IEAData_withheader)
   cols_to_delete <- grepl(pattern = paste0(estimated_year, "$"), x = cnames)
   # cols_to_delete has TRUE for each column to eliminate. But we need true for each column to KEEP.
   # With [!cols_to_delete], we get the desired effect.
