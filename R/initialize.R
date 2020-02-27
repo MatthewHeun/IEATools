@@ -2,7 +2,7 @@
 #' 
 #' When starting to work with an IEA data file, 
 #' it is important to verify its integrity.
-#' This function performs verification steps on `.iea_file`.
+#' This function performs some validation tests on `.iea_file`.
 #' 
 #' At this time, the only verification step performed by this function
 #' is confirming that every country has the same flow and product rows in the same order.
