@@ -4,7 +4,10 @@
 \alias{sample_iea_data_path}
 \title{The path to a sample data frame}
 \usage{
-sample_iea_data_path()
+sample_iea_data_path(year = 2019)
+}
+\arguments{
+\item{year}{the desired year of sample data. Options are 2019 (default) and 2018.}
 }
 \value{
 the path to a sample data file.
@@ -18,5 +21,5 @@ Nick Johnstone (IEA Chief Statistician) and Matthew Kuperus Heun (IEATools devel
 on Monday, 3 June 2019.
 }
 \examples{
-sample_iea_data_path()
+sample_iea_data_path() # Assumes 2019
 }

@@ -366,13 +366,21 @@ prod_tp_eiou_energy_carriers <- function(file_path = sample_iea_data_path(),
 #' Nick Johnstone (IEA Chief Statistician) and Matthew Kuperus Heun (IEATools developer)
 #' on Monday, 3 June 2019.
 #'
+#' @param year the desired year of sample data. Options are 2019 (default) and 2018. 
+#'
 #' @return the path to a sample data file.
 #' 
 #' @export
 #'
 #' @examples
-#' sample_iea_data_path()
-sample_iea_data_path <- function() {
-  file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2019.csv") %>%
-    system.file(package = "IEATools")
+#' sample_iea_data_path() # Assumes 2019
+sample_iea_data_path <- function(year = 2019) {
+  if (year == 2018) {
+    return(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2018.csv") %>%
+             system.file(package = "IEATools"))  
+  } else if (year == 2019) {
+    return(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2019.csv") %>%
+             system.file(package = "IEATools"))
+  }
+  stop("Only year = 2019 is supported in sample_iea_data_path()")
 }

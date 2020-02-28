@@ -186,9 +186,7 @@ test_that("augment_iea_df works", {
   
   # As of 2019, the IEA no longer tags flows with "(transf.)", "(transformation)", or "(energy)".  
   # So these tests must be applied only to 2018 data.
-
-  IEADF_unaugmented_2018 <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2018.csv") %>%
-    system.file(package = "IEATools") %>% 
+  IEADF_unaugmented_2018 <- sample_iea_data_path(2018) %>% 
     iea_df() %>% 
     rename_iea_df_cols()
   IEADF_augmented_2018 <- IEADF_unaugmented_2018 %>% 

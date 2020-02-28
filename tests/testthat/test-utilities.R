@@ -136,7 +136,8 @@ test_that("tp_products() works as expected", {
   expect_equal(length(names(supply_eiou)), 0)
 })
 
-test_that("sample_file_path works correctly", {
-  expect_true(sample_iea_data_path() %>% endsWith("IEATools/extdata/GH-ZA-ktoe-Extended-Energy-Balances-sample.csv"))
+test_that("sample_iea_file_path works correctly", {
+  expect_true(sample_iea_data_path() %>% endsWith("IEATools/extdata/GH-ZA-ktoe-Extended-Energy-Balances-sample-2019.csv"))
+  expect_true(endsWith(sample_iea_data_path(2018), "IEATools/extdata/GH-ZA-ktoe-Extended-Energy-Balances-sample-2018.csv"))
+  expect_error(sample_iea_data_path(2017), "Only year = 2019 is supported in sample_iea_data_path")
 })
-
