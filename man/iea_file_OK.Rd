@@ -43,7 +43,6 @@ Note that \code{.iea_file} is read internally with \code{\link[data.table:fread]
 }
 \examples{
 library(magrittr)
-file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\%
- system.file(package = "IEATools") \%>\% 
+sample_data_path() \%>\% 
  iea_file_OK()
 }

@@ -24,8 +24,7 @@
 #'
 #' @examples
 #' library(magrittr)
-#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>%
-#'  system.file(package = "IEATools") %>% 
+#' sample_data_path() %>% 
 #'  iea_file_OK()
 iea_file_OK <- function(.iea_file = NULL, 
                         text = NULL,
@@ -78,9 +77,9 @@ iea_file_OK <- function(.iea_file = NULL,
 }
 
 
-#' Load IEA data from an extended enegy balances csv file
+#' Load IEA data from an extended energy balances .csv file
 #'
-#' This function reads an IEA extended energy balances file and
+#' This function reads an IEA extended energy balances .csv file and
 #' converts it to a data frame with appropriately-labeled columns.
 #' One of `iea_file` or `text` must be specified, but not both.
 #' The first line of `iea_file` or `text`
@@ -88,7 +87,7 @@ iea_file_OK <- function(.iea_file = NULL,
 #' the second line is expected to start with `expected_2nd_line_start`, and
 #' it may have any number of commas appended.
 #' (The extra commas might come from opening and re-saving the file in Excel.)
-#' Alternatively, the file may start with `expected_simple_start`.
+#' Alternatively, the file may have a first line of `expected_simple_start`.
 #' If none of these conditions are not met, execution is halted, and
 #' an error message is provided.
 #' Files should have a return character at the end of their final line.
@@ -97,6 +96,18 @@ iea_file_OK <- function(.iea_file = NULL,
 #' in columns at the right of `.iea_file`, 
 #' because column names in the output are constructed from the header line(s) of `.iea_file` 
 #' (which contain years and country, flow, product information).
+#' 
+#' In the IEA's data, some entries in the "FLOW" column are quoted to avoid creating too many columns. 
+#' For example, "Paper, pulp and printing" is quoted in the raw .csv file: 
+#' "      Paper, pulp and printing".
+#' Internally, this function uses [data.table::fread()], which, unfortunately, does not
+#' strip leading and trailing white space from quoted entries.
+#' So the function uses [base::trimws()] to finish the job.
+#' 
+#' When the IEA includes estimated data for a year, 
+#' the column name of the estimated year includes an "E" appended.
+#' (E.g., "2017E".) 
+#' This function eliminates estimated columns.
 #' 
 #' The IEA data have indicators for 
 #' not applicable values ("`x`") and for
@@ -140,6 +151,7 @@ iea_file_OK <- function(.iea_file = NULL,
 #'        Note that `expected_simple_start` is sometimes encountered in data supplied by the IEA.
 #'        Furthermore, `expected_simple_start` could be the format of the file when somebody "helpfully" fiddles with 
 #'        the raw data from the IEA.
+#' @param flow the name of the flow column, entries of which are stripped of leading and trailing white space. Default is "FLOW".
 #' @param missing_data a string that identifies missing data. Default is "`..`".
 #'        Entries of `missing_data` are coded as `0`` in output.
 #' @param not_applicable_data a string that identifies not-applicable data. Default is "x".
@@ -171,6 +183,7 @@ iea_df <- function(.iea_file = NULL,
                    text = NULL, 
                    expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
                    expected_simple_start = expected_2nd_line_start,
+                   flow = "FLOW",
                    missing_data = "..", not_applicable_data = "x", confidential_data = "c", 
                    estimated_year = "E"){
   assertthat::assert_that(xor(!is.null(.iea_file), !is.null(text)), 
@@ -244,6 +257,11 @@ iea_df <- function(.iea_file = NULL,
   # cols_to_delete has TRUE for each column to eliminate. But we need true for each column to KEEP.
   # With [!cols_to_delete], we get the desired effect.
   IEAData_withheader <- IEAData_withheader[!cols_to_delete]
+  
+  # The data.table::fread function doesn't trim leading and trailing whitespace from quoted entries.
+  # In practice, this means that any FLOW containing a comma may have leading whitespace.
+  # Eliminate this whitespace.
+  IEAData_withheader[[flow]] <- trimws(IEAData_withheader[[flow]])
 
   # Data tagged as not-applicable in the IEA database should be coded as 0.
   # We still want to allow calculations with these data.
@@ -343,8 +361,7 @@ clean_iea_whitespace <- function(.iea_df,
 #' @export
 #'
 #' @examples
-#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEATools") %>% 
+#' sample_data_path() %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   use_iso_countries()
@@ -407,8 +424,7 @@ use_iso_countries <- function(.iea_df,
 #' @export
 #'
 #' @examples
-#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEATools") %>% 
+#' sample_data_path() %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   remove_agg_memo_flows()
@@ -684,8 +700,7 @@ augment_iea_df <- function(.iea_df,
 #' @export
 #'
 #' @examples
-#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEATools") %>% 
+#' sample_data_path() %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   remove_agg_memo_flows() %>% 
@@ -734,7 +749,7 @@ tidy_iea_df <- function(.iea_df,
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
 #' 
-#' @param .iea_file the path of the file to be loaded. Default loads example data bundled with the package.
+#' @param .iea_file the path of the file to be loaded. Default loads example data bundled with the package via [sample_data_path()].
 #' @param remove_zeroes a logical indicating whether data points with the value `0` are to be removed from the output. (Default is `TRUE`.)
 #'
 #' @return a tidy, augmented data frame of IEA extended energy balance data.
@@ -747,8 +762,7 @@ tidy_iea_df <- function(.iea_df,
 #' # Take a simple approach
 #' simple <- load_tidy_iea_df()
 #' # Take the complicated approach
-#' complicated <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEATools") %>% 
+#' complicated <- sample_data_path() %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   clean_iea_whitespace() %>% 
@@ -758,10 +772,9 @@ tidy_iea_df <- function(.iea_df,
 #'   tidy_iea_df()
 #' # simple and complicated should be exactly the same
 #' all(simple == complicated)
-load_tidy_iea_df <- function(.iea_file = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-                               system.file(package = "IEATools"), 
+load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(), 
                              remove_zeroes = TRUE){
-  file_path %>% 
+  .iea_file %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
     clean_iea_whitespace() %>% 

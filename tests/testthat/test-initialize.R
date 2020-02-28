@@ -3,8 +3,7 @@ context("Initialize IEA data")
 ###########################################################
 
 test_that("iea_file_OK works", {
-  f <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>%
-    system.file(package = "IEATools")
+  f <- sample_data_path()
   expect_true(iea_file_OK(f))
   
   # Read the file as text and use the text argument.
@@ -43,8 +42,7 @@ test_that("iea_df works", {
   expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal (if no detail),42,43"), expectedDF)
   # Test with a full IEA data file in the correct format
   # IEAfile <- file.path("extdata", "IEA-2Countries-full2ndrow.csv") %>% 
-  IEAfile <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEATools")
+  IEAfile <- sample_data_path()
   IEAtext <- readChar(IEAfile, file.info(IEAfile)$size)
   # Eliminate all series of commas at ends of lines
   # The pattern ,*$ means "match any number (*) of commas (,) at the end of a line ($)".
@@ -57,8 +55,7 @@ test_that("iea_df works", {
   expect_equal(ncol(IEADF), 5)
   expect_equal(colnames(IEADF)[[5]], "2000")
   # Test with an IEA data file with extra commas on the 2nd line.
-  IEADF2 <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEATools") %>% 
+  IEADF2 <- sample_data_path() %>% 
     iea_df()
   expect_equal(nrow(IEADF2), 14688)
   expect_equal(ncol(IEADF2), 5)
@@ -106,6 +103,18 @@ test_that("iea_df strips white space from FLOW columns", {
   df <- iea_df(text = text_contents)
   # Expect that the leading spaces have been stripped
   expect_equal(df[[1, 2]], "Paper, pulp and printing")
+  
+  # Try with the sample data
+  # Load the data without processing it to verify that there are leading spaces in the FLOW column
+  # The example file has 272 rows in which FLOW begins with white space, even after using strip.white = TRUE.
+  expect_true(data.table::fread(file = sample_iea_data_path(), strip.white = TRUE, header = TRUE, sep = ",") %>% 
+                dplyr::filter(startsWith(.data$FLOW, " ")) %>% 
+                nrow() == 272)
+  # Now run the iea_df function over the same file. 
+  # iea_df ought to strip all of that white space, leaving none left.
+  expect_true(iea_df(sample_iea_data_path()) %>% 
+                dplyr::filter(startsWith(.data$FLOW, " ")) %>% 
+                nrow() == 0)
 })
 
 test_that("iea_df works with .. and x", {
@@ -151,8 +160,7 @@ test_that("augment_iea_df works", {
   expect_equal(simple_with_tfc_df$Ledger.side, c("Supply", "Consumption"))
   expect_equal(simple_with_tfc_df$Flow.aggregation.point, c("Total primary energy supply", NA_character_))
   
-  IEADF_unaugmented <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEATools") %>% 
+  IEADF_unaugmented <- sample_data_path() %>% 
     iea_df() %>% 
     rename_iea_df_cols()
   IEADF_augmented <- IEADF_unaugmented %>% 
@@ -214,8 +222,7 @@ context("Testing munge_to_tidy")
 ###########################################################
 
 test_that("remove_agg_memo_flows works as expected", {
-  Cleaned <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEATools") %>% 
+  Cleaned <- sample_data_path() %>% 
     iea_df() %>% 
     rename_iea_df_cols() %>% 
     remove_agg_memo_flows()
@@ -244,8 +251,7 @@ test_that("remove_agg_memo_flows works as expected", {
 
   # Try again with a different approach. 
   # This time, ensure that rows we want to clean are present first.
-  IEA_data <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEATools") %>% 
+  IEA_data <- sample_data_path() %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
     augment_iea_df()
@@ -283,8 +289,7 @@ test_that("remove_agg_memo_flows works as expected", {
 })
 
 test_that("use_iso_countries works as expected", {
-  iso3 <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEATools") %>% 
+  iso3 <- sample_data_path() %>% 
     iea_df() %>% 
     rename_iea_df_cols() %>% 
     use_iso_countries()
@@ -294,8 +299,7 @@ test_that("use_iso_countries works as expected", {
   expect_true(any(iso3$Country == "GHA"))
 
   # Try with 2-letter vs. 3-letter abbreviations
-  iso2 <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEATools") %>% 
+  iso2 <- sample_data_path() %>% 
     iea_df() %>% 
     rename_iea_df_cols() %>% 
     use_iso_countries(iso_abbrev_type = 2)
@@ -346,8 +350,7 @@ test_that("trimming white space works", {
 
 test_that("load_tidy_iea_df works as expected", {
   simple <- load_tidy_iea_df()
-  complicated <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-    system.file(package = "IEATools") %>% 
+  complicated <- sample_data_path() %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
     clean_iea_whitespace() %>% 

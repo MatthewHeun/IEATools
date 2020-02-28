@@ -5,8 +5,7 @@
 \title{Identify all energy types supplied or consumed by Production, Transformation processes, or Energy industry own use}
 \usage{
 prod_tp_eiou_energy_carriers(
-  file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv")
-    \%>\% system.file(package = "IEATools"),
+  file_path = sample_iea_data_path(),
   iea_df = IEATools::load_tidy_iea_df(file_path),
   side = c("Consumption", "Supply"),
   flow_aggregation_point = "Flow.aggregation.point",

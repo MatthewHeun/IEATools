@@ -53,6 +53,8 @@ library(IEATools)
 # Define the file location
 IEA_path <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
   system.file(package = "IEATools")
+# Or use the function
+IEA_path <- sample_iea_data_path()
 readChar(IEA_path, nchars = 256)
 ```
 
@@ -115,13 +117,6 @@ the only rational way to proceed is to convert
 IEA_data <- IEA_path %>% 
   iea_df()
 IEA_data %>% 
-  glimpse()
-```
-
-The output of `iea_file_OK()` can be read by `iea_df()`, too.
-
-```{r}
-iea_df(iea_file_contents = iea_file_OK(IEA_path)) %>% 
   glimpse()
 ```
 
@@ -272,12 +267,11 @@ loads the sample data bundled with the package and
 converts it to a tidy IEA data frame, 
 assuming default arguments for all functions. 
 But you can supply the path to any IEA data file
-in the `file_path` argument to `load_tidy_iea_df()`.
+in the `.iea_file` argument to `load_tidy_iea_df()`.
 
 ```{r}
 Simple <- load_tidy_iea_df()
-Complicated <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-  system.file(package = "IEATools") %>% 
+Complicated <- sample_iea_data_path() %>% 
   iea_df() %>%
   rename_iea_df_cols() %>% 
   remove_agg_memo_flows() %>% 

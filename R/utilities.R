@@ -300,8 +300,7 @@ carnot_efficiency <- function(heat_types, T_0 = 298.15){
 #'
 #' @examples
 #' prod_tp_eiou_energy_carriers()
-prod_tp_eiou_energy_carriers <- function(file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-                                           system.file(package = "IEATools"), 
+prod_tp_eiou_energy_carriers <- function(file_path = sample_iea_data_path(), 
                                          iea_df = IEATools::load_tidy_iea_df(file_path), 
                                          side = c("Consumption", "Supply"),
                                          flow_aggregation_point = "Flow.aggregation.point", 
@@ -359,36 +358,21 @@ prod_tp_eiou_energy_carriers <- function(file_path = file.path("extdata", "GH-ZA
 }
 
 
-#' Perform a ternary xor calculation
+#' The path to a sample data frame
 #' 
-#' Binary xor returns TRUE iff only one of two arguments is `TRUE`, but not both.
-#' Ternary xor returns TRUE iff only one of three arguments is `TRUE`, but not both.
+#' The sample data file is in .csv format and contains for Ghana and South Africa for 1971 and 2000.
 #' 
-#' Internally, this function converts all arguments to numeric and sums.
-#' Only when the sum is `1`, the function returns `TRUE`.  
+#' Permission to include this data was provided in a phone conversation between 
+#' Nick Johnstone (IEA Chief Statistician) and Matthew Kuperus Heun (IEATools developer)
+#' on Monday, 3 June 2019.
 #'
-#' @param a the first argument (a logical)
-#' @param b the second argument (a logical)
-#' @param c the third argument (a logical)
-#'
-#' @return `TRUE` if only one argument is true, `FALSE` otherwise.
+#' @return the path to a sample data file.
 #' 
 #' @export
 #'
 #' @examples
-#' ternary_xor(TRUE, FALSE, FALSE)
-#' ternary_xor(FALSE, TRUE, FALSE)
-#' ternary_xor(FALSE, FALSE, TRUE)
-#' ternary_xor(TRUE, TRUE, FALSE)
-#' ternary_xor(FALSE, TRUE, TRUE)
-#' ternary_xor(TRUE, FALSE, TRUE)
-#' ternary_xor(TRUE, TRUE, TRUE)
-#' ternary_xor(FALSE, FALSE, FALSE)
-#' \donttest{
-#'   ternary_xor(1, 0, 0) # error: all arguments need to be logical
-#'   ternary_xor(1, FALSE, FALSE) # error: all arguments need to be logical
-#' }
-ternary_xor <- function(a, b, c) {
-  assertthat::assert_that(is.logical(a) & is.logical(b) & is.logical(c), msg = "All arguments to ternary_xor must be logical")
-  return(as.numeric(a) + as.numeric(b) + as.numeric(c) == 1)
+#' sample_iea_data_path()
+sample_iea_data_path <- function() {
+  file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>%
+    system.file(package = "IEATools")
 }
