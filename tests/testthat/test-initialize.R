@@ -62,8 +62,7 @@ test_that("iea_df works", {
 })
 
 test_that("iea_df works after first checking the file with iea_file_OK", {
-  f <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>%
-    system.file(package = "IEATools")
+  f <- sample_iea_data_path()
   isOK <- iea_file_OK(f)
   DF2 <- iea_df(f)
   # Verify that we got the right types of columns
@@ -365,10 +364,10 @@ test_that("load_tidy_iea_df works as expected", {
     use_iso_countries() %>% 
     augment_iea_df() %>% 
     tidy_iea_df()
-  expect_true(all(simple == complicated))
+  expect_equal(simple, complicated)
 })
 
-test_that("spreading by years works as expected after load_tiey_iea_df()", {
+test_that("spreading by years works as expected after load_tidy_iea_df()", {
   year_spread <- load_tidy_iea_df() %>% 
     tidyr::spread(key = Year, value = E.dot)
   expect_true("1971" %in% names(year_spread))
