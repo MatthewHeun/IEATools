@@ -734,7 +734,7 @@ tidy_iea_df <- function(.iea_df,
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
 #' 
-#' @param file_path the path of the file to be loaded. Default loads example data bundled with the package.
+#' @param .iea_file the path of the file to be loaded. Default loads example data bundled with the package.
 #' @param remove_zeroes a logical indicating whether data points with the value `0` are to be removed from the output. (Default is `TRUE`.)
 #'
 #' @return a tidy, augmented data frame of IEA extended energy balance data.
@@ -742,7 +742,11 @@ tidy_iea_df <- function(.iea_df,
 #' @export
 #'
 #' @examples
+#' # Check the file first
+#' iea_file_OK(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% system.file(package = "IEATools"))
+#' # Take a simple approach
 #' simple <- load_tidy_iea_df()
+#' # Take the complicated approach
 #' complicated <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
 #'   system.file(package = "IEATools") %>% 
 #'   iea_df() %>%
@@ -752,8 +756,9 @@ tidy_iea_df <- function(.iea_df,
 #'   use_iso_countries() %>% 
 #'   augment_iea_df() %>% 
 #'   tidy_iea_df()
+#' # simple and complicated should be exactly the same
 #' all(simple == complicated)
-load_tidy_iea_df <- function(file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
+load_tidy_iea_df <- function(.iea_file = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
                                system.file(package = "IEATools"), 
                              remove_zeroes = TRUE){
   file_path %>% 
