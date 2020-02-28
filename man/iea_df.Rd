@@ -6,7 +6,6 @@
 \usage{
 iea_df(
   .iea_file = NULL,
-  iea_file_contents = NULL,
   text = NULL,
   expected_1st_line_start = ",,TIME",
   expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT",
@@ -20,9 +19,6 @@ iea_df(
 \arguments{
 \item{.iea_file}{a string containing the path to a .csv file of extended energy balances from the IEA.
 Default is the path to a sample IEA file provided in this package.}
-
-\item{iea_file_contents}{a data frame with the contents of a previous read of an IEA file.
-This argument is likely to be the return value of a call to \code{\link[=iea_file_OK]{iea_file_OK()}}.}
 
 \item{text}{a character string that can be parsed as IEA extended energy balances.
 (This argument is useful for testing.)}

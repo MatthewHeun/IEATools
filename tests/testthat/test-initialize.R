@@ -4,21 +4,28 @@ context("Initialize IEA data")
 
 test_that("iea_file_OK works", {
   f <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>%
-    system.file(package = "IEATools") %>% 
-    iea_file_OK()
-  expect_true(length(f) > 1)
-  expect_equal(names(f), c("COUNTRY", "FLOW", "PRODUCT", "1971", "2000"))
+    system.file(package = "IEATools")
+  expect_true(iea_file_OK(f))
   
-  # Try again using the results of the first call
-  f2 <- iea_file_OK(iea_file_contents = f)
-  expect_true(length(f2) > 1)
-  expect_equal(names(f2), c("COUNTRY", "FLOW", "PRODUCT", "1971", "2000"))
-  
+  # Read the file as text and use the text argument.
+  conn <- file(f, open = "rt") # open file connection
+  f_text <- conn %>% readLines()
+  expect_true(iea_file_OK(text = f_text))
+  close(conn)
+
   # Mess with the file and expect an error, because rows are no longer identical from one country to another.
-  f3 <- f2
-  f3[[1, 3]] <- f2[[2, 3]]
-  f3[[2, 3]] <- f2[[1, 3]]
-  expect_false(iea_file_OK(iea_file_contents = f3))
+  f1 <- data.table::fread(file = f, header = TRUE, strip.white = FALSE, sep = ",")
+  f2 <- f1
+  f2[[1, 3]] <- f1[[2, 3]]
+  f2[[2, 3]] <- f1[[1, 3]]
+  # Write to a temporary file as a .csv file
+  tf <- tempfile(pattern = "iea_file_OK_test", fileext = ".csv")
+  write.csv(f2, file = tf)
+  expect_false(iea_file_OK(tf))
+  # Delete file if it exists
+  if (file.exists(tf)) {
+    file.remove(tf)
+  }
 })
 
 test_that("iea_df works", {
@@ -58,11 +65,11 @@ test_that("iea_df works", {
   expect_equal(colnames(IEADF2)[[5]], "2000")
 })
 
-test_that("iea_df works after first loading the file with iea_file_OK", {
-  DF1 <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>%
-    system.file(package = "IEATools") %>% 
-    iea_file_OK()
-  DF2 <- iea_df(iea_file_contents = DF1)
+test_that("iea_df works after first checking the file with iea_file_OK", {
+  f <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>%
+    system.file(package = "IEATools")
+  isOK <- iea_file_OK(f)
+  DF2 <- iea_df(f)
   # Verify that we got the right types of columns
   expect_true(inherits(DF2$COUNTRY, "character"))
   expect_true(inherits(DF2$FLOW, "character"))

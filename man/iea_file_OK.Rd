@@ -6,11 +6,11 @@
 \usage{
 iea_file_OK(
   .iea_file = NULL,
-  iea_file_contents = NULL,
+  text = NULL,
   country = "COUNTRY",
   flow = "FLOW",
   product = "PRODUCT",
-  rowid = "rownum"
+  rowid = "rowid"
 )
 }
 \arguments{
@@ -22,15 +22,15 @@ iea_file_OK(
 
 \item{product}{the name of the product column. Default is "PRODUCT".}
 
-\item{rowid}{the name of a row number column added internally to \code{.iea_file} per country. Default is "rownum".}
+\item{rowid}{the name of a row number column added internally to \code{.iea_file} per country. Default is "rowid".}
 }
 \value{
-the file contents (as a data frame) if all checks pass. Errors are thrown when a verification step fails.
+\code{TRUE} if \code{.iea_file} passes all checks. Errors are thrown when a verification step fails.
 }
 \description{
 When starting to work with an IEA data file,
 it is important to verify its integrity.
-This function performs verification steps on \code{.iea_file}.
+This function performs some validation tests on \code{.iea_file}.
 }
 \details{
 At this time, the only verification step performed by this function
@@ -45,6 +45,5 @@ Note that \code{.iea_file} is read internally with \code{\link[data.table:fread]
 library(magrittr)
 file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\%
  system.file(package = "IEATools") \%>\% 
- iea_file_OK() \%>\% 
- head()
+ iea_file_OK()
 }
