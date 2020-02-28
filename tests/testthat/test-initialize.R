@@ -93,6 +93,21 @@ test_that("iea_df works with a plain first row", {
   expect_equal(iea_df(.iea_file = tiny_file), expectedDF)
 })
 
+test_that("iea_df strips white space from FLOW columns", {
+  # In the IEA's 2019 data, some data are quoted to avoid creating too many columns. 
+  # For example, Paper, pulp and printing is quoted in the raw .csv file: "      Paper, pulp and printing".
+  # There are leading spaces, but data.table::fread
+  # doesn't strip white space from quoted data.
+  # So I have to do extra work to strip that white space. 
+  # This test verifies that the code is working correctly.
+  
+  # Set up a text string that exhibits the problem
+  text_contents <- ',,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,"      Paper, pulp and printing",Hard coal (if no detail),42,43'
+  df <- iea_df(text = text_contents)
+  # Expect that the leading spaces have been stripped
+  expect_equal(df[[1, 2]], "Paper, pulp and printing")
+})
+
 test_that("iea_df works with .. and x", {
   expectedDF <- data.frame(COUNTRY = "World", FLOW = "Production", PRODUCT = "Hard coal (if no detail)", `1960` = 0, `1961` = 0, 
                            check.names = FALSE, stringsAsFactors = FALSE) 
