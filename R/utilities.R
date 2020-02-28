@@ -384,7 +384,7 @@ prod_tp_eiou_energy_carriers <- function(file_path = file.path("extdata", "GH-ZA
 #' ternary_xor(TRUE, FALSE, TRUE)
 #' ternary_xor(TRUE, TRUE, TRUE)
 #' ternary_xor(FALSE, FALSE, FALSE)
-#' \dontrun{
+#' \donttest{
 #'   ternary_xor(1, 0, 0) # error: all arguments need to be logical
 #'   ternary_xor(1, FALSE, FALSE) # error: all arguments need to be logical
 #' }
