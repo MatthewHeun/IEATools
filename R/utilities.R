@@ -373,6 +373,6 @@ prod_tp_eiou_energy_carriers <- function(file_path = sample_iea_data_path(),
 #' @examples
 #' sample_iea_data_path()
 sample_iea_data_path <- function() {
-  file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>%
+  file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2019.csv") %>%
     system.file(package = "IEATools")
 }

@@ -3,7 +3,7 @@ context("Initialize IEA data")
 ###########################################################
 
 test_that("iea_file_OK works", {
-  f <- sample_data_path()
+  f <- sample_iea_data_path()
   expect_true(iea_file_OK(f))
   
   # Read the file as text and use the text argument.
@@ -41,8 +41,7 @@ test_that("iea_df works", {
   # (Extra commas are present on the 2nd line.)
   expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal (if no detail),42,43"), expectedDF)
   # Test with a full IEA data file in the correct format
-  # IEAfile <- file.path("extdata", "IEA-2Countries-full2ndrow.csv") %>% 
-  IEAfile <- sample_data_path()
+  IEAfile <- sample_iea_data_path()
   IEAtext <- readChar(IEAfile, file.info(IEAfile)$size)
   # Eliminate all series of commas at ends of lines
   # The pattern ,*$ means "match any number (*) of commas (,) at the end of a line ($)".
@@ -55,7 +54,7 @@ test_that("iea_df works", {
   expect_equal(ncol(IEADF), 5)
   expect_equal(colnames(IEADF)[[5]], "2000")
   # Test with an IEA data file with extra commas on the 2nd line.
-  IEADF2 <- sample_data_path() %>% 
+  IEADF2 <- sample_iea_data_path() %>% 
     iea_df()
   expect_equal(nrow(IEADF2), 14688)
   expect_equal(ncol(IEADF2), 5)
@@ -123,7 +122,7 @@ test_that("iea_df works with .. and x", {
   expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),..,x"), expectedDF)
 })
 
-test_that("iea_df works with estimated columns postfixed by 'E'", {
+test_that("iea_df works with estimated columns sufffixed by 'E'", {
   expectedDF <- data.frame(COUNTRY = "World", FLOW = "Production", PRODUCT = "Hard coal (if no detail)", `1960` = 0, 
                            check.names = FALSE, stringsAsFactors = FALSE) 
   expect_equal(iea_df(text = ",,TIME,1960,1961E\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),..,x"), expectedDF)
@@ -160,7 +159,7 @@ test_that("augment_iea_df works", {
   expect_equal(simple_with_tfc_df$Ledger.side, c("Supply", "Consumption"))
   expect_equal(simple_with_tfc_df$Flow.aggregation.point, c("Total primary energy supply", NA_character_))
   
-  IEADF_unaugmented <- sample_data_path() %>% 
+  IEADF_unaugmented <- sample_iea_data_path() %>% 
     iea_df() %>% 
     rename_iea_df_cols()
   IEADF_augmented <- IEADF_unaugmented %>% 
@@ -185,19 +184,29 @@ test_that("augment_iea_df works", {
   expect_false(any(IEADF_augmented %>% dplyr::select(-Flow.aggregation.point) == ".."))
   expect_false(any(IEADF_augmented %>% dplyr::select(-Flow.aggregation.point) == "x"))
   
-  # Check that the original has flows that end in "(transf.)"
-  expect_true(nrow(IEADF_unaugmented %>% filter(endsWith(Flow, "(transf.)"))) > 0)
-  # Check that the original has flows that end in "(transformation)"
-  expect_true(nrow(IEADF_unaugmented %>% filter(endsWith(Flow, "(transformation)"))) > 0)
-  # Check that the original has flows that end in "(energy)"
-  expect_true(nrow(IEADF_unaugmented %>% filter(endsWith(Flow, "(energy)"))) > 0)
+  # As of 2019, the IEA no longer tags flows with "(transf.)", "(transformation)", or "(energy)".  
+  # So these tests must be applied only to 2018 data.
+
+  IEADF_unaugmented_2018 <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2018.csv") %>%
+    system.file(package = "IEATools") %>% 
+    iea_df() %>% 
+    rename_iea_df_cols()
+  IEADF_augmented_2018 <- IEADF_unaugmented_2018 %>% 
+    augment_iea_df()
   
+  # Check that the original has flows that end in "(transf.)"
+  expect_true(nrow(IEADF_unaugmented_2018 %>% filter(endsWith(Flow, "(transf.)"))) > 0)
+  # Check that the original has flows that end in "(transformation)"
+  expect_true(nrow(IEADF_unaugmented_2018 %>% filter(endsWith(Flow, "(transformation)"))) > 0)
+  # Check that the original has flows that end in "(energy)"
+  expect_true(nrow(IEADF_unaugmented_2018 %>% filter(endsWith(Flow, "(energy)"))) > 0)
+
   # Check that all "(transf.)" have been removed from the Flow column
-  expect_equal(nrow(IEADF_augmented %>% filter(endsWith(Flow, "(transf.)"))), 0)
+  expect_equal(nrow(IEADF_augmented_2018 %>% filter(endsWith(Flow, "(transf.)"))), 0)
   # Check that all "(transformation)" have been removed from the Flow column
-  expect_equal(nrow(IEADF_augmented %>% filter(endsWith(Flow, "(transformation)"))), 0)
+  expect_equal(nrow(IEADF_augmented_2018 %>% filter(endsWith(Flow, "(transformation)"))), 0)
   # Check that all "(energy)" have been removed from the Flow column
-  expect_equal(nrow(IEADF_augmented %>% filter(endsWith(Flow, "(energy)"))), 0)
+  expect_equal(nrow(IEADF_augmented_2018 %>% filter(endsWith(Flow, "(energy)"))), 0)
   
   
   # Try a bogus data frame with extra spaces before the suffix.
@@ -222,7 +231,7 @@ context("Testing munge_to_tidy")
 ###########################################################
 
 test_that("remove_agg_memo_flows works as expected", {
-  Cleaned <- sample_data_path() %>% 
+  Cleaned <- sample_iea_data_path() %>% 
     iea_df() %>% 
     rename_iea_df_cols() %>% 
     remove_agg_memo_flows()
@@ -251,12 +260,13 @@ test_that("remove_agg_memo_flows works as expected", {
 
   # Try again with a different approach. 
   # This time, ensure that rows we want to clean are present first.
-  IEA_data <- sample_data_path() %>% 
+  IEA_data <- sample_iea_data_path() %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
     augment_iea_df()
   # Verify that aggregation flows exist
   agg_flows <- c("Total primary energy supply", "Total final consumption", "Transformation processes", "Energy industry own use", "Industry", "Transport", "Other", "Non-energy use")
+  agg_flows <- c("Other")
   expect_true(lapply(agg_flows, 
                      FUN = function(s){
                        expect_true(IEA_data %>% filter(Flow == s) %>% nrow() > 0)
@@ -289,7 +299,7 @@ test_that("remove_agg_memo_flows works as expected", {
 })
 
 test_that("use_iso_countries works as expected", {
-  iso3 <- sample_data_path() %>% 
+  iso3 <- sample_iea_data_path() %>% 
     iea_df() %>% 
     rename_iea_df_cols() %>% 
     use_iso_countries()
@@ -299,7 +309,7 @@ test_that("use_iso_countries works as expected", {
   expect_true(any(iso3$Country == "GHA"))
 
   # Try with 2-letter vs. 3-letter abbreviations
-  iso2 <- sample_data_path() %>% 
+  iso2 <- sample_iea_data_path() %>% 
     iea_df() %>% 
     rename_iea_df_cols() %>% 
     use_iso_countries(iso_abbrev_type = 2)
@@ -350,7 +360,7 @@ test_that("trimming white space works", {
 
 test_that("load_tidy_iea_df works as expected", {
   simple <- load_tidy_iea_df()
-  complicated <- sample_data_path() %>% 
+  complicated <- sample_iea_data_path() %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
     clean_iea_whitespace() %>% 

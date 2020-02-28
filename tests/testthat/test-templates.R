@@ -12,7 +12,7 @@ check_fu_allocation_template <- function(.DF){
   last_row <- nrow(.DF)
   expect_equal(.DF$Flow.aggregation.point[[last_row]], "Other")
   expect_equal(.DF$Ef.product[[last_row]], "Electricity")
-  expect_equal(.DF$Destination[[last_row]], "Non-specified (other)")
+  expect_equal(.DF$Destination[[last_row]], "Final consumption not elsewhere specified")
   expect_equal(.DF$Quantity[[last_row]], "C_3 [%]")
 }
 

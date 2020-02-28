@@ -1,3 +1,17 @@
+* Focused some tests that assumed some FLOWs would end in 
+  "(transf.)", "(transformation)", or "(energy)" on sample IEA data from 2018.  
+  No FLOWs end with those strings in the 2019 data.
+  There is no harm to leave the code that strips trailing "(transf.)", "(transformation)", and "(energy)".
+* `augment_iea_df()` now recognizes "Final consumption not elsewhere specified" as an "other" flow.
+  "Final consumption not elsewhere specified" (in the 2019 data) is a synonym for "Non-specified (other)" 
+  (in 2018 and earlier editions of the IEA data).
+* `augment_iea_df()` now recognizes "Industry not elsewhere specified" as an industry flow.
+  "Industry not elsewhere specified" (in the 2019 data) is a synonym for "Non-specified (industry)" 
+  (in 2018 and earlier editions of the IEA data).
+* `iea_df()` now removes white space, even from "FLOW" entries that are quoted
+  to protect commas.
+
+
 # IEATools 0.1.12 (2020-02-26)
 
 * `iea_df()` now reads files with a clean header line.

@@ -24,7 +24,7 @@
 #'
 #' @examples
 #' library(magrittr)
-#' sample_data_path() %>% 
+#' sample_iea_data_path() %>% 
 #'  iea_file_OK()
 iea_file_OK <- function(.iea_file = NULL, 
                         text = NULL,
@@ -361,7 +361,7 @@ clean_iea_whitespace <- function(.iea_df,
 #' @export
 #'
 #' @examples
-#' sample_data_path() %>% 
+#' sample_iea_data_path() %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   use_iso_countries()
@@ -424,7 +424,7 @@ use_iso_countries <- function(.iea_df,
 #' @export
 #'
 #' @examples
-#' sample_data_path() %>% 
+#' sample_iea_data_path() %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   remove_agg_memo_flows()
@@ -567,11 +567,11 @@ augment_iea_df <- function(.iea_df,
                            tfc = "Total final consumption",
                            tfc_flows = c("Industry", "Transport", "Other", "Non-energy use"),
                            industry = "Industry",
-                           industry_flows = c("Iron and steel", "Chemical and petrochemical", "Non-ferrous metals", "Non-metallic minerals", "Transport equipment", "Machinery", "Mining and quarrying", "Food and tobacco", "Paper, pulp and print", "Wood and wood products", "Construction", "Textile and leather", "Non-specified (industry)"), 
+                           industry_flows = c("Iron and steel", "Chemical and petrochemical", "Non-ferrous metals", "Non-metallic minerals", "Transport equipment", "Machinery", "Mining and quarrying", "Food and tobacco", "Paper, pulp and print", "Wood and wood products", "Construction", "Textile and leather", "Non-specified (industry)", "Industry not elsewhere specified"), 
                            transport = "Transport",
                            transport_flows = c("World aviation bunkers", "Domestic aviation", "Road", "Rail", "Pipeline transport", "World marine bunkers", "Domestic navigation", "Non-specified (transport)"),
                            other = "Other",
-                           other_flows = c("Residential", "Commercial and public services", "Agriculture/forestry", "Fishing", "Non-specified (other)"),
+                           other_flows = c("Residential", "Commercial and public services", "Agriculture/forestry", "Fishing", "Non-specified (other)", "Final consumption not elsewhere specified"),
                            non_energy = "Non-energy use",
                            non_energy_prefix = "Non-energy use",
                            electricity_output = "Electricity output (GWh)",
@@ -700,7 +700,7 @@ augment_iea_df <- function(.iea_df,
 #' @export
 #'
 #' @examples
-#' sample_data_path() %>% 
+#' sample_iea_data_path() %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   remove_agg_memo_flows() %>% 
@@ -749,7 +749,7 @@ tidy_iea_df <- function(.iea_df,
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
 #' 
-#' @param .iea_file the path of the file to be loaded. Default loads example data bundled with the package via [sample_data_path()].
+#' @param .iea_file the path of the file to be loaded. Default loads example data bundled with the package via [sample_iea_data_path()].
 #' @param remove_zeroes a logical indicating whether data points with the value `0` are to be removed from the output. (Default is `TRUE`.)
 #'
 #' @return a tidy, augmented data frame of IEA extended energy balance data.
@@ -762,7 +762,7 @@ tidy_iea_df <- function(.iea_df,
 #' # Take a simple approach
 #' simple <- load_tidy_iea_df()
 #' # Take the complicated approach
-#' complicated <- sample_data_path() %>% 
+#' complicated <- sample_iea_data_path() %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   clean_iea_whitespace() %>% 

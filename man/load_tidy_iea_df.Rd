@@ -7,7 +7,7 @@
 load_tidy_iea_df(.iea_file = sample_iea_data_path(), remove_zeroes = TRUE)
 }
 \arguments{
-\item{.iea_file}{the path of the file to be loaded. Default loads example data bundled with the package via \code{\link[=sample_data_path]{sample_data_path()}}.}
+\item{.iea_file}{the path of the file to be loaded. Default loads example data bundled with the package via \code{\link[=sample_iea_data_path]{sample_iea_data_path()}}.}
 
 \item{remove_zeroes}{a logical indicating whether data points with the value \code{0} are to be removed from the output. (Default is \code{TRUE}.)}
 }
@@ -36,7 +36,7 @@ iea_file_OK(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv
 # Take a simple approach
 simple <- load_tidy_iea_df()
 # Take the complicated approach
-complicated <- sample_data_path() \%>\% 
+complicated <- sample_iea_data_path() \%>\% 
   iea_df() \%>\%
   rename_iea_df_cols() \%>\% 
   clean_iea_whitespace() \%>\% 

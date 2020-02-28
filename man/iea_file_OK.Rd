@@ -43,6 +43,6 @@ Note that \code{.iea_file} is read internally with \code{\link[data.table:fread]
 }
 \examples{
 library(magrittr)
-sample_data_path() \%>\% 
+sample_iea_data_path() \%>\% 
  iea_file_OK()
 }

@@ -137,6 +137,6 @@ test_that("tp_products() works as expected", {
 })
 
 test_that("sample_file_path works correctly", {
-  expect_true(sample_data_path() %>% endsWith("IEATools/extdata/GH-ZA-ktoe-Extended-Energy-Balances-sample.csv"))
+  expect_true(sample_iea_data_path() %>% endsWith("IEATools/extdata/GH-ZA-ktoe-Extended-Energy-Balances-sample.csv"))
 })
 
