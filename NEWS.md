@@ -1,3 +1,7 @@
+* There is no longer an "Other" aggregation in the IEA database.
+  One test that had expected an "Other" aggregation point in the database (using 2018 data)
+  was failing, because the expectation is no longer met in the 2019 version of the database.
+  The test has been changed to no longer expect an "Other" aggregation point.
 * Focused some tests that assumed some FLOWs would end in 
   "(transf.)", "(transformation)", or "(energy)" on sample IEA data from 2018.  
   No FLOWs end with those strings in the 2019 data.

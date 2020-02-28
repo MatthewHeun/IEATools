@@ -263,8 +263,7 @@ test_that("remove_agg_memo_flows works as expected", {
     rename_iea_df_cols() %>% 
     augment_iea_df()
   # Verify that aggregation flows exist
-  agg_flows <- c("Total primary energy supply", "Total final consumption", "Transformation processes", "Energy industry own use", "Industry", "Transport", "Other", "Non-energy use")
-  agg_flows <- c("Other")
+  agg_flows <- c("Total primary energy supply", "Total final consumption", "Transformation processes", "Energy industry own use", "Industry", "Transport", "Non-energy use")
   expect_true(lapply(agg_flows, 
                      FUN = function(s){
                        expect_true(IEA_data %>% filter(Flow == s) %>% nrow() > 0)
@@ -331,7 +330,7 @@ test_that("use_iso_countries works as expected", {
   expect_equal(n_world_rows, 2)
 })
 
-test_that("tidy_iea works as expected", {
+test_that("load_tidy_iea_df works as expected", {
   iea_tidy_df <- load_tidy_iea_df()
   # Verify column names and order
   expect_equal(names(iea_tidy_df), c("Country", "Method", "Energy.type", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", 
