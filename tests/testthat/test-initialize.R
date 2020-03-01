@@ -368,6 +368,8 @@ test_that("load_tidy_iea_df works as expected", {
 })
 
 test_that("spreading by years works as expected after load_tidy_iea_df()", {
+  # This test will fail if things are not specified correctly.
+  # Without correct specification, keys will not be unique.
   year_spread <- load_tidy_iea_df() %>% 
     tidyr::spread(key = Year, value = E.dot)
   expect_true("1971" %in% names(year_spread))
