@@ -384,3 +384,43 @@ sample_iea_data_path <- function(year = 2019) {
   }
   stop("Only year = 2019 is supported in sample_iea_data_path()")
 }
+
+
+#' Find row numbers for adjacent entries
+#' 
+#' Given `.DF`, find the row numbers that contain the first instance 
+#' in `col_name` of adjacent `entries`
+#' 
+#' This function is helpful for finding boundaries between rows of a data frame
+#' in preparation for defining grouping variables.
+#'
+#' @param .DF the data frame in which to search for `entries` in `col_name`.
+#' @param col_name the column of `.DF` in which to search for consecutive `entries`.
+#' @param entries a vector of length 2 representing the consecutive entries in  `col_name` for which to search.
+#'
+#' @return an integer vector of length 2 giving the rows for `entries[[1]]` and `entries[[2]]`, whose difference is 1.
+#'         `NULL` if no consecutive `entries` are found in `col_name`.
+#' 
+#' @export
+#'
+#' @examples
+#' DF <- data.frame(C1 = c("A", "B", "C"))
+#' DF %>% adjacent_rownums("C1", c("A", "B"))
+#' DF %>% adjacent_rownums("C1", c("B", "C"))
+adjacent_rownums <- function(.df, col_name, entries) {
+  if (length(entries) != 2) {
+    stop(paste("entries must have length 2 in adjacent_rownames. Was ", length(entries)))
+  }
+  col <- .df %>% 
+    extract2(col_name)
+  prev <- head(col, -1)
+  later <- tail(col, -1)
+  out <- which(prev == entries[[1]] & later == entries[[2]])
+  if (length(out) == 0) {
+    return(NULL)
+  }
+  if (length(out) != 1) {
+    stop("multiple instances of adjacent entries in adjacent_rownums")
+  }
+  return(c(out, out+1))
+}

@@ -447,6 +447,8 @@ remove_agg_memo_flows <- function(.iea_df,
 #' Augment an IEA data frame
 #' 
 #' This function prepares an IEA data frame created by [iea_df()] for use in R.
+#' It works on IEA data from the 2018 and 2019 releases
+#' of the IEA's extended energy balances..
 #' 
 #' This function solves several problems.
 #' The first problem is that metadata in the `COUNTRY`, `FLOW`, and `PRODUCT`
@@ -539,7 +541,7 @@ remove_agg_memo_flows <- function(.iea_df,
 #'                        "World,Production,Hard coal (if no detail),42,43\n",
 #'                        "World,Losses,Hard coal (if no detail),1,2")) %>% 
 #'   rename_iea_df_cols() %>% 
-#'   augment_iea_df()
+#'   augment_iea_df2018()
 augment_iea_df <- function(.iea_df, 
                            country = "Country", 
                            ledger_side = "Ledger.side", 
@@ -588,7 +590,7 @@ augment_iea_df <- function(.iea_df,
     # Then create the Ledger.side column. 
     dplyr::group_modify(function(ctry_tbl, ctry){
       # At this point, 
-      # ctry_tbl is the rows for this country, and
+      # ctry_tbl contains all rows for this country, and
       # ctry is a data frame with one country column and one country row containing the country.
       with_row_nums <- ctry_tbl %>% 
         tibble::rownames_to_column(var = .rownum) %>% 

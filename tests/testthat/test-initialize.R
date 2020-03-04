@@ -133,6 +133,7 @@ test_that("rename_iea_df_cols works", {
   expect_equal(names(renamed), c("Country", "Flow", "Product", "1960", "1961"))
 })
 
+
 test_that("augment_iea_df works", {
   # Try with a bogus set of data without a Losses row or a Total final consumption row.
   expect_error(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43") %>% 
@@ -192,18 +193,18 @@ test_that("augment_iea_df works", {
     augment_iea_df()
   
   # Check that the original has flows that end in "(transf.)"
-  expect_true(nrow(IEADF_unaugmented_2018 %>% filter(endsWith(Flow, "(transf.)"))) > 0)
+  expect_true(nrow(IEADF_unaugmented_2018 %>% dplyr::filter(endsWith(Flow, "(transf.)"))) > 0)
   # Check that the original has flows that end in "(transformation)"
-  expect_true(nrow(IEADF_unaugmented_2018 %>% filter(endsWith(Flow, "(transformation)"))) > 0)
+  expect_true(nrow(IEADF_unaugmented_2018 %>% dplyr::filter(endsWith(Flow, "(transformation)"))) > 0)
   # Check that the original has flows that end in "(energy)"
-  expect_true(nrow(IEADF_unaugmented_2018 %>% filter(endsWith(Flow, "(energy)"))) > 0)
+  expect_true(nrow(IEADF_unaugmented_2018 %>% dplyr::filter(endsWith(Flow, "(energy)"))) > 0)
 
   # Check that all "(transf.)" have been removed from the Flow column
-  expect_equal(nrow(IEADF_augmented_2018 %>% filter(endsWith(Flow, "(transf.)"))), 0)
+  expect_equal(nrow(IEADF_augmented_2018 %>% dplyr::filter(endsWith(Flow, "(transf.)"))), 0)
   # Check that all "(transformation)" have been removed from the Flow column
-  expect_equal(nrow(IEADF_augmented_2018 %>% filter(endsWith(Flow, "(transformation)"))), 0)
+  expect_equal(nrow(IEADF_augmented_2018 %>% dplyr::filter(endsWith(Flow, "(transformation)"))), 0)
   # Check that all "(energy)" have been removed from the Flow column
-  expect_equal(nrow(IEADF_augmented_2018 %>% filter(endsWith(Flow, "(energy)"))), 0)
+  expect_equal(nrow(IEADF_augmented_2018 %>% dplyr::filter(endsWith(Flow, "(energy)"))), 0)
   
   
   # Try a bogus data frame with extra spaces before the suffix.
@@ -265,17 +266,17 @@ test_that("remove_agg_memo_flows works as expected", {
   agg_flows <- c("Total primary energy supply", "Total final consumption", "Transformation processes", "Energy industry own use", "Industry", "Transport", "Non-energy use")
   expect_true(lapply(agg_flows, 
                      FUN = function(s){
-                       expect_true(IEA_data %>% filter(Flow == s) %>% nrow() > 0)
+                       expect_true(IEA_data %>% dplyr::filter(Flow == s) %>% nrow() > 0)
                      }) %>% as.logical() %>% all())
   # Verify that flow memos exist
   memo_flow_prefixes <- c("Memo: ", "Electricity output (GWh)", "Heat output")
   expect_true(lapply(memo_flow_prefixes, 
                      FUN = function(s){
-                       expect_true(IEA_data %>% filter(startsWith(Flow, s)) %>% nrow() > 0)
+                       expect_true(IEA_data %>% dplyr::filter(startsWith(Flow, s)) %>% nrow() > 0)
                      }) %>% as.logical() %>% all())
   # Verify that product memos exist
   memo_product_prefix <- "Memo: "
-  expect_true(IEA_data %>% filter(startsWith(Product, memo_product_prefix)) %>% nrow() > 0)
+  expect_true(IEA_data %>% dplyr::filter(startsWith(Product, memo_product_prefix)) %>% nrow() > 0)
   
   # Now clean the aggregation flows and see if they're gone.
   Cleaned <- IEA_data %>% 
@@ -283,15 +284,15 @@ test_that("remove_agg_memo_flows works as expected", {
   # Ensure that aggregation flows were removed.
   expect_true(lapply(agg_flows, 
                      FUN = function(s){
-                       expect_true(Cleaned %>% filter(Flow == s) %>% nrow() == 0)
+                       expect_true(Cleaned %>% dplyr::filter(Flow == s) %>% nrow() == 0)
                      }) %>% as.logical() %>% all())
   # Ensure that flow memos were removed
   expect_true(lapply(memo_flow_prefixes, 
                      FUN = function(s){
-                       expect_true(Cleaned %>% filter(startsWith(Flow, s)) %>% nrow() == 0)
+                       expect_true(Cleaned %>% dplyr::filter(startsWith(Flow, s)) %>% nrow() == 0)
                      }) %>% as.logical() %>% all())
   # Ensure that product memos were removed
-  expect_true(IEA_data %>% filter(startsWith(Product, memo_product_prefix)) %>% nrow() > 0)
+  expect_true(IEA_data %>% dplyr::filter(startsWith(Product, memo_product_prefix)) %>% nrow() > 0)
 })
 
 test_that("use_iso_countries works as expected", {
@@ -329,6 +330,7 @@ test_that("use_iso_countries works as expected", {
   expect_equal(n_world_rows, 2)
 })
 
+
 test_that("load_tidy_iea_df works as expected", {
   iea_tidy_df <- load_tidy_iea_df()
   # Verify column names and order
@@ -342,10 +344,12 @@ test_that("load_tidy_iea_df works as expected", {
   expect_true(all(iea_tidy_df$Ledger.side %in% c("Supply", "Consumption")))
 })
 
+
 test_that("converting year to numeric works as expected", {
   iea_tidy_df <- load_tidy_iea_df()
   expect_true(is.numeric(iea_tidy_df$Year))
 })
+
 
 test_that("trimming white space works", {
   cleaned <- data.frame(Flow = "  a flow   ", Product = "   a product   ", stringsAsFactors = FALSE) %>% 
@@ -353,6 +357,7 @@ test_that("trimming white space works", {
   expect_equal(cleaned$Flow[[1]], "a flow")
   expect_equal(cleaned$Product[[1]], "a product")
 })
+
 
 test_that("load_tidy_iea_df works as expected", {
   simple <- load_tidy_iea_df()
@@ -366,6 +371,25 @@ test_that("load_tidy_iea_df works as expected", {
     tidy_iea_df()
   expect_equal(simple, complicated)
 })
+
+
+test_that("every Flow.aggregation.point is filled by augmentation.", {
+  # Every row in the Flow.aggregation.point column should be filled with a non-NA entry.
+  # Verify that's indeed the case.
+  expect_false(load_tidy_iea_df(sample_iea_data_path(2018)) %>% 
+                   magrittr::extract2("Flow.aggregation.point") %>% 
+                   is.na() %>% 
+                   any())
+  
+  
+  for (year in valid_iea_release_years) {
+    expect_false(load_tidy_iea_df(sample_iea_data_path(year)) %>% 
+                   magrittr::extract2("Flow.aggregation.point") %>% 
+                   is.na() %>% 
+                   any())
+  }
+})
+
 
 test_that("spreading by years works as expected after load_tidy_iea_df()", {
   # This test will fail if things are not specified correctly.

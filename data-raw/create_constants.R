@@ -7,6 +7,13 @@ library(IEATools)
 
 
 #
+# Define the valid IEA release years for which this package will work
+# 
+
+valid_iea_release_years <- c(2018, 2019)
+usethis::use_data(valid_iea_release_years, overwrite = TRUE)
+
+#
 # Coal and coal products
 # 
 
@@ -143,6 +150,7 @@ aggregation_flows <- c(
   "Transformation processes", 
   "Energy industry own use",
   "Industry",
+  "Manufacturing",
   "Transport",
   "Other",
   "Non-energy use"

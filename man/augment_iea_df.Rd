@@ -155,6 +155,8 @@ The \code{.rownum} column is deleted before returning.}
 }
 \description{
 This function prepares an IEA data frame created by \code{\link[=iea_df]{iea_df()}} for use in R.
+It works on IEA data from the 2018 and 2019 releases
+of the IEA's extended energy balances..
 }
 \details{
 This function solves several problems.
@@ -198,5 +200,5 @@ iea_df(text = paste0(",,TIME,1960,1961\n",
                        "World,Production,Hard coal (if no detail),42,43\n",
                        "World,Losses,Hard coal (if no detail),1,2")) \%>\% 
   rename_iea_df_cols() \%>\% 
-  augment_iea_df()
+  augment_iea_df2018()
 }

@@ -141,3 +141,15 @@ test_that("sample_iea_file_path works correctly", {
   expect_true(endsWith(sample_iea_data_path(2018), "IEATools/extdata/GH-ZA-ktoe-Extended-Energy-Balances-sample-2018.csv"))
   expect_error(sample_iea_data_path(2017), "Only year = 2019 is supported in sample_iea_data_path")
 })
+
+
+test_that("adjacent_rownums works as expected", {
+  DF <- data.frame(C1 = c("A", "B", "C"), stringsAsFactors = FALSE)
+  expect_equal(adjacent_rownums(DF, col_name = "C1", entries = c("A", "B")), c(1, 2))
+  expect_equal(adjacent_rownums(DF, col_name = "C1", entries = c("B", "C")), c(2, 3))
+  # When we can't find adjacent entries, get NULL back.
+  expect_true(is.null(adjacent_rownums(DF, col_name = "C1", entries = c("A", "Z"))))
+  # Try when there are multiple matches.
+  DF2 <- data.frame(C1 = c("A", "B", "A", "B"), stringsAsFactors = FALSE)
+  expect_error(adjacent_rownums(DF2, col_name = "C1", entries = c("A", "B")), "multiple instances of adjacent entries in adjacent_rownums")
+})
