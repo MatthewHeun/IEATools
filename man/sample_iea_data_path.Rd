@@ -2,18 +2,20 @@
 % Please edit documentation in R/utilities.R
 \name{sample_iea_data_path}
 \alias{sample_iea_data_path}
-\title{The path to a sample data frame}
+\title{The path to a sample IEA extended energy balances data file in .csv format}
 \usage{
-sample_iea_data_path(year = 2019)
+sample_iea_data_path(version = 2019)
 }
 \arguments{
-\item{year}{the desired year of sample data. Options are 2019 (default) and 2018.}
+\item{version}{the desired version (expressed as the year of release) of sample data.
+Options are 2019 (default) and 2018.}
 }
 \value{
 the path to a sample data file.
 }
 \description{
-The sample data file is in .csv format and contains for Ghana and South Africa for 1971 and 2000.
+The sample data file is in .csv format and contains
+IEA extended energy balances data for Ghana and South Africa for the years 1971 and 2000.
 }
 \details{
 Permission to include this data was provided in a phone conversation between
@@ -21,5 +23,7 @@ Nick Johnstone (IEA Chief Statistician) and Matthew Kuperus Heun (IEATools devel
 on Monday, 3 June 2019.
 }
 \examples{
-sample_iea_data_path() # Assumes 2019
+sample_iea_data_path()     # Assumes 2019
+sample_iea_data_path(2019) # Same
+sample_iea_data_path(2018) # Retrieves path for sample IEA extended energy balances data from 2018 release
 }

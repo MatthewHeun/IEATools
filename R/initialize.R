@@ -570,6 +570,8 @@ augment_iea_df <- function(.iea_df,
                            tfc_flows = IEATools::tfc_flows,
                            industry = "Industry",
                            industry_flows = IEATools::industry_flows, 
+                           iron_and_steel = "Iron and steel",
+                           mining_and_quarrying = "Mining and quarrying",
                            transport = "Transport",
                            transport_flows = IEATools::transport_flows,
                            other = "Other",
@@ -605,22 +607,21 @@ augment_iea_df <- function(.iea_df,
       # ctry is a 1-cell data frame (one country row and one country column) containing the name of the country we're working on now.
 
       # Find the split point between the Supply and Consumption sides of the ledger.
-      # Take two attempts.
-      # This first attempt works for the 2018 release of the extended energy balances data.
-      # If it doesn't work, we'll get NULL for supply_consumption_split.
+      supply_consumption_split <- find_supply_consumption_split(ctry_tbl, flow = flow, losses = losses, 
+                                                                iron_and_steel = iron_and_steel, 
+                                                                mining_and_quarrying = mining_and_quarrying, 
+                                                                tfc = tfc, industry = industry)
 
-      supply_consumption_split <- adjacent_rownums(ctry_tbl, flow, c("Losses", "Iron and steel"))
-      if (is.null(supply_consumption_split)) {
-        # This is the second attempt.
-        # This second attempt works for the 2019 release of the extended energy balances data.
-        supply_consumption_split <- adjacent_rownums(ctry_tbl, flow, c("Losses", "Mining and quarrying"))
-      }
-      assertthat::assert_that(!is.null(supply_consumption_split),
-                              msg = "Could not find the rows that separate the Supply and Consumption sides of the ledger in augment_iea_df")
       # Start of the Transformation processes section of the IEA data
+      # Make two attempts at this.
+      # First attempt should work if the aggregation rows have already been removed from the data frame.
       transformation_start <- adjacent_rownums(ctry_tbl, flow, c("Statistical differences", "Main activity producer electricity plants"))
+      if (is.null(transformation_start)) {
+        # Second attempt should work when aggregation rows (specifically, "Transformation processes") remain in the data frame.
+        transformation_start <- adjacent_rownums(ctry_tbl, flow, c("Statistical differences", "Transformation processes"))
+      }
       assertthat::assert_that(!is.null(transformation_start),
-                              msg = "Could not find the rows that separate Statistical differences from Main activity producer electricity plants in augment_iea_df")
+                              msg = "Could not find the rows that separate TFC compare from Transformation processes in augment_iea_df")
       # End of the Transformation processes section of the IEA data
       transformation_end <- adjacent_rownums(ctry_tbl, flow, c("Non-specified", "Coal mines"))
       assertthat::assert_that(!is.null(transformation_end),

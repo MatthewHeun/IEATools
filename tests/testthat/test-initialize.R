@@ -137,19 +137,19 @@ test_that("rename_iea_df_cols works", {
 test_that("augment_iea_df works", {
   # Try with a bogus set of data without a Losses row or a Total final consumption row.
   expect_error(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43") %>% 
-    rename_iea_df_cols() %>% 
-    augment_iea_df(), 
-    "Could not find the rows that separate the Supply and Consumption sides of the ledger in augment_iea_df")
+                 rename_iea_df_cols() %>% 
+                 augment_iea_df(), 
+               "Could not find the rows that separate the Supply and Consumption sides of the ledger in augment_iea_df")
   # Try with bogus data WITH a Losses and an Iron and steel row.
   # This attempt will also fail, because the EIOU split will not be found.
   expect_error(iea_df(text = paste0(",,TIME,1960,1961\n",
-                                                "COUNTRY,FLOW,PRODUCT\n",
-                                                "World,Production,Hard coal (if no detail),42,43\n",
-                                                "World,Losses,Hard coal (if no detail),1,2\n",
-                                                "World,Iron and steel,Hard coal (if no detail),5,6")) %>% 
-    rename_iea_df_cols() %>% 
-    augment_iea_df(), 
-    "Could not find the rows that separate Statistical differences from Main activity producer electricity plants in augment_iea_df")
+                                    "COUNTRY,FLOW,PRODUCT\n",
+                                    "World,Production,Hard coal (if no detail),42,43\n",
+                                    "World,Losses,Hard coal (if no detail),1,2\n",
+                                    "World,Iron and steel,Hard coal (if no detail),5,6")) %>% 
+                 rename_iea_df_cols() %>% 
+                 augment_iea_df(), 
+               "Could not find the rows that separate Statistical differences from Main activity producer electricity plants in augment_iea_df")
   # Try with bogus data WITH a Losses and an Iron and steel row and WITH a Statistical differences and a Main activity producer electricity plants row.
   # This attempt will also fail, because the end of the EIOU split will not be found.
   expect_error(iea_df(text = paste0(",,TIME,1960,1961\n",
@@ -162,7 +162,7 @@ test_that("augment_iea_df works", {
                  rename_iea_df_cols() %>% 
                  augment_iea_df(), 
                "Could not find the rows that separate Non-specified from Coal mines in augment_iea_df")
-
+  
   # Try another attempt that will fail.
   expect_error(iea_df(text = paste0(",,TIME,1960,1961\n",
                                     "COUNTRY,FLOW,PRODUCT\n",
@@ -176,38 +176,28 @@ test_that("augment_iea_df works", {
                  rename_iea_df_cols() %>% 
                  augment_iea_df(), 
                "Could not find the rows that separate Non-specified from Losses in augment_iea_df")
-  # Still missing supply and consumption.
-  expect_error(iea_df(text = paste0(",,TIME,1960,1961\n",
-                                    "COUNTRY,FLOW,PRODUCT\n",
-                                    "World,Production,Hard coal (if no detail),42,43\n",
-                                    "World,Losses,Hard coal (if no detail),1,2\n",
-                                    "World,Iron and steel,Hard coal (if no detail),5,6\n",
-                                    "World,Statistical differences,Hard coal (if no detail),7,8\n",
-                                    "World,Main activity producer electricity plants,Hard coal (if no detail),9,10\n",
-                                    "World,Non-specified,Hard coal (if no detail),11,12\n",
-                                    "World,Coal mines,Hard coal (if no detail),13,14\n",
-                                    "World,Non-specified,Hard coal (if no detail),15,16\n",
-                                    "World,Losses,Hard coal (if no detail),17,18")) %>% 
-                 rename_iea_df_cols() %>% 
-                 augment_iea_df(),
-               "Could not find the rows that separate the Supply and Consumption sides of the ledger in augment_iea_df")
   # This one should work!
   simple_with_tfc_df <- iea_df(text = paste0(",,TIME,1960,1961\n",
                                              "COUNTRY,FLOW,PRODUCT\n",
                                              "World,Production,Hard coal (if no detail),42,43\n",
-                                             "World,Losses,Hard coal (if no detail),1,2\n",
-                                             "World,Iron and steel,Hard coal (if no detail),5,6\n",
                                              "World,Statistical differences,Hard coal (if no detail),7,8\n",
                                              "World,Main activity producer electricity plants,Hard coal (if no detail),9,10\n",
                                              "World,Non-specified,Hard coal (if no detail),11,12\n",
                                              "World,Coal mines,Hard coal (if no detail),13,14\n",
-                                             "World,Non-specified,Hard coal (if no detail),15,16\n",
-                                             "World,Losses,Hard coal (if no detail),17,18\n")) %>% 
+                                             "World,Non-specified,Hard coal (if no detail),11,12\n",
+                                             "World,Losses,Hard coal (if no detail),1,2\n",
+                                             "World,Iron and steel,Hard coal (if no detail),5,6\n")) %>% 
     rename_iea_df_cols() %>% 
     augment_iea_df()
-  expect_equal(simple_with_tfc_df$Ledger.side, c("Supply", "Consumption"))
-  expect_equal(simple_with_tfc_df$Flow.aggregation.point, c("Total primary energy supply", NA_character_))
-  
+  expect_equal(simple_with_tfc_df$Ledger.side %>% unique(), c("Supply", "Consumption"))
+  expect_equal(simple_with_tfc_df$Flow.aggregation.point, c("Total primary energy supply",
+                                                            "TFC compare", 
+                                                            "Transformation processes", 
+                                                            "Transformation processes", 
+                                                            "Energy industry own use",
+                                                            "Energy industry own use",
+                                                            "TFC compare",
+                                                            "Industry"))
   IEADF_unaugmented <- sample_iea_data_path() %>% 
     iea_df() %>% 
     rename_iea_df_cols()

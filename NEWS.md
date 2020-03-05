@@ -6,9 +6,15 @@
   The method relies on the fact that each country's rows are in exactly the same order.
   The validity of this assumption can be tested with `iea_file_OK()`.
 * Added a new function `adjacent_rownums()` that identifies the row numbers where 
-  two adjascent entries exist. 
+  two adjacent entries exist. 
   This function is used extensively when determining the 
   row ranges for "Transformation processes" and "Energy industry own use".
+* Added function `sample_iea_data_path()` which takes a year (representing year of data release)
+  as an argument.
+  Default year is (now) 2019.  
+  In subsequent years, I will change the default year to the most-recent year available.
+  2018 is also supported.
+  This function allows supporting and testing of previous years' data versions.
 * Added `iea_file_OK()` which tells whether all countries in an IEA extended energy balance table
   have the same order for all rows.
 * Added "Paper, pulp and printing" to the list of industries for 2019.

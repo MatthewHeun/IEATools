@@ -37,6 +37,8 @@ augment_iea_df(
   tfc_flows = IEATools::tfc_flows,
   industry = "Industry",
   industry_flows = IEATools::industry_flows,
+  iron_and_steel = "Iron and steel",
+  mining_and_quarrying = "Mining and quarrying",
   transport = "Transport",
   transport_flows = IEATools::transport_flows,
   other = "Other",

@@ -358,27 +358,31 @@ prod_tp_eiou_energy_carriers <- function(file_path = sample_iea_data_path(),
 }
 
 
-#' The path to a sample data frame
+#' The path to a sample IEA extended energy balances data file in .csv format
 #' 
-#' The sample data file is in .csv format and contains for Ghana and South Africa for 1971 and 2000.
+#' The sample data file is in .csv format and contains
+#' IEA extended energy balances data for Ghana and South Africa for the years 1971 and 2000.
 #' 
 #' Permission to include this data was provided in a phone conversation between 
 #' Nick Johnstone (IEA Chief Statistician) and Matthew Kuperus Heun (IEATools developer)
 #' on Monday, 3 June 2019.
 #'
-#' @param year the desired year of sample data. Options are 2019 (default) and 2018. 
+#' @param version the desired version (expressed as the year of release) of sample data. 
+#'                Options are 2019 (default) and 2018. 
 #'
 #' @return the path to a sample data file.
 #' 
 #' @export
 #'
 #' @examples
-#' sample_iea_data_path() # Assumes 2019
-sample_iea_data_path <- function(year = 2019) {
-  if (year == 2018) {
+#' sample_iea_data_path()     # Assumes 2019
+#' sample_iea_data_path(2019) # Same
+#' sample_iea_data_path(2018) # Retrieves path for sample IEA extended energy balances data from 2018 release
+sample_iea_data_path <- function(version = 2019) {
+  if (version == 2018) {
     return(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2018.csv") %>%
              system.file(package = "IEATools"))  
-  } else if (year == 2019) {
+  } else if (version == 2019) {
     return(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2019.csv") %>%
              system.file(package = "IEATools"))
   }
@@ -424,3 +428,59 @@ adjacent_rownums <- function(.df, col_name, entries) {
   }
   return(c(out, out+1))
 }
+
+
+#' Find the split point between Supply and Consumption
+#' 
+#' Given a country's IEA extended energy balance data frame,
+#' find the row numbers that represent the transition between
+#' the Supply and Consumption sides of the ledger.
+#' 
+#' Arguments should be supplied by the calling function.
+#' 
+#' An error is given if this function fails to find the location of the split between supply and consumption.
+#'
+#' @param .ctry_tbl a country's IEA data frame
+#' @param flow the name of the flow column
+#' @param losses the name for losses in the flow column
+#' @param iron_and_steel the name for the iron and steel industry in the flow column
+#' @param mining_and_quarrying the name for the mining and quarrying industry in the flow column
+#' @param tfc the name for total final consumption in the flow column
+#' @param industry the name for industry in the flow column
+#'
+#' @return a pair of integers representing the rows that straddle the split between 
+#'         the supply and consumption side of the ledger
+#'
+find_supply_consumption_split <- function(.ctry_tbl,
+                                          flow,
+                                          losses,
+                                          iron_and_steel,
+                                          mining_and_quarrying,
+                                          tfc,
+                                          industry) {
+  # Take three attempts.
+  # This is the first attempt.
+  # It will work if aggregation rows remain in .ctry_tbl
+  # If it doesn't work, we'll get NULL for supply_consumption_split.
+  supply_consumption_split <- adjacent_rownums(.ctry_tbl, flow, c(tfc, industry)) 
+  if (is.null(supply_consumption_split)) {
+    # This is the second attempt.
+    # This second attempt works for the 2019 release of the extended energy balances data 
+    # when aggregation rows have already been removed from the data frame.
+    supply_consumption_split <- adjacent_rownums(.ctry_tbl, flow, c(losses, mining_and_quarrying))
+  }
+  if (is.null(supply_consumption_split)) {
+    # This third attempt works for the 2018 release of the extended energy balances data 
+    # when aggregation rows have already been removed from the data frame.
+    supply_consumption_split <- adjacent_rownums(.ctry_tbl, flow, c(losses, iron_and_steel))
+  }
+  # If we failed, emit an error.
+  assertthat::assert_that(!is.null(supply_consumption_split),
+                          msg = "Could not find the rows that separate the Supply and Consumption sides of the ledger in find_supply_consumption_split")
+  return(supply_consumption_split)
+}
+
+
+
+
+
