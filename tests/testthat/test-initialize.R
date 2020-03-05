@@ -139,7 +139,7 @@ test_that("augment_iea_df works", {
   expect_error(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43") %>% 
                  rename_iea_df_cols() %>% 
                  augment_iea_df(), 
-               "Could not find the rows that separate the Supply and Consumption sides of the ledger in augment_iea_df")
+               "Could not find the rows that separate the Supply and Consumption sides of the ledger in find_supply_consumption_split")
   # Try with bogus data WITH a Losses and an Iron and steel row.
   # This attempt will also fail, because the EIOU split will not be found.
   expect_error(iea_df(text = paste0(",,TIME,1960,1961\n",
@@ -149,7 +149,7 @@ test_that("augment_iea_df works", {
                                     "World,Iron and steel,Hard coal (if no detail),5,6")) %>% 
                  rename_iea_df_cols() %>% 
                  augment_iea_df(), 
-               "Could not find the rows that separate Statistical differences from Main activity producer electricity plants in augment_iea_df")
+               "Could not find the rows that identify the beginning of transformation processes in find_transformation_start")
   # Try with bogus data WITH a Losses and an Iron and steel row and WITH a Statistical differences and a Main activity producer electricity plants row.
   # This attempt will also fail, because the end of the EIOU split will not be found.
   expect_error(iea_df(text = paste0(",,TIME,1960,1961\n",
@@ -161,7 +161,7 @@ test_that("augment_iea_df works", {
                                     "World,Main activity producer electricity plants,Hard coal (if no detail),9,10")) %>% 
                  rename_iea_df_cols() %>% 
                  augment_iea_df(), 
-               "Could not find the rows that separate Non-specified from Coal mines in augment_iea_df")
+               "Could not find the rows that identify the end of Transformation Process rows and the beginning of Energy industry own use in find_transformation_end")
   
   # Try another attempt that will fail.
   expect_error(iea_df(text = paste0(",,TIME,1960,1961\n",
@@ -175,7 +175,7 @@ test_that("augment_iea_df works", {
                                     "World,Coal mines,Hard coal (if no detail),13,14")) %>% 
                  rename_iea_df_cols() %>% 
                  augment_iea_df(), 
-               "Could not find the rows that separate Non-specified from Losses in augment_iea_df")
+               "Could not find the rows that separate Non-specified from Losses in find_eiou_end")
   # This one should work!
   simple_with_tfc_df <- iea_df(text = paste0(",,TIME,1960,1961\n",
                                              "COUNTRY,FLOW,PRODUCT\n",
@@ -245,22 +245,21 @@ test_that("augment_iea_df works", {
   # Check that all "(energy)" have been removed from the Flow column
   expect_equal(nrow(IEADF_augmented_2018 %>% dplyr::filter(endsWith(Flow, "(energy)"))), 0)
   
-  
   # Try a bogus data frame with extra spaces before the suffix.
-  Cleaned <- data.frame(Flow = c("Nuclear industry      (transf.)", 
-                                 "Nuclear industry    (transformation)",
-                                 "Nuclear industry        (energy)",
-                                 "Losses"), 
-                        stringsAsFactors = FALSE) %>% 
-    dplyr::mutate(
-      Country = "US",
-      Product = "Heat",
-      E.dot = 200
-    ) %>% 
+  simple_with_tfc_df_2 <- iea_df(text = paste0(",,TIME,1960,1961\n",
+                                             "COUNTRY,FLOW,PRODUCT\n",
+                                             "World,Production,Hard coal (if no detail),42,43\n",
+                                             "World,Statistical differences,Hard coal (if no detail),7,8\n",
+                                             "World,Main activity producer electricity plants      (transf.),Hard coal (if no detail),9,10\n",
+                                             "World,Non-specified,Hard coal (if no detail),11,12\n",
+                                             "World,Coal mines      (energy),Hard coal (if no detail),13,14\n",
+                                             "World,Non-specified,Hard coal (if no detail),11,12\n",
+                                             "World,Losses,Hard coal (if no detail),1,2\n",
+                                             "World,Iron and steel,Hard coal (if no detail),5,6\n")) %>% 
+    rename_iea_df_cols() %>% 
     augment_iea_df()
-  for (i in 1:3) {
-    expect_equal(Cleaned$Flow[[i]], "Nuclear industry")
-  }
+  expect_equal(simple_with_tfc_df_2$Flow[[3]], "Main activity producer electricity plants")
+  expect_equal(simple_with_tfc_df_2$Flow[[5]], "Coal mines")
 })
 
 ###########################################################
