@@ -35,6 +35,8 @@ augment_iea_df(
     main_activity_producer_electricity_plants = "Main activity producer electricity plants",
   eiou = "Energy industry own use",
   eiou_flows_suffix = "(energy)",
+  coal_mines = "Coal mines",
+  non_specified = "Non-specified",
   tfc = "Total final consumption",
   tfc_flows = IEATools::tfc_flows,
   industry = "Industry",

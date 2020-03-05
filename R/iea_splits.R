@@ -132,11 +132,105 @@ find_transformation_start <- function(.ctry_tbl,
 }
 
 
+#' Find the point where Transformation processes end
+#' 
+#' Given a country's IEA extended energy balance data frame,
+#' find the row numbers that represent the transition between
+#' the Transformation processes and Energy industry own use.
+#' 
+#' Arguments should be supplied by the calling function.
+#' 
+#' An error is given if this function fails to find the location of the split between 
+#' Transformation processes and Energy industry own use. 
+#'
+#' @param .ctry_tbl a country's IEA data frame
+#' @param flow the name of the flow column
+#' @param non_specified the name of non-specified in the flow column
+#' @param eiou the name for energy industry own use in the flow column
+#' @param coal_mines the name for coal mines in the flow column
+#'
+#' @return a pair of integers representing the rows that straddle 
+#'         the split between Transformation processes and Energy industry own use
+#'         The first integer is the last row of Transformation processes.
+find_transformation_end <- function(.ctry_tbl,
+                                    flow,
+                                    non_specified,
+                                    eiou,
+                                    coal_mines) {
+  # Make two attempts at this.
+  # First attempt assumes that aggregation rows are still present in the IEA data frame.
+  transformation_end <- adjacent_rownums(.ctry_tbl, flow, c(non_specified, eiou))
+  if (is.null(transformation_end)) {
+    # Second attempt assumes that aggregation rows have been removed.
+    transformation_end <- adjacent_rownums(.ctry_tbl, flow, c("Non-specified", "Coal mines"))
+  }
+  assertthat::assert_that(!is.null(transformation_end),
+                          msg = "Could not find the rows that identify the end of Transformation Process rows and the beginning of Energy industry own use in find_transformation_end")
+  return(transformation_end)  
+}
 
 
+#' Find the point where Energy industry own use starts
+#' 
+#' Given a country's IEA extended energy balance data frame,
+#' find the row numbers that represent the transition between
+#' the Transformation processes and Energy industry own use.
+#' This function simply calls `find_transformation_end()`, because
+#' the dividing line between Transformation processes and Energy industry own use
+#' is also the point where Energy industry own use starts.
+#' 
+#' Arguments should be supplied by the calling function.
+#' 
+#' An error is given if this function fails to find the location of the split between 
+#' Transformation processes and Energy industry own use. 
+#'
+#' @param .ctry_tbl a country's IEA data frame
+#' @param flow the name of the flow column
+#' @param non_specified the name of non-specified in the flow column
+#' @param eiou the name for energy industry own use in the flow column
+#' @param coal_mines the name for coal mines in the flow column
+#'
+#' @return a pair of integers representing the rows that straddle 
+#'         the split between Transformation processes and Energy industry own use
+#'         The second integer is the first row of Energy industry own use.
+find_eiou_start <- function(.ctry_tbl,
+                            flow,
+                            non_specified,
+                            eiou,
+                            coal_mines) {
+  find_transformation_end(.ctry_tbl, flow = flow, non_specified = non_specified,
+                          eiou = eiou, coal_mines = coal_mines)
+}
 
 
-
+#' Find the point where Energy industry own use ends
+#' 
+#' Given a country's IEA extended energy balance data frame,
+#' find the row numbers that represent the transition between
+#' the Energy industry own use and Losses (a TFC compare flow).
+#' 
+#' Arguments should be supplied by the calling function.
+#' 
+#' An error is given if this function fails to find the location of the split between 
+#' Transformation processes and Energy industry own use. 
+#'
+#' @param .ctry_tbl a country's IEA data frame
+#' @param flow the name of the flow column
+#' @param non_specified the name of non-specified in the flow column
+#' @param losses the name for losses in the flow column
+#'
+#' @return a pair of integers representing the rows that straddle 
+#'         the split between Energy industry own use and Losses.
+#'         The first integer is the last row of Energy industry own use.
+find_eiou_end <- function(.ctry_tbl,
+                          flow,
+                          non_specified,
+                          losses) {
+  eiou_end <- adjacent_rownums(.ctry_tbl, flow, c(non_specified, losses))
+  assertthat::assert_that(!is.null(eiou_end),
+                          msg = "Could not find the rows that separate Non-specified from Losses in find_eiou_end")
+  return(eiou_end)
+}
 
 
 

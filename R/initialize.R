@@ -567,6 +567,8 @@ augment_iea_df <- function(.iea_df,
                            main_activity_producer_electricity_plants = "Main activity producer electricity plants",
                            eiou = "Energy industry own use",
                            eiou_flows_suffix = "(energy)",
+                           coal_mines = "Coal mines",
+                           non_specified = "Non-specified",
                            tfc = "Total final consumption",
                            tfc_flows = IEATools::tfc_flows,
                            industry = "Industry",
@@ -588,7 +590,10 @@ augment_iea_df <- function(.iea_df,
     # Eliminate rownames, leaving only numbers
     tibble::remove_rownames() %>% 
     dplyr::mutate(
-      # We no longer rely upon the (energy), (transf.), and (transformation) suffixes, so delete them.
+      # The 2018 IEA extended energy balance data used suffixes to identify portions of their data.
+      # But in the 2019 edition of the data, those suffixes were removed,
+      # so we can no longer rely upon them.
+      # Thus, we delete the suffixes if they are present in the flow column of the data frame.
       # The string "\s+" means to match any number (+) of whitespace (\\s) characters.
       !!as.name(flow) := dplyr::case_when(
         # Delete the " (transf.)" suffix
@@ -617,17 +622,16 @@ augment_iea_df <- function(.iea_df,
       transformation_start <- find_transformation_start(ctry_tbl, flow = flow, statistical_differences = statistical_differences,
                                                         transformation_processes = transformation_processes,
                                                         main_activity_producer_electricity_plants = main_activity_producer_electricity_plants)
-      # End of the Transformation processes section of the IEA data
-      transformation_end <- adjacent_rownums(ctry_tbl, flow, c("Non-specified", "Coal mines"))
-      assertthat::assert_that(!is.null(transformation_end),
-                              msg = "Could not find the rows that separate Non-specified from Coal mines in augment_iea_df")
-      # Start of EIOU (energy industry own use) flows is at the same point that Transformation processes end
-      eiou_start <- transformation_end
-      # End of EIOU flows
-      eiou_end <- adjacent_rownums(ctry_tbl, flow, c("Non-specified", "Losses"))
-      assertthat::assert_that(!is.null(eiou_end),
-                              msg = "Could not find the rows that separate Non-specified from Losses in augment_iea_df")
       
+      # End of the Transformation processes section of the IEA data
+      transformation_end <- find_transformation_end(ctry_tbl, flow = flow, non_specified = non_specified, 
+                                                    eiou = eiou, coal_mines = coal_mines)
+      # Start of EIOU (energy industry own use) section of the IEA data
+      eiou_start <- find_eiou_start(ctry_tbl, flow = flow, non_specified = non_specified, 
+                                    eiou = eiou, coal_mines = coal_mines)
+      # End of EIOU flows
+      eiou_end <- find_eiou_end(ctry_tbl, flow = flow, non_specified = non_specified, losses = losses)
+
       ctry_tbl %>% 
         # Add a temporary .rownum column
         tibble::rownames_to_column(var = .rownum) %>%
