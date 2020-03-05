@@ -564,6 +564,7 @@ augment_iea_df <- function(.iea_df,
                            transformation_processes = "Transformation processes",
                            tp_flows_suffix = "(transf.)",
                            nstp_flows_suffix = "(transformation)",
+                           main_activity_producer_electricity_plants = "Main activity producer electricity plants",
                            eiou = "Energy industry own use",
                            eiou_flows_suffix = "(energy)",
                            tfc = "Total final consumption",
@@ -613,15 +614,9 @@ augment_iea_df <- function(.iea_df,
                                                                 tfc = tfc, industry = industry)
 
       # Start of the Transformation processes section of the IEA data
-      # Make two attempts at this.
-      # First attempt should work if the aggregation rows have already been removed from the data frame.
-      transformation_start <- adjacent_rownums(ctry_tbl, flow, c("Statistical differences", "Main activity producer electricity plants"))
-      if (is.null(transformation_start)) {
-        # Second attempt should work when aggregation rows (specifically, "Transformation processes") remain in the data frame.
-        transformation_start <- adjacent_rownums(ctry_tbl, flow, c("Statistical differences", "Transformation processes"))
-      }
-      assertthat::assert_that(!is.null(transformation_start),
-                              msg = "Could not find the rows that separate TFC compare from Transformation processes in augment_iea_df")
+      transformation_start <- find_transformation_start(ctry_tbl, flow = flow, statistical_differences = statistical_differences,
+                                                        transformation_processes = transformation_processes,
+                                                        main_activity_producer_electricity_plants = main_activity_producer_electricity_plants)
       # End of the Transformation processes section of the IEA data
       transformation_end <- adjacent_rownums(ctry_tbl, flow, c("Non-specified", "Coal mines"))
       assertthat::assert_that(!is.null(transformation_end),

@@ -31,7 +31,7 @@ find_supply_consumption_split(
 }
 \value{
 a pair of integers representing the rows that straddle the split between
-the supply and consumption side of the ledger
+the Supply and Consumption sides of the ledger
 }
 \description{
 Given a country's IEA extended energy balance data frame,
@@ -41,5 +41,5 @@ the Supply and Consumption sides of the ledger.
 \details{
 Arguments should be supplied by the calling function.
 
-An error is given if this function fails to find the location of the split between supply and consumption.
+An error is given if this function fails to find the location of the split between Supply and Consumption.
 }

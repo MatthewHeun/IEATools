@@ -31,6 +31,8 @@ augment_iea_df(
   transformation_processes = "Transformation processes",
   tp_flows_suffix = "(transf.)",
   nstp_flows_suffix = "(transformation)",
+ 
+    main_activity_producer_electricity_plants = "Main activity producer electricity plants",
   eiou = "Energy industry own use",
   eiou_flows_suffix = "(energy)",
   tfc = "Total final consumption",

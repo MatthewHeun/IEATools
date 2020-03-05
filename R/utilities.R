@@ -438,7 +438,7 @@ adjacent_rownums <- function(.df, col_name, entries) {
 #' 
 #' Arguments should be supplied by the calling function.
 #' 
-#' An error is given if this function fails to find the location of the split between supply and consumption.
+#' An error is given if this function fails to find the location of the split between Supply and Consumption.
 #'
 #' @param .ctry_tbl a country's IEA data frame
 #' @param flow the name of the flow column
@@ -449,8 +449,7 @@ adjacent_rownums <- function(.df, col_name, entries) {
 #' @param industry the name for industry in the flow column
 #'
 #' @return a pair of integers representing the rows that straddle the split between 
-#'         the supply and consumption side of the ledger
-#'
+#'         the Supply and Consumption sides of the ledger
 find_supply_consumption_split <- function(.ctry_tbl,
                                           flow,
                                           losses,
@@ -481,6 +480,42 @@ find_supply_consumption_split <- function(.ctry_tbl,
 }
 
 
-
+#' Find the point where Transformation processes begin
+#' 
+#' Given a country's IEA extended energy balance data frame,
+#' find the row numbers that represent the transition between
+#' the first TFC Compare section and Transformation processes.
+#' 
+#' Arguments should be supplied by the calling function.
+#' 
+#' An error is given if this function fails to find the location of the split between 
+#' TFC compare and Transformation processes.
+#'
+#' @param .ctry_tbl a country's IEA data frame
+#' @param flow the name of the flow column
+#' @param statistical_differences the name for statistical difference in the flow column
+#' @param transformation_processes the name for transformation processes in the flow column
+#' @param main_activity_producer_elect_plants the name for main activity producer electricity plants in the flow column
+#'
+#' @return a pair of integers representing the rows that straddle the split between 
+#'         the TFC compare and Transformation processes flows.
+#'         The second integer is the first row of Transformation processes.
+find_transformation_start <- function(.ctry_tbl, 
+                                      flow,
+                                      statistical_differences,
+                                      transformation_processes,
+                                      main_activity_producer_electricity_plants) {
+  # Make two attempts at this.
+  # First attempt should work when aggregation rows (specifically, "Transformation processes") 
+  # remain in the data frame.
+  transformation_start <- adjacent_rownums(.ctry_tbl, flow, c(statistical_differences, transformation_processes))
+  if (is.null(transformation_start)) {
+    # Second attempt should work if the aggregation rows have already been removed from the data frame.
+    transformation_start <- adjacent_rownums(.ctry_tbl, flow, c(statistical_differences, main_activity_producer_electricity_plants))
+  }
+  assertthat::assert_that(!is.null(transformation_start),
+                          msg = "Could not find the rows that identify the beginning of transformation processes in find_transformation_start")
+  return(transformation_start)
+}
 
 
