@@ -386,8 +386,32 @@ sample_iea_data_path <- function(version = 2019) {
     return(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2019.csv") %>%
              system.file(package = "IEATools"))
   }
-  stop("Only year = 2019 is supported in sample_iea_data_path()")
+  stop("Only 2018 and 2019 are supported in sample_iea_data_path()")
 }
 
 
+#' The path to a filled final-to-useful allocation table
+#' 
+#' @param version the desired version (expressed as the year of IEA data release) of 
+#'                the sample final-to-useful allocation table. 
+#'                Options are 2019 (default) and 2018. 
+#'
+#' @return the path to a final-to-useful allocation table
+#' 
+#' @export
+#'
+#' @examples
+#' sample_fu_allocation_table_path()     # Assumes 2019
+#' sample_fu_allocation_table_path(2019) # Same
+#' sample_fu_allocation_table_path(2018) # Retrieves path for sample IEA extended energy balances data from 2018 release
+sample_fu_allocation_table_path <- function(version = 2019) {
+  if (version == 2018) {
+    return(file.path("extdata", "GH-ZA-Allocation-sample-2018.xlsx") %>% 
+             system.file(package = "IEATools"))
+  } else if (version == 2019) {
+    return(file.path("extdata", "GH-ZA-Allocation-sample-2019.xlsx") %>% 
+             system.file(package = "IEATools"))
+  }
+  stop("Only 2018 and 2019 are supported in sample_fu_allocation_table_path()")
+}
 

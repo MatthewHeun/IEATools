@@ -539,8 +539,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
 #' @examples
 #' # Loads final-to-useful allocation data supplied with the package
 #' load_fu_allocation_data()
-load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocation-sample.xlsx") %>% 
-                                      system.file(package = "IEATools"), 
+load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(), 
                                     fu_allocations_tab_name = "FU Allocations"){
   openxlsx::read.xlsx(path, sheet = fu_allocations_tab_name)
 }
