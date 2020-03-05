@@ -1,3 +1,5 @@
+* Rebuilt the sample template for F-->U allocation,
+  because new categories of energy consumption were provided for ZA EIOU.
 * Wrote new tests for the new approaches to determining 
   "Transformation processes" and "Energy industry own use".
 * Implemented a new way to identify "Transformation processes" and "Energy industry own use" rows.
