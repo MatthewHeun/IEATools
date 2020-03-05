@@ -232,23 +232,3 @@ find_eiou_end <- function(.ctry_tbl,
   return(eiou_end)
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
