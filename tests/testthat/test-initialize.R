@@ -357,7 +357,13 @@ test_that("use_iso_countries works as expected", {
   world <- iea_df(text = paste0(",,TIME,1960,1961\n",
                                 "COUNTRY,FLOW,PRODUCT\n",
                                 "World,Production,Hard coal (if no detail),42,43\n",
-                                "World,Losses,Hard coal (if no detail),1,2")) %>% 
+                                "World,Statistical differences,Hard coal (if no detail),7,8\n",
+                                "World,Main activity producer electricity plants,Hard coal (if no detail),9,10\n",
+                                "World,Non-specified,Hard coal (if no detail),11,12\n",
+                                "World,Coal mines,Hard coal (if no detail),13,14\n",
+                                "World,Non-specified,Hard coal (if no detail),11,12\n",
+                                "World,Losses,Hard coal (if no detail),1,2\n",
+                                "World,Iron and steel,Hard coal (if no detail),5,6\n")) %>% 
     rename_iea_df_cols() %>% 
     augment_iea_df() %>% 
     use_iso_countries()
@@ -365,7 +371,7 @@ test_that("use_iso_countries works as expected", {
   n_world_rows <- world %>% 
     dplyr::filter(Country == "World") %>% 
     nrow()
-  expect_equal(n_world_rows, 2)
+  expect_equal(n_world_rows, 8)
 })
 
 
