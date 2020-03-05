@@ -541,7 +541,7 @@ remove_agg_memo_flows <- function(.iea_df,
 #'                        "World,Production,Hard coal (if no detail),42,43\n",
 #'                        "World,Losses,Hard coal (if no detail),1,2")) %>% 
 #'   rename_iea_df_cols() %>% 
-#'   augment_iea_df2018()
+#'   augment_iea_df()
 augment_iea_df <- function(.iea_df, 
                            country = "Country", 
                            ledger_side = "Ledger.side", 
@@ -555,9 +555,9 @@ augment_iea_df <- function(.iea_df,
                            supply = "Supply", 
                            consumption = "Consumption",
                            tpes = "Total primary energy supply", 
-                           tpes_flows = c("Production", "Imports", "Exports", "International marine bunkers", "International aviation bunkers", "Stock changes"),
+                           tpes_flows = IEATools::tpes_flows,
                            tfc_compare = "TFC compare",
-                           tfc_compare_flows = c("Total primary energy supply", "Transfers", "Statistical differences", "Transformation processes", "Energy industry own use", "Losses"),
+                           tfc_compare_flows = IEATools::tfc_compare_flows,
                            transfers = "Transfers",
                            statistical_differences = "Statistical differences",
                            losses = "Losses", 
@@ -567,13 +567,13 @@ augment_iea_df <- function(.iea_df,
                            eiou = "Energy industry own use",
                            eiou_flows_suffix = "(energy)",
                            tfc = "Total final consumption",
-                           tfc_flows = c("Industry", "Transport", "Other", "Non-energy use"),
+                           tfc_flows = IEATools::tfc_flows,
                            industry = "Industry",
-                           industry_flows = c("Iron and steel", "Chemical and petrochemical", "Non-ferrous metals", "Non-metallic minerals", "Transport equipment", "Machinery", "Mining and quarrying", "Food and tobacco", "Paper, pulp and print", "Wood and wood products", "Construction", "Textile and leather", "Non-specified (industry)", "Industry not elsewhere specified"), 
+                           industry_flows = IEATools::industry_flows, 
                            transport = "Transport",
-                           transport_flows = c("World aviation bunkers", "Domestic aviation", "Road", "Rail", "Pipeline transport", "World marine bunkers", "Domestic navigation", "Non-specified (transport)"),
+                           transport_flows = IEATools::transport_flows,
                            other = "Other",
-                           other_flows = c("Residential", "Commercial and public services", "Agriculture/forestry", "Fishing", "Non-specified (other)", "Final consumption not elsewhere specified"),
+                           other_flows = IEATools::other_flows,
                            non_energy = "Non-energy use",
                            non_energy_prefix = "Non-energy use",
                            electricity_output = "Electricity output (GWh)",
@@ -584,68 +584,8 @@ augment_iea_df <- function(.iea_df,
   .iea_df %>% 
     # Eliminate rownames, leaving only numbers
     tibble::remove_rownames() %>% 
-    dplyr::group_by(!!as.name(country)) %>% 
-    # The split between Supply and Consumption ledger sides occurs where Flow == Losses and Flow == Total final consumption.
-    # Find this dividing line in .iea_df. 
-    # Then create the Ledger.side column. 
-    dplyr::group_modify(function(ctry_tbl, ctry){
-      # At this point, 
-      # ctry_tbl contains all rows for this country, and
-      # ctry is a data frame with one country column and one country row containing the country.
-      with_row_nums <- ctry_tbl %>% 
-        tibble::rownames_to_column(var = .rownum) %>% 
-        dplyr::mutate(
-          !!as.name(.rownum) := as.numeric(!!as.name(.rownum))
-        )
-      # Find the break point between the Supply side and the Consumption side of the ledger.
-      # We'll find the break point by identifying the last supply row in the data frame.
-      # We'll take two runs at this.
-      # One by looking for "Losses" in the Flow column (the end of the supply side) and 
-      # the other by looking for "Total final consumption" in the Flow column (the beginning of the consumption side).
-      loss_rows <- with_row_nums %>% 
-        dplyr::filter(!!as.name(flow) == losses)
-      if (nrow(loss_rows) > 0) {
-        # First, calculate the last row of Losses. last_loss_row is the last row of the supply side of the ledger.
-        last_supply_row <- loss_rows %>% magrittr::extract2(.rownum) %>% max()
-      } else {
-        # Look for the first row that is Total final consumption and subtract one.
-        tfc_rows <- with_row_nums %>% 
-          dplyr::filter(!!as.name(flow) == tfc)
-        if (nrow(tfc_rows) > 0) {
-          last_supply_row <- tfc_rows %>% magrittr::extract2(.rownum) %>% min() - 1
-        } else {
-          # Everything failed. Throw an error
-          stop(paste("Found neither", losses, "nor", tfc, "in the", flow, "column."))
-        }
-      }
-      
-      with_row_nums %>% 
-        dplyr::mutate(
-          !!as.name(ledger_side) := dplyr::case_when(
-            !!as.name(.rownum) <= last_supply_row ~ supply,
-            TRUE ~ consumption
-          )
-        )
-    }) %>% 
     dplyr::mutate(
-      # Now add the Flow.aggregation.point column
-      !!as.name(flow_aggregation_point) := dplyr::case_when(
-        !!as.name(ledger_side) == supply & !!as.name(flow) %in% tpes_flows ~ tpes, 
-        !!as.name(ledger_side) == supply & !!as.name(flow) %in% tfc_compare_flows ~ tfc_compare,
-        !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), tp_flows_suffix) ~ transformation_processes,
-        !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), nstp_flows_suffix) ~ transformation_processes,
-        !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), eiou_flows_suffix) ~ eiou,
-        !!as.name(ledger_side) == consumption & !!as.name(flow) == tfc ~ NA_character_,
-        !!as.name(ledger_side) == consumption & !!as.name(flow) %in% tfc_flows ~ tfc,
-        !!as.name(ledger_side) == consumption & !!as.name(flow) %in% industry_flows ~ industry,
-        !!as.name(ledger_side) == consumption & !!as.name(flow) %in% transport_flows ~ transport,
-        !!as.name(ledger_side) == consumption & !!as.name(flow) %in% other_flows ~ other,
-        !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), non_energy_prefix) ~ non_energy,
-        !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), electricity_output_flows_prefix) ~ electricity_output,
-        !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), heat_output_flows_prefix) ~ heat_output,
-        TRUE ~ NA_character_
-      ), 
-      # Now that Flow.aggregation.point is present, we no longer need the (energy),  (transf.), and (transformation) suffixes, so delete them.
+      # We no longer rely upon the (energy), (transf.), and (transformation) suffixes, so delete them.
       # The string "\s+" means to match any number (+) of whitespace (\\s) characters.
       !!as.name(flow) := dplyr::case_when(
         # Delete the " (transf.)" suffix
@@ -655,21 +595,175 @@ augment_iea_df <- function(.iea_df,
         # Delete the " (energy)" suffix
         endsWith(!!as.name(flow), eiou_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(eiou_flows_suffix)), replacement = "", x = !!as.name(flow)),
         TRUE ~ !!as.name(flow)
-      ),
-      # Add method column
-      !!method := method_val,
-      # Add last stage column
-      !!last_stage := last_stage_val,
-      # Add energy type column
-      !!energy_type := energy_type_val,
-      # Add the Unit column
-      !!unit := unit_val
+      )
     ) %>% 
-    # Finally, reorder the columns, remove the .rownum column, and return
-    dplyr::select(-.rownum) %>% 
-    dplyr::select(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product, unit, dplyr::everything()) %>% 
-    # Remove the grouping that we created.
+    dplyr::group_by(!!as.name(country)) %>% 
+    # Perform the next operations on a per-country basis
+    dplyr::group_modify(function(ctry_tbl, ctry){
+      # At this point,
+      # ctry_tbl contains all rows for this country, and
+      # ctry is a 1-cell data frame (one country row and one country column) containing the name of the country we're working on now.
+
+      # Find the split point between the Supply and Consumption sides of the ledger.
+      # Take two attempts.
+      # This first attempt works for the 2018 release of the extended energy balances data.
+      # If it doesn't work, we'll get NULL for supply_consumption_split.
+
+
+      supply_consumption_split <- adjacent_rownums(ctry_tbl, flow, c("Losses", "Iron and steel"))
+      if (is.null(supply_consumption_split)) {
+        # This is the second attempt.
+        # This second attempt works for the 2019 release of the extended energy balances data.
+        supply_consumption_split <- adjacent_rownums(ctry_tbl, flow, c("Losses", "Mining and quarrying"))
+      }
+      assertthat::assert_that(!is.null(supply_consumption_split),
+                              msg = "Could not find the rows that separate the Supply and Consumption sides of the ledger in augment_iea_df")
+      # Start of the Transformation processes section of the IEA data
+      transformation_start <- adjacent_rownums(ctry_tbl, flow, c("Statistical differences", "Main activity producer electricity plants"))
+      # End of the Transformation processes section of the IEA data
+      transformation_end <- adjacent_rownums(ctry_tbl, flow, c("Non-specified", "Coal mines"))
+      # Start of EIOU (energy industry own use) flows
+      eiou_start <- adjacent_rownums(ctry_tbl, flow, c("Non-specified", "Coal mines"))
+      # End of EIOU flows
+      eiou_end <- adjacent_rownums(ctry_tbl, flow, c("Non-specified", "Losses"))
+      
+      
+      ctry_tbl %>% 
+        # Add a temporary .rownum column
+        tibble::rownames_to_column(var = .rownum) %>%
+        dplyr::mutate(
+          !!as.name(.rownum) := as.numeric(!!as.name(.rownum))
+        ) %>% 
+        dplyr::mutate(
+          # Add the Ledger.side column
+          !!as.name(ledger_side) := dplyr::case_when(
+            !!as.name(.rownum) <= supply_consumption_split[[1]] ~ supply,
+            !!as.name(.rownum) >= supply_consumption_split[[2]] ~ consumption,
+            TRUE ~ NA_character_), 
+          # Add the Flow.aggregation.point column
+          !!as.name(flow_aggregation_point) := dplyr::case_when(
+            # Supply side flows
+            !!as.name(ledger_side) == supply & !!as.name(flow) %in% tpes_flows ~ tpes,
+            !!as.name(ledger_side) == supply & !!as.name(flow) %in% tfc_compare_flows ~ tfc_compare,
+            !!as.name(.rownum) >= transformation_start[[2]] & !!as.name(.rownum) <= transformation_end[[1]] ~ transformation_processes,
+            !!as.name(.rownum) >= eiou_start[[2]] & !!as.name(.rownum) <= eiou_end[[1]] ~ eiou,
+            # Consumption side flows
+            !!as.name(ledger_side) == consumption & !!as.name(flow) == tfc ~ NA_character_,
+            !!as.name(ledger_side) == consumption & !!as.name(flow) %in% tfc_flows ~ tfc,
+            !!as.name(ledger_side) == consumption & !!as.name(flow) %in% industry_flows ~ industry,
+            !!as.name(ledger_side) == consumption & !!as.name(flow) %in% transport_flows ~ transport,
+            !!as.name(ledger_side) == consumption & !!as.name(flow) %in% other_flows ~ other,
+            !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), non_energy_prefix) ~ non_energy,
+            !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), electricity_output_flows_prefix) ~ electricity_output,
+            !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), heat_output_flows_prefix) ~ heat_output,
+            
+            
+            TRUE ~ NA_character_
+          )
+        )
+    }) %>% 
+    # End of the per-country processing
+    # Do some processing on the entire data frame.
+    dplyr::mutate(
+      # Add method column
+      !!as.name(method) := method_val,
+      # Add last stage column
+      !!as.name(last_stage) := last_stage_val,
+      # Add energy type column
+      !!as.name(energy_type) := energy_type_val,
+      # Add the Unit column
+      !!as.name(unit) := unit_val
+    ) %>%
+    # Remove the rownum column
+    dplyr::select(-.rownum) %>%
+    # Reorder the columns
+    dplyr::select(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product, unit, dplyr::everything()) %>%
+    # Remove the per-country grouping that we created.
     dplyr::ungroup()
+
+
+      
+      
+      
+      
+    #   with_row_nums <- ctry_tbl %>%
+    #     tibble::rownames_to_column(var = .rownum) %>%
+    #     dplyr::mutate(
+    #       !!as.name(.rownum) := as.numeric(!!as.name(.rownum))
+    #     )
+    #   # Find the break point between the Supply side and the Consumption side of the ledger.
+    #   # We'll find the break point by identifying the last supply row in the data frame.
+    #   # We'll take two runs at this.
+    #   # One by looking for "Losses" in the Flow column (the end of the supply side) and
+    #   # the other by looking for "Total final consumption" in the Flow column (the beginning of the consumption side).
+    #   loss_rows <- with_row_nums %>%
+    #     dplyr::filter(!!as.name(flow) == losses)
+    #   if (nrow(loss_rows) > 0) {
+    #     # First, calculate the last row of Losses. last_loss_row is the last row of the supply side of the ledger.
+    #     last_supply_row <- loss_rows %>% magrittr::extract2(.rownum) %>% max()
+    #   } else {
+    #     # Look for the first row that is Total final consumption and subtract one.
+    #     tfc_rows <- with_row_nums %>%
+    #       dplyr::filter(!!as.name(flow) == tfc)
+    #     if (nrow(tfc_rows) > 0) {
+    #       last_supply_row <- tfc_rows %>% magrittr::extract2(.rownum) %>% min() - 1
+    #     } else {
+    #       # Everything failed. Throw an error
+    #       stop(paste("Found neither", losses, "nor", tfc, "in the", flow, "column."))
+    #     }
+    #   }
+    # 
+    #   with_row_nums %>%
+    #     dplyr::mutate(
+    #       !!as.name(ledger_side) := dplyr::case_when(
+    #         !!as.name(.rownum) <= last_supply_row ~ supply,
+    #         TRUE ~ consumption
+    #       )
+    #     )
+    # }) %>%
+    # dplyr::mutate(
+    #   # Now add the Flow.aggregation.point column
+    #   !!as.name(flow_aggregation_point) := dplyr::case_when(
+    #     !!as.name(ledger_side) == supply & !!as.name(flow) %in% tpes_flows ~ tpes,
+    #     !!as.name(ledger_side) == supply & !!as.name(flow) %in% tfc_compare_flows ~ tfc_compare,
+    #     !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), tp_flows_suffix) ~ transformation_processes,
+    #     !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), nstp_flows_suffix) ~ transformation_processes,
+    #     !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), eiou_flows_suffix) ~ eiou,
+    #     !!as.name(ledger_side) == consumption & !!as.name(flow) == tfc ~ NA_character_,
+    #     !!as.name(ledger_side) == consumption & !!as.name(flow) %in% tfc_flows ~ tfc,
+    #     !!as.name(ledger_side) == consumption & !!as.name(flow) %in% industry_flows ~ industry,
+    #     !!as.name(ledger_side) == consumption & !!as.name(flow) %in% transport_flows ~ transport,
+    #     !!as.name(ledger_side) == consumption & !!as.name(flow) %in% other_flows ~ other,
+    #     !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), non_energy_prefix) ~ non_energy,
+    #     !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), electricity_output_flows_prefix) ~ electricity_output,
+    #     !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), heat_output_flows_prefix) ~ heat_output,
+    #     TRUE ~ NA_character_
+    #   ),
+    #   # Now that Flow.aggregation.point is present, we no longer need the (energy),  (transf.), and (transformation) suffixes, so delete them.
+    #   # The string "\s+" means to match any number (+) of whitespace (\\s) characters.
+    #   !!as.name(flow) := dplyr::case_when(
+    #     # Delete the " (transf.)" suffix
+    #     endsWith(!!as.name(flow), tp_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(tp_flows_suffix)), replacement = "", x = !!as.name(flow)),
+    #     # Delete the " (transformation)" suffix
+    #     endsWith(!!as.name(flow), nstp_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(nstp_flows_suffix)), replacement = "", x = !!as.name(flow)),
+    #     # Delete the " (energy)" suffix
+    #     endsWith(!!as.name(flow), eiou_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(eiou_flows_suffix)), replacement = "", x = !!as.name(flow)),
+    #     TRUE ~ !!as.name(flow)
+    #   ),
+    #   # Add method column
+    #   !!method := method_val,
+    #   # Add last stage column
+    #   !!last_stage := last_stage_val,
+    #   # Add energy type column
+    #   !!energy_type := energy_type_val,
+    #   # Add the Unit column
+    #   !!unit := unit_val
+    # ) %>%
+    # # Finally, reorder the columns, remove the .rownum column, and return
+    # dplyr::select(-.rownum) %>%
+    # dplyr::select(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product, unit, dplyr::everything()) %>%
+    # # Remove the grouping that we created.
+    # dplyr::ungroup()
 }
 
 

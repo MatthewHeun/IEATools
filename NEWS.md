@@ -1,3 +1,18 @@
+* Wrote new tests for the new approaches to determining 
+  "Transformation processes" and "Energy industry own use".
+* Implemented a new way to identify "Transformation processes" and "Energy industry own use" rows.
+  The new method works for both the 2018 and 2019 editions of the IEA data.
+  The new method is based on finding breakpoints between sections of the table.
+  The method relies on the fact that each country's rows are in exactly the same order.
+  The validity of this assumption can be tested with `iea_file_OK()`.
+* Added a new function `adjacent_rownums()` that identifies the row numbers where 
+  two adjascent entries exist. 
+  This function is used extensively when determining the 
+  row ranges for "Transformation processes" and "Energy industry own use".
+* Added `iea_file_OK()` which tells whether all countries in an IEA extended energy balance table
+  have the same order for all rows.
+* Added "Paper, pulp and printing" to the list of industries for 2019.
+  (In the 2018 edition of the IEA's data, "Paper, pulp and print" was the name of this industry.)
 * There is no longer an "Other" aggregation in the IEA database.
   One test that had expected an "Other" aggregation point in the database (using 2018 data)
   was failing, because the expectation is no longer met in the 2019 version of the database.

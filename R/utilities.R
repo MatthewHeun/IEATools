@@ -412,7 +412,7 @@ adjacent_rownums <- function(.df, col_name, entries) {
     stop(paste("entries must have length 2 in adjacent_rownames. Was ", length(entries)))
   }
   col <- .df %>% 
-    extract2(col_name)
+    magrittr::extract2(col_name)
   prev <- head(col, -1)
   later <- tail(col, -1)
   out <- which(prev == entries[[1]] & later == entries[[2]])

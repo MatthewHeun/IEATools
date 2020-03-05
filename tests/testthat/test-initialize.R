@@ -373,15 +373,22 @@ test_that("load_tidy_iea_df works as expected", {
 })
 
 
-test_that("every Flow.aggregation.point is filled by augmentation.", {
-  # Every row in the Flow.aggregation.point column should be filled with a non-NA entry.
+test_that("Ledger.side is added by agugmentation", {
+  # Every row in the Ledger.side column should be filled with a non-NA entry.
   # Verify that's indeed the case.
-  expect_false(load_tidy_iea_df(sample_iea_data_path(2018)) %>% 
-                   magrittr::extract2("Flow.aggregation.point") %>% 
+  for (year in valid_iea_release_years) {
+    DF <- load_tidy_iea_df(sample_iea_data_path(year))
+    expect_false(DF %>% 
+                   magrittr::extract2("Ledger.side") %>% 
                    is.na() %>% 
                    any())
-  
-  
+  }
+})
+
+
+test_that("every Flow.aggregation.point is filled by augmentation", {
+  # Every row in the Flow.aggregation.point column should be filled with a non-NA entry.
+  # Verify that's indeed the case.
   for (year in valid_iea_release_years) {
     expect_false(load_tidy_iea_df(sample_iea_data_path(year)) %>% 
                    magrittr::extract2("Flow.aggregation.point") %>% 
@@ -394,10 +401,12 @@ test_that("every Flow.aggregation.point is filled by augmentation.", {
 test_that("spreading by years works as expected after load_tidy_iea_df()", {
   # This test will fail if things are not specified correctly.
   # Without correct specification, keys will not be unique.
-  year_spread <- load_tidy_iea_df() %>% 
-    tidyr::spread(key = Year, value = E.dot)
-  expect_true("1971" %in% names(year_spread))
-  expect_true("2000" %in% names(year_spread))
+  for (year in valid_iea_release_years) {
+    year_spread <- load_tidy_iea_df(sample_iea_data_path(year)) %>% 
+      tidyr::spread(key = Year, value = E.dot)
+    expect_true("1971" %in% names(year_spread))
+    expect_true("2000" %in% names(year_spread))
+  }
 })
 
 
