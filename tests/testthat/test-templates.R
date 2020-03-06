@@ -158,7 +158,41 @@ test_that("eta_fu_template works as expected for 2018 data", {
 })
 
 
-test_that("write_eta_fu_template works as expected", {
+test_that("eta_fu_template works as expected for 2019 data", {
+  # Try for 2019 data
+  # Use the default sorting (by Eu.product)
+  Eta_fu_template_2019 <- load_fu_allocation_data(sample_fu_allocation_table_path(2019)) %>% 
+    eta_fu_template()
+  expect_equal(Eta_fu_template_2019$Machine[[1]], "Automobiles")
+  expect_equal(Eta_fu_template_2019$Machine[[nrow(Eta_fu_template_2019)]], "Oil furnaces")
+  expect_equal(as.character(Eta_fu_template_2019$Quantity[[1]]), "E.dot_machine")
+  expect_equal(as.character(Eta_fu_template_2019$Quantity[[nrow(Eta_fu_template_2019)]]), "phi.u")
+  
+  eu_products <- Eta_fu_template_2019$Eu.product %>% unique() %>% as.character()
+  # Check that the order is as expected.
+  expect_equivalent(eu_products, c("MD", "Light", "HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C"))
+  # Check the class of the year columns. They should be numeric.
+  expect_true(is.numeric(Eta_fu_template_2019[["1971"]]))
+  expect_true(is.numeric(Eta_fu_template_2019[["2000"]]))
+  
+  # Now try to sort by importance
+  Eta_fu_template_2019_2 <- load_fu_allocation_data(sample_fu_allocation_table_path(2019)) %>% 
+    eta_fu_template(sort_by = "importance")
+  expect_equal(Eta_fu_template_2019_2$Machine[[1]], "Wood stoves")
+  expect_equal(Eta_fu_template_2019_2$Machine[[nrow(Eta_fu_template_2019_2)]], "Gas heaters")
+  expect_equal(as.character(Eta_fu_template_2019_2$Quantity[[1]]), "E.dot_machine")
+  expect_equal(as.character(Eta_fu_template_2019_2$Quantity[[nrow(Eta_fu_template_2019_2)]]), "phi.u")
+  
+  eu_products2 <- Eta_fu_template_2019_2$Eu.product %>% unique() %>% as.character()
+  # Check that the order is as expected.
+  expect_equivalent(eu_products2, c("MTH.100.C", "MTH.200.C", "MD", "Light", "HTH.600.C", "LTH.20.C"))
+  # Check the class of the year columns. They should be numeric.
+  expect_true(is.numeric(Eta_fu_template_2019_2[["1971"]]))
+  expect_true(is.numeric(Eta_fu_template_2019_2[["2000"]]))
+})
+
+
+test_that("write_eta_fu_template works as expected for 2018 data", {
   # Try with default sort order
   Eta_fu_template_2018 <- load_fu_allocation_data(sample_fu_allocation_table_path(2018)) %>% 
     eta_fu_template()
@@ -198,8 +232,9 @@ test_that("write_eta_fu_template works as expected", {
     file.remove(f2)
   }
   
+  
   # Try with "importance" sort order.
-  Eta_fu_template_2018_2 <- load_fu_allocation_data() %>% 
+  Eta_fu_template_2018_2 <- load_fu_allocation_data(sample_fu_allocation_table_path(2018)) %>% 
     eta_fu_template(sort_by = "importance")
   # Get a temporary file in which to write the blank template.
   f <- tempfile(fileext = ".xlsx")
@@ -212,11 +247,11 @@ test_that("write_eta_fu_template works as expected", {
   # (in this case levels) that are different after reading back in.
   expect_equivalent(Template_2018.reread2, Eta_fu_template_2018_2)
   expect_equal(Template_2018.reread2$Machine[[9]], "Automobiles")
-  expect_equal(Template_2018.reread2$Machine[[261]], "Gas furnaces")
+  expect_equal(Template_2018.reread2$Machine[[261]], "Kerosene stoves")
   expect_equal(as.character(Template_2018.reread2$Quantity[[9]]), "E.dot_machine")
   expect_equal(as.character(Template_2018.reread2$Quantity[[262]]), "E.dot_machine [%]")
   
-  # Now try to write it again.
+  # Now try to write it again. 
   expect_true(file.exists(f))
   expect_error(Eta_fu_template_2018_2 %>% write_eta_fu_template(p), "File already exists!")
   # Clean up
@@ -251,9 +286,61 @@ test_that("write_eta_fu_template works as expected", {
 })
 
 
+test_that("write_eta_fu_template works as expected for 2019 data", {
+  # Try with default sort order
+  Eta_fu_template_2019 <- load_fu_allocation_data(sample_fu_allocation_table_path(2019)) %>% 
+    eta_fu_template()
+  # Get a temporary file in which to write the blank template.
+  f <- tempfile(fileext = ".xlsx")
+  p <- Eta_fu_template_2019 %>% 
+    write_eta_fu_template(f, overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)
+  # Read the tab back in.
+  Template.reread <- openxlsx::read.xlsx(f, sheet = "FU etas")
+  # Check that it was read back correctly.
+  # Use expect_equivalent instead of expect_equal to ignore attributes 
+  # (in this case levels) that are different after reading back in.
+  expect_equivalent(Template.reread, Eta_fu_template_2019)
+  expect_equal(Template.reread$Machine[[9]], "Diesel trucks")
+  expect_equal(Template.reread$Machine[[261]], "LPG stoves")
+  expect_equal(as.character(Template.reread$Quantity[[9]]), "E.dot_machine")
+  expect_equal(as.character(Template.reread$Quantity[[262]]), "E.dot_machine [%]")
+  
+  # Clean up
+  if (file.exists(f)) {
+    file.remove(f)
+  }
+  
+  # Try with "importance" sort order.
+  Eta_fu_template_2019_2 <- load_fu_allocation_data(sample_fu_allocation_table_path(2019)) %>% 
+    eta_fu_template(sort_by = "importance")
+  # Get a temporary file in which to write the blank template.
+  f <- tempfile(fileext = ".xlsx")
+  p <- Eta_fu_template_2019_2 %>% 
+    write_eta_fu_template(f, overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)
+  # Read the tab back in.
+  Template_2019.reread2 <- openxlsx::read.xlsx(f, sheet = "FU etas")
+  # Check that it was read back correctly.
+  # Use expect_equivalent instead of expect_equal to ignore attributes 
+  # (in this case levels) that are different after reading back in.
+  expect_equivalent(Template_2019.reread2, Eta_fu_template_2019_2)
+  expect_equal(Template_2019.reread2$Machine[[9]], "Automobiles")
+  expect_equal(Template_2019.reread2$Machine[[261]], "Gas furnaces")
+  expect_equal(as.character(Template_2019.reread2$Quantity[[9]]), "E.dot_machine")
+  expect_equal(as.character(Template_2019.reread2$Quantity[[262]]), "E.dot_machine [%]")
+  
+  # Clean up
+  if (file.exists(f)) {
+    file.remove(f)
+  }
+})
+
+
 test_that("load_eta_fu_data works as expected", {
   # Load eta_fu data from package
-  Eta_fu <- load_eta_fu_data()
-  expect_true(TRUE)
+  for (year in valid_iea_release_years) {
+    Eta_fu <- load_eta_fu_data(path = sample_eta_fu_table_path(year))
+    expect_true(length(Eta_fu) > 0)
+    expect_true(nrow(Eta_fu) > 0)
+  }
 })
   
