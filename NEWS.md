@@ -1,3 +1,6 @@
+* Added template tests for both 2018 and 2019.
+* Added new sample allocation and F-->U efficiency tables
+  for 2019 data.
 * Rebuilt the sample template for F-->U allocation,
   because new categories of energy consumption were provided for ZA EIOU.
 * Wrote new tests for the new approaches to determining 
