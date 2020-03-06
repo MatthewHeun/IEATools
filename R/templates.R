@@ -1246,8 +1246,7 @@ write_eta_fu_template <- function(.eta_fu_template,
 #'
 #' @examples
 #' load_eta_fu_data()
-load_eta_fu_data <- function(path = file.path("extdata", "GH-ZA-Efficiency-sample.xlsx") %>% 
-                                      system.file(package = "IEATools"), 
+load_eta_fu_data <- function(path = sample_eta_fu_table_path(), 
                                     eta_fu_tab_name = "FU etas"){
   openxlsx::read.xlsx(path, sheet = eta_fu_tab_name)
 }

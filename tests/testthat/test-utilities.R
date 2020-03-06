@@ -151,6 +151,13 @@ test_that("sample_fu_allocation_table_path works correctly", {
 })
 
 
+test_that("sample_eta_fu_table_path works correctly", {
+  expect_true(sample_eta_fu_table_path() %>% endsWith("GH-ZA-Efficiency-sample-2019.xlsx"))
+  expect_true(endsWith(sample_eta_fu_table_path(2018), "GH-ZA-Efficiency-sample-2018.xlsx"))
+  expect_error(sample_eta_fu_table_path(2017), "Only 2018 and 2019 are supported in sample_eta_fu_table_path")
+})
+
+
 test_that("adjacent_rownums works as expected", {
   DF <- data.frame(C1 = c("A", "B", "C"), stringsAsFactors = FALSE)
   expect_equal(adjacent_rownums(DF, col_name = "C1", entries = c("A", "B")), c(1, 2))
