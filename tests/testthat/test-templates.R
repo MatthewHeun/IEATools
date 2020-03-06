@@ -16,6 +16,7 @@ check_fu_allocation_template <- function(.DF){
   expect_equal(.DF$Quantity[[last_row]], "C_3 [%]")
 }
 
+
 test_that("openxlsx works as expected", {
   # These are just tests for me to understand the openxlsx package.
   Tidy_iea_df <- load_tidy_iea_df() %>% 
@@ -42,6 +43,7 @@ test_that("openxlsx works as expected", {
   }
 })
 
+
 test_that("fu_allocation_template works as expected", {
   Allocation_template <- load_tidy_iea_df() %>% 
     specify_all() %>%
@@ -57,6 +59,7 @@ test_that("fu_allocation_template works as expected", {
   expect_equal(names(Allocation_template), expected_colorder)
   expect_true(all(Allocation_template$Ledger.side == "Consumption" | Allocation_template$Flow.aggregation.point == "Energy industry own use"))
 })
+
 
 test_that("write_fu_allocation_template works as expected", {
   FU_allocation_template <- load_tidy_iea_df() %>% 
@@ -113,11 +116,13 @@ test_that("write_fu_allocation_template works as expected", {
   }
 })
 
+
 test_that("load_fu_allocation_data works as expected", {
   # Load default data and check the filled table.
   load_fu_allocation_data() %>% 
     check_fu_allocation_template()
 })
+
 
 test_that("eta_fu_template works as expected", {
   # Use the default sorting (by Eu.product)
@@ -150,6 +155,7 @@ test_that("eta_fu_template works as expected", {
   expect_true(is.numeric(Eta_fu_template2[["1971"]]))
   expect_true(is.numeric(Eta_fu_template2[["2000"]]))
 })
+
 
 test_that("write_eta_fu_template works as expected", {
   # Try with default sort order
