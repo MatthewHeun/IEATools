@@ -85,6 +85,7 @@ test_that("iea_df works with a plain first row", {
   # Instead of text, try with a tiny file that is identical to expectedDF.
   tiny_file <- file.path("extdata", "Tiny-Example-File-Simple-Header.csv") %>% 
     system.file(package = "IEATools")
+print(tiny_file)
   expect_equal(iea_df(.iea_file = tiny_file), expectedDF)
 })
 
