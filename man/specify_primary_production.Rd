@@ -55,7 +55,7 @@ Default is "\code{Resources}".}
 
 \item{production}{a string identifying production in the flow column. Default is "\code{Production}".}
 
-\item{e_dot}{the name of the energy column in \code{.tidy_eia_df}. Default is "\code{E.dot}".}
+\item{e_dot}{the name of the energy column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
 
 \item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
 }

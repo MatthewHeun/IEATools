@@ -50,7 +50,7 @@ write_eta_fu_template(
 
 \item{e_dot_machine_perc}{a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine [\%]".}
 
-\item{maximum_values}{a string identifying the maximum values column in the outgoing template. Default is "Maxmimum.values".}
+\item{maximum_values}{a string identifying the maximum values column in the outgoing template. Default is "Maximum.values".}
 
 \item{header_row_font_color}{a hex string representing the font color for the header row in the Excel file that is written by this function.
 Default is "#FFFFFF", white.}

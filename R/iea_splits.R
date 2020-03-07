@@ -25,9 +25,8 @@
 #' DF %>% adjacent_rownums("C1", c("A", "B"))
 #' DF %>% adjacent_rownums("C1", c("B", "C"))
 adjacent_rownums <- function(.DF, col_name, entries) {
-  if (length(entries) != 2) {
-    stop(paste("entries must have length 2 in adjacent_rownames. Was ", length(entries)))
-  }
+  assertthat::assert_that(length(entries) == 2, 
+                          msg = paste("entries must have length 2 in adjacent_rownames. Was ", length(entries)))
   col <- .DF %>% 
     magrittr::extract2(col_name)
   prev <- utils::head(col, -1)

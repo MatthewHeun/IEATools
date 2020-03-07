@@ -80,12 +80,12 @@ Default is "\verb{#104273}", a dark yellow color.}
 Default is "\verb{#104273}", a light yellow color.}
 
 \item{dont_fill_shading_color}{a hex string representing the shading color for cells that don't require inputs.
-Default is "\verb{#A8A8A8}", a medim gray color.}
+Default is "\verb{#A8A8A8}", a medium gray color.}
 
 \item{overwrite}{a boolean that tells whether an existing file at \code{path} will be overwritten. Default is "\code{FALSE}".
 If \code{path} already exists and \code{overwrite = FALSE}, an error is given.}
 
-\item{n_allocation_rows}{the number of allcation rows to write for each final energy product. Default is \code{3}.}
+\item{n_allocation_rows}{the number of allocation rows to write for each final energy product. Default is \code{3}.}
 
 \item{.rownum}{a temporary column created internally. \code{.rownum} must not exist in \code{.tidy_iea_df} when \code{write_fu_allocation_template} is called.
 Default is "\code{.rownum}".}
@@ -108,7 +108,7 @@ Formatting is applied to the template:
 Analysts may fill those cells, but it is not necessary to do so.
 \item Blue cells indicate final demand energy consumption.
 \item Yellow cells indicate energy industry own use energy consumption.
-\item Rows are written in same order as EIA extended energy balance data.
+\item Rows are written in same order as IEA extended energy balance data.
 \item Columns are written in a reasonable order, namely that left-to-right order
 approximates flow through the energy conversion chain.
 }

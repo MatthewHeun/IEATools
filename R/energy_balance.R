@@ -41,28 +41,28 @@
 #'        grouping columns, typically `Country`, `Year`, `Product`, etc. 
 #'        a `Ledger.side` column.
 #' @param ledger_side the name of the column in `.tidy_iea_data`
-#'        that contains ledger side information (a string). Default is "`Ledger.side`".
+#'        that contains ledger side information (a string). Default is "Ledger.side".
 #' @param supply the identifier for supply data in the `ledger_side` column (a string).
-#'        Default is "`Supply`".
+#'        Default is "Supply".
 #' @param consumption the identifier for consumption data in the `ledger_side` column (a string).
-#'        Default is "`Consumption`".
+#'        Default is "Consumption".
 #' @param flow_aggregation_point the name of the column in `.tidy_iea_df` that contains flow aggregation point information.
-#'        Default is "`Flow.aggregation.point`".
-#' @param flow the name of the column in `.tidy_iea_df` that contains flows. Default is "`Flow`".
-#' @param product the name of the column in `.tidy_iea_df` that contains products. Default is "`Product`".
+#'        Default is "Flow.aggregation.point".
+#' @param flow the name of the column in `.tidy_iea_df` that contains flows. Default is "Flow".
+#' @param product the name of the column in `.tidy_iea_df` that contains products. Default is "Product".
 #' @param e_dot the name of the column in `.tidy_iea_data`
-#'        that contains energy flow data. Default is "`E.dot`".
-#' @param unit the name of the colum in `.tidy_iea_data`
-#'        that contains the units for the energy flow data. Default is "`Unit`".
+#'        that contains energy flow data. Default is "E.dot".
+#' @param unit the name of the column in `.tidy_iea_data`
+#'        that contains the units for the energy flow data. Default is "Unit".
 #' @param supply_sum the name of a new column that will contain the sum of all supply for that group.
-#'        Default is "`supply_sum`".
+#'        Default is "supply_sum".
 #' @param consumption_sum the name of a new column that will contain the sum of all consumption for that group.
-#'        Default is "`consumption_sum`".
+#'        Default is "consumption_sum".
 #' @param supply_minus_consumption the name of a new column that will contain the difference between supply and consumption for that group.
-#'        Default is "`supply_minus_consumption`". 
+#'        Default is "supply_minus_consumption". 
 #' @param balance_OK the name of a new logical column that tells whether a row's energy balance is OK.
-#'        Default is "`balance_OK`".
-#' @param err the name of a new column that indicates the energy balance error for each group. Default is "`err`".
+#'        Default is "balance_OK".
+#' @param err the name of a new column that indicates the energy balance error for each group. Default is "err".
 #' @param tol if the difference between supply and consumption is greater than `tol`, 
 #'        `balance_OK` will be set to `FALSE`. Default is `1e-6`.
 #'
@@ -133,7 +133,7 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
 #' @param balance_OK the name of a new logical column that tells whether a row's energy balance is OK.
 #'        Default is "`balance_OK`".
 #'
-#' @return `TRUE` if all groups of `.tidy_iea_df_balances` are balanceed, `FALSE` otherwise. 
+#' @return `TRUE` if all groups of `.tidy_iea_df_balances` are balanced, `FALSE` otherwise. 
 #'
 #' @export
 #'

@@ -19,7 +19,7 @@ the \code{fu_allocations_tab_name} tab in \code{path} as a data frame.
 }
 \description{
 When performing extending an energy conversion chain from useful energy to final energy,
-allocations of final energy consumption to useful energy catagories are defined by the analyst.
+allocations of final energy consumption to useful energy categories are defined by the analyst.
 The Excel file at \code{path} contains those allocations.
 }
 \details{

@@ -130,7 +130,7 @@ iea_file_OK <- function(.iea_file = NULL,
 #' classified under "Hard coal (if no detail)" in 1971.)
 #' On the other hand, "`..`" is used for data in the most recent year 
 #' when those data have not yet been incorporated into the database. 
-#' In the face of IEA’s inconsistencies, 
+#' In the face of IEA's inconsistencies, 
 #' the only rational way to proceed is to convert 
 #' both "`x`" and "`..`" in the IEA files to "`0`" in the output data frame
 #' from this function.
@@ -288,7 +288,7 @@ iea_df <- function(.iea_file = NULL,
 #' 
 #' The IEA data has columns named `COUNTRY`, `FLOW`, and `PRODUCT`.
 #' This function turns off the shouting, 
-#' renaming the columms (by default) to `Country`, `Flow`, and `Product`.
+#' renaming the columns (by default) to `Country`, `Flow`, and `Product`.
 #'
 #' @param .iea_df a data frame produced by [iea_df()]
 #' @param country the original name for the country column. (Default is `COUNTRY`.)
@@ -408,7 +408,7 @@ use_iso_countries <- function(.iea_df,
 #' Sometimes, it is convenient to remove those rows. 
 #' This function does so, using default identifying strings for aggregations and memos.
 #' 
-#' Note that the IEA data somtimes includes a variable number of spaces 
+#' Note that the IEA data sometimes includes a variable number of spaces 
 #' before the "Memo: " string. 
 #' There are several places where trailing spaces are found, such as "Nuclear industry ".
 #' This function strips all leading and trailing spaces in the `Flow` and `Product` columns.

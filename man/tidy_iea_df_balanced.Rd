@@ -14,7 +14,7 @@ each row is in balance.}
 Default is "\code{balance_OK}".}
 }
 \value{
-\code{TRUE} if all groups of \code{.tidy_iea_df_balances} are balanceed, \code{FALSE} otherwise.
+\code{TRUE} if all groups of \code{.tidy_iea_df_balances} are balanced, \code{FALSE} otherwise.
 }
 \description{
 This function provides a handy way to tell if \emph{all} rows of \code{.tidy_iea_df_balance}

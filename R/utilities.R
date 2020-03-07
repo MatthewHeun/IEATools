@@ -85,7 +85,7 @@ year_cols <- function(.df, year_pattern = "^-?\\d+$", return_names = FALSE){
 #' @param x a list into which `values` is to be inserted
 #' @param after the object in `x` after which `after` will be inserted
 #' @param values the object to be inserted into `x`
-#' @param .after_all a boolean telling whether to insert `values` after after all instances of `after` (when `TRUE`, the defaul)
+#' @param .after_all a boolean telling whether to insert `values` after after all instances of `after` (when `TRUE`, the default)
 #'        or only the first instance of `after` (when `FALSE`).
 #' @param .equals_function insertion of `values` occurs at `which(.equals_function(x, after))`.
 #'        Default is `==`.
@@ -132,7 +132,7 @@ insert_after <- function(x, after = NULL, values, .after_all = TRUE, .equals_fun
 #' If `heat_type` does not conform to the pattern shown above, `NA` is the likely result.
 #' 
 #' @param heat_types a string vector of heat types to be converted to temperatures
-#' @param sep the separator between parts of the `heat_types` string. Defulat is ".".
+#' @param sep the separator between parts of the `heat_types` string. Default is ".".
 #'
 #' @return a numeric vector of same length as `heat_types` containing temperatures in Kelvin.
 #' 

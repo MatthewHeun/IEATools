@@ -104,7 +104,7 @@ e.g., World Anthracite supply in 1971.
 classified under "Hard coal (if no detail)" in 1971.)
 On the other hand, "\code{..}" is used for data in the most recent year
 when those data have not yet been incorporated into the database.
-In the face of IEA’s inconsistencies,
+In the face of IEA's inconsistencies,
 the only rational way to proceed is to convert
 both "\code{x}" and "\code{..}" in the IEA files to "\code{0}" in the output data frame
 from this function.

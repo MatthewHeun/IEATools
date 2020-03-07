@@ -83,7 +83,7 @@ IEA_path %>%
 Extended energy balance data can be pulled directly into an `R` data frame 
 by the `iea_df()` function. 
 `iea_df()` fixes the header shown in the figure above,
-conveting it to a single row.
+converting it to a single row.
 Furthermore, `iea_df()` deals with the IEA's indicators for 
 not applicable values ("`x`"),
 for unavailable values ("`..`"), and
@@ -108,7 +108,7 @@ because Anthracite was classified under "Hard coal (if no detail)" in 1971.)
 On the other hand, "`..`" is used correctly for data in the most recent year 
 when those data have not yet been incorporated into the database. 
 
-In the face of IEA’s inconsistencies, 
+In the face of IEA's inconsistencies, 
 the only rational way to proceed is to convert 
 "`x`", "`..`", and "`c`" to "`0`".
 `iea_df()` performs that task.
@@ -129,7 +129,7 @@ data are not convenient for immediate use.
 1. Column titles are SHOUTING.
 2. The `COUNTRY` column contains full (long) country names. 
 It would be nicer if countries were identified by their [2- or 3-letter ISO codes](https://en.wikipedia.org/wiki/ISO_3166-1).
-3. The demarcation between the supply and consumptions sides of the ledger is unclear to new users.
+3. The demarcation between the supply and consumption sides of the ledger is unclear to new users.
 4. How data should be aggregated is unclear to new users.
 5. The data are not in [tidy format](https://doi.org/10.18637/jss.v059.i10).
 
@@ -309,7 +309,7 @@ Balances %>%
 ```
 
 Notice that the IEA data are not quite energy balanced.
-To fix the enery balance, use the `fix_tidy_iea_df_balances()` function.
+To fix the energy balance, use the `fix_tidy_iea_df_balances()` function.
 `fix_tidy_iea_df_balances()` adjusts the `Statistical differences` flow
 to achieve perfect energy balance.
 

@@ -31,7 +31,7 @@ final energy is sold to consumers.)
 But consumers don't buy final energy for its own sake.
 They buy final energy so they can convert it to useful energy 
 (heat, light, work) that, 
-when combined with infrastrucure 
+when combined with infrastructure 
 (buildings, roads, etc.),
 provides energy services
 (heated and cooled space, passenger and freight transport, etc.).

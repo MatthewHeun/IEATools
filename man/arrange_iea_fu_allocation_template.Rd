@@ -33,7 +33,7 @@ Default is "\code{both}".}
 
 \item{ef_product}{the name of the final energy column in \code{.fu_allocation_template}. Default is "\code{Ef.product}".}
 
-\item{machine}{the name of the machine columnin \code{.fu_allocation_template}. Default is "\code{Machine}".}
+\item{machine}{the name of the machine column in \code{.fu_allocation_template}. Default is "\code{Machine}".}
 
 \item{eu_product}{the name of the useful energy product column in \code{.fu_allocation_template}. Default is "\code{Eu.product}".}
 
@@ -64,7 +64,7 @@ Other orderings can be specified with the \code{fap_flow_order} and \code{ef_pro
 It sorts columns (left-to-right) in the order of energy flow through the energy conversion chain.
 }
 \details{
-Whe sorting rows,
+When sorting rows,
 the \code{flow_allocation_point}, \code{flow}, and \code{product} columns are considered.
 Internally, this function figures out which columns are metadata columns
 and groups on those columns before applying the row ordering.
