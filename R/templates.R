@@ -539,8 +539,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
 #' @examples
 #' # Loads final-to-useful allocation data supplied with the package
 #' load_fu_allocation_data()
-load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocation-sample.xlsx") %>% 
-                                      system.file(package = "IEATools"), 
+load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(), 
                                     fu_allocations_tab_name = "FU Allocations"){
   openxlsx::read.xlsx(path, sheet = fu_allocations_tab_name)
 }
@@ -852,7 +851,7 @@ eta_fu_template <- function(.fu_allocations,
   
   # Check for errors. If there is a problem somewhere, 
   # we will obtain NA in the Machine column.
-  assertthat::assert_that(!any(out[[machine]] %>% is.na()), msg = "At least one row of out has NA in the machine column in era_fu_template.
+  assertthat::assert_that(!any(out[[machine]] %>% is.na()), msg = "At least one row of out has NA in the machine column in eta_fu_template.
                           Double-check Machine and Destination names.")
   
   return(out)
@@ -1247,8 +1246,7 @@ write_eta_fu_template <- function(.eta_fu_template,
 #'
 #' @examples
 #' load_eta_fu_data()
-load_eta_fu_data <- function(path = file.path("extdata", "GH-ZA-Efficiency-sample.xlsx") %>% 
-                                      system.file(package = "IEATools"), 
+load_eta_fu_data <- function(path = sample_eta_fu_table_path(), 
                                     eta_fu_tab_name = "FU etas"){
   openxlsx::read.xlsx(path, sheet = eta_fu_tab_name)
 }

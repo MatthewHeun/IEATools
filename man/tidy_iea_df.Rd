@@ -61,8 +61,7 @@ make an IEA data frame tidy.
 Default argument values assume that \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}} has been called on \code{.iea_df}.
 }
 \examples{
-file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
-  system.file(package = "IEATools") \%>\% 
+sample_iea_data_path() \%>\% 
   iea_df() \%>\%
   rename_iea_df_cols() \%>\% 
   remove_agg_memo_flows() \%>\% 

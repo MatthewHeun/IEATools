@@ -2,7 +2,7 @@
 % Please edit documentation in R/initialize.R
 \name{iea_df}
 \alias{iea_df}
-\title{Load IEA data from an extended enegy balances csv file}
+\title{Load IEA data from an extended energy balances .csv file}
 \usage{
 iea_df(
   .iea_file = NULL,
@@ -10,6 +10,7 @@ iea_df(
   expected_1st_line_start = ",,TIME",
   expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT",
   expected_simple_start = expected_2nd_line_start,
+  flow = "FLOW",
   missing_data = "..",
   not_applicable_data = "x",
   confidential_data = "c",
@@ -32,6 +33,8 @@ Note that \code{expected_simple_start} is sometimes encountered in data supplied
 Furthermore, \code{expected_simple_start} could be the format of the file when somebody "helpfully" fiddles with
 the raw data from the IEA.}
 
+\item{flow}{the name of the flow column, entries of which are stripped of leading and trailing white space. Default is "FLOW".}
+
 \item{missing_data}{a string that identifies missing data. Default is "\code{..}".
 Entries of \code{missing_data} are coded as `0`` in output.}
 
@@ -50,7 +53,7 @@ Data from estimated years are removed from output.}
 a data frame containing the IEA extended energy balances data
 }
 \description{
-This function reads an IEA extended energy balances file and
+This function reads an IEA extended energy balances .csv file and
 converts it to a data frame with appropriately-labeled columns.
 One of \code{iea_file} or \code{text} must be specified, but not both.
 The first line of \code{iea_file} or \code{text}
@@ -58,7 +61,7 @@ is expected to start with \code{expected_start_1st_line}, and
 the second line is expected to start with \code{expected_2nd_line_start}, and
 it may have any number of commas appended.
 (The extra commas might come from opening and re-saving the file in Excel.)
-Alternatively, the file may start with \code{expected_simple_start}.
+Alternatively, the file may have a first line of \code{expected_simple_start}.
 If none of these conditions are not met, execution is halted, and
 an error message is provided.
 Files should have a return character at the end of their final line.
@@ -68,6 +71,18 @@ This function is designed to work even as more years are added
 in columns at the right of \code{.iea_file},
 because column names in the output are constructed from the header line(s) of \code{.iea_file}
 (which contain years and country, flow, product information).
+
+In the IEA's data, some entries in the "FLOW" column are quoted to avoid creating too many columns.
+For example, "Paper, pulp and printing" is quoted in the raw .csv file:
+"      Paper, pulp and printing".
+Internally, this function uses \code{\link[data.table:fread]{data.table::fread()}}, which, unfortunately, does not
+strip leading and trailing white space from quoted entries.
+So the function uses \code{\link[base:trimws]{base::trimws()}} to finish the job.
+
+When the IEA includes estimated data for a year,
+the column name of the estimated year includes an "E" appended.
+(E.g., "2017E".)
+This function eliminates estimated columns.
 
 The IEA data have indicators for
 not applicable values ("\code{x}") and for

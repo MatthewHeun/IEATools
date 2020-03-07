@@ -5,8 +5,7 @@
 \title{Load final-to-useful machine efficiency data}
 \usage{
 load_eta_fu_data(
-  path = file.path("extdata", "GH-ZA-Efficiency-sample.xlsx") \%>\% system.file(package
-    = "IEATools"),
+  path = sample_eta_fu_table_path(),
   eta_fu_tab_name = "FU etas"
 )
 }

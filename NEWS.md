@@ -1,3 +1,47 @@
+* Added template tests for both 2018 and 2019.
+* Added new sample allocation and F-->U efficiency tables
+  for 2019 data.
+* Rebuilt the sample template for F-->U allocation,
+  because new categories of energy consumption were provided for ZA EIOU.
+* Wrote new tests for the new approaches to determining 
+  "Transformation processes" and "Energy industry own use".
+* Implemented a new way to identify "Transformation processes" and "Energy industry own use" rows.
+  The new method works for both the 2018 and 2019 editions of the IEA data.
+  The new method is based on finding breakpoints between sections of the table.
+  The method relies on the fact that each country's rows are in exactly the same order.
+  The validity of this assumption can be tested with `iea_file_OK()`.
+* Added a new function `adjacent_rownums()` that identifies the row numbers where 
+  two adjacent entries exist. 
+  This function is used extensively when determining the 
+  row ranges for "Transformation processes" and "Energy industry own use".
+* Added function `sample_iea_data_path()` which takes a year (representing year of data release)
+  as an argument.
+  Default year is (now) 2019.  
+  In subsequent years, I will change the default year to the most-recent year available.
+  2018 is also supported.
+  This function allows supporting and testing of previous years' data versions.
+* Added `iea_file_OK()` which tells whether all countries in an IEA extended energy balance table
+  have the same order for all rows.
+* Added "Paper, pulp and printing" to the list of industries for 2019.
+  (In the 2018 edition of the IEA's data, "Paper, pulp and print" was the name of this industry.)
+* There is no longer an "Other" aggregation in the IEA database.
+  One test that had expected an "Other" aggregation point in the database (using 2018 data)
+  was failing, because the expectation is no longer met in the 2019 version of the database.
+  The test has been changed to no longer expect an "Other" aggregation point.
+* Focused some tests that assumed some FLOWs would end in 
+  "(transf.)", "(transformation)", or "(energy)" on sample IEA data from 2018.  
+  No FLOWs end with those strings in the 2019 data.
+  There is no harm to leave the code that strips trailing "(transf.)", "(transformation)", and "(energy)".
+* `augment_iea_df()` now recognizes "Final consumption not elsewhere specified" as an "other" flow.
+  "Final consumption not elsewhere specified" (in the 2019 data) is a synonym for "Non-specified (other)" 
+  (in 2018 and earlier editions of the IEA data).
+* `augment_iea_df()` now recognizes "Industry not elsewhere specified" as an industry flow.
+  "Industry not elsewhere specified" (in the 2019 data) is a synonym for "Non-specified (industry)" 
+  (in 2018 and earlier editions of the IEA data).
+* `iea_df()` now removes white space, even from "FLOW" entries that are quoted
+  to protect commas.
+
+
 # IEATools 0.1.12 (2020-02-26)
 
 * `iea_df()` now reads files with a clean header line.

@@ -7,6 +7,13 @@ library(IEATools)
 
 
 #
+# Define the valid IEA release years for which this package will work
+# 
+
+valid_iea_release_years <- c(2018, 2019)
+usethis::use_data(valid_iea_release_years, overwrite = TRUE)
+
+#
 # Coal and coal products
 # 
 
@@ -133,6 +140,104 @@ biofuels_and_waste_products <- c(
 usethis::use_data(biofuels_and_waste_products, overwrite = TRUE)
 
 
+#
+# Flow types
+# 
+
+tpes_flows <- c(
+  "Production", 
+  "Imports", 
+  "Exports",
+  "International marine bunkers",
+  "International aviation bunkers",
+  "Stock changes")
+usethis::use_data(tpes_flows, overwrite = TRUE)
+
+
+tfc_compare_flows <- c(
+  "Total primary energy supply",
+  "Transfers",
+  "Statistical differences",
+  "Transformation processes", 
+  "Energy industry own use", 
+  "Losses")
+usethis::use_data(tfc_compare_flows, overwrite = TRUE)
+
+
+tfc_flows <- c(
+  "Industry",
+  "Transport",
+  "Other",
+  "Non-energy use")
+usethis::use_data(tfc_flows, overwrite = TRUE)
+
+
+manufacturing_flows <- c(
+  "Iron and steel",
+  "Chemical and petrochemical",
+  "Non-ferrous metals",
+  "Non-metallic minerals",
+  "Transport equipment",
+  "Machinery",
+  "Food and tobacco",
+  # 2018
+  "Paper, pulp and print",
+  # 2019
+  "Paper, pulp and printing",
+  "Wood and wood products",
+  "Textile and leather"
+)
+usethis::use_data(manufacturing_flows, overwrite = TRUE)
+
+
+industry_flows <- c(
+  "Mining and quarrying", 
+  "Construction", 
+  # "Iron and steel",
+  # "Chemical and petrochemical", 
+  # "Non-ferrous metals",
+  # "Non-metallic minerals",
+  # "Transport equipment", 
+  # "Machinery", 
+  # "Food and tobacco",
+  # # 2018
+  # "Paper, pulp and print",
+  # #2019
+  # "Paper, pulp and printing",
+  # "Wood and wood products",
+  # "Textile and leather",
+  manufacturing_flows,
+  # 2018
+  "Non-specified (industry)", 
+  # 2019
+  "Industry not elsewhere specified")
+usethis::use_data(industry_flows, overwrite = TRUE)
+
+
+transport_flows <- c(
+  "World aviation bunkers",
+  "Domestic aviation",
+  "Road",
+  "Rail", 
+  "Pipeline transport", 
+  "World marine bunkers",
+  "Domestic navigation",
+  "Non-specified (transport)")
+usethis::use_data(transport_flows, overwrite = TRUE)
+
+
+other_flows <- c(
+  "Residential", 
+  "Commercial and public services",
+  "Agriculture/forestry", 
+  "Fishing",
+  # 2018
+  "Non-specified (other)",
+  # 2019
+  "Final consumption not elsewhere specified")
+usethis::use_data(other_flows, overwrite = TRUE)
+
+
 # 
 # Aggregations
 # 
@@ -143,6 +248,7 @@ aggregation_flows <- c(
   "Transformation processes", 
   "Energy industry own use",
   "Industry",
+  "Manufacturing",
   "Transport",
   "Other",
   "Non-energy use"
@@ -175,16 +281,16 @@ interface_industries = c("Imports",
 usethis::use_data(interface_industries, overwrite = TRUE)
 
 
+# 
+# Sort orders
+# 
+
 ledger_side_iea_order <- c(
   "Supply", 
   "Consumption"
 )
 usethis::use_data(ledger_side_iea_order, overwrite = TRUE)
 
-
-# 
-# Sort orders
-# 
 
 # Defining the row order for IEA-style data frames is tricky and requires some manual intervention.
 # In the first step, we use the data frame created from load_tidy_iea_df,

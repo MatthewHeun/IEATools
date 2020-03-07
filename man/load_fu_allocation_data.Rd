@@ -5,8 +5,7 @@
 \title{Load final-to-useful allocation data}
 \usage{
 load_fu_allocation_data(
-  path = file.path("extdata", "GH-ZA-Allocation-sample.xlsx") \%>\% system.file(package
-    = "IEATools"),
+  path = sample_fu_allocation_table_path(),
   fu_allocations_tab_name = "FU Allocations"
 )
 }

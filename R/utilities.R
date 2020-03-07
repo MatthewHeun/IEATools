@@ -300,8 +300,7 @@ carnot_efficiency <- function(heat_types, T_0 = 298.15){
 #'
 #' @examples
 #' prod_tp_eiou_energy_carriers()
-prod_tp_eiou_energy_carriers <- function(file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-                                           system.file(package = "IEATools"), 
+prod_tp_eiou_energy_carriers <- function(file_path = sample_iea_data_path(), 
                                          iea_df = IEATools::load_tidy_iea_df(file_path), 
                                          side = c("Consumption", "Supply"),
                                          flow_aggregation_point = "Flow.aggregation.point", 
@@ -356,4 +355,92 @@ prod_tp_eiou_energy_carriers <- function(file_path = file.path("extdata", "GH-ZA
     # Lastly, we set the names of each list of energy types to the transformation process with which they are associated,
     # either as inputs or outputs.
     magrittr::set_names(machines)  
+}
+
+
+#' The path to a sample IEA extended energy balances data file in .csv format
+#' 
+#' The sample data file is in .csv format and contains
+#' IEA extended energy balances data for Ghana and South Africa for the years 1971 and 2000.
+#' 
+#' Permission to include this data was provided in a phone conversation between 
+#' Nick Johnstone (IEA Chief Statistician) and Matthew Kuperus Heun (IEATools developer)
+#' on Monday, 3 June 2019.
+#'
+#' @param version the desired version (expressed as the year of release) of sample data. 
+#'                Options are 2019 (default) and 2018. 
+#'
+#' @return the path to a sample data file.
+#' 
+#' @export
+#'
+#' @examples
+#' sample_iea_data_path()     # Assumes 2019
+#' sample_iea_data_path(2019) # Same
+#' # Retrieves path for sample IEA extended energy balances data from 2018 release
+#' sample_iea_data_path(2018) 
+sample_iea_data_path <- function(version = 2019) {
+  if (version == 2018) {
+    return(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2018.csv") %>%
+             system.file(package = "IEATools"))  
+  } else if (version == 2019) {
+    return(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2019.csv") %>%
+             system.file(package = "IEATools"))
+  }
+  stop("Only 2018 and 2019 are supported in sample_iea_data_path()")
+}
+
+
+#' The path to a filled final-to-useful allocation table
+#' 
+#' @param version the desired version (expressed as the year of IEA data release) of 
+#'                the sample final-to-useful allocation table. 
+#'                Options are 2019 (default) and 2018. 
+#'
+#' @return the path to a final-to-useful allocation table
+#' 
+#' @export
+#'
+#' @examples
+#' sample_fu_allocation_table_path()     # Assumes 2019
+#' sample_fu_allocation_table_path(2019) # Same
+#' # Returns path for sample allocation table appropriate for 2018 IEA data release
+#' sample_fu_allocation_table_path(2018) 
+sample_fu_allocation_table_path <- function(version = 2019) {
+  if (version == 2018) {
+    return(file.path("extdata", "GH-ZA-Allocation-sample-2018.xlsx") %>% 
+             system.file(package = "IEATools"))
+  } else if (version == 2019) {
+    return(file.path("extdata", "GH-ZA-Allocation-sample-2019.xlsx") %>% 
+             system.file(package = "IEATools"))
+  }
+  stop("Only 2018 and 2019 are supported in sample_fu_allocation_table_path()")
+}
+
+
+#' The path to a filled final-to-useful efficiency table
+#'
+#' @param version the desired version (expressed as the year of IEA data release) of 
+#'                the sample final-to-useful efficiencies table. 
+#'                Options are 2019 (default) and 2018. 
+#'
+#' @return the path to a final-to-useful efficiencies table
+#' 
+#' @export
+#'
+#' @examples
+#' sample_eta_fu_table_path()     # Assumes 2019
+#' sample_eta_fu_table_path(2019) # Same
+#' # Returns path for sample efficiency table appropriate for 2018 IEA data release
+#' sample_eta_fu_table_path(2018) 
+sample_eta_fu_table_path <- function(version = 2019) {
+  if (version == 2018) {
+    return(file.path("extdata", "GH-ZA-Efficiency-sample-2018.xlsx") %>% 
+             system.file(package = "IEATools"))
+  } else if (version == 2019) {
+    return(file.path("extdata", "GH-ZA-Efficiency-sample-2019.xlsx") %>% 
+             system.file(package = "IEATools"))
+  }
+  stop("Only 2018 and 2019 are supported in sample_eta_fu_table_path()")
+  
 }
