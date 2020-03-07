@@ -168,8 +168,14 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' 
 #' Internally, this function calls [calc_tidy_iea_df_balances()]
 #' and adjusts the value of the `statistical_differences` column to compensate for any imbalances that are present.
+#' 
+#' If energy balance for any product is greater than `max_fix` (default 5), 
+#' an error will be emitted, and execution will halt.
+#' This behavior is intended to identify any places where there are gross energy imbalances
+#' that should be investigated prior to further analysis.
 #'
-#' @param .tidy_iea_df a tidy data frame containing IEA extended energy balanc data
+#' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
+#' @param max_fix the maximum energy balance that will be fixed without giving an error. Default is 5.
 #' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "Ledger.side".
 #' @param supply a string indicating the supply side of the ledger in the `ledger_side` column. Default is "Supply".
 #' @param consumption a string indicating the consumption side of the ledger in the `ledger_side` column. Default is "Consumption".
@@ -214,6 +220,7 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' balanced %>% 
 #'   tidy_iea_df_balanced()
 fix_tidy_iea_df_balances <- function(.tidy_iea_df,
+                                     max_fix = 5,
                                      # Input columns and values
                                      ledger_side = "Ledger.side",
                                      supply = "Supply", 
@@ -238,6 +245,13 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
       !!as.name(flow_aggregation_point) := tfc_compare
     )
   
+  # Check the maximum error. If greater than the max allowable error before fixing,
+  # throw an error.
+  max_err <- max(abs(e_bal_errors[[err]]))
+  assertthat::assert_that(max_err < max_fix, 
+                          msg = paste0("Maximum energy balance error is ", max_err, 
+                                       ". Maximum fixable error is ", max_fix, ", so we're stopping in fix_tidy_iea_df_balances"))
+
   out <- .tidy_iea_df %>% 
     dplyr::full_join(e_bal_errors, by = matsindf::everything_except(.tidy_iea_df, e_dot, .symbols = FALSE)) %>% 
     dplyr::mutate(

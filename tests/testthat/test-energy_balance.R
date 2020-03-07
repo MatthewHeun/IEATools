@@ -8,7 +8,7 @@ context("IEA energy balance")
 test_that("calc_tidy_iea_df_balance works correctly for 2018 data", {
   Ebal_2018 <- load_tidy_iea_df(sample_iea_data_path(2018)) %>%
     calc_tidy_iea_df_balances()
-  expect_false(all(Ebal$balance_OK))
+  expect_false(all(Ebal_2018$balance_OK))
   expect_true(Ebal_2018 %>% dplyr::filter(Country == "GHA", Year == 1971, Product == "Aviation gasoline") %>% magrittr::extract2("balance_OK"))
   expect_false(Ebal_2018 %>% dplyr::filter(Country == "GHA", Year == 1971, Product == "Electricity") %>% magrittr::extract2("balance_OK"))
   expect_true(Ebal_2018 %>% dplyr::filter(Country == "ZAF", Year == 1971, Product == "Hydro") %>% magrittr::extract2("balance_OK"))
@@ -19,10 +19,11 @@ test_that("calc_tidy_iea_df_balance works correctly for 2018 data", {
 test_that("calc_tidy_iea_df_balance works correctly for 2019 data", {
   Ebal_2019 <- load_tidy_iea_df(sample_iea_data_path(2019)) %>%
     calc_tidy_iea_df_balances()
-  expect_false(all(Ebal$balance_OK))
+  expect_false(all(Ebal_2019$balance_OK))
   expect_true(Ebal_2019 %>% dplyr::filter(Country == "GHA", Year == 1971, Product == "Aviation gasoline") %>% magrittr::extract2("balance_OK"))
   expect_false(Ebal_2019 %>% dplyr::filter(Country == "GHA", Year == 1971, Product == "Electricity") %>% magrittr::extract2("balance_OK"))
-  expect_true(Ebal_2019 %>% dplyr::filter(Country == "ZAF", Year == 1971, Product == "Hydro") %>% magrittr::extract2("balance_OK"))
+  # This one was OK in the 2018 data, but is off by 1e-4 in the 2019 data.
+  expect_false(Ebal_2019 %>% dplyr::filter(Country == "ZAF", Year == 1971, Product == "Hydro") %>% magrittr::extract2("balance_OK"))
   expect_false(Ebal_2019 %>% dplyr::filter(Country == "ZAF", Year == 2000, Product == "Other bituminous coal") %>% magrittr::extract2("balance_OK"))
 })
 

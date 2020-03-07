@@ -6,6 +6,7 @@
 \usage{
 fix_tidy_iea_df_balances(
   .tidy_iea_df,
+  max_fix = 5,
   ledger_side = "Ledger.side",
   supply = "Supply",
   consumption = "Consumption",
@@ -20,7 +21,9 @@ fix_tidy_iea_df_balances(
 )
 }
 \arguments{
-\item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balanc data}
+\item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
+
+\item{max_fix}{the maximum energy balance that will be fixed without giving an error. Default is 5.}
 
 \item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "Ledger.side".}
 
@@ -67,6 +70,11 @@ Grouping should \emph{not} be done on the \code{flow_aggregation_point}, \code{F
 
 Internally, this function calls \code{\link[=calc_tidy_iea_df_balances]{calc_tidy_iea_df_balances()}}
 and adjusts the value of the \code{statistical_differences} column to compensate for any imbalances that are present.
+
+If energy balance for any product is greater than \code{max_fix} (default 5),
+an error will be emitted, and execution will halt.
+This behavior is intended to identify any places where there are gross energy imbalances
+that should be investigated prior to further analysis.
 }
 \examples{
 library(dplyr)

@@ -32,7 +32,7 @@ See examples for two ways to achieve the same result.
 }
 \examples{
 # Check the file first
-iea_file_OK(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% system.file(package = "IEATools"))
+iea_file_OK(sample_iea_data_path())
 # Take a simple approach
 simple <- load_tidy_iea_df()
 # Take the complicated approach

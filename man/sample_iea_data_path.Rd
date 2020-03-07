@@ -25,5 +25,6 @@ on Monday, 3 June 2019.
 \examples{
 sample_iea_data_path()     # Assumes 2019
 sample_iea_data_path(2019) # Same
-sample_iea_data_path(2018) # Retrieves path for sample IEA extended energy balances data from 2018 release
+# Retrieves path for sample IEA extended energy balances data from 2018 release
+sample_iea_data_path(2018) 
 }

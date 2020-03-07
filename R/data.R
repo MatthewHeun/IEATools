@@ -85,6 +85,23 @@
 #' @format A string vector with 10 entries
 "biofuels_and_waste_products"
 
+
+#' Total primary energy supply flows
+#'
+#' A string vector containing names of `Total primary energy supply` `Flow`s in the IEA extended energy balances database.
+#' 
+#' @format A string vector
+"tpes_flows"
+
+
+#' Industry flows
+#'
+#' A string vector containing names of `Industry` `Flow`s in the IEA extended energy balances database.
+#' 
+#' @format A string vector
+"industry_flows"
+
+
 #' Aggregation flows
 #'
 #' A string vector containing names of industries whose purpose in IEA extended energy balance `Flow`s is to provide aggregations.

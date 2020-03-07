@@ -564,7 +564,7 @@ augment_iea_df <- function(.iea_df,
                            transformation_processes = "Transformation processes",
                            tp_flows_suffix = "(transf.)",
                            nstp_flows_suffix = "(transformation)",
-                           main_activity_producer_electricity_plants = "Main activity producer electricity plants",
+                           mapep = "Main activity producer electricity plants",
                            eiou = "Energy industry own use",
                            eiou_flows_suffix = "(energy)",
                            coal_mines = "Coal mines",
@@ -621,7 +621,7 @@ augment_iea_df <- function(.iea_df,
       # Start of the Transformation processes section of the IEA data
       transformation_start <- find_transformation_start(ctry_tbl, flow = flow, statistical_differences = statistical_differences,
                                                         transformation_processes = transformation_processes,
-                                                        main_activity_producer_electricity_plants = main_activity_producer_electricity_plants)
+                                                        main_activity_producer_electricity_plants = mapep)
       
       # End of the Transformation processes section of the IEA data
       transformation_end <- find_transformation_end(ctry_tbl, flow = flow, non_specified = non_specified, 
@@ -858,7 +858,7 @@ tidy_iea_df <- function(.iea_df,
 #'
 #' @examples
 #' # Check the file first
-#' iea_file_OK(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% system.file(package = "IEATools"))
+#' iea_file_OK(sample_iea_data_path())
 #' # Take a simple approach
 #' simple <- load_tidy_iea_df()
 #' # Take the complicated approach

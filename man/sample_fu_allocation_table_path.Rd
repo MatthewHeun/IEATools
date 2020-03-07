@@ -20,5 +20,6 @@ The path to a filled final-to-useful allocation table
 \examples{
 sample_fu_allocation_table_path()     # Assumes 2019
 sample_fu_allocation_table_path(2019) # Same
-sample_fu_allocation_table_path(2018) # Returns path for sample allocation table appropriate for 2018 IEA data release
+# Returns path for sample allocation table appropriate for 2018 IEA data release
+sample_fu_allocation_table_path(2018) 
 }

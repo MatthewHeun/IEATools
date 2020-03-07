@@ -20,5 +20,6 @@ The path to a filled final-to-useful efficiency table
 \examples{
 sample_eta_fu_table_path()     # Assumes 2019
 sample_eta_fu_table_path(2019) # Same
-sample_eta_fu_table_path(2018) # Returns path for sample efficiency table appropriate for 2018 IEA data release
+# Returns path for sample efficiency table appropriate for 2018 IEA data release
+sample_eta_fu_table_path(2018) 
 }
