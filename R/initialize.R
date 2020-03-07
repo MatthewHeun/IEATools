@@ -13,6 +13,7 @@
 #' Note that `.iea_file` is read internally with [data.table::fread()] *without* stripping white space.
 #'
 #' @param .iea_file the path to the raw IEA data file for which quality assurance is desired
+#' @param text a string containing text to be parsed as an IEA file.
 #' @param country the name of the country column. Default is "COUNTRY".
 #' @param flow the name of the flow column. Default is "FLOW".
 #' @param product the name of the product column. Default is "PRODUCT".
@@ -47,7 +48,7 @@ iea_file_OK <- function(.iea_file = NULL,
     dplyr::group_by(!!as.name(country)) %>% 
     # Add row numbers
     dplyr::do(
-      tibble::rowid_to_column(., var = rowid)
+      tibble::rowid_to_column(.data, var = rowid)
     ) %>% 
     dplyr::ungroup() %>% 
     # Keep only rowid, flow, and product. This removes COUNTRY and years from the data frame
@@ -486,47 +487,52 @@ remove_agg_memo_flows <- function(.iea_df,
 #' an error is generated.
 #'
 #' @param .iea_df a data frame produced by the [iea_df()] function
-#' @param country the name of the country column in `.iea_df`. Default is "`Country`".
-#' @param ledger_side the name of the ledger side column to be added to `.iea_df`. Default is "`Ledger.side`".
-#' @param flow_aggregation_point the name of the flow aggregation point column to be added to `.iea_df`. Default is "`Flow.aggregation.point`".
-#' @param flow the name of the flow column in `.iea_df`.  Default is "`Flow`".
-#' @param product the name of the product column in `.iea_df`.  Default is "`Product`".
-#' @param energy_type the name of the energy type column to be added to `.iea_df`. Default is "`Energy.type`.
-#' @param energy_type_val the value to put in the `energy_type` column. Default is "`E`".
-#' @param method the name of the method column to be added to `.iea_df`. Default is "`Method`.
-#' @param method_val the value to put in the `method` column. Default is "`PCM`" (Physical Content Method, which is used by the IEA).
-#' @param last_stage the name of the last stage column to be added to `.iea_df`. Default is "`Last.stage`.
-#' @param last_stage_val the value to put in the `last_stage` column. Default is "`Final`" (which is the last stage supplied by the IEA).
-#' @param unit the name of the unit column to be added to `.iea_df`. Default is "`Unit`".
+#' @param country the name of the country column in `.iea_df`. Default is "Country".
+#' @param ledger_side the name of the ledger side column to be added to `.iea_df`. Default is "Ledger.side".
+#' @param flow_aggregation_point the name of the flow aggregation point column to be added to `.iea_df`. Default is "Flow.aggregation.point".
+#' @param flow the name of the flow column in `.iea_df`.  Default is "Flow".
+#' @param product the name of the product column in `.iea_df`.  Default is "Product".
+#' @param energy_type the name of the energy type column to be added to `.iea_df`. Default is "Energy.type.
+#' @param energy_type_val the value to put in the `energy_type` column. Default is "E".
+#' @param method the name of the method column to be added to `.iea_df`. Default is "Method".
+#' @param method_val the value to put in the `method` column. Default is "PCM" (Physical Content Method, which is used by the IEA).
+#' @param last_stage the name of the last stage column to be added to `.iea_df`. Default is "Last.stage".
+#' @param last_stage_val the value to put in the `last_stage` column. Default is "Final" (which is the last stage supplied by the IEA).
+#' @param unit the name of the unit column to be added to `.iea_df`. Default is "Unit".
 #' @param unit_val the value to put in the `unit` column. Default is "`ktoe`" for kilotons of oil equivalent.
-#' @param supply the string that identifies supply `Ledger.side`. Default is "`Supply`".
-#' @param consumption the string that identifies consumption `Ledger.side`. Default is "`Consumption`".
-#' @param tpes the string that identifies total primary energy supply `Flow.aggregation.point`. Default is "`Total primary energy supply`.
+#' @param supply the string that identifies supply `Ledger.side`. Default is "Supply".
+#' @param consumption the string that identifies consumption `Ledger.side`. Default is "Consumption".
+#' @param tpes the string that identifies total primary energy supply `Flow.aggregation.point`. Default is "Total primary energy supply".
 #' @param tpes_flows a vector of strings that give flows that are aggregated to `Total primary energy supply`. 
-#' @param tfc_compare a string that identifies the `TFC compare` flow aggregation point. Default is `TFC compare`.
+#' @param tfc_compare a string that identifies the `TFC compare` flow aggregation point. Default is "TFC compare".
 #' @param tfc_compare_flows a vector of strings that give `Flow`s that are aggregated to `TFC compare`.
-#' @param transfers = a string that identifies transfers in the flow column. Default is "`Transfers`".
-#' @param statistical_differences a string that identifies statistical differences in flow column. Default is "`Statistical differences`".
-#' @param losses the string that indicates losses in the `Flow` column. Default is "`Losses`".
-#' @param transformation_processes the string that indicates transformation processes in the `Flow` column. Default is "`Transformation processes`".
-#' @param tp_flows_suffix the suffix for transformation processes in the `Flow` column. Default is "`(transf.)`".
-#' @param nstp_flows_suffix the suffix for non-specified transformation processes in the `Flow` column. Default is "`(transformation)`".
-#' @param eiou the string that identifies energy industry own use in the `Flow` column. Default is "`Energy industry own use`".
-#' @param eiou_flows_suffix the suffix for energy industry own use in the `Flow` column. Default is "`(energy)`".
-#' @param tfc the string that identifies total final consumption in the `Flow` column. Default is "`Total final consumption`".
+#' @param transfers = a string that identifies transfers in the flow column. Default is "Transfers".
+#' @param statistical_differences a string that identifies statistical differences in flow column. Default is "Statistical differences".
+#' @param losses the string that indicates losses in the `Flow` column. Default is "Losses".
+#' @param transformation_processes the string that indicates transformation processes in the `Flow` column. Default is "Transformation processes".
+#' @param tp_flows_suffix the suffix for transformation processes in the `Flow` column. Default is "(transf.)".
+#' @param nstp_flows_suffix the suffix for non-specified transformation processes in the `Flow` column. Default is "(transformation)".
+#' @param mapep the string that identifies main activity producer electricity plants in the `Flow` column. Default is "Main activity producer electricity plants".
+#' @param eiou the string that identifies energy industry own use in the `Flow` column. Default is "Energy industry own use".
+#' @param eiou_flows_suffix the suffix for energy industry own use in the `Flow` column. Default is "(energy)".
+#' @param coal_mines the string that identifies coal mines in the `Flow` column. Default is "Coal mines".
+#' @param non_specified the string that identifies non-specified flows in the `Flow` column. Default is "Non-specified".
+#' @param tfc the string that identifies total final consumption in the `Flow` column. Default is "Total final consumption".
 #' @param tfc_flows a vector of strings that give total final consumption in the `Flow` column.
-#' @param industry a string that names the industry `Flow.aggregation.point`. Default is "`Industry`".
+#' @param industry a string that names the industry `Flow.aggregation.point`. Default is "Industry".
 #' @param industry_flows a vector of strings representing `Flow`s to be aggregated in the `Industry` `Flow.aggregation.point`. 
-#' @param transport a string that names the transport `Flow.aggregation.point`. Default is "`Transport`".
+#' @param iron_and_steel a string that identifies the iron and steel industry. Default is "Iron and steel".
+#' @param mining_and_quarrying a string that identifies the mining and quarrying industry. Default is "Mining and quarrying".
+#' @param transport a string that names the transport `Flow.aggregation.point`. Default is "Transport".
 #' @param transport_flows a vector of strings representing `Flow`s to be aggregated in the `Transport` `Flow.aggregation.point`. 
-#' @param other a string that names the other `Flow.aggregation.point`. Default is "`Other`".
+#' @param other a string that names the other `Flow.aggregation.point`. Default is "Other".
 #' @param other_flows a vector of strings representing `Flow`s to be aggregated in the `Other` `Flow.aggregation.point`. 
-#' @param non_energy a string that names the non-energy `Flow.aggregation.point`. Default is "`Non-energy use`".
+#' @param non_energy a string that names the non-energy `Flow.aggregation.point`. Default is "Non-energy use".
 #' @param non_energy_prefix a string prefix for `Flow`s to be aggregated in the `Non-energy use` `Flow.aggregation.point`. 
-#' @param electricity_output a string that names the electricity output `Flow`. Default is "`Electricity output (GWh)`". 
-#' @param electricity_output_flows_prefix a string prefix for `Flow`s to be aggregated in electricity output. Default is "`Electricity output (GWh)-`".
-#' @param heat_output a string that names the heat output `Flow`. Default is "`Heat output`". 
-#' @param heat_output_flows_prefix a string prefix for `Flow`s to be aggregated in heat output. Default is "`Heat output-`".
+#' @param electricity_output a string that names the electricity output `Flow`. Default is "Electricity output (GWh)". 
+#' @param electricity_output_flows_prefix a string prefix for `Flow`s to be aggregated in electricity output. Default is "Electricity output (GWh)-".
+#' @param heat_output a string that names the heat output `Flow`. Default is "Heat output". 
+#' @param heat_output_flows_prefix a string prefix for `Flow`s to be aggregated in heat output. Default is "Heat output-".
 #' @param .rownum the name of a column created (and destroyed) internally by this function. 
 #'        The `.rownum` column temporarily holds row numbers for internal calculations.
 #'        The `.rownum` column is deleted before returning. 
@@ -537,9 +543,16 @@ remove_agg_memo_flows <- function(.iea_df,
 #'
 #' @examples
 #' iea_df(text = paste0(",,TIME,1960,1961\n",
-#'                        "COUNTRY,FLOW,PRODUCT\n",
-#'                        "World,Production,Hard coal (if no detail),42,43\n",
-#'                        "World,Losses,Hard coal (if no detail),1,2")) %>% 
+#'                      "COUNTRY,FLOW,PRODUCT\n",
+#'                      "World,Production,Hard coal (if no detail),42,43\n",
+#'                      "World,Statistical differences,Hard coal (if no detail),7,8\n",
+#'                      "World,Main activity producer electricity plants,",
+#'                        "Hard coal (if no detail),9,10\n",
+#'                      "World,Non-specified,Hard coal (if no detail),11,12\n",
+#'                      "World,Coal mines,Hard coal (if no detail),13,14\n",
+#'                      "World,Non-specified,Hard coal (if no detail),11,12\n",
+#'                      "World,Losses,Hard coal (if no detail),1,2\n",
+#'                      "World,Iron and steel,Hard coal (if no detail),5,6\n")) %>% 
 #'   rename_iea_df_cols() %>% 
 #'   augment_iea_df()
 augment_iea_df <- function(.iea_df, 
@@ -621,7 +634,7 @@ augment_iea_df <- function(.iea_df,
       # Start of the Transformation processes section of the IEA data
       transformation_start <- find_transformation_start(ctry_tbl, flow = flow, statistical_differences = statistical_differences,
                                                         transformation_processes = transformation_processes,
-                                                        main_activity_producer_electricity_plants = mapep)
+                                                        mapep = mapep)
       
       # End of the Transformation processes section of the IEA data
       transformation_end <- find_transformation_end(ctry_tbl, flow = flow, non_specified = non_specified, 

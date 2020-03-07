@@ -16,6 +16,8 @@ iea_file_OK(
 \arguments{
 \item{.iea_file}{the path to the raw IEA data file for which quality assurance is desired}
 
+\item{text}{a string containing text to be parsed as an IEA file.}
+
 \item{country}{the name of the country column. Default is "COUNTRY".}
 
 \item{flow}{the name of the flow column. Default is "FLOW".}

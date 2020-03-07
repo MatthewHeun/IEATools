@@ -9,7 +9,7 @@ find_transformation_start(
   flow,
   statistical_differences,
   transformation_processes,
-  main_activity_producer_electricity_plants
+  mapep
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ find_transformation_start(
 
 \item{transformation_processes}{the name for transformation processes in the flow column}
 
-\item{main_activity_producer_elect_plants}{the name for main activity producer electricity plants in the flow column}
+\item{mapep}{the name for main activity producer electricity plants in the flow column}
 }
 \value{
 a pair of integers representing the rows that straddle the split between

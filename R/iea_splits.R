@@ -108,7 +108,7 @@ find_supply_consumption_split <- function(.ctry_tbl,
 #' @param flow the name of the flow column
 #' @param statistical_differences the name for statistical difference in the flow column
 #' @param transformation_processes the name for transformation processes in the flow column
-#' @param main_activity_producer_elect_plants the name for main activity producer electricity plants in the flow column
+#' @param mapep the name for main activity producer electricity plants in the flow column
 #'
 #' @return a pair of integers representing the rows that straddle the split between 
 #'         the TFC compare and Transformation processes flows.
@@ -117,14 +117,14 @@ find_transformation_start <- function(.ctry_tbl,
                                       flow,
                                       statistical_differences,
                                       transformation_processes,
-                                      main_activity_producer_electricity_plants) {
+                                      mapep) {
   # Make two attempts at this.
   # First attempt should work when aggregation rows (specifically, "Transformation processes") 
   # remain in the data frame.
   transformation_start <- adjacent_rownums(.ctry_tbl, flow, c(statistical_differences, transformation_processes))
   if (is.null(transformation_start)) {
     # Second attempt should work if the aggregation rows have already been removed from the data frame.
-    transformation_start <- adjacent_rownums(.ctry_tbl, flow, c(statistical_differences, main_activity_producer_electricity_plants))
+    transformation_start <- adjacent_rownums(.ctry_tbl, flow, c(statistical_differences, mapep))
   }
   assertthat::assert_that(!is.null(transformation_start),
                           msg = "Could not find the rows that identify the beginning of transformation processes in find_transformation_start")

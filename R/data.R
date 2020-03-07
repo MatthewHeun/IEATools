@@ -1,3 +1,12 @@
+#' IEA release years supported by this package
+#'
+#' A numeric vector containing release years for IEA extended energy balance data
+#' supported by this package.
+#' 
+#' @format A numeric vector with 2 entries
+"valid_iea_release_years"
+
+
 #' Coal and coal products
 #'
 #' A string vector containing names of products classified by the IEA as coal and coal products.
@@ -90,16 +99,56 @@
 #'
 #' A string vector containing names of `Total primary energy supply` `Flow`s in the IEA extended energy balances database.
 #' 
-#' @format A string vector
+#' @format A string vector with 6 entries
 "tpes_flows"
+
+
+#' Total final consumption comparison flows
+#'
+#' A string vector containing names of `Total final consumption` comparison `Flow`s in the IEA extended energy balances database.
+#' 
+#' @format A string vector with 6 entries
+"tfc_compare_flows"
+
+
+#' Total final consumption flows
+#'
+#' A string vector containing names of `Total final consumption` `Flow`s in the IEA extended energy balances database.
+#' 
+#' @format A string vector with 4 entries
+"tfc_flows"
 
 
 #' Industry flows
 #'
 #' A string vector containing names of `Industry` `Flow`s in the IEA extended energy balances database.
 #' 
-#' @format A string vector
+#' @format A string vector with 15 entries
 "industry_flows"
+
+
+#' Manufacturing flows
+#'
+#' A string vector containing names of `Manufacturing` `Flow`s in the IEA extended energy balances database.
+#' 
+#' @format A string vector with 15 entries
+"manufacturing_flows"
+
+
+#' Transport flows
+#'
+#' A string vector containing names of `Transport` `Flow`s in the IEA extended energy balances database.
+#' 
+#' @format A string vector with 8 entries
+"transport_flows"
+
+
+#' Other flows
+#'
+#' A string vector containing names of `Other` `Flow`s in the IEA extended energy balances database.
+#' 
+#' @format A string vector with 6 entries
+"other_flows"
 
 
 #' Aggregation flows

@@ -172,22 +172,41 @@ tfc_flows <- c(
 usethis::use_data(tfc_flows, overwrite = TRUE)
 
 
-industry_flows <- c(
+manufacturing_flows <- c(
   "Iron and steel",
-  "Chemical and petrochemical", 
+  "Chemical and petrochemical",
   "Non-ferrous metals",
   "Non-metallic minerals",
-  "Transport equipment", 
-  "Machinery", 
-  "Mining and quarrying", 
+  "Transport equipment",
+  "Machinery",
   "Food and tobacco",
   # 2018
   "Paper, pulp and print",
-  #2019
+  # 2019
   "Paper, pulp and printing",
   "Wood and wood products",
+  "Textile and leather"
+)
+usethis::use_data(manufacturing_flows, overwrite = TRUE)
+
+
+industry_flows <- c(
+  "Mining and quarrying", 
   "Construction", 
-  "Textile and leather",
+  # "Iron and steel",
+  # "Chemical and petrochemical", 
+  # "Non-ferrous metals",
+  # "Non-metallic minerals",
+  # "Transport equipment", 
+  # "Machinery", 
+  # "Food and tobacco",
+  # # 2018
+  # "Paper, pulp and print",
+  # #2019
+  # "Paper, pulp and printing",
+  # "Wood and wood products",
+  # "Textile and leather",
+  manufacturing_flows,
   # 2018
   "Non-specified (industry)", 
   # 2019
