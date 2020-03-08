@@ -81,13 +81,6 @@ test_that("iea_df works with a plain first row", {
                            check.names = FALSE, stringsAsFactors = FALSE) 
   file_contents <- "COUNTRY,FLOW,PRODUCT,1960,1961\nWorld,Production,Hard coal (if no detail),42,43"
   expect_equal(iea_df(text = file_contents), expectedDF)
-  
-  # Instead of text, try with a tiny file that is identical to expectedDF.
-  tiny_file <- file.path("extdata", "Tiny-Example-File-Simple-Header.csv") %>% 
-    system.file(package = "IEATools")
-print(tiny_file)
-print(iea_df(tiny_file))
-  expect_equal(iea_df(.iea_file = tiny_file), expectedDF)
 })
 
 test_that("iea_df strips white space from FLOW columns", {
