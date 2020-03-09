@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Load IEA data from an extended enegy balances csv file — iea_df • IEATools</title>
+<title>Load IEA data from an extended energy balances .csv file — iea_df • IEATools</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Load IEA data from an extended enegy balances csv file — iea_df" />
-<meta property="og:description" content="This function reads an IEA extended energy balances file and
+<meta property="og:title" content="Load IEA data from an extended energy balances .csv file — iea_df" />
+<meta property="og:description" content="This function reads an IEA extended energy balances .csv file and
 converts it to a data frame with appropriately-labeled columns.
 One of iea_file or text must be specified, but not both.
 The first line of iea_file or text
@@ -44,7 +44,7 @@ is expected to start with expected_start_1st_line, and
 the second line is expected to start with expected_2nd_line_start, and
 it may have any number of commas appended.
 (The extra commas might come from opening and re-saving the file in Excel.)
-Alternatively, the file may start with expected_simple_start.
+Alternatively, the file may have a first line of expected_simple_start.
 If none of these conditions are not met, execution is halted, and
 an error message is provided.
 Files should have a return character at the end of their final line." />
@@ -80,7 +80,7 @@ Files should have a return character at the end of their final line." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.13</span>
       </span>
     </div>
 
@@ -135,13 +135,13 @@ Files should have a return character at the end of their final line." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Load IEA data from an extended enegy balances csv file</h1>
+    <h1>Load IEA data from an extended energy balances .csv file</h1>
     
     <div class="hidden name"><code>iea_df.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function reads an IEA extended energy balances file and
+    <p>This function reads an IEA extended energy balances .csv file and
 converts it to a data frame with appropriately-labeled columns.
 One of <code>iea_file</code> or <code>text</code> must be specified, but not both.
 The first line of <code>iea_file</code> or <code>text</code>
@@ -149,7 +149,7 @@ is expected to start with <code>expected_start_1st_line</code>, and
 the second line is expected to start with <code>expected_2nd_line_start</code>, and
 it may have any number of commas appended.
 (The extra commas might come from opening and re-saving the file in Excel.)
-Alternatively, the file may start with <code>expected_simple_start</code>.
+Alternatively, the file may have a first line of <code>expected_simple_start</code>.
 If none of these conditions are not met, execution is halted, and
 an error message is provided.
 Files should have a return character at the end of their final line.</p>
@@ -161,6 +161,7 @@ Files should have a return character at the end of their final line.</p>
   <span class='kw'>expected_1st_line_start</span> <span class='kw'>=</span> <span class='st'>",,TIME"</span>,
   <span class='kw'>expected_2nd_line_start</span> <span class='kw'>=</span> <span class='st'>"COUNTRY,FLOW,PRODUCT"</span>,
   <span class='kw'>expected_simple_start</span> <span class='kw'>=</span> <span class='no'>expected_2nd_line_start</span>,
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"FLOW"</span>,
   <span class='kw'>missing_data</span> <span class='kw'>=</span> <span class='st'>".."</span>,
   <span class='kw'>not_applicable_data</span> <span class='kw'>=</span> <span class='st'>"x"</span>,
   <span class='kw'>confidential_data</span> <span class='kw'>=</span> <span class='st'>"c"</span>,
@@ -196,6 +197,10 @@ Furthermore, <code>expected_simple_start</code> could be the format of the file 
 the raw data from the IEA.</p></td>
     </tr>
     <tr>
+      <th>flow</th>
+      <td><p>the name of the flow column, entries of which are stripped of leading and trailing white space. Default is "FLOW".</p></td>
+    </tr>
+    <tr>
       <th>missing_data</th>
       <td><p>a string that identifies missing data. Default is "<code>..</code>".
 Entries of <code>missing_data</code> are coded as `0`` in output.</p></td>
@@ -228,6 +233,16 @@ Data from estimated years are removed from output.</p></td>
 in columns at the right of <code>.iea_file</code>,
 because column names in the output are constructed from the header line(s) of <code>.iea_file</code>
 (which contain years and country, flow, product information).</p>
+<p>In the IEA's data, some entries in the "FLOW" column are quoted to avoid creating too many columns.
+For example, "Paper, pulp and printing" is quoted in the raw .csv file:
+"      Paper, pulp and printing".
+Internally, this function uses <code><a href='https://Rdatatable.gitlab.io/data.table/reference/fread.html'>data.table::fread()</a></code>, which, unfortunately, does not
+strip leading and trailing white space from quoted entries.
+So the function uses <code><a href='https://rdrr.io/r/base/trimws.html'>base::trimws()</a></code> to finish the job.</p>
+<p>When the IEA includes estimated data for a year,
+the column name of the estimated year includes an "E" appended.
+(E.g., "2017E".)
+This function eliminates estimated columns.</p>
 <p>The IEA data have indicators for
 not applicable values ("<code>x</code>") and for
 unavailable values ("<code>..</code>").
@@ -248,7 +263,7 @@ e.g., World Anthracite supply in 1971.
 classified under "Hard coal (if no detail)" in 1971.)
 On the other hand, "<code>..</code>" is used for data in the most recent year
 when those data have not yet been incorporated into the database.
-In the face of IEA’s inconsistencies,
+In the face of IEA's inconsistencies,
 the only rational way to proceed is to convert
 both "<code>x</code>" and "<code>..</code>" in the IEA files to "<code>0</code>" in the output data frame
 from this function.

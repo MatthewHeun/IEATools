@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.13</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@
       <h1>Specify EIOU Industries and Flows</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-02-26</h4>
+            <h4 class="date">2020-03-08</h4>
       
       
       <div class="hidden name"><code>specify.Rmd</code></div>
@@ -112,7 +112,7 @@
 <span id="cb1-5"><a href="#cb1-5"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(Flow.aggregation.point <span class="op">==</span><span class="st"> "Energy industry own use"</span>)</span>
 <span id="cb1-6"><a href="#cb1-6"></a>EIOU_flows <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb1-7"><a href="#cb1-7"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(Country, Year, Flow, Product)</span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="co">#&gt; # A tibble: 13 x 4</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="co">#&gt; # A tibble: 15 x 4</span></span>
 <span id="cb1-9"><a href="#cb1-9"></a><span class="co">#&gt;    Country  Year Flow                                        Product      </span></span>
 <span id="cb1-10"><a href="#cb1-10"></a><span class="co">#&gt;    &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;                                       &lt;chr&gt;        </span></span>
 <span id="cb1-11"><a href="#cb1-11"></a><span class="co">#&gt;  1 GHA      1971 Oil refineries                              Refinery gas </span></span>
@@ -123,17 +123,21 @@
 <span id="cb1-16"><a href="#cb1-16"></a><span class="co">#&gt;  6 GHA      2000 Oil refineries                              Refinery gas </span></span>
 <span id="cb1-17"><a href="#cb1-17"></a><span class="co">#&gt;  7 GHA      2000 Own use in electricity, CHP and heat plants Electricity  </span></span>
 <span id="cb1-18"><a href="#cb1-18"></a><span class="co">#&gt;  8 ZAF      2000 Coal mines                                  Electricity  </span></span>
-<span id="cb1-19"><a href="#cb1-19"></a><span class="co">#&gt;  9 ZAF      2000 Oil refineries                              Gas works gas</span></span>
-<span id="cb1-20"><a href="#cb1-20"></a><span class="co">#&gt; 10 ZAF      2000 Oil refineries                              Refinery gas </span></span>
-<span id="cb1-21"><a href="#cb1-21"></a><span class="co">#&gt; 11 ZAF      2000 Oil refineries                              Electricity  </span></span>
-<span id="cb1-22"><a href="#cb1-22"></a><span class="co">#&gt; 12 ZAF      2000 Own use in electricity, CHP and heat plants Electricity  </span></span>
-<span id="cb1-23"><a href="#cb1-23"></a><span class="co">#&gt; 13 ZAF      2000 Pumped storage plants                       Electricity</span></span></code></pre></div>
+<span id="cb1-19"><a href="#cb1-19"></a><span class="co">#&gt;  9 ZAF      2000 Oil and gas extraction                      Electricity  </span></span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="co">#&gt; 10 ZAF      2000 Coke ovens                                  Electricity  </span></span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="co">#&gt; 11 ZAF      2000 Oil refineries                              Gas works gas</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a><span class="co">#&gt; 12 ZAF      2000 Oil refineries                              Refinery gas </span></span>
+<span id="cb1-23"><a href="#cb1-23"></a><span class="co">#&gt; 13 ZAF      2000 Oil refineries                              Electricity  </span></span>
+<span id="cb1-24"><a href="#cb1-24"></a><span class="co">#&gt; 14 ZAF      2000 Own use in electricity, CHP and heat plants Electricity  </span></span>
+<span id="cb1-25"><a href="#cb1-25"></a><span class="co">#&gt; 15 ZAF      2000 Pumped storage plants                       Electricity</span></span></code></pre></div>
 <p>And <code>EIOU</code>-consuming industries can be found by the following code.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>EIOU_flows<span class="op">$</span>Flow <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>()</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="co">#&gt; [1] "Oil refineries"                             </span></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="co">#&gt; [2] "Own use in electricity, CHP and heat plants"</span></span>
 <span id="cb2-4"><a href="#cb2-4"></a><span class="co">#&gt; [3] "Coal mines"                                 </span></span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="co">#&gt; [4] "Pumped storage plants"</span></span></code></pre></div>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co">#&gt; [4] "Oil and gas extraction"                     </span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co">#&gt; [5] "Coke ovens"                                 </span></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="co">#&gt; [6] "Pumped storage plants"</span></span></code></pre></div>
 <p>Note that one of the industries that receives EIOU is <code>Coal mines (energy)</code>, but coal is not produced by <code>Coal mines (energy)</code> in the IEA data. (The suffix <code>(energy)</code> indicates EIOU.) Rather, coal (of various types) first appears in rows where the <code>Flow</code> is <code>Production</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(Flow.aggregation.point <span class="op">==</span><span class="st"> "Total primary energy supply"</span>, </span>
@@ -204,76 +208,101 @@
 <span id="cb4-12"><a href="#cb4-12"></a><span class="co">#&gt; 4     ZAF 2000 Total primary energy supply Resources (Oil and natural gas)</span></span>
 <span id="cb4-13"><a href="#cb4-13"></a><span class="co">#&gt; 5     ZAF 2000 Total primary energy supply Resources (Oil and natural gas)</span></span>
 <span id="cb4-14"><a href="#cb4-14"></a><span class="co">#&gt; 6     ZAF 2000 Total primary energy supply                Resources (Coal)</span></span>
-<span id="cb4-15"><a href="#cb4-15"></a><span class="co">#&gt;                    Product  E.dot matnames</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a><span class="co">#&gt; 1 Hard coal (if no detail)  33064        R</span></span>
-<span id="cb4-17"><a href="#cb4-17"></a><span class="co">#&gt; 2              Coking coal   2372        R</span></span>
-<span id="cb4-18"><a href="#cb4-18"></a><span class="co">#&gt; 3                Crude oil    667        R</span></span>
-<span id="cb4-19"><a href="#cb4-19"></a><span class="co">#&gt; 4              Natural gas   1398        R</span></span>
-<span id="cb4-20"><a href="#cb4-20"></a><span class="co">#&gt; 5      Natural gas liquids    277        R</span></span>
-<span id="cb4-21"><a href="#cb4-21"></a><span class="co">#&gt; 6    Other bituminous coal 124554        R</span></span></code></pre></div>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="co">#&gt;                    Product       E.dot matnames</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="co">#&gt; 1 Hard coal (if no detail)  33064.4311        R</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="co">#&gt; 2              Coking coal   2371.9304        R</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a><span class="co">#&gt; 3                Crude oil    666.8167        R</span></span>
+<span id="cb4-19"><a href="#cb4-19"></a><span class="co">#&gt; 4              Natural gas   1397.7644        R</span></span>
+<span id="cb4-20"><a href="#cb4-20"></a><span class="co">#&gt; 5      Natural gas liquids    276.6636        R</span></span>
+<span id="cb4-21"><a href="#cb4-21"></a><span class="co">#&gt; 6    Other bituminous coal 124554.3759        R</span></span></code></pre></div>
 <p>Furthermore, the added flows from the <code>Resource</code> industries are tagged as <code>Transformation processes</code> and belong in the <code>U_excl_EIOU</code> and <code>V</code> matrices. The EIOU flows are shown to belong in the <code>U_EIOU</code> matrix.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>Specific_primary_production <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb5-2"><a href="#cb5-2"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(Flow <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Coal mines"</span>, <span class="st">"Oil and gas extraction"</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb5-3"><a href="#cb5-3"></a><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>()</span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="co">#&gt;   Country Method Energy.type Last.stage Year Ledger.side</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a><span class="co">#&gt; 1     ZAF    PCM           E      Final 1971      Supply</span></span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="co">#&gt; 2     ZAF    PCM           E      Final 2000      Supply</span></span>
-<span id="cb5-7"><a href="#cb5-7"></a><span class="co">#&gt; 3     ZAF    PCM           E      Final 1971      Supply</span></span>
-<span id="cb5-8"><a href="#cb5-8"></a><span class="co">#&gt; 4     ZAF    PCM           E      Final 2000      Supply</span></span>
-<span id="cb5-9"><a href="#cb5-9"></a><span class="co">#&gt; 5     ZAF    PCM           E      Final 2000      Supply</span></span>
-<span id="cb5-10"><a href="#cb5-10"></a><span class="co">#&gt; 6     ZAF    PCM           E      Final 1971      Supply</span></span>
-<span id="cb5-11"><a href="#cb5-11"></a><span class="co">#&gt; 7     ZAF    PCM           E      Final 2000      Supply</span></span>
-<span id="cb5-12"><a href="#cb5-12"></a><span class="co">#&gt; 8     ZAF    PCM           E      Final 2000      Supply</span></span>
-<span id="cb5-13"><a href="#cb5-13"></a><span class="co">#&gt;     Flow.aggregation.point       Flow                               Product</span></span>
-<span id="cb5-14"><a href="#cb5-14"></a><span class="co">#&gt; 1  Energy industry own use Coal mines                           Electricity</span></span>
-<span id="cb5-15"><a href="#cb5-15"></a><span class="co">#&gt; 2  Energy industry own use Coal mines                           Electricity</span></span>
-<span id="cb5-16"><a href="#cb5-16"></a><span class="co">#&gt; 3 Transformation processes Coal mines              Hard coal (if no detail)</span></span>
-<span id="cb5-17"><a href="#cb5-17"></a><span class="co">#&gt; 4 Transformation processes Coal mines                           Coking coal</span></span>
-<span id="cb5-18"><a href="#cb5-18"></a><span class="co">#&gt; 5 Transformation processes Coal mines                 Other bituminous coal</span></span>
-<span id="cb5-19"><a href="#cb5-19"></a><span class="co">#&gt; 6 Transformation processes Coal mines Hard coal (if no detail) (Coal mines)</span></span>
-<span id="cb5-20"><a href="#cb5-20"></a><span class="co">#&gt; 7 Transformation processes Coal mines              Coking coal (Coal mines)</span></span>
-<span id="cb5-21"><a href="#cb5-21"></a><span class="co">#&gt; 8 Transformation processes Coal mines    Other bituminous coal (Coal mines)</span></span>
-<span id="cb5-22"><a href="#cb5-22"></a><span class="co">#&gt;   Unit   E.dot    matnames</span></span>
-<span id="cb5-23"><a href="#cb5-23"></a><span class="co">#&gt; 1 ktoe     -52      U_EIOU</span></span>
-<span id="cb5-24"><a href="#cb5-24"></a><span class="co">#&gt; 2 ktoe    -237      U_EIOU</span></span>
-<span id="cb5-25"><a href="#cb5-25"></a><span class="co">#&gt; 3 ktoe  -33064 U_excl_EIOU</span></span>
-<span id="cb5-26"><a href="#cb5-26"></a><span class="co">#&gt; 4 ktoe   -2372 U_excl_EIOU</span></span>
-<span id="cb5-27"><a href="#cb5-27"></a><span class="co">#&gt; 5 ktoe -124554 U_excl_EIOU</span></span>
-<span id="cb5-28"><a href="#cb5-28"></a><span class="co">#&gt; 6 ktoe   33064           V</span></span>
-<span id="cb5-29"><a href="#cb5-29"></a><span class="co">#&gt; 7 ktoe    2372           V</span></span>
-<span id="cb5-30"><a href="#cb5-30"></a><span class="co">#&gt; 8 ktoe  124554           V</span></span>
-<span id="cb5-31"><a href="#cb5-31"></a>Specific_primary_production <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-32"><a href="#cb5-32"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(Flow.aggregation.point <span class="op">==</span><span class="st"> "Energy industry own use"</span> ) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-33"><a href="#cb5-33"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(Country, Year, Flow, Product, E.dot, matnames) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-34"><a href="#cb5-34"></a><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>()</span>
-<span id="cb5-35"><a href="#cb5-35"></a><span class="co">#&gt;    Country Year                                        Flow       Product E.dot</span></span>
-<span id="cb5-36"><a href="#cb5-36"></a><span class="co">#&gt; 1      GHA 1971                              Oil refineries  Refinery gas   -20</span></span>
-<span id="cb5-37"><a href="#cb5-37"></a><span class="co">#&gt; 2      GHA 1971 Own use in electricity, CHP and heat plants   Electricity    -2</span></span>
-<span id="cb5-38"><a href="#cb5-38"></a><span class="co">#&gt; 3      GHA 2000                              Oil refineries  Refinery gas   -39</span></span>
-<span id="cb5-39"><a href="#cb5-39"></a><span class="co">#&gt; 4      GHA 2000 Own use in electricity, CHP and heat plants   Electricity    -4</span></span>
-<span id="cb5-40"><a href="#cb5-40"></a><span class="co">#&gt; 5      ZAF 1971                                  Coal mines   Electricity   -52</span></span>
-<span id="cb5-41"><a href="#cb5-41"></a><span class="co">#&gt; 6      ZAF 1971                              Oil refineries      Fuel oil  -580</span></span>
-<span id="cb5-42"><a href="#cb5-42"></a><span class="co">#&gt; 7      ZAF 1971 Own use in electricity, CHP and heat plants   Electricity  -305</span></span>
-<span id="cb5-43"><a href="#cb5-43"></a><span class="co">#&gt; 8      ZAF 2000                                  Coal mines   Electricity  -237</span></span>
-<span id="cb5-44"><a href="#cb5-44"></a><span class="co">#&gt; 9      ZAF 2000                              Oil refineries   Electricity -1146</span></span>
-<span id="cb5-45"><a href="#cb5-45"></a><span class="co">#&gt; 10     ZAF 2000                              Oil refineries Gas works gas    -1</span></span>
-<span id="cb5-46"><a href="#cb5-46"></a><span class="co">#&gt; 11     ZAF 2000                              Oil refineries  Refinery gas -1052</span></span>
-<span id="cb5-47"><a href="#cb5-47"></a><span class="co">#&gt; 12     ZAF 2000 Own use in electricity, CHP and heat plants   Electricity -1053</span></span>
-<span id="cb5-48"><a href="#cb5-48"></a><span class="co">#&gt; 13     ZAF 2000                       Pumped storage plants   Electricity   -55</span></span>
-<span id="cb5-49"><a href="#cb5-49"></a><span class="co">#&gt;    matnames</span></span>
-<span id="cb5-50"><a href="#cb5-50"></a><span class="co">#&gt; 1    U_EIOU</span></span>
-<span id="cb5-51"><a href="#cb5-51"></a><span class="co">#&gt; 2    U_EIOU</span></span>
-<span id="cb5-52"><a href="#cb5-52"></a><span class="co">#&gt; 3    U_EIOU</span></span>
-<span id="cb5-53"><a href="#cb5-53"></a><span class="co">#&gt; 4    U_EIOU</span></span>
-<span id="cb5-54"><a href="#cb5-54"></a><span class="co">#&gt; 5    U_EIOU</span></span>
-<span id="cb5-55"><a href="#cb5-55"></a><span class="co">#&gt; 6    U_EIOU</span></span>
-<span id="cb5-56"><a href="#cb5-56"></a><span class="co">#&gt; 7    U_EIOU</span></span>
-<span id="cb5-57"><a href="#cb5-57"></a><span class="co">#&gt; 8    U_EIOU</span></span>
-<span id="cb5-58"><a href="#cb5-58"></a><span class="co">#&gt; 9    U_EIOU</span></span>
-<span id="cb5-59"><a href="#cb5-59"></a><span class="co">#&gt; 10   U_EIOU</span></span>
-<span id="cb5-60"><a href="#cb5-60"></a><span class="co">#&gt; 11   U_EIOU</span></span>
-<span id="cb5-61"><a href="#cb5-61"></a><span class="co">#&gt; 12   U_EIOU</span></span>
-<span id="cb5-62"><a href="#cb5-62"></a><span class="co">#&gt; 13   U_EIOU</span></span></code></pre></div>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="co">#&gt;    Country Method Energy.type Last.stage Year Ledger.side</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co">#&gt; 1      ZAF    PCM           E      Final 1971      Supply</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="co">#&gt; 2      ZAF    PCM           E      Final 2000      Supply</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="co">#&gt; 3      ZAF    PCM           E      Final 2000      Supply</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="co">#&gt; 4      ZAF    PCM           E      Final 1971      Supply</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="co">#&gt; 5      ZAF    PCM           E      Final 2000      Supply</span></span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="co">#&gt; 6      ZAF    PCM           E      Final 2000      Supply</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a><span class="co">#&gt; 7      ZAF    PCM           E      Final 1971      Supply</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a><span class="co">#&gt; 8      ZAF    PCM           E      Final 2000      Supply</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a><span class="co">#&gt; 9      ZAF    PCM           E      Final 2000      Supply</span></span>
+<span id="cb5-14"><a href="#cb5-14"></a><span class="co">#&gt; 10     ZAF    PCM           E      Final 2000      Supply</span></span>
+<span id="cb5-15"><a href="#cb5-15"></a><span class="co">#&gt; 11     ZAF    PCM           E      Final 2000      Supply</span></span>
+<span id="cb5-16"><a href="#cb5-16"></a><span class="co">#&gt; 12     ZAF    PCM           E      Final 2000      Supply</span></span>
+<span id="cb5-17"><a href="#cb5-17"></a><span class="co">#&gt; 13     ZAF    PCM           E      Final 2000      Supply</span></span>
+<span id="cb5-18"><a href="#cb5-18"></a><span class="co">#&gt; 14     ZAF    PCM           E      Final 2000      Supply</span></span>
+<span id="cb5-19"><a href="#cb5-19"></a><span class="co">#&gt; 15     ZAF    PCM           E      Final 2000      Supply</span></span>
+<span id="cb5-20"><a href="#cb5-20"></a><span class="co">#&gt;      Flow.aggregation.point                   Flow</span></span>
+<span id="cb5-21"><a href="#cb5-21"></a><span class="co">#&gt; 1   Energy industry own use             Coal mines</span></span>
+<span id="cb5-22"><a href="#cb5-22"></a><span class="co">#&gt; 2   Energy industry own use             Coal mines</span></span>
+<span id="cb5-23"><a href="#cb5-23"></a><span class="co">#&gt; 3   Energy industry own use Oil and gas extraction</span></span>
+<span id="cb5-24"><a href="#cb5-24"></a><span class="co">#&gt; 4  Transformation processes             Coal mines</span></span>
+<span id="cb5-25"><a href="#cb5-25"></a><span class="co">#&gt; 5  Transformation processes             Coal mines</span></span>
+<span id="cb5-26"><a href="#cb5-26"></a><span class="co">#&gt; 6  Transformation processes             Coal mines</span></span>
+<span id="cb5-27"><a href="#cb5-27"></a><span class="co">#&gt; 7  Transformation processes             Coal mines</span></span>
+<span id="cb5-28"><a href="#cb5-28"></a><span class="co">#&gt; 8  Transformation processes             Coal mines</span></span>
+<span id="cb5-29"><a href="#cb5-29"></a><span class="co">#&gt; 9  Transformation processes             Coal mines</span></span>
+<span id="cb5-30"><a href="#cb5-30"></a><span class="co">#&gt; 10 Transformation processes Oil and gas extraction</span></span>
+<span id="cb5-31"><a href="#cb5-31"></a><span class="co">#&gt; 11 Transformation processes Oil and gas extraction</span></span>
+<span id="cb5-32"><a href="#cb5-32"></a><span class="co">#&gt; 12 Transformation processes Oil and gas extraction</span></span>
+<span id="cb5-33"><a href="#cb5-33"></a><span class="co">#&gt; 13 Transformation processes Oil and gas extraction</span></span>
+<span id="cb5-34"><a href="#cb5-34"></a><span class="co">#&gt; 14 Transformation processes Oil and gas extraction</span></span>
+<span id="cb5-35"><a href="#cb5-35"></a><span class="co">#&gt; 15 Transformation processes Oil and gas extraction</span></span>
+<span id="cb5-36"><a href="#cb5-36"></a><span class="co">#&gt;                                         Product Unit        E.dot    matnames</span></span>
+<span id="cb5-37"><a href="#cb5-37"></a><span class="co">#&gt; 1                                   Electricity ktoe     -52.3646      U_EIOU</span></span>
+<span id="cb5-38"><a href="#cb5-38"></a><span class="co">#&gt; 2                                   Electricity ktoe    -237.4033      U_EIOU</span></span>
+<span id="cb5-39"><a href="#cb5-39"></a><span class="co">#&gt; 3                                   Electricity ktoe      -0.0860      U_EIOU</span></span>
+<span id="cb5-40"><a href="#cb5-40"></a><span class="co">#&gt; 4                      Hard coal (if no detail) ktoe  -33064.4311 U_excl_EIOU</span></span>
+<span id="cb5-41"><a href="#cb5-41"></a><span class="co">#&gt; 5                                   Coking coal ktoe   -2371.9304 U_excl_EIOU</span></span>
+<span id="cb5-42"><a href="#cb5-42"></a><span class="co">#&gt; 6                         Other bituminous coal ktoe -124554.3759 U_excl_EIOU</span></span>
+<span id="cb5-43"><a href="#cb5-43"></a><span class="co">#&gt; 7         Hard coal (if no detail) (Coal mines) ktoe   33064.4311           V</span></span>
+<span id="cb5-44"><a href="#cb5-44"></a><span class="co">#&gt; 8                      Coking coal (Coal mines) ktoe    2371.9304           V</span></span>
+<span id="cb5-45"><a href="#cb5-45"></a><span class="co">#&gt; 9            Other bituminous coal (Coal mines) ktoe  124554.3759           V</span></span>
+<span id="cb5-46"><a href="#cb5-46"></a><span class="co">#&gt; 10                                    Crude oil ktoe    -666.8167 U_excl_EIOU</span></span>
+<span id="cb5-47"><a href="#cb5-47"></a><span class="co">#&gt; 11                                  Natural gas ktoe   -1397.7644 U_excl_EIOU</span></span>
+<span id="cb5-48"><a href="#cb5-48"></a><span class="co">#&gt; 12                          Natural gas liquids ktoe    -276.6636 U_excl_EIOU</span></span>
+<span id="cb5-49"><a href="#cb5-49"></a><span class="co">#&gt; 13           Crude oil (Oil and gas extraction) ktoe     666.8167           V</span></span>
+<span id="cb5-50"><a href="#cb5-50"></a><span class="co">#&gt; 14         Natural gas (Oil and gas extraction) ktoe    1397.7644           V</span></span>
+<span id="cb5-51"><a href="#cb5-51"></a><span class="co">#&gt; 15 Natural gas liquids (Oil and gas extraction) ktoe     276.6636           V</span></span>
+<span id="cb5-52"><a href="#cb5-52"></a>Specific_primary_production <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-53"><a href="#cb5-53"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(Flow.aggregation.point <span class="op">==</span><span class="st"> "Energy industry own use"</span> ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-54"><a href="#cb5-54"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(Country, Year, Flow, Product, E.dot, matnames) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-55"><a href="#cb5-55"></a><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>()</span>
+<span id="cb5-56"><a href="#cb5-56"></a><span class="co">#&gt;    Country Year                                        Flow       Product</span></span>
+<span id="cb5-57"><a href="#cb5-57"></a><span class="co">#&gt; 1      GHA 1971                              Oil refineries  Refinery gas</span></span>
+<span id="cb5-58"><a href="#cb5-58"></a><span class="co">#&gt; 2      GHA 1971 Own use in electricity, CHP and heat plants   Electricity</span></span>
+<span id="cb5-59"><a href="#cb5-59"></a><span class="co">#&gt; 3      GHA 2000                              Oil refineries  Refinery gas</span></span>
+<span id="cb5-60"><a href="#cb5-60"></a><span class="co">#&gt; 4      GHA 2000 Own use in electricity, CHP and heat plants   Electricity</span></span>
+<span id="cb5-61"><a href="#cb5-61"></a><span class="co">#&gt; 5      ZAF 1971                                  Coal mines   Electricity</span></span>
+<span id="cb5-62"><a href="#cb5-62"></a><span class="co">#&gt; 6      ZAF 1971                              Oil refineries      Fuel oil</span></span>
+<span id="cb5-63"><a href="#cb5-63"></a><span class="co">#&gt; 7      ZAF 1971 Own use in electricity, CHP and heat plants   Electricity</span></span>
+<span id="cb5-64"><a href="#cb5-64"></a><span class="co">#&gt; 8      ZAF 2000                                  Coal mines   Electricity</span></span>
+<span id="cb5-65"><a href="#cb5-65"></a><span class="co">#&gt; 9      ZAF 2000                                  Coke ovens   Electricity</span></span>
+<span id="cb5-66"><a href="#cb5-66"></a><span class="co">#&gt; 10     ZAF 2000                      Oil and gas extraction   Electricity</span></span>
+<span id="cb5-67"><a href="#cb5-67"></a><span class="co">#&gt; 11     ZAF 2000                              Oil refineries   Electricity</span></span>
+<span id="cb5-68"><a href="#cb5-68"></a><span class="co">#&gt; 12     ZAF 2000                              Oil refineries Gas works gas</span></span>
+<span id="cb5-69"><a href="#cb5-69"></a><span class="co">#&gt; 13     ZAF 2000                              Oil refineries  Refinery gas</span></span>
+<span id="cb5-70"><a href="#cb5-70"></a><span class="co">#&gt; 14     ZAF 2000 Own use in electricity, CHP and heat plants   Electricity</span></span>
+<span id="cb5-71"><a href="#cb5-71"></a><span class="co">#&gt; 15     ZAF 2000                       Pumped storage plants   Electricity</span></span>
+<span id="cb5-72"><a href="#cb5-72"></a><span class="co">#&gt;         E.dot matnames</span></span>
+<span id="cb5-73"><a href="#cb5-73"></a><span class="co">#&gt; 1    -19.5304   U_EIOU</span></span>
+<span id="cb5-74"><a href="#cb5-74"></a><span class="co">#&gt; 2     -2.4936   U_EIOU</span></span>
+<span id="cb5-75"><a href="#cb5-75"></a><span class="co">#&gt; 3    -26.4235   U_EIOU</span></span>
+<span id="cb5-76"><a href="#cb5-76"></a><span class="co">#&gt; 4     -3.7833   U_EIOU</span></span>
+<span id="cb5-77"><a href="#cb5-77"></a><span class="co">#&gt; 5    -52.3646   U_EIOU</span></span>
+<span id="cb5-78"><a href="#cb5-78"></a><span class="co">#&gt; 6   -579.9369   U_EIOU</span></span>
+<span id="cb5-79"><a href="#cb5-79"></a><span class="co">#&gt; 7   -305.4170   U_EIOU</span></span>
+<span id="cb5-80"><a href="#cb5-80"></a><span class="co">#&gt; 8   -237.4033   U_EIOU</span></span>
+<span id="cb5-81"><a href="#cb5-81"></a><span class="co">#&gt; 9     -0.0860   U_EIOU</span></span>
+<span id="cb5-82"><a href="#cb5-82"></a><span class="co">#&gt; 10    -0.0860   U_EIOU</span></span>
+<span id="cb5-83"><a href="#cb5-83"></a><span class="co">#&gt; 11 -1146.2597   U_EIOU</span></span>
+<span id="cb5-84"><a href="#cb5-84"></a><span class="co">#&gt; 12    -0.5804   U_EIOU</span></span>
+<span id="cb5-85"><a href="#cb5-85"></a><span class="co">#&gt; 13 -1052.3455   U_EIOU</span></span>
+<span id="cb5-86"><a href="#cb5-86"></a><span class="co">#&gt; 14 -1052.5365   U_EIOU</span></span>
+<span id="cb5-87"><a href="#cb5-87"></a><span class="co">#&gt; 15   -55.4600   U_EIOU</span></span></code></pre></div>
 </div>
 <div id="convert-production-to-resources-specify_production_to_resources" class="section level2">
 <h2 class="hasAnchor">
@@ -296,7 +325,7 @@
 <span id="cb6-15"><a href="#cb6-15"></a><span class="co">#&gt; $ Flow                   &lt;chr&gt; "Resources (Hydro)", "Resources (Primary solid…</span></span>
 <span id="cb6-16"><a href="#cb6-16"></a><span class="co">#&gt; $ Product                &lt;chr&gt; "Hydro", "Primary solid biofuels", "Hydro", "P…</span></span>
 <span id="cb6-17"><a href="#cb6-17"></a><span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span></span>
-<span id="cb6-18"><a href="#cb6-18"></a><span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 250, 2088, 568, 3891, 33064, 10, 4700, 2372, 6…</span></span></code></pre></div>
+<span id="cb6-18"><a href="#cb6-18"></a><span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 250.1290, 2087.5131, 568.2717, 3891.0146, 3306…</span></span></code></pre></div>
 </div>
 <div id="be-more-specific-about-interface-industries-specify_interface_industries" class="section level2">
 <h2 class="hasAnchor">
@@ -304,7 +333,7 @@
 <p>An interface industry is one that moves energy carriers into or out of a country. When <code>Flow</code> is any of the interface industries, we need to be more specific. If we don’t separate these <code>Flow</code>s by <code>Product</code>, we run into trouble in the PSUT framework:</p>
 <ul>
 <li>upstream swims will result in all <code>Product</code>s being produced even if only one is needed and</li>
-<li>embodied energy calculations will result in many types of energy being embodied, even if only one sould be.</li>
+<li>embodied energy calculations will result in many types of energy being embodied, even if only one should be.</li>
 </ul>
 <p>To solve these problems, <code><a href="../reference/specify_interface_industries.html">specify_interface_industries()</a></code> adds a suffix <code>(Product)</code> to each of these interface industries.</p>
 <p>Note that “<code>Production</code>” <code>Flow</code>s also needs to be specified, but that is accomplished in the <code><a href="../reference/specify_primary_production.html">specify_primary_production()</a></code> and <code><a href="../reference/specify_production_to_resources.html">specify_production_to_resources()</a></code> functions.</p>
@@ -324,7 +353,7 @@
 <span id="cb7-14"><a href="#cb7-14"></a><span class="co">#&gt; $ Flow                   &lt;chr&gt; "Imports (Crude oil)", "Imports (Aviation gaso…</span></span>
 <span id="cb7-15"><a href="#cb7-15"></a><span class="co">#&gt; $ Product                &lt;chr&gt; "Crude oil", "Aviation gasoline", "Kerosene ty…</span></span>
 <span id="cb7-16"><a href="#cb7-16"></a><span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span></span>
-<span id="cb7-17"><a href="#cb7-17"></a><span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 916, 1, 21, 1, 18, -4, -4, -178, -29, -22, -1,…</span></span></code></pre></div>
+<span id="cb7-17"><a href="#cb7-17"></a><span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 916.2081, 1.0700, 21.3051, 1.0461, 18.0567, -4…</span></span></code></pre></div>
 </div>
 <div id="be-more-specific-about-transformation-process-energy-industry-own-use-specify_tp_eiou" class="section level2">
 <h2 class="hasAnchor">
@@ -353,7 +382,7 @@
 <span id="cb8-15"><a href="#cb8-15"></a><span class="co">#&gt; $ Flow                   &lt;chr&gt; "Main activity producer electricity plants", "…</span></span>
 <span id="cb8-16"><a href="#cb8-16"></a><span class="co">#&gt; $ Product                &lt;chr&gt; "Electricity", "Electricity", "Electricity", "…</span></span>
 <span id="cb8-17"><a href="#cb8-17"></a><span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe"</span></span>
-<span id="cb8-18"><a href="#cb8-18"></a><span class="co">#&gt; $ E.dot                  &lt;dbl&gt; -2, -4, -305, -1108</span></span></code></pre></div>
+<span id="cb8-18"><a href="#cb8-18"></a><span class="co">#&gt; $ E.dot                  &lt;dbl&gt; -2.4936, -3.7833, -305.4170, -1107.9965</span></span></code></pre></div>
 </div>
 <div id="identify-transformation-process-sinks-and-sources-tp_sinks_sources" class="section level2">
 <h2 class="hasAnchor">
