@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.13</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@
       <h1>IEATools</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-02-26</h4>
+            <h4 class="date">2020-03-08</h4>
       
       
       <div class="hidden name"><code>IEATools.Rmd</code></div>
@@ -120,27 +120,38 @@ IEA extended energy balance data format.
 <span id="cb1-3"><a href="#cb1-3"></a><span class="co"># Define the file location</span></span>
 <span id="cb1-4"><a href="#cb1-4"></a>IEA_path &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="st">"extdata"</span>, <span class="st">"GH-ZA-ktoe-Extended-Energy-Balances-sample.csv"</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb1-5"><a href="#cb1-5"></a><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="dt">package =</span> <span class="st">"IEATools"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="kw"><a href="https://rdrr.io/r/base/readChar.html">readChar</a></span>(IEA_path, <span class="dt">nchars =</span> <span class="dv">256</span>)</span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="co">#&gt; [1] ",,TIME,1971,2000\r\nCOUNTRY,FLOW,PRODUCT,,\r\nGhana,Production,Hard coal (if no detail),0,x\r\nGhana,Production,Brown coal (if no detail),0,x\r\nGhana,Production,Anthracite,..,0\r\nGhana,Production,Coking coal,..,0\r\nGhana,Production,Other bituminous coal,..,0\r\nGhana"</span></span></code></pre></div>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co"># Or use the function</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>IEA_path &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sample_iea_data_path.html">sample_iea_data_path</a></span>()</span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="kw"><a href="https://rdrr.io/r/base/readChar.html">readChar</a></span>(IEA_path, <span class="dt">nchars =</span> <span class="dv">256</span>)</span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="co">#&gt; [1] "COUNTRY,FLOW,PRODUCT,1971,2000\r\nGhana,Production,Hard coal (if no detail),0,x\r\nGhana,Production,Brown coal (if no detail),0,x\r\nGhana,Production,Anthracite,..,0\r\nGhana,Production,Coking coal,..,0\r\nGhana,Production,Other bituminous coal,..,0\r\nGhana,Productio"</span></span></code></pre></div>
+</div>
+<div id="check-the-integrity-of-the-iea-data-file-iea_file_ok" class="section level3">
+<h3 class="hasAnchor">
+<a href="#check-the-integrity-of-the-iea-data-file-iea_file_ok" class="anchor"></a>Check the integrity of the IEA data file (<code>iea_file_OK()</code>)</h3>
+<p>When starting to work with an IEA data file, it is important to verify its integrity. <code><a href="../reference/iea_file_OK.html">iea_file_OK()</a></code> performs This function performs some validation tests on its argument. Specifically, this function confirms that every country has the same <code>FLOW</code> and <code>PRODUCT</code> rows in the same order. Note that the IEA data file is read internally with <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html">data.table::fread()</a></code> <em>without</em> stripping white space. Also, if the IEA data file passes the integrity checks, a data frame representing the file (without modification) is returned.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>IEA_path <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="st">  </span><span class="kw"><a href="../reference/iea_file_OK.html">iea_file_OK</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">#&gt;  logi TRUE</span></span></code></pre></div>
 </div>
 <div id="convert-the-iea-data-into-an-r-data-frame-iea_df" class="section level3">
 <h3 class="hasAnchor">
 <a href="#convert-the-iea-data-into-an-r-data-frame-iea_df" class="anchor"></a>Convert the IEA data into an R data frame (<code>iea_df()</code>)</h3>
-<p>Extended energy balance data can be pulled directly into an <code>R</code> data frame by the <code><a href="../reference/iea_df.html">iea_df()</a></code> function. <code><a href="../reference/iea_df.html">iea_df()</a></code> fixes the header shown in the figure above, conveting it to a single row. Furthermore, <code><a href="../reference/iea_df.html">iea_df()</a></code> deals with the IEA’s indicators for not applicable values (“<code>x</code>”), for unavailable values (“<code>..</code>”), and for confidential values (“<code>c</code>”). (See “World Energy Balances: Database Documentation (2018 edition)” at (<a href="http://wds.iea.org/wds/pdf/worldbal_documentation.pdf" class="uri">http://wds.iea.org/wds/pdf/worldbal_documentation.pdf</a>).)</p>
+<p>Extended energy balance data can be pulled directly into an <code>R</code> data frame by the <code><a href="../reference/iea_df.html">iea_df()</a></code> function. <code><a href="../reference/iea_df.html">iea_df()</a></code> fixes the header shown in the figure above, converting it to a single row. Furthermore, <code><a href="../reference/iea_df.html">iea_df()</a></code> deals with the IEA’s indicators for not applicable values (“<code>x</code>”), for unavailable values (“<code>..</code>”), and for confidential values (“<code>c</code>”). (See “World Energy Balances: Database Documentation (2018 edition)” at (<a href="http://wds.iea.org/wds/pdf/worldbal_documentation.pdf" class="uri">http://wds.iea.org/wds/pdf/worldbal_documentation.pdf</a>).)</p>
 <p><code>R</code> has three concepts that could be used for “<code>x</code>” and “<code>..</code>”: <code>0</code> would indicate value known to be zero. <code>NULL</code> would indicate an undefined value. <code>NA</code> would indicate a value that is unavailable.</p>
 <p>In theory, mapping from the IEA’s indicators to <code>R</code> should be done as follows: “<code>..</code>” (unavailable) and “<code>c</code>” (confidential) would be converted to <code>NA</code> in <code>R</code>. “<code>x</code>” (not applicable) would be converted to <code>0</code> in <code>R</code>. “<code>NULL</code>” would not be used. However, the IEA are not consistent with their coding. In some places “<code>..</code>” (unavailable) is used for not applicable values, e.g. World Anthracite supply in 1971. (World Anthracite supply in 1971 is actually not applicable (“<code>x</code>”), because Anthracite was classified under “Hard coal (if no detail)” in 1971.) On the other hand, “<code>..</code>” is used correctly for data in the most recent year when those data have not yet been incorporated into the database.</p>
 <p>In the face of IEA’s inconsistencies, the only rational way to proceed is to convert “<code>x</code>”, “<code>..</code>”, and “<code>c</code>” to “<code>0</code>”. <code><a href="../reference/iea_df.html">iea_df()</a></code> performs that task.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>IEA_data &lt;-<span class="st"> </span>IEA_path <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="st">  </span><span class="kw"><a href="../reference/iea_df.html">iea_df</a></span>()</span>
-<span id="cb2-3"><a href="#cb2-3"></a>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="co">#&gt; Observations: 14,688</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="co">#&gt; Variables: 5</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="co">#&gt; $ COUNTRY &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana"…</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a><span class="co">#&gt; $ FLOW    &lt;chr&gt; "Production", "Production", "Production", "Production", "Prod…</span></span>
-<span id="cb2-9"><a href="#cb2-9"></a><span class="co">#&gt; $ PRODUCT &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…</span></span>
-<span id="cb2-10"><a href="#cb2-10"></a><span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span>
-<span id="cb2-11"><a href="#cb2-11"></a><span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>IEA_data &lt;-<span class="st"> </span>IEA_path <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="st">  </span><span class="kw"><a href="../reference/iea_df.html">iea_df</a></span>()</span>
+<span id="cb3-3"><a href="#cb3-3"></a>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co">#&gt; Observations: 14,688</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="co">#&gt; Variables: 5</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co">#&gt; $ COUNTRY &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana"…</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="co">#&gt; $ FLOW    &lt;chr&gt; "Production", "Production", "Production", "Production", "Prod…</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="co">#&gt; $ PRODUCT &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span></code></pre></div>
 </div>
 </div>
 <div id="next-steps" class="section level2">
@@ -150,7 +161,7 @@ IEA extended energy balance data format.
 <ol style="list-style-type: decimal">
 <li>Column titles are SHOUTING.</li>
 <li>The <code>COUNTRY</code> column contains full (long) country names. It would be nicer if countries were identified by their <a href="https://en.wikipedia.org/wiki/ISO_3166-1">2- or 3-letter ISO codes</a>.</li>
-<li>The demarcation between the supply and consumptions sides of the ledger is unclear to new users.</li>
+<li>The demarcation between the supply and consumption sides of the ledger is unclear to new users.</li>
 <li>How data should be aggregated is unclear to new users.</li>
 <li>The data are not in <a href="https://doi.org/10.18637/jss.v059.i10">tidy format</a>.</li>
 </ol>
@@ -159,80 +170,80 @@ IEA extended energy balance data format.
 <h3 class="hasAnchor">
 <a href="#fix-column-titles-rename_iea_df_cols" class="anchor"></a>Fix column titles (<code>rename_iea_df_cols()</code>)</h3>
 <p>To unshout the column titles, use the <code><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols()</a></code> function.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="co">#&gt; Observations: 14,688</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a><span class="co">#&gt; Variables: 5</span></span>
-<span id="cb3-6"><a href="#cb3-6"></a><span class="co">#&gt; $ Country &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana"…</span></span>
-<span id="cb3-7"><a href="#cb3-7"></a><span class="co">#&gt; $ Flow    &lt;chr&gt; "Production", "Production", "Production", "Production", "Prod…</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a><span class="co">#&gt; $ Product &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…</span></span>
-<span id="cb3-9"><a href="#cb3-9"></a><span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span>
-<span id="cb3-10"><a href="#cb3-10"></a><span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span></code></pre></div>
-<p>Note that the example above uses the <code><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols()</a></code> function without arguments, because the default arguments are correct for the extended energy balance data as it arrives from the IEA. However, both the old and new names can be specified as arguments. If you despise both capitals letters and vowels, you could do the following.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>(<span class="dt">new_country =</span> <span class="st">"cntry"</span>, <span class="dt">new_flow =</span> <span class="st">"flw"</span>, <span class="dt">new_product =</span> <span class="st">"prdct"</span>)  <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
 <span id="cb4-4"><a href="#cb4-4"></a><span class="co">#&gt; Observations: 14,688</span></span>
 <span id="cb4-5"><a href="#cb4-5"></a><span class="co">#&gt; Variables: 5</span></span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="co">#&gt; $ cntry  &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana",…</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="co">#&gt; $ flw    &lt;chr&gt; "Production", "Production", "Production", "Production", "Produ…</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a><span class="co">#&gt; $ prdct  &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Anth…</span></span>
-<span id="cb4-9"><a href="#cb4-9"></a><span class="co">#&gt; $ `1971` &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span></span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="co">#&gt; $ `2000` &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span></span></code></pre></div>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="co">#&gt; $ Country &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana"…</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="co">#&gt; $ Flow    &lt;chr&gt; "Production", "Production", "Production", "Production", "Prod…</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="co">#&gt; $ Product &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span></code></pre></div>
+<p>Note that the example above uses the <code><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols()</a></code> function without arguments, because the default arguments are correct for the extended energy balance data as it arrives from the IEA. However, both the old and new names can be specified as arguments. If you despise both capitals letters and vowels, you could do the following.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>(<span class="dt">new_country =</span> <span class="st">"cntry"</span>, <span class="dt">new_flow =</span> <span class="st">"flw"</span>, <span class="dt">new_product =</span> <span class="st">"prdct"</span>)  <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="co">#&gt; Observations: 14,688</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co">#&gt; Variables: 5</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="co">#&gt; $ cntry  &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana",…</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="co">#&gt; $ flw    &lt;chr&gt; "Production", "Production", "Production", "Production", "Produ…</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="co">#&gt; $ prdct  &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Anth…</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="co">#&gt; $ `1971` &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span></span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="co">#&gt; $ `2000` &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span></span></code></pre></div>
 <p>The default arguments are consistent throughout the <code>IEATools</code> package. Thus, it is recommended that you use the default argument values, wherever possible.</p>
 </div>
 <div id="change-to-3-letter-iso-country-abbreviations-use_iso_countries" class="section level3">
 <h3 class="hasAnchor">
 <a href="#change-to-3-letter-iso-country-abbreviations-use_iso_countries" class="anchor"></a>Change to 3-letter ISO country abbreviations (<code>use_iso_countries()</code>)</h3>
 <p>To reduce the length of character strings representing countries, the <code><a href="../reference/use_iso_countries.html">use_iso_countries()</a></code> function replaces country character strings with each country’s 3-letter abbreviation.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="st">  </span><span class="kw"><a href="../reference/use_iso_countries.html">use_iso_countries</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
-<span id="cb5-5"><a href="#cb5-5"></a><span class="co">#&gt; Observations: 14,688</span></span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="co">#&gt; Variables: 5</span></span>
-<span id="cb5-7"><a href="#cb5-7"></a><span class="co">#&gt; $ Country &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"…</span></span>
-<span id="cb5-8"><a href="#cb5-8"></a><span class="co">#&gt; $ Flow    &lt;chr&gt; "Production", "Production", "Production", "Production", "Prod…</span></span>
-<span id="cb5-9"><a href="#cb5-9"></a><span class="co">#&gt; $ Product &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…</span></span>
-<span id="cb5-10"><a href="#cb5-10"></a><span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span>
-<span id="cb5-11"><a href="#cb5-11"></a><span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span></code></pre></div>
-<p>If the 2-letter abbreviations are preferred, set the <code>iso_abbrev_type = 2</code> as shown below.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb6-2"><a href="#cb6-2"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span><span class="kw"><a href="../reference/use_iso_countries.html">use_iso_countries</a></span>(<span class="dt">iso_abbrev_type =</span> <span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span><span class="kw"><a href="../reference/use_iso_countries.html">use_iso_countries</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb6-4"><a href="#cb6-4"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
 <span id="cb6-5"><a href="#cb6-5"></a><span class="co">#&gt; Observations: 14,688</span></span>
 <span id="cb6-6"><a href="#cb6-6"></a><span class="co">#&gt; Variables: 5</span></span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="co">#&gt; $ Country &lt;chr&gt; "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "…</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="co">#&gt; $ Country &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"…</span></span>
 <span id="cb6-8"><a href="#cb6-8"></a><span class="co">#&gt; $ Flow    &lt;chr&gt; "Production", "Production", "Production", "Production", "Prod…</span></span>
 <span id="cb6-9"><a href="#cb6-9"></a><span class="co">#&gt; $ Product &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…</span></span>
 <span id="cb6-10"><a href="#cb6-10"></a><span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span>
 <span id="cb6-11"><a href="#cb6-11"></a><span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span></code></pre></div>
+<p>If the 2-letter abbreviations are preferred, set the <code>iso_abbrev_type = 2</code> as shown below.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="st">  </span><span class="kw"><a href="../reference/use_iso_countries.html">use_iso_countries</a></span>(<span class="dt">iso_abbrev_type =</span> <span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="co">#&gt; Observations: 14,688</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="co">#&gt; Variables: 5</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="co">#&gt; $ Country &lt;chr&gt; "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "GH", "…</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="co">#&gt; $ Flow    &lt;chr&gt; "Production", "Production", "Production", "Production", "Prod…</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="co">#&gt; $ Product &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span></code></pre></div>
 </div>
 <div id="remove-aggregation-and-memo-data-remove_agg_memo_flows" class="section level3">
 <h3 class="hasAnchor">
 <a href="#remove-aggregation-and-memo-data-remove_agg_memo_flows" class="anchor"></a>Remove aggregation and memo data (<code>remove_agg_memo_flows()</code>)</h3>
 <p>The IEA’s extended energy balances contain many memos and aggregations in the data itself. For the purposes of manipulations and calculations, it is often advisable to remove all memos and aggregations. The <code><a href="../reference/remove_agg_memo_flows.html">remove_agg_memo_flows()</a></code> function performs that task.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb7-3"><a href="#cb7-3"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(Flow <span class="op">==</span><span class="st"> "Total primary energy supply"</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb7-4"><a href="#cb7-4"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
-<span id="cb7-5"><a href="#cb7-5"></a><span class="co">#&gt; Observations: 136</span></span>
-<span id="cb7-6"><a href="#cb7-6"></a><span class="co">#&gt; Variables: 5</span></span>
-<span id="cb7-7"><a href="#cb7-7"></a><span class="co">#&gt; $ Country &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana"…</span></span>
-<span id="cb7-8"><a href="#cb7-8"></a><span class="co">#&gt; $ Flow    &lt;chr&gt; "Total primary energy supply", "Total primary energy supply",…</span></span>
-<span id="cb7-9"><a href="#cb7-9"></a><span class="co">#&gt; $ Product &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…</span></span>
-<span id="cb7-10"><a href="#cb7-10"></a><span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span>
-<span id="cb7-11"><a href="#cb7-11"></a><span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span>
-<span id="cb7-12"><a href="#cb7-12"></a><span class="co"># Total primary energy supply is an aggregation row,</span></span>
-<span id="cb7-13"><a href="#cb7-13"></a><span class="co"># so its rows should be absent after calling remove_agg_memo_flows().</span></span>
-<span id="cb7-14"><a href="#cb7-14"></a>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb7-15"><a href="#cb7-15"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb7-16"><a href="#cb7-16"></a><span class="st">  </span><span class="kw"><a href="../reference/remove_agg_memo_flows.html">remove_agg_memo_flows</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb7-17"><a href="#cb7-17"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(Flow <span class="op">==</span><span class="st"> "Total primary energy supply"</span>)</span>
-<span id="cb7-18"><a href="#cb7-18"></a><span class="co">#&gt; [1] Country Flow    Product 1971    2000   </span></span>
-<span id="cb7-19"><a href="#cb7-19"></a><span class="co">#&gt; &lt;0 rows&gt; (or 0-length row.names)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(Flow <span class="op">==</span><span class="st"> "Total primary energy supply"</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="co">#&gt; Observations: 136</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="co">#&gt; Variables: 5</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="co">#&gt; $ Country &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana"…</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="co">#&gt; $ Flow    &lt;chr&gt; "Total primary energy supply", "Total primary energy supply",…</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="co">#&gt; $ Product &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.000…</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000…</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="co"># Total primary energy supply is an aggregation row,</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="co"># so its rows should be absent after calling remove_agg_memo_flows().</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="st">  </span><span class="kw"><a href="../reference/remove_agg_memo_flows.html">remove_agg_memo_flows</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb8-17"><a href="#cb8-17"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(Flow <span class="op">==</span><span class="st"> "Total primary energy supply"</span>)</span>
+<span id="cb8-18"><a href="#cb8-18"></a><span class="co">#&gt; [1] Country Flow    Product 1971    2000   </span></span>
+<span id="cb8-19"><a href="#cb8-19"></a><span class="co">#&gt; &lt;0 rows&gt; (or 0-length row.names)</span></span></code></pre></div>
 </div>
 <div id="augment-with-ledger-side-and-aggregation-point-information-augment_iea_df" class="section level3">
 <h3 class="hasAnchor">
@@ -244,66 +255,65 @@ IEA extended energy balance data format.
 </ol>
 <p>are unclear.</p>
 <p>To clarify these issues and make later aggregation calculations possible, call the <code>augment_iea_data()</code> function. <code><a href="../reference/augment_iea_df.html">augment_iea_df()</a></code> has many default arguments that work fine for as-delivered IEA extended energy balance data in kilotons of oil equivalent units. <code><a href="../reference/augment_iea_df.html">augment_iea_df()</a></code> adds new columns <code>Ledger.side</code>, <code>Flow.aggregation.point</code>, <code>Energy.type</code>, and <code>Unit</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw"><a href="../reference/augment_iea_df.html">augment_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="co">#&gt; Observations: 14,688</span></span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="co">#&gt; Variables: 11</span></span>
-<span id="cb8-7"><a href="#cb8-7"></a><span class="co">#&gt; $ Country                &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "…</span></span>
-<span id="cb8-8"><a href="#cb8-8"></a><span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span></span>
-<span id="cb8-9"><a href="#cb8-9"></a><span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span></span>
-<span id="cb8-10"><a href="#cb8-10"></a><span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span></span>
-<span id="cb8-11"><a href="#cb8-11"></a><span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Suppl…</span></span>
-<span id="cb8-12"><a href="#cb8-12"></a><span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary …</span></span>
-<span id="cb8-13"><a href="#cb8-13"></a><span class="co">#&gt; $ Flow                   &lt;chr&gt; "Production", "Production", "Production", "Pro…</span></span>
-<span id="cb8-14"><a href="#cb8-14"></a><span class="co">#&gt; $ Product                &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no…</span></span>
-<span id="cb8-15"><a href="#cb8-15"></a><span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span></span>
-<span id="cb8-16"><a href="#cb8-16"></a><span class="co">#&gt; $ `1971`                 &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span>
-<span id="cb8-17"><a href="#cb8-17"></a><span class="co">#&gt; $ `2000`                 &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="st">  </span><span class="kw"><a href="../reference/augment_iea_df.html">augment_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="co">#&gt; Observations: 14,688</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="co">#&gt; Variables: 11</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="co">#&gt; $ Country                &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "…</span></span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a><span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span></span>
+<span id="cb9-10"><a href="#cb9-10"></a><span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span></span>
+<span id="cb9-11"><a href="#cb9-11"></a><span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Suppl…</span></span>
+<span id="cb9-12"><a href="#cb9-12"></a><span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary …</span></span>
+<span id="cb9-13"><a href="#cb9-13"></a><span class="co">#&gt; $ Flow                   &lt;chr&gt; "Production", "Production", "Production", "Pro…</span></span>
+<span id="cb9-14"><a href="#cb9-14"></a><span class="co">#&gt; $ Product                &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no…</span></span>
+<span id="cb9-15"><a href="#cb9-15"></a><span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span></span>
+<span id="cb9-16"><a href="#cb9-16"></a><span class="co">#&gt; $ `1971`                 &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span>
+<span id="cb9-17"><a href="#cb9-17"></a><span class="co">#&gt; $ `2000`                 &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span></code></pre></div>
 </div>
 <div id="convert-to-a-tidy-data-frame-tidy_iea_df" class="section level3">
 <h3 class="hasAnchor">
 <a href="#convert-to-a-tidy-data-frame-tidy_iea_df" class="anchor"></a>Convert to a tidy data frame (<code>tidy_iea_df()</code>)</h3>
 <p>The <a href="https://doi.org/10.18637/jss.v059.i10">tidy format</a> is a data frame where each datum is located on its own row and columns provide metadata for each datum. As delivered, the IEA’s data are not tidy: years are spread to the right rather than being a single column. The <code><a href="../reference/tidy_iea_df.html">tidy_iea_df()</a></code> function converts to a tidy format. By default, <code><a href="../reference/tidy_iea_df.html">tidy_iea_df()</a></code> removes zeroes from the data frame, thereby reducing memory footprint.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>Tidy_IEA_df &lt;-<span class="st"> </span>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb9-3"><a href="#cb9-3"></a><span class="st">  </span><span class="kw"><a href="../reference/use_iso_countries.html">use_iso_countries</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb9-4"><a href="#cb9-4"></a><span class="st">  </span><span class="kw"><a href="../reference/remove_agg_memo_flows.html">remove_agg_memo_flows</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb9-5"><a href="#cb9-5"></a><span class="st">  </span><span class="kw"><a href="../reference/augment_iea_df.html">augment_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb9-6"><a href="#cb9-6"></a><span class="st">  </span><span class="kw"><a href="../reference/tidy_iea_df.html">tidy_iea_df</a></span>()</span>
-<span id="cb9-7"><a href="#cb9-7"></a>Tidy_IEA_df <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb9-8"><a href="#cb9-8"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
-<span id="cb9-9"><a href="#cb9-9"></a><span class="co">#&gt; Observations: 399</span></span>
-<span id="cb9-10"><a href="#cb9-10"></a><span class="co">#&gt; Variables: 11</span></span>
-<span id="cb9-11"><a href="#cb9-11"></a><span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span></span>
-<span id="cb9-12"><a href="#cb9-12"></a><span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span></span>
-<span id="cb9-13"><a href="#cb9-13"></a><span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span></span>
-<span id="cb9-14"><a href="#cb9-14"></a><span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span></span>
-<span id="cb9-15"><a href="#cb9-15"></a><span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971…</span></span>
-<span id="cb9-16"><a href="#cb9-16"></a><span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Suppl…</span></span>
-<span id="cb9-17"><a href="#cb9-17"></a><span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary …</span></span>
-<span id="cb9-18"><a href="#cb9-18"></a><span class="co">#&gt; $ Flow                   &lt;chr&gt; "Production", "Production", "Imports", "Import…</span></span>
-<span id="cb9-19"><a href="#cb9-19"></a><span class="co">#&gt; $ Product                &lt;chr&gt; "Primary solid biofuels", "Hydro", "Crude oil"…</span></span>
-<span id="cb9-20"><a href="#cb9-20"></a><span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span></span>
-<span id="cb9-21"><a href="#cb9-21"></a><span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 2088, 250, 916, 1, 21, 1, 18, -4, -4, -178, -2…</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>Tidy_IEA_df &lt;-<span class="st"> </span>IEA_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="kw"><a href="../reference/use_iso_countries.html">use_iso_countries</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="st">  </span><span class="kw"><a href="../reference/remove_agg_memo_flows.html">remove_agg_memo_flows</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="st">  </span><span class="kw"><a href="../reference/augment_iea_df.html">augment_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="st">  </span><span class="kw"><a href="../reference/tidy_iea_df.html">tidy_iea_df</a></span>()</span>
+<span id="cb10-7"><a href="#cb10-7"></a>Tidy_IEA_df <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
+<span id="cb10-9"><a href="#cb10-9"></a><span class="co">#&gt; Observations: 402</span></span>
+<span id="cb10-10"><a href="#cb10-10"></a><span class="co">#&gt; Variables: 11</span></span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span></span>
+<span id="cb10-12"><a href="#cb10-12"></a><span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span></span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span></span>
+<span id="cb10-14"><a href="#cb10-14"></a><span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span></span>
+<span id="cb10-15"><a href="#cb10-15"></a><span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971…</span></span>
+<span id="cb10-16"><a href="#cb10-16"></a><span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Suppl…</span></span>
+<span id="cb10-17"><a href="#cb10-17"></a><span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary …</span></span>
+<span id="cb10-18"><a href="#cb10-18"></a><span class="co">#&gt; $ Flow                   &lt;chr&gt; "Production", "Production", "Imports", "Import…</span></span>
+<span id="cb10-19"><a href="#cb10-19"></a><span class="co">#&gt; $ Product                &lt;chr&gt; "Primary solid biofuels", "Hydro", "Crude oil"…</span></span>
+<span id="cb10-20"><a href="#cb10-20"></a><span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span></span>
+<span id="cb10-21"><a href="#cb10-21"></a><span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 2087.5131, 250.1290, 916.2081, 1.0700, 21.3051…</span></span></code></pre></div>
 </div>
 </div>
 <div id="the-load_tidy_iea_df-function" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-load_tidy_iea_df-function" class="anchor"></a>The <code>load_tidy_iea_df()</code> function</h2>
-<p>For simplicity, all steps above are rolled into <code><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df()</a></code>. By default, <code><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df()</a></code> loads the sample data bundled with the package and converts it to a tidy IEA data frame, assuming default arguments for all functions. But you can supply the path to any IEA data file in the <code>file_path</code> argument to <code><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df()</a></code>.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>Simple &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>()</span>
-<span id="cb10-2"><a href="#cb10-2"></a>Complicated &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="st">"extdata"</span>, <span class="st">"GH-ZA-ktoe-Extended-Energy-Balances-sample.csv"</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="dt">package =</span> <span class="st">"IEATools"</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb10-4"><a href="#cb10-4"></a><span class="st">  </span><span class="kw"><a href="../reference/iea_df.html">iea_df</a></span>() <span class="op">%&gt;%</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="st">  </span><span class="kw"><a href="../reference/remove_agg_memo_flows.html">remove_agg_memo_flows</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb10-7"><a href="#cb10-7"></a><span class="st">  </span><span class="kw"><a href="../reference/use_iso_countries.html">use_iso_countries</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb10-8"><a href="#cb10-8"></a><span class="st">  </span><span class="kw"><a href="../reference/augment_iea_df.html">augment_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb10-9"><a href="#cb10-9"></a><span class="st">  </span><span class="kw"><a href="../reference/tidy_iea_df.html">tidy_iea_df</a></span>()</span>
-<span id="cb10-10"><a href="#cb10-10"></a><span class="kw"><a href="https://rdrr.io/r/base/all.html">all</a></span>(Simple <span class="op">==</span><span class="st"> </span>Complicated)</span>
-<span id="cb10-11"><a href="#cb10-11"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<p>For simplicity, all steps above are rolled into <code><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df()</a></code>. By default, <code><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df()</a></code> loads the sample data bundled with the package and converts it to a tidy IEA data frame, assuming default arguments for all functions. But you can supply the path to any IEA data file in the <code>.iea_file</code> argument to <code><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df()</a></code>.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>Simple &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>()</span>
+<span id="cb11-2"><a href="#cb11-2"></a>Complicated &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sample_iea_data_path.html">sample_iea_data_path</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="kw"><a href="../reference/iea_df.html">iea_df</a></span>() <span class="op">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span><span class="kw"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="st">  </span><span class="kw"><a href="../reference/remove_agg_memo_flows.html">remove_agg_memo_flows</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-6"><a href="#cb11-6"></a><span class="st">  </span><span class="kw"><a href="../reference/use_iso_countries.html">use_iso_countries</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-7"><a href="#cb11-7"></a><span class="st">  </span><span class="kw"><a href="../reference/augment_iea_df.html">augment_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-8"><a href="#cb11-8"></a><span class="st">  </span><span class="kw"><a href="../reference/tidy_iea_df.html">tidy_iea_df</a></span>()</span>
+<span id="cb11-9"><a href="#cb11-9"></a><span class="kw"><a href="https://rdrr.io/r/base/all.html">all</a></span>(Simple <span class="op">==</span><span class="st"> </span>Complicated)</span>
+<span id="cb11-10"><a href="#cb11-10"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p>At this point, the integrity of the IEA data can be checked.</p>
 </div>
 <div id="check-data-integrity" class="section level2">
@@ -322,47 +332,47 @@ IEA extended energy balance data format.
 <li>
 <code>err</code> (supply sum when <code>consumption_sum</code> is <code>NA</code> or <code>supply_minus_consumption</code> when <code>consumption_sum</code> is not <code>NA</code>).</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>Balances &lt;-<span class="st"> </span>Tidy_IEA_df <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb11-2"><a href="#cb11-2"></a><span class="st">  </span><span class="kw"><a href="../reference/calc_tidy_iea_df_balances.html">calc_tidy_iea_df_balances</a></span>()</span>
-<span id="cb11-3"><a href="#cb11-3"></a>Balances <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
-<span id="cb11-5"><a href="#cb11-5"></a><span class="co">#&gt; Observations: 78</span></span>
-<span id="cb11-6"><a href="#cb11-6"></a><span class="co">#&gt; Variables: 12</span></span>
-<span id="cb11-7"><a href="#cb11-7"></a><span class="co">#&gt; $ Country                  &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "G…</span></span>
-<span id="cb11-8"><a href="#cb11-8"></a><span class="co">#&gt; $ Method                   &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "P…</span></span>
-<span id="cb11-9"><a href="#cb11-9"></a><span class="co">#&gt; $ Energy.type              &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E",…</span></span>
-<span id="cb11-10"><a href="#cb11-10"></a><span class="co">#&gt; $ Last.stage               &lt;chr&gt; "Final", "Final", "Final", "Final", "Final",…</span></span>
-<span id="cb11-11"><a href="#cb11-11"></a><span class="co">#&gt; $ Year                     &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 19…</span></span>
-<span id="cb11-12"><a href="#cb11-12"></a><span class="co">#&gt; $ Product                  &lt;chr&gt; "Aviation gasoline", "Charcoal", "Crude oil"…</span></span>
-<span id="cb11-13"><a href="#cb11-13"></a><span class="co">#&gt; $ Unit                     &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "kto…</span></span>
-<span id="cb11-14"><a href="#cb11-14"></a><span class="co">#&gt; $ supply_sum               &lt;dbl&gt; 0, 119, 0, 236, 94, 219, 0, -1, 3, 18, 203, …</span></span>
-<span id="cb11-15"><a href="#cb11-15"></a><span class="co">#&gt; $ consumption_sum          &lt;dbl&gt; NA, 119, NA, 235, 95, 217, NA, NA, 3, 18, 20…</span></span>
-<span id="cb11-16"><a href="#cb11-16"></a><span class="co">#&gt; $ supply_minus_consumption &lt;dbl&gt; NA, 0, NA, 1, -1, 2, NA, NA, 0, 0, 1, 0, 0, …</span></span>
-<span id="cb11-17"><a href="#cb11-17"></a><span class="co">#&gt; $ balance_OK               &lt;lgl&gt; TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, TRUE,…</span></span>
-<span id="cb11-18"><a href="#cb11-18"></a><span class="co">#&gt; $ err                      &lt;dbl&gt; 0, 0, 0, 1, -1, 2, 0, -1, 0, 0, 1, 0, 0, 0, …</span></span>
-<span id="cb11-19"><a href="#cb11-19"></a>Balances <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb11-20"><a href="#cb11-20"></a><span class="st">  </span><span class="kw"><a href="../reference/tidy_iea_df_balanced.html">tidy_iea_df_balanced</a></span>()</span>
-<span id="cb11-21"><a href="#cb11-21"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-<p>Notice that the IEA data are not quite energy balanced. To fix the enery balance, use the <code><a href="../reference/fix_tidy_iea_df_balances.html">fix_tidy_iea_df_balances()</a></code> function. <code><a href="../reference/fix_tidy_iea_df_balances.html">fix_tidy_iea_df_balances()</a></code> adjusts the <code>Statistical differences</code> flow to achieve perfect energy balance.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Fix product-level balances within each country</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a>Tidy_IEA_df <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="st">  </span><span class="kw"><a href="../reference/fix_tidy_iea_df_balances.html">fix_tidy_iea_df_balances</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb12-4"><a href="#cb12-4"></a><span class="st">  </span><span class="kw"><a href="../reference/calc_tidy_iea_df_balances.html">calc_tidy_iea_df_balances</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb12-5"><a href="#cb12-5"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
-<span id="cb12-6"><a href="#cb12-6"></a><span class="co">#&gt; Observations: 78</span></span>
-<span id="cb12-7"><a href="#cb12-7"></a><span class="co">#&gt; Variables: 12</span></span>
-<span id="cb12-8"><a href="#cb12-8"></a><span class="co">#&gt; $ Country                  &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "G…</span></span>
-<span id="cb12-9"><a href="#cb12-9"></a><span class="co">#&gt; $ Method                   &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "P…</span></span>
-<span id="cb12-10"><a href="#cb12-10"></a><span class="co">#&gt; $ Energy.type              &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E",…</span></span>
-<span id="cb12-11"><a href="#cb12-11"></a><span class="co">#&gt; $ Last.stage               &lt;chr&gt; "Final", "Final", "Final", "Final", "Final",…</span></span>
-<span id="cb12-12"><a href="#cb12-12"></a><span class="co">#&gt; $ Year                     &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 19…</span></span>
-<span id="cb12-13"><a href="#cb12-13"></a><span class="co">#&gt; $ Product                  &lt;chr&gt; "Aviation gasoline", "Charcoal", "Crude oil"…</span></span>
-<span id="cb12-14"><a href="#cb12-14"></a><span class="co">#&gt; $ Unit                     &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "kto…</span></span>
-<span id="cb12-15"><a href="#cb12-15"></a><span class="co">#&gt; $ supply_sum               &lt;dbl&gt; 0, 119, 0, 235, 95, 217, 0, 0, 3, 18, 202, 8…</span></span>
-<span id="cb12-16"><a href="#cb12-16"></a><span class="co">#&gt; $ consumption_sum          &lt;dbl&gt; NA, 119, NA, 235, 95, 217, NA, NA, 3, 18, 20…</span></span>
-<span id="cb12-17"><a href="#cb12-17"></a><span class="co">#&gt; $ supply_minus_consumption &lt;dbl&gt; NA, 0, NA, 0, 0, 0, NA, NA, 0, 0, 0, 0, 0, N…</span></span>
-<span id="cb12-18"><a href="#cb12-18"></a><span class="co">#&gt; $ balance_OK               &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TR…</span></span>
-<span id="cb12-19"><a href="#cb12-19"></a><span class="co">#&gt; $ err                      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>Balances &lt;-<span class="st"> </span>Tidy_IEA_df <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="st">  </span><span class="kw"><a href="../reference/calc_tidy_iea_df_balances.html">calc_tidy_iea_df_balances</a></span>()</span>
+<span id="cb12-3"><a href="#cb12-3"></a>Balances <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="co">#&gt; Observations: 78</span></span>
+<span id="cb12-6"><a href="#cb12-6"></a><span class="co">#&gt; Variables: 12</span></span>
+<span id="cb12-7"><a href="#cb12-7"></a><span class="co">#&gt; $ Country                  &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "G…</span></span>
+<span id="cb12-8"><a href="#cb12-8"></a><span class="co">#&gt; $ Method                   &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "P…</span></span>
+<span id="cb12-9"><a href="#cb12-9"></a><span class="co">#&gt; $ Energy.type              &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E",…</span></span>
+<span id="cb12-10"><a href="#cb12-10"></a><span class="co">#&gt; $ Last.stage               &lt;chr&gt; "Final", "Final", "Final", "Final", "Final",…</span></span>
+<span id="cb12-11"><a href="#cb12-11"></a><span class="co">#&gt; $ Year                     &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 19…</span></span>
+<span id="cb12-12"><a href="#cb12-12"></a><span class="co">#&gt; $ Product                  &lt;chr&gt; "Aviation gasoline", "Charcoal", "Crude oil"…</span></span>
+<span id="cb12-13"><a href="#cb12-13"></a><span class="co">#&gt; $ Unit                     &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "kto…</span></span>
+<span id="cb12-14"><a href="#cb12-14"></a><span class="co">#&gt; $ supply_sum               &lt;dbl&gt; 0.000000e+00, 1.191745e+02, -3.552714e-14, 2…</span></span>
+<span id="cb12-15"><a href="#cb12-15"></a><span class="co">#&gt; $ consumption_sum          &lt;dbl&gt; NA, 119.1745, NA, 235.1678, 95.0559, 218.216…</span></span>
+<span id="cb12-16"><a href="#cb12-16"></a><span class="co">#&gt; $ supply_minus_consumption &lt;dbl&gt; NA, 0.000000e+00, NA, -2.000000e-04, 0.00000…</span></span>
+<span id="cb12-17"><a href="#cb12-17"></a><span class="co">#&gt; $ balance_OK               &lt;lgl&gt; TRUE, TRUE, TRUE, FALSE, TRUE, FALSE, TRUE, …</span></span>
+<span id="cb12-18"><a href="#cb12-18"></a><span class="co">#&gt; $ err                      &lt;dbl&gt; 0.000000e+00, 0.000000e+00, -3.552714e-14, -…</span></span>
+<span id="cb12-19"><a href="#cb12-19"></a>Balances <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-20"><a href="#cb12-20"></a><span class="st">  </span><span class="kw"><a href="../reference/tidy_iea_df_balanced.html">tidy_iea_df_balanced</a></span>()</span>
+<span id="cb12-21"><a href="#cb12-21"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<p>Notice that the IEA data are not quite energy balanced. To fix the energy balance, use the <code><a href="../reference/fix_tidy_iea_df_balances.html">fix_tidy_iea_df_balances()</a></code> function. <code><a href="../reference/fix_tidy_iea_df_balances.html">fix_tidy_iea_df_balances()</a></code> adjusts the <code>Statistical differences</code> flow to achieve perfect energy balance.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># Fix product-level balances within each country</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>Tidy_IEA_df <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="st">  </span><span class="kw"><a href="../reference/fix_tidy_iea_df_balances.html">fix_tidy_iea_df_balances</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="st">  </span><span class="kw"><a href="../reference/calc_tidy_iea_df_balances.html">calc_tidy_iea_df_balances</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
+<span id="cb13-6"><a href="#cb13-6"></a><span class="co">#&gt; Observations: 78</span></span>
+<span id="cb13-7"><a href="#cb13-7"></a><span class="co">#&gt; Variables: 12</span></span>
+<span id="cb13-8"><a href="#cb13-8"></a><span class="co">#&gt; $ Country                  &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "G…</span></span>
+<span id="cb13-9"><a href="#cb13-9"></a><span class="co">#&gt; $ Method                   &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "P…</span></span>
+<span id="cb13-10"><a href="#cb13-10"></a><span class="co">#&gt; $ Energy.type              &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E",…</span></span>
+<span id="cb13-11"><a href="#cb13-11"></a><span class="co">#&gt; $ Last.stage               &lt;chr&gt; "Final", "Final", "Final", "Final", "Final",…</span></span>
+<span id="cb13-12"><a href="#cb13-12"></a><span class="co">#&gt; $ Year                     &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 19…</span></span>
+<span id="cb13-13"><a href="#cb13-13"></a><span class="co">#&gt; $ Product                  &lt;chr&gt; "Aviation gasoline", "Charcoal", "Crude oil"…</span></span>
+<span id="cb13-14"><a href="#cb13-14"></a><span class="co">#&gt; $ Unit                     &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "kto…</span></span>
+<span id="cb13-15"><a href="#cb13-15"></a><span class="co">#&gt; $ supply_sum               &lt;dbl&gt; 0.0000, 119.1745, 0.0000, 235.1678, 95.0559,…</span></span>
+<span id="cb13-16"><a href="#cb13-16"></a><span class="co">#&gt; $ consumption_sum          &lt;dbl&gt; NA, 119.1745, NA, 235.1678, 95.0559, 218.216…</span></span>
+<span id="cb13-17"><a href="#cb13-17"></a><span class="co">#&gt; $ supply_minus_consumption &lt;dbl&gt; NA, 0, NA, 0, 0, 0, NA, NA, 0, 0, 0, 0, 0, N…</span></span>
+<span id="cb13-18"><a href="#cb13-18"></a><span class="co">#&gt; $ balance_OK               &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TR…</span></span>
+<span id="cb13-19"><a href="#cb13-19"></a><span class="co">#&gt; $ err                      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span></span></code></pre></div>
 </div>
 <div id="conclusion" class="section level1">
 <h1 class="hasAnchor">

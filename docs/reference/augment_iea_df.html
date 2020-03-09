@@ -36,7 +36,9 @@
 
 
 <meta property="og:title" content="Augment an IEA data frame — augment_iea_df" />
-<meta property="og:description" content="This function prepares an IEA data frame created by iea_df() for use in R." />
+<meta property="og:description" content="This function prepares an IEA data frame created by iea_df() for use in R.
+It works on IEA data from the 2018 and 2019 releases
+of the IEA's extended energy balances.." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -69,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.13</span>
       </span>
     </div>
 
@@ -130,7 +132,9 @@
     </div>
 
     <div class="ref-description">
-    <p>This function prepares an IEA data frame created by <code><a href='iea_df.html'>iea_df()</a></code> for use in R.</p>
+    <p>This function prepares an IEA data frame created by <code><a href='iea_df.html'>iea_df()</a></code> for use in R.
+It works on IEA data from the 2018 and 2019 releases
+of the IEA's extended energy balances..</p>
     </div>
 
     <pre class="usage"><span class='fu'>augment_iea_df</span>(
@@ -151,35 +155,30 @@
   <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>,
   <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
   <span class='kw'>tpes</span> <span class='kw'>=</span> <span class='st'>"Total primary energy supply"</span>,
-  <span class='kw'>tpes_flows</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Production"</span>, <span class='st'>"Imports"</span>, <span class='st'>"Exports"</span>, <span class='st'>"International marine bunkers"</span>,
-    <span class='st'>"International aviation bunkers"</span>, <span class='st'>"Stock changes"</span>),
+  <span class='kw'>tpes_flows</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/tpes_flows.html'>tpes_flows</a></span>,
   <span class='kw'>tfc_compare</span> <span class='kw'>=</span> <span class='st'>"TFC compare"</span>,
-  <span class='kw'>tfc_compare_flows</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Total primary energy supply"</span>, <span class='st'>"Transfers"</span>,
-    <span class='st'>"Statistical differences"</span>, <span class='st'>"Transformation processes"</span>, <span class='st'>"Energy industry own use"</span>,
-    <span class='st'>"Losses"</span>),
+  <span class='kw'>tfc_compare_flows</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/tfc_compare_flows.html'>tfc_compare_flows</a></span>,
   <span class='kw'>transfers</span> <span class='kw'>=</span> <span class='st'>"Transfers"</span>,
   <span class='kw'>statistical_differences</span> <span class='kw'>=</span> <span class='st'>"Statistical differences"</span>,
   <span class='kw'>losses</span> <span class='kw'>=</span> <span class='st'>"Losses"</span>,
   <span class='kw'>transformation_processes</span> <span class='kw'>=</span> <span class='st'>"Transformation processes"</span>,
   <span class='kw'>tp_flows_suffix</span> <span class='kw'>=</span> <span class='st'>"(transf.)"</span>,
   <span class='kw'>nstp_flows_suffix</span> <span class='kw'>=</span> <span class='st'>"(transformation)"</span>,
+  <span class='kw'>mapep</span> <span class='kw'>=</span> <span class='st'>"Main activity producer electricity plants"</span>,
   <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>,
   <span class='kw'>eiou_flows_suffix</span> <span class='kw'>=</span> <span class='st'>"(energy)"</span>,
+  <span class='kw'>coal_mines</span> <span class='kw'>=</span> <span class='st'>"Coal mines"</span>,
+  <span class='kw'>non_specified</span> <span class='kw'>=</span> <span class='st'>"Non-specified"</span>,
   <span class='kw'>tfc</span> <span class='kw'>=</span> <span class='st'>"Total final consumption"</span>,
-  <span class='kw'>tfc_flows</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Industry"</span>, <span class='st'>"Transport"</span>, <span class='st'>"Other"</span>, <span class='st'>"Non-energy use"</span>),
+  <span class='kw'>tfc_flows</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/tfc_flows.html'>tfc_flows</a></span>,
   <span class='kw'>industry</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>,
-  <span class='kw'>industry_flows</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Iron and steel"</span>, <span class='st'>"Chemical and petrochemical"</span>,
-    <span class='st'>"Non-ferrous metals"</span>, <span class='st'>"Non-metallic minerals"</span>, <span class='st'>"Transport equipment"</span>, <span class='st'>"Machinery"</span>,
-    <span class='st'>"Mining and quarrying"</span>, <span class='st'>"Food and tobacco"</span>, <span class='st'>"Paper, pulp and print"</span>,
-    <span class='st'>"Wood and wood products"</span>, <span class='st'>"Construction"</span>, <span class='st'>"Textile and leather"</span>,
-    <span class='st'>"Non-specified (industry)"</span>),
+  <span class='kw'>industry_flows</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/industry_flows.html'>industry_flows</a></span>,
+  <span class='kw'>iron_and_steel</span> <span class='kw'>=</span> <span class='st'>"Iron and steel"</span>,
+  <span class='kw'>mining_and_quarrying</span> <span class='kw'>=</span> <span class='st'>"Mining and quarrying"</span>,
   <span class='kw'>transport</span> <span class='kw'>=</span> <span class='st'>"Transport"</span>,
-  <span class='kw'>transport_flows</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"World aviation bunkers"</span>, <span class='st'>"Domestic aviation"</span>, <span class='st'>"Road"</span>, <span class='st'>"Rail"</span>,
-    <span class='st'>"Pipeline transport"</span>, <span class='st'>"World marine bunkers"</span>, <span class='st'>"Domestic navigation"</span>,
-    <span class='st'>"Non-specified (transport)"</span>),
+  <span class='kw'>transport_flows</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/transport_flows.html'>transport_flows</a></span>,
   <span class='kw'>other</span> <span class='kw'>=</span> <span class='st'>"Other"</span>,
-  <span class='kw'>other_flows</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Residential"</span>, <span class='st'>"Commercial and public services"</span>,
-    <span class='st'>"Agriculture/forestry"</span>, <span class='st'>"Fishing"</span>, <span class='st'>"Non-specified (other)"</span>),
+  <span class='kw'>other_flows</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/other_flows.html'>other_flows</a></span>,
   <span class='kw'>non_energy</span> <span class='kw'>=</span> <span class='st'>"Non-energy use"</span>,
   <span class='kw'>non_energy_prefix</span> <span class='kw'>=</span> <span class='st'>"Non-energy use"</span>,
   <span class='kw'>electricity_output</span> <span class='kw'>=</span> <span class='st'>"Electricity output (GWh)"</span>,
@@ -198,51 +197,51 @@
     </tr>
     <tr>
       <th>country</th>
-      <td><p>the name of the country column in <code>.iea_df</code>. Default is "<code>Country</code>".</p></td>
+      <td><p>the name of the country column in <code>.iea_df</code>. Default is "Country".</p></td>
     </tr>
     <tr>
       <th>ledger_side</th>
-      <td><p>the name of the ledger side column to be added to <code>.iea_df</code>. Default is "<code>Ledger.side</code>".</p></td>
+      <td><p>the name of the ledger side column to be added to <code>.iea_df</code>. Default is "Ledger.side".</p></td>
     </tr>
     <tr>
       <th>flow_aggregation_point</th>
-      <td><p>the name of the flow aggregation point column to be added to <code>.iea_df</code>. Default is "<code>Flow.aggregation.point</code>".</p></td>
+      <td><p>the name of the flow aggregation point column to be added to <code>.iea_df</code>. Default is "Flow.aggregation.point".</p></td>
     </tr>
     <tr>
       <th>flow</th>
-      <td><p>the name of the flow column in <code>.iea_df</code>.  Default is "<code>Flow</code>".</p></td>
+      <td><p>the name of the flow column in <code>.iea_df</code>.  Default is "Flow".</p></td>
     </tr>
     <tr>
       <th>product</th>
-      <td><p>the name of the product column in <code>.iea_df</code>.  Default is "<code>Product</code>".</p></td>
+      <td><p>the name of the product column in <code>.iea_df</code>.  Default is "Product".</p></td>
     </tr>
     <tr>
       <th>energy_type</th>
-      <td><p>the name of the energy type column to be added to <code>.iea_df</code>. Default is "<code>Energy.type</code>.</p></td>
+      <td><p>the name of the energy type column to be added to <code>.iea_df</code>. Default is "Energy.type.</p></td>
     </tr>
     <tr>
       <th>energy_type_val</th>
-      <td><p>the value to put in the <code>energy_type</code> column. Default is "<code>E</code>".</p></td>
+      <td><p>the value to put in the <code>energy_type</code> column. Default is "E".</p></td>
     </tr>
     <tr>
       <th>method</th>
-      <td><p>the name of the method column to be added to <code>.iea_df</code>. Default is "<code>Method</code>.</p></td>
+      <td><p>the name of the method column to be added to <code>.iea_df</code>. Default is "Method".</p></td>
     </tr>
     <tr>
       <th>method_val</th>
-      <td><p>the value to put in the <code>method</code> column. Default is "<code>PCM</code>" (Physical Content Method, which is used by the IEA).</p></td>
+      <td><p>the value to put in the <code>method</code> column. Default is "PCM" (Physical Content Method, which is used by the IEA).</p></td>
     </tr>
     <tr>
       <th>last_stage</th>
-      <td><p>the name of the last stage column to be added to <code>.iea_df</code>. Default is "<code>Last.stage</code>.</p></td>
+      <td><p>the name of the last stage column to be added to <code>.iea_df</code>. Default is "Last.stage".</p></td>
     </tr>
     <tr>
       <th>last_stage_val</th>
-      <td><p>the value to put in the <code>last_stage</code> column. Default is "<code>Final</code>" (which is the last stage supplied by the IEA).</p></td>
+      <td><p>the value to put in the <code>last_stage</code> column. Default is "Final" (which is the last stage supplied by the IEA).</p></td>
     </tr>
     <tr>
       <th>unit</th>
-      <td><p>the name of the unit column to be added to <code>.iea_df</code>. Default is "<code>Unit</code>".</p></td>
+      <td><p>the name of the unit column to be added to <code>.iea_df</code>. Default is "Unit".</p></td>
     </tr>
     <tr>
       <th>unit_val</th>
@@ -250,15 +249,15 @@
     </tr>
     <tr>
       <th>supply</th>
-      <td><p>the string that identifies supply <code>Ledger.side</code>. Default is "<code>Supply</code>".</p></td>
+      <td><p>the string that identifies supply <code>Ledger.side</code>. Default is "Supply".</p></td>
     </tr>
     <tr>
       <th>consumption</th>
-      <td><p>the string that identifies consumption <code>Ledger.side</code>. Default is "<code>Consumption</code>".</p></td>
+      <td><p>the string that identifies consumption <code>Ledger.side</code>. Default is "Consumption".</p></td>
     </tr>
     <tr>
       <th>tpes</th>
-      <td><p>the string that identifies total primary energy supply <code>Flow.aggregation.point</code>. Default is "<code>Total primary energy supply</code>.</p></td>
+      <td><p>the string that identifies total primary energy supply <code>Flow.aggregation.point</code>. Default is "Total primary energy supply".</p></td>
     </tr>
     <tr>
       <th>tpes_flows</th>
@@ -266,7 +265,7 @@
     </tr>
     <tr>
       <th>tfc_compare</th>
-      <td><p>a string that identifies the <code>TFC compare</code> flow aggregation point. Default is <code>TFC compare</code>.</p></td>
+      <td><p>a string that identifies the <code>TFC compare</code> flow aggregation point. Default is "TFC compare".</p></td>
     </tr>
     <tr>
       <th>tfc_compare_flows</th>
@@ -274,39 +273,51 @@
     </tr>
     <tr>
       <th>transfers</th>
-      <td><p>= a string that identifies transfers in the flow column. Default is "<code>Transfers</code>".</p></td>
+      <td><p>= a string that identifies transfers in the flow column. Default is "Transfers".</p></td>
     </tr>
     <tr>
       <th>statistical_differences</th>
-      <td><p>a string that identifies statistical differences in flow column. Default is "<code>Statistical differences</code>".</p></td>
+      <td><p>a string that identifies statistical differences in flow column. Default is "Statistical differences".</p></td>
     </tr>
     <tr>
       <th>losses</th>
-      <td><p>the string that indicates losses in the <code>Flow</code> column. Default is "<code>Losses</code>".</p></td>
+      <td><p>the string that indicates losses in the <code>Flow</code> column. Default is "Losses".</p></td>
     </tr>
     <tr>
       <th>transformation_processes</th>
-      <td><p>the string that indicates transformation processes in the <code>Flow</code> column. Default is "<code>Transformation processes</code>".</p></td>
+      <td><p>the string that indicates transformation processes in the <code>Flow</code> column. Default is "Transformation processes".</p></td>
     </tr>
     <tr>
       <th>tp_flows_suffix</th>
-      <td><p>the suffix for transformation processes in the <code>Flow</code> column. Default is "<code>(transf.)</code>".</p></td>
+      <td><p>the suffix for transformation processes in the <code>Flow</code> column. Default is "(transf.)".</p></td>
     </tr>
     <tr>
       <th>nstp_flows_suffix</th>
-      <td><p>the suffix for non-specified transformation processes in the <code>Flow</code> column. Default is "<code>(transformation)</code>".</p></td>
+      <td><p>the suffix for non-specified transformation processes in the <code>Flow</code> column. Default is "(transformation)".</p></td>
+    </tr>
+    <tr>
+      <th>mapep</th>
+      <td><p>the string that identifies main activity producer electricity plants in the <code>Flow</code> column. Default is "Main activity producer electricity plants".</p></td>
     </tr>
     <tr>
       <th>eiou</th>
-      <td><p>the string that identifies energy industry own use in the <code>Flow</code> column. Default is "<code>Energy industry own use</code>".</p></td>
+      <td><p>the string that identifies energy industry own use in the <code>Flow</code> column. Default is "Energy industry own use".</p></td>
     </tr>
     <tr>
       <th>eiou_flows_suffix</th>
-      <td><p>the suffix for energy industry own use in the <code>Flow</code> column. Default is "<code>(energy)</code>".</p></td>
+      <td><p>the suffix for energy industry own use in the <code>Flow</code> column. Default is "(energy)".</p></td>
+    </tr>
+    <tr>
+      <th>coal_mines</th>
+      <td><p>the string that identifies coal mines in the <code>Flow</code> column. Default is "Coal mines".</p></td>
+    </tr>
+    <tr>
+      <th>non_specified</th>
+      <td><p>the string that identifies non-specified flows in the <code>Flow</code> column. Default is "Non-specified".</p></td>
     </tr>
     <tr>
       <th>tfc</th>
-      <td><p>the string that identifies total final consumption in the <code>Flow</code> column. Default is "<code>Total final consumption</code>".</p></td>
+      <td><p>the string that identifies total final consumption in the <code>Flow</code> column. Default is "Total final consumption".</p></td>
     </tr>
     <tr>
       <th>tfc_flows</th>
@@ -314,15 +325,23 @@
     </tr>
     <tr>
       <th>industry</th>
-      <td><p>a string that names the industry <code>Flow.aggregation.point</code>. Default is "<code>Industry</code>".</p></td>
+      <td><p>a string that names the industry <code>Flow.aggregation.point</code>. Default is "Industry".</p></td>
     </tr>
     <tr>
       <th>industry_flows</th>
       <td><p>a vector of strings representing <code>Flow</code>s to be aggregated in the <code>Industry</code> <code>Flow.aggregation.point</code>.</p></td>
     </tr>
     <tr>
+      <th>iron_and_steel</th>
+      <td><p>a string that identifies the iron and steel industry. Default is "Iron and steel".</p></td>
+    </tr>
+    <tr>
+      <th>mining_and_quarrying</th>
+      <td><p>a string that identifies the mining and quarrying industry. Default is "Mining and quarrying".</p></td>
+    </tr>
+    <tr>
       <th>transport</th>
-      <td><p>a string that names the transport <code>Flow.aggregation.point</code>. Default is "<code>Transport</code>".</p></td>
+      <td><p>a string that names the transport <code>Flow.aggregation.point</code>. Default is "Transport".</p></td>
     </tr>
     <tr>
       <th>transport_flows</th>
@@ -330,7 +349,7 @@
     </tr>
     <tr>
       <th>other</th>
-      <td><p>a string that names the other <code>Flow.aggregation.point</code>. Default is "<code>Other</code>".</p></td>
+      <td><p>a string that names the other <code>Flow.aggregation.point</code>. Default is "Other".</p></td>
     </tr>
     <tr>
       <th>other_flows</th>
@@ -338,7 +357,7 @@
     </tr>
     <tr>
       <th>non_energy</th>
-      <td><p>a string that names the non-energy <code>Flow.aggregation.point</code>. Default is "<code>Non-energy use</code>".</p></td>
+      <td><p>a string that names the non-energy <code>Flow.aggregation.point</code>. Default is "Non-energy use".</p></td>
     </tr>
     <tr>
       <th>non_energy_prefix</th>
@@ -346,19 +365,19 @@
     </tr>
     <tr>
       <th>electricity_output</th>
-      <td><p>a string that names the electricity output <code>Flow</code>. Default is "<code>Electricity output (GWh)</code>".</p></td>
+      <td><p>a string that names the electricity output <code>Flow</code>. Default is "Electricity output (GWh)".</p></td>
     </tr>
     <tr>
       <th>electricity_output_flows_prefix</th>
-      <td><p>a string prefix for <code>Flow</code>s to be aggregated in electricity output. Default is "<code>Electricity output (GWh)-</code>".</p></td>
+      <td><p>a string prefix for <code>Flow</code>s to be aggregated in electricity output. Default is "Electricity output (GWh)-".</p></td>
     </tr>
     <tr>
       <th>heat_output</th>
-      <td><p>a string that names the heat output <code>Flow</code>. Default is "<code>Heat output</code>".</p></td>
+      <td><p>a string that names the heat output <code>Flow</code>. Default is "Heat output".</p></td>
     </tr>
     <tr>
       <th>heat_output_flows_prefix</th>
-      <td><p>a string prefix for <code>Flow</code>s to be aggregated in heat output. Default is "<code>Heat output-</code>".</p></td>
+      <td><p>a string prefix for <code>Flow</code>s to be aggregated in heat output. Default is "Heat output-".</p></td>
     </tr>
     <tr>
       <th>.rownum</th>
@@ -407,15 +426,28 @@ an error is generated.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='iea_df.html'>iea_df</a></span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>",,TIME,1960,1961\n"</span>,
-                       <span class='st'>"COUNTRY,FLOW,PRODUCT\n"</span>,
-                       <span class='st'>"World,Production,Hard coal (if no detail),42,43\n"</span>,
-                       <span class='st'>"World,Losses,Hard coal (if no detail),1,2"</span>)) <span class='kw'>%&gt;%</span>
+                     <span class='st'>"COUNTRY,FLOW,PRODUCT\n"</span>,
+                     <span class='st'>"World,Production,Hard coal (if no detail),42,43\n"</span>,
+                     <span class='st'>"World,Statistical differences,Hard coal (if no detail),7,8\n"</span>,
+                     <span class='st'>"World,Main activity producer electricity plants,"</span>,
+                       <span class='st'>"Hard coal (if no detail),9,10\n"</span>,
+                     <span class='st'>"World,Non-specified,Hard coal (if no detail),11,12\n"</span>,
+                     <span class='st'>"World,Coal mines,Hard coal (if no detail),13,14\n"</span>,
+                     <span class='st'>"World,Non-specified,Hard coal (if no detail),11,12\n"</span>,
+                     <span class='st'>"World,Losses,Hard coal (if no detail),1,2\n"</span>,
+                     <span class='st'>"World,Iron and steel,Hard coal (if no detail),5,6\n"</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='rename_iea_df_cols.html'>rename_iea_df_cols</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>augment_iea_df</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 2 x 11</span><span>
+  <span class='fu'>augment_iea_df</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 8 x 11</span><span>
 #&gt;   Country Method Energy.type Last.stage Ledger.side Flow.aggregatio… Flow 
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>
 #&gt; </span><span style='color: #555555;'>1</span><span> World   PCM    E           Final      Supply      Total primary e… Prod…
-#&gt; </span><span style='color: #555555;'>2</span><span> World   PCM    E           Final      Supply      TFC compare      Loss…
+#&gt; </span><span style='color: #555555;'>2</span><span> World   PCM    E           Final      Supply      TFC compare      Stat…
+#&gt; </span><span style='color: #555555;'>3</span><span> World   PCM    E           Final      Supply      Transformation … Main…
+#&gt; </span><span style='color: #555555;'>4</span><span> World   PCM    E           Final      Supply      Transformation … Non-…
+#&gt; </span><span style='color: #555555;'>5</span><span> World   PCM    E           Final      Supply      Energy industry… Coal…
+#&gt; </span><span style='color: #555555;'>6</span><span> World   PCM    E           Final      Supply      Energy industry… Non-…
+#&gt; </span><span style='color: #555555;'>7</span><span> World   PCM    E           Final      Supply      TFC compare      Loss…
+#&gt; </span><span style='color: #555555;'>8</span><span> World   PCM    E           Final      Consumption Industry         Iron…
 #&gt; </span><span style='color: #555555;'># … with 4 more variables: Product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Unit </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, `1960` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
 #&gt; #   `1961` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
