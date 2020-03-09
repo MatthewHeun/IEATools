@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.13</span>
       </span>
     </div>
 
@@ -126,24 +126,75 @@
       
     </div>
 
-    <div id="ieatools-0-1-9-2020-01-15" class="section level1">
+    <div id="ieatools-0113-2020-03-08" class="section level1">
 <h1 class="page-header">
-<a href="#ieatools-0-1-9-2020-01-15" class="anchor"></a>IEATools 0.1.9 (2020-01-15)</h1>
+<a href="#ieatools-0113-2020-03-08" class="anchor"></a>IEATools 0.1.13 (2020-03-08)</h1>
+<ul>
+<li>Added template tests for both 2018 and 2019.</li>
+<li>Added new sample allocation and F–&gt;U efficiency tables for 2019 data.</li>
+<li>Rebuilt the sample template for F–&gt;U allocation, because new categories of energy consumption were provided for ZA EIOU.</li>
+<li>Wrote new tests for the new approaches to determining “Transformation processes” and “Energy industry own use”.</li>
+<li>Implemented a new way to identify “Transformation processes” and “Energy industry own use” rows. The new method works for both the 2018 and 2019 editions of the IEA data. The new method is based on finding breakpoints between sections of the table. The method relies on the fact that each country’s rows are in exactly the same order. The validity of this assumption can be tested with <code><a href="../reference/iea_file_OK.html">iea_file_OK()</a></code>.</li>
+<li>Added a new function <code><a href="../reference/adjacent_rownums.html">adjacent_rownums()</a></code> that identifies the row numbers where two adjacent entries exist. This function is used extensively when determining the row ranges for “Transformation processes” and “Energy industry own use”.</li>
+<li>Added function <code><a href="../reference/sample_iea_data_path.html">sample_iea_data_path()</a></code> which takes a year (representing year of data release) as an argument. Default year is (now) 2019.<br>
+In subsequent years, I will change the default year to the most-recent year available. 2018 is also supported. This function allows supporting and testing of previous years’ data versions.</li>
+<li>Added <code><a href="../reference/iea_file_OK.html">iea_file_OK()</a></code> which tells whether all countries in an IEA extended energy balance table have the same order for all rows.</li>
+<li>Added “Paper, pulp and printing” to the list of industries for 2019. (In the 2018 edition of the IEA’s data, “Paper, pulp and print” was the name of this industry.)</li>
+<li>There is no longer an “Other” aggregation in the IEA database. One test that had expected an “Other” aggregation point in the database (using 2018 data) was failing, because the expectation is no longer met in the 2019 version of the database. The test has been changed to no longer expect an “Other” aggregation point.</li>
+<li>Focused some tests that assumed some FLOWs would end in “(transf.)”, “(transformation)”, or “(energy)” on sample IEA data from 2018.<br>
+No FLOWs end with those strings in the 2019 data. There is no harm to leave the code that strips trailing “(transf.)”, “(transformation)”, and “(energy)”.</li>
+<li>
+<code><a href="../reference/augment_iea_df.html">augment_iea_df()</a></code> now recognizes “Final consumption not elsewhere specified” as an “other” flow. “Final consumption not elsewhere specified” (in the 2019 data) is a synonym for “Non-specified (other)” (in 2018 and earlier editions of the IEA data).</li>
+<li>
+<code><a href="../reference/augment_iea_df.html">augment_iea_df()</a></code> now recognizes “Industry not elsewhere specified” as an industry flow. “Industry not elsewhere specified” (in the 2019 data) is a synonym for “Non-specified (industry)” (in 2018 and earlier editions of the IEA data).</li>
+<li>
+<code><a href="../reference/iea_df.html">iea_df()</a></code> now removes white space, even from “FLOW” entries that are quoted to protect commas.</li>
+</ul>
+</div>
+    <div id="ieatools-0112-2020-02-26" class="section level1">
+<h1 class="page-header">
+<a href="#ieatools-0112-2020-02-26" class="anchor"></a>IEATools 0.1.12 (2020-02-26)</h1>
+<ul>
+<li>
+<code><a href="../reference/iea_df.html">iea_df()</a></code> now reads files with a clean header line.</li>
+<li>Improved documentation on the energy balance functions, especially <code><a href="../reference/fix_tidy_iea_df_balances.html">fix_tidy_iea_df_balances()</a></code>, where clarifying examples are now provided.</li>
+</ul>
+</div>
+    <div id="ieatools-0111-2020-02-14" class="section level1">
+<h1 class="page-header">
+<a href="#ieatools-0111-2020-02-14" class="anchor"></a>IEATools 0.1.11 (2020-02-14)</h1>
+<ul>
+<li>
+<code><a href="../reference/iea_df.html">iea_df()</a></code> now deletes columns that end with <code>estimated_year</code>, whose default value is “E”. This feature allows us to process IEA data files with column names such as “2014E”.</li>
+</ul>
+</div>
+    <div id="ieatools-0110-2020-01-22" class="section level1">
+<h1 class="page-header">
+<a href="#ieatools-0110-2020-01-22" class="anchor"></a>IEATools 0.1.10 (2020-01-22)</h1>
+<ul>
+<li>Integrated with <a href="http://www.codecov.io">codecov.io</a> by adding <code>codecov.yml</code> file to repository.</li>
+<li>Integrated with Travis by adding <code>.travis.yml</code> file to repository. Now, Travis builds the package automatically after each commit. In addition, test coverage is calculated after each build.</li>
+<li>Now at 100% test coverage. Got to this point by adding new tests to ensure that all parts of the code are being hit. And by adjusting the regex strings in <code><a href="../reference/extract_TK.html">extract_TK()</a></code>.</li>
+</ul>
+</div>
+    <div id="ieatools-019-2020-01-15" class="section level1">
+<h1 class="page-header">
+<a href="#ieatools-019-2020-01-15" class="anchor"></a>IEATools 0.1.9 (2020-01-15)</h1>
 <ul>
 <li>Added GitHub Pages website.</li>
 </ul>
 </div>
-    <div id="ieatools-0-1-8-2019-07-24" class="section level1">
+    <div id="ieatools-018-2019-07-24" class="section level1">
 <h1 class="page-header">
-<a href="#ieatools-0-1-8-2019-07-24" class="anchor"></a>IEATools 0.1.8 (2019-07-24)</h1>
+<a href="#ieatools-018-2019-07-24" class="anchor"></a>IEATools 0.1.8 (2019-07-24)</h1>
 <ul>
 <li>Efficiency template now includes energy flows into final-to-useful machines for each year, indicating to analysts which years need no efficiency or exergy-to-energy ratio.</li>
 <li>New <code>sort_by</code> argument for <code><a href="../reference/eta_fu_template.html">eta_fu_template()</a></code> allows “useful_energy_type” and “importance”. “useful_energy_type” sorts first by <code>md</code>, <code>light</code>, <code>ke</code>, and <code>heat</code>, then by magnitude of energy flow into the machine. “importance” sorts by magnitude of energy flow into the machine only. Default is “useful_energy_type”.</li>
 </ul>
 </div>
-    <div id="ieatools-0-1-7-2019-04-18" class="section level1">
+    <div id="ieatools-017-2019-04-18" class="section level1">
 <h1 class="page-header">
-<a href="#ieatools-0-1-7-2019-04-18" class="anchor"></a>IEATools 0.1.7 (2019-04-18)</h1>
+<a href="#ieatools-017-2019-04-18" class="anchor"></a>IEATools 0.1.7 (2019-04-18)</h1>
 <ul>
 <li>Allocation template now sorting rows in IEA order.</li>
 <li>All specified primary flows now consumed somewhere in the ECC.</li>
@@ -154,9 +205,9 @@ For example, “Hard coal (if no detail)” –&gt; “Hard coal (if no detail) 
 <code><a href="../reference/specify_tp_eiou.html">specify_tp_eiou()</a></code> now aggregates inputs and outputs separately at the end of its specification process. Doing so avoids a situation where resource extraction industries would look like a Transformation process sink industry when inputs and outputs were netted together.</li>
 </ul>
 </div>
-    <div id="ieatools-0-1-6-2019-04-06" class="section level1">
+    <div id="ieatools-016-2019-04-06" class="section level1">
 <h1 class="page-header">
-<a href="#ieatools-0-1-6-2019-04-06" class="anchor"></a>IEATools 0.1.6 (2019-04-06)</h1>
+<a href="#ieatools-016-2019-04-06" class="anchor"></a>IEATools 0.1.6 (2019-04-06)</h1>
 <ul>
 <li>Updated all three vignettes to reflect the new functions and demonstrate their use.</li>
 <li>New function <code><a href="../reference/augment_iea_df.html">augment_iea_df()</a></code> now removes <code>(energy)</code>, <code>(transf.)</code>, and <code>(transformation)</code> suffixes from the <code>Flow</code> column after adding the <code>Flow.aggregation.point</code> column.</li>
@@ -172,44 +223,44 @@ For example, “Hard coal (if no detail)” –&gt; “Hard coal (if no detail) 
 <li>Added function to create an S_units matrix from tidy data.</li>
 </ul>
 </div>
-    <div id="ieadata-0-1-5-2018-08-10" class="section level1">
+    <div id="ieadata-015-2018-08-10" class="section level1">
 <h1 class="page-header">
-<a href="#ieadata-0-1-5-2018-08-10" class="anchor"></a>IEAData 0.1.5 (2018-08-10)</h1>
+<a href="#ieadata-015-2018-08-10" class="anchor"></a>IEAData 0.1.5 (2018-08-10)</h1>
 <ul>
 <li>Trying again. Doesn’t seem like data were pushed to GitHub.</li>
 </ul>
 </div>
-    <div id="ieadata-0-1-4-2018-08-10" class="section level1">
+    <div id="ieadata-014-2018-08-10" class="section level1">
 <h1 class="page-header">
-<a href="#ieadata-0-1-4-2018-08-10" class="anchor"></a>IEAData 0.1.4 (2018-08-10)</h1>
+<a href="#ieadata-014-2018-08-10" class="anchor"></a>IEAData 0.1.4 (2018-08-10)</h1>
 <ul>
 <li>Now includes “World” as a country.</li>
 </ul>
 </div>
-    <div id="ieadata-0-1-3-2018-07-29" class="section level1">
+    <div id="ieadata-013-2018-07-29" class="section level1">
 <h1 class="page-header">
-<a href="#ieadata-0-1-3-2018-07-29" class="anchor"></a>IEAData 0.1.3 (2018-07-29)</h1>
+<a href="#ieadata-013-2018-07-29" class="anchor"></a>IEAData 0.1.3 (2018-07-29)</h1>
 <ul>
 <li>New version of FixedHNFuels.tsv file from Noah Ver Beek.</li>
 </ul>
 </div>
-    <div id="ieadata-0-1-2-2018-07-27" class="section level1">
+    <div id="ieadata-012-2018-07-27" class="section level1">
 <h1 class="page-header">
-<a href="#ieadata-0-1-2-2018-07-27" class="anchor"></a>IEAData 0.1.2 (2018-07-27)</h1>
+<a href="#ieadata-012-2018-07-27" class="anchor"></a>IEAData 0.1.2 (2018-07-27)</h1>
 <ul>
 <li>Fixed bug in which data are replaced for Honduras.</li>
 </ul>
 </div>
-    <div id="ieadata-0-1-1-2018-07-27" class="section level1">
+    <div id="ieadata-011-2018-07-27" class="section level1">
 <h1 class="page-header">
-<a href="#ieadata-0-1-1-2018-07-27" class="anchor"></a>IEAData 0.1.1 (2018-07-27)</h1>
+<a href="#ieadata-011-2018-07-27" class="anchor"></a>IEAData 0.1.1 (2018-07-27)</h1>
 <ul>
 <li>Added fixes for Honduras data from Noah Ver Beek.</li>
 </ul>
 </div>
-    <div id="ieadata-0-1-0-2018-05-25" class="section level1">
+    <div id="ieadata-010-2018-05-25" class="section level1">
 <h1 class="page-header">
-<a href="#ieadata-0-1-0-2018-05-25" class="anchor"></a>IEAData 0.1.0 (2018-05-25)</h1>
+<a href="#ieadata-010-2018-05-25" class="anchor"></a>IEAData 0.1.0 (2018-05-25)</h1>
 <ul>
 <li>Initial release.</li>
 </ul>
@@ -220,16 +271,20 @@ For example, “Hard coal (if no detail)” –&gt; “Hard coal (if no detail) 
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#ieatools-0-1-9-2020-01-15">0.1.9</a></li>
-        <li><a href="#ieatools-0-1-8-2019-07-24">0.1.8</a></li>
-        <li><a href="#ieatools-0-1-7-2019-04-18">0.1.7</a></li>
-        <li><a href="#ieatools-0-1-6-2019-04-06">0.1.6</a></li>
-        <li><a href="#ieadata-0-1-5-2018-08-10">0.1.5</a></li>
-        <li><a href="#ieadata-0-1-4-2018-08-10">0.1.4</a></li>
-        <li><a href="#ieadata-0-1-3-2018-07-29">0.1.3</a></li>
-        <li><a href="#ieadata-0-1-2-2018-07-27">0.1.2</a></li>
-        <li><a href="#ieadata-0-1-1-2018-07-27">0.1.1</a></li>
-        <li><a href="#ieadata-0-1-0-2018-05-25">0.1.0</a></li>
+        <li><a href="#ieatools-0113-2020-03-08">0.1.13</a></li>
+        <li><a href="#ieatools-0112-2020-02-26">0.1.12</a></li>
+        <li><a href="#ieatools-0111-2020-02-14">0.1.11</a></li>
+        <li><a href="#ieatools-0110-2020-01-22">0.1.10</a></li>
+        <li><a href="#ieatools-019-2020-01-15">0.1.9</a></li>
+        <li><a href="#ieatools-018-2019-07-24">0.1.8</a></li>
+        <li><a href="#ieatools-017-2019-04-18">0.1.7</a></li>
+        <li><a href="#ieatools-016-2019-04-06">0.1.6</a></li>
+        <li><a href="#ieadata-015-2018-08-10">0.1.5</a></li>
+        <li><a href="#ieadata-014-2018-08-10">0.1.4</a></li>
+        <li><a href="#ieadata-013-2018-07-29">0.1.3</a></li>
+        <li><a href="#ieadata-012-2018-07-27">0.1.2</a></li>
+        <li><a href="#ieadata-011-2018-07-27">0.1.1</a></li>
+        <li><a href="#ieadata-010-2018-05-25">0.1.0</a></li>
       </ul>
     </div>
   </div>

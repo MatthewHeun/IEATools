@@ -27,7 +27,7 @@ tp_sinks_to_nonenergy(
 
 \item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
 
-\item{non_energy_flow_agg_point}{the name of the aggregation point where transforamtion process sinks will be reassigned. Default is "\verb{Non-energy use}".}
+\item{non_energy_flow_agg_point}{the name of the aggregation point where transformation process sinks will be reassigned. Default is "\verb{Non-energy use}".}
 
 \item{transformation_processes}{a string that identifies transformation processes in the \code{flow_aggregation_point} column. Default is "\verb{Transformation processes}".}
 

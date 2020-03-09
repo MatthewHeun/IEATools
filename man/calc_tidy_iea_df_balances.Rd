@@ -29,40 +29,40 @@ grouping columns, typically \code{Country}, \code{Year}, \code{Product}, etc.
 a \code{Ledger.side} column.}
 
 \item{ledger_side}{the name of the column in \code{.tidy_iea_data}
-that contains ledger side information (a string). Default is "\code{Ledger.side}".}
+that contains ledger side information (a string). Default is "Ledger.side".}
 
 \item{flow_aggregation_point}{the name of the column in \code{.tidy_iea_df} that contains flow aggregation point information.
-Default is "\code{Flow.aggregation.point}".}
+Default is "Flow.aggregation.point".}
 
 \item{supply}{the identifier for supply data in the \code{ledger_side} column (a string).
-Default is "\code{Supply}".}
+Default is "Supply".}
 
 \item{consumption}{the identifier for consumption data in the \code{ledger_side} column (a string).
-Default is "\code{Consumption}".}
+Default is "Consumption".}
 
-\item{flow}{the name of the column in \code{.tidy_iea_df} that contains flows. Default is "\code{Flow}".}
+\item{flow}{the name of the column in \code{.tidy_iea_df} that contains flows. Default is "Flow".}
 
-\item{product}{the name of the column in \code{.tidy_iea_df} that contains products. Default is "\code{Product}".}
+\item{product}{the name of the column in \code{.tidy_iea_df} that contains products. Default is "Product".}
 
 \item{e_dot}{the name of the column in \code{.tidy_iea_data}
-that contains energy flow data. Default is "\code{E.dot}".}
+that contains energy flow data. Default is "E.dot".}
 
-\item{unit}{the name of the colum in \code{.tidy_iea_data}
-that contains the units for the energy flow data. Default is "\code{Unit}".}
+\item{unit}{the name of the column in \code{.tidy_iea_data}
+that contains the units for the energy flow data. Default is "Unit".}
 
 \item{supply_sum}{the name of a new column that will contain the sum of all supply for that group.
-Default is "\code{supply_sum}".}
+Default is "supply_sum".}
 
 \item{consumption_sum}{the name of a new column that will contain the sum of all consumption for that group.
-Default is "\code{consumption_sum}".}
+Default is "consumption_sum".}
 
 \item{supply_minus_consumption}{the name of a new column that will contain the difference between supply and consumption for that group.
-Default is "\code{supply_minus_consumption}".}
+Default is "supply_minus_consumption".}
 
 \item{balance_OK}{the name of a new logical column that tells whether a row's energy balance is OK.
-Default is "\code{balance_OK}".}
+Default is "balance_OK".}
 
-\item{err}{the name of a new column that indicates the energy balance error for each group. Default is "\code{err}".}
+\item{err}{the name of a new column that indicates the energy balance error for each group. Default is "err".}
 
 \item{tol}{if the difference between supply and consumption is greater than \code{tol},
 \code{balance_OK} will be set to \code{FALSE}. Default is \code{1e-6}.}
@@ -79,7 +79,7 @@ So be sure to group \code{.tidy_iea_df} by appropriate variables
 before calling this function.
 Grouping should \emph{definitely} be done on the \code{Product} column.
 Typically, grouping is also done on
-\code{Country}, \code{Year}, \code{Energy.type}, \code{Last.stage}, etc. columns.
+\code{Country}, \code{Method}, \code{Year}, \code{Energy.type}, \code{Last.stage}, etc. columns.
 Grouping should \emph{not} be done on the \code{Ledger.side} column or the \code{Flow} column.
 To test whether all balances are OK,
 use the \code{\link[=tidy_iea_df_balanced]{tidy_iea_df_balanced()}} function.

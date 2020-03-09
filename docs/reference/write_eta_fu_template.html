@@ -36,6 +36,7 @@
 
 
 <meta property="og:title" content="Write a final-to-useful machine efficiencies template to a file — write_eta_fu_template" />
+<meta property="og:description" content="The template should be created by eta_fu_template()." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -68,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.13</span>
       </span>
     </div>
 
@@ -129,6 +130,7 @@
     </div>
 
     <div class="ref-description">
+    <p>The template should be created by <code><a href='eta_fu_template.html'>eta_fu_template()</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>write_eta_fu_template</span>(
@@ -191,33 +193,103 @@
     </tr>
     <tr>
       <th>perc</th>
-      <td><p>the string identifying percentage quantities. Default is "[\<!-- %]".} --></p>
-<p>e_dot_machine_perca string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine [\<!-- %]".} -->maximum_valuesa string identifying the maximum values column in the outgoing template. Default is "Maxmimum.values".header_row_font_colora hex string representing the font color for the header row in the Excel file that is written by this function.
-Default is "#FFFFFF", white.header_row_shading_colora hex string representing the shading color for the header row in the Excel file that is written by this function.
-Default is "#5A80B8", medium blue.e_dot_machine_row_font_colora hex string representing the font color for rows of energy flows into final-to-useful machines in the Excel file that is written by this function.
-Default is "#8C87A0", a dark purple color.e_dot_machine_row_shading_colora hex string representing the shading color for rows of energy flows into final-to-useful machines in the Excel file that is written by this function.
-Default is "#5A80B8", medium purple color.e_dot_machine_perc_row_font_colora hex string representing the font color for rows of percentage of energy flows into final-to-useful machines in the Excel file that is written by this function.
-Default is "#8C87A0", a dark purple color.e_dot_machine_perc_row_shading_colora hex string representing the shading color for rows of percentage of energy flows into final-to-useful machines in the Excel file that is written by this function.
-Default is "#5A80B8", medium purple color.eta_row_font_colora hex string representing the font color for <code>eta_fu</code> rows in the Excel file that is written by this function.
-Default is "#000000", black.eta_row_shading_colora hex string representing the shading color for <code>eta_fu</code> rows in the Excel file that is written by this function.
-Default is "#FFFFFF", white.phi_row_font_colora hex string representing the font color for <code>phi_u</code> rows in the Excel file that is written by this function.
-Default is "#000000", black.phi_row_shading_colora hex string representing the shading color for <code>phi_u</code> rows in the Excel file that is written by this function.
-Default is "#FFFFFF", white.blank_shading_colora hex string representing the shading color for blank cells in the <code>maximum_values</code> column.
-Default is "#808080".quantitythe name of the quantity column in <code>.eta_fu_template</code>. Default is "Quantity".e_dot_machine_max_percthe name of the rows that give maximum percentages. Default is "E.dot_machine_max [\<!-- %]".} -->.rownumthe name of a temporary column containing row numbers. Default is ".rownum".the <code>path</code> argumentThe template should be created by <code><a href='eta_fu_template.html'>eta_fu_template()</a></code>.f &lt;- tempfile(fileext = ".xlsx")
-load_fu_allocation_data() %&gt;% 
-  eta_fu_template() %&gt;% 
-  write_eta_fu_template(f)
-if (file.exists(f)) 
-  file.remove(f)</p></td>
+      <td><p>the string identifying percentage quantities. Default is "[%]".</p></td>
+    </tr>
+    <tr>
+      <th>e_dot_machine_perc</th>
+      <td><p>a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine [%]".</p></td>
+    </tr>
+    <tr>
+      <th>maximum_values</th>
+      <td><p>a string identifying the maximum values column in the outgoing template. Default is "Maximum.values".</p></td>
+    </tr>
+    <tr>
+      <th>header_row_font_color</th>
+      <td><p>a hex string representing the font color for the header row in the Excel file that is written by this function.
+Default is "#FFFFFF", white.</p></td>
+    </tr>
+    <tr>
+      <th>header_row_shading_color</th>
+      <td><p>a hex string representing the shading color for the header row in the Excel file that is written by this function.
+Default is "#5A80B8", medium blue.</p></td>
+    </tr>
+    <tr>
+      <th>e_dot_machine_row_font_color</th>
+      <td><p>a hex string representing the font color for rows of energy flows into final-to-useful machines in the Excel file that is written by this function.
+Default is "#8C87A0", a dark purple color.</p></td>
+    </tr>
+    <tr>
+      <th>e_dot_machine_row_shading_color</th>
+      <td><p>a hex string representing the shading color for rows of energy flows into final-to-useful machines in the Excel file that is written by this function.
+Default is "#5A80B8", medium purple color.</p></td>
+    </tr>
+    <tr>
+      <th>e_dot_machine_perc_row_font_color</th>
+      <td><p>a hex string representing the font color for rows of percentage of energy flows into final-to-useful machines in the Excel file that is written by this function.
+Default is "#8C87A0", a dark purple color.</p></td>
+    </tr>
+    <tr>
+      <th>e_dot_machine_perc_row_shading_color</th>
+      <td><p>a hex string representing the shading color for rows of percentage of energy flows into final-to-useful machines in the Excel file that is written by this function.
+Default is "#5A80B8", medium purple color.</p></td>
+    </tr>
+    <tr>
+      <th>eta_row_font_color</th>
+      <td><p>a hex string representing the font color for <code>eta_fu</code> rows in the Excel file that is written by this function.
+Default is "#000000", black.</p></td>
+    </tr>
+    <tr>
+      <th>eta_row_shading_color</th>
+      <td><p>a hex string representing the shading color for <code>eta_fu</code> rows in the Excel file that is written by this function.
+Default is "#FFFFFF", white.</p></td>
+    </tr>
+    <tr>
+      <th>phi_row_font_color</th>
+      <td><p>a hex string representing the font color for <code>phi_u</code> rows in the Excel file that is written by this function.
+Default is "#000000", black.</p></td>
+    </tr>
+    <tr>
+      <th>phi_row_shading_color</th>
+      <td><p>a hex string representing the shading color for <code>phi_u</code> rows in the Excel file that is written by this function.
+Default is "#FFFFFF", white.</p></td>
+    </tr>
+    <tr>
+      <th>blank_shading_color</th>
+      <td><p>a hex string representing the shading color for blank cells in the <code>maximum_values</code> column.
+Default is "#808080".</p></td>
+    </tr>
+    <tr>
+      <th>quantity</th>
+      <td><p>the name of the quantity column in <code>.eta_fu_template</code>. Default is "Quantity".</p></td>
+    </tr>
+    <tr>
+      <th>e_dot_machine_max_perc</th>
+      <td><p>the name of the rows that give maximum percentages. Default is "E.dot_machine_max [%]".</p></td>
+    </tr>
+    <tr>
+      <th>.rownum</th>
+      <td><p>the name of a temporary column containing row numbers. Default is ".rownum".</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>the <code>path</code> argument</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".xlsx"</span>)
+<span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='eta_fu_template.html'>eta_fu_template</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'>write_eta_fu_template</span>(<span class='no'>f</span>)</div><div class='output co'>#&gt; [1] "/var/folders/_z/j2bgrwl576b_ht2jnqntvnm00000gq/T//Rtmpe9jSJv/file13b7e2664bc7d.xlsx"</div><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='no'>f</span>)) {
+  <span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.remove</a></span>(<span class='no'>f</span>)
+}</div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#value">Value</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

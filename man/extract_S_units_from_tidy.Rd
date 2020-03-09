@@ -35,11 +35,11 @@ extract_S_units_from_tidy(
 
 \item{s_units}{the name of the unit summation column to be added to \code{.tidy_iea_df}. Default is "\code{S_unit}".}
 
-\item{val}{the name of a temporary column to be created in \code{.tidy_iea_df}. Deafult is "\code{.val}".}
+\item{val}{the name of a temporary column to be created in \code{.tidy_iea_df}. Default is "\code{.val}".}
 
-\item{rowtype}{the name of a temporary rowype column created in \code{.tidy_iea_df}. Default is "\code{rowtype}".}
+\item{rowtype}{the name of a temporary rowtype column created in \code{.tidy_iea_df}. Default is "\code{rowtype}".}
 
-\item{coltype}{the name of a temporary colype column created in \code{.tidy_iea_df}. Default is "\code{coltype}".}
+\item{coltype}{the name of a temporary coltype column created in \code{.tidy_iea_df}. Default is "\code{coltype}".}
 }
 \value{
 a data frame containing grouping variables and a new column of unit summation matrices called \code{s_unit}.

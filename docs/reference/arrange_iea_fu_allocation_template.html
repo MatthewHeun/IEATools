@@ -73,7 +73,7 @@ It sorts columns (left-to-right) in the order of energy flow through the energy 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.13</span>
       </span>
     </div>
 
@@ -184,7 +184,7 @@ Default is "<code>both</code>".</p></td>
     </tr>
     <tr>
       <th>machine</th>
-      <td><p>the name of the machine columnin <code>.fu_allocation_template</code>. Default is "<code>Machine</code>".</p></td>
+      <td><p>the name of the machine column in <code>.fu_allocation_template</code>. Default is "<code>Machine</code>".</p></td>
     </tr>
     <tr>
       <th>eu_product</th>
@@ -227,7 +227,7 @@ This column must not be present in <code>.fu_allocation_template</code>.</p></td
     <p>An row- and/or column-ordered version of <code>.fu_allocation_template</code></p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Whe sorting rows,
+    <p>When sorting rows,
 the <code>flow_allocation_point</code>, <code>flow</code>, and <code>product</code> columns are considered.
 Internally, this function figures out which columns are metadata columns
 and groups on those columns before applying the row ordering.
@@ -248,7 +248,7 @@ The column order is:</p><ul>
     <pre class="examples"><div class='input'><span class='no'>Template</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='specify_all.html'>specify_all</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='fu_allocation_template.html'>fu_allocation_template</a></span>()
-<span class='no'>Template</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 690 x 15</span><span>
+<span class='no'>Template</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 705 x 15</span><span>
 #&gt;    Country Method Energy.type Last.stage Ledger.side Flow.aggregatio… Unit 
 #&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>
 #&gt; </span><span style='color: #555555;'> 1</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
@@ -261,10 +261,10 @@ The column order is:</p><ul>
 #&gt; </span><span style='color: #555555;'> 8</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
 #&gt; </span><span style='color: #555555;'> 9</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
 #&gt; </span><span style='color: #555555;'>10</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
-#&gt; </span><span style='color: #555555;'># … with 680 more rows, and 8 more variables: Ef.product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Machine </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; </span><span style='color: #555555;'># … with 695 more rows, and 8 more variables: Ef.product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Machine </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
 #&gt; #   Eu.product </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Destination </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Quantity </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Maximum.values </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
 #&gt; #   `1971` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, `2000` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='no'>Template</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>arrange_iea_fu_allocation_template</span>()</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 690 x 15</span><span>
+  <span class='fu'>arrange_iea_fu_allocation_template</span>()</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 705 x 15</span><span>
 #&gt;    Country Method Energy.type Last.stage Ledger.side Flow.aggregatio… Unit 
 #&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>
 #&gt; </span><span style='color: #555555;'> 1</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
@@ -277,7 +277,7 @@ The column order is:</p><ul>
 #&gt; </span><span style='color: #555555;'> 8</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
 #&gt; </span><span style='color: #555555;'> 9</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
 #&gt; </span><span style='color: #555555;'>10</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
-#&gt; </span><span style='color: #555555;'># … with 680 more rows, and 8 more variables: Ef.product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Machine </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
+#&gt; </span><span style='color: #555555;'># … with 695 more rows, and 8 more variables: Ef.product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Machine </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
 #&gt; #   Eu.product </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Destination </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Quantity </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Maximum.values </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
 #&gt; #   `1971` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, `2000` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>

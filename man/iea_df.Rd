@@ -2,16 +2,19 @@
 % Please edit documentation in R/initialize.R
 \name{iea_df}
 \alias{iea_df}
-\title{Load IEA data from an extended enegy balances csv file}
+\title{Load IEA data from an extended energy balances .csv file}
 \usage{
 iea_df(
   .iea_file = NULL,
   text = NULL,
   expected_1st_line_start = ",,TIME",
   expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT",
+  expected_simple_start = expected_2nd_line_start,
+  flow = "FLOW",
   missing_data = "..",
   not_applicable_data = "x",
-  confidential_data = "c"
+  confidential_data = "c",
+  estimated_year = "E"
 )
 }
 \arguments{
@@ -21,39 +24,65 @@ Default is the path to a sample IEA file provided in this package.}
 \item{text}{a character string that can be parsed as IEA extended energy balances.
 (This argument is useful for testing.)}
 
-\item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is "\verb{,,TIME}".}
+\item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is ",,TIME".}
 
-\item{expected_2nd_line_start}{the expected start of the second line of \code{iea_file}. Default is "\verb{COUNTRY,FLOW,PRODUCT}".}
+\item{expected_2nd_line_start}{the expected start of the second line of \code{iea_file}. Default is "COUNTRY,FLOW,PRODUCT".}
+
+\item{expected_simple_start}{the expected starting of the first line of \code{iea_file}. Default is the value of \code{expected_2nd_line_start}.
+Note that \code{expected_simple_start} is sometimes encountered in data supplied by the IEA.
+Furthermore, \code{expected_simple_start} could be the format of the file when somebody "helpfully" fiddles with
+the raw data from the IEA.}
+
+\item{flow}{the name of the flow column, entries of which are stripped of leading and trailing white space. Default is "FLOW".}
 
 \item{missing_data}{a string that identifies missing data. Default is "\code{..}".
-Entries of "\code{missing_data}" are coded as `0`` in output.}
+Entries of \code{missing_data} are coded as `0`` in output.}
 
-\item{not_applicable_data}{a string that identifies not-applicable data.
-Entries of "\code{not_applicable_data}" are coded as \code{0} in output.}
+\item{not_applicable_data}{a string that identifies not-applicable data. Default is "x".
+Entries of \code{not_applicable_data} are coded as \code{0} in output.}
 
-\item{confidential_data}{a string that identifies confidential data.
-Entries of "\code{confidential_data}" are coded as \code{0} in output.}
+\item{confidential_data}{a string that identifies confidential data. Default is "c".
+Entries of \code{confidential_data} are coded as \code{0} in output.}
+
+\item{estimated_year}{a string that identifies an estimated year.
+Default is "E".
+E.g., in "2014E", the "E" indicates that data for 2014 are estimated.
+Data from estimated years are removed from output.}
 }
 \value{
 a data frame containing the IEA extended energy balances data
 }
 \description{
-This function reads an IEA extended energy balances file and
-converts it to a data frame with appropriately-labelled columns.
+This function reads an IEA extended energy balances .csv file and
+converts it to a data frame with appropriately-labeled columns.
 One of \code{iea_file} or \code{text} must be specified, but not both.
 The first line of \code{iea_file} or \code{text}
 is expected to start with \code{expected_start_1st_line}, and
 the second line is expected to start with \code{expected_2nd_line_start}, and
 it may have any number of commas appended.
 (The extra commas might come from opening and re-saving the file in Excel.)
-If those conditions are not met, execution is halted, and
-an error message is given.
+Alternatively, the file may have a first line of \code{expected_simple_start}.
+If none of these conditions are not met, execution is halted, and
+an error message is provided.
+Files should have a return character at the end of their final line.
 }
 \details{
 This function is designed to work even as more years are added
 in columns at the right of \code{.iea_file},
-because column names in the output are constructed from the first two lines of \code{iea_file}
+because column names in the output are constructed from the header line(s) of \code{.iea_file}
 (which contain years and country, flow, product information).
+
+In the IEA's data, some entries in the "FLOW" column are quoted to avoid creating too many columns.
+For example, "Paper, pulp and printing" is quoted in the raw .csv file:
+"      Paper, pulp and printing".
+Internally, this function uses \code{\link[data.table:fread]{data.table::fread()}}, which, unfortunately, does not
+strip leading and trailing white space from quoted entries.
+So the function uses \code{\link[base:trimws]{base::trimws()}} to finish the job.
+
+When the IEA includes estimated data for a year,
+the column name of the estimated year includes an "E" appended.
+(E.g., "2017E".)
+This function eliminates estimated columns.
 
 The IEA data have indicators for
 not applicable values ("\code{x}") and for
@@ -69,27 +98,34 @@ In theory, mapping from the IEA's indicators to \code{R} should proceed as follo
 "\code{x}" (not applicable) in the IEA data would be converted to \code{0} in \code{R}.
 "\code{NULL}" would not be used.
 However, the IEA are not consistent with their coding.
-In some places "\code{..}" is used for not applicable values
-(e.g., World Anthracite supply in 1971).
-World Anthracite supply in 1971 is actually not applicable, because Anthracite was
-classified under "Hard coal (if no detail)" in 1971.
+In some places "\code{..}" (indicating unavailable) is used for not applicable values,
+e.g., World Anthracite supply in 1971.
+(World Anthracite supply in 1971 is actually not applicable, because Anthracite was
+classified under "Hard coal (if no detail)" in 1971.)
 On the other hand, "\code{..}" is used for data in the most recent year
 when those data have not yet been incorporated into the database.
-In the face of IEA’s inconsistencies,
+In the face of IEA's inconsistencies,
 the only rational way to proceed is to convert
-both "\code{x}" and "\code{..}" to "\code{0}"
-in this function.
+both "\code{x}" and "\code{..}" in the IEA files to "\code{0}" in the output data frame
+from this function.
 Furthermore, confidential data (coded by the IEA as "\code{c}") is also interpreted as \code{0}.
 (What else can we do?)
 
 The data frame returned from this function is not ready to be used in R,
 because rows are not unique.
-To further prepre the data frame for use, call \code{augment_iea_data()},
-passing the output of this function in the \code{.iea_df} argument of \code{augment_iea_data()}.
+To further prepare the data frame for use, call \code{\link[=augment_iea_df]{augment_iea_df()}},
+passing the output of this function to the \code{.iea_df} argument of \code{\link[=augment_iea_df]{augment_iea_df()}}.
 }
 \examples{
 # Original file format
-iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43")
+iea_df(text = paste0(",,TIME,1960,1961\n",
+                     "COUNTRY,FLOW,PRODUCT\n",
+                     "World,Production,Hard coal (if no detail),42,43"))
 # With extra commas on the 2nd line
-iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal,42,43")
+iea_df(text = paste0(",,TIME,1960,1961\n",
+                     "COUNTRY,FLOW,PRODUCT,,,\n",
+                     "World,Production,Hard coal (if no detail),42,43"))
+# With a clean first line
+iea_df(text = paste0("COUNTRY,FLOW,PRODUCT,1960,1961\n",
+                     "World,Production,Hard coal (if no detail),42,43"))
 }

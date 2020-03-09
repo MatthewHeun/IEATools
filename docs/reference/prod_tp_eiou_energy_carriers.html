@@ -71,7 +71,7 @@ supplied or consumed by Production, Transformation processes, or Energy industry
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.13</span>
       </span>
     </div>
 
@@ -138,8 +138,7 @@ supplied or consumed by Production, Transformation processes, or Energy industry
     </div>
 
     <pre class="usage"><span class='fu'>prod_tp_eiou_energy_carriers</span>(
-  <span class='kw'>file_path</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"extdata"</span>, <span class='st'>"GH-ZA-ktoe-Extended-Energy-Balances-sample.csv"</span>)
-    <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"IEATools"</span>),
+  <span class='kw'>file_path</span> <span class='kw'>=</span> <span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span>(),
   <span class='kw'>iea_df</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/IEATools/man/load_tidy_iea_df.html'>load_tidy_iea_df</a></span>(<span class='no'>file_path</span>),
   <span class='kw'>side</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Consumption"</span>, <span class='st'>"Supply"</span>),
   <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,

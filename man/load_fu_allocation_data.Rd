@@ -5,8 +5,7 @@
 \title{Load final-to-useful allocation data}
 \usage{
 load_fu_allocation_data(
-  path = file.path("extdata", "GH-ZA-Allocation-sample.xlsx") \%>\% system.file(package
-    = "IEATools"),
+  path = sample_fu_allocation_table_path(),
   fu_allocations_tab_name = "FU Allocations"
 )
 }
@@ -20,7 +19,7 @@ the \code{fu_allocations_tab_name} tab in \code{path} as a data frame.
 }
 \description{
 When performing extending an energy conversion chain from useful energy to final energy,
-allocations of final energy consumption to useful energy catagories are defined by the analyst.
+allocations of final energy consumption to useful energy categories are defined by the analyst.
 The Excel file at \code{path} contains those allocations.
 }
 \details{

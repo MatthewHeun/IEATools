@@ -99,7 +99,7 @@ Default is \code{0}.}
 (using \code{arrange_iea_fu_allocation_template()}) before returning.
 Default is \code{TRUE}.}
 
-\item{.value}{the name of a temproary value column added to \code{.tidy_iea_df}.
+\item{.value}{the name of a temporary value column added to \code{.tidy_iea_df}.
 A \code{.value} column must not be present in \code{.tidy_iea_df}. Default is "\code{.value}".}
 }
 \value{

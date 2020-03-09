@@ -35,14 +35,13 @@ Sometimes, it is convenient to remove those rows.
 This function does so, using default identifying strings for aggregations and memos.
 }
 \details{
-Note that the IEA data somtimes includes a variable number of spaces
+Note that the IEA data sometimes includes a variable number of spaces
 before the "Memo: " string.
 There are several places where trailing spaces are found, such as "Nuclear industry ".
 This function strips all leading and trailing spaces in the \code{Flow} and \code{Product} columns.
 }
 \examples{
-file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
-  system.file(package = "IEATools") \%>\% 
+sample_iea_data_path() \%>\% 
   iea_df() \%>\%
   rename_iea_df_cols() \%>\% 
   remove_agg_memo_flows()

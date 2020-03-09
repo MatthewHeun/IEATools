@@ -35,7 +35,7 @@ rename_iea_df_cols(
 \description{
 The IEA data has columns named \code{COUNTRY}, \code{FLOW}, and \code{PRODUCT}.
 This function turns off the shouting,
-renaming the columms (by default) to \code{Country}, \code{Flow}, and \code{Product}.
+renaming the columns (by default) to \code{Country}, \code{Flow}, and \code{Product}.
 }
 \examples{
 iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43") \%>\% 

@@ -19,7 +19,7 @@ insert_after(
 
 \item{values}{the object to be inserted into \code{x}}
 
-\item{.after_all}{a boolean telling whether to insert \code{values} after after all instances of \code{after} (when \code{TRUE}, the defaul)
+\item{.after_all}{a boolean telling whether to insert \code{values} after after all instances of \code{after} (when \code{TRUE}, the default)
 or only the first instance of \code{after} (when \code{FALSE}).}
 
 \item{.equals_function}{insertion of \code{values} occurs at \code{which(.equals_function(x, after))}.

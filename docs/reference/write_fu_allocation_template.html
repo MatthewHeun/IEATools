@@ -72,7 +72,7 @@ This function saves an Excel workbook to path that contains an analyst's templat
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.13</span>
       </span>
     </div>
 
@@ -257,7 +257,7 @@ Default is "<code>#104273</code>", a light yellow color.</p></td>
     <tr>
       <th>dont_fill_shading_color</th>
       <td><p>a hex string representing the shading color for cells that don't require inputs.
-Default is "<code>#A8A8A8</code>", a medim gray color.</p></td>
+Default is "<code>#A8A8A8</code>", a medium gray color.</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
@@ -266,7 +266,7 @@ If <code>path</code> already exists and <code>overwrite = FALSE</code>, an error
     </tr>
     <tr>
       <th>n_allocation_rows</th>
-      <td><p>the number of allcation rows to write for each final energy product. Default is <code>3</code>.</p></td>
+      <td><p>the number of allocation rows to write for each final energy product. Default is <code>3</code>.</p></td>
     </tr>
     <tr>
       <th>.rownum</th>
@@ -286,7 +286,7 @@ Default is "<code>.rownum</code>".</p></td>
 Analysts may fill those cells, but it is not necessary to do so.</p></li>
 <li><p>Blue cells indicate final demand energy consumption.</p></li>
 <li><p>Yellow cells indicate energy industry own use energy consumption.</p></li>
-<li><p>Rows are written in same order as EIA extended energy balance data.</p></li>
+<li><p>Rows are written in same order as IEA extended energy balance data.</p></li>
 <li><p>Columns are written in a reasonable order, namely that left-to-right order
 approximates flow through the energy conversion chain.</p></li>
 </ul>
@@ -297,7 +297,7 @@ approximates flow through the energy conversion chain.</p></li>
 <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='specify_all.html'>specify_all</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='fu_allocation_template.html'>fu_allocation_template</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>write_fu_allocation_template</span>(<span class='no'>f</span>)</div><div class='output co'>#&gt; [1] "/var/folders/_z/j2bgrwl576b_ht2jnqntvnm00000gq/T//Rtmpi4Iisp/file12231b3ae07b.xlsx"</div><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='no'>f</span>)) {
+  <span class='fu'>write_fu_allocation_template</span>(<span class='no'>f</span>)</div><div class='output co'>#&gt; [1] "/var/folders/_z/j2bgrwl576b_ht2jnqntvnm00000gq/T//Rtmpe9jSJv/file13b7e74656730.xlsx"</div><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='no'>f</span>)) {
   <span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.remove</a></span>(<span class='no'>f</span>)
 }</div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>

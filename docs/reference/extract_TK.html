@@ -72,7 +72,7 @@ to temperatures by extracting the temperature from the middle of the string." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.13</span>
       </span>
     </div>
 
@@ -139,7 +139,7 @@ This function converts heat types (e.g., "<code>HTH.600.C</code>")
 to temperatures by extracting the temperature from the middle of the string.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>extract_TK</span>(<span class='no'>heat_types</span>)</pre>
+    <pre class="usage"><span class='fu'>extract_TK</span>(<span class='no'>heat_types</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"."</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -147,6 +147,10 @@ to temperatures by extracting the temperature from the middle of the string.</p>
     <tr>
       <th>heat_types</th>
       <td><p>a string vector of heat types to be converted to temperatures</p></td>
+    </tr>
+    <tr>
+      <th>sep</th>
+      <td><p>the separator between parts of the <code>heat_types</code> string. Default is ".".</p></td>
     </tr>
     </table>
 
