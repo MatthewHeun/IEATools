@@ -579,6 +579,7 @@ load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(),
 #' If any read values in the `c_perc` rows are outside of the range 0 <= x <= 1, an error is thrown.
 #'
 #' @param .fu_allocations a data frame containing a completed final-to-useful allocation template for final demand.
+#'        This data frame can be obtained from the function `load_fu_allocation_data()`.
 #' @param T_0 the dead state temperature (in kelvin) for calculation of heat exergy. Default is `298.15` kelvin.
 #' @param sort_by how to sort rows of eta_fu template. 
 #'        Options are (1) by "useful_energy_type" and (2) by "importance". 
