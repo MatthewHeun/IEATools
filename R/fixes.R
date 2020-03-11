@@ -32,8 +32,8 @@
 #' example_tidy_iea_df <- load_tidy_iea_df() %>% 
 #'   filter(Country == "GHA") %>% 
 #'   filter(Product == "Primary solid biofuels") %>% 
-#'   # This example data frame has PSB for Ghana for 1971 and 2000.  
-#'   Let's pretend that 1971 is 1991 and 2000 is 1992.
+#'   # The example data frame has PSB for Ghana for 1971 and 2000.  
+#'   # Let's pretend that 1971 is 1991 and 2000 is 1992.
 #'   mutate(
 #'     Year := dplyr::case_when(
 #'       Year == 1971 ~ 1991,

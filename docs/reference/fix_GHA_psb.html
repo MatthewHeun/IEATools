@@ -175,7 +175,8 @@ for additional details.</p>
 <span class='no'>example_tidy_iea_df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Country</span> <span class='kw'>==</span> <span class='st'>"GHA"</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Product</span> <span class='kw'>==</span> <span class='st'>"Primary solid biofuels"</span>) <span class='kw'>%&gt;%</span>
-  <span class='co'># Ghana has PSB for 1971 and 2000.  Let's pretend that 1971 is 1991 and 2000 is 1992</span>
+  <span class='co'># The example data frame has PSB for Ghana for 1971 and 2000.  </span>
+  <span class='co'># Let's pretend that 1971 is 1991 and 2000 is 1992.</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(
     <span class='no'>Year</span> <span class='kw'>:=</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/case_when.html'>case_when</a></span>(
       <span class='no'>Year</span> <span class='kw'>==</span> <span class='fl'>1971</span> ~ <span class='fl'>1991</span>,
