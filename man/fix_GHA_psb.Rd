@@ -30,5 +30,28 @@ Applied Energy, 251(112697):1–24, May 2019
 for additional details.
 }
 \examples{
-
+library(dplyr)
+# Build an example tidy IEA data frame in which Ghana's Primary solid biofuels can be fixed.
+example_tidy_iea_df <- load_tidy_iea_df() \%>\% 
+  filter(Country == "GHA") \%>\% 
+  filter(Product == "Primary solid biofuels") \%>\% 
+  # Ghana has PSB for 1971 and 2000.  Let's pretend that 1971 is 1991 and 2000 is 1992
+  mutate(
+    Year := dplyr::case_when(
+      Year == 1971 ~ 1991,
+      Year == 2000 ~ 1992
+    )
+  ) \%>\% 
+  # Filter rows from years beyond our interest for this test.
+  filter(Year \%in\% c(1991, 1992))
+example_tidy_iea_df
+fixed <- example_tidy_iea_df \%>\% 
+  fix_GHA_psb()
+# Compare production of Primary solid biofuels in 1991
+example_tidy_iea_df \%>\% 
+  filter(Year == 1991, Flow == "Production") \%>\% 
+  select("E.dot", "Unit")
+fixed \%>\% 
+  filter(Year == 1991, Flow == "Production") \%>\% 
+  select("E.dot", "Unit")
 }
