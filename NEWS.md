@@ -1,4 +1,14 @@
+# IEATools 0.1.13 (2020-03-11)
+
+* Fixed an issue with argument names: overwrite --> overwrite_file. 
+  The change was made in the `IEATools` package develop branch
+  against which the latest version of the PFU-Database repository was built.
+  However, the argument name change needs to be on the master branch of `IEATools`
+  so that `install_github()` gets the updated argument name.
+* Added stub functions to fix certain IEA data.
+  This capability is in development and not yet working.
 * Added a script to make internal data frames for fixing IEA data.
+  This capability is in development and not yet working.
 
 
 # IEATools 0.1.13 (2020-03-08)
