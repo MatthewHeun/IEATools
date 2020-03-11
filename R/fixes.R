@@ -33,7 +33,11 @@ fix_GHA_psb <- function(.tidy_iea_df) {
   # can be accessed with IEATools:::Fixed_GHA_PSB.
   # We'll do a left-join with .tidy_iea_df to pull the updated data into the tidy data frame.
   .tidy_iea_df %>% 
-    dplyr::left_join(IEATools:::Fixed_GHA_PSB, by = c("Country", "Year", "Ledger.side", "Flow.aggregation.point", "Flow", "Product", "E.dot"))
+    # anti_join eliminates all rows in .tidy_iea_df that will be replaced
+    dplyr::anti_join(Fixed_GHA_PSB, by = c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side",
+                                           "Flow.aggregation.point", "Flow", "Product", "Unit", "Year")) %>% 
+    # Now add the new data at the bottom.
+    bind_rows(Fixed_GHA_PSB)
 }
 
 

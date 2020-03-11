@@ -1,4 +1,9 @@
-# IEATools 0.1.13 (2020-03-11)
+* Completed function called `fix_GHA_psb()` which 
+  smooths Ghana's Primary solid biofuels data
+  in the years 1991--1999.
+
+
+# IEATools 0.1.14 (2020-03-11)
 
 * Fixed an issue with argument names: overwrite --> overwrite_file. 
   The change was made in the `IEATools` package develop branch
