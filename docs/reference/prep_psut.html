@@ -242,7 +242,7 @@ and adds those matrices to the data frame.</p>
 #&gt; <span class='message'>    matches</span></div><div class='input'><span class='no'>Simple</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='specify_all.html'>specify_all</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>prep_psut</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>rename</a></span>(<span class='kw'>matval_simple</span> <span class='kw'>=</span> <span class='no'>matvals</span>)
+  <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/select.html'>rename</a></span>(<span class='kw'>matval_simple</span> <span class='kw'>=</span> <span class='no'>matvals</span>)
 <span class='no'>S_units</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='extract_S_units_from_tidy.html'>extract_S_units_from_tidy</a></span>()
 <span class='no'>Complicated</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
@@ -251,16 +251,16 @@ and adds those matrices to the data frame.</p>
   <span class='fu'><a href='add_row_col_meta.html'>add_row_col_meta</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='collapse_to_tidy_psut.html'>collapse_to_tidy_psut</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matnames</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matvals</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/join.html'>full_join</a></span>(<span class='no'>S_units</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Method"</span>, <span class='st'>"Energy.type"</span>, <span class='st'>"Last.stage"</span>,
+  <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/join.html'>full_join</a></span>(<span class='no'>S_units</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Method"</span>, <span class='st'>"Energy.type"</span>, <span class='st'>"Last.stage"</span>,
                             <span class='st'>"Country"</span>, <span class='st'>"Year"</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://tidyr.tidyverse.org/reference/gather.html'>gather</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matnames</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matvals</span>, <span class='no'>R</span>, <span class='no'>U_EIOU</span>, <span class='no'>U_excl_EIOU</span>,
                                         <span class='no'>V</span>, <span class='no'>Y</span>, <span class='no'>S_units</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>rename</a></span>(<span class='kw'>matval_complicated</span> <span class='kw'>=</span> <span class='no'>matvals</span>)
+  <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/select.html'>rename</a></span>(<span class='kw'>matval_complicated</span> <span class='kw'>=</span> <span class='no'>matvals</span>)
 <span class='co'># Simple and Complicated are same.</span>
-<span class='fu'><a href='https://dplyr.tidyverse.org/reference/join.html'>full_join</a></span>(<span class='no'>Simple</span>, <span class='no'>Complicated</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Method"</span>, <span class='st'>"Energy.type"</span>,
+<span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/join.html'>full_join</a></span>(<span class='no'>Simple</span>, <span class='no'>Complicated</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Method"</span>, <span class='st'>"Energy.type"</span>,
                                       <span class='st'>"Last.stage"</span>, <span class='st'>"Country"</span>,
                                       <span class='st'>"Year"</span>, <span class='st'>"matnames"</span>)) <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/mutate.html'>mutate</a></span>(
     <span class='kw'>same</span> <span class='kw'>=</span> <span class='kw pkg'>matsbyname</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/matsbyname/man/equal_byname.html'>equal_byname</a></span>(<span class='no'>matval_simple</span>, <span class='no'>matval_complicated</span>)
   ) <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>magrittr</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/magrittr/man/aliases.html'>extract2</a></span>(<span class='st'>"same"</span>) <span class='kw'>%&gt;%</span>

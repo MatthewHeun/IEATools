@@ -87,7 +87,7 @@
       <h1>Prepare for PSUT analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-03-08</h4>
+            <h4 class="date">2020-03-11</h4>
       
       
       <div class="hidden name"><code>prep_psut.Rmd</code></div>
@@ -244,7 +244,7 @@
 <span id="cb5-17"><a href="#cb5-17"></a><span class="kw">full_join</span>(Simple <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">matval_simple =</span> matvals), </span>
 <span id="cb5-18"><a href="#cb5-18"></a>          Complicated <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">matval_complicated =</span> matvals), </span>
 <span id="cb5-19"><a href="#cb5-19"></a>          <span class="dt">by =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Method"</span>, <span class="st">"Energy.type"</span>, <span class="st">"Last.stage"</span>, <span class="st">"Country"</span>, <span class="st">"Year"</span>, <span class="st">"matnames"</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb5-20"><a href="#cb5-20"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(</span>
+<span id="cb5-20"><a href="#cb5-20"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html">mutate</a></span>(</span>
 <span id="cb5-21"><a href="#cb5-21"></a>    <span class="dt">same =</span> matsbyname<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/matsbyname/man/equal_byname.html">equal_byname</a></span>(matval_simple, matval_complicated)</span>
 <span id="cb5-22"><a href="#cb5-22"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb5-23"><a href="#cb5-23"></a><span class="st">  </span>magrittr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/magrittr/man/aliases.html">extract2</a></span>(<span class="st">"same"</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>

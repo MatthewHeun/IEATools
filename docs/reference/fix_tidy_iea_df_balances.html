@@ -242,7 +242,7 @@ that should be investigated prior to further analysis.</p>
 <span class='co'># Remember that grouping should _not_ be done on</span>
 <span class='co'># the `flow_aggregation_point`, `Flow`, or `ledger_side` columns.</span>
 <span class='no'>grouped_iea_df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Country</span>, <span class='no'>Method</span>, <span class='no'>Energy.type</span>, <span class='no'>Last.stage</span>, <span class='no'>Year</span>, <span class='no'>Product</span>)
+  <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/group_by.html'>group_by</a></span>(<span class='no'>Country</span>, <span class='no'>Method</span>, <span class='no'>Energy.type</span>, <span class='no'>Last.stage</span>, <span class='no'>Year</span>, <span class='no'>Product</span>)
 <span class='co'># unbalanced will not be balanced, because the IEA data are not in perfect balance.</span>
 <span class='co'># Because we have grouped by key variables, </span>
 <span class='co'># `calc_tidy_iea_df_balances` provides energy balances </span>

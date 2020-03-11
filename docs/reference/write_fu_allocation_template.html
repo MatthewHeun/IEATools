@@ -160,7 +160,7 @@ This function saves an Excel workbook to <code>path</code> that contains an anal
   <span class='kw'>energy_row_font_color_eiou</span> <span class='kw'>=</span> <span class='st'>"#918700"</span>,
   <span class='kw'>energy_row_shading_color_eiou</span> <span class='kw'>=</span> <span class='st'>"#FCFCAB"</span>,
   <span class='kw'>dont_fill_shading_color</span> <span class='kw'>=</span> <span class='st'>"#A8A8A8"</span>,
-  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>overwrite_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>n_allocation_rows</span> <span class='kw'>=</span> <span class='fl'>3</span>,
   <span class='kw'>.rownum</span> <span class='kw'>=</span> <span class='st'>".rownum"</span>
 )</pre>
@@ -260,8 +260,8 @@ Default is "<code>#104273</code>", a light yellow color.</p></td>
 Default is "<code>#A8A8A8</code>", a medium gray color.</p></td>
     </tr>
     <tr>
-      <th>overwrite</th>
-      <td><p>a boolean that tells whether an existing file at <code>path</code> will be overwritten. Default is "<code>FALSE</code>".
+      <th>overwrite_file</th>
+      <td><p>a boolean that tells whether an existing file at <code>path</code> will be overwritten. Default is <code>FALSE</code>.
 If <code>path</code> already exists and <code>overwrite = FALSE</code>, an error is given.</p></td>
     </tr>
     <tr>
@@ -297,7 +297,7 @@ approximates flow through the energy conversion chain.</p></li>
 <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='specify_all.html'>specify_all</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='fu_allocation_template.html'>fu_allocation_template</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>write_fu_allocation_template</span>(<span class='no'>f</span>)</div><div class='output co'>#&gt; [1] "/var/folders/_z/j2bgrwl576b_ht2jnqntvnm00000gq/T//Rtmpe9jSJv/file13b7e74656730.xlsx"</div><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='no'>f</span>)) {
+  <span class='fu'>write_fu_allocation_template</span>(<span class='no'>f</span>)</div><div class='output co'>#&gt; [1] "/var/folders/y7/gl7nw9bd61g2js7pjpkhqr_40000gq/T//Rtmpsdd875/filef5b02d9835c2.xlsx"</div><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='no'>f</span>)) {
   <span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.remove</a></span>(<span class='no'>f</span>)
 }</div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>

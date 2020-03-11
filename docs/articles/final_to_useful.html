@@ -87,7 +87,7 @@
       <h1>Final to Useful Analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-03-08</h4>
+            <h4 class="date">2020-03-11</h4>
       
       
       <div class="hidden name"><code>final_to_useful.Rmd</code></div>
@@ -116,7 +116,7 @@
 <span id="cb1-2"><a href="#cb1-2"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(IEATools)</span>
 <span id="cb1-3"><a href="#cb1-3"></a>Tidy_iea_data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb1-4"><a href="#cb1-4"></a><span class="st">  </span><span class="kw"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="st">  </span><span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/reexports.html">glimpse</a></span>()</span>
 <span id="cb1-6"><a href="#cb1-6"></a><span class="co">#&gt; Observations: 413</span></span>
 <span id="cb1-7"><a href="#cb1-7"></a><span class="co">#&gt; Variables: 11</span></span>
 <span id="cb1-8"><a href="#cb1-8"></a><span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span></span>
@@ -135,7 +135,7 @@
 <span id="cb2-2"><a href="#cb2-2"></a><span class="st">  </span><span class="kw"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="st">  </span><span class="kw"><a href="../reference/fu_allocation_template.html">fu_allocation_template</a></span>()</span>
 <span id="cb2-4"><a href="#cb2-4"></a>FU_allocation_template <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="st">  </span><span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/reexports.html">glimpse</a></span>()</span>
 <span id="cb2-6"><a href="#cb2-6"></a><span class="co">#&gt; Observations: 705</span></span>
 <span id="cb2-7"><a href="#cb2-7"></a><span class="co">#&gt; Variables: 15</span></span>
 <span id="cb2-8"><a href="#cb2-8"></a><span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span></span>
@@ -168,7 +168,7 @@
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>Eta_fu_template &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_fu_allocation_data.html">load_fu_allocation_data</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="st">  </span><span class="kw"><a href="../reference/eta_fu_template.html">eta_fu_template</a></span>()</span>
 <span id="cb4-3"><a href="#cb4-3"></a>Eta_fu_template <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="st">  </span><span class="kw"><a href="https://rdrr.io/pkg/dplyr/man/reexports.html">glimpse</a></span>()</span>
 <span id="cb4-5"><a href="#cb4-5"></a><span class="co">#&gt; Observations: 268</span></span>
 <span id="cb4-6"><a href="#cb4-6"></a><span class="co">#&gt; Variables: 11</span></span>
 <span id="cb4-7"><a href="#cb4-7"></a><span class="co">#&gt; $ Country        &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"…</span></span>
