@@ -4,10 +4,12 @@
 \alias{extract_TK}
 \title{Extract temperatures (in Kelvin) from heat types}
 \usage{
-extract_TK(heat_types)
+extract_TK(heat_types, sep = ".")
 }
 \arguments{
 \item{heat_types}{a string vector of heat types to be converted to temperatures}
+
+\item{sep}{the separator between parts of the \code{heat_types} string. Default is ".".}
 }
 \value{
 a numeric vector of same length as \code{heat_types} containing temperatures in Kelvin.

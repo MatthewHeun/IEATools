@@ -4,8 +4,12 @@
 \alias{specify_interface_industries}
 \title{Specify interface industries}
 \usage{
-specify_interface_industries(.tidy_iea_df, flow = "Flow",
-  int_industries = IEATools::interface_industries, product = "Product")
+specify_interface_industries(
+  .tidy_iea_df,
+  flow = "Flow",
+  int_industries = IEATools::interface_industries,
+  product = "Product"
+)
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
@@ -25,7 +29,7 @@ An interface industry is one that moves energy carriers into or out of a country
 When \code{Flow} is any of the interface industries, we need to be more specific.
 If we don't separate these \code{Flow}s by \code{Product}, we run into trouble with
 upstream swims (e.g., all \code{Product}s are produced even if only one is needed) and
-embodied energy calculations (many types of energy are embodied, even if only one sould be).
+embodied energy calculations (many types of energy are embodied, even if only one should be).
 This function adds a suffix \code{(Product)} to each of these interface industries.
 }
 \details{

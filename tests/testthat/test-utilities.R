@@ -36,9 +36,16 @@ test_that("extract_TK() works as expected", {
   heats1 <- c("HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C", "LTH.-20.C")
   expect_equal(extract_TK(heats1), c(600, 200, 100, 20, -20) + 273.15)
   
+  expect_equal(extract_TK("MTH.500.K"), 500)
   expect_true(is.na(extract_TK("LMH.20.C")))
   expect_equal(extract_TK(c("MMH.20.C", "HTH.600.C")), c(NA_real_, 600 + 273.15))
+  expect_true(is.na(extract_TK("HTH.600.P"))) # unknown unit
   expect_true(is.na(extract_TK("MTH.100.J")))
+  expect_true(is.na(extract_TK("MTH.XXX.K"))) # bogus temperature numbers
+  expect_true(is.na(extract_TK("MTH.ccc.C")))
+  
+  expect_true(is.na(extract_TK("")))
+  expect_true(is.na(extract_TK("HTH")))
   
   expect_equal(extract_TK("HTH.600.F"), 588.70555556)
   expect_equal(extract_TK("STH.600.F"), 588.70555556)
@@ -49,6 +56,16 @@ test_that("extract_TK() works as expected", {
   expect_equal(extract_TK("LTH.-79.2.C"), 193.95)
   expect_equal(extract_TK("LTH.1089.15.K"), 1089.15)
   expect_equal(extract_TK("LTH.-40.F"), extract_TK("LTH.-40.C"))
+  
+  # Build a vector that has well-formed and mal-formed strings.
+  weird_temps <- c("HTH.-40.0.F", "MTH.70.K", "ZHH.70.K")
+  kelvins <- extract_TK(weird_temps)
+  expect_equal(kelvins[[1]], -40.0 + 273.15)
+  expect_equal(kelvins[[2]], 70)
+  expect_true(is.na(kelvins[[3]]))
+  
+  # Try with malformed unit string
+  expect_true(is.na(extract_TK("HTH.600.CC")))
 })
 
 test_that("carnot_efficiency works as expected", {
@@ -119,3 +136,35 @@ test_that("tp_products() works as expected", {
   expect_equal(length(names(supply_eiou)), 0)
 })
 
+
+test_that("sample_iea_file_path works correctly", {
+  expect_true(sample_iea_data_path() %>% endsWith("GH-ZA-ktoe-Extended-Energy-Balances-sample-2019.csv"))
+  expect_true(endsWith(sample_iea_data_path(2018), "GH-ZA-ktoe-Extended-Energy-Balances-sample-2018.csv"))
+  expect_error(sample_iea_data_path(2017), "Only 2018 and 2019 are supported in sample_iea_data_path()")
+})
+
+
+test_that("sample_fu_allocation_table_path works correctly", {
+  expect_true(sample_fu_allocation_table_path() %>% endsWith("GH-ZA-Allocation-sample-2019.xlsx"))
+  expect_true(endsWith(sample_fu_allocation_table_path(2018), "GH-ZA-Allocation-sample-2018.xlsx"))
+  expect_error(sample_fu_allocation_table_path(2017), "Only 2018 and 2019 are supported in sample_fu_allocation_table_path")
+})
+
+
+test_that("sample_eta_fu_table_path works correctly", {
+  expect_true(sample_eta_fu_table_path() %>% endsWith("GH-ZA-Efficiency-sample-2019.xlsx"))
+  expect_true(endsWith(sample_eta_fu_table_path(2018), "GH-ZA-Efficiency-sample-2018.xlsx"))
+  expect_error(sample_eta_fu_table_path(2017), "Only 2018 and 2019 are supported in sample_eta_fu_table_path")
+})
+
+
+test_that("adjacent_rownums works as expected", {
+  DF <- data.frame(C1 = c("A", "B", "C"), stringsAsFactors = FALSE)
+  expect_equal(adjacent_rownums(DF, col_name = "C1", entries = c("A", "B")), c(1, 2))
+  expect_equal(adjacent_rownums(DF, col_name = "C1", entries = c("B", "C")), c(2, 3))
+  # When we can't find adjacent entries, get NULL back.
+  expect_true(is.null(adjacent_rownums(DF, col_name = "C1", entries = c("A", "Z"))))
+  # Try when there are multiple matches.
+  DF2 <- data.frame(C1 = c("A", "B", "A", "B"), stringsAsFactors = FALSE)
+  expect_error(adjacent_rownums(DF2, col_name = "C1", entries = c("A", "B")), "multiple instances of adjacent entries in adjacent_rownums")
+})

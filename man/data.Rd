@@ -7,6 +7,6 @@
 .data
 }
 \description{
-See \code{rlang::\link[rlang]{.data}} for details.
+See \link[rlang:.data]{rlang::.data} for details.
 }
 \keyword{internal}

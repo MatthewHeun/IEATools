@@ -44,7 +44,7 @@
 #' @param arrange a boolean telling whether to arranged the rows and columns 
 #'        (using `arrange_iea_fu_allocation_template()`) before returning. 
 #'        Default is `TRUE`.
-#' @param .value the name of a temproary value column added to `.tidy_iea_df`. 
+#' @param .value the name of a temporary value column added to `.tidy_iea_df`. 
 #'        A `.value` column must not be present in `.tidy_iea_df`. Default is "`.value`".
 #'
 #' @return a data frame containing the EIOU template
@@ -189,7 +189,7 @@ fu_allocation_template <- function(.tidy_iea_df,
 #' Other orderings can be specified with the `fap_flow_order` and `ef_product_order` arguments.
 #' It sorts columns (left-to-right) in the order of energy flow through the energy conversion chain.
 #' 
-#' Whe sorting rows, 
+#' When sorting rows, 
 #' the `flow_allocation_point`, `flow`, and `product` columns are considered. 
 #' Internally, this function figures out which columns are metadata columns
 #' and groups on those columns before applying the row ordering.
@@ -211,7 +211,7 @@ fu_allocation_template <- function(.tidy_iea_df,
 #' @param ledger_side the ledger side column in `.fu_allocation_template`. Default is "`Ledger.side`".
 #' @param flow_aggregation_point the flow aggregation point column in `.fu_allocation_template`. Default is "`Flow.aggregation.point`".
 #' @param ef_product the name of the final energy column in `.fu_allocation_template`. Default is "`Ef.product`".
-#' @param machine the name of the machine columnin `.fu_allocation_template`. Default is "`Machine`".
+#' @param machine the name of the machine column in `.fu_allocation_template`. Default is "`Machine`".
 #' @param eu_product the name of the useful energy product column in `.fu_allocation_template`. Default is "`Eu.product`".
 #' @param destination the name of the destination column in `.fu_allocation_template`. Default is "`Destination`".
 #' @param unit the name of the unit in `.fu_allocation_template`. Default is "`Unit`".
@@ -326,7 +326,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #'   Analysts may fill those cells, but it is not necessary to do so.
 #' * Blue cells indicate final demand energy consumption.
 #' * Yellow cells indicate energy industry own use energy consumption.
-#' * Rows are written in same order as EIA extended energy balance data.
+#' * Rows are written in same order as IEA extended energy balance data.
 #' * Columns are written in a reasonable order, namely that left-to-right order
 #'   approximates flow through the energy conversion chain.
 #'
@@ -360,10 +360,10 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #' @param energy_row_shading_color_eiou a hex string representing the shading color for `e_dot` and `e_dot_perc` energy industry own use rows in the Excel file that is written by this function.
 #'        Default is "`#104273`", a light yellow color.
 #' @param dont_fill_shading_color a hex string representing the shading color for cells that don't require inputs. 
-#'        Default is "`#A8A8A8`", a medim gray color.
-#' @param overwrite a boolean that tells whether an existing file at `path` will be overwritten. Default is "`FALSE`".
+#'        Default is "`#A8A8A8`", a medium gray color.
+#' @param overwrite_file a boolean that tells whether an existing file at `path` will be overwritten. Default is `FALSE`.
 #'        If `path` already exists and `overwrite = FALSE`, an error is given.
-#' @param n_allocation_rows the number of allcation rows to write for each final energy product. Default is `3`.
+#' @param n_allocation_rows the number of allocation rows to write for each final energy product. Default is `3`.
 #' @param .rownum a temporary column created internally. `.rownum` must not exist in `.tidy_iea_df` when `write_fu_allocation_template` is called.
 #'        Default is "`.rownum`".
 #'
@@ -400,7 +400,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
                                          energy_row_font_color_eiou = "#918700",
                                          energy_row_shading_color_eiou = "#FCFCAB", 
                                          dont_fill_shading_color = "#A8A8A8",
-                                         overwrite = FALSE,
+                                         overwrite_file = FALSE,
                                          n_allocation_rows = 3,
                                          .rownum = ".rownum"){
   matsindf::verify_cols_missing(.fu_allocation_template, .rownum)
@@ -512,7 +512,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
   if (!endsWith(path, ".xlsx")) {
     path <- paste0(path, ".xlsx")
   }
-  openxlsx::saveWorkbook(fu_wb, path, overwrite = overwrite)
+  openxlsx::saveWorkbook(fu_wb, path, overwrite = overwrite_file)
   # And return the path
   return(path)
 }
@@ -521,7 +521,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
 #' Load final-to-useful allocation data
 #' 
 #' When performing extending an energy conversion chain from useful energy to final energy, 
-#' allocations of final energy consumption to useful energy catagories are defined by the analyst.  
+#' allocations of final energy consumption to useful energy categories are defined by the analyst.  
 #' The Excel file at `path` contains those allocations.
 #' 
 #' A final-to-useful allocation template can be 
@@ -539,8 +539,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
 #' @examples
 #' # Loads final-to-useful allocation data supplied with the package
 #' load_fu_allocation_data()
-load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocation-sample.xlsx") %>% 
-                                      system.file(package = "IEATools"), 
+load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(), 
                                     fu_allocations_tab_name = "FU Allocations"){
   openxlsx::read.xlsx(path, sheet = fu_allocations_tab_name)
 }
@@ -580,6 +579,7 @@ load_fu_allocation_data <- function(path = file.path("extdata", "GH-ZA-Allocatio
 #' If any read values in the `c_perc` rows are outside of the range 0 <= x <= 1, an error is thrown.
 #'
 #' @param .fu_allocations a data frame containing a completed final-to-useful allocation template for final demand.
+#'        This data frame can be obtained from the function `load_fu_allocation_data()`.
 #' @param T_0 the dead state temperature (in kelvin) for calculation of heat exergy. Default is `298.15` kelvin.
 #' @param sort_by how to sort rows of eta_fu template. 
 #'        Options are (1) by "useful_energy_type" and (2) by "importance". 
@@ -699,7 +699,7 @@ eta_fu_template <- function(.fu_allocations,
     )
   # Now we join the E.dot and C values and calculate the energy flowing into each final-to-useful machine
   input_energy <- dplyr::full_join(c_info, e_dot_info, 
-                                   by = matsindf::everything_except(e_dot_info, e_dot_dest, .symbols = FALSE)) %>%
+                                   by = matsindf::everything_except(e_dot_info, e_dot_dest, .symbols = FALSE)) %>% 
     # There may be cases where the analyst has filled a C value, but there is no corresponding e_dot_dest value.
     # Get rid of those rows.
     dplyr::filter(!is.na(!!as.name(e_dot_dest))) %>% 
@@ -802,10 +802,7 @@ eta_fu_template <- function(.fu_allocations,
       ) %>% 
       magrittr::extract2(.row_order)
   }
-    
-  # The following nearly works, except that the machines are not in descending order of importance as we move down.
-  # Need to set the order of Machine/Eu.product from E.dot_machine.
-  
+
   # Annual format, including blanks for eta_fu and phi_u
   Annual <- dplyr::full_join(input_energy, input_energy_percs, by = matsindf::everything_except(input_energy, e_dot_machine, .symbols = FALSE)) %>% 
     dplyr::mutate(
@@ -830,7 +827,6 @@ eta_fu_template <- function(.fu_allocations,
                   !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc), !!as.name(eta_fu), !!as.name(phi_u)) %>% 
     tidyr::spread(key = .year, value = .value)
   
-  
   # Prepare the outgoing data frame.
   out <- dplyr::full_join(Maxima, Annual, by = matsindf::everything_except(Maxima, maximum_values, .symbols = FALSE)) %>% 
     dplyr::mutate(
@@ -853,6 +849,11 @@ eta_fu_template <- function(.fu_allocations,
   for (i in year_col_indices) {
     out[[i]] <- as.numeric(out[[i]])
   }
+  
+  # Check for errors. If there is a problem somewhere, 
+  # we will obtain NA in the Machine column.
+  assertthat::assert_that(!any(out[[machine]] %>% is.na()), msg = "At least one row of out has NA in the machine column in eta_fu_template.
+                          Double-check Machine and Destination names.")
   
   return(out)
   
@@ -1048,15 +1049,15 @@ eta_fu_template <- function(.fu_allocations,
 #' The template should be created by `eta_fu_template()`.
 #'
 #' @param .eta_fu_template a template for final-to-useful energy efficiency values, generated by `eta_fu_template()`.
-#' @param path the file path where the template will be written
+#' @param path the file path where the eta_fu template will be written
 #' @param eta_fu_tab_name the name of the final-to-useful efficiency tab. Default is "FU etas".
 #' @param overwrite_file a logical telling whether to overwrite a file, if it already exists. Default is `FALSE`.
 #' @param overwrite_fu_eta_tab a logical telling whether to overwrite the final-to-useful efficiency tab, if it already exists. Default is `FALSE`.
 #' @param eta_fu the name of the final-to-useful efficiency rows in `.eta_fu_template`. Default is "eta.fu".
 #' @param e_dot_machine a string identifying energy flow into final-to-useful machines. Default is "E.dot_machine".
-#' @param perc the string identifying percentage quantities. Default is "\[\%\]".
-#' @param e_dot_machine_perc a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine \[\%\]".
-#' @param maximum_values a string identifying the maximum values column in the outgoing template. Default is "Maxmimum.values".
+#' @param perc the string identifying percentage quantities. Default is "\[%\]".
+#' @param e_dot_machine_perc a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine \[%\]".
+#' @param maximum_values a string identifying the maximum values column in the outgoing template. Default is "Maximum.values".
 #' @param header_row_font_color a hex string representing the font color for the header row in the Excel file that is written by this function.
 #'        Default is "#FFFFFF", white.
 #' @param header_row_shading_color a hex string representing the shading color for the header row in the Excel file that is written by this function.
@@ -1080,7 +1081,7 @@ eta_fu_template <- function(.fu_allocations,
 #' @param blank_shading_color a hex string representing the shading color for blank cells in the `maximum_values` column.
 #'        Default is "#808080".
 #' @param quantity the name of the quantity column in `.eta_fu_template`. Default is "Quantity".
-#' @param e_dot_machine_max_perc the name of the rows that give maximum percentages. Default is "E.dot_machine_max \[\%\]".
+#' @param e_dot_machine_max_perc the name of the rows that give maximum percentages. Default is "E.dot_machine_max \[%\]".
 #' @param .rownum the name of a temporary column containing row numbers. Default is ".rownum". 
 #'
 #' @return the `path` argument
@@ -1246,8 +1247,7 @@ write_eta_fu_template <- function(.eta_fu_template,
 #'
 #' @examples
 #' load_eta_fu_data()
-load_eta_fu_data <- function(path = file.path("extdata", "GH-ZA-Efficiency-sample.xlsx") %>% 
-                                      system.file(package = "IEATools"), 
+load_eta_fu_data <- function(path = sample_eta_fu_table_path(), 
                                     eta_fu_tab_name = "FU etas"){
   openxlsx::read.xlsx(path, sheet = eta_fu_tab_name)
 }

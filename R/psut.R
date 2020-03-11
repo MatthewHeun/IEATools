@@ -16,9 +16,9 @@
 #' @param e_dot the name of the energy flow rate column in `.tidy_iea_df`. Default is "`E.dot`".
 #' @param unit the name of the unit column in "`.tidy_iea_df`". Default is "`Unit`".
 #' @param s_units the name of the unit summation column to be added to `.tidy_iea_df`. Default is "`S_unit`".
-#' @param val the name of a temporary column to be created in `.tidy_iea_df`. Deafult is "`.val`".
-#' @param rowtype the name of a temporary rowype column created in `.tidy_iea_df`. Default is "`rowtype`".
-#' @param coltype the name of a temporary colype column created in `.tidy_iea_df`. Default is "`coltype`".
+#' @param val the name of a temporary column to be created in `.tidy_iea_df`. Default is "`.val`".
+#' @param rowtype the name of a temporary rowtype column created in `.tidy_iea_df`. Default is "`rowtype`".
+#' @param coltype the name of a temporary coltype column created in `.tidy_iea_df`. Default is "`coltype`".
 #'
 #' @return a data frame containing grouping variables and a new column of unit summation matrices called `s_unit`.
 #'

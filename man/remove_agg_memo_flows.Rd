@@ -4,10 +4,14 @@
 \alias{remove_agg_memo_flows}
 \title{Remove aggregation and memo rows from data frames of IEA data}
 \usage{
-remove_agg_memo_flows(.iea_df, flow = "Flow", product = "Product",
+remove_agg_memo_flows(
+  .iea_df,
+  flow = "Flow",
+  product = "Product",
   agg_flows = IEATools::aggregation_flows,
   memo_flow_prefixes = IEATools::memo_aggregation_flow_prefixes,
-  memo_product_prefixes = IEATools::memo_aggregation_product_prefixes)
+  memo_product_prefixes = IEATools::memo_aggregation_product_prefixes
+)
 }
 \arguments{
 \item{.iea_df}{a data frame of IEA data}
@@ -31,14 +35,13 @@ Sometimes, it is convenient to remove those rows.
 This function does so, using default identifying strings for aggregations and memos.
 }
 \details{
-Note that the IEA data somtimes includes a variable number of spaces
+Note that the IEA data sometimes includes a variable number of spaces
 before the "Memo: " string.
 There are several places where trailing spaces are found, such as "Nuclear industry ".
 This function strips all leading and trailing spaces in the \code{Flow} and \code{Product} columns.
 }
 \examples{
-file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
-  system.file(package = "IEATools") \%>\% 
+sample_iea_data_path() \%>\% 
   iea_df() \%>\%
   rename_iea_df_cols() \%>\% 
   remove_agg_memo_flows()

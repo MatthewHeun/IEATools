@@ -180,7 +180,7 @@ If we don't separate these `Flow`s by `Product`, we run into trouble
 in the PSUT framework:
 
 * upstream swims will result in all `Product`s being produced even if only one is needed and
-* embodied energy calculations will result in many types of energy being embodied, even if only one sould be.
+* embodied energy calculations will result in many types of energy being embodied, even if only one should be.
 
 To solve these problems, `specify_interface_industries()`
 adds a suffix ` (Product)` to each of these interface industries.

@@ -4,12 +4,21 @@
 \alias{tidy_iea_df}
 \title{Creates a tidy IEA data frame}
 \usage{
-tidy_iea_df(.iea_df, year = "Year", e_dot = "E.dot",
-  method = "Method", last_stage = "Last.stage", country = "Country",
+tidy_iea_df(
+  .iea_df,
+  year = "Year",
+  e_dot = "E.dot",
+  method = "Method",
+  last_stage = "Last.stage",
+  country = "Country",
   ledger_side = "Ledger.side",
   flow_aggregation_point = "Flow.aggregation.point",
-  energy_type = "Energy.type", unit = "Unit", flow = "Flow",
-  product = "Product", remove_zeroes = TRUE)
+  energy_type = "Energy.type",
+  unit = "Unit",
+  flow = "Flow",
+  product = "Product",
+  remove_zeroes = TRUE
+)
 }
 \arguments{
 \item{.iea_df}{a IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
@@ -52,8 +61,7 @@ make an IEA data frame tidy.
 Default argument values assume that \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}} has been called on \code{.iea_df}.
 }
 \examples{
-file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") \%>\% 
-  system.file(package = "IEATools") \%>\% 
+sample_iea_data_path() \%>\% 
   iea_df() \%>\%
   rename_iea_df_cols() \%>\% 
   remove_agg_memo_flows() \%>\% 

@@ -56,7 +56,7 @@
 #' @param resources a string identifying resource industries to be added to `.tidy_iea_df`. 
 #'        Default is "`Resources`".
 #' @param production a string identifying production in the flow column. Default is "`Production`".
-#' @param e_dot the name of the energy column in `.tidy_eia_df`. Default is "`E.dot`".
+#' @param e_dot the name of the energy column in `.tidy_iea_df`. Default is "`E.dot`".
 #' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
 #'
 #' @return `.tidy_iea_df` with adjusted production information for primary energy 
@@ -235,7 +235,7 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' When `Flow` is any of the interface industries, we need to be more specific.
 #' If we don't separate these `Flow`s by `Product`, we run into trouble with
 #' upstream swims (e.g., all `Product`s are produced even if only one is needed) and
-#' embodied energy calculations (many types of energy are embodied, even if only one sould be).
+#' embodied energy calculations (many types of energy are embodied, even if only one should be).
 #' This function adds a suffix `(Product)` to each of these interface industries.
 #' 
 #' Note that "`Production`" also needs to be specified, 
@@ -517,7 +517,7 @@ tp_sinks_sources <- function(.tidy_iea_df,
 #' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "`Ledger.side`".
 #' @param consumption a string identifying the consumption side of the ledger. Default is "`Consumption`".
 #' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
-#' @param non_energy_flow_agg_point the name of the aggregation point where transforamtion process sinks will be reassigned. Default is "`Non-energy use`".
+#' @param non_energy_flow_agg_point the name of the aggregation point where transformation process sinks will be reassigned. Default is "`Non-energy use`".
 #' @param transformation_processes a string that identifies transformation processes in the `flow_aggregation_point` column. Default is "`Transformation processes`".
 #' @param eiou a string that identifies energy industry own use in the `flow_aggregation_point` column. Default is "`Energy industry own use`".
 #' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".

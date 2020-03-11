@@ -1,20 +1,114 @@
-#' Load IEA data from an extended enegy balances csv file
+#' Perform quality assurance on a raw IEA data file
+#' 
+#' When starting to work with an IEA data file, 
+#' it is important to verify its integrity.
+#' This function performs some validation tests on `.iea_file`.
+#' 
+#' At this time, the only verification step performed by this function
+#' is confirming that every country has the same flow and product rows in the same order.
+#' The approach is to add a per-country row number column to the data frame and delete all the data in year columns.
+#' Then, the resulting data frame is queried for duplicate row numbers.
+#' If none are found, the function returns the data frame read from the file.
+#' 
+#' Note that `.iea_file` is read internally with [data.table::fread()] *without* stripping white space.
 #'
-#' This function reads an IEA extended energy balances file and
-#' converts it to a data frame with appropriately-labelled columns.
+#' @param .iea_file the path to the raw IEA data file for which quality assurance is desired
+#' @param text a string containing text to be parsed as an IEA file.
+#' @param country the name of the country column. Default is "COUNTRY".
+#' @param flow the name of the flow column. Default is "FLOW".
+#' @param product the name of the product column. Default is "PRODUCT".
+#' @param rowid the name of a row number column added internally to `.iea_file` per country. Default is "rowid".
+#'
+#' @return `TRUE` if `.iea_file` passes all checks. Errors are thrown when a verification step fails.
+#' 
+#' @export
+#'
+#' @examples
+#' library(magrittr)
+#' sample_iea_data_path() %>% 
+#'  iea_file_OK()
+iea_file_OK <- function(.iea_file = NULL, 
+                        text = NULL,
+                        country = "COUNTRY",
+                        flow = "FLOW", 
+                        product = "PRODUCT", 
+                        rowid = "rowid") {
+  assertthat::assert_that(xor(is.null(.iea_file), is.null(text)), 
+                          msg = "need to supply one but not both of .iea_file and text arguments to iea_file_OK")
+  # Create a data frame from the file or the text.
+  if (!is.null(.iea_file)) {
+    DF <- data.table::fread(file = .iea_file, strip.white = FALSE, header = TRUE, sep = ",")
+  } else {
+    # text has been provided, probably for testing purposes.
+    DF <- data.table::fread(text = text, strip.white = FALSE, header = TRUE, sep = ",")
+  }
+  # Verify that each country has the same order of flows and products
+  flow_product <- DF %>% 
+    # Group by country so that adding row numbers is done per-country
+    dplyr::group_by(!!as.name(country)) %>% 
+    # Add row numbers
+    dplyr::do(
+      tibble::rowid_to_column(.data, var = rowid)
+    ) %>% 
+    dplyr::ungroup() %>% 
+    # Keep only rowid, flow, and product. This removes COUNTRY and years from the data frame
+    dplyr::select(!!as.name(rowid), !!as.name(flow), !!as.name(product)) %>% 
+    # In this context, unique() gives unique combinations of per-country row number, flow, product triples.
+    # If all countries have the same order of things, 
+    # all countries should have the same row number, flow, product triples, and
+    # this call to unique() will give the same number of rows as exist one country.
+    unique()
+  
+  # After having obtained the unique (per-country) row number, flow, product triples,
+  # we see if there are any duplicated row numbers.
+  # If all countries have the same row number, flow, product triples, 
+  # there will be no duplicated row numbers.
+  flow_product %>% 
+    # Look at the rowid column only
+    dplyr::select(!!as.name(rowid)) %>% 
+    # duplicated() returns TRUE for any duplicated values
+    duplicated() %>% 
+    # Any tells us if there are any duplicated values (TRUEs).
+    # We want all FALSE (no duplicated values).
+    any() %>% 
+    # If everything is FALSE (what we want), any() will return FALSE.
+    # But we want a good result from this function to return TRUE, 
+    # so we reverse the logic with not().
+    magrittr::not()
+}
+
+
+#' Load IEA data from an extended energy balances .csv file
+#'
+#' This function reads an IEA extended energy balances .csv file and
+#' converts it to a data frame with appropriately-labeled columns.
 #' One of `iea_file` or `text` must be specified, but not both.
 #' The first line of `iea_file` or `text`
 #' is expected to start with `expected_start_1st_line`, and
 #' the second line is expected to start with `expected_2nd_line_start`, and
 #' it may have any number of commas appended.
 #' (The extra commas might come from opening and re-saving the file in Excel.)
-#' If those conditions are not met, execution is halted, and
-#' an error message is given.
+#' Alternatively, the file may have a first line of `expected_simple_start`.
+#' If none of these conditions are not met, execution is halted, and
+#' an error message is provided.
+#' Files should have a return character at the end of their final line.
 #' 
 #' This function is designed to work even as more years are added
 #' in columns at the right of `.iea_file`, 
-#' because column names in the output are constructed from the first two lines of `iea_file` 
+#' because column names in the output are constructed from the header line(s) of `.iea_file` 
 #' (which contain years and country, flow, product information).
+#' 
+#' In the IEA's data, some entries in the "FLOW" column are quoted to avoid creating too many columns. 
+#' For example, "Paper, pulp and printing" is quoted in the raw .csv file: 
+#' "      Paper, pulp and printing".
+#' Internally, this function uses [data.table::fread()], which, unfortunately, does not
+#' strip leading and trailing white space from quoted entries.
+#' So the function uses [base::trimws()] to finish the job.
+#' 
+#' When the IEA includes estimated data for a year, 
+#' the column name of the estimated year includes an "E" appended.
+#' (E.g., "2017E".) 
+#' This function eliminates estimated columns.
 #' 
 #' The IEA data have indicators for 
 #' not applicable values ("`x`") and for
@@ -30,36 +124,45 @@
 #' "`x`" (not applicable) in the IEA data would be converted to `0` in `R`.
 #' "`NULL`" would not be used.
 #' However, the IEA are not consistent with their coding. 
-#' In some places "`..`" is used for not applicable values
-#' (e.g., World Anthracite supply in 1971). 
-#' World Anthracite supply in 1971 is actually not applicable, because Anthracite was
-#' classified under "Hard coal (if no detail)" in 1971.
+#' In some places "`..`" (indicating unavailable) is used for not applicable values, 
+#' e.g., World Anthracite supply in 1971. 
+#' (World Anthracite supply in 1971 is actually not applicable, because Anthracite was
+#' classified under "Hard coal (if no detail)" in 1971.)
 #' On the other hand, "`..`" is used for data in the most recent year 
 #' when those data have not yet been incorporated into the database. 
-#' In the face of IEA’s inconsistencies, 
+#' In the face of IEA's inconsistencies, 
 #' the only rational way to proceed is to convert 
-#' both "`x`" and "`..`" to "`0`"
-#' in this function.
+#' both "`x`" and "`..`" in the IEA files to "`0`" in the output data frame
+#' from this function.
 #' Furthermore, confidential data (coded by the IEA as "`c`") is also interpreted as `0`.
 #' (What else can we do?)
 #' 
 #' The data frame returned from this function is not ready to be used in R, 
 #' because rows are not unique.
-#' To further prepre the data frame for use, call `augment_iea_data()`,
-#' passing the output of this function in the `.iea_df` argument of `augment_iea_data()`.
+#' To further prepare the data frame for use, call [augment_iea_df()],
+#' passing the output of this function to the `.iea_df` argument of [augment_iea_df()].
 #'
 #' @param .iea_file a string containing the path to a .csv file of extended energy balances from the IEA.
 #'        Default is the path to a sample IEA file provided in this package.
 #' @param text a character string that can be parsed as IEA extended energy balances. 
 #'        (This argument is useful for testing.)
-#' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is "`,,TIME`".
-#' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "`COUNTRY,FLOW,PRODUCT`".
+#' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is ",,TIME".
+#' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "COUNTRY,FLOW,PRODUCT".
+#' @param expected_simple_start the expected starting of the first line of `iea_file`. Default is the value of `expected_2nd_line_start`.
+#'        Note that `expected_simple_start` is sometimes encountered in data supplied by the IEA.
+#'        Furthermore, `expected_simple_start` could be the format of the file when somebody "helpfully" fiddles with 
+#'        the raw data from the IEA.
+#' @param flow the name of the flow column, entries of which are stripped of leading and trailing white space. Default is "FLOW".
 #' @param missing_data a string that identifies missing data. Default is "`..`".
-#'        Entries of "`missing_data`" are coded as `0`` in output.
-#' @param not_applicable_data a string that identifies not-applicable data.
-#'        Entries of "`not_applicable_data`" are coded as `0` in output.
-#' @param confidential_data a string that identifies confidential data.
-#'        Entries of "`confidential_data`" are coded as `0` in output.
+#'        Entries of `missing_data` are coded as `0`` in output.
+#' @param not_applicable_data a string that identifies not-applicable data. Default is "x".
+#'        Entries of `not_applicable_data` are coded as `0` in output.
+#' @param confidential_data a string that identifies confidential data. Default is "c".
+#'        Entries of `confidential_data` are coded as `0` in output.
+#' @param estimated_year a string that identifies an estimated year. 
+#'        Default is "E".
+#'        E.g., in "2014E", the "E" indicates that data for 2014 are estimated.
+#'        Data from estimated years are removed from output.
 #'
 #' @return a data frame containing the IEA extended energy balances data
 #' 
@@ -67,67 +170,113 @@
 #' 
 #' @examples 
 #' # Original file format
-#' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43")
+#' iea_df(text = paste0(",,TIME,1960,1961\n",
+#'                      "COUNTRY,FLOW,PRODUCT\n",
+#'                      "World,Production,Hard coal (if no detail),42,43"))
 #' # With extra commas on the 2nd line
-#' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal,42,43")
+#' iea_df(text = paste0(",,TIME,1960,1961\n",
+#'                      "COUNTRY,FLOW,PRODUCT,,,\n",
+#'                      "World,Production,Hard coal (if no detail),42,43"))
+#' # With a clean first line
+#' iea_df(text = paste0("COUNTRY,FLOW,PRODUCT,1960,1961\n",
+#'                      "World,Production,Hard coal (if no detail),42,43"))
 iea_df <- function(.iea_file = NULL, 
                    text = NULL, 
                    expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
-                   missing_data = "..", not_applicable_data = "x", confidential_data = "c"){
-  assertthat::assert_that(xor(is.null(.iea_file), is.null(text)), 
-                          msg = "need to supply one but not both of iea_file and text arguments to iea_df")
+                   expected_simple_start = expected_2nd_line_start,
+                   flow = "FLOW",
+                   missing_data = "..", not_applicable_data = "x", confidential_data = "c", 
+                   estimated_year = "E"){
+  assertthat::assert_that(xor(!is.null(.iea_file), !is.null(text)), 
+                          msg = "need to supply only one of .iea_file or text arguments to iea_df")
   if (!is.null(.iea_file)) {
     conn <- file(.iea_file, open = "rt") # open file connection
   } else {
     # text has been provided, probably for testing purposes.
     conn <- textConnection(text)
   }
-  header <- conn %>% readLines(n = 2) # read header
-  close(conn)
-  # Check whether header has the form we expect.
-  assertthat::assert_that(length(header) == 2, msg = "couldn't read 2 lines in iea_df")
-  if (header[[2]] %>% startsWith(expected_2nd_line_start) & header[[2]] %>% endsWith(",")) {
-    # The file may have been opened in Excel and resaved.
-    # When that occurs, many commas are appended to the 2nd line.
-    # Strip out these commas before proceeding further.
-    # The pattern ,*$ means "match any number (*) of commas (,) at the end of the line ($)".
-    header[[2]] <- gsub(pattern = ",*$", replacement = "", header[[2]])
-  }
-  assertthat::assert_that(header[[1]] %>% startsWith(expected_1st_line_start) & header[[2]] == expected_2nd_line_start, 
-                          msg = paste0("In iea_df, input data didn't start with '", expected_1st_line_start, 
-                                       "' or second line didn't start with '", expected_2nd_line_start, "'")) 
-  if (!is.null(.iea_file)) {
-    # Slurp the file. This slurping ignores the header, which fread deems to be the first 2 lines.
-    # Note that I'm using data.table::fread at the recommendation of
-    # https://statcompute.wordpress.com/2014/02/11/efficiency-of-importing-large-csv-files-in-r/
-    # which indicates this function is significantly faster than other options.
-    IEAData_noheader <- data.table::fread(file = .iea_file, header = FALSE, sep = ",", skip = 2)
-  } else {
-    IEAData_noheader <- data.table::fread(text = text, header = FALSE, sep = ",", skip = 2)
-  }
-  # At this point, the IEAData_noheader data frame has default (meaningless) column names, V1, V2, V3, ...  
-  # Create column names from the header lines that we read previously.
-  # The code here should be robust to adding more years through time,
-  # because it simply replaces the first 3 items of the first line 
-  # with appropriate values from the 2nd line.
-  colnames <- gsub(pattern = expected_1st_line_start, replacement = expected_2nd_line_start, header[[1]]) %>% 
-    strsplit(",") %>% 
-    unlist()
-  IEAData_withheader <- IEAData_noheader %>% 
-    magrittr::set_names(colnames)
   
+  # Check if the first line has the simple format
+  first_two_lines <- conn %>% readLines(n = 2)
+  close(conn)
+  assertthat::assert_that(length(first_two_lines) == 2, msg = "couldn't read 2 lines in iea_df")
+  first_line <- first_two_lines[[1]]
+  second_line <- first_two_lines[[2]]
+  # Ensure that we have an expected format for the first line or two in first_two_lines.
+  assertthat::assert_that(first_line %>% startsWith(expected_simple_start) | 
+                            (first_line %>% startsWith(expected_1st_line_start) & second_line %>% startsWith(expected_2nd_line_start)), 
+                          msg = paste0(".iea_file didn't start with '",
+                                       expected_simple_start,
+                                       "' or '",
+                                       expected_1st_line_start,
+                                       "\n",
+                                       expected_2nd_line_start,
+                                       "'."))
+  if (first_line %>% startsWith(expected_simple_start)) {
+    # We have the simple start to the file, so we can assume a one-line header.
+    if (!is.null(.iea_file)) {
+      IEAData_withheader <- data.table::fread(file = .iea_file, header = TRUE, sep = ",")
+    } else {
+      IEAData_withheader <- data.table::fread(text = text, header = TRUE, sep = ",")
+    }
+  } else if (first_line %>% startsWith(expected_1st_line_start) & 
+             second_line %>% startsWith(expected_2nd_line_start)) {
+    # We have the complicated start to the file, so go through some additional work to apply the proper header
+    # to the file.
+    if (second_line %>% endsWith(",")) {
+      # The file may have been opened in Excel and resaved.
+      # When that occurs, many commas are appended to the 2nd line.
+      # Strip out these commas before proceeding further.
+      # The pattern ,*$ means "match any number (*) of commas (,) at the end of the line ($)".
+      second_line <- sub(pattern = ",*$", replacement = "", second_line)
+    }
+    if (!is.null(.iea_file)) {
+      # Slurp the file. This slurping ignores the header, which we know are the first 2 lines.
+      # Note that I'm using data.table::fread at the recommendation of
+      # https://statcompute.wordpress.com/2014/02/11/efficiency-of-importing-large-csv-files-in-r/
+      # which indicates this function is significantly faster than other options.
+      IEAData_noheader <- data.table::fread(file = .iea_file, header = FALSE, sep = ",", skip = 2)
+    } else {
+      IEAData_noheader <- data.table::fread(text = text, header = FALSE, sep = ",", skip = 2)
+    }
+    # At this point, the IEAData_noheader data frame has default (meaningless) column names, V1, V2, V3, ...
+    # Create column names from the header lines that we read previously.
+    # The code here should be robust to adding more years through time,
+    # because it simply replaces the first 3 items of the first line
+    # with appropriate values from the 2nd line.
+    cnames <- gsub(pattern = expected_1st_line_start, replacement = expected_2nd_line_start, first_line) %>%
+      strsplit(",") %>%
+      unlist()
+    IEAData_withheader <- IEAData_noheader %>%
+      magrittr::set_names(cnames)
+  }
+  
+  # At this point, IEAData_withheader may have some column names that end in estimated_year.
+  # We should delete those columns.
+  cnames <- colnames(IEAData_withheader)
+  cols_to_delete <- grepl(pattern = paste0(estimated_year, "$"), x = cnames)
+  # cols_to_delete has TRUE for each column to eliminate. But we need true for each column to KEEP.
+  # With [!cols_to_delete], we get the desired effect.
+  IEAData_withheader <- IEAData_withheader[!cols_to_delete]
+  
+  # The data.table::fread function doesn't trim leading and trailing whitespace from quoted entries.
+  # In practice, this means that any FLOW containing a comma may have leading whitespace.
+  # Eliminate this whitespace.
+  IEAData_withheader[[flow]] <- trimws(IEAData_withheader[[flow]])
+
   # Data tagged as not-applicable in the IEA database should be coded as 0.
   # We still want to allow calculations with these data.
   IEAData_withheader[IEAData_withheader == not_applicable_data] <- 0
-  # However, missing data should be tagged as "not available", because calculations 
-  # with unavaiable data should fail.
+  # However, missing data should be tagged as "not available", because calculations
+  # with unavailable data should fail.
+  # However, there are so many pieces of missing data, we code them as "0" for now.
   IEAData_withheader[IEAData_withheader == missing_data] <- 0
   # Data tagged as confidential are converted to 0.
   # What else can we do?
   IEAData_withheader[IEAData_withheader == confidential_data] <- 0
-  
-  # Convert all year columns (columns whose names are all numbers) to numeric, 
-  # convert into a data frame, and 
+
+  # Convert all year columns (columns whose names are all numbers) to numeric,
+  # convert into a data frame, and
   # return.
   IEAData_withheader %>%
       dplyr::mutate_at(dplyr::vars(year_cols(IEAData_withheader)), as.numeric) %>%
@@ -139,7 +288,7 @@ iea_df <- function(.iea_file = NULL,
 #' 
 #' The IEA data has columns named `COUNTRY`, `FLOW`, and `PRODUCT`.
 #' This function turns off the shouting, 
-#' renaming the columms (by default) to `Country`, `Flow`, and `Product`.
+#' renaming the columns (by default) to `Country`, `Flow`, and `Product`.
 #'
 #' @param .iea_df a data frame produced by [iea_df()]
 #' @param country the original name for the country column. (Default is `COUNTRY`.)
@@ -213,8 +362,7 @@ clean_iea_whitespace <- function(.iea_df,
 #' @export
 #'
 #' @examples
-#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEATools") %>% 
+#' sample_iea_data_path() %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   use_iso_countries()
@@ -260,7 +408,7 @@ use_iso_countries <- function(.iea_df,
 #' Sometimes, it is convenient to remove those rows. 
 #' This function does so, using default identifying strings for aggregations and memos.
 #' 
-#' Note that the IEA data somtimes includes a variable number of spaces 
+#' Note that the IEA data sometimes includes a variable number of spaces 
 #' before the "Memo: " string. 
 #' There are several places where trailing spaces are found, such as "Nuclear industry ".
 #' This function strips all leading and trailing spaces in the `Flow` and `Product` columns.
@@ -277,8 +425,7 @@ use_iso_countries <- function(.iea_df,
 #' @export
 #'
 #' @examples
-#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEATools") %>% 
+#' sample_iea_data_path() %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   remove_agg_memo_flows()
@@ -301,6 +448,8 @@ remove_agg_memo_flows <- function(.iea_df,
 #' Augment an IEA data frame
 #' 
 #' This function prepares an IEA data frame created by [iea_df()] for use in R.
+#' It works on IEA data from the 2018 and 2019 releases
+#' of the IEA's extended energy balances..
 #' 
 #' This function solves several problems.
 #' The first problem is that metadata in the `COUNTRY`, `FLOW`, and `PRODUCT`
@@ -338,47 +487,52 @@ remove_agg_memo_flows <- function(.iea_df,
 #' an error is generated.
 #'
 #' @param .iea_df a data frame produced by the [iea_df()] function
-#' @param country the name of the country column in `.iea_df`. Default is "`Country`".
-#' @param ledger_side the name of the ledger side column to be added to `.iea_df`. Default is "`Ledger.side`".
-#' @param flow_aggregation_point the name of the flow aggregation point column to be added to `.iea_df`. Default is "`Flow.aggregation.point`".
-#' @param flow the name of the flow column in `.iea_df`.  Default is "`Flow`".
-#' @param product the name of the product column in `.iea_df`.  Default is "`Product`".
-#' @param energy_type the name of the energy type column to be added to `.iea_df`. Default is "`Energy.type`.
-#' @param energy_type_val the value to put in the `energy_type` column. Default is "`E`".
-#' @param method the name of the method column to be added to `.iea_df`. Default is "`Method`.
-#' @param method_val the value to put in the `method` column. Default is "`PCM`" (Physical Content Method, which is used by the IEA).
-#' @param last_stage the name of the last stage column to be added to `.iea_df`. Default is "`Last.stage`.
-#' @param last_stage_val the value to put in the `last_stage` column. Default is "`Final`" (which is the last stage supplied by the IEA).
-#' @param unit the name of the unit column to be added to `.iea_df`. Default is "`Unit`".
+#' @param country the name of the country column in `.iea_df`. Default is "Country".
+#' @param ledger_side the name of the ledger side column to be added to `.iea_df`. Default is "Ledger.side".
+#' @param flow_aggregation_point the name of the flow aggregation point column to be added to `.iea_df`. Default is "Flow.aggregation.point".
+#' @param flow the name of the flow column in `.iea_df`.  Default is "Flow".
+#' @param product the name of the product column in `.iea_df`.  Default is "Product".
+#' @param energy_type the name of the energy type column to be added to `.iea_df`. Default is "Energy.type.
+#' @param energy_type_val the value to put in the `energy_type` column. Default is "E".
+#' @param method the name of the method column to be added to `.iea_df`. Default is "Method".
+#' @param method_val the value to put in the `method` column. Default is "PCM" (Physical Content Method, which is used by the IEA).
+#' @param last_stage the name of the last stage column to be added to `.iea_df`. Default is "Last.stage".
+#' @param last_stage_val the value to put in the `last_stage` column. Default is "Final" (which is the last stage supplied by the IEA).
+#' @param unit the name of the unit column to be added to `.iea_df`. Default is "Unit".
 #' @param unit_val the value to put in the `unit` column. Default is "`ktoe`" for kilotons of oil equivalent.
-#' @param supply the string that identifies supply `Ledger.side`. Default is "`Supply`".
-#' @param consumption the string that identifies consumption `Ledger.side`. Default is "`Consumption`".
-#' @param tpes the string that identifies total primary energy supply `Flow.aggregation.point`. Default is "`Total primary energy supply`.
+#' @param supply the string that identifies supply `Ledger.side`. Default is "Supply".
+#' @param consumption the string that identifies consumption `Ledger.side`. Default is "Consumption".
+#' @param tpes the string that identifies total primary energy supply `Flow.aggregation.point`. Default is "Total primary energy supply".
 #' @param tpes_flows a vector of strings that give flows that are aggregated to `Total primary energy supply`. 
-#' @param tfc_compare a string that identifies the `TFC compare` flow aggregation point. Default is `TFC compare`.
+#' @param tfc_compare a string that identifies the `TFC compare` flow aggregation point. Default is "TFC compare".
 #' @param tfc_compare_flows a vector of strings that give `Flow`s that are aggregated to `TFC compare`.
-#' @param transfers = a string that identifies transfers in the flow column. Default is "`Transfers`".
-#' @param statistical_differences a string that identifies statistical differences in flow column. Default is "`Statistical differences`".
-#' @param losses the string that indicates losses in the `Flow` column. Default is "`Losses`".
-#' @param transformation_processes the string that indicates transformation processes in the `Flow` column. Default is "`Transformation processes`".
-#' @param tp_flows_suffix the suffix for transformation processes in the `Flow` column. Default is "`(transf.)`".
-#' @param nstp_flows_suffix the suffix for non-specified transformation processes in the `Flow` column. Default is "`(transformation)`".
-#' @param eiou the string that identifies energy industry own use in the `Flow` column. Default is "`Energy industry own use`".
-#' @param eiou_flows_suffix the suffix for energy industry own use in the `Flow` column. Default is "`(energy)`".
-#' @param tfc the string that identifies total final consumption in the `Flow` column. Default is "`Total final consumption`".
+#' @param transfers = a string that identifies transfers in the flow column. Default is "Transfers".
+#' @param statistical_differences a string that identifies statistical differences in flow column. Default is "Statistical differences".
+#' @param losses the string that indicates losses in the `Flow` column. Default is "Losses".
+#' @param transformation_processes the string that indicates transformation processes in the `Flow` column. Default is "Transformation processes".
+#' @param tp_flows_suffix the suffix for transformation processes in the `Flow` column. Default is "(transf.)".
+#' @param nstp_flows_suffix the suffix for non-specified transformation processes in the `Flow` column. Default is "(transformation)".
+#' @param mapep the string that identifies main activity producer electricity plants in the `Flow` column. Default is "Main activity producer electricity plants".
+#' @param eiou the string that identifies energy industry own use in the `Flow` column. Default is "Energy industry own use".
+#' @param eiou_flows_suffix the suffix for energy industry own use in the `Flow` column. Default is "(energy)".
+#' @param coal_mines the string that identifies coal mines in the `Flow` column. Default is "Coal mines".
+#' @param non_specified the string that identifies non-specified flows in the `Flow` column. Default is "Non-specified".
+#' @param tfc the string that identifies total final consumption in the `Flow` column. Default is "Total final consumption".
 #' @param tfc_flows a vector of strings that give total final consumption in the `Flow` column.
-#' @param industry a string that names the industry `Flow.aggregation.point`. Default is "`Industry`".
+#' @param industry a string that names the industry `Flow.aggregation.point`. Default is "Industry".
 #' @param industry_flows a vector of strings representing `Flow`s to be aggregated in the `Industry` `Flow.aggregation.point`. 
-#' @param transport a string that names the transport `Flow.aggregation.point`. Default is "`Transport`".
+#' @param iron_and_steel a string that identifies the iron and steel industry. Default is "Iron and steel".
+#' @param mining_and_quarrying a string that identifies the mining and quarrying industry. Default is "Mining and quarrying".
+#' @param transport a string that names the transport `Flow.aggregation.point`. Default is "Transport".
 #' @param transport_flows a vector of strings representing `Flow`s to be aggregated in the `Transport` `Flow.aggregation.point`. 
-#' @param other a string that names the other `Flow.aggregation.point`. Default is "`Other`".
+#' @param other a string that names the other `Flow.aggregation.point`. Default is "Other".
 #' @param other_flows a vector of strings representing `Flow`s to be aggregated in the `Other` `Flow.aggregation.point`. 
-#' @param non_energy a string that names the non-energy `Flow.aggregation.point`. Default is "`Non-energy use`".
+#' @param non_energy a string that names the non-energy `Flow.aggregation.point`. Default is "Non-energy use".
 #' @param non_energy_prefix a string prefix for `Flow`s to be aggregated in the `Non-energy use` `Flow.aggregation.point`. 
-#' @param electricity_output a string that names the electricity output `Flow`. Default is "`Electricity output (GWh)`". 
-#' @param electricity_output_flows_prefix a string prefix for `Flow`s to be aggregated in electricity output. Default is "`Electricity output (GWh)-`".
-#' @param heat_output a string that names the heat output `Flow`. Default is "`Heat output`". 
-#' @param heat_output_flows_prefix a string prefix for `Flow`s to be aggregated in heat output. Default is "`Heat output-`".
+#' @param electricity_output a string that names the electricity output `Flow`. Default is "Electricity output (GWh)". 
+#' @param electricity_output_flows_prefix a string prefix for `Flow`s to be aggregated in electricity output. Default is "Electricity output (GWh)-".
+#' @param heat_output a string that names the heat output `Flow`. Default is "Heat output". 
+#' @param heat_output_flows_prefix a string prefix for `Flow`s to be aggregated in heat output. Default is "Heat output-".
 #' @param .rownum the name of a column created (and destroyed) internally by this function. 
 #'        The `.rownum` column temporarily holds row numbers for internal calculations.
 #'        The `.rownum` column is deleted before returning. 
@@ -389,9 +543,16 @@ remove_agg_memo_flows <- function(.iea_df,
 #'
 #' @examples
 #' iea_df(text = paste0(",,TIME,1960,1961\n",
-#'                        "COUNTRY,FLOW,PRODUCT\n",
-#'                        "World,Production,Hard coal (if no detail),42,43\n",
-#'                        "World,Losses,Hard coal (if no detail),1,2")) %>% 
+#'                      "COUNTRY,FLOW,PRODUCT\n",
+#'                      "World,Production,Hard coal (if no detail),42,43\n",
+#'                      "World,Statistical differences,Hard coal (if no detail),7,8\n",
+#'                      "World,Main activity producer electricity plants,",
+#'                        "Hard coal (if no detail),9,10\n",
+#'                      "World,Non-specified,Hard coal (if no detail),11,12\n",
+#'                      "World,Coal mines,Hard coal (if no detail),13,14\n",
+#'                      "World,Non-specified,Hard coal (if no detail),11,12\n",
+#'                      "World,Losses,Hard coal (if no detail),1,2\n",
+#'                      "World,Iron and steel,Hard coal (if no detail),5,6\n")) %>% 
 #'   rename_iea_df_cols() %>% 
 #'   augment_iea_df()
 augment_iea_df <- function(.iea_df, 
@@ -407,25 +568,30 @@ augment_iea_df <- function(.iea_df,
                            supply = "Supply", 
                            consumption = "Consumption",
                            tpes = "Total primary energy supply", 
-                           tpes_flows = c("Production", "Imports", "Exports", "International marine bunkers", "International aviation bunkers", "Stock changes"),
+                           tpes_flows = IEATools::tpes_flows,
                            tfc_compare = "TFC compare",
-                           tfc_compare_flows = c("Total primary energy supply", "Transfers", "Statistical differences", "Transformation processes", "Energy industry own use", "Losses"),
+                           tfc_compare_flows = IEATools::tfc_compare_flows,
                            transfers = "Transfers",
                            statistical_differences = "Statistical differences",
                            losses = "Losses", 
                            transformation_processes = "Transformation processes",
                            tp_flows_suffix = "(transf.)",
                            nstp_flows_suffix = "(transformation)",
+                           mapep = "Main activity producer electricity plants",
                            eiou = "Energy industry own use",
                            eiou_flows_suffix = "(energy)",
+                           coal_mines = "Coal mines",
+                           non_specified = "Non-specified",
                            tfc = "Total final consumption",
-                           tfc_flows = c("Industry", "Transport", "Other", "Non-energy use"),
+                           tfc_flows = IEATools::tfc_flows,
                            industry = "Industry",
-                           industry_flows = c("Iron and steel", "Chemical and petrochemical", "Non-ferrous metals", "Non-metallic minerals", "Transport equipment", "Machinery", "Mining and quarrying", "Food and tobacco", "Paper, pulp and print", "Wood and wood products", "Construction", "Textile and leather", "Non-specified (industry)"), 
+                           industry_flows = IEATools::industry_flows, 
+                           iron_and_steel = "Iron and steel",
+                           mining_and_quarrying = "Mining and quarrying",
                            transport = "Transport",
-                           transport_flows = c("World aviation bunkers", "Domestic aviation", "Road", "Rail", "Pipeline transport", "World marine bunkers", "Domestic navigation", "Non-specified (transport)"),
+                           transport_flows = IEATools::transport_flows,
                            other = "Other",
-                           other_flows = c("Residential", "Commercial and public services", "Agriculture/forestry", "Fishing", "Non-specified (other)"),
+                           other_flows = IEATools::other_flows,
                            non_energy = "Non-energy use",
                            non_energy_prefix = "Non-energy use",
                            electricity_output = "Electricity output (GWh)",
@@ -436,68 +602,11 @@ augment_iea_df <- function(.iea_df,
   .iea_df %>% 
     # Eliminate rownames, leaving only numbers
     tibble::remove_rownames() %>% 
-    dplyr::group_by(!!as.name(country)) %>% 
-    # The split between Supply and Consumption ledger sides occurs where Flow == Losses and Flow == Total final consumption.
-    # Find this dividing line in .iea_df. 
-    # Then create the Ledger.side column. 
-    dplyr::group_modify(function(ctry_tbl, ctry){
-      # At this point, 
-      # ctry_tbl is the rows for this country, and
-      # ctry is a data frame with one country column and one country row containing the country.
-      with_row_nums <- ctry_tbl %>% 
-        tibble::rownames_to_column(var = .rownum) %>% 
-        dplyr::mutate(
-          !!as.name(.rownum) := as.numeric(!!as.name(.rownum))
-        )
-      # Find the break point between the Supply side and the Consumption side of the ledger.
-      # We'll find the break point by identifying the last supply row in the data frame.
-      # We'll take two runs at this.
-      # One by looking for "Losses" in the Flow column (the end of the supply side) and 
-      # the other by looking for "Total final consumption" in the Flow column (the beginning of the consumption side).
-      loss_rows <- with_row_nums %>% 
-        dplyr::filter(!!as.name(flow) == losses)
-      if (nrow(loss_rows) > 0) {
-        # First, calculate the last row of Losses. last_loss_row is the last row of the supply side of the ledger.
-        last_supply_row <- loss_rows %>% magrittr::extract2(.rownum) %>% max()
-      } else {
-        # Look for the first row that is Total final consumption and subtract one.
-        tfc_rows <- with_row_nums %>% 
-          dplyr::filter(!!as.name(flow) == tfc)
-        if (nrow(tfc_rows) > 0) {
-          last_supply_row <- tfc_rows %>% magrittr::extract2(.rownum) %>% min() - 1
-        } else {
-          # Everything failed. Throw an error
-          stop(paste("Found neither", losses, "nor", tfc, "in the", flow, "column."))
-        }
-      }
-      
-      with_row_nums %>% 
-        dplyr::mutate(
-          !!as.name(ledger_side) := dplyr::case_when(
-            !!as.name(.rownum) <= last_supply_row ~ supply,
-            TRUE ~ consumption
-          )
-        )
-    }) %>% 
     dplyr::mutate(
-      # Now add the Flow.aggregation.point column
-      !!as.name(flow_aggregation_point) := dplyr::case_when(
-        !!as.name(ledger_side) == supply & !!as.name(flow) %in% tpes_flows ~ tpes, 
-        !!as.name(ledger_side) == supply & !!as.name(flow) %in% tfc_compare_flows ~ tfc_compare,
-        !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), tp_flows_suffix) ~ transformation_processes,
-        !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), nstp_flows_suffix) ~ transformation_processes,
-        !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), eiou_flows_suffix) ~ eiou,
-        !!as.name(ledger_side) == consumption & !!as.name(flow) == tfc ~ NA_character_,
-        !!as.name(ledger_side) == consumption & !!as.name(flow) %in% tfc_flows ~ tfc,
-        !!as.name(ledger_side) == consumption & !!as.name(flow) %in% industry_flows ~ industry,
-        !!as.name(ledger_side) == consumption & !!as.name(flow) %in% transport_flows ~ transport,
-        !!as.name(ledger_side) == consumption & !!as.name(flow) %in% other_flows ~ other,
-        !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), non_energy_prefix) ~ non_energy,
-        !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), electricity_output_flows_prefix) ~ electricity_output,
-        !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), heat_output_flows_prefix) ~ heat_output,
-        TRUE ~ NA_character_
-      ), 
-      # Now that Flow.aggregation.point is present, we no longer need the (energy),  (transf.), and (transformation) suffixes, so delete them.
+      # The 2018 IEA extended energy balance data used suffixes to identify portions of their data.
+      # But in the 2019 edition of the data, those suffixes were removed,
+      # so we can no longer rely upon them.
+      # Thus, we delete the suffixes if they are present in the flow column of the data frame.
       # The string "\s+" means to match any number (+) of whitespace (\\s) characters.
       !!as.name(flow) := dplyr::case_when(
         # Delete the " (transf.)" suffix
@@ -507,21 +616,171 @@ augment_iea_df <- function(.iea_df,
         # Delete the " (energy)" suffix
         endsWith(!!as.name(flow), eiou_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(eiou_flows_suffix)), replacement = "", x = !!as.name(flow)),
         TRUE ~ !!as.name(flow)
-      ),
-      # Add method column
-      !!method := method_val,
-      # Add last stage column
-      !!last_stage := last_stage_val,
-      # Add energy type column
-      !!energy_type := energy_type_val,
-      # Add the Unit column
-      !!unit := unit_val
+      )
     ) %>% 
-    # Finally, reorder the columns, remove the .rownum column, and return
-    dplyr::select(-.rownum) %>% 
-    dplyr::select(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product, unit, dplyr::everything()) %>% 
-    # Remove the grouping that we created.
+    dplyr::group_by(!!as.name(country)) %>% 
+    # Perform the next operations on a per-country basis
+    dplyr::group_modify(function(ctry_tbl, ctry){
+      # At this point,
+      # ctry_tbl contains all rows for this country, and
+      # ctry is a 1-cell data frame (one country row and one country column) containing the name of the country we're working on now.
+
+      # Find the split point between the Supply and Consumption sides of the ledger.
+      supply_consumption_split <- find_supply_consumption_split(ctry_tbl, flow = flow, losses = losses, 
+                                                                iron_and_steel = iron_and_steel, 
+                                                                mining_and_quarrying = mining_and_quarrying, 
+                                                                tfc = tfc, industry = industry)
+
+      # Start of the Transformation processes section of the IEA data
+      transformation_start <- find_transformation_start(ctry_tbl, flow = flow, statistical_differences = statistical_differences,
+                                                        transformation_processes = transformation_processes,
+                                                        mapep = mapep)
+      
+      # End of the Transformation processes section of the IEA data
+      transformation_end <- find_transformation_end(ctry_tbl, flow = flow, non_specified = non_specified, 
+                                                    eiou = eiou, coal_mines = coal_mines)
+      # Start of EIOU (energy industry own use) section of the IEA data
+      eiou_start <- find_eiou_start(ctry_tbl, flow = flow, non_specified = non_specified, 
+                                    eiou = eiou, coal_mines = coal_mines)
+      # End of EIOU flows
+      eiou_end <- find_eiou_end(ctry_tbl, flow = flow, non_specified = non_specified, losses = losses)
+
+      ctry_tbl %>% 
+        # Add a temporary .rownum column
+        tibble::rownames_to_column(var = .rownum) %>%
+        dplyr::mutate(
+          !!as.name(.rownum) := as.numeric(!!as.name(.rownum))
+        ) %>% 
+        dplyr::mutate(
+          # Add the Ledger.side column
+          !!as.name(ledger_side) := dplyr::case_when(
+            !!as.name(.rownum) <= supply_consumption_split[[1]] ~ supply,
+            !!as.name(.rownum) >= supply_consumption_split[[2]] ~ consumption,
+            TRUE ~ NA_character_), 
+          # Add the Flow.aggregation.point column
+          !!as.name(flow_aggregation_point) := dplyr::case_when(
+            # Supply side flows
+            !!as.name(ledger_side) == supply & !!as.name(flow) %in% tpes_flows ~ tpes,
+            !!as.name(ledger_side) == supply & !!as.name(flow) %in% tfc_compare_flows ~ tfc_compare,
+            !!as.name(.rownum) >= transformation_start[[2]] & !!as.name(.rownum) <= transformation_end[[1]] ~ transformation_processes,
+            !!as.name(.rownum) >= eiou_start[[2]] & !!as.name(.rownum) <= eiou_end[[1]] ~ eiou,
+            # Consumption side flows
+            !!as.name(ledger_side) == consumption & !!as.name(flow) == tfc ~ NA_character_,
+            !!as.name(ledger_side) == consumption & !!as.name(flow) %in% tfc_flows ~ tfc,
+            !!as.name(ledger_side) == consumption & !!as.name(flow) %in% industry_flows ~ industry,
+            !!as.name(ledger_side) == consumption & !!as.name(flow) %in% transport_flows ~ transport,
+            !!as.name(ledger_side) == consumption & !!as.name(flow) %in% other_flows ~ other,
+            !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), non_energy_prefix) ~ non_energy,
+            !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), electricity_output_flows_prefix) ~ electricity_output,
+            !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), heat_output_flows_prefix) ~ heat_output,
+            
+            
+            TRUE ~ NA_character_
+          )
+        )
+    }) %>% 
+    # End of the per-country processing
+    # Do some processing on the entire data frame.
+    dplyr::mutate(
+      # Add method column
+      !!as.name(method) := method_val,
+      # Add last stage column
+      !!as.name(last_stage) := last_stage_val,
+      # Add energy type column
+      !!as.name(energy_type) := energy_type_val,
+      # Add the Unit column
+      !!as.name(unit) := unit_val
+    ) %>%
+    # Remove the rownum column
+    dplyr::select(-.rownum) %>%
+    # Reorder the columns
+    dplyr::select(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product, unit, dplyr::everything()) %>%
+    # Remove the per-country grouping that we created.
     dplyr::ungroup()
+
+
+      
+      
+      
+      
+    #   with_row_nums <- ctry_tbl %>%
+    #     tibble::rownames_to_column(var = .rownum) %>%
+    #     dplyr::mutate(
+    #       !!as.name(.rownum) := as.numeric(!!as.name(.rownum))
+    #     )
+    #   # Find the break point between the Supply side and the Consumption side of the ledger.
+    #   # We'll find the break point by identifying the last supply row in the data frame.
+    #   # We'll take two runs at this.
+    #   # One by looking for "Losses" in the Flow column (the end of the supply side) and
+    #   # the other by looking for "Total final consumption" in the Flow column (the beginning of the consumption side).
+    #   loss_rows <- with_row_nums %>%
+    #     dplyr::filter(!!as.name(flow) == losses)
+    #   if (nrow(loss_rows) > 0) {
+    #     # First, calculate the last row of Losses. last_loss_row is the last row of the supply side of the ledger.
+    #     last_supply_row <- loss_rows %>% magrittr::extract2(.rownum) %>% max()
+    #   } else {
+    #     # Look for the first row that is Total final consumption and subtract one.
+    #     tfc_rows <- with_row_nums %>%
+    #       dplyr::filter(!!as.name(flow) == tfc)
+    #     if (nrow(tfc_rows) > 0) {
+    #       last_supply_row <- tfc_rows %>% magrittr::extract2(.rownum) %>% min() - 1
+    #     } else {
+    #       # Everything failed. Throw an error
+    #       stop(paste("Found neither", losses, "nor", tfc, "in the", flow, "column."))
+    #     }
+    #   }
+    # 
+    #   with_row_nums %>%
+    #     dplyr::mutate(
+    #       !!as.name(ledger_side) := dplyr::case_when(
+    #         !!as.name(.rownum) <= last_supply_row ~ supply,
+    #         TRUE ~ consumption
+    #       )
+    #     )
+    # }) %>%
+    # dplyr::mutate(
+    #   # Now add the Flow.aggregation.point column
+    #   !!as.name(flow_aggregation_point) := dplyr::case_when(
+    #     !!as.name(ledger_side) == supply & !!as.name(flow) %in% tpes_flows ~ tpes,
+    #     !!as.name(ledger_side) == supply & !!as.name(flow) %in% tfc_compare_flows ~ tfc_compare,
+    #     !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), tp_flows_suffix) ~ transformation_processes,
+    #     !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), nstp_flows_suffix) ~ transformation_processes,
+    #     !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), eiou_flows_suffix) ~ eiou,
+    #     !!as.name(ledger_side) == consumption & !!as.name(flow) == tfc ~ NA_character_,
+    #     !!as.name(ledger_side) == consumption & !!as.name(flow) %in% tfc_flows ~ tfc,
+    #     !!as.name(ledger_side) == consumption & !!as.name(flow) %in% industry_flows ~ industry,
+    #     !!as.name(ledger_side) == consumption & !!as.name(flow) %in% transport_flows ~ transport,
+    #     !!as.name(ledger_side) == consumption & !!as.name(flow) %in% other_flows ~ other,
+    #     !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), non_energy_prefix) ~ non_energy,
+    #     !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), electricity_output_flows_prefix) ~ electricity_output,
+    #     !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), heat_output_flows_prefix) ~ heat_output,
+    #     TRUE ~ NA_character_
+    #   ),
+    #   # Now that Flow.aggregation.point is present, we no longer need the (energy),  (transf.), and (transformation) suffixes, so delete them.
+    #   # The string "\s+" means to match any number (+) of whitespace (\\s) characters.
+    #   !!as.name(flow) := dplyr::case_when(
+    #     # Delete the " (transf.)" suffix
+    #     endsWith(!!as.name(flow), tp_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(tp_flows_suffix)), replacement = "", x = !!as.name(flow)),
+    #     # Delete the " (transformation)" suffix
+    #     endsWith(!!as.name(flow), nstp_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(nstp_flows_suffix)), replacement = "", x = !!as.name(flow)),
+    #     # Delete the " (energy)" suffix
+    #     endsWith(!!as.name(flow), eiou_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(eiou_flows_suffix)), replacement = "", x = !!as.name(flow)),
+    #     TRUE ~ !!as.name(flow)
+    #   ),
+    #   # Add method column
+    #   !!method := method_val,
+    #   # Add last stage column
+    #   !!last_stage := last_stage_val,
+    #   # Add energy type column
+    #   !!energy_type := energy_type_val,
+    #   # Add the Unit column
+    #   !!unit := unit_val
+    # ) %>%
+    # # Finally, reorder the columns, remove the .rownum column, and return
+    # dplyr::select(-.rownum) %>%
+    # dplyr::select(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product, unit, dplyr::everything()) %>%
+    # # Remove the grouping that we created.
+    # dplyr::ungroup()
 }
 
 
@@ -554,8 +813,7 @@ augment_iea_df <- function(.iea_df,
 #' @export
 #'
 #' @examples
-#' file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEATools") %>% 
+#' sample_iea_data_path() %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   remove_agg_memo_flows() %>% 
@@ -604,7 +862,7 @@ tidy_iea_df <- function(.iea_df,
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
 #' 
-#' @param file_path the path of the file to be loaded. Default loads example data bundled with the package.
+#' @param .iea_file the path of the file to be loaded. Default loads example data bundled with the package via [sample_iea_data_path()].
 #' @param remove_zeroes a logical indicating whether data points with the value `0` are to be removed from the output. (Default is `TRUE`.)
 #'
 #' @return a tidy, augmented data frame of IEA extended energy balance data.
@@ -612,9 +870,12 @@ tidy_iea_df <- function(.iea_df,
 #' @export
 #'
 #' @examples
+#' # Check the file first
+#' iea_file_OK(sample_iea_data_path())
+#' # Take a simple approach
 #' simple <- load_tidy_iea_df()
-#' complicated <- file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-#'   system.file(package = "IEATools") %>% 
+#' # Take the complicated approach
+#' complicated <- sample_iea_data_path() %>% 
 #'   iea_df() %>%
 #'   rename_iea_df_cols() %>% 
 #'   clean_iea_whitespace() %>% 
@@ -622,11 +883,11 @@ tidy_iea_df <- function(.iea_df,
 #'   use_iso_countries() %>% 
 #'   augment_iea_df() %>% 
 #'   tidy_iea_df()
+#' # simple and complicated should be exactly the same
 #' all(simple == complicated)
-load_tidy_iea_df <- function(file_path = file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample.csv") %>% 
-                               system.file(package = "IEATools"), 
+load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(), 
                              remove_zeroes = TRUE){
-  file_path %>% 
+  .iea_file %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
     clean_iea_whitespace() %>% 

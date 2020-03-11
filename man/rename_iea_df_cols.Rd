@@ -4,9 +4,15 @@
 \alias{rename_iea_df_cols}
 \title{Rename columns of an IEA data frame}
 \usage{
-rename_iea_df_cols(.iea_df, country = "COUNTRY",
-  new_country = "Country", flow = "FLOW", new_flow = "Flow",
-  product = "PRODUCT", new_product = "Product")
+rename_iea_df_cols(
+  .iea_df,
+  country = "COUNTRY",
+  new_country = "Country",
+  flow = "FLOW",
+  new_flow = "Flow",
+  product = "PRODUCT",
+  new_product = "Product"
+)
 }
 \arguments{
 \item{.iea_df}{a data frame produced by \code{\link[=iea_df]{iea_df()}}}
@@ -29,9 +35,9 @@ rename_iea_df_cols(.iea_df, country = "COUNTRY",
 \description{
 The IEA data has columns named \code{COUNTRY}, \code{FLOW}, and \code{PRODUCT}.
 This function turns off the shouting,
-renaming the columms (by default) to \code{Country}, \code{Flow}, and \code{Product}.
+renaming the columns (by default) to \code{Country}, \code{Flow}, and \code{Product}.
 }
 \examples{
-iea_df(text = ",,TIME,1960,1961\\nCOUNTRY,FLOW,PRODUCT\\nWorld,Production,Hard coal,42,43") \%>\% 
+iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43") \%>\% 
   rename_iea_df_cols()
 }

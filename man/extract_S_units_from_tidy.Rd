@@ -4,11 +4,19 @@
 \alias{extract_S_units_from_tidy}
 \title{Extract a unit summation matrix from a tidy data frame}
 \usage{
-extract_S_units_from_tidy(.tidy_iea_df, ledger_side = "Ledger.side",
-  flow_aggregation_point = "Flow.aggregation.point", flow = "Flow",
-  product = "Product", e_dot = "E.dot", unit = "Unit",
-  s_units = "S_units", val = ".val", rowtype = ".rowtype",
-  coltype = ".coltype")
+extract_S_units_from_tidy(
+  .tidy_iea_df,
+  ledger_side = "Ledger.side",
+  flow_aggregation_point = "Flow.aggregation.point",
+  flow = "Flow",
+  product = "Product",
+  e_dot = "E.dot",
+  unit = "Unit",
+  s_units = "S_units",
+  val = ".val",
+  rowtype = ".rowtype",
+  coltype = ".coltype"
+)
 }
 \arguments{
 \item{.tidy_iea_df}{the tidy data frame from which a unit summation \code{S_units} matrix is to be formed.}
@@ -27,11 +35,11 @@ extract_S_units_from_tidy(.tidy_iea_df, ledger_side = "Ledger.side",
 
 \item{s_units}{the name of the unit summation column to be added to \code{.tidy_iea_df}. Default is "\code{S_unit}".}
 
-\item{val}{the name of a temporary column to be created in \code{.tidy_iea_df}. Deafult is "\code{.val}".}
+\item{val}{the name of a temporary column to be created in \code{.tidy_iea_df}. Default is "\code{.val}".}
 
-\item{rowtype}{the name of a temporary rowype column created in \code{.tidy_iea_df}. Default is "\code{rowtype}".}
+\item{rowtype}{the name of a temporary rowtype column created in \code{.tidy_iea_df}. Default is "\code{rowtype}".}
 
-\item{coltype}{the name of a temporary colype column created in \code{.tidy_iea_df}. Default is "\code{coltype}".}
+\item{coltype}{the name of a temporary coltype column created in \code{.tidy_iea_df}. Default is "\code{coltype}".}
 }
 \value{
 a data frame containing grouping variables and a new column of unit summation matrices called \code{s_unit}.
