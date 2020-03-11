@@ -40,7 +40,8 @@ eta_fu_template(
 )
 }
 \arguments{
-\item{.fu_allocations}{a data frame containing a completed final-to-useful allocation template for final demand.}
+\item{.fu_allocations}{a data frame containing a completed final-to-useful allocation template for final demand.
+This data frame can be obtained from the function \code{load_fu_allocation_data()}.}
 
 \item{T_0}{the dead state temperature (in kelvin) for calculation of heat exergy. Default is \code{298.15} kelvin.}
 

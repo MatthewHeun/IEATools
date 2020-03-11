@@ -1,5 +1,11 @@
-# This is an old script that was used in the past to proprocess IEA data.
+# This is an old script that was used in the past to preprocess IEA data.
 # This script has been superseded by the functions in the IEATools package.
+# The script should remain here until fixes to 
+#   * GHA PSB
+#   * GHA Industrial electricity
+#   * HND fuels
+# are implemented in functions.
+# 
 #    --- MKH, 9 March 2020
 
 
