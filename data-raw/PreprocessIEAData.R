@@ -1,3 +1,14 @@
+# This is an old script that was used in the past to preprocess IEA data.
+# This script has been superseded by the functions in the IEATools package.
+# The script should remain here until fixes to 
+#   * GHA PSB
+#   * GHA Industrial electricity
+#   * HND fuels
+# are implemented in functions.
+# 
+#    --- MKH, 9 March 2020
+
+
 # This script loads IEA data in (nearly) its as-downloaded format (in ktoe, not EJ) and
 # converts to an R object that is stored in this repository.
 # The only changes you need to make to the as-downloaded format of the IEA data files are
