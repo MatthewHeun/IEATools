@@ -54,7 +54,7 @@
 #'   select("E.dot", "Unit")
 fix_GHA_psb <- function(.tidy_iea_df) {
   # The internal data that contains the updated Ghana Primary Solid Biofuel data
-  # can be accessed with IEATools:::Fixed_GHA_PSB.
+  # can be accessed with Fixed_GHA_PSB.
   # We'll do a left-join with .tidy_iea_df to pull the updated data into the tidy data frame.
   .tidy_iea_df %>% 
     # anti_join eliminates all rows in .tidy_iea_df that will be replaced
