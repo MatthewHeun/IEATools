@@ -361,7 +361,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #'        Default is "`#104273`", a light yellow color.
 #' @param dont_fill_shading_color a hex string representing the shading color for cells that don't require inputs. 
 #'        Default is "`#A8A8A8`", a medium gray color.
-#' @param overwrite a boolean that tells whether an existing file at `path` will be overwritten. Default is "`FALSE`".
+#' @param overwrite_file a boolean that tells whether an existing file at `path` will be overwritten. Default is `FALSE`.
 #'        If `path` already exists and `overwrite = FALSE`, an error is given.
 #' @param n_allocation_rows the number of allocation rows to write for each final energy product. Default is `3`.
 #' @param .rownum a temporary column created internally. `.rownum` must not exist in `.tidy_iea_df` when `write_fu_allocation_template` is called.
@@ -400,7 +400,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
                                          energy_row_font_color_eiou = "#918700",
                                          energy_row_shading_color_eiou = "#FCFCAB", 
                                          dont_fill_shading_color = "#A8A8A8",
-                                         overwrite = FALSE,
+                                         overwrite_file = FALSE,
                                          n_allocation_rows = 3,
                                          .rownum = ".rownum"){
   matsindf::verify_cols_missing(.fu_allocation_template, .rownum)
@@ -512,7 +512,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
   if (!endsWith(path, ".xlsx")) {
     path <- paste0(path, ".xlsx")
   }
-  openxlsx::saveWorkbook(fu_wb, path, overwrite = overwrite)
+  openxlsx::saveWorkbook(fu_wb, path, overwrite = overwrite_file)
   # And return the path
   return(path)
 }

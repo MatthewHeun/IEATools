@@ -25,7 +25,7 @@ write_fu_allocation_template(
   energy_row_font_color_eiou = "#918700",
   energy_row_shading_color_eiou = "#FCFCAB",
   dont_fill_shading_color = "#A8A8A8",
-  overwrite = FALSE,
+  overwrite_file = FALSE,
   n_allocation_rows = 3,
   .rownum = ".rownum"
 )
@@ -82,7 +82,7 @@ Default is "\verb{#104273}", a light yellow color.}
 \item{dont_fill_shading_color}{a hex string representing the shading color for cells that don't require inputs.
 Default is "\verb{#A8A8A8}", a medium gray color.}
 
-\item{overwrite}{a boolean that tells whether an existing file at \code{path} will be overwritten. Default is "\code{FALSE}".
+\item{overwrite_file}{a boolean that tells whether an existing file at \code{path} will be overwritten. Default is \code{FALSE}.
 If \code{path} already exists and \code{overwrite = FALSE}, an error is given.}
 
 \item{n_allocation_rows}{the number of allocation rows to write for each final energy product. Default is \code{3}.}
