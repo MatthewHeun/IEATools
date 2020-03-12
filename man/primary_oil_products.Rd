@@ -11,4 +11,7 @@ primary_oil_products
 \description{
 A string vector containing names of products classified by the IEA as primary oil products.
 }
+\examples{
+primary_oil_products
+}
 \keyword{datasets}

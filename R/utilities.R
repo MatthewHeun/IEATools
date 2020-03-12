@@ -445,7 +445,6 @@ sample_eta_fu_table_path <- function(version = 2019) {
 }
 
 
-
 #' Sort a tidy IEA data frame in IEA row order
 #' 
 #' The constants [country_order], [method_order], 
@@ -529,6 +528,6 @@ sort_tidy_iea_df <- function(.tidy_iea_df,
       # Remove the temporary fap_flow column
       !!as.name(fap_flow) := NULL, 
     ) %>% 
-    # Remove factors from the sorting columns
+    # Remove factors from the sorting columns to return columns to character state.
     dplyr::mutate_at(c(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product), as.character)
 }

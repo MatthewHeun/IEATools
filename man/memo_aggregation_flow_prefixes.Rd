@@ -11,4 +11,7 @@ memo_aggregation_flow_prefixes
 \description{
 A string vector containing names of \code{Flow}s that provide memos and aggregations.
 }
+\examples{
+memo_aggregation_flow_prefixes
+}
 \keyword{datasets}

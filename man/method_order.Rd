@@ -11,4 +11,7 @@ method_order
 \description{
 A string vector containing types of methods for quantifying the primary equivalent of renewable electricity.
 }
+\examples{
+method_order
+}
 \keyword{datasets}

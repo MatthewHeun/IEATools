@@ -66,14 +66,14 @@ sort_tidy_iea_df(
 \item{product_iea_order}{the order in which to sort the \code{prodcut} column of \code{.tidy_iea_df}. Default is \link{product_iea_order}.}
 }
 \value{
-a sorted version of \code{.tidy_iea_df}
+a version of \code{.tidy_iea_df} sorted in IEA order
 }
 \description{
 The constants \link{country_order}, \link{method_order},
 \link{energy_type_order}, \link{last_stage_order},
 \link{ledger_side_iea_order}, \link{fap_flow_iea_order},
 \link{product_iea_order} are used to sort a tidy IEA data frame,
-in that order of precedence.
+(in that order of precedence).
 }
 \examples{
 library(dplyr)

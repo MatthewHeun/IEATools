@@ -12,4 +12,7 @@ valid_iea_release_years
 A numeric vector containing release years for IEA extended energy balance data
 supported by this package.
 }
+\examples{
+valid_iea_release_years
+}
 \keyword{datasets}

@@ -11,4 +11,7 @@ product_iea_order
 \description{
 A string vector containing entries for the product column in IEA order.
 }
+\examples{
+product_iea_order
+}
 \keyword{datasets}

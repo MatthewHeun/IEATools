@@ -11,4 +11,7 @@ tfc_compare_flows
 \description{
 A string vector containing names of \verb{Total final consumption} comparison \code{Flow}s in the IEA extended energy balances database.
 }
+\examples{
+tfc_compare_flows
+}
 \keyword{datasets}

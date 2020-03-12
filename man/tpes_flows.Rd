@@ -11,4 +11,7 @@ tpes_flows
 \description{
 A string vector containing names of \verb{Total primary energy supply} \code{Flow}s in the IEA extended energy balances database.
 }
+\examples{
+tpes_flows
+}
 \keyword{datasets}

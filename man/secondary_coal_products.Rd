@@ -11,4 +11,7 @@ secondary_coal_products
 \description{
 A string vector containing names of products classified by the IEA as \code{coal_and_coal_products} that are not \code{primary_coal_products}.
 }
+\examples{
+secondary_coal_products
+}
 \keyword{datasets}

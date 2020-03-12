@@ -11,4 +11,7 @@ energy_type_order
 \description{
 A string vector containing the order for energy types.
 }
+\examples{
+energy_type_order
+}
 \keyword{datasets}

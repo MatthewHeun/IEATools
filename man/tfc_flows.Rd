@@ -11,4 +11,7 @@ tfc_flows
 \description{
 A string vector containing names of \verb{Total final consumption} \code{Flow}s in the IEA extended energy balances database.
 }
+\examples{
+tfc_flows
+}
 \keyword{datasets}

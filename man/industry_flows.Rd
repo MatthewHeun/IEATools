@@ -11,4 +11,7 @@ industry_flows
 \description{
 A string vector containing names of \code{Industry} \code{Flow}s in the IEA extended energy balances database.
 }
+\examples{
+industry_flows
+}
 \keyword{datasets}

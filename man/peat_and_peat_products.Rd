@@ -11,4 +11,7 @@ peat_and_peat_products
 \description{
 A string vector containing names of products classified by the IEA as peat and peat products.
 }
+\examples{
+peat_and_peat_products
+}
 \keyword{datasets}

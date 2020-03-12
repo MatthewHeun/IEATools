@@ -11,4 +11,7 @@ ledger_side_iea_order
 \description{
 A string vector containing \code{Ledger.side} entries in IEA order.
 }
+\examples{
+ledger_side_iea_order
+}
 \keyword{datasets}

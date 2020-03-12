@@ -172,6 +172,8 @@ test_that("adjacent_rownums works as expected", {
 
 test_that("sorting a tidy IEA data frame works as expected", {
   tidy <- load_tidy_iea_df()
+  # Should get the same thing back if we sort now, because the IEA data are already sorted in IEA order!
+  expect_equal(sort_tidy_iea_df(tidy), tidy)
   num_rows <- nrow(tidy)
   # Look at the first row
   expect_equal(tidy$Country[[1]], "GHA")
@@ -187,6 +189,9 @@ test_that("sorting a tidy IEA data frame works as expected", {
   expect_equal(unsorted$Product[[num_rows]], "Primary solid biofuels")
   # Now sort it
   sorted <- sort_tidy_iea_df(unsorted)
+  # Bug: The Last.stage column has NA values
+  # Make sure Last.stage has no NA values in it.
+  expect_false(any(is.na(sorted$Last.stage)))
   # Look at the first row
   expect_equal(sorted$Country[[1]], "GHA")
   expect_equal(sorted$Product[[1]], "Primary solid biofuels")

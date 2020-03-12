@@ -11,4 +11,7 @@ country_order
 \description{
 A string vector containing 3-letter ISO country codes in alphabetical order.
 }
+\examples{
+country_order
+}
 \keyword{datasets}

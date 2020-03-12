@@ -11,4 +11,7 @@ secondary_peat_products
 \description{
 A string vector containing names of products classified by the IEA as "Peat and peat products" that are not \code{primary_peat_products}.
 }
+\examples{
+secondary_peat_products
+}
 \keyword{datasets}

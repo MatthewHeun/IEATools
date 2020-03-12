@@ -11,4 +11,7 @@ primary_peat_products
 \description{
 A string vector containing names of products classified by the IEA as primary peat products.
 }
+\examples{
+primary_peat_products
+}
 \keyword{datasets}

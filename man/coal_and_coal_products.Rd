@@ -11,4 +11,7 @@ coal_and_coal_products
 \description{
 A string vector containing names of products classified by the IEA as coal and coal products.
 }
+\examples{
+coal_and_coal_products
+}
 \keyword{datasets}

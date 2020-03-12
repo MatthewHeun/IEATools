@@ -11,4 +11,7 @@ renewable_products
 \description{
 A string vector containing names of products classified by the IEA as renewables.
 }
+\examples{
+renewable_products
+}
 \keyword{datasets}

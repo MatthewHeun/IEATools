@@ -11,4 +11,7 @@ last_stage_order
 \description{
 A string vector containing options for the last stage of energy conversion chain analysis.
 }
+\examples{
+last_stage_order
+}
 \keyword{datasets}

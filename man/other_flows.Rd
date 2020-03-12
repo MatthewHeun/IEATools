@@ -11,4 +11,7 @@ other_flows
 \description{
 A string vector containing names of \code{Other} \code{Flow}s in the IEA extended energy balances database.
 }
+\examples{
+other_flows
+}
 \keyword{datasets}

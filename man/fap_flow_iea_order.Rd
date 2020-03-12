@@ -11,4 +11,7 @@ fap_flow_iea_order
 \description{
 A string vector containing entries for a united flow aggregation point and flow column in IEA order.
 }
+\examples{
+fap_flow_iea_order
+}
 \keyword{datasets}

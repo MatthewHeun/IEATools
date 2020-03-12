@@ -11,4 +11,7 @@ memo_aggregation_product_prefixes
 \description{
 A string vector containing names of \code{Product}s that provide memos and aggregations.
 }
+\examples{
+memo_aggregation_product_prefixes
+}
 \keyword{datasets}

@@ -11,4 +11,7 @@ interface_industries
 \description{
 A string vector containing names of \code{Flow}s that interface with the world outside of the economy.
 }
+\examples{
+interface_industries
+}
 \keyword{datasets}

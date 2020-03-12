@@ -11,4 +11,7 @@ primary_coal_products
 \description{
 A string vector containing names of products classified by the IEA as primary coal products.
 }
+\examples{
+primary_coal_products
+}
 \keyword{datasets}

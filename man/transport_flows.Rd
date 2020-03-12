@@ -11,4 +11,7 @@ transport_flows
 \description{
 A string vector containing names of \code{Transport} \code{Flow}s in the IEA extended energy balances database.
 }
+\examples{
+transport_flows
+}
 \keyword{datasets}

@@ -11,4 +11,7 @@ biofuels_and_waste_products
 \description{
 A string vector containing names of products classified by the IEA as biofuel and waste products.
 }
+\examples{
+biofuels_and_waste_products
+}
 \keyword{datasets}

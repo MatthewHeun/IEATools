@@ -1,3 +1,4 @@
+* Fixed a bug in `sort_tidy_iea_df()` that results in `NA` values in the `Last.stage` column.
 * Added a function called `sort_tidy_iea_df()` which sorts tidy IEA data frames
   with default IEA row orders.
 * Completed function called `fix_GHA_psb()` which 
