@@ -285,6 +285,40 @@ usethis::use_data(interface_industries, overwrite = TRUE)
 # Sort orders
 # 
 
+country_order <- countrycode::codelist %>% 
+  dplyr::select(iso3c) %>% 
+  dplyr::filter(!is.na(iso3c)) %>% 
+  unlist() %>% 
+  unname()
+usethis::use_data(country_order, overwrite = TRUE)
+
+
+# See
+# T. Sousa, P. E. Brockway, J. M. Cullen, S. T. Henriques, J. Miller, A. C. Serrenho, and T. Domingos. 
+# The need for robust, consistent methods in societal exergy accounting. Ecological Economics, 141:11–21, Nov 2017.
+# for details
+method_order <- c(
+  "PCM", # Physical content method (used by IEA)
+  "RCM", # Resource content method
+  "PSM"  # Partial substitution method (used by EIA and BP)
+)
+usethis::use_data(method_order, overwrite = TRUE)
+
+
+energy_type_order <- c(
+  "E", # Energy 
+  "X"  # Exergy
+)
+usethis::use_data(energy_type_order, overwrite = TRUE)
+
+
+last_stage_order <- c(
+  "final", 
+  "useful"
+)
+usethis::use_data(last_stage_order, overwrite = TRUE)
+
+
 ledger_side_iea_order <- c(
   "Supply", 
   "Consumption"

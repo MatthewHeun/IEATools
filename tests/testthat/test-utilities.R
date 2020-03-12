@@ -168,3 +168,29 @@ test_that("adjacent_rownums works as expected", {
   DF2 <- data.frame(C1 = c("A", "B", "A", "B"), stringsAsFactors = FALSE)
   expect_error(adjacent_rownums(DF2, col_name = "C1", entries = c("A", "B")), "multiple instances of adjacent entries in adjacent_rownums")
 })
+
+
+test_that("sorting a tidy IEA data frame works as expected", {
+  tidy <- load_tidy_iea_df()
+  num_rows <- nrow(tidy)
+  # Look at the first row
+  expect_equal(tidy$Country[[1]], "GHA")
+  expect_equal(tidy$Product[[1]], "Primary solid biofuels")
+  # Look at the last row
+  expect_equal(tidy$Country[[num_rows]], "ZAF")
+  expect_equal(tidy$Product[[num_rows]], "Paraffin waxes")
+  # Move the first row to the bottom to put everything out of order
+  unsorted <- tidy[-1, ] %>% 
+    dplyr::bind_rows(tidy[1, ])
+  # Check that the moved successfully to the last row
+  expect_equal(unsorted$Country[[num_rows]], "GHA")
+  expect_equal(unsorted$Product[[num_rows]], "Primary solid biofuels")
+  # Now sort it
+  sorted <- sort_tidy_iea_df(unsorted)
+  # Look at the first row
+  expect_equal(sorted$Country[[1]], "GHA")
+  expect_equal(sorted$Product[[1]], "Primary solid biofuels")
+  # Look at the last row
+  expect_equal(sorted$Country[[num_rows]], "ZAF")
+  expect_equal(sorted$Product[[num_rows]], "Paraffin waxes")
+})

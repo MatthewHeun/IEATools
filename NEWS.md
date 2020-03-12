@@ -1,3 +1,5 @@
+* Added a function called `sort_tidy_iea_df()` which sorts tidy IEA data frames
+  with default IEA row orders.
 * Completed function called `fix_GHA_psb()` which 
   smooths Ghana's Primary solid biofuels data
   in the years 1991--1999.
