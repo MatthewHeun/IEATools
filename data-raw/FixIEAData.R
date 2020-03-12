@@ -26,8 +26,8 @@ library(tidyselect)
 # The function fix_GHA_psb() makes use of these data.
 # FixedGHA_PSB <- read.delim(file = file.path("data-raw", "FixedGHPSB.tsv"), 
 #                            check.names = FALSE, stringsAsFactors = FALSE) %>% 
-Fixed_GHA_PSB <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "GHAPSB.xlsx"), sheet = "FixedGHPSB") %>% 
-  tidyr::gather(key = "Year", value = "E.dot", tidyselect::matches("^-?\\d+$")) %>% 
+Fixed_GHA_PSB <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "GHA-PSB.xlsx"), sheet = "FixedGHPSB") %>% 
+  tidyr::pivot_longer(tidyselect::matches("^-?\\d+$"), names_to = "Year", values_to = "E.dot", ) %>% 
   dplyr::filter(
     # Eliminate rows that have 0 energy.
     E.dot != 0
@@ -35,6 +35,12 @@ Fixed_GHA_PSB <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "GHAPSB.xl
   dplyr::mutate(
     Year = as.numeric(Year)
   )
+
+
+
+
+
+
 
 # Use these data frames as internal objects in the package.
 # These objects are stored in R/sysdata.rda and can be accessed by
