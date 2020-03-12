@@ -44,8 +44,8 @@ in a .csv file format as shown in the following figure.
 knitr::include_graphics("figs/original_header.pdf")
 ```
 
-Example data from two countries [Ghana (GH) and South Africa (ZA)]
-for two years (1971 and 2000) are provided in the `IEATools` package.
+Example data from two countries, Ghana (GH) and South Africa (ZA), 
+for two years, 1971 and 2000, are provided in the `IEATools` package.
 
 ```{r}
 library(dplyr)
@@ -173,16 +173,6 @@ with each country's 3-letter abbreviation.
 IEA_data %>% 
   rename_iea_df_cols() %>% 
   use_iso_countries() %>% 
-  glimpse()
-```
-
-If the 2-letter abbreviations are preferred, set the `iso_abbrev_type = 2`
-as shown below.
-
-```{r}
-IEA_data %>% 
-  rename_iea_df_cols() %>% 
-  use_iso_countries(iso_abbrev_type = 2) %>% 
   glimpse()
 ```
 

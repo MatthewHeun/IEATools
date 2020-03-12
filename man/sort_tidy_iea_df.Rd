@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities.R
 \name{sort_tidy_iea_df}
 \alias{sort_tidy_iea_df}
-\title{Sort a tidy IEA data frame in IEA sort order}
+\title{Sort a tidy IEA data frame in IEA row order}
 \usage{
 sort_tidy_iea_df(
   .tidy_iea_df,
@@ -36,6 +36,8 @@ sort_tidy_iea_df(
 \item{energy_type}{the name of the energy type column in \code{.tidy_iea_df}. Default is "Energy.type".}
 
 \item{last_stage}{the name of the last stage column in \code{.tidy_iea_df}. Default is "Last.stage".}
+
+\item{year}{the name of the year column in \code{.tidy_iea_df}. Default is "Year".}
 
 \item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "Ledger.side".}
 

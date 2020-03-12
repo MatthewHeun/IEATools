@@ -452,13 +452,14 @@ sample_eta_fu_table_path <- function(version = 2019) {
 #' [energy_type_order], [last_stage_order], 
 #' [ledger_side_iea_order], [fap_flow_iea_order], 
 #' [product_iea_order] are used to sort a tidy IEA data frame,
-#' in that order of precedence.
+#' (in that order of precedence).
 #'
 #' @param .tidy_iea_df the tidy IEA data frame to be sorted
 #' @param country the name of the country column in `.tidy_iea_df`. Default is "Country".
 #' @param method the name of the method column in `.tidy_iea_df`. Default is "Method".
 #' @param energy_type the name of the energy type column in `.tidy_iea_df`. Default is "Energy.type".
 #' @param last_stage the name of the last stage column in `.tidy_iea_df`. Default is "Last.stage".
+#' @param year the name of the year column in `.tidy_iea_df`. Default is "Year".
 #' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "Ledger.side".
 #' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
 #' @param flow the name of the flow column in `.tidy_iea_df`. Default is "Flow".
@@ -473,7 +474,7 @@ sample_eta_fu_table_path <- function(version = 2019) {
 #' @param fap_flow_iea_order the order in which to sort the united `flow_aggregation_point` and `flow` columns of `.tidy_iea_df`. Default is [fap_flow_iea_order].
 #' @param product_iea_order the order in which to sort the `prodcut` column of `.tidy_iea_df`. Default is [product_iea_order].
 #'
-#' @return a sorted version of `.tidy_iea_df` 
+#' @return a version of `.tidy_iea_df` sorted in IEA order
 #' 
 #' @export
 #'

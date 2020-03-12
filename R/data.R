@@ -180,6 +180,38 @@
 "interface_industries"
 
 
+#' Country order
+#'
+#' A string vector containing 3-letter ISO country codes in alphabetical order.
+#' 
+#' @format A string vector
+"country_order"
+
+
+#' Method order
+#'
+#' A string vector containing types of methods for quantifying the primary equivalent of renewable electricity.
+#' 
+#' @format A string vector
+"method_order"
+
+
+#' Energy type order
+#'
+#' A string vector containing the order for energy types.
+#' 
+#' @format A string vector
+"energy_type_order"
+
+
+#' Last stage order
+#'
+#' A string vector containing options for the last stage of energy conversion chain analysis.
+#' 
+#' @format A string vector
+"last_stage_order"
+
+
 #' IEA order for ledger side
 #'
 #' A string vector containing `Ledger.side` entries in IEA order.
