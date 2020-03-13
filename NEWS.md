@@ -1,4 +1,5 @@
 * Added a "Sorting" section to the IEATools vignette.
+  It describes the `sort_iea_df()` function.
 * `sort_iea_df()` previously worked only with tidy data frames (with a column of years).
   `sort_iea_df()` now also works with wide data frames (with years spread to the right).
 * renamed `sort_tidy_iea_df()` --> `sort_iea_df()`
