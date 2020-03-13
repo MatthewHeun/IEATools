@@ -1,3 +1,6 @@
+* `sort_iea_df()` now works with wide data frames (with years spread to the right)
+  as well as tidy data frames (with a column of years).
+* renamed `sort_tidy_iea_df()` --> `sort_iea_df()`
 * Fixed a bug in `sort_tidy_iea_df()` that results in `NA` values in the `Last.stage` column.
 * Added a function called `sort_tidy_iea_df()` which sorts tidy IEA data frames
   with default IEA row orders.

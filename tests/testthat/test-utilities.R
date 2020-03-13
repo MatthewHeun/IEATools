@@ -173,7 +173,7 @@ test_that("adjacent_rownums works as expected", {
 test_that("sorting a tidy IEA data frame works as expected", {
   tidy <- load_tidy_iea_df()
   # Should get the same thing back if we sort now, because the IEA data are already sorted in IEA order!
-  expect_equal(sort_tidy_iea_df(tidy), tidy)
+  expect_equal(sort_iea_df(tidy), tidy)
   num_rows <- nrow(tidy)
   # Look at the first row
   expect_equal(tidy$Country[[1]], "GHA")
@@ -188,7 +188,7 @@ test_that("sorting a tidy IEA data frame works as expected", {
   expect_equal(unsorted$Country[[num_rows]], "GHA")
   expect_equal(unsorted$Product[[num_rows]], "Primary solid biofuels")
   # Now sort it
-  sorted <- sort_tidy_iea_df(unsorted)
+  sorted <- sort_iea_df(unsorted)
   # Bug: The Last.stage column has NA values
   # Make sure Last.stage has no NA values in it.
   expect_false(any(is.na(sorted$Last.stage)))
@@ -198,4 +198,20 @@ test_that("sorting a tidy IEA data frame works as expected", {
   # Look at the last row
   expect_equal(sorted$Country[[num_rows]], "ZAF")
   expect_equal(sorted$Product[[num_rows]], "Paraffin waxes")
+  
+  # Try with a wide data frame, one that spreads years to the right.
+  unsorted_wide <- tidy %>% 
+    tidyr::pivot_wider(names_from = Year, values_from = E.dot)
+  # The wide data frame is not sorted correctly. Sort it.
+  sorted_wide <- sort_iea_df(unsorted_wide)
+  # Test that we got a good result.
+  # First row should have Ghana first
+  expect_equal(sorted_wide$Country[[1]], "GHA")
+  expect_equal(sorted_wide$Ledger.side[[1]], "Supply")
+  expect_equal(sorted_wide$Product[[1]], "Primary solid biofuels")
+  # Last row is South Africa
+  num_rows <- nrow(sorted_wide)
+  expect_equal(sorted_wide$Country[[num_rows]], "ZAF")
+  expect_equal(sorted_wide$Flow.aggregation.point[[num_rows]], "Non-energy use")
+  expect_equal(sorted_wide$Product[[num_rows]], "Paraffin waxes")
 })
