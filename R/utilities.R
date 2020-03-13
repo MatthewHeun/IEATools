@@ -445,13 +445,24 @@ sample_eta_fu_table_path <- function(version = 2019) {
 }
 
 
-#' Sort a tidy IEA data frame in IEA row order
+#' Sort an IEA data frame in IEA row order
 #' 
-#' The constants [country_order], [method_order], 
-#' [energy_type_order], [last_stage_order], 
+#' The IEA data frame to be sorted can be either 
+#' (a) tidy (long) where each observation is on its own row and 
+#' there is a `year` column present or 
+#' (b) wide where year columns are spread to the right.
+#' 
+#' Sorting is accomplished (by default) using 
+#' the constants [country_order], [method_order], 
+#' [energy_type_order], [last_stage_order], `year` (if present),
 #' [ledger_side_iea_order], [fap_flow_iea_order], 
-#' [product_iea_order] are used to sort a tidy IEA data frame,
+#' [product_iea_order],
 #' (in that order of precedence).
+#' 
+#' Years are sorted if the `year` column is present (a tidy data frame).
+#' If years are not present, they are assumed to be spread to the right
+#' to create a wide data frame. 
+#' Wide data frames are sorted in the same order.
 #'
 #' @param .tidy_iea_df the tidy IEA data frame to be sorted
 #' @param country the name of the country column in `.tidy_iea_df`. Default is "Country".
@@ -489,10 +500,10 @@ sample_eta_fu_table_path <- function(version = 2019) {
 #' head(unsorted)
 #' tail(unsorted)
 #' # Now sort it
-#' sorted <- sort_tidy_iea_df(unsorted)
+#' sorted <- sort_iea_df(unsorted)
 #' head(sorted)
 #' tail(sorted)
-sort_tidy_iea_df <- function(.tidy_iea_df,
+sort_iea_df <- function(.tidy_iea_df,
                              country = "Country", 
                              method = "Method",
                              energy_type = "Energy.type",
@@ -511,7 +522,7 @@ sort_tidy_iea_df <- function(.tidy_iea_df,
                              ledger_side_iea_order = IEATools::ledger_side_iea_order,
                              fap_flow_iea_order = IEATools::fap_flow_iea_order,
                              product_iea_order = IEATools::product_iea_order) {
-  .tidy_iea_df %>% 
+  factorized <- .tidy_iea_df %>% 
     dplyr::mutate(
       !!as.name(country) := factor(!!as.name(country), levels = country_order),
       !!as.name(method) := factor(!!as.name(method), levels = method_order),
@@ -521,9 +532,23 @@ sort_tidy_iea_df <- function(.tidy_iea_df,
       !!as.name(fap_flow) := paste0(!!as.name(flow_aggregation_point), sep, !!as.name(flow)),
       !!as.name(fap_flow) := factor(!!as.name(fap_flow), levels = fap_flow_iea_order),
       !!as.name(product) := factor(!!as.name(product), levels = product_iea_order)
-    ) %>% 
-    dplyr::arrange(!!as.name(country), !!as.name(method), !!as.name(energy_type), !!as.name(last_stage), !!as.name(year),
-                   !!as.name(fap_flow), !!as.name(product)) %>% 
+    )
+  
+  if (year %in% names(factorized)) {
+    # If we have the year column, we want to include it in the arranging.
+    # Likely that we have a long, tidy data frame here.
+    sorted <- factorized %>% 
+      dplyr::arrange(!!as.name(country), !!as.name(method), !!as.name(energy_type), !!as.name(last_stage), !!as.name(year),
+                     !!as.name(fap_flow), !!as.name(product))
+  } else {
+    # No year column. This might be a wide data frame here in which years are spread as columns to the right.
+    # Exclude year from the arranging.
+    sorted <- factorized %>% 
+      dplyr::arrange(!!as.name(country), !!as.name(method), !!as.name(energy_type), !!as.name(last_stage),
+                     !!as.name(fap_flow), !!as.name(product))
+  }
+  
+  sorted %>% 
     dplyr::mutate(
       # Remove the temporary fap_flow column
       !!as.name(fap_flow) := NULL, 
