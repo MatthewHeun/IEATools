@@ -29,7 +29,7 @@
 * Added new sample allocation and F-->U efficiency tables
   for 2019 data.
 * Rebuilt the sample template for F-->U allocation,
-  because new categories of energy consumption were provided for ZA EIOU.
+  because new categories of energy consumption were provided for ZAF EIOU.
 * Wrote new tests for the new approaches to determining 
   "Transformation processes" and "Energy industry own use".
 * Implemented a new way to identify "Transformation processes" and "Energy industry own use" rows.
