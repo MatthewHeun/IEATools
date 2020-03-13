@@ -362,6 +362,96 @@ IEA extended energy balance data format.
 <span id="cb12-18"><a href="#cb12-18"></a><span class="co">#&gt; $ balance_OK               &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TR…</span></span>
 <span id="cb12-19"><a href="#cb12-19"></a><span class="co">#&gt; $ err                      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span></span></code></pre></div>
 </div>
+<div id="sorting" class="section level2">
+<h2 class="hasAnchor">
+<a href="#sorting" class="anchor"></a>Sorting</h2>
+<p>When manipulating IEA data frames, rows may attain different sorting relative to the standard IEA order. The <code><a href="../reference/sort_iea_df.html">sort_iea_df()</a></code> function can return a data frame to IEA sort order.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>  Tidy_IEA_df &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>()</span>
+<span id="cb13-2"><a href="#cb13-2"></a>  Tidy_IEA_df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(Year, Flow, Product, E.dot)</span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="co">#&gt; # A tibble: 402 x 4</span></span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="co">#&gt;     Year Flow       Product                                 E.dot</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;                                   &lt;dbl&gt;</span></span>
+<span id="cb13-6"><a href="#cb13-6"></a><span class="co">#&gt;  1  1971 Production Primary solid biofuels                2088.  </span></span>
+<span id="cb13-7"><a href="#cb13-7"></a><span class="co">#&gt;  2  1971 Production Hydro                                  250.  </span></span>
+<span id="cb13-8"><a href="#cb13-8"></a><span class="co">#&gt;  3  1971 Imports    Crude oil                              916.  </span></span>
+<span id="cb13-9"><a href="#cb13-9"></a><span class="co">#&gt;  4  1971 Imports    Aviation gasoline                        1.07</span></span>
+<span id="cb13-10"><a href="#cb13-10"></a><span class="co">#&gt;  5  1971 Imports    Kerosene type jet fuel excl. biofuels   21.3 </span></span>
+<span id="cb13-11"><a href="#cb13-11"></a><span class="co">#&gt;  6  1971 Imports    Other kerosene                           1.05</span></span>
+<span id="cb13-12"><a href="#cb13-12"></a><span class="co">#&gt;  7  1971 Imports    Lubricants                              18.1 </span></span>
+<span id="cb13-13"><a href="#cb13-13"></a><span class="co">#&gt;  8  1971 Exports    Motor gasoline excl. biofuels           -4.28</span></span>
+<span id="cb13-14"><a href="#cb13-14"></a><span class="co">#&gt;  9  1971 Exports    Other kerosene                          -4.18</span></span>
+<span id="cb13-15"><a href="#cb13-15"></a><span class="co">#&gt; 10  1971 Exports    Fuel oil                              -178.  </span></span>
+<span id="cb13-16"><a href="#cb13-16"></a><span class="co">#&gt; # … with 392 more rows</span></span>
+<span id="cb13-17"><a href="#cb13-17"></a>  <span class="co"># Move the first row to the bottom to put everything out of order</span></span>
+<span id="cb13-18"><a href="#cb13-18"></a>  Unsorted &lt;-<span class="st"> </span>Tidy_IEA_df[<span class="op">-</span><span class="dv">1</span>, ] <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span>(Tidy_IEA_df[<span class="dv">1</span>, ])</span>
+<span id="cb13-19"><a href="#cb13-19"></a>  Unsorted <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(Year, Flow, Product, E.dot)</span>
+<span id="cb13-20"><a href="#cb13-20"></a><span class="co">#&gt; # A tibble: 402 x 4</span></span>
+<span id="cb13-21"><a href="#cb13-21"></a><span class="co">#&gt;     Year Flow                        Product                               E.dot</span></span>
+<span id="cb13-22"><a href="#cb13-22"></a><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;                       &lt;chr&gt;                                 &lt;dbl&gt;</span></span>
+<span id="cb13-23"><a href="#cb13-23"></a><span class="co">#&gt;  1  1971 Production                  Hydro                                250.  </span></span>
+<span id="cb13-24"><a href="#cb13-24"></a><span class="co">#&gt;  2  1971 Imports                     Crude oil                            916.  </span></span>
+<span id="cb13-25"><a href="#cb13-25"></a><span class="co">#&gt;  3  1971 Imports                     Aviation gasoline                      1.07</span></span>
+<span id="cb13-26"><a href="#cb13-26"></a><span class="co">#&gt;  4  1971 Imports                     Kerosene type jet fuel excl. biofu…   21.3 </span></span>
+<span id="cb13-27"><a href="#cb13-27"></a><span class="co">#&gt;  5  1971 Imports                     Other kerosene                         1.05</span></span>
+<span id="cb13-28"><a href="#cb13-28"></a><span class="co">#&gt;  6  1971 Imports                     Lubricants                            18.1 </span></span>
+<span id="cb13-29"><a href="#cb13-29"></a><span class="co">#&gt;  7  1971 Exports                     Motor gasoline excl. biofuels         -4.28</span></span>
+<span id="cb13-30"><a href="#cb13-30"></a><span class="co">#&gt;  8  1971 Exports                     Other kerosene                        -4.18</span></span>
+<span id="cb13-31"><a href="#cb13-31"></a><span class="co">#&gt;  9  1971 Exports                     Fuel oil                            -178.  </span></span>
+<span id="cb13-32"><a href="#cb13-32"></a><span class="co">#&gt; 10  1971 International marine bunke… Gas/diesel oil excl. biofuels        -29.0 </span></span>
+<span id="cb13-33"><a href="#cb13-33"></a><span class="co">#&gt; # … with 392 more rows</span></span>
+<span id="cb13-34"><a href="#cb13-34"></a>  <span class="co"># Now sort it to put everything right again</span></span>
+<span id="cb13-35"><a href="#cb13-35"></a>  Sorted &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sort_iea_df.html">sort_iea_df</a></span>(Unsorted)</span>
+<span id="cb13-36"><a href="#cb13-36"></a>  Sorted <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(Year, Flow, Product, E.dot)</span>
+<span id="cb13-37"><a href="#cb13-37"></a><span class="co">#&gt; # A tibble: 402 x 4</span></span>
+<span id="cb13-38"><a href="#cb13-38"></a><span class="co">#&gt;     Year Flow       Product                                 E.dot</span></span>
+<span id="cb13-39"><a href="#cb13-39"></a><span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;                                   &lt;dbl&gt;</span></span>
+<span id="cb13-40"><a href="#cb13-40"></a><span class="co">#&gt;  1  1971 Production Primary solid biofuels                2088.  </span></span>
+<span id="cb13-41"><a href="#cb13-41"></a><span class="co">#&gt;  2  1971 Production Hydro                                  250.  </span></span>
+<span id="cb13-42"><a href="#cb13-42"></a><span class="co">#&gt;  3  1971 Imports    Crude oil                              916.  </span></span>
+<span id="cb13-43"><a href="#cb13-43"></a><span class="co">#&gt;  4  1971 Imports    Aviation gasoline                        1.07</span></span>
+<span id="cb13-44"><a href="#cb13-44"></a><span class="co">#&gt;  5  1971 Imports    Kerosene type jet fuel excl. biofuels   21.3 </span></span>
+<span id="cb13-45"><a href="#cb13-45"></a><span class="co">#&gt;  6  1971 Imports    Other kerosene                           1.05</span></span>
+<span id="cb13-46"><a href="#cb13-46"></a><span class="co">#&gt;  7  1971 Imports    Lubricants                              18.1 </span></span>
+<span id="cb13-47"><a href="#cb13-47"></a><span class="co">#&gt;  8  1971 Exports    Motor gasoline excl. biofuels           -4.28</span></span>
+<span id="cb13-48"><a href="#cb13-48"></a><span class="co">#&gt;  9  1971 Exports    Other kerosene                          -4.18</span></span>
+<span id="cb13-49"><a href="#cb13-49"></a><span class="co">#&gt; 10  1971 Exports    Fuel oil                              -178.  </span></span>
+<span id="cb13-50"><a href="#cb13-50"></a><span class="co">#&gt; # … with 392 more rows</span></span></code></pre></div>
+<p><code><a href="../reference/sort_iea_df.html">sort_iea_df()</a></code> also works with wide data frames in which years are spread to the right.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>  <span class="co"># Pivoting the data results in unconventional ordering</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>  Unsorted_wide &lt;-<span class="st"> </span>Tidy_IEA_df <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span>(<span class="dt">names_from =</span> Year, <span class="dt">values_from =</span> E.dot)</span>
+<span id="cb14-3"><a href="#cb14-3"></a>  Unsorted_wide <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(Flow, Product, <span class="st">`</span><span class="dt">1971</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2000</span><span class="st">`</span>)</span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="co">#&gt; # A tibble: 293 x 4</span></span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="co">#&gt;    Flow       Product                                `1971`  `2000`</span></span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="co">#&gt;    &lt;chr&gt;      &lt;chr&gt;                                   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span id="cb14-7"><a href="#cb14-7"></a><span class="co">#&gt;  1 Production Primary solid biofuels                2088.   3891.  </span></span>
+<span id="cb14-8"><a href="#cb14-8"></a><span class="co">#&gt;  2 Production Hydro                                  250.    568.  </span></span>
+<span id="cb14-9"><a href="#cb14-9"></a><span class="co">#&gt;  3 Imports    Crude oil                              916.   1308.  </span></span>
+<span id="cb14-10"><a href="#cb14-10"></a><span class="co">#&gt;  4 Imports    Aviation gasoline                        1.07    5.35</span></span>
+<span id="cb14-11"><a href="#cb14-11"></a><span class="co">#&gt;  5 Imports    Kerosene type jet fuel excl. biofuels   21.3    32.0 </span></span>
+<span id="cb14-12"><a href="#cb14-12"></a><span class="co">#&gt;  6 Imports    Other kerosene                           1.05   NA   </span></span>
+<span id="cb14-13"><a href="#cb14-13"></a><span class="co">#&gt;  7 Imports    Lubricants                              18.1    31.1 </span></span>
+<span id="cb14-14"><a href="#cb14-14"></a><span class="co">#&gt;  8 Exports    Motor gasoline excl. biofuels           -4.28 -104.  </span></span>
+<span id="cb14-15"><a href="#cb14-15"></a><span class="co">#&gt;  9 Exports    Other kerosene                          -4.18   NA   </span></span>
+<span id="cb14-16"><a href="#cb14-16"></a><span class="co">#&gt; 10 Exports    Fuel oil                              -178.   -183.  </span></span>
+<span id="cb14-17"><a href="#cb14-17"></a><span class="co">#&gt; # … with 283 more rows</span></span>
+<span id="cb14-18"><a href="#cb14-18"></a>  <span class="co"># The wide data frame is not sorted correctly. Sort it.</span></span>
+<span id="cb14-19"><a href="#cb14-19"></a>  Sorted_wide &lt;-<span class="st"> </span><span class="kw"><a href="../reference/sort_iea_df.html">sort_iea_df</a></span>(Unsorted_wide)</span>
+<span id="cb14-20"><a href="#cb14-20"></a>  Sorted_wide <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(Flow, Product, <span class="st">`</span><span class="dt">1971</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2000</span><span class="st">`</span>)</span>
+<span id="cb14-21"><a href="#cb14-21"></a><span class="co">#&gt; # A tibble: 293 x 4</span></span>
+<span id="cb14-22"><a href="#cb14-22"></a><span class="co">#&gt;    Flow       Product                                `1971`  `2000`</span></span>
+<span id="cb14-23"><a href="#cb14-23"></a><span class="co">#&gt;    &lt;chr&gt;      &lt;chr&gt;                                   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span id="cb14-24"><a href="#cb14-24"></a><span class="co">#&gt;  1 Production Primary solid biofuels                2088.   3891.  </span></span>
+<span id="cb14-25"><a href="#cb14-25"></a><span class="co">#&gt;  2 Production Hydro                                  250.    568.  </span></span>
+<span id="cb14-26"><a href="#cb14-26"></a><span class="co">#&gt;  3 Imports    Crude oil                              916.   1308.  </span></span>
+<span id="cb14-27"><a href="#cb14-27"></a><span class="co">#&gt;  4 Imports    Liquefied petroleum gases (LPG)         NA      39.5 </span></span>
+<span id="cb14-28"><a href="#cb14-28"></a><span class="co">#&gt;  5 Imports    Motor gasoline excl. biofuels           NA     430.  </span></span>
+<span id="cb14-29"><a href="#cb14-29"></a><span class="co">#&gt;  6 Imports    Aviation gasoline                        1.07    5.35</span></span>
+<span id="cb14-30"><a href="#cb14-30"></a><span class="co">#&gt;  7 Imports    Kerosene type jet fuel excl. biofuels   21.3    32.0 </span></span>
+<span id="cb14-31"><a href="#cb14-31"></a><span class="co">#&gt;  8 Imports    Other kerosene                           1.05   NA   </span></span>
+<span id="cb14-32"><a href="#cb14-32"></a><span class="co">#&gt;  9 Imports    Gas/diesel oil excl. biofuels           NA     409.  </span></span>
+<span id="cb14-33"><a href="#cb14-33"></a><span class="co">#&gt; 10 Imports    Lubricants                              18.1    31.1 </span></span>
+<span id="cb14-34"><a href="#cb14-34"></a><span class="co">#&gt; # … with 283 more rows</span></span></code></pre></div>
+</div>
 <div id="conclusion" class="section level1">
 <h1 class="hasAnchor">
 <a href="#conclusion" class="anchor"></a>Conclusion</h1>
@@ -380,6 +470,7 @@ IEA extended energy balance data format.
       <li><a href="#next-steps">Next steps</a></li>
       <li><a href="#the-load_tidy_iea_df-function">The <code>load_tidy_iea_df()</code> function</a></li>
       <li><a href="#check-data-integrity">Check data integrity</a></li>
+      <li><a href="#sorting">Sorting</a></li>
       <li><a href="#conclusion">Conclusion</a></li>
       </ul>
 </div>
