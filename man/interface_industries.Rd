@@ -4,7 +4,9 @@
 \name{interface_industries}
 \alias{interface_industries}
 \title{Interface industries}
-\format{A string vector with 5 entries}
+\format{
+A string vector with 5 entries
+}
 \usage{
 interface_industries
 }

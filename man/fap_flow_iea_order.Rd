@@ -4,7 +4,9 @@
 \name{fap_flow_iea_order}
 \alias{fap_flow_iea_order}
 \title{IEA order for combined flow aggregation point and flow}
-\format{A string vector}
+\format{
+A string vector
+}
 \usage{
 fap_flow_iea_order
 }

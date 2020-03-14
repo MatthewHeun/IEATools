@@ -4,7 +4,9 @@
 \name{product_iea_order}
 \alias{product_iea_order}
 \title{IEA order for products}
-\format{A string vector}
+\format{
+A string vector
+}
 \usage{
 product_iea_order
 }

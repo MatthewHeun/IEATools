@@ -4,7 +4,9 @@
 \name{transport_flows}
 \alias{transport_flows}
 \title{Transport flows}
-\format{A string vector with 8 entries}
+\format{
+A string vector with 8 entries
+}
 \usage{
 transport_flows
 }

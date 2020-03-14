@@ -4,7 +4,9 @@
 \name{manufacturing_flows}
 \alias{manufacturing_flows}
 \title{Manufacturing flows}
-\format{A string vector with 15 entries}
+\format{
+A string vector with 15 entries
+}
 \usage{
 manufacturing_flows
 }

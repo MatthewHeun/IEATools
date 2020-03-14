@@ -4,7 +4,9 @@
 \name{tfc_compare_flows}
 \alias{tfc_compare_flows}
 \title{Total final consumption comparison flows}
-\format{A string vector with 6 entries}
+\format{
+A string vector with 6 entries
+}
 \usage{
 tfc_compare_flows
 }

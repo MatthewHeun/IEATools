@@ -4,7 +4,9 @@
 \name{primary_oil_products}
 \alias{primary_oil_products}
 \title{Primary oil products}
-\format{A string vector with 2 entries}
+\format{
+A string vector with 2 entries
+}
 \usage{
 primary_oil_products
 }

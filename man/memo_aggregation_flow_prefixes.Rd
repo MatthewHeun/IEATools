@@ -4,7 +4,9 @@
 \name{memo_aggregation_flow_prefixes}
 \alias{memo_aggregation_flow_prefixes}
 \title{Memo and aggregation flow prefixes}
-\format{A string vector with 3 entries}
+\format{
+A string vector with 3 entries
+}
 \usage{
 memo_aggregation_flow_prefixes
 }

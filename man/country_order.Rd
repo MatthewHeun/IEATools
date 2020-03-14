@@ -4,7 +4,9 @@
 \name{country_order}
 \alias{country_order}
 \title{Country order}
-\format{A string vector}
+\format{
+A string vector
+}
 \usage{
 country_order
 }

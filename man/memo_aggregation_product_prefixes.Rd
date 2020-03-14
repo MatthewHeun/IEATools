@@ -4,7 +4,9 @@
 \name{memo_aggregation_product_prefixes}
 \alias{memo_aggregation_product_prefixes}
 \title{Memo and aggregation product prefixes}
-\format{A string vector with 2 entries}
+\format{
+A string vector with 2 entries
+}
 \usage{
 memo_aggregation_product_prefixes
 }

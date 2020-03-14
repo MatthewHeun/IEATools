@@ -4,7 +4,9 @@
 \name{primary_coal_products}
 \alias{primary_coal_products}
 \title{Primary coal products}
-\format{A string vector with 7 entries}
+\format{
+A string vector with 7 entries
+}
 \usage{
 primary_coal_products
 }

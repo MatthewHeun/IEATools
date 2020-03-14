@@ -4,7 +4,9 @@
 \name{valid_iea_release_years}
 \alias{valid_iea_release_years}
 \title{IEA release years supported by this package}
-\format{A numeric vector with 2 entries}
+\format{
+A numeric vector with 2 entries
+}
 \usage{
 valid_iea_release_years
 }

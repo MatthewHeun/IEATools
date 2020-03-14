@@ -4,7 +4,9 @@
 \name{aggregation_flows}
 \alias{aggregation_flows}
 \title{Aggregation flows}
-\format{A string vector with 8 entries}
+\format{
+A string vector with 8 entries
+}
 \usage{
 aggregation_flows
 }

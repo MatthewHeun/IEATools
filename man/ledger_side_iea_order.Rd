@@ -4,7 +4,9 @@
 \name{ledger_side_iea_order}
 \alias{ledger_side_iea_order}
 \title{IEA order for ledger side}
-\format{A string vector}
+\format{
+A string vector
+}
 \usage{
 ledger_side_iea_order
 }

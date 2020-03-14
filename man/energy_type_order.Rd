@@ -4,7 +4,9 @@
 \name{energy_type_order}
 \alias{energy_type_order}
 \title{Energy type order}
-\format{A string vector}
+\format{
+A string vector
+}
 \usage{
 energy_type_order
 }

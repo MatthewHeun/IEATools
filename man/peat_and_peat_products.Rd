@@ -4,7 +4,9 @@
 \name{peat_and_peat_products}
 \alias{peat_and_peat_products}
 \title{Peat and peat products}
-\format{A string vector with 2 entries}
+\format{
+A string vector with 2 entries
+}
 \usage{
 peat_and_peat_products
 }

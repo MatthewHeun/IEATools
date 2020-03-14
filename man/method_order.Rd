@@ -4,7 +4,9 @@
 \name{method_order}
 \alias{method_order}
 \title{Method order}
-\format{A string vector}
+\format{
+A string vector
+}
 \usage{
 method_order
 }

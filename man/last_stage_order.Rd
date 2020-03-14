@@ -4,7 +4,9 @@
 \name{last_stage_order}
 \alias{last_stage_order}
 \title{Last stage order}
-\format{A string vector}
+\format{
+A string vector
+}
 \usage{
 last_stage_order
 }

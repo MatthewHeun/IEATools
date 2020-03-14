@@ -4,7 +4,9 @@
 \name{tfc_flows}
 \alias{tfc_flows}
 \title{Total final consumption flows}
-\format{A string vector with 4 entries}
+\format{
+A string vector with 4 entries
+}
 \usage{
 tfc_flows
 }

@@ -4,7 +4,9 @@
 \name{renewable_products}
 \alias{renewable_products}
 \title{Renewable products}
-\format{A string vector with 23 entries}
+\format{
+A string vector with 23 entries
+}
 \usage{
 renewable_products
 }

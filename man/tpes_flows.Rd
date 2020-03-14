@@ -4,7 +4,9 @@
 \name{tpes_flows}
 \alias{tpes_flows}
 \title{Total primary energy supply flows}
-\format{A string vector with 6 entries}
+\format{
+A string vector with 6 entries
+}
 \usage{
 tpes_flows
 }
