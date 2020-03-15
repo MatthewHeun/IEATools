@@ -52,14 +52,25 @@
 #' fixed %>% 
 #'   filter(Year == 1991, Flow == "Production") %>% 
 #'   select("E.dot", "Unit")
-fix_GHA_psb <- function(.tidy_iea_df) {
+fix_GHA_psb <- function(.tidy_iea_df,
+                        col_names = iea_cols,
+                        country = col_names$country, 
+                        method = col_names$method, 
+                        energy_type = col_names$energy_type,
+                        last_stage = col_names$last_stage,
+                        ledger_side = col_names$ledger_side, 
+                        flow_aggregation_point = col_names$flow_aggregation_point,
+                        flow = col_names$flow,
+                        product = col_names$product,
+                        unit = col_names$unit,
+                        year = col_names$year){
   # The internal data that contains the updated Ghana Primary Solid Biofuel data
   # can be accessed with Fixed_GHA_PSB.
   # We'll do a left-join with .tidy_iea_df to pull the updated data into the tidy data frame.
   .tidy_iea_df %>% 
     # anti_join eliminates all rows in .tidy_iea_df that will be replaced
-    dplyr::anti_join(Fixed_GHA_PSB, by = c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side",
-                                           "Flow.aggregation.point", "Flow", "Product", "Unit", "Year")) %>% 
+    dplyr::anti_join(Fixed_GHA_PSB, by = c(country, method, energy_type, last_stage, ledger_side,
+                                           flow_aggregation_point, flow, product, unit, year)) %>% 
     # Now add the new data at the bottom.
     dplyr::bind_rows(Fixed_GHA_PSB)
 }
