@@ -1,0 +1,29 @@
+---
+title: "Fixes for IEA Data"
+author: "Matthew Kuperus Heun"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    fig_caption: yes
+vignette: >
+  %\VignetteIndexEntry{Fixes for IEA Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(IEATools)
+```
+
+## Introduction
+
+Some data in the IEA extended energy balances is incomplete or incorrect.
+The `IEATools` package provides functions to fix the incomplete or incorrect data.
+These fixes emerge from detailed country studies that lead to academic papers.
