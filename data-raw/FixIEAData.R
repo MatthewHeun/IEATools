@@ -63,7 +63,7 @@ Fixed_GHA_Industry_Electricity <- openxlsx::read.xlsx(xlsxFile = file.path("data
 
 # Use these data frames as internal objects in the package.
 # These objects are stored in R/sysdata.rda and can be accessed by
-# IEATools:::Fixed_GHA_PSB, for example.
+# Fixed_GHA_PSB, for example.
 usethis::use_data(Fixed_GHA_PSB, Fixed_GHA_Industry_Electricity, internal = TRUE, overwrite = TRUE)
 
 
