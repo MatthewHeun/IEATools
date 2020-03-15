@@ -4,10 +4,45 @@
 \alias{fix_GHA_psb}
 \title{Fix Ghana Primary solid biofuels data from 1991 through 1999}
 \usage{
-fix_GHA_psb(.tidy_iea_df)
+fix_GHA_psb(
+  .tidy_iea_df,
+  col_names = IEATools::iea_cols,
+  country = col_names$country,
+  method = col_names$method,
+  energy_type = col_names$energy_type,
+  last_stage = col_names$last_stage,
+  ledger_side = col_names$ledger_side,
+  flow_aggregation_point = col_names$flow_aggregation_point,
+  flow = col_names$flow,
+  product = col_names$product,
+  unit = col_names$unit,
+  year = col_names$year
+)
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy IEA data frame produced by \code{\link[=load_tidy_iea_df]{load_tidy_iea_df()}}}
+
+\item{col_names}{a list of column names in IEA data frames. Default is \code{iea_cols}.}
+
+\item{country}{the name of the country column in \code{.tidy_iea_df}. Default is \code{col_names$country}.}
+
+\item{method}{the name of the method column in \code{.tidy_iea_df}. Default is \code{col_names$method}.}
+
+\item{energy_type}{the name of the energy type column in \code{.tidy_iea_df}. Default is \code{col_names$energy_type}.}
+
+\item{last_stage}{the name of the last stage column in \code{.tidy_iea_df}. Default is \code{col_names$last_stage}.}
+
+\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is \code{col_names$ledger_side}.}
+
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is \code{col_names$flow_aggregation_point}.}
+
+\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is \code{col_names$flow}.}
+
+\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is \code{col_names$product}.}
+
+\item{unit}{the name of the unit column in \code{.tidy_iea_df}. Default is \code{col_names$unit}.}
+
+\item{year}{the name of the year column in \code{.tidy_iea_df}. Default is \code{col_names$year}.}
 }
 \value{
 \code{.tidy_iea_df} with smoothed Ghana Primary solid biofuels data

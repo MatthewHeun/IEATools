@@ -21,6 +21,17 @@
 #' for additional details.
 #'
 #' @param .tidy_iea_df a tidy IEA data frame produced by [load_tidy_iea_df()]
+#' @param col_names a list of column names in IEA data frames. Default is `IEATools::iea_cols`.
+#' @param country the name of the country column in `.tidy_iea_df`. Default is `col_names$country`.
+#' @param method the name of the method column in `.tidy_iea_df`. Default is `col_names$method`.
+#' @param energy_type the name of the energy type column in `.tidy_iea_df`. Default is `col_names$energy_type`.
+#' @param last_stage the name of the last stage column in `.tidy_iea_df`. Default is `col_names$last_stage`.
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is `col_names$ledger_side`.
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is `col_names$flow_aggregation_point`.
+#' @param flow the name of the flow column in `.tidy_iea_df`. Default is `col_names$flow`.
+#' @param product the name of the product column in `.tidy_iea_df`. Default is `col_names$product`.
+#' @param unit the name of the unit column in `.tidy_iea_df`. Default is `col_names$unit`.
+#' @param year the name of the year column in `.tidy_iea_df`. Default is `col_names$year`.
 #'
 #' @return `.tidy_iea_df` with smoothed Ghana Primary solid biofuels data
 #' 
@@ -53,7 +64,7 @@
 #'   filter(Year == 1991, Flow == "Production") %>% 
 #'   select("E.dot", "Unit")
 fix_GHA_psb <- function(.tidy_iea_df,
-                        col_names = iea_cols,
+                        col_names = IEATools::iea_cols,
                         country = col_names$country, 
                         method = col_names$method, 
                         energy_type = col_names$energy_type,
@@ -64,19 +75,34 @@ fix_GHA_psb <- function(.tidy_iea_df,
                         product = col_names$product,
                         unit = col_names$unit,
                         year = col_names$year){
-  # The internal data that contains the updated Ghana Primary Solid Biofuel data
+  # Figure out the years present in the .tidy_iea_df
+  years_present <- .tidy_iea_df[[year]] %>% 
+    unique()
+  # The internal data that contains the updated Ghana Primary solid biofuels data
   # can be accessed with Fixed_GHA_PSB.
-  # We'll do a left-join with .tidy_iea_df to pull the updated data into the tidy data frame.
+  data_to_bind <- Fixed_GHA_PSB %>% 
+    dplyr::filter(!!as.name(year) %in% years_present)
   .tidy_iea_df %>% 
     # anti_join eliminates all rows in .tidy_iea_df that will be replaced
     dplyr::anti_join(Fixed_GHA_PSB, by = c(country, method, energy_type, last_stage, ledger_side,
                                            flow_aggregation_point, flow, product, unit, year)) %>% 
     # Now add the new data at the bottom.
-    dplyr::bind_rows(Fixed_GHA_PSB)
+    dplyr::bind_rows(data_to_bind)
 }
 
 
-fix_GHA_industry_electricity <- function(.iea_df) {
+fix_GHA_industry_electricity <- function(.tidy_iea_df,
+                                         col_names = IEATools::iea_cols,
+                                         country = col_names$country, 
+                                         method = col_names$method, 
+                                         energy_type = col_names$energy_type,
+                                         last_stage = col_names$last_stage,
+                                         ledger_side = col_names$ledger_side, 
+                                         flow_aggregation_point = col_names$flow_aggregation_point,
+                                         flow = col_names$flow,
+                                         product = col_names$product,
+                                         unit = col_names$unit,
+                                         year = col_names$year) {
   
 }
 
