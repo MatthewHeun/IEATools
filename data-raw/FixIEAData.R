@@ -35,6 +35,17 @@ Fixed_GHA_PSB <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "GHA-PSB.x
     !!as.name(iea_cols$year) := as.numeric(!!as.name(iea_cols$year))
   )
 
+
+# Ghana's Industry Electricity data have specifics for 
+# Mining and quarrying,
+# Non-ferrous metals, and
+# Textile and leather
+# for the years 1971--1973 only.
+# However, data to bring more specificity to Industry Electricity consumption 
+# are available from the Ghana Grid Corporation (GridCo) and the Volta River Authority (VRA).
+# These data have been compiled in the GHA-IndustryElectricity.xlsx file.
+# We read the file here and make it available for use internally to the packjage.
+# The function fix_GHA_industry_electricity() makes use of these data.
 Fixed_GHA_Industry_Electricity <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "GHA-IndustryElectricity.xlsx"), 
                                                                            sheet = "FixedGHAIndustryElectricity") %>% 
   tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = iea_cols$year, values_to = iea_cols$e_dot) %>% 
