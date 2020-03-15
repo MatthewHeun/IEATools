@@ -1,3 +1,5 @@
+* Added named `iea_cols` object to simplify and standardize names for columns in IEA data frames,
+  both tidy and wide.
 * Added a "Sorting" section to the IEATools vignette.
   It describes the `sort_iea_df()` function.
 * `sort_iea_df()` previously worked only with tidy data frames (with a column of years).

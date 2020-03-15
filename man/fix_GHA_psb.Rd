@@ -2,7 +2,7 @@
 % Please edit documentation in R/fixes.R
 \name{fix_GHA_psb}
 \alias{fix_GHA_psb}
-\title{Fix Ghana Primary solid biofuels data from 1991 through 1999}
+\title{Improve Ghana Primary solid biofuels data from 1991 through 1999}
 \usage{
 fix_GHA_psb(
   .tidy_iea_df,
@@ -22,7 +22,7 @@ fix_GHA_psb(
 \arguments{
 \item{.tidy_iea_df}{a tidy IEA data frame produced by \code{\link[=load_tidy_iea_df]{load_tidy_iea_df()}}}
 
-\item{col_names}{a list of column names in IEA data frames. Default is \code{iea_cols}.}
+\item{col_names}{a list of column names in IEA data frames. Default is \code{IEATools::iea_cols}.}
 
 \item{country}{the name of the country column in \code{.tidy_iea_df}. Default is \code{col_names$country}.}
 
@@ -63,6 +63,8 @@ M. K. Heun and P. E. Brockway.
 Meeting 2030 primary energy and economic growth goals: Mission impossible?
 Applied Energy, 251(112697):1–24, May 2019
 for additional details.
+
+Also see the file named "GHA-PSB.xlsx" for the actual calculations.
 }
 \examples{
 library(dplyr)
@@ -77,9 +79,7 @@ example_tidy_iea_df <- load_tidy_iea_df() \%>\%
       Year == 1971 ~ 1991,
       Year == 2000 ~ 1992
     )
-  ) \%>\% 
-  # Filter rows from years beyond our interest for this test.
-  filter(Year \%in\% c(1991, 1992))
+  ) 
 example_tidy_iea_df
 fixed <- example_tidy_iea_df \%>\% 
   fix_GHA_psb()

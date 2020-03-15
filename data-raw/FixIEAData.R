@@ -37,10 +37,10 @@ Fixed_GHA_PSB <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "GHA-PSB.x
 
 Fixed_GHA_Industry_Electricity <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "GHA-IndustryElectricity.xlsx"), 
                                                                            sheet = "FixedGHAIndustryElectricity") %>% 
-  tidyr::pivot_longer(tidyselect::matches(year_pattern), names_to = iea_cols$year, values_to = iea_cols$e_dot) %>% 
+  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = iea_cols$year, values_to = iea_cols$e_dot) %>% 
   dplyr::filter(
     # Eliminate rows that have 0 energy.
-    !!as.name(iea_cols$e_dot) != 0
+    !!as.name(iea_cols$e_dot) != 0, 
   ) %>% 
   dplyr::mutate(
     !!as.name(iea_cols$year) := as.numeric(!!as.name(iea_cols$year))
