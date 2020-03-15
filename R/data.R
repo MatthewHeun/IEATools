@@ -10,6 +10,22 @@
 "valid_iea_release_years"
 
 
+#' IEA data frame columns
+#'
+#' A string list containing named names of columns in IEA data frames.
+#' These data frames can be 
+#' tidy (one row per data point) or
+#' wide (years spread to the right).
+#' Names of the items in the list are the typical function arguments
+#' for column names.
+#' 
+#' @format A string list with 10 entries
+#' 
+#' @examples
+#' iea_cols
+"iea_cols"
+
+
 #' Coal and coal products
 #'
 #' A string vector containing names of products classified by the IEA as coal and coal products.
