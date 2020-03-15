@@ -13,6 +13,26 @@ library(IEATools)
 valid_iea_release_years <- c(2018, 2019)
 usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 
+
+#
+# Give the column names of IEA data frames in typical left-to-right order.
+# 
+
+iea_cols <- list(country = "Country",
+                 method = "Method", 
+                 energy_type = "Energy.type", 
+                 last_stage = "Last.stage", 
+                 year = "Year",
+                 ledger_side = "Ledger.side", 
+                 flow_aggregation_point = "Flow.aggregation.point", 
+                 flow = "Flow", 
+                 product = "Product", 
+                 unit = "Unit", 
+                 e_dot = "E.dot"
+)
+usethis::use_data(iea_cols, overwrite = TRUE)
+
+
 #
 # Coal and coal products
 # 
