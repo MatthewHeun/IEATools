@@ -215,3 +215,19 @@ test_that("sorting a tidy IEA data frame works as expected", {
   expect_equal(sorted_wide$Flow.aggregation.point[[num_rows]], "Non-energy use")
   expect_equal(sorted_wide$Product[[num_rows]], "Paraffin waxes")
 })
+
+
+test_that("replace_join works as expected", {
+  DFA <- data.frame(x = c(1, 2), y = c("A", "B"), stringsAsFactors = FALSE)
+  DFB <- data.frame(x = c(2, 3), y = c("C", "D"), stringsAsFactors = FALSE)
+  
+  expect_equal(replace_join(DFA, DFB, replace_col = "y"),
+               data.frame(x = c(1, 2), y = c("A", "C"), stringsAsFactors = FALSE))
+  
+  expect_error(replace_join(DFA, DFB, replace_col = c("x", "y")), 
+               "length\\(replace_col\\) is 2 in replace_join. Must be 1.")
+  
+  DFC <- data.frame(x = c(2, 3), y = c("C", "D"), z = c("E", "F"), stringsAsFactors = FALSE)
+  expect_equal(replace_join(DFA, DFC, replace_col = c("y")), 
+               data.frame(x = c(1, 2), y = c("A", "C"), stringsAsFactors = FALSE))
+})

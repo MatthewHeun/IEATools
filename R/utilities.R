@@ -556,3 +556,57 @@ sort_iea_df <- function(.tidy_iea_df,
     # Remove factors from the sorting columns to return columns to character state.
     dplyr::mutate_at(c(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product), as.character)
 }
+
+
+#' `left_join` with replacement
+#' 
+#' This function adds a replacement join type to the various `*_join` functions in the dplyr package.
+#' `replace_join()` returns all rows from `x` and all columns from `x`.
+#'
+#' @param x 
+#' @param y 
+#' @param replace_col
+#' @param by 
+#' @param copy 
+#' @param suffix 
+#' @param ... 
+#'
+#' @return
+#' 
+#' @export
+#'
+#' @examples
+replace_join <- function(x, y, replace_col, 
+                         by = dplyr::intersect(names(x), names(y)) %>% dplyr::setdiff(replace_col), 
+                         copy = FALSE, 
+                         suffix = c(".x", ".y"), ...) {
+  assertthat::assert_that(length(replace_col) == 1, 
+                          msg = paste0("length(replace_col) is ", length(replace_col), " in replace_join. Must be 1."))
+  .x_col <- paste0(replace_col, suffix[[1]])
+  .y_col <- paste0(replace_col, suffix[[2]])
+  # Find the columns of y that are not in by or replace_col.
+  # These columns need to be removed from y, 
+  # else they appear in the output
+  remove_from_y <- dplyr::setdiff(names(y), dplyr::union(by, replace_col))
+  trimmed_y <- y
+  for (to_remove in remove_from_y) {
+    trimmed_y <- trimmed_y %>% 
+      dplyr::mutate(
+        !!as.name(to_remove) := NULL
+      )
+  }
+  # The algorithm here is 
+  #   * Do a left join
+  #   * keep the .x version if .y is NA
+  #   * keep the .y version if .y is not NA
+  #   * Delete the .x and .y columns
+  dplyr::left_join(x, trimmed_y, copy = copy, suffix = suffix, by = by, ... = ...) %>% 
+    dplyr::mutate(
+      !!as.name(replace_col) := dplyr::case_when(
+        is.na(!!as.name(.y_col)) ~ !!as.name(.x_col),
+        TRUE ~ !!as.name(.y_col)
+      ), 
+      !!as.name(.x_col) := NULL,
+      !!as.name(.y_col) := NULL
+    )
+}
