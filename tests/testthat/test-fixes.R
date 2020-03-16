@@ -89,7 +89,7 @@ test_that("Fixing GHA PSB works as expected", {
 })
 
 
-test_that("IEA data lacking Ghana is not fixed", {
+test_that("IEA data lacking Ghana is not fixed for PSBs", {
   # Load some example IEA data
   tidy_example <- load_tidy_iea_df() %>% 
     # Exclude Ghana
