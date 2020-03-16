@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, include = FALSE}
+library(dplyr)
 library(IEATools)
 ```
 
@@ -27,3 +28,153 @@ library(IEATools)
 Some data in the IEA extended energy balances is incomplete or incorrect.
 The `IEATools` package provides functions to fix the incomplete or incorrect data.
 These fixes emerge from detailed country studies that lead to academic papers.
+
+
+## The fixes
+
+At present, there are two fixes to IEA data.
+
+
+### Ghana Primary solid biofuels
+
+Ghana's Primary solid biofuels data show a very large and dramatic decline from 1999 to 2000.
+This decline is due to new survey data being used for the 2000 data.  
+When we look at the PSB data on a per-capita basis, it is clear that 
+a near-constant PSB/capita value was used to extrapolate per-capita usage in the late 1990s.
+When new survey data became available for the 2000 reporting year, 
+the per-capita consumption of PSB obviously changed.  
+Our approach to this problem is to smooth out the large peak in PSB consumption 
+by reducing the per-capita consumption of PSB
+in the years 1991--1999.
+See the Supplementary material (especially section S2.7) for   
+
+M. K. Heun and P. E. Brockway. 
+Meeting 2030 primary energy and economic growth goals: Mission impossible? 
+Applied Energy, 251(112697):1–24, May 2019
+
+available [here](http://www.doi.org/10.1016/j.apenergy.2019.01.255)
+for additional details.
+
+An example data frame can be constructed 
+from the example data supplied with this package
+using `load_tidy_iea_df()`.
+We pretend that 1971 is 1991 and 2000 is 1992.
+
+```{r}
+example_tidy_iea_df <- load_tidy_iea_df() %>% 
+  dplyr::filter(Country == "GHA") %>% 
+  dplyr::filter(Product == "Primary solid biofuels") %>% 
+  dplyr::mutate(
+    Year := dplyr::case_when(
+      Year == 1971 ~ 1991,
+      Year == 2000 ~ 1992
+    )
+  ) 
+example_tidy_iea_df %>% 
+  dplyr::filter(Product == "Primary solid biofuels") %>% 
+  dplyr::select(Year, Flow.aggregation.point, Flow, E.dot, Unit)
+fixed <- example_tidy_iea_df %>% 
+  fix_GHA_psb()
+```
+
+Comparing production of Primary solid biofuels in 1991
+shows that production rates have changed.
+
+```{r}
+example_tidy_iea_df %>% 
+  dplyr::filter(Year == 1991, Flow == "Production") %>% 
+  dplyr::select("E.dot", "Unit")
+fixed %>% 
+  dplyr::filter(Year == 1991, Flow == "Production") %>% 
+  dplyr::select("E.dot", "Unit")
+```
+
+The private object `Fixed_GHA_PSB` contains the replacement Primary solid biofuels data.
+
+
+### Ghana Industry Electricity
+
+IEA data for Ghana begins in 1971.
+For 1971--1973, the IEA maintained specificity for Electricity consumption in Industry, including
+
+* Mining and quarrying,
+* Non-ferrous metals, and 
+* Textile and leather.
+
+All other Electricity consumed in Industry is classified as "Industry not specified elsewhere".
+
+However, annual reports from the Ghana Grid Company ([GridCo](http://www.gridcogh.com)) and 
+the Volta River Authority ([VRA](https://www.vra.com)) provide a means to continue providing 
+specifics from 1974 to today.
+Gaining this specificity is especially helpful for the "Non-ferrous metals" category,
+because the pot lines at the Volta Aluminum Company ([VALCO](http://www.valcotema.com))
+convert electricity into high-temperature heat for aluminum smelting operations, 
+injecting large amounts of high-exergy heat into the economy.
+
+To add specificity to Ghana's Industry Electricity consumption, 
+use the `fix_GHA_industry_electricity()` function
+with the example data supplied with the package
+(`load_tidy_iea_df()`).
+
+```{r}
+example_tidy_iea_df <- load_tidy_iea_df() %>% 
+  dplyr::filter(Country == "GHA")
+fixed <- example_tidy_iea_df %>% 
+  fix_GHA_industry_electricity()
+```
+
+The 1973 data already have specific Industry Electricity consumption.,
+but the 2000 data do not.
+
+```{r}
+example_tidy_iea_df %>% 
+  dplyr::filter(Flow %in% c("Mining and quarrying",
+                     "Non-ferrous metals",
+                     "Textile and leather", 
+                     "Industry not elsewhere specified"), 
+         Product == "Electricity") %>% 
+  dplyr::select("Year", "Flow", "E.dot", "Unit")
+```
+
+The "fixed" data have added specificity.
+
+```{r}
+fixed %>% 
+  dplyr::filter(Flow %in% c("Mining and quarrying",
+                     "Non-ferrous metals",
+                     "Textile and leather", 
+                     "Industry not elsewhere specified"), 
+         Product == "Electricity") %>% 
+  dplyr::select("Year", "Flow", "E.dot", "Unit")
+```
+
+Note that the 2000 data are still in balance,
+with the sum of 
+"Mining and quarrying",
+"Non-ferrous metals",
+"Textile and leather", and 
+"Industry not elsewhere specified" 
+*after* fixing 
+equal to 
+"Industry not elsewhere specified" 
+*before* the fixing.
+
+```{r}
+example_tidy_iea_df %>% 
+  dplyr::filter(Year == 2000, 
+         Product == "Electricity", 
+         Flow == "Industry not elsewhere specified") %>% 
+  dplyr::select(E.dot) %>% 
+  as.numeric()
+fixed %>% 
+  dplyr::filter(Year == 2000, 
+         Product == "Electricity", 
+         Flow %in% c("Mining and quarrying",
+                     "Non-ferrous metals",
+                     "Textile and leather", 
+                     "Industry not elsewhere specified")) %>% 
+  dplyr::select(E.dot) %>% 
+  sum()
+```
+
+The private object `Fixed_GHA_Industry_Electricity` contains the replacement Industry electricity data.
