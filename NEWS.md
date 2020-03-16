@@ -1,3 +1,4 @@
+* Added function `replace_join()` to assist with IEA data fixes.
 * Added named `iea_cols` object to simplify and standardize names for columns in IEA data frames,
   both tidy and wide.
 * Added a "Sorting" section to the IEATools vignette.
