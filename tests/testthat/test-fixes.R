@@ -89,6 +89,28 @@ test_that("Fixing GHA PSB works as expected", {
 })
 
 
+test_that("IEA data lacking Ghana is not fixed", {
+  # Load some example IEA data
+  tidy_example <- load_tidy_iea_df() %>% 
+    # Exclude Ghana
+    dplyr::filter(Country != "GHA") %>% 
+    # Ghana has PSB for 1971 and 2000.  Let's pretend that 1971 is 1991 and 2000 is 1992
+    dplyr::mutate(
+      Year := dplyr::case_when(
+        Year == 1971 ~ 1991,
+        Year == 2000 ~ 1992
+      )
+    )
+  nrows_orig <- nrow(tidy_example)
+  
+  # Now fix the "Ghana" data
+  fixed <- fix_GHA_psb(tidy_example)
+  nrows_fixed <- nrow(fixed)
+  # We should not have added any rows.
+  expect_equal(nrows_fixed, nrows_orig)
+})
+
+
 test_that("Fixing GHA Industry Electricity works as expected", {
   tidy_example <- load_tidy_iea_df() %>% 
     # Focus on Ghana only

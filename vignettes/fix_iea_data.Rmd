@@ -52,8 +52,8 @@ M. K. Heun and P. E. Brockway.
 Meeting 2030 primary energy and economic growth goals: Mission impossible? 
 Applied Energy, 251(112697):1–24, May 2019
 
-available [here](http://www.doi.org/10.1016/j.apenergy.2019.01.255)
-for additional details.
+for additional details. 
+See (http://www.doi.org/10.1016/j.apenergy.2019.01.255).
 
 An example data frame can be constructed 
 from the example data supplied with this package
