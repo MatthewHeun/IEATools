@@ -558,35 +558,69 @@ sort_iea_df <- function(.tidy_iea_df,
 }
 
 
-#' `left_join` with replacement
+#' `full_join` with replacement
 #' 
-#' This function adds a replacement join type to the various `*_join` functions in the dplyr package.
-#' `replace_join()` returns all rows from `x` and all columns from `x`.
+#' Perform a modified `dplyr::full_join()` on `x` and `y`, 
+#' returning all columns from `c`, 
+#' non-matching rows from `x`,
+#' and all rows from `y`.
+#' Essentially `replace_join()` replaces matching rows in `x` with corresponding rows from `y`
+#' and adds all unmatched rows from `y`.
+#' 
+#' If `x` contains multiple matching rows, matching rows in `y` are inserted into `x` at each matching location.
+#' If `y` contains multiple matching rows, all are inserted into `x` at each matching location.
+#' See examples.
+#' 
+#' Columns of `x` and `y` named in `by` and `replace_col` should not be factors. 
 #'
-#' @param x 
-#' @param y 
-#' @param replace_col
-#' @param by 
-#' @param copy 
-#' @param suffix 
-#' @param ... 
+#' @param x object on which replace_join will be performed. 
+#'        `x` is the data frame in which rows will be replaced by matching rows from `y`.
+#' @param y object on which replace_join will be performed. 
+#'        `y` is the data frame from which replacement rows are obtained when matching rows are found
+#'        and from which unmatching rows are added to the outgoing data frame.
+#' @param replace_col the string name of the column (common to both `x` and `y`)
+#'        whose values in `y` will be inserted into `x` where row matches are found for the `by` columns.
+#'        `replace_col` should not be in `by`.
+#'        The default value of `by` ensures that `replace_col` is not in `by`.
+#' @param by the string names of columns (common to `x` and `y`) on which matching rows will be determined.
+#'        Default is `dplyr::intersect(names(x), names(y)) %>% dplyr::setdiff(replace_col)`.
+#'        This default ensures that `replace_col` is not in `by`, as required.
+#' @param copy passed to `dplyr::left_join()`. Default value is `FALSE`.
+#' @param suffix appended to `replace_col` to form the names of columns created in `x` during the internal `dplyr::left_join()` operation.
+#'        Default is `c(".x", ".y")`, same as the default for `dplyr::full_join()`.
+#' @param ... passed to `dplyr::full_join()`
 #'
-#' @return
+#' @return a copy of `x` in which matching `by` rows are replaced by matched rows from `y` and unmatched rows from `y` are added to `x`.
 #' 
 #' @export
 #'
 #' @examples
+#' DFA <- data.frame(x = c(1, 2), y = c("A", "B"), stringsAsFactors = FALSE)
+#' DFB <- data.frame(x = c(2, 3), y = c("C", "D"), stringsAsFactors = FALSE)
+#' replace_join(DFA, DFB, replace_col = "y")
+#' replace_join(DFB, DFA, replace_col = "y")
+#' DFC <- data.frame(x = c(2, 2), y = c("M", "N"), stringsAsFactors = FALSE)
+#' replace_join(DFA, DFC, replace_col = "y")
+#' replace_join(DFC, DFA, replace_col = "y")
+#' DFD <- data.frame(x = c(2, 2), y = c("A", "B"), stringsAsFactors = FALSE)
+#' replace_join(DFC, DFD, replace_col = "y")
 replace_join <- function(x, y, replace_col, 
                          by = dplyr::intersect(names(x), names(y)) %>% dplyr::setdiff(replace_col), 
                          copy = FALSE, 
                          suffix = c(".x", ".y"), ...) {
   assertthat::assert_that(length(replace_col) == 1, 
                           msg = paste0("length(replace_col) is ", length(replace_col), " in replace_join. Must be 1."))
+  # Check for factors and give error if any columns are factors.
+  assertthat::assert_that(!any(lapply(x[c(by, replace_col)], is.factor) %>% unlist()) &
+                            !any(lapply(y[c(by, replace_col)], is.factor) %>% unlist()), 
+                          msg = "Columns should not contain factors in arguments to replace_join")
+  assertthat::assert_that(! replace_col %in% by, msg = "replace_col must not be in by argument to replace_join")
+  # Make the names of the .x and .y columns
   .x_col <- paste0(replace_col, suffix[[1]])
   .y_col <- paste0(replace_col, suffix[[2]])
   # Find the columns of y that are not in by or replace_col.
   # These columns need to be removed from y, 
-  # else they appear in the output
+  # else they appear in the output.
   remove_from_y <- dplyr::setdiff(names(y), dplyr::union(by, replace_col))
   trimmed_y <- y
   for (to_remove in remove_from_y) {
@@ -595,12 +629,12 @@ replace_join <- function(x, y, replace_col,
         !!as.name(to_remove) := NULL
       )
   }
-  # The algorithm here is 
-  #   * Do a left join
+  # The algorithm is 
+  #   * Do a left join, which results in .x and .y columns for replace_col.
   #   * keep the .x version if .y is NA
   #   * keep the .y version if .y is not NA
   #   * Delete the .x and .y columns
-  dplyr::left_join(x, trimmed_y, copy = copy, suffix = suffix, by = by, ... = ...) %>% 
+  dplyr::full_join(x, trimmed_y, copy = copy, suffix = suffix, by = by, ... = ...) %>% 
     dplyr::mutate(
       !!as.name(replace_col) := dplyr::case_when(
         is.na(!!as.name(.y_col)) ~ !!as.name(.x_col),

@@ -161,20 +161,20 @@ test_that("Fixing GHA Industry Electricity works as expected", {
   
   # Ensure that data are still in balance
   orig <- tidy_example %>% 
-    filter(Year == 2000, 
+    dplyr::filter(Year == 2000, 
            Product == "Electricity", 
            Flow == "Industry not elsewhere specified") %>% 
-    select(E.dot) %>% 
+    dplyr::select(E.dot) %>% 
     unlist() %>% 
     as.numeric()
   new <- fixed_tidy_example %>% 
-    filter(Year == 2000, 
+    dplyr::filter(Year == 2000, 
            Product == "Electricity", 
            Flow %in% c("Mining and quarrying",
                        "Non-ferrous metals",
                        "Textile and leather", 
                        "Industry not elsewhere specified")) %>% 
-    select(E.dot) %>% 
+    dplyr::select(E.dot) %>% 
     sum()
   expect_equal(new, orig)
 })

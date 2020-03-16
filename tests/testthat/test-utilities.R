@@ -218,16 +218,96 @@ test_that("sorting a tidy IEA data frame works as expected", {
 
 
 test_that("replace_join works as expected", {
-  DFA <- data.frame(x = c(1, 2), y = c("A", "B"), stringsAsFactors = FALSE)
-  DFB <- data.frame(x = c(2, 3), y = c("C", "D"), stringsAsFactors = FALSE)
+  DFA <- tibble::tribble(~x, ~y, 
+                         1, "A", 
+                         2, "B")
+  DFB <- tibble::tribble(~x, ~y, 
+                         2, "C", 
+                         3, "D")
+                         
+  # Try with incorrect by argument. 
+  # replace_col is in by argument
+  expect_error(replace_join(DFA, DFB, replace_col = "y", by = c("x", "y")),
+               msg = "replace_col must not be in by argument to replace_join")
   
+  # But the default by argument ensures that replace_col is not in the by argument.
   expect_equal(replace_join(DFA, DFB, replace_col = "y"),
-               data.frame(x = c(1, 2), y = c("A", "C"), stringsAsFactors = FALSE))
-  
+               tibble::tribble(~x, ~y, 
+                               1, "A", 
+                               2, "C", 
+                               3, "D"))
+               
+  expect_equal(replace_join(DFB, DFA, replace_col = "y"),
+               tibble::tribble(~x, ~y, 
+                               2, "B", 
+                               3, "D", 
+                               1, "A"))
+
+  # Try with 2 columns in replace_col.
   expect_error(replace_join(DFA, DFB, replace_col = c("x", "y")), 
                "length\\(replace_col\\) is 2 in replace_join. Must be 1.")
   
   DFC <- data.frame(x = c(2, 3), y = c("C", "D"), z = c("E", "F"), stringsAsFactors = FALSE)
-  expect_equal(replace_join(DFA, DFC, replace_col = c("y")), 
-               data.frame(x = c(1, 2), y = c("A", "C"), stringsAsFactors = FALSE))
+  DFC <- tibble::tribble(~x, ~y, ~z, 
+                         2, "C", "E", 
+                         3, "D", "F")
+  expect_equal(replace_join(DFA, DFC, replace_col = "y"), 
+               tibble::tribble(~x, ~y, 
+                               1, "A", 
+                               2, "C", 
+                               3, "D"))
+  
+  # Try when replace_col is in by.  That isn't allowed.
+  expect_error(replace_join(DFA, DFB, replace_col = "y", by = c("x", "y")), 
+               msg = "replace_col must not be in by argument to replace_join")
+  
+  # Try with multiple matching rows
+  DFD <- tibble::tribble(~x, ~y,
+                         2, "M", 
+                         2, "N")
+  expect_equal(replace_join(DFA, DFD, replace_col = "y"), 
+               tibble::tribble(~x, ~y, 
+                               1, "A", 
+                               2, "M", 
+                               2, "N"))
+  expect_equal(replace_join(DFD, DFA, replace_col = "y"), 
+               tibble::tribble(~x, ~y, 
+                               2, "B", 
+                               2, "B", 
+                               1, "A"))
+
+  # Try when one of the columns in x or y contains factors.  
+  DFE <- tibble::tribble(~x, ~y, 
+                         1, "A", 
+                         2, "B") %>% dplyr::mutate(x = factor(x))
+  expect_error(replace_join(DFE, DFB, replace_col = "y"), 
+               msg = "Columns should not contain factors in arguments to replace_join")
+  
+  # Try with multiple columns in the by argument
+  DFF <- tibble::tribble(~x, ~y, ~z,
+                         1, "A", 1, 
+                         2, "B", 2)
+  DFG <- tibble::tribble(~x, ~y, ~z, 
+                         2, "B", 11, 
+                         3, "C", 12)
+  expect_equal(replace_join(DFF, DFG, replace_col = "z"), 
+               tibble::tribble(~x, ~y, ~z, 
+                               1, "A", 1,
+                               2, "B", 11,
+                               3, "C", 12))
+
+  # Try with columns that aren't used.
+  # In this case, the z column in DFE just comes along for the ride, yielding an NA value.
+  expect_equal(replace_join(DFF, DFB, replace_col = "y"), 
+               tibble::tribble(~x, ~z, ~y, 
+                               1, 1, "A", 
+                               2, 2, "C",
+                               3, NA_integer_, "D"))
+
+  # Try switching.  In this case, the z column in DFE is lost, as expected.
+  expect_equal(replace_join(DFB, DFF, replace_col = "y"),
+               tibble::tribble(~x, ~y, 
+                               2, "B", 
+                               3, "D", 
+                               1, "A"))
 })

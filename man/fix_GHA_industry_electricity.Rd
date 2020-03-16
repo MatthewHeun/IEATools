@@ -7,22 +7,16 @@
 fix_GHA_industry_electricity(
   .tidy_iea_df,
   col_names = IEATools::iea_cols,
-  country = col_names$country,
-  method = col_names$method,
-  energy_type = col_names$energy_type,
-  last_stage = col_names$last_stage,
-  ledger_side = col_names$ledger_side,
-  flow_aggregation_point = col_names$flow_aggregation_point,
-  flow = col_names$flow,
-  product = col_names$product,
-  unit = col_names$unit,
-  year = col_names$year
+  year = col_names$year,
+  e_dot = col_names$e_dot
 )
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy IEA data frame produced by \code{\link[=load_tidy_iea_df]{load_tidy_iea_df()}}}
 
 \item{col_names}{a list of column names in IEA data frames. Default is \code{IEATools::iea_cols}.}
+
+\item{year}{the name of the year column in \code{.tidy_iea_df}. Default is \code{col_names$year}.}
 
 \item{country}{the name of the country column in \code{.tidy_iea_df}. Default is \code{col_names$country}.}
 
@@ -41,8 +35,6 @@ fix_GHA_industry_electricity(
 \item{product}{the name of the product column in \code{.tidy_iea_df}. Default is \code{col_names$product}.}
 
 \item{unit}{the name of the unit column in \code{.tidy_iea_df}. Default is \code{col_names$unit}.}
-
-\item{year}{the name of the year column in \code{.tidy_iea_df}. Default is \code{col_names$year}.}
 }
 \value{
 \code{.tidy_iea_df} with smoothed Ghana Primary solid biofuels data
