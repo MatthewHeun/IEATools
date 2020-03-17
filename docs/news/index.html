@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.14</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.15</span>
       </span>
     </div>
 
@@ -129,6 +129,25 @@
       
     </div>
 
+    <div id="ieatools-0115-2020-03-16" class="section level1">
+<h1 class="page-header">
+<a href="#ieatools-0115-2020-03-16" class="anchor"></a>IEATools 0.1.15 (2020-03-16)</h1>
+<ul>
+<li>Now up to 429 tests!</li>
+<li>Added a <code>fix_iea_data</code> vignette.</li>
+<li>Did preparatory work for future <code>fix_*</code> functions, including the internal <code><a href="../reference/do_fix.html">do_fix()</a></code> function which will work for fixing data from any country in any years, so long as a replacement data frame is available.</li>
+<li>Added function <code><a href="../reference/fix_GHA_industry_electricity.html">fix_GHA_industry_electricity()</a></code> which adds specificity to Ghana’s industry electricity.</li>
+<li>Added function <code><a href="../reference/replace_join.html">replace_join()</a></code> to assist with IEA data fixes.</li>
+<li>Added named <code>iea_cols</code> object to simplify and standardize names for columns in IEA data frames, both tidy and wide.</li>
+<li>Added a “Sorting” section to the IEATools vignette. It describes the <code><a href="../reference/sort_iea_df.html">sort_iea_df()</a></code> function.</li>
+<li>renamed <code>sort_tidy_iea_df()</code> –&gt; <code><a href="../reference/sort_iea_df.html">sort_iea_df()</a></code>, because the function also sorts wide data frames.</li>
+<li>
+<code>sort_tidy_iea_df()</code> previously worked only with tidy data frames (with a column of years). <code>sort_tidy_iea_df()</code> now also works with wide data frames (with years spread to the right).</li>
+<li>Fixed a bug in <code>sort_tidy_iea_df()</code> that results in <code>NA</code> values in the <code>Last.stage</code> column.</li>
+<li>Added a function called <code>sort_tidy_iea_df()</code> which sorts tidy IEA data frames with default IEA row orders.</li>
+<li>Completed function called <code><a href="../reference/fix_GHA_psb.html">fix_GHA_psb()</a></code> which smooths Ghana’s Primary solid biofuels data in the years 1991–1999.</li>
+</ul>
+</div>
     <div id="ieatools-0114-2020-03-11" class="section level1">
 <h1 class="page-header">
 <a href="#ieatools-0114-2020-03-11" class="anchor"></a>IEATools 0.1.14 (2020-03-11)</h1>
@@ -283,6 +302,7 @@ For example, “Hard coal (if no detail)” –&gt; “Hard coal (if no detail) 
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#ieatools-0115-2020-03-16">0.1.15</a></li>
         <li><a href="#ieatools-0114-2020-03-11">0.1.14</a></li>
         <li><a href="#ieatools-0113-2020-03-08">0.1.13</a></li>
         <li><a href="#ieatools-0112-2020-02-26">0.1.12</a></li>
