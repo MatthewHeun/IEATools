@@ -1,7 +1,7 @@
 # IEATools 0.1.15 (2020-03-16)
 
 * Now up to 429 tests!
-* Added a `fix_iea_data` vignette.
+* Added a `fix_iea_data` vignette.  See [Fixes for IEA Data](https://matthewheun.github.io/IEATools/articles/fix_iea_data.html).
 * Did preparatory work for future `fix_*` functions, including
   the internal `do_fix()` function which will work for fixing data from any country in any years,
   so long as a replacement data frame is available.
