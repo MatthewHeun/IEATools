@@ -228,7 +228,7 @@ test_that("replace_join works as expected", {
   # Try with incorrect by argument. 
   # replace_col is in by argument
   expect_error(replace_join(DFA, DFB, replace_col = "y", by = c("x", "y")),
-               msg = "replace_col must not be in by argument to replace_join")
+               msg = "replace_col must not be in the by argument to replace_join")
   
   # But the default by argument ensures that replace_col is not in the by argument.
   expect_equal(replace_join(DFA, DFB, replace_col = "y"),
@@ -310,4 +310,13 @@ test_that("replace_join works as expected", {
                                2, "B", 
                                3, "D", 
                                1, "A"))
+  
+  # Test with y missing replace_col
+  DFH <- tibble::tribble(~a, ~b, 
+                         1, 1, 
+                         2, 2)
+  expect_equal(replace_join(DFA, DFH, replace_col = "y"), DFA)
+  
+  # Test with x missing replace_col
+  expect_equal(replace_join(DFH, DFA, replace_col = "y"), DFH)
 })

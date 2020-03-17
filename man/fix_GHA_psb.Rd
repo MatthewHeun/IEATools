@@ -8,14 +8,6 @@ fix_GHA_psb(
   .tidy_iea_df,
   col_names = IEATools::iea_cols,
   country = col_names$country,
-  method = col_names$method,
-  energy_type = col_names$energy_type,
-  last_stage = col_names$last_stage,
-  ledger_side = col_names$ledger_side,
-  flow_aggregation_point = col_names$flow_aggregation_point,
-  flow = col_names$flow,
-  product = col_names$product,
-  unit = col_names$unit,
   year = col_names$year,
   e_dot = col_names$e_dot
 )
@@ -27,23 +19,9 @@ fix_GHA_psb(
 
 \item{country}{the name of the country column in \code{.tidy_iea_df}. Default is \code{col_names$country}.}
 
-\item{method}{the name of the method column in \code{.tidy_iea_df}. Default is \code{col_names$method}.}
-
-\item{energy_type}{the name of the energy type column in \code{.tidy_iea_df}. Default is \code{col_names$energy_type}.}
-
-\item{last_stage}{the name of the last stage column in \code{.tidy_iea_df}. Default is \code{col_names$last_stage}.}
-
-\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is \code{col_names$ledger_side}.}
-
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is \code{col_names$flow_aggregation_point}.}
-
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is \code{col_names$flow}.}
-
-\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is \code{col_names$product}.}
-
-\item{unit}{the name of the unit column in \code{.tidy_iea_df}. Default is \code{col_names$unit}.}
-
 \item{year}{the name of the year column in \code{.tidy_iea_df}. Default is \code{col_names$year}.}
+
+\item{e_dot}{the name of the energy flow rate column in \code{.tidy_iea_df}. Default is \code{col_names$e_dot}.}
 }
 \value{
 \code{.tidy_iea_df} with smoothed Ghana Primary solid biofuels data
@@ -59,6 +37,9 @@ Our approach to this problem is to smooth out the really big peak in PSB consump
 by reducing the per-capita consumption of PSB, starting in 1991.
 }
 \details{
+If \code{.tidy_iea_df} does not contain data from Ghana for the years in question,
+no fixing is performed, and \code{.tidy_iea_df} is returned unmodified.
+
 See the Supplemental information to
 M. K. Heun and P. E. Brockway.
 Meeting 2030 primary energy and economic growth goals: Mission impossible?

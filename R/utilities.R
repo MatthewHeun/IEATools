@@ -572,6 +572,8 @@ sort_iea_df <- function(.tidy_iea_df,
 #' See examples.
 #' 
 #' Columns of `x` and `y` named in `by` and `replace_col` should not be factors. 
+#' 
+#' If `replace_col` is not in both `x` and `y`, `x` is returned, unmodified.
 #'
 #' @param x object on which replace_join will be performed. 
 #'        `x` is the data frame in which rows will be replaced by matching rows from `y`.
@@ -608,13 +610,19 @@ replace_join <- function(x, y, replace_col,
                          by = dplyr::intersect(names(x), names(y)) %>% dplyr::setdiff(replace_col), 
                          copy = FALSE, 
                          suffix = c(".x", ".y"), ...) {
+  # Ensure that replace_col has length 1.
   assertthat::assert_that(length(replace_col) == 1, 
                           msg = paste0("length(replace_col) is ", length(replace_col), " in replace_join. Must be 1."))
+  # Ensure that x and y both have replace_col. If not, just return x.
+  if (! (replace_col %in% names(x) & replace_col %in% names(y))) {
+    return(x)
+  }
   # Check for factors and give error if any columns are factors.
   assertthat::assert_that(!any(lapply(x[c(by, replace_col)], is.factor) %>% unlist()) &
                             !any(lapply(y[c(by, replace_col)], is.factor) %>% unlist()), 
                           msg = "Columns should not contain factors in arguments to replace_join")
-  assertthat::assert_that(! replace_col %in% by, msg = "replace_col must not be in by argument to replace_join")
+  # Ensure that replace_col is not in by.
+  assertthat::assert_that(! replace_col %in% by, msg = "replace_col must not be in the by argument to replace_join")
   # Make the names of the .x and .y columns
   .x_col <- paste0(replace_col, suffix[[1]])
   .y_col <- paste0(replace_col, suffix[[2]])
@@ -630,7 +638,7 @@ replace_join <- function(x, y, replace_col,
       )
   }
   # The algorithm is 
-  #   * Do a left join, which results in .x and .y columns for replace_col.
+  #   * Do a full_join, which results in .x and .y columns for replace_col.
   #   * keep the .x version if .y is NA
   #   * keep the .y version if .y is not NA
   #   * Delete the .x and .y columns

@@ -7,6 +7,7 @@
 fix_GHA_industry_electricity(
   .tidy_iea_df,
   col_names = IEATools::iea_cols,
+  country = col_names$country,
   year = col_names$year,
   e_dot = col_names$e_dot
 )
@@ -16,28 +17,14 @@ fix_GHA_industry_electricity(
 
 \item{col_names}{a list of column names in IEA data frames. Default is \code{IEATools::iea_cols}.}
 
-\item{year}{the name of the year column in \code{.tidy_iea_df}. Default is \code{col_names$year}.}
-
 \item{country}{the name of the country column in \code{.tidy_iea_df}. Default is \code{col_names$country}.}
 
-\item{method}{the name of the method column in \code{.tidy_iea_df}. Default is \code{col_names$method}.}
+\item{year}{the name of the year column in \code{.tidy_iea_df}. Default is \code{col_names$year}.}
 
-\item{energy_type}{the name of the energy type column in \code{.tidy_iea_df}. Default is \code{col_names$energy_type}.}
-
-\item{last_stage}{the name of the last stage column in \code{.tidy_iea_df}. Default is \code{col_names$last_stage}.}
-
-\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is \code{col_names$ledger_side}.}
-
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is \code{col_names$flow_aggregation_point}.}
-
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is \code{col_names$flow}.}
-
-\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is \code{col_names$product}.}
-
-\item{unit}{the name of the unit column in \code{.tidy_iea_df}. Default is \code{col_names$unit}.}
+\item{e_dot}{the name of the energy flow rate column in \code{.tidy_iea_df}. Default is \code{colnames$e_dot}.}
 }
 \value{
-\code{.tidy_iea_df} with smoothed Ghana Primary solid biofuels data
+\code{.tidy_iea_df} with improved Ghana Industry Electricity, if warranted
 }
 \description{
 Ghana's Industry Electricity data are specified for
@@ -58,6 +45,9 @@ M. K. Heun and P. E. Brockway.
 Meeting 2030 primary energy and economic growth goals: Mission impossible?
 Applied Energy, 251(112697):1–24, May 2019
 for additional details.
+
+If \code{.tidy_iea_df} does not contain data from Ghana for the years in question,
+no fixing is performed, and \code{.tidy_iea_df} is returned unmodified.
 
 Also see the file named "GHA-IndustryElectricity.xlsx" for the actual calculations.
 }

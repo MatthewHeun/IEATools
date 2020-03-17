@@ -55,6 +55,8 @@ If \code{y} contains multiple matching rows, all are inserted into \code{x} at e
 See examples.
 
 Columns of \code{x} and \code{y} named in \code{by} and \code{replace_col} should not be factors.
+
+If \code{replace_col} is not in both \code{x} and \code{y}, \code{x} is returned, unmodified.
 }
 \examples{
 DFA <- data.frame(x = c(1, 2), y = c("A", "B"), stringsAsFactors = FALSE)
