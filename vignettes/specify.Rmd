@@ -367,4 +367,4 @@ all(Simple == Complicated)
 
 This vignette demonstrated how to specify details of primary and transformation process flows.
 The next step could be to prepare the IEA data for use within the PSUT framework.
-For details, see the [Prep PSUT](prep_psut.html) vignette.
+For details, see the [Prep PSUT](https://matthewheun.github.io/IEATools/articles/prep_psut.html) vignette.

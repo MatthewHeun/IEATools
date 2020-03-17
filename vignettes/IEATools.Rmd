@@ -47,7 +47,7 @@ in a .csv file format as shown in the following figure.
 knitr::include_graphics("figs/original_header.pdf")
 ```
 
-Example data from two countries, Ghana (GH) and South Africa (ZA), 
+Example data from two countries, Ghana (GHA) and South Africa (ZAF), 
 for two years, 1971 and 2000, are provided in the `IEATools` package.
 
 ```{r}
@@ -349,6 +349,6 @@ At this point, IEA extended energy balance
 data have been imported to `R` and
 are ready to be used. 
 The next step could be to specify some of the IEA energy flows.
-See the [specify](specify.html) vignette for details.
+See the [specify](https://matthewheun.github.io/IEATools/articles/specify.html) vignette for details.
 
 
