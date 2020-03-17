@@ -160,15 +160,8 @@ This function applies the fixes to years that are available in <code>.tidy_iea_d
   <span class='no'>.tidy_iea_df</span>,
   <span class='kw'>col_names</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/iea_cols.html'>iea_cols</a></span>,
   <span class='kw'>country</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>country</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>method</span>,
-  <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>energy_type</span>,
-  <span class='kw'>last_stage</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>last_stage</span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>ledger_side</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>flow_aggregation_point</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>flow</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>product</span>,
-  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>unit</span>,
-  <span class='kw'>year</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>year</span>
+  <span class='kw'>year</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>year</span>,
+  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>e_dot</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -187,46 +180,18 @@ This function applies the fixes to years that are available in <code>.tidy_iea_d
       <td><p>the name of the country column in <code>.tidy_iea_df</code>. Default is <code>col_names$country</code>.</p></td>
     </tr>
     <tr>
-      <th>method</th>
-      <td><p>the name of the method column in <code>.tidy_iea_df</code>. Default is <code>col_names$method</code>.</p></td>
-    </tr>
-    <tr>
-      <th>energy_type</th>
-      <td><p>the name of the energy type column in <code>.tidy_iea_df</code>. Default is <code>col_names$energy_type</code>.</p></td>
-    </tr>
-    <tr>
-      <th>last_stage</th>
-      <td><p>the name of the last stage column in <code>.tidy_iea_df</code>. Default is <code>col_names$last_stage</code>.</p></td>
-    </tr>
-    <tr>
-      <th>ledger_side</th>
-      <td><p>the name of the ledger side column in <code>.tidy_iea_df</code>. Default is <code>col_names$ledger_side</code>.</p></td>
-    </tr>
-    <tr>
-      <th>flow_aggregation_point</th>
-      <td><p>the name of the flow aggregation point column in <code>.tidy_iea_df</code>. Default is <code>col_names$flow_aggregation_point</code>.</p></td>
-    </tr>
-    <tr>
-      <th>flow</th>
-      <td><p>the name of the flow column in <code>.tidy_iea_df</code>. Default is <code>col_names$flow</code>.</p></td>
-    </tr>
-    <tr>
-      <th>product</th>
-      <td><p>the name of the product column in <code>.tidy_iea_df</code>. Default is <code>col_names$product</code>.</p></td>
-    </tr>
-    <tr>
-      <th>unit</th>
-      <td><p>the name of the unit column in <code>.tidy_iea_df</code>. Default is <code>col_names$unit</code>.</p></td>
-    </tr>
-    <tr>
       <th>year</th>
       <td><p>the name of the year column in <code>.tidy_iea_df</code>. Default is <code>col_names$year</code>.</p></td>
+    </tr>
+    <tr>
+      <th>e_dot</th>
+      <td><p>the name of the energy flow rate column in <code>.tidy_iea_df</code>. Default is <code>colnames$e_dot</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.tidy_iea_df</code> with smoothed Ghana Primary solid biofuels data</p>
+    <p><code>.tidy_iea_df</code> with improved Ghana Industry Electricity, if warranted</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>See the Supplemental information to
@@ -234,6 +199,8 @@ M. K. Heun and P. E. Brockway.
 Meeting 2030 primary energy and economic growth goals: Mission impossible?
 Applied Energy, 251(112697):1–24, May 2019
 for additional details.</p>
+<p>If <code>.tidy_iea_df</code> does not contain data from Ghana for the years in question,
+no fixing is performed, and <code>.tidy_iea_df</code> is returned unmodified.</p>
 <p>Also see the file named "GHA-IndustryElectricity.xlsx" for the actual calculations.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -283,10 +250,10 @@ for additional details.</p>
 #&gt; </span><span style='color: #555555;'>2</span><span>  </span><span style='text-decoration: underline;'>1</span><span>971 Non-ferrous metals               170.   ktoe 
 #&gt; </span><span style='color: #555555;'>3</span><span>  </span><span style='text-decoration: underline;'>1</span><span>971 Textile and leather                1.46 ktoe 
 #&gt; </span><span style='color: #555555;'>4</span><span>  </span><span style='text-decoration: underline;'>1</span><span>971 Industry not elsewhere specified  21.9  ktoe 
-#&gt; </span><span style='color: #555555;'>5</span><span>  </span><span style='text-decoration: underline;'>2</span><span>000 Mining and quarrying              45.4  ktoe 
-#&gt; </span><span style='color: #555555;'>6</span><span>  </span><span style='text-decoration: underline;'>2</span><span>000 Non-ferrous metals               219.   ktoe 
-#&gt; </span><span style='color: #555555;'>7</span><span>  </span><span style='text-decoration: underline;'>2</span><span>000 Textile and leather                2.27 ktoe 
-#&gt; </span><span style='color: #555555;'>8</span><span>  </span><span style='text-decoration: underline;'>2</span><span>000 Industry not elsewhere specified 104.   ktoe </div><div class='input'><span class='co'># Show that new data are still in balance</span>
+#&gt; </span><span style='color: #555555;'>5</span><span>  </span><span style='text-decoration: underline;'>2</span><span>000 Industry not elsewhere specified 104.   ktoe 
+#&gt; </span><span style='color: #555555;'>6</span><span>  </span><span style='text-decoration: underline;'>2</span><span>000 Mining and quarrying              45.4  ktoe 
+#&gt; </span><span style='color: #555555;'>7</span><span>  </span><span style='text-decoration: underline;'>2</span><span>000 Non-ferrous metals               219.   ktoe 
+#&gt; </span><span style='color: #555555;'>8</span><span>  </span><span style='text-decoration: underline;'>2</span><span>000 Textile and leather                2.27 ktoe </div><div class='input'><span class='co'># Show that new data are still in balance</span>
 <span class='no'>example_tidy_iea_df</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Year</span> <span class='kw'>==</span> <span class='fl'>2000</span>,
          <span class='no'>Product</span> <span class='kw'>==</span> <span class='st'>"Electricity"</span>,

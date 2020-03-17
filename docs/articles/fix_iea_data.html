@@ -90,7 +90,7 @@
       <h1>Fixes for IEA Data</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-03-15</h4>
+            <h4 class="date">2020-03-16</h4>
       
       
       <div class="hidden name"><code>fix_iea_data.Rmd</code></div>
@@ -115,7 +115,7 @@
 When we look at the PSB data on a per-capita basis, it is clear that a near-constant PSB/capita value was used to extrapolate per-capita usage in the late 1990s. When new survey data became available for the 2000 reporting year, the per-capita consumption of PSB obviously changed.<br>
 Our approach to this problem is to smooth out the large peak in PSB consumption by reducing the per-capita consumption of PSB in the years 1991–1999. See the Supplementary material (especially section S2.7) for</p>
 <p>M. K. Heun and P. E. Brockway. Meeting 2030 primary energy and economic growth goals: Mission impossible? Applied Energy, 251(112697):1–24, May 2019</p>
-<p>available <a href="http://www.doi.org/10.1016/j.apenergy.2019.01.255">here</a> for additional details.</p>
+<p>for additional details. See (<a href="http://www.doi.org/10.1016/j.apenergy.2019.01.255" class="uri">http://www.doi.org/10.1016/j.apenergy.2019.01.255</a>).</p>
 <p>An example data frame can be constructed from the example data supplied with this package using <code><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df()</a></code>. We pretend that 1971 is 1991 and 2000 is 1992.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>example_tidy_iea_df &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(Country <span class="op">==</span><span class="st"> "GHA"</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -208,10 +208,10 @@ Our approach to this problem is to smooth out the large peak in PSB consumption 
 <span id="cb5-12"><a href="#cb5-12"></a><span class="co">#&gt; 2  1971 Non-ferrous metals               170.   ktoe </span></span>
 <span id="cb5-13"><a href="#cb5-13"></a><span class="co">#&gt; 3  1971 Textile and leather                1.46 ktoe </span></span>
 <span id="cb5-14"><a href="#cb5-14"></a><span class="co">#&gt; 4  1971 Industry not elsewhere specified  21.9  ktoe </span></span>
-<span id="cb5-15"><a href="#cb5-15"></a><span class="co">#&gt; 5  2000 Mining and quarrying              45.4  ktoe </span></span>
-<span id="cb5-16"><a href="#cb5-16"></a><span class="co">#&gt; 6  2000 Non-ferrous metals               219.   ktoe </span></span>
-<span id="cb5-17"><a href="#cb5-17"></a><span class="co">#&gt; 7  2000 Textile and leather                2.27 ktoe </span></span>
-<span id="cb5-18"><a href="#cb5-18"></a><span class="co">#&gt; 8  2000 Industry not elsewhere specified 104.   ktoe</span></span></code></pre></div>
+<span id="cb5-15"><a href="#cb5-15"></a><span class="co">#&gt; 5  2000 Industry not elsewhere specified 104.   ktoe </span></span>
+<span id="cb5-16"><a href="#cb5-16"></a><span class="co">#&gt; 6  2000 Mining and quarrying              45.4  ktoe </span></span>
+<span id="cb5-17"><a href="#cb5-17"></a><span class="co">#&gt; 7  2000 Non-ferrous metals               219.   ktoe </span></span>
+<span id="cb5-18"><a href="#cb5-18"></a><span class="co">#&gt; 8  2000 Textile and leather                2.27 ktoe</span></span></code></pre></div>
 <p>Note that the 2000 data are still in balance, with the sum of “Mining and quarrying”, “Non-ferrous metals”, “Textile and leather”, and “Industry not elsewhere specified” <em>after</em> fixing equal to “Industry not elsewhere specified” <em>before</em> the fixing.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>example_tidy_iea_df <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb6-2"><a href="#cb6-2"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(Year <span class="op">==</span><span class="st"> </span><span class="dv">2000</span>, </span>

@@ -157,7 +157,19 @@ fix_HND_fuels <- function(.iea_df) {
 }
 
 
-
+#' Performs fixes to IEA data
+#' 
+#' This is an internal convenience function that performs fixes on IEA data
+#' given a replacement data frame. 
+#' It makes use of the `replace_join()` function internally.
+#'
+#' @param .tidy_iea_df the tidy IEA data frame to be fixed
+#' @param replacement a data frame containing the data that fixes the IEA data
+#' @param country the name of the country column in `.tidy_iea_df` and `replacement`
+#' @param year the name of the year column in `.tidy_iea_df` and `replacement`
+#' @param e_dot the name of the energy flow rate column in `.tidy_iea_df` and `replacement`
+#'
+#' @return a modified version of `.tidy_iea_df` with `replacement` included, if warranted
 do_fix <- function(.tidy_iea_df, 
                    replacement, 
                    country,

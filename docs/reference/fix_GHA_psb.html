@@ -154,15 +154,8 @@ by reducing the per-capita consumption of PSB, starting in 1991.</p>
   <span class='no'>.tidy_iea_df</span>,
   <span class='kw'>col_names</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/iea_cols.html'>iea_cols</a></span>,
   <span class='kw'>country</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>country</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>method</span>,
-  <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>energy_type</span>,
-  <span class='kw'>last_stage</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>last_stage</span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>ledger_side</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>flow_aggregation_point</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>flow</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>product</span>,
-  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>unit</span>,
-  <span class='kw'>year</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>year</span>
+  <span class='kw'>year</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>year</span>,
+  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>e_dot</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -181,40 +174,12 @@ by reducing the per-capita consumption of PSB, starting in 1991.</p>
       <td><p>the name of the country column in <code>.tidy_iea_df</code>. Default is <code>col_names$country</code>.</p></td>
     </tr>
     <tr>
-      <th>method</th>
-      <td><p>the name of the method column in <code>.tidy_iea_df</code>. Default is <code>col_names$method</code>.</p></td>
-    </tr>
-    <tr>
-      <th>energy_type</th>
-      <td><p>the name of the energy type column in <code>.tidy_iea_df</code>. Default is <code>col_names$energy_type</code>.</p></td>
-    </tr>
-    <tr>
-      <th>last_stage</th>
-      <td><p>the name of the last stage column in <code>.tidy_iea_df</code>. Default is <code>col_names$last_stage</code>.</p></td>
-    </tr>
-    <tr>
-      <th>ledger_side</th>
-      <td><p>the name of the ledger side column in <code>.tidy_iea_df</code>. Default is <code>col_names$ledger_side</code>.</p></td>
-    </tr>
-    <tr>
-      <th>flow_aggregation_point</th>
-      <td><p>the name of the flow aggregation point column in <code>.tidy_iea_df</code>. Default is <code>col_names$flow_aggregation_point</code>.</p></td>
-    </tr>
-    <tr>
-      <th>flow</th>
-      <td><p>the name of the flow column in <code>.tidy_iea_df</code>. Default is <code>col_names$flow</code>.</p></td>
-    </tr>
-    <tr>
-      <th>product</th>
-      <td><p>the name of the product column in <code>.tidy_iea_df</code>. Default is <code>col_names$product</code>.</p></td>
-    </tr>
-    <tr>
-      <th>unit</th>
-      <td><p>the name of the unit column in <code>.tidy_iea_df</code>. Default is <code>col_names$unit</code>.</p></td>
-    </tr>
-    <tr>
       <th>year</th>
       <td><p>the name of the year column in <code>.tidy_iea_df</code>. Default is <code>col_names$year</code>.</p></td>
+    </tr>
+    <tr>
+      <th>e_dot</th>
+      <td><p>the name of the energy flow rate column in <code>.tidy_iea_df</code>. Default is <code>col_names$e_dot</code>.</p></td>
     </tr>
     </table>
 
@@ -223,7 +188,9 @@ by reducing the per-capita consumption of PSB, starting in 1991.</p>
     <p><code>.tidy_iea_df</code> with smoothed Ghana Primary solid biofuels data</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>See the Supplemental information to
+    <p>If <code>.tidy_iea_df</code> does not contain data from Ghana for the years in question,
+no fixing is performed, and <code>.tidy_iea_df</code> is returned unmodified.</p>
+<p>See the Supplemental information to
 M. K. Heun and P. E. Brockway.
 Meeting 2030 primary energy and economic growth goals: Mission impossible?
 Applied Energy, 251(112697):1–24, May 2019

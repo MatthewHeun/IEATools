@@ -1,11 +1,18 @@
+* Now up to 429 tests!
+* Added a `fix_iea_data` vignette.
+* Did preparatory work for future `fix_*` functions, including
+  the internal `do_fix()` function which will work for fixing data from any country in any years,
+  so long as a replacement data frame is available.
+* Added function `fix_GHA_industry_electricity()` which adds specificity to Ghana's industry electricity.
 * Added function `replace_join()` to assist with IEA data fixes.
 * Added named `iea_cols` object to simplify and standardize names for columns in IEA data frames,
   both tidy and wide.
 * Added a "Sorting" section to the IEATools vignette.
   It describes the `sort_iea_df()` function.
-* `sort_iea_df()` previously worked only with tidy data frames (with a column of years).
-  `sort_iea_df()` now also works with wide data frames (with years spread to the right).
-* renamed `sort_tidy_iea_df()` --> `sort_iea_df()`
+* renamed `sort_tidy_iea_df()` --> `sort_iea_df()`, because 
+  the function also sorts wide data frames.
+* `sort_tidy_iea_df()` previously worked only with tidy data frames (with a column of years).
+  `sort_tidy_iea_df()` now also works with wide data frames (with years spread to the right).
 * Fixed a bug in `sort_tidy_iea_df()` that results in `NA` values in the `Last.stage` column.
 * Added a function called `sort_tidy_iea_df()` which sorts tidy IEA data frames
   with default IEA row orders.
