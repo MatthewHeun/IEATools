@@ -22,9 +22,9 @@ library(tidyr)
 ## Introduction
 
 After loading IEA data and ensuring that the data are balanced 
-(see the [vignette about loading data](http://IEATools.html)) and
+(see the [vignette about loading data](https://matthewheun.github.io/IEATools/articles/IEATools.html)) and
 specifying many of the flows
-(see the [vignette about specifying flows](http://specify.html)),
+(see the [vignette about specifying flows](https://matthewheun.github.io/IEATools/articles/specify.html)),
 the analyst can prepare for physical supply-use table (PSUT) analysis
 of an energy conversion chain.
 This vignette shows how to use the functions in the `IEATools` package
