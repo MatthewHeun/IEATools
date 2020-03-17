@@ -348,16 +348,15 @@ clean_iea_whitespace <- function(.iea_df,
 }
 
 
-#' Replace country names with 2-letter ISO abbreviations
+#' Replace country names with 3-letter ISO abbreviations
 #' 
-#' The IEA uses full country names, but it is more concise to use the 2-letter ISO abbreviations.
+#' The IEA uses full country names, but it is more concise to use the 3-letter ISO abbreviations.
 #' This function replaces the full country names with ISO abbreviations where possible.
 #'
 #' @param .iea_df a data frame containing a `country` column
-#' @param country the name of the country column in `.iea_df`. Default is "`Country`".
-#' @param iso_abbrev_type an integer, either `2` for 2-letter abbreviations or `3` for 3-letter abbreviations. Default is 3.
+#' @param country the name of the country column in `.iea_df`. Default is "Country".
 #'
-#' @return `.iea_df` with 2-letter ISO country abbreviations
+#' @return `.iea_df` with 3-letter ISO country abbreviations
 #' 
 #' @export
 #'
@@ -367,16 +366,11 @@ clean_iea_whitespace <- function(.iea_df,
 #'   rename_iea_df_cols() %>% 
 #'   use_iso_countries()
 use_iso_countries <- function(.iea_df, 
-                              country = "Country",
-                              iso_abbrev_type = 3){
+                              country = "Country"){
+  # Eliminates warnings.
+  country.name.en <- "country.name.en" 
+  iso_type = "iso3c"
   # Load country code information
-  country.name.en <- "country.name.en" # Eliminates a warning.
-  assertthat::assert_that(iso_abbrev_type %in% c(2, 3))
-  if (iso_abbrev_type == 2) {
-    iso_type = "iso2c"
-  } else if (iso_abbrev_type == 3) {
-    iso_type = "iso3c"
-  } 
   CountryInfo <- countrycode::codelist %>%
     dplyr::select(!!as.name(country.name.en), !!as.name(iso_type)) %>% 
     dplyr::rename(

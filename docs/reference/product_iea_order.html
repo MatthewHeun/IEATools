@@ -98,6 +98,9 @@
       <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
     </li>
     <li>
+      <a href="../articles/fix_iea_data.html">Fixes for IEA Data</a>
+    </li>
+    <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
     <li>
@@ -140,11 +143,93 @@
 
     <p>A string vector</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>product_iea_order</span></div><div class='output co'>#&gt;  [1] "Hard coal (if no detail)"                                    
+#&gt;  [2] "Brown coal (if no detail)"                                   
+#&gt;  [3] "Anthracite"                                                  
+#&gt;  [4] "Coking coal"                                                 
+#&gt;  [5] "Other bituminous coal"                                       
+#&gt;  [6] "Sub-bituminous coal"                                         
+#&gt;  [7] "Lignite"                                                     
+#&gt;  [8] "Hard coal (if no detail) (Coal mines)"                       
+#&gt;  [9] "Brown coal (if no detail) (Coal mines)"                      
+#&gt; [10] "Anthracite (Coal mines)"                                     
+#&gt; [11] "Coking coal (Coal mines)"                                    
+#&gt; [12] "Other bituminous coal (Coal mines)"                          
+#&gt; [13] "Sub-bituminous coal (Coal mines)"                            
+#&gt; [14] "Lignite (Coal mines)"                                        
+#&gt; [15] "Patent fuel"                                                 
+#&gt; [16] "Coke oven coke"                                              
+#&gt; [17] "Gas coke"                                                    
+#&gt; [18] "Coal tar"                                                    
+#&gt; [19] "BKB"                                                         
+#&gt; [20] "Gas works gas"                                               
+#&gt; [21] "Coke oven gas"                                               
+#&gt; [22] "Blast furnace gas"                                           
+#&gt; [23] "Other recovered gases"                                       
+#&gt; [24] "Peat"                                                        
+#&gt; [25] "Peat products"                                               
+#&gt; [26] "Oil shale and oil sands"                                     
+#&gt; [27] "Crude/NGL/feedstocks (if no detail) (Oil and gas extraction)"
+#&gt; [28] "Crude oil (Oil and gas extraction)"                          
+#&gt; [29] "Natural gas liquids (Oil and gas extraction)"                
+#&gt; [30] "Additives/blending components (Oil and gas extraction)"      
+#&gt; [31] "Other hydrocarbons (Oil and gas extraction)"                 
+#&gt; [32] "Oil shale and oil sands (Oil and gas extraction)"            
+#&gt; [33] "Natural gas"                                                 
+#&gt; [34] "Natural gas (Oil and gas extraction)"                        
+#&gt; [35] "Crude/NGL/feedstocks (if no detail)"                         
+#&gt; [36] "Crude oil"                                                   
+#&gt; [37] "Natural gas liquids"                                         
+#&gt; [38] "Refinery feedstocks"                                         
+#&gt; [39] "Additives/blending components"                               
+#&gt; [40] "Other hydrocarbons"                                          
+#&gt; [41] "Refinery gas"                                                
+#&gt; [42] "Ethane"                                                      
+#&gt; [43] "Liquefied petroleum gases (LPG)"                             
+#&gt; [44] "Motor gasoline excl. biofuels"                               
+#&gt; [45] "Aviation gasoline"                                           
+#&gt; [46] "Gasoline type jet fuel"                                      
+#&gt; [47] "Kerosene type jet fuel excl. biofuels"                       
+#&gt; [48] "Other kerosene"                                              
+#&gt; [49] "Gas/diesel oil excl. biofuels"                               
+#&gt; [50] "Fuel oil"                                                    
+#&gt; [51] "Naphtha"                                                     
+#&gt; [52] "White spirit &amp; SBP"                                          
+#&gt; [53] "Lubricants"                                                  
+#&gt; [54] "Bitumen"                                                     
+#&gt; [55] "Paraffin waxes"                                              
+#&gt; [56] "Petroleum coke"                                              
+#&gt; [57] "Other oil products"                                          
+#&gt; [58] "Industrial waste"                                            
+#&gt; [59] "Municipal waste (renewable)"                                 
+#&gt; [60] "Municipal waste (non-renewable)"                             
+#&gt; [61] "Primary solid biofuels"                                      
+#&gt; [62] "Biogases"                                                    
+#&gt; [63] "Biogasoline"                                                 
+#&gt; [64] "Biodiesels"                                                  
+#&gt; [65] "Bio jet kerosene"                                            
+#&gt; [66] "Other liquid biofuels"                                       
+#&gt; [67] "Non-specified primary biofuels and waste"                    
+#&gt; [68] "Charcoal"                                                    
+#&gt; [69] "Elec/heat output from non-specified manufactured gases"      
+#&gt; [70] "Heat output from non-specified combustible fuels"            
+#&gt; [71] "Nuclear"                                                     
+#&gt; [72] "Hydro"                                                       
+#&gt; [73] "Geothermal"                                                  
+#&gt; [74] "Solar photovoltaics"                                         
+#&gt; [75] "Solar thermal"                                               
+#&gt; [76] "Tide, wave and ocean"                                        
+#&gt; [77] "Wind"                                                        
+#&gt; [78] "Other sources"                                               
+#&gt; [79] "Electricity"                                                 
+#&gt; [80] "Heat"                                                        </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#format">Format</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

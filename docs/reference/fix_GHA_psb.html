@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fix Ghana Primary solid biofuels data from 1991 through 1999 — fix_GHA_psb • IEATools</title>
+<title>Improve Ghana Primary solid biofuels data from 1991 through 1999 — fix_GHA_psb • IEATools</title>
 
 
 <!-- jquery -->
@@ -35,7 +35,7 @@
 
 
 
-<meta property="og:title" content="Fix Ghana Primary solid biofuels data from 1991 through 1999 — fix_GHA_psb" />
+<meta property="og:title" content="Improve Ghana Primary solid biofuels data from 1991 through 1999 — fix_GHA_psb" />
 <meta property="og:description" content="Ghana's Primary solid biofuels data show a very large and dramatic decline from 1999 to 2000.
 This decline is due to new survey data being used for the 2000 data.
 When we look at the PSB data on a per-capita basis, it is clear that
@@ -105,6 +105,9 @@ by reducing the per-capita consumption of PSB, starting in 1991." />
       <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
     </li>
     <li>
+      <a href="../articles/fix_iea_data.html">Fixes for IEA Data</a>
+    </li>
+    <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
     </li>
     <li>
@@ -131,7 +134,7 @@ by reducing the per-capita consumption of PSB, starting in 1991." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fix Ghana Primary solid biofuels data from 1991 through 1999</h1>
+    <h1>Improve Ghana Primary solid biofuels data from 1991 through 1999</h1>
     
     <div class="hidden name"><code>fix_GHA_psb.Rd</code></div>
     </div>
@@ -147,7 +150,13 @@ Our approach to this problem is to smooth out the really big peak in PSB consump
 by reducing the per-capita consumption of PSB, starting in 1991.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>fix_GHA_psb</span>(<span class='no'>.tidy_iea_df</span>)</pre>
+    <pre class="usage"><span class='fu'>fix_GHA_psb</span>(
+  <span class='no'>.tidy_iea_df</span>,
+  <span class='kw'>col_names</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/iea_cols.html'>iea_cols</a></span>,
+  <span class='kw'>country</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>country</span>,
+  <span class='kw'>year</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>year</span>,
+  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>e_dot</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,6 +165,22 @@ by reducing the per-capita consumption of PSB, starting in 1991.</p>
       <th>.tidy_iea_df</th>
       <td><p>a tidy IEA data frame produced by <code><a href='load_tidy_iea_df.html'>load_tidy_iea_df()</a></code></p></td>
     </tr>
+    <tr>
+      <th>col_names</th>
+      <td><p>a list of column names in IEA data frames. Default is <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>country</th>
+      <td><p>the name of the country column in <code>.tidy_iea_df</code>. Default is <code>col_names$country</code>.</p></td>
+    </tr>
+    <tr>
+      <th>year</th>
+      <td><p>the name of the year column in <code>.tidy_iea_df</code>. Default is <code>col_names$year</code>.</p></td>
+    </tr>
+    <tr>
+      <th>e_dot</th>
+      <td><p>the name of the energy flow rate column in <code>.tidy_iea_df</code>. Default is <code>col_names$e_dot</code>.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -163,15 +188,56 @@ by reducing the per-capita consumption of PSB, starting in 1991.</p>
     <p><code>.tidy_iea_df</code> with smoothed Ghana Primary solid biofuels data</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>See the Supplemental information to
+    <p>If <code>.tidy_iea_df</code> does not contain data from Ghana for the years in question,
+no fixing is performed, and <code>.tidy_iea_df</code> is returned unmodified.</p>
+<p>See the Supplemental information to
 M. K. Heun and P. E. Brockway.
 Meeting 2030 primary energy and economic growth goals: Mission impossible?
 Applied Energy, 251(112697):1–24, May 2019
 for additional details.</p>
+<p>Also see the file named "GHA-PSB.xlsx" for the actual calculations.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
+<span class='co'># Build an example tidy IEA data frame in which Ghana's Primary solid biofuels can be fixed.</span>
+<span class='no'>example_tidy_iea_df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Country</span> <span class='kw'>==</span> <span class='st'>"GHA"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Product</span> <span class='kw'>==</span> <span class='st'>"Primary solid biofuels"</span>) <span class='kw'>%&gt;%</span>
+  <span class='co'># The example data frame has PSB for Ghana for 1971 and 2000.  </span>
+  <span class='co'># Let's pretend that 1971 is 1991 and 2000 is 1992.</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(
+    <span class='no'>Year</span> <span class='kw'>:=</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/case_when.html'>case_when</a></span>(
+      <span class='no'>Year</span> <span class='kw'>==</span> <span class='fl'>1971</span> ~ <span class='fl'>1991</span>,
+      <span class='no'>Year</span> <span class='kw'>==</span> <span class='fl'>2000</span> ~ <span class='fl'>1992</span>
+    )
+  )
+<span class='no'>example_tidy_iea_df</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 10 x 11</span><span>
+#&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>           
+#&gt; </span><span style='color: #555555;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>991 Supply      Total primary e…
+#&gt; </span><span style='color: #555555;'> 2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>991 Supply      Transformation …
+#&gt; </span><span style='color: #555555;'> 3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>991 Consumption Industry        
+#&gt; </span><span style='color: #555555;'> 4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>991 Consumption Other           
+#&gt; </span><span style='color: #555555;'> 5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Supply      Total primary e…
+#&gt; </span><span style='color: #555555;'> 6</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Supply      Transformation …
+#&gt; </span><span style='color: #555555;'> 7</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Consumption Industry        
+#&gt; </span><span style='color: #555555;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Consumption Other           
+#&gt; </span><span style='color: #555555;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Consumption Other           
+#&gt; </span><span style='color: #555555;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Consumption Other           
+#&gt; </span><span style='color: #555555;'># … with 4 more variables: Flow </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Unit </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, E.dot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='no'>fixed</span> <span class='kw'>&lt;-</span> <span class='no'>example_tidy_iea_df</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'>fix_GHA_psb</span>()
+<span class='co'># Compare production of Primary solid biofuels in 1991</span>
+<span class='no'>example_tidy_iea_df</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Year</span> <span class='kw'>==</span> <span class='fl'>1991</span>, <span class='no'>Flow</span> <span class='kw'>==</span> <span class='st'>"Production"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='st'>"E.dot"</span>, <span class='st'>"Unit"</span>)</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 1 x 2</span><span>
+#&gt;   E.dot Unit 
+#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span> </span><span style='text-decoration: underline;'>2</span><span>088. ktoe </div><div class='input'><span class='no'>fixed</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Year</span> <span class='kw'>==</span> <span class='fl'>1991</span>, <span class='no'>Flow</span> <span class='kw'>==</span> <span class='st'>"Production"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='st'>"E.dot"</span>, <span class='st'>"Unit"</span>)</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 1 x 2</span><span>
+#&gt;   E.dot Unit 
+#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>
+#&gt; </span><span style='color: #555555;'>1</span><span>  </span><span style='text-decoration: underline;'>4</span><span>025 ktoe </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

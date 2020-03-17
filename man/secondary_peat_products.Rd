@@ -4,11 +4,16 @@
 \name{secondary_peat_products}
 \alias{secondary_peat_products}
 \title{Secondary peat products}
-\format{A string vector with 1 entry}
+\format{
+A string vector with 1 entry
+}
 \usage{
 secondary_peat_products
 }
 \description{
 A string vector containing names of products classified by the IEA as "Peat and peat products" that are not \code{primary_peat_products}.
+}
+\examples{
+secondary_peat_products
 }
 \keyword{datasets}

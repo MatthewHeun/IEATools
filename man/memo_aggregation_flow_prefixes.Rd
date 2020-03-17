@@ -4,11 +4,16 @@
 \name{memo_aggregation_flow_prefixes}
 \alias{memo_aggregation_flow_prefixes}
 \title{Memo and aggregation flow prefixes}
-\format{A string vector with 3 entries}
+\format{
+A string vector with 3 entries
+}
 \usage{
 memo_aggregation_flow_prefixes
 }
 \description{
 A string vector containing names of \code{Flow}s that provide memos and aggregations.
+}
+\examples{
+memo_aggregation_flow_prefixes
 }
 \keyword{datasets}

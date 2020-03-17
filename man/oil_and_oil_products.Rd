@@ -4,11 +4,16 @@
 \name{oil_and_oil_products}
 \alias{oil_and_oil_products}
 \title{Oil and oil products}
-\format{A string vector with 23 entries}
+\format{
+A string vector with 23 entries
+}
 \usage{
 oil_and_oil_products
 }
 \description{
 A string vector containing names of products classified by the IEA as oil and oil products.
+}
+\examples{
+oil_and_oil_products
 }
 \keyword{datasets}

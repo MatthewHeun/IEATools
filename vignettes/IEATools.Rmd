@@ -11,11 +11,14 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+```
+
+```{r setup, include = FALSE}
 library(dplyr)
 library(IEATools)
 ```
@@ -44,8 +47,8 @@ in a .csv file format as shown in the following figure.
 knitr::include_graphics("figs/original_header.pdf")
 ```
 
-Example data from two countries [Ghana (GH) and South Africa (ZA)]
-for two years (1971 and 2000) are provided in the `IEATools` package.
+Example data from two countries, Ghana (GH) and South Africa (ZA), 
+for two years, 1971 and 2000, are provided in the `IEATools` package.
 
 ```{r}
 library(dplyr)
@@ -173,16 +176,6 @@ with each country's 3-letter abbreviation.
 IEA_data %>% 
   rename_iea_df_cols() %>% 
   use_iso_countries() %>% 
-  glimpse()
-```
-
-If the 2-letter abbreviations are preferred, set the `iso_abbrev_type = 2`
-as shown below.
-
-```{r}
-IEA_data %>% 
-  rename_iea_df_cols() %>% 
-  use_iso_countries(iso_abbrev_type = 2) %>% 
   glimpse()
 ```
 
@@ -319,6 +312,34 @@ Tidy_IEA_df %>%
   fix_tidy_iea_df_balances() %>% 
   calc_tidy_iea_df_balances() %>% 
   glimpse()
+```
+
+
+## Sorting
+
+When manipulating IEA data frames, rows may attain different sorting relative to the standard IEA order.
+The `sort_iea_df()` function can return a data frame to IEA sort order.
+
+```{r}
+  Tidy_IEA_df <- load_tidy_iea_df()
+  Tidy_IEA_df %>% dplyr::select(Year, Flow, Product, E.dot)
+  # Move the first row to the bottom to put everything out of order
+  Unsorted <- Tidy_IEA_df[-1, ] %>% dplyr::bind_rows(Tidy_IEA_df[1, ])
+  Unsorted %>% dplyr::select(Year, Flow, Product, E.dot)
+  # Now sort it to put everything right again
+  Sorted <- sort_iea_df(Unsorted)
+  Sorted %>% dplyr::select(Year, Flow, Product, E.dot)
+```
+
+`sort_iea_df()` also works with wide data frames in which years are spread to the right.
+
+```{r}
+  # Pivoting the data results in unconventional ordering
+  Unsorted_wide <- Tidy_IEA_df %>% tidyr::pivot_wider(names_from = Year, values_from = E.dot)
+  Unsorted_wide %>% dplyr::select(Flow, Product, `1971`, `2000`)
+  # The wide data frame is not sorted correctly. Sort it.
+  Sorted_wide <- sort_iea_df(Unsorted_wide)
+  Sorted_wide %>% dplyr::select(Flow, Product, `1971`, `2000`)
 ```
 
 

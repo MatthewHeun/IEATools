@@ -127,6 +127,6 @@ To obtain a nicely-formatted Excel spreadsheet, use the
 
 ```{r}
 # Eta_fu_template %>% 
-#  write_eta_fu_template("~/Desktop/Test_eta_fu_template.xlsx")
+#   write_eta_fu_template("~/Desktop/Test_eta_fu_template.xlsx")
 ```
 
