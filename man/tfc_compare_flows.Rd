@@ -4,11 +4,16 @@
 \name{tfc_compare_flows}
 \alias{tfc_compare_flows}
 \title{Total final consumption comparison flows}
-\format{A string vector with 6 entries}
+\format{
+A string vector with 6 entries
+}
 \usage{
 tfc_compare_flows
 }
 \description{
 A string vector containing names of \verb{Total final consumption} comparison \code{Flow}s in the IEA extended energy balances database.
+}
+\examples{
+tfc_compare_flows
 }
 \keyword{datasets}

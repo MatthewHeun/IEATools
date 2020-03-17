@@ -4,11 +4,16 @@
 \name{industry_flows}
 \alias{industry_flows}
 \title{Industry flows}
-\format{A string vector with 15 entries}
+\format{
+A string vector with 15 entries
+}
 \usage{
 industry_flows
 }
 \description{
 A string vector containing names of \code{Industry} \code{Flow}s in the IEA extended energy balances database.
+}
+\examples{
+industry_flows
 }
 \keyword{datasets}

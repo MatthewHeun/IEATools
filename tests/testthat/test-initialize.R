@@ -338,16 +338,6 @@ test_that("use_iso_countries works as expected", {
   expect_false(any(iso3$Country == "Ghana"))
   expect_true(any(iso3$Country == "GHA"))
 
-  # Try with 2-letter vs. 3-letter abbreviations
-  iso2 <- sample_iea_data_path() %>% 
-    iea_df() %>% 
-    rename_iea_df_cols() %>% 
-    use_iso_countries(iso_abbrev_type = 2)
-  expect_false(any(iso2$Country == "South Africa"))
-  expect_true(any(iso2$Country == "ZA"))
-  expect_false(any(iso2$Country == "Ghana"))
-  expect_true(any(iso2$Country == "GH"))
-  
   # Try with a data frame that contains a World country.
   world <- iea_df(text = paste0(",,TIME,1960,1961\n",
                                 "COUNTRY,FLOW,PRODUCT\n",

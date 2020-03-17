@@ -1,10 +1,48 @@
+# IEATools 0.1.15 (2020-03-16)
+
+* Now up to 429 tests!
+* Added a `fix_iea_data` vignette.
+* Did preparatory work for future `fix_*` functions, including
+  the internal `do_fix()` function which will work for fixing data from any country in any years,
+  so long as a replacement data frame is available.
+* Added function `fix_GHA_industry_electricity()` which adds specificity to Ghana's industry electricity.
+* Added function `replace_join()` to assist with IEA data fixes.
+* Added named `iea_cols` object to simplify and standardize names for columns in IEA data frames,
+  both tidy and wide.
+* Added a "Sorting" section to the IEATools vignette.
+  It describes the `sort_iea_df()` function.
+* renamed `sort_tidy_iea_df()` --> `sort_iea_df()`, because 
+  the function also sorts wide data frames.
+* `sort_tidy_iea_df()` previously worked only with tidy data frames (with a column of years).
+  `sort_tidy_iea_df()` now also works with wide data frames (with years spread to the right).
+* Fixed a bug in `sort_tidy_iea_df()` that results in `NA` values in the `Last.stage` column.
+* Added a function called `sort_tidy_iea_df()` which sorts tidy IEA data frames
+  with default IEA row orders.
+* Completed function called `fix_GHA_psb()` which 
+  smooths Ghana's Primary solid biofuels data
+  in the years 1991--1999.
+
+
+# IEATools 0.1.14 (2020-03-11)
+
+* Fixed an issue with argument names: overwrite --> overwrite_file. 
+  The change was made in the `IEATools` package develop branch
+  against which the latest version of the PFU-Database repository was built.
+  However, the argument name change needs to be on the master branch of `IEATools`
+  so that `install_github()` gets the updated argument name.
+* Added stub functions to fix certain IEA data.
+  This capability is in development and not yet working.
+* Added a script to make internal data frames for fixing IEA data.
+  This capability is in development and not yet working.
+
+
 # IEATools 0.1.13 (2020-03-08)
 
 * Added template tests for both 2018 and 2019.
 * Added new sample allocation and F-->U efficiency tables
   for 2019 data.
 * Rebuilt the sample template for F-->U allocation,
-  because new categories of energy consumption were provided for ZA EIOU.
+  because new categories of energy consumption were provided for ZAF EIOU.
 * Wrote new tests for the new approaches to determining 
   "Transformation processes" and "Energy industry own use".
 * Implemented a new way to identify "Transformation processes" and "Energy industry own use" rows.

@@ -4,11 +4,16 @@
 \name{aggregation_flows}
 \alias{aggregation_flows}
 \title{Aggregation flows}
-\format{A string vector with 8 entries}
+\format{
+A string vector with 8 entries
+}
 \usage{
 aggregation_flows
 }
 \description{
 A string vector containing names of industries whose purpose in IEA extended energy balance \code{Flow}s is to provide aggregations.
+}
+\examples{
+aggregation_flows
 }
 \keyword{datasets}

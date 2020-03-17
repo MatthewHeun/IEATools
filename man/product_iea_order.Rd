@@ -4,11 +4,16 @@
 \name{product_iea_order}
 \alias{product_iea_order}
 \title{IEA order for products}
-\format{A string vector}
+\format{
+A string vector
+}
 \usage{
 product_iea_order
 }
 \description{
 A string vector containing entries for the product column in IEA order.
+}
+\examples{
+product_iea_order
 }
 \keyword{datasets}

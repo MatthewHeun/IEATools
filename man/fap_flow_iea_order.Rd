@@ -4,11 +4,16 @@
 \name{fap_flow_iea_order}
 \alias{fap_flow_iea_order}
 \title{IEA order for combined flow aggregation point and flow}
-\format{A string vector}
+\format{
+A string vector
+}
 \usage{
 fap_flow_iea_order
 }
 \description{
 A string vector containing entries for a united flow aggregation point and flow column in IEA order.
+}
+\examples{
+fap_flow_iea_order
 }
 \keyword{datasets}

@@ -4,11 +4,16 @@
 \name{tpes_flows}
 \alias{tpes_flows}
 \title{Total primary energy supply flows}
-\format{A string vector with 6 entries}
+\format{
+A string vector with 6 entries
+}
 \usage{
 tpes_flows
 }
 \description{
 A string vector containing names of \verb{Total primary energy supply} \code{Flow}s in the IEA extended energy balances database.
+}
+\examples{
+tpes_flows
 }
 \keyword{datasets}

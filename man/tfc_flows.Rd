@@ -4,11 +4,16 @@
 \name{tfc_flows}
 \alias{tfc_flows}
 \title{Total final consumption flows}
-\format{A string vector with 4 entries}
+\format{
+A string vector with 4 entries
+}
 \usage{
 tfc_flows
 }
 \description{
 A string vector containing names of \verb{Total final consumption} \code{Flow}s in the IEA extended energy balances database.
+}
+\examples{
+tfc_flows
 }
 \keyword{datasets}

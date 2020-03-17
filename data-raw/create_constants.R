@@ -13,6 +13,26 @@ library(IEATools)
 valid_iea_release_years <- c(2018, 2019)
 usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 
+
+#
+# Give the column names of IEA data frames in typical left-to-right order.
+# 
+
+iea_cols <- list(country = "Country",
+                 method = "Method", 
+                 energy_type = "Energy.type", 
+                 last_stage = "Last.stage", 
+                 year = "Year",
+                 ledger_side = "Ledger.side", 
+                 flow_aggregation_point = "Flow.aggregation.point", 
+                 flow = "Flow", 
+                 product = "Product", 
+                 unit = "Unit", 
+                 e_dot = "E.dot"
+)
+usethis::use_data(iea_cols, overwrite = TRUE)
+
+
 #
 # Coal and coal products
 # 
@@ -284,6 +304,40 @@ usethis::use_data(interface_industries, overwrite = TRUE)
 # 
 # Sort orders
 # 
+
+country_order <- countrycode::codelist %>% 
+  dplyr::select(iso3c) %>% 
+  dplyr::filter(!is.na(iso3c)) %>% 
+  unlist() %>% 
+  unname()
+usethis::use_data(country_order, overwrite = TRUE)
+
+
+# See
+# T. Sousa, P. E. Brockway, J. M. Cullen, S. T. Henriques, J. Miller, A. C. Serrenho, and T. Domingos. 
+# The need for robust, consistent methods in societal exergy accounting. Ecological Economics, 141:11–21, Nov 2017.
+# for details
+method_order <- c(
+  "PCM", # Physical content method (used by IEA)
+  "RCM", # Resource content method
+  "PSM"  # Partial substitution method (used by EIA and BP)
+)
+usethis::use_data(method_order, overwrite = TRUE)
+
+
+energy_type_order <- c(
+  "E", # Energy 
+  "X"  # Exergy
+)
+usethis::use_data(energy_type_order, overwrite = TRUE)
+
+
+last_stage_order <- c(
+  "Final", 
+  "Useful"
+)
+usethis::use_data(last_stage_order, overwrite = TRUE)
+
 
 ledger_side_iea_order <- c(
   "Supply", 
