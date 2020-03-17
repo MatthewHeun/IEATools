@@ -74,20 +74,24 @@ fix_GHA_psb <- function(.tidy_iea_df,
                         flow = col_names$flow,
                         product = col_names$product,
                         unit = col_names$unit,
-                        year = col_names$year){
-  # Figure out the years present in the .tidy_iea_df
-  years_present <- .tidy_iea_df[[year]] %>% 
-    unique()
-  # The internal data that contains the updated Ghana Primary solid biofuels data
-  # can be accessed with Fixed_GHA_PSB.
-  data_to_bind <- Fixed_GHA_PSB %>% 
-    dplyr::filter(!!as.name(year) %in% years_present)
-  .tidy_iea_df %>% 
-    # anti_join eliminates all rows in .tidy_iea_df that will be replaced
-    dplyr::anti_join(Fixed_GHA_PSB, by = c(country, method, energy_type, last_stage, ledger_side,
-                                           flow_aggregation_point, flow, product, unit, year)) %>% 
-    # Now add the new data at the bottom.
-    dplyr::bind_rows(data_to_bind)
+                        year = col_names$year, 
+                        e_dot = col_names$e_dot){
+  # # Figure out the years present in the .tidy_iea_df
+  # years_present <- .tidy_iea_df[[year]] %>% 
+  #   unique()
+  # # The internal data that contains the updated Ghana Primary solid biofuels data
+  # # can be accessed with Fixed_GHA_PSB.
+  # data_to_bind <- Fixed_GHA_PSB %>% 
+  #   dplyr::filter(!!as.name(year) %in% years_present)
+  # .tidy_iea_df %>% 
+  #   # anti_join eliminates all rows in .tidy_iea_df that will be replaced
+  #   dplyr::anti_join(Fixed_GHA_PSB, by = c(country, method, energy_type, last_stage, ledger_side,
+  #                                          flow_aggregation_point, flow, product, unit, year)) %>% 
+  #   # Now add the new data at the bottom.
+  #   dplyr::bind_rows(data_to_bind)
+  do_fix(.tidy_iea_df, replacement = Fixed_GHA_PSB, 
+         year = year, e_dot = e_dot)
+  
 }
 
 
@@ -172,14 +176,16 @@ fix_GHA_industry_electricity <- function(.tidy_iea_df,
                                          col_names = IEATools::iea_cols,
                                          year = col_names$year,
                                          e_dot = col_names$e_dot) {
-  # Figure out the years present in the .tidy_iea_df
-  years_present <- .tidy_iea_df[[year]] %>%
-    unique()
-  # The internal data that contains the updated Ghana Industry Electricity data
-  # can be accessed with Fixed_GHA_Industry_Electricity.
-  data_to_join <- Fixed_GHA_Industry_Electricity %>%
-    dplyr::filter(!!as.name(year) %in% years_present)
-  replace_join(.tidy_iea_df, data_to_join, replace_col = e_dot)
+  # # Figure out the years present in the .tidy_iea_df
+  # years_present <- .tidy_iea_df[[year]] %>%
+  #   unique()
+  # # The internal data that contains the updated Ghana Industry Electricity data
+  # # can be accessed with Fixed_GHA_Industry_Electricity.
+  # data_to_join <- Fixed_GHA_Industry_Electricity %>%
+  #   dplyr::filter(!!as.name(year) %in% years_present)
+  # replace_join(.tidy_iea_df, data_to_join, replace_col = e_dot)
+  do_fix(.tidy_iea_df, replacement = Fixed_GHA_Industry_Electricity, 
+         year = year, e_dot = e_dot)
 }
 
 
@@ -189,3 +195,14 @@ fix_HND_fuels <- function(.iea_df) {
 
 
 
+do_fix <- function(.tidy_iea_df, 
+                   replacement, 
+                   year,
+                   e_dot) {
+  # Figure out the years present in the .tidy_iea_df
+  years_present <- .tidy_iea_df[[year]] %>% unique()
+  # The internal data that contains the updated Ghana Industry Electricity data
+  # can be accessed with Fixed_GHA_Industry_Electricity.
+  data_to_join <- replacement %>% dplyr::filter(!!as.name(year) %in% years_present)
+  replace_join(.tidy_iea_df, data_to_join, replace_col = e_dot)
+}

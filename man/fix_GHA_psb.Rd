@@ -16,7 +16,8 @@ fix_GHA_psb(
   flow = col_names$flow,
   product = col_names$product,
   unit = col_names$unit,
-  year = col_names$year
+  year = col_names$year,
+  e_dot = col_names$e_dot
 )
 }
 \arguments{
