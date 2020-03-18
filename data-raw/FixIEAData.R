@@ -57,10 +57,6 @@ Fixed_GHA_Industry_Electricity <- openxlsx::read.xlsx(xlsxFile = file.path("data
     !!as.name(iea_cols$year) := as.numeric(!!as.name(iea_cols$year))
   )
 
-
-
-
-
 # Use these data frames as internal objects in the package.
 # These objects are stored in R/sysdata.rda and can be accessed by
 # Fixed_GHA_PSB, for example.
