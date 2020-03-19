@@ -1,3 +1,6 @@
+* Added names to all constants for easier programming.
+
+
 # IEATools 0.1.15 (2020-03-16)
 
 * Now up to 429 tests!
