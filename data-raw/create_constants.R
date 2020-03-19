@@ -310,7 +310,7 @@ countries <- countrycode::codelist %>%
   dplyr::filter(!is.na(iso3c)) %>% 
   unlist() %>% 
   unname()
-usethis::use_data(country_order, overwrite = TRUE)
+usethis::use_data(countries, overwrite = TRUE)
 
 
 # See
@@ -322,14 +322,14 @@ methods <- c(
   rcm = "RCM", # Resource content method
   psm = "PSM"  # Partial substitution method (used by EIA and BP)
 )
-usethis::use_data(method_order, overwrite = TRUE)
+usethis::use_data(methods, overwrite = TRUE)
 
 
 energy_types <- c(
   e = "E", # Energy 
   x = "X"  # Exergy
 )
-usethis::use_data(energy_type_order, overwrite = TRUE)
+usethis::use_data(energy_types, overwrite = TRUE)
 
 
 last_stages <- c(
@@ -337,14 +337,14 @@ last_stages <- c(
   useful = "Useful", 
   services = "Services"
 )
-usethis::use_data(last_stage_order, overwrite = TRUE)
+usethis::use_data(last_stages, overwrite = TRUE)
 
 
 ledger_sides <- c(
   supply = "Supply", 
   consumption = "Consumption"
 )
-usethis::use_data(ledger_side_iea_order, overwrite = TRUE)
+usethis::use_data(ledger_sides, overwrite = TRUE)
 
 
 # Defining the row order for IEA-style data frames is tricky and requires some manual intervention.
@@ -364,7 +364,7 @@ fap_flows <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   # Pumped storage plants, and Nuclear industry is reassigned to Main activity producer electricity plants in specify_tp_eiou()
   insert_after(after = "Energy industry own use_Nuclear industry", 
                values = "Energy industry own use_Main activity producer electricity plants")
-usethis::use_data(fap_flow_iea_order, overwrite = TRUE)
+usethis::use_data(fap_flows, overwrite = TRUE)
 
 
 products <- load_tidy_iea_df(remove_zeroes = FALSE) %>% 
@@ -380,4 +380,4 @@ products <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
                values = paste(primary_oil_products, "(Oil and gas extraction)")) %>% 
   insert_after(after = "Natural gas", 
                values = paste("Natural gas", "(Oil and gas extraction)"))
-usethis::use_data(product_iea_order, overwrite = TRUE)
+usethis::use_data(products, overwrite = TRUE)
