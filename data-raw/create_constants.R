@@ -334,7 +334,8 @@ usethis::use_data(energy_type_order, overwrite = TRUE)
 
 last_stage_order <- c(
   "Final", 
-  "Useful"
+  "Useful", 
+  "Services"
 )
 usethis::use_data(last_stage_order, overwrite = TRUE)
 
