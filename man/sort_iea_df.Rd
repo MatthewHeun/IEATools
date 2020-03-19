@@ -17,13 +17,13 @@ sort_iea_df(
   sep = "_",
   fap_flow = paste0(flow_aggregation_point, sep, flow),
   product = "Product",
-  country_order = IEATools::country_order,
-  method_order = IEATools::method_order,
-  energy_type_order = IEATools::energy_type_order,
-  last_stage_order = IEATools::last_stage_order,
-  ledger_side_iea_order = IEATools::ledger_side_iea_order,
-  fap_flow_iea_order = IEATools::fap_flow_iea_order,
-  product_iea_order = IEATools::product_iea_order
+  country_order = IEATools::countries,
+  method_order = IEATools::methods,
+  energy_type_order = IEATools::energy_types,
+  last_stage_order = IEATools::last_stages,
+  ledger_side_iea_order = IEATools::ledger_sides,
+  fap_flow_iea_order = IEATools::fap_flows,
+  product_iea_order = IEATools::products
 )
 }
 \arguments{
@@ -51,19 +51,19 @@ sort_iea_df(
 
 \item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "Product".}
 
-\item{country_order}{the order in which to sort the \code{country} column of \code{.tidy_iea_df}. Default is \link{country_order}.}
+\item{country_order}{the order in which to sort the \code{country} column of \code{.tidy_iea_df}. Default is \link{countries}.}
 
-\item{method_order}{the order in which to sort the \code{method} column of \code{.tidy_iea_df}. Default is \link{method_order}.}
+\item{method_order}{the order in which to sort the \code{method} column of \code{.tidy_iea_df}. Default is \link{methods}.}
 
-\item{energy_type_order}{the order in which to sort the \code{energy_type} column of \code{.tidy_iea_df}. Default is \link{energy_type_order}.}
+\item{energy_type_order}{the order in which to sort the \code{energy_type} column of \code{.tidy_iea_df}. Default is \link{energy_types}.}
 
-\item{last_stage_order}{the order in which to sort the \code{last_stage} column of \code{.tidy_iea_df}. Default is \link{last_stage_order}.}
+\item{last_stage_order}{the order in which to sort the \code{last_stage} column of \code{.tidy_iea_df}. Default is \link{last_stages}.}
 
-\item{ledger_side_iea_order}{the order in which to sort the \code{ledger_side} column of \code{.tidy_iea_df}. Default is \link{ledger_side_iea_order}.}
+\item{ledger_side_iea_order}{the order in which to sort the \code{ledger_side} column of \code{.tidy_iea_df}. Default is \link{ledger_sides}.}
 
-\item{fap_flow_iea_order}{the order in which to sort the united \code{flow_aggregation_point} and \code{flow} columns of \code{.tidy_iea_df}. Default is \link{fap_flow_iea_order}.}
+\item{fap_flow_iea_order}{the order in which to sort the united \code{flow_aggregation_point} and \code{flow} columns of \code{.tidy_iea_df}. Default is \link{fap_flows}.}
 
-\item{product_iea_order}{the order in which to sort the \code{prodcut} column of \code{.tidy_iea_df}. Default is \link{product_iea_order}.}
+\item{product_iea_order}{the order in which to sort the \code{prodcut} column of \code{.tidy_iea_df}. Default is \link{products}.}
 }
 \value{
 a version of \code{.tidy_iea_df} sorted in IEA order
@@ -76,10 +76,10 @@ there is a \code{year} column present or
 }
 \details{
 Sorting is accomplished (by default) using
-the constants \link{country_order}, \link{method_order},
-\link{energy_type_order}, \link{last_stage_order}, \code{year} (if present),
-\link{ledger_side_iea_order}, \link{fap_flow_iea_order},
-\link{product_iea_order},
+the constants \link{countries}, \link{methods},
+\link{energy_types}, \link{last_stages}, \code{year} (if present),
+\link{ledger_sides}, \link{fap_flows},
+\link{products},
 (in that order of precedence).
 
 Years are sorted if the \code{year} column is present (a tidy data frame).

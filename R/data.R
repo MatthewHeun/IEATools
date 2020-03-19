@@ -271,8 +271,8 @@
 #' @format A string vector
 #' 
 #' @examples
-#' country_order
-"country_order"
+#' countries
+"countries"
 
 
 #' Method order
@@ -282,8 +282,8 @@
 #' @format A string vector
 #' 
 #' @examples
-#' method_order
-"method_order"
+#' methods
+"methods"
 
 
 #' Energy type order
@@ -294,7 +294,7 @@
 #' 
 #' @examples
 #' energy_type_order
-"energy_type_order"
+"energy_types"
 
 
 #' Last stage order
@@ -304,8 +304,8 @@
 #' @format A string vector
 #' 
 #' @examples
-#' last_stage_order
-"last_stage_order"
+#' last_stages
+"last_stages"
 
 
 #' IEA order for ledger side
@@ -315,8 +315,8 @@
 #' @format A string vector
 #' 
 #' @examples
-#' ledger_side_iea_order
-"ledger_side_iea_order"
+#' ledger_sides
+"ledger_sides"
 
 
 #' IEA order for combined flow aggregation point and flow 
@@ -326,8 +326,8 @@
 #' @format A string vector
 #' 
 #' @examples
-#' fap_flow_iea_order
-"fap_flow_iea_order"
+#' fap_flows
+"fap_flows"
 
 
 #' IEA order for products
@@ -337,5 +337,5 @@
 #' @format A string vector
 #' 
 #' @examples
-#' product_iea_order
-"product_iea_order"
+#' products
+"products"

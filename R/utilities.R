@@ -453,10 +453,10 @@ sample_eta_fu_table_path <- function(version = 2019) {
 #' (b) wide where year columns are spread to the right.
 #' 
 #' Sorting is accomplished (by default) using 
-#' the constants [country_order], [method_order], 
-#' [energy_type_order], [last_stage_order], `year` (if present),
-#' [ledger_side_iea_order], [fap_flow_iea_order], 
-#' [product_iea_order],
+#' the constants [countries], [methods], 
+#' [energy_types], [last_stages], `year` (if present),
+#' [ledger_sides], [fap_flows], 
+#' [products],
 #' (in that order of precedence).
 #' 
 #' Years are sorted if the `year` column is present (a tidy data frame).
@@ -476,13 +476,13 @@ sample_eta_fu_table_path <- function(version = 2019) {
 #' @param sep a separator between the flow aggregation point column and the flow column. Used when uniting those two columns internally. Default is "_".
 #' @param fap_flow the name of the united flow aggregation point and flow column to be created internally in `.tidy_iea_df`. Default is "Flow.aggregation.point_Flow".
 #' @param product the name of the product column in `.tidy_iea_df`. Default is "Product".
-#' @param country_order the order in which to sort the `country` column of `.tidy_iea_df`. Default is [country_order].
-#' @param method_order the order in which to sort the `method` column of `.tidy_iea_df`. Default is [method_order].
-#' @param energy_type_order the order in which to sort the `energy_type` column of `.tidy_iea_df`. Default is [energy_type_order].
-#' @param last_stage_order the order in which to sort the `last_stage` column of `.tidy_iea_df`. Default is [last_stage_order].
-#' @param ledger_side_iea_order the order in which to sort the `ledger_side` column of `.tidy_iea_df`. Default is [ledger_side_iea_order].
-#' @param fap_flow_iea_order the order in which to sort the united `flow_aggregation_point` and `flow` columns of `.tidy_iea_df`. Default is [fap_flow_iea_order].
-#' @param product_iea_order the order in which to sort the `prodcut` column of `.tidy_iea_df`. Default is [product_iea_order].
+#' @param country_order the order in which to sort the `country` column of `.tidy_iea_df`. Default is [countries].
+#' @param method_order the order in which to sort the `method` column of `.tidy_iea_df`. Default is [methods].
+#' @param energy_type_order the order in which to sort the `energy_type` column of `.tidy_iea_df`. Default is [energy_types].
+#' @param last_stage_order the order in which to sort the `last_stage` column of `.tidy_iea_df`. Default is [last_stages].
+#' @param ledger_side_iea_order the order in which to sort the `ledger_side` column of `.tidy_iea_df`. Default is [ledger_sides].
+#' @param fap_flow_iea_order the order in which to sort the united `flow_aggregation_point` and `flow` columns of `.tidy_iea_df`. Default is [fap_flows].
+#' @param product_iea_order the order in which to sort the `prodcut` column of `.tidy_iea_df`. Default is [products].
 #'
 #' @return a version of `.tidy_iea_df` sorted in IEA order
 #' 
@@ -515,13 +515,13 @@ sort_iea_df <- function(.tidy_iea_df,
                              sep = "_",
                              fap_flow = paste0(flow_aggregation_point, sep, flow),
                              product = "Product",
-                             country_order = IEATools::country_order,
-                             method_order = IEATools::method_order,
-                             energy_type_order = IEATools::energy_type_order,
-                             last_stage_order = IEATools::last_stage_order, 
-                             ledger_side_iea_order = IEATools::ledger_side_iea_order,
-                             fap_flow_iea_order = IEATools::fap_flow_iea_order,
-                             product_iea_order = IEATools::product_iea_order) {
+                             country_order = IEATools::countries,
+                             method_order = IEATools::methods,
+                             energy_type_order = IEATools::energy_types,
+                             last_stage_order = IEATools::last_stages, 
+                             ledger_side_iea_order = IEATools::ledger_sides,
+                             fap_flow_iea_order = IEATools::fap_flows,
+                             product_iea_order = IEATools::products) {
   factorized <- .tidy_iea_df %>% 
     dplyr::mutate(
       !!as.name(country) := factor(!!as.name(country), levels = country_order),

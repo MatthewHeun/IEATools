@@ -14,8 +14,8 @@ arrange_iea_fu_allocation_template(
   eu_product = "Eu.product",
   destination = "Destination",
   unit = "Unit",
-  fap_dest_order = IEATools::fap_flow_iea_order,
-  ef_product_order = IEATools::product_iea_order,
+  fap_dest_order = IEATools::fap_flows,
+  ef_product_order = IEATools::products,
   quantity = "Quantity",
   maximum_values = "Maximum.values",
   .temp_sort = ".fap_flow"
