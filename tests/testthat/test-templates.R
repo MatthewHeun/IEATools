@@ -32,7 +32,7 @@ test_that("openxlsx works as expected", {
   # Read the data back in, one sheet at a time.
   GHA <- openxlsx::read.xlsx(f, sheet = "GHA")
   ZAF <- openxlsx::read.xlsx(f, sheet = "ZAF")
-  # And recombine into a single Tibble
+  # And recombine into a single tibble
   Rebuild <- dplyr::bind_rows(GHA, ZAF) %>% 
     dplyr::as_tibble()
   # And we should get back what we wrote.

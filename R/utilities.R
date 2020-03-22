@@ -508,24 +508,25 @@ sample_eta_fu_table_path <- function(version = 2019) {
 #' head(sorted)
 #' tail(sorted)
 sort_iea_df <- function(.tidy_iea_df,
-                             country = "Country", 
-                             method = "Method",
-                             energy_type = "Energy.type",
-                             last_stage = "Last.stage",
-                             year = "Year",
-                             ledger_side = "Ledger.side",
-                             flow_aggregation_point = "Flow.aggregation.point",
-                             flow = "Flow", 
-                             sep = "_",
-                             fap_flow = paste0(flow_aggregation_point, sep, flow),
-                             product = "Product",
-                             country_order = IEATools::countries,
-                             method_order = IEATools::methods,
-                             energy_type_order = IEATools::energy_types,
-                             last_stage_order = IEATools::last_stages, 
-                             ledger_side_iea_order = IEATools::ledger_sides,
-                             fap_flow_iea_order = IEATools::fap_flows,
-                             product_iea_order = IEATools::products) {
+                        col_names = IEATools::iea_cols,
+                        country = col_names$country, 
+                        method = col_names$method,
+                        energy_type = col_names$energy_type,
+                        last_stage = col_names$last_stage, 
+                        year = col_names$year,
+                        ledger_side = col_names$ledger_side,
+                        flow_aggregation_point = col_names$flow_aggregation_point,
+                        flow = col_names$flow,
+                        sep = "_",
+                        fap_flow = paste0(flow_aggregation_point, sep, flow),
+                        product = col_names$product,
+                        country_order = IEATools::countries,
+                        method_order = IEATools::methods,
+                        energy_type_order = IEATools::energy_types,
+                        last_stage_order = IEATools::last_stages, 
+                        ledger_side_iea_order = IEATools::ledger_sides,
+                        fap_flow_iea_order = IEATools::fap_flows,
+                        product_iea_order = IEATools::products) {
   factorized <- .tidy_iea_df %>% 
     dplyr::mutate(
       !!as.name(country) := factor(!!as.name(country), levels = country_order),
@@ -542,7 +543,7 @@ sort_iea_df <- function(.tidy_iea_df,
     # If we have the year column, we want to include it in the arranging.
     # Likely that we have a long, tidy data frame here.
     sorted <- factorized %>% 
-      dplyr::arrange(!!as.name(country), !!as.name(method), !!as.name(energy_type), !!as.name(last_stage), !!as.name(year),
+      dplyr::arrange(!!as.name(year), !!as.name(country), !!as.name(method), !!as.name(energy_type), !!as.name(last_stage),
                      !!as.name(fap_flow), !!as.name(product))
   } else {
     # No year column. This might be a wide data frame here in which years are spread as columns to the right.
