@@ -1,3 +1,6 @@
+* All constants are now lists of character strings
+  instead of vectors
+  to allow `$` referencing of specific list items.
 * Added names to all constants for easier programming.
 
 
