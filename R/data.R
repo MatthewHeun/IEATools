@@ -1,3 +1,15 @@
+#' Notation used in IEATools
+#'
+#' A character vector containing the notation used in the IEATools package.
+#' Notation for delimiting specification strings is included.
+#' 
+#' @format A character vector with 2 entries
+#' 
+#' @examples
+#' notation
+"notation"
+
+
 #' IEA release years supported by this package
 #'
 #' A numeric vector containing release years for IEA extended energy balance data
