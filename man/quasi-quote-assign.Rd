@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils-qqassign.R
 \name{:=}
 \alias{:=}
-\title{Pipe operator}
+\title{Assignment}
 \usage{
 x := y
 }
