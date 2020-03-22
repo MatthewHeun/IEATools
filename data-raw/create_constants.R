@@ -14,6 +14,15 @@ valid_iea_release_years <- c(2018, 2019)
 usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 
 
+# 
+# Notation
+# 
+
+notation <- list(specify_open = " <<", 
+                 specify_close = ">>")
+usethis::use_data(notation, overwrite = TRUE)
+
+
 #
 # Give the column names of IEA data frames in typical left-to-right order.
 # 
@@ -363,12 +372,4 @@ products <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
                values = paste("Natural gas", "(Oil and gas extraction)"))
 usethis::use_data(products, overwrite = TRUE)
 
-
-# 
-# Notation
-# 
-
-notation <- list(specify_open = " <<", 
-                 specify_close = ">>")
-usethis::use_data(notation, overwrite = TRUE)
 
