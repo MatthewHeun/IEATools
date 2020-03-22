@@ -20,7 +20,8 @@ check_fu_allocation_template <- function(.DF){
 test_that("openxlsx works as expected", {
   # These are just tests for me to understand the openxlsx package.
   Tidy_iea_df <- load_tidy_iea_df() %>% 
-    specify_all()
+    specify_all() %>% 
+    sort_iea_df()
   # Get a temporary file in which to write two data frames on different tabs.
   f <- tempfile(fileext = ".xslx")
   # Write the data from both countries, each on its own tab.

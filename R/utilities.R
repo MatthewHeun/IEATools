@@ -468,7 +468,7 @@ sample_eta_fu_table_path <- function(version = 2019) {
 #' to create a wide data frame. 
 #' Wide data frames are sorted in the same order.
 #'
-#' @param .tidy_iea_df the tidy IEA data frame to be sorted
+#' @param .iea_df the IEA data frame to be sorted
 #' @param country the name of the country column in `.tidy_iea_df`. Default is "Country".
 #' @param method the name of the method column in `.tidy_iea_df`. Default is "Method".
 #' @param energy_type the name of the energy type column in `.tidy_iea_df`. Default is "Energy.type".
@@ -507,7 +507,7 @@ sample_eta_fu_table_path <- function(version = 2019) {
 #' sorted <- sort_iea_df(unsorted)
 #' head(sorted)
 #' tail(sorted)
-sort_iea_df <- function(.tidy_iea_df,
+sort_iea_df <- function(.iea_df,
                         col_names = IEATools::iea_cols,
                         country = col_names$country, 
                         method = col_names$method,
@@ -527,7 +527,7 @@ sort_iea_df <- function(.tidy_iea_df,
                         ledger_side_iea_order = IEATools::ledger_sides,
                         fap_flow_iea_order = IEATools::fap_flows,
                         product_iea_order = IEATools::products) {
-  factorized <- .tidy_iea_df %>% 
+  factorized <- .iea_df %>% 
     dplyr::mutate(
       !!as.name(country) := factor(!!as.name(country), levels = country_order),
       !!as.name(method) := factor(!!as.name(method), levels = method_order),

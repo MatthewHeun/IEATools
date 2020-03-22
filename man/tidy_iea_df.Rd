@@ -6,44 +6,45 @@
 \usage{
 tidy_iea_df(
   .iea_df,
-  year = "Year",
-  e_dot = "E.dot",
-  method = "Method",
-  last_stage = "Last.stage",
-  country = "Country",
-  ledger_side = "Ledger.side",
-  flow_aggregation_point = "Flow.aggregation.point",
-  energy_type = "Energy.type",
-  unit = "Unit",
-  flow = "Flow",
-  product = "Product",
+  col_names = IEATools::iea_cols,
+  year = col_names$year,
+  e_dot = col_names$e_dot,
+  method = col_names$method,
+  last_stage = col_names$last_stage,
+  country = col_names$country,
+  ledger_side = col_names$ledger_side,
+  flow_aggregation_point = col_names$flow_aggregation_point,
+  energy_type = col_names$energy_type,
+  unit = col_names$unit,
+  flow = col_names$flow,
+  product = col_names$product,
   remove_zeroes = TRUE
 )
 }
 \arguments{
-\item{.iea_df}{a IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
+\item{.iea_df}{a IEA data frame whose columns have been renamed by \code{rename_iea_df_cols()}}
 
-\item{year}{the name of the year column created in \code{.iea_df} by this function. (Default is "\code{Year}".)}
+\item{year}{the name of the year column created in \code{.iea_df} by this function. (Default is "Year".)}
 
-\item{e_dot}{the name of the energy/exergy value column created in \code{.iea_df} by this function. (Default is "\code{E.dot}".)}
+\item{e_dot}{the name of the energy/exergy value column created in \code{.iea_df} by this function. (Default is "E.dot".)}
 
-\item{method}{the name of the method column created in \code{.iea_df} by this function. (Default is "\code{Method}".)}
+\item{method}{the name of the method column created in \code{.iea_df} by this function. (Default is "Method".)}
 
-\item{last_stage}{the name of the last stage column created in \code{.iea_df} by this function. (Default is "\code{Last.stage}".)}
+\item{last_stage}{the name of the last stage column created in \code{.iea_df} by this function. (Default is "Last.stage".)}
 
-\item{country}{the name of the country column in \code{.iea_df}. (Default is "\code{Country}".)}
+\item{country}{the name of the country column in \code{.iea_df}. (Default is "Country".)}
 
-\item{ledger_side}{the name of the ledger side in \code{.iea_df}. (Default is "\code{Ledger.side}".)}
+\item{ledger_side}{the name of the ledger side in \code{.iea_df}. (Default is "Ledger.side".)}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.iea_df}. (Default is "\code{Flow.aggregation.point}".)}
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.iea_df}. (Default is "Flow.aggregation.point".)}
 
-\item{energy_type}{the name of the energy type column in \code{.iea_df}. (Default is "\code{Energy.type}".)}
+\item{energy_type}{the name of the energy type column in \code{.iea_df}. (Default is "Energy.type".)}
 
-\item{unit}{the name of the unit column in \code{.iea_df}. (Default is "\code{Units}".)}
+\item{unit}{the name of the unit column in \code{.iea_df}. (Default is "Units".)}
 
-\item{flow}{the name of the flow column in \code{.iea_df}. (Default is "\code{Flow}".)}
+\item{flow}{the name of the flow column in \code{.iea_df}. (Default is "Flow".)}
 
-\item{product}{the name of the product column in \code{.iea_df}. (Default is "\code{Product}".)}
+\item{product}{the name of the product column in \code{.iea_df}. (Default is "Product".)}
 
 \item{remove_zeroes}{a logical indicating whether data points with the value \code{0} are to be removed from the output. (Default is \code{TRUE}.)}
 }
@@ -54,11 +55,11 @@ a tidy version of \code{.iea_df} containing new columns \code{year} and \code{e_
 Data from the IEA have years in columns,
 but the \href{https://doi.org/10.18637/jss.v059.i10}{tidy data format}
 requires one row for each datum.
-This function uses \code{\link[tidyr:gather]{tidyr::gather()}} to
+This function uses \code{tidyr::gather()} to
 make an IEA data frame tidy.
 }
 \details{
-Default argument values assume that \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}} has been called on \code{.iea_df}.
+Default argument values assume that \code{rename_iea_df_cols()} has been called on \code{.iea_df}.
 }
 \examples{
 sample_iea_data_path() \%>\% 

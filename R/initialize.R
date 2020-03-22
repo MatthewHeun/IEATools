@@ -783,23 +783,23 @@ augment_iea_df <- function(.iea_df,
 #' Data from the IEA have years in columns, 
 #' but the [tidy data format](https://doi.org/10.18637/jss.v059.i10)
 #' requires one row for each datum.
-#' This function uses [tidyr::gather()] to 
+#' This function uses `tidyr::gather()` to 
 #' make an IEA data frame tidy.
 #' 
-#' Default argument values assume that [rename_iea_df_cols()] has been called on `.iea_df`.
+#' Default argument values assume that `rename_iea_df_cols()` has been called on `.iea_df`.
 #'
-#' @param .iea_df a IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
-#' @param year the name of the year column created in `.iea_df` by this function. (Default is "`Year`".)
-#' @param method the name of the method column created in `.iea_df` by this function. (Default is "`Method`".)
-#' @param last_stage the name of the last stage column created in `.iea_df` by this function. (Default is "`Last.stage`".)
-#' @param e_dot the name of the energy/exergy value column created in `.iea_df` by this function. (Default is "`E.dot`".)
-#' @param country the name of the country column in `.iea_df`. (Default is "`Country`".)
-#' @param ledger_side the name of the ledger side in `.iea_df`. (Default is "`Ledger.side`".)
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.iea_df`. (Default is "`Flow.aggregation.point`".)
-#' @param energy_type the name of the energy type column in `.iea_df`. (Default is "`Energy.type`".)
-#' @param unit the name of the unit column in `.iea_df`. (Default is "`Units`".)
-#' @param flow the name of the flow column in `.iea_df`. (Default is "`Flow`".)
-#' @param product the name of the product column in `.iea_df`. (Default is "`Product`".)
+#' @param .iea_df a IEA data frame whose columns have been renamed by `rename_iea_df_cols()`
+#' @param year the name of the year column created in `.iea_df` by this function. (Default is "Year".)
+#' @param method the name of the method column created in `.iea_df` by this function. (Default is "Method".)
+#' @param last_stage the name of the last stage column created in `.iea_df` by this function. (Default is "Last.stage".)
+#' @param e_dot the name of the energy/exergy value column created in `.iea_df` by this function. (Default is "E.dot".)
+#' @param country the name of the country column in `.iea_df`. (Default is "Country".)
+#' @param ledger_side the name of the ledger side in `.iea_df`. (Default is "Ledger.side".)
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.iea_df`. (Default is "Flow.aggregation.point".)
+#' @param energy_type the name of the energy type column in `.iea_df`. (Default is "Energy.type".)
+#' @param unit the name of the unit column in `.iea_df`. (Default is "Units".)
+#' @param flow the name of the flow column in `.iea_df`. (Default is "Flow".)
+#' @param product the name of the product column in `.iea_df`. (Default is "Product".)
 #' @param remove_zeroes a logical indicating whether data points with the value `0` are to be removed from the output. (Default is `TRUE`.)
 #'
 #' @return a tidy version of `.iea_df` containing new columns `year` and `e_dot` and, optionally, `0` values removed
@@ -815,14 +815,18 @@ augment_iea_df <- function(.iea_df,
 #'   augment_iea_df() %>% 
 #'   tidy_iea_df()
 tidy_iea_df <- function(.iea_df, 
-                        year = "Year", e_dot = "E.dot", 
-                        method = "Method", 
-                        last_stage = "Last.stage",
-                        country = "Country", 
-                        ledger_side = "Ledger.side", 
-                        flow_aggregation_point = "Flow.aggregation.point", 
-                        energy_type = "Energy.type", unit = "Unit", 
-                        flow = "Flow", product = "Product",
+                        col_names = IEATools::iea_cols,
+                        year = col_names$year,
+                        e_dot = col_names$e_dot, 
+                        method = col_names$method, 
+                        last_stage = col_names$last_stage,
+                        country = col_names$country, 
+                        ledger_side = col_names$ledger_side, 
+                        flow_aggregation_point = col_names$flow_aggregation_point, 
+                        energy_type = col_names$energy_type,
+                        unit = col_names$unit, 
+                        flow = col_names$flow, 
+                        product = col_names$product,
                         remove_zeroes = TRUE){
   out <- .iea_df %>% 
     # Gather into a tidy data frame.

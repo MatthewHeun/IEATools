@@ -247,6 +247,12 @@ other_flows <- list(residential = "Residential",
 usethis::use_data(other_flows, overwrite = TRUE)
 
 
+non_energy_flows <- list(non_energy_use_insustry_transformation_energy = "Non-energy use industry/transformation/energy", 
+                         non_energy_use_in_transport = "Non-energy use in transport", 
+                         non_energy_use_in_other = "Non energy use in other")
+usethis::use_data(non_energy_flows, overwrite = TRUE)
+
+
 # 
 # Aggregations
 # 
@@ -356,3 +362,13 @@ products <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   insert_after(after = "Natural gas", 
                values = paste("Natural gas", "(Oil and gas extraction)"))
 usethis::use_data(products, overwrite = TRUE)
+
+
+# 
+# Notation
+# 
+
+notation <- list(specify_open = " <<", 
+                 specify_close = ">>")
+usethis::use_data(notation, overwrite = TRUE)
+

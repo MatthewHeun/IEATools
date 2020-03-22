@@ -118,7 +118,7 @@ specify_primary_production <- function(.tidy_iea_df,
       # We have EIOU rows, so we have more work to do.
       
       # Find the places where the Production energy is consumed,
-      # for example, Hard coal (if no detail).2
+      # for example, Hard coal (if no detail).
       # These pieces of consumed energy need to be renamed
       # to "product (eiou_dest)"
       # i.e., the product is produced by (is from) eiou_dest.

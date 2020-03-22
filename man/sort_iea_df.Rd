@@ -5,7 +5,7 @@
 \title{Sort an IEA data frame in IEA row order}
 \usage{
 sort_iea_df(
-  .tidy_iea_df,
+  .iea_df,
   col_names = IEATools::iea_cols,
   country = col_names$country,
   method = col_names$method,
@@ -28,7 +28,7 @@ sort_iea_df(
 )
 }
 \arguments{
-\item{.tidy_iea_df}{the tidy IEA data frame to be sorted}
+\item{.iea_df}{the IEA data frame to be sorted}
 
 \item{country}{the name of the country column in \code{.tidy_iea_df}. Default is "Country".}
 

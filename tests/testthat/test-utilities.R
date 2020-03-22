@@ -221,6 +221,36 @@ test_that("sorting a tidy IEA data frame works as expected", {
 })
 
 
+test_that("sorting an IEA DF does the right thing with Non-energy flows", {
+  tidy <- load_tidy_iea_df() # Unsorted
+  tidy1971 <- tidy %>% 
+    dplyr::filter(Year == 1971)
+  expect_equal(sort_iea_df(tidy1971), tidy1971)
+  expect_equal(sort_iea_df(tidy), tidy)
+})
+
+
+test_that("sorting works on real IEA data frame", {
+  # Make sure that the initially-loaded data frame has sorting as expected.
+  loaded <- load_tidy_iea_df()
+  expect_equal(loaded$Flow[[1]], IEATools::tpes_flows$production)
+  expect_equal(loaded$Flow[[nrow(loaded)]], IEATools::non_energy_flows$non_energy_use_insustry_transformation_energy)
+  
+  # Sort the data frame and make sure everything is still in the right place.
+  sorted_loaded <- sort_iea_df(loaded)
+  expect_equal(sorted_loaded$Flow[[1]], IEATools::tpes_flows$production)
+  expect_equal(sorted_loaded$Flow[[nrow(sorted_loaded)]], IEATools::non_energy_flows$non_energy_use_insustry_transformation_energy)
+  
+  # Now specify the data frame and make sure sorting still works.
+  sorted_specified <- loaded %>% 
+    specify_all() %>% 
+    sort_iea_df()
+  expect_equal(sorted_specified$Flow[[1]], IEATools::tpes_flows$production)
+  expect_equal(sorted_specified$Flow[[nrow(sorted_specified)]], IEATools::non_energy_flows$non_energy_use_insustry_transformation_energy)
+  
+})
+
+
 test_that("replace_join works as expected", {
   DFA <- tibble::tribble(~x, ~y, 
                          1, "A", 
