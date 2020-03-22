@@ -18,8 +18,8 @@ usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 # Notation
 # 
 
-notation <- list(specify_open = " <<", 
-                 specify_close = ">>")
+notation <- list(specify_open = " (", 
+                 specify_close = ")")
 usethis::use_data(notation, overwrite = TRUE)
 
 

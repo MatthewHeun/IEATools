@@ -19,16 +19,18 @@ specify_primary_production(
   resources = "Resources",
   production = "Production",
   e_dot = "E.dot",
-  product = "Product"
+  product = "Product",
+  .open = notation$specify_open,
+  .close = notation$specify_close
 )
 }
 \arguments{
-\item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
+\item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{rename_iea_df_cols()}}
 
 \item{eiou_destinations}{a vector of destinations for EIOU for primary production of coal and coal products and oil and natural gas.
 Default is \code{c("Coal mines", "Oil and gas extraction")}.}
 
-\item{liquefaction_regas}{a string identifying liquefaction and regasification plants. Default is "\verb{Liquefaction (LNG) / regasification plants}".}
+\item{liquefaction_regas}{a string identifying liquefaction and regasification plants. Default is "Liquefaction (LNG) / regasification plants".}
 
 \item{liquefaction_regas_reassign}{a string identifying the industry to which EIOU into \code{liquefaction_regas} will be reassigned.
 Default is "\verb{Oil and gas extraction}".}
@@ -58,6 +60,10 @@ Default is "\code{Resources}".}
 \item{e_dot}{the name of the energy column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
 
 \item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
+
+\item{.open}{a string that identifies the start of the specification portion of flows. Default is \code{notation$specify_open}.}
+
+\item{.close}{a string that identifies the end of specification portion of  flows. Default is \code{notation$specify_close}.}
 }
 \value{
 \code{.tidy_iea_df} with adjusted production information for primary energy

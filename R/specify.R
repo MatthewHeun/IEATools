@@ -36,10 +36,10 @@
 #' Be sure to call this function _after_ calling `augment_iea_df()` or
 #' `load_tidy_iea_df()`.
 #'
-#' @param .tidy_iea_df an IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
+#' @param .tidy_iea_df an IEA data frame whose columns have been renamed by `rename_iea_df_cols()`
 #' @param eiou_destinations a vector of destinations for EIOU for primary production of coal and coal products and oil and natural gas.
 #'        Default is `c("Coal mines", "Oil and gas extraction")`.
-#' @param liquefaction_regas a string identifying liquefaction and regasification plants. Default is "`Liquefaction (LNG) / regasification plants`".
+#' @param liquefaction_regas a string identifying liquefaction and regasification plants. Default is "Liquefaction (LNG) / regasification plants".
 #' @param liquefaction_regas_reassign a string identifying the industry to which EIOU into `liquefaction_regas` will be reassigned.
 #'        Default is "`Oil and gas extraction`".
 #' @param production_products a list of products for which we want to specify primary industries.
@@ -58,6 +58,8 @@
 #' @param production a string identifying production in the flow column. Default is "`Production`".
 #' @param e_dot the name of the energy column in `.tidy_iea_df`. Default is "`E.dot`".
 #' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
+#' @param .open a string that identifies the start of the specification portion of flows. Default is `notation$specify_open`.
+#' @param .close a string that identifies the end of specification portion of  flows. Default is `notation$specify_close`.
 #'
 #' @return `.tidy_iea_df` with adjusted production information for primary energy 
 #'         for both coal and coal products and oil and gas extraction
@@ -94,12 +96,14 @@ specify_primary_production <- function(.tidy_iea_df,
                                        resources = "Resources",
                                        production = "Production", 
                                        e_dot = "E.dot",
-                                       product = "Product"){
+                                       product = "Product", 
+                                       .open = notation$specify_open, 
+                                       .close = notation$specify_close){
   specify_primary_func <- function(.tidf, eiou_dest, prod_prods, prod_short_name){
     # Convert from the Production industry to Resources (prod_short_name)
     # For example, Flow = Production, Product = Anthracite becomes Flow = Resources (Coal), Product = Anthracite
     res_name <- resources
-    if (!endsWith(resources, paste0("(", prod_short_name, ")"))) {
+    if (!endsWith(resources, paste0(.open, prod_short_name, .close))) {
       res_name <- paste0(res_name, " (", prod_short_name, ")")
     }
     # Replace Production with res_name in Production rows
