@@ -14,6 +14,6 @@ energy_types
 A string vector containing the order for energy types.
 }
 \examples{
-energy_type_order
+energy_types
 }
 \keyword{datasets}

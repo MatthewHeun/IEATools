@@ -7,6 +7,10 @@
 #' the return value has the same length as \code{x} and contains the result
 #' of applying the test (does \code{x} start with any of \code{target})
 #' for each item in \code{x}.
+#' 
+#' `target` can be either a vector or a list. 
+#' To allow `target` to be a list, 
+#' `target` is `unlist()`ed before use.
 #'
 #' @param x a string (or vector or list of strings)
 #' @param target a vector or list of strings
@@ -27,7 +31,7 @@
 #'                    target = c("Production", "Imports"))
 starts_with_any_of <- function(x, target){
   sapply(x, FUN = function(one_x){
-    any(startsWith(x = one_x, prefix = target))
+    any(startsWith(x = one_x, prefix = unlist(target)))
   }) %>%
     magrittr::set_names(NULL)
 }

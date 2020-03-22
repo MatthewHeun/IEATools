@@ -155,13 +155,13 @@ there is a <code>year</code> column present or
   <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"_"</span>,
   <span class='kw'>fap_flow</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>flow_aggregation_point</span>, <span class='no'>sep</span>, <span class='no'>flow</span>),
   <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
-  <span class='kw'>country_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/country_order.html'>country_order</a></span>,
-  <span class='kw'>method_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/method_order.html'>method_order</a></span>,
-  <span class='kw'>energy_type_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/energy_type_order.html'>energy_type_order</a></span>,
-  <span class='kw'>last_stage_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/last_stage_order.html'>last_stage_order</a></span>,
-  <span class='kw'>ledger_side_iea_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/ledger_side_iea_order.html'>ledger_side_iea_order</a></span>,
-  <span class='kw'>fap_flow_iea_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/fap_flow_iea_order.html'>fap_flow_iea_order</a></span>,
-  <span class='kw'>product_iea_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/product_iea_order.html'>product_iea_order</a></span>
+  <span class='kw'>country_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/countries.html'>countries</a></span>,
+  <span class='kw'>method_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/methods.html'>methods</a></span>,
+  <span class='kw'>energy_type_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/energy_types.html'>energy_types</a></span>,
+  <span class='kw'>last_stage_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/last_stages.html'>last_stages</a></span>,
+  <span class='kw'>ledger_side_iea_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/ledger_sides.html'>ledger_sides</a></span>,
+  <span class='kw'>fap_flow_iea_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/fap_flows.html'>fap_flows</a></span>,
+  <span class='kw'>product_iea_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/products.html'>products</a></span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -217,31 +217,31 @@ there is a <code>year</code> column present or
     </tr>
     <tr>
       <th>country_order</th>
-      <td><p>the order in which to sort the <code>country</code> column of <code>.tidy_iea_df</code>. Default is <a href='country_order.html'>country_order</a>.</p></td>
+      <td><p>the order in which to sort the <code>country</code> column of <code>.tidy_iea_df</code>. Default is <a href='countries.html'>countries</a>.</p></td>
     </tr>
     <tr>
       <th>method_order</th>
-      <td><p>the order in which to sort the <code>method</code> column of <code>.tidy_iea_df</code>. Default is <a href='method_order.html'>method_order</a>.</p></td>
+      <td><p>the order in which to sort the <code>method</code> column of <code>.tidy_iea_df</code>. Default is <a href='methods.html'>methods</a>.</p></td>
     </tr>
     <tr>
       <th>energy_type_order</th>
-      <td><p>the order in which to sort the <code>energy_type</code> column of <code>.tidy_iea_df</code>. Default is <a href='energy_type_order.html'>energy_type_order</a>.</p></td>
+      <td><p>the order in which to sort the <code>energy_type</code> column of <code>.tidy_iea_df</code>. Default is <a href='energy_types.html'>energy_types</a>.</p></td>
     </tr>
     <tr>
       <th>last_stage_order</th>
-      <td><p>the order in which to sort the <code>last_stage</code> column of <code>.tidy_iea_df</code>. Default is <a href='last_stage_order.html'>last_stage_order</a>.</p></td>
+      <td><p>the order in which to sort the <code>last_stage</code> column of <code>.tidy_iea_df</code>. Default is <a href='last_stages.html'>last_stages</a>.</p></td>
     </tr>
     <tr>
       <th>ledger_side_iea_order</th>
-      <td><p>the order in which to sort the <code>ledger_side</code> column of <code>.tidy_iea_df</code>. Default is <a href='ledger_side_iea_order.html'>ledger_side_iea_order</a>.</p></td>
+      <td><p>the order in which to sort the <code>ledger_side</code> column of <code>.tidy_iea_df</code>. Default is <a href='ledger_sides.html'>ledger_sides</a>.</p></td>
     </tr>
     <tr>
       <th>fap_flow_iea_order</th>
-      <td><p>the order in which to sort the united <code>flow_aggregation_point</code> and <code>flow</code> columns of <code>.tidy_iea_df</code>. Default is <a href='fap_flow_iea_order.html'>fap_flow_iea_order</a>.</p></td>
+      <td><p>the order in which to sort the united <code>flow_aggregation_point</code> and <code>flow</code> columns of <code>.tidy_iea_df</code>. Default is <a href='fap_flows.html'>fap_flows</a>.</p></td>
     </tr>
     <tr>
       <th>product_iea_order</th>
-      <td><p>the order in which to sort the <code>prodcut</code> column of <code>.tidy_iea_df</code>. Default is <a href='product_iea_order.html'>product_iea_order</a>.</p></td>
+      <td><p>the order in which to sort the <code>prodcut</code> column of <code>.tidy_iea_df</code>. Default is <a href='products.html'>products</a>.</p></td>
     </tr>
     </table>
 
@@ -251,10 +251,10 @@ there is a <code>year</code> column present or
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Sorting is accomplished (by default) using
-the constants <a href='country_order.html'>country_order</a>, <a href='method_order.html'>method_order</a>,
-<a href='energy_type_order.html'>energy_type_order</a>, <a href='last_stage_order.html'>last_stage_order</a>, <code>year</code> (if present),
-<a href='ledger_side_iea_order.html'>ledger_side_iea_order</a>, <a href='fap_flow_iea_order.html'>fap_flow_iea_order</a>,
-<a href='product_iea_order.html'>product_iea_order</a>,
+the constants <a href='countries.html'>countries</a>, <a href='methods.html'>methods</a>,
+<a href='energy_types.html'>energy_types</a>, <a href='last_stages.html'>last_stages</a>, <code>year</code> (if present),
+<a href='ledger_sides.html'>ledger_sides</a>, <a href='fap_flows.html'>fap_flows</a>,
+<a href='products.html'>products</a>,
 (in that order of precedence).</p>
 <p>Years are sorted if the <code>year</code> column is present (a tidy data frame).
 If years are not present, they are assumed to be spread to the right

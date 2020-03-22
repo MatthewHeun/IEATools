@@ -90,7 +90,7 @@
       <h1>Specify EIOU Industries and Flows</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-03-19</h4>
+            <h4 class="date">2020-03-22</h4>
       
       
       <div class="hidden name"><code>specify.Rmd</code></div>
@@ -147,17 +147,9 @@
 <span id="cb3-3"><a href="#cb3-3"></a>         Product <span class="op">%in%</span><span class="st"> </span>coal_and_coal_products) <span class="op">%&gt;%</span></span>
 <span id="cb3-4"><a href="#cb3-4"></a><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(Country, Flow.aggregation.point, Flow, Product) <span class="op">%&gt;%</span></span>
 <span id="cb3-5"><a href="#cb3-5"></a><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>()</span>
-<span id="cb3-6"><a href="#cb3-6"></a><span class="co">#&gt; # A tibble: 8 x 4</span></span>
-<span id="cb3-7"><a href="#cb3-7"></a><span class="co">#&gt;   Country Flow.aggregation.point      Flow          Product                 </span></span>
-<span id="cb3-8"><a href="#cb3-8"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;                       &lt;chr&gt;         &lt;chr&gt;                   </span></span>
-<span id="cb3-9"><a href="#cb3-9"></a><span class="co">#&gt; 1 ZAF     Total primary energy supply Production    Hard coal (if no detail)</span></span>
-<span id="cb3-10"><a href="#cb3-10"></a><span class="co">#&gt; 2 ZAF     Total primary energy supply Exports       Hard coal (if no detail)</span></span>
-<span id="cb3-11"><a href="#cb3-11"></a><span class="co">#&gt; 3 ZAF     Total primary energy supply Production    Coking coal             </span></span>
-<span id="cb3-12"><a href="#cb3-12"></a><span class="co">#&gt; 4 ZAF     Total primary energy supply Production    Other bituminous coal   </span></span>
-<span id="cb3-13"><a href="#cb3-13"></a><span class="co">#&gt; 5 ZAF     Total primary energy supply Imports       Coking coal             </span></span>
-<span id="cb3-14"><a href="#cb3-14"></a><span class="co">#&gt; 6 ZAF     Total primary energy supply Exports       Coking coal             </span></span>
-<span id="cb3-15"><a href="#cb3-15"></a><span class="co">#&gt; 7 ZAF     Total primary energy supply Exports       Other bituminous coal   </span></span>
-<span id="cb3-16"><a href="#cb3-16"></a><span class="co">#&gt; 8 ZAF     Total primary energy supply Stock changes Other bituminous coal</span></span></code></pre></div>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="co">#&gt; # A tibble: 0 x 4</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co">#&gt; # … with 4 variables: Country &lt;chr&gt;, Flow.aggregation.point &lt;chr&gt;, Flow &lt;chr&gt;,</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="co">#&gt; #   Product &lt;chr&gt;</span></span></code></pre></div>
 </div>
 <div id="problems-with-the-iea-approach-to-eiou" class="section level3">
 <h3 class="hasAnchor">

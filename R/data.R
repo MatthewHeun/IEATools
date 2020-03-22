@@ -293,7 +293,7 @@
 #' @format A string vector
 #' 
 #' @examples
-#' energy_type_order
+#' energy_types
 "energy_types"
 
 

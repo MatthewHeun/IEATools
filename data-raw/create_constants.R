@@ -28,8 +28,7 @@ iea_cols <- list(country = "Country",
                  flow = "Flow", 
                  product = "Product", 
                  unit = "Unit", 
-                 e_dot = "E.dot"
-)
+                 e_dot = "E.dot")
 usethis::use_data(iea_cols, overwrite = TRUE)
 
 
@@ -41,10 +40,9 @@ primary_coal_products <- list(hard_coal_if_no_detail = "Hard coal (if no detail)
                               brown_coal_if_no_detail = "Brown coal (if no detail)",
                               anthracite = "Anthracite",
                               coking_coal = "Coking coal",
-                              otehr_bituminous_coal = "Other bituminous coal",
+                              other_bituminous_coal = "Other bituminous coal",
                               sub_bituminous_coal = "Sub-bituminous coal",
-                              lignite = "Lignite"
-)
+                              lignite = "Lignite")
 usethis::use_data(primary_coal_products, overwrite = TRUE)
 
 coal_and_coal_products <- list(primary_coal_products,
@@ -56,11 +54,12 @@ coal_and_coal_products <- list(primary_coal_products,
                                bas_works_gas = "Gas works gas",
                                coke_oven_gas = "Coke oven gas",
                                blast_furnace_gas = "Blast furnace gas",
-                               other_recovered_gases = "Other recovered gases"
-)
+                               other_recovered_gases = "Other recovered gases")
 usethis::use_data(coal_and_coal_products, overwrite = TRUE)
 
-secondary_coal_products <- setdiff(coal_and_coal_products, primary_coal_products)
+secondary_coal_products <- setdiff(coal_and_coal_products, primary_coal_products) %>% 
+  unlist() %>% 
+  as.list()
 usethis::use_data(secondary_coal_products, overwrite = TRUE)
 
 
@@ -72,11 +71,14 @@ primary_peat_products <- list(peat = "Peat")
 usethis::use_data(primary_peat_products, overwrite = TRUE)
 
 peat_and_peat_products <- list(primary_peat_products,
-                               peat_products = "Peat products"
-)
+                               peat_products = "Peat products") %>% 
+  unlist() %>% 
+  as.list()
 usethis::use_data(peat_and_peat_products, overwrite = TRUE)
 
-secondary_peat_products <- setdiff(peat_and_peat_products, primary_peat_products)
+secondary_peat_products <- setdiff(peat_and_peat_products, primary_peat_products) %>% 
+  unlist() %>% 
+  as.list()
 usethis::use_data(secondary_peat_products, overwrite = TRUE)
 
 
@@ -89,8 +91,7 @@ primary_oil_products <- list(crude_ngl_feedstocks_if_no_detail = "Crude/NGL/feed
                              natural_gas_liquids = "Natural gas liquids",
                              additives_blending_components = "Additives/blending components",
                              otehr_hydrocarbons = "Other hydrocarbons", 
-                             oil_shals_and_oil_sands = "Oil shale and oil sands"
-)
+                             oil_shals_and_oil_sands = "Oil shale and oil sands")
 usethis::use_data(primary_oil_products, overwrite = TRUE)
 
 oil_and_oil_products <- list(primary_oil_products,
@@ -111,11 +112,14 @@ oil_and_oil_products <- list(primary_oil_products,
                              bitumen = "Bitumen",
                              paraffin_waxes = "Paraffin waxes",
                              petroleum_coke = "Petroleum coke",
-                             other_oil_products = "Other oil products"
-)
+                             other_oil_products = "Other oil products") %>% 
+  unlist() %>% 
+  as.list()
 usethis::use_data(oil_and_oil_products, overwrite = TRUE)
 
-secondary_oil_products <- setdiff(oil_and_oil_products, primary_oil_products)
+secondary_oil_products <- setdiff(oil_and_oil_products, primary_oil_products) %>% 
+  unlist() %>% 
+  as.list()
 usethis::use_data(secondary_oil_products, overwrite = TRUE)
 
 
@@ -129,8 +133,7 @@ renewable_products <- list(geothermal = "Geothermal",
                            solar_thermal = "Solar thermal",
                            tide_wave_and_ocean = "Tide, wave and ocean",
                            wind = "Wind",
-                           other_sources = "Other sources"
-)
+                           other_sources = "Other sources")
 usethis::use_data(renewable_products, overwrite = TRUE)
 
 
@@ -148,8 +151,7 @@ biofuels_and_waste_products <- list(industrial_waste = "Industrial waste",
                                     bio_jet_kerosene = "Bio jet kerosene",
                                     other_liquid_biofuels = "Other liquid biofuels",
                                     non_specified_primary_biofuels_and_waste = "Non-specified primary biofuels and waste",
-                                    charcoal = "Charcoal"
-)
+                                    charcoal = "Charcoal")
 usethis::use_data(biofuels_and_waste_products, overwrite = TRUE)
 
 
@@ -194,8 +196,7 @@ manufacturing_flows <- list(iron_and_steel = "Iron and steel",
                             # 2019
                             paper_pulp_and_printing = "Paper, pulp and printing",
                             wood_and_wood_products = "Wood and wood products",
-                            textile_and_leather = "Textile and leather"
-)
+                            textile_and_leather = "Textile and leather")
 usethis::use_data(manufacturing_flows, overwrite = TRUE)
 
 
@@ -218,7 +219,9 @@ industry_flows <- list(mining_and_quarrying = "Mining and quarrying",
                        # 2018
                        non_specified_industry = "Non-specified (industry)", 
                        # 2019
-                       industyr_not_elsewhere_specified = "Industry not elsewhere specified")
+                       industry_not_elsewhere_specified = "Industry not elsewhere specified") %>% 
+  unlist() %>% 
+  as.list()
 usethis::use_data(industry_flows, overwrite = TRUE)
 
 
@@ -256,19 +259,16 @@ aggregation_flows <- list(total_primary_energy_supply = "Total primary energy su
                           manufacturing = "Manufacturing",
                           transport = "Transport",
                           other = "Other",
-                          non_energy_use = "Non-energy use"
-)
+                          non_energy_use = "Non-energy use")
 usethis::use_data(aggregation_flows, overwrite = TRUE)
 
 memo_aggregation_flow_prefixes = list(memo = "Memo: ", 
                                       electricity_output_GWh = "Electricity output (GWh)", 
-                                      heat_output = "Heat output"
-)
+                                      heat_output = "Heat output")
 usethis::use_data(memo_aggregation_flow_prefixes, overwrite = TRUE)
 
 memo_aggregation_product_prefixes = list(memo = "Memo: ", 
-                                         total = "Total"
-)
+                                         total = "Total")
 usethis::use_data(memo_aggregation_product_prefixes, overwrite = TRUE)
 
 
@@ -302,27 +302,23 @@ usethis::use_data(countries, overwrite = TRUE)
 # for details
 methods <- list(pcm = "PCM", # Physical content method (used by IEA)
                 rcm = "RCM", # Resource content method
-                psm = "PSM"  # Partial substitution method (used by EIA and BP)
-)
+                psm = "PSM") # Partial substitution method (used by EIA and BP)
 usethis::use_data(methods, overwrite = TRUE)
 
 
 energy_types <- list(e = "E", # Energy 
-                     x = "X"  # Exergy
-)
+                     x = "X") # Exergy
 usethis::use_data(energy_types, overwrite = TRUE)
 
 
 last_stages <- list(final = "Final", 
                     useful = "Useful", 
-                    services = "Services"
-)
+                    services = "Services")
 usethis::use_data(last_stages, overwrite = TRUE)
 
 
 ledger_sides <- list(supply = "Supply", 
-                     consumption = "Consumption"
-)
+                     consumption = "Consumption")
 usethis::use_data(ledger_sides, overwrite = TRUE)
 
 

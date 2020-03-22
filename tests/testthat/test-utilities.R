@@ -9,9 +9,13 @@ test_that("starts_with_any_of() works properly", {
   expect_equal(starts_with_any_of(x = c("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
                                   target = c("Production", "Imports")),
                c(TRUE, TRUE, FALSE, FALSE))
-  # Does it also work with lists?
+  # Does it also work when x is a list?
   expect_equal(starts_with_any_of(x = list("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
                                   target = c("Production", "Imports")),
+               c(TRUE, TRUE, FALSE, FALSE))
+  # Does it work when target is also a list? 
+  expect_equal(starts_with_any_of(x = list("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
+                                  target = list("Production", "Imports")),
                c(TRUE, TRUE, FALSE, FALSE))
 })
 
