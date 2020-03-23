@@ -20,8 +20,8 @@ usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 
 # Note that open and close are escaped if they contain any of [, ], (, or ). 
 # Otherwise, open and close should not contain any regex special characters.
-specify_notation <- list(open = " (((", 
-                         close = ")))", 
+specify_notation <- list(open = " [", 
+                         close = "]", 
                          resources_preposition = "of ",
                          eiou_preposition = "to ", 
                          interface_ind_preposition = "of ",
@@ -182,7 +182,8 @@ usethis::use_data(biofuels_and_waste_products, overwrite = TRUE)
 # Flow types
 # 
 
-tpes_flows <- list(production = "Production", 
+tpes_flows <- list(resources = "Resources", 
+                   production = "Production", 
                    importa = "Imports", 
                    exports = "Exports",
                    international_marine_bunkers = "International marine bunkers",

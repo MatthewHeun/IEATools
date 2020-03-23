@@ -558,20 +558,16 @@ sort_iea_df <- function(.iea_df,
   }
 
   factorized <- .iea_df %>% 
+    despecify_col(col = flow, despecified_col = .clean_flow) %>% 
+    despecify_col(col = product, despecified_col = .clean_product) %>% 
     dplyr::mutate(
       !!as.name(country) := factor(!!as.name(country), levels = country_order),
       !!as.name(method) := factor(!!as.name(method), levels = method_order),
       !!as.name(energy_type) := factor(!!as.name(energy_type), levels = energy_type_order),
       !!as.name(last_stage) := factor(!!as.name(last_stage), levels = last_stage_order),
       !!as.name(ledger_side) := factor(!!as.name(ledger_side), levels = ledger_side_iea_order),
-      
-      "{.clean_flow}" := dplyr::case_when(
-        startsWith(.data[[flow]], "Resources") ~ "Production",
-        TRUE ~ gsub(pattern = flow_pat, replacement = "", x = .data[[flow]])
-      ),
       !!as.name(fap_flow) := paste0(.data[[flow_aggregation_point]], sep, .data[[.clean_flow]]),
       !!as.name(fap_flow) := factor(!!as.name(fap_flow), levels = fap_flow_iea_order),
-      "{.clean_product}" := gsub(pattern = prod_pat, replacement = "", x = .data[[product]]),
       "{.clean_product}" := factor(.data[[.clean_product]], levels = product_iea_order)
     )
   

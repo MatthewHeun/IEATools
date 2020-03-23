@@ -99,6 +99,27 @@ test_that("specify_all works as expected", {
   expect_equal(Simple, Complicated)
 })
 
+
+test_that("despecify_col work as expected", {
+  specified <- load_tidy_iea_df() %>% 
+    specify_all()
+  despecified <- specified %>% 
+    despecify_col(col = iea_cols$flow, despecified_col = "clean_Flow")
+  despecified %>% 
+    dplyr::select(clean_Flow) %>% 
+    unlist() %>% 
+    endsWith(specify_notation$close) %>% 
+    any() %>% 
+    expect_false()
+  despecified %>% 
+    dplyr::select(clean_Flow) %>% 
+    unlist() %>% 
+    startsWith(tpes_flows$resources) %>% 
+    any() %>% 
+    expect_false()
+})
+
+
 ###########################################################
 context("Transformation sinks and sources")
 ###########################################################

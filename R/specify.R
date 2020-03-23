@@ -667,3 +667,51 @@ specify_all <- function(.tidy_iea_df){
     specify_interface_industries() %>% 
     tp_sinks_to_nonenergy()
 }
+
+
+#' Remove specification strings from a column
+#' 
+#' `Flow` and `Product` columns of IEA data frames may have been "specified" 
+#' with one of the functions of `specify_all()`.
+#' The specifying makes it difficult to sort the columns in IEA order (with `sort_iea_df()`), 
+#' as the `Flow` and `Product` columns now contain non-IEA flows and products.
+#' To enable sorting, this function de-specifies a column in `.df`.
+#' 
+#' De-specifying includes the following changes:
+#'     * Any "Resource" flows are replaced by "Production". E.g., "Resources [Coal]" becomes "Production".
+#'     * All parenthetical decorations are removed.  E.g., "Other bituminous coal [of Coal mines]" becomes "Other bituminous coal".
+#'     
+#' Identification of parenthetical notation delimiters is determined by the `specify_notation` object of this package.
+#'
+#' @param .df the data frame in which `col` exists
+#' @param col the string name of the column in `.df` to be de-specified
+#' @param despecified_col the string name of the column in `.df` to contain the de-specified version of `col`
+#'
+#' @return a de-specified version of `.data`
+#' 
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' load_tidy_iea_df() %>% 
+#'   specify_all() %>% 
+#'   despecify_col(col = "Flow", despecified_col = "clean_Flow") %>% 
+#'   select(Flow, Product, E.dot, clean_Flow) %>% 
+#'   filter(endsWith(Flow, specify_notation$close))
+despecify_col <- function(.df, col, despecified_col) {
+  pat <- paste0(specify_notation$open, ".*", specify_notation$close, "$")
+  to_escape <- c("[", "]", "(", ")")
+  # Replace any special characters (defined in to_escape) with escaped characters "\\" so they will work in the pattern.
+  for (char in to_escape) {
+    pat <- gsub(pattern = paste0("\\", char), replacement = paste0("\\\\", char), x = pat)
+  }
+  .df %>% 
+    dplyr::mutate(
+      "{despecified_col}" := dplyr::case_when(
+        # Change "Resources" back to "Production"
+        startsWith(.data[[col]], tpes_flows$resources) ~ tpes_flows$production, 
+        # Remove all parenthetical decorations.
+        TRUE ~ gsub(pattern = pat, replacement = "", x = .data[[col]])
+      )
+    )
+}
