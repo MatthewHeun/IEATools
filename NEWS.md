@@ -1,4 +1,6 @@
 * Now up to 440 tests, which all pass.
+* `sort_iea_df()` now works for specified IEA data frames.
+  Internally, `sort_iea_df()` now uses `despecify_col()`.
 * New function `despecify_col()` removes specification decoration from a column.
 * Now using prepositions in specification strings.
 * Specification strings are now given in a package constant (`specify_notation`).
