@@ -289,11 +289,11 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
     assertthat::assert_that(nrow(na_ef_product) == 0)
     out <- out %>% 
       dplyr::group_by(!!!meta_cols) %>% 
-      dplyr::arrange(!!as.name(.temp_sort), !!as.name(ef_product), .by_group = TRUE) %>% 
+      dplyr::arrange(!!as.name(.temp_sort), !!as.name(.clean_ef_product), .by_group = TRUE) %>% 
       dplyr::mutate(
+        # Eliminate temporary columns
         !!as.name(.temp_sort) := NULL, 
-        # Undo the factorization of the Ef.product column.
-        !!as.name(ef_product) := as.character(!!as.name(ef_product))
+        !!as.name(.clean_ef_product) := NULL
       ) %>% 
       # Undo the grouping that we performed above.
       dplyr::ungroup()
@@ -307,7 +307,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
     # Figure out the metadata columns.
     # Columns that are not years and are not machine_and_product_columns are metadata columns.
     meta_cols <- out %>% 
-      matsindf::everything_except(c(year_colnames, machine_and_product_columns, .clean_ef_product))
+      matsindf::everything_except(c(year_colnames, machine_and_product_columns))
     # Now put the column names together in the desired order
     col_order <- c(meta_cols, machine_and_product_columns, year_colnames)
     out <- out %>% 
