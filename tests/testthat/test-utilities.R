@@ -245,7 +245,10 @@ test_that("sorting works on a specified IEA data frame", {
   sorted_specified <- loaded %>% 
     specify_all() %>% 
     sort_iea_df()
-  expect_equal(sorted_specified$Flow[[1]], IEATools::tpes_flows$production)
+  expect_equal(sorted_specified$Flow[[1]], paste0("Resources", 
+                                                  specify_notation$resources_open, 
+                                                  biofuels_and_waste_products$primary_solid_biofuels, 
+                                                  specify_notation$resources_close))
   expect_equal(sorted_specified$Flow[[nrow(sorted_specified)]], IEATools::non_energy_flows$non_energy_use_insustry_transformation_energy)
 })
 

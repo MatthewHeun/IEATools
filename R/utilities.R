@@ -564,7 +564,7 @@ sort_iea_df <- function(.iea_df,
       ),
       !!as.name(fap_flow) := paste0(.data[[flow_aggregation_point]], sep, .data[[.clean_flow]]),
       !!as.name(fap_flow) := factor(!!as.name(fap_flow), levels = fap_flow_iea_order),
-      "{.clean_product}" := gsub(pattern = paste0(notation$specify_open, ".*", notation$specify_close, "$"),
+      "{.clean_product}" := gsub(pattern = paste0(specify_notation$open, ".*", specify_notation$close, "$"),
                                  x = .data[[product]],
                                  replacement = ""),
       "{.clean_product}" := factor(.data[[.clean_product]], levels = product_iea_order)
@@ -575,13 +575,13 @@ sort_iea_df <- function(.iea_df,
     # Likely that we have a long, tidy data frame here.
     sorted <- factorized %>% 
       dplyr::arrange(!!as.name(year), !!as.name(country), !!as.name(method), !!as.name(energy_type), !!as.name(last_stage),
-                     !!as.name(fap_flow), !!as.name(product))
+                     !!as.name(fap_flow), !!as.name(.clean_product))
   } else {
     # No year column. This might be a wide data frame here in which years are spread as columns to the right.
     # Exclude year from the arranging.
     sorted <- factorized %>% 
       dplyr::arrange(!!as.name(country), !!as.name(method), !!as.name(energy_type), !!as.name(last_stage),
-                     !!as.name(fap_flow), !!as.name(product))
+                     !!as.name(fap_flow), !!as.name(.clean_product))
   }
   
   sorted %>% 
@@ -592,7 +592,7 @@ sort_iea_df <- function(.iea_df,
       "{.clean_product}" := NULL
     ) %>% 
     # Remove factors from the sorting columns to return columns to character state.
-    dplyr::mutate_at(c(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product), as.character)
+    dplyr::mutate_at(c(country, method, energy_type, last_stage, ledger_side), as.character)
 }
 
 

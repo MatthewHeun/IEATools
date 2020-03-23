@@ -351,7 +351,7 @@ usethis::use_data(ledger_sides, overwrite = TRUE)
 
 # Defining the row order for IEA-style data frames is tricky and requires some manual intervention.
 # In the first step, we use the data frame created from load_tidy_iea_df,
-# creating a united column from Flow.aggregation.point.
+# creating a united column from Flow.aggregation.point and Flow.
 fap_flows <- load_tidy_iea_df(remove_zeroes = FALSE) %>% 
   tidyr::unite(col = Flow.aggregation.point_Flow, Flow.aggregation.point, Flow, sep = "_", remove = TRUE) %>% 
   dplyr::select(Flow.aggregation.point_Flow) %>% 
@@ -362,6 +362,10 @@ fap_flows <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   # Coal mines and Oil and gas extraction are created in specify_primary_production().
   insert_after(after = "Total primary energy supply_Production", 
                values = c("Total primary energy supply_Coal mines", "Total primary energy supply_Oil and gas extraction")) %>% 
+  # We we have Resources, Coal mines and Oil and gas extraction are Transformation processes.
+  # Add entries for those, too.
+  insert_after(after = "TFC compare_Statistical differences", 
+               values = c("Transformation processes_Coal mines", "Transformation processes_Oil and gas extraction")) %>% 
   # Energy industry own use_Own use in electricity, CHP and heat plants, 
   # Pumped storage plants, and Nuclear industry is reassigned to Main activity producer electricity plants in specify_tp_eiou()
   insert_after(after = "Energy industry own use_Nuclear industry", 
