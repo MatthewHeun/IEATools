@@ -247,7 +247,8 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
                                                ef_product_order = IEATools::products, 
                                                quantity = "Quantity",
                                                maximum_values = "Maximum.values", 
-                                               .temp_sort = ".fap_flow"){
+                                               .temp_sort = ".fap_flow", 
+                                               .clean_ef_product = ".clean_Ef_product"){
   rowcol <- match.arg(rowcol)
   out <- .fu_allocation_template
   # Work on row order
@@ -261,17 +262,21 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
     # Columns that are not years and are not machine_and_product_columns are metadata columns.
     # We group by these columns later.
     meta_cols <- out %>% 
-      matsindf::everything_except(c(year_colnames, machine_and_product_columns))  
+      matsindf::everything_except(c(year_colnames, machine_and_product_columns, ef_product))
+    # Adjust the columns in preparation for sorting.
     out <- out %>% 
+      # De-specify the Ef.product column so it can be sorted.
+      despecify_col(col = ef_product, despecified_col = .clean_ef_product) %>% 
+      # Create a united Flow.aggregation.point_Flow column.
       tidyr::unite(col = !!as.name(.temp_sort), !!as.name(flow_aggregation_point), !!as.name(destination), sep = "_", remove = FALSE)
     # Ensure that no .fap_flow and no ef_products are NA at this point.
     assertthat::assert_that(!any(is.na(out[[.temp_sort]])))
-    assertthat::assert_that(!any(is.na(out[[ef_product]])))
+    assertthat::assert_that(!any(is.na(out[[.clean_ef_product]])))
     # Convert .temp_sort and ef_product to factors so that they can be arranged (sorted) later.
     out <- out %>% 
       dplyr::mutate(
         !!as.name(.temp_sort) := factor(!!as.name(.temp_sort), levels = fap_dest_order),
-        !!as.name(ef_product) := factor(!!as.name(ef_product), levels = ef_product_order)
+        !!as.name(.clean_ef_product) := factor(!!as.name(.clean_ef_product), levels = ef_product_order)
       ) 
     # Ensure that we have not accidentally created NA values in the .temp_sort or ef_product columns.
     # NA values in either of these columns will occur when we do not have a complete set of factors 
@@ -279,7 +284,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
     na_temp_sort <- out %>% 
       dplyr::filter(is.na(!!as.name(.temp_sort)))
     na_ef_product <- out %>% 
-      dplyr::filter(is.na(!!as.name(ef_product)))
+      dplyr::filter(is.na(!!as.name(.clean_ef_product)))
     assertthat::assert_that(nrow(na_temp_sort) == 0)
     assertthat::assert_that(nrow(na_ef_product) == 0)
     out <- out %>% 
@@ -302,7 +307,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
     # Figure out the metadata columns.
     # Columns that are not years and are not machine_and_product_columns are metadata columns.
     meta_cols <- out %>% 
-      matsindf::everything_except(c(year_colnames, machine_and_product_columns))
+      matsindf::everything_except(c(year_colnames, machine_and_product_columns, .clean_ef_product))
     # Now put the column names together in the desired order
     col_order <- c(meta_cols, machine_and_product_columns, year_colnames)
     out <- out %>% 

@@ -18,7 +18,8 @@ arrange_iea_fu_allocation_template(
   ef_product_order = IEATools::products,
   quantity = "Quantity",
   maximum_values = "Maximum.values",
-  .temp_sort = ".fap_flow"
+  .temp_sort = ".fap_flow",
+  .clean_ef_product = ".clean_Ef_product"
 )
 }
 \arguments{
