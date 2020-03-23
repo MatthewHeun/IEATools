@@ -24,7 +24,9 @@ sort_iea_df(
   last_stage_order = IEATools::last_stages,
   ledger_side_iea_order = IEATools::ledger_sides,
   fap_flow_iea_order = IEATools::fap_flows,
-  product_iea_order = IEATools::products
+  product_iea_order = IEATools::products,
+  .clean_flow = ".clean_flow",
+  .clean_product = ".clean_product"
 )
 }
 \arguments{

@@ -18,9 +18,21 @@ usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 # Notation
 # 
 
-notation <- list(specify_open = " <<", 
-                 specify_close = ">>")
-usethis::use_data(notation, overwrite = TRUE)
+specify_notation <- list(open = " <<", 
+                         close = ">>", 
+                         resources_preposition = "of ",
+                         eiou_preposition = "to ", 
+                         interface_ind_preposition = "of ",
+                         final_demand_preposition = "to ")
+specify_notation$resources_open <- paste0(specify_notation$open, specify_notation$resources_preposition)
+specify_notation$resources_close <- specify_notation$close
+specify_notation$eiou_open <- paste0(specify_notation$open, specify_notation$eiou_preposition)
+specify_notation$eiou_close <- specify_notation$close
+specify_notation$interface_ind_open <- paste0(specify_notation$open, specify_notation$interface_ind_preposition)
+specify_notation$interface_ind_close <- specify_notation$close
+specify_notation$final_demand_open <- paste0(specify_notation$open, specify_notation$final_demand_preposition)
+specify_notation$final_demand_close <- specify_notation$close
+usethis::use_data(specify_notation, overwrite = TRUE)
 
 
 #
@@ -365,11 +377,11 @@ products <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   # Insert a few items manually.
   # In specify_primary_production(), some Products are renamed to account for the fact that they come from a different industry.
   insert_after(after = primary_coal_products[length(primary_coal_products)], 
-               values = paste0(primary_coal_products, notation$specify_open, "Coal mines", notation$specify_close)) %>% 
+               values = paste0(primary_coal_products, specify_notation$open, "Coal mines", specify_notation$close)) %>% 
   insert_after(after = primary_oil_products[length(primary_oil_products)], 
-               values = paste0(primary_oil_products, notation$specify_open, "Oil and gas extraction", notation$specify_close)) %>% 
+               values = paste0(primary_oil_products, specify_notation$open, "Oil and gas extraction", specify_notation$close)) %>% 
   insert_after(after = "Natural gas", 
-               values = paste0("Natural gas", notation$specify_open, "Oil and gas extraction", notation$specify_close))
+               values = paste0("Natural gas", specify_notation$open, "Oil and gas extraction", specify_notation$close))
 usethis::use_data(products, overwrite = TRUE)
 
 

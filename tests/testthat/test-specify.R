@@ -32,9 +32,9 @@ test_that("renamed products are also consumed", {
     dplyr::filter((startsWith(Product, "Hard coal") | Flow == "Coal mines"), Year == 1971)
   Renamed_primary <- Specific_production %>% 
     specify_primary_production()
-  expect_equal(Renamed_primary %>% dplyr::filter(Flow == paste0("Resources", notation$specify_open, "Coal", notation$specify_close)) %>% nrow(), 1)
+  expect_equal(Renamed_primary %>% dplyr::filter(Flow == paste0("Resources", specify_notation$resources_open, "Coal", specify_notation$resources_close)) %>% nrow(), 1)
   expect_equal(Renamed_primary %>% dplyr::filter(Product == "Electricity") %>% nrow(), 1)
-  expect_equal(Renamed_primary %>% dplyr::filter(Product == paste0("Hard coal (if no detail)", notation$specify_open, "Coal mines", notation$specify_close)) %>% nrow(), 18)
+  expect_equal(Renamed_primary %>% dplyr::filter(Product == paste0("Hard coal (if no detail)", specify_notation$resources_open, "Coal mines", specify_notation$resources_close)) %>% nrow(), 18)
 })
 
 test_that("interface industries are correctly specified", {
@@ -44,9 +44,9 @@ test_that("interface industries are correctly specified", {
   # Rather, everything should be specified as X (Product).
   for (i in interface_industries) {
     # Ensure that there are no interface_industries remaining
-    expect_equal(nrow(specified %>% filter(Flow == i)), 0)
+    expect_equal(nrow(specified %>% dplyr::filter(Flow == i)), 0)
     # Ensure that every interface_industry ends with ")", indicating that it has been specified.
-    expect_true(specified %>% filter(startsWith(Flow, i) & endsWith(Flow, notation$specify_close)) %>% nrow() > 0)
+    expect_true(specified %>% dplyr::filter(startsWith(Flow, i) & endsWith(Flow, specify_notation$interface_ind_close)) %>% nrow() > 0)
   }
 })
 
@@ -184,10 +184,10 @@ test_that("tp_sinks_to_nonenergy works as expected", {
   # We expect that the original 4 rows are now down to 3.
   expect_equal(nrow(Result), 3)
   # Check that the sink energy was correctly added to existing Non-energy use.
-  expect_equal(Result %>% filter(Flow.aggregation.point == "Non-energy use") %>% extract2("E.dot"), 10)
+  expect_equal(Result %>% dplyr::filter(Flow.aggregation.point == "Non-energy use") %>% extract2("E.dot"), 10)
   # Check that the original rows are unchanged
-  expect_equal(Result %>% filter(Flow == "Automobiles", Product == "Petrol") %>% extract2("E.dot"), -1)
-  expect_equal(Result %>% filter(Flow == "Automobiles", Product == "MD") %>% extract2("E.dot"), 1)
+  expect_equal(Result %>% dplyr::filter(Flow == "Automobiles", Product == "Petrol") %>% extract2("E.dot"), -1)
+  expect_equal(Result %>% dplyr::filter(Flow == "Automobiles", Product == "MD") %>% extract2("E.dot"), 1)
 })
 
 test_that("spreading by years works as expected at each step of specify_all()", {

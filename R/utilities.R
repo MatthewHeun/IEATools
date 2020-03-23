@@ -526,7 +526,28 @@ sort_iea_df <- function(.iea_df,
                         last_stage_order = IEATools::last_stages, 
                         ledger_side_iea_order = IEATools::ledger_sides,
                         fap_flow_iea_order = IEATools::fap_flows,
-                        product_iea_order = IEATools::products) {
+                        product_iea_order = IEATools::products, 
+                        .clean_flow = ".clean_flow",
+                        .clean_product = ".clean_product") {
+  # factorized <- .iea_df %>% 
+  #   dplyr::mutate(
+  #     !!as.name(country) := factor(!!as.name(country), levels = country_order),
+  #     !!as.name(method) := factor(!!as.name(method), levels = method_order),
+  #     !!as.name(energy_type) := factor(!!as.name(energy_type), levels = energy_type_order),
+  #     !!as.name(last_stage) := factor(!!as.name(last_stage), levels = last_stage_order),
+  #     !!as.name(ledger_side) := factor(!!as.name(ledger_side), levels = ledger_side_iea_order),
+  #     "{.clean_flow}" := gsub(pattern = paste0(specify_notation$open, ".*", specify_notation$close, "$"), 
+  #                             x = .data[[flow]], 
+  #                             replacement = ""),
+  #     # !!as.name(fap_flow) := paste0(!!as.name(flow_aggregation_point), sep, !!as.name(flow)),
+  #     !!as.name(fap_flow) := paste0("{flow_aggregation_point}", sep, "{flow}"),
+  #     !!as.name(fap_flow) := factor(!!as.name(fap_flow), levels = fap_flow_iea_order),
+  #     "{.clean_product}" := gsub(pattern = paste0(specify_notation$open, ".*", specify_notation$close, "$"), 
+  #                                x = .data[[product]], 
+  #                                replacement = ""),
+  #     !!as.name(product) := factor(!!as.name(product), levels = product_iea_order)
+  #   )
+  
   factorized <- .iea_df %>% 
     dplyr::mutate(
       !!as.name(country) := factor(!!as.name(country), levels = country_order),
@@ -534,9 +555,19 @@ sort_iea_df <- function(.iea_df,
       !!as.name(energy_type) := factor(!!as.name(energy_type), levels = energy_type_order),
       !!as.name(last_stage) := factor(!!as.name(last_stage), levels = last_stage_order),
       !!as.name(ledger_side) := factor(!!as.name(ledger_side), levels = ledger_side_iea_order),
-      !!as.name(fap_flow) := paste0(!!as.name(flow_aggregation_point), sep, !!as.name(flow)),
+      
+      "{.clean_flow}" := dplyr::case_when(
+        startsWith(.data[[flow]], "Resources") ~ "Production",
+        TRUE ~ gsub(pattern = paste0(specify_notation$open, ".*", specify_notation$close, "$"), 
+                    x = .data[[flow]], 
+                    replacement = "")
+      ),
+      !!as.name(fap_flow) := paste0(.data[[flow_aggregation_point]], sep, .data[[.clean_flow]]),
       !!as.name(fap_flow) := factor(!!as.name(fap_flow), levels = fap_flow_iea_order),
-      !!as.name(product) := factor(!!as.name(product), levels = product_iea_order)
+      "{.clean_product}" := gsub(pattern = paste0(notation$specify_open, ".*", notation$specify_close, "$"),
+                                 x = .data[[product]],
+                                 replacement = ""),
+      "{.clean_product}" := factor(.data[[.clean_product]], levels = product_iea_order)
     )
   
   if (year %in% names(factorized)) {
@@ -555,8 +586,10 @@ sort_iea_df <- function(.iea_df,
   
   sorted %>% 
     dplyr::mutate(
-      # Remove the temporary fap_flow column
+      # Remove temporary columns
       !!as.name(fap_flow) := NULL, 
+      "{.clean_flow}" := NULL,
+      "{.clean_product}" := NULL
     ) %>% 
     # Remove factors from the sorting columns to return columns to character state.
     dplyr::mutate_at(c(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product), as.character)

@@ -1,13 +1,13 @@
-#' Notation used in IEATools
+#' Specification notation
 #'
-#' A character vector containing the notation used in the IEATools package.
+#' A character vector containing the specification notation used in the IEATools package.
 #' Notation for delimiting specification strings is included.
 #' 
-#' @format A character vector with 2 entries
+#' @format A character vector
 #' 
 #' @examples
-#' notation
-"notation"
+#' specify_notation
+"specify_notation"
 
 
 #' IEA release years supported by this package

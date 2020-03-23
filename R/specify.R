@@ -58,8 +58,8 @@
 #' @param production a string identifying production in the flow column. Default is "`Production`".
 #' @param e_dot the name of the energy column in `.tidy_iea_df`. Default is "`E.dot`".
 #' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
-#' @param .open a string that identifies the start of the specification portion of flows. Default is `notation$specify_open`.
-#' @param .close a string that identifies the end of specification portion of  flows. Default is `notation$specify_close`.
+#' @param .resources_open a string that identifies the start of the specification portion of flows. Default is `specify_notation$resources_open`.
+#' @param .resources_close a string that identifies the end of specification portion of  flows. Default is `specify_notation$resources_close`.
 #'
 #' @return `.tidy_iea_df` with adjusted production information for primary energy 
 #'         for both coal and coal products and oil and gas extraction
@@ -97,14 +97,14 @@ specify_primary_production <- function(.tidy_iea_df,
                                        production = "Production", 
                                        e_dot = "E.dot",
                                        product = "Product", 
-                                       .open = notation$specify_open, 
-                                       .close = notation$specify_close){
+                                       .resources_open = specify_notation$resources_open, 
+                                       .resources_close = specify_notation$resources_close){
   specify_primary_func <- function(.tidf, eiou_dest, prod_prods, prod_short_name){
     # Convert from the Production industry to Resources (prod_short_name)
     # For example, Flow = Production, Product = Anthracite becomes Flow = Resources (Coal), Product = Anthracite
     res_name <- resources
-    if (!endsWith(resources, paste0(.open, prod_short_name, .close))) {
-      res_name <- paste0(res_name, .open, prod_short_name, .close)
+    if (!endsWith(resources, paste0(.resources_open, prod_short_name, .resources_close))) {
+      res_name <- paste0(res_name, .resources_open, prod_short_name, .resources_close)
     }
     # Replace Production with res_name in Production rows
     .tidf <- .tidf %>% 
@@ -129,7 +129,7 @@ specify_primary_production <- function(.tidy_iea_df,
       .tidf <- .tidf %>% 
         dplyr::mutate(
           !!as.name(product) := dplyr::case_when(
-            !!as.name(product) %in% prod_prods & !startsWith(!!as.name(flow), resources) ~ paste0(!!as.name(product), .open, eiou_dest, .close), 
+            !!as.name(product) %in% prod_prods & !startsWith(!!as.name(flow), resources) ~ paste0(!!as.name(product), .resources_open, eiou_dest, .resources_close), 
             TRUE ~ !!as.name(product)
           )
         )
@@ -149,7 +149,7 @@ specify_primary_production <- function(.tidy_iea_df,
       Output <- Input %>% 
         dplyr::mutate(
           # Convert the Product to the specified product, i.e., product (eiou_dest)
-          !!as.name(product) := paste0(!!as.name(product), .open, !!as.name(flow), .close),
+          !!as.name(product) := paste0(!!as.name(product), .resources_open, !!as.name(flow), .resources_close),
           !!as.name(e_dot) := -!!as.name(e_dot)
         )
       
@@ -208,11 +208,10 @@ specify_primary_production <- function(.tidy_iea_df,
 #' @param resources a string identifying resource industries to be added to `.tidy_iea_df`. 
 #'        Default is "Resources".
 #' @param product the name of the product column in `.tidy_iea_df`.  Default is "Product".
-#' @param .open a string that identifies the start of the specification portion of flows. Default is `notation$specify_open`.
-#' @param .close a string that identifies the end of specification portion of  flows. Default is `notation$specify_close`.
-
+#' @param .resources_open a string that identifies the start of the specification portion of flows. Default is `specify_notation$resources_open`.
+#' @param .resources_close a string that identifies the end of specification portion of  flows. Default is `specify_notation$resources_close`.
 #'
-#' @return `.tidy_iea_df` with `Production` changed to `Resources (product)`
+#' @return `.tidy_iea_df` with `Production` changed to `resources .resources_open product .resources_close` in the `flow` column
 #' 
 #' @export
 #'
@@ -225,13 +224,13 @@ specify_production_to_resources <- function(.tidy_iea_df,
                                     product = "Product",
                                     production = "Production",
                                     resources = "Resources",
-                                    .open = notation$specify_open, 
-                                    .close = notation$specify_close){
+                                    .resources_open = specify_notation$resources_open, 
+                                    .resources_close = specify_notation$resources_close){
   # Take any remaining "Production" rows and convert them to Resources (Product).
   .tidy_iea_df %>% 
     dplyr::mutate(
       !!as.name(flow) := dplyr::case_when(
-        !!as.name(flow) == production ~ paste0(resources, .open, !!as.name(product), .close), 
+        !!as.name(flow) == production ~ paste0(resources, .resources_open, !!as.name(product), .resources_close), 
         TRUE ~ !!as.name(flow)
       )
     )
@@ -256,8 +255,8 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' @param int_industries a string vector of industries involved in exchanges with other countries,
 #'        bunkers, or stock changes. Default is [IEATools::interface_industries].
 #' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
-#' @param .open a string that identifies the start of the specification portion of flows. Default is `notation$specify_open`.
-#' @param .close a string that identifies the end of specification portion of  flows. Default is `notation$specify_close`.
+#' @param .interface_ind_open a string that identifies the start of the specification portion of flows. Default is `specify_notation$interface_ind_open`.
+#' @param .interface_ind_close a string that identifies the end of specification portion of  flows. Default is `specify_notation$interface_ind_close`.
 #'
 #' @return a modified version of `.tidy_iea_df` with specified interface industries
 #' 
@@ -270,12 +269,12 @@ specify_interface_industries <- function(.tidy_iea_df,
                                          flow = "Flow", 
                                          int_industries = IEATools::interface_industries,
                                          product = "Product", 
-                                         .open = notation$specify_open, 
-                                         .close = notation$specify_close){
+                                         .interface_ind_open = specify_notation$interface_ind_open, 
+                                         .interface_ind_close = specify_notation$interface_ind_close){
   .tidy_iea_df %>% 
     dplyr::mutate(
       !!as.name(flow) := dplyr::case_when(
-        !!as.name(flow) %in% int_industries ~ paste0(!!as.name(flow), .open, !!as.name(product), .close),
+        !!as.name(flow) %in% int_industries ~ paste0(!!as.name(flow), .interface_ind_open, !!as.name(product), .interface_ind_close),
         TRUE ~ !!as.name(flow)
       )
     )
