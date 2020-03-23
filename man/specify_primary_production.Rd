@@ -20,8 +20,9 @@ specify_primary_production(
   production = "Production",
   e_dot = "E.dot",
   product = "Product",
-  .resources_open = specify_notation$resources_open,
-  .resources_close = specify_notation$resources_close
+  notation = IEATools::specify_notation,
+  .resources_open = notation$resources_open,
+  .resources_close = notation$resources_close
 )
 }
 \arguments{
@@ -60,6 +61,8 @@ Default is "\code{Resources}".}
 \item{e_dot}{the name of the energy column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
 
 \item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
+
+\item{notation}{a list of specification notations. Default is \code{IEATools::specify_notation}.}
 
 \item{.resources_open}{a string that identifies the start of the specification portion of flows. Default is \code{specify_notation$resources_open}.}
 

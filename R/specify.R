@@ -58,6 +58,7 @@
 #' @param production a string identifying production in the flow column. Default is "`Production`".
 #' @param e_dot the name of the energy column in `.tidy_iea_df`. Default is "`E.dot`".
 #' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
+#' @param notation a list of specification notations. Default is `IEATools::specify_notation`.
 #' @param .resources_open a string that identifies the start of the specification portion of flows. Default is `specify_notation$resources_open`.
 #' @param .resources_close a string that identifies the end of specification portion of  flows. Default is `specify_notation$resources_close`.
 #'
@@ -97,8 +98,9 @@ specify_primary_production <- function(.tidy_iea_df,
                                        production = "Production", 
                                        e_dot = "E.dot",
                                        product = "Product", 
-                                       .resources_open = specify_notation$resources_open, 
-                                       .resources_close = specify_notation$resources_close){
+                                       notation = IEATools::specify_notation,
+                                       .resources_open = notation$resources_open, 
+                                       .resources_close = notation$resources_close){
   specify_primary_func <- function(.tidf, eiou_dest, prod_prods, prod_short_name){
     # Convert from the Production industry to Resources (prod_short_name)
     # For example, Flow = Production, Product = Anthracite becomes Flow = Resources (Coal), Product = Anthracite
@@ -208,6 +210,7 @@ specify_primary_production <- function(.tidy_iea_df,
 #' @param resources a string identifying resource industries to be added to `.tidy_iea_df`. 
 #'        Default is "Resources".
 #' @param product the name of the product column in `.tidy_iea_df`.  Default is "Product".
+#' @param notation a list of specification notations. Default is `IEATools::specify_notation`.
 #' @param .resources_open a string that identifies the start of the specification portion of flows. Default is `specify_notation$resources_open`.
 #' @param .resources_close a string that identifies the end of specification portion of  flows. Default is `specify_notation$resources_close`.
 #'
@@ -224,8 +227,9 @@ specify_production_to_resources <- function(.tidy_iea_df,
                                     product = "Product",
                                     production = "Production",
                                     resources = "Resources",
-                                    .resources_open = specify_notation$resources_open, 
-                                    .resources_close = specify_notation$resources_close){
+                                    notation = IEATools::specify_notation,
+                                    .resources_open = notation$resources_open, 
+                                    .resources_close = notation$resources_close){
   # Take any remaining "Production" rows and convert them to Resources (Product).
   .tidy_iea_df %>% 
     dplyr::mutate(
@@ -253,10 +257,11 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
 #' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
 #' @param int_industries a string vector of industries involved in exchanges with other countries,
-#'        bunkers, or stock changes. Default is [IEATools::interface_industries].
+#'        bunkers, or stock changes. Default is `IEATools::interface_industries`.
 #' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
-#' @param .interface_ind_open a string that identifies the start of the specification portion of flows. Default is `specify_notation$interface_ind_open`.
-#' @param .interface_ind_close a string that identifies the end of specification portion of  flows. Default is `specify_notation$interface_ind_close`.
+#' @param notation a list of specification notations. Default is `IEATools::specify_notation`.
+#' @param .interface_ind_open a string that identifies the start of the specification portion of flows. Default is `IEATools::specify_notation$interface_ind_open`.
+#' @param .interface_ind_close a string that identifies the end of specification portion of  flows. Default is `IEATools::specify_notation$interface_ind_close`.
 #'
 #' @return a modified version of `.tidy_iea_df` with specified interface industries
 #' 
@@ -269,8 +274,9 @@ specify_interface_industries <- function(.tidy_iea_df,
                                          flow = "Flow", 
                                          int_industries = IEATools::interface_industries,
                                          product = "Product", 
-                                         .interface_ind_open = specify_notation$interface_ind_open, 
-                                         .interface_ind_close = specify_notation$interface_ind_close){
+                                         notation = IEATools::specify_notation,
+                                         .interface_ind_open = notation$interface_ind_open, 
+                                         .interface_ind_close = notation$interface_ind_close){
   .tidy_iea_df %>% 
     dplyr::mutate(
       !!as.name(flow) := dplyr::case_when(
@@ -678,16 +684,19 @@ specify_all <- function(.tidy_iea_df){
 #' To enable sorting, this function de-specifies a column in `.df`.
 #' 
 #' De-specifying includes the following changes:
-#'     * Any "Resource" flows are replaced by "Production". E.g., "Resources [Coal]" becomes "Production".
-#'     * All parenthetical decorations are removed.  E.g., "Other bituminous coal [of Coal mines]" becomes "Other bituminous coal".
+#'     * Any "Resource" flows are replaced by "Production". E.g., "Resources \[Coal\]" becomes "Production".
+#'     * All parenthetical decorations are removed.  E.g., "Other bituminous coal \[of Coal mines\]" becomes "Other bituminous coal".
 #'     
 #' Identification of parenthetical notation delimiters is determined by the `specify_notation` object of this package.
 #'
 #' @param .df the data frame in which `col` exists
 #' @param col the string name of the column in `.df` to be de-specified
 #' @param despecified_col the string name of the column in `.df` to contain the de-specified version of `col`
+#' @param notation a list of specification notations. Default is `IEATools::specify_notation`.
+#' @param .open the opening string for specification decoration. Default is `IEATools::specify_notation$open`.
+#' @param .close the closing string for specification decoration. Default is `IEATools::specify_notation$close`.
 #'
-#' @return a de-specified version of `.data`
+#' @return a de-specified version of `.df`
 #' 
 #' @export
 #'
@@ -698,8 +707,11 @@ specify_all <- function(.tidy_iea_df){
 #'   despecify_col(col = "Flow", despecified_col = "clean_Flow") %>% 
 #'   select(Flow, Product, E.dot, clean_Flow) %>% 
 #'   filter(endsWith(Flow, specify_notation$close))
-despecify_col <- function(.df, col, despecified_col) {
-  pat <- paste0(specify_notation$open, ".*", specify_notation$close, "$")
+despecify_col <- function(.df, col, despecified_col, 
+                          notation = IEATools::specify_notation, 
+                          .open = notation$open, 
+                          .close = notation$close) {
+  pat <- paste0(.open, ".*", .close, "$")
   to_escape <- c("[", "]", "(", ")")
   # Replace any special characters (defined in to_escape) with escaped characters "\\" so they will work in the pattern.
   for (char in to_escape) {

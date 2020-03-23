@@ -235,6 +235,17 @@
 "other_flows"
 
 
+#' Non-energy flows
+#'
+#' A string vector containing names of `Non-energy` `Flow`s in the IEA extended energy balances database.
+#' 
+#' @format A string vector with 3 entries
+#' 
+#' @examples
+#' non_energy_flows
+"non_energy_flows"
+
+
 #' Aggregation flows
 #'
 #' A string vector containing names of industries whose purpose in IEA extended energy balance `Flow`s is to provide aggregations.

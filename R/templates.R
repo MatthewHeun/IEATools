@@ -220,7 +220,10 @@ fu_allocation_template <- function(.tidy_iea_df,
 #' @param quantity the name of the quantity column in `.fu_allocation_template`. Default is "`Quantity`".
 #' @param maximum_values the name of the maximum value column `.fu_allocation_template`. Default is "`Unit`".
 #' @param .temp_sort the name of a temporary column to be added to `.fu_allocation_template`. 
-#'        Default is "`.fap_flow`".
+#'        Default is ".fap_flow".
+#'        This column must not be present in `.fu_allocation_template`.
+#' @param .clean_ef_product the name of a temporary column to be added to `.fu_allocation_template`. 
+#'        Default is ".clean_ef_product".
 #'        This column must not be present in `.fu_allocation_template`.
 #'
 #' @return An row- and/or column-ordered version of `.fu_allocation_template`
