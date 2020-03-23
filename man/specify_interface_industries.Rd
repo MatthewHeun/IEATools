@@ -8,7 +8,9 @@ specify_interface_industries(
   .tidy_iea_df,
   flow = "Flow",
   int_industries = IEATools::interface_industries,
-  product = "Product"
+  product = "Product",
+  .open = notation$specify_open,
+  .close = notation$specify_close
 )
 }
 \arguments{
@@ -20,6 +22,10 @@ specify_interface_industries(
 bunkers, or stock changes. Default is \link[IEATools:interface_industries]{IEATools::interface_industries}.}
 
 \item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
+
+\item{.open}{a string that identifies the start of the specification portion of flows. Default is \code{notation$specify_open}.}
+
+\item{.close}{a string that identifies the end of specification portion of  flows. Default is \code{notation$specify_close}.}
 }
 \value{
 a modified version of \code{.tidy_iea_df} with specified interface industries

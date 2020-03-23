@@ -18,8 +18,8 @@ usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 # Notation
 # 
 
-notation <- list(specify_open = " (", 
-                 specify_close = ")")
+notation <- list(specify_open = " <<", 
+                 specify_close = ">>")
 usethis::use_data(notation, overwrite = TRUE)
 
 
@@ -365,11 +365,11 @@ products <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   # Insert a few items manually.
   # In specify_primary_production(), some Products are renamed to account for the fact that they come from a different industry.
   insert_after(after = primary_coal_products[length(primary_coal_products)], 
-               values = paste(primary_coal_products, "(Coal mines)")) %>% 
+               values = paste0(primary_coal_products, notation$specify_open, "Coal mines", notation$specify_close)) %>% 
   insert_after(after = primary_oil_products[length(primary_oil_products)], 
-               values = paste(primary_oil_products, "(Oil and gas extraction)")) %>% 
+               values = paste0(primary_oil_products, notation$specify_open, "Oil and gas extraction", notation$specify_close)) %>% 
   insert_after(after = "Natural gas", 
-               values = paste("Natural gas", "(Oil and gas extraction)"))
+               values = paste0("Natural gas", notation$specify_open, "Oil and gas extraction", notation$specify_close))
 usethis::use_data(products, overwrite = TRUE)
 
 

@@ -26,15 +26,15 @@ test_that("production is converted to resources correctly", {
   expect_equal(DF$Flow[[1]], "Oil and gas extraction")
 })
 
-test_that("crenamed products are also consumed", {
+test_that("renamed products are also consumed", {
   Specific_production <- load_tidy_iea_df() %>% 
     # Look at only 1 product to make things simpler
     dplyr::filter((startsWith(Product, "Hard coal") | Flow == "Coal mines"), Year == 1971)
   Renamed_primary <- Specific_production %>% 
     specify_primary_production()
-  expect_equal(Renamed_primary %>% dplyr::filter(Flow == "Resources (Coal)") %>% nrow(), 1)
+  expect_equal(Renamed_primary %>% dplyr::filter(Flow == paste0("Resources", notation$specify_open, "Coal", notation$specify_close)) %>% nrow(), 1)
   expect_equal(Renamed_primary %>% dplyr::filter(Product == "Electricity") %>% nrow(), 1)
-  expect_equal(Renamed_primary %>% dplyr::filter(Product == "Hard coal (if no detail) (Coal mines)") %>% nrow(), 18)
+  expect_equal(Renamed_primary %>% dplyr::filter(Product == paste0("Hard coal (if no detail)", notation$specify_open, "Coal mines", notation$specify_close)) %>% nrow(), 18)
 })
 
 test_that("interface industries are correctly specified", {
@@ -46,7 +46,7 @@ test_that("interface industries are correctly specified", {
     # Ensure that there are no interface_industries remaining
     expect_equal(nrow(specified %>% filter(Flow == i)), 0)
     # Ensure that every interface_industry ends with ")", indicating that it has been specified.
-    expect_true(specified %>% filter(startsWith(Flow, i) & endsWith(Flow, ")")) %>% nrow() > 0)
+    expect_true(specified %>% filter(startsWith(Flow, i) & endsWith(Flow, notation$specify_close)) %>% nrow() > 0)
   }
 })
 

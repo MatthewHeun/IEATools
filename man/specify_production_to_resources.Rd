@@ -9,20 +9,26 @@ specify_production_to_resources(
   flow = "Flow",
   product = "Product",
   production = "Production",
-  resources = "Resources"
+  resources = "Resources",
+  .open = notation$specify_open,
+  .close = notation$specify_close
 )
 }
 \arguments{
-\item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
+\item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{rename_iea_df_cols()}}
 
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}.  Default is "\code{Flow}".}
+\item{flow}{the name of the flow column in \code{.tidy_iea_df}.  Default is "Flow".}
 
-\item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
+\item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "Product".}
 
-\item{production}{a string identifying production in the flow column. Default is "\code{Production}".}
+\item{production}{a string identifying production in the flow column. Default is "Production".}
 
 \item{resources}{a string identifying resource industries to be added to \code{.tidy_iea_df}.
-Default is "\code{Resources}".}
+Default is "Resources".}
+
+\item{.open}{a string that identifies the start of the specification portion of flows. Default is \code{notation$specify_open}.}
+
+\item{.close}{a string that identifies the end of specification portion of  flows. Default is \code{notation$specify_close}.}
 }
 \value{
 \code{.tidy_iea_df} with \code{Production} changed to \code{Resources (product)}

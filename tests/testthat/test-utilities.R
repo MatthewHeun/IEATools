@@ -247,7 +247,6 @@ test_that("sorting works on real IEA data frame", {
     sort_iea_df()
   expect_equal(sorted_specified$Flow[[1]], IEATools::tpes_flows$production)
   expect_equal(sorted_specified$Flow[[nrow(sorted_specified)]], IEATools::non_energy_flows$non_energy_use_insustry_transformation_energy)
-  
 })
 
 
