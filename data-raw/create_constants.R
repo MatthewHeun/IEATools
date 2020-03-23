@@ -18,8 +18,10 @@ usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 # Notation
 # 
 
-specify_notation <- list(open = " <<", 
-                         close = ">>", 
+# Note that open and close are escaped if they contain any of [, ], (, or ). 
+# Otherwise, open and close should not contain any regex special characters.
+specify_notation <- list(open = " <", 
+                         close = ">", 
                          resources_preposition = "of ",
                          eiou_preposition = "to ", 
                          interface_ind_preposition = "of ",
