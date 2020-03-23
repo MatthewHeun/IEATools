@@ -1,3 +1,6 @@
+* Now using prepositions in specification strings.
+* Specification strings are now given in a package constant (`specify_notation`).
+  These constants are referred throughout the package.
 * All constants are now lists of character strings
   instead of vectors
   to allow `$` referencing of specific list items.

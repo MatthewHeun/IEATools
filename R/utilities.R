@@ -549,12 +549,14 @@ sort_iea_df <- function(.iea_df,
   #   )
   
   flow_pat <- paste0(specify_notation$open, ".*", specify_notation$close, "$")
-  # Replace any [, ], (, or ) with escape characters "\\" to accept them as literal.
-  for (char in c("[", "]", "(", ")")) {
+  prod_pat <- paste0(specify_notation$open, ".*", specify_notation$close, "$")
+  # Replace any special characters in to_escape with escaped characters "\\" so they will work in the pattern.
+  to_escape <- c("[", "]", "(", ")")
+  for (char in to_escape) {
     flow_pat <- gsub(pattern = paste0("\\", char), replacement = paste0("\\\\", char), x = flow_pat)
+    prod_pat <- gsub(pattern = paste0("\\", char), replacement = paste0("\\\\", char), x = flow_pat)
   }
 
-  
   factorized <- .iea_df %>% 
     dplyr::mutate(
       !!as.name(country) := factor(!!as.name(country), levels = country_order),
@@ -565,13 +567,11 @@ sort_iea_df <- function(.iea_df,
       
       "{.clean_flow}" := dplyr::case_when(
         startsWith(.data[[flow]], "Resources") ~ "Production",
-        TRUE ~ gsub(pattern = flow_pat, x = .data[[flow]], replacement = "")
+        TRUE ~ gsub(pattern = flow_pat, replacement = "", x = .data[[flow]])
       ),
       !!as.name(fap_flow) := paste0(.data[[flow_aggregation_point]], sep, .data[[.clean_flow]]),
       !!as.name(fap_flow) := factor(!!as.name(fap_flow), levels = fap_flow_iea_order),
-      "{.clean_product}" := gsub(pattern = paste0(specify_notation$open, ".*", specify_notation$close, "$"),
-                                 x = .data[[product]],
-                                 replacement = ""),
+      "{.clean_product}" := gsub(pattern = prod_pat, replacement = "", x = .data[[product]]),
       "{.clean_product}" := factor(.data[[.clean_product]], levels = product_iea_order)
     )
   
