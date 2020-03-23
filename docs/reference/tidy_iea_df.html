@@ -146,17 +146,18 @@ make an IEA data frame tidy.</p>
 
     <pre class="usage"><span class='fu'>tidy_iea_df</span>(
   <span class='no'>.iea_df</span>,
-  <span class='kw'>year</span> <span class='kw'>=</span> <span class='st'>"Year"</span>,
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"Method"</span>,
-  <span class='kw'>last_stage</span> <span class='kw'>=</span> <span class='st'>"Last.stage"</span>,
-  <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='st'>"Energy.type"</span>,
-  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
+  <span class='kw'>col_names</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/iea_cols.html'>iea_cols</a></span>,
+  <span class='kw'>year</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>year</span>,
+  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>e_dot</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>method</span>,
+  <span class='kw'>last_stage</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>last_stage</span>,
+  <span class='kw'>country</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>country</span>,
+  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>ledger_side</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>flow_aggregation_point</span>,
+  <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>energy_type</span>,
+  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>unit</span>,
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>flow</span>,
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>product</span>,
   <span class='kw'>remove_zeroes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )</pre>
 
@@ -168,48 +169,52 @@ make an IEA data frame tidy.</p>
       <td><p>a IEA data frame whose columns have been renamed by <code><a href='rename_iea_df_cols.html'>rename_iea_df_cols()</a></code></p></td>
     </tr>
     <tr>
+      <th>col_names</th>
+      <td><p>a list of column names in IEA data frames. Default is <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
+    </tr>
+    <tr>
       <th>year</th>
-      <td><p>the name of the year column created in <code>.iea_df</code> by this function. (Default is "<code>Year</code>".)</p></td>
+      <td><p>the name of the year column created in <code>.iea_df</code> by this function. (Default is "Year".)</p></td>
     </tr>
     <tr>
       <th>e_dot</th>
-      <td><p>the name of the energy/exergy value column created in <code>.iea_df</code> by this function. (Default is "<code>E.dot</code>".)</p></td>
+      <td><p>the name of the energy/exergy value column created in <code>.iea_df</code> by this function. (Default is "E.dot".)</p></td>
     </tr>
     <tr>
       <th>method</th>
-      <td><p>the name of the method column created in <code>.iea_df</code> by this function. (Default is "<code>Method</code>".)</p></td>
+      <td><p>the name of the method column created in <code>.iea_df</code> by this function. (Default is "Method".)</p></td>
     </tr>
     <tr>
       <th>last_stage</th>
-      <td><p>the name of the last stage column created in <code>.iea_df</code> by this function. (Default is "<code>Last.stage</code>".)</p></td>
+      <td><p>the name of the last stage column created in <code>.iea_df</code> by this function. (Default is "Last.stage".)</p></td>
     </tr>
     <tr>
       <th>country</th>
-      <td><p>the name of the country column in <code>.iea_df</code>. (Default is "<code>Country</code>".)</p></td>
+      <td><p>the name of the country column in <code>.iea_df</code>. (Default is "Country".)</p></td>
     </tr>
     <tr>
       <th>ledger_side</th>
-      <td><p>the name of the ledger side in <code>.iea_df</code>. (Default is "<code>Ledger.side</code>".)</p></td>
+      <td><p>the name of the ledger side in <code>.iea_df</code>. (Default is "Ledger.side".)</p></td>
     </tr>
     <tr>
       <th>flow_aggregation_point</th>
-      <td><p>the name of the flow aggregation point column in <code>.iea_df</code>. (Default is "<code>Flow.aggregation.point</code>".)</p></td>
+      <td><p>the name of the flow aggregation point column in <code>.iea_df</code>. (Default is "Flow.aggregation.point".)</p></td>
     </tr>
     <tr>
       <th>energy_type</th>
-      <td><p>the name of the energy type column in <code>.iea_df</code>. (Default is "<code>Energy.type</code>".)</p></td>
+      <td><p>the name of the energy type column in <code>.iea_df</code>. (Default is "Energy.type".)</p></td>
     </tr>
     <tr>
       <th>unit</th>
-      <td><p>the name of the unit column in <code>.iea_df</code>. (Default is "<code>Units</code>".)</p></td>
+      <td><p>the name of the unit column in <code>.iea_df</code>. (Default is "Units".)</p></td>
     </tr>
     <tr>
       <th>flow</th>
-      <td><p>the name of the flow column in <code>.iea_df</code>. (Default is "<code>Flow</code>".)</p></td>
+      <td><p>the name of the flow column in <code>.iea_df</code>. (Default is "Flow".)</p></td>
     </tr>
     <tr>
       <th>product</th>
-      <td><p>the name of the product column in <code>.iea_df</code>. (Default is "<code>Product</code>".)</p></td>
+      <td><p>the name of the product column in <code>.iea_df</code>. (Default is "Product".)</p></td>
     </tr>
     <tr>
       <th>remove_zeroes</th>

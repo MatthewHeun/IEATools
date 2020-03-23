@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Total primary energy supply flows — tpes_flows • IEATools</title>
+<title>Specification notation — specify_notation • IEATools</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,9 @@
 
 
 
-<meta property="og:title" content="Total primary energy supply flows — tpes_flows" />
-<meta property="og:description" content="A string vector containing names of Total primary energy supply Flows in the IEA extended energy balances database." />
+<meta property="og:title" content="Specification notation — specify_notation" />
+<meta property="og:description" content="A character vector containing the specification notation used in the IEATools package.
+Notation for delimiting specification strings is included." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -127,43 +128,65 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Total primary energy supply flows</h1>
+    <h1>Specification notation</h1>
     
-    <div class="hidden name"><code>tpes_flows.Rd</code></div>
+    <div class="hidden name"><code>specify_notation.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A string vector containing names of <code>Total primary energy supply</code> <code>Flow</code>s in the IEA extended energy balances database.</p>
+    <p>A character vector containing the specification notation used in the IEATools package.
+Notation for delimiting specification strings is included.</p>
     </div>
 
-    <pre class="usage"><span class='no'>tpes_flows</span></pre>
+    <pre class="usage"><span class='no'>specify_notation</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string vector with 6 entries</p>
+    <p>A character vector</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>tpes_flows</span></div><div class='output co'>#&gt; $resources
-#&gt; [1] "Resources"
+    <pre class="examples"><div class='input'><span class='no'>specify_notation</span></div><div class='output co'>#&gt; $open
+#&gt; [1] " ["
 #&gt; 
-#&gt; $production
-#&gt; [1] "Production"
+#&gt; $close
+#&gt; [1] "]"
 #&gt; 
-#&gt; $importa
-#&gt; [1] "Imports"
+#&gt; $resources_preposition
+#&gt; [1] "of "
 #&gt; 
-#&gt; $exports
-#&gt; [1] "Exports"
+#&gt; $eiou_preposition
+#&gt; [1] "to "
 #&gt; 
-#&gt; $international_marine_bunkers
-#&gt; [1] "International marine bunkers"
+#&gt; $interface_ind_preposition
+#&gt; [1] "of "
 #&gt; 
-#&gt; $international_aviation_bunkers
-#&gt; [1] "International aviation bunkers"
+#&gt; $final_demand_preposition
+#&gt; [1] "to "
 #&gt; 
-#&gt; $stock_changes
-#&gt; [1] "Stock changes"
+#&gt; $resources_open
+#&gt; [1] " [of "
+#&gt; 
+#&gt; $resources_close
+#&gt; [1] "]"
+#&gt; 
+#&gt; $eiou_open
+#&gt; [1] " [to "
+#&gt; 
+#&gt; $eiou_close
+#&gt; [1] "]"
+#&gt; 
+#&gt; $interface_ind_open
+#&gt; [1] " [of "
+#&gt; 
+#&gt; $interface_ind_close
+#&gt; [1] "]"
+#&gt; 
+#&gt; $final_demand_open
+#&gt; [1] " [to "
+#&gt; 
+#&gt; $final_demand_close
+#&gt; [1] "]"
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
