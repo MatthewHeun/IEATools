@@ -7,6 +7,10 @@
 iea_file_OK(
   .iea_file = NULL,
   text = NULL,
+  expected_1st_line_start = ",,TIME",
+  expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT",
+  expected_simple_start = expected_2nd_line_start,
+  .slurped_iea_df = NULL,
   country = "COUNTRY",
   flow = "FLOW",
   product = "PRODUCT",
@@ -42,6 +46,12 @@ Then, the resulting data frame is queried for duplicate row numbers.
 If none are found, the function returns the data frame read from the file.
 
 Note that \code{.iea_file} is read internally with \code{\link[data.table:fread]{data.table::fread()}} \emph{without} stripping white space.
+
+If \code{.slurped_iea_df} is supplied, arguments \code{.iea_file} or \code{text} are ignored.
+If \code{.slurped_iea_df} is absent,
+either \code{.iea_file} or \code{text} are required, and
+the helper function \code{slurp_iea_to_raw_df()} is called internally
+to load a raw data frame of data.
 }
 \examples{
 library(magrittr)

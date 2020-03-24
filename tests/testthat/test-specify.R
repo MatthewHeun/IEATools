@@ -156,7 +156,7 @@ test_that("tp_sinks_sources() works as expected", {
   # Automobiles are fine, but Furnaces don't make anything and are, therefore, a transformation sink.
   # expect_equal(Tidy %>% tp_sinks_sources(grouping_vars = "Country"), 
   expect_equal(Tidy %>% tp_sinks_sources(), 
-               tibble::tibble(Country = "Bogus", Flow = "Furnaces"))
+               data.frame(Country = "Bogus", Flow = "Furnaces", stringsAsFactors = FALSE))
 })
 
 test_that('tp_sinks_sources(type = "sources") works as expected', {

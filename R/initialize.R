@@ -1,85 +1,6 @@
-#' Perform quality assurance on a raw IEA data file
+#' Slurp an IEA extended energy balance data file
 #' 
-#' When starting to work with an IEA data file, 
-#' it is important to verify its integrity.
-#' This function performs some validation tests on `.iea_file`.
-#' 
-#' At this time, the only verification step performed by this function
-#' is confirming that every country has the same flow and product rows in the same order.
-#' The approach is to add a per-country row number column to the data frame and delete all the data in year columns.
-#' Then, the resulting data frame is queried for duplicate row numbers.
-#' If none are found, the function returns the data frame read from the file.
-#' 
-#' Note that `.iea_file` is read internally with [data.table::fread()] *without* stripping white space.
-#'
-#' @param .iea_file the path to the raw IEA data file for which quality assurance is desired
-#' @param text a string containing text to be parsed as an IEA file.
-#' @param country the name of the country column. Default is "COUNTRY".
-#' @param flow the name of the flow column. Default is "FLOW".
-#' @param product the name of the product column. Default is "PRODUCT".
-#' @param rowid the name of a row number column added internally to `.iea_file` per country. Default is "rowid".
-#'
-#' @return `TRUE` if `.iea_file` passes all checks. Errors are thrown when a verification step fails.
-#' 
-#' @export
-#'
-#' @examples
-#' library(magrittr)
-#' sample_iea_data_path() %>% 
-#'  iea_file_OK()
-iea_file_OK <- function(.iea_file = NULL, 
-                        text = NULL,
-                        country = "COUNTRY",
-                        flow = "FLOW", 
-                        product = "PRODUCT", 
-                        rowid = "rowid") {
-  assertthat::assert_that(xor(is.null(.iea_file), is.null(text)), 
-                          msg = "need to supply one but not both of .iea_file and text arguments to iea_file_OK")
-  # Create a data frame from the file or the text.
-  if (!is.null(.iea_file)) {
-    DF <- data.table::fread(file = .iea_file, strip.white = FALSE, header = TRUE, sep = ",")
-  } else {
-    # text has been provided, probably for testing purposes.
-    DF <- data.table::fread(text = text, strip.white = FALSE, header = TRUE, sep = ",")
-  }
-  # Verify that each country has the same order of flows and products
-  flow_product <- DF %>% 
-    # Group by country so that adding row numbers is done per-country
-    dplyr::group_by(!!as.name(country)) %>% 
-    # Add row numbers
-    dplyr::do(
-      tibble::rowid_to_column(.data, var = rowid)
-    ) %>% 
-    dplyr::ungroup() %>% 
-    # Keep only rowid, flow, and product. This removes COUNTRY and years from the data frame
-    dplyr::select(!!as.name(rowid), !!as.name(flow), !!as.name(product)) %>% 
-    # In this context, unique() gives unique combinations of per-country row number, flow, product triples.
-    # If all countries have the same order of things, 
-    # all countries should have the same row number, flow, product triples, and
-    # this call to unique() will give the same number of rows as exist one country.
-    unique()
-  
-  # After having obtained the unique (per-country) row number, flow, product triples,
-  # we see if there are any duplicated row numbers.
-  # If all countries have the same row number, flow, product triples, 
-  # there will be no duplicated row numbers.
-  flow_product %>% 
-    # Look at the rowid column only
-    dplyr::select(!!as.name(rowid)) %>% 
-    # duplicated() returns TRUE for any duplicated values
-    duplicated() %>% 
-    # Any tells us if there are any duplicated values (TRUEs).
-    # We want all FALSE (no duplicated values).
-    any() %>% 
-    # If everything is FALSE (what we want), any() will return FALSE.
-    # But we want a good result from this function to return TRUE, 
-    # so we reverse the logic with not().
-    magrittr::not()
-}
-
-
-#' Load IEA data from an extended energy balances .csv file
-#'
+#' This is an internal helper function. 
 #' This function reads an IEA extended energy balances .csv file and
 #' converts it to a data frame with appropriately-labeled columns.
 #' One of `iea_file` or `text` must be specified, but not both.
@@ -97,96 +18,34 @@ iea_file_OK <- function(.iea_file = NULL,
 #' in columns at the right of `.iea_file`, 
 #' because column names in the output are constructed from the header line(s) of `.iea_file` 
 #' (which contain years and country, flow, product information).
-#' 
-#' In the IEA's data, some entries in the "FLOW" column are quoted to avoid creating too many columns. 
-#' For example, "Paper, pulp and printing" is quoted in the raw .csv file: 
-#' "      Paper, pulp and printing".
-#' Internally, this function uses [data.table::fread()], which, unfortunately, does not
-#' strip leading and trailing white space from quoted entries.
-#' So the function uses [base::trimws()] to finish the job.
-#' 
-#' When the IEA includes estimated data for a year, 
-#' the column name of the estimated year includes an "E" appended.
-#' (E.g., "2017E".) 
-#' This function eliminates estimated columns.
-#' 
-#' The IEA data have indicators for 
-#' not applicable values ("`x`") and for
-#' unavailable values ("`..`"). 
-#' (See "World Energy Balances: Database Documentation (2018 edition)" at
-#' <http://wds.iea.org/wds/pdf/worldbal_documentation.pdf>.)
-#' `R` has three concepts that could be used for "`x`" and "`..`":
-#' `0` would indicate value known to be zero.
-#' `NULL` would indicate an undefined value.
-#' `NA` would indicate a value that is unavailable.
-#' In theory, mapping from the IEA's indicators to `R` should proceed as follows:
-#' "`..`" (unavailable) in the IEA data would be converted to `NA` in `R`.
-#' "`x`" (not applicable) in the IEA data would be converted to `0` in `R`.
-#' "`NULL`" would not be used.
-#' However, the IEA are not consistent with their coding. 
-#' In some places "`..`" (indicating unavailable) is used for not applicable values, 
-#' e.g., World Anthracite supply in 1971. 
-#' (World Anthracite supply in 1971 is actually not applicable, because Anthracite was
-#' classified under "Hard coal (if no detail)" in 1971.)
-#' On the other hand, "`..`" is used for data in the most recent year 
-#' when those data have not yet been incorporated into the database. 
-#' In the face of IEA's inconsistencies, 
-#' the only rational way to proceed is to convert 
-#' both "`x`" and "`..`" in the IEA files to "`0`" in the output data frame
-#' from this function.
-#' Furthermore, confidential data (coded by the IEA as "`c`") is also interpreted as `0`.
-#' (What else can we do?)
-#' 
-#' The data frame returned from this function is not ready to be used in R, 
-#' because rows are not unique.
-#' To further prepare the data frame for use, call [augment_iea_df()],
-#' passing the output of this function to the `.iea_df` argument of [augment_iea_df()].
 #'
-#' @param .iea_file a string containing the path to a .csv file of extended energy balances from the IEA.
-#'        Default is the path to a sample IEA file provided in this package.
-#' @param text a character string that can be parsed as IEA extended energy balances. 
-#'        (This argument is useful for testing.)
-#' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is ",,TIME".
-#' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "COUNTRY,FLOW,PRODUCT".
-#' @param expected_simple_start the expected starting of the first line of `iea_file`. Default is the value of `expected_2nd_line_start`.
-#'        Note that `expected_simple_start` is sometimes encountered in data supplied by the IEA.
-#'        Furthermore, `expected_simple_start` could be the format of the file when somebody "helpfully" fiddles with 
-#'        the raw data from the IEA.
-#' @param flow the name of the flow column, entries of which are stripped of leading and trailing white space. Default is "FLOW".
-#' @param missing_data a string that identifies missing data. Default is "`..`".
-#'        Entries of `missing_data` are coded as `0`` in output.
-#' @param not_applicable_data a string that identifies not-applicable data. Default is "x".
-#'        Entries of `not_applicable_data` are coded as `0` in output.
-#' @param confidential_data a string that identifies confidential data. Default is "c".
-#'        Entries of `confidential_data` are coded as `0` in output.
-#' @param estimated_year a string that identifies an estimated year. 
-#'        Default is "E".
-#'        E.g., in "2014E", the "E" indicates that data for 2014 are estimated.
-#'        Data from estimated years are removed from output.
+#' @param .iea_file 
+#' @param text 
+#' @param expected_1st_line_start 
+#' @param expected_2nd_line_start 
+#' @param expected_simple_start 
 #'
-#' @return a data frame containing the IEA extended energy balances data
+#' @return a raw data frame of IEA extended energy balance data with appropriate column titles
 #' 
 #' @export
-#' 
-#' @examples 
-#' # Original file format
-#' iea_df(text = paste0(",,TIME,1960,1961\n",
+#'
+#' @examples
+#' # 2018 and earlier file format
+#' slurp_iea_to_raw_df(text = paste0(",,TIME,1960,1961\n",
 #'                      "COUNTRY,FLOW,PRODUCT\n",
 #'                      "World,Production,Hard coal (if no detail),42,43"))
 #' # With extra commas on the 2nd line
-#' iea_df(text = paste0(",,TIME,1960,1961\n",
+#' slurp_iea_to_raw_df(text = paste0(",,TIME,1960,1961\n",
 #'                      "COUNTRY,FLOW,PRODUCT,,,\n",
 #'                      "World,Production,Hard coal (if no detail),42,43"))
-#' # With a clean first line
-#' iea_df(text = paste0("COUNTRY,FLOW,PRODUCT,1960,1961\n",
+#' # With a clean first line (2019 file format)
+#' slurp_iea_to_raw_df(text = paste0("COUNTRY,FLOW,PRODUCT,1960,1961\n",
 #'                      "World,Production,Hard coal (if no detail),42,43"))
-iea_df <- function(.iea_file = NULL, 
-                   text = NULL, 
-                   expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
-                   expected_simple_start = expected_2nd_line_start,
-                   flow = "FLOW",
-                   missing_data = "..", not_applicable_data = "x", confidential_data = "c", 
-                   estimated_year = "E"){
+slurp_iea_to_raw_df <- function(.iea_file = NULL, 
+                                text = NULL, 
+                                expected_1st_line_start = ",,TIME", 
+                                expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
+                                expected_simple_start = expected_2nd_line_start) {
   assertthat::assert_that(xor(!is.null(.iea_file), !is.null(text)), 
                           msg = "need to supply only one of .iea_file or text arguments to iea_df")
   if (!is.null(.iea_file)) {
@@ -250,8 +109,217 @@ iea_df <- function(.iea_file = NULL,
     IEAData_withheader <- IEAData_noheader %>%
       magrittr::set_names(cnames)
   }
+  return(IEAData_withheader)
+}
+
+
+#' Perform quality assurance on a raw IEA data file
+#' 
+#' When starting to work with an IEA data file, 
+#' it is important to verify its integrity.
+#' This function performs some validation tests on `.iea_file`.
+#' 
+#' At this time, the only verification step performed by this function
+#' is confirming that every country has the same flow and product rows in the same order.
+#' The approach is to add a per-country row number column to the data frame and delete all the data in year columns.
+#' Then, the resulting data frame is queried for duplicate row numbers.
+#' If none are found, the function returns the data frame read from the file.
+#' 
+#' Note that `.iea_file` is read internally with [data.table::fread()] *without* stripping white space.
+#' 
+#' If `.slurped_iea_df` is supplied, arguments `.iea_file` or `text` are ignored. 
+#' If `.slurped_iea_df` is absent, 
+#' either `.iea_file` or `text` are required, and 
+#' the helper function `slurp_iea_to_raw_df()` is called internally 
+#' to load a raw data frame of data.
+
+#'
+#' @param .iea_file the path to the raw IEA data file for which quality assurance is desired
+#' @param text a string containing text to be parsed as an IEA file.
+#' @param country the name of the country column. Default is "COUNTRY".
+#' @param flow the name of the flow column. Default is "FLOW".
+#' @param product the name of the product column. Default is "PRODUCT".
+#' @param rowid the name of a row number column added internally to `.iea_file` per country. Default is "rowid".
+#'
+#' @return `TRUE` if `.iea_file` passes all checks. Errors are thrown when a verification step fails.
+#' 
+#' @export
+#'
+#' @examples
+#' library(magrittr)
+#' sample_iea_data_path() %>% 
+#'  iea_file_OK()
+iea_file_OK <- function(.iea_file = NULL, 
+                        text = NULL, 
+                        expected_1st_line_start = ",,TIME", 
+                        expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
+                        expected_simple_start = expected_2nd_line_start,
+                        .slurped_iea_df = NULL,
+                        country = "COUNTRY",
+                        flow = "FLOW", 
+                        product = "PRODUCT", 
+                        rowid = "rowid") {
   
-  # At this point, IEAData_withheader may have some column names that end in estimated_year.
+  if (is.null(.slurped_iea_df)) {
+    DF <- slurp_iea_to_raw_df(.iea_file = .iea_file, 
+                              text = text, 
+                              expected_1st_line_start = expected_1st_line_start, 
+                              expected_2nd_line_start = expected_2nd_line_start, 
+                              expected_simple_start = expected_simple_start)
+  } else {
+    DF <- .slurped_iea_df
+  }
+  
+  # Verify that each country has the same order of flows and products
+  flow_product <- DF %>% 
+    # Group by country so that adding row numbers is done per-country
+    dplyr::group_by(!!as.name(country)) %>% 
+    # Add row numbers
+    dplyr::do(
+      tibble::rowid_to_column(.data, var = rowid)
+    ) %>% 
+    dplyr::ungroup() %>% 
+    # Keep only rowid, flow, and product. This removes COUNTRY and years from the data frame
+    dplyr::select(!!as.name(rowid), !!as.name(flow), !!as.name(product)) %>% 
+    # In this context, unique() gives unique combinations of per-country row number, flow, product triples.
+    # If all countries have the same order of things, 
+    # all countries should have the same row number, flow, product triples, and
+    # this call to unique() will give the same number of rows as exist one country.
+    unique()
+  
+  # After having obtained the unique (per-country) row number, flow, product triples,
+  # we see if there are any duplicated row numbers.
+  # If all countries have the same row number, flow, product triples, 
+  # there will be no duplicated row numbers.
+  flow_product %>% 
+    # Look at the rowid column only
+    dplyr::select(!!as.name(rowid)) %>% 
+    # duplicated() returns TRUE for any duplicated values
+    duplicated() %>% 
+    # Any tells us if there are any duplicated values (TRUEs).
+    # We want all FALSE (no duplicated values).
+    any() %>% 
+    # If everything is FALSE (what we want), any() will return FALSE.
+    # But we want a good result from this function to return TRUE, 
+    # so we reverse the logic with not().
+    magrittr::not()
+}
+
+
+#' Load IEA data from an extended energy balances .csv file
+#' 
+#' If `.slurped_iea_df` is supplied, arguments `.iea_file` or `text` are ignored. 
+#' If `.slurped_iea_df` is absent, 
+#' either `.iea_file` or `text` are required, and 
+#' the helper function `slurp_iea_to_raw_df()` is called internally 
+#' to load a raw data frame of data.
+#' 
+#' Next, this function does some cleaning of the data.
+#' 
+#' In the IEA's data, some entries in the "FLOW" column are quoted to avoid creating too many columns. 
+#' For example, "Paper, pulp and printing" is quoted in the raw .csv file: 
+#' "      Paper, pulp and printing".
+#' Internally, this function uses [data.table::fread()], which, unfortunately, does not
+#' strip leading and trailing white space from quoted entries.
+#' So the function uses [base::trimws()] to finish the job.
+#' 
+#' When the IEA includes estimated data for a year, 
+#' the column name of the estimated year includes an "E" appended.
+#' (E.g., "2017E".) 
+#' This function eliminates estimated columns.
+#' 
+#' The IEA data have indicators for 
+#' not applicable values ("`x`") and for
+#' unavailable values ("`..`"). 
+#' (See "World Energy Balances: Database Documentation (2018 edition)" at
+#' <http://wds.iea.org/wds/pdf/worldbal_documentation.pdf>.)
+#' `R` has three concepts that could be used for "`x`" and "`..`":
+#' `0` would indicate value known to be zero.
+#' `NULL` would indicate an undefined value.
+#' `NA` would indicate a value that is unavailable.
+#' In theory, mapping from the IEA's indicators to `R` should proceed as follows:
+#' "`..`" (unavailable) in the IEA data would be converted to `NA` in `R`.
+#' "`x`" (not applicable) in the IEA data would be converted to `0` in `R`.
+#' "`NULL`" would not be used.
+#' However, the IEA are not consistent with their coding. 
+#' In some places "`..`" (indicating unavailable) is used for not applicable values, 
+#' e.g., World Anthracite supply in 1971. 
+#' (World Anthracite supply in 1971 is actually not applicable, because Anthracite was
+#' classified under "Hard coal (if no detail)" in 1971.)
+#' On the other hand, "`..`" is used for data in the most recent year 
+#' when those data have not yet been incorporated into the database. 
+#' In the face of IEA's inconsistencies, 
+#' the only rational way to proceed is to convert 
+#' both "`x`" and "`..`" in the IEA files to "`0`" in the output data frame
+#' from this function.
+#' Furthermore, confidential data (coded by the IEA as "`c`") is also interpreted as `0`.
+#' (What else can we do?)
+#' 
+#' The data frame returned from this function is not ready to be used in R, 
+#' because rows are not unique.
+#' To further prepare the data frame for use, call [augment_iea_df()],
+#' passing the output of this function to the `.iea_df` argument of [augment_iea_df()].
+#'
+#' @param .slurped_iea_df a data frame created by `slurp_iea_to_raw_df()`
+#' @param .iea_file a string containing the path to a .csv file of extended energy balances from the IEA.
+#'        Default is the path to a sample IEA file provided in this package.
+#' @param text a character string that can be parsed as IEA extended energy balances. 
+#'        (This argument is useful for testing.)
+#' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is ",,TIME".
+#' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "COUNTRY,FLOW,PRODUCT".
+#' @param expected_simple_start the expected starting of the first line of `iea_file`. Default is the value of `expected_2nd_line_start`.
+#'        Note that `expected_simple_start` is sometimes encountered in data supplied by the IEA.
+#'        Furthermore, `expected_simple_start` could be the format of the file when somebody "helpfully" fiddles with 
+#'        the raw data from the IEA.
+#' @param flow the name of the flow column, entries of which are stripped of leading and trailing white space. Default is "FLOW".
+#' @param missing_data a string that identifies missing data. Default is "`..`".
+#'        Entries of `missing_data` are coded as `0`` in output.
+#' @param not_applicable_data a string that identifies not-applicable data. Default is "x".
+#'        Entries of `not_applicable_data` are coded as `0` in output.
+#' @param confidential_data a string that identifies confidential data. Default is "c".
+#'        Entries of `confidential_data` are coded as `0` in output.
+#' @param estimated_year a string that identifies an estimated year. 
+#'        Default is "E".
+#'        E.g., in "2014E", the "E" indicates that data for 2014 are estimated.
+#'        Data from estimated years are removed from output.
+#'
+#' @return a data frame containing the IEA extended energy balances data
+#' 
+#' @export
+#' 
+#' @examples 
+#' # Original file format
+#' iea_df(text = paste0(",,TIME,1960,1961\n",
+#'                      "COUNTRY,FLOW,PRODUCT\n",
+#'                      "World,Production,Hard coal (if no detail),42,43"))
+#' # With extra commas on the 2nd line
+#' iea_df(text = paste0(",,TIME,1960,1961\n",
+#'                      "COUNTRY,FLOW,PRODUCT,,,\n",
+#'                      "World,Production,Hard coal (if no detail),42,43"))
+#' # With a clean first line
+#' iea_df(text = paste0("COUNTRY,FLOW,PRODUCT,1960,1961\n",
+#'                      "World,Production,Hard coal (if no detail),42,43"))
+iea_df <- function(.iea_file = NULL, 
+                   text = NULL, 
+                   .slurped_iea_df = NULL, 
+                   expected_1st_line_start = ",,TIME", 
+                   expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
+                   expected_simple_start = expected_2nd_line_start,
+                   flow = "FLOW",
+                   missing_data = "..", not_applicable_data = "x", confidential_data = "c", 
+                   estimated_year = "E"){
+
+  if (is.null(.slurped_iea_df)) {
+    IEAData_withheader <- slurp_iea_to_raw_df(.iea_file = .iea_file, 
+                                              text = text, 
+                                              expected_1st_line_start = expected_1st_line_start, 
+                                              expected_2nd_line_start = expected_2nd_line_start, 
+                                              expected_simple_start = expected_simple_start)
+  } else {
+    IEAData_withheader <- .slurped_iea_df
+  }
+  
+  # At this point, IEAData_withheader may have some column names that end in `estimated_year`.
   # We should delete those columns.
   cnames <- colnames(IEAData_withheader)
   cols_to_delete <- grepl(pattern = paste0(estimated_year, "$"), x = cnames)

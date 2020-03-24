@@ -13,13 +13,16 @@ test_that("iea_file_OK works", {
   close(conn)
 
   # Mess with the file and expect an error, because rows are no longer identical from one country to another.
-  f1 <- data.table::fread(file = f, header = TRUE, strip.white = FALSE, sep = ",")
+  # f1 <- data.table::fread(file = f, header = TRUE, strip.white = FALSE, sep = ",")
+  f1 <- read.csv(file = f, header = TRUE, strip.white = FALSE, sep = ",")
   f2 <- f1
+  # Switch Hard coal and Brown coal in the PRODUCT column.
   f2[[1, 3]] <- f1[[2, 3]]
   f2[[2, 3]] <- f1[[1, 3]]
-  # Write to a temporary file as a .csv file
+  # Write the messed-up data to a temporary file as a .csv file
   tf <- tempfile(pattern = "iea_file_OK_test", fileext = ".csv")
   write.csv(f2, file = tf)
+  # Read it back to confirm that it is messed up
   expect_false(iea_file_OK(tf))
   # Delete file if it exists
   if (file.exists(tf)) {

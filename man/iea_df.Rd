@@ -7,6 +7,7 @@
 iea_df(
   .iea_file = NULL,
   text = NULL,
+  .slurped_iea_df = NULL,
   expected_1st_line_start = ",,TIME",
   expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT",
   expected_simple_start = expected_2nd_line_start,
@@ -23,6 +24,8 @@ Default is the path to a sample IEA file provided in this package.}
 
 \item{text}{a character string that can be parsed as IEA extended energy balances.
 (This argument is useful for testing.)}
+
+\item{.slurped_iea_df}{a data frame created by \code{slurp_iea_to_raw_df()}}
 
 \item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is ",,TIME".}
 
@@ -53,24 +56,14 @@ Data from estimated years are removed from output.}
 a data frame containing the IEA extended energy balances data
 }
 \description{
-This function reads an IEA extended energy balances .csv file and
-converts it to a data frame with appropriately-labeled columns.
-One of \code{iea_file} or \code{text} must be specified, but not both.
-The first line of \code{iea_file} or \code{text}
-is expected to start with \code{expected_start_1st_line}, and
-the second line is expected to start with \code{expected_2nd_line_start}, and
-it may have any number of commas appended.
-(The extra commas might come from opening and re-saving the file in Excel.)
-Alternatively, the file may have a first line of \code{expected_simple_start}.
-If none of these conditions are not met, execution is halted, and
-an error message is provided.
-Files should have a return character at the end of their final line.
+If \code{.slurped_iea_df} is supplied, arguments \code{.iea_file} or \code{text} are ignored.
+If \code{.slurped_iea_df} is absent,
+either \code{.iea_file} or \code{text} are required, and
+the helper function \code{slurp_iea_to_raw_df()} is called internally
+to load a raw data frame of data.
 }
 \details{
-This function is designed to work even as more years are added
-in columns at the right of \code{.iea_file},
-because column names in the output are constructed from the header line(s) of \code{.iea_file}
-(which contain years and country, flow, product information).
+Next, this function does some cleaning of the data.
 
 In the IEA's data, some entries in the "FLOW" column are quoted to avoid creating too many columns.
 For example, "Paper, pulp and printing" is quoted in the raw .csv file:
