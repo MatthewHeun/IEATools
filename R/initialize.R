@@ -59,18 +59,22 @@ slurp_iea_to_raw_df <- function(.iea_file = NULL,
   first_two_lines <- conn %>% readLines(n = 2)
   close(conn)
   assertthat::assert_that(length(first_two_lines) == 2, msg = "couldn't read 2 lines in iea_df")
-  first_line <- first_two_lines[[1]]
-  second_line <- first_two_lines[[2]]
+  # first_line <- first_two_lines[[1]]
+  # second_line <- first_two_lines[[2]]
+  # Eliminate any quotes that are present
+  first_line <- gsub(pattern = '\\"', replacement = "", x = first_two_lines[[1]])
+  second_line <- gsub(pattern = '\\"', replacement = "", x = first_two_lines[[2]])
   # Ensure that we have an expected format for the first line or two in first_two_lines.
   assertthat::assert_that(first_line %>% startsWith(expected_simple_start) | 
                             (first_line %>% startsWith(expected_1st_line_start) & second_line %>% startsWith(expected_2nd_line_start)), 
-                          msg = paste0(".iea_file didn't start with '",
-                                       expected_simple_start,
-                                       "' or '",
-                                       expected_1st_line_start,
-                                       "\n",
-                                       expected_2nd_line_start,
-                                       "'."))
+                          msg = paste0(".iea_file must start with ",
+                                       "first line: '", expected_simple_start, "', ",
+                                       "or ",
+                                       "first line: '", expected_1st_line_start, "' and ",
+                                       "second line: '", expected_2nd_line_start, "'.  ",
+                                       "Instead, found ",
+                                       "first line: '", first_line, "', ",
+                                       "second line: '", second_line, "'."))
   if (first_line %>% startsWith(expected_simple_start)) {
     # We have the simple start to the file, so we can assume a one-line header.
     if (!is.null(.iea_file)) {
