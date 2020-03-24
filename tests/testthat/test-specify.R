@@ -181,7 +181,7 @@ test_that('tp_sinks_sources(type = "sources") works as expected', {
     )
   # Automobiles are fine, but Furnaces make Petrol without consuming any energy, and are, therefore, a transformation source.
   expect_equal(Tidy %>% tp_sinks_sources(type = "sources"), 
-               tibble::tibble(Country = "Bogus", Flow = "Furnaces"))
+               data.frame(Country = "Bogus", Flow = "Furnaces", stringsAsFactors = FALSE))
 })
 
 test_that("tp_sinks_to_nonenergy works as expected", {
