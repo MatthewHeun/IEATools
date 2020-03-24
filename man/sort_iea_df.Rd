@@ -24,11 +24,15 @@ sort_iea_df(
   last_stage_order = IEATools::last_stages,
   ledger_side_iea_order = IEATools::ledger_sides,
   fap_flow_iea_order = IEATools::fap_flows,
-  product_iea_order = IEATools::products
+  product_iea_order = IEATools::products,
+  .clean_flow = ".clean_flow",
+  .clean_product = ".clean_product"
 )
 }
 \arguments{
 \item{.iea_df}{the IEA data frame to be sorted}
+
+\item{col_names}{a list of column names in IEA data frames. Default is \code{IEATools::iea_cols}.}
 
 \item{country}{the name of the country column in \code{.tidy_iea_df}. Default is "Country".}
 
@@ -64,7 +68,13 @@ sort_iea_df(
 
 \item{fap_flow_iea_order}{the order in which to sort the united \code{flow_aggregation_point} and \code{flow} columns of \code{.tidy_iea_df}. Default is \link{fap_flows}.}
 
-\item{product_iea_order}{the order in which to sort the \code{prodcut} column of \code{.tidy_iea_df}. Default is \link{products}.}
+\item{product_iea_order}{the order in which to sort the \code{product} column of \code{.tidy_iea_df}. Default is \link{products}.}
+
+\item{.clean_flow}{the name of an internally-generated column in \code{.iea_df} that stores
+a de-specified version of the \code{flow} column. Default is ".clean_flow".}
+
+\item{.clean_product}{the name of an internally-generated column in \code{.iea_df} that stores
+a de-specified version of the \code{product} column. Default is ".clean_product".}
 }
 \value{
 a version of \code{.tidy_iea_df} sorted in IEA order

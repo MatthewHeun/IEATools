@@ -220,7 +220,10 @@ fu_allocation_template <- function(.tidy_iea_df,
 #' @param quantity the name of the quantity column in `.fu_allocation_template`. Default is "`Quantity`".
 #' @param maximum_values the name of the maximum value column `.fu_allocation_template`. Default is "`Unit`".
 #' @param .temp_sort the name of a temporary column to be added to `.fu_allocation_template`. 
-#'        Default is "`.fap_flow`".
+#'        Default is ".fap_flow".
+#'        This column must not be present in `.fu_allocation_template`.
+#' @param .clean_ef_product the name of a temporary column to be added to `.fu_allocation_template`. 
+#'        Default is ".clean_ef_product".
 #'        This column must not be present in `.fu_allocation_template`.
 #'
 #' @return An row- and/or column-ordered version of `.fu_allocation_template`
@@ -247,7 +250,8 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
                                                ef_product_order = IEATools::products, 
                                                quantity = "Quantity",
                                                maximum_values = "Maximum.values", 
-                                               .temp_sort = ".fap_flow"){
+                                               .temp_sort = ".fap_flow", 
+                                               .clean_ef_product = ".clean_Ef_product"){
   rowcol <- match.arg(rowcol)
   out <- .fu_allocation_template
   # Work on row order
@@ -261,17 +265,21 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
     # Columns that are not years and are not machine_and_product_columns are metadata columns.
     # We group by these columns later.
     meta_cols <- out %>% 
-      matsindf::everything_except(c(year_colnames, machine_and_product_columns))  
+      matsindf::everything_except(c(year_colnames, machine_and_product_columns, ef_product))
+    # Adjust the columns in preparation for sorting.
     out <- out %>% 
+      # De-specify the Ef.product column so it can be sorted.
+      despecify_col(col = ef_product, despecified_col = .clean_ef_product) %>% 
+      # Create a united Flow.aggregation.point_Flow column.
       tidyr::unite(col = !!as.name(.temp_sort), !!as.name(flow_aggregation_point), !!as.name(destination), sep = "_", remove = FALSE)
     # Ensure that no .fap_flow and no ef_products are NA at this point.
     assertthat::assert_that(!any(is.na(out[[.temp_sort]])))
-    assertthat::assert_that(!any(is.na(out[[ef_product]])))
+    assertthat::assert_that(!any(is.na(out[[.clean_ef_product]])))
     # Convert .temp_sort and ef_product to factors so that they can be arranged (sorted) later.
     out <- out %>% 
       dplyr::mutate(
         !!as.name(.temp_sort) := factor(!!as.name(.temp_sort), levels = fap_dest_order),
-        !!as.name(ef_product) := factor(!!as.name(ef_product), levels = ef_product_order)
+        !!as.name(.clean_ef_product) := factor(!!as.name(.clean_ef_product), levels = ef_product_order)
       ) 
     # Ensure that we have not accidentally created NA values in the .temp_sort or ef_product columns.
     # NA values in either of these columns will occur when we do not have a complete set of factors 
@@ -279,16 +287,16 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
     na_temp_sort <- out %>% 
       dplyr::filter(is.na(!!as.name(.temp_sort)))
     na_ef_product <- out %>% 
-      dplyr::filter(is.na(!!as.name(ef_product)))
+      dplyr::filter(is.na(!!as.name(.clean_ef_product)))
     assertthat::assert_that(nrow(na_temp_sort) == 0)
     assertthat::assert_that(nrow(na_ef_product) == 0)
     out <- out %>% 
       dplyr::group_by(!!!meta_cols) %>% 
-      dplyr::arrange(!!as.name(.temp_sort), !!as.name(ef_product), .by_group = TRUE) %>% 
+      dplyr::arrange(!!as.name(.temp_sort), !!as.name(.clean_ef_product), .by_group = TRUE) %>% 
       dplyr::mutate(
+        # Eliminate temporary columns
         !!as.name(.temp_sort) := NULL, 
-        # Undo the factorization of the Ef.product column.
-        !!as.name(ef_product) := as.character(!!as.name(ef_product))
+        !!as.name(.clean_ef_product) := NULL
       ) %>% 
       # Undo the grouping that we performed above.
       dplyr::ungroup()

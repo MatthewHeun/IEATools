@@ -18,9 +18,23 @@ usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 # Notation
 # 
 
-notation <- list(specify_open = " <<", 
-                 specify_close = ">>")
-usethis::use_data(notation, overwrite = TRUE)
+# Note that open and close are escaped if they contain any of [, ], (, or ). 
+# Otherwise, open and close should not contain any regex special characters.
+specify_notation <- list(open = " [", 
+                         close = "]", 
+                         resources_preposition = "of ",
+                         eiou_preposition = "to ", 
+                         interface_ind_preposition = "of ",
+                         final_demand_preposition = "to ")
+specify_notation$resources_open <- paste0(specify_notation$open, specify_notation$resources_preposition)
+specify_notation$resources_close <- specify_notation$close
+specify_notation$eiou_open <- paste0(specify_notation$open, specify_notation$eiou_preposition)
+specify_notation$eiou_close <- specify_notation$close
+specify_notation$interface_ind_open <- paste0(specify_notation$open, specify_notation$interface_ind_preposition)
+specify_notation$interface_ind_close <- specify_notation$close
+specify_notation$final_demand_open <- paste0(specify_notation$open, specify_notation$final_demand_preposition)
+specify_notation$final_demand_close <- specify_notation$close
+usethis::use_data(specify_notation, overwrite = TRUE)
 
 
 #
@@ -168,7 +182,8 @@ usethis::use_data(biofuels_and_waste_products, overwrite = TRUE)
 # Flow types
 # 
 
-tpes_flows <- list(production = "Production", 
+tpes_flows <- list(resources = "Resources", 
+                   production = "Production", 
                    importa = "Imports", 
                    exports = "Exports",
                    international_marine_bunkers = "International marine bunkers",
@@ -339,7 +354,7 @@ usethis::use_data(ledger_sides, overwrite = TRUE)
 
 # Defining the row order for IEA-style data frames is tricky and requires some manual intervention.
 # In the first step, we use the data frame created from load_tidy_iea_df,
-# creating a united column from Flow.aggregation.point.
+# creating a united column from Flow.aggregation.point and Flow.
 fap_flows <- load_tidy_iea_df(remove_zeroes = FALSE) %>% 
   tidyr::unite(col = Flow.aggregation.point_Flow, Flow.aggregation.point, Flow, sep = "_", remove = TRUE) %>% 
   dplyr::select(Flow.aggregation.point_Flow) %>% 
@@ -350,6 +365,10 @@ fap_flows <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   # Coal mines and Oil and gas extraction are created in specify_primary_production().
   insert_after(after = "Total primary energy supply_Production", 
                values = c("Total primary energy supply_Coal mines", "Total primary energy supply_Oil and gas extraction")) %>% 
+  # We we have Resources, Coal mines and Oil and gas extraction are Transformation processes.
+  # Add entries for those, too.
+  insert_after(after = "TFC compare_Statistical differences", 
+               values = c("Transformation processes_Coal mines", "Transformation processes_Oil and gas extraction")) %>% 
   # Energy industry own use_Own use in electricity, CHP and heat plants, 
   # Pumped storage plants, and Nuclear industry is reassigned to Main activity producer electricity plants in specify_tp_eiou()
   insert_after(after = "Energy industry own use_Nuclear industry", 
@@ -365,11 +384,11 @@ products <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   # Insert a few items manually.
   # In specify_primary_production(), some Products are renamed to account for the fact that they come from a different industry.
   insert_after(after = primary_coal_products[length(primary_coal_products)], 
-               values = paste(primary_coal_products, "(Coal mines)")) %>% 
+               values = paste0(primary_coal_products, specify_notation$open, "Coal mines", specify_notation$close)) %>% 
   insert_after(after = primary_oil_products[length(primary_oil_products)], 
-               values = paste(primary_oil_products, "(Oil and gas extraction)")) %>% 
+               values = paste0(primary_oil_products, specify_notation$open, "Oil and gas extraction", specify_notation$close)) %>% 
   insert_after(after = "Natural gas", 
-               values = paste("Natural gas", "(Oil and gas extraction)"))
+               values = paste0("Natural gas", specify_notation$open, "Oil and gas extraction", specify_notation$close))
 usethis::use_data(products, overwrite = TRUE)
 
 

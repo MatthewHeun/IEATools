@@ -18,7 +18,8 @@ arrange_iea_fu_allocation_template(
   ef_product_order = IEATools::products,
   quantity = "Quantity",
   maximum_values = "Maximum.values",
-  .temp_sort = ".fap_flow"
+  .temp_sort = ".fap_flow",
+  .clean_ef_product = ".clean_Ef_product"
 )
 }
 \arguments{
@@ -50,7 +51,11 @@ Default is "\code{both}".}
 \item{maximum_values}{the name of the maximum value column \code{.fu_allocation_template}. Default is "\code{Unit}".}
 
 \item{.temp_sort}{the name of a temporary column to be added to \code{.fu_allocation_template}.
-Default is "\code{.fap_flow}".
+Default is ".fap_flow".
+This column must not be present in \code{.fu_allocation_template}.}
+
+\item{.clean_ef_product}{the name of a temporary column to be added to \code{.fu_allocation_template}.
+Default is ".clean_ef_product".
 This column must not be present in \code{.fu_allocation_template}.}
 }
 \value{

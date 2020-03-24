@@ -8,7 +8,10 @@ specify_interface_industries(
   .tidy_iea_df,
   flow = "Flow",
   int_industries = IEATools::interface_industries,
-  product = "Product"
+  product = "Product",
+  notation = IEATools::specify_notation,
+  .interface_ind_open = notation$interface_ind_open,
+  .interface_ind_close = notation$interface_ind_close
 )
 }
 \arguments{
@@ -17,9 +20,15 @@ specify_interface_industries(
 \item{flow}{the name of the flow column in \code{.tidy_iea_df}.  Default is "\code{Flow}".}
 
 \item{int_industries}{a string vector of industries involved in exchanges with other countries,
-bunkers, or stock changes. Default is \link[IEATools:interface_industries]{IEATools::interface_industries}.}
+bunkers, or stock changes. Default is \code{IEATools::interface_industries}.}
 
 \item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
+
+\item{notation}{a list of specification notations. Default is \code{IEATools::specify_notation}.}
+
+\item{.interface_ind_open}{a string that identifies the start of the specification portion of flows. Default is \code{IEATools::specify_notation$interface_ind_open}.}
+
+\item{.interface_ind_close}{a string that identifies the end of specification portion of  flows. Default is \code{IEATools::specify_notation$interface_ind_close}.}
 }
 \value{
 a modified version of \code{.tidy_iea_df} with specified interface industries

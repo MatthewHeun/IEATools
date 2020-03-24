@@ -1,13 +1,13 @@
-#' Notation used in IEATools
+#' Specification notation
 #'
-#' A character vector containing the notation used in the IEATools package.
+#' A character vector containing the specification notation used in the IEATools package.
 #' Notation for delimiting specification strings is included.
 #' 
-#' @format A character vector with 2 entries
+#' @format A character vector
 #' 
 #' @examples
-#' notation
-"notation"
+#' specify_notation
+"specify_notation"
 
 
 #' IEA release years supported by this package
@@ -233,6 +233,17 @@
 #' @examples
 #' other_flows
 "other_flows"
+
+
+#' Non-energy flows
+#'
+#' A string vector containing names of `Non-energy` `Flow`s in the IEA extended energy balances database.
+#' 
+#' @format A string vector with 3 entries
+#' 
+#' @examples
+#' non_energy_flows
+"non_energy_flows"
 
 
 #' Aggregation flows

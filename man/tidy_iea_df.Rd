@@ -24,6 +24,8 @@ tidy_iea_df(
 \arguments{
 \item{.iea_df}{a IEA data frame whose columns have been renamed by \code{rename_iea_df_cols()}}
 
+\item{col_names}{a list of column names in IEA data frames. Default is \code{IEATools::iea_cols}.}
+
 \item{year}{the name of the year column created in \code{.iea_df} by this function. (Default is "Year".)}
 
 \item{e_dot}{the name of the energy/exergy value column created in \code{.iea_df} by this function. (Default is "E.dot".)}

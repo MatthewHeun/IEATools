@@ -147,7 +147,10 @@ where <code>product</code> is the name of the energy carrier for this resource.<
   <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
   <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
   <span class='kw'>production</span> <span class='kw'>=</span> <span class='st'>"Production"</span>,
-  <span class='kw'>resources</span> <span class='kw'>=</span> <span class='st'>"Resources"</span>
+  <span class='kw'>resources</span> <span class='kw'>=</span> <span class='st'>"Resources"</span>,
+  <span class='kw'>notation</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/specify_notation.html'>specify_notation</a></span>,
+  <span class='kw'>.resources_open</span> <span class='kw'>=</span> <span class='no'>notation</span>$<span class='no'>resources_open</span>,
+  <span class='kw'>.resources_close</span> <span class='kw'>=</span> <span class='no'>notation</span>$<span class='no'>resources_close</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -159,26 +162,38 @@ where <code>product</code> is the name of the energy carrier for this resource.<
     </tr>
     <tr>
       <th>flow</th>
-      <td><p>the name of the flow column in <code>.tidy_iea_df</code>.  Default is "<code>Flow</code>".</p></td>
+      <td><p>the name of the flow column in <code>.tidy_iea_df</code>.  Default is "Flow".</p></td>
     </tr>
     <tr>
       <th>product</th>
-      <td><p>the name of the product column in <code>.tidy_iea_df</code>.  Default is "<code>Product</code>".</p></td>
+      <td><p>the name of the product column in <code>.tidy_iea_df</code>.  Default is "Product".</p></td>
     </tr>
     <tr>
       <th>production</th>
-      <td><p>a string identifying production in the flow column. Default is "<code>Production</code>".</p></td>
+      <td><p>a string identifying production in the flow column. Default is "Production".</p></td>
     </tr>
     <tr>
       <th>resources</th>
       <td><p>a string identifying resource industries to be added to <code>.tidy_iea_df</code>.
-Default is "<code>Resources</code>".</p></td>
+Default is "Resources".</p></td>
+    </tr>
+    <tr>
+      <th>notation</th>
+      <td><p>a list of specification notations. Default is <code><a href='specify_notation.html'>IEATools::specify_notation</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>.resources_open</th>
+      <td><p>a string that identifies the start of the specification portion of flows. Default is <code>specify_notation$resources_open</code>.</p></td>
+    </tr>
+    <tr>
+      <th>.resources_close</th>
+      <td><p>a string that identifies the end of specification portion of  flows. Default is <code>specify_notation$resources_close</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.tidy_iea_df</code> with <code>Production</code> changed to <code>Resources (product)</code></p>
+    <p><code>.tidy_iea_df</code> with <code>Production</code> changed to <code>resources .resources_open product .resources_close</code> in the <code>flow</code> column</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function should be called <em>after</em> <code><a href='specify_primary_production.html'>specify_primary_production()</a></code>,

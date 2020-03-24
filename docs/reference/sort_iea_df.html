@@ -143,33 +143,40 @@ there is a <code>year</code> column present or
     </div>
 
     <pre class="usage"><span class='fu'>sort_iea_df</span>(
-  <span class='no'>.tidy_iea_df</span>,
-  <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"Method"</span>,
-  <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='st'>"Energy.type"</span>,
-  <span class='kw'>last_stage</span> <span class='kw'>=</span> <span class='st'>"Last.stage"</span>,
-  <span class='kw'>year</span> <span class='kw'>=</span> <span class='st'>"Year"</span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
+  <span class='no'>.iea_df</span>,
+  <span class='kw'>col_names</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/iea_cols.html'>iea_cols</a></span>,
+  <span class='kw'>country</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>country</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>method</span>,
+  <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>energy_type</span>,
+  <span class='kw'>last_stage</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>last_stage</span>,
+  <span class='kw'>year</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>year</span>,
+  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>ledger_side</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>flow_aggregation_point</span>,
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>flow</span>,
   <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"_"</span>,
   <span class='kw'>fap_flow</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>flow_aggregation_point</span>, <span class='no'>sep</span>, <span class='no'>flow</span>),
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>product</span>,
   <span class='kw'>country_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/countries.html'>countries</a></span>,
   <span class='kw'>method_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/methods.html'>methods</a></span>,
   <span class='kw'>energy_type_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/energy_types.html'>energy_types</a></span>,
   <span class='kw'>last_stage_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/last_stages.html'>last_stages</a></span>,
   <span class='kw'>ledger_side_iea_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/ledger_sides.html'>ledger_sides</a></span>,
   <span class='kw'>fap_flow_iea_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/fap_flows.html'>fap_flows</a></span>,
-  <span class='kw'>product_iea_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/products.html'>products</a></span>
+  <span class='kw'>product_iea_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/products.html'>products</a></span>,
+  <span class='kw'>.clean_flow</span> <span class='kw'>=</span> <span class='st'>".clean_flow"</span>,
+  <span class='kw'>.clean_product</span> <span class='kw'>=</span> <span class='st'>".clean_product"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.tidy_iea_df</th>
-      <td><p>the tidy IEA data frame to be sorted</p></td>
+      <th>.iea_df</th>
+      <td><p>the IEA data frame to be sorted</p></td>
+    </tr>
+    <tr>
+      <th>col_names</th>
+      <td><p>a list of column names in IEA data frames. Default is <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
       <th>country</th>
@@ -241,7 +248,17 @@ there is a <code>year</code> column present or
     </tr>
     <tr>
       <th>product_iea_order</th>
-      <td><p>the order in which to sort the <code>prodcut</code> column of <code>.tidy_iea_df</code>. Default is <a href='products.html'>products</a>.</p></td>
+      <td><p>the order in which to sort the <code>product</code> column of <code>.tidy_iea_df</code>. Default is <a href='products.html'>products</a>.</p></td>
+    </tr>
+    <tr>
+      <th>.clean_flow</th>
+      <td><p>the name of an internally-generated column in <code>.iea_df</code> that stores
+a de-specified version of the <code>flow</code> column. Default is ".clean_flow".</p></td>
+    </tr>
+    <tr>
+      <th>.clean_product</th>
+      <td><p>the name of an internally-generated column in <code>.iea_df</code> that stores
+a de-specified version of the <code>product</code> column. Default is ".clean_product".</p></td>
     </tr>
     </table>
 
