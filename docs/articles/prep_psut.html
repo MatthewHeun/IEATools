@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.15</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.16</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <h1>Prepare for PSUT analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-03-16</h4>
+            <h4 class="date">2020-03-24</h4>
       
       
       <div class="hidden name"><code>prep_psut.Rmd</code></div>
@@ -102,7 +102,7 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>After loading IEA data and ensuring that the data are balanced (see the <a href="http://IEATools.html">vignette about loading data</a>) and specifying many of the flows (see the <a href="http://specify.html">vignette about specifying flows</a>), the analyst can prepare for physical supply-use table (PSUT) analysis of an energy conversion chain. This vignette shows how to use the functions in the <code>IEATools</code> package for that purpose.</p>
+<p>After loading IEA data and ensuring that the data are balanced (see the <a href="https://matthewheun.github.io/IEATools/articles/IEATools.html">vignette about loading data</a>) and specifying many of the flows (see the <a href="https://matthewheun.github.io/IEATools/articles/specify.html">vignette about specifying flows</a>), the analyst can prepare for physical supply-use table (PSUT) analysis of an energy conversion chain. This vignette shows how to use the functions in the <code>IEATools</code> package for that purpose.</p>
 </div>
 <div id="adding-psut-matrix-names-add_psut_matnames" class="section level2">
 <h2 class="hasAnchor">
@@ -177,9 +177,9 @@
 <span id="cb3-18"><a href="#cb3-18"></a><span class="kw"><a href="https://rdrr.io/r/base/class.html">class</a></span>(Tidy_PSUT<span class="op">$</span>matvals[[<span class="dv">1</span>]])</span>
 <span id="cb3-19"><a href="#cb3-19"></a><span class="co">#&gt; [1] "matrix"</span></span>
 <span id="cb3-20"><a href="#cb3-20"></a>Tidy_PSUT<span class="op">$</span>matvals[[<span class="dv">1</span>]]</span>
-<span id="cb3-21"><a href="#cb3-21"></a><span class="co">#&gt;                                      Hydro Primary solid biofuels</span></span>
-<span id="cb3-22"><a href="#cb3-22"></a><span class="co">#&gt; Resources (Hydro)                  250.129                  0.000</span></span>
-<span id="cb3-23"><a href="#cb3-23"></a><span class="co">#&gt; Resources (Primary solid biofuels)   0.000               2087.513</span></span>
+<span id="cb3-21"><a href="#cb3-21"></a><span class="co">#&gt;                                         Hydro Primary solid biofuels</span></span>
+<span id="cb3-22"><a href="#cb3-22"></a><span class="co">#&gt; Resources [of Hydro]                  250.129                  0.000</span></span>
+<span id="cb3-23"><a href="#cb3-23"></a><span class="co">#&gt; Resources [of Primary solid biofuels]   0.000               2087.513</span></span>
 <span id="cb3-24"><a href="#cb3-24"></a><span class="co">#&gt; attr(,"rowtype")</span></span>
 <span id="cb3-25"><a href="#cb3-25"></a><span class="co">#&gt; [1] "Industry"</span></span>
 <span id="cb3-26"><a href="#cb3-26"></a><span class="co">#&gt; attr(,"coltype")</span></span>

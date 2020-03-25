@@ -1,3 +1,125 @@
+#' Slurp an IEA extended energy balance data file
+#' 
+#' This is an internal helper function. 
+#' This function reads an IEA extended energy balances .csv file and
+#' converts it to a data frame with appropriately-labeled columns.
+#' One of `iea_file` or `text` must be specified, but not both.
+#' The first line of `iea_file` or `text`
+#' is expected to start with `expected_start_1st_line`, and
+#' the second line is expected to start with `expected_2nd_line_start`, and
+#' it may have any number of commas appended.
+#' (The extra commas might come from opening and re-saving the file in Excel.)
+#' Alternatively, the file may have a first line of `expected_simple_start`.
+#' If none of these conditions are not met, execution is halted, and
+#' an error message is provided.
+#' Files should have a return character at the end of their final line.
+#' 
+#' This function is designed to work even as more years are added
+#' in columns at the right of `.iea_file`, 
+#' because column names in the output are constructed from the header line(s) of `.iea_file` 
+#' (which contain years and country, flow, product information).
+#'
+#' @param .iea_file the path to the raw IEA data file for which quality assurance is desired
+#' @param text a string containing text to be parsed as an IEA file.
+#' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is ",,TIME".
+#' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "COUNTRY,FLOW,PRODUCT".
+#' @param expected_simple_start the expected starting of the first line of `iea_file`. Default is the value of `expected_2nd_line_start`.
+#'        Note that `expected_simple_start` is sometimes encountered in data supplied by the IEA.
+#'        Furthermore, `expected_simple_start` could be the format of the file when somebody "helpfully" fiddles with 
+#'        the raw data from the IEA.
+#'
+#' @return a raw data frame of IEA extended energy balance data with appropriate column titles
+#' 
+#' @export
+#'
+#' @examples
+#' # 2018 and earlier file format
+#' slurp_iea_to_raw_df(text = paste0(",,TIME,1960,1961\n",
+#'                      "COUNTRY,FLOW,PRODUCT\n",
+#'                      "World,Production,Hard coal (if no detail),42,43"))
+#' # With extra commas on the 2nd line
+#' slurp_iea_to_raw_df(text = paste0(",,TIME,1960,1961\n",
+#'                      "COUNTRY,FLOW,PRODUCT,,,\n",
+#'                      "World,Production,Hard coal (if no detail),42,43"))
+#' # With a clean first line (2019 file format)
+#' slurp_iea_to_raw_df(text = paste0("COUNTRY,FLOW,PRODUCT,1960,1961\n",
+#'                      "World,Production,Hard coal (if no detail),42,43"))
+slurp_iea_to_raw_df <- function(.iea_file = NULL, 
+                                text = NULL, 
+                                expected_1st_line_start = ",,TIME", 
+                                expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
+                                expected_simple_start = expected_2nd_line_start) {
+  assertthat::assert_that(xor(!is.null(.iea_file), !is.null(text)), 
+                          msg = "need to supply only one of .iea_file or text arguments to iea_df")
+  if (!is.null(.iea_file)) {
+    conn <- file(.iea_file, open = "rt") # open file connection
+  } else {
+    # text has been provided, probably for testing purposes.
+    conn <- textConnection(text)
+  }
+  
+  # Check if the first line has the simple format
+  first_two_lines <- conn %>% readLines(n = 2)
+  close(conn)
+  assertthat::assert_that(length(first_two_lines) == 2, msg = "couldn't read 2 lines in iea_df")
+  # first_line <- first_two_lines[[1]]
+  # second_line <- first_two_lines[[2]]
+  # Eliminate any quotes that are present
+  first_line <- gsub(pattern = '\\"', replacement = "", x = first_two_lines[[1]])
+  second_line <- gsub(pattern = '\\"', replacement = "", x = first_two_lines[[2]])
+  # Ensure that we have an expected format for the first line or two in first_two_lines.
+  assertthat::assert_that(first_line %>% startsWith(expected_simple_start) | 
+                            (first_line %>% startsWith(expected_1st_line_start) & second_line %>% startsWith(expected_2nd_line_start)), 
+                          msg = paste0(".iea_file must start with ",
+                                       "first line: '", expected_simple_start, "', ",
+                                       "or ",
+                                       "first line: '", expected_1st_line_start, "' and ",
+                                       "second line: '", expected_2nd_line_start, "'.  ",
+                                       "Instead, found ",
+                                       "first line: '", first_line, "', ",
+                                       "second line: '", second_line, "'."))
+  if (first_line %>% startsWith(expected_simple_start)) {
+    # We have the simple start to the file, so we can assume a one-line header.
+    if (!is.null(.iea_file)) {
+      IEAData_withheader <- data.table::fread(file = .iea_file, header = TRUE, sep = ",")
+    } else {
+      IEAData_withheader <- data.table::fread(text = text, header = TRUE, sep = ",")
+    }
+  } else if (first_line %>% startsWith(expected_1st_line_start) & 
+             second_line %>% startsWith(expected_2nd_line_start)) {
+    # We have the complicated start to the file, so go through some additional work to apply the proper header
+    # to the file.
+    if (second_line %>% endsWith(",")) {
+      # The file may have been opened in Excel and resaved.
+      # When that occurs, many commas are appended to the 2nd line.
+      # Strip out these commas before proceeding further.
+      # The pattern ,*$ means "match any number (*) of commas (,) at the end of the line ($)".
+      second_line <- sub(pattern = ",*$", replacement = "", second_line)
+    }
+    if (!is.null(.iea_file)) {
+      # Slurp the file. This slurping ignores the header, which we know are the first 2 lines.
+      # Note that I'm using data.table::fread at the recommendation of
+      # https://statcompute.wordpress.com/2014/02/11/efficiency-of-importing-large-csv-files-in-r/
+      # which indicates this function is significantly faster than other options.
+      IEAData_noheader <- data.table::fread(file = .iea_file, header = FALSE, sep = ",", skip = 2)
+    } else {
+      IEAData_noheader <- data.table::fread(text = text, header = FALSE, sep = ",", skip = 2)
+    }
+    # At this point, the IEAData_noheader data frame has default (meaningless) column names, V1, V2, V3, ...
+    # Create column names from the header lines that we read previously.
+    # The code here should be robust to adding more years through time,
+    # because it simply replaces the first 3 items of the first line
+    # with appropriate values from the 2nd line.
+    cnames <- gsub(pattern = expected_1st_line_start, replacement = expected_2nd_line_start, first_line) %>%
+      strsplit(",") %>%
+      unlist()
+    IEAData_withheader <- IEAData_noheader %>%
+      magrittr::set_names(cnames)
+  }
+  return(IEAData_withheader)
+}
+
+
 #' Perform quality assurance on a raw IEA data file
 #' 
 #' When starting to work with an IEA data file, 
@@ -11,9 +133,23 @@
 #' If none are found, the function returns the data frame read from the file.
 #' 
 #' Note that `.iea_file` is read internally with [data.table::fread()] *without* stripping white space.
+#' 
+#' If `.slurped_iea_df` is supplied, arguments `.iea_file` or `text` are ignored. 
+#' If `.slurped_iea_df` is absent, 
+#' either `.iea_file` or `text` are required, and 
+#' the helper function `slurp_iea_to_raw_df()` is called internally 
+#' to load a raw data frame of data.
+
 #'
 #' @param .iea_file the path to the raw IEA data file for which quality assurance is desired
 #' @param text a string containing text to be parsed as an IEA file.
+#' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is ",,TIME".
+#' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "COUNTRY,FLOW,PRODUCT".
+#' @param expected_simple_start the expected starting of the first line of `iea_file`. Default is the value of `expected_2nd_line_start`.
+#'        Note that `expected_simple_start` is sometimes encountered in data supplied by the IEA.
+#'        Furthermore, `expected_simple_start` could be the format of the file when somebody "helpfully" fiddles with 
+#'        the raw data from the IEA.
+#' @param .slurped_iea_df a data frame created by `slurp_iea_to_raw_df()`
 #' @param country the name of the country column. Default is "COUNTRY".
 #' @param flow the name of the flow column. Default is "FLOW".
 #' @param product the name of the product column. Default is "PRODUCT".
@@ -28,20 +164,26 @@
 #' sample_iea_data_path() %>% 
 #'  iea_file_OK()
 iea_file_OK <- function(.iea_file = NULL, 
-                        text = NULL,
+                        text = NULL, 
+                        expected_1st_line_start = ",,TIME", 
+                        expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
+                        expected_simple_start = expected_2nd_line_start,
+                        .slurped_iea_df = NULL,
                         country = "COUNTRY",
                         flow = "FLOW", 
                         product = "PRODUCT", 
                         rowid = "rowid") {
-  assertthat::assert_that(xor(is.null(.iea_file), is.null(text)), 
-                          msg = "need to supply one but not both of .iea_file and text arguments to iea_file_OK")
-  # Create a data frame from the file or the text.
-  if (!is.null(.iea_file)) {
-    DF <- data.table::fread(file = .iea_file, strip.white = FALSE, header = TRUE, sep = ",")
+  
+  if (is.null(.slurped_iea_df)) {
+    DF <- slurp_iea_to_raw_df(.iea_file = .iea_file, 
+                              text = text, 
+                              expected_1st_line_start = expected_1st_line_start, 
+                              expected_2nd_line_start = expected_2nd_line_start, 
+                              expected_simple_start = expected_simple_start)
   } else {
-    # text has been provided, probably for testing purposes.
-    DF <- data.table::fread(text = text, strip.white = FALSE, header = TRUE, sep = ",")
+    DF <- .slurped_iea_df
   }
+  
   # Verify that each country has the same order of flows and products
   flow_product <- DF %>% 
     # Group by country so that adding row numbers is done per-country
@@ -79,24 +221,14 @@ iea_file_OK <- function(.iea_file = NULL,
 
 
 #' Load IEA data from an extended energy balances .csv file
-#'
-#' This function reads an IEA extended energy balances .csv file and
-#' converts it to a data frame with appropriately-labeled columns.
-#' One of `iea_file` or `text` must be specified, but not both.
-#' The first line of `iea_file` or `text`
-#' is expected to start with `expected_start_1st_line`, and
-#' the second line is expected to start with `expected_2nd_line_start`, and
-#' it may have any number of commas appended.
-#' (The extra commas might come from opening and re-saving the file in Excel.)
-#' Alternatively, the file may have a first line of `expected_simple_start`.
-#' If none of these conditions are not met, execution is halted, and
-#' an error message is provided.
-#' Files should have a return character at the end of their final line.
 #' 
-#' This function is designed to work even as more years are added
-#' in columns at the right of `.iea_file`, 
-#' because column names in the output are constructed from the header line(s) of `.iea_file` 
-#' (which contain years and country, flow, product information).
+#' If `.slurped_iea_df` is supplied, arguments `.iea_file` or `text` are ignored. 
+#' If `.slurped_iea_df` is absent, 
+#' either `.iea_file` or `text` are required, and 
+#' the helper function `slurp_iea_to_raw_df()` is called internally 
+#' to load a raw data frame of data.
+#' 
+#' Next, this function does some cleaning of the data.
 #' 
 #' In the IEA's data, some entries in the "FLOW" column are quoted to avoid creating too many columns. 
 #' For example, "Paper, pulp and printing" is quoted in the raw .csv file: 
@@ -152,6 +284,7 @@ iea_file_OK <- function(.iea_file = NULL,
 #'        Note that `expected_simple_start` is sometimes encountered in data supplied by the IEA.
 #'        Furthermore, `expected_simple_start` could be the format of the file when somebody "helpfully" fiddles with 
 #'        the raw data from the IEA.
+#' @param .slurped_iea_df a data frame created by `slurp_iea_to_raw_df()`
 #' @param flow the name of the flow column, entries of which are stripped of leading and trailing white space. Default is "FLOW".
 #' @param missing_data a string that identifies missing data. Default is "`..`".
 #'        Entries of `missing_data` are coded as `0`` in output.
@@ -182,76 +315,25 @@ iea_file_OK <- function(.iea_file = NULL,
 #'                      "World,Production,Hard coal (if no detail),42,43"))
 iea_df <- function(.iea_file = NULL, 
                    text = NULL, 
-                   expected_1st_line_start = ",,TIME", expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
+                   expected_1st_line_start = ",,TIME", 
+                   expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
                    expected_simple_start = expected_2nd_line_start,
+                   .slurped_iea_df = NULL, 
                    flow = "FLOW",
                    missing_data = "..", not_applicable_data = "x", confidential_data = "c", 
                    estimated_year = "E"){
-  assertthat::assert_that(xor(!is.null(.iea_file), !is.null(text)), 
-                          msg = "need to supply only one of .iea_file or text arguments to iea_df")
-  if (!is.null(.iea_file)) {
-    conn <- file(.iea_file, open = "rt") # open file connection
+
+  if (is.null(.slurped_iea_df)) {
+    IEAData_withheader <- slurp_iea_to_raw_df(.iea_file = .iea_file, 
+                                              text = text, 
+                                              expected_1st_line_start = expected_1st_line_start, 
+                                              expected_2nd_line_start = expected_2nd_line_start, 
+                                              expected_simple_start = expected_simple_start)
   } else {
-    # text has been provided, probably for testing purposes.
-    conn <- textConnection(text)
+    IEAData_withheader <- .slurped_iea_df
   }
   
-  # Check if the first line has the simple format
-  first_two_lines <- conn %>% readLines(n = 2)
-  close(conn)
-  assertthat::assert_that(length(first_two_lines) == 2, msg = "couldn't read 2 lines in iea_df")
-  first_line <- first_two_lines[[1]]
-  second_line <- first_two_lines[[2]]
-  # Ensure that we have an expected format for the first line or two in first_two_lines.
-  assertthat::assert_that(first_line %>% startsWith(expected_simple_start) | 
-                            (first_line %>% startsWith(expected_1st_line_start) & second_line %>% startsWith(expected_2nd_line_start)), 
-                          msg = paste0(".iea_file didn't start with '",
-                                       expected_simple_start,
-                                       "' or '",
-                                       expected_1st_line_start,
-                                       "\n",
-                                       expected_2nd_line_start,
-                                       "'."))
-  if (first_line %>% startsWith(expected_simple_start)) {
-    # We have the simple start to the file, so we can assume a one-line header.
-    if (!is.null(.iea_file)) {
-      IEAData_withheader <- data.table::fread(file = .iea_file, header = TRUE, sep = ",")
-    } else {
-      IEAData_withheader <- data.table::fread(text = text, header = TRUE, sep = ",")
-    }
-  } else if (first_line %>% startsWith(expected_1st_line_start) & 
-             second_line %>% startsWith(expected_2nd_line_start)) {
-    # We have the complicated start to the file, so go through some additional work to apply the proper header
-    # to the file.
-    if (second_line %>% endsWith(",")) {
-      # The file may have been opened in Excel and resaved.
-      # When that occurs, many commas are appended to the 2nd line.
-      # Strip out these commas before proceeding further.
-      # The pattern ,*$ means "match any number (*) of commas (,) at the end of the line ($)".
-      second_line <- sub(pattern = ",*$", replacement = "", second_line)
-    }
-    if (!is.null(.iea_file)) {
-      # Slurp the file. This slurping ignores the header, which we know are the first 2 lines.
-      # Note that I'm using data.table::fread at the recommendation of
-      # https://statcompute.wordpress.com/2014/02/11/efficiency-of-importing-large-csv-files-in-r/
-      # which indicates this function is significantly faster than other options.
-      IEAData_noheader <- data.table::fread(file = .iea_file, header = FALSE, sep = ",", skip = 2)
-    } else {
-      IEAData_noheader <- data.table::fread(text = text, header = FALSE, sep = ",", skip = 2)
-    }
-    # At this point, the IEAData_noheader data frame has default (meaningless) column names, V1, V2, V3, ...
-    # Create column names from the header lines that we read previously.
-    # The code here should be robust to adding more years through time,
-    # because it simply replaces the first 3 items of the first line
-    # with appropriate values from the 2nd line.
-    cnames <- gsub(pattern = expected_1st_line_start, replacement = expected_2nd_line_start, first_line) %>%
-      strsplit(",") %>%
-      unlist()
-    IEAData_withheader <- IEAData_noheader %>%
-      magrittr::set_names(cnames)
-  }
-  
-  # At this point, IEAData_withheader may have some column names that end in estimated_year.
+  # At this point, IEAData_withheader may have some column names that end in `estimated_year`.
   # We should delete those columns.
   cnames <- colnames(IEAData_withheader)
   cols_to_delete <- grepl(pattern = paste0(estimated_year, "$"), x = cnames)
@@ -691,90 +773,6 @@ augment_iea_df <- function(.iea_df,
     dplyr::select(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product, unit, dplyr::everything()) %>%
     # Remove the per-country grouping that we created.
     dplyr::ungroup()
-
-
-      
-      
-      
-      
-    #   with_row_nums <- ctry_tbl %>%
-    #     tibble::rownames_to_column(var = .rownum) %>%
-    #     dplyr::mutate(
-    #       !!as.name(.rownum) := as.numeric(!!as.name(.rownum))
-    #     )
-    #   # Find the break point between the Supply side and the Consumption side of the ledger.
-    #   # We'll find the break point by identifying the last supply row in the data frame.
-    #   # We'll take two runs at this.
-    #   # One by looking for "Losses" in the Flow column (the end of the supply side) and
-    #   # the other by looking for "Total final consumption" in the Flow column (the beginning of the consumption side).
-    #   loss_rows <- with_row_nums %>%
-    #     dplyr::filter(!!as.name(flow) == losses)
-    #   if (nrow(loss_rows) > 0) {
-    #     # First, calculate the last row of Losses. last_loss_row is the last row of the supply side of the ledger.
-    #     last_supply_row <- loss_rows %>% magrittr::extract2(.rownum) %>% max()
-    #   } else {
-    #     # Look for the first row that is Total final consumption and subtract one.
-    #     tfc_rows <- with_row_nums %>%
-    #       dplyr::filter(!!as.name(flow) == tfc)
-    #     if (nrow(tfc_rows) > 0) {
-    #       last_supply_row <- tfc_rows %>% magrittr::extract2(.rownum) %>% min() - 1
-    #     } else {
-    #       # Everything failed. Throw an error
-    #       stop(paste("Found neither", losses, "nor", tfc, "in the", flow, "column."))
-    #     }
-    #   }
-    # 
-    #   with_row_nums %>%
-    #     dplyr::mutate(
-    #       !!as.name(ledger_side) := dplyr::case_when(
-    #         !!as.name(.rownum) <= last_supply_row ~ supply,
-    #         TRUE ~ consumption
-    #       )
-    #     )
-    # }) %>%
-    # dplyr::mutate(
-    #   # Now add the Flow.aggregation.point column
-    #   !!as.name(flow_aggregation_point) := dplyr::case_when(
-    #     !!as.name(ledger_side) == supply & !!as.name(flow) %in% tpes_flows ~ tpes,
-    #     !!as.name(ledger_side) == supply & !!as.name(flow) %in% tfc_compare_flows ~ tfc_compare,
-    #     !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), tp_flows_suffix) ~ transformation_processes,
-    #     !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), nstp_flows_suffix) ~ transformation_processes,
-    #     !!as.name(ledger_side) == supply & endsWith(!!as.name(flow), eiou_flows_suffix) ~ eiou,
-    #     !!as.name(ledger_side) == consumption & !!as.name(flow) == tfc ~ NA_character_,
-    #     !!as.name(ledger_side) == consumption & !!as.name(flow) %in% tfc_flows ~ tfc,
-    #     !!as.name(ledger_side) == consumption & !!as.name(flow) %in% industry_flows ~ industry,
-    #     !!as.name(ledger_side) == consumption & !!as.name(flow) %in% transport_flows ~ transport,
-    #     !!as.name(ledger_side) == consumption & !!as.name(flow) %in% other_flows ~ other,
-    #     !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), non_energy_prefix) ~ non_energy,
-    #     !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), electricity_output_flows_prefix) ~ electricity_output,
-    #     !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), heat_output_flows_prefix) ~ heat_output,
-    #     TRUE ~ NA_character_
-    #   ),
-    #   # Now that Flow.aggregation.point is present, we no longer need the (energy),  (transf.), and (transformation) suffixes, so delete them.
-    #   # The string "\s+" means to match any number (+) of whitespace (\\s) characters.
-    #   !!as.name(flow) := dplyr::case_when(
-    #     # Delete the " (transf.)" suffix
-    #     endsWith(!!as.name(flow), tp_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(tp_flows_suffix)), replacement = "", x = !!as.name(flow)),
-    #     # Delete the " (transformation)" suffix
-    #     endsWith(!!as.name(flow), nstp_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(nstp_flows_suffix)), replacement = "", x = !!as.name(flow)),
-    #     # Delete the " (energy)" suffix
-    #     endsWith(!!as.name(flow), eiou_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(eiou_flows_suffix)), replacement = "", x = !!as.name(flow)),
-    #     TRUE ~ !!as.name(flow)
-    #   ),
-    #   # Add method column
-    #   !!method := method_val,
-    #   # Add last stage column
-    #   !!last_stage := last_stage_val,
-    #   # Add energy type column
-    #   !!energy_type := energy_type_val,
-    #   # Add the Unit column
-    #   !!unit := unit_val
-    # ) %>%
-    # # Finally, reorder the columns, remove the .rownum column, and return
-    # dplyr::select(-.rownum) %>%
-    # dplyr::select(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product, unit, dplyr::everything()) %>%
-    # # Remove the grouping that we created.
-    # dplyr::ungroup()
 }
 
 
@@ -783,23 +781,24 @@ augment_iea_df <- function(.iea_df,
 #' Data from the IEA have years in columns, 
 #' but the [tidy data format](https://doi.org/10.18637/jss.v059.i10)
 #' requires one row for each datum.
-#' This function uses [tidyr::gather()] to 
+#' This function uses `tidyr::gather()` to 
 #' make an IEA data frame tidy.
 #' 
-#' Default argument values assume that [rename_iea_df_cols()] has been called on `.iea_df`.
+#' Default argument values assume that `rename_iea_df_cols()` has been called on `.iea_df`.
 #'
-#' @param .iea_df a IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
-#' @param year the name of the year column created in `.iea_df` by this function. (Default is "`Year`".)
-#' @param method the name of the method column created in `.iea_df` by this function. (Default is "`Method`".)
-#' @param last_stage the name of the last stage column created in `.iea_df` by this function. (Default is "`Last.stage`".)
-#' @param e_dot the name of the energy/exergy value column created in `.iea_df` by this function. (Default is "`E.dot`".)
-#' @param country the name of the country column in `.iea_df`. (Default is "`Country`".)
-#' @param ledger_side the name of the ledger side in `.iea_df`. (Default is "`Ledger.side`".)
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.iea_df`. (Default is "`Flow.aggregation.point`".)
-#' @param energy_type the name of the energy type column in `.iea_df`. (Default is "`Energy.type`".)
-#' @param unit the name of the unit column in `.iea_df`. (Default is "`Units`".)
-#' @param flow the name of the flow column in `.iea_df`. (Default is "`Flow`".)
-#' @param product the name of the product column in `.iea_df`. (Default is "`Product`".)
+#' @param .iea_df a IEA data frame whose columns have been renamed by `rename_iea_df_cols()`
+#' @param col_names a list of column names in IEA data frames. Default is `IEATools::iea_cols`.
+#' @param year the name of the year column created in `.iea_df` by this function. (Default is "Year".)
+#' @param method the name of the method column created in `.iea_df` by this function. (Default is "Method".)
+#' @param last_stage the name of the last stage column created in `.iea_df` by this function. (Default is "Last.stage".)
+#' @param e_dot the name of the energy/exergy value column created in `.iea_df` by this function. (Default is "E.dot".)
+#' @param country the name of the country column in `.iea_df`. (Default is "Country".)
+#' @param ledger_side the name of the ledger side in `.iea_df`. (Default is "Ledger.side".)
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.iea_df`. (Default is "Flow.aggregation.point".)
+#' @param energy_type the name of the energy type column in `.iea_df`. (Default is "Energy.type".)
+#' @param unit the name of the unit column in `.iea_df`. (Default is "Units".)
+#' @param flow the name of the flow column in `.iea_df`. (Default is "Flow".)
+#' @param product the name of the product column in `.iea_df`. (Default is "Product".)
 #' @param remove_zeroes a logical indicating whether data points with the value `0` are to be removed from the output. (Default is `TRUE`.)
 #'
 #' @return a tidy version of `.iea_df` containing new columns `year` and `e_dot` and, optionally, `0` values removed
@@ -815,14 +814,18 @@ augment_iea_df <- function(.iea_df,
 #'   augment_iea_df() %>% 
 #'   tidy_iea_df()
 tidy_iea_df <- function(.iea_df, 
-                        year = "Year", e_dot = "E.dot", 
-                        method = "Method", 
-                        last_stage = "Last.stage",
-                        country = "Country", 
-                        ledger_side = "Ledger.side", 
-                        flow_aggregation_point = "Flow.aggregation.point", 
-                        energy_type = "Energy.type", unit = "Unit", 
-                        flow = "Flow", product = "Product",
+                        col_names = IEATools::iea_cols,
+                        year = col_names$year,
+                        e_dot = col_names$e_dot, 
+                        method = col_names$method, 
+                        last_stage = col_names$last_stage,
+                        country = col_names$country, 
+                        ledger_side = col_names$ledger_side, 
+                        flow_aggregation_point = col_names$flow_aggregation_point, 
+                        energy_type = col_names$energy_type,
+                        unit = col_names$unit, 
+                        flow = col_names$flow, 
+                        product = col_names$product,
                         remove_zeroes = TRUE){
   out <- .iea_df %>% 
     # Gather into a tidy data frame.

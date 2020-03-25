@@ -73,7 +73,7 @@ It sorts columns (left-to-right) in the order of energy flow through the energy 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.15</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.16</span>
       </span>
     </div>
 
@@ -154,11 +154,12 @@ It sorts columns (left-to-right) in the order of energy flow through the energy 
   <span class='kw'>eu_product</span> <span class='kw'>=</span> <span class='st'>"Eu.product"</span>,
   <span class='kw'>destination</span> <span class='kw'>=</span> <span class='st'>"Destination"</span>,
   <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>,
-  <span class='kw'>fap_dest_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/fap_flow_iea_order.html'>fap_flow_iea_order</a></span>,
-  <span class='kw'>ef_product_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/product_iea_order.html'>product_iea_order</a></span>,
+  <span class='kw'>fap_dest_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/fap_flows.html'>fap_flows</a></span>,
+  <span class='kw'>ef_product_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/products.html'>products</a></span>,
   <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='st'>"Quantity"</span>,
   <span class='kw'>maximum_values</span> <span class='kw'>=</span> <span class='st'>"Maximum.values"</span>,
-  <span class='kw'>.temp_sort</span> <span class='kw'>=</span> <span class='st'>".fap_flow"</span>
+  <span class='kw'>.temp_sort</span> <span class='kw'>=</span> <span class='st'>".fap_flow"</span>,
+  <span class='kw'>.clean_ef_product</span> <span class='kw'>=</span> <span class='st'>".clean_Ef_product"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -203,7 +204,7 @@ Default is "<code>both</code>".</p></td>
     </tr>
     <tr>
       <th>fap_dest_order</th>
-      <td><p>the desired order for the combination of <code>flow_aggregation_point</code> and <code>destination</code> columns. Default is <code><a href='fap_flow_iea_order.html'>IEATools::fap_flow_iea_order</a></code>.</p></td>
+      <td><p>the desired order for the combination of <code>flow_aggregation_point</code> and <code>destination</code> columns. Default is <code>IEATools::fap_flow_iea_order</code>.</p></td>
     </tr>
     <tr>
       <th>ef_product_order</th>
@@ -220,7 +221,13 @@ Default is "<code>both</code>".</p></td>
     <tr>
       <th>.temp_sort</th>
       <td><p>the name of a temporary column to be added to <code>.fu_allocation_template</code>.
-Default is "<code>.fap_flow</code>".
+Default is ".fap_flow".
+This column must not be present in <code>.fu_allocation_template</code>.</p></td>
+    </tr>
+    <tr>
+      <th>.clean_ef_product</th>
+      <td><p>the name of a temporary column to be added to <code>.fu_allocation_template</code>.
+Default is ".clean_ef_product".
 This column must not be present in <code>.fu_allocation_template</code>.</p></td>
     </tr>
     </table>

@@ -1,7 +1,23 @@
+# IEATools 0.1.16 (2020-03-24)
+
+* Now up to 444 tests, which all pass.
+* `iea_file_OK()` now works on the 2018 IEA extended energy balance data.
+* `sort_iea_df()` now works for specified IEA data frames.
+  Internally, `sort_iea_df()` now uses `despecify_col()`.
+* New function `despecify_col()` removes specification decoration from a column.
+* Now using prepositions in specification strings.
+* Specification strings are now given in a package constant (`specify_notation`).
+  These constants are referred throughout the package.
+* All constants are now lists of character strings
+  instead of vectors
+  to allow `$` referencing of specific list items.
+* Added names to all constants for easier programming.
+
+
 # IEATools 0.1.15 (2020-03-16)
 
 * Now up to 429 tests!
-* Added a `fix_iea_data` vignette.
+* Added a `fix_iea_data` vignette.  See [Fixes for IEA Data](https://matthewheun.github.io/IEATools/articles/fix_iea_data.html).
 * Did preparatory work for future `fix_*` functions, including
   the internal `do_fix()` function which will work for fixing data from any country in any years,
   so long as a replacement data frame is available.

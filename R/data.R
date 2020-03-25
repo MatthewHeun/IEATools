@@ -1,3 +1,15 @@
+#' Specification notation
+#'
+#' A character vector containing the specification notation used in the IEATools package.
+#' Notation for delimiting specification strings is included.
+#' 
+#' @format A character vector
+#' 
+#' @examples
+#' specify_notation
+"specify_notation"
+
+
 #' IEA release years supported by this package
 #'
 #' A numeric vector containing release years for IEA extended energy balance data
@@ -223,6 +235,17 @@
 "other_flows"
 
 
+#' Non-energy flows
+#'
+#' A string vector containing names of `Non-energy` `Flow`s in the IEA extended energy balances database.
+#' 
+#' @format A string vector with 3 entries
+#' 
+#' @examples
+#' non_energy_flows
+"non_energy_flows"
+
+
 #' Aggregation flows
 #'
 #' A string vector containing names of industries whose purpose in IEA extended energy balance `Flow`s is to provide aggregations.
@@ -271,8 +294,8 @@
 #' @format A string vector
 #' 
 #' @examples
-#' country_order
-"country_order"
+#' countries
+"countries"
 
 
 #' Method order
@@ -282,8 +305,8 @@
 #' @format A string vector
 #' 
 #' @examples
-#' method_order
-"method_order"
+#' methods
+"methods"
 
 
 #' Energy type order
@@ -293,8 +316,8 @@
 #' @format A string vector
 #' 
 #' @examples
-#' energy_type_order
-"energy_type_order"
+#' energy_types
+"energy_types"
 
 
 #' Last stage order
@@ -304,8 +327,8 @@
 #' @format A string vector
 #' 
 #' @examples
-#' last_stage_order
-"last_stage_order"
+#' last_stages
+"last_stages"
 
 
 #' IEA order for ledger side
@@ -315,8 +338,8 @@
 #' @format A string vector
 #' 
 #' @examples
-#' ledger_side_iea_order
-"ledger_side_iea_order"
+#' ledger_sides
+"ledger_sides"
 
 
 #' IEA order for combined flow aggregation point and flow 
@@ -326,8 +349,8 @@
 #' @format A string vector
 #' 
 #' @examples
-#' fap_flow_iea_order
-"fap_flow_iea_order"
+#' fap_flows
+"fap_flows"
 
 
 #' IEA order for products
@@ -337,5 +360,5 @@
 #' @format A string vector
 #' 
 #' @examples
-#' product_iea_order
-"product_iea_order"
+#' products
+"products"

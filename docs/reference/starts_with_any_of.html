@@ -70,7 +70,7 @@ starts with any of the strings in target and FALSE otherwise." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.15</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.16</span>
       </span>
     </div>
 
@@ -165,6 +165,9 @@ and contains the result of applying the test to each item in <code>x</code>.</p>
 the return value has the same length as <code>x</code> and contains the result
 of applying the test (does <code>x</code> start with any of <code>target</code>)
 for each item in <code>x</code>.</p>
+<p><code>target</code> can be either a vector or a list.
+To allow <code>target</code> to be a list,
+<code>target</code> is <code><a href='https://rdrr.io/r/base/unlist.html'>unlist()</a></code>ed before use.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>starts_with_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"prefix - suffix"</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"prefix"</span>))</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>starts_with_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"prefix - suffix"</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"c"</span>))</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>starts_with_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"prefix - suffix"</span>, <span class='kw'>target</span> <span class='kw'>=</span> <span class='st'>"suffix"</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>starts_with_any_of</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Production - Crude"</span>, <span class='st'>"Production - NG"</span>,

@@ -20,20 +20,21 @@ check_fu_allocation_template <- function(.DF){
 test_that("openxlsx works as expected", {
   # These are just tests for me to understand the openxlsx package.
   Tidy_iea_df <- load_tidy_iea_df() %>% 
-    specify_all()
+    specify_all() %>% 
+    sort_iea_df()
   # Get a temporary file in which to write two data frames on different tabs.
   f <- tempfile(fileext = ".xslx")
-  # Write the data from both countries, each on its own tab.
-  openxlsx::write.xlsx(list(GHA = Tidy_iea_df %>% 
-                              dplyr::filter(Country == "GHA"), 
-                            ZAF = Tidy_iea_df %>% 
-                              dplyr::filter(Country == "ZAF")),
+  # Write the data from both years, each on its own tab.
+  openxlsx::write.xlsx(list(y1971 = Tidy_iea_df %>% 
+                              dplyr::filter(Year == 1971), 
+                            y2k = Tidy_iea_df %>% 
+                              dplyr::filter(Year == 2000)),
                        file = f)
   # Read the data back in, one sheet at a time.
-  GHA <- openxlsx::read.xlsx(f, sheet = "GHA")
-  ZAF <- openxlsx::read.xlsx(f, sheet = "ZAF")
-  # And recombine into a single Tibble
-  Rebuild <- dplyr::bind_rows(GHA, ZAF) %>% 
+  y1971 <- openxlsx::read.xlsx(f, sheet = "y1971")
+  y2k <- openxlsx::read.xlsx(f, sheet = "y2k")
+  # And recombine into a single tibble
+  Rebuild <- dplyr::bind_rows(y1971, y2k) %>% 
     dplyr::as_tibble()
   # And we should get back what we wrote.
   expect_equal(Rebuild, Tidy_iea_df)
@@ -47,7 +48,8 @@ test_that("openxlsx works as expected", {
 test_that("fu_allocation_template works as expected", {
   Allocation_template <- load_tidy_iea_df() %>% 
     specify_all() %>%
-    fu_allocation_template()
+    fu_allocation_template() %>% 
+    arrange_iea_fu_allocation_template()
 
   # Check rows
   check_fu_allocation_template(Allocation_template)

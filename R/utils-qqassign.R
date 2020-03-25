@@ -1,4 +1,4 @@
-#' Pipe operator
+#' Assignment
 #'
 #' See \code{rlang::\link[rlang]{:=}} for details.
 #'

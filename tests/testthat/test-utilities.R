@@ -9,9 +9,13 @@ test_that("starts_with_any_of() works properly", {
   expect_equal(starts_with_any_of(x = c("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
                                   target = c("Production", "Imports")),
                c(TRUE, TRUE, FALSE, FALSE))
-  # Does it also work with lists?
+  # Does it also work when x is a list?
   expect_equal(starts_with_any_of(x = list("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
                                   target = c("Production", "Imports")),
+               c(TRUE, TRUE, FALSE, FALSE))
+  # Does it work when target is also a list? 
+  expect_equal(starts_with_any_of(x = list("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
+                                  target = list("Production", "Imports")),
                c(TRUE, TRUE, FALSE, FALSE))
 })
 
@@ -214,6 +218,38 @@ test_that("sorting a tidy IEA data frame works as expected", {
   expect_equal(sorted_wide$Country[[num_rows]], "ZAF")
   expect_equal(sorted_wide$Flow.aggregation.point[[num_rows]], "Non-energy use")
   expect_equal(sorted_wide$Product[[num_rows]], "Paraffin waxes")
+})
+
+
+test_that("sorting an IEA DF does the right thing with Non-energy flows", {
+  tidy <- load_tidy_iea_df() # Unsorted
+  tidy1971 <- tidy %>% 
+    dplyr::filter(Year == 1971)
+  expect_equal(sort_iea_df(tidy1971), tidy1971)
+  expect_equal(sort_iea_df(tidy), tidy)
+})
+
+
+test_that("sorting works on a specified IEA data frame", {
+  # Make sure that the initially-loaded data frame has sorting as expected.
+  loaded <- load_tidy_iea_df()
+  expect_equal(loaded$Flow[[1]], IEATools::tpes_flows$production)
+  expect_equal(loaded$Flow[[nrow(loaded)]], IEATools::non_energy_flows$non_energy_use_insustry_transformation_energy)
+  
+  # Sort the data frame and make sure everything is still in the right place.
+  sorted_loaded <- sort_iea_df(loaded)
+  expect_equal(sorted_loaded$Flow[[1]], IEATools::tpes_flows$production)
+  expect_equal(sorted_loaded$Flow[[nrow(sorted_loaded)]], IEATools::non_energy_flows$non_energy_use_insustry_transformation_energy)
+  
+  # Now specify the data frame and make sure sorting still works.
+  sorted_specified <- loaded %>% 
+    specify_all() %>% 
+    sort_iea_df()
+  expect_equal(sorted_specified$Flow[[1]], paste0("Resources", 
+                                                  specify_notation$resources_open, 
+                                                  biofuels_and_waste_products$primary_solid_biofuels, 
+                                                  specify_notation$resources_close))
+  expect_equal(sorted_specified$Flow[[nrow(sorted_specified)]], IEATools::non_energy_flows$non_energy_use_insustry_transformation_energy)
 })
 
 

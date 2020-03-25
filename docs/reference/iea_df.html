@@ -36,18 +36,11 @@
 
 
 <meta property="og:title" content="Load IEA data from an extended energy balances .csv file — iea_df" />
-<meta property="og:description" content="This function reads an IEA extended energy balances .csv file and
-converts it to a data frame with appropriately-labeled columns.
-One of iea_file or text must be specified, but not both.
-The first line of iea_file or text
-is expected to start with expected_start_1st_line, and
-the second line is expected to start with expected_2nd_line_start, and
-it may have any number of commas appended.
-(The extra commas might come from opening and re-saving the file in Excel.)
-Alternatively, the file may have a first line of expected_simple_start.
-If none of these conditions are not met, execution is halted, and
-an error message is provided.
-Files should have a return character at the end of their final line." />
+<meta property="og:description" content="If .slurped_iea_df is supplied, arguments .iea_file or text are ignored.
+If .slurped_iea_df is absent,
+either .iea_file or text are required, and
+the helper function slurp_iea_to_raw_df() is called internally
+to load a raw data frame of data." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -80,7 +73,7 @@ Files should have a return character at the end of their final line." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.15</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.16</span>
       </span>
     </div>
 
@@ -144,18 +137,11 @@ Files should have a return character at the end of their final line." />
     </div>
 
     <div class="ref-description">
-    <p>This function reads an IEA extended energy balances .csv file and
-converts it to a data frame with appropriately-labeled columns.
-One of <code>iea_file</code> or <code>text</code> must be specified, but not both.
-The first line of <code>iea_file</code> or <code>text</code>
-is expected to start with <code>expected_start_1st_line</code>, and
-the second line is expected to start with <code>expected_2nd_line_start</code>, and
-it may have any number of commas appended.
-(The extra commas might come from opening and re-saving the file in Excel.)
-Alternatively, the file may have a first line of <code>expected_simple_start</code>.
-If none of these conditions are not met, execution is halted, and
-an error message is provided.
-Files should have a return character at the end of their final line.</p>
+    <p>If <code>.slurped_iea_df</code> is supplied, arguments <code>.iea_file</code> or <code>text</code> are ignored.
+If <code>.slurped_iea_df</code> is absent,
+either <code>.iea_file</code> or <code>text</code> are required, and
+the helper function <code><a href='slurp_iea_to_raw_df.html'>slurp_iea_to_raw_df()</a></code> is called internally
+to load a raw data frame of data.</p>
     </div>
 
     <pre class="usage"><span class='fu'>iea_df</span>(
@@ -164,6 +150,7 @@ Files should have a return character at the end of their final line.</p>
   <span class='kw'>expected_1st_line_start</span> <span class='kw'>=</span> <span class='st'>",,TIME"</span>,
   <span class='kw'>expected_2nd_line_start</span> <span class='kw'>=</span> <span class='st'>"COUNTRY,FLOW,PRODUCT"</span>,
   <span class='kw'>expected_simple_start</span> <span class='kw'>=</span> <span class='no'>expected_2nd_line_start</span>,
+  <span class='kw'>.slurped_iea_df</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"FLOW"</span>,
   <span class='kw'>missing_data</span> <span class='kw'>=</span> <span class='st'>".."</span>,
   <span class='kw'>not_applicable_data</span> <span class='kw'>=</span> <span class='st'>"x"</span>,
@@ -200,6 +187,10 @@ Furthermore, <code>expected_simple_start</code> could be the format of the file 
 the raw data from the IEA.</p></td>
     </tr>
     <tr>
+      <th>.slurped_iea_df</th>
+      <td><p>a data frame created by <code><a href='slurp_iea_to_raw_df.html'>slurp_iea_to_raw_df()</a></code></p></td>
+    </tr>
+    <tr>
       <th>flow</th>
       <td><p>the name of the flow column, entries of which are stripped of leading and trailing white space. Default is "FLOW".</p></td>
     </tr>
@@ -232,10 +223,7 @@ Data from estimated years are removed from output.</p></td>
     <p>a data frame containing the IEA extended energy balances data</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function is designed to work even as more years are added
-in columns at the right of <code>.iea_file</code>,
-because column names in the output are constructed from the header line(s) of <code>.iea_file</code>
-(which contain years and country, flow, product information).</p>
+    <p>Next, this function does some cleaning of the data.</p>
 <p>In the IEA's data, some entries in the "FLOW" column are quoted to avoid creating too many columns.
 For example, "Paper, pulp and printing" is quoted in the raw .csv file:
 "      Paper, pulp and printing".
