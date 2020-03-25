@@ -1,4 +1,6 @@
-* Now up to 440 tests, which all pass.
+# IEATools 0.1.16 (2020-03-24)
+
+* Now up to 444 tests, which all pass.
 * `iea_file_OK()` now works on the 2018 IEA extended energy balance data.
 * `sort_iea_df()` now works for specified IEA data frames.
   Internally, `sort_iea_df()` now uses `despecify_col()`.

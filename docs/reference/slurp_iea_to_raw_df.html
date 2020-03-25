@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Identify all energy types supplied or consumed by Production, Transformation processes, or Energy industry own use — prod_tp_eiou_energy_carriers • IEATools</title>
+<title>Slurp an IEA extended energy balance data file — slurp_iea_to_raw_df • IEATools</title>
 
 
 <!-- jquery -->
@@ -35,10 +35,20 @@
 
 
 
-<meta property="og:title" content="Identify all energy types supplied or consumed by Production, Transformation processes, or Energy industry own use — prod_tp_eiou_energy_carriers" />
-<meta property="og:description" content="Sometimes, it is helpful to know all types of energy supplied or consumed by Production, Transformation processes, or Energy industry own use.
-This function (optionally) reads an IEA data file or loads an IEA data frame and builds a named list of energy types
-supplied or consumed by Production, Transformation processes, or Energy industry own use." />
+<meta property="og:title" content="Slurp an IEA extended energy balance data file — slurp_iea_to_raw_df" />
+<meta property="og:description" content="This is an internal helper function.
+This function reads an IEA extended energy balances .csv file and
+converts it to a data frame with appropriately-labeled columns.
+One of iea_file or text must be specified, but not both.
+The first line of iea_file or text
+is expected to start with expected_start_1st_line, and
+the second line is expected to start with expected_2nd_line_start, and
+it may have any number of commas appended.
+(The extra commas might come from opening and re-saving the file in Excel.)
+Alternatively, the file may have a first line of expected_simple_start.
+If none of these conditions are not met, execution is halted, and
+an error message is provided.
+Files should have a return character at the end of their final line." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -129,94 +139,86 @@ supplied or consumed by Production, Transformation processes, or Energy industry
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Identify all energy types supplied or consumed by Production, Transformation processes, or Energy industry own use</h1>
+    <h1>Slurp an IEA extended energy balance data file</h1>
     
-    <div class="hidden name"><code>prod_tp_eiou_energy_carriers.Rd</code></div>
+    <div class="hidden name"><code>slurp_iea_to_raw_df.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Sometimes, it is helpful to know all types of energy supplied or consumed by Production, Transformation processes, or Energy industry own use.
-This function (optionally) reads an IEA data file or loads an IEA data frame and builds a named list of energy types
-supplied or consumed by Production, Transformation processes, or Energy industry own use.</p>
+    <p>This is an internal helper function.
+This function reads an IEA extended energy balances .csv file and
+converts it to a data frame with appropriately-labeled columns.
+One of <code>iea_file</code> or <code>text</code> must be specified, but not both.
+The first line of <code>iea_file</code> or <code>text</code>
+is expected to start with <code>expected_start_1st_line</code>, and
+the second line is expected to start with <code>expected_2nd_line_start</code>, and
+it may have any number of commas appended.
+(The extra commas might come from opening and re-saving the file in Excel.)
+Alternatively, the file may have a first line of <code>expected_simple_start</code>.
+If none of these conditions are not met, execution is halted, and
+an error message is provided.
+Files should have a return character at the end of their final line.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>prod_tp_eiou_energy_carriers</span>(
-  <span class='kw'>file_path</span> <span class='kw'>=</span> <span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span>(),
-  <span class='kw'>iea_df</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/IEATools/man/load_tidy_iea_df.html'>load_tidy_iea_df</a></span>(<span class='no'>file_path</span>),
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Consumption"</span>, <span class='st'>"Supply"</span>),
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  <span class='kw'>production</span> <span class='kw'>=</span> <span class='st'>"Production"</span>,
-  <span class='kw'>transformation_processes</span> <span class='kw'>=</span> <span class='st'>"Transformation processes"</span>,
-  <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>,
-  <span class='kw'>stage</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>production</span>, <span class='no'>transformation_processes</span>, <span class='no'>eiou</span>),
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>
+    <pre class="usage"><span class='fu'>slurp_iea_to_raw_df</span>(
+  <span class='kw'>.iea_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>text</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>expected_1st_line_start</span> <span class='kw'>=</span> <span class='st'>",,TIME"</span>,
+  <span class='kw'>expected_2nd_line_start</span> <span class='kw'>=</span> <span class='st'>"COUNTRY,FLOW,PRODUCT"</span>,
+  <span class='kw'>expected_simple_start</span> <span class='kw'>=</span> <span class='no'>expected_2nd_line_start</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>file_path</th>
-      <td><p>the path to the IEA data file (optional)</p></td>
+      <th>.iea_file</th>
+      <td><p>the path to the raw IEA data file for which quality assurance is desired</p></td>
     </tr>
     <tr>
-      <th>iea_df</th>
-      <td><p>a data frame containing IEA data. Default is <code><a href='load_tidy_iea_df.html'>IEATools::load_tidy_iea_df(file_path)</a></code>.</p></td>
+      <th>text</th>
+      <td><p>a string containing text to be parsed as an IEA file.</p></td>
     </tr>
     <tr>
-      <th>side</th>
-      <td><p>refers to the "<code>Consumptiion</code>" or "<code>Supply</code>" side of Production, Transformation processes, or Energy industry own use.
-One of "<code>Consumption</code>" or "<code>Supply</code>". Default is "<code>Consumption</code>".</p></td>
+      <th>expected_1st_line_start</th>
+      <td><p>the expected start of the first line of <code>iea_file</code>. Default is ",,TIME".</p></td>
     </tr>
     <tr>
-      <th>flow_aggregation_point</th>
-      <td><p>the flow aggregation point column in <code>iea_df</code>. Default is "<code>Flow.aggregation.point</code>".</p></td>
+      <th>expected_2nd_line_start</th>
+      <td><p>the expected start of the second line of <code>iea_file</code>. Default is "COUNTRY,FLOW,PRODUCT".</p></td>
     </tr>
     <tr>
-      <th>production</th>
-      <td><p>the string indicating the production flow. Default is "<code>Production</code>".</p></td>
-    </tr>
-    <tr>
-      <th>transformation_processes</th>
-      <td><p>the string indicating the transformation process stage. Default is "<code>Transformation processes</code>".</p></td>
-    </tr>
-    <tr>
-      <th>eiou</th>
-      <td><p>the string indicating the energy industry own use flow. Default is "<code>Energy industry own use</code>".</p></td>
-    </tr>
-    <tr>
-      <th>stage</th>
-      <td><p>the string indicating the stage for the analysis. One of <code>production</code>, <code>transformation_processes</code>, or <code>eiou</code>.
-Default is <code>production</code>.</p></td>
-    </tr>
-    <tr>
-      <th>e_dot</th>
-      <td><p>the energy flow rate column in <code>iea_df</code>.  Default is "<code>E.dot</code>".</p></td>
-    </tr>
-    <tr>
-      <th>flow</th>
-      <td><p>the flow column in <code>iea_df</code>. Default is "<code>Flow</code>".</p></td>
-    </tr>
-    <tr>
-      <th>product</th>
-      <td><p>the product column in <code>iea_df</code>.  Default is "<code>Product</code>".</p></td>
+      <th>expected_simple_start</th>
+      <td><p>the expected starting of the first line of <code>iea_file</code>. Default is the value of <code>expected_2nd_line_start</code>.
+Note that <code>expected_simple_start</code> is sometimes encountered in data supplied by the IEA.
+Furthermore, <code>expected_simple_start</code> could be the format of the file when somebody "helpfully" fiddles with
+the raw data from the IEA.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list of string vectors</p>
+    <p>a raw data frame of IEA extended energy balance data with appropriate column titles</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The names in the returned list are the Production, Transformation processes, or Energy industry own use industries in <code>iea_df</code>.
-The items in the returned list are vectors of energy types produced or consumed by the corresponding industries.</p>
+    <p>This function is designed to work even as more years are added
+in columns at the right of <code>.iea_file</code>,
+because column names in the output are constructed from the header line(s) of <code>.iea_file</code>
+(which contain years and country, flow, product information).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>prod_tp_eiou_energy_carriers</span>()</div><div class='output co'>#&gt; named list()
-#&gt; attr(,"ptype")
-#&gt; character(0)</div></pre>
+    <pre class="examples"><div class='input'><span class='co'># 2018 and earlier file format</span>
+<span class='fu'>slurp_iea_to_raw_df</span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>",,TIME,1960,1961\n"</span>,
+                     <span class='st'>"COUNTRY,FLOW,PRODUCT\n"</span>,
+                     <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))</div><div class='output co'>#&gt;    COUNTRY       FLOW                  PRODUCT 1960 1961
+#&gt; 1:   World Production Hard coal (if no detail)   42   43</div><div class='input'><span class='co'># With extra commas on the 2nd line</span>
+<span class='fu'>slurp_iea_to_raw_df</span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>",,TIME,1960,1961\n"</span>,
+                     <span class='st'>"COUNTRY,FLOW,PRODUCT,,,\n"</span>,
+                     <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))</div><div class='output co'>#&gt;    COUNTRY       FLOW                  PRODUCT 1960 1961
+#&gt; 1:   World Production Hard coal (if no detail)   42   43</div><div class='input'><span class='co'># With a clean first line (2019 file format)</span>
+<span class='fu'>slurp_iea_to_raw_df</span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"COUNTRY,FLOW,PRODUCT,1960,1961\n"</span>,
+                     <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))</div><div class='output co'>#&gt;    COUNTRY       FLOW                  PRODUCT 1960 1961
+#&gt; 1:   World Production Hard coal (if no detail)   42   43</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
