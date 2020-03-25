@@ -125,11 +125,11 @@ insert_after <- function(x, after = NULL, values, .after_all = TRUE, .equals_fun
 #' In societal exergy analysis, converting heat to exergy requires knowledge 
 #' of the temperature of that heat.
 #' This function converts heat types (e.g., "`HTH.600.C`")
-#' to temperatures by extracting the temperature from the middle of the string.
+#' to temperatures by extracting the temperature (in Kelvin) from the middle of the string.
 #' 
 #' It is assumed that the heat type has the following structure: 
 #' * a single letter (typically, "H", "M", or "L" for high, medium, or low, although the character doesn't matter)
-#' * the string "TH." (for "temperature heat"), 
+#' * the string "TH." or "TC." (for "temperature heating" or "temperature cooling"), 
 #' * the temperature value, and
 #' * unit (one of ".C", ".F", ".R", or ".K", indicating ° Celsius, ° Fahrenheit, rankine, or kelvin, respectively).
 #' 
@@ -181,10 +181,10 @@ extract_TK <- function(heat_types, sep = "."){
     # Be careful with literal dots in the following regex code.
     sep <- paste0("\\", sep)
   }
-  # Eliminate the leading *TH<sep>
-  # If the string does not start with *TH<sep>, the leading characters will not be eliminated, and
+  # Eliminate the leading *TH<sep> or *TC<sep>
+  # If the string does not start with *TH<sep> or *TC<sep>, the leading characters will not be eliminated, and
   # an error will occur later in this function.
-  temporary <- sub(pattern = paste0("^.TH", sep), replacement = "", x = heat_types)
+  temporary <- sub(pattern = paste0("(^.TH|^.TC)", sep), replacement = "", x = heat_types)
   # Grab the temperatures from the strings, which are everything before the last sep and unit character.
   # So delete everything including and after the last sep.
   temperature_strings <- sub(pattern = paste0(sep, ".$"), replacement = "", x = temporary)

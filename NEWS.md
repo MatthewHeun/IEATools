@@ -1,3 +1,10 @@
+# IEATools 0.1.17 (2020-03-25)
+
+* `extract_TK()` now accepts strings 
+  formulated for "cooling" in addition to "heating."
+  Thus, "LTC.15.C" is now accepted and parses correctly.
+
+
 # IEATools 0.1.16 (2020-03-24)
 
 * Now up to 444 tests, which all pass.
