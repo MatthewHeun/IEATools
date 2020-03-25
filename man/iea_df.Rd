@@ -7,10 +7,10 @@
 iea_df(
   .iea_file = NULL,
   text = NULL,
-  .slurped_iea_df = NULL,
   expected_1st_line_start = ",,TIME",
   expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT",
   expected_simple_start = expected_2nd_line_start,
+  .slurped_iea_df = NULL,
   flow = "FLOW",
   missing_data = "..",
   not_applicable_data = "x",
@@ -25,8 +25,6 @@ Default is the path to a sample IEA file provided in this package.}
 \item{text}{a character string that can be parsed as IEA extended energy balances.
 (This argument is useful for testing.)}
 
-\item{.slurped_iea_df}{a data frame created by \code{slurp_iea_to_raw_df()}}
-
 \item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is ",,TIME".}
 
 \item{expected_2nd_line_start}{the expected start of the second line of \code{iea_file}. Default is "COUNTRY,FLOW,PRODUCT".}
@@ -35,6 +33,8 @@ Default is the path to a sample IEA file provided in this package.}
 Note that \code{expected_simple_start} is sometimes encountered in data supplied by the IEA.
 Furthermore, \code{expected_simple_start} could be the format of the file when somebody "helpfully" fiddles with
 the raw data from the IEA.}
+
+\item{.slurped_iea_df}{a data frame created by \code{slurp_iea_to_raw_df()}}
 
 \item{flow}{the name of the flow column, entries of which are stripped of leading and trailing white space. Default is "FLOW".}
 

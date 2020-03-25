@@ -22,6 +22,17 @@ iea_file_OK(
 
 \item{text}{a string containing text to be parsed as an IEA file.}
 
+\item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is ",,TIME".}
+
+\item{expected_2nd_line_start}{the expected start of the second line of \code{iea_file}. Default is "COUNTRY,FLOW,PRODUCT".}
+
+\item{expected_simple_start}{the expected starting of the first line of \code{iea_file}. Default is the value of \code{expected_2nd_line_start}.
+Note that \code{expected_simple_start} is sometimes encountered in data supplied by the IEA.
+Furthermore, \code{expected_simple_start} could be the format of the file when somebody "helpfully" fiddles with
+the raw data from the IEA.}
+
+\item{.slurped_iea_df}{a data frame created by \code{slurp_iea_to_raw_df()}}
+
 \item{country}{the name of the country column. Default is "COUNTRY".}
 
 \item{flow}{the name of the flow column. Default is "FLOW".}

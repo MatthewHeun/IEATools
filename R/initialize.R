@@ -19,11 +19,14 @@
 #' because column names in the output are constructed from the header line(s) of `.iea_file` 
 #' (which contain years and country, flow, product information).
 #'
-#' @param .iea_file 
-#' @param text 
-#' @param expected_1st_line_start 
-#' @param expected_2nd_line_start 
-#' @param expected_simple_start 
+#' @param .iea_file the path to the raw IEA data file for which quality assurance is desired
+#' @param text a string containing text to be parsed as an IEA file.
+#' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is ",,TIME".
+#' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "COUNTRY,FLOW,PRODUCT".
+#' @param expected_simple_start the expected starting of the first line of `iea_file`. Default is the value of `expected_2nd_line_start`.
+#'        Note that `expected_simple_start` is sometimes encountered in data supplied by the IEA.
+#'        Furthermore, `expected_simple_start` could be the format of the file when somebody "helpfully" fiddles with 
+#'        the raw data from the IEA.
 #'
 #' @return a raw data frame of IEA extended energy balance data with appropriate column titles
 #' 
@@ -140,6 +143,13 @@ slurp_iea_to_raw_df <- function(.iea_file = NULL,
 #'
 #' @param .iea_file the path to the raw IEA data file for which quality assurance is desired
 #' @param text a string containing text to be parsed as an IEA file.
+#' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is ",,TIME".
+#' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "COUNTRY,FLOW,PRODUCT".
+#' @param expected_simple_start the expected starting of the first line of `iea_file`. Default is the value of `expected_2nd_line_start`.
+#'        Note that `expected_simple_start` is sometimes encountered in data supplied by the IEA.
+#'        Furthermore, `expected_simple_start` could be the format of the file when somebody "helpfully" fiddles with 
+#'        the raw data from the IEA.
+#' @param .slurped_iea_df a data frame created by `slurp_iea_to_raw_df()`
 #' @param country the name of the country column. Default is "COUNTRY".
 #' @param flow the name of the flow column. Default is "FLOW".
 #' @param product the name of the product column. Default is "PRODUCT".
@@ -264,7 +274,6 @@ iea_file_OK <- function(.iea_file = NULL,
 #' To further prepare the data frame for use, call [augment_iea_df()],
 #' passing the output of this function to the `.iea_df` argument of [augment_iea_df()].
 #'
-#' @param .slurped_iea_df a data frame created by `slurp_iea_to_raw_df()`
 #' @param .iea_file a string containing the path to a .csv file of extended energy balances from the IEA.
 #'        Default is the path to a sample IEA file provided in this package.
 #' @param text a character string that can be parsed as IEA extended energy balances. 
@@ -275,6 +284,7 @@ iea_file_OK <- function(.iea_file = NULL,
 #'        Note that `expected_simple_start` is sometimes encountered in data supplied by the IEA.
 #'        Furthermore, `expected_simple_start` could be the format of the file when somebody "helpfully" fiddles with 
 #'        the raw data from the IEA.
+#' @param .slurped_iea_df a data frame created by `slurp_iea_to_raw_df()`
 #' @param flow the name of the flow column, entries of which are stripped of leading and trailing white space. Default is "FLOW".
 #' @param missing_data a string that identifies missing data. Default is "`..`".
 #'        Entries of `missing_data` are coded as `0`` in output.
@@ -305,10 +315,10 @@ iea_file_OK <- function(.iea_file = NULL,
 #'                      "World,Production,Hard coal (if no detail),42,43"))
 iea_df <- function(.iea_file = NULL, 
                    text = NULL, 
-                   .slurped_iea_df = NULL, 
                    expected_1st_line_start = ",,TIME", 
                    expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
                    expected_simple_start = expected_2nd_line_start,
+                   .slurped_iea_df = NULL, 
                    flow = "FLOW",
                    missing_data = "..", not_applicable_data = "x", confidential_data = "c", 
                    estimated_year = "E"){
