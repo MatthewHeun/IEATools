@@ -13,13 +13,16 @@ test_that("iea_file_OK works", {
   close(conn)
 
   # Mess with the file and expect an error, because rows are no longer identical from one country to another.
-  f1 <- data.table::fread(file = f, header = TRUE, strip.white = FALSE, sep = ",")
+  # f1 <- data.table::fread(file = f, header = TRUE, strip.white = FALSE, sep = ",")
+  f1 <- read.csv(file = f, header = TRUE, strip.white = FALSE, sep = ",")
   f2 <- f1
+  # Switch Hard coal and Brown coal in the PRODUCT column.
   f2[[1, 3]] <- f1[[2, 3]]
   f2[[2, 3]] <- f1[[1, 3]]
-  # Write to a temporary file as a .csv file
+  # Write the messed-up data to a temporary file as a .csv file
   tf <- tempfile(pattern = "iea_file_OK_test", fileext = ".csv")
-  write.csv(f2, file = tf)
+  write.csv(f2, file = tf, row.names = FALSE)
+  # Read it back to confirm that it is messed up
   expect_false(iea_file_OK(tf))
   # Delete file if it exists
   if (file.exists(tf)) {
@@ -31,7 +34,7 @@ test_that("iea_df works", {
   # Test with only 1 line
   expect_error(iea_df(text = "abc"), "couldn't read 2 lines in iea_df")
   # Test with 2 lines but of wrong style.
-  expect_error(iea_df(text = "abc\n123"), ".iea_file didn't start with 'COUNTRY,FLOW,PRODUCT' or ',,TIME\nCOUNTRY,FLOW,PRODUCT'.")
+  expect_error(iea_df(text = "abc\n123"), ".iea_file must start with first line: 'COUNTRY,FLOW,PRODUCT', or first line: ',,TIME' and second line: 'COUNTRY,FLOW,PRODUCT'.  Instead, found first line: 'abc', second line: '123'.")
   # Test with text that is expected to parse correctly.
   # This is the format of the original .csv files.
   expectedDF <- data.frame(COUNTRY = "World", FLOW = "Production", PRODUCT = "Hard coal (if no detail)", `1960` = 42, `1961` = 43, 
