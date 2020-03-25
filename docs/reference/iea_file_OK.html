@@ -71,7 +71,7 @@ This function performs some validation tests on .iea_file." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.15</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.16</span>
       </span>
     </div>
 
@@ -143,6 +143,10 @@ This function performs some validation tests on <code>.iea_file</code>.</p>
     <pre class="usage"><span class='fu'>iea_file_OK</span>(
   <span class='kw'>.iea_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>text</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>expected_1st_line_start</span> <span class='kw'>=</span> <span class='st'>",,TIME"</span>,
+  <span class='kw'>expected_2nd_line_start</span> <span class='kw'>=</span> <span class='st'>"COUNTRY,FLOW,PRODUCT"</span>,
+  <span class='kw'>expected_simple_start</span> <span class='kw'>=</span> <span class='no'>expected_2nd_line_start</span>,
+  <span class='kw'>.slurped_iea_df</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"COUNTRY"</span>,
   <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"FLOW"</span>,
   <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"PRODUCT"</span>,
@@ -159,6 +163,25 @@ This function performs some validation tests on <code>.iea_file</code>.</p>
     <tr>
       <th>text</th>
       <td><p>a string containing text to be parsed as an IEA file.</p></td>
+    </tr>
+    <tr>
+      <th>expected_1st_line_start</th>
+      <td><p>the expected start of the first line of <code>iea_file</code>. Default is ",,TIME".</p></td>
+    </tr>
+    <tr>
+      <th>expected_2nd_line_start</th>
+      <td><p>the expected start of the second line of <code>iea_file</code>. Default is "COUNTRY,FLOW,PRODUCT".</p></td>
+    </tr>
+    <tr>
+      <th>expected_simple_start</th>
+      <td><p>the expected starting of the first line of <code>iea_file</code>. Default is the value of <code>expected_2nd_line_start</code>.
+Note that <code>expected_simple_start</code> is sometimes encountered in data supplied by the IEA.
+Furthermore, <code>expected_simple_start</code> could be the format of the file when somebody "helpfully" fiddles with
+the raw data from the IEA.</p></td>
+    </tr>
+    <tr>
+      <th>.slurped_iea_df</th>
+      <td><p>a data frame created by <code><a href='slurp_iea_to_raw_df.html'>slurp_iea_to_raw_df()</a></code></p></td>
     </tr>
     <tr>
       <th>country</th>
@@ -189,6 +212,11 @@ The approach is to add a per-country row number column to the data frame and del
 Then, the resulting data frame is queried for duplicate row numbers.
 If none are found, the function returns the data frame read from the file.</p>
 <p>Note that <code>.iea_file</code> is read internally with <code><a href='https://Rdatatable.gitlab.io/data.table/reference/fread.html'>data.table::fread()</a></code> <em>without</em> stripping white space.</p>
+<p>If <code>.slurped_iea_df</code> is supplied, arguments <code>.iea_file</code> or <code>text</code> are ignored.
+If <code>.slurped_iea_df</code> is absent,
+either <code>.iea_file</code> or <code>text</code> are required, and
+the helper function <code><a href='slurp_iea_to_raw_df.html'>slurp_iea_to_raw_df()</a></code> is called internally
+to load a raw data frame of data.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>magrittr</span>)</div><div class='output co'>#&gt; <span class='message'></span>

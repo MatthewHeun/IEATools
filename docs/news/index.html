@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.15</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.16</span>
       </span>
     </div>
 
@@ -129,6 +129,22 @@
       
     </div>
 
+    <div id="ieatools-0116-2020-03-24" class="section level1">
+<h1 class="page-header">
+<a href="#ieatools-0116-2020-03-24" class="anchor"></a>IEATools 0.1.16 (2020-03-24)</h1>
+<ul>
+<li>Now up to 444 tests, which all pass.</li>
+<li>
+<code><a href="../reference/iea_file_OK.html">iea_file_OK()</a></code> now works on the 2018 IEA extended energy balance data.</li>
+<li>
+<code><a href="../reference/sort_iea_df.html">sort_iea_df()</a></code> now works for specified IEA data frames. Internally, <code><a href="../reference/sort_iea_df.html">sort_iea_df()</a></code> now uses <code><a href="../reference/despecify_col.html">despecify_col()</a></code>.</li>
+<li>New function <code><a href="../reference/despecify_col.html">despecify_col()</a></code> removes specification decoration from a column.</li>
+<li>Now using prepositions in specification strings.</li>
+<li>Specification strings are now given in a package constant (<code>specify_notation</code>). These constants are referred throughout the package.</li>
+<li>All constants are now lists of character strings instead of vectors to allow <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> referencing of specific list items.</li>
+<li>Added names to all constants for easier programming.</li>
+</ul>
+</div>
     <div id="ieatools-0115-2020-03-16" class="section level1">
 <h1 class="page-header">
 <a href="#ieatools-0115-2020-03-16" class="anchor"></a>IEATools 0.1.15 (2020-03-16)</h1>
@@ -302,6 +318,7 @@ For example, “Hard coal (if no detail)” –&gt; “Hard coal (if no detail) 
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#ieatools-0116-2020-03-24">0.1.16</a></li>
         <li><a href="#ieatools-0115-2020-03-16">0.1.15</a></li>
         <li><a href="#ieatools-0114-2020-03-11">0.1.14</a></li>
         <li><a href="#ieatools-0113-2020-03-08">0.1.13</a></li>
