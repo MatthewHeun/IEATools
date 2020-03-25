@@ -90,7 +90,7 @@
       <h1>IEATools</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-03-24</h4>
+            <h4 class="date">2020-03-25</h4>
       
       
       <div class="hidden name"><code>IEATools.Rmd</code></div>
@@ -421,7 +421,7 @@ IEA extended energy balance data format.
 <span id="cb13-50"><a href="#cb13-50"></a><span class="co">#&gt; # … with 392 more rows</span></span></code></pre></div>
 <p><code><a href="../reference/sort_iea_df.html">sort_iea_df()</a></code> also works with wide data frames in which years are spread to the right.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>  <span class="co"># Pivoting the data results in unconventional ordering</span></span>
-<span id="cb14-2"><a href="#cb14-2"></a>  Unsorted_wide &lt;-<span class="st"> </span>Tidy_IEA_df <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/tidyr/man/pivot_wider.html">pivot_wider</a></span>(<span class="dt">names_from =</span> Year, <span class="dt">values_from =</span> E.dot)</span>
+<span id="cb14-2"><a href="#cb14-2"></a>  Unsorted_wide &lt;-<span class="st"> </span>Tidy_IEA_df <span class="op">%&gt;%</span><span class="st"> </span>tidyr<span class="op">::</span><span class="kw"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span>(<span class="dt">names_from =</span> Year, <span class="dt">values_from =</span> E.dot)</span>
 <span id="cb14-3"><a href="#cb14-3"></a>  Unsorted_wide <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(Flow, Product, <span class="st">`</span><span class="dt">1971</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2000</span><span class="st">`</span>)</span>
 <span id="cb14-4"><a href="#cb14-4"></a><span class="co">#&gt; # A tibble: 293 x 4</span></span>
 <span id="cb14-5"><a href="#cb14-5"></a><span class="co">#&gt;    Flow       Product                                `1971`  `2000`</span></span>
