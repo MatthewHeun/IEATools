@@ -3,8 +3,12 @@ context("Initialize IEA data")
 ###########################################################
 
 test_that("iea_file_OK works", {
+  # Try from a file
   f <- sample_iea_data_path()
   expect_true(iea_file_OK(f))
+  # Try after slurping
+  df <- slurp_iea_to_raw_df(f)
+  expect_true(iea_file_OK(.slurped_iea_df = df))
   
   # Read the file as text and use the text argument.
   conn <- file(f, open = "rt") # open file connection
@@ -62,6 +66,13 @@ test_that("iea_df works", {
   expect_equal(nrow(IEADF2), 14688)
   expect_equal(ncol(IEADF2), 5)
   expect_equal(colnames(IEADF2)[[5]], "2000")
+  # Test that it works with a slurped df
+  slurped <- sample_iea_data_path() %>% 
+    slurp_iea_to_raw_df()
+  IEADF3 <- iea_df(.slurped_iea_df = slurped)
+  expect_equal(nrow(IEADF3), 14688)
+  expect_equal(ncol(IEADF3), 5)
+  expect_equal(colnames(IEADF3)[[5]], "2000")
 })
 
 test_that("iea_df works after first checking the file with iea_file_OK", {
