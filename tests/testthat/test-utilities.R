@@ -70,6 +70,11 @@ test_that("extract_TK() works as expected", {
   
   # Try with malformed unit string
   expect_true(is.na(extract_TK("HTH.600.CC")))
+  
+  # Try with LTC.15.C.  I.e., we are now allowing cooling.
+  expect_equal(extract_TK("LTC.15.C"), 15 + 273.15)
+  expect_true(is.na(extract_TK("LTW.15.C")))
+  expect_equal(extract_TK("HTC.-110.C"), -110 + 273.15)
 })
 
 test_that("carnot_efficiency works as expected", {

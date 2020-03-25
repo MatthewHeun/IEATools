@@ -39,7 +39,7 @@
 <meta property="og:description" content="In societal exergy analysis, converting heat to exergy requires knowledge
 of the temperature of that heat.
 This function converts heat types (e.g., &quot;HTH.600.C&quot;)
-to temperatures by extracting the temperature from the middle of the string." />
+to temperatures by extracting the temperature (in Kelvin) from the middle of the string." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -139,7 +139,7 @@ to temperatures by extracting the temperature from the middle of the string." />
     <p>In societal exergy analysis, converting heat to exergy requires knowledge
 of the temperature of that heat.
 This function converts heat types (e.g., "<code>HTH.600.C</code>")
-to temperatures by extracting the temperature from the middle of the string.</p>
+to temperatures by extracting the temperature (in Kelvin) from the middle of the string.</p>
     </div>
 
     <pre class="usage"><span class='fu'>extract_TK</span>(<span class='no'>heat_types</span>, <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>"."</span>)</pre>
@@ -164,7 +164,7 @@ to temperatures by extracting the temperature from the middle of the string.</p>
 
     <p>It is assumed that the heat type has the following structure:</p><ul>
 <li><p>a single letter (typically, "H", "M", or "L" for high, medium, or low, although the character doesn't matter)</p></li>
-<li><p>the string "TH." (for "temperature heat"),</p></li>
+<li><p>the string "TH." or "TC." (for "temperature heating" or "temperature cooling"),</p></li>
 <li><p>the temperature value, and</p></li>
 <li><p>unit (one of ".C", ".F", ".R", or ".K", indicating ° Celsius, ° Fahrenheit, rankine, or kelvin, respectively).</p></li>
 </ul>
