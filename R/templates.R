@@ -206,19 +206,19 @@ fu_allocation_template <- function(.tidy_iea_df,
 #' * allocations (C_x rows).
 #'
 #' @param .fu_allocation_template the final-to-useful allocation template created by `fu_allocation_template()`
-#' @param rowcol one of "`both`", "`row`", or "`col`" to indicate whether rows, columns, or both should be arranged.
-#'        Default is "`both`". 
-#' @param ledger_side the ledger side column in `.fu_allocation_template`. Default is "`Ledger.side`".
-#' @param flow_aggregation_point the flow aggregation point column in `.fu_allocation_template`. Default is "`Flow.aggregation.point`".
-#' @param ef_product the name of the final energy column in `.fu_allocation_template`. Default is "`Ef.product`".
-#' @param machine the name of the machine column in `.fu_allocation_template`. Default is "`Machine`".
-#' @param eu_product the name of the useful energy product column in `.fu_allocation_template`. Default is "`Eu.product`".
-#' @param destination the name of the destination column in `.fu_allocation_template`. Default is "`Destination`".
-#' @param unit the name of the unit in `.fu_allocation_template`. Default is "`Unit`".
+#' @param rowcol one of "both", "row", or "col" to indicate whether rows, columns, or both should be arranged.
+#'        Default is "both". 
+#' @param ledger_side the ledger side column in `.fu_allocation_template`. Default is "Ledger.side".
+#' @param flow_aggregation_point the flow aggregation point column in `.fu_allocation_template`. Default is "Flow.aggregation.point".
+#' @param ef_product the name of the final energy column in `.fu_allocation_template`. Default is "Ef.product".
+#' @param machine the name of the machine column in `.fu_allocation_template`. Default is "Machine".
+#' @param eu_product the name of the useful energy product column in `.fu_allocation_template`. Default is "Eu.product".
+#' @param destination the name of the destination column in `.fu_allocation_template`. Default is "Destination".
+#' @param unit the name of the unit in `.fu_allocation_template`. Default is "Unit".
 #' @param fap_dest_order the desired order for the combination of `flow_aggregation_point` and `destination` columns. Default is `IEATools::fap_flow_iea_order`.
-#' @param ef_product_order the desired order for final energy products in `.fu_allocation_template`. Default is "`Ef.product`".
-#' @param quantity the name of the quantity column in `.fu_allocation_template`. Default is "`Quantity`".
-#' @param maximum_values the name of the maximum value column `.fu_allocation_template`. Default is "`Unit`".
+#' @param ef_product_order the desired order for final energy products in `.fu_allocation_template`. Default is "Ef.product".
+#' @param quantity the name of the quantity column in `.fu_allocation_template`. Default is "Quantity".
+#' @param maximum_values the name of the maximum value column `.fu_allocation_template`. Default is "Unit".
 #' @param .temp_sort the name of a temporary column to be added to `.fu_allocation_template`. 
 #'        Default is ".fap_flow".
 #'        This column must not be present in `.fu_allocation_template`.
