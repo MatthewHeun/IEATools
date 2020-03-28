@@ -25,33 +25,33 @@ prep_psut(
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame that has been specified with \code{\link[=specify_all]{specify_all()}}.}
 
-\item{ledger_side}{the name of the ledger side column. Default is "\code{Ledger.side}".}
+\item{ledger_side}{the name of the ledger side column. Default is "Ledger.side".}
 
-\item{supply}{the string identifying the supply side of the ledger. Default is "\code{Supply}".}
+\item{supply}{the string identifying the supply side of the ledger. Default is "Supply".}
 
-\item{consumption}{the string identifying the consumption side of the ledger. Default is "\code{Consumption}".}
+\item{consumption}{the string identifying the consumption side of the ledger. Default is "Consumption".}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
 
-\item{flow}{the name of the flow column. Default is "\code{Flow}".}
+\item{flow}{the name of the flow column. Default is "Flow".}
 
-\item{product}{the name of the product column. Default is "\code{Product}".}
+\item{product}{the name of the product column. Default is "Product".}
 
-\item{unit}{the name of the unit column. Default is "\code{Unit}".}
+\item{unit}{the name of the unit column. Default is "Unit".}
 
 \item{e_dot}{the name of the energy rate column. Default is "E.dot".}
 
-\item{matnames}{the name of the matrix names column added by this function. Default is "\code{matnames}".}
+\item{matnames}{the name of the matrix names column added by this function. Default is "matnames".}
 
-\item{matvals}{the name of the matrix value column added by this function. Default is "\code{matvals}".}
+\item{matvals}{the name of the matrix value column added by this function. Default is "matvals".}
 
-\item{rownames}{the name of the rownames column passed to \code{collapse_to_tidy_psut()}. Default is "\code{rownames}".}
+\item{rownames}{the name of the rownames column passed to \code{collapse_to_tidy_psut()}. Default is "rownames".}
 
-\item{colnames}{the name of the colnames column passed to \code{collapse_to_tidy_psut()}. Default is "\code{colnames}".}
+\item{colnames}{the name of the colnames column passed to \code{collapse_to_tidy_psut()}. Default is "colnames".}
 
-\item{rowtypes}{the name of the rowtypes column passed to \code{collapse_to_tidy_psut()}. Default is "\code{rowtypes}".}
+\item{rowtypes}{the name of the rowtypes column passed to \code{collapse_to_tidy_psut()}. Default is "rowtypes".}
 
-\item{coltypes}{the name of the coltypes column passed to \code{collapse_to_tidy_psut()}. Default is "\code{coltypes}".}
+\item{coltypes}{the name of the coltypes column passed to \code{collapse_to_tidy_psut()}. Default is "coltypes".}
 }
 \value{
 a tidy PSUT data frame

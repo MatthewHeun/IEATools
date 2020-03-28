@@ -21,25 +21,25 @@ extract_S_units_from_tidy(
 \arguments{
 \item{.tidy_iea_df}{the tidy data frame from which a unit summation \code{S_units} matrix is to be formed.}
 
-\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "\code{Ledger.side}".}
+\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "Ledger.side".}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
 
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "\code{Flow}".}
+\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "Flow".}
 
-\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "\code{Product}".}
+\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "Product".}
 
-\item{e_dot}{the name of the energy flow rate column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
+\item{e_dot}{the name of the energy flow rate column in \code{.tidy_iea_df}. Default is "E.dot".}
 
-\item{unit}{the name of the unit column in "\code{.tidy_iea_df}". Default is "\code{Unit}".}
+\item{unit}{the name of the unit column in \code{.tidy_iea_df}. Default is "Unit".}
 
-\item{s_units}{the name of the unit summation column to be added to \code{.tidy_iea_df}. Default is "\code{S_unit}".}
+\item{s_units}{the name of the unit summation column to be added to \code{.tidy_iea_df}. Default is "S_unit".}
 
-\item{val}{the name of a temporary column to be created in \code{.tidy_iea_df}. Default is "\code{.val}".}
+\item{val}{the name of a temporary column to be created in \code{.tidy_iea_df}. Default is ".val".}
 
-\item{rowtype}{the name of a temporary rowtype column created in \code{.tidy_iea_df}. Default is "\code{rowtype}".}
+\item{rowtype}{the name of a temporary rowtype column created in \code{.tidy_iea_df}. Default is ".rowtype".}
 
-\item{coltype}{the name of a temporary coltype column created in \code{.tidy_iea_df}. Default is "\code{coltype}".}
+\item{coltype}{the name of a temporary coltype column created in \code{.tidy_iea_df}. Default is ".coltype".}
 }
 \value{
 a data frame containing grouping variables and a new column of unit summation matrices called \code{s_unit}.

@@ -23,29 +23,29 @@ collapse_to_tidy_psut(
 \arguments{
 \item{.tidy_iea_df}{a data frame containing \code{matnames} and several other columns}
 
-\item{matnames}{the name of a column in \code{.tidy_iea_df} containing matrix names. Default is "\code{matname}".}
+\item{matnames}{the name of a column in \code{.tidy_iea_df} containing matrix names. Default is "matname".}
 
-\item{e_dot}{the name of a column in \code{.tidy_iea_df} containing energy flow rates. Default is "\code{E.dot}".}
+\item{e_dot}{the name of a column in \code{.tidy_iea_df} containing energy flow rates. Default is "E.dot".}
 
-\item{rownames}{the name of a column to be added to \code{.tidy_iea_df} for row names. Default is "\code{rownames}".}
+\item{rownames}{the name of a column to be added to \code{.tidy_iea_df} for row names. Default is "rownames".}
 
-\item{colnames}{the name of a column to be added to \code{.tidy_iea_df} for column names. Default is "\code{colnames}".}
+\item{colnames}{the name of a column to be added to \code{.tidy_iea_df} for column names. Default is "colnames".}
 
-\item{rowtypes}{the name of a column to be added to \code{.tidy_iea_df} for row types. Default is "\code{rowtypes}".}
+\item{rowtypes}{the name of a column to be added to \code{.tidy_iea_df} for row types. Default is "rowtypes".}
 
-\item{coltypes}{the name of a column to be added to \code{.tidy_iea_df} for column types. Default is "\code{coltypes}".}
+\item{coltypes}{the name of a column to be added to \code{.tidy_iea_df} for column types. Default is "coltypes".}
 
-\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "\code{Ledger.side}".}
+\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "Ledger.side".}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
 
-\item{unit}{the name of the unit column in \code{.tidy_iea_df}. Default is "\code{Unit}".}
+\item{unit}{the name of the unit column in \code{.tidy_iea_df}. Default is "Unit".}
 
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "\code{Flow}".}
+\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "Flow".}
 
-\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "\code{Product}".}
+\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "Product".}
 
-\item{matvals}{the name of a column to be added to \code{.tidy_iea_df} for matrices. Default is "\code{matvals}".}
+\item{matvals}{the name of a column to be added to \code{.tidy_iea_df} for matrices. Default is "matvals".}
 }
 \value{
 \code{.tidy_iea_df} with all values converted to matrices in the \code{matvals} column
