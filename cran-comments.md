@@ -1,8 +1,8 @@
 ## Context
-`IEATools` v0.1.15 is the first CRAN release.
+`IEATools` v0.1.15 is the first CRAN release of this package.
 
 ## Test environments (7 in total) and R CMD check results
-* Local: macOS X install 10.15.2 (Catalina), R3.6.2
+* Local: macOS X install 10.15.3 (Catalina), R3.6.3
     * 0 ERRORs
     * 0 WARNINGs
     * 0 NOTEs
@@ -14,33 +14,25 @@
     * `devtools::check_win_release()`, R3.6.3 (2020-02-29)
         * 0 ERRORs
         * 0 WARNINGs
-        * 0 NOTEs
-    * `devtools::check_win_devel()`, R Under development (unstable) (2020-01-28 r77738)
+        * 1 NOTE (New submission)
+    * `devtools::check_win_devel()`, R version 4.0.0 alpha (2020-03-26 r78078)
         * 0 ERRORs
         * 0 WARNINGs
-        * 0 NOTEs
+        * 1 NOTE (New submission)
 * rhub:
     * `devtools::check_rhub()`
         * Windows Server 2008 R2 SP1, R-devel, 32/64 bit
             * 0 ERRORs
             * 0 WARNINGs
-            * 0 NOTEs
+            * 1 NOTE (New submission)
         * Ubuntu Linux 16.04 LTS, R-release, GCC
-            * 1 ERROR
-              The error is:    
-              #> sh: echo: I/O error    
-              #> Build step 'Execute shell' marked build as failure    
-              This error occurs early in the bootstrapping process and has nothing to do with testing the `matsindf` package.
+            * 0 ERRORs
             * 0 WARNINGs
-            * 0 NOTEs
+            * 1 NOTE (New submission)
         * Fedora Linux, R-devel, clang, gfortran
-            * 1 ERROR:
-              The error is:    
-              #> sh: echo: I/O error    
-              #> Build step 'Execute shell' marked build as failure    
-              This error occurs early in the bootstrapping process and has nothing to do with testing the `matsindf` package.
+            * 0 ERRORs
             * 0 WARNINGs
-            * 0 NOTEs
+            * 1 NOTE (New submission)
 
 ## Downstream dependencies
-* There are currently no downstream dependencies for `IEATools`.
+* Becaue `IEATools` is a new submission, there are currently no downstream dependencies.
