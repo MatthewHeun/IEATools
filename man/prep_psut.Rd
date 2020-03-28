@@ -6,14 +6,15 @@
 \usage{
 prep_psut(
   .tidy_iea_df,
-  ledger_side = "Ledger.side",
+  cols = IEATools::iea_cols,
+  ledger_side = cols$ledger_side,
+  flow_aggregation_point = cols$flow_aggregation_point,
+  flow = cols$flow,
+  product = cols$product,
+  unit = cols$unit,
+  e_dot = cols$e_dot,
   supply = "Supply",
   consumption = "Consumption",
-  flow_aggregation_point = "Flow.aggregation.point",
-  flow = "Flow",
-  product = "Product",
-  unit = "Unit",
-  e_dot = "E.dot",
   matnames = "matnames",
   matvals = "matvals",
   rownames = "rownames",
@@ -23,23 +24,25 @@ prep_psut(
 )
 }
 \arguments{
-\item{.tidy_iea_df}{a tidy data frame that has been specified with \code{\link[=specify_all]{specify_all()}}.}
+\item{.tidy_iea_df}{a tidy data frame that has been specified with \code{specify_all()}.}
 
-\item{ledger_side}{the name of the ledger side column. Default is "Ledger.side".}
+\item{cols}{a list containing names of columns. Default is \code{IEATools::iea_cols}.}
+
+\item{ledger_side}{the name of the ledger side column. Default is \code{cols$ledger_side}.}
+
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is \code{cols$flow_aggregation_point}.}
+
+\item{flow}{the name of the flow column. Default is \code{cols$flow}.}
+
+\item{product}{the name of the product column. Default is \code{cols$product}.}
+
+\item{unit}{the name of the unit column. Default is \code{cols$unit}.}
+
+\item{e_dot}{the name of the energy rate column. Default is \code{cols$e_dot}.}
 
 \item{supply}{the string identifying the supply side of the ledger. Default is "Supply".}
 
 \item{consumption}{the string identifying the consumption side of the ledger. Default is "Consumption".}
-
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
-
-\item{flow}{the name of the flow column. Default is "Flow".}
-
-\item{product}{the name of the product column. Default is "Product".}
-
-\item{unit}{the name of the unit column. Default is "Unit".}
-
-\item{e_dot}{the name of the energy rate column. Default is "E.dot".}
 
 \item{matnames}{the name of the matrix names column added by this function. Default is "matnames".}
 
@@ -63,12 +66,12 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y).
 \details{
 This function bundles several others:
 \enumerate{
-\item \code{\link[=add_psut_matnames]{add_psut_matnames()}}
-\item \code{\link[=add_row_col_meta]{add_row_col_meta()}}
-\item \code{\link[=collapse_to_tidy_psut]{collapse_to_tidy_psut()}}
+\item \code{add_psut_matnames()}
+\item \code{add_row_col_meta()}
+\item \code{collapse_to_tidy_psut()}
 }
 
-Furthermore, it extracts \code{S_units} matrices using \code{\link[=extract_S_units_from_tidy]{extract_S_units_from_tidy()}}
+Furthermore, it extracts \code{S_units} matrices using \code{extract_S_units_from_tidy()}
 and adds those matrices to the data frame.
 }
 \examples{

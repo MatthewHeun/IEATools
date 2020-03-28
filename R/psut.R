@@ -9,12 +9,13 @@
 #' `.tidy_iea_df` is typically obtained from [tidy_iea_df()].
 #'
 #' @param .tidy_iea_df the tidy data frame from which a unit summation `S_units` matrix is to be formed.
-#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "Ledger.side".
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
-#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "Flow".
-#' @param product the name of the product column in `.tidy_iea_df`. Default is "Product".
-#' @param e_dot the name of the energy flow rate column in `.tidy_iea_df`. Default is "E.dot".
-#' @param unit the name of the unit column in `.tidy_iea_df`. Default is "Unit".
+#' @param cols a list containing names of columns. Default is `iea_cols`.
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is `cols$ledger_side`.
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is `cols$ledger_side`.
+#' @param flow the name of the flow column in `.tidy_iea_df`. Default is `cols$flow`.
+#' @param product the name of the product column in `.tidy_iea_df`. Default is `cols$product`.
+#' @param e_dot the name of the energy flow rate column in `.tidy_iea_df`. Default is `cols$e_dot`.
+#' @param unit the name of the unit column in `.tidy_iea_df`. Default is `cols$unit`.
 #' @param s_units the name of the unit summation column to be added to `.tidy_iea_df`. Default is "S_unit".
 #' @param val the name of a temporary column to be created in `.tidy_iea_df`. Default is ".val".
 #' @param rowtype the name of a temporary rowtype column created in `.tidy_iea_df`. Default is ".rowtype".
@@ -30,12 +31,13 @@
 #'   extract_S_units_from_tidy()
 extract_S_units_from_tidy <- function(.tidy_iea_df, 
                                       # Column names in .tidy_iea_df
-                                      ledger_side = "Ledger.side", 
-                                      flow_aggregation_point = "Flow.aggregation.point", 
-                                      flow = "Flow", 
-                                      product = "Product", 
-                                      e_dot = "E.dot",
-                                      unit = "Unit", 
+                                      cols = IEATools::iea_cols,
+                                      ledger_side = cols$ledger_side, 
+                                      flow_aggregation_point = cols$flow_aggregation_point, 
+                                      flow = cols$flow, 
+                                      product = cols$product, 
+                                      e_dot = cols$e_dot,
+                                      unit = cols$unit, 
                                       # Output column name
                                       s_units = "S_units",
                                       # Intermediate column names
@@ -72,7 +74,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #' and terminology, although `.tidy_iea_df` does not necessarily need to contain IEA data.
 #'
 #' In a reasonable workflow, this function would be followed by a call to
-#' [add_row_col_meta()] and [matsindf::collapse_to_matrices()].
+#' `add_row_col_meta()` and `matsindf::collapse_to_matrices()`.
 #'
 #' This function respects groups when identifying entries in the resource matrix (`R`).
 #' So be sure to group `.tidy_iea_df` before calling this function.
@@ -81,22 +83,23 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #' An error will occur if `.tidy_iea_df` already has a column named ".R".
 #'
 #' @param .tidy_iea_df a data frame with `ledger_side`, `flow_aggregation_point`, `flow`, and `e_dot` columns.
+#' @param cols a list containing names of columns. Default is `iea_cols`.
 #' @param ledger_side the name of the column in `.tidy_iea_df` that contains ledger side
-#'        (a string). Default is "\code{Ledger.side}".
+#'        (a string). Default is `cols$ledger_side`.
+#' @param flow_aggregation_point the name of the column in `.tidy_iea_df` that contains flow aggregation point information.
+#'        Default is `cols$flow_aggregation_point`.
+#' @param flow the name of the column in `.tidy_iea_df` that contains flow information.
+#'        Default is `cols$flow`.
+#' @param product the name of the column in `.tidy_iea_df` that contains flow information.
+#'        Default is `cols$product`.
+#' @param e_dot the name of the column in `.tidy_iea_df` that contains energy and exergy values
+#'        (a string). Default is `cols$e_dot`.
 #' @param supply the identifier for items on the supply side of the ledger (a string).
 #'        Default is "Supply".
 #' @param consumption the identifier for items on the consumption side
 #'        of the ledger (a string). Default is "Consumption".
-#' @param flow_aggregation_point the name of the column in `.tidy_iea_df` that contains flow aggregation point information.
-#'        Default is "Flow.aggregation.point".
-#' @param flow the name of the column in `.tidy_iea_df` that contains flow information.
-#'        Default is "Flow".
 #' @param production a string identifying production in the flow column. Default is `Production`.
 #' @param resources a string identifying resources in the flow column. Default is `Resources`.
-#' @param product the name of the column in `.tidy_iea_df` that contains flow information.
-#'        Default is "Product".
-#' @param e_dot the name of the column in `.tidy_iea_df` that contains energy and exergy values
-#'        (a string). Default is "E.dot".
 #' @param eiou the identifier for items that are energy industry own use.
 #'        Default is "Energy industry own use".
 #' @param neg_supply_in_fd identifiers for flow items that, when negative,
@@ -120,15 +123,16 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #'   glimpse()
 add_psut_matnames <- function(.tidy_iea_df,
                               # Input columns
-                              ledger_side = iea_cols$ledger_side,
+                              cols = IEATools::iea_cols,
+                              ledger_side = cols$ledger_side,
+                              flow_aggregation_point = cols$flow_aggregation_point,
+                              flow = cols$flow, 
+                              product = cols$product, 
+                              e_dot = cols$e_dot,
                               supply = "Supply",
                               consumption = "Consumption",
-                              flow_aggregation_point = "Flow.aggregation.point",
-                              flow = "Flow",
                               production = "Production",
                               resources = "Resources",
-                              product = "Product", 
-                              e_dot = "E.dot",
                               # Input identifiers for supply, consumption, and EIOU
                               eiou = "Energy industry own use",
                               neg_supply_in_fd = c("Exports",
@@ -139,7 +143,7 @@ add_psut_matnames <- function(.tidy_iea_df,
                                                    "Stock changes"),
                               # Output column
                               matnames = "matnames",
-                              # Ouput identifiers for
+                              # Output identifiers for
                               # use matrix excluding EIOU (U_excl_EIOU),
                               # use matrix energy industry own use items (U_EIOU),
                               # make (V), and
@@ -180,6 +184,11 @@ add_psut_matnames <- function(.tidy_iea_df,
 #' information to `.tidy_iea_df`.
 #'
 #' @param .tidy_iea_df a data frame containing column `matnames`
+#' @param cols a list containing names of columns. Default is `IEATools::iea_cols`.
+#' @param flow the name of the column in `.tidy_iea_df` where Flow names
+#'        is found (a string). Default is `cols$flow`.
+#' @param product the name of the column in `.tidy_iea_df` where Product names
+#'        is found (a string). Default is `cols$product`.
 #' @param matnames the name of the column in `.tidy_iea_df` that contains names of matrices
 #'        (a string).  Default is "matnames".
 #' @param U the name for use matrices (a string). Default is "U".
@@ -187,10 +196,6 @@ add_psut_matnames <- function(.tidy_iea_df,
 #' @param R the name for resource matrices (a string). Default is "R".
 #' @param V the name for make matrices (a string). Default is "V".
 #' @param Y the name for final demand matrices (a string). Default is "Y".
-#' @param product the name of the column in `.tidy_iea_df` where Product names
-#'        is found (a string). Default is "Product".
-#' @param flow the name of the column in `.tidy_iea_df` where Flow names
-#'        is found (a string). Default is "Flow".
 #' @param industry_type the name that identifies production industries and
 #'        and transformation processes (a string). Default is "Industry".
 #' @param product_type the name that identifies energy carriers (a string).
@@ -220,10 +225,12 @@ add_psut_matnames <- function(.tidy_iea_df,
 #'   add_psut_matnames() %>%
 #'   add_row_col_meta()
 add_row_col_meta <- function(.tidy_iea_df,
+                             # Column names for Product and Flow
+                             cols = IEATools::iea_cols,
+                             product = cols$product, 
+                             flow = cols$flow,
                              # Name of the input column containing matrix names
                              matnames = "matnames",
-                             # Column names for Product and Flow
-                             product = "Product", flow = "Flow",
                              # Expected matrix names in the matnames column
                              U = "U", U_EIOU = "U_EIOU",
                              R = "R", V = "V", Y = "Y",
@@ -236,32 +243,32 @@ add_row_col_meta <- function(.tidy_iea_df,
   matsindf::verify_cols_missing(.tidy_iea_df, c(rownames, colnames, rowtypes, coltypes))
   .tidy_iea_df %>%
     dplyr::mutate(
-      !!as.name(rownames) := dplyr::case_when(
-        startsWith(!!as.name(matnames), U) ~ !!as.name(product),
-        !!as.name(matnames) == R ~ !!as.name(flow),
-        !!as.name(matnames) == V ~ !!as.name(flow),
-        !!as.name(matnames) == Y ~ !!as.name(product),
+      "{rownames}" := dplyr::case_when(
+        startsWith(.data[[matnames]], U) ~ .data[[product]],
+        .data[[matnames]] == R ~ .data[[flow]],
+        .data[[matnames]] == V ~ .data[[flow]],
+        .data[[matnames]] == Y ~ .data[[product]],
         TRUE ~ NA_character_
       ),
       !!as.name(colnames) := dplyr::case_when(
-        startsWith(!!as.name(matnames), U) ~ !!as.name(flow),
-        !!as.name(matnames) == V ~ !!as.name(product),
-        !!as.name(matnames) == R ~ !!as.name(product),
-        !!as.name(matnames) == Y ~ !!as.name(flow),
+        startsWith(.data[[matnames]], U) ~ .data[[flow]],
+        .data[[matnames]] == V ~ .data[[product]],
+        .data[[matnames]] == R ~ .data[[product]],
+        .data[[matnames]] == Y ~ .data[[flow]],
         TRUE ~ NA_character_
       ),
       !!as.name(rowtypes) := dplyr::case_when(
-        startsWith(!!as.name(matnames), U) ~ product_type,
-        !!as.name(matnames) == R ~ resource_type,
-        !!as.name(matnames) == V ~ industry_type,
-        !!as.name(matnames) == Y ~ product_type,
+        startsWith(.data[[matnames]], U) ~ product_type,
+        .data[[matnames]] == R ~ resource_type,
+        .data[[matnames]] == V ~ industry_type,
+        .data[[matnames]] == Y ~ product_type,
         TRUE ~ NA_character_
       ),
       !!as.name(coltypes) := dplyr::case_when(
-        startsWith(!!as.name(matnames), U) ~ industry_type,
-        !!as.name(matnames) == R ~ product_type,
-        !!as.name(matnames) == V ~ product_type,
-        !!as.name(matnames) == Y ~ sector_type,
+        startsWith(.data[[matnames]], U) ~ industry_type,
+        .data[[matnames]] == R ~ product_type,
+        .data[[matnames]] == V ~ product_type,
+        .data[[matnames]] == Y ~ sector_type,
         TRUE ~ NA_character_
       )
     )
@@ -277,12 +284,13 @@ add_row_col_meta <- function(.tidy_iea_df,
 #' before creating the matrices.
 #'
 #' @param .tidy_iea_df a data frame containing `matnames` and several other columns
-#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "Ledger.side".
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
-#' @param unit the name of the unit column in `.tidy_iea_df`. Default is "Unit".
-#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "Flow".
-#' @param product the name of the product column in `.tidy_iea_df`. Default is "Product".
-#' @param e_dot the name of a column in `.tidy_iea_df` containing energy flow rates. Default is "E.dot".
+#' @param cols a list containing names of columns. Default is `IEATools::iea_cols`.
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is `cols$ledger_side`.
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is `"Flcols$flow_aggregation_point`.
+#' @param unit the name of the unit column in `.tidy_iea_df`. Default is cols$unit.
+#' @param flow the name of the flow column in `.tidy_iea_df`. Default is cols$flow.
+#' @param product the name of the product column in `.tidy_iea_df`. Default is `cols$product`.
+#' @param e_dot the name of a column in `.tidy_iea_df` containing energy flow rates. Default is `.iea_cols$e_dot`
 #' @param matnames the name of a column in `.tidy_iea_df` containing matrix names. Default is "matname".
 #' @param rownames the name of a column to be added to `.tidy_iea_df` for row names. Default is "rownames".
 #' @param colnames the name of a column to be added to `.tidy_iea_df` for column names. Default is "colnames".
@@ -302,34 +310,35 @@ add_row_col_meta <- function(.tidy_iea_df,
 #'   collapse_to_tidy_psut()
 collapse_to_tidy_psut <- function(.tidy_iea_df,
                                   # Name of the input columns containing matrix names
+                                  cols = IEATools::iea_cols,
+                                  e_dot = cols$e_dot,
+                                  # Other IEA variables that are no longer needed after collapsing
+                                  ledger_side = cols$ledger_side,
+                                  flow_aggregation_point = cols$flow_aggregation_point, 
+                                  unit = cols$unit, 
+                                  flow = cols$flow,
+                                  product = cols$product,
                                   matnames = "matnames",
-                                  e_dot = "E.dot",
                                   rownames = "rownames", colnames = "colnames",
                                   rowtypes = "rowtypes", coltypes = "coltypes", 
-                                  # Other IEA variables that are no longer needed after collapsing
-                                  ledger_side = "Ledger.side",
-                                  flow_aggregation_point = "Flow.aggregation.point", 
-                                  unit = "Unit",
-                                  flow = "Flow", 
-                                  product = "Product",
                                   # Name of output column of matrices
                                   matvals = "matvals"){
   matsindf::verify_cols_missing(.tidy_iea_df, matvals)
   .tidy_iea_df %>% 
     dplyr::mutate(
       # All values in the matrices must be positive
-      !!as.name(e_dot) := abs(!!as.name(e_dot))
+      "{e_dot}" := abs(.data[[e_dot]])
     ) %>%
     dplyr::mutate(
       # Eliminate columns that we no longer need.
       # Set to NULL in mutate, because if the columns are missing, 
       # perhaps because the caller already deleted them,
       # no errors are given.
-      !!as.name(ledger_side) := NULL,
-      !!as.name(flow_aggregation_point) := NULL,
-      !!as.name(unit) := NULL,
-      !!as.name(flow) := NULL,
-      !!as.name(product) := NULL
+      "{ledger_side}" := NULL,
+      "{flow_aggregation_point}" := NULL,
+      "{unit}" := NULL,
+      "{flow}" := NULL,
+      "{product}" := NULL
     ) %>% 
     # We assume that everything remaining is a metadata column.
     matsindf::group_by_everything_except(e_dot, rownames, colnames, rowtypes, coltypes) %>% 
@@ -338,7 +347,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
                                    rownames = rownames, colnames = colnames,
                                    rowtypes = rowtypes, coltypes = coltypes) %>%
     dplyr::rename(
-      !!as.name(matvals) := !!as.name(e_dot)
+      "{matvals}" := .data[[e_dot]]
     ) %>% 
     dplyr::ungroup()
 }
@@ -350,22 +359,23 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' by collapsing the IEA data into PSUT matrices (R, U, V, and Y).
 #' 
 #' This function bundles several others:
-#' 1. [add_psut_matnames()]
-#' 2. [add_row_col_meta()]
-#' 3. [collapse_to_tidy_psut()]
+#' 1. `add_psut_matnames()`
+#' 2. `add_row_col_meta()`
+#' 3. `collapse_to_tidy_psut()`
 #' 
-#' Furthermore, it extracts `S_units` matrices using [extract_S_units_from_tidy()]
+#' Furthermore, it extracts `S_units` matrices using `extract_S_units_from_tidy()`
 #' and adds those matrices to the data frame.
 #'
-#' @param .tidy_iea_df a tidy data frame that has been specified with [specify_all()].
-#' @param ledger_side the name of the ledger side column. Default is "Ledger.side". 
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
+#' @param .tidy_iea_df a tidy data frame that has been specified with `specify_all()`.
+#' @param cols a list containing names of columns. Default is `IEATools::iea_cols`.
+#' @param ledger_side the name of the ledger side column. Default is `cols$ledger_side`.
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is `cols$flow_aggregation_point`.
+#' @param flow the name of the flow column. Default is `cols$flow`.
+#' @param product the name of the product column. Default is `cols$product`.
+#' @param unit the name of the unit column. Default is `cols$unit`. 
+#' @param e_dot the name of the energy rate column. Default is `cols$e_dot`. 
 #' @param supply the string identifying the supply side of the ledger. Default is "Supply".
 #' @param consumption the string identifying the consumption side of the ledger. Default is "Consumption".
-#' @param flow the name of the flow column. Default is "Flow".
-#' @param product the name of the product column. Default is "Product".
-#' @param unit the name of the unit column. Default is "Unit".
-#' @param e_dot the name of the energy rate column. Default is "E.dot".
 #' @param matnames the name of the matrix names column added by this function. Default is "matnames".
 #' @param matvals the name of the matrix value column added by this function. Default is "matvals".
 #' @param rownames the name of the rownames column passed to `collapse_to_tidy_psut()`. Default is "rownames".
@@ -408,14 +418,15 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #'   as.logical() %>% 
 #'   all()
 prep_psut <- function(.tidy_iea_df, 
-                      ledger_side = "Ledger.side", 
+                      cols = IEATools::iea_cols,
+                      ledger_side = cols$ledger_side, 
+                      flow_aggregation_point = cols$flow_aggregation_point,
+                      flow = cols$flow, 
+                      product = cols$product, 
+                      unit = cols$unit, 
+                      e_dot = cols$e_dot,
                       supply = "Supply", 
                       consumption = "Consumption", 
-                      flow_aggregation_point = "Flow.aggregation.point",
-                      flow = "Flow",
-                      product = "Product", 
-                      unit = "Unit", 
-                      e_dot = "E.dot", 
                       matnames = "matnames",
                       matvals = "matvals", 
                       rownames = "rownames", 

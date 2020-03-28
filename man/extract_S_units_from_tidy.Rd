@@ -6,12 +6,13 @@
 \usage{
 extract_S_units_from_tidy(
   .tidy_iea_df,
-  ledger_side = "Ledger.side",
-  flow_aggregation_point = "Flow.aggregation.point",
-  flow = "Flow",
-  product = "Product",
-  e_dot = "E.dot",
-  unit = "Unit",
+  cols = IEATools::iea_cols,
+  ledger_side = cols$ledger_side,
+  flow_aggregation_point = cols$flow_aggregation_point,
+  flow = cols$flow,
+  product = cols$product,
+  e_dot = cols$e_dot,
+  unit = cols$unit,
   s_units = "S_units",
   val = ".val",
   rowtype = ".rowtype",
@@ -21,17 +22,19 @@ extract_S_units_from_tidy(
 \arguments{
 \item{.tidy_iea_df}{the tidy data frame from which a unit summation \code{S_units} matrix is to be formed.}
 
-\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "Ledger.side".}
+\item{cols}{a list containing names of columns. Default is \code{iea_cols}.}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
+\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is \code{cols$ledger_side}.}
 
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "Flow".}
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is \code{cols$ledger_side}.}
 
-\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "Product".}
+\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is \code{cols$flow}.}
 
-\item{e_dot}{the name of the energy flow rate column in \code{.tidy_iea_df}. Default is "E.dot".}
+\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is \code{cols$product}.}
 
-\item{unit}{the name of the unit column in \code{.tidy_iea_df}. Default is "Unit".}
+\item{e_dot}{the name of the energy flow rate column in \code{.tidy_iea_df}. Default is \code{cols$e_dot}.}
+
+\item{unit}{the name of the unit column in \code{.tidy_iea_df}. Default is \code{cols$unit}.}
 
 \item{s_units}{the name of the unit summation column to be added to \code{.tidy_iea_df}. Default is "S_unit".}
 

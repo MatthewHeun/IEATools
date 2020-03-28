@@ -6,15 +6,16 @@
 \usage{
 add_psut_matnames(
   .tidy_iea_df,
-  ledger_side = iea_cols$ledger_side,
+  cols = IEATools::iea_cols,
+  ledger_side = cols$ledger_side,
+  flow_aggregation_point = cols$flow_aggregation_point,
+  flow = cols$flow,
+  product = cols$product,
+  e_dot = cols$e_dot,
   supply = "Supply",
   consumption = "Consumption",
-  flow_aggregation_point = "Flow.aggregation.point",
-  flow = "Flow",
   production = "Production",
   resources = "Resources",
-  product = "Product",
-  e_dot = "E.dot",
   eiou = "Energy industry own use",
   neg_supply_in_fd = c("Exports", "International aviation bunkers",
     "International marine bunkers", "Losses", "Statistical differences", "Stock changes"),
@@ -29,8 +30,22 @@ add_psut_matnames(
 \arguments{
 \item{.tidy_iea_df}{a data frame with \code{ledger_side}, \code{flow_aggregation_point}, \code{flow}, and \code{e_dot} columns.}
 
+\item{cols}{a list containing names of columns. Default is \code{iea_cols}.}
+
 \item{ledger_side}{the name of the column in \code{.tidy_iea_df} that contains ledger side
-(a string). Default is "\code{Ledger.side}".}
+(a string). Default is \code{cols$ledger_side}.}
+
+\item{flow_aggregation_point}{the name of the column in \code{.tidy_iea_df} that contains flow aggregation point information.
+Default is \code{cols$flow_aggregation_point}.}
+
+\item{flow}{the name of the column in \code{.tidy_iea_df} that contains flow information.
+Default is \code{cols$flow}.}
+
+\item{product}{the name of the column in \code{.tidy_iea_df} that contains flow information.
+Default is \code{cols$product}.}
+
+\item{e_dot}{the name of the column in \code{.tidy_iea_df} that contains energy and exergy values
+(a string). Default is \code{cols$e_dot}.}
 
 \item{supply}{the identifier for items on the supply side of the ledger (a string).
 Default is "Supply".}
@@ -38,21 +53,9 @@ Default is "Supply".}
 \item{consumption}{the identifier for items on the consumption side
 of the ledger (a string). Default is "Consumption".}
 
-\item{flow_aggregation_point}{the name of the column in \code{.tidy_iea_df} that contains flow aggregation point information.
-Default is "Flow.aggregation.point".}
-
-\item{flow}{the name of the column in \code{.tidy_iea_df} that contains flow information.
-Default is "Flow".}
-
 \item{production}{a string identifying production in the flow column. Default is \code{Production}.}
 
 \item{resources}{a string identifying resources in the flow column. Default is \code{Resources}.}
-
-\item{product}{the name of the column in \code{.tidy_iea_df} that contains flow information.
-Default is "Product".}
-
-\item{e_dot}{the name of the column in \code{.tidy_iea_df} that contains energy and exergy values
-(a string). Default is "E.dot".}
 
 \item{eiou}{the identifier for items that are energy industry own use.
 Default is "Energy industry own use".}
@@ -84,7 +87,7 @@ and terminology, although \code{.tidy_iea_df} does not necessarily need to conta
 }
 \details{
 In a reasonable workflow, this function would be followed by a call to
-\code{\link[=add_row_col_meta]{add_row_col_meta()}} and \code{\link[matsindf:collapse_to_matrices]{matsindf::collapse_to_matrices()}}.
+\code{add_row_col_meta()} and \code{matsindf::collapse_to_matrices()}.
 
 This function respects groups when identifying entries in the resource matrix (\code{R}).
 So be sure to group \code{.tidy_iea_df} before calling this function.

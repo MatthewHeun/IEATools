@@ -6,9 +6,10 @@
 \usage{
 add_row_col_meta(
   .tidy_iea_df,
+  cols = IEATools::iea_cols,
+  product = cols$product,
+  flow = cols$flow,
   matnames = "matnames",
-  product = "Product",
-  flow = "Flow",
   U = "U",
   U_EIOU = "U_EIOU",
   R = "R",
@@ -27,14 +28,16 @@ add_row_col_meta(
 \arguments{
 \item{.tidy_iea_df}{a data frame containing column \code{matnames}}
 
-\item{matnames}{the name of the column in \code{.tidy_iea_df} that contains names of matrices
-(a string).  Default is "matnames".}
+\item{cols}{a list containing names of columns. Default is \code{IEATools::iea_cols}.}
 
 \item{product}{the name of the column in \code{.tidy_iea_df} where Product names
-is found (a string). Default is "Product".}
+is found (a string). Default is \code{cols$product}.}
 
 \item{flow}{the name of the column in \code{.tidy_iea_df} where Flow names
-is found (a string). Default is "Flow".}
+is found (a string). Default is \code{cols$flow}.}
+
+\item{matnames}{the name of the column in \code{.tidy_iea_df} that contains names of matrices
+(a string).  Default is "matnames".}
 
 \item{U}{the name for use matrices (a string). Default is "U".}
 
