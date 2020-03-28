@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -40,7 +44,6 @@
 wherein each row of .tidy_iea_df is a single value in an energy conversion chain.
 The default argument values assume that .tidy_iea_df uses IEA-style nomenclature
 and terminology, although .tidy_iea_df does not necessarily need to contain IEA data." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -58,7 +61,7 @@ and terminology, although .tidy_iea_df does not necessarily need to contain IEA 
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -144,15 +147,16 @@ and terminology, although <code>.tidy_iea_df</code> does not necessarily need to
 
     <pre class="usage"><span class='fu'>add_psut_matnames</span>(
   <span class='no'>.tidy_iea_df</span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
+  <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>,
+  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>ledger_side</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>flow_aggregation_point</span>,
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>flow</span>,
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>product</span>,
+  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>e_dot</span>,
   <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>,
   <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
   <span class='kw'>production</span> <span class='kw'>=</span> <span class='st'>"Production"</span>,
   <span class='kw'>resources</span> <span class='kw'>=</span> <span class='st'>"Resources"</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
   <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>,
   <span class='kw'>neg_supply_in_fd</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Exports"</span>, <span class='st'>"International aviation bunkers"</span>,
     <span class='st'>"International marine bunkers"</span>, <span class='st'>"Losses"</span>, <span class='st'>"Statistical differences"</span>, <span class='st'>"Stock changes"</span>),
@@ -172,29 +176,43 @@ and terminology, although <code>.tidy_iea_df</code> does not necessarily need to
       <td><p>a data frame with <code>ledger_side</code>, <code>flow_aggregation_point</code>, <code>flow</code>, and <code>e_dot</code> columns.</p></td>
     </tr>
     <tr>
+      <th>cols</th>
+      <td><p>a list containing names of columns. Default is <code>iea_cols</code>.</p></td>
+    </tr>
+    <tr>
       <th>ledger_side</th>
       <td><p>the name of the column in <code>.tidy_iea_df</code> that contains ledger side
-(a string). Default is "<code>Ledger.side</code>".</p></td>
-    </tr>
-    <tr>
-      <th>supply</th>
-      <td><p>the identifier for items on the supply side of the ledger (a string).
-Default is "<code>Supply</code>".</p></td>
-    </tr>
-    <tr>
-      <th>consumption</th>
-      <td><p>the identifier for items on the consumption side
-of the ledger (a string). Default is "<code>Consumption</code>".</p></td>
+(a string). Default is <code>cols$ledger_side</code>.</p></td>
     </tr>
     <tr>
       <th>flow_aggregation_point</th>
       <td><p>the name of the column in <code>.tidy_iea_df</code> that contains flow aggregation point information.
-Default is "<code>Flow.aggregation.point</code>".</p></td>
+Default is <code>cols$flow_aggregation_point</code>.</p></td>
     </tr>
     <tr>
       <th>flow</th>
       <td><p>the name of the column in <code>.tidy_iea_df</code> that contains flow information.
-Default is "<code>Flow</code>".</p></td>
+Default is <code>cols$flow</code>.</p></td>
+    </tr>
+    <tr>
+      <th>product</th>
+      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains flow information.
+Default is <code>cols$product</code>.</p></td>
+    </tr>
+    <tr>
+      <th>e_dot</th>
+      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains energy and exergy values
+(a string). Default is <code>cols$e_dot</code>.</p></td>
+    </tr>
+    <tr>
+      <th>supply</th>
+      <td><p>the identifier for items on the supply side of the ledger (a string).
+Default is "Supply".</p></td>
+    </tr>
+    <tr>
+      <th>consumption</th>
+      <td><p>the identifier for items on the consumption side
+of the ledger (a string). Default is "Consumption".</p></td>
     </tr>
     <tr>
       <th>production</th>
@@ -205,19 +223,9 @@ Default is "<code>Flow</code>".</p></td>
       <td><p>a string identifying resources in the flow column. Default is <code>Resources</code>.</p></td>
     </tr>
     <tr>
-      <th>product</th>
-      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains flow information.
-Default is "<code>Product</code>".</p></td>
-    </tr>
-    <tr>
-      <th>e_dot</th>
-      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains energy and exergy values
-(a string). Default is "<code>E.dot</code>".</p></td>
-    </tr>
-    <tr>
       <th>eiou</th>
       <td><p>the identifier for items that are energy industry own use.
-Default is "<code>Energy industry own use</code>".</p></td>
+Default is "Energy industry own use".</p></td>
     </tr>
     <tr>
       <th>neg_supply_in_fd</th>
@@ -227,27 +235,27 @@ are entries in the final demand (<code>Y</code>) matrix.</p></td>
     <tr>
       <th>matnames</th>
       <td><p>the name of the output column containing the name of the matrix
-to which a row's value belongs (a string). Default is "<code>matnames</code>".</p></td>
+to which a row's value belongs (a string). Default is "matnames".</p></td>
     </tr>
     <tr>
       <th>R</th>
-      <td><p>the name for the resource matrix (a string). Default is "<code>R</code>".</p></td>
+      <td><p>the name for the resource matrix (a string). Default is "R".</p></td>
     </tr>
     <tr>
       <th>U_excl_EIOU</th>
-      <td><p>the name for the use matrix that excludes energy industry own use (a string). Default is "<code>U_excl_EIOU</code>".</p></td>
+      <td><p>the name for the use matrix that excludes energy industry own use (a string). Default is "U_excl_EIOU".</p></td>
     </tr>
     <tr>
       <th>U_EIOU</th>
-      <td><p>the name for the energy industry own use matrix. Default is "<code>U_EIOU</code>".</p></td>
+      <td><p>the name for the energy industry own use matrix. Default is "U_EIOU".</p></td>
     </tr>
     <tr>
       <th>V</th>
-      <td><p>the name for the make matrix (a string). Default is "<code>V</code>".</p></td>
+      <td><p>the name for the make matrix (a string). Default is "V".</p></td>
     </tr>
     <tr>
       <th>Y</th>
-      <td><p>the name for the final demand matrix (a string). Default is "<code>Y</code>".</p></td>
+      <td><p>the name for the final demand matrix (a string). Default is "Y".</p></td>
     </tr>
     </table>
 
@@ -260,8 +268,8 @@ to which a row's value belongs (a string). Default is "<code>matnames</code>".</
 <code><a href='add_row_col_meta.html'>add_row_col_meta()</a></code> and <code><a href='https://rdrr.io/pkg/matsindf/man/collapse_to_matrices.html'>matsindf::collapse_to_matrices()</a></code>.</p>
 <p>This function respects groups when identifying entries in the resource matrix (<code>R</code>).
 So be sure to group <code>.tidy_iea_df</code> before calling this function.</p>
-<p>Internally, this function adds a temporary column to <code>.tidy_iea_df</code> called "<code>.R</code>".
-An error will occur if <code>.tidy_iea_df</code> already has a column named "<code>.R</code>".</p>
+<p>Internally, this function adds a temporary column to <code>.tidy_iea_df</code> called ".R".
+An error will occur if <code>.tidy_iea_df</code> already has a column named ".R".</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
@@ -288,15 +296,10 @@ An error will occur if <code>.tidy_iea_df</code> already has a column named "<co
 #&gt; $ E.dot                  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> 2087.5131, 250.1290, 916.2081, 1.0700, 21.3051…
 #&gt; $ matnames               </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> "R", "R", "V", "V", "V", "V", "V", "Y", "Y", "…</div></span></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -307,7 +310,7 @@ An error will occur if <code>.tidy_iea_df</code> already has a column named "<co
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

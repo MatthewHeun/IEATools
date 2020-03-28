@@ -31,7 +31,20 @@
 #' Names of the items in the list are the typical function arguments
 #' for column names.
 #' 
-#' @format A string list with 10 entries
+#' @format A string list
+#' \describe{
+#' \item{country}{The name of a column containing countries.}
+#' \item{method}{The name of a column containing methods for calculating primary energy equivalent of renewable electricity. See `IEATools::methods`.}
+#' \item{energy_type}{The name of a column containing energy types. See `IEATools::energy_types`.}
+#' \item{last_stage}{The name of a column containing last stages of energy conversion chain analysis. See `IEATools::last_stages`.}
+#' \item{year}{The name of a column containing years in wide data frames.}
+#' \item{ledger_side}{The name of a column containing ledger sides. See `IEATools::ledger_sides`.}
+#' \item{flow_aggregation_point}{The name of a column containing flow aggregation points. See `IEATools::flow_aggregation_points`.}
+#' \item{flow}{The name of a column containing IEA flow information. See `IEATools::flows`.}
+#' \item{product}{The name of a column containing IEA products. See `IEATools::products`.}
+#' \item{unit}{The name of a column containing units for energy flows.}
+#' \item{e_dot}{The name of a column containing energy flow rates.}
+#' }
 #' 
 #' @examples
 #' iea_cols

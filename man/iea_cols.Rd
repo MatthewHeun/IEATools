@@ -5,7 +5,20 @@
 \alias{iea_cols}
 \title{IEA data frame columns}
 \format{
-A string list with 10 entries
+A string list
+\describe{
+\item{country}{The name of a column containing countries.}
+\item{method}{The name of a column containing methods for calculating primary energy equivalent of renewable electricity. See \code{IEATools::methods}.}
+\item{energy_type}{The name of a column containing energy types. See \code{IEATools::energy_types}.}
+\item{last_stage}{The name of a column containing last stages of energy conversion chain analysis. See \code{IEATools::last_stages}.}
+\item{year}{The name of a column containing years in wide data frames.}
+\item{ledger_side}{The name of a column containing ledger sides. See \code{IEATools::ledger_sides}.}
+\item{flow_aggregation_point}{The name of a column containing flow aggregation points. See \code{IEATools::flow_aggregation_points}.}
+\item{flow}{The name of a column containing IEA flow information. See \code{IEATools::flows}.}
+\item{product}{The name of a column containing IEA products. See \code{IEATools::products}.}
+\item{unit}{The name of a column containing units for energy flows.}
+\item{e_dot}{The name of a column containing energy flow rates.}
+}
 }
 \usage{
 iea_cols

@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -42,7 +46,6 @@ non-matching rows from x,
 and all rows from y.
 Essentially replace_join() replaces matching rows in x with corresponding rows from y
 and adds all unmatched rows from y." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -60,7 +63,7 @@ and adds all unmatched rows from y." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -138,7 +141,7 @@ and adds all unmatched rows from y." />
     </div>
 
     <div class="ref-description">
-    <p>Perform a modified <code><a href='https://dplyr.tidyverse.org/reference/join.html'>dplyr::full_join()</a></code> on <code>x</code> and <code>y</code>,
+    <p>Perform a modified <code><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>dplyr::full_join()</a></code> on <code>x</code> and <code>y</code>,
 returning all columns from <code>c</code>,
 non-matching rows from <code>x</code>,
 and all rows from <code>y</code>.
@@ -150,7 +153,7 @@ and adds all unmatched rows from <code>y</code>.</p>
   <span class='no'>x</span>,
   <span class='no'>y</span>,
   <span class='no'>replace_col</span>,
-  <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/setops.html'>intersect</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>x</span>), <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>y</span>)) <span class='kw'>%&gt;%</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/setops.html'>setdiff</a></span>(<span class='no'>replace_col</span>),
+  <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>intersect</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>x</span>), <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>y</span>)) <span class='kw'>%&gt;%</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>setdiff</a></span>(<span class='no'>replace_col</span>),
   <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>".x"</span>, <span class='st'>".y"</span>),
   <span class='no'>...</span>
@@ -185,16 +188,16 @@ This default ensures that <code>replace_col</code> is not in <code>by</code>, as
     </tr>
     <tr>
       <th>copy</th>
-      <td><p>passed to <code><a href='https://dplyr.tidyverse.org/reference/join.html'>dplyr::left_join()</a></code>. Default value is <code>FALSE</code>.</p></td>
+      <td><p>passed to <code><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>dplyr::left_join()</a></code>. Default value is <code>FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>suffix</th>
-      <td><p>appended to <code>replace_col</code> to form the names of columns created in <code>x</code> during the internal <code><a href='https://dplyr.tidyverse.org/reference/join.html'>dplyr::left_join()</a></code> operation.
-Default is <code><a href='https://rdrr.io/r/base/c.html'>c(".x", ".y")</a></code>, same as the default for <code><a href='https://dplyr.tidyverse.org/reference/join.html'>dplyr::full_join()</a></code>.</p></td>
+      <td><p>appended to <code>replace_col</code> to form the names of columns created in <code>x</code> during the internal <code><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>dplyr::left_join()</a></code> operation.
+Default is <code><a href='https://rdrr.io/r/base/c.html'>c(".x", ".y")</a></code>, same as the default for <code><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>dplyr::full_join()</a></code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>passed to <code><a href='https://dplyr.tidyverse.org/reference/join.html'>dplyr::full_join()</a></code></p></td>
+      <td><p>passed to <code><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>dplyr::full_join()</a></code></p></td>
     </tr>
     </table>
 
@@ -232,15 +235,10 @@ See examples.</p>
 #&gt; 3 2 A
 #&gt; 4 2 B</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -251,7 +249,7 @@ See examples.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>
