@@ -40,8 +40,7 @@
 
 
 <meta property="og:title" content="Collapse a tidy data frame of IEA data to a tidy PSUT data frame — collapse_to_tidy_psut" />
-<meta property="og:description" content="Call this function after calling add_row_col_meta()
-to collapse .tidy_iea_df into a tidy PSUT data frame." />
+<meta property="og:description" content="Call this function after calling add_row_col_meta()`` to collapse .tidy_iea_df` into a tidy PSUT data frame." />
 
 
 
@@ -137,25 +136,23 @@ to collapse .tidy_iea_df into a tidy PSUT data frame." />
     </div>
 
     <div class="ref-description">
-    <p>Call this function after calling <code><a href='add_row_col_meta.html'>add_row_col_meta()</a></code>
-to collapse <code>.tidy_iea_df</code> into a tidy PSUT data frame.</p>
+    <p>Call this function after calling <code>add_row_col_meta()`` to collapse </code>.tidy_iea_df` into a tidy PSUT data frame.</p>
     </div>
 
     <pre class="usage"><span class='fu'>collapse_to_tidy_psut</span>(
   <span class='no'>.tidy_iea_df</span>,
-  <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>,
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>e_dot</span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>ledger_side</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>flow_aggregation_point</span>,
-  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>unit</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>flow</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>product</span>,
-  <span class='kw'>matnames</span> <span class='kw'>=</span> <span class='st'>"matnames"</span>,
-  <span class='kw'>rownames</span> <span class='kw'>=</span> <span class='st'>"rownames"</span>,
-  <span class='kw'>colnames</span> <span class='kw'>=</span> <span class='st'>"colnames"</span>,
-  <span class='kw'>rowtypes</span> <span class='kw'>=</span> <span class='st'>"rowtypes"</span>,
-  <span class='kw'>coltypes</span> <span class='kw'>=</span> <span class='st'>"coltypes"</span>,
-  <span class='kw'>matvals</span> <span class='kw'>=</span> <span class='st'>"matvals"</span>
+  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>ledger_side</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow_aggregation_point</span>,
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow</span>,
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>product</span>,
+  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>e_dot</span>,
+  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>unit</span>,
+  <span class='kw'>matnames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>matnames</span>,
+  <span class='kw'>rownames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>rownames</span>,
+  <span class='kw'>colnames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>colnames</span>,
+  <span class='kw'>rowtypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>rowtypes</span>,
+  <span class='kw'>coltypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>coltypes</span>,
+  <span class='kw'>matvals</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>matvals</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -166,56 +163,16 @@ to collapse <code>.tidy_iea_df</code> into a tidy PSUT data frame.</p>
       <td><p>a data frame containing <code>matnames</code> and several other columns</p></td>
     </tr>
     <tr>
-      <th>cols</th>
-      <td><p>a list containing names of columns. Default is <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
+      <th>ledger_side, flow_aggregation_point, flow, product, e_dot, unit</th>
+      <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>e_dot</th>
-      <td><p>the name of a column in <code>.tidy_iea_df</code> containing energy flow rates. Default is <code>.iea_cols$e_dot</code></p></td>
-    </tr>
-    <tr>
-      <th>ledger_side</th>
-      <td><p>the name of the ledger side column in <code>.tidy_iea_df</code>. Default is <code>cols$ledger_side</code>.</p></td>
-    </tr>
-    <tr>
-      <th>flow_aggregation_point</th>
-      <td><p>the name of the flow aggregation point column in <code>.tidy_iea_df</code>. Default is <code>"Flcols$flow_aggregation_point</code>.</p></td>
-    </tr>
-    <tr>
-      <th>unit</th>
-      <td><p>the name of the unit column in <code>.tidy_iea_df</code>. Default is cols$unit.</p></td>
-    </tr>
-    <tr>
-      <th>flow</th>
-      <td><p>the name of the flow column in <code>.tidy_iea_df</code>. Default is cols$flow.</p></td>
-    </tr>
-    <tr>
-      <th>product</th>
-      <td><p>the name of the product column in <code>.tidy_iea_df</code>. Default is <code>cols$product</code>.</p></td>
-    </tr>
-    <tr>
-      <th>matnames</th>
-      <td><p>the name of a column in <code>.tidy_iea_df</code> containing matrix names. Default is "matname".</p></td>
-    </tr>
-    <tr>
-      <th>rownames</th>
-      <td><p>the name of a column to be added to <code>.tidy_iea_df</code> for row names. Default is "rownames".</p></td>
-    </tr>
-    <tr>
-      <th>colnames</th>
-      <td><p>the name of a column to be added to <code>.tidy_iea_df</code> for column names. Default is "colnames".</p></td>
-    </tr>
-    <tr>
-      <th>rowtypes</th>
-      <td><p>the name of a column to be added to <code>.tidy_iea_df</code> for row types. Default is "rowtypes".</p></td>
-    </tr>
-    <tr>
-      <th>coltypes</th>
-      <td><p>the name of a column to be added to <code>.tidy_iea_df</code> for column types. Default is "coltypes".</p></td>
+      <th>matnames, rownames, colnames, rowtypes, coltypes</th>
+      <td><p>See <code><a href='mat_meta_cols.html'>IEATools::mat_meta_cols</a></code>.</p></td>
     </tr>
     <tr>
       <th>matvals</th>
-      <td><p>the name of a column to be added to <code>.tidy_iea_df</code> for matrices. Default is "matvals".</p></td>
+      <td><p>See <code><a href='psut_cols.html'>IEATools::psut_cols</a></code>.</p></td>
     </tr>
     </table>
 

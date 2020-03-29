@@ -152,17 +152,17 @@ on a per-product basis.</p>
     <pre class="usage"><span class='fu'>fix_tidy_iea_df_balances</span>(
   <span class='no'>.tidy_iea_df</span>,
   <span class='kw'>max_fix</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
-  <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>,
-  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  <span class='kw'>tfc_compare</span> <span class='kw'>=</span> <span class='st'>"TFC compare"</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>statistical_differences</span> <span class='kw'>=</span> <span class='st'>"Statistical differences"</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
-  <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>".err"</span>,
-  <span class='kw'>remove_zeroes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>remove_zeroes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>ledger_side</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow_aggregation_point</span>,
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow</span>,
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>product</span>,
+  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>e_dot</span>,
+  <span class='kw'>supply</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='ledger_sides.html'>ledger_sides</a></span>$<span class='no'>supply</span>,
+  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='ledger_sides.html'>ledger_sides</a></span>$<span class='no'>consumption</span>,
+  <span class='kw'>tfc_compare</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='aggregation_flows.html'>aggregation_flows</a></span>$<span class='no'>tfc_compare</span>,
+  <span class='kw'>statistical_differences</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span>$<span class='no'>statistical_differences</span>,
+  <span class='kw'>.err</span> <span class='kw'>=</span> <span class='st'>".err"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -177,48 +177,28 @@ on a per-product basis.</p>
       <td><p>the maximum energy balance that will be fixed without giving an error. Default is 5.</p></td>
     </tr>
     <tr>
-      <th>ledger_side</th>
-      <td><p>the name of the ledger side column in <code>.tidy_iea_df</code>. Default is "Ledger.side".</p></td>
+      <th>remove_zeroes</th>
+      <td><p>a logical telling whether to remove <code>0</code>s after balancing. Default is <code>TRUE</code>.</p></td>
     </tr>
     <tr>
-      <th>supply</th>
-      <td><p>a string indicating the supply side of the ledger in the <code>ledger_side</code> column. Default is "Supply".</p></td>
+      <th>ledger_side, flow_aggregation_point, flow, product, e_dot</th>
+      <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>consumption</th>
-      <td><p>a string indicating the consumption side of the ledger in the <code>ledger_side</code> column. Default is "Consumption".</p></td>
-    </tr>
-    <tr>
-      <th>flow_aggregation_point</th>
-      <td><p>the name of the flow aggregation point column in <code>.tidy_iea_df</code>. Default is "Flow.aggregation.point".</p></td>
+      <th>supply, consumption</th>
+      <td><p>See <code><a href='ledger_sides.html'>IEATools::ledger_sides</a></code>.</p></td>
     </tr>
     <tr>
       <th>tfc_compare</th>
-      <td><p>a string indicating the Total final consumption comparison flow aggregation point. Default is "TFC compare".</p></td>
-    </tr>
-    <tr>
-      <th>flow</th>
-      <td><p>the name of the flow column in <code>.tidy_iea_df</code>. Default is "Flow".</p></td>
+      <td><p>See <code><a href='aggregation_flows.html'>IEATools::aggregation_flows</a></code>.</p></td>
     </tr>
     <tr>
       <th>statistical_differences</th>
-      <td><p>a string indicating statistical differences in the <code>flow</code> column. Default is "Statistical differences".</p></td>
+      <td><p>See <code><a href='tfc_compare_flows.html'>IEATools::tfc_compare_flows</a></code>.</p></td>
     </tr>
     <tr>
-      <th>product</th>
-      <td><p>the name of the product column in <code>.tidy_iea_df</code>. Default is "Product".</p></td>
-    </tr>
-    <tr>
-      <th>e_dot</th>
-      <td><p>the name of the energy flow column in <code>.tidy_iea_df</code>. Default is "E.dot".</p></td>
-    </tr>
-    <tr>
-      <th>err</th>
+      <th>.err</th>
       <td><p>the name of a temporary error column added to <code>.tidy_iea_df</code>. Default is ".err".</p></td>
-    </tr>
-    <tr>
-      <th>remove_zeroes</th>
-      <td><p>a logical telling whether to remove <code>0</code>s after balancing.</p></td>
     </tr>
     </table>
 

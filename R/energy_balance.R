@@ -223,9 +223,9 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
     calc_tidy_iea_df_balances(err = .err) %>% 
     dplyr::select(!!!grouping_names, .err) %>% 
     dplyr::mutate(
-      !!as.name(flow) := statistical_differences, 
-      !!as.name(ledger_side) := supply,
-      !!as.name(flow_aggregation_point) := tfc_compare
+      "{flow}" := statistical_differences, 
+      "{ledger_side}" := supply,
+      "{flow_aggregation_point}" := tfc_compare
     )
   
   # Check the maximum error. If greater than the max allowable error before fixing,

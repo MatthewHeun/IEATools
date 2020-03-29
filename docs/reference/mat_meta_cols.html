@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>PSUT matrix row and column types — row_col_types • IEATools</title>
+<title>PSUT matrix meta information column names — mat_meta_cols • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="PSUT matrix row and column types — row_col_types" />
-<meta property="og:description" content="PSUT matrices have row and column types.
-This list provides the typical names for the row and column types
+<meta property="og:title" content="PSUT matrix meta information column names — mat_meta_cols" />
+<meta property="og:description" content="When forming PSUT matrices, meta information is provided in columns.
+This list provides the typical names for the meta information columns
 throughout the IEATools package." />
 
 
@@ -132,47 +132,48 @@ throughout the IEATools package." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>PSUT matrix row and column types</h1>
+    <h1>PSUT matrix meta information column names</h1>
     
-    <div class="hidden name"><code>row_col_types.Rd</code></div>
+    <div class="hidden name"><code>mat_meta_cols.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>PSUT matrices have row and column types.
-This list provides the typical names for the row and column types
+    <p>When forming PSUT matrices, meta information is provided in columns.
+This list provides the typical names for the meta information columns
 throughout the <code>IEATools</code> package.</p>
     </div>
 
-    <pre class="usage"><span class='no'>row_col_types</span></pre>
+    <pre class="usage"><span class='no'>mat_meta_cols</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string list with 5 entries</p><dl'>
-<dt>resource</dt><dd><p>The type of entity that provides raw resources.</p></dd>
-<dt>industry</dt><dd><p>The type of entity that receives inputs and makes outputs.</p></dd>
-<dt>sector</dt><dd><p>The type of entity that absorbs final demand.</p></dd>
-<dt>product</dt><dd><p>The inputs and outputs of industries.</p></dd>
-<dt>unit</dt><dd><p>Units of physical measurement such as ktoe or TJ.</p></dd>
+    <p>A string list with 6 entries</p><dl'>
+<dt>matnames</dt><dd><p>The name of the column that contains matrix names.</p></dd>
+<dt>rownames</dt><dd><p>The name of the column that contains matrix row names.</p></dd>
+<dt>colnames</dt><dd><p>The name of the column that contains matrix column names.</p></dd>
+<dt>rowtypes</dt><dd><p>The name of the column that contains matrix row types.</p></dd>
+<dt>coltypes</dt><dd><p>The name of the column that contains matrix column types.</p></dd>
+<dt>matvals</dt><dd><p>The name of the column in a tidy data frame that contains matrices.</p></dd>
 
 </dl>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>row_col_types</span></div><div class='output co'>#&gt; $industry
-#&gt; [1] "Industry"
+    <pre class="examples"><div class='input'><span class='no'>mat_meta_cols</span></div><div class='output co'>#&gt; $matnames
+#&gt; [1] "matnames"
 #&gt; 
-#&gt; $resource
-#&gt; [1] "Industry"
+#&gt; $rownames
+#&gt; [1] "rownames"
 #&gt; 
-#&gt; $sector
-#&gt; [1] "Industry"
+#&gt; $colnames
+#&gt; [1] "colnames"
 #&gt; 
-#&gt; $product
-#&gt; [1] "Product"
+#&gt; $rowtypes
+#&gt; [1] "rowtypes"
 #&gt; 
-#&gt; $unit
-#&gt; [1] "Unit"
+#&gt; $coltypes
+#&gt; [1] "coltypes"
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

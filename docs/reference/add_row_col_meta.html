@@ -145,23 +145,22 @@ information to <code>.tidy_iea_df</code>.</p>
 
     <pre class="usage"><span class='fu'>add_row_col_meta</span>(
   <span class='no'>.tidy_iea_df</span>,
-  <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>product</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>flow</span>,
-  <span class='kw'>matnames</span> <span class='kw'>=</span> <span class='st'>"matnames"</span>,
-  <span class='kw'>U</span> <span class='kw'>=</span> <span class='st'>"U"</span>,
-  <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='st'>"U_EIOU"</span>,
-  <span class='kw'>R</span> <span class='kw'>=</span> <span class='st'>"R"</span>,
-  <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
-  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>,
-  <span class='kw'>industry_type</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>,
-  <span class='kw'>product_type</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
-  <span class='kw'>sector_type</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>,
-  <span class='kw'>resource_type</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>,
-  <span class='kw'>rownames</span> <span class='kw'>=</span> <span class='st'>"rownames"</span>,
-  <span class='kw'>colnames</span> <span class='kw'>=</span> <span class='st'>"colnames"</span>,
-  <span class='kw'>rowtypes</span> <span class='kw'>=</span> <span class='st'>"rowtypes"</span>,
-  <span class='kw'>coltypes</span> <span class='kw'>=</span> <span class='st'>"coltypes"</span>
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>product</span>,
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow</span>,
+  <span class='kw'>matnames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>matnames</span>,
+  <span class='kw'>U</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>U</span>,
+  <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>U_eiou</span>,
+  <span class='kw'>R</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>R</span>,
+  <span class='kw'>V</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>V</span>,
+  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>Y</span>,
+  <span class='kw'>industry_type</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>industry</span>,
+  <span class='kw'>product_type</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>product</span>,
+  <span class='kw'>sector_type</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>sector</span>,
+  <span class='kw'>resource_type</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>resource</span>,
+  <span class='kw'>rownames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>rownames</span>,
+  <span class='kw'>colnames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>colnames</span>,
+  <span class='kw'>rowtypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>rowtypes</span>,
+  <span class='kw'>coltypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>coltypes</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -172,18 +171,8 @@ information to <code>.tidy_iea_df</code>.</p>
       <td><p>a data frame containing column <code>matnames</code></p></td>
     </tr>
     <tr>
-      <th>cols</th>
-      <td><p>a list containing names of columns. Default is <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>product</th>
-      <td><p>the name of the column in <code>.tidy_iea_df</code> where Product names
-is found (a string). Default is <code>cols$product</code>.</p></td>
-    </tr>
-    <tr>
-      <th>flow</th>
-      <td><p>the name of the column in <code>.tidy_iea_df</code> where Flow names
-is found (a string). Default is <code>cols$flow</code>.</p></td>
+      <th>flow, product</th>
+      <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
       <th>matnames</th>
@@ -191,24 +180,8 @@ is found (a string). Default is <code>cols$flow</code>.</p></td>
 (a string).  Default is "matnames".</p></td>
     </tr>
     <tr>
-      <th>U</th>
-      <td><p>the name for use matrices (a string). Default is "U".</p></td>
-    </tr>
-    <tr>
-      <th>U_EIOU</th>
-      <td><p>the name for energy industry own use matrices (a string). Default is "U_EIOU".</p></td>
-    </tr>
-    <tr>
-      <th>R</th>
-      <td><p>the name for resource matrices (a string). Default is "R".</p></td>
-    </tr>
-    <tr>
-      <th>V</th>
-      <td><p>the name for make matrices (a string). Default is "V".</p></td>
-    </tr>
-    <tr>
-      <th>Y</th>
-      <td><p>the name for final demand matrices (a string). Default is "Y".</p></td>
+      <th>R, U, U_EIOU, V, Y</th>
+      <td><p>See <code><a href='psut_cols.html'>IEATools::psut_cols</a></code>.</p></td>
     </tr>
     <tr>
       <th>industry_type</th>

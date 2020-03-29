@@ -148,14 +148,15 @@ throughout the <code>IEATools</code> package.</p>
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string list with 11 entries</p><dl'>
-<dt>resources,R</dt><dd><p>The name of a column containing resource (<code>R</code>) matrices.</p></dd>
-<dt>use,U</dt><dd><p>The name of a column containing use (<code>U</code>) matrices.</p></dd>
-<dt>U_excl_eiou</dt><dd><p>The name of a column containing use (<code>U</code>) matrices that exclude energy industry own use.</p></dd>
-<dt>U_EIOU</dt><dd><p>The name of a column containing use (<code>U</code>) matrices that contain exclusively energy industry own use.</p></dd>
-<dt>make,V</dt><dd><p>The name of a column containing make (<code>V</code>) matrices.</p></dd>
-<dt>final_demand,Y</dt><dd><p>The name of a column containing final demand (<code>Y</code>) matrices.</p></dd>
-<dt>s_units</dt><dd><p>The name of a column containing unit summation (<code>S_units</code>) matrices.</p></dd>
+    <p>A string list with 8 entries</p><dl'>
+<dt>resources,R</dt><dd><p>The name of a column in a wide data frame containing resource (<code>R</code>) matrices.</p></dd>
+<dt>use,U</dt><dd><p>The name of a column in a wide data frame containing use (<code>U</code>) matrices.</p></dd>
+<dt>U_excl_eiou</dt><dd><p>The name of a column in a wide data frame containing use (<code>U</code>) matrices that exclude energy industry own use.</p></dd>
+<dt>U_EIOU</dt><dd><p>The name of a column in a wide data frame containing use (<code>U</code>) matrices that contain exclusively energy industry own use.</p></dd>
+<dt>make,V</dt><dd><p>The name of a column in a wide data frame containing make (<code>V</code>) matrices.</p></dd>
+<dt>final_demand,Y</dt><dd><p>The name of a column in a wide data frame containing final demand (<code>Y</code>) matrices.</p></dd>
+<dt>s_units</dt><dd><p>The name of a column in a wide data frame containing unit summation (<code>S_units</code>) matrices.</p></dd>
+<dt>matvals</dt><dd><p>The name of a column in a tidy data frame containing matrices.</p></dd>
 
 </dl>
 
@@ -198,6 +199,9 @@ E.g., both <code>resources</code> and <code>R</code> point to the "R" column nam
 #&gt; 
 #&gt; $s_units
 #&gt; [1] "S_units"
+#&gt; 
+#&gt; $matvals
+#&gt; [1] "matvals"
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

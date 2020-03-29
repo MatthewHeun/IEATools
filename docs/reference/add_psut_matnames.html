@@ -156,10 +156,13 @@ and terminology, although <code>.tidy_iea_df</code> does not necessarily need to
   <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='ledger_sides.html'>ledger_sides</a></span>$<span class='no'>consumption</span>,
   <span class='kw'>production</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tpes_flows.html'>tpes_flows</a></span>$<span class='no'>production</span>,
   <span class='kw'>resources</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tpes_flows.html'>tpes_flows</a></span>$<span class='no'>resources</span>,
-  <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>,
-  <span class='kw'>neg_supply_in_fd</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Exports"</span>, <span class='st'>"International aviation bunkers"</span>,
-    <span class='st'>"International marine bunkers"</span>, <span class='st'>"Losses"</span>, <span class='st'>"Statistical differences"</span>, <span class='st'>"Stock changes"</span>),
-  <span class='kw'>matnames</span> <span class='kw'>=</span> <span class='st'>"matnames"</span>,
+  <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span>$<span class='no'>energy_industry_own_use</span>,
+  <span class='kw'>neg_supply_in_fd</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tpes_flows.html'>tpes_flows</a></span>$<span class='no'>exports</span>,
+    <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tpes_flows.html'>tpes_flows</a></span>$<span class='no'>international_aviation_bunkers</span>,
+    <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tpes_flows.html'>tpes_flows</a></span>$<span class='no'>international_marine_bunkers</span>,
+    <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tpes_flows.html'>tpes_flows</a></span>$<span class='no'>stock_changes</span>, <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span>$<span class='no'>losses</span>,
+    <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span>$<span class='no'>statistical_differences</span>),
+  <span class='kw'>matnames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>matnames</span>,
   <span class='kw'>R</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>R</span>,
   <span class='kw'>U_excl_EIOU</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>U_excl_eiou</span>,
   <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>U_eiou</span>,
@@ -188,21 +191,19 @@ and terminology, although <code>.tidy_iea_df</code> does not necessarily need to
     </tr>
     <tr>
       <th>eiou</th>
-      <td><p>the identifier for items that are energy industry own use.
-Default is "Energy industry own use".</p></td>
+      <td><p>See <code><a href='tfc_compare_flows.html'>IEATools::tfc_compare_flows</a></code>.</p></td>
     </tr>
     <tr>
       <th>neg_supply_in_fd</th>
-      <td><p>identifiers for flow items that, when negative,
-are entries in the final demand (<code>Y</code>) matrix.</p></td>
+      <td><p>For "Exports", "International aviation bunkers", "International marine bunkers", and "Stock changes", see <code><a href='tpes_flows.html'>IEATools::tpes_flows</a></code>.
+For "Losses" and "Statistica differnces", see <code><a href='tfc_compare_flows.html'>IEATools::tfc_compare_flows</a></code>.</p></td>
     </tr>
     <tr>
       <th>matnames</th>
-      <td><p>the name of the output column containing the name of the matrix
-to which a row's value belongs (a string). Default is "matnames".</p></td>
+      <td><p>See <code><a href='mat_meta_cols.html'>IEATools::mat_meta_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>R, U_excl_EIOU, U_eiou, V, Y</th>
+      <th>R, U_excl_EIOU, U_EIOU, V, Y</th>
       <td><p>See <code>IEATools::psut_matnames</code>.</p></td>
     </tr>
     </table>

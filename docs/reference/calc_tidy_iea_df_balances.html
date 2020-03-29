@@ -163,14 +163,14 @@ use the <code><a href='tidy_iea_df_balanced.html'>tidy_iea_df_balanced()</a></co
 
     <pre class="usage"><span class='fu'>calc_tidy_iea_df_balances</span>(
   <span class='no'>.tidy_iea_df</span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>,
-  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
-  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>,
+  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>ledger_side</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow_aggregation_point</span>,
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow</span>,
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>product</span>,
+  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>e_dot</span>,
+  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>unit</span>,
+  <span class='kw'>supply</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='ledger_sides.html'>ledger_sides</a></span>$<span class='no'>supply</span>,
+  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='ledger_sides.html'>ledger_sides</a></span>$<span class='no'>consumption</span>,
   <span class='kw'>supply_sum</span> <span class='kw'>=</span> <span class='st'>"supply_sum"</span>,
   <span class='kw'>consumption_sum</span> <span class='kw'>=</span> <span class='st'>"consumption_sum"</span>,
   <span class='kw'>supply_minus_consumption</span> <span class='kw'>=</span> <span class='st'>"supply_minus_consumption"</span>,
@@ -190,42 +190,12 @@ grouping columns, typically <code>Country</code>, <code>Year</code>, <code>Produ
 a <code>Ledger.side</code> column.</p></td>
     </tr>
     <tr>
-      <th>ledger_side</th>
-      <td><p>the name of the column in <code>.tidy_iea_data</code>
-that contains ledger side information (a string). Default is "Ledger.side".</p></td>
+      <th>ledger_side, flow_aggregation_point, flow, product, e_dot, unit</th>
+      <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>flow_aggregation_point</th>
-      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains flow aggregation point information.
-Default is "Flow.aggregation.point".</p></td>
-    </tr>
-    <tr>
-      <th>supply</th>
-      <td><p>the identifier for supply data in the <code>ledger_side</code> column (a string).
-Default is "Supply".</p></td>
-    </tr>
-    <tr>
-      <th>consumption</th>
-      <td><p>the identifier for consumption data in the <code>ledger_side</code> column (a string).
-Default is "Consumption".</p></td>
-    </tr>
-    <tr>
-      <th>flow</th>
-      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains flows. Default is "Flow".</p></td>
-    </tr>
-    <tr>
-      <th>product</th>
-      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains products. Default is "Product".</p></td>
-    </tr>
-    <tr>
-      <th>e_dot</th>
-      <td><p>the name of the column in <code>.tidy_iea_data</code>
-that contains energy flow data. Default is "E.dot".</p></td>
-    </tr>
-    <tr>
-      <th>unit</th>
-      <td><p>the name of the column in <code>.tidy_iea_data</code>
-that contains the units for the energy flow data. Default is "Unit".</p></td>
+      <th>supply, consumption</th>
+      <td><p>See <code><a href='ledger_sides.html'>IEATools::ledger_sides</a></code>.</p></td>
     </tr>
     <tr>
       <th>supply_sum</th>
