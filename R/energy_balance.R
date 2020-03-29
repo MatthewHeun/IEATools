@@ -102,19 +102,19 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
     dplyr::summarise("{supply_sum}" := sum(.data[[e_dot]]))
   # Calculate the consumption sum on a per-group basis
   ConsumptionSum <- Tidy %>%
-    dplyr::filter(!!as.name(ledger_side) == consumption) %>%
-    dplyr::summarise(!!as.name(consumption_sum) := sum(.data[[e_dot]]))
+    dplyr::filter(.data[[ledger_side]] == consumption) %>%
+    dplyr::summarise("{consumption_sum}" := sum(.data[[e_dot]]))
   # Return the difference between supply and consumption
   dplyr::full_join(SupplySum, ConsumptionSum, by = grouping_strings) %>% 
     dplyr::mutate(
-      "{supply_minus_consumption}" := !!as.name(supply_sum) - !!as.name(consumption_sum), 
+      "{supply_minus_consumption}" := .data[[supply_sum]] - .data[[consumption_sum]], 
       "{balance_OK}" := dplyr::case_when(
-        is.na(!!as.name(consumption_sum)) ~ abs(!!as.name(supply_sum)) <= tol,
-        TRUE ~ abs(!!as.name(supply_sum) - !!as.name(consumption_sum)) <= tol
+        is.na(.data[[consumption_sum]]) ~ abs(.data[[supply_sum]]) <= tol,
+        TRUE ~ abs(.data[[supply_sum]] - .data[[consumption_sum]]) <= tol
       ),
       "{err}" := dplyr::case_when(
-        is.na(!!as.name(consumption_sum)) ~ !!as.name(supply_sum),
-        TRUE ~ !!as.name(supply_minus_consumption)
+        is.na(.data[[consumption_sum]]) ~ .data[[supply_sum]],
+        TRUE ~ .data[[supply_minus_consumption]]
       )
     ) %>% 
     dplyr::ungroup()
