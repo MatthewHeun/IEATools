@@ -35,7 +35,7 @@ fix_tidy_iea_df_balances(
 
 \item{statistical_differences}{See \code{IEATools::tfc_compare_flows}.}
 
-\item{err}{the name of a temporary error column added to \code{.tidy_iea_df}. Default is ".err".}
+\item{.err}{the name of a temporary error column added to \code{.tidy_iea_df}. Default is ".err".}
 }
 \value{
 \code{.tidy_iea_df} with adjusted \code{statistical_differences} flows such that

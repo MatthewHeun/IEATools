@@ -169,7 +169,7 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param tfc_compare See `IEATools::aggregation_flows`.
 #' @param statistical_differences See `IEATools::tfc_compare_flows`.
-#' @param err the name of a temporary error column added to `.tidy_iea_df`. Default is ".err".
+#' @param .err the name of a temporary error column added to `.tidy_iea_df`. Default is ".err".
 #'
 #' @return `.tidy_iea_df` with adjusted `statistical_differences` flows such that 
 #'         the data for each product are in perfect energy balance.
