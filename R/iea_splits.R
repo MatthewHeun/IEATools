@@ -6,7 +6,8 @@
 #' Find row numbers for adjacent entries
 #' 
 #' Given `.DF`, find the row numbers that contain the first instance 
-#' in `col_name` of adjacent `entries`
+#' in `col_name` of adjacent `entries`, 
+#' this function finds the row number of the adjacent `entries`.
 #' 
 #' This function is helpful for finding boundaries between rows of a data frame
 #' in preparation for defining grouping variables.
