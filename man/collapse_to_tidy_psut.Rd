@@ -6,56 +6,34 @@
 \usage{
 collapse_to_tidy_psut(
   .tidy_iea_df,
-  cols = IEATools::iea_cols,
-  e_dot = cols$e_dot,
-  ledger_side = cols$ledger_side,
-  flow_aggregation_point = cols$flow_aggregation_point,
-  unit = cols$unit,
-  flow = cols$flow,
-  product = cols$product,
-  matnames = "matnames",
-  rownames = "rownames",
-  colnames = "colnames",
-  rowtypes = "rowtypes",
-  coltypes = "coltypes",
-  matvals = "matvals"
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  flow = IEATools::iea_cols$flow,
+  product = IEATools::iea_cols$product,
+  e_dot = IEATools::iea_cols$e_dot,
+  unit = IEATools::iea_cols$unit,
+  matnames = IEATools::mat_meta_cols$matnames,
+  rownames = IEATools::mat_meta_cols$rownames,
+  colnames = IEATools::mat_meta_cols$colnames,
+  rowtypes = IEATools::mat_meta_cols$rowtypes,
+  coltypes = IEATools::mat_meta_cols$coltypes,
+  matvals = IEATools::psut_cols$matvals
 )
 }
 \arguments{
 \item{.tidy_iea_df}{a data frame containing \code{matnames} and several other columns}
 
-\item{cols}{a list containing names of columns. Default is \code{IEATools::iea_cols}.}
+\item{ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
 
-\item{e_dot}{the name of a column in \code{.tidy_iea_df} containing energy flow rates. Default is \code{.iea_cols$e_dot}}
+\item{matnames, rownames, colnames, rowtypes, coltypes}{See \code{IEATools::mat_meta_cols}.}
 
-\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is \code{cols$ledger_side}.}
-
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is \verb{"Flcols$flow_aggregation_point}.}
-
-\item{unit}{the name of the unit column in \code{.tidy_iea_df}. Default is cols$unit.}
-
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is cols$flow.}
-
-\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is \code{cols$product}.}
-
-\item{matnames}{the name of a column in \code{.tidy_iea_df} containing matrix names. Default is "matname".}
-
-\item{rownames}{the name of a column to be added to \code{.tidy_iea_df} for row names. Default is "rownames".}
-
-\item{colnames}{the name of a column to be added to \code{.tidy_iea_df} for column names. Default is "colnames".}
-
-\item{rowtypes}{the name of a column to be added to \code{.tidy_iea_df} for row types. Default is "rowtypes".}
-
-\item{coltypes}{the name of a column to be added to \code{.tidy_iea_df} for column types. Default is "coltypes".}
-
-\item{matvals}{the name of a column to be added to \code{.tidy_iea_df} for matrices. Default is "matvals".}
+\item{matvals}{See \code{IEATools::psut_cols}.}
 }
 \value{
 \code{.tidy_iea_df} with all values converted to matrices in the \code{matvals} column
 }
 \description{
-Call this function after calling \code{\link[=add_row_col_meta]{add_row_col_meta()}}
-to collapse \code{.tidy_iea_df} into a tidy PSUT data frame.
+Call this function after calling \verb{add_row_col_meta()`` to collapse }.tidy_iea_df` into a tidy PSUT data frame.
 }
 \details{
 This function ensures that all energy flow numbers are positive

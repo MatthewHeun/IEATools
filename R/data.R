@@ -62,15 +62,16 @@
 #' thereby providing synonyms.
 #' E.g., both `resources` and `R` point to the "R" column name.
 #' 
-#' @format A string list with 11 entries
+#' @format A string list with 8 entries
 #' \describe{
-#' \item{resources,R}{The name of a column containing resource (`R`) matrices.}
-#' \item{use,U}{The name of a column containing use (`U`) matrices.}
-#' \item{U_excl_eiou}{The name of a column containing use (`U`) matrices that exclude energy industry own use.}
-#' \item{U_EIOU}{The name of a column containing use (`U`) matrices that contain exclusively energy industry own use.}
-#' \item{make,V}{The name of a column containing make (`V`) matrices.}
-#' \item{final_demand,Y}{The name of a column containing final demand (`Y`) matrices.}
-#' \item{s_units}{The name of a column containing unit summation (`S_units`) matrices.}
+#' \item{resources,R}{The name of a column in a wide data frame containing resource (`R`) matrices.}
+#' \item{use,U}{The name of a column in a wide data frame containing use (`U`) matrices.}
+#' \item{U_excl_eiou}{The name of a column in a wide data frame containing use (`U`) matrices that exclude energy industry own use.}
+#' \item{U_EIOU}{The name of a column in a wide data frame containing use (`U`) matrices that contain exclusively energy industry own use.}
+#' \item{make,V}{The name of a column in a wide data frame containing make (`V`) matrices.}
+#' \item{final_demand,Y}{The name of a column in a wide data frame containing final demand (`Y`) matrices.}
+#' \item{s_units}{The name of a column in a wide data frame containing unit summation (`S_units`) matrices.}
+#' \item{matvals}{The name of a column in a tidy data frame containing matrices.}
 #' }
 #' 
 #' @examples
@@ -104,13 +105,14 @@
 #' This list provides the typical names for the meta information columns
 #' throughout the `IEATools` package.
 #' 
-#' @format A string list with 5 entries
+#' @format A string list with 6 entries
 #' \describe{
 #' \item{matnames}{The name of the column that contains matrix names.}
 #' \item{rownames}{The name of the column that contains matrix row names.}
 #' \item{colnames}{The name of the column that contains matrix column names.}
 #' \item{rowtypes}{The name of the column that contains matrix row types.}
 #' \item{coltypes}{The name of the column that contains matrix column types.}
+#' \item{matvals}{The name of the column in a tidy data frame that contains matrices.}
 #' }
 #' 
 #' @examples
@@ -244,13 +246,13 @@
 #' 
 #' @format A string vector with 6 entries
 #' \describe{
-#' \item{resources}{}
-#' \item{production}{}
-#' \item{imports}{}
-#' \item{exports}{}
-#' \item{international_marine_bunkers}{}
-#' \item{international_aviation_bunkers}{}
-#' \item{stock_changes}{}
+#' \item{resources}{The string identifier for Resource flows.}
+#' \item{production}{The string identifier for Production flows.}
+#' \item{imports}{The string identifier for Import flows.}
+#' \item{exports}{The string identifier for  flows.}
+#' \item{international_marine_bunkers}{The string identifier for International marine bunkers flows.}
+#' \item{international_aviation_bunkers}{The string identifier for International aviation bunkers flows.}
+#' \item{stock_changes}{The string identifier for Stock changes flows.}
 #' }
 #' 
 #' @examples 

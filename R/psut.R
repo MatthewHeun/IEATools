@@ -254,26 +254,16 @@ add_row_col_meta <- function(.tidy_iea_df,
 
 #' Collapse a tidy data frame of IEA data to a tidy PSUT data frame
 #' 
-#' Call this function after calling [add_row_col_meta()]
+#' Call this function after calling `add_row_col_meta()``
 #' to collapse `.tidy_iea_df` into a tidy PSUT data frame. 
 #' 
 #' This function ensures that all energy flow numbers are positive
 #' before creating the matrices.
 #'
 #' @param .tidy_iea_df a data frame containing `matnames` and several other columns
-#' @param cols a list containing names of columns. Default is `IEATools::iea_cols`.
-#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is `cols$ledger_side`.
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is `"Flcols$flow_aggregation_point`.
-#' @param unit the name of the unit column in `.tidy_iea_df`. Default is cols$unit.
-#' @param flow the name of the flow column in `.tidy_iea_df`. Default is cols$flow.
-#' @param product the name of the product column in `.tidy_iea_df`. Default is `cols$product`.
-#' @param e_dot the name of a column in `.tidy_iea_df` containing energy flow rates. Default is `.iea_cols$e_dot`
-#' @param matnames the name of a column in `.tidy_iea_df` containing matrix names. Default is "matname".
-#' @param rownames the name of a column to be added to `.tidy_iea_df` for row names. Default is "rownames".
-#' @param colnames the name of a column to be added to `.tidy_iea_df` for column names. Default is "colnames".
-#' @param rowtypes the name of a column to be added to `.tidy_iea_df` for row types. Default is "rowtypes".
-#' @param coltypes the name of a column to be added to `.tidy_iea_df` for column types. Default is "coltypes".
-#' @param matvals the name of a column to be added to `.tidy_iea_df` for matrices. Default is "matvals".
+#' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
+#' @param matnames,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
+#' @param matvals See `IEATools::psut_cols`.
 #'
 #' @return `.tidy_iea_df` with all values converted to matrices in the `matvals` column
 #' 
@@ -286,20 +276,20 @@ add_row_col_meta <- function(.tidy_iea_df,
 #'   add_row_col_meta() %>% 
 #'   collapse_to_tidy_psut()
 collapse_to_tidy_psut <- function(.tidy_iea_df,
-                                  # Name of the input columns containing matrix names
-                                  cols = IEATools::iea_cols,
-                                  e_dot = cols$e_dot,
-                                  # Other IEA variables that are no longer needed after collapsing
-                                  ledger_side = cols$ledger_side,
-                                  flow_aggregation_point = cols$flow_aggregation_point, 
-                                  unit = cols$unit, 
-                                  flow = cols$flow,
-                                  product = cols$product,
-                                  matnames = "matnames",
-                                  rownames = "rownames", colnames = "colnames",
-                                  rowtypes = "rowtypes", coltypes = "coltypes", 
+                                  # Names of input columns
+                                  ledger_side = IEATools::iea_cols$ledger_side,
+                                  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point, 
+                                  flow = IEATools::iea_cols$flow,
+                                  product = IEATools::iea_cols$product,
+                                  e_dot = IEATools::iea_cols$e_dot,
+                                  unit = IEATools::iea_cols$unit, 
+                                  matnames = IEATools::mat_meta_cols$matnames,
+                                  rownames = IEATools::mat_meta_cols$rownames,
+                                  colnames = IEATools::mat_meta_cols$colnames,
+                                  rowtypes = IEATools::mat_meta_cols$rowtypes, 
+                                  coltypes = IEATools::mat_meta_cols$coltypes, 
                                   # Name of output column of matrices
-                                  matvals = "matvals"){
+                                  matvals = IEATools::psut_cols$matvals){
   matsindf::verify_cols_missing(.tidy_iea_df, matvals)
   .tidy_iea_df %>% 
     dplyr::mutate(

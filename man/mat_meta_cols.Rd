@@ -5,13 +5,14 @@
 \alias{mat_meta_cols}
 \title{PSUT matrix meta information column names}
 \format{
-A string list with 5 entries
+A string list with 6 entries
 \describe{
 \item{matnames}{The name of the column that contains matrix names.}
 \item{rownames}{The name of the column that contains matrix row names.}
 \item{colnames}{The name of the column that contains matrix column names.}
 \item{rowtypes}{The name of the column that contains matrix row types.}
 \item{coltypes}{The name of the column that contains matrix column types.}
+\item{matvals}{The name of the column in a tidy data frame that contains matrices.}
 }
 }
 \usage{

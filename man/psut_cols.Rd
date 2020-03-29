@@ -5,15 +5,16 @@
 \alias{psut_cols}
 \title{Physical Supply-Use Table (PSUT) data frame column names}
 \format{
-A string list with 11 entries
+A string list with 8 entries
 \describe{
-\item{resources,R}{The name of a column containing resource (\code{R}) matrices.}
-\item{use,U}{The name of a column containing use (\code{U}) matrices.}
-\item{U_excl_eiou}{The name of a column containing use (\code{U}) matrices that exclude energy industry own use.}
-\item{U_EIOU}{The name of a column containing use (\code{U}) matrices that contain exclusively energy industry own use.}
-\item{make,V}{The name of a column containing make (\code{V}) matrices.}
-\item{final_demand,Y}{The name of a column containing final demand (\code{Y}) matrices.}
-\item{s_units}{The name of a column containing unit summation (\code{S_units}) matrices.}
+\item{resources,R}{The name of a column in a wide data frame containing resource (\code{R}) matrices.}
+\item{use,U}{The name of a column in a wide data frame containing use (\code{U}) matrices.}
+\item{U_excl_eiou}{The name of a column in a wide data frame containing use (\code{U}) matrices that exclude energy industry own use.}
+\item{U_EIOU}{The name of a column in a wide data frame containing use (\code{U}) matrices that contain exclusively energy industry own use.}
+\item{make,V}{The name of a column in a wide data frame containing make (\code{V}) matrices.}
+\item{final_demand,Y}{The name of a column in a wide data frame containing final demand (\code{Y}) matrices.}
+\item{s_units}{The name of a column in a wide data frame containing unit summation (\code{S_units}) matrices.}
+\item{matvals}{The name of a column in a tidy data frame containing matrices.}
 }
 }
 \usage{

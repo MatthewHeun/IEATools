@@ -59,7 +59,7 @@ usethis::use_data(iea_cols, overwrite = TRUE)
 # Give names for matrix meta information columns
 # 
 
-mat_meta_cols <- list(matnames = "matnames", 
+mat_meta_cols <- list(matnames = "matnames",
                       rownames = "rownames", 
                       colnames = "colnames", 
                       rowtypes = "rowtypes", 
@@ -81,7 +81,8 @@ psut_cols <- list(resources = "R",
                   V = "V", 
                   final_demand = "Y",
                   Y = "Y", 
-                  s_units = "S_units")
+                  s_units = "S_units", 
+                  matvals = "matvals")
 usethis::use_data(psut_cols, overwrite = TRUE)
 
 

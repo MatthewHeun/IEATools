@@ -7,13 +7,13 @@
 \format{
 A string vector with 6 entries
 \describe{
-\item{resources}{}
-\item{production}{}
-\item{imports}{}
-\item{exports}{}
-\item{international_marine_bunkers}{}
-\item{international_aviation_bunkers}{}
-\item{stock_changes}{}
+\item{resources}{The string identifier for Resource flows.}
+\item{production}{The string identifier for Production flows.}
+\item{imports}{The string identifier for Import flows.}
+\item{exports}{The string identifier for  flows.}
+\item{international_marine_bunkers}{The string identifier for International marine bunkers flows.}
+\item{international_aviation_bunkers}{The string identifier for International aviation bunkers flows.}
+\item{stock_changes}{The string identifier for Stock changes flows.}
 }
 }
 \usage{
