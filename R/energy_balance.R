@@ -40,20 +40,8 @@
 #'        `flow`, and energy rate (`e_dot`) columns along with  
 #'        grouping columns, typically `Country`, `Year`, `Product`, etc. 
 #'        a `Ledger.side` column.
-#' @param ledger_side the name of the column in `.tidy_iea_data`
-#'        that contains ledger side information (a string). Default is "Ledger.side".
-#' @param supply the identifier for supply data in the `ledger_side` column (a string).
-#'        Default is "Supply".
-#' @param consumption the identifier for consumption data in the `ledger_side` column (a string).
-#'        Default is "Consumption".
-#' @param flow_aggregation_point the name of the column in `.tidy_iea_df` that contains flow aggregation point information.
-#'        Default is "Flow.aggregation.point".
-#' @param flow the name of the column in `.tidy_iea_df` that contains flows. Default is "Flow".
-#' @param product the name of the column in `.tidy_iea_df` that contains products. Default is "Product".
-#' @param e_dot the name of the column in `.tidy_iea_data`
-#'        that contains energy flow data. Default is "E.dot".
-#' @param unit the name of the column in `.tidy_iea_data`
-#'        that contains the units for the energy flow data. Default is "Unit".
+#' @param ledger_side,flow_aggregation_point,flow,product,edot,unit See `IEATools::iea_cols`.
+#' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param supply_sum the name of a new column that will contain the sum of all supply for that group.
 #'        Default is "supply_sum".
 #' @param consumption_sum the name of a new column that will contain the sum of all consumption for that group.
@@ -77,14 +65,14 @@
 #' head(Ebal, 5)
 calc_tidy_iea_df_balances <- function(.tidy_iea_df, 
                             # Input column names
-                            ledger_side = "Ledger.side",
-                            flow_aggregation_point = "Flow.aggregation.point",
-                            supply = "Supply",
-                            consumption = "Consumption",
-                            flow = "Flow",
-                            product = "Product",
-                            e_dot = "E.dot",
-                            unit = "Unit",
+                            ledger_side = IEATools::iea_cols$ledger_side,
+                            flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                            flow = IEATools::iea_cols$flow,
+                            product = IEATools::iea_cols$product,
+                            e_dot = IEATools::iea_cols$e_dot,
+                            unit = IEATools::iea_cols$unit,
+                            supply = IEATools::ledger_sides$supply,
+                            consumption = IEATools::ledger_sides$consumption,
                             # Output column names
                             supply_sum = "supply_sum",
                             consumption_sum = "consumption_sum",

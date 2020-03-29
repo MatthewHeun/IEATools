@@ -6,14 +6,14 @@
 \usage{
 calc_tidy_iea_df_balances(
   .tidy_iea_df,
-  ledger_side = "Ledger.side",
-  flow_aggregation_point = "Flow.aggregation.point",
-  supply = "Supply",
-  consumption = "Consumption",
-  flow = "Flow",
-  product = "Product",
-  e_dot = "E.dot",
-  unit = "Unit",
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  flow = IEATools::iea_cols$flow,
+  product = IEATools::iea_cols$product,
+  e_dot = IEATools::iea_cols$e_dot,
+  unit = IEATools::iea_cols$unit,
+  supply = IEATools::ledger_sides$supply,
+  consumption = IEATools::ledger_sides$consumption,
   supply_sum = "supply_sum",
   consumption_sum = "consumption_sum",
   supply_minus_consumption = "supply_minus_consumption",
@@ -28,27 +28,9 @@ calc_tidy_iea_df_balances(
 grouping columns, typically \code{Country}, \code{Year}, \code{Product}, etc.
 a \code{Ledger.side} column.}
 
-\item{ledger_side}{the name of the column in \code{.tidy_iea_data}
-that contains ledger side information (a string). Default is "Ledger.side".}
+\item{ledger_side, flow_aggregation_point, flow, product, edot, unit}{See \code{IEATools::iea_cols}.}
 
-\item{flow_aggregation_point}{the name of the column in \code{.tidy_iea_df} that contains flow aggregation point information.
-Default is "Flow.aggregation.point".}
-
-\item{supply}{the identifier for supply data in the \code{ledger_side} column (a string).
-Default is "Supply".}
-
-\item{consumption}{the identifier for consumption data in the \code{ledger_side} column (a string).
-Default is "Consumption".}
-
-\item{flow}{the name of the column in \code{.tidy_iea_df} that contains flows. Default is "Flow".}
-
-\item{product}{the name of the column in \code{.tidy_iea_df} that contains products. Default is "Product".}
-
-\item{e_dot}{the name of the column in \code{.tidy_iea_data}
-that contains energy flow data. Default is "E.dot".}
-
-\item{unit}{the name of the column in \code{.tidy_iea_data}
-that contains the units for the energy flow data. Default is "Unit".}
+\item{supply, consumption}{See \code{IEATools::ledger_sides}.}
 
 \item{supply_sum}{the name of a new column that will contain the sum of all supply for that group.
 Default is "supply_sum".}
