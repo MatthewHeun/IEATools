@@ -83,11 +83,10 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #' @param ledger_side,flow_aggregation_point,flow,product,e_dot See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param production,resources See `IEATools::tpes_flows`.
-#' @param eiou See `IEATools::tpes_compare_flows`.
-#' @param neg_supply_in_fd identifiers for flow items that, when negative,
-#'        are entries in the final demand (`Y`) matrix.
-#' @param matnames the name of the output column containing the name of the matrix
-#'        to which a row's value belongs (a string). Default is "matnames".
+#' @param eiou See `IEATools::tfc_compare_flows`.
+#' @param neg_supply_in_fd For "Exports", "International aviation bunkers", "International marine bunkers", and "Stock changes", see `IEATools::tpes_flows`.
+#'        For "Losses" and "Statistica differnces", see `IEATools::tfc_compare_flows`.
+#' @param matnames See `IEATools::mat_meta_cols`.
 #' @param R,U_excl_EIOU,U_EIOU,V,Y See `IEATools::psut_matnames`.
 #'
 #' @return `.tidy_iea_df` with an added column `matnames`.
@@ -112,12 +111,12 @@ add_psut_matnames <- function(.tidy_iea_df,
                               resources = IEATools::tpes_flows$resources,
                               # Input identifiers for supply, consumption, and EIOU
                               eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
-                              neg_supply_in_fd = c("Exports",
-                                                   "International aviation bunkers",
-                                                   "International marine bunkers",
-                                                   "Losses",
-                                                   "Statistical differences",
-                                                   "Stock changes"),
+                              neg_supply_in_fd = c(IEATools::tpes_flows$exports,
+                                                   IEATools::tpes_flows$international_aviation_bunkers,
+                                                   IEATools::tpes_flows$international_marine_bunkers,
+                                                   IEATools::tpes_flows$stock_changes,
+                                                   IEATools::tfc_compare_flows$losses,
+                                                   IEATools::tfc_compare_flows$statistical_differences),
                               # Output column
                               matnames = IEATools::mat_meta_cols$matnames,
                               # Output identifiers for
