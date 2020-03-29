@@ -271,6 +271,7 @@ test_that("augment_iea_df works", {
   expect_equal(simple_with_tfc_df_2$Flow[[5]], "Coal mines")
 })
 
+
 ###########################################################
 context("Testing munge_to_tidy")
 ###########################################################
@@ -416,7 +417,7 @@ test_that("load_tidy_iea_df works as expected", {
 })
 
 
-test_that("Ledger.side is added by agugmentation", {
+test_that("Ledger.side is added by augmentation", {
   # Every row in the Ledger.side column should be filled with a non-NA entry.
   # Verify that's indeed the case.
   for (year in valid_iea_release_years) {
