@@ -334,21 +334,10 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' and adds those matrices to the data frame.
 #'
 #' @param .tidy_iea_df a tidy data frame that has been specified with `specify_all()`.
-#' @param cols a list containing names of columns. Default is `IEATools::iea_cols`.
-#' @param ledger_side the name of the ledger side column. Default is `cols$ledger_side`.
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is `cols$flow_aggregation_point`.
-#' @param flow the name of the flow column. Default is `cols$flow`.
-#' @param product the name of the product column. Default is `cols$product`.
-#' @param unit the name of the unit column. Default is `cols$unit`. 
-#' @param e_dot the name of the energy rate column. Default is `cols$e_dot`. 
-#' @param supply the string identifying the supply side of the ledger. Default is "Supply".
-#' @param consumption the string identifying the consumption side of the ledger. Default is "Consumption".
-#' @param matnames the name of the matrix names column added by this function. Default is "matnames".
-#' @param matvals the name of the matrix value column added by this function. Default is "matvals".
-#' @param rownames the name of the rownames column passed to `collapse_to_tidy_psut()`. Default is "rownames".
-#' @param colnames the name of the colnames column passed to `collapse_to_tidy_psut()`. Default is "colnames".
-#' @param rowtypes the name of the rowtypes column passed to `collapse_to_tidy_psut()`. Default is "rowtypes".
-#' @param coltypes the name of the coltypes column passed to `collapse_to_tidy_psut()`. Default is "coltypes".
+#' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
+#' @param supply,consumption See `IEATools::ledger_sides`.
+#' @param matnames,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
+#' @param matvals See `IEATools::psut_cols`.
 #'
 #' @return a tidy PSUT data frame
 #' 
@@ -385,21 +374,20 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #'   as.logical() %>% 
 #'   all()
 prep_psut <- function(.tidy_iea_df, 
-                      cols = IEATools::iea_cols,
-                      ledger_side = cols$ledger_side, 
-                      flow_aggregation_point = cols$flow_aggregation_point,
-                      flow = cols$flow, 
-                      product = cols$product, 
-                      unit = cols$unit, 
-                      e_dot = cols$e_dot,
-                      supply = "Supply", 
-                      consumption = "Consumption", 
-                      matnames = "matnames",
-                      matvals = "matvals", 
-                      rownames = "rownames", 
-                      colnames = "colnames", 
-                      rowtypes = "rowtypes", 
-                      coltypes = "coltypes"){
+                      ledger_side = IEATools::iea_cols$ledger_side, 
+                      flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                      flow = IEATools::iea_cols$flow, 
+                      product = IEATools::iea_cols$product, 
+                      e_dot = IEATools::iea_cols$e_dot,
+                      unit = IEATools::iea_cols$unit, 
+                      supply = IEATools::ledger_sides$supply, 
+                      consumption = IEATools::ledger_sides$consumption, 
+                      matnames = IEATools::mat_meta_cols$matnames,
+                      rownames = IEATools::mat_meta_cols$rownames, 
+                      colnames = IEATools::mat_meta_cols$colnames, 
+                      rowtypes = IEATools::mat_meta_cols$rowtypes, 
+                      coltypes = IEATools::mat_meta_cols$coltypes,
+                      matvals = IEATools::psut_cols$matvals){
   S_units <- extract_S_units_from_tidy(.tidy_iea_df, 
                                        product = product, 
                                        unit = unit)
