@@ -57,7 +57,6 @@
 #'   filter(Year == 1991, Flow == "Production") %>% 
 #'   select("E.dot", "Unit")
 fix_GHA_psb <- function(.tidy_iea_df,
-                        col_names = IEATools::iea_cols,
                         country = IEATools::iea_cols$country, 
                         year = IEATools::iea_cols$year, 
                         e_dot = IEATools::iea_cols$e_dot){
@@ -137,7 +136,6 @@ fix_GHA_psb <- function(.tidy_iea_df,
 #'   select(E.dot) %>% 
 #'   sum()
 fix_GHA_industry_electricity <- function(.tidy_iea_df, 
-                                         col_names = IEATools::iea_cols,
                                          country = IEATools::iea_cols$country,
                                          year = IEATools::iea_cols$year,
                                          e_dot = IEATools::iea_cols$e_dot) {

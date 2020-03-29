@@ -4,16 +4,22 @@
 \alias{find_transformation_end}
 \title{Find the point where Transformation processes end}
 \usage{
-find_transformation_end(.ctry_tbl, flow, non_specified, eiou, coal_mines)
+find_transformation_end(
+  .ctry_tbl,
+  flow = IEATools::iea_cols$flow,
+  non_specified,
+  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+  coal_mines = "Coal mines"
+)
 }
 \arguments{
 \item{.ctry_tbl}{a country's IEA data frame}
 
-\item{flow}{the name of the flow column}
+\item{flow}{See \code{IEATools::iea_cols$flow}.}
 
 \item{non_specified}{the name of non-specified in the flow column}
 
-\item{eiou}{the name for energy industry own use in the flow column}
+\item{eiou}{See \code{IEATools::tfc_compare_flows}.}
 
 \item{coal_mines}{the name for coal mines in the flow column}
 }

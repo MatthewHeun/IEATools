@@ -6,7 +6,6 @@
 \usage{
 fix_GHA_psb(
   .tidy_iea_df,
-  col_names = IEATools::iea_cols,
   country = IEATools::iea_cols$country,
   year = IEATools::iea_cols$year,
   e_dot = IEATools::iea_cols$e_dot

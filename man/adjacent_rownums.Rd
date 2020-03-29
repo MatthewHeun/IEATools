@@ -19,7 +19,8 @@ an integer vector of length 2 giving the rows for \code{entries[[1]]} and \code{
 }
 \description{
 Given \code{.DF}, find the row numbers that contain the first instance
-in \code{col_name} of adjacent \code{entries}
+in \code{col_name} of adjacent \code{entries},
+this function finds the row number of the adjacent \code{entries}.
 }
 \details{
 This function is helpful for finding boundaries between rows of a data frame
