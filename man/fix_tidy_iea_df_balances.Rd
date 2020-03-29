@@ -7,17 +7,17 @@
 fix_tidy_iea_df_balances(
   .tidy_iea_df,
   max_fix = 5,
-  ledger_side = "Ledger.side",
-  supply = "Supply",
-  consumption = "Consumption",
-  flow_aggregation_point = "Flow.aggregation.point",
-  tfc_compare = "TFC compare",
-  flow = "Flow",
-  statistical_differences = "Statistical differences",
-  product = "Product",
-  e_dot = "E.dot",
-  err = ".err",
-  remove_zeroes = TRUE
+  remove_zeroes = TRUE,
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  flow = IEATools::iea_cols$flow,
+  product = IEATools::iea_cols$product,
+  e_dot = IEATools::iea_cols$e_dot,
+  supply = IEATools::ledger_sides$supply,
+  consumption = IEATools::ledger_sides$consumption,
+  tfc_compare = IEATools::aggregation_flows$tfc_compare,
+  statistical_differences = IEATools::tfc_compare_flows$statistical_differences,
+  .err = ".err"
 )
 }
 \arguments{
@@ -25,27 +25,17 @@ fix_tidy_iea_df_balances(
 
 \item{max_fix}{the maximum energy balance that will be fixed without giving an error. Default is 5.}
 
-\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "Ledger.side".}
+\item{remove_zeroes}{a logical telling whether to remove \code{0}s after balancing. Default is \code{TRUE}.}
 
-\item{supply}{a string indicating the supply side of the ledger in the \code{ledger_side} column. Default is "Supply".}
+\item{ledger_side, flow_aggregation_point, flow, product, e_dot}{See \code{IEATools::iea_cols}.}
 
-\item{consumption}{a string indicating the consumption side of the ledger in the \code{ledger_side} column. Default is "Consumption".}
+\item{supply, consumption}{See \code{IEATools::ledger_sides}.}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
+\item{tfc_compare}{See \code{IEATools::aggregation_flows}.}
 
-\item{tfc_compare}{a string indicating the Total final consumption comparison flow aggregation point. Default is "TFC compare".}
-
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "Flow".}
-
-\item{statistical_differences}{a string indicating statistical differences in the \code{flow} column. Default is "Statistical differences".}
-
-\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "Product".}
-
-\item{e_dot}{the name of the energy flow column in \code{.tidy_iea_df}. Default is "E.dot".}
+\item{statistical_differences}{See \code{IEATools::tfc_compare_flows}.}
 
 \item{err}{the name of a temporary error column added to \code{.tidy_iea_df}. Default is ".err".}
-
-\item{remove_zeroes}{a logical telling whether to remove \code{0}s after balancing.}
 }
 \value{
 \code{.tidy_iea_df} with adjusted \code{statistical_differences} flows such that

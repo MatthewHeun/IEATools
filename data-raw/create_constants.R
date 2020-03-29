@@ -328,6 +328,7 @@ aggregation_flows <- list(total_primary_energy_supply = "Total primary energy su
                           total_final_consumption = "Total final consumption", 
                           transformation_processes = "Transformation processes", 
                           energy_industry_own_use = "Energy industry own use",
+                          tfc_compare = "TFC compare",
                           industry = "Industry",
                           manufacturing = "Manufacturing",
                           transport = "Transport",

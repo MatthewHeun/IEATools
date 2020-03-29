@@ -28,7 +28,7 @@ calc_tidy_iea_df_balances(
 grouping columns, typically \code{Country}, \code{Year}, \code{Product}, etc.
 a \code{Ledger.side} column.}
 
-\item{ledger_side, flow_aggregation_point, flow, product, edot, unit}{See \code{IEATools::iea_cols}.}
+\item{ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
 
 \item{supply, consumption}{See \code{IEATools::ledger_sides}.}
 

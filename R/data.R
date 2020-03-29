@@ -348,8 +348,22 @@
 #' Aggregation flows
 #'
 #' A string vector containing names of industries whose purpose in IEA extended energy balance `Flow`s is to provide aggregations.
+#' These items appear in `Flow.aggregation.point` columns.
 #' 
-#' @format A string vector with 8 entries
+#' @format A string vector with 10 entries
+#' \describe{
+#' \item{total_primary_energy_supply}{Indicates a flow that aggregates to total primary energy supply.}
+#' \item{total_final_consumption}{Indicates a flow that aggregates to total final consumption.}
+#' \item{transformation_processes}{Indicates a flow involved in transformation processes.}
+#' \item{energy_industry_own_use}{Indicates a flow that aggregates to energy industry own use.}
+#' \item{tfc_compare}{Indicates a flow that compares total primary energy supply to total final consumption.}
+#' \item{industry}{Indicates a flow that aggregates to industry final demand.}
+#' \item{manufacturing}{Indicates a flow that aggregates to manufacturing final demand.}
+#' \item{transport}{Indicates a flow that aggregates to transport final demand.}
+#' \item{other}{Indicates a flow that aggregates to other final demand.}
+#' \item{non_energy_use}{Indicates a flow that aggregates to non-energy use final demand.}
+#' }
+#' 
 #' 
 #' @examples
 #' aggregation_flows
