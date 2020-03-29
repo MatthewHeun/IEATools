@@ -6,20 +6,14 @@
 #' `.tidy_iea_df` should be grouped as needed, typically on 
 #' `Country`, `Year`, `Energy.type`, `Last.stage`, etc., but
 #' _not_ on `Unit`, `Flow` or `Product`.
-#' `.tidy_iea_df` is typically obtained from [tidy_iea_df()].
+#' `.tidy_iea_df` is typically obtained from `tidy_iea_df()`.
 #'
 #' @param .tidy_iea_df the tidy data frame from which a unit summation `S_units` matrix is to be formed.
-#' @param cols a list containing names of columns. Default is `iea_cols`.
-#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is `cols$ledger_side`.
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is `cols$ledger_side`.
-#' @param flow the name of the flow column in `.tidy_iea_df`. Default is `cols$flow`.
-#' @param product the name of the product column in `.tidy_iea_df`. Default is `cols$product`.
-#' @param e_dot the name of the energy flow rate column in `.tidy_iea_df`. Default is `cols$e_dot`.
-#' @param unit the name of the unit column in `.tidy_iea_df`. Default is `cols$unit`.
-#' @param s_units the name of the unit summation column to be added to `.tidy_iea_df`. Default is "S_unit".
-#' @param val the name of a temporary column to be created in `.tidy_iea_df`. Default is ".val".
-#' @param rowtype the name of a temporary rowtype column created in `.tidy_iea_df`. Default is ".rowtype".
-#' @param coltype the name of a temporary coltype column created in `.tidy_iea_df`. Default is ".coltype".
+#' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
+#' @param s_units See `IEATools::psut_cols`.
+#' @param .val the name of a temporary value column to be created in `.tidy_iea_df`. Default is ".val".
+#' @param .rowtype the name of a temporary rowtype column created in `.tidy_iea_df`. Default is ".rowtype".
+#' @param .coltype the name of a temporary coltype column created in `.tidy_iea_df`. Default is ".coltype".
 #'
 #' @return a data frame containing grouping variables and a new column of unit summation matrices called `s_unit`.
 #'
@@ -31,36 +25,38 @@
 #'   extract_S_units_from_tidy()
 extract_S_units_from_tidy <- function(.tidy_iea_df, 
                                       # Column names in .tidy_iea_df
-                                      cols = IEATools::iea_cols,
-                                      ledger_side = cols$ledger_side, 
-                                      flow_aggregation_point = cols$flow_aggregation_point, 
-                                      flow = cols$flow, 
-                                      product = cols$product, 
-                                      e_dot = cols$e_dot,
-                                      unit = cols$unit, 
+                                      ledger_side = IEATools::iea_cols$ledger_side, 
+                                      flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point, 
+                                      flow = IEATools::iea_cols$flow, 
+                                      product = IEATools::iea_cols$product, 
+                                      e_dot = IEATools::iea_cols$e_dot,
+                                      unit = IEATools::iea_cols$unit,
+                                      # Row and product types
+                                      product_type = IEATools::row_col_types$unit,
+                                      unit_type = IEATools::row_col_types$unit, 
                                       # Output column name
-                                      s_units = "S_units",
+                                      s_units = IEATools::psut_cols$s_units, 
                                       # Intermediate column names
-                                      val = ".val", 
-                                      rowtype = ".rowtype", 
-                                      coltype = ".coltype"){
-  grouping_vars <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, unit, flow, product, e_dot)
-  matsindf::verify_cols_missing(.tidy_iea_df, c(s_units, val, rowtype, coltype))
+                                      .val = ".val", 
+                                      .rowtype = ".rowtype", 
+                                      .coltype = ".coltype"){
+  grouping_vars <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, unit)
+  matsindf::verify_cols_missing(.tidy_iea_df, c(s_units, .val, .rowtype, .coltype))
   .tidy_iea_df %>% 
     dplyr::group_by(!!!grouping_vars) %>% 
     dplyr::select(!!!grouping_vars, .data[[product]], .data[[unit]]) %>%
     dplyr::do(unique(.data)) %>%
     dplyr::mutate(
-      "{val}" := 1,
+      "{.val}" := 1,
       "{s_units}" := s_units,
-      "{rowtype}" := product,
-      "{coltype}" := unit
+      "{.rowtype}" := product_type,
+      "{.coltype}" := unit_type
     ) %>%
-    matsindf::collapse_to_matrices(matnames = s_units, matvals = val,
+    matsindf::collapse_to_matrices(matnames = s_units, matvals = .val,
                                    rownames = product, colnames = unit,
-                                   rowtypes = rowtype, coltypes = coltype) %>%
+                                   rowtypes = .rowtype, coltypes = .coltype) %>%
     dplyr::rename(
-      "{s_units}" := .data[[val]]
+      "{s_units}" := .data[[.val]]
     ) %>% 
     dplyr::ungroup()
 }
@@ -84,7 +80,6 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #'
 #' @param .tidy_iea_df a data frame with `ledger_side`, `flow_aggregation_point`, `flow`, and `e_dot` columns.
 #' @param cols a list containing names of columns. Default is `iea_cols`.
-#' @param ledger_side the name of the column in `.tidy_iea_df` that contains ledger side
 #'        (a string). Default is `cols$ledger_side`.
 #' @param flow_aggregation_point the name of the column in `.tidy_iea_df` that contains flow aggregation point information.
 #'        Default is `cols$flow_aggregation_point`.
@@ -123,12 +118,11 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #'   glimpse()
 add_psut_matnames <- function(.tidy_iea_df,
                               # Input columns
-                              cols = IEATools::iea_cols,
-                              ledger_side = cols$ledger_side,
-                              flow_aggregation_point = cols$flow_aggregation_point,
-                              flow = cols$flow, 
-                              product = cols$product, 
-                              e_dot = cols$e_dot,
+                              ledger_side = IEATools::iea_cols$ledger_side,
+                              flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                              flow = IEATools::iea_cols$flow, 
+                              product = IEATools::iea_cols$product, 
+                              e_dot = IEATools::iea_cols$e_dot,
                               supply = "Supply",
                               consumption = "Consumption",
                               production = "Production",

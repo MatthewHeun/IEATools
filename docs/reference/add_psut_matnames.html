@@ -147,12 +147,11 @@ and terminology, although <code>.tidy_iea_df</code> does not necessarily need to
 
     <pre class="usage"><span class='fu'>add_psut_matnames</span>(
   <span class='no'>.tidy_iea_df</span>,
-  <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>ledger_side</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>flow_aggregation_point</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>flow</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>product</span>,
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>e_dot</span>,
+  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>ledger_side</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow_aggregation_point</span>,
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow</span>,
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>product</span>,
+  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>e_dot</span>,
   <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>,
   <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
   <span class='kw'>production</span> <span class='kw'>=</span> <span class='st'>"Production"</span>,
@@ -174,10 +173,6 @@ and terminology, although <code>.tidy_iea_df</code> does not necessarily need to
     <tr>
       <th>.tidy_iea_df</th>
       <td><p>a data frame with <code>ledger_side</code>, <code>flow_aggregation_point</code>, <code>flow</code>, and <code>e_dot</code> columns.</p></td>
-    </tr>
-    <tr>
-      <th>cols</th>
-      <td><p>a list containing names of columns. Default is <code>iea_cols</code>.</p></td>
     </tr>
     <tr>
       <th>ledger_side</th>
@@ -256,6 +251,10 @@ to which a row's value belongs (a string). Default is "matnames".</p></td>
     <tr>
       <th>Y</th>
       <td><p>the name for the final demand matrix (a string). Default is "Y".</p></td>
+    </tr>
+    <tr>
+      <th>cols</th>
+      <td><p>a list containing names of columns. Default is <code>iea_cols</code>.</p></td>
     </tr>
     </table>
 

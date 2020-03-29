@@ -3,9 +3,9 @@
 \docType{data}
 \name{iea_cols}
 \alias{iea_cols}
-\title{IEA data frame columns}
+\title{IEA data frame column names}
 \format{
-A string list
+A string list with 11 entries
 \describe{
 \item{country}{The name of a column containing countries.}
 \item{method}{The name of a column containing methods for calculating primary energy equivalent of renewable electricity. See \code{IEATools::methods}.}
@@ -25,11 +25,11 @@ iea_cols
 }
 \description{
 A string list containing named names of columns in IEA data frames.
-These data frames can be
-tidy (one row per data point) or
-wide (years spread to the right).
-Names of the items in the list are the typical function arguments
-for column names.
+The IEA data frames can be
+tidy (with one row for each data point) or
+wide (with years spread to the right).
+Items in the list provide default values for column name function arguments
+throughout the \code{IEATools} package.
 }
 \examples{
 iea_cols

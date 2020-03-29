@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>IEA data frame column names — iea_cols • IEATools</title>
+<title>Physical Supply-Use Table (PSUT) data frame column names — psut_cols • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,8 @@
 
 
 
-<meta property="og:title" content="IEA data frame column names — iea_cols" />
-<meta property="og:description" content="A string list containing named names of columns in IEA data frames.
-The IEA data frames can be
-tidy (with one row for each data point) or
-wide (with years spread to the right).
+<meta property="og:title" content="Physical Supply-Use Table (PSUT) data frame column names — psut_cols" />
+<meta property="og:description" content="A string list containing named names of columns in PSUT data frames.
 Items in the list provide default values for column name function arguments
 throughout the IEATools package." />
 
@@ -135,74 +132,65 @@ throughout the IEATools package." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>IEA data frame column names</h1>
+    <h1>Physical Supply-Use Table (PSUT) data frame column names</h1>
     
-    <div class="hidden name"><code>iea_cols.Rd</code></div>
+    <div class="hidden name"><code>psut_cols.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A string list containing named names of columns in IEA data frames.
-The IEA data frames can be
-tidy (with one row for each data point) or
-wide (with years spread to the right).
+    <p>A string list containing named names of columns in PSUT data frames.
 Items in the list provide default values for column name function arguments
 throughout the <code>IEATools</code> package.</p>
     </div>
 
-    <pre class="usage"><span class='no'>iea_cols</span></pre>
+    <pre class="usage"><span class='no'>psut_cols</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string list with 11 entries</p><dl'>
-<dt>country</dt><dd><p>The name of a column containing countries.</p></dd>
-<dt>method</dt><dd><p>The name of a column containing methods for calculating primary energy equivalent of renewable electricity. See <code><a href='methods.html'>IEATools::methods</a></code>.</p></dd>
-<dt>energy_type</dt><dd><p>The name of a column containing energy types. See <code><a href='energy_types.html'>IEATools::energy_types</a></code>.</p></dd>
-<dt>last_stage</dt><dd><p>The name of a column containing last stages of energy conversion chain analysis. See <code><a href='last_stages.html'>IEATools::last_stages</a></code>.</p></dd>
-<dt>year</dt><dd><p>The name of a column containing years in wide data frames.</p></dd>
-<dt>ledger_side</dt><dd><p>The name of a column containing ledger sides. See <code><a href='ledger_sides.html'>IEATools::ledger_sides</a></code>.</p></dd>
-<dt>flow_aggregation_point</dt><dd><p>The name of a column containing flow aggregation points. See <code>IEATools::flow_aggregation_points</code>.</p></dd>
-<dt>flow</dt><dd><p>The name of a column containing IEA flow information. See <code>IEATools::flows</code>.</p></dd>
-<dt>product</dt><dd><p>The name of a column containing IEA products. See <code><a href='products.html'>IEATools::products</a></code>.</p></dd>
-<dt>unit</dt><dd><p>The name of a column containing units for energy flows.</p></dd>
-<dt>e_dot</dt><dd><p>The name of a column containing energy flow rates.</p></dd>
+    <p>A string list with 9 entries</p><dl'>
+<dt>resources,R</dt><dd><p>The name of a column containing resource (<code>R</code>) matrices.</p></dd>
+<dt>use,U</dt><dd><p>The name of a column containing use (<code>U</code>) matrices.</p></dd>
+<dt>use,U</dt><dd><p>The name of a column containing use (<code>U</code>) matrices.</p></dd>
+<dt>make,V</dt><dd><p>The name of a column containing make (<code>V</code>) matrices.</p></dd>
+<dt>final_demand,Y</dt><dd><p>The name of a column containing final demand (<code>Y</code>) matrices.</p></dd>
+<dt>s_units</dt><dd><p>The name of a column containing unit summation (<code>S_units</code>) matrices.</p></dd>
 
 </dl>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Note that some of the values are repeated,
+providing synonuyms for referencing column names.
+E.g., both <code>resources</code> and <code>R</code> point to the "R" column name.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>iea_cols</span></div><div class='output co'>#&gt; $country
-#&gt; [1] "Country"
+    <pre class="examples"><div class='input'><span class='no'>psut_cols</span></div><div class='output co'>#&gt; $s_units
+#&gt; [1] "S_units"
 #&gt; 
-#&gt; $method
-#&gt; [1] "Method"
+#&gt; $resources
+#&gt; [1] "R"
 #&gt; 
-#&gt; $energy_type
-#&gt; [1] "Energy.type"
+#&gt; $R
+#&gt; [1] "R"
 #&gt; 
-#&gt; $last_stage
-#&gt; [1] "Last.stage"
+#&gt; $use
+#&gt; [1] "U"
 #&gt; 
-#&gt; $year
-#&gt; [1] "Year"
+#&gt; $U
+#&gt; [1] "U"
 #&gt; 
-#&gt; $ledger_side
-#&gt; [1] "Ledger.side"
+#&gt; $make
+#&gt; [1] "V"
 #&gt; 
-#&gt; $flow_aggregation_point
-#&gt; [1] "Flow.aggregation.point"
+#&gt; $V
+#&gt; [1] "V"
 #&gt; 
-#&gt; $flow
-#&gt; [1] "Flow"
+#&gt; $final_demand
+#&gt; [1] "Y"
 #&gt; 
-#&gt; $product
-#&gt; [1] "Product"
-#&gt; 
-#&gt; $unit
-#&gt; [1] "Unit"
-#&gt; 
-#&gt; $e_dot
-#&gt; [1] "E.dot"
+#&gt; $Y
+#&gt; [1] "Y"
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

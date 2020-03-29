@@ -56,6 +56,32 @@ usethis::use_data(iea_cols, overwrite = TRUE)
 
 
 #
+# Give the column names of data frames with PSUT data
+#
+
+psut_cols <- list(resources = "R",
+                  R = "R",
+                  use = "U", 
+                  U = "U", 
+                  make = "V", 
+                  V = "V", 
+                  final_demand = "Y",
+                  Y = "Y", 
+                  s_units = "S_units")
+usethis::use_data(psut_cols, overwrite = TRUE)
+
+
+# 
+# Give row and column types
+# 
+
+row_col_types <- list(industry = "Industry", 
+                      product = "Product", 
+                      unit = "Unit")
+usethis::use_data(row_col_types, overwrite = TRUE)
+
+
+#
 # Coal and coal products
 # 
 

@@ -6,12 +6,11 @@
 \usage{
 add_psut_matnames(
   .tidy_iea_df,
-  cols = IEATools::iea_cols,
-  ledger_side = cols$ledger_side,
-  flow_aggregation_point = cols$flow_aggregation_point,
-  flow = cols$flow,
-  product = cols$product,
-  e_dot = cols$e_dot,
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  flow = IEATools::iea_cols$flow,
+  product = IEATools::iea_cols$product,
+  e_dot = IEATools::iea_cols$e_dot,
   supply = "Supply",
   consumption = "Consumption",
   production = "Production",
@@ -29,11 +28,6 @@ add_psut_matnames(
 }
 \arguments{
 \item{.tidy_iea_df}{a data frame with \code{ledger_side}, \code{flow_aggregation_point}, \code{flow}, and \code{e_dot} columns.}
-
-\item{cols}{a list containing names of columns. Default is \code{iea_cols}.}
-
-\item{ledger_side}{the name of the column in \code{.tidy_iea_df} that contains ledger side
-(a string). Default is \code{cols$ledger_side}.}
 
 \item{flow_aggregation_point}{the name of the column in \code{.tidy_iea_df} that contains flow aggregation point information.
 Default is \code{cols$flow_aggregation_point}.}
@@ -75,6 +69,9 @@ to which a row's value belongs (a string). Default is "matnames".}
 \item{V}{the name for the make matrix (a string). Default is "V".}
 
 \item{Y}{the name for the final demand matrix (a string). Default is "Y".}
+
+\item{cols}{a list containing names of columns. Default is \code{iea_cols}.
+(a string). Default is \code{cols$ledger_side}.}
 }
 \value{
 \code{.tidy_iea_df} with an added column \code{matnames}.

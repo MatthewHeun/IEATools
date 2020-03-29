@@ -6,43 +6,32 @@
 \usage{
 extract_S_units_from_tidy(
   .tidy_iea_df,
-  cols = IEATools::iea_cols,
-  ledger_side = cols$ledger_side,
-  flow_aggregation_point = cols$flow_aggregation_point,
-  flow = cols$flow,
-  product = cols$product,
-  e_dot = cols$e_dot,
-  unit = cols$unit,
-  s_units = "S_units",
-  val = ".val",
-  rowtype = ".rowtype",
-  coltype = ".coltype"
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  flow = IEATools::iea_cols$flow,
+  product = IEATools::iea_cols$product,
+  e_dot = IEATools::iea_cols$e_dot,
+  unit = IEATools::iea_cols$unit,
+  product_type = IEATools::row_col_types$unit,
+  unit_type = IEATools::row_col_types$unit,
+  s_units = IEATools::psut_cols$s_units,
+  .val = ".val",
+  .rowtype = ".rowtype",
+  .coltype = ".coltype"
 )
 }
 \arguments{
 \item{.tidy_iea_df}{the tidy data frame from which a unit summation \code{S_units} matrix is to be formed.}
 
-\item{cols}{a list containing names of columns. Default is \code{iea_cols}.}
+\item{ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
 
-\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is \code{cols$ledger_side}.}
+\item{s_units}{See \code{IEATools::psut_cols}.}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is \code{cols$ledger_side}.}
+\item{.val}{the name of a temporary value column to be created in \code{.tidy_iea_df}. Default is ".val".}
 
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is \code{cols$flow}.}
+\item{.rowtype}{the name of a temporary rowtype column created in \code{.tidy_iea_df}. Default is ".rowtype".}
 
-\item{product}{the name of the product column in \code{.tidy_iea_df}. Default is \code{cols$product}.}
-
-\item{e_dot}{the name of the energy flow rate column in \code{.tidy_iea_df}. Default is \code{cols$e_dot}.}
-
-\item{unit}{the name of the unit column in \code{.tidy_iea_df}. Default is \code{cols$unit}.}
-
-\item{s_units}{the name of the unit summation column to be added to \code{.tidy_iea_df}. Default is "S_unit".}
-
-\item{val}{the name of a temporary column to be created in \code{.tidy_iea_df}. Default is ".val".}
-
-\item{rowtype}{the name of a temporary rowtype column created in \code{.tidy_iea_df}. Default is ".rowtype".}
-
-\item{coltype}{the name of a temporary coltype column created in \code{.tidy_iea_df}. Default is ".coltype".}
+\item{.coltype}{the name of a temporary coltype column created in \code{.tidy_iea_df}. Default is ".coltype".}
 }
 \value{
 a data frame containing grouping variables and a new column of unit summation matrices called \code{s_unit}.
@@ -55,7 +44,7 @@ Unit summation matrices have products in rows and units in columns, with
 \code{.tidy_iea_df} should be grouped as needed, typically on
 \code{Country}, \code{Year}, \code{Energy.type}, \code{Last.stage}, etc., but
 \emph{not} on \code{Unit}, \code{Flow} or \code{Product}.
-\code{.tidy_iea_df} is typically obtained from \code{\link[=tidy_iea_df]{tidy_iea_df()}}.
+\code{.tidy_iea_df} is typically obtained from \code{tidy_iea_df()}.
 }
 \examples{
 library(dplyr)

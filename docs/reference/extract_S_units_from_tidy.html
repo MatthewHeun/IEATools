@@ -143,14 +143,13 @@
 
     <pre class="usage"><span class='fu'>extract_S_units_from_tidy</span>(
   <span class='no'>.tidy_iea_df</span>,
-  <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>ledger_side</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>flow_aggregation_point</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>flow</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>product</span>,
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>e_dot</span>,
-  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='no'>cols</span>$<span class='no'>unit</span>,
-  <span class='kw'>s_units</span> <span class='kw'>=</span> <span class='st'>"S_units"</span>,
+  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>ledger_side</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow_aggregation_point</span>,
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow</span>,
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>product</span>,
+  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>e_dot</span>,
+  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>unit</span>,
+  <span class='kw'>s_units</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>s_units</span>,
   <span class='kw'>val</span> <span class='kw'>=</span> <span class='st'>".val"</span>,
   <span class='kw'>rowtype</span> <span class='kw'>=</span> <span class='st'>".rowtype"</span>,
   <span class='kw'>coltype</span> <span class='kw'>=</span> <span class='st'>".coltype"</span>
@@ -164,32 +163,8 @@
       <td><p>the tidy data frame from which a unit summation <code>S_units</code> matrix is to be formed.</p></td>
     </tr>
     <tr>
-      <th>cols</th>
-      <td><p>a list containing names of columns. Default is <code>iea_cols</code>.</p></td>
-    </tr>
-    <tr>
-      <th>ledger_side</th>
-      <td><p>the name of the ledger side column in <code>.tidy_iea_df</code>. Default is <code>cols$ledger_side</code>.</p></td>
-    </tr>
-    <tr>
-      <th>flow_aggregation_point</th>
-      <td><p>the name of the flow aggregation point column in <code>.tidy_iea_df</code>. Default is <code>cols$ledger_side</code>.</p></td>
-    </tr>
-    <tr>
-      <th>flow</th>
-      <td><p>the name of the flow column in <code>.tidy_iea_df</code>. Default is <code>cols$flow</code>.</p></td>
-    </tr>
-    <tr>
-      <th>product</th>
-      <td><p>the name of the product column in <code>.tidy_iea_df</code>. Default is <code>cols$product</code>.</p></td>
-    </tr>
-    <tr>
-      <th>e_dot</th>
-      <td><p>the name of the energy flow rate column in <code>.tidy_iea_df</code>. Default is <code>cols$e_dot</code>.</p></td>
-    </tr>
-    <tr>
-      <th>unit</th>
-      <td><p>the name of the unit column in <code>.tidy_iea_df</code>. Default is <code>cols$unit</code>.</p></td>
+      <th>ledger_side, flow_aggregation_point, flow, product, e_dot, unit</th>
+      <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
       <th>s_units</th>

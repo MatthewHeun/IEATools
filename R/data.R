@@ -22,16 +22,16 @@
 "valid_iea_release_years"
 
 
-#' IEA data frame columns
+#' IEA data frame column names
 #'
 #' A string list containing named names of columns in IEA data frames.
-#' These data frames can be 
-#' tidy (one row per data point) or
-#' wide (years spread to the right).
-#' Names of the items in the list are the typical function arguments
-#' for column names.
+#' The IEA data frames can be 
+#' tidy (with one row for each data point) or
+#' wide (with years spread to the right).
+#' Items in the list provide default values for column name function arguments
+#' throughout the `IEATools` package.
 #' 
-#' @format A string list
+#' @format A string list with 11 entries
 #' \describe{
 #' \item{country}{The name of a column containing countries.}
 #' \item{method}{The name of a column containing methods for calculating primary energy equivalent of renewable electricity. See `IEATools::methods`.}
@@ -49,6 +49,49 @@
 #' @examples
 #' iea_cols
 "iea_cols"
+
+
+
+#' Physical Supply-Use Table (PSUT) data frame column names
+#'
+#' A string list containing named names of columns in PSUT data frames.
+#' Items in the list provide default values for column name function arguments
+#' throughout the `IEATools` package.
+#' 
+#' Note that some of the values are repeated,
+#' providing synonuyms for referencing column names.
+#' E.g., both `resources` and `R` point to the "R" column name.
+#' 
+#' @format A string list with 9 entries
+#' \describe{
+#' \item{resources,R}{The name of a column containing resource (`R`) matrices.}
+#' \item{use,U}{The name of a column containing use (`U`) matrices.}
+#' \item{make,V}{The name of a column containing make (`V`) matrices.}
+#' \item{final_demand,Y}{The name of a column containing final demand (`Y`) matrices.}
+#' \item{s_units}{The name of a column containing unit summation (`S_units`) matrices.}
+#' }
+#' 
+#' @examples
+#' psut_cols
+"psut_cols"
+
+
+#' PSUT matrix row and column types
+#'
+#' PSUT matrices have row and column types. 
+#' This list provides the typical names for the row and column types
+#' throughout the `IEATools` package.
+#' 
+#' @format A string list with 3 entries
+#' \describe{
+#' \item{industry}{The type of entity that receives inputs and makes outputs.}
+#' \item{product}{The inputs and outputs of industries.}
+#' \item{unit}{Units of physical measurement such as ktoe or TJ.}
+#' }
+#' 
+#' @examples
+#' row_col_types
+"row_col_types"
 
 
 #' Coal and coal products
