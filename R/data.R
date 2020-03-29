@@ -59,13 +59,15 @@
 #' throughout the `IEATools` package.
 #' 
 #' Note that some of the values are repeated,
-#' providing synonuyms for referencing column names.
+#' thereby providing synonyms.
 #' E.g., both `resources` and `R` point to the "R" column name.
 #' 
-#' @format A string list with 9 entries
+#' @format A string list with 11 entries
 #' \describe{
 #' \item{resources,R}{The name of a column containing resource (`R`) matrices.}
 #' \item{use,U}{The name of a column containing use (`U`) matrices.}
+#' \item{U_excl_eiou}{The name of a column containing use (`U`) matrices that exclude energy industry own use.}
+#' \item{U_EIOU}{The name of a column containing use (`U`) matrices that contain exclusively energy industry own use.}
 #' \item{make,V}{The name of a column containing make (`V`) matrices.}
 #' \item{final_demand,Y}{The name of a column containing final demand (`Y`) matrices.}
 #' \item{s_units}{The name of a column containing unit summation (`S_units`) matrices.}
@@ -219,6 +221,15 @@
 #' A string vector containing names of `Total primary energy supply` `Flow`s in the IEA extended energy balances database.
 #' 
 #' @format A string vector with 6 entries
+#' \describe{
+#' \item{resources}{}
+#' \item{production}{}
+#' \item{imports}{}
+#' \item{exports}{}
+#' \item{international_marine_bunkers}{}
+#' \item{international_aviation_bunkers}{}
+#' \item{stock_changes}{}
+#' }
 #' 
 #' @examples 
 #' tpes_flows
@@ -389,9 +400,14 @@
 
 #' IEA order for ledger side
 #'
-#' A string vector containing `Ledger.side` entries in IEA order.
+#' A string vector containing ledger side entries in IEA order.
+#' See also `IEATools::iea_cols`.
 #' 
-#' @format A string vector
+#' @format A string list with 2 entries
+#' \describe{
+#' \item{supply}{The supply side of the ledger.}
+#' \item{consumption}{The consumption side of the ledger.}
+#' }
 #' 
 #' @examples
 #' ledger_sides

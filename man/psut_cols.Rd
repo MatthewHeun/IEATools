@@ -5,10 +5,12 @@
 \alias{psut_cols}
 \title{Physical Supply-Use Table (PSUT) data frame column names}
 \format{
-A string list with 9 entries
+A string list with 11 entries
 \describe{
 \item{resources,R}{The name of a column containing resource (\code{R}) matrices.}
 \item{use,U}{The name of a column containing use (\code{U}) matrices.}
+\item{U_excl_eiou}{The name of a column containing use (\code{U}) matrices that exclude energy industry own use.}
+\item{U_EIOU}{The name of a column containing use (\code{U}) matrices that contain exclusively energy industry own use.}
 \item{make,V}{The name of a column containing make (\code{V}) matrices.}
 \item{final_demand,Y}{The name of a column containing final demand (\code{Y}) matrices.}
 \item{s_units}{The name of a column containing unit summation (\code{S_units}) matrices.}
@@ -24,7 +26,7 @@ throughout the \code{IEATools} package.
 }
 \details{
 Note that some of the values are repeated,
-providing synonuyms for referencing column names.
+thereby providing synonyms.
 E.g., both \code{resources} and \code{R} point to the "R" column name.
 }
 \examples{

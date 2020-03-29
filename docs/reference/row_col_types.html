@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Physical Supply-Use Table (PSUT) data frame column names — psut_cols • IEATools</title>
+<title>PSUT matrix row and column types — row_col_types • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="Physical Supply-Use Table (PSUT) data frame column names — psut_cols" />
-<meta property="og:description" content="A string list containing named names of columns in PSUT data frames.
-Items in the list provide default values for column name function arguments
+<meta property="og:title" content="PSUT matrix row and column types — row_col_types" />
+<meta property="og:description" content="PSUT matrices have row and column types.
+This list provides the typical names for the row and column types
 throughout the IEATools package." />
 
 
@@ -132,72 +132,39 @@ throughout the IEATools package." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Physical Supply-Use Table (PSUT) data frame column names</h1>
+    <h1>PSUT matrix row and column types</h1>
     
-    <div class="hidden name"><code>psut_cols.Rd</code></div>
+    <div class="hidden name"><code>row_col_types.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A string list containing named names of columns in PSUT data frames.
-Items in the list provide default values for column name function arguments
+    <p>PSUT matrices have row and column types.
+This list provides the typical names for the row and column types
 throughout the <code>IEATools</code> package.</p>
     </div>
 
-    <pre class="usage"><span class='no'>psut_cols</span></pre>
+    <pre class="usage"><span class='no'>row_col_types</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string list with 11 entries</p><dl'>
-<dt>resources,R</dt><dd><p>The name of a column containing resource (<code>R</code>) matrices.</p></dd>
-<dt>use,U</dt><dd><p>The name of a column containing use (<code>U</code>) matrices.</p></dd>
-<dt>U_excl_eiou</dt><dd><p>The name of a column containing use (<code>U</code>) matrices that exclude energy industry own use.</p></dd>
-<dt>U_EIOU</dt><dd><p>The name of a column containing use (<code>U</code>) matrices that contain exclusively energy industry own use.</p></dd>
-<dt>make,V</dt><dd><p>The name of a column containing make (<code>V</code>) matrices.</p></dd>
-<dt>final_demand,Y</dt><dd><p>The name of a column containing final demand (<code>Y</code>) matrices.</p></dd>
-<dt>s_units</dt><dd><p>The name of a column containing unit summation (<code>S_units</code>) matrices.</p></dd>
+    <p>A string list with 3 entries</p><dl'>
+<dt>industry</dt><dd><p>The type of entity that receives inputs and makes outputs.</p></dd>
+<dt>product</dt><dd><p>The inputs and outputs of industries.</p></dd>
+<dt>unit</dt><dd><p>Units of physical measurement such as ktoe or TJ.</p></dd>
 
 </dl>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Note that some of the values are repeated,
-thereby providing synonyms.
-E.g., both <code>resources</code> and <code>R</code> point to the "R" column name.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>psut_cols</span></div><div class='output co'>#&gt; $resources
-#&gt; [1] "R"
+    <pre class="examples"><div class='input'><span class='no'>row_col_types</span></div><div class='output co'>#&gt; $industry
+#&gt; [1] "Industry"
 #&gt; 
-#&gt; $R
-#&gt; [1] "R"
+#&gt; $product
+#&gt; [1] "Product"
 #&gt; 
-#&gt; $use
-#&gt; [1] "U"
-#&gt; 
-#&gt; $U
-#&gt; [1] "U"
-#&gt; 
-#&gt; $U_excl_eiou
-#&gt; [1] "U_excl_EIOU"
-#&gt; 
-#&gt; $U_eiou
-#&gt; [1] "U_EIOU"
-#&gt; 
-#&gt; $make
-#&gt; [1] "V"
-#&gt; 
-#&gt; $V
-#&gt; [1] "V"
-#&gt; 
-#&gt; $final_demand
-#&gt; [1] "Y"
-#&gt; 
-#&gt; $Y
-#&gt; [1] "Y"
-#&gt; 
-#&gt; $s_units
-#&gt; [1] "S_units"
+#&gt; $unit
+#&gt; [1] "Unit"
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -11,6 +11,7 @@
 #' @param .tidy_iea_df the tidy data frame from which a unit summation `S_units` matrix is to be formed.
 #' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
 #' @param s_units See `IEATools::psut_cols`.
+#' @param product_type,unit_type See `IEATools::row_col_types`.
 #' @param .val the name of a temporary value column to be created in `.tidy_iea_df`. Default is ".val".
 #' @param .rowtype the name of a temporary rowtype column created in `.tidy_iea_df`. Default is ".rowtype".
 #' @param .coltype the name of a temporary coltype column created in `.tidy_iea_df`. Default is ".coltype".
@@ -79,33 +80,16 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #' An error will occur if `.tidy_iea_df` already has a column named ".R".
 #'
 #' @param .tidy_iea_df a data frame with `ledger_side`, `flow_aggregation_point`, `flow`, and `e_dot` columns.
-#' @param cols a list containing names of columns. Default is `iea_cols`.
-#'        (a string). Default is `cols$ledger_side`.
-#' @param flow_aggregation_point the name of the column in `.tidy_iea_df` that contains flow aggregation point information.
-#'        Default is `cols$flow_aggregation_point`.
-#' @param flow the name of the column in `.tidy_iea_df` that contains flow information.
-#'        Default is `cols$flow`.
-#' @param product the name of the column in `.tidy_iea_df` that contains flow information.
-#'        Default is `cols$product`.
-#' @param e_dot the name of the column in `.tidy_iea_df` that contains energy and exergy values
-#'        (a string). Default is `cols$e_dot`.
-#' @param supply the identifier for items on the supply side of the ledger (a string).
-#'        Default is "Supply".
-#' @param consumption the identifier for items on the consumption side
-#'        of the ledger (a string). Default is "Consumption".
-#' @param production a string identifying production in the flow column. Default is `Production`.
-#' @param resources a string identifying resources in the flow column. Default is `Resources`.
+#' @param ledger_side,flow_aggregation_point,flow,product,e_dot See `IEATools::iea_cols`.
+#' @param supply,consumption See `IEATools::ledger_sides`.
+#' @param production,resources See `IEATools::tpes_flows`.
 #' @param eiou the identifier for items that are energy industry own use.
 #'        Default is "Energy industry own use".
 #' @param neg_supply_in_fd identifiers for flow items that, when negative,
 #'        are entries in the final demand (`Y`) matrix.
 #' @param matnames the name of the output column containing the name of the matrix
 #'        to which a row's value belongs (a string). Default is "matnames".
-#' @param R the name for the resource matrix (a string). Default is "R".
-#' @param U_excl_EIOU the name for the use matrix that excludes energy industry own use (a string). Default is "U_excl_EIOU".
-#' @param U_EIOU the name for the energy industry own use matrix. Default is "U_EIOU".
-#' @param V the name for the make matrix (a string). Default is "V".
-#' @param Y the name for the final demand matrix (a string). Default is "Y".
+#' @param R,U_excl_EIOU,U_EIOU,V,Y See `IEATools::psut_matnames`.
 #'
 #' @return `.tidy_iea_df` with an added column `matnames`.
 #'
@@ -123,10 +107,10 @@ add_psut_matnames <- function(.tidy_iea_df,
                               flow = IEATools::iea_cols$flow, 
                               product = IEATools::iea_cols$product, 
                               e_dot = IEATools::iea_cols$e_dot,
-                              supply = "Supply",
-                              consumption = "Consumption",
-                              production = "Production",
-                              resources = "Resources",
+                              supply = IEATools::ledger_sides$supply,
+                              consumption = IEATools::ledger_sides$consumption,
+                              production = IEATools::tpes_flows$production,
+                              resources = IEATools::tpes_flows$resources,
                               # Input identifiers for supply, consumption, and EIOU
                               eiou = "Energy industry own use",
                               neg_supply_in_fd = c("Exports",
@@ -143,8 +127,11 @@ add_psut_matnames <- function(.tidy_iea_df,
                               # make (V), and
                               # final demand (Y)
                               # matrices.
-                              R = "R", U_excl_EIOU = "U_excl_EIOU", U_EIOU = "U_EIOU",
-                              V = "V", Y = "Y"){
+                              R = IEATools::psut_cols$R, 
+                              U_excl_EIOU = IEATools::psut_cols$U_excl_eiou, 
+                              U_EIOU = IEATools::psut_cols$U_eiou,
+                              V = IEATools::psut_cols$V, 
+                              Y = IEATools::psut_cols$Y){
   matsindf::verify_cols_missing(.tidy_iea_df, matnames)
   
   .tidy_iea_df %>%

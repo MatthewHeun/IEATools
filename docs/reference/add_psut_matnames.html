@@ -152,19 +152,19 @@ and terminology, although <code>.tidy_iea_df</code> does not necessarily need to
   <span class='kw'>flow</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow</span>,
   <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>product</span>,
   <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>e_dot</span>,
-  <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>,
-  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
-  <span class='kw'>production</span> <span class='kw'>=</span> <span class='st'>"Production"</span>,
-  <span class='kw'>resources</span> <span class='kw'>=</span> <span class='st'>"Resources"</span>,
+  <span class='kw'>supply</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='ledger_sides.html'>ledger_sides</a></span>$<span class='no'>supply</span>,
+  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='ledger_sides.html'>ledger_sides</a></span>$<span class='no'>consumption</span>,
+  <span class='kw'>production</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tpes_flows.html'>tpes_flows</a></span>$<span class='no'>production</span>,
+  <span class='kw'>resources</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tpes_flows.html'>tpes_flows</a></span>$<span class='no'>resources</span>,
   <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>,
   <span class='kw'>neg_supply_in_fd</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Exports"</span>, <span class='st'>"International aviation bunkers"</span>,
     <span class='st'>"International marine bunkers"</span>, <span class='st'>"Losses"</span>, <span class='st'>"Statistical differences"</span>, <span class='st'>"Stock changes"</span>),
   <span class='kw'>matnames</span> <span class='kw'>=</span> <span class='st'>"matnames"</span>,
-  <span class='kw'>R</span> <span class='kw'>=</span> <span class='st'>"R"</span>,
-  <span class='kw'>U_excl_EIOU</span> <span class='kw'>=</span> <span class='st'>"U_excl_EIOU"</span>,
-  <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='st'>"U_EIOU"</span>,
-  <span class='kw'>V</span> <span class='kw'>=</span> <span class='st'>"V"</span>,
-  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='st'>"Y"</span>
+  <span class='kw'>R</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>R</span>,
+  <span class='kw'>U_excl_EIOU</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>U_excl_eiou</span>,
+  <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>U_eiou</span>,
+  <span class='kw'>V</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>V</span>,
+  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>Y</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -175,47 +175,16 @@ and terminology, although <code>.tidy_iea_df</code> does not necessarily need to
       <td><p>a data frame with <code>ledger_side</code>, <code>flow_aggregation_point</code>, <code>flow</code>, and <code>e_dot</code> columns.</p></td>
     </tr>
     <tr>
-      <th>ledger_side</th>
-      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains ledger side
-(a string). Default is <code>cols$ledger_side</code>.</p></td>
+      <th>ledger_side, flow_aggregation_point, flow, product, e_dot</th>
+      <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>flow_aggregation_point</th>
-      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains flow aggregation point information.
-Default is <code>cols$flow_aggregation_point</code>.</p></td>
+      <th>supply, consumption</th>
+      <td><p>See <code><a href='ledger_sides.html'>IEATools::ledger_sides</a></code>.</p></td>
     </tr>
     <tr>
-      <th>flow</th>
-      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains flow information.
-Default is <code>cols$flow</code>.</p></td>
-    </tr>
-    <tr>
-      <th>product</th>
-      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains flow information.
-Default is <code>cols$product</code>.</p></td>
-    </tr>
-    <tr>
-      <th>e_dot</th>
-      <td><p>the name of the column in <code>.tidy_iea_df</code> that contains energy and exergy values
-(a string). Default is <code>cols$e_dot</code>.</p></td>
-    </tr>
-    <tr>
-      <th>supply</th>
-      <td><p>the identifier for items on the supply side of the ledger (a string).
-Default is "Supply".</p></td>
-    </tr>
-    <tr>
-      <th>consumption</th>
-      <td><p>the identifier for items on the consumption side
-of the ledger (a string). Default is "Consumption".</p></td>
-    </tr>
-    <tr>
-      <th>production</th>
-      <td><p>a string identifying production in the flow column. Default is <code>Production</code>.</p></td>
-    </tr>
-    <tr>
-      <th>resources</th>
-      <td><p>a string identifying resources in the flow column. Default is <code>Resources</code>.</p></td>
+      <th>production, resources</th>
+      <td><p>See <code><a href='tpes_flows.html'>IEATools::tpes_flows</a></code>.</p></td>
     </tr>
     <tr>
       <th>eiou</th>
@@ -233,28 +202,8 @@ are entries in the final demand (<code>Y</code>) matrix.</p></td>
 to which a row's value belongs (a string). Default is "matnames".</p></td>
     </tr>
     <tr>
-      <th>R</th>
-      <td><p>the name for the resource matrix (a string). Default is "R".</p></td>
-    </tr>
-    <tr>
-      <th>U_excl_EIOU</th>
-      <td><p>the name for the use matrix that excludes energy industry own use (a string). Default is "U_excl_EIOU".</p></td>
-    </tr>
-    <tr>
-      <th>U_EIOU</th>
-      <td><p>the name for the energy industry own use matrix. Default is "U_EIOU".</p></td>
-    </tr>
-    <tr>
-      <th>V</th>
-      <td><p>the name for the make matrix (a string). Default is "V".</p></td>
-    </tr>
-    <tr>
-      <th>Y</th>
-      <td><p>the name for the final demand matrix (a string). Default is "Y".</p></td>
-    </tr>
-    <tr>
-      <th>cols</th>
-      <td><p>a list containing names of columns. Default is <code>iea_cols</code>.</p></td>
+      <th>R, U_excl_EIOU, U_eiou, V, Y</th>
+      <td><p>See <code>IEATools::psut_matnames</code>.</p></td>
     </tr>
     </table>
 

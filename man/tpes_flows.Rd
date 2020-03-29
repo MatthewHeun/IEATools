@@ -6,6 +6,15 @@
 \title{Total primary energy supply flows}
 \format{
 A string vector with 6 entries
+\describe{
+\item{resources}{}
+\item{production}{}
+\item{imports}{}
+\item{exports}{}
+\item{international_marine_bunkers}{}
+\item{international_aviation_bunkers}{}
+\item{stock_changes}{}
+}
 }
 \usage{
 tpes_flows

@@ -149,10 +149,12 @@
   <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>product</span>,
   <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>e_dot</span>,
   <span class='kw'>unit</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>unit</span>,
+  <span class='kw'>product_type</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>unit</span>,
+  <span class='kw'>unit_type</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>unit</span>,
   <span class='kw'>s_units</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>s_units</span>,
-  <span class='kw'>val</span> <span class='kw'>=</span> <span class='st'>".val"</span>,
-  <span class='kw'>rowtype</span> <span class='kw'>=</span> <span class='st'>".rowtype"</span>,
-  <span class='kw'>coltype</span> <span class='kw'>=</span> <span class='st'>".coltype"</span>
+  <span class='kw'>.val</span> <span class='kw'>=</span> <span class='st'>".val"</span>,
+  <span class='kw'>.rowtype</span> <span class='kw'>=</span> <span class='st'>".rowtype"</span>,
+  <span class='kw'>.coltype</span> <span class='kw'>=</span> <span class='st'>".coltype"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -168,18 +170,18 @@
     </tr>
     <tr>
       <th>s_units</th>
-      <td><p>the name of the unit summation column to be added to <code>.tidy_iea_df</code>. Default is "S_unit".</p></td>
+      <td><p>See <code><a href='psut_cols.html'>IEATools::psut_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>val</th>
-      <td><p>the name of a temporary column to be created in <code>.tidy_iea_df</code>. Default is ".val".</p></td>
+      <th>.val</th>
+      <td><p>the name of a temporary value column to be created in <code>.tidy_iea_df</code>. Default is ".val".</p></td>
     </tr>
     <tr>
-      <th>rowtype</th>
+      <th>.rowtype</th>
       <td><p>the name of a temporary rowtype column created in <code>.tidy_iea_df</code>. Default is ".rowtype".</p></td>
     </tr>
     <tr>
-      <th>coltype</th>
+      <th>.coltype</th>
       <td><p>the name of a temporary coltype column created in <code>.tidy_iea_df</code>. Default is ".coltype".</p></td>
     </tr>
     </table>

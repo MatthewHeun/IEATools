@@ -11,45 +11,29 @@ add_psut_matnames(
   flow = IEATools::iea_cols$flow,
   product = IEATools::iea_cols$product,
   e_dot = IEATools::iea_cols$e_dot,
-  supply = "Supply",
-  consumption = "Consumption",
-  production = "Production",
-  resources = "Resources",
+  supply = IEATools::ledger_sides$supply,
+  consumption = IEATools::ledger_sides$consumption,
+  production = IEATools::tpes_flows$production,
+  resources = IEATools::tpes_flows$resources,
   eiou = "Energy industry own use",
   neg_supply_in_fd = c("Exports", "International aviation bunkers",
     "International marine bunkers", "Losses", "Statistical differences", "Stock changes"),
   matnames = "matnames",
-  R = "R",
-  U_excl_EIOU = "U_excl_EIOU",
-  U_EIOU = "U_EIOU",
-  V = "V",
-  Y = "Y"
+  R = IEATools::psut_cols$R,
+  U_excl_EIOU = IEATools::psut_cols$U_excl_eiou,
+  U_EIOU = IEATools::psut_cols$U_eiou,
+  V = IEATools::psut_cols$V,
+  Y = IEATools::psut_cols$Y
 )
 }
 \arguments{
 \item{.tidy_iea_df}{a data frame with \code{ledger_side}, \code{flow_aggregation_point}, \code{flow}, and \code{e_dot} columns.}
 
-\item{flow_aggregation_point}{the name of the column in \code{.tidy_iea_df} that contains flow aggregation point information.
-Default is \code{cols$flow_aggregation_point}.}
+\item{ledger_side, flow_aggregation_point, flow, product, e_dot}{See \code{IEATools::iea_cols}.}
 
-\item{flow}{the name of the column in \code{.tidy_iea_df} that contains flow information.
-Default is \code{cols$flow}.}
+\item{supply, consumption}{See \code{IEATools::ledger_sides}.}
 
-\item{product}{the name of the column in \code{.tidy_iea_df} that contains flow information.
-Default is \code{cols$product}.}
-
-\item{e_dot}{the name of the column in \code{.tidy_iea_df} that contains energy and exergy values
-(a string). Default is \code{cols$e_dot}.}
-
-\item{supply}{the identifier for items on the supply side of the ledger (a string).
-Default is "Supply".}
-
-\item{consumption}{the identifier for items on the consumption side
-of the ledger (a string). Default is "Consumption".}
-
-\item{production}{a string identifying production in the flow column. Default is \code{Production}.}
-
-\item{resources}{a string identifying resources in the flow column. Default is \code{Resources}.}
+\item{production, resources}{See \code{IEATools::tpes_flows}.}
 
 \item{eiou}{the identifier for items that are energy industry own use.
 Default is "Energy industry own use".}
@@ -60,18 +44,7 @@ are entries in the final demand (\code{Y}) matrix.}
 \item{matnames}{the name of the output column containing the name of the matrix
 to which a row's value belongs (a string). Default is "matnames".}
 
-\item{R}{the name for the resource matrix (a string). Default is "R".}
-
-\item{U_excl_EIOU}{the name for the use matrix that excludes energy industry own use (a string). Default is "U_excl_EIOU".}
-
-\item{U_EIOU}{the name for the energy industry own use matrix. Default is "U_EIOU".}
-
-\item{V}{the name for the make matrix (a string). Default is "V".}
-
-\item{Y}{the name for the final demand matrix (a string). Default is "Y".}
-
-\item{cols}{a list containing names of columns. Default is \code{iea_cols}.
-(a string). Default is \code{cols$ledger_side}.}
+\item{R, U_excl_EIOU, U_EIOU, V, Y}{See \code{IEATools::psut_matnames}.}
 }
 \value{
 \code{.tidy_iea_df} with an added column \code{matnames}.

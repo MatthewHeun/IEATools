@@ -25,6 +25,8 @@ extract_S_units_from_tidy(
 
 \item{ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
 
+\item{product_type, unit_type}{See \code{IEATools::row_col_types}.}
+
 \item{s_units}{See \code{IEATools::psut_cols}.}
 
 \item{.val}{the name of a temporary value column to be created in \code{.tidy_iea_df}. Default is ".val".}

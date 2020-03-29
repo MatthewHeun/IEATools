@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="IEA order for ledger side — ledger_sides" />
-<meta property="og:description" content="A string vector containing Ledger.side entries in IEA order." />
+<meta property="og:description" content="A string vector containing ledger side entries in IEA order.
+See also IEATools::iea_cols." />
 
 
 
@@ -136,7 +137,8 @@
     </div>
 
     <div class="ref-description">
-    <p>A string vector containing <code>Ledger.side</code> entries in IEA order.</p>
+    <p>A string vector containing ledger side entries in IEA order.
+See also <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='no'>ledger_sides</span></pre>
@@ -144,7 +146,12 @@
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string vector</p>
+    <p>A string list with 2 entries</p><dl'>
+<dt>supply</dt><dd><p>The supply side of the ledger.</p></dd>
+<dt>consumption</dt><dd><p>The consumption side of the ledger.</p></dd>
+
+</dl>
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>ledger_sides</span></div><div class='output co'>#&gt; $supply
