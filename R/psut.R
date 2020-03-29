@@ -83,8 +83,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #' @param ledger_side,flow_aggregation_point,flow,product,e_dot See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param production,resources See `IEATools::tpes_flows`.
-#' @param eiou the identifier for items that are energy industry own use.
-#'        Default is "Energy industry own use".
+#' @param eiou See `IEATools::tpes_compare_flows`.
 #' @param neg_supply_in_fd identifiers for flow items that, when negative,
 #'        are entries in the final demand (`Y`) matrix.
 #' @param matnames the name of the output column containing the name of the matrix
@@ -112,7 +111,7 @@ add_psut_matnames <- function(.tidy_iea_df,
                               production = IEATools::tpes_flows$production,
                               resources = IEATools::tpes_flows$resources,
                               # Input identifiers for supply, consumption, and EIOU
-                              eiou = "Energy industry own use",
+                              eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
                               neg_supply_in_fd = c("Exports",
                                                    "International aviation bunkers",
                                                    "International marine bunkers",

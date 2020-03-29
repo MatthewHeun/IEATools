@@ -15,7 +15,7 @@ add_psut_matnames(
   consumption = IEATools::ledger_sides$consumption,
   production = IEATools::tpes_flows$production,
   resources = IEATools::tpes_flows$resources,
-  eiou = "Energy industry own use",
+  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
   neg_supply_in_fd = c("Exports", "International aviation bunkers",
     "International marine bunkers", "Losses", "Statistical differences", "Stock changes"),
   matnames = IEATools::mat_meta_cols$matnames,
@@ -35,8 +35,7 @@ add_psut_matnames(
 
 \item{production, resources}{See \code{IEATools::tpes_flows}.}
 
-\item{eiou}{the identifier for items that are energy industry own use.
-Default is "Energy industry own use".}
+\item{eiou}{See \code{IEATools::tpes_compare_flows}.}
 
 \item{neg_supply_in_fd}{identifiers for flow items that, when negative,
 are entries in the final demand (\code{Y}) matrix.}
