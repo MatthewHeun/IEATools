@@ -120,7 +120,7 @@ add_psut_matnames <- function(.tidy_iea_df,
                                                    "Statistical differences",
                                                    "Stock changes"),
                               # Output column
-                              matnames = "matnames",
+                              matnames = IEATools::mat_meta_cols$matnames,
                               # Output identifiers for
                               # use matrix excluding EIOU (U_excl_EIOU),
                               # use matrix energy industry own use items (U_EIOU),
@@ -160,23 +160,15 @@ add_psut_matnames <- function(.tidy_iea_df,
 
 #' Add row, column, row type, and column type metadata
 #' 
-#' After calling [add_psut_matnames()], call this function
+#' After calling `add_psut_matnames()`, call this function
 #' to add row, column, row type, and column type 
 #' information to `.tidy_iea_df`.
 #'
 #' @param .tidy_iea_df a data frame containing column `matnames`
-#' @param cols a list containing names of columns. Default is `IEATools::iea_cols`.
-#' @param flow the name of the column in `.tidy_iea_df` where Flow names
-#'        is found (a string). Default is `cols$flow`.
-#' @param product the name of the column in `.tidy_iea_df` where Product names
-#'        is found (a string). Default is `cols$product`.
+#' @param flow,product See `IEATools::iea_cols`.
 #' @param matnames the name of the column in `.tidy_iea_df` that contains names of matrices
 #'        (a string).  Default is "matnames".
-#' @param U the name for use matrices (a string). Default is "U".
-#' @param U_EIOU the name for energy industry own use matrices (a string). Default is "U_EIOU".
-#' @param R the name for resource matrices (a string). Default is "R".
-#' @param V the name for make matrices (a string). Default is "V".
-#' @param Y the name for final demand matrices (a string). Default is "Y".
+#' @param R,U,U_EIOU,V,Y See `IEATools::psut_cols`.
 #' @param industry_type the name that identifies production industries and
 #'        and transformation processes (a string). Default is "Industry".
 #' @param product_type the name that identifies energy carriers (a string).
@@ -207,20 +199,26 @@ add_psut_matnames <- function(.tidy_iea_df,
 #'   add_row_col_meta()
 add_row_col_meta <- function(.tidy_iea_df,
                              # Column names for Product and Flow
-                             cols = IEATools::iea_cols,
-                             product = cols$product, 
-                             flow = cols$flow,
+                             product = IEATools::iea_cols$product, 
+                             flow = IEATools::iea_cols$flow,
                              # Name of the input column containing matrix names
-                             matnames = "matnames",
+                             matnames = IEATools::mat_meta_cols$matnames,
                              # Expected matrix names in the matnames column
-                             U = "U", U_EIOU = "U_EIOU",
-                             R = "R", V = "V", Y = "Y",
+                             U = IEATools::psut_cols$U,
+                             U_EIOU = IEATools::psut_cols$U_eiou,
+                             R = IEATools::psut_cols$R, 
+                             V = IEATools::psut_cols$V,
+                             Y = IEATools::psut_cols$Y,
                              # Row and column Type identifiers
-                             industry_type = "Industry", product_type = "Product",
-                             sector_type = "Industry", resource_type = "Industry",
+                             industry_type = IEATools::row_col_types$industry,
+                             product_type = IEATools::row_col_types$product, 
+                             sector_type = IEATools::row_col_types$sector, 
+                             resource_type = IEATools::row_col_types$resource,
                              # Output columns
-                             rownames = "rownames", colnames = "colnames",
-                             rowtypes = "rowtypes", coltypes = "coltypes"){
+                             rownames = IEATools::mat_meta_cols$rownames, 
+                             colnames = IEATools::mat_meta_cols$colnames,
+                             rowtypes = IEATools::mat_meta_cols$rowtypes, 
+                             coltypes = IEATools::mat_meta_cols$coltypes){
   matsindf::verify_cols_missing(.tidy_iea_df, c(rownames, colnames, rowtypes, coltypes))
   .tidy_iea_df %>%
     dplyr::mutate(

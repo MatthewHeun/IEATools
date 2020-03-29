@@ -84,9 +84,11 @@
 #' This list provides the typical names for the row and column types
 #' throughout the `IEATools` package.
 #' 
-#' @format A string list with 3 entries
+#' @format A string list with 5 entries
 #' \describe{
+#' \item{resource}{The type of entity that provides raw resources.}
 #' \item{industry}{The type of entity that receives inputs and makes outputs.}
+#' \item{sector}{The type of entity that absorbs final demand.}
 #' \item{product}{The inputs and outputs of industries.}
 #' \item{unit}{Units of physical measurement such as ktoe or TJ.}
 #' }
@@ -94,6 +96,26 @@
 #' @examples
 #' row_col_types
 "row_col_types"
+
+
+#' PSUT matrix meta information column names
+#'
+#' When forming PSUT matrices, meta information is provided in columns.
+#' This list provides the typical names for the meta information columns
+#' throughout the `IEATools` package.
+#' 
+#' @format A string list with 5 entries
+#' \describe{
+#' \item{matnames}{The name of the column that contains matrix names.}
+#' \item{rownames}{The name of the column that contains matrix row names.}
+#' \item{colnames}{The name of the column that contains matrix column names.}
+#' \item{rowtypes}{The name of the column that contains matrix row types.}
+#' \item{coltypes}{The name of the column that contains matrix column types.}
+#' }
+#' 
+#' @examples
+#' mat_meta_cols
+"mat_meta_cols"
 
 
 #' Coal and coal products

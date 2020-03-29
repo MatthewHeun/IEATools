@@ -55,6 +55,18 @@ iea_cols <- list(country = "Country",
 usethis::use_data(iea_cols, overwrite = TRUE)
 
 
+# 
+# Give names for matrix meta information columns
+# 
+
+mat_meta_cols <- list(matnames = "matnames", 
+                      rownames = "rownames", 
+                      colnames = "colnames", 
+                      rowtypes = "rowtypes", 
+                      coltypes = "coltypes")
+usethis::use_data(mat_meta_cols, overwrite = TRUE)
+
+
 #
 # Give the column names of data frames with PSUT data
 #
@@ -78,6 +90,8 @@ usethis::use_data(psut_cols, overwrite = TRUE)
 # 
 
 row_col_types <- list(industry = "Industry", 
+                      resource = "Industry",
+                      sector = "Industry",
                       product = "Product", 
                       unit = "Unit")
 usethis::use_data(row_col_types, overwrite = TRUE)

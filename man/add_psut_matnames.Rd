@@ -18,7 +18,7 @@ add_psut_matnames(
   eiou = "Energy industry own use",
   neg_supply_in_fd = c("Exports", "International aviation bunkers",
     "International marine bunkers", "Losses", "Statistical differences", "Stock changes"),
-  matnames = "matnames",
+  matnames = IEATools::mat_meta_cols$matnames,
   R = IEATools::psut_cols$R,
   U_excl_EIOU = IEATools::psut_cols$U_excl_eiou,
   U_EIOU = IEATools::psut_cols$U_eiou,
