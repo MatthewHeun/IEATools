@@ -55,6 +55,69 @@ iea_cols <- list(country = "Country",
 usethis::use_data(iea_cols, overwrite = TRUE)
 
 
+# 
+# Give names for matrix meta information columns
+# 
+
+mat_meta_cols <- list(matnames = "matnames",
+                      rownames = "rownames", 
+                      colnames = "colnames", 
+                      rowtypes = "rowtypes", 
+                      coltypes = "coltypes")
+usethis::use_data(mat_meta_cols, overwrite = TRUE)
+
+
+#
+# Give the column names of data frames with PSUT data
+#
+
+psut_cols <- list(resources = "R",
+                  R = "R",
+                  use = "U", 
+                  U = "U", 
+                  U_excl_eiou = "U_excl_EIOU",
+                  U_eiou = "U_EIOU",
+                  make = "V", 
+                  V = "V", 
+                  final_demand = "Y",
+                  Y = "Y", 
+                  s_units = "S_units", 
+                  matvals = "matvals")
+usethis::use_data(psut_cols, overwrite = TRUE)
+
+
+# 
+# Give names of columns in FU allocation and eta_fu templates
+# 
+
+template_cols <- list(ef_product = "Ef.product",
+                      machine = "Machine",
+                      eu_product = "Eu.product",
+                      destination = "Destination",
+                      quantity = "Quantity",
+                      maximum_values = "Maximum.values",
+                      C_eiou = "C_EIOU",
+                      C_Y = "C_Y",
+                      e_dot_perc = "E.dot [%]",
+                      e_dot_machine = "E.dot_machine",
+                      e_dot_machine_perc = "E.dot_machine [%]", 
+                      eta_fu = "eta.fu",
+                      phi_u = "phi.u")
+usethis::use_data(template_cols, overwrite = TRUE)
+
+
+# 
+# Give row and column types
+# 
+
+row_col_types <- list(industry = "Industry", 
+                      resource = "Industry",
+                      sector = "Industry",
+                      product = "Product", 
+                      unit = "Unit")
+usethis::use_data(row_col_types, overwrite = TRUE)
+
+
 #
 # Coal and coal products
 # 
@@ -184,7 +247,7 @@ usethis::use_data(biofuels_and_waste_products, overwrite = TRUE)
 
 tpes_flows <- list(resources = "Resources", 
                    production = "Production", 
-                   importa = "Imports", 
+                   imports = "Imports", 
                    exports = "Exports",
                    international_marine_bunkers = "International marine bunkers",
                    international_aviation_bunkers = "International aviation bunkers",
@@ -199,6 +262,30 @@ tfc_compare_flows <- list(total_primary_energy_supply = "Total primary energy su
                           energy_industry_own_use = "Energy industry own use", 
                           losses = "Losses")
 usethis::use_data(tfc_compare_flows, overwrite = TRUE)
+
+
+transformation_processes <- list(main_activity_producer_electricity_plants = "Main activity producer electricity plants", 
+                                 autoproducer_electricity_plants = "Autoproducer electricity plants", 
+                                 main_activity_producer_CHP_plants = "Main activity producer CHP plants",
+                                 autoproducer_CHP_plants = "Autoproducer CHP plants",
+                                 main_activity_producer_heat_plants = "Main activity producer heat plants",
+                                 autoproducer_heat_plants = "Autoproducer heat plants",
+                                 heat_pumps = "Heat pumps",
+                                 electric_boilers = "Electric boilers",
+                                 chemical_heat_for_electricity_production = "Chemical heat for electricity production",
+                                 blast_furnaces = "Blast furnaces",
+                                 gas_works = "Gas works",
+                                 coke_ovens = "Coke ovens",
+                                 patent_fuel_plants = "Patent fuel plants",
+                                 bkb_peat_briquette_plants = "BKB/peat briquette plants",
+                                 oil_refineries = "Oil refineries",
+                                 petrochemical_plants = "Petrochemical plants",
+                                 coal_liquefaction_plants = "Coal liquefaction plants",
+                                 gas_to_liquid_gtl_plants = "Gas-to-liquids (GTL) plants",
+                                 for_blended_natural_gas = "For blended natural gas",
+                                 charcoal_production_plants = "Charcoal production plants",
+                                 non_specified_transformation = "Non-specified (transformation)")
+usethis::use_data(transformation_processes, overwrite = TRUE)
 
 
 tfc_flows <- list(industry = "Industry",
@@ -243,7 +330,10 @@ industry_flows <- list(mining_and_quarrying = "Mining and quarrying",
                        # 2018
                        non_specified_industry = "Non-specified (industry)", 
                        # 2019
-                       industry_not_elsewhere_specified = "Industry not elsewhere specified") %>% 
+                       industry_not_elsewhere_specified = "Industry not elsewhere specified",
+                       # Extra flows that arise after specification
+                       coal_mines = "Coal mines",
+                       oil_and_gas_extraction = "Oil and gas extraction") %>% 
   unlist() %>% 
   as.list()
 usethis::use_data(industry_flows, overwrite = TRUE)
@@ -285,6 +375,7 @@ aggregation_flows <- list(total_primary_energy_supply = "Total primary energy su
                           total_final_consumption = "Total final consumption", 
                           transformation_processes = "Transformation processes", 
                           energy_industry_own_use = "Energy industry own use",
+                          tfc_compare = "TFC compare",
                           industry = "Industry",
                           manufacturing = "Manufacturing",
                           transport = "Transport",
@@ -390,5 +481,20 @@ products <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   insert_after(after = "Natural gas", 
                values = paste0("Natural gas", specify_notation$open, "Oil and gas extraction", specify_notation$close))
 usethis::use_data(products, overwrite = TRUE)
+
+
+#
+# Pull the non-specified flows together
+# 
+
+non_specified_flows <- list(non_specified_transformation = transformation_processes$non_specified_transformation,
+                            non_specified_energy = "Non-specified (energy)",
+                            non_specified_transport = transport_flows$non_specified_transport, 
+                            # 2018
+                            non_specified_industry = industry_flows$non_specified_industry, 
+                            # 2019
+                            industry_not_elsewhere_specified = industry_flows$industry_not_elsewhere_specified, 
+                            non_specified = "Non-specified")
+usethis::use_data(non_specified_flows, overwrite = TRUE)
 
 

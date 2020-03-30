@@ -4,16 +4,21 @@
 \alias{find_eiou_end}
 \title{Find the point where Energy industry own use ends}
 \usage{
-find_eiou_end(.ctry_tbl, flow, non_specified, losses)
+find_eiou_end(
+  .ctry_tbl,
+  flow = IEATools::iea_cols$flow,
+  non_specified = IEATools::non_specified_flows$non_specified,
+  losses = IEATools::tfc_compare_flows$losses
+)
 }
 \arguments{
 \item{.ctry_tbl}{a country's IEA data frame}
 
-\item{flow}{the name of the flow column}
+\item{flow}{See \code{IEATools::iea_cols$flow}.}
 
-\item{non_specified}{the name of non-specified in the flow column}
+\item{non_specified}{See \code{IEATools::non_specified_flows}.}
 
-\item{losses}{the name for losses in the flow column}
+\item{losses}{See \code{IEATools::tfc_compare_flows}.}
 }
 \value{
 a pair of integers representing the rows that straddle

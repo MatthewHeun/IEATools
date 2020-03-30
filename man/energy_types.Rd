@@ -5,13 +5,13 @@
 \alias{energy_types}
 \title{Energy type order}
 \format{
-A string vector
+A string list with 2 entries
 }
 \usage{
 energy_types
 }
 \description{
-A string vector containing the order for energy types.
+A string list containing the order for energy types.
 }
 \examples{
 energy_types

@@ -5,7 +5,7 @@
 \alias{oil_and_oil_products}
 \title{Oil and oil products}
 \format{
-A string vector with 23 entries
+A string vector with 24 entries
 }
 \usage{
 oil_and_oil_products

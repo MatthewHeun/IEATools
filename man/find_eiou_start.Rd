@@ -4,18 +4,24 @@
 \alias{find_eiou_start}
 \title{Find the point where Energy industry own use starts}
 \usage{
-find_eiou_start(.ctry_tbl, flow, non_specified, eiou, coal_mines)
+find_eiou_start(
+  .ctry_tbl,
+  flow = IEATools::iea_cols$flow,
+  non_specified = IEATools::non_specified_flows$non_specified,
+  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+  coal_mines = IEATools::industry_flows$coal_mines
+)
 }
 \arguments{
 \item{.ctry_tbl}{a country's IEA data frame}
 
-\item{flow}{the name of the flow column}
+\item{flow}{See \code{IEATools::iea_cols$flow}.}
 
-\item{non_specified}{the name of non-specified in the flow column}
+\item{non_specified}{See \code{IEATools::non_specified_flows}.}
 
-\item{eiou}{the name for energy industry own use in the flow column}
+\item{eiou}{See \code{IEATools::tfc_compare_flows}.}
 
-\item{coal_mines}{the name for coal mines in the flow column}
+\item{coal_mines}{the name for coal mines in the flow column. Default is "Coal mines".}
 }
 \value{
 a pair of integers representing the rows that straddle

@@ -6,6 +6,14 @@
 \title{Total final consumption comparison flows}
 \format{
 A string vector with 6 entries
+\describe{
+\item{total_primary_energy_supply}{The string identifier for Total primary energy supply.}
+\item{transfers}{The string identifier for Transfers.}
+\item{statistical_differences}{The string identifier for statistical differences.}
+\item{transformation_processes}{The string identifier for transformation processes.}
+\item{energy_industry_own_use}{The string identifier for energy industry own use.}
+\item{losses}{The string identifier for losses.}
+}
 }
 \usage{
 tfc_compare_flows

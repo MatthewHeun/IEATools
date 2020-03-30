@@ -1,5 +1,12 @@
 # IEATools 0.1.17 (2020-03-25)
 
+* Added several new member objects to standard names across the package:
+    + `industry_flows`
+    + `non_specified_flows`
+    + `transformation_processes`
+    + `row_col_types`
+    + `psut_cols`
+    + `mat_meta_cols`
 * `extract_TK()` now accepts strings 
   formulated for "cooling" in addition to "heating."
   Thus, "LTC.15.C" is now accepted and parses correctly.

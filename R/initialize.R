@@ -194,7 +194,7 @@ iea_file_OK <- function(.iea_file = NULL,
     ) %>% 
     dplyr::ungroup() %>% 
     # Keep only rowid, flow, and product. This removes COUNTRY and years from the data frame
-    dplyr::select(!!as.name(rowid), !!as.name(flow), !!as.name(product)) %>% 
+    dplyr::select(rowid, flow, product) %>% 
     # In this context, unique() gives unique combinations of per-country row number, flow, product triples.
     # If all countries have the same order of things, 
     # all countries should have the same row number, flow, product triples, and
@@ -207,7 +207,7 @@ iea_file_OK <- function(.iea_file = NULL,
   # there will be no duplicated row numbers.
   flow_product %>% 
     # Look at the rowid column only
-    dplyr::select(!!as.name(rowid)) %>% 
+    dplyr::select(rowid) %>% 
     # duplicated() returns TRUE for any duplicated values
     duplicated() %>% 
     # Any tells us if there are any duplicated values (TRUEs).

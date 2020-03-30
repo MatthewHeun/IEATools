@@ -277,7 +277,7 @@ all(Simple == Complicated)
 At this point, the integrity of the IEA data can be checked.
 
 
-## Check data integrity
+## Check energy balances
 
 The IEA extended energy balance data are usually close to balanced, but not quite.
 To check the integrity of the energy balances,

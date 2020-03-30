@@ -6,52 +6,32 @@
 \usage{
 prep_psut(
   .tidy_iea_df,
-  ledger_side = "Ledger.side",
-  supply = "Supply",
-  consumption = "Consumption",
-  flow_aggregation_point = "Flow.aggregation.point",
-  flow = "Flow",
-  product = "Product",
-  unit = "Unit",
-  e_dot = "E.dot",
-  matnames = "matnames",
-  matvals = "matvals",
-  rownames = "rownames",
-  colnames = "colnames",
-  rowtypes = "rowtypes",
-  coltypes = "coltypes"
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  flow = IEATools::iea_cols$flow,
+  product = IEATools::iea_cols$product,
+  e_dot = IEATools::iea_cols$e_dot,
+  unit = IEATools::iea_cols$unit,
+  supply = IEATools::ledger_sides$supply,
+  consumption = IEATools::ledger_sides$consumption,
+  matnames = IEATools::mat_meta_cols$matnames,
+  rownames = IEATools::mat_meta_cols$rownames,
+  colnames = IEATools::mat_meta_cols$colnames,
+  rowtypes = IEATools::mat_meta_cols$rowtypes,
+  coltypes = IEATools::mat_meta_cols$coltypes,
+  matvals = IEATools::psut_cols$matvals
 )
 }
 \arguments{
-\item{.tidy_iea_df}{a tidy data frame that has been specified with \code{\link[=specify_all]{specify_all()}}.}
+\item{.tidy_iea_df}{a tidy data frame that has been specified with \code{specify_all()}.}
 
-\item{ledger_side}{the name of the ledger side column. Default is "\code{Ledger.side}".}
+\item{ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
 
-\item{supply}{the string identifying the supply side of the ledger. Default is "\code{Supply}".}
+\item{supply, consumption}{See \code{IEATools::ledger_sides}.}
 
-\item{consumption}{the string identifying the consumption side of the ledger. Default is "\code{Consumption}".}
+\item{matnames, rownames, colnames, rowtypes, coltypes}{See \code{IEATools::mat_meta_cols}.}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
-
-\item{flow}{the name of the flow column. Default is "\code{Flow}".}
-
-\item{product}{the name of the product column. Default is "\code{Product}".}
-
-\item{unit}{the name of the unit column. Default is "\code{Unit}".}
-
-\item{e_dot}{the name of the energy rate column. Default is "E.dot".}
-
-\item{matnames}{the name of the matrix names column added by this function. Default is "\code{matnames}".}
-
-\item{matvals}{the name of the matrix value column added by this function. Default is "\code{matvals}".}
-
-\item{rownames}{the name of the rownames column passed to \code{collapse_to_tidy_psut()}. Default is "\code{rownames}".}
-
-\item{colnames}{the name of the colnames column passed to \code{collapse_to_tidy_psut()}. Default is "\code{colnames}".}
-
-\item{rowtypes}{the name of the rowtypes column passed to \code{collapse_to_tidy_psut()}. Default is "\code{rowtypes}".}
-
-\item{coltypes}{the name of the coltypes column passed to \code{collapse_to_tidy_psut()}. Default is "\code{coltypes}".}
+\item{matvals}{See \code{IEATools::psut_cols}.}
 }
 \value{
 a tidy PSUT data frame
@@ -63,12 +43,12 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y).
 \details{
 This function bundles several others:
 \enumerate{
-\item \code{\link[=add_psut_matnames]{add_psut_matnames()}}
-\item \code{\link[=add_row_col_meta]{add_row_col_meta()}}
-\item \code{\link[=collapse_to_tidy_psut]{collapse_to_tidy_psut()}}
+\item \code{add_psut_matnames()}
+\item \code{add_row_col_meta()}
+\item \code{collapse_to_tidy_psut()}
 }
 
-Furthermore, it extracts \code{S_units} matrices using \code{\link[=extract_S_units_from_tidy]{extract_S_units_from_tidy()}}
+Furthermore, it extracts \code{S_units} matrices using \code{extract_S_units_from_tidy()}
 and adds those matrices to the data frame.
 }
 \examples{

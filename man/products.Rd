@@ -5,7 +5,7 @@
 \alias{products}
 \title{IEA order for products}
 \format{
-A string vector
+A string list with 80
 }
 \usage{
 products

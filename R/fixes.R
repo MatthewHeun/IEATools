@@ -25,11 +25,8 @@
 #' 
 #' Also see the file named "GHA-PSB.xlsx" for the actual calculations.
 #'
-#' @param .tidy_iea_df a tidy IEA data frame produced by [load_tidy_iea_df()]
-#' @param col_names a list of column names in IEA data frames. Default is `IEATools::iea_cols`.
-#' @param country the name of the country column in `.tidy_iea_df`. Default is `col_names$country`.
-#' @param year the name of the year column in `.tidy_iea_df`. Default is `col_names$year`.
-#' @param e_dot the name of the energy flow rate column in `.tidy_iea_df`. Default is `col_names$e_dot`.
+#' @param .tidy_iea_df a tidy IEA data frame produced by `load_tidy_iea_df()`
+#' @param country,year,e_dot See `IEATools::iea_cols`.
 #'
 #' @return `.tidy_iea_df` with smoothed Ghana Primary solid biofuels data
 #' 
@@ -60,10 +57,9 @@
 #'   filter(Year == 1991, Flow == "Production") %>% 
 #'   select("E.dot", "Unit")
 fix_GHA_psb <- function(.tidy_iea_df,
-                        col_names = IEATools::iea_cols,
-                        country = col_names$country, 
-                        year = col_names$year, 
-                        e_dot = col_names$e_dot){
+                        country = IEATools::iea_cols$country, 
+                        year = IEATools::iea_cols$year, 
+                        e_dot = IEATools::iea_cols$e_dot){
   do_fix(.tidy_iea_df, replacement = Fixed_GHA_PSB, 
          country = country, year = year, e_dot = e_dot)
 }
@@ -95,10 +91,7 @@ fix_GHA_psb <- function(.tidy_iea_df,
 #' Also see the file named "GHA-IndustryElectricity.xlsx" for the actual calculations.
 #' 
 #' @param .tidy_iea_df a tidy IEA data frame produced by [load_tidy_iea_df()]
-#' @param col_names a list of column names in IEA data frames. Default is `IEATools::iea_cols`.
-#' @param country the name of the country column in `.tidy_iea_df`. Default is `col_names$country`.
-#' @param year the name of the year column in `.tidy_iea_df`. Default is `col_names$year`.
-#' @param e_dot the name of the energy flow rate column in `.tidy_iea_df`. Default is `colnames$e_dot`.
+#' @param country,year,e_dot See `IEATools::iea_cols`.
 #'
 #' @return `.tidy_iea_df` with improved Ghana Industry Electricity, if warranted
 #' 
@@ -143,10 +136,9 @@ fix_GHA_psb <- function(.tidy_iea_df,
 #'   select(E.dot) %>% 
 #'   sum()
 fix_GHA_industry_electricity <- function(.tidy_iea_df, 
-                                         col_names = IEATools::iea_cols,
-                                         country = col_names$country,
-                                         year = col_names$year,
-                                         e_dot = col_names$e_dot) {
+                                         country = IEATools::iea_cols$country,
+                                         year = IEATools::iea_cols$year,
+                                         e_dot = IEATools::iea_cols$e_dot) {
   do_fix(.tidy_iea_df, replacement = Fixed_GHA_Industry_Electricity,
          country = country, year = year, e_dot = e_dot)
 }
@@ -181,7 +173,7 @@ do_fix <- function(.tidy_iea_df,
   # The internal data that contains the updated Ghana Industry Electricity data
   # can be accessed with Fixed_GHA_Industry_Electricity.
   data_to_join <- replacement %>% 
-    dplyr::filter(!!as.name(year) %in% years_present, 
-                  !!as.name(country) %in% countries_present)
+    dplyr::filter(.data[[year]] %in% years_present, 
+                  .data[[country]] %in% countries_present)
   replace_join(.tidy_iea_df, data_to_join, replace_col = e_dot)
 }

@@ -5,13 +5,18 @@
 \alias{ledger_sides}
 \title{IEA order for ledger side}
 \format{
-A string vector
+A string list with 2 entries
+\describe{
+\item{supply}{The supply side of the ledger.}
+\item{consumption}{The consumption side of the ledger.}
+}
 }
 \usage{
 ledger_sides
 }
 \description{
-A string vector containing \code{Ledger.side} entries in IEA order.
+A string vector containing ledger side entries in IEA order.
+See also \code{IEATools::iea_cols}.
 }
 \examples{
 ledger_sides
