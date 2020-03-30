@@ -310,7 +310,10 @@ industry_flows <- list(mining_and_quarrying = "Mining and quarrying",
                        # 2018
                        non_specified_industry = "Non-specified (industry)", 
                        # 2019
-                       industry_not_elsewhere_specified = "Industry not elsewhere specified") %>% 
+                       industry_not_elsewhere_specified = "Industry not elsewhere specified",
+                       # Extra flows that arise after specification
+                       coal_mines = "Coal mines",
+                       oil_and_gas_extraction = "Oil and gas extraction") %>% 
   unlist() %>% 
   as.list()
 usethis::use_data(industry_flows, overwrite = TRUE)

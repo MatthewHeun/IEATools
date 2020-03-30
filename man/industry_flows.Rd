@@ -5,7 +5,25 @@
 \alias{industry_flows}
 \title{Industry flows}
 \format{
-A string vector with 15 entries
+A string vector with 16 entries
+\describe{
+\item{construction}{The string identifier for the construction industry.}
+\item{iron_and_steel}{The string identifier for the iron and steel industry.}
+\item{chemical_and_petrochemical}{The string identifier for the chemical and petrochemical industry.}
+\item{non_ferrous_metals}{The string identifier for the non-ferrous metals industry.}
+\item{non_metallic_minerals}{The string identifier for the non-metallic minerals industry.}
+\item{transport_equipment}{The string identifier for the transport equipment industry.}
+\item{machinery}{The string identifier for the machinery industry.}
+\item{food_and_tobacco}{The string identifier for the food and tobacco industry.}
+\item{paper_pulp_and_print}{The string identifier for the paper, pulp and print industry. (For 2018 and earlier versions of the IEA extended energy balance database.)}
+\item{paper_pulp_and_printing}{The string identifier for the paper, pulp and printing industry. (For 2019 and later versions of the IEA extended energy balance database.)}
+\item{wood_and_wood_products}{The string identifier for the wood and wood products industry.}
+\item{textile_and_leather}{The string identifier for the textile and leather industry.}
+\item{non_specified_industry}{The string identifier for non-specified (industry).}
+\item{industry_not_elsewhere_specified}{The string identifier for industry not elsewhere specified.}
+\item{coal_mines}{The string identifier for coal mines. This industry arises after specifying the dataset.}
+\item{oil_and_gas_extraction}{The string identifier for oil and gas extraction. This industry arises after specifying the dataset.}
+}
 }
 \usage{
 industry_flows

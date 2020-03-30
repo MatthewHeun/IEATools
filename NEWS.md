@@ -1,6 +1,7 @@
 # IEATools 0.1.17 (2020-03-25)
 
 * Added several new member objects to standard names across the package:
+    + `industry_flows`
     + `non_specified_flows`
     + `transformation_processes`
     + `row_col_types`
