@@ -153,15 +153,15 @@ find_transformation_start <- function(.ctry_tbl,
 #'         The first integer is the last row of Transformation processes.
 find_transformation_end <- function(.ctry_tbl,
                                     flow = IEATools::iea_cols$flow,
-                                    non_specified = non_specified_flows$non_specified,
+                                    non_specified = IEATools::non_specified_flows$non_specified,
                                     eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
-                                    coal_mines = "Coal mines") {
+                                    coal_mines = IEATools::industry_flows$coal_mines) {
   # Make two attempts at this.
   # First attempt assumes that aggregation rows are still present in the IEA data frame.
   transformation_end <- adjacent_rownums(.ctry_tbl, flow, c(non_specified, eiou))
   if (is.null(transformation_end)) {
     # Second attempt assumes that aggregation rows have been removed.
-    transformation_end <- adjacent_rownums(.ctry_tbl, flow, c("Non-specified", "Coal mines"))
+    transformation_end <- adjacent_rownums(.ctry_tbl, flow, c(non_specified, coal_mines))
   }
   assertthat::assert_that(!is.null(transformation_end),
                           msg = "Could not find the rows that identify the end of Transformation Process rows and the beginning of Energy industry own use in find_transformation_end")
@@ -196,7 +196,7 @@ find_eiou_start <- function(.ctry_tbl,
                             flow = IEATools::iea_cols$flow,
                             non_specified = IEATools::non_specified_flows$non_specified,
                             eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
-                            coal_mines = "Coal mines") {
+                            coal_mines = IEATools::industry_flows$coal_mines) {
   find_transformation_end(.ctry_tbl, flow = flow, non_specified = non_specified,
                           eiou = eiou, coal_mines = coal_mines)
 }

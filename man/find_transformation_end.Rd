@@ -7,9 +7,9 @@
 find_transformation_end(
   .ctry_tbl,
   flow = IEATools::iea_cols$flow,
-  non_specified = non_specified_flows$non_specified,
+  non_specified = IEATools::non_specified_flows$non_specified,
   eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
-  coal_mines = "Coal mines"
+  coal_mines = IEATools::industry_flows$coal_mines
 )
 }
 \arguments{
