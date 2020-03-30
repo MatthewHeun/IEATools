@@ -6,9 +6,9 @@
 \usage{
 find_transformation_start(
   .ctry_tbl,
-  flow,
-  statistical_differences,
-  transformation_processes,
+  flow = IEATools::iea_cols$flow,
+  statistical_differences = IEATools::tfc_compare_flows$statistical_differences,
+  transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
   mapep
 )
 }

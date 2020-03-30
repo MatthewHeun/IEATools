@@ -260,6 +260,40 @@
 "tpes_flows"
 
 
+#' Transformation processes
+#'
+#' A string vector containing names of `Transformation processes` `Flow`s in the IEA extended energy balances database.
+#' 
+#' @format A string vector with 6 entries
+#' \describe{
+#' \item{main_activity_producer_electricity_plants}{The string that identifies main activity producer electricity plants.}
+#' \item{autoproducer_electricity_plants}{The string that identifies autoproducer electricity plants.}
+#' \item{main_activity_producer_CHP_plants}{The string that identifies main activity producer combined heat and power plants.}
+#' \item{autoproducer_CHP_plants}{The string that identifies autoproducer combined heat and power plants.}
+#' \item{main_activity_producer_heat_plants}{The string that identifies main activity producer heat plants.}
+#' \item{autoproducer_heat_plants}{The string that identifies autoproducer heat plants.}
+#' \item{heat_pumps}{The string that identifies heat pumps.}
+#' \item{electric_boilers}{The string that identifies electric boilers.}
+#' \item{chemical_heat_for_electricity_production}{The string that identifies chemical heat for electricity production.}
+#' \item{blast_furnaces}{The string that identifies blast furnaces.}
+#' \item{gas_works}{The string that identifies gas works.}
+#' \item{coke_ovens}{The string that identifies coke ovens.}
+#' \item{patent_fuel_plants}{The string that identifies patent fuel plants.}
+#' \item{bkb_peat_briquette_plants}{The string that identifies BKB/peat briquette plants.}
+#' \item{oil_refineries}{The string that identifies oil refineries.}
+#' \item{petrochemical_plants}{The string that identifies petrochemical plants.}
+#' \item{coal_liquefaction_plants}{The string that identifies coal liquefaction plants.}
+#' \item{gas_to_liquid_gtl_plants}{The string that identifies gas to liquid (GTL) plants.}
+#' \item{for_blended_natural_gas}{The string that identifies for blended natural gas.}
+#' \item{charcoal_production_plants}{The string that identifies charcoal production plants.}
+#' \item{non_specified_transformation}{The string that identifies non-specified transformation.}
+#' }
+#' 
+#' @examples 
+#' transformation_processes
+"transformation_processes"
+
+
 #' Total final consumption comparison flows
 #'
 #' A string vector containing names of `Total final consumption` comparison `Flow`s in the IEA extended energy balances database.
@@ -493,3 +527,22 @@
 #' @examples
 #' products
 "products"
+
+
+
+#' IEA non-specified flows
+#'
+#' A string vector containing non-specified flows in IEA order.
+#' 
+#' @format A string list with 5 entries
+#' \describe{
+#' \item{non_specified_transformation}{The string identifying non-specified transformation process flows.}
+#' \item{non_specified_energy}{The string identifying non-specified energy industry own use.}
+#' \item{non_specified_transport}{The string identifying non-specified transport.}
+#' \item{non_specified_industry}{The string identifying non-specified industry for 2018 and earlier versions of the IEA's extended energy balance data.}
+#' \item{industry_not_elsewhere_specified}{The string identifying non-specified industry flows for 2019 and later versions of the IEA's extended energy balance data.}
+#' }
+#' 
+#' @examples
+#' non_specified_flows
+"non_specified_flows"

@@ -114,9 +114,9 @@ find_supply_consumption_split <- function(.ctry_tbl,
 #'         the TFC compare and Transformation processes flows.
 #'         The second integer is the first row of Transformation processes.
 find_transformation_start <- function(.ctry_tbl, 
-                                      flow,
-                                      statistical_differences,
-                                      transformation_processes,
+                                      flow = IEATools::iea_cols$flow,
+                                      statistical_differences = IEATools::tfc_compare_flows$statistical_differences,
+                                      transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
                                       mapep) {
   # Make two attempts at this.
   # First attempt should work when aggregation rows (specifically, "Transformation processes") 
@@ -194,7 +194,7 @@ find_transformation_end <- function(.ctry_tbl,
 #'         the split between Transformation processes and Energy industry own use
 #'         The second integer is the first row of Energy industry own use.
 find_eiou_start <- function(.ctry_tbl,
-                            flow = IEATools::iea_cols$flow,
+                            flow,
                             non_specified,
                             eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
                             coal_mines) {

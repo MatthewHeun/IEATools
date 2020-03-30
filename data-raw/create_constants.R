@@ -244,6 +244,30 @@ tfc_compare_flows <- list(total_primary_energy_supply = "Total primary energy su
 usethis::use_data(tfc_compare_flows, overwrite = TRUE)
 
 
+transformation_processes <- list(main_activity_producer_electricity_plants = "Main activity producer electricity plants", 
+                                 autoproducer_electricity_plants = "Autoproducer electricity plants", 
+                                 main_activity_producer_CHP_plants = "Main activity producer CHP plants",
+                                 autoproducer_CHP_plants = "Autoproducer CHP plants",
+                                 main_activity_producer_heat_plants = "Main activity producer heat plants",
+                                 autoproducer_heat_plants = "Autoproducer heat plants",
+                                 heat_pumps = "Heat pumps",
+                                 electric_boilers = "Electric boilers",
+                                 chemical_heat_for_electricity_production = "Chemical heat for electricity production",
+                                 blast_furnaces = "Blast furnaces",
+                                 gas_works = "Gas works",
+                                 coke_ovens = "Coke ovens",
+                                 patent_fuel_plants = "Patent fuel plants",
+                                 bkb_peat_briquette_plants = "BKB/peat briquette plants",
+                                 oil_refineries = "Oil refineries",
+                                 petrochemical_plants = "Petrochemical plants",
+                                 coal_liquefaction_plants = "Coal liquefaction plants",
+                                 gas_to_liquid_gtl_plants = "Gas-to-liquids (GTL) plants",
+                                 for_blended_natural_gas = "For blended natural gas",
+                                 charcoal_production_plants = "Charcoal production plants",
+                                 non_specified_transformation = "Non-specified (transformation)")
+usethis::use_data(transformation_processes, overwrite = TRUE)
+
+
 tfc_flows <- list(industry = "Industry",
                   transport = "Transport",
                   other = "Other",
@@ -434,5 +458,21 @@ products <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   insert_after(after = "Natural gas", 
                values = paste0("Natural gas", specify_notation$open, "Oil and gas extraction", specify_notation$close))
 usethis::use_data(products, overwrite = TRUE)
+
+
+
+
+#
+# Pull the non-specified flows together
+# 
+
+non_specified_flows <- list(non_specified_transformation = transformation_processes$non_specified_transformation,
+                            non_specified_energy = "Non-specified (energy)",
+                            non_specified_transport = transport_flows$non_specified_transport, 
+                            # 2018
+                            non_specified_industry = industry_flows$non_specified_industry, 
+                            # 2019
+                            industry_not_elsewhere_specified = industry_flows$industry_not_elsewhere_specified)
+usethis::use_data(non_specified_flows, overwrite = TRUE)
 
 

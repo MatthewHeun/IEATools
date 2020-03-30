@@ -6,7 +6,7 @@
 \usage{
 find_eiou_start(
   .ctry_tbl,
-  flow = IEATools::iea_cols$flow,
+  flow,
   non_specified,
   eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
   coal_mines
