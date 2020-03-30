@@ -5,13 +5,13 @@
 \alias{methods}
 \title{Method order}
 \format{
-A string vector
+A string list with 3 entries
 }
 \usage{
 methods
 }
 \description{
-A string vector containing types of methods for quantifying the primary equivalent of renewable electricity.
+A string list containing types of methods for quantifying the primary equivalent of renewable electricity.
 }
 \examples{
 methods

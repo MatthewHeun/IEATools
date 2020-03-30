@@ -3,7 +3,7 @@
 #' A character vector containing the specification notation used in the IEATools package.
 #' Notation for delimiting specification strings is included.
 #' 
-#' @format A character vector
+#' @format A character vector with `r length(specify_notation)` entries
 #' 
 #' @examples
 #' specify_notation
@@ -15,7 +15,7 @@
 #' A numeric vector containing release years for IEA extended energy balance data
 #' supported by this package.
 #' 
-#' @format A numeric vector with 2 entries
+#' @format A numeric vector with `r length(valid_iea_release_years)` entries
 #' 
 #' @examples
 #' valid_iea_release_years
@@ -31,7 +31,7 @@
 #' Items in the list provide default values for column name function arguments
 #' throughout the `IEATools` package.
 #' 
-#' @format A string list with 11 entries
+#' @format A string list with `r length(iea_cols)` entries
 #' \describe{
 #' \item{country}{The name of a column containing countries.}
 #' \item{method}{The name of a column containing methods for calculating primary energy equivalent of renewable electricity. See `IEATools::methods`.}
@@ -62,7 +62,7 @@
 #' thereby providing synonyms.
 #' E.g., both `resources` and `R` point to the "R" column name.
 #' 
-#' @format A string list with 8 entries
+#' @format A string list with `r length(psut_cols)` entries
 #' \describe{
 #' \item{resources,R}{The name of a column in a wide data frame containing resource (`R`) matrices.}
 #' \item{use,U}{The name of a column in a wide data frame containing use (`U`) matrices.}
@@ -79,13 +79,45 @@
 "psut_cols"
 
 
+#' Final-to-useful template column names
+#'
+#' A string list containing named names of columns in templates 
+#' (either final-to-useful allocations or machine efficiency) 
+#' for final-to-useful analysis.
+#' Items in the list provide default values for column and row name function arguments
+#' throughout the `IEATools` package.
+#' 
+#' Some of these names may represent rows (instead of columns) at some stages of the final-to-useful analysis.
+#' 
+#' @format A string list with `r length(template_cols)` entries
+#' \describe{
+#' \item{ef_product}{The name of the final energy product column in final-to-useful templates.}
+#' \item{machine}{The name of the machine column in final-to-useful templates.}
+#' \item{eu_product}{The name of the useful energy product column in final-to-useful templates.}
+#' \item{destination}{The name of the destination column in final-to-useful templates.}
+#' \item{quantity}{The name of the quantity column in final-to-useful templates.}
+#' \item{maximum_values}{The name of the maximum values column in final-to-useful templates.}
+#' \item{c_}{The name of the allocation (`C_1`, `C_2`, `C_3`, etc.) columns in final-to-useful templates.}
+#' \item{C}{The name of the allocation (`C`) matrix column.}
+#' \item{e_dot_perc}{The name of the energy flow percentage column in final-to-useful templates.}
+#' \item{e_dot_machine}{The name of the column representing energy flow into a machine in final-to-useful templates.}
+#' \item{e_dot_machine_perc}{The name of the machine energy flow percentage column in final-to-useful templates.}
+#' \item{eta_fu}{The name of the final-to-useful machine efficiency column in final-to-useful templates.}
+#' \item{phi_u}{The name of the exergy-to-energy ratio column in final-to-useful templates.}
+#' }
+#' 
+#' @examples
+#' template_cols
+"template_cols"
+
+
 #' PSUT matrix row and column types
 #'
 #' PSUT matrices have row and column types. 
 #' This list provides the typical names for the row and column types
 #' throughout the `IEATools` package.
 #' 
-#' @format A string list with 5 entries
+#' @format A string list with `r length(row_col_types)` entries
 #' \describe{
 #' \item{resource}{The type of entity that provides raw resources.}
 #' \item{industry}{The type of entity that receives inputs and makes outputs.}
@@ -105,7 +137,7 @@
 #' This list provides the typical names for the meta information columns
 #' throughout the `IEATools` package.
 #' 
-#' @format A string list with 6 entries
+#' @format A string list with `r length(mat_meta_cols)` entries
 #' \describe{
 #' \item{matnames}{The name of the column that contains matrix names.}
 #' \item{rownames}{The name of the column that contains matrix row names.}
@@ -124,7 +156,7 @@
 #'
 #' A string vector containing names of products classified by the IEA as coal and coal products.
 #' 
-#' @format A string vector with 16 entries
+#' @format A string vector with `r length(coal_and_coal_products)` entries
 #' 
 #' @examples
 #' coal_and_coal_products
@@ -135,7 +167,7 @@
 #'
 #' A string vector containing names of products classified by the IEA as primary coal products.
 #' 
-#' @format A string vector with 7 entries
+#' @format A string vector with `r length(primary_coal_products)` entries
 #' @examples
 #' primary_coal_products
 "primary_coal_products"
@@ -145,7 +177,7 @@
 #'
 #' A string vector containing names of products classified by the IEA as `coal_and_coal_products` that are not `primary_coal_products`.
 #' 
-#' @format A string vector with 9 entries
+#' @format A string vector with `r length(secondary_coal_products)` entries
 #' 
 #' @examples 
 #' secondary_coal_products
@@ -156,7 +188,7 @@
 #'
 #' A string vector containing names of products classified by the IEA as peat and peat products.
 #' 
-#' @format A string vector with 2 entries
+#' @format A string vector with `r length(peat_and_peat_products)` entries
 #' 
 #' @examples 
 #' peat_and_peat_products
@@ -167,7 +199,7 @@
 #'
 #' A string vector containing names of products classified by the IEA as primary peat products.
 #' 
-#' @format A string vector with 1 entry
+#' @format A string vector with `r length(primary_peat_products)` entry
 #' 
 #' @examples 
 #' primary_peat_products
@@ -178,7 +210,7 @@
 #'
 #' A string vector containing names of products classified by the IEA as "Peat and peat products" that are not `primary_peat_products`.
 #' 
-#' @format A string vector with 1 entry
+#' @format A string vector with `r length(secondary_peat_products)` entry
 #' 
 #' @examples 
 #' secondary_peat_products
@@ -189,7 +221,7 @@
 #'
 #' A string vector containing names of products classified by the IEA as oil and oil products.
 #' 
-#' @format A string vector with 23 entries
+#' @format A string vector with `r length(oil_and_oil_products)` entries
 #' 
 #' @examples 
 #' oil_and_oil_products
@@ -200,7 +232,7 @@
 #'
 #' A string vector containing names of products classified by the IEA as primary oil products.
 #' 
-#' @format A string vector with 2 entries
+#' @format A string vector with `r length(primary_oil_products)` entries
 #' 
 #' @examples 
 #' primary_oil_products
@@ -211,7 +243,7 @@
 #'
 #' A string vector containing names of products classified by the IEA as `oil_and_oil_products` that are not `primary_coal_products`.
 #' 
-#' @format A string vector with 18 entries
+#' @format A string vector with `r length(secondary_oil_products)` entries
 #' 
 #' @examples 
 #' secondary_oil_products
@@ -222,7 +254,7 @@
 #'
 #' A string vector containing names of products classified by the IEA as renewables.
 #' 
-#' @format A string vector with 23 entries
+#' @format A string vector with `r length(renewable_products)` entries
 #' 
 #' @examples 
 #' renewable_products
@@ -233,7 +265,7 @@
 #'
 #' A string vector containing names of products classified by the IEA as biofuel and waste products.
 #' 
-#' @format A string vector with 10 entries
+#' @format A string vector with `r length(biofuels_and_waste_products)` entries
 #' 
 #' @examples
 #' biofuels_and_waste_products
@@ -244,7 +276,7 @@
 #'
 #' A string vector containing names of `Total primary energy supply` `Flow`s in the IEA extended energy balances database.
 #' 
-#' @format A string vector with 6 entries
+#' @format A string vector with `r length(tpes_flows)` entries
 #' \describe{
 #' \item{resources}{The string identifier for Resource flows.}
 #' \item{production}{The string identifier for Production flows.}
@@ -264,7 +296,7 @@
 #'
 #' A string vector containing names of `Transformation processes` `Flow`s in the IEA extended energy balances database.
 #' 
-#' @format A string vector with 6 entries
+#' @format A string vector with `r length(transformation_processes)` entries
 #' \describe{
 #' \item{main_activity_producer_electricity_plants}{The string that identifies main activity producer electricity plants.}
 #' \item{autoproducer_electricity_plants}{The string that identifies autoproducer electricity plants.}
@@ -298,7 +330,7 @@
 #'
 #' A string vector containing names of `Total final consumption` comparison `Flow`s in the IEA extended energy balances database.
 #' 
-#' @format A string vector with 6 entries
+#' @format A string vector with `r length(tfc_compare_flows)` entries
 #' \describe{
 #' \item{total_primary_energy_supply}{The string identifier for Total primary energy supply.}
 #' \item{transfers}{The string identifier for Transfers.}
@@ -317,7 +349,7 @@
 #'
 #' A string vector containing names of `Total final consumption` `Flow`s in the IEA extended energy balances database.
 #' 
-#' @format A string vector with 4 entries
+#' @format A string vector with `r length(tfc_flows)` entries
 #' 
 #' @examples 
 #' tfc_flows
@@ -328,7 +360,7 @@
 #'
 #' A string vector containing names of `Industry` `Flow`s in the IEA extended energy balances database.
 #' 
-#' @format A string vector with 16 entries
+#' @format A string vector with `r length(industry_flows)` entries
 #' \describe{
 #' \item{construction}{The string identifier for the construction industry.}
 #' \item{iron_and_steel}{The string identifier for the iron and steel industry.}
@@ -357,7 +389,7 @@
 #'
 #' A string vector containing names of `Manufacturing` `Flow`s in the IEA extended energy balances database.
 #' 
-#' @format A string vector with 11 entries
+#' @format A string vector with `r length(manufacturing_flows)` entries
 #' \describe{
 #' \item{iron_and_steel}{The string identifying the iron and steel industry.}
 #' \item{chemical_and_petrochemical}{The string identifying the chemical and petrochemical industry}
@@ -381,7 +413,7 @@
 #'
 #' A string vector containing names of `Transport` `Flow`s in the IEA extended energy balances database.
 #' 
-#' @format A string vector with 8 entries
+#' @format A string vector with `r length(transport_flows)` entries
 #' 
 #' @examples
 #' transport_flows
@@ -392,7 +424,7 @@
 #'
 #' A string vector containing names of `Other` `Flow`s in the IEA extended energy balances database.
 #' 
-#' @format A string vector with 6 entries
+#' @format A string vector with `r length(other_flows)` entries
 #' 
 #' @examples
 #' other_flows
@@ -403,7 +435,7 @@
 #'
 #' A string vector containing names of `Non-energy` `Flow`s in the IEA extended energy balances database.
 #' 
-#' @format A string vector with 3 entries
+#' @format A string vector with `r length(non_energy_flows)` entries
 #' 
 #' @examples
 #' non_energy_flows
@@ -415,7 +447,7 @@
 #' A string vector containing names of industries whose purpose in IEA extended energy balance `Flow`s is to provide aggregations.
 #' These items appear in `Flow.aggregation.point` columns.
 #' 
-#' @format A string vector with 10 entries
+#' @format A string vector with `r length(aggregation_flows)` entries
 #' \describe{
 #' \item{total_primary_energy_supply}{Indicates a flow that aggregates to total primary energy supply.}
 #' \item{total_final_consumption}{Indicates a flow that aggregates to total final consumption.}
@@ -438,7 +470,7 @@
 #'
 #' A string vector containing names of `Flow`s that provide memos and aggregations.
 #' 
-#' @format A string vector with 3 entries
+#' @format A string vector with `r length(memo_aggregation_flow_prefixes)` entries
 #' 
 #' @examples
 #' memo_aggregation_flow_prefixes
@@ -448,7 +480,7 @@
 #'
 #' A string vector containing names of `Product`s that provide memos and aggregations.
 #' 
-#' @format A string vector with 2 entries
+#' @format A string vector with `r length(memo_aggregation_product_prefixes)` entries
 #' 
 #' @examples
 #' memo_aggregation_product_prefixes
@@ -458,7 +490,7 @@
 #'
 #' A string vector containing names of `Flow`s that interface with the world outside of the economy.
 #' 
-#' @format A string vector with 5 entries
+#' @format A string vector with `r length(interface_industries)` entries
 #' 
 #' @examples
 #' interface_industries
@@ -469,7 +501,7 @@
 #'
 #' A string vector containing 3-letter ISO country codes in alphabetical order.
 #' 
-#' @format A string vector
+#' @format A string vector with `r length(countries)` entries
 #' 
 #' @examples
 #' countries
@@ -478,9 +510,9 @@
 
 #' Method order
 #'
-#' A string vector containing types of methods for quantifying the primary equivalent of renewable electricity.
+#' A string list containing types of methods for quantifying the primary equivalent of renewable electricity.
 #' 
-#' @format A string vector
+#' @format A string list with `r length(methods)` entries
 #' 
 #' @examples
 #' methods
@@ -489,9 +521,9 @@
 
 #' Energy type order
 #'
-#' A string vector containing the order for energy types.
+#' A string list containing the order for energy types.
 #' 
-#' @format A string vector
+#' @format A string list with `r length(energy_types)` entries
 #' 
 #' @examples
 #' energy_types
@@ -500,9 +532,9 @@
 
 #' Last stage order
 #'
-#' A string vector containing options for the last stage of energy conversion chain analysis.
+#' A string list containing options for the last stage of energy conversion chain analysis.
 #' 
-#' @format A string vector
+#' @format A string list with `r length(last_stages)`
 #' 
 #' @examples
 #' last_stages
@@ -514,7 +546,7 @@
 #' A string vector containing ledger side entries in IEA order.
 #' See also `IEATools::iea_cols`.
 #' 
-#' @format A string list with 2 entries
+#' @format A string list with `r length(ledger_sides)` entries
 #' \describe{
 #' \item{supply}{The supply side of the ledger.}
 #' \item{consumption}{The consumption side of the ledger.}
@@ -529,7 +561,7 @@
 #'
 #' A string vector containing entries for a united flow aggregation point and flow column in IEA order.
 #' 
-#' @format A string vector
+#' @format A string list with `r length(fap_flows)`
 #' 
 #' @examples
 #' fap_flows
@@ -540,19 +572,18 @@
 #'
 #' A string vector containing entries for the product column in IEA order.
 #' 
-#' @format A string vector
+#' @format A string list with `r length(products)`
 #' 
 #' @examples
 #' products
 "products"
 
 
-
 #' IEA non-specified flows
 #'
 #' A string vector containing non-specified flows in IEA order.
 #' 
-#' @format A string list with 6 entries
+#' @format A string list with `r length(non_specified_flows)` entries
 #' \describe{
 #' \item{non_specified_transformation}{The string identifying non-specified transformation process flows.}
 #' \item{non_specified_energy}{The string identifying non-specified energy industry own use.}

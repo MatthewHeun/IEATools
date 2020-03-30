@@ -87,6 +87,26 @@ usethis::use_data(psut_cols, overwrite = TRUE)
 
 
 # 
+# Give names of columns in FU allocation and eta_fu templates
+# 
+
+template_cols <- list(ef_product = "Ef.product",
+                      machine = "Machine",
+                      eu_product = "Eu.product",
+                      destination = "Destination",
+                      quantity = "Quantity",
+                      maximum_values = "Maximum.values",
+                      C_eiou = "C_EIOU",
+                      C_Y = "C_Y",
+                      e_dot_perc = "E.dot [%]",
+                      e_dot_machine = "E.dot_machine",
+                      e_dot_machine_perc = "E.dot_machine [%]", 
+                      eta_fu = "eta.fu",
+                      phi_u = "phi.u")
+usethis::use_data(template_cols, overwrite = TRUE)
+
+
+# 
 # Give row and column types
 # 
 

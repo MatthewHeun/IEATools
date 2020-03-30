@@ -5,13 +5,13 @@
 \alias{last_stages}
 \title{Last stage order}
 \format{
-A string vector
+A string list with 3
 }
 \usage{
 last_stages
 }
 \description{
-A string vector containing options for the last stage of energy conversion chain analysis.
+A string list containing options for the last stage of energy conversion chain analysis.
 }
 \examples{
 last_stages

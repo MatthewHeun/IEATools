@@ -5,7 +5,7 @@
 \alias{mat_meta_cols}
 \title{PSUT matrix meta information column names}
 \format{
-A string list with 6 entries
+A string list with 5 entries
 \describe{
 \item{matnames}{The name of the column that contains matrix names.}
 \item{rownames}{The name of the column that contains matrix row names.}

@@ -5,7 +5,7 @@
 \alias{biofuels_and_waste_products}
 \title{Biofuel and waste products}
 \format{
-A string vector with 10 entries
+A string vector with 11 entries
 }
 \usage{
 biofuels_and_waste_products
