@@ -7,7 +7,7 @@
 find_transformation_end(
   .ctry_tbl,
   flow = IEATools::iea_cols$flow,
-  non_specified,
+  non_specified = non_specified_flows$non_specified,
   eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
   coal_mines = "Coal mines"
 )
@@ -17,11 +17,11 @@ find_transformation_end(
 
 \item{flow}{See \code{IEATools::iea_cols$flow}.}
 
-\item{non_specified}{the name of non-specified in the flow column}
+\item{non_specified}{See \code{IEATools::non_specified_flows}.}
 
 \item{eiou}{See \code{IEATools::tfc_compare_flows}.}
 
-\item{coal_mines}{the name for coal mines in the flow column}
+\item{coal_mines}{the name for coal mines in the flow column. Default is "Coal mines".}
 }
 \value{
 a pair of integers representing the rows that straddle

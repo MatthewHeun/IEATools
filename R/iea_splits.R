@@ -105,19 +105,18 @@ find_supply_consumption_split <- function(.ctry_tbl,
 #' TFC compare and Transformation processes.
 #'
 #' @param .ctry_tbl a country's IEA data frame
-#' @param flow the name of the flow column
-#' @param statistical_differences the name for statistical difference in the flow column
-#' @param transformation_processes the name for transformation processes in the flow column
-#' @param mapep the name for main activity producer electricity plants in the flow column
+#' @param flow See `IEATools::iea_cols`. 
+#' @param transformation_processes,statistical_differences See `IEATools::tfc_compare_flows`.
+#' @param mapep See `IEATools::transformation_processes`.
 #'
 #' @return a pair of integers representing the rows that straddle the split between 
 #'         the TFC compare and Transformation processes flows.
 #'         The second integer is the first row of Transformation processes.
 find_transformation_start <- function(.ctry_tbl, 
                                       flow = IEATools::iea_cols$flow,
-                                      statistical_differences = IEATools::tfc_compare_flows$statistical_differences,
                                       transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
-                                      mapep) {
+                                      statistical_differences = IEATools::tfc_compare_flows$statistical_differences,
+                                      mapep = IEATools::transformation_processes$main_activity_producer_electricity_plants) {
   # Make two attempts at this.
   # First attempt should work when aggregation rows (specifically, "Transformation processes") 
   # remain in the data frame.
@@ -145,16 +144,16 @@ find_transformation_start <- function(.ctry_tbl,
 #'
 #' @param .ctry_tbl a country's IEA data frame
 #' @param flow See `IEATools::iea_cols$flow`.
-#' @param non_specified the name of non-specified in the flow column
+#' @param non_specified See `IEATools::non_specified_flows`.
 #' @param eiou See `IEATools::tfc_compare_flows`. 
-#' @param coal_mines the name for coal mines in the flow column
+#' @param coal_mines the name for coal mines in the flow column. Default is "Coal mines".
 #'
 #' @return a pair of integers representing the rows that straddle 
 #'         the split between Transformation processes and Energy industry own use
 #'         The first integer is the last row of Transformation processes.
 find_transformation_end <- function(.ctry_tbl,
                                     flow = IEATools::iea_cols$flow,
-                                    non_specified,
+                                    non_specified = non_specified_flows$non_specified,
                                     eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
                                     coal_mines = "Coal mines") {
   # Make two attempts at this.
@@ -186,18 +185,18 @@ find_transformation_end <- function(.ctry_tbl,
 #'
 #' @param .ctry_tbl a country's IEA data frame
 #' @param flow See `IEATools::iea_cols$flow`.
-#' @param non_specified the name of non-specified in the flow column
+#' @param non_specified See `IEATools::non_specified_flows`. 
 #' @param eiou See `IEATools::tfc_compare_flows`. 
-#' @param coal_mines the name for coal mines in the flow column
+#' @param coal_mines the name for coal mines in the flow column. Default is "Coal mines".
 #'
 #' @return a pair of integers representing the rows that straddle 
 #'         the split between Transformation processes and Energy industry own use
 #'         The second integer is the first row of Energy industry own use.
 find_eiou_start <- function(.ctry_tbl,
-                            flow,
-                            non_specified,
+                            flow = IEATools::iea_cols$flow,
+                            non_specified = IEATools::non_specified_flows$non_specified,
                             eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
-                            coal_mines) {
+                            coal_mines = "Coal mines") {
   find_transformation_end(.ctry_tbl, flow = flow, non_specified = non_specified,
                           eiou = eiou, coal_mines = coal_mines)
 }
@@ -216,7 +215,7 @@ find_eiou_start <- function(.ctry_tbl,
 #'
 #' @param .ctry_tbl a country's IEA data frame
 #' @param flow See `IEATools::iea_cols$flow`.
-#' @param non_specified the name of non-specified in the flow column
+#' @param non_specified See `IEATools::non_specified_flows`. 
 #' @param losses See `IEATools::tfc_compare_flows`.
 #'
 #' @return a pair of integers representing the rows that straddle 
@@ -224,7 +223,7 @@ find_eiou_start <- function(.ctry_tbl,
 #'         The first integer is the last row of Energy industry own use.
 find_eiou_end <- function(.ctry_tbl,
                           flow = IEATools::iea_cols$flow,
-                          non_specified,
+                          non_specified = IEATools::non_specified_flows$non_specified,
                           losses = IEATools::tfc_compare_flows$losses) {
   eiou_end <- adjacent_rownums(.ctry_tbl, flow, c(non_specified, losses))
   assertthat::assert_that(!is.null(eiou_end),

@@ -472,7 +472,8 @@ non_specified_flows <- list(non_specified_transformation = transformation_proces
                             # 2018
                             non_specified_industry = industry_flows$non_specified_industry, 
                             # 2019
-                            industry_not_elsewhere_specified = industry_flows$industry_not_elsewhere_specified)
+                            industry_not_elsewhere_specified = industry_flows$industry_not_elsewhere_specified, 
+                            non_specified = "Non-specified")
 usethis::use_data(non_specified_flows, overwrite = TRUE)
 
 

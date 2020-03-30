@@ -6,10 +6,10 @@
 \usage{
 find_eiou_start(
   .ctry_tbl,
-  flow,
-  non_specified,
+  flow = IEATools::iea_cols$flow,
+  non_specified = IEATools::non_specified_flows$non_specified,
   eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
-  coal_mines
+  coal_mines = "Coal mines"
 )
 }
 \arguments{
@@ -17,11 +17,11 @@ find_eiou_start(
 
 \item{flow}{See \code{IEATools::iea_cols$flow}.}
 
-\item{non_specified}{the name of non-specified in the flow column}
+\item{non_specified}{See \code{IEATools::non_specified_flows}.}
 
 \item{eiou}{See \code{IEATools::tfc_compare_flows}.}
 
-\item{coal_mines}{the name for coal mines in the flow column}
+\item{coal_mines}{the name for coal mines in the flow column. Default is "Coal mines".}
 }
 \value{
 a pair of integers representing the rows that straddle

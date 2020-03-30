@@ -7,7 +7,7 @@
 find_eiou_end(
   .ctry_tbl,
   flow = IEATools::iea_cols$flow,
-  non_specified,
+  non_specified = IEATools::non_specified_flows$non_specified,
   losses = IEATools::tfc_compare_flows$losses
 )
 }
@@ -16,7 +16,7 @@ find_eiou_end(
 
 \item{flow}{See \code{IEATools::iea_cols$flow}.}
 
-\item{non_specified}{the name of non-specified in the flow column}
+\item{non_specified}{See \code{IEATools::non_specified_flows}.}
 
 \item{losses}{See \code{IEATools::tfc_compare_flows}.}
 }

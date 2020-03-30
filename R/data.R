@@ -534,13 +534,14 @@
 #'
 #' A string vector containing non-specified flows in IEA order.
 #' 
-#' @format A string list with 5 entries
+#' @format A string list with 6 entries
 #' \describe{
 #' \item{non_specified_transformation}{The string identifying non-specified transformation process flows.}
 #' \item{non_specified_energy}{The string identifying non-specified energy industry own use.}
 #' \item{non_specified_transport}{The string identifying non-specified transport.}
 #' \item{non_specified_industry}{The string identifying non-specified industry for 2018 and earlier versions of the IEA's extended energy balance data.}
 #' \item{industry_not_elsewhere_specified}{The string identifying non-specified industry flows for 2019 and later versions of the IEA's extended energy balance data.}
+#' \item{non_specified}{The string identifying generic non-specified flows.}
 #' }
 #' 
 #' @examples
