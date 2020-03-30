@@ -161,10 +161,9 @@ This function applies the fixes to years that are available in <code>.tidy_iea_d
 
     <pre class="usage"><span class='fu'>fix_GHA_industry_electricity</span>(
   <span class='no'>.tidy_iea_df</span>,
-  <span class='kw'>col_names</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>,
-  <span class='kw'>country</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>country</span>,
-  <span class='kw'>year</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>year</span>,
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>e_dot</span>
+  <span class='kw'>country</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>country</span>,
+  <span class='kw'>year</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>year</span>,
+  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>e_dot</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -175,20 +174,8 @@ This function applies the fixes to years that are available in <code>.tidy_iea_d
       <td><p>a tidy IEA data frame produced by <code><a href='load_tidy_iea_df.html'>load_tidy_iea_df()</a></code></p></td>
     </tr>
     <tr>
-      <th>col_names</th>
-      <td><p>a list of column names in IEA data frames. Default is <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>country</th>
-      <td><p>the name of the country column in <code>.tidy_iea_df</code>. Default is <code>col_names$country</code>.</p></td>
-    </tr>
-    <tr>
-      <th>year</th>
-      <td><p>the name of the year column in <code>.tidy_iea_df</code>. Default is <code>col_names$year</code>.</p></td>
-    </tr>
-    <tr>
-      <th>e_dot</th>
-      <td><p>the name of the energy flow rate column in <code>.tidy_iea_df</code>. Default is <code>colnames$e_dot</code>.</p></td>
+      <th>country, year, e_dot</th>
+      <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     </table>
 

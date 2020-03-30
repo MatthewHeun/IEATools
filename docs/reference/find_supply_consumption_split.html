@@ -145,12 +145,12 @@ the Supply and Consumption sides of the ledger.</p>
 
     <pre class="usage"><span class='fu'>find_supply_consumption_split</span>(
   <span class='no'>.ctry_tbl</span>,
-  <span class='no'>flow</span>,
-  <span class='no'>losses</span>,
-  <span class='no'>iron_and_steel</span>,
-  <span class='no'>mining_and_quarrying</span>,
-  <span class='no'>tfc</span>,
-  <span class='no'>industry</span>
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow</span>,
+  <span class='kw'>losses</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span>$<span class='no'>losses</span>,
+  <span class='kw'>iron_and_steel</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='manufacturing_flows.html'>manufacturing_flows</a></span>$<span class='no'>iron_and_steel</span>,
+  <span class='kw'>mining_and_quarrying</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='industry_flows.html'>industry_flows</a></span>$<span class='no'>mining_and_quarrying</span>,
+  <span class='kw'>tfc</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='aggregation_flows.html'>aggregation_flows</a></span>$<span class='no'>total_final_consumption</span>,
+  <span class='kw'>industry</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_flows.html'>tfc_flows</a></span>$<span class='no'>industry</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -162,27 +162,27 @@ the Supply and Consumption sides of the ledger.</p>
     </tr>
     <tr>
       <th>flow</th>
-      <td><p>the name of the flow column</p></td>
+      <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
       <th>losses</th>
-      <td><p>the name for losses in the flow column</p></td>
+      <td><p>See <code><a href='tfc_compare_flows.html'>IEATools::tfc_compare_flows</a></code>.</p></td>
     </tr>
     <tr>
       <th>iron_and_steel</th>
-      <td><p>the name for the iron and steel industry in the flow column</p></td>
+      <td><p>See <code>IEATools::manufactuiring_flows</code>.</p></td>
     </tr>
     <tr>
       <th>mining_and_quarrying</th>
-      <td><p>the name for the mining and quarrying industry in the flow column</p></td>
+      <td><p>See <code><a href='industry_flows.html'>IEATools::industry_flows</a></code>.</p></td>
     </tr>
     <tr>
       <th>tfc</th>
-      <td><p>the name for total final consumption in the flow column</p></td>
+      <td><p>See <code><a href='aggregation_flows.html'>IEATools::aggregation_flows</a></code>.</p></td>
     </tr>
     <tr>
       <th>industry</th>
-      <td><p>the name for industry in the flow column</p></td>
+      <td><p>See <code><a href='tfc_flows.html'>IEATools::tfc_flows</a></code>.</p></td>
     </tr>
     </table>
 

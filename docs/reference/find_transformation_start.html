@@ -145,10 +145,10 @@ the first TFC Compare section and Transformation processes.</p>
 
     <pre class="usage"><span class='fu'>find_transformation_start</span>(
   <span class='no'>.ctry_tbl</span>,
-  <span class='no'>flow</span>,
-  <span class='no'>statistical_differences</span>,
-  <span class='no'>transformation_processes</span>,
-  <span class='no'>mapep</span>
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow</span>,
+  <span class='kw'>transformation_processes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span>$<span class='no'>transformation_processes</span>,
+  <span class='kw'>statistical_differences</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span>$<span class='no'>statistical_differences</span>,
+  <span class='kw'>mapep</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='transformation_processes.html'>transformation_processes</a></span>$<span class='no'>main_activity_producer_electricity_plants</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -160,19 +160,15 @@ the first TFC Compare section and Transformation processes.</p>
     </tr>
     <tr>
       <th>flow</th>
-      <td><p>the name of the flow column</p></td>
+      <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>statistical_differences</th>
-      <td><p>the name for statistical difference in the flow column</p></td>
-    </tr>
-    <tr>
-      <th>transformation_processes</th>
-      <td><p>the name for transformation processes in the flow column</p></td>
+      <th>transformation_processes, statistical_differences</th>
+      <td><p>See <code><a href='tfc_compare_flows.html'>IEATools::tfc_compare_flows</a></code>.</p></td>
     </tr>
     <tr>
       <th>mapep</th>
-      <td><p>the name for main activity producer electricity plants in the flow column</p></td>
+      <td><p>See <code><a href='transformation_processes.html'>IEATools::transformation_processes</a></code>.</p></td>
     </tr>
     </table>
 

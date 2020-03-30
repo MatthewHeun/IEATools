@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Manufacturing flows — manufacturing_flows • IEATools</title>
+<title>Transformation processes — transformation_processes • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Manufacturing flows — manufacturing_flows" />
-<meta property="og:description" content="A string vector containing names of Manufacturing Flows in the IEA extended energy balances database." />
+<meta property="og:title" content="Transformation processes — transformation_processes" />
+<meta property="og:description" content="A string vector containing names of Transformation processes Flows in the IEA extended energy balances database." />
 
 
 
@@ -130,69 +130,109 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Manufacturing flows</h1>
+    <h1>Transformation processes</h1>
     
-    <div class="hidden name"><code>manufacturing_flows.Rd</code></div>
+    <div class="hidden name"><code>transformation_processes.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A string vector containing names of <code>Manufacturing</code> <code>Flow</code>s in the IEA extended energy balances database.</p>
+    <p>A string vector containing names of <code>Transformation processes</code> <code>Flow</code>s in the IEA extended energy balances database.</p>
     </div>
 
-    <pre class="usage"><span class='no'>manufacturing_flows</span></pre>
+    <pre class="usage"><span class='no'>transformation_processes</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string vector with 11 entries</p><dl'>
-<dt>iron_and_steel</dt><dd><p>The string identifying the iron and steel industry.</p></dd>
-<dt>chemical_and_petrochemical</dt><dd><p>The string identifying the chemical and petrochemical industry</p></dd>
-<dt>non_ferrous_metals</dt><dd><p>The string identifying the non-ferrous metals industry</p></dd>
-<dt>non_metallic_minerals</dt><dd><p>The string identifying the non-metallic minerals industry</p></dd>
-<dt>transport_equipment</dt><dd><p>The string identifying the transport equipment industry</p></dd>
-<dt>machinery</dt><dd><p>The string identifying the machinery industry</p></dd>
-<dt>food_and_tobacco</dt><dd><p>The string identifying the food and tobacco industry</p></dd>
-<dt>paper_pulp_and_print</dt><dd><p>The string identifying the paper, pulp, and print industry (in 2018 and earlier releases of the IEA extended energy balance data)</p></dd>
-<dt>paper_pulp_and_printing</dt><dd><p>The string identifying the paper, pulp, and printing industry (in 2019 and later releases of the IEA extended energy balance data)</p></dd>
-<dt>wood_and_wood_products</dt><dd><p>The string identifying the wood and wood products industry</p></dd>
-<dt>textile_and_leather</dt><dd><p>The string identifying the textile and leather industry</p></dd>
+    <p>A string vector with 6 entries</p><dl'>
+<dt>main_activity_producer_electricity_plants</dt><dd><p>The string that identifies main activity producer electricity plants.</p></dd>
+<dt>autoproducer_electricity_plants</dt><dd><p>The string that identifies autoproducer electricity plants.</p></dd>
+<dt>main_activity_producer_CHP_plants</dt><dd><p>The string that identifies main activity producer combined heat and power plants.</p></dd>
+<dt>autoproducer_CHP_plants</dt><dd><p>The string that identifies autoproducer combined heat and power plants.</p></dd>
+<dt>main_activity_producer_heat_plants</dt><dd><p>The string that identifies main activity producer heat plants.</p></dd>
+<dt>autoproducer_heat_plants</dt><dd><p>The string that identifies autoproducer heat plants.</p></dd>
+<dt>heat_pumps</dt><dd><p>The string that identifies heat pumps.</p></dd>
+<dt>electric_boilers</dt><dd><p>The string that identifies electric boilers.</p></dd>
+<dt>chemical_heat_for_electricity_production</dt><dd><p>The string that identifies chemical heat for electricity production.</p></dd>
+<dt>blast_furnaces</dt><dd><p>The string that identifies blast furnaces.</p></dd>
+<dt>gas_works</dt><dd><p>The string that identifies gas works.</p></dd>
+<dt>coke_ovens</dt><dd><p>The string that identifies coke ovens.</p></dd>
+<dt>patent_fuel_plants</dt><dd><p>The string that identifies patent fuel plants.</p></dd>
+<dt>bkb_peat_briquette_plants</dt><dd><p>The string that identifies BKB/peat briquette plants.</p></dd>
+<dt>oil_refineries</dt><dd><p>The string that identifies oil refineries.</p></dd>
+<dt>petrochemical_plants</dt><dd><p>The string that identifies petrochemical plants.</p></dd>
+<dt>coal_liquefaction_plants</dt><dd><p>The string that identifies coal liquefaction plants.</p></dd>
+<dt>gas_to_liquid_gtl_plants</dt><dd><p>The string that identifies gas to liquid (GTL) plants.</p></dd>
+<dt>for_blended_natural_gas</dt><dd><p>The string that identifies for blended natural gas.</p></dd>
+<dt>charcoal_production_plants</dt><dd><p>The string that identifies charcoal production plants.</p></dd>
+<dt>non_specified_transformation</dt><dd><p>The string that identifies non-specified transformation.</p></dd>
 
 </dl>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>manufacturing_flows</span></div><div class='output co'>#&gt; $iron_and_steel
-#&gt; [1] "Iron and steel"
+    <pre class="examples"><div class='input'><span class='no'>transformation_processes</span></div><div class='output co'>#&gt; $main_activity_producer_electricity_plants
+#&gt; [1] "Main activity producer electricity plants"
 #&gt; 
-#&gt; $chemical_and_petrochemical
-#&gt; [1] "Chemical and petrochemical"
+#&gt; $autoproducer_electricity_plants
+#&gt; [1] "Autoproducer electricity plants"
 #&gt; 
-#&gt; $non_ferrous_metals
-#&gt; [1] "Non-ferrous metals"
+#&gt; $main_activity_producer_CHP_plants
+#&gt; [1] "Main activity producer CHP plants"
 #&gt; 
-#&gt; $non_metallic_minerals
-#&gt; [1] "Non-metallic minerals"
+#&gt; $autoproducer_CHP_plants
+#&gt; [1] "Autoproducer CHP plants"
 #&gt; 
-#&gt; $transport_equipment
-#&gt; [1] "Transport equipment"
+#&gt; $main_activity_producer_heat_plants
+#&gt; [1] "Main activity producer heat plants"
 #&gt; 
-#&gt; $machiners
-#&gt; [1] "Machinery"
+#&gt; $autoproducer_heat_plants
+#&gt; [1] "Autoproducer heat plants"
 #&gt; 
-#&gt; $food_and_tobacco
-#&gt; [1] "Food and tobacco"
+#&gt; $heat_pumps
+#&gt; [1] "Heat pumps"
 #&gt; 
-#&gt; $paper_pulp_and_print
-#&gt; [1] "Paper, pulp and print"
+#&gt; $electric_boilers
+#&gt; [1] "Electric boilers"
 #&gt; 
-#&gt; $paper_pulp_and_printing
-#&gt; [1] "Paper, pulp and printing"
+#&gt; $chemical_heat_for_electricity_production
+#&gt; [1] "Chemical heat for electricity production"
 #&gt; 
-#&gt; $wood_and_wood_products
-#&gt; [1] "Wood and wood products"
+#&gt; $blast_furnaces
+#&gt; [1] "Blast furnaces"
 #&gt; 
-#&gt; $textile_and_leather
-#&gt; [1] "Textile and leather"
+#&gt; $gas_works
+#&gt; [1] "Gas works"
+#&gt; 
+#&gt; $coke_ovens
+#&gt; [1] "Coke ovens"
+#&gt; 
+#&gt; $patent_fuel_plants
+#&gt; [1] "Patent fuel plants"
+#&gt; 
+#&gt; $bkb_peat_briquette_plants
+#&gt; [1] "BKB/peat briquette plants"
+#&gt; 
+#&gt; $oil_refineries
+#&gt; [1] "Oil refineries"
+#&gt; 
+#&gt; $petrochemical_plants
+#&gt; [1] "Petrochemical plants"
+#&gt; 
+#&gt; $coal_liquefaction_plants
+#&gt; [1] "Coal liquefaction plants"
+#&gt; 
+#&gt; $gas_to_liquid_gtl_plants
+#&gt; [1] "Gas-to-liquids (GTL) plants"
+#&gt; 
+#&gt; $for_blended_natural_gas
+#&gt; [1] "For blended natural gas"
+#&gt; 
+#&gt; $charcoal_production_plants
+#&gt; [1] "Charcoal production plants"
+#&gt; 
+#&gt; $non_specified_transformation
+#&gt; [1] "Non-specified (transformation)"
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

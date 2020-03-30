@@ -143,7 +143,12 @@ find the row numbers that represent the transition between
 the Energy industry own use and Losses (a TFC compare flow).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>find_eiou_end</span>(<span class='no'>.ctry_tbl</span>, <span class='no'>flow</span>, <span class='no'>non_specified</span>, <span class='no'>losses</span>)</pre>
+    <pre class="usage"><span class='fu'>find_eiou_end</span>(
+  <span class='no'>.ctry_tbl</span>,
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow</span>,
+  <span class='kw'>non_specified</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='non_specified_flows.html'>non_specified_flows</a></span>$<span class='no'>non_specified</span>,
+  <span class='kw'>losses</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span>$<span class='no'>losses</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,15 +159,15 @@ the Energy industry own use and Losses (a TFC compare flow).</p>
     </tr>
     <tr>
       <th>flow</th>
-      <td><p>the name of the flow column</p></td>
+      <td><p>See <code>IEATools::iea_cols$flow</code>.</p></td>
     </tr>
     <tr>
       <th>non_specified</th>
-      <td><p>the name of non-specified in the flow column</p></td>
+      <td><p>See <code><a href='non_specified_flows.html'>IEATools::non_specified_flows</a></code>.</p></td>
     </tr>
     <tr>
       <th>losses</th>
-      <td><p>the name for losses in the flow column</p></td>
+      <td><p>See <code><a href='tfc_compare_flows.html'>IEATools::tfc_compare_flows</a></code>.</p></td>
     </tr>
     </table>
 
