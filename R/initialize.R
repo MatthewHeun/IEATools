@@ -725,7 +725,7 @@ augment_iea_df <- function(.iea_df,
         # Add a temporary .rownum column
         tibble::rownames_to_column(var = .rownum) %>%
         dplyr::mutate(
-          !!as.name(.rownum) := as.numeric(!!as.name(.rownum))
+          "{.rownum}" := as.numeric(.data[[.rownum]])
         ) %>% 
         dplyr::mutate(
           # Add the Ledger.side column
