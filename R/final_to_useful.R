@@ -11,8 +11,8 @@
 #' and final demand (`C_eiou` and `C_Y`, respectively).
 #' 
 #' Rows of the output `C` matrices should sum to 1.  
-#' An error is thrown if this is not so. 
-#' Such errors probably indicate the template was not filled correctly.
+#' If there is a problem, a data frame that shows the errors is returned.
+#' Such errors probably indicate the FU template was not filled correctly.
 #'
 #' @param .fu_allocations a final-to-useful allocation table read by `load_fu_allocation_data()`.
 #' @param country,method,energy_type,last_stage,ledger_side,flow_aggregation_point,e_dot,year See `IEATools::iea_cols`.
@@ -23,14 +23,19 @@
 #' @param sep The string separator between prefix and suffix of compound row and column names. Default is " -> ".
 #'            The default value matches the default value for the `sep` argument of `matsbyname::vectorize_byname()`, because
 #'            `matsbyname::vectorize_byname()` will be used for further manipulations.
-#' @param .should_be_1_vector a temporary column created internally (and not returned) for error checking. 
+#' @param tol The allowable amount by which a row sum in a `C` matrix can be different from 1. Default is 1e-6.
+#' @param .should_be_1_vector a temporary column created internally for error checking (and not returned unless there is an error). 
 #'                            This column should contain 1 vectors (i.e., vectors filled with 1's).
-#' @param .is_1_vector a temporary column created internally (and not returned)
-#'                     that contains `TRUE` or `FALSE` depending on whether a 1 vector was created by row sums.
-#'                     This column is tested internally to ensure all values are `TRUE` before returning.
+#' @param .is_1 a temporary column created internally (and not returned unless there is an error)
+#'              that contains `TRUE` or `FALSE` depending on whether a rowsum was 1.
+#' @param .all_1 a temporary column created internally (and not returned unless there is an error)
+#'               that tells whether a 1-vector was created by rowsums.
 #'
 #' @return a tidy data frame with metadata columns (and year) along with `matnames` and `matvals` columns
 #'         indicating and containing `C_eiou` and `C_Y` matrices, respectively.
+#'         If not all rows of a C matrix sum to 1, 
+#'         a warning is emitted, and
+#'         a data frame is returned which shows the errors.
 #'         
 #' @export
 #'
@@ -70,13 +75,16 @@ form_C_mats <- function(.fu_allocations,
                    
                    sep = " -> ",
                    
+                   tol = 1e-6,
+                   
                    # Names of output matrices
                    C_eiou = IEATools::template_cols$C_eiou,
                    C_Y = IEATools::template_cols$C_Y,
                    
                    # Temporary column names
                    .should_be_1_vector = ".should_be_1_vector", 
-                   .is_1_vector = ".is_1_vector") {
+                   .is_1 = ".is_1", 
+                   .all_1 = ".all_1") {
 
   cleaned <- .fu_allocations %>% 
     # Eliminate rows titled e_dot or e_dot_perc. These are just helper rows for the analyst.
@@ -146,10 +154,36 @@ form_C_mats <- function(.fu_allocations,
   verify <- out %>% 
     dplyr::mutate(
       "{.should_be_1_vector}" := matsbyname::rowsums_byname(.data[[matvals]]),
-      "{.is_1_vector}" := matsbyname::compare_byname(.data[[.should_be_1_vector]], "==", 1) %>% matsbyname::all_byname()
+      "{.is_1}" := matsbyname::difference_byname(.data[[.should_be_1_vector]], 1) %>% 
+        matsbyname::abs_byname() %>% 
+        matsbyname::compare_byname("<=", tol),
+      "{.all_1}" := .data[[.is_1]] %>% matsbyname::all_byname()
     )
-  assertthat::assert_that(all(verify[[.is_1_vector]] %>% as.logical()))
-  
-  # If we passed the test, we can return the out data frame.
+  # Check that all rows sum to 1.
+  if (!all(verify[[.all_1]] %>% as.logical())) {
+    # Not all rows summed to 1. Emit a warning and return debugging information.
+    warning("Not all rows in the C matrices sum to 1. Returning a diagnostic data frame from form_C_mats().")
+    # Create a problems data frame that we will return instead of out.
+    probs <- verify %>% 
+      dplyr::mutate(
+        # Get rid of some columns
+        "{matvals}" := NULL,
+        "{.is_1}" := NULL,
+        "{.all_1}" := NULL
+      ) %>% 
+      matsindf::expand_to_tidy(matvals = .should_be_1_vector) %>% 
+      # Eliminate some unneeded columns
+      dplyr::mutate(
+        "{colnames}" := NULL,
+        "{rowtypes}" := NULL,
+        "{coltypes}" := NULL
+      ) %>%
+      dplyr::filter(
+        abs(.data[[.should_be_1_vector]] - 1) > 1e-6
+      )
+    return(probs)
+  }
+
+  # If we passed the test, we can return the out data frame without the verification columns.
   return(out)
 }

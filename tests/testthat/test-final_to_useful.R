@@ -59,4 +59,7 @@ test_that("form_C_mats works as expected", {
   c_stoves <- "Industrial furnaces -> HTH.600.C"
   expect_equal(C_Y_ZAF_2000[[r1, c_stoves]], 1)
   expect_equal(C_Y_ZAF_2000[[r_kerosene, c1]], 1)
+  
+  # Set a wrong value and expect a warning.
+  
 })

@@ -32,10 +32,12 @@ form_C_mats(
   product = IEATools::row_col_types$product,
   industry = IEATools::row_col_types$industry,
   sep = " -> ",
+  tol = 1e-06,
   C_eiou = IEATools::template_cols$C_eiou,
   C_Y = IEATools::template_cols$C_Y,
   .should_be_1_vector = ".should_be_1_vector",
-  .is_1_vector = ".is_1_vector"
+  .is_1 = ".is_1",
+  .all_1 = ".all_1"
 )
 }
 \arguments{
@@ -55,16 +57,23 @@ form_C_mats(
 The default value matches the default value for the \code{sep} argument of \code{matsbyname::vectorize_byname()}, because
 \code{matsbyname::vectorize_byname()} will be used for further manipulations.}
 
-\item{.should_be_1_vector}{a temporary column created internally (and not returned) for error checking.
+\item{tol}{The allowable amount by which a row sum in a \code{C} matrix can be different from 1. Default is 1e-6.}
+
+\item{.should_be_1_vector}{a temporary column created internally for error checking (and not returned unless there is an error).
 This column should contain 1 vectors (i.e., vectors filled with 1's).}
 
-\item{.is_1_vector}{a temporary column created internally (and not returned)
-that contains \code{TRUE} or \code{FALSE} depending on whether a 1 vector was created by row sums.
-This column is tested internally to ensure all values are \code{TRUE} before returning.}
+\item{.is_1}{a temporary column created internally (and not returned unless there is an error)
+that contains \code{TRUE} or \code{FALSE} depending on whether a rowsum was 1.}
+
+\item{.all_1}{a temporary column created internally (and not returned unless there is an error)
+that tells whether a 1-vector was created by rowsums.}
 }
 \value{
 a tidy data frame with metadata columns (and year) along with \code{matnames} and \code{matvals} columns
 indicating and containing \code{C_eiou} and \code{C_Y} matrices, respectively.
+If not all rows of a C matrix sum to 1,
+a warning is emitted, and
+a data frame is returned which shows the errors.
 }
 \description{
 This function uses information in a filled allocation template (created by \code{write_fu_allocation_template()})
@@ -76,8 +85,8 @@ and final demand (\code{C_eiou} and \code{C_Y}, respectively).
 }
 \details{
 Rows of the output \code{C} matrices should sum to 1.
-An error is thrown if this is not so.
-Such errors probably indicate the template was not filled correctly.
+If there is a problem, a data frame that shows the errors is returned.
+Such errors probably indicate the FU template was not filled correctly.
 }
 \examples{
 load_fu_allocation_data() \%>\% 
