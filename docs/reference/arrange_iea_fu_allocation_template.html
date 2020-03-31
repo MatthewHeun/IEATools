@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -41,7 +45,6 @@ in reasonable ways to assist analysts.
 This function sorts rows (top-to-bottom) by default in the same order as appears in the IEA extended energy balance data.
 Other orderings can be specified with the fap_flow_order and ef_product_order arguments.
 It sorts columns (left-to-right) in the order of energy flow through the energy conversion chain." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -59,7 +62,7 @@ It sorts columns (left-to-right) in the order of energy flow through the energy 
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -73,7 +76,7 @@ It sorts columns (left-to-right) in the order of energy flow through the energy 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.14</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.18</span>
       </span>
     </div>
 
@@ -100,6 +103,9 @@ It sorts columns (left-to-right) in the order of energy flow through the energy 
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/fix_iea_data.html">Fixes for IEA Data</a>
     </li>
     <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
@@ -151,11 +157,12 @@ It sorts columns (left-to-right) in the order of energy flow through the energy 
   <span class='kw'>eu_product</span> <span class='kw'>=</span> <span class='st'>"Eu.product"</span>,
   <span class='kw'>destination</span> <span class='kw'>=</span> <span class='st'>"Destination"</span>,
   <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>,
-  <span class='kw'>fap_dest_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/fap_flow_iea_order.html'>fap_flow_iea_order</a></span>,
-  <span class='kw'>ef_product_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/IEATools/man/product_iea_order.html'>product_iea_order</a></span>,
+  <span class='kw'>fap_dest_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='fap_flows.html'>fap_flows</a></span>,
+  <span class='kw'>ef_product_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='products.html'>products</a></span>,
   <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='st'>"Quantity"</span>,
   <span class='kw'>maximum_values</span> <span class='kw'>=</span> <span class='st'>"Maximum.values"</span>,
-  <span class='kw'>.temp_sort</span> <span class='kw'>=</span> <span class='st'>".fap_flow"</span>
+  <span class='kw'>.temp_sort</span> <span class='kw'>=</span> <span class='st'>".fap_flow"</span>,
+  <span class='kw'>.clean_ef_product</span> <span class='kw'>=</span> <span class='st'>".clean_Ef_product"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -167,57 +174,63 @@ It sorts columns (left-to-right) in the order of energy flow through the energy 
     </tr>
     <tr>
       <th>rowcol</th>
-      <td><p>one of "<code>both</code>", "<code>row</code>", or "<code>col</code>" to indicate whether rows, columns, or both should be arranged.
-Default is "<code>both</code>".</p></td>
+      <td><p>one of "both", "row", or "col" to indicate whether rows, columns, or both should be arranged.
+Default is "both".</p></td>
     </tr>
     <tr>
       <th>ledger_side</th>
-      <td><p>the ledger side column in <code>.fu_allocation_template</code>. Default is "<code>Ledger.side</code>".</p></td>
+      <td><p>the ledger side column in <code>.fu_allocation_template</code>. Default is "Ledger.side".</p></td>
     </tr>
     <tr>
       <th>flow_aggregation_point</th>
-      <td><p>the flow aggregation point column in <code>.fu_allocation_template</code>. Default is "<code>Flow.aggregation.point</code>".</p></td>
+      <td><p>the flow aggregation point column in <code>.fu_allocation_template</code>. Default is "Flow.aggregation.point".</p></td>
     </tr>
     <tr>
       <th>ef_product</th>
-      <td><p>the name of the final energy column in <code>.fu_allocation_template</code>. Default is "<code>Ef.product</code>".</p></td>
+      <td><p>the name of the final energy column in <code>.fu_allocation_template</code>. Default is "Ef.product".</p></td>
     </tr>
     <tr>
       <th>machine</th>
-      <td><p>the name of the machine column in <code>.fu_allocation_template</code>. Default is "<code>Machine</code>".</p></td>
+      <td><p>the name of the machine column in <code>.fu_allocation_template</code>. Default is "Machine".</p></td>
     </tr>
     <tr>
       <th>eu_product</th>
-      <td><p>the name of the useful energy product column in <code>.fu_allocation_template</code>. Default is "<code>Eu.product</code>".</p></td>
+      <td><p>the name of the useful energy product column in <code>.fu_allocation_template</code>. Default is "Eu.product".</p></td>
     </tr>
     <tr>
       <th>destination</th>
-      <td><p>the name of the destination column in <code>.fu_allocation_template</code>. Default is "<code>Destination</code>".</p></td>
+      <td><p>the name of the destination column in <code>.fu_allocation_template</code>. Default is "Destination".</p></td>
     </tr>
     <tr>
       <th>unit</th>
-      <td><p>the name of the unit in <code>.fu_allocation_template</code>. Default is "<code>Unit</code>".</p></td>
+      <td><p>the name of the unit in <code>.fu_allocation_template</code>. Default is "Unit".</p></td>
     </tr>
     <tr>
       <th>fap_dest_order</th>
-      <td><p>the desired order for the combination of <code>flow_aggregation_point</code> and <code>destination</code> columns. Default is <code><a href='fap_flow_iea_order.html'>IEATools::fap_flow_iea_order</a></code>.</p></td>
+      <td><p>the desired order for the combination of <code>flow_aggregation_point</code> and <code>destination</code> columns. Default is <code>IEATools::fap_flow_iea_order</code>.</p></td>
     </tr>
     <tr>
       <th>ef_product_order</th>
-      <td><p>the desired order for final energy products in <code>.fu_allocation_template</code>. Default is "<code>Ef.product</code>".</p></td>
+      <td><p>the desired order for final energy products in <code>.fu_allocation_template</code>. Default is "Ef.product".</p></td>
     </tr>
     <tr>
       <th>quantity</th>
-      <td><p>the name of the quantity column in <code>.fu_allocation_template</code>. Default is "<code>Quantity</code>".</p></td>
+      <td><p>the name of the quantity column in <code>.fu_allocation_template</code>. Default is "Quantity".</p></td>
     </tr>
     <tr>
       <th>maximum_values</th>
-      <td><p>the name of the maximum value column <code>.fu_allocation_template</code>. Default is "<code>Unit</code>".</p></td>
+      <td><p>the name of the maximum value column <code>.fu_allocation_template</code>. Default is "Unit".</p></td>
     </tr>
     <tr>
       <th>.temp_sort</th>
       <td><p>the name of a temporary column to be added to <code>.fu_allocation_template</code>.
-Default is "<code>.fap_flow</code>".
+Default is ".fap_flow".
+This column must not be present in <code>.fu_allocation_template</code>.</p></td>
+    </tr>
+    <tr>
+      <th>.clean_ef_product</th>
+      <td><p>the name of a temporary column to be added to <code>.fu_allocation_template</code>.
+Default is ".clean_ef_product".
 This column must not be present in <code>.fu_allocation_template</code>.</p></td>
     </tr>
     </table>
@@ -247,8 +260,10 @@ The column order is:</p><ul>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>Template</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='specify_all.html'>specify_all</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='fu_allocation_template.html'>fu_allocation_template</a></span>()
-<span class='no'>Template</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 705 x 15</span><span>
+  <span class='fu'><a href='fu_allocation_template.html'>fu_allocation_template</a></span>()</div><div class='output co'>#&gt; <span class='warning'>Warning: The `add` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span>
+#&gt; <span class='warning'>Please use the `.add` argument instead.</span>
+#&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once every 8 hours.</span><span></span>
+#&gt; <span class='warning'></span><span style='color: #555555;'>Call `lifecycle::last_warnings()` to see where this warning was generated.</span><span></span></div><div class='input'><span class='no'>Template</span></div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 705 x 15</span><span>
 #&gt;    Country Method Energy.type Last.stage Ledger.side Flow.aggregatio… Unit 
 #&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>
 #&gt; </span><span style='color: #555555;'> 1</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
@@ -261,9 +276,9 @@ The column order is:</p><ul>
 #&gt; </span><span style='color: #555555;'> 8</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
 #&gt; </span><span style='color: #555555;'> 9</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
 #&gt; </span><span style='color: #555555;'>10</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
-#&gt; </span><span style='color: #555555;'># … with 695 more rows, and 8 more variables: Ef.product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Machine </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   Eu.product </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Destination </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Quantity </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Maximum.values </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   `1971` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, `2000` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='no'>Template</span> <span class='kw'>%&gt;%</span>
+#&gt; </span><span style='color: #555555;'># … with 695 more rows, and 8 more variables: Ef.product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Machine </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   Eu.product </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Destination </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Quantity </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Maximum.values </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   `1971` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, `2000` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='no'>Template</span> <span class='kw'>%&gt;%</span>
   <span class='fu'>arrange_iea_fu_allocation_template</span>()</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 705 x 15</span><span>
 #&gt;    Country Method Energy.type Last.stage Ledger.side Flow.aggregatio… Unit 
 #&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>
@@ -277,19 +292,14 @@ The column order is:</p><ul>
 #&gt; </span><span style='color: #555555;'> 8</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
 #&gt; </span><span style='color: #555555;'> 9</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
 #&gt; </span><span style='color: #555555;'>10</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
-#&gt; </span><span style='color: #555555;'># … with 695 more rows, and 8 more variables: Ef.product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Machine </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   Eu.product </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Destination </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Quantity </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Maximum.values </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   `1971` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, `2000` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+#&gt; </span><span style='color: #555555;'># … with 695 more rows, and 8 more variables: Ef.product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Machine </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   Eu.product </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, Destination </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Quantity </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Maximum.values </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   `1971` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, `2000` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -300,7 +310,7 @@ The column order is:</p><ul>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

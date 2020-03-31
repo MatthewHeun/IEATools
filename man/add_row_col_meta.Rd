@@ -6,69 +6,57 @@
 \usage{
 add_row_col_meta(
   .tidy_iea_df,
-  matnames = "matnames",
-  product = "Product",
-  flow = "Flow",
-  U = "U",
-  U_EIOU = "U_EIOU",
-  R = "R",
-  V = "V",
-  Y = "Y",
-  industry_type = "Industry",
-  product_type = "Product",
-  sector_type = "Industry",
-  resource_type = "Industry",
-  rownames = "rownames",
-  colnames = "colnames",
-  rowtypes = "rowtypes",
-  coltypes = "coltypes"
+  product = IEATools::iea_cols$product,
+  flow = IEATools::iea_cols$flow,
+  matnames = IEATools::mat_meta_cols$matnames,
+  U = IEATools::psut_cols$U,
+  U_EIOU = IEATools::psut_cols$U_eiou,
+  R = IEATools::psut_cols$R,
+  V = IEATools::psut_cols$V,
+  Y = IEATools::psut_cols$Y,
+  industry_type = IEATools::row_col_types$industry,
+  product_type = IEATools::row_col_types$product,
+  sector_type = IEATools::row_col_types$sector,
+  resource_type = IEATools::row_col_types$resource,
+  rownames = IEATools::mat_meta_cols$rownames,
+  colnames = IEATools::mat_meta_cols$colnames,
+  rowtypes = IEATools::mat_meta_cols$rowtypes,
+  coltypes = IEATools::mat_meta_cols$coltypes
 )
 }
 \arguments{
 \item{.tidy_iea_df}{a data frame containing column \code{matnames}}
 
+\item{flow, product}{See \code{IEATools::iea_cols}.}
+
 \item{matnames}{the name of the column in \code{.tidy_iea_df} that contains names of matrices
-(a string).  Default is "\code{matnames}".}
+(a string).  Default is "matnames".}
 
-\item{product}{the name of the column in \code{.tidy_iea_df} where Product names
-is found (a string). Default is "\code{Product}".}
-
-\item{flow}{the name of the column in \code{.tidy_iea_df} where Flow names
-is found (a string). Default is "\code{Flow}".}
-
-\item{U}{the name for use matrices (a string). Default is "\code{U}".}
-
-\item{U_EIOU}{the name for energy industry own use matrices (a string). Default is "\code{U_EIOU}".}
-
-\item{R}{the name for resource matrices (a string). Default is "\code{R}".}
-
-\item{V}{the name for make matrices (a string). Default is "\code{V}".}
-
-\item{Y}{the name for final demand matrices (a string). Default is "\code{Y}".}
+\item{R, U, U_EIOU, V, Y}{See \code{IEATools::psut_cols}.}
 
 \item{industry_type}{the name that identifies production industries and
-and transformation processes (a string). Default is "\code{Industry}".}
+and transformation processes (a string). Default is "Industry".}
 
 \item{product_type}{the name that identifies energy carriers (a string).
-Default is "\code{Product}".}
+Default is "Product".}
 
 \item{sector_type}{the name that identifies final demand sectors (a string).
-Default is "\code{Industry}".}
+Default is "Industry".}
 
 \item{resource_type}{the name that identifies resource sectors (a string).
-Default is "\code{Industry}".}
+Default is "Industry".}
 
 \item{rownames}{the name of the output column that contains row names for matrices
-(a string). Default is "\code{rowname}".}
+(a string). Default is "rowname".}
 
 \item{colnames}{the name of the output column that contains column names for matrices
-(a string). Default is "\code{colname}".}
+(a string). Default is "colname".}
 
 \item{rowtypes}{the name of the output column that contains row types for matrices
-(a string). Default is "\code{rowtype}".}
+(a string). Default is "rowtype".}
 
 \item{coltypes}{the name of the output column that contains column types for matrices
-(a string). Default is "\code{coltype}".}
+(a string). Default is "coltype".}
 }
 \value{
 \code{.tidy_iea_df} with additional columns named
@@ -76,7 +64,7 @@ Default is "\code{Industry}".}
 \code{rowtype}, and \code{coltype}.
 }
 \description{
-After calling \code{\link[=add_psut_matnames]{add_psut_matnames()}}, call this function
+After calling \code{add_psut_matnames()}, call this function
 to add row, column, row type, and column type
 information to \code{.tidy_iea_df}.
 }

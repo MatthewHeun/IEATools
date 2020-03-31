@@ -6,22 +6,20 @@
 \usage{
 find_transformation_start(
   .ctry_tbl,
-  flow,
-  statistical_differences,
-  transformation_processes,
-  mapep
+  flow = IEATools::iea_cols$flow,
+  transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
+  statistical_differences = IEATools::tfc_compare_flows$statistical_differences,
+  mapep = IEATools::transformation_processes$main_activity_producer_electricity_plants
 )
 }
 \arguments{
 \item{.ctry_tbl}{a country's IEA data frame}
 
-\item{flow}{the name of the flow column}
+\item{flow}{See \code{IEATools::iea_cols}.}
 
-\item{statistical_differences}{the name for statistical difference in the flow column}
+\item{transformation_processes, statistical_differences}{See \code{IEATools::tfc_compare_flows}.}
 
-\item{transformation_processes}{the name for transformation processes in the flow column}
-
-\item{mapep}{the name for main activity producer electricity plants in the flow column}
+\item{mapep}{See \code{IEATools::transformation_processes}.}
 }
 \value{
 a pair of integers representing the rows that straddle the split between

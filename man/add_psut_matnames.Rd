@@ -6,72 +6,46 @@
 \usage{
 add_psut_matnames(
   .tidy_iea_df,
-  ledger_side = "Ledger.side",
-  supply = "Supply",
-  consumption = "Consumption",
-  flow_aggregation_point = "Flow.aggregation.point",
-  flow = "Flow",
-  production = "Production",
-  resources = "Resources",
-  product = "Product",
-  e_dot = "E.dot",
-  eiou = "Energy industry own use",
-  neg_supply_in_fd = c("Exports", "International aviation bunkers",
-    "International marine bunkers", "Losses", "Statistical differences", "Stock changes"),
-  matnames = "matnames",
-  R = "R",
-  U_excl_EIOU = "U_excl_EIOU",
-  U_EIOU = "U_EIOU",
-  V = "V",
-  Y = "Y"
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  flow = IEATools::iea_cols$flow,
+  product = IEATools::iea_cols$product,
+  e_dot = IEATools::iea_cols$e_dot,
+  supply = IEATools::ledger_sides$supply,
+  consumption = IEATools::ledger_sides$consumption,
+  production = IEATools::tpes_flows$production,
+  resources = IEATools::tpes_flows$resources,
+  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+  neg_supply_in_fd = c(IEATools::tpes_flows$exports,
+    IEATools::tpes_flows$international_aviation_bunkers,
+    IEATools::tpes_flows$international_marine_bunkers,
+    IEATools::tpes_flows$stock_changes, IEATools::tfc_compare_flows$losses,
+    IEATools::tfc_compare_flows$statistical_differences),
+  matnames = IEATools::mat_meta_cols$matnames,
+  R = IEATools::psut_cols$R,
+  U_excl_EIOU = IEATools::psut_cols$U_excl_eiou,
+  U_EIOU = IEATools::psut_cols$U_eiou,
+  V = IEATools::psut_cols$V,
+  Y = IEATools::psut_cols$Y
 )
 }
 \arguments{
 \item{.tidy_iea_df}{a data frame with \code{ledger_side}, \code{flow_aggregation_point}, \code{flow}, and \code{e_dot} columns.}
 
-\item{ledger_side}{the name of the column in \code{.tidy_iea_df} that contains ledger side
-(a string). Default is "\code{Ledger.side}".}
+\item{ledger_side, flow_aggregation_point, flow, product, e_dot}{See \code{IEATools::iea_cols}.}
 
-\item{supply}{the identifier for items on the supply side of the ledger (a string).
-Default is "\code{Supply}".}
+\item{supply, consumption}{See \code{IEATools::ledger_sides}.}
 
-\item{consumption}{the identifier for items on the consumption side
-of the ledger (a string). Default is "\code{Consumption}".}
+\item{production, resources}{See \code{IEATools::tpes_flows}.}
 
-\item{flow_aggregation_point}{the name of the column in \code{.tidy_iea_df} that contains flow aggregation point information.
-Default is "\code{Flow.aggregation.point}".}
+\item{eiou}{See \code{IEATools::tfc_compare_flows}.}
 
-\item{flow}{the name of the column in \code{.tidy_iea_df} that contains flow information.
-Default is "\code{Flow}".}
+\item{neg_supply_in_fd}{For "Exports", "International aviation bunkers", "International marine bunkers", and "Stock changes", see \code{IEATools::tpes_flows}.
+For "Losses" and "Statistica differnces", see \code{IEATools::tfc_compare_flows}.}
 
-\item{production}{a string identifying production in the flow column. Default is \code{Production}.}
+\item{matnames}{See \code{IEATools::mat_meta_cols}.}
 
-\item{resources}{a string identifying resources in the flow column. Default is \code{Resources}.}
-
-\item{product}{the name of the column in \code{.tidy_iea_df} that contains flow information.
-Default is "\code{Product}".}
-
-\item{e_dot}{the name of the column in \code{.tidy_iea_df} that contains energy and exergy values
-(a string). Default is "\code{E.dot}".}
-
-\item{eiou}{the identifier for items that are energy industry own use.
-Default is "\verb{Energy industry own use}".}
-
-\item{neg_supply_in_fd}{identifiers for flow items that, when negative,
-are entries in the final demand (\code{Y}) matrix.}
-
-\item{matnames}{the name of the output column containing the name of the matrix
-to which a row's value belongs (a string). Default is "\code{matnames}".}
-
-\item{R}{the name for the resource matrix (a string). Default is "\code{R}".}
-
-\item{U_excl_EIOU}{the name for the use matrix that excludes energy industry own use (a string). Default is "\code{U_excl_EIOU}".}
-
-\item{U_EIOU}{the name for the energy industry own use matrix. Default is "\code{U_EIOU}".}
-
-\item{V}{the name for the make matrix (a string). Default is "\code{V}".}
-
-\item{Y}{the name for the final demand matrix (a string). Default is "\code{Y}".}
+\item{R, U_excl_EIOU, U_EIOU, V, Y}{See \code{IEATools::psut_matnames}.}
 }
 \value{
 \code{.tidy_iea_df} with an added column \code{matnames}.
@@ -84,13 +58,13 @@ and terminology, although \code{.tidy_iea_df} does not necessarily need to conta
 }
 \details{
 In a reasonable workflow, this function would be followed by a call to
-\code{\link[=add_row_col_meta]{add_row_col_meta()}} and \code{\link[matsindf:collapse_to_matrices]{matsindf::collapse_to_matrices()}}.
+\code{add_row_col_meta()} and \code{matsindf::collapse_to_matrices()}.
 
 This function respects groups when identifying entries in the resource matrix (\code{R}).
 So be sure to group \code{.tidy_iea_df} before calling this function.
 
-Internally, this function adds a temporary column to \code{.tidy_iea_df} called "\code{.R}".
-An error will occur if \code{.tidy_iea_df} already has a column named "\code{.R}".
+Internally, this function adds a temporary column to \code{.tidy_iea_df} called ".R".
+An error will occur if \code{.tidy_iea_df} already has a column named ".R".
 }
 \examples{
 library(dplyr)

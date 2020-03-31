@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -53,7 +57,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-index">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -67,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.14</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.18</span>
       </span>
     </div>
 
@@ -94,6 +98,9 @@
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/fix_iea_data.html">Fixes for IEA Data</a>
     </li>
     <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
@@ -140,6 +147,11 @@
           <p class="section-desc"></p>
         </th>
       </tr>
+      
+      
+    </tbody><tbody>
+      
+      
       <tr>
         
         <td>
@@ -215,6 +227,30 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="countries.html">countries</a></code> </p>
+        </td>
+        <td><p>Country order</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="despecify_col.html">despecify_col()</a></code> </p>
+        </td>
+        <td><p>Remove specification strings from a column</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="do_fix.html">do_fix()</a></code> </p>
+        </td>
+        <td><p>Performs fixes to IEA data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="energy_types.html">energy_types</a></code> </p>
+        </td>
+        <td><p>Energy type order</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="eta_fu_template.html">eta_fu_template()</a></code> </p>
         </td>
         <td><p>Final-to-useful efficiency template</p></td>
@@ -233,7 +269,7 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="fap_flow_iea_order.html">fap_flow_iea_order</a></code> </p>
+          <p><code><a href="fap_flows.html">fap_flows</a></code> </p>
         </td>
         <td><p>IEA order for combined flow aggregation point and flow</p></td>
       </tr><tr>
@@ -269,9 +305,15 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="fix_GHA_industry_electricity.html">fix_GHA_industry_electricity()</a></code> </p>
+        </td>
+        <td><p>Improve IEA Ghana Industry Electricity data from 1974 through 2017</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="fix_GHA_psb.html">fix_GHA_psb()</a></code> </p>
         </td>
-        <td><p>Fix Ghana Primary solid biofuels data from 1991 through 1999</p></td>
+        <td><p>Improve Ghana Primary solid biofuels data from 1991 through 1999</p></td>
       </tr><tr>
         
         <td>
@@ -281,9 +323,21 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="form_C_mats.html">form_C_mats()</a></code> </p>
+        </td>
+        <td><p>Create allocation matrices (<code>C</code>) from an allocation table</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="fu_allocation_template.html">fu_allocation_template()</a></code> </p>
         </td>
         <td><p>Create a template for analysis of final-to-useful transformation processes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="iea_cols.html">iea_cols</a></code> </p>
+        </td>
+        <td><p>IEA data frame column names</p></td>
       </tr><tr>
         
         <td>
@@ -317,7 +371,13 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="ledger_side_iea_order.html">ledger_side_iea_order</a></code> </p>
+          <p><code><a href="last_stages.html">last_stages</a></code> </p>
+        </td>
+        <td><p>Last stage order</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ledger_sides.html">ledger_sides</a></code> </p>
         </td>
         <td><p>IEA order for ledger side</p></td>
       </tr><tr>
@@ -347,6 +407,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="mat_meta_cols.html">mat_meta_cols</a></code> </p>
+        </td>
+        <td><p>PSUT matrix meta information column names</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="memo_aggregation_flow_prefixes.html">memo_aggregation_flow_prefixes</a></code> </p>
         </td>
         <td><p>Memo and aggregation flow prefixes</p></td>
@@ -356,6 +422,24 @@
           <p><code><a href="memo_aggregation_product_prefixes.html">memo_aggregation_product_prefixes</a></code> </p>
         </td>
         <td><p>Memo and aggregation product prefixes</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="methods.html">methods</a></code> </p>
+        </td>
+        <td><p>Method order</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="non_energy_flows.html">non_energy_flows</a></code> </p>
+        </td>
+        <td><p>Non-energy flows</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="non_specified_flows.html">non_specified_flows</a></code> </p>
+        </td>
+        <td><p>IEA non-specified flows</p></td>
       </tr><tr>
         
         <td>
@@ -407,9 +491,15 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="product_iea_order.html">product_iea_order</a></code> </p>
+          <p><code><a href="products.html">products</a></code> </p>
         </td>
         <td><p>IEA order for products</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="psut_cols.html">psut_cols</a></code> </p>
+        </td>
+        <td><p>Physical Supply-Use Table (PSUT) data frame column names</p></td>
       </tr><tr>
         
         <td>
@@ -428,6 +518,18 @@
           <p><code><a href="renewable_products.html">renewable_products</a></code> </p>
         </td>
         <td><p>Renewable products</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="replace_join.html">replace_join()</a></code> </p>
+        </td>
+        <td><p><code>full_join</code> with replacement</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="row_col_types.html">row_col_types</a></code> </p>
+        </td>
+        <td><p>PSUT matrix row and column types</p></td>
       </tr><tr>
         
         <td>
@@ -467,6 +569,18 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="slurp_iea_to_raw_df.html">slurp_iea_to_raw_df()</a></code> </p>
+        </td>
+        <td><p>Slurp an IEA extended energy balance data file</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sort_iea_df.html">sort_iea_df()</a></code> </p>
+        </td>
+        <td><p>Sort an IEA data frame in IEA row order</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="specify_all.html">specify_all()</a></code> </p>
         </td>
         <td><p>Specify all industries</p></td>
@@ -476,6 +590,12 @@
           <p><code><a href="specify_interface_industries.html">specify_interface_industries()</a></code> </p>
         </td>
         <td><p>Specify interface industries</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="specify_notation.html">specify_notation</a></code> </p>
+        </td>
+        <td><p>Specification notation</p></td>
       </tr><tr>
         
         <td>
@@ -500,6 +620,12 @@
           <p><code><a href="starts_with_any_of.html">starts_with_any_of()</a></code> </p>
         </td>
         <td><p>Tell if a string starts with any of a vector of strings</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="template_cols.html">template_cols</a></code> </p>
+        </td>
+        <td><p>Final-to-useful template column names</p></td>
       </tr><tr>
         
         <td>
@@ -545,6 +671,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="transformation_processes.html">transformation_processes</a></code> </p>
+        </td>
+        <td><p>Transformation processes</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="transport_flows.html">transport_flows</a></code> </p>
         </td>
         <td><p>Transport flows</p></td>
@@ -553,7 +685,7 @@
         <td>
           <p><code><a href="use_iso_countries.html">use_iso_countries()</a></code> </p>
         </td>
-        <td><p>Replace country names with 2-letter ISO abbreviations</p></td>
+        <td><p>Replace country names with 3-letter ISO abbreviations</p></td>
       </tr><tr>
         
         <td>
@@ -583,11 +715,10 @@
     </table>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
-    </ul>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -598,7 +729,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

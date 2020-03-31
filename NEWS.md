@@ -1,4 +1,65 @@
-# IEATools 0.1.13 (2020-03-11)
+# IEATools 0.1.18 (2020-03-31)
+
+* New function `form_C_mats()` which makes a data frame of C matrices and metadata 
+  from an FU Allocation table.
+
+
+# IEATools 0.1.17 (2020-03-25)
+
+* Added several new member objects to standard names across the package:
+    + `industry_flows`
+    + `non_specified_flows`
+    + `transformation_processes`
+    + `row_col_types`
+    + `psut_cols`
+    + `mat_meta_cols`
+* `extract_TK()` now accepts strings 
+  formulated for "cooling" in addition to "heating."
+  Thus, "LTC.15.C" is now accepted and parses correctly.
+
+
+# IEATools 0.1.16 (2020-03-24)
+
+* Now up to 444 tests, which all pass.
+* `iea_file_OK()` now works on the 2018 IEA extended energy balance data.
+* `sort_iea_df()` now works for specified IEA data frames.
+  Internally, `sort_iea_df()` now uses `despecify_col()`.
+* New function `despecify_col()` removes specification decoration from a column.
+* Now using prepositions in specification strings.
+* Specification strings are now given in a package constant (`specify_notation`).
+  These constants are referred throughout the package.
+* All constants are now lists of character strings
+  instead of vectors
+  to allow `$` referencing of specific list items.
+* Added names to all constants for easier programming.
+
+
+# IEATools 0.1.15 (2020-03-16)
+
+* Now up to 429 tests!
+* Added a `fix_iea_data` vignette.  See [Fixes for IEA Data](https://matthewheun.github.io/IEATools/articles/fix_iea_data.html).
+* Did preparatory work for future `fix_*` functions, including
+  the internal `do_fix()` function which will work for fixing data from any country in any years,
+  so long as a replacement data frame is available.
+* Added function `fix_GHA_industry_electricity()` which adds specificity to Ghana's industry electricity.
+* Added function `replace_join()` to assist with IEA data fixes.
+* Added named `iea_cols` object to simplify and standardize names for columns in IEA data frames,
+  both tidy and wide.
+* Added a "Sorting" section to the IEATools vignette.
+  It describes the `sort_iea_df()` function.
+* renamed `sort_tidy_iea_df()` --> `sort_iea_df()`, because 
+  the function also sorts wide data frames.
+* `sort_tidy_iea_df()` previously worked only with tidy data frames (with a column of years).
+  `sort_tidy_iea_df()` now also works with wide data frames (with years spread to the right).
+* Fixed a bug in `sort_tidy_iea_df()` that results in `NA` values in the `Last.stage` column.
+* Added a function called `sort_tidy_iea_df()` which sorts tidy IEA data frames
+  with default IEA row orders.
+* Completed function called `fix_GHA_psb()` which 
+  smooths Ghana's Primary solid biofuels data
+  in the years 1991--1999.
+
+
+# IEATools 0.1.14 (2020-03-11)
 
 * Fixed an issue with argument names: overwrite --> overwrite_file. 
   The change was made in the `IEATools` package develop branch
@@ -17,7 +78,7 @@
 * Added new sample allocation and F-->U efficiency tables
   for 2019 data.
 * Rebuilt the sample template for F-->U allocation,
-  because new categories of energy consumption were provided for ZA EIOU.
+  because new categories of energy consumption were provided for ZAF EIOU.
 * Wrote new tests for the new approaches to determining 
   "Transformation processes" and "Energy industry own use".
 * Implemented a new way to identify "Transformation processes" and "Energy industry own use" rows.

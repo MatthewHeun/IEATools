@@ -3,8 +3,12 @@ context("Initialize IEA data")
 ###########################################################
 
 test_that("iea_file_OK works", {
+  # Try from a file
   f <- sample_iea_data_path()
   expect_true(iea_file_OK(f))
+  # Try after slurping
+  df <- slurp_iea_to_raw_df(f)
+  expect_true(iea_file_OK(.slurped_iea_df = df))
   
   # Read the file as text and use the text argument.
   conn <- file(f, open = "rt") # open file connection
@@ -13,13 +17,16 @@ test_that("iea_file_OK works", {
   close(conn)
 
   # Mess with the file and expect an error, because rows are no longer identical from one country to another.
-  f1 <- data.table::fread(file = f, header = TRUE, strip.white = FALSE, sep = ",")
+  # f1 <- data.table::fread(file = f, header = TRUE, strip.white = FALSE, sep = ",")
+  f1 <- read.csv(file = f, header = TRUE, strip.white = FALSE, sep = ",")
   f2 <- f1
+  # Switch Hard coal and Brown coal in the PRODUCT column.
   f2[[1, 3]] <- f1[[2, 3]]
   f2[[2, 3]] <- f1[[1, 3]]
-  # Write to a temporary file as a .csv file
+  # Write the messed-up data to a temporary file as a .csv file
   tf <- tempfile(pattern = "iea_file_OK_test", fileext = ".csv")
-  write.csv(f2, file = tf)
+  write.csv(f2, file = tf, row.names = FALSE)
+  # Read it back to confirm that it is messed up
   expect_false(iea_file_OK(tf))
   # Delete file if it exists
   if (file.exists(tf)) {
@@ -31,7 +38,7 @@ test_that("iea_df works", {
   # Test with only 1 line
   expect_error(iea_df(text = "abc"), "couldn't read 2 lines in iea_df")
   # Test with 2 lines but of wrong style.
-  expect_error(iea_df(text = "abc\n123"), ".iea_file didn't start with 'COUNTRY,FLOW,PRODUCT' or ',,TIME\nCOUNTRY,FLOW,PRODUCT'.")
+  expect_error(iea_df(text = "abc\n123"), ".iea_file must start with first line: 'COUNTRY,FLOW,PRODUCT', or first line: ',,TIME' and second line: 'COUNTRY,FLOW,PRODUCT'.  Instead, found first line: 'abc', second line: '123'.")
   # Test with text that is expected to parse correctly.
   # This is the format of the original .csv files.
   expectedDF <- data.frame(COUNTRY = "World", FLOW = "Production", PRODUCT = "Hard coal (if no detail)", `1960` = 42, `1961` = 43, 
@@ -59,6 +66,13 @@ test_that("iea_df works", {
   expect_equal(nrow(IEADF2), 14688)
   expect_equal(ncol(IEADF2), 5)
   expect_equal(colnames(IEADF2)[[5]], "2000")
+  # Test that it works with a slurped df
+  slurped <- sample_iea_data_path() %>% 
+    slurp_iea_to_raw_df()
+  IEADF3 <- iea_df(.slurped_iea_df = slurped)
+  expect_equal(nrow(IEADF3), 14688)
+  expect_equal(ncol(IEADF3), 5)
+  expect_equal(colnames(IEADF3)[[5]], "2000")
 })
 
 test_that("iea_df works after first checking the file with iea_file_OK", {
@@ -257,6 +271,7 @@ test_that("augment_iea_df works", {
   expect_equal(simple_with_tfc_df_2$Flow[[5]], "Coal mines")
 })
 
+
 ###########################################################
 context("Testing munge_to_tidy")
 ###########################################################
@@ -338,16 +353,6 @@ test_that("use_iso_countries works as expected", {
   expect_false(any(iso3$Country == "Ghana"))
   expect_true(any(iso3$Country == "GHA"))
 
-  # Try with 2-letter vs. 3-letter abbreviations
-  iso2 <- sample_iea_data_path() %>% 
-    iea_df() %>% 
-    rename_iea_df_cols() %>% 
-    use_iso_countries(iso_abbrev_type = 2)
-  expect_false(any(iso2$Country == "South Africa"))
-  expect_true(any(iso2$Country == "ZA"))
-  expect_false(any(iso2$Country == "Ghana"))
-  expect_true(any(iso2$Country == "GH"))
-  
   # Try with a data frame that contains a World country.
   world <- iea_df(text = paste0(",,TIME,1960,1961\n",
                                 "COUNTRY,FLOW,PRODUCT\n",
@@ -412,7 +417,7 @@ test_that("load_tidy_iea_df works as expected", {
 })
 
 
-test_that("Ledger.side is added by agugmentation", {
+test_that("Ledger.side is added by augmentation", {
   # Every row in the Ledger.side column should be filled with a non-NA entry.
   # Verify that's indeed the case.
   for (year in valid_iea_release_years) {

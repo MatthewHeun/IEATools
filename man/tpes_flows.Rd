@@ -4,11 +4,25 @@
 \name{tpes_flows}
 \alias{tpes_flows}
 \title{Total primary energy supply flows}
-\format{A string vector with 6 entries}
+\format{
+A string vector with 7 entries
+\describe{
+\item{resources}{The string identifier for Resource flows.}
+\item{production}{The string identifier for Production flows.}
+\item{imports}{The string identifier for Import flows.}
+\item{exports}{The string identifier for  flows.}
+\item{international_marine_bunkers}{The string identifier for International marine bunkers flows.}
+\item{international_aviation_bunkers}{The string identifier for International aviation bunkers flows.}
+\item{stock_changes}{The string identifier for Stock changes flows.}
+}
+}
 \usage{
 tpes_flows
 }
 \description{
 A string vector containing names of \verb{Total primary energy supply} \code{Flow}s in the IEA extended energy balances database.
+}
+\examples{
+tpes_flows
 }
 \keyword{datasets}

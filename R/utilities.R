@@ -7,6 +7,10 @@
 #' the return value has the same length as \code{x} and contains the result
 #' of applying the test (does \code{x} start with any of \code{target})
 #' for each item in \code{x}.
+#' 
+#' `target` can be either a vector or a list. 
+#' To allow `target` to be a list, 
+#' `target` is `unlist()`ed before use.
 #'
 #' @param x a string (or vector or list of strings)
 #' @param target a vector or list of strings
@@ -27,7 +31,7 @@
 #'                    target = c("Production", "Imports"))
 starts_with_any_of <- function(x, target){
   sapply(x, FUN = function(one_x){
-    any(startsWith(x = one_x, prefix = target))
+    any(startsWith(x = one_x, prefix = unlist(target)))
   }) %>%
     magrittr::set_names(NULL)
 }
@@ -121,11 +125,11 @@ insert_after <- function(x, after = NULL, values, .after_all = TRUE, .equals_fun
 #' In societal exergy analysis, converting heat to exergy requires knowledge 
 #' of the temperature of that heat.
 #' This function converts heat types (e.g., "`HTH.600.C`")
-#' to temperatures by extracting the temperature from the middle of the string.
+#' to temperatures by extracting the temperature (in Kelvin) from the middle of the string.
 #' 
 #' It is assumed that the heat type has the following structure: 
 #' * a single letter (typically, "H", "M", or "L" for high, medium, or low, although the character doesn't matter)
-#' * the string "TH." (for "temperature heat"), 
+#' * the string "TH." or "TC." (for "temperature heating" or "temperature cooling"), 
 #' * the temperature value, and
 #' * unit (one of ".C", ".F", ".R", or ".K", indicating ° Celsius, ° Fahrenheit, rankine, or kelvin, respectively).
 #' 
@@ -177,10 +181,10 @@ extract_TK <- function(heat_types, sep = "."){
     # Be careful with literal dots in the following regex code.
     sep <- paste0("\\", sep)
   }
-  # Eliminate the leading *TH<sep>
-  # If the string does not start with *TH<sep>, the leading characters will not be eliminated, and
+  # Eliminate the leading *TH<sep> or *TC<sep>
+  # If the string does not start with *TH<sep> or *TC<sep>, the leading characters will not be eliminated, and
   # an error will occur later in this function.
-  temporary <- sub(pattern = paste0("^.TH", sep), replacement = "", x = heat_types)
+  temporary <- sub(pattern = paste0("(^.TH|^.TC)", sep), replacement = "", x = heat_types)
   # Grab the temperatures from the strings, which are everything before the last sep and unit character.
   # So delete everything including and after the last sep.
   temperature_strings <- sub(pattern = paste0(sep, ".$"), replacement = "", x = temporary)
@@ -442,5 +446,226 @@ sample_eta_fu_table_path <- function(version = 2019) {
              system.file(package = "IEATools"))
   }
   stop("Only 2018 and 2019 are supported in sample_eta_fu_table_path()")
+}
+
+
+#' Sort an IEA data frame in IEA row order
+#' 
+#' The IEA data frame to be sorted can be either 
+#' (a) tidy (long) where each observation is on its own row and 
+#' there is a `year` column present or 
+#' (b) wide where year columns are spread to the right.
+#' 
+#' Sorting is accomplished (by default) using 
+#' the constants [countries], [methods], 
+#' [energy_types], [last_stages], `year` (if present),
+#' [ledger_sides], [fap_flows], 
+#' [products],
+#' (in that order of precedence).
+#' 
+#' Years are sorted if the `year` column is present (a tidy data frame).
+#' If years are not present, they are assumed to be spread to the right
+#' to create a wide data frame. 
+#' Wide data frames are sorted in the same order.
+#'
+#' @param .iea_df the IEA data frame to be sorted
+#' @param col_names a list of column names in IEA data frames. Default is `IEATools::iea_cols`.
+#' @param country the name of the country column in `.tidy_iea_df`. Default is "Country".
+#' @param method the name of the method column in `.tidy_iea_df`. Default is "Method".
+#' @param energy_type the name of the energy type column in `.tidy_iea_df`. Default is "Energy.type".
+#' @param last_stage the name of the last stage column in `.tidy_iea_df`. Default is "Last.stage".
+#' @param year the name of the year column in `.tidy_iea_df`. Default is "Year".
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "Ledger.side".
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
+#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "Flow".
+#' @param sep a separator between the flow aggregation point column and the flow column. Used when uniting those two columns internally. Default is "_".
+#' @param fap_flow the name of the united flow aggregation point and flow column to be created internally in `.tidy_iea_df`. Default is "Flow.aggregation.point_Flow".
+#' @param product the name of the product column in `.tidy_iea_df`. Default is "Product".
+#' @param country_order the order in which to sort the `country` column of `.tidy_iea_df`. Default is [countries].
+#' @param method_order the order in which to sort the `method` column of `.tidy_iea_df`. Default is [methods].
+#' @param energy_type_order the order in which to sort the `energy_type` column of `.tidy_iea_df`. Default is [energy_types].
+#' @param last_stage_order the order in which to sort the `last_stage` column of `.tidy_iea_df`. Default is [last_stages].
+#' @param ledger_side_iea_order the order in which to sort the `ledger_side` column of `.tidy_iea_df`. Default is [ledger_sides].
+#' @param fap_flow_iea_order the order in which to sort the united `flow_aggregation_point` and `flow` columns of `.tidy_iea_df`. Default is [fap_flows].
+#' @param product_iea_order the order in which to sort the `product` column of `.tidy_iea_df`. Default is [products].
+#' @param .clean_flow the name of an internally-generated column in `.iea_df` that stores 
+#'                    a de-specified version of the `flow` column. Default is ".clean_flow".
+#' @param .clean_product the name of an internally-generated column in `.iea_df` that stores 
+#'                       a de-specified version of the `product` column. Default is ".clean_product".
+#'
+#' @return a version of `.tidy_iea_df` sorted in IEA order
+#' 
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' tidy <- load_tidy_iea_df()
+#' # See first and last rows
+#' head(tidy)
+#' tail(tidy)
+#' # Move the first row to the bottom to put everything out of order
+#' unsorted <- tidy[-1, ] %>% 
+#'   bind_rows(tidy[1, ])
+#' head(unsorted)
+#' tail(unsorted)
+#' # Now sort it
+#' sorted <- sort_iea_df(unsorted)
+#' head(sorted)
+#' tail(sorted)
+sort_iea_df <- function(.iea_df,
+                        col_names = IEATools::iea_cols,
+                        country = col_names$country, 
+                        method = col_names$method,
+                        energy_type = col_names$energy_type,
+                        last_stage = col_names$last_stage, 
+                        year = col_names$year,
+                        ledger_side = col_names$ledger_side,
+                        flow_aggregation_point = col_names$flow_aggregation_point,
+                        flow = col_names$flow,
+                        sep = "_",
+                        fap_flow = paste0(flow_aggregation_point, sep, flow),
+                        product = col_names$product,
+                        country_order = IEATools::countries,
+                        method_order = IEATools::methods,
+                        energy_type_order = IEATools::energy_types,
+                        last_stage_order = IEATools::last_stages, 
+                        ledger_side_iea_order = IEATools::ledger_sides,
+                        fap_flow_iea_order = IEATools::fap_flows,
+                        product_iea_order = IEATools::products, 
+                        .clean_flow = ".clean_flow",
+                        .clean_product = ".clean_product") {
+
+  factorized <- .iea_df %>% 
+    despecify_col(col = flow, despecified_col = .clean_flow) %>% 
+    despecify_col(col = product, despecified_col = .clean_product) %>% 
+    dplyr::mutate(
+      "{country}" := factor(!!as.name(country), levels = country_order),
+      "{method}" := factor(!!as.name(method), levels = method_order),
+      "{energy_type}" := factor(!!as.name(energy_type), levels = energy_type_order),
+      "{last_stage}" := factor(!!as.name(last_stage), levels = last_stage_order),
+      "{ledger_side}" := factor(!!as.name(ledger_side), levels = ledger_side_iea_order),
+      "{fap_flow}" := paste0(.data[[flow_aggregation_point]], sep, .data[[.clean_flow]]),
+      "{fap_flow}" := factor(!!as.name(fap_flow), levels = fap_flow_iea_order),
+      "{.clean_product}" := factor(.data[[.clean_product]], levels = product_iea_order)
+    )
   
+  if (year %in% names(factorized)) {
+    # If we have the year column, we want to include it in the arranging.
+    # Likely that we have a long, tidy data frame here.
+    sorted <- factorized %>% 
+      dplyr::arrange(!!as.name(year), !!as.name(country), !!as.name(method), !!as.name(energy_type), !!as.name(last_stage),
+                     !!as.name(fap_flow), !!as.name(.clean_product))
+  } else {
+    # No year column. This might be a wide data frame here in which years are spread as columns to the right.
+    # Exclude year from the arranging.
+    sorted <- factorized %>% 
+      dplyr::arrange(!!as.name(country), !!as.name(method), !!as.name(energy_type), !!as.name(last_stage),
+                     !!as.name(fap_flow), !!as.name(.clean_product))
+  }
+  
+  sorted %>% 
+    dplyr::mutate(
+      # Remove temporary columns
+      !!as.name(fap_flow) := NULL, 
+      "{.clean_flow}" := NULL,
+      "{.clean_product}" := NULL
+    ) %>% 
+    # Remove factors from the sorting columns to return columns to character state.
+    dplyr::mutate_at(c(country, method, energy_type, last_stage, ledger_side), as.character)
+}
+
+
+#' `full_join` with replacement
+#' 
+#' Perform a modified `dplyr::full_join()` on `x` and `y`, 
+#' returning all columns from `c`, 
+#' non-matching rows from `x`,
+#' and all rows from `y`.
+#' Essentially `replace_join()` replaces matching rows in `x` with corresponding rows from `y`
+#' and adds all unmatched rows from `y`.
+#' 
+#' If `x` contains multiple matching rows, matching rows in `y` are inserted into `x` at each matching location.
+#' If `y` contains multiple matching rows, all are inserted into `x` at each matching location.
+#' See examples.
+#' 
+#' Columns of `x` and `y` named in `by` and `replace_col` should not be factors. 
+#' 
+#' If `replace_col` is not in both `x` and `y`, `x` is returned, unmodified.
+#'
+#' @param x object on which replace_join will be performed. 
+#'        `x` is the data frame in which rows will be replaced by matching rows from `y`.
+#' @param y object on which replace_join will be performed. 
+#'        `y` is the data frame from which replacement rows are obtained when matching rows are found
+#'        and from which unmatching rows are added to the outgoing data frame.
+#' @param replace_col the string name of the column (common to both `x` and `y`)
+#'        whose values in `y` will be inserted into `x` where row matches are found for the `by` columns.
+#'        `replace_col` should not be in `by`.
+#'        The default value of `by` ensures that `replace_col` is not in `by`.
+#' @param by the string names of columns (common to `x` and `y`) on which matching rows will be determined.
+#'        Default is `dplyr::intersect(names(x), names(y)) %>% dplyr::setdiff(replace_col)`.
+#'        This default ensures that `replace_col` is not in `by`, as required.
+#' @param copy passed to `dplyr::left_join()`. Default value is `FALSE`.
+#' @param suffix appended to `replace_col` to form the names of columns created in `x` during the internal `dplyr::left_join()` operation.
+#'        Default is `c(".x", ".y")`, same as the default for `dplyr::full_join()`.
+#' @param ... passed to `dplyr::full_join()`
+#'
+#' @return a copy of `x` in which matching `by` rows are replaced by matched rows from `y` and unmatched rows from `y` are added to `x`.
+#' 
+#' @export
+#'
+#' @examples
+#' DFA <- data.frame(x = c(1, 2), y = c("A", "B"), stringsAsFactors = FALSE)
+#' DFB <- data.frame(x = c(2, 3), y = c("C", "D"), stringsAsFactors = FALSE)
+#' replace_join(DFA, DFB, replace_col = "y")
+#' replace_join(DFB, DFA, replace_col = "y")
+#' DFC <- data.frame(x = c(2, 2), y = c("M", "N"), stringsAsFactors = FALSE)
+#' replace_join(DFA, DFC, replace_col = "y")
+#' replace_join(DFC, DFA, replace_col = "y")
+#' DFD <- data.frame(x = c(2, 2), y = c("A", "B"), stringsAsFactors = FALSE)
+#' replace_join(DFC, DFD, replace_col = "y")
+replace_join <- function(x, y, replace_col, 
+                         by = dplyr::intersect(names(x), names(y)) %>% dplyr::setdiff(replace_col), 
+                         copy = FALSE, 
+                         suffix = c(".x", ".y"), ...) {
+  # Ensure that replace_col has length 1.
+  assertthat::assert_that(length(replace_col) == 1, 
+                          msg = paste0("length(replace_col) is ", length(replace_col), " in replace_join. Must be 1."))
+  # Ensure that x and y both have replace_col. If not, just return x.
+  if (! (replace_col %in% names(x) & replace_col %in% names(y))) {
+    return(x)
+  }
+  # Check for factors and give error if any columns are factors.
+  assertthat::assert_that(!any(lapply(x[c(by, replace_col)], is.factor) %>% unlist()) &
+                            !any(lapply(y[c(by, replace_col)], is.factor) %>% unlist()), 
+                          msg = "Columns should not contain factors in arguments to replace_join")
+  # Ensure that replace_col is not in by.
+  assertthat::assert_that(! replace_col %in% by, msg = "replace_col must not be in the by argument to replace_join")
+  # Make the names of the .x and .y columns
+  .x_col <- paste0(replace_col, suffix[[1]])
+  .y_col <- paste0(replace_col, suffix[[2]])
+  # Find the columns of y that are not in by or replace_col.
+  # These columns need to be removed from y, 
+  # else they appear in the output.
+  remove_from_y <- dplyr::setdiff(names(y), dplyr::union(by, replace_col))
+  trimmed_y <- y
+  for (to_remove in remove_from_y) {
+    trimmed_y <- trimmed_y %>% 
+      dplyr::mutate(
+        !!as.name(to_remove) := NULL
+      )
+  }
+  # The algorithm is 
+  #   * Do a full_join, which results in .x and .y columns for replace_col.
+  #   * keep the .x version if .y is NA
+  #   * keep the .y version if .y is not NA
+  #   * Delete the .x and .y columns
+  dplyr::full_join(x, trimmed_y, copy = copy, suffix = suffix, by = by, ... = ...) %>% 
+    dplyr::mutate(
+      !!as.name(replace_col) := dplyr::case_when(
+        is.na(!!as.name(.y_col)) ~ !!as.name(.x_col),
+        TRUE ~ !!as.name(.y_col)
+      ), 
+      !!as.name(.x_col) := NULL,
+      !!as.name(.y_col) := NULL
+    )
 }

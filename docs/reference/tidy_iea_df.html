@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -41,7 +45,6 @@ but the tidy data format
 requires one row for each datum.
 This function uses tidyr::gather() to
 make an IEA data frame tidy." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -59,7 +62,7 @@ make an IEA data frame tidy." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -73,7 +76,7 @@ make an IEA data frame tidy." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.14</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.18</span>
       </span>
     </div>
 
@@ -100,6 +103,9 @@ make an IEA data frame tidy." />
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="../articles/final_to_useful.html">Final to Useful Analysis</a>
+    </li>
+    <li>
+      <a href="../articles/fix_iea_data.html">Fixes for IEA Data</a>
     </li>
     <li>
       <a href="../articles/prep_psut.html">Prepare for PSUT analysis</a>
@@ -143,17 +149,18 @@ make an IEA data frame tidy.</p>
 
     <pre class="usage"><span class='fu'>tidy_iea_df</span>(
   <span class='no'>.iea_df</span>,
-  <span class='kw'>year</span> <span class='kw'>=</span> <span class='st'>"Year"</span>,
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"Method"</span>,
-  <span class='kw'>last_stage</span> <span class='kw'>=</span> <span class='st'>"Last.stage"</span>,
-  <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='st'>"Energy.type"</span>,
-  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
+  <span class='kw'>col_names</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>,
+  <span class='kw'>year</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>year</span>,
+  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>e_dot</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>method</span>,
+  <span class='kw'>last_stage</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>last_stage</span>,
+  <span class='kw'>country</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>country</span>,
+  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>ledger_side</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>flow_aggregation_point</span>,
+  <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>energy_type</span>,
+  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>unit</span>,
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>flow</span>,
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='no'>col_names</span>$<span class='no'>product</span>,
   <span class='kw'>remove_zeroes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )</pre>
 
@@ -165,48 +172,52 @@ make an IEA data frame tidy.</p>
       <td><p>a IEA data frame whose columns have been renamed by <code><a href='rename_iea_df_cols.html'>rename_iea_df_cols()</a></code></p></td>
     </tr>
     <tr>
+      <th>col_names</th>
+      <td><p>a list of column names in IEA data frames. Default is <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
+    </tr>
+    <tr>
       <th>year</th>
-      <td><p>the name of the year column created in <code>.iea_df</code> by this function. (Default is "<code>Year</code>".)</p></td>
+      <td><p>the name of the year column created in <code>.iea_df</code> by this function. (Default is "Year".)</p></td>
     </tr>
     <tr>
       <th>e_dot</th>
-      <td><p>the name of the energy/exergy value column created in <code>.iea_df</code> by this function. (Default is "<code>E.dot</code>".)</p></td>
+      <td><p>the name of the energy/exergy value column created in <code>.iea_df</code> by this function. (Default is "E.dot".)</p></td>
     </tr>
     <tr>
       <th>method</th>
-      <td><p>the name of the method column created in <code>.iea_df</code> by this function. (Default is "<code>Method</code>".)</p></td>
+      <td><p>the name of the method column created in <code>.iea_df</code> by this function. (Default is "Method".)</p></td>
     </tr>
     <tr>
       <th>last_stage</th>
-      <td><p>the name of the last stage column created in <code>.iea_df</code> by this function. (Default is "<code>Last.stage</code>".)</p></td>
+      <td><p>the name of the last stage column created in <code>.iea_df</code> by this function. (Default is "Last.stage".)</p></td>
     </tr>
     <tr>
       <th>country</th>
-      <td><p>the name of the country column in <code>.iea_df</code>. (Default is "<code>Country</code>".)</p></td>
+      <td><p>the name of the country column in <code>.iea_df</code>. (Default is "Country".)</p></td>
     </tr>
     <tr>
       <th>ledger_side</th>
-      <td><p>the name of the ledger side in <code>.iea_df</code>. (Default is "<code>Ledger.side</code>".)</p></td>
+      <td><p>the name of the ledger side in <code>.iea_df</code>. (Default is "Ledger.side".)</p></td>
     </tr>
     <tr>
       <th>flow_aggregation_point</th>
-      <td><p>the name of the flow aggregation point column in <code>.iea_df</code>. (Default is "<code>Flow.aggregation.point</code>".)</p></td>
+      <td><p>the name of the flow aggregation point column in <code>.iea_df</code>. (Default is "Flow.aggregation.point".)</p></td>
     </tr>
     <tr>
       <th>energy_type</th>
-      <td><p>the name of the energy type column in <code>.iea_df</code>. (Default is "<code>Energy.type</code>".)</p></td>
+      <td><p>the name of the energy type column in <code>.iea_df</code>. (Default is "Energy.type".)</p></td>
     </tr>
     <tr>
       <th>unit</th>
-      <td><p>the name of the unit column in <code>.iea_df</code>. (Default is "<code>Units</code>".)</p></td>
+      <td><p>the name of the unit column in <code>.iea_df</code>. (Default is "Units".)</p></td>
     </tr>
     <tr>
       <th>flow</th>
-      <td><p>the name of the flow column in <code>.iea_df</code>. (Default is "<code>Flow</code>".)</p></td>
+      <td><p>the name of the flow column in <code>.iea_df</code>. (Default is "Flow".)</p></td>
     </tr>
     <tr>
       <th>product</th>
-      <td><p>the name of the product column in <code>.iea_df</code>. (Default is "<code>Product</code>".)</p></td>
+      <td><p>the name of the product column in <code>.iea_df</code>. (Default is "Product".)</p></td>
     </tr>
     <tr>
       <th>remove_zeroes</th>
@@ -241,18 +252,13 @@ make an IEA data frame tidy.</p>
 #&gt; </span><span style='color: #555555;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e…
 #&gt; </span><span style='color: #555555;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e…
 #&gt; </span><span style='color: #555555;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e…
-#&gt; </span><span style='color: #555555;'># … with 392 more rows, and 4 more variables: Flow </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,
-#&gt; #   Unit </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, E.dot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+#&gt; </span><span style='color: #555555;'># … with 392 more rows, and 4 more variables: Flow </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
+#&gt; </span><span style='color: #555555;'>#   Unit </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, E.dot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -263,7 +269,7 @@ make an IEA data frame tidy.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

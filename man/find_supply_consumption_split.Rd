@@ -6,28 +6,28 @@
 \usage{
 find_supply_consumption_split(
   .ctry_tbl,
-  flow,
-  losses,
-  iron_and_steel,
-  mining_and_quarrying,
-  tfc,
-  industry
+  flow = IEATools::iea_cols$flow,
+  losses = IEATools::tfc_compare_flows$losses,
+  iron_and_steel = IEATools::manufacturing_flows$iron_and_steel,
+  mining_and_quarrying = IEATools::industry_flows$mining_and_quarrying,
+  tfc = IEATools::aggregation_flows$total_final_consumption,
+  industry = IEATools::tfc_flows$industry
 )
 }
 \arguments{
 \item{.ctry_tbl}{a country's IEA data frame}
 
-\item{flow}{the name of the flow column}
+\item{flow}{See \code{IEATools::iea_cols}.}
 
-\item{losses}{the name for losses in the flow column}
+\item{losses}{See \code{IEATools::tfc_compare_flows}.}
 
-\item{iron_and_steel}{the name for the iron and steel industry in the flow column}
+\item{iron_and_steel}{See \code{IEATools::manufactuiring_flows}.}
 
-\item{mining_and_quarrying}{the name for the mining and quarrying industry in the flow column}
+\item{mining_and_quarrying}{See \code{IEATools::industry_flows}.}
 
-\item{tfc}{the name for total final consumption in the flow column}
+\item{tfc}{See \code{IEATools::aggregation_flows}.}
 
-\item{industry}{the name for industry in the flow column}
+\item{industry}{See \code{IEATools::tfc_flows}.}
 }
 \value{
 a pair of integers representing the rows that straddle the split between

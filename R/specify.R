@@ -36,10 +36,10 @@
 #' Be sure to call this function _after_ calling `augment_iea_df()` or
 #' `load_tidy_iea_df()`.
 #'
-#' @param .tidy_iea_df an IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
+#' @param .tidy_iea_df an IEA data frame whose columns have been renamed by `rename_iea_df_cols()`
 #' @param eiou_destinations a vector of destinations for EIOU for primary production of coal and coal products and oil and natural gas.
 #'        Default is `c("Coal mines", "Oil and gas extraction")`.
-#' @param liquefaction_regas a string identifying liquefaction and regasification plants. Default is "`Liquefaction (LNG) / regasification plants`".
+#' @param liquefaction_regas a string identifying liquefaction and regasification plants. Default is "Liquefaction (LNG) / regasification plants".
 #' @param liquefaction_regas_reassign a string identifying the industry to which EIOU into `liquefaction_regas` will be reassigned.
 #'        Default is "`Oil and gas extraction`".
 #' @param production_products a list of products for which we want to specify primary industries.
@@ -58,6 +58,9 @@
 #' @param production a string identifying production in the flow column. Default is "`Production`".
 #' @param e_dot the name of the energy column in `.tidy_iea_df`. Default is "`E.dot`".
 #' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
+#' @param notation a list of specification notations. Default is `IEATools::specify_notation`.
+#' @param .resources_open a string that identifies the start of the specification portion of flows. Default is `specify_notation$resources_open`.
+#' @param .resources_close a string that identifies the end of specification portion of  flows. Default is `specify_notation$resources_close`.
 #'
 #' @return `.tidy_iea_df` with adjusted production information for primary energy 
 #'         for both coal and coal products and oil and gas extraction
@@ -94,13 +97,16 @@ specify_primary_production <- function(.tidy_iea_df,
                                        resources = "Resources",
                                        production = "Production", 
                                        e_dot = "E.dot",
-                                       product = "Product"){
+                                       product = "Product", 
+                                       notation = IEATools::specify_notation,
+                                       .resources_open = notation$resources_open, 
+                                       .resources_close = notation$resources_close){
   specify_primary_func <- function(.tidf, eiou_dest, prod_prods, prod_short_name){
     # Convert from the Production industry to Resources (prod_short_name)
     # For example, Flow = Production, Product = Anthracite becomes Flow = Resources (Coal), Product = Anthracite
     res_name <- resources
-    if (!endsWith(resources, paste0("(", prod_short_name, ")"))) {
-      res_name <- paste0(res_name, " (", prod_short_name, ")")
+    if (!endsWith(resources, paste0(.resources_open, prod_short_name, .resources_close))) {
+      res_name <- paste0(res_name, .resources_open, prod_short_name, .resources_close)
     }
     # Replace Production with res_name in Production rows
     .tidf <- .tidf %>% 
@@ -118,14 +124,14 @@ specify_primary_production <- function(.tidy_iea_df,
       # We have EIOU rows, so we have more work to do.
       
       # Find the places where the Production energy is consumed,
-      # for example, Hard coal (if no detail).2
+      # for example, Hard coal (if no detail).
       # These pieces of consumed energy need to be renamed
       # to "product (eiou_dest)"
       # i.e., the product is produced by (is from) eiou_dest.
       .tidf <- .tidf %>% 
         dplyr::mutate(
           !!as.name(product) := dplyr::case_when(
-            !!as.name(product) %in% prod_prods & !startsWith(!!as.name(flow), resources) ~ paste0(!!as.name(product), " (", eiou_dest, ")"), 
+            !!as.name(product) %in% prod_prods & !startsWith(!!as.name(flow), resources) ~ paste0(!!as.name(product), .resources_open, eiou_dest, .resources_close), 
             TRUE ~ !!as.name(product)
           )
         )
@@ -145,7 +151,7 @@ specify_primary_production <- function(.tidy_iea_df,
       Output <- Input %>% 
         dplyr::mutate(
           # Convert the Product to the specified product, i.e., product (eiou_dest)
-          !!as.name(product) := paste0(!!as.name(product), " (", !!as.name(flow), ")"),
+          !!as.name(product) := paste0(!!as.name(product), .resources_open, !!as.name(flow), .resources_close),
           !!as.name(e_dot) := -!!as.name(e_dot)
         )
       
@@ -198,14 +204,17 @@ specify_primary_production <- function(.tidy_iea_df,
 #' If this function is called first, 
 #' EIOU will not be accounted correctly.
 #'
-#' @param .tidy_iea_df an IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
-#' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
-#' @param production a string identifying production in the flow column. Default is "`Production`".
+#' @param .tidy_iea_df an IEA data frame whose columns have been renamed by `rename_iea_df_cols()`
+#' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "Flow".
+#' @param production a string identifying production in the flow column. Default is "Production".
 #' @param resources a string identifying resource industries to be added to `.tidy_iea_df`. 
-#'        Default is "`Resources`".
-#' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
+#'        Default is "Resources".
+#' @param product the name of the product column in `.tidy_iea_df`.  Default is "Product".
+#' @param notation a list of specification notations. Default is `IEATools::specify_notation`.
+#' @param .resources_open a string that identifies the start of the specification portion of flows. Default is `specify_notation$resources_open`.
+#' @param .resources_close a string that identifies the end of specification portion of  flows. Default is `specify_notation$resources_close`.
 #'
-#' @return `.tidy_iea_df` with `Production` changed to `Resources (product)`
+#' @return `.tidy_iea_df` with `Production` changed to `resources .resources_open product .resources_close` in the `flow` column
 #' 
 #' @export
 #'
@@ -217,12 +226,15 @@ specify_production_to_resources <- function(.tidy_iea_df,
                                     flow = "Flow",
                                     product = "Product",
                                     production = "Production",
-                                    resources = "Resources"){
+                                    resources = "Resources",
+                                    notation = IEATools::specify_notation,
+                                    .resources_open = notation$resources_open, 
+                                    .resources_close = notation$resources_close){
   # Take any remaining "Production" rows and convert them to Resources (Product).
   .tidy_iea_df %>% 
     dplyr::mutate(
       !!as.name(flow) := dplyr::case_when(
-        !!as.name(flow) == production ~ paste0(resources, " (", !!as.name(product), ")"), 
+        !!as.name(flow) == production ~ paste0(resources, .resources_open, !!as.name(product), .resources_close), 
         TRUE ~ !!as.name(flow)
       )
     )
@@ -245,8 +257,11 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
 #' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
 #' @param int_industries a string vector of industries involved in exchanges with other countries,
-#'        bunkers, or stock changes. Default is [IEATools::interface_industries].
+#'        bunkers, or stock changes. Default is `IEATools::interface_industries`.
 #' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
+#' @param notation a list of specification notations. Default is `IEATools::specify_notation`.
+#' @param .interface_ind_open a string that identifies the start of the specification portion of flows. Default is `IEATools::specify_notation$interface_ind_open`.
+#' @param .interface_ind_close a string that identifies the end of specification portion of  flows. Default is `IEATools::specify_notation$interface_ind_close`.
 #'
 #' @return a modified version of `.tidy_iea_df` with specified interface industries
 #' 
@@ -258,11 +273,14 @@ specify_production_to_resources <- function(.tidy_iea_df,
 specify_interface_industries <- function(.tidy_iea_df,
                                          flow = "Flow", 
                                          int_industries = IEATools::interface_industries,
-                                         product = "Product"){
+                                         product = "Product", 
+                                         notation = IEATools::specify_notation,
+                                         .interface_ind_open = notation$interface_ind_open, 
+                                         .interface_ind_close = notation$interface_ind_close){
   .tidy_iea_df %>% 
     dplyr::mutate(
       !!as.name(flow) := dplyr::case_when(
-        !!as.name(flow) %in% int_industries ~ paste0(!!as.name(flow), " (", !!as.name(product), ")"),
+        !!as.name(flow) %in% int_industries ~ paste0(!!as.name(flow), .interface_ind_open, !!as.name(product), .interface_ind_close),
         TRUE ~ !!as.name(flow)
       )
     )
@@ -654,4 +672,58 @@ specify_all <- function(.tidy_iea_df){
     specify_tp_eiou() %>% 
     specify_interface_industries() %>% 
     tp_sinks_to_nonenergy()
+}
+
+
+#' Remove specification strings from a column
+#' 
+#' `Flow` and `Product` columns of IEA data frames may have been "specified" 
+#' with one of the functions of `specify_all()`.
+#' The specifying makes it difficult to sort the columns in IEA order (with `sort_iea_df()`), 
+#' as the `Flow` and `Product` columns now contain non-IEA flows and products.
+#' To enable sorting, this function de-specifies a column in `.df`.
+#' 
+#' De-specifying includes the following changes:
+#'     * Any "Resource" flows are replaced by "Production". E.g., "Resources \[Coal\]" becomes "Production".
+#'     * All parenthetical decorations are removed.  E.g., "Other bituminous coal \[of Coal mines\]" becomes "Other bituminous coal".
+#'     
+#' Identification of parenthetical notation delimiters is determined by the `specify_notation` object of this package.
+#'
+#' @param .df the data frame in which `col` exists
+#' @param col the string name of the column in `.df` to be de-specified
+#' @param despecified_col the string name of the column in `.df` to contain the de-specified version of `col`
+#' @param notation a list of specification notations. Default is `IEATools::specify_notation`.
+#' @param .open the opening string for specification decoration. Default is `IEATools::specify_notation$open`.
+#' @param .close the closing string for specification decoration. Default is `IEATools::specify_notation$close`.
+#'
+#' @return a de-specified version of `.df`
+#' 
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' load_tidy_iea_df() %>% 
+#'   specify_all() %>% 
+#'   despecify_col(col = "Flow", despecified_col = "clean_Flow") %>% 
+#'   select(Flow, Product, E.dot, clean_Flow) %>% 
+#'   filter(endsWith(Flow, specify_notation$close))
+despecify_col <- function(.df, col, despecified_col, 
+                          notation = IEATools::specify_notation, 
+                          .open = notation$open, 
+                          .close = notation$close) {
+  pat <- paste0(.open, ".*", .close, "$")
+  to_escape <- c("[", "]", "(", ")")
+  # Replace any special characters (defined in to_escape) with escaped characters "\\" so they will work in the pattern.
+  for (char in to_escape) {
+    pat <- gsub(pattern = paste0("\\", char), replacement = paste0("\\\\", char), x = pat)
+  }
+  .df %>% 
+    dplyr::mutate(
+      "{despecified_col}" := dplyr::case_when(
+        # Change "Resources" back to "Production"
+        startsWith(.data[[col]], tpes_flows$resources) ~ tpes_flows$production, 
+        # Remove all parenthetical decorations.
+        TRUE ~ gsub(pattern = pat, replacement = "", x = .data[[col]])
+      )
+    )
 }

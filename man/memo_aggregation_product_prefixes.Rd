@@ -4,11 +4,16 @@
 \name{memo_aggregation_product_prefixes}
 \alias{memo_aggregation_product_prefixes}
 \title{Memo and aggregation product prefixes}
-\format{A string vector with 2 entries}
+\format{
+A string vector with 2 entries
+}
 \usage{
 memo_aggregation_product_prefixes
 }
 \description{
 A string vector containing names of \code{Product}s that provide memos and aggregations.
+}
+\examples{
+memo_aggregation_product_prefixes
 }
 \keyword{datasets}

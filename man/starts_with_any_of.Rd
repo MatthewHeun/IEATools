@@ -26,6 +26,10 @@ This function is vectorized. If \code{x} is a vector or list of strings,
 the return value has the same length as \code{x} and contains the result
 of applying the test (does \code{x} start with any of \code{target})
 for each item in \code{x}.
+
+\code{target} can be either a vector or a list.
+To allow \code{target} to be a list,
+\code{target} is \code{unlist()}ed before use.
 }
 \examples{
 starts_with_any_of(x = "prefix - suffix", target = c("a", "b", "prefix"))

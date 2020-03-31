@@ -4,11 +4,16 @@
 \name{transport_flows}
 \alias{transport_flows}
 \title{Transport flows}
-\format{A string vector with 8 entries}
+\format{
+A string vector with 8 entries
+}
 \usage{
 transport_flows
 }
 \description{
 A string vector containing names of \code{Transport} \code{Flow}s in the IEA extended energy balances database.
+}
+\examples{
+transport_flows
 }
 \keyword{datasets}

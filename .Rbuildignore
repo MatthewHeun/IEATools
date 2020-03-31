@@ -5,3 +5,5 @@
 ^\.Rproj\.user$
 ^codecov\.yml$
 ^\.travis\.yml$
+^vignettes/fix_iea_data\.Rmd$
+^cran-comments\.md$

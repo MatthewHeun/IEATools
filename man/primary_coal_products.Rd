@@ -4,11 +4,16 @@
 \name{primary_coal_products}
 \alias{primary_coal_products}
 \title{Primary coal products}
-\format{A string vector with 7 entries}
+\format{
+A string vector with 7 entries
+}
 \usage{
 primary_coal_products
 }
 \description{
 A string vector containing names of products classified by the IEA as primary coal products.
+}
+\examples{
+primary_coal_products
 }
 \keyword{datasets}

@@ -4,11 +4,16 @@
 \name{coal_and_coal_products}
 \alias{coal_and_coal_products}
 \title{Coal and coal products}
-\format{A string vector with 16 entries}
+\format{
+A string vector with 10 entries
+}
 \usage{
 coal_and_coal_products
 }
 \description{
 A string vector containing names of products classified by the IEA as coal and coal products.
+}
+\examples{
+coal_and_coal_products
 }
 \keyword{datasets}

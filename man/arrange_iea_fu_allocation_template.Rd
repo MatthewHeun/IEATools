@@ -14,43 +14,48 @@ arrange_iea_fu_allocation_template(
   eu_product = "Eu.product",
   destination = "Destination",
   unit = "Unit",
-  fap_dest_order = IEATools::fap_flow_iea_order,
-  ef_product_order = IEATools::product_iea_order,
+  fap_dest_order = IEATools::fap_flows,
+  ef_product_order = IEATools::products,
   quantity = "Quantity",
   maximum_values = "Maximum.values",
-  .temp_sort = ".fap_flow"
+  .temp_sort = ".fap_flow",
+  .clean_ef_product = ".clean_Ef_product"
 )
 }
 \arguments{
 \item{.fu_allocation_template}{the final-to-useful allocation template created by \code{fu_allocation_template()}}
 
-\item{rowcol}{one of "\code{both}", "\code{row}", or "\code{col}" to indicate whether rows, columns, or both should be arranged.
-Default is "\code{both}".}
+\item{rowcol}{one of "both", "row", or "col" to indicate whether rows, columns, or both should be arranged.
+Default is "both".}
 
-\item{ledger_side}{the ledger side column in \code{.fu_allocation_template}. Default is "\code{Ledger.side}".}
+\item{ledger_side}{the ledger side column in \code{.fu_allocation_template}. Default is "Ledger.side".}
 
-\item{flow_aggregation_point}{the flow aggregation point column in \code{.fu_allocation_template}. Default is "\code{Flow.aggregation.point}".}
+\item{flow_aggregation_point}{the flow aggregation point column in \code{.fu_allocation_template}. Default is "Flow.aggregation.point".}
 
-\item{ef_product}{the name of the final energy column in \code{.fu_allocation_template}. Default is "\code{Ef.product}".}
+\item{ef_product}{the name of the final energy column in \code{.fu_allocation_template}. Default is "Ef.product".}
 
-\item{machine}{the name of the machine column in \code{.fu_allocation_template}. Default is "\code{Machine}".}
+\item{machine}{the name of the machine column in \code{.fu_allocation_template}. Default is "Machine".}
 
-\item{eu_product}{the name of the useful energy product column in \code{.fu_allocation_template}. Default is "\code{Eu.product}".}
+\item{eu_product}{the name of the useful energy product column in \code{.fu_allocation_template}. Default is "Eu.product".}
 
-\item{destination}{the name of the destination column in \code{.fu_allocation_template}. Default is "\code{Destination}".}
+\item{destination}{the name of the destination column in \code{.fu_allocation_template}. Default is "Destination".}
 
-\item{unit}{the name of the unit in \code{.fu_allocation_template}. Default is "\code{Unit}".}
+\item{unit}{the name of the unit in \code{.fu_allocation_template}. Default is "Unit".}
 
 \item{fap_dest_order}{the desired order for the combination of \code{flow_aggregation_point} and \code{destination} columns. Default is \code{IEATools::fap_flow_iea_order}.}
 
-\item{ef_product_order}{the desired order for final energy products in \code{.fu_allocation_template}. Default is "\code{Ef.product}".}
+\item{ef_product_order}{the desired order for final energy products in \code{.fu_allocation_template}. Default is "Ef.product".}
 
-\item{quantity}{the name of the quantity column in \code{.fu_allocation_template}. Default is "\code{Quantity}".}
+\item{quantity}{the name of the quantity column in \code{.fu_allocation_template}. Default is "Quantity".}
 
-\item{maximum_values}{the name of the maximum value column \code{.fu_allocation_template}. Default is "\code{Unit}".}
+\item{maximum_values}{the name of the maximum value column \code{.fu_allocation_template}. Default is "Unit".}
 
 \item{.temp_sort}{the name of a temporary column to be added to \code{.fu_allocation_template}.
-Default is "\code{.fap_flow}".
+Default is ".fap_flow".
+This column must not be present in \code{.fu_allocation_template}.}
+
+\item{.clean_ef_product}{the name of a temporary column to be added to \code{.fu_allocation_template}.
+Default is ".clean_ef_product".
 This column must not be present in \code{.fu_allocation_template}.}
 }
 \value{

@@ -4,11 +4,16 @@
 \name{other_flows}
 \alias{other_flows}
 \title{Other flows}
-\format{A string vector with 6 entries}
+\format{
+A string vector with 6 entries
+}
 \usage{
 other_flows
 }
 \description{
 A string vector containing names of \code{Other} \code{Flow}s in the IEA extended energy balances database.
+}
+\examples{
+other_flows
 }
 \keyword{datasets}

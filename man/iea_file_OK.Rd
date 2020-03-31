@@ -7,6 +7,10 @@
 iea_file_OK(
   .iea_file = NULL,
   text = NULL,
+  expected_1st_line_start = ",,TIME",
+  expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT",
+  expected_simple_start = expected_2nd_line_start,
+  .slurped_iea_df = NULL,
   country = "COUNTRY",
   flow = "FLOW",
   product = "PRODUCT",
@@ -17,6 +21,17 @@ iea_file_OK(
 \item{.iea_file}{the path to the raw IEA data file for which quality assurance is desired}
 
 \item{text}{a string containing text to be parsed as an IEA file.}
+
+\item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is ",,TIME".}
+
+\item{expected_2nd_line_start}{the expected start of the second line of \code{iea_file}. Default is "COUNTRY,FLOW,PRODUCT".}
+
+\item{expected_simple_start}{the expected starting of the first line of \code{iea_file}. Default is the value of \code{expected_2nd_line_start}.
+Note that \code{expected_simple_start} is sometimes encountered in data supplied by the IEA.
+Furthermore, \code{expected_simple_start} could be the format of the file when somebody "helpfully" fiddles with
+the raw data from the IEA.}
+
+\item{.slurped_iea_df}{a data frame created by \code{slurp_iea_to_raw_df()}}
 
 \item{country}{the name of the country column. Default is "COUNTRY".}
 
@@ -42,6 +57,12 @@ Then, the resulting data frame is queried for duplicate row numbers.
 If none are found, the function returns the data frame read from the file.
 
 Note that \code{.iea_file} is read internally with \code{\link[data.table:fread]{data.table::fread()}} \emph{without} stripping white space.
+
+If \code{.slurped_iea_df} is supplied, arguments \code{.iea_file} or \code{text} are ignored.
+If \code{.slurped_iea_df} is absent,
+either \code{.iea_file} or \code{text} are required, and
+the helper function \code{slurp_iea_to_raw_df()} is called internally
+to load a raw data frame of data.
 }
 \examples{
 library(magrittr)

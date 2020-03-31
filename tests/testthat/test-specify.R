@@ -26,15 +26,15 @@ test_that("production is converted to resources correctly", {
   expect_equal(DF$Flow[[1]], "Oil and gas extraction")
 })
 
-test_that("crenamed products are also consumed", {
+test_that("renamed products are also consumed", {
   Specific_production <- load_tidy_iea_df() %>% 
     # Look at only 1 product to make things simpler
     dplyr::filter((startsWith(Product, "Hard coal") | Flow == "Coal mines"), Year == 1971)
   Renamed_primary <- Specific_production %>% 
     specify_primary_production()
-  expect_equal(Renamed_primary %>% dplyr::filter(Flow == "Resources (Coal)") %>% nrow(), 1)
+  expect_equal(Renamed_primary %>% dplyr::filter(Flow == paste0("Resources", specify_notation$resources_open, "Coal", specify_notation$resources_close)) %>% nrow(), 1)
   expect_equal(Renamed_primary %>% dplyr::filter(Product == "Electricity") %>% nrow(), 1)
-  expect_equal(Renamed_primary %>% dplyr::filter(Product == "Hard coal (if no detail) (Coal mines)") %>% nrow(), 18)
+  expect_equal(Renamed_primary %>% dplyr::filter(Product == paste0("Hard coal (if no detail)", specify_notation$resources_open, "Coal mines", specify_notation$resources_close)) %>% nrow(), 18)
 })
 
 test_that("interface industries are correctly specified", {
@@ -44,9 +44,9 @@ test_that("interface industries are correctly specified", {
   # Rather, everything should be specified as X (Product).
   for (i in interface_industries) {
     # Ensure that there are no interface_industries remaining
-    expect_equal(nrow(specified %>% filter(Flow == i)), 0)
+    expect_equal(nrow(specified %>% dplyr::filter(Flow == i)), 0)
     # Ensure that every interface_industry ends with ")", indicating that it has been specified.
-    expect_true(specified %>% filter(startsWith(Flow, i) & endsWith(Flow, ")")) %>% nrow() > 0)
+    expect_true(specified %>% dplyr::filter(startsWith(Flow, i) & endsWith(Flow, specify_notation$interface_ind_close)) %>% nrow() > 0)
   }
 })
 
@@ -99,6 +99,27 @@ test_that("specify_all works as expected", {
   expect_equal(Simple, Complicated)
 })
 
+
+test_that("despecify_col work as expected", {
+  specified <- load_tidy_iea_df() %>% 
+    specify_all()
+  despecified <- specified %>% 
+    despecify_col(col = iea_cols$flow, despecified_col = "clean_Flow")
+  despecified %>% 
+    dplyr::select(clean_Flow) %>% 
+    unlist() %>% 
+    endsWith(specify_notation$close) %>% 
+    any() %>% 
+    expect_false()
+  despecified %>% 
+    dplyr::select(clean_Flow) %>% 
+    unlist() %>% 
+    startsWith(tpes_flows$resources) %>% 
+    any() %>% 
+    expect_false()
+})
+
+
 ###########################################################
 context("Transformation sinks and sources")
 ###########################################################
@@ -135,7 +156,7 @@ test_that("tp_sinks_sources() works as expected", {
   # Automobiles are fine, but Furnaces don't make anything and are, therefore, a transformation sink.
   # expect_equal(Tidy %>% tp_sinks_sources(grouping_vars = "Country"), 
   expect_equal(Tidy %>% tp_sinks_sources(), 
-               data.frame(Country = "Bogus", Flow = "Furnaces", stringsAsFactors = FALSE))
+               tibble::tibble(Country = "Bogus", Flow = "Furnaces"))
 })
 
 test_that('tp_sinks_sources(type = "sources") works as expected', {
@@ -160,7 +181,7 @@ test_that('tp_sinks_sources(type = "sources") works as expected', {
     )
   # Automobiles are fine, but Furnaces make Petrol without consuming any energy, and are, therefore, a transformation source.
   expect_equal(Tidy %>% tp_sinks_sources(type = "sources"), 
-               data.frame(Country = "Bogus", Flow = "Furnaces", stringsAsFactors = FALSE))
+               tibble::tibble(Country = "Bogus", Flow = "Furnaces"))
 })
 
 test_that("tp_sinks_to_nonenergy works as expected", {
@@ -184,10 +205,10 @@ test_that("tp_sinks_to_nonenergy works as expected", {
   # We expect that the original 4 rows are now down to 3.
   expect_equal(nrow(Result), 3)
   # Check that the sink energy was correctly added to existing Non-energy use.
-  expect_equal(Result %>% filter(Flow.aggregation.point == "Non-energy use") %>% extract2("E.dot"), 10)
+  expect_equal(Result %>% dplyr::filter(Flow.aggregation.point == "Non-energy use") %>% extract2("E.dot"), 10)
   # Check that the original rows are unchanged
-  expect_equal(Result %>% filter(Flow == "Automobiles", Product == "Petrol") %>% extract2("E.dot"), -1)
-  expect_equal(Result %>% filter(Flow == "Automobiles", Product == "MD") %>% extract2("E.dot"), 1)
+  expect_equal(Result %>% dplyr::filter(Flow == "Automobiles", Product == "Petrol") %>% extract2("E.dot"), -1)
+  expect_equal(Result %>% dplyr::filter(Flow == "Automobiles", Product == "MD") %>% extract2("E.dot"), 1)
 })
 
 test_that("spreading by years works as expected at each step of specify_all()", {

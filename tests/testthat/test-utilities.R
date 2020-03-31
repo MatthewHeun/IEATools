@@ -9,9 +9,13 @@ test_that("starts_with_any_of() works properly", {
   expect_equal(starts_with_any_of(x = c("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
                                   target = c("Production", "Imports")),
                c(TRUE, TRUE, FALSE, FALSE))
-  # Does it also work with lists?
+  # Does it also work when x is a list?
   expect_equal(starts_with_any_of(x = list("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
                                   target = c("Production", "Imports")),
+               c(TRUE, TRUE, FALSE, FALSE))
+  # Does it work when target is also a list? 
+  expect_equal(starts_with_any_of(x = list("Production - Crude", "Production - NG", "Exports - Oil", "Exports - Crude"),
+                                  target = list("Production", "Imports")),
                c(TRUE, TRUE, FALSE, FALSE))
 })
 
@@ -66,6 +70,11 @@ test_that("extract_TK() works as expected", {
   
   # Try with malformed unit string
   expect_true(is.na(extract_TK("HTH.600.CC")))
+  
+  # Try with LTC.15.C.  I.e., we are now allowing cooling.
+  expect_equal(extract_TK("LTC.15.C"), 15 + 273.15)
+  expect_true(is.na(extract_TK("LTW.15.C")))
+  expect_equal(extract_TK("HTC.-110.C"), -110 + 273.15)
 })
 
 test_that("carnot_efficiency works as expected", {
@@ -167,4 +176,188 @@ test_that("adjacent_rownums works as expected", {
   # Try when there are multiple matches.
   DF2 <- data.frame(C1 = c("A", "B", "A", "B"), stringsAsFactors = FALSE)
   expect_error(adjacent_rownums(DF2, col_name = "C1", entries = c("A", "B")), "multiple instances of adjacent entries in adjacent_rownums")
+})
+
+
+test_that("sorting a tidy IEA data frame works as expected", {
+  tidy <- load_tidy_iea_df()
+  # Should get the same thing back if we sort now, because the IEA data are already sorted in IEA order!
+  expect_equal(sort_iea_df(tidy), tidy)
+  num_rows <- nrow(tidy)
+  # Look at the first row
+  expect_equal(tidy$Country[[1]], "GHA")
+  expect_equal(tidy$Product[[1]], "Primary solid biofuels")
+  # Look at the last row
+  expect_equal(tidy$Country[[num_rows]], "ZAF")
+  expect_equal(tidy$Product[[num_rows]], "Paraffin waxes")
+  # Move the first row to the bottom to put everything out of order
+  unsorted <- tidy[-1, ] %>% 
+    dplyr::bind_rows(tidy[1, ])
+  # Check that the moved successfully to the last row
+  expect_equal(unsorted$Country[[num_rows]], "GHA")
+  expect_equal(unsorted$Product[[num_rows]], "Primary solid biofuels")
+  # Now sort it
+  sorted <- sort_iea_df(unsorted)
+  # Bug: The Last.stage column has NA values
+  # Make sure Last.stage has no NA values in it.
+  expect_false(any(is.na(sorted$Last.stage)))
+  # Look at the first row
+  expect_equal(sorted$Country[[1]], "GHA")
+  expect_equal(sorted$Product[[1]], "Primary solid biofuels")
+  # Look at the last row
+  expect_equal(sorted$Country[[num_rows]], "ZAF")
+  expect_equal(sorted$Product[[num_rows]], "Paraffin waxes")
+  
+  # Try with a wide data frame, one that spreads years to the right.
+  unsorted_wide <- tidy %>% 
+    tidyr::pivot_wider(names_from = Year, values_from = E.dot)
+  # The wide data frame is not sorted correctly. Sort it.
+  sorted_wide <- sort_iea_df(unsorted_wide)
+  # Test that we got a good result.
+  # First row should have Ghana first
+  expect_equal(sorted_wide$Country[[1]], "GHA")
+  expect_equal(sorted_wide$Ledger.side[[1]], "Supply")
+  expect_equal(sorted_wide$Product[[1]], "Primary solid biofuels")
+  # Last row is South Africa
+  num_rows <- nrow(sorted_wide)
+  expect_equal(sorted_wide$Country[[num_rows]], "ZAF")
+  expect_equal(sorted_wide$Flow.aggregation.point[[num_rows]], "Non-energy use")
+  expect_equal(sorted_wide$Product[[num_rows]], "Paraffin waxes")
+})
+
+
+test_that("sorting an IEA DF does the right thing with Non-energy flows", {
+  tidy <- load_tidy_iea_df() # Unsorted
+  tidy1971 <- tidy %>% 
+    dplyr::filter(Year == 1971)
+  expect_equal(sort_iea_df(tidy1971), tidy1971)
+  expect_equal(sort_iea_df(tidy), tidy)
+})
+
+
+test_that("sorting works on a specified IEA data frame", {
+  # Make sure that the initially-loaded data frame has sorting as expected.
+  loaded <- load_tidy_iea_df()
+  expect_equal(loaded$Flow[[1]], IEATools::tpes_flows$production)
+  expect_equal(loaded$Flow[[nrow(loaded)]], IEATools::non_energy_flows$non_energy_use_insustry_transformation_energy)
+  
+  # Sort the data frame and make sure everything is still in the right place.
+  sorted_loaded <- sort_iea_df(loaded)
+  expect_equal(sorted_loaded$Flow[[1]], IEATools::tpes_flows$production)
+  expect_equal(sorted_loaded$Flow[[nrow(sorted_loaded)]], IEATools::non_energy_flows$non_energy_use_insustry_transformation_energy)
+  
+  # Now specify the data frame and make sure sorting still works.
+  sorted_specified <- loaded %>% 
+    specify_all() %>% 
+    sort_iea_df()
+  expect_equal(sorted_specified$Flow[[1]], paste0("Resources", 
+                                                  specify_notation$resources_open, 
+                                                  biofuels_and_waste_products$primary_solid_biofuels, 
+                                                  specify_notation$resources_close))
+  expect_equal(sorted_specified$Flow[[nrow(sorted_specified)]], IEATools::non_energy_flows$non_energy_use_insustry_transformation_energy)
+})
+
+
+test_that("replace_join works as expected", {
+  DFA <- tibble::tribble(~x, ~y, 
+                         1, "A", 
+                         2, "B")
+  DFB <- tibble::tribble(~x, ~y, 
+                         2, "C", 
+                         3, "D")
+                         
+  # Try with incorrect by argument. 
+  # replace_col is in by argument
+  expect_error(replace_join(DFA, DFB, replace_col = "y", by = c("x", "y")),
+               msg = "replace_col must not be in the by argument to replace_join")
+  
+  # But the default by argument ensures that replace_col is not in the by argument.
+  expect_equal(replace_join(DFA, DFB, replace_col = "y"),
+               tibble::tribble(~x, ~y, 
+                               1, "A", 
+                               2, "C", 
+                               3, "D"))
+               
+  expect_equal(replace_join(DFB, DFA, replace_col = "y"),
+               tibble::tribble(~x, ~y, 
+                               2, "B", 
+                               3, "D", 
+                               1, "A"))
+
+  # Try with 2 columns in replace_col.
+  expect_error(replace_join(DFA, DFB, replace_col = c("x", "y")), 
+               "length\\(replace_col\\) is 2 in replace_join. Must be 1.")
+  
+  DFC <- data.frame(x = c(2, 3), y = c("C", "D"), z = c("E", "F"), stringsAsFactors = FALSE)
+  DFC <- tibble::tribble(~x, ~y, ~z, 
+                         2, "C", "E", 
+                         3, "D", "F")
+  expect_equal(replace_join(DFA, DFC, replace_col = "y"), 
+               tibble::tribble(~x, ~y, 
+                               1, "A", 
+                               2, "C", 
+                               3, "D"))
+  
+  # Try when replace_col is in by.  That isn't allowed.
+  expect_error(replace_join(DFA, DFB, replace_col = "y", by = c("x", "y")), 
+               msg = "replace_col must not be in by argument to replace_join")
+  
+  # Try with multiple matching rows
+  DFD <- tibble::tribble(~x, ~y,
+                         2, "M", 
+                         2, "N")
+  expect_equal(replace_join(DFA, DFD, replace_col = "y"), 
+               tibble::tribble(~x, ~y, 
+                               1, "A", 
+                               2, "M", 
+                               2, "N"))
+  expect_equal(replace_join(DFD, DFA, replace_col = "y"), 
+               tibble::tribble(~x, ~y, 
+                               2, "B", 
+                               2, "B", 
+                               1, "A"))
+
+  # Try when one of the columns in x or y contains factors.  
+  DFE <- tibble::tribble(~x, ~y, 
+                         1, "A", 
+                         2, "B") %>% dplyr::mutate(x = factor(x))
+  expect_error(replace_join(DFE, DFB, replace_col = "y"), 
+               msg = "Columns should not contain factors in arguments to replace_join")
+  
+  # Try with multiple columns in the by argument
+  DFF <- tibble::tribble(~x, ~y, ~z,
+                         1, "A", 1, 
+                         2, "B", 2)
+  DFG <- tibble::tribble(~x, ~y, ~z, 
+                         2, "B", 11, 
+                         3, "C", 12)
+  expect_equal(replace_join(DFF, DFG, replace_col = "z"), 
+               tibble::tribble(~x, ~y, ~z, 
+                               1, "A", 1,
+                               2, "B", 11,
+                               3, "C", 12))
+
+  # Try with columns that aren't used.
+  # In this case, the z column in DFE just comes along for the ride, yielding an NA value.
+  expect_equal(replace_join(DFF, DFB, replace_col = "y"), 
+               tibble::tribble(~x, ~z, ~y, 
+                               1, 1, "A", 
+                               2, 2, "C",
+                               3, NA_integer_, "D"))
+
+  # Try switching.  In this case, the z column in DFE is lost, as expected.
+  expect_equal(replace_join(DFB, DFF, replace_col = "y"),
+               tibble::tribble(~x, ~y, 
+                               2, "B", 
+                               3, "D", 
+                               1, "A"))
+  
+  # Test with y missing replace_col
+  DFH <- tibble::tribble(~a, ~b, 
+                         1, 1, 
+                         2, 2)
+  expect_equal(replace_join(DFA, DFH, replace_col = "y"), DFA)
+  
+  # Test with x missing replace_col
+  expect_equal(replace_join(DFH, DFA, replace_col = "y"), DFH)
 })

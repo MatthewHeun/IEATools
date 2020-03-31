@@ -4,11 +4,16 @@
 \name{secondary_oil_products}
 \alias{secondary_oil_products}
 \title{Secondary oil products}
-\format{A string vector with 18 entries}
+\format{
+A string vector with 18 entries
+}
 \usage{
 secondary_oil_products
 }
 \description{
 A string vector containing names of products classified by the IEA as \code{oil_and_oil_products} that are not \code{primary_coal_products}.
+}
+\examples{
+secondary_oil_products
 }
 \keyword{datasets}

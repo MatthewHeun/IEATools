@@ -9,23 +9,32 @@ specify_production_to_resources(
   flow = "Flow",
   product = "Product",
   production = "Production",
-  resources = "Resources"
+  resources = "Resources",
+  notation = IEATools::specify_notation,
+  .resources_open = notation$resources_open,
+  .resources_close = notation$resources_close
 )
 }
 \arguments{
-\item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
+\item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{rename_iea_df_cols()}}
 
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}.  Default is "\code{Flow}".}
+\item{flow}{the name of the flow column in \code{.tidy_iea_df}.  Default is "Flow".}
 
-\item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
+\item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "Product".}
 
-\item{production}{a string identifying production in the flow column. Default is "\code{Production}".}
+\item{production}{a string identifying production in the flow column. Default is "Production".}
 
 \item{resources}{a string identifying resource industries to be added to \code{.tidy_iea_df}.
-Default is "\code{Resources}".}
+Default is "Resources".}
+
+\item{notation}{a list of specification notations. Default is \code{IEATools::specify_notation}.}
+
+\item{.resources_open}{a string that identifies the start of the specification portion of flows. Default is \code{specify_notation$resources_open}.}
+
+\item{.resources_close}{a string that identifies the end of specification portion of  flows. Default is \code{specify_notation$resources_close}.}
 }
 \value{
-\code{.tidy_iea_df} with \code{Production} changed to \code{Resources (product)}
+\code{.tidy_iea_df} with \code{Production} changed to \verb{resources .resources_open product .resources_close} in the \code{flow} column
 }
 \description{
 The IEA gives resource extraction in rows where the \code{Flow} is "\code{Production}".

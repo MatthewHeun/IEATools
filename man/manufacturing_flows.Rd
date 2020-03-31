@@ -4,11 +4,29 @@
 \name{manufacturing_flows}
 \alias{manufacturing_flows}
 \title{Manufacturing flows}
-\format{A string vector with 15 entries}
+\format{
+A string vector with 11 entries
+\describe{
+\item{iron_and_steel}{The string identifying the iron and steel industry.}
+\item{chemical_and_petrochemical}{The string identifying the chemical and petrochemical industry}
+\item{non_ferrous_metals}{The string identifying the non-ferrous metals industry}
+\item{non_metallic_minerals}{The string identifying the non-metallic minerals industry}
+\item{transport_equipment}{The string identifying the transport equipment industry}
+\item{machinery}{The string identifying the machinery industry}
+\item{food_and_tobacco}{The string identifying the food and tobacco industry}
+\item{paper_pulp_and_print}{The string identifying the paper, pulp, and print industry (in 2018 and earlier releases of the IEA extended energy balance data)}
+\item{paper_pulp_and_printing}{The string identifying the paper, pulp, and printing industry (in 2019 and later releases of the IEA extended energy balance data)}
+\item{wood_and_wood_products}{The string identifying the wood and wood products industry}
+\item{textile_and_leather}{The string identifying the textile and leather industry}
+}
+}
 \usage{
 manufacturing_flows
 }
 \description{
 A string vector containing names of \code{Manufacturing} \code{Flow}s in the IEA extended energy balances database.
+}
+\examples{
+manufacturing_flows
 }
 \keyword{datasets}

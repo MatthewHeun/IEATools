@@ -40,20 +40,8 @@
 #'        `flow`, and energy rate (`e_dot`) columns along with  
 #'        grouping columns, typically `Country`, `Year`, `Product`, etc. 
 #'        a `Ledger.side` column.
-#' @param ledger_side the name of the column in `.tidy_iea_data`
-#'        that contains ledger side information (a string). Default is "Ledger.side".
-#' @param supply the identifier for supply data in the `ledger_side` column (a string).
-#'        Default is "Supply".
-#' @param consumption the identifier for consumption data in the `ledger_side` column (a string).
-#'        Default is "Consumption".
-#' @param flow_aggregation_point the name of the column in `.tidy_iea_df` that contains flow aggregation point information.
-#'        Default is "Flow.aggregation.point".
-#' @param flow the name of the column in `.tidy_iea_df` that contains flows. Default is "Flow".
-#' @param product the name of the column in `.tidy_iea_df` that contains products. Default is "Product".
-#' @param e_dot the name of the column in `.tidy_iea_data`
-#'        that contains energy flow data. Default is "E.dot".
-#' @param unit the name of the column in `.tidy_iea_data`
-#'        that contains the units for the energy flow data. Default is "Unit".
+#' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
+#' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param supply_sum the name of a new column that will contain the sum of all supply for that group.
 #'        Default is "supply_sum".
 #' @param consumption_sum the name of a new column that will contain the sum of all consumption for that group.
@@ -77,14 +65,14 @@
 #' head(Ebal, 5)
 calc_tidy_iea_df_balances <- function(.tidy_iea_df, 
                             # Input column names
-                            ledger_side = "Ledger.side",
-                            flow_aggregation_point = "Flow.aggregation.point",
-                            supply = "Supply",
-                            consumption = "Consumption",
-                            flow = "Flow",
-                            product = "Product",
-                            e_dot = "E.dot",
-                            unit = "Unit",
+                            ledger_side = IEATools::iea_cols$ledger_side,
+                            flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                            flow = IEATools::iea_cols$flow,
+                            product = IEATools::iea_cols$product,
+                            e_dot = IEATools::iea_cols$e_dot,
+                            unit = IEATools::iea_cols$unit,
+                            supply = IEATools::ledger_sides$supply,
+                            consumption = IEATools::ledger_sides$consumption,
                             # Output column names
                             supply_sum = "supply_sum",
                             consumption_sum = "consumption_sum",
@@ -98,23 +86,23 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
   Tidy <- .tidy_iea_df %>% 
     dplyr::group_by(!!!grouping_names)
   SupplySum <- Tidy %>%
-    dplyr::filter(!!as.name(ledger_side) == supply) %>%
-    dplyr::summarise(!!as.name(supply_sum) := sum(!!as.name(e_dot)))
-  # Calculate the sonsumption sum on a per-group basis
+    dplyr::filter(.data[[ledger_side]] == supply) %>%
+    dplyr::summarise("{supply_sum}" := sum(.data[[e_dot]]))
+  # Calculate the consumption sum on a per-group basis
   ConsumptionSum <- Tidy %>%
-    dplyr::filter(!!as.name(ledger_side) == consumption) %>%
-    dplyr::summarise(!!as.name(consumption_sum) := sum(!!as.name(e_dot)))
+    dplyr::filter(.data[[ledger_side]] == consumption) %>%
+    dplyr::summarise("{consumption_sum}" := sum(.data[[e_dot]]))
   # Return the difference between supply and consumption
   dplyr::full_join(SupplySum, ConsumptionSum, by = grouping_strings) %>% 
     dplyr::mutate(
-      !!as.name(supply_minus_consumption) := !!as.name(supply_sum) - !!as.name(consumption_sum), 
-      !!as.name(balance_OK) := dplyr::case_when(
-        is.na(!!as.name(consumption_sum)) ~ abs(!!as.name(supply_sum)) <= tol,
-        TRUE ~ abs(!!as.name(supply_sum) - !!as.name(consumption_sum)) <= tol
+      "{supply_minus_consumption}" := .data[[supply_sum]] - .data[[consumption_sum]], 
+      "{balance_OK}" := dplyr::case_when(
+        is.na(.data[[consumption_sum]]) ~ abs(.data[[supply_sum]]) <= tol,
+        TRUE ~ abs(.data[[supply_sum]] - .data[[consumption_sum]]) <= tol
       ),
-      !!as.name(err) := dplyr::case_when(
-        is.na(!!as.name(consumption_sum)) ~ !!as.name(supply_sum),
-        TRUE ~ !!as.name(supply_minus_consumption)
+      "{err}" := dplyr::case_when(
+        is.na(.data[[consumption_sum]]) ~ .data[[supply_sum]],
+        TRUE ~ .data[[supply_minus_consumption]]
       )
     ) %>% 
     dplyr::ungroup()
@@ -176,17 +164,12 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
 #' @param max_fix the maximum energy balance that will be fixed without giving an error. Default is 5.
-#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "Ledger.side".
-#' @param supply a string indicating the supply side of the ledger in the `ledger_side` column. Default is "Supply".
-#' @param consumption a string indicating the consumption side of the ledger in the `ledger_side` column. Default is "Consumption".
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
-#' @param tfc_compare a string indicating the Total final consumption comparison flow aggregation point. Default is "TFC compare".
-#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "Flow".
-#' @param statistical_differences a string indicating statistical differences in the `flow` column. Default is "Statistical differences".
-#' @param product the name of the product column in `.tidy_iea_df`. Default is "Product".
-#' @param e_dot the name of the energy flow column in `.tidy_iea_df`. Default is "E.dot".
-#' @param err the name of a temporary error column added to `.tidy_iea_df`. Default is ".err".
-#' @param remove_zeroes a logical telling whether to remove `0`s after balancing.
+#' @param remove_zeroes a logical telling whether to remove `0`s after balancing. Default is `TRUE`.
+#' @param ledger_side,flow_aggregation_point,flow,product,e_dot See `IEATools::iea_cols`.
+#' @param supply,consumption See `IEATools::ledger_sides`.
+#' @param tfc_compare See `IEATools::aggregation_flows`.
+#' @param statistical_differences See `IEATools::tfc_compare_flows`.
+#' @param .err the name of a temporary error column added to `.tidy_iea_df`. Default is ".err".
 #'
 #' @return `.tidy_iea_df` with adjusted `statistical_differences` flows such that 
 #'         the data for each product are in perfect energy balance.
@@ -221,36 +204,36 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #'   tidy_iea_df_balanced()
 fix_tidy_iea_df_balances <- function(.tidy_iea_df,
                                      max_fix = 5,
+                                     remove_zeroes = TRUE,
                                      # Input columns and values
-                                     ledger_side = "Ledger.side",
-                                     supply = "Supply", 
-                                     consumption = "Consumption",
-                                     flow_aggregation_point = "Flow.aggregation.point",
-                                     tfc_compare = "TFC compare",
-                                     flow = "Flow",
-                                     statistical_differences = "Statistical differences",
-                                     product = "Product",
-                                     e_dot = "E.dot", 
+                                     ledger_side = IEATools::iea_cols$ledger_side,
+                                     flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                     flow = IEATools::iea_cols$flow,
+                                     product = IEATools::iea_cols$product,
+                                     e_dot = IEATools::iea_cols$e_dot, 
+                                     supply = IEATools::ledger_sides$supply, 
+                                     consumption = IEATools::ledger_sides$consumption,
+                                     tfc_compare = IEATools::aggregation_flows$tfc_compare,
+                                     statistical_differences = IEATools::tfc_compare_flows$statistical_differences,
                                      # Name used for error column internally
-                                     err = ".err", 
-                                     remove_zeroes = TRUE){
+                                     .err = ".err"){
   grouping_names <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot)
   grouping_strings <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot, .symbols = FALSE)
   e_bal_errors <- .tidy_iea_df %>% 
-    calc_tidy_iea_df_balances(err = err) %>% 
-    dplyr::select(!!!grouping_names, err) %>% 
+    calc_tidy_iea_df_balances(err = .err) %>% 
+    dplyr::select(!!!grouping_names, .err) %>% 
     dplyr::mutate(
-      !!as.name(flow) := statistical_differences, 
-      !!as.name(ledger_side) := supply,
-      !!as.name(flow_aggregation_point) := tfc_compare
+      "{flow}" := statistical_differences, 
+      "{ledger_side}" := supply,
+      "{flow_aggregation_point}" := tfc_compare
     )
   
   # Check the maximum error. If greater than the max allowable error before fixing,
   # throw an error.
-  max_err <- max(abs(e_bal_errors[[err]]))
+  max_err <- max(abs(e_bal_errors[[.err]]))
   assertthat::assert_that(max_err < max_fix, 
                           msg = paste0("Maximum energy balance error is ", max_err, 
-                                       ". Maximum fixable error is ", max_fix, ", so we're stopping in fix_tidy_iea_df_balances"))
+                                       ". Maximum fixable error is ", max_fix, ", so we're stopping in fix_tidy_iea_df_balances()"))
 
   out <- .tidy_iea_df %>% 
     dplyr::full_join(e_bal_errors, by = matsindf::everything_except(.tidy_iea_df, e_dot, .symbols = FALSE)) %>% 
@@ -258,19 +241,19 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
       # If IEA thought things were in balance (even if they aren't), there will be an 
       # NA in the e_dot column in the Statistical differences row. 
       # Replace these NAs with zeroes.
-      !!as.name(e_dot) := dplyr::case_when(
-        is.na(!!as.name(e_dot)) & !is.na(!!as.name(err)) ~ 0,
-        TRUE ~ !!as.name(e_dot)
+      "{e_dot}" := dplyr::case_when(
+        is.na(.data[[e_dot]]) & !is.na(.data[[.err]]) ~ 0,
+        TRUE ~ .data[[e_dot]]
       ),
-      !!as.name(e_dot) := dplyr::case_when(
-        !!as.name(flow) == statistical_differences ~ !!as.name(e_dot) - !!as.name(err), 
-        TRUE ~ !!as.name(e_dot)
+      "{e_dot}" := dplyr::case_when(
+        .data[[flow]] == statistical_differences ~ .data[[e_dot]] - .data[[.err]],
+        TRUE ~ .data[[e_dot]]
       )
     ) %>% 
-    dplyr::select(-err)
+    dplyr::select(-.err)
   if (remove_zeroes) {
     out <- out %>% 
-      dplyr::filter(!(!!as.name(e_dot) == 0))
+      dplyr::filter(!(.data[[e_dot]] == 0))
   }
   return(out)
 }

@@ -18,13 +18,13 @@ a numeric vector of same length as \code{heat_types} containing temperatures in 
 In societal exergy analysis, converting heat to exergy requires knowledge
 of the temperature of that heat.
 This function converts heat types (e.g., "\code{HTH.600.C}")
-to temperatures by extracting the temperature from the middle of the string.
+to temperatures by extracting the temperature (in Kelvin) from the middle of the string.
 }
 \details{
 It is assumed that the heat type has the following structure:
 \itemize{
 \item a single letter (typically, "H", "M", or "L" for high, medium, or low, although the character doesn't matter)
-\item the string "TH." (for "temperature heat"),
+\item the string "TH." or "TC." (for "temperature heating" or "temperature cooling"),
 \item the temperature value, and
 \item unit (one of ".C", ".F", ".R", or ".K", indicating ° Celsius, ° Fahrenheit, rankine, or kelvin, respectively).
 }
