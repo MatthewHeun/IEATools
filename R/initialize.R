@@ -684,17 +684,17 @@ augment_iea_df <- function(.iea_df,
       # so we can no longer rely upon them.
       # Thus, we delete the suffixes if they are present in the flow column of the data frame.
       # The string "\s+" means to match any number (+) of whitespace (\\s) characters.
-      !!as.name(flow) := dplyr::case_when(
+      "{flow}" := dplyr::case_when(
         # Delete the " (transf.)" suffix
-        endsWith(!!as.name(flow), tp_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(tp_flows_suffix)), replacement = "", x = !!as.name(flow)), 
+        endsWith(.data[[flow]], tp_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(tp_flows_suffix)), replacement = "", x = .data[[flow]]), 
         # Delete the " (transformation)" suffix
-        endsWith(!!as.name(flow), nstp_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(nstp_flows_suffix)), replacement = "", x = !!as.name(flow)), 
+        endsWith(.data[[flow]], nstp_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(nstp_flows_suffix)), replacement = "", x = .data[[flow]]), 
         # Delete the " (energy)" suffix
-        endsWith(!!as.name(flow), eiou_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(eiou_flows_suffix)), replacement = "", x = !!as.name(flow)),
-        TRUE ~ !!as.name(flow)
+        endsWith(.data[[flow]], eiou_flows_suffix) ~ gsub(pattern = paste0("\\s+", Hmisc::escapeRegex(eiou_flows_suffix)), replacement = "", x = .data[[flow]]),
+        TRUE ~ .data[[flow]]
       )
     ) %>% 
-    dplyr::group_by(!!as.name(country)) %>% 
+    dplyr::group_by(.data[[country]]) %>% 
     # Perform the next operations on a per-country basis
     dplyr::group_modify(function(ctry_tbl, ctry){
       # At this point,
@@ -725,7 +725,7 @@ augment_iea_df <- function(.iea_df,
         # Add a temporary .rownum column
         tibble::rownames_to_column(var = .rownum) %>%
         dplyr::mutate(
-          !!as.name(.rownum) := as.numeric(!!as.name(.rownum))
+          "{.rownum}" := as.numeric(.data[[.rownum]])
         ) %>% 
         dplyr::mutate(
           # Add the Ledger.side column
