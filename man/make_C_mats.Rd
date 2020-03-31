@@ -18,13 +18,24 @@ make_C_mats(
   consumption = IEATools::ledger_sides$consumption,
   quantity = IEATools::template_cols$quantity,
   machine = IEATools::template_cols$machine,
+  ef_product = IEATools::template_cols$ef_product,
   eu_product = IEATools::template_cols$eu_product,
+  destination = IEATools::template_cols$destination,
   e_dot_perc = IEATools::template_cols$e_dot_perc,
   maximum_values = IEATools::template_cols$maximum_values,
   matnames = IEATools::mat_meta_cols$matnames,
+  matvals = IEATools::mat_meta_cols$matvals,
+  rownames = IEATools::mat_meta_cols$rownames,
+  colnames = IEATools::mat_meta_cols$colnames,
+  rowtypes = IEATools::mat_meta_cols$rowtypes,
+  coltypes = IEATools::mat_meta_cols$coltypes,
+  product = IEATools::row_col_types$product,
+  industry = IEATools::row_col_types$industry,
+  sep = " -> ",
   C_eiou = "C_EIOU",
   C_Y = "C_Y",
-  .C = ".C"
+  .should_be_1_vector = ".should_be_1_vector",
+  .is_1_vector = ".is_1_vector"
 )
 }
 \arguments{

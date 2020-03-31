@@ -24,19 +24,36 @@ make_C_mats <- function(.fu_allocations,
                    flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                    e_dot = IEATools::iea_cols$e_dot,
                    year = IEATools::iea_cols$year,
+                   
                    supply = IEATools::ledger_sides$supply,
                    consumption = IEATools::ledger_sides$consumption,
+                   
                    quantity = IEATools::template_cols$quantity,
                    machine = IEATools::template_cols$machine,
+                   ef_product = IEATools::template_cols$ef_product,
                    eu_product = IEATools::template_cols$eu_product,
+                   destination = IEATools::template_cols$destination,
                    e_dot_perc = IEATools::template_cols$e_dot_perc,
                    maximum_values = IEATools::template_cols$maximum_values,
+                   
                    matnames = IEATools::mat_meta_cols$matnames,
+                   matvals  = IEATools::mat_meta_cols$matvals,
+                   rownames = IEATools::mat_meta_cols$rownames,
+                   colnames = IEATools::mat_meta_cols$colnames,
+                   rowtypes = IEATools::mat_meta_cols$rowtypes,
+                   coltypes = IEATools::mat_meta_cols$coltypes,
+                   
+                   product = IEATools::row_col_types$product,
+                   industry = IEATools::row_col_types$industry,
+                   
+                   sep = " -> ",
+                   
                    # Names of output matrices
                    C_eiou = "C_EIOU",
                    C_Y = "C_Y",
-                   # Temporary column name
-                   .C = ".C") {
+                   # Temporary column names
+                   .should_be_1_vector = ".should_be_1_vector", 
+                   .is_1_vector = ".is_1_vector") {
 
   cleaned <- .fu_allocations %>% 
     # Eliminate rows titled e_dot or e_dot_perc. These are just helper rows for the analyst.
@@ -66,19 +83,49 @@ make_C_mats <- function(.fu_allocations,
     ) %>% 
     # Get rid of rows where machine and eu_product are NA. No data has been provided here.
     dplyr::filter(! (is.na(.data[[machine]]) & is.na(.data[[eu_product]])) )
+  # Gather years into a tidy data frame.
   year_names <- year_cols(cleaned, return_names = TRUE)
   gathered <- cleaned %>% 
     # Gather to put years in a column
-    tidyr::pivot_longer(year_names, names_to = year, values_to = .C) %>% 
+    tidyr::pivot_longer(year_names, names_to = year, values_to = matvals) %>% 
     # Eliminate rows where C is NA. They came from places where data are not available.
-    dplyr::filter(!is.na(.data[[.C]])) %>% 
-    # Group by ledger_side so that we create one set of C matrices for EIOU flows and another for consumption flows.
-    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[matnames]])
+    dplyr::filter(!is.na(.data[[matvals]]))
     
+  # Prepare for collapsing to matrices by adding row and column names and types.
+  prepped <- gathered %>% 
+    # Create row and column names.
+    dplyr::mutate(
+      # Row names come from Ef.product -> Destination for both C_Y and C_EIOU.
+      "{rownames}" := paste0(.data[[ef_product]], sep, .data[[destination]]),
+      # Column names come from Machine -> Eu.product for both C_Y and C_EIOU.
+      "{colnames}" := paste0(.data[[machine]], sep, .data[[eu_product]]), 
+      # Row types are Products
+      "{rowtypes}" := product,
+      # Column types are industries
+      "{coltypes}" := industry,
+      # Eliminate columns we no longer need
+      "{ef_product}" := NULL,
+      "{machine}" := NULL,
+      "{eu_product}" := NULL,
+      "{destination}" := NULL
+    )
+
+  # Group and collapse to C_EIOU and C_Y matrices.
+  # In particular, group by matnames so that we create one set of C matrices for EIOU flows and another for consumption flows.
+  group_cols <- matsindf::everything_except(prepped, matvals, rownames, colnames, rowtypes, coltypes)
+  out <- prepped %>% 
+    dplyr::group_by(!!!group_cols) %>% 
+    matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
+                                   rownames = rownames, colnames = colnames, 
+                                   rowtypes = rowtypes, coltypes = coltypes)
+  # Verify that all rows sum to 1. If not, there has been a problem somewhere.
+  verify <- out %>% 
+    dplyr::mutate(
+      "{.should_be_1_vector}" := matsbyname::rowsums_byname(.data[[matvals]]),
+      "{.is_1_vector}" := matsbyname::compare_byname(.data[[.should_be_1_vector]], "==", 1) %>% matsbyname::all_byname()
+    )
+  assertthat::assert_that(all(verify[[.is_1_vector]] %>% as.logical()))
   
-    
-  # Next step is to make matrices in this data frame.
-  
-    
-  
+  # If we passed the test, we can return the out data frame.
+  return(out)
 }
