@@ -140,11 +140,11 @@
 #' @format A string list with `r length(mat_meta_cols)` entries
 #' \describe{
 #' \item{matnames}{The name of the column that contains matrix names.}
+#' \item{matvals}{The name of the column in a tidy data frame that contains matrices themselves.}
 #' \item{rownames}{The name of the column that contains matrix row names.}
 #' \item{colnames}{The name of the column that contains matrix column names.}
 #' \item{rowtypes}{The name of the column that contains matrix row types.}
 #' \item{coltypes}{The name of the column that contains matrix column types.}
-#' \item{matvals}{The name of the column in a tidy data frame that contains matrices.}
 #' }
 #' 
 #' @examples

@@ -60,6 +60,7 @@ usethis::use_data(iea_cols, overwrite = TRUE)
 # 
 
 mat_meta_cols <- list(matnames = "matnames",
+                      matvals  = "matvals",
                       rownames = "rownames", 
                       colnames = "colnames", 
                       rowtypes = "rowtypes", 
