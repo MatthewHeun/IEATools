@@ -1,18 +1,18 @@
 
 
 
-#' Create an allocation matrix (`C`) from an allocation table
+#' Create allocation matrices (`C`) from an allocation table
 #' 
-#' To create an allocation matrix (`C`), 
-#' rownames are taken from the `Ef.product` and `Destination` columns, and
+#' This function uses information in a filled allocation template (created by `write_fu_allocation_template()`)
+#' to create allocation matrices (`C`). 
+#' rownames of the `C` matricds are taken from the `Ef.product` and `Destination` columns, and
 #' colnames are taken from the `Machine` and `Eu.product` columns.
 #' `C` matrices are created for both energy industry own use
-#' and final demand (`C_eiou` and `C_y`, respectively).
-#' 
-#' The `.fu_allocations` data frame is first made tidy by gathering all years.
+#' and final demand (`C_eiou` and `C_Y`, respectively).
 #' 
 #' Rows of the output `C` matrices should sum to 1.  
 #' An error is thrown if this is not so. 
+#' Such errors probably indicate the template was not filled correctly.
 #'
 #' @param .fu_allocations a final-to-useful allocation table read by `load_fu_allocation_data()`.
 #' @param country,method,energy_type,last_stage,ledger_side,flow_aggregation_point,e_dot,year See `IEATools::iea_cols`.
@@ -21,9 +21,13 @@
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #' @param product,industry See `IEATools::row_col_types`.
 #' @param sep The string separator between prefix and suffix of compound row and column names. Default is " -> ".
-#' @param .should_be_1_vector a temporary column created internally (and not returned) that should contain 1 vectors.
+#'            The default value matches the default value for the `sep` argument of `matsbyname::vectorize_byname()`, because
+#'            `matsbyname::vectorize_byname()` will be used for further manipulations.
+#' @param .should_be_1_vector a temporary column created internally (and not returned) for error checking. 
+#'                            This column should contain 1 vectors (i.e., vectors filled with 1's).
 #' @param .is_1_vector a temporary column created internally (and not returned)
-#'                     that contains `TRUE` or `FALSE` depending on whether a ` vector was created by row sums.
+#'                     that contains `TRUE` or `FALSE` depending on whether a 1 vector was created by row sums.
+#'                     This column is tested internally to ensure all values are `TRUE` before returning.
 #'
 #' @return a tidy data frame with metadata columns (and year) along with `matnames` and `matvals` columns
 #'         indicating and containing `C_eiou` and `C_Y` matrices, respectively.

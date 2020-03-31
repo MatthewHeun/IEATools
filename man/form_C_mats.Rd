@@ -2,7 +2,7 @@
 % Please edit documentation in R/final_to_useful.R
 \name{form_C_mats}
 \alias{form_C_mats}
-\title{Create an allocation matrix (\code{C}) from an allocation table}
+\title{Create allocation matrices (\code{C}) from an allocation table}
 \usage{
 form_C_mats(
   .fu_allocations,
@@ -51,29 +51,33 @@ form_C_mats(
 
 \item{product, industry}{See \code{IEATools::row_col_types}.}
 
-\item{sep}{The string separator between prefix and suffix of compound row and column names. Default is " -> ".}
+\item{sep}{The string separator between prefix and suffix of compound row and column names. Default is " -> ".
+The default value matches the default value for the \code{sep} argument of \code{matsbyname::vectorize_byname()}, because
+\code{matsbyname::vectorize_byname()} will be used for further manipulations.}
 
-\item{.should_be_1_vector}{a temporary column created internally (and not returned) that should contain 1 vectors.}
+\item{.should_be_1_vector}{a temporary column created internally (and not returned) for error checking.
+This column should contain 1 vectors (i.e., vectors filled with 1's).}
 
 \item{.is_1_vector}{a temporary column created internally (and not returned)
-that contains \code{TRUE} or \code{FALSE} depending on whether a ` vector was created by row sums.}
+that contains \code{TRUE} or \code{FALSE} depending on whether a 1 vector was created by row sums.
+This column is tested internally to ensure all values are \code{TRUE} before returning.}
 }
 \value{
 a tidy data frame with metadata columns (and year) along with \code{matnames} and \code{matvals} columns
 indicating and containing \code{C_eiou} and \code{C_Y} matrices, respectively.
 }
 \description{
-To create an allocation matrix (\code{C}),
-rownames are taken from the \code{Ef.product} and \code{Destination} columns, and
+This function uses information in a filled allocation template (created by \code{write_fu_allocation_template()})
+to create allocation matrices (\code{C}).
+rownames of the \code{C} matricds are taken from the \code{Ef.product} and \code{Destination} columns, and
 colnames are taken from the \code{Machine} and \code{Eu.product} columns.
 \code{C} matrices are created for both energy industry own use
-and final demand (\code{C_eiou} and \code{C_y}, respectively).
+and final demand (\code{C_eiou} and \code{C_Y}, respectively).
 }
 \details{
-The \code{.fu_allocations} data frame is first made tidy by gathering all years.
-
 Rows of the output \code{C} matrices should sum to 1.
 An error is thrown if this is not so.
+Such errors probably indicate the template was not filled correctly.
 }
 \examples{
 load_fu_allocation_data() \%>\% 

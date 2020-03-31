@@ -29,7 +29,7 @@ sample_efficiency_table <- tibble::tribble(
   "Furnace", "LTH", 0.97)
   
 
-test_that("make_C works as expected", {
+test_that("form_C_mats works as expected", {
   C_df <- load_fu_allocation_data() %>% form_C_mats(alloc_table)
   # Check values.
   
