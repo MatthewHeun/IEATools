@@ -30,7 +30,33 @@ sample_efficiency_table <- tibble::tribble(
   
 
 test_that("form_C_mats works as expected", {
-  C_df <- load_fu_allocation_data() %>% form_C_mats(alloc_table)
-  # Check values.
+  C_df <- load_fu_allocation_data() %>% 
+    form_C_mats()
+  # Check some values.
+  C_EIOU_GHA_1971 <- C_df %>% 
+    dplyr::filter(Country == "GHA", Year == 1971, matnames == IEATools::template_cols$C_eiou) %>% 
+    magrittr::extract2(IEATools::mat_meta_cols$matvals) %>% 
+    magrittr::extract2(1)
+  r1 <- "Electricity -> Main activity producer electricity plants"
+  r2 <- "Refinery gas -> Oil refineries"
+  c1 <- "Electric lights -> Light"
+  c2 <- "Electric motors -> MD"
+  c3 <- "Industrial furnaces -> HTH.600.C"
+  expect_equal(C_EIOU_GHA_1971[[r1, c1]], 0.5)
+  expect_equal(C_EIOU_GHA_1971[[r1, c2]], 0.5)
+  expect_equal(C_EIOU_GHA_1971[[r1, c3]], 0)
+  expect_equal(C_EIOU_GHA_1971[[r2, c1]], 0)
+  expect_equal(C_EIOU_GHA_1971[[r2, c2]], 0)
+  expect_equal(C_EIOU_GHA_1971[[r2, c3]], 1)
   
+  C_Y_ZAF_2000 <- C_df %>% 
+    dplyr::filter(Country == "ZAF", Year == 2000, matnames == IEATools::template_cols$C_Y) %>% 
+    magrittr::extract2(IEATools::mat_meta_cols$matvals) %>% 
+    magrittr::extract2(1)
+  r1 <- "Blast furnace gas -> Iron and steel"
+  c1 <- "Airplanes -> MD"
+  r_kerosene <- "Kerosene type jet fuel excl. biofuels -> Domestic aviation"
+  c_stoves <- "Industrial furnaces -> HTH.600.C"
+  expect_equal(C_Y_ZAF_2000[[r1, c_stoves]], 1)
+  expect_equal(C_Y_ZAF_2000[[r_kerosene, c1]], 1)
 })
