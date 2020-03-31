@@ -6,16 +6,34 @@
 #' To create an allocation matrix (`C`), 
 #' rownames are taken from the `Ef.product` and `Destination` columns, and
 #' colnames are taken from the `Machine` and `Eu.product` columns.
+#' `C` matrices are created for both energy industry own use
+#' and final demand (`C_eiou` and `C_y`, respectively).
 #' 
-#' The `.fu_alocations` data frame is first made tidy by gathering all years.
+#' The `.fu_allocations` data frame is first made tidy by gathering all years.
+#' 
+#' Rows of the output `C` matrices should sum to 1.  
+#' An error is thrown if this is not so. 
 #'
-#' @param .fu_allocations 
+#' @param .fu_allocations a final-to-useful allocation table read by `load_fu_allocation_data()`.
+#' @param country,method,energy_type,last_stage,ledger_side,flow_aggregation_point,e_dot,year See `IEATools::iea_cols`.
+#' @param supply,consumption See `IEATools::ledger_sides`.
+#' @param quantity,machine,ef_product,eu_product,destination,e_dot_perc,maximum_values,C_eiou,C_Y See `IEATools::template_cols`.
+#' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
+#' @param product,industry See `IEATools::row_col_types`.
+#' @param sep The string separator between prefix and suffix of compound row and column names. Default is " -> ".
+#' @param .should_be_1_vector a temporary column created internally (and not returned) that should contain 1 vectors.
+#' @param .is_1_vector a temporary column created internally (and not returned)
+#'                     that contains `TRUE` or `FALSE` depending on whether a ` vector was created by row sums.
 #'
-#' @return a tidy data frame with metadata columns (and year) along with a `C` column.
+#' @return a tidy data frame with metadata columns (and year) along with `matnames` and `matvals` columns
+#'         indicating and containing `C_eiou` and `C_Y` matrices, respectively.
+#'         
 #' @export
 #'
 #' @examples
-make_C_mats <- function(.fu_allocations, 
+#' load_fu_allocation_data() %>% 
+#'   form_C_mats()
+form_C_mats <- function(.fu_allocations, 
                    country = IEATools::iea_cols$country,
                    method = IEATools::iea_cols$method,
                    energy_type = IEATools::iea_cols$energy_type,
@@ -49,8 +67,9 @@ make_C_mats <- function(.fu_allocations,
                    sep = " -> ",
                    
                    # Names of output matrices
-                   C_eiou = "C_EIOU",
-                   C_Y = "C_Y",
+                   C_eiou = IEATools::template_cols$C_eiou,
+                   C_Y = IEATools::template_cols$C_Y,
+                   
                    # Temporary column names
                    .should_be_1_vector = ".should_be_1_vector", 
                    .is_1_vector = ".is_1_vector") {
@@ -118,6 +137,7 @@ make_C_mats <- function(.fu_allocations,
     matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
                                    rownames = rownames, colnames = colnames, 
                                    rowtypes = rowtypes, coltypes = coltypes)
+  
   # Verify that all rows sum to 1. If not, there has been a problem somewhere.
   verify <- out %>% 
     dplyr::mutate(

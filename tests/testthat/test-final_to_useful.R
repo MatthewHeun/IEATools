@@ -30,6 +30,7 @@ sample_efficiency_table <- tibble::tribble(
   
 
 test_that("make_C works as expected", {
-  alloc_table <- load_fu_allocation_data()
-  C <- make_C_mats(alloc_table)
+  C_df <- load_fu_allocation_data() %>% form_C_mats(alloc_table)
+  # Check values.
+  
 })
