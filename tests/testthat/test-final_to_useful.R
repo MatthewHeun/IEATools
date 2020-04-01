@@ -30,8 +30,8 @@ sample_efficiency_table <- tibble::tribble(
   
 
 test_that("form_C_mats works as expected", {
-  C_df <- load_fu_allocation_data() %>% 
-    form_C_mats()
+  allocation_table <- load_fu_allocation_data()
+  C_df <- form_C_mats(allocation_table)
   # Check some values.
   C_EIOU_GHA_1971 <- C_df %>% 
     dplyr::filter(Country == "GHA", Year == 1971, matnames == IEATools::template_cols$C_eiou) %>% 
@@ -61,5 +61,10 @@ test_that("form_C_mats works as expected", {
   expect_equal(C_Y_ZAF_2000[[r_kerosene, c1]], 1)
   
   # Set a wrong value and expect a warning.
-  
+  allocation_table_wrong <- allocation_table
+  allocation_table_wrong[[3, "1971"]] <- 0.9
+  expect_warning(diagnostic_df <- form_C_mats(allocation_table_wrong), "Not all rows in the C matrices sum to 1.")
+  # Check that the diagnostic data frame is correct
+  expect_equal(diagnostic_df[[1, IEATools::mat_meta_cols$rownames]], "Refinery gas -> Oil refineries")
+  expect_equal(diagnostic_df[[1, ".should_be_1_vector"]], 0.9)
 })
