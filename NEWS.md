@@ -1,3 +1,5 @@
+# IEATools 0.1.19 (2020-04-01)
+
 * New function `form_eta_fu_phi_u_vecs()` which 
   creates column vectors of final-to-useful efficiencies (eta_fu)
   and exergy-to-energy ratios (phi_u)

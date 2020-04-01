@@ -298,8 +298,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                        `load_tidy_iea_df()` `%>%` `specify_all()` `%>%` `prep_psut()`
 #' @param tidy_C_data a tidy data frame of final-to-useful allocation matrices, probably the result of calling `form_C_mats()`.
 #' @param tidy_eta_fu_data a tidy data frame of final-to-useful machine efficiency matrices, probably the result of calling `form_eta_fu_phi_u_vecs`.
-#' @param last_stage See `IEATools::iea_cols$last_stage`. 
-#'                   `last_stage` should be a column in all of `.tidy_psut_data`, `C_data`, and `eta_fu_data`.
+#' @param last_stage,unit See `IEATools::iea_cols$last_stage`. 
+#'                        Each of these should be a column in all of `.tidy_psut_data`, `C_data`, and `eta_fu_data`.
 #' @param final,useful See `IEATools::last_stages`.
 #' @param R,U_eiou,U_excl_eiou,V,Y See `IEATools::psut_cols`. 
 #'                                 These matrices should be found in the `matvals` column of the `.tidy_psut_data` data frame.
@@ -308,6 +308,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                          `C_eiou` and `C_Y` matrices should be found in the `matvals` column of the `C_Y_data` data frame.
 #'                          `eta_fu` should be found in the `matvals` column of the `eta_fu_data` data frame.
 #' @param .useful A suffix applied to versions of PSUT matrices where useful is the last stage. Default is ".useful".
+#' @param .eta_fu_hat an internal matrix name. Default is ".eta_fu_hat".
 #'
 #' @return a version of `.tidy_sut_data` that contains additional rows with useful final stage ECC matrices 
 #' 
