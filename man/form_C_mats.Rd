@@ -6,10 +6,6 @@
 \usage{
 form_C_mats(
   .fu_allocation_table,
-  country = IEATools::iea_cols$country,
-  method = IEATools::iea_cols$method,
-  energy_type = IEATools::iea_cols$energy_type,
-  last_stage = IEATools::iea_cols$last_stage,
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   e_dot = IEATools::iea_cols$e_dot,
@@ -43,9 +39,9 @@ form_C_mats(
 \arguments{
 \item{.fu_allocation_table}{a final-to-useful allocation table read by \code{load_fu_allocation_data()}.
 A template for this table should have been created by \code{fu_allocation_table()} and
-\code{write_fu_allocation_able()}.}
+\code{write_fu_allocation_table()}.}
 
-\item{country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, e_dot, year}{See \code{IEATools::iea_cols}.}
+\item{ledger_side, flow_aggregation_point, e_dot, year}{See \code{IEATools::iea_cols}.}
 
 \item{supply, consumption}{See \code{IEATools::ledger_sides}.}
 

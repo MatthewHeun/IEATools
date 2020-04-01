@@ -48,6 +48,18 @@ test_that("form_C_mats works as expected", {
 
 test_that("form_eta_fu_phi_vecs works as expected", {
   efficiency_table <- load_eta_fu_data()
-  eta_fu_df <- form_eta_fu_phi_vecs(efficiency_table)
+  eta_fu_phi_u_df <- form_eta_fu_phi_u_vecs(efficiency_table)
   
+  # Check some values
+  eta_GHA_1971 <- eta_fu_phi_u_df$matvals[[1]]
+  expect_equal(eta_GHA_1971[["Irons -> MTH.200.C", 1]], 0.85)
+  expect_equal(eta_GHA_1971[["Trucks -> MD", 1]], 0.30)
+  expect_equal(eta_GHA_1971[["Fans -> MD", 1]], 0.10)
+  expect_equal(eta_GHA_1971[["Boat engines -> MD", 1]], 0.30)
+
+  phi_ZAR_2000 <- eta_fu_phi_u_df$matvals[[8]]  
+  expect_equal(phi_ZAR_2000[["Generators -> MD", 1]], 1)
+  expect_equal(phi_ZAR_2000[["LPG stoves -> LTH.20.C", 1]], 0.01677008)
+  expect_equal(phi_ZAR_2000[["Industrial furnaces -> HTH.600.C", 1]], 0.65853519)
+  expect_equal(phi_ZAR_2000[["Electric lights -> Light", 1]], 0.18301611)
 })
