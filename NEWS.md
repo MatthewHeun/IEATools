@@ -1,6 +1,18 @@
+# IEATools 0.1.19 (2020-04-01)
+
+* New function `form_eta_fu_phi_u_vecs()` which 
+  creates column vectors of final-to-useful efficiencies (eta_fu)
+  and exergy-to-energy ratios (phi_u)
+  from an efficiency table.
+* Added new test to hit code path for generating diagnostic information
+  when FU Allocation table is mal-formed.
+  Code coverage is back up to 100% for testing.
+
+
 # IEATools 0.1.18 (2020-03-31)
 
-* New function `form_C_mats()` which makes a data frame of C matrices and metadata 
+* New function `form_C_mats()` which makes a data frame of C matrices 
+  (a.k.a. final-to-useful allocation matrices) and metadata 
   from an FU Allocation table.
 
 

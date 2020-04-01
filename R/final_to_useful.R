@@ -14,8 +14,10 @@
 #' If there is a problem, a data frame that shows the errors is returned.
 #' Such errors probably indicate the FU template was not filled correctly.
 #'
-#' @param .fu_allocations a final-to-useful allocation table read by `load_fu_allocation_data()`.
-#' @param country,method,energy_type,last_stage,ledger_side,flow_aggregation_point,e_dot,year See `IEATools::iea_cols`.
+#' @param .fu_allocation_table a final-to-useful allocation table read by `load_fu_allocation_data()`.
+#'                             A template for this table should have been created by `fu_allocation_table()` and 
+#'                             `write_fu_allocation_table()`.
+#' @param ledger_side,flow_aggregation_point,e_dot,unit,year See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param quantity,machine,ef_product,eu_product,destination,e_dot_perc,maximum_values,C_eiou,C_Y See `IEATools::template_cols`.
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
@@ -42,51 +44,49 @@
 #' @examples
 #' load_fu_allocation_data() %>% 
 #'   form_C_mats()
-form_C_mats <- function(.fu_allocations, 
-                   country = IEATools::iea_cols$country,
-                   method = IEATools::iea_cols$method,
-                   energy_type = IEATools::iea_cols$energy_type,
-                   last_stage = IEATools::iea_cols$last_stage,
-                   ledger_side = IEATools::iea_cols$ledger_side,
-                   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
-                   e_dot = IEATools::iea_cols$e_dot,
-                   year = IEATools::iea_cols$year,
-                   
-                   supply = IEATools::ledger_sides$supply,
-                   consumption = IEATools::ledger_sides$consumption,
-                   
-                   quantity = IEATools::template_cols$quantity,
-                   machine = IEATools::template_cols$machine,
-                   ef_product = IEATools::template_cols$ef_product,
-                   eu_product = IEATools::template_cols$eu_product,
-                   destination = IEATools::template_cols$destination,
-                   e_dot_perc = IEATools::template_cols$e_dot_perc,
-                   maximum_values = IEATools::template_cols$maximum_values,
-                   
-                   matnames = IEATools::mat_meta_cols$matnames,
-                   matvals  = IEATools::mat_meta_cols$matvals,
-                   rownames = IEATools::mat_meta_cols$rownames,
-                   colnames = IEATools::mat_meta_cols$colnames,
-                   rowtypes = IEATools::mat_meta_cols$rowtypes,
-                   coltypes = IEATools::mat_meta_cols$coltypes,
-                   
-                   product = IEATools::row_col_types$product,
-                   industry = IEATools::row_col_types$industry,
-                   
-                   sep = " -> ",
-                   
-                   tol = 1e-6,
-                   
-                   # Names of output matrices
-                   C_eiou = IEATools::template_cols$C_eiou,
-                   C_Y = IEATools::template_cols$C_Y,
-                   
-                   # Temporary column names
-                   .should_be_1_vector = ".should_be_1_vector", 
-                   .is_1 = ".is_1", 
-                   .all_1 = ".all_1") {
-
-  cleaned <- .fu_allocations %>% 
+form_C_mats <- function(.fu_allocation_table, 
+                        
+                        ledger_side = IEATools::iea_cols$ledger_side,
+                        flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                        e_dot = IEATools::iea_cols$e_dot,
+                        unit = IEATools::iea_cols$unit,
+                        year = IEATools::iea_cols$year,
+                        
+                        supply = IEATools::ledger_sides$supply,
+                        consumption = IEATools::ledger_sides$consumption,
+                        
+                        quantity = IEATools::template_cols$quantity,
+                        machine = IEATools::template_cols$machine,
+                        ef_product = IEATools::template_cols$ef_product,
+                        eu_product = IEATools::template_cols$eu_product,
+                        destination = IEATools::template_cols$destination,
+                        e_dot_perc = IEATools::template_cols$e_dot_perc,
+                        maximum_values = IEATools::template_cols$maximum_values,
+                        
+                        matnames = IEATools::mat_meta_cols$matnames,
+                        matvals  = IEATools::mat_meta_cols$matvals,
+                        rownames = IEATools::mat_meta_cols$rownames,
+                        colnames = IEATools::mat_meta_cols$colnames,
+                        rowtypes = IEATools::mat_meta_cols$rowtypes,
+                        coltypes = IEATools::mat_meta_cols$coltypes,
+                        
+                        product = IEATools::row_col_types$product,
+                        industry = IEATools::row_col_types$industry,
+                        
+                        sep = " -> ",
+                        
+                        tol = 1e-6,
+                        
+                        # Names of output matrices
+                        C_eiou = IEATools::template_cols$C_eiou,
+                        C_Y = IEATools::template_cols$C_Y,
+                        
+                        # Temporary column names
+                        .should_be_1_vector = ".should_be_1_vector", 
+                        .is_1 = ".is_1", 
+                        .all_1 = ".all_1") {
+  
+  cleaned <- .fu_allocation_table %>% 
     # Eliminate rows titled e_dot or e_dot_perc. These are just helper rows for the analyst.
     dplyr::filter(! (.data[[quantity]] %in% c(e_dot, e_dot_perc)) ) %>% 
     dplyr::rename(
@@ -105,6 +105,8 @@ form_C_mats <- function(.fu_allocations,
         # Catch any logic errors here.
         TRUE ~ NA_character_
       ),
+      # Eliminate the unit column (if it exists), as it has no meaning for allocation fractions.
+      "{unit}" := NULL,
       # Eliminate the maximum_values column. It was only a helper for the analyst.
       "{maximum_values}" := NULL,
       # Eliminate the quantity column. Everything is a C at this point.
@@ -112,7 +114,7 @@ form_C_mats <- function(.fu_allocations,
       # Eliminate the flow aggregation point column. We don't need it.
       "{flow_aggregation_point}" := NULL
     ) %>% 
-    # Get rid of rows where machine and eu_product are NA. No data has been provided here.
+    # Get rid of rows where machine and eu_product are NA. No data have been provided in these locations..
     dplyr::filter(! (is.na(.data[[machine]]) & is.na(.data[[eu_product]])) )
   # Gather years into a tidy data frame.
   year_names <- year_cols(cleaned, return_names = TRUE)
@@ -120,7 +122,11 @@ form_C_mats <- function(.fu_allocations,
     # Gather to put years in a column
     tidyr::pivot_longer(year_names, names_to = year, values_to = matvals) %>% 
     # Eliminate rows where C is NA. They came from places where data are not available.
-    dplyr::filter(!is.na(.data[[matvals]]))
+    dplyr::filter(!is.na(.data[[matvals]])) %>% 
+    # Make sure the year column is numeric
+    dplyr::mutate(
+      "{year}" := as.numeric(.data[[year]])
+    )
     
   # Prepare for collapsing to matrices by adding row and column names and types.
   prepped <- gathered %>% 
@@ -186,4 +192,176 @@ form_C_mats <- function(.fu_allocations,
 
   # If we passed the test, we can return the out data frame without the verification columns.
   return(out)
+}
+
+
+#' Create final-to-useful efficiency vectors (`eta_fu`) and exergy-to-energy ratio vectors (`phi_u`) from a final-to-useful efficiency table
+#'
+#' @param .eta_fu_table a final-to-useful efficiency table read by `load_eta_fu_allocation_data()`.
+#'                      A template for this table should have been created by `eta_fu_table()` and 
+#'                      `write_eta_fu_table()`.
+#' @param unit,year See `IEATools::iea_cols`.
+#' @param quantity,machine,eu_product,e_dot_machine,e_dot_machine_perc,maximum_values,eta_fu,phi_u See `IEATools::template_cols`.
+#' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
+#' @param sep The string separator between prefix and suffix of compound row and column names. Default is " -> ".
+#'            The default value matches the default value for the `sep` argument of `matsbyname::vectorize_byname()`, because
+#'            `matsbyname::vectorize_byname()` will be used for further manipulations.
+#'
+#' @return a tidy data frame with metadata columns (and year) along with `matnames` and `matvals` columns
+#'         indicating and containing `eta_fu` and `phi_u` vectors, respectively.
+#' 
+#' @export
+#'
+#' @examples
+#' load_eta_fu_data() %>% 
+#'   form_eta_fu_phi_u_vecs()
+form_eta_fu_phi_u_vecs <- function(.eta_fu_table, 
+                                   
+                                   unit = IEATools::iea_cols$unit,
+                                   year = IEATools::iea_cols$year,
+                                   
+                                   quantity = IEATools::template_cols$quantity,
+                                   machine = IEATools::template_cols$machine,
+                                   eu_product = IEATools::template_cols$eu_product,
+                                   e_dot_machine = IEATools::template_cols$e_dot_machine,
+                                   e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
+                                   maximum_values = IEATools::template_cols$maximum_values,
+                                   eta_fu = IEATools::template_cols$eta_fu,
+                                   phi_u = IEATools::template_cols$phi_u,
+                                   
+                                   matnames = IEATools::mat_meta_cols$matnames,
+                                   matvals  = IEATools::mat_meta_cols$matvals,
+                                   rownames = IEATools::mat_meta_cols$rownames,
+                                   colnames = IEATools::mat_meta_cols$colnames,
+                                   rowtypes = IEATools::mat_meta_cols$rowtypes,
+                                   coltypes = IEATools::mat_meta_cols$coltypes, 
+                                   
+                                   sep = " -> ") {
+  
+  cleaned <- .eta_fu_table %>% 
+    # Eliminate rows titled e_dot_machine or e_dot_machine_perc. These are just helper rows for the analyst.
+    dplyr::filter(! (.data[[quantity]] %in% c(e_dot_machine, e_dot_machine_perc)) ) %>% 
+    dplyr::mutate(
+      # Eliminate the unit column (if it exists), as it has no meaning for efficiencies and exergy-to-energy ratios.
+      "{unit}" := NULL,
+      # Eliminate the maximum_values column. It was only a helper for the analyst.
+      "{maximum_values}" := NULL
+    ) %>% 
+    dplyr::rename(
+      # The quantity column gives us the matrix names
+      "{matnames}" := quantity
+    )
+  # Gather years into a tidy data frame.
+  year_names <- year_cols(cleaned, return_names = TRUE)
+  gathered <- cleaned %>% 
+    # Gather to put years in a column
+    tidyr::pivot_longer(year_names, names_to = year, values_to = matvals) %>% 
+    # Eliminate rows where C is NA. They came from places where data are not available.
+    dplyr::filter(!is.na(.data[[matvals]])) %>% 
+    # Make sure the year column is numeric
+    dplyr::mutate(
+      "{year}" := as.numeric(.data[[year]])
+    )
+  
+  prepped <- gathered %>% 
+    dplyr::mutate(
+      # Create rownames from the machine and eu_product rows.
+      "{rownames}" := paste0(.data[[machine]], sep, .data[[eu_product]]),
+      # Eliminate machine and eu_product columns, becasue we no longer need them.
+      "{machine}" := NULL,
+      "{eu_product}" := NULL,
+      # Create colnames according to the name of the matrix to be created
+      "{colnames}" := .data[[matnames]],
+      "{rowtypes}" := IEATools::row_col_types$industry,
+      "{coltypes}" := IEATools::row_col_types$product
+    )
+
+  # Collapse to matrices (actually, column vectors) and return  
+  group_cols <- matsindf::everything_except(prepped, matvals, rownames, colnames, rowtypes, coltypes)
+  out <- prepped %>% 
+    dplyr::group_by(!!!group_cols) %>% 
+    matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
+                                   rownames = rownames, colnames = colnames, 
+                                   rowtypes = rowtypes, coltypes = coltypes)
+  
+  return(out)
+}
+
+
+#' Move an ECC from final to useful as its last stage
+#'
+#' @param .tidy_psut_data A tidy data frame of PSUT matrices that represent an energy conversion chain.
+#'                        Matrix names should be in the `matnames` column, and
+#'                        matrices themselves should be in the `matvals` column.
+#'                        The last stage of these ECCs should be final (not useful).
+#'                        `.tidy_psut_data` is likely the result of calling (in sequence)
+#'                        `load_tidy_iea_df()` `%>%` `specify_all()` `%>%` `prep_psut()`
+#' @param tidy_C_data a tidy data frame of final-to-useful allocation matrices, probably the result of calling `form_C_mats()`.
+#' @param tidy_eta_fu_data a tidy data frame of final-to-useful machine efficiency matrices, probably the result of calling `form_eta_fu_phi_u_vecs`.
+#' @param last_stage,unit See `IEATools::iea_cols$last_stage`. 
+#'                        Each of these should be a column in all of `.tidy_psut_data`, `C_data`, and `eta_fu_data`.
+#' @param final,useful See `IEATools::last_stages`.
+#' @param R,U_eiou,U_excl_eiou,V,Y See `IEATools::psut_cols`. 
+#'                                 These matrices should be found in the `matvals` column of the `.tidy_psut_data` data frame.
+#' @param matnames,matvals See `IEATools::mat_meta_cols`. 
+#' @param C_eiou,C_Y,eta_fu See `IEATools::template_cols`. 
+#'                          `C_eiou` and `C_Y` matrices should be found in the `matvals` column of the `C_Y_data` data frame.
+#'                          `eta_fu` should be found in the `matvals` column of the `eta_fu_data` data frame.
+#' @param .useful A suffix applied to versions of PSUT matrices where useful is the last stage. Default is ".useful".
+#' @param .eta_fu_hat an internal matrix name. Default is ".eta_fu_hat".
+#'
+#' @return a version of `.tidy_sut_data` that contains additional rows with useful final stage ECC matrices 
+#' 
+#' @export
+#'
+#' @examples
+move_to_useful_last_stage <- function(.tidy_psut_data, 
+                                      tidy_C_data,
+                                      tidy_eta_fu_data,
+                                      
+                                      last_stage = IEATools::iea_cols$last_stage,
+                                      unit = IEATools::iea_cols$unit,
+                                      
+                                      final = IEATools::last_stages$final,
+                                      useful = IEATools::last_stages$useful,
+                                      
+                                      R = IEATools::psut_cols$R, 
+                                      U_eiou = IEATools::psut_cols$U_eiou,
+                                      U_excl_eiou = IEATools::psut_cols$U_excl_eiou,
+                                      V = IEATools::psut_cols$V, 
+                                      Y = IEATools::psut_cols$Y, 
+                                      
+                                      matnames = IEATools::mat_meta_cols$matnames,
+                                      matvals = IEATools::mat_meta_cols$matvals,
+                                      
+                                      C_eiou = IEATools::template_cols$C_eiou,
+                                      C_Y = IEATools::template_cols$C_Y, 
+                                      eta_fu = IEATools::template_cols$eta_fu,
+                                      
+                                      .useful = ".useful", 
+                                      .eta_fu_hat = ".eta_fu_hat") {
+  
+  # Clean out Unit cols 
+  
+  wide <- .tidy_psut_data %>% 
+    # Bind the C and eta_fu vectors to the bottom of the .tidy_sut_data frame
+    dplyr::bind_rows(tidy_C_data, tidy_eta_fu_data) %>% 
+    # Put the matrices in columns in preparation for calculations
+    tidyr::pivot_wider(names_from = matnames, values_from = matvals) %>% 
+    dplyr::mutate(
+      # Calculate eta_fu_hat
+      "{.eta_fu_hat}" := matsbyname::hatize_byname(.data[[eta_fu]])
+      # Swap column names from arrow notation to paren notation
+    )
+
+  
+  # Spread the matrices for calculations
+  
+  # Calculate matrices with _useful suffixes for the useful version
+  
+  # Eliminate the final stage matrices
+  
+  # Eliminate suffixes on the useful stage columns and change last_stage to "Useful".
+  
+  # Bind the useful stage mats to the bottom of the final stage mats
 }
