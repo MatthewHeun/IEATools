@@ -1,3 +1,8 @@
+* Added new test to hit code path for generating diagnostic information
+  when FU Allocation table is mal-formed.
+  Code coverage is back up to 100% for testing.
+
+
 # IEATools 0.1.18 (2020-03-31)
 
 * New function `form_C_mats()` which makes a data frame of C matrices and metadata 
