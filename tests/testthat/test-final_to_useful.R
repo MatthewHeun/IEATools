@@ -38,9 +38,14 @@ test_that("form_C_mats works as expected", {
   
   # Set a wrong value and expect a warning.
   allocation_table_wrong <- allocation_table
-  allocation_table_wrong[[3, "1971"]] <- 0.9
+  allocation_table_wrong[[3, "1971"]] <- 0.9 # Was 1.0. This change should trigger an error on this row.
   expect_warning(diagnostic_df <- form_C_mats(allocation_table_wrong), "Not all rows in the C matrices sum to 1.")
   # Check that the diagnostic data frame is correct
   expect_equal(diagnostic_df[[1, IEATools::mat_meta_cols$rownames]], "Refinery gas -> Oil refineries")
   expect_equal(diagnostic_df[[1, ".should_be_1_vector"]], 0.9)
+})
+
+
+test_that("form_eta_fu_vecs works as expected", {
+  efficiency_table <- load_eta_fu_data()
 })
