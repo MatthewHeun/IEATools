@@ -41,7 +41,9 @@ form_C_mats(
 )
 }
 \arguments{
-\item{.fu_allocation_table}{a final-to-useful allocation table read by \code{load_fu_allocation_data()}.}
+\item{.fu_allocation_table}{a final-to-useful allocation table read by \code{load_fu_allocation_data()}.
+A template for this table should have been created by \code{fu_allocation_table()} and
+\code{write_fu_allocation_able()}.}
 
 \item{country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, e_dot, year}{See \code{IEATools::iea_cols}.}
 

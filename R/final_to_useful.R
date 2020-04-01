@@ -15,6 +15,8 @@
 #' Such errors probably indicate the FU template was not filled correctly.
 #'
 #' @param .fu_allocation_table a final-to-useful allocation table read by `load_fu_allocation_data()`.
+#'                             A template for this table should have been created by `fu_allocation_table()` and 
+#'                             `write_fu_allocation_able()`.
 #' @param country,method,energy_type,last_stage,ledger_side,flow_aggregation_point,e_dot,year See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param quantity,machine,ef_product,eu_product,destination,e_dot_perc,maximum_values,C_eiou,C_Y See `IEATools::template_cols`.
@@ -43,49 +45,50 @@
 #' load_fu_allocation_data() %>% 
 #'   form_C_mats()
 form_C_mats <- function(.fu_allocation_table, 
-                   country = IEATools::iea_cols$country,
-                   method = IEATools::iea_cols$method,
-                   energy_type = IEATools::iea_cols$energy_type,
-                   last_stage = IEATools::iea_cols$last_stage,
-                   ledger_side = IEATools::iea_cols$ledger_side,
-                   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
-                   e_dot = IEATools::iea_cols$e_dot,
-                   year = IEATools::iea_cols$year,
-                   
-                   supply = IEATools::ledger_sides$supply,
-                   consumption = IEATools::ledger_sides$consumption,
-                   
-                   quantity = IEATools::template_cols$quantity,
-                   machine = IEATools::template_cols$machine,
-                   ef_product = IEATools::template_cols$ef_product,
-                   eu_product = IEATools::template_cols$eu_product,
-                   destination = IEATools::template_cols$destination,
-                   e_dot_perc = IEATools::template_cols$e_dot_perc,
-                   maximum_values = IEATools::template_cols$maximum_values,
-                   
-                   matnames = IEATools::mat_meta_cols$matnames,
-                   matvals  = IEATools::mat_meta_cols$matvals,
-                   rownames = IEATools::mat_meta_cols$rownames,
-                   colnames = IEATools::mat_meta_cols$colnames,
-                   rowtypes = IEATools::mat_meta_cols$rowtypes,
-                   coltypes = IEATools::mat_meta_cols$coltypes,
-                   
-                   product = IEATools::row_col_types$product,
-                   industry = IEATools::row_col_types$industry,
-                   
-                   sep = " -> ",
-                   
-                   tol = 1e-6,
-                   
-                   # Names of output matrices
-                   C_eiou = IEATools::template_cols$C_eiou,
-                   C_Y = IEATools::template_cols$C_Y,
-                   
-                   # Temporary column names
-                   .should_be_1_vector = ".should_be_1_vector", 
-                   .is_1 = ".is_1", 
-                   .all_1 = ".all_1") {
-
+                        
+                        country = IEATools::iea_cols$country,
+                        method = IEATools::iea_cols$method,
+                        energy_type = IEATools::iea_cols$energy_type,
+                        last_stage = IEATools::iea_cols$last_stage,
+                        ledger_side = IEATools::iea_cols$ledger_side,
+                        flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                        e_dot = IEATools::iea_cols$e_dot,
+                        year = IEATools::iea_cols$year,
+                        
+                        supply = IEATools::ledger_sides$supply,
+                        consumption = IEATools::ledger_sides$consumption,
+                        
+                        quantity = IEATools::template_cols$quantity,
+                        machine = IEATools::template_cols$machine,
+                        ef_product = IEATools::template_cols$ef_product,
+                        eu_product = IEATools::template_cols$eu_product,
+                        destination = IEATools::template_cols$destination,
+                        e_dot_perc = IEATools::template_cols$e_dot_perc,
+                        maximum_values = IEATools::template_cols$maximum_values,
+                        
+                        matnames = IEATools::mat_meta_cols$matnames,
+                        matvals  = IEATools::mat_meta_cols$matvals,
+                        rownames = IEATools::mat_meta_cols$rownames,
+                        colnames = IEATools::mat_meta_cols$colnames,
+                        rowtypes = IEATools::mat_meta_cols$rowtypes,
+                        coltypes = IEATools::mat_meta_cols$coltypes,
+                        
+                        product = IEATools::row_col_types$product,
+                        industry = IEATools::row_col_types$industry,
+                        
+                        sep = " -> ",
+                        
+                        tol = 1e-6,
+                        
+                        # Names of output matrices
+                        C_eiou = IEATools::template_cols$C_eiou,
+                        C_Y = IEATools::template_cols$C_Y,
+                        
+                        # Temporary column names
+                        .should_be_1_vector = ".should_be_1_vector", 
+                        .is_1 = ".is_1", 
+                        .all_1 = ".all_1") {
+  
   cleaned <- .fu_allocation_table %>% 
     # Eliminate rows titled e_dot or e_dot_perc. These are just helper rows for the analyst.
     dplyr::filter(! (.data[[quantity]] %in% c(e_dot, e_dot_perc)) ) %>% 
@@ -199,6 +202,49 @@ form_C_mats <- function(.fu_allocation_table,
 #' @examples
 #' load_eta_fu_data() %>% 
 #'   form_eta_fu_vecs()
-form_eta_fu_vecs <- function(.eta_fu_table) {
+form_eta_fu_phi_vecs <- function(.eta_fu_table, 
+                             
+                             country = IEATools::iea_cols$country,
+                             method = IEATools::iea_cols$method,
+                             energy_type = IEATools::iea_cols$energy_type,
+                             last_stage = IEATools::iea_cols$last_stage,
+                             ledger_side = IEATools::iea_cols$ledger_side,
+                             flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                             e_dot = IEATools::iea_cols$e_dot,
+                             year = IEATools::iea_cols$year,
+                             
+                             quantity = IEATools::template_cols$quantity,
+                             machine = IEATools::template_cols$machine,
+                             ef_product = IEATools::template_cols$ef_product,
+                             eu_product = IEATools::template_cols$eu_product,
+                             destination = IEATools::template_cols$destination,
+                             e_dot_machine = IEATools::template_cols$e_dot_machine,
+                             e_dot_perc = IEATools::template_cols$e_dot_perc,
+                             e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
+                             maximum_values = IEATools::template_cols$maximum_values,
+                             
+                             matnames = IEATools::mat_meta_cols$matnames,
+                             matvals  = IEATools::mat_meta_cols$matvals,
+                             rownames = IEATools::mat_meta_cols$rownames,
+                             colnames = IEATools::mat_meta_cols$colnames,
+                             rowtypes = IEATools::mat_meta_cols$rowtypes,
+                             coltypes = IEATools::mat_meta_cols$coltypes) {
   
+  cleaned <- .eta_fu_table %>% 
+    # Eliminate rows titled e_dot or e_dot_perc. These are just helper rows for the analyst.
+    dplyr::filter(! (.data[[quantity]] %in% c(e_dot_machine, e_dot_machine_perc)) ) %>% 
+    dplyr::mutate(
+      # Eliminate the maximum_values column. It was only a helper for the analyst.
+      "{maximum_values}" := NULL
+    ) %>% 
+    dplyr::rename(
+      # The quantity column gives us the matrix names
+      "{matnames}" := quantity
+    )
+    
+  
+  
+  print()
+  
+    
 }

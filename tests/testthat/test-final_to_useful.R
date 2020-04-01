@@ -46,8 +46,8 @@ test_that("form_C_mats works as expected", {
 })
 
 
-test_that("form_eta_fu_vecs works as expected", {
+test_that("form_eta_fu_phi_vecs works as expected", {
   efficiency_table <- load_eta_fu_data()
-  eta_fu_df <- form_eta_fu_vecs(efficiency_table)
+  eta_fu_df <- form_eta_fu_phi_vecs(efficiency_table)
   
 })
