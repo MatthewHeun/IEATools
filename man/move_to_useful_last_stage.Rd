@@ -38,8 +38,8 @@ The last stage of these ECCs should be final (not useful).
 
 \item{tidy_eta_fu_data}{a tidy data frame of final-to-useful machine efficiency matrices, probably the result of calling \code{form_eta_fu_phi_u_vecs}.}
 
-\item{last_stage}{See \code{IEATools::iea_cols$last_stage}.
-\code{last_stage} should be a column in all of \code{.tidy_psut_data}, \code{C_data}, and \code{eta_fu_data}.}
+\item{last_stage, unit}{See \code{IEATools::iea_cols$last_stage}.
+Each of these should be a column in all of \code{.tidy_psut_data}, \code{C_data}, and \code{eta_fu_data}.}
 
 \item{final, useful}{See \code{IEATools::last_stages}.}
 
@@ -53,6 +53,8 @@ These matrices should be found in the \code{matvals} column of the \code{.tidy_p
 \code{eta_fu} should be found in the \code{matvals} column of the \code{eta_fu_data} data frame.}
 
 \item{.useful}{A suffix applied to versions of PSUT matrices where useful is the last stage. Default is ".useful".}
+
+\item{.eta_fu_hat}{an internal matrix name. Default is ".eta_fu_hat".}
 }
 \value{
 a version of \code{.tidy_sut_data} that contains additional rows with useful final stage ECC matrices
