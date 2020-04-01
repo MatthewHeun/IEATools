@@ -6,6 +6,7 @@
 \usage{
 form_eta_fu_phi_u_vecs(
   .eta_fu_table,
+  unit = IEATools::iea_cols$unit,
   year = IEATools::iea_cols$year,
   quantity = IEATools::template_cols$quantity,
   machine = IEATools::template_cols$machine,
@@ -29,7 +30,7 @@ form_eta_fu_phi_u_vecs(
 A template for this table should have been created by \code{eta_fu_table()} and
 \code{write_eta_fu_table()}.}
 
-\item{year}{See \code{IEATools::iea_cols}.}
+\item{unit, year}{See \code{IEATools::iea_cols}.}
 
 \item{quantity, machine, eu_product, e_dot_machine, e_dot_machine_perc, maximum_values, eta_fu, phi_u}{See \code{IEATools::template_cols}.}
 

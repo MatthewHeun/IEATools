@@ -9,6 +9,7 @@ move_to_useful_last_stage(
   tidy_C_data,
   tidy_eta_fu_data,
   last_stage = IEATools::iea_cols$last_stage,
+  unit = IEATools::iea_cols$unit,
   final = IEATools::last_stages$final,
   useful = IEATools::last_stages$useful,
   R = IEATools::psut_cols$R,
@@ -21,7 +22,8 @@ move_to_useful_last_stage(
   C_eiou = IEATools::template_cols$C_eiou,
   C_Y = IEATools::template_cols$C_Y,
   eta_fu = IEATools::template_cols$eta_fu,
-  .useful = "_useful"
+  .useful = ".useful",
+  .eta_fu_hat = ".eta_fu_hat"
 )
 }
 \arguments{
@@ -50,7 +52,7 @@ These matrices should be found in the \code{matvals} column of the \code{.tidy_p
 \code{C_eiou} and \code{C_Y} matrices should be found in the \code{matvals} column of the \code{C_Y_data} data frame.
 \code{eta_fu} should be found in the \code{matvals} column of the \code{eta_fu_data} data frame.}
 
-\item{.useful}{A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".}
+\item{.useful}{A suffix applied to versions of PSUT matrices where useful is the last stage. Default is ".useful".}
 }
 \value{
 a version of \code{.tidy_sut_data} that contains additional rows with useful final stage ECC matrices

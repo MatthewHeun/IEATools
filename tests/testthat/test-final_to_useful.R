@@ -10,6 +10,8 @@ test_that("form_C_mats works as expected", {
   C_df <- form_C_mats(allocation_table)
   # Check type of year column
   expect_true(inherits(C_df$Year, "numeric"))
+  # Check that the Unit column is missing.  It has no meaning for allocations.
+  expect_true(is.null(C_df[[IEATools::iea_cols$unit]]))
   # Check some values.
   C_EIOU_GHA_1971 <- C_df %>% 
     dplyr::filter(Country == "GHA", Year == 1971, matnames == IEATools::template_cols$C_eiou) %>% 
@@ -53,8 +55,9 @@ test_that("form_eta_fu_phi_vecs works as expected", {
   eta_fu_phi_u_df <- form_eta_fu_phi_u_vecs(efficiency_table)
   # Check type of year column
   expect_true(inherits(eta_fu_phi_u_df$Year, "numeric"))
-  
-  
+  # Check that the Unit column is missing.  It has no meaning for allocations.
+  expect_true(is.null(eta_fu_phi_u_df[[IEATools::iea_cols$unit]]))
+
   # Check some values
   eta_GHA_1971 <- eta_fu_phi_u_df$matvals[[1]]
   expect_equal(eta_GHA_1971[["Irons -> MTH.200.C", 1]], 0.85)

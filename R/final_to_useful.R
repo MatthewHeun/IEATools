@@ -17,7 +17,7 @@
 #' @param .fu_allocation_table a final-to-useful allocation table read by `load_fu_allocation_data()`.
 #'                             A template for this table should have been created by `fu_allocation_table()` and 
 #'                             `write_fu_allocation_table()`.
-#' @param ledger_side,flow_aggregation_point,e_dot,year See `IEATools::iea_cols`.
+#' @param ledger_side,flow_aggregation_point,e_dot,unit,year See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param quantity,machine,ef_product,eu_product,destination,e_dot_perc,maximum_values,C_eiou,C_Y See `IEATools::template_cols`.
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
@@ -49,6 +49,7 @@ form_C_mats <- function(.fu_allocation_table,
                         ledger_side = IEATools::iea_cols$ledger_side,
                         flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                         e_dot = IEATools::iea_cols$e_dot,
+                        unit = IEATools::iea_cols$unit,
                         year = IEATools::iea_cols$year,
                         
                         supply = IEATools::ledger_sides$supply,
@@ -104,6 +105,8 @@ form_C_mats <- function(.fu_allocation_table,
         # Catch any logic errors here.
         TRUE ~ NA_character_
       ),
+      # Eliminate the unit column (if it exists), as it has no meaning for allocation fractions.
+      "{unit}" := NULL,
       # Eliminate the maximum_values column. It was only a helper for the analyst.
       "{maximum_values}" := NULL,
       # Eliminate the quantity column. Everything is a C at this point.
@@ -197,7 +200,7 @@ form_C_mats <- function(.fu_allocation_table,
 #' @param .eta_fu_table a final-to-useful efficiency table read by `load_eta_fu_allocation_data()`.
 #'                      A template for this table should have been created by `eta_fu_table()` and 
 #'                      `write_eta_fu_table()`.
-#' @param year See `IEATools::iea_cols`.
+#' @param unit,year See `IEATools::iea_cols`.
 #' @param quantity,machine,eu_product,e_dot_machine,e_dot_machine_perc,maximum_values,eta_fu,phi_u See `IEATools::template_cols`.
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #' @param sep The string separator between prefix and suffix of compound row and column names. Default is " -> ".
@@ -214,6 +217,7 @@ form_C_mats <- function(.fu_allocation_table,
 #'   form_eta_fu_phi_u_vecs()
 form_eta_fu_phi_u_vecs <- function(.eta_fu_table, 
                                    
+                                   unit = IEATools::iea_cols$unit,
                                    year = IEATools::iea_cols$year,
                                    
                                    quantity = IEATools::template_cols$quantity,
@@ -238,6 +242,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     # Eliminate rows titled e_dot_machine or e_dot_machine_perc. These are just helper rows for the analyst.
     dplyr::filter(! (.data[[quantity]] %in% c(e_dot_machine, e_dot_machine_perc)) ) %>% 
     dplyr::mutate(
+      # Eliminate the unit column (if it exists), as it has no meaning for efficiencies and exergy-to-energy ratios.
+      "{unit}" := NULL,
       # Eliminate the maximum_values column. It was only a helper for the analyst.
       "{maximum_values}" := NULL
     ) %>% 
@@ -301,7 +307,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param C_eiou,C_Y,eta_fu See `IEATools::template_cols`. 
 #'                          `C_eiou` and `C_Y` matrices should be found in the `matvals` column of the `C_Y_data` data frame.
 #'                          `eta_fu` should be found in the `matvals` column of the `eta_fu_data` data frame.
-#' @param .useful A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".
+#' @param .useful A suffix applied to versions of PSUT matrices where useful is the last stage. Default is ".useful".
 #'
 #' @return a version of `.tidy_sut_data` that contains additional rows with useful final stage ECC matrices 
 #' 
@@ -313,6 +319,7 @@ move_to_useful_last_stage <- function(.tidy_psut_data,
                                       tidy_eta_fu_data,
                                       
                                       last_stage = IEATools::iea_cols$last_stage,
+                                      unit = IEATools::iea_cols$unit,
                                       
                                       final = IEATools::last_stages$final,
                                       useful = IEATools::last_stages$useful,
@@ -330,14 +337,21 @@ move_to_useful_last_stage <- function(.tidy_psut_data,
                                       C_Y = IEATools::template_cols$C_Y, 
                                       eta_fu = IEATools::template_cols$eta_fu,
                                       
-                                      .useful = "_useful") {
+                                      .useful = ".useful", 
+                                      .eta_fu_hat = ".eta_fu_hat") {
   
-  .tidy_psut_data %>% 
+  # Clean out Unit cols 
+  
+  wide <- .tidy_psut_data %>% 
     # Bind the C and eta_fu vectors to the bottom of the .tidy_sut_data frame
     dplyr::bind_rows(C_data, eta_fu_data) %>% 
-    tidyr::pivot_wider(names_from = matnames, values_from = matvals)
-  
-  print()
+    # Put the matrices in columns in preparation for calculations
+    tidyr::pivot_wider(names_from = matnames, values_from = matvals) %>% 
+    dplyr::mutate(
+      # Calculate eta_fu_hat
+      "{.eta_fu_hat}" := matsbyname::hatize_byname(.data[[eta_fu]])
+    )
+
   
   # Spread the matrices for calculations
   
