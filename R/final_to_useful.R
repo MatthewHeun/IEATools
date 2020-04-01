@@ -344,12 +344,13 @@ move_to_useful_last_stage <- function(.tidy_psut_data,
   
   wide <- .tidy_psut_data %>% 
     # Bind the C and eta_fu vectors to the bottom of the .tidy_sut_data frame
-    dplyr::bind_rows(C_data, eta_fu_data) %>% 
+    dplyr::bind_rows(tidy_C_data, tidy_eta_fu_data) %>% 
     # Put the matrices in columns in preparation for calculations
     tidyr::pivot_wider(names_from = matnames, values_from = matvals) %>% 
     dplyr::mutate(
       # Calculate eta_fu_hat
       "{.eta_fu_hat}" := matsbyname::hatize_byname(.data[[eta_fu]])
+      # Swap column names from arrow notation to paren notation
     )
 
   
