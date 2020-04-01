@@ -119,7 +119,11 @@ form_C_mats <- function(.fu_allocation_table,
     # Gather to put years in a column
     tidyr::pivot_longer(year_names, names_to = year, values_to = matvals) %>% 
     # Eliminate rows where C is NA. They came from places where data are not available.
-    dplyr::filter(!is.na(.data[[matvals]]))
+    dplyr::filter(!is.na(.data[[matvals]])) %>% 
+    # Make sure the year column is numeric
+    dplyr::mutate(
+      "{year}" := as.numeric(.data[[year]])
+    )
     
   # Prepare for collapsing to matrices by adding row and column names and types.
   prepped <- gathered %>% 
@@ -188,7 +192,7 @@ form_C_mats <- function(.fu_allocation_table,
 }
 
 
-#' Title
+#' Create final-to-useful efficiency vectors (`eta_fu`) and exergy-to-energy ratio vectors (`phi_u`) from a final-to-useful efficiency table
 #'
 #' @param .eta_fu_table a final-to-useful efficiency table read by `load_eta_fu_allocation_data()`.
 #'                      A template for this table should have been created by `eta_fu_table()` and 
@@ -247,7 +251,11 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     # Gather to put years in a column
     tidyr::pivot_longer(year_names, names_to = year, values_to = matvals) %>% 
     # Eliminate rows where C is NA. They came from places where data are not available.
-    dplyr::filter(!is.na(.data[[matvals]]))
+    dplyr::filter(!is.na(.data[[matvals]])) %>% 
+    # Make sure the year column is numeric
+    dplyr::mutate(
+      "{year}" := as.numeric(.data[[year]])
+    )
   
   prepped <- gathered %>% 
     dplyr::mutate(
@@ -271,4 +279,73 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    rowtypes = rowtypes, coltypes = coltypes)
   
   return(out)
+}
+
+
+#' Move an ECC from final to useful as its last stage
+#'
+#' @param .tidy_psut_data A tidy data frame of PSUT matrices that represent an energy conversion chain.
+#'                        Matrix names should be in the `matnames` column, and
+#'                        matrices themselves should be in the `matvals` column.
+#'                        The last stage of these ECCs should be final (not useful).
+#'                        `.tidy_psut_data` is likely the result of calling (in sequence)
+#'                        `load_tidy_iea_df()` `%>%` `specify_all()` `%>%` `prep_psut()`
+#' @param tidy_C_data a tidy data frame of final-to-useful allocation matrices, probably the result of calling `form_C_mats()`.
+#' @param tidy_eta_fu_data a tidy data frame of final-to-useful machine efficiency matrices, probably the result of calling `form_eta_fu_phi_u_vecs`.
+#' @param last_stage See `IEATools::iea_cols$last_stage`. 
+#'                   `last_stage` should be a column in all of `.tidy_psut_data`, `C_data`, and `eta_fu_data`.
+#' @param final,useful See `IEATools::last_stages`.
+#' @param R,U_eiou,U_excl_eiou,V,Y See `IEATools::psut_cols`. 
+#'                                 These matrices should be found in the `matvals` column of the `.tidy_psut_data` data frame.
+#' @param matnames,matvals See `IEATools::mat_meta_cols`. 
+#' @param C_eiou,C_Y,eta_fu See `IEATools::template_cols`. 
+#'                          `C_eiou` and `C_Y` matrices should be found in the `matvals` column of the `C_Y_data` data frame.
+#'                          `eta_fu` should be found in the `matvals` column of the `eta_fu_data` data frame.
+#' @param .useful A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".
+#'
+#' @return a version of `.tidy_sut_data` that contains additional rows with useful final stage ECC matrices 
+#' 
+#' @export
+#'
+#' @examples
+move_to_useful_last_stage <- function(.tidy_psut_data, 
+                                      tidy_C_data,
+                                      tidy_eta_fu_data,
+                                      
+                                      last_stage = IEATools::iea_cols$last_stage,
+                                      
+                                      final = IEATools::last_stages$final,
+                                      useful = IEATools::last_stages$useful,
+                                      
+                                      R = IEATools::psut_cols$R, 
+                                      U_eiou = IEATools::psut_cols$U_eiou,
+                                      U_excl_eiou = IEATools::psut_cols$U_excl_eiou,
+                                      V = IEATools::psut_cols$V, 
+                                      Y = IEATools::psut_cols$Y, 
+                                      
+                                      matnames = IEATools::mat_meta_cols$matnames,
+                                      matvals = IEATools::mat_meta_cols$matvals,
+                                      
+                                      C_eiou = IEATools::template_cols$C_eiou,
+                                      C_Y = IEATools::template_cols$C_Y, 
+                                      eta_fu = IEATools::template_cols$eta_fu,
+                                      
+                                      .useful = "_useful") {
+  
+  .tidy_psut_data %>% 
+    # Bind the C and eta_fu vectors to the bottom of the .tidy_sut_data frame
+    dplyr::bind_rows(C_data, eta_fu_data) %>% 
+    tidyr::pivot_wider(names_from = matnames, values_from = matvals)
+  
+  print()
+  
+  # Spread the matrices for calculations
+  
+  # Calculate matrices with _useful suffixes for the useful version
+  
+  # Eliminate the final stage matrices
+  
+  # Eliminate suffixes on the useful stage columns and change last_stage to "Useful".
+  
+  # Bind the useful stage mats to the bottom of the final stage mats
 }

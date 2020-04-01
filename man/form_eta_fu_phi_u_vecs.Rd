@@ -2,7 +2,7 @@
 % Please edit documentation in R/final_to_useful.R
 \name{form_eta_fu_phi_u_vecs}
 \alias{form_eta_fu_phi_u_vecs}
-\title{Title}
+\title{Create final-to-useful efficiency vectors (\code{eta_fu}) and exergy-to-energy ratio vectors (\code{phi_u}) from a final-to-useful efficiency table}
 \usage{
 form_eta_fu_phi_u_vecs(
   .eta_fu_table,
@@ -44,7 +44,7 @@ a tidy data frame with metadata columns (and year) along with \code{matnames} an
 indicating and containing \code{eta_fu} and \code{phi_u} vectors, respectively.
 }
 \description{
-Title
+Create final-to-useful efficiency vectors (\code{eta_fu}) and exergy-to-energy ratio vectors (\code{phi_u}) from a final-to-useful efficiency table
 }
 \examples{
 load_eta_fu_data() \%>\% 
