@@ -81,7 +81,7 @@ test_that("move_to_useful_last_stage works as expected", {
   eta_fu_data <- load_eta_fu_data() %>% form_eta_fu_phi_u_vecs()
   
   with_useful <- psut_mats %>% 
-    move_to_useful_last_stage(tidy_C_data = C_data, tidy_eta_fu_data = eta_fu_data)
+    move_last_stage_to_useful(tidy_C_data = C_data, tidy_eta_fu_data = eta_fu_data)
 
   # Check some of the values  
   

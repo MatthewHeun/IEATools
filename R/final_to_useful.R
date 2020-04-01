@@ -315,7 +315,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @export
 #'
 #' @examples
-move_to_useful_last_stage <- function(.tidy_psut_data, 
+move_last_stage_to_useful <- function(.tidy_psut_data, 
                                       tidy_C_data,
                                       tidy_eta_fu_data,
                                       
