@@ -14,7 +14,7 @@
 #' If there is a problem, a data frame that shows the errors is returned.
 #' Such errors probably indicate the FU template was not filled correctly.
 #'
-#' @param .fu_allocations a final-to-useful allocation table read by `load_fu_allocation_data()`.
+#' @param .fu_allocation_table a final-to-useful allocation table read by `load_fu_allocation_data()`.
 #' @param country,method,energy_type,last_stage,ledger_side,flow_aggregation_point,e_dot,year See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param quantity,machine,ef_product,eu_product,destination,e_dot_perc,maximum_values,C_eiou,C_Y See `IEATools::template_cols`.
@@ -42,7 +42,7 @@
 #' @examples
 #' load_fu_allocation_data() %>% 
 #'   form_C_mats()
-form_C_mats <- function(.fu_allocations, 
+form_C_mats <- function(.fu_allocation_table, 
                    country = IEATools::iea_cols$country,
                    method = IEATools::iea_cols$method,
                    energy_type = IEATools::iea_cols$energy_type,
@@ -86,7 +86,7 @@ form_C_mats <- function(.fu_allocations,
                    .is_1 = ".is_1", 
                    .all_1 = ".all_1") {
 
-  cleaned <- .fu_allocations %>% 
+  cleaned <- .fu_allocation_table %>% 
     # Eliminate rows titled e_dot or e_dot_perc. These are just helper rows for the analyst.
     dplyr::filter(! (.data[[quantity]] %in% c(e_dot, e_dot_perc)) ) %>% 
     dplyr::rename(
@@ -186,4 +186,19 @@ form_C_mats <- function(.fu_allocations,
 
   # If we passed the test, we can return the out data frame without the verification columns.
   return(out)
+}
+
+
+#' Title
+#'
+#' @param .eta_fu_table 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' load_eta_fu_data() %>% 
+#'   form_eta_fu_vecs()
+form_eta_fu_vecs <- function(.eta_fu_table) {
+  
 }

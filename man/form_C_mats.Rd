@@ -5,7 +5,7 @@
 \title{Create allocation matrices (\code{C}) from an allocation table}
 \usage{
 form_C_mats(
-  .fu_allocations,
+  .fu_allocation_table,
   country = IEATools::iea_cols$country,
   method = IEATools::iea_cols$method,
   energy_type = IEATools::iea_cols$energy_type,
@@ -41,7 +41,7 @@ form_C_mats(
 )
 }
 \arguments{
-\item{.fu_allocations}{a final-to-useful allocation table read by \code{load_fu_allocation_data()}.}
+\item{.fu_allocation_table}{a final-to-useful allocation table read by \code{load_fu_allocation_data()}.}
 
 \item{country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, e_dot, year}{See \code{IEATools::iea_cols}.}
 
