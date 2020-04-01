@@ -5,7 +5,8 @@
 
 # IEATools 0.1.18 (2020-03-31)
 
-* New function `form_C_mats()` which makes a data frame of C matrices and metadata 
+* New function `form_C_mats()` which makes a data frame of C matrices 
+  (a.k.a. final-to-useful allocation matrices) and metadata 
   from an FU Allocation table.
 
 
