@@ -115,7 +115,7 @@ form_C_mats <- function(.fu_allocation_table,
       # Eliminate the flow aggregation point column. We don't need it.
       "{flow_aggregation_point}" := NULL
     ) %>% 
-    # Get rid of rows where machine and eu_product are NA. No data has been provided here.
+    # Get rid of rows where machine and eu_product are NA. No data have been provided in these locations..
     dplyr::filter(! (is.na(.data[[machine]]) & is.na(.data[[eu_product]])) )
   # Gather years into a tidy data frame.
   year_names <- year_cols(cleaned, return_names = TRUE)
@@ -222,13 +222,17 @@ form_eta_fu_phi_vecs <- function(.eta_fu_table,
                              e_dot_perc = IEATools::template_cols$e_dot_perc,
                              e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
                              maximum_values = IEATools::template_cols$maximum_values,
+                             eta_fu = IEATools::template_cols$eta_fu,
+                             phi_u = IEATools::template_cols$phi_u,
                              
                              matnames = IEATools::mat_meta_cols$matnames,
                              matvals  = IEATools::mat_meta_cols$matvals,
                              rownames = IEATools::mat_meta_cols$rownames,
                              colnames = IEATools::mat_meta_cols$colnames,
                              rowtypes = IEATools::mat_meta_cols$rowtypes,
-                             coltypes = IEATools::mat_meta_cols$coltypes) {
+                             coltypes = IEATools::mat_meta_cols$coltypes, 
+                             
+                             sep = " -> ") {
   
   cleaned <- .eta_fu_table %>% 
     # Eliminate rows titled e_dot or e_dot_perc. These are just helper rows for the analyst.
@@ -241,10 +245,34 @@ form_eta_fu_phi_vecs <- function(.eta_fu_table,
       # The quantity column gives us the matrix names
       "{matnames}" := quantity
     )
-    
+  # Gather years into a tidy data frame.
+  year_names <- year_cols(cleaned, return_names = TRUE)
+  gathered <- cleaned %>% 
+    # Gather to put years in a column
+    tidyr::pivot_longer(year_names, names_to = year, values_to = matvals) %>% 
+    # Eliminate rows where C is NA. They came from places where data are not available.
+    dplyr::filter(!is.na(.data[[matvals]]))
   
+  prepped <- gathered %>% 
+    dplyr::mutate(
+      # Create rownames from the machine and eu_product rows.
+      "{rownames}" := paste0(.data[[machine]], sep, .data[[eu_product]]),
+      # Eliminate machine and eu_product columns, becasue we no longer need them.
+      "{machine}" := NULL,
+      "{eu_product}" := NULL,
+      # Create colnames according to the name of the matrix to be created
+      "{colnames}" := .data[[matnames]],
+      "{rowtypes}" := IEATools::row_col_types$industry,
+      "{coltypes}" := IEATools::row_col_types$product
+    )
+
+  # Collapse to matrices (actually, column vectors) and return  
+  group_cols <- matsindf::everything_except(prepped, matvals, rownames, colnames, rowtypes, coltypes)
+  out <- prepped %>% 
+    dplyr::group_by(!!!group_cols) %>% 
+    matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
+                                   rownames = rownames, colnames = colnames, 
+                                   rowtypes = rowtypes, coltypes = coltypes)
   
-  print()
-  
-    
+  return(out)
 }

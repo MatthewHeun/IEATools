@@ -23,12 +23,15 @@ form_eta_fu_phi_vecs(
   e_dot_perc = IEATools::template_cols$e_dot_perc,
   e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
   maximum_values = IEATools::template_cols$maximum_values,
+  eta_fu = IEATools::template_cols$eta_fu,
+  phi_u = IEATools::template_cols$phi_u,
   matnames = IEATools::mat_meta_cols$matnames,
   matvals = IEATools::mat_meta_cols$matvals,
   rownames = IEATools::mat_meta_cols$rownames,
   colnames = IEATools::mat_meta_cols$colnames,
   rowtypes = IEATools::mat_meta_cols$rowtypes,
-  coltypes = IEATools::mat_meta_cols$coltypes
+  coltypes = IEATools::mat_meta_cols$coltypes,
+  sep = " -> "
 )
 }
 \arguments{
