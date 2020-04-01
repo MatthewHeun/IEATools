@@ -5,14 +5,11 @@
 \title{Create allocation matrices (\code{C}) from an allocation table}
 \usage{
 form_C_mats(
-  .fu_allocations,
-  country = IEATools::iea_cols$country,
-  method = IEATools::iea_cols$method,
-  energy_type = IEATools::iea_cols$energy_type,
-  last_stage = IEATools::iea_cols$last_stage,
+  .fu_allocation_table,
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   e_dot = IEATools::iea_cols$e_dot,
+  unit = IEATools::iea_cols$unit,
   year = IEATools::iea_cols$year,
   supply = IEATools::ledger_sides$supply,
   consumption = IEATools::ledger_sides$consumption,
@@ -41,9 +38,11 @@ form_C_mats(
 )
 }
 \arguments{
-\item{.fu_allocations}{a final-to-useful allocation table read by \code{load_fu_allocation_data()}.}
+\item{.fu_allocation_table}{a final-to-useful allocation table read by \code{load_fu_allocation_data()}.
+A template for this table should have been created by \code{fu_allocation_table()} and
+\code{write_fu_allocation_table()}.}
 
-\item{country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, e_dot, year}{See \code{IEATools::iea_cols}.}
+\item{ledger_side, flow_aggregation_point, e_dot, unit, year}{See \code{IEATools::iea_cols}.}
 
 \item{supply, consumption}{See \code{IEATools::ledger_sides}.}
 

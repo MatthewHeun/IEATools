@@ -1,3 +1,7 @@
+* New function `form_eta_fu_phi_u_vecs()` which 
+  creates column vectors of final-to-useful efficiencies (eta_fu)
+  and exergy-to-energy ratios (phi_u)
+  from an efficiency table.
 * Added new test to hit code path for generating diagnostic information
   when FU Allocation table is mal-formed.
   Code coverage is back up to 100% for testing.

@@ -8,6 +8,10 @@ context("Final to useful")
 test_that("form_C_mats works as expected", {
   allocation_table <- load_fu_allocation_data()
   C_df <- form_C_mats(allocation_table)
+  # Check type of year column
+  expect_true(inherits(C_df$Year, "numeric"))
+  # Check that the Unit column is missing.  It has no meaning for allocations.
+  expect_true(is.null(C_df[[IEATools::iea_cols$unit]]))
   # Check some values.
   C_EIOU_GHA_1971 <- C_df %>% 
     dplyr::filter(Country == "GHA", Year == 1971, matnames == IEATools::template_cols$C_eiou) %>% 
@@ -46,6 +50,39 @@ test_that("form_C_mats works as expected", {
 })
 
 
-test_that("form_eta_fu_vecs works as expected", {
+test_that("form_eta_fu_phi_vecs works as expected", {
   efficiency_table <- load_eta_fu_data()
+  eta_fu_phi_u_df <- form_eta_fu_phi_u_vecs(efficiency_table)
+  # Check type of year column
+  expect_true(inherits(eta_fu_phi_u_df$Year, "numeric"))
+  # Check that the Unit column is missing.  It has no meaning for allocations.
+  expect_true(is.null(eta_fu_phi_u_df[[IEATools::iea_cols$unit]]))
+
+  # Check some values
+  eta_GHA_1971 <- eta_fu_phi_u_df$matvals[[1]]
+  expect_equal(eta_GHA_1971[["Irons -> MTH.200.C", 1]], 0.85)
+  expect_equal(eta_GHA_1971[["Trucks -> MD", 1]], 0.30)
+  expect_equal(eta_GHA_1971[["Fans -> MD", 1]], 0.10)
+  expect_equal(eta_GHA_1971[["Boat engines -> MD", 1]], 0.30)
+
+  phi_ZAR_2000 <- eta_fu_phi_u_df$matvals[[8]]  
+  expect_equal(phi_ZAR_2000[["Generators -> MD", 1]], 1)
+  expect_equal(phi_ZAR_2000[["LPG stoves -> LTH.20.C", 1]], 0.01677008)
+  expect_equal(phi_ZAR_2000[["Industrial furnaces -> HTH.600.C", 1]], 0.65853519)
+  expect_equal(phi_ZAR_2000[["Electric lights -> Light", 1]], 0.18301611)
+})
+
+
+test_that("move_to_useful_last_stage works as expected", {
+  psut_mats <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    prep_psut()
+  C_data <- load_fu_allocation_data() %>% form_C_mats()
+  eta_fu_data <- load_eta_fu_data() %>% form_eta_fu_phi_u_vecs()
+  
+  with_useful <- psut_mats %>% 
+    move_to_useful_last_stage(tidy_C_data = C_data, tidy_eta_fu_data = eta_fu_data)
+
+  # Check some of the values  
+  
 })
