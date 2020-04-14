@@ -27,6 +27,10 @@ NULL
 #' @export
 #' @rdname switch-notation
 switch_notation <- function(x, old_start, old_end, new_start, new_end) {
+  # Need to extract pieces and switch directions.
+  # Eliminate old_end from RHS of x
+  # strsplit at old_start
+  # Rebuild string with RHS new_start LHS new_end
   out <- sub(pattern = old_start, replacement = new_start, x = x)
   sub(pattern = paste0(old_end, "$"), replacement = new_end, x = out)
 }
