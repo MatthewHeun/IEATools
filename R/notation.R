@@ -29,10 +29,15 @@ NULL
 switch_notation <- function(x, old_start, old_end, new_start, new_end) {
   # Need to extract pieces and switch directions.
   # Eliminate old_end from RHS of x
-  # strsplit at old_start
+  no_end <- sub(pattern = paste0(old_end, "$"), replacement = "", x = x)
+  # strsplit at old_start to get the pieces
+  old_split <- strsplit(no_end, split = old_start, fixed = TRUE)
   # Rebuild string with RHS new_start LHS new_end
-  out <- sub(pattern = old_start, replacement = new_start, x = x)
-  sub(pattern = paste0(old_end, "$"), replacement = new_end, x = out)
+  sapply(old_split, function(x) {
+    old_prefix <- x[[1]]
+    old_suffix <- x[[2]]
+    paste0(old_suffix, new_start, old_prefix, new_end)
+  })
 }
 
 
