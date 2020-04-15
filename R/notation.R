@@ -31,9 +31,18 @@ switch_notation <- function(x, old_start, old_end, new_start, new_end) {
   # Eliminate old_end from RHS of x
   no_end <- sub(pattern = paste0(old_end, "$"), replacement = "", x = x)
   # strsplit at old_start to get the pieces
-  old_split <- strsplit(no_end, split = old_start, fixed = TRUE)
+  # old_split <- strsplit(no_end, split = old_start, fixed = TRUE)
+  # Split at the first instance of old_start
+  old_split <- stringi::stri_split_fixed(str = no_end, fixed = TRUE, pattern = old_start, n = 2)
   # Rebuild string with RHS new_start LHS new_end
   sapply(old_split, function(x) {
+    # Check the number of pieces
+    assertthat::assert_that(length(x) <= 2, msg = paste0("switch_notation resulted in three pieces: ", utils::capture.output(cat(x, sep = ", "))))
+    if (length(x) == 1) {
+      # There was nothing to switch.
+      # Simply return the existing string
+      return(x)
+    }
     old_prefix <- x[[1]]
     old_suffix <- x[[2]]
     paste0(old_suffix, new_start, old_prefix, new_end)
