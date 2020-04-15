@@ -3,6 +3,9 @@ context("Notation")
 ###########################################################
 
 test_that("arrow_to_paren works as expected", {
+  # Degenerate cases
+  expect_equal(arrow_to_paren("a"), "a")
+  
   expect_equal(arrow_to_paren("a -> b"), "b [a]")
   expect_equal(arrow_to_paren(c("a -> b", "c -> d")), c("b [a]", "d [c]"))
   
@@ -14,6 +17,9 @@ test_that("arrow_to_paren works as expected", {
 
 
 test_that("paren_to_arrow works as expected", {
+  # Degenerate cases
+  expect_equal(paren_to_arrow("a"), "a")
+
   expect_equal(paren_to_arrow("b [a]"), "a -> b")
   expect_equal(paren_to_arrow(c("b [a]", "d [c]")), c("a -> b", "c -> d"))
 
