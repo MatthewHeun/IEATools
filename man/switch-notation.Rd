@@ -47,7 +47,10 @@ and parenthetical notation is "to [from]".
 These functions change a vector of strings between the specification notations.
 \itemize{
 \item \code{switch_notation()} is the worker function.
-\item \code{arrow_to_paren()} switches from arrow to parenthetical specification notations.
-\item \code{paren_to_arrow()} switches from parenthetical to arrow specification notations.
+\item \code{arrow_to_paren()} switches from arrow to parenthetical specification notation.
+\item \code{paren_to_arrow()} switches from parenthetical to arrow specification notation.
 }
+}
+\examples{
+
 }

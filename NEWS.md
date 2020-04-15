@@ -1,3 +1,7 @@
+* Added functions for row and column notation:
+  `paren_to_arrow()`, `arrow_to_paren()`, and switch_notation()`.
+
+
 # IEATools 0.1.19 (2020-04-01)
 
 * New function `form_eta_fu_phi_u_vecs()` which 

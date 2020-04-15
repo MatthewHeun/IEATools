@@ -5,6 +5,7 @@ context("Notation")
 test_that("arrow_to_paren works as expected", {
   # Degenerate cases
   expect_equal(arrow_to_paren("a"), "a")
+  expect_equal(arrow_to_paren(42), "42")
   
   expect_equal(arrow_to_paren("a -> b"), "b [a]")
   expect_equal(arrow_to_paren(c("a -> b", "c -> d")), c("b [a]", "d [c]"))
@@ -19,6 +20,7 @@ test_that("arrow_to_paren works as expected", {
 test_that("paren_to_arrow works as expected", {
   # Degenerate cases
   expect_equal(paren_to_arrow("a"), "a")
+  expect_equal(paren_to_arrow(42), "42")
 
   expect_equal(paren_to_arrow("b [a]"), "a -> b")
   expect_equal(paren_to_arrow(c("b [a]", "d [c]")), c("a -> b", "c -> d"))
@@ -32,3 +34,13 @@ test_that("paren_to_arrow works as expected", {
   expect_equal(paren_to_arrow("a [b [c]]"), "b [c] -> a")
 })
 
+
+test_that("arrow_to_paren_byname works as expected", {
+  # Make a single matrix with names that can be switched
+  m <- matrix(c(1, 2, 
+                3, 4), nrow = 2, ncol = 2, byrow = TRUE, dimnames = list(c("a -> b", "c -> d"), c("c1", "c2")))
+  
+  expected <- m
+  rownames(expected) <- c("b [a]", "d [c]")
+  expect_equal(arrow_to_paren_byname(m, margin = 1), expected)
+})

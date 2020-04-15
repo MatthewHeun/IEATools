@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Rename columns of an IEA data frame — rename_iea_df_cols • IEATools</title>
+<title>Change specification notation on matrix row or column names — switch-notation-byname • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,10 @@
 
 
 
-<meta property="og:title" content="Rename columns of an IEA data frame — rename_iea_df_cols" />
-<meta property="og:description" content="The IEA data has columns named COUNTRY, FLOW, and PRODUCT.
-This function turns off the shouting,
-renaming the columns (by default) to Country, Flow, and Product." />
+<meta property="og:title" content="Change specification notation on matrix row or column names — switch-notation-byname" />
+<meta property="og:description" content="Switch notation style
+in row or column names of matrices or a list of matrices.
+Notation style is either arrow (&quot;a -&amp;gt; b&quot;) or parenthetical (&quot;b [a]&quot;)" />
 
 
 
@@ -132,68 +132,53 @@ renaming the columns (by default) to Country, Flow, and Product." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Rename columns of an IEA data frame</h1>
+    <h1>Change specification notation on matrix row or column names</h1>
     
-    <div class="hidden name"><code>rename_iea_df_cols.Rd</code></div>
+    <div class="hidden name"><code>switch-notation-byname.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>The IEA data has columns named <code>COUNTRY</code>, <code>FLOW</code>, and <code>PRODUCT</code>.
-This function turns off the shouting,
-renaming the columns (by default) to <code>Country</code>, <code>Flow</code>, and <code>Product</code>.</p>
+    <p>Switch notation style
+in row or column names of matrices or a list of matrices.
+Notation style is either arrow ("a -&gt; b") or parenthetical ("b [a]")</p>
     </div>
 
-    <pre class="usage"><span class='fu'>rename_iea_df_cols</span>(
-  <span class='no'>.iea_df</span>,
-  <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"COUNTRY"</span>,
-  <span class='kw'>new_country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"FLOW"</span>,
-  <span class='kw'>new_flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"PRODUCT"</span>,
-  <span class='kw'>new_product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>arrow_to_paren_byname</span>(<span class='no'>m</span>, <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>))
+
+<span class='fu'>paren_to_arrow_byname</span>(<span class='no'>m</span>, <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>))</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.iea_df</th>
-      <td><p>a data frame produced by <code><a href='iea_df.html'>iea_df()</a></code></p></td>
+      <th>m</th>
+      <td><p>a single matrix or a list of matrices.</p></td>
     </tr>
     <tr>
-      <th>country</th>
-      <td><p>the original name for the country column. (Default is <code>COUNTRY</code>.)</p></td>
-    </tr>
-    <tr>
-      <th>new_country</th>
-      <td><p>the new name for the country column. (Default is <code>Country</code>.)</p></td>
-    </tr>
-    <tr>
-      <th>flow</th>
-      <td><p>the original name for the flow column. (Default is <code>FLOW</code>.)</p></td>
-    </tr>
-    <tr>
-      <th>new_flow</th>
-      <td><p>the new name for the flow column. (Default is <code>Flow</code>.)</p></td>
-    </tr>
-    <tr>
-      <th>product</th>
-      <td><p>the original name for the product column. (Default is <code>PRODUCT</code>.)</p></td>
-    </tr>
-    <tr>
-      <th>new_product</th>
-      <td><p>the new name for the product column. (Default is <code>Product</code>.)</p></td>
+      <th>margin</th>
+      <td><p>the margin over which the notation switch should be made:
+<code>1</code> for rows, <code>2</code> for columns, or <code><a href='https://rdrr.io/r/base/c.html'>c(1, 2)</a></code> (the default) for both rows and columns.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.iea_df</code> with renamed columns</p>
+    <p>a version of <code>m</code> with switched notation</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The suffix "_byname" indicates that this function behaves like functions in the <code>byname</code> package.
+Specifically, it can work with a single matrix or a list of matrices supplied to the <code>m</code> argument.</p><ul>
+<li><p><code>arrow_to_paren_byname()</code> switches from arrow to parenthetical specification notation for a matrix or list of matrices.</p></li>
+<li><p><code>paren_to_arrow_byname()</code> switches from parenthetical to arrow specification notation for a matrix or list of matrices.</p></li>
+</ul>
+
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='switch-notation.html'>arrow_to_paren()</a></code>, <code><a href='switch-notation.html'>paren_to_arrow()</a></code>, and <code><a href='switch-notation.html'>switch_notation()</a></code>, <code>switch_notation</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='iea_df.html'>iea_df</a></span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='st'>",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>rename_iea_df_cols</span>()</div><div class='output co'>#&gt;   Country       Flow   Product 1960 1961
-#&gt; 1   World Production Hard coal   42   43</div></pre>
+    <pre class="examples"><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
