@@ -61,7 +61,7 @@ test_that("arrow_to_paren_byname works as expected", {
   expect_error(arrow_to_paren_byname(m, margin = c(1, 3)), "margin must be 1, 2, or both")
   
   # Check with a list of matrices
-  mlist <- list(m, m)
+  mlist <- list(m, m, m)
   expect_equal(arrow_to_paren_byname(mlist, margin = 1), list(expected, expected))
 })
 
