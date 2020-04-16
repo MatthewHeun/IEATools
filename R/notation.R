@@ -27,8 +27,8 @@
 #' @param new_end the end of specification notation in output
 #' @param m a single matrix or a list of matrices.
 #' @param margin the margin over which the notation switch should be made:
-#'               `1` for rows, `2` for columns, or `c(1, 2)` (the default) for both rows and columns.
-#' @param worker_func the function to be called to 
+#'               `1` for rows, `2` for columns, or `c(1, 2)` (the default) for both rows and columns
+#' @param worker_func the function to be called by `switch_notation_byname()`, one of `arrow_to_paren()` or `paren_to_arrow()`
 #'
 #' @examples
 #' arrow_to_paren("a -> b")
@@ -38,6 +38,7 @@
 #'             dimnames = list(c("a -> b", "c -> d"), c("f [e]", "h [g]")))
 #' m
 #' arrow_to_paren_byname(m)
+#' arrow_to_paren_byname(m, margin = 2) # No changes expected.
 #' paren_to_arrow_byname(m)
 #' 
 #' @name switch-notation
@@ -47,13 +48,64 @@ NULL
 #' @export
 #' @rdname switch-notation
 switch_notation <- function(x, old_start, old_end, new_start, new_end) {
-  # Need to extract pieces and switch directions.
+  if (!inherits(x, "list")) {
+    # # x does is not a list. So we will proceed as though it is a character or can coerced to a character.
+    # # Eliminate old_end from RHS of x
+    # no_end <- sub(pattern = paste0(old_end, "$"), replacement = "", x = x)
+    # # Split at the first instance of old_start to get two pieces
+    # old_split <- stringi::stri_split_fixed(str = no_end, fixed = TRUE, pattern = old_start, n = 2)
+    # # Rebuild string with RHS new_start LHS new_end
+    # out <- sapply(old_split, function(x) {
+    #   # Check the number of pieces. Form a readable error message.
+    #   assertthat::assert_that(length(x) <= 2, msg = paste0("switch_notation resulted in three pieces: ", utils::capture.output(cat(x, sep = ", "))))
+    #   if (length(x) == 1) {
+    #     # There was nothing to switch.
+    #     # Simply return the existing string
+    #     return(x)
+    #   }
+    #   old_prefix <- x[[1]]
+    #   old_suffix <- x[[2]]
+    #   paste0(old_suffix, new_start, old_prefix, new_end)
+    # })
+    # return(out)
+    return(switch_notation_notlist(x, old_start = old_start, old_end = old_end, new_start = new_start, new_end = new_end))
+  } 
+  
+  # If we get here, we have a list.
+  # We need to preserve the character of the list.
+  # lapply(x, function(s) {
+  #   no_end <- sub(pattern = paste0(old_end, "$"), replacement = "", x = s)
+  #   # Split at the first instance of old_start to get two pieces, preserving list structure
+  #   old_split <- stringi::stri_split_fixed(str = s, fixed = TRUE, pattern = old_start, n = 2)
+  #   # Rebuild string with RHS new_start LHS new_end
+  #   out <- sapply(old_split, function(x) {
+  #     # Check the number of pieces. Form a readable error message.
+  #     assertthat::assert_that(length(x) <= 2, msg = paste0("switch_notation resulted in three pieces: ", utils::capture.output(cat(x, sep = ", "))))
+  #     if (length(x) == 1) {
+  #       # There was nothing to switch.
+  #       # Simply return the existing string
+  #       return(x)
+  #     }
+  #     old_prefix <- x[[1]]
+  #     old_suffix <- x[[2]]
+  #     paste0(old_suffix, new_start, old_prefix, new_end)
+  #   })
+  #   return(out)
+  # })
+  lapply(x, function(s) {
+    switch_notation_notlist(s, old_start = old_start, old_end = old_end, new_start = new_start, new_end = new_end)
+  })
+}
+
+
+switch_notation_notlist <- function(x, old_start, old_end, new_start, new_end) {
+  # x does is not a list. So we will proceed as though it is a character or can coerced to a character.
   # Eliminate old_end from RHS of x
   no_end <- sub(pattern = paste0(old_end, "$"), replacement = "", x = x)
   # Split at the first instance of old_start to get two pieces
   old_split <- stringi::stri_split_fixed(str = no_end, fixed = TRUE, pattern = old_start, n = 2)
   # Rebuild string with RHS new_start LHS new_end
-  sapply(old_split, function(x) {
+  out <- sapply(old_split, function(x) {
     # Check the number of pieces. Form a readable error message.
     assertthat::assert_that(length(x) <= 2, msg = paste0("switch_notation resulted in three pieces: ", utils::capture.output(cat(x, sep = ", "))))
     if (length(x) == 1) {
@@ -65,6 +117,7 @@ switch_notation <- function(x, old_start, old_end, new_start, new_end) {
     old_suffix <- x[[2]]
     paste0(old_suffix, new_start, old_prefix, new_end)
   })
+  return(out)
 }
 
 

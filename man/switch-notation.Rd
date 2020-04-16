@@ -70,9 +70,9 @@ switch_notation_byname(
 \item{m}{a single matrix or a list of matrices.}
 
 \item{margin}{the margin over which the notation switch should be made:
-\code{1} for rows, \code{2} for columns, or \code{c(1, 2)} (the default) for both rows and columns.}
+\code{1} for rows, \code{2} for columns, or \code{c(1, 2)} (the default) for both rows and columns}
 
-\item{worker_func}{the function to be called to}
+\item{worker_func}{the function to be called by \code{switch_notation_byname()}, one of \code{arrow_to_paren()} or \code{paren_to_arrow()}}
 }
 \value{
 An object of same length as \code{strings} with switched notation.
@@ -99,5 +99,12 @@ Specifically, they can work with a single matrix or a list of matrices supplied 
 \examples{
 arrow_to_paren("a -> b")
 paren_to_arrow("b [a]")
+m <- matrix(c(1, 2, 
+              3, 4), nrow = 2, ncol = 2, byrow = TRUE, 
+            dimnames = list(c("a -> b", "c -> d"), c("f [e]", "h [g]")))
+m
+arrow_to_paren_byname(m)
+arrow_to_paren_byname(m, margin = 2) # No changes expected.
+paren_to_arrow_byname(m)
 
 }
