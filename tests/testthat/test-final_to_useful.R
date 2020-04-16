@@ -9,7 +9,7 @@ test_that("form_C_mats works as expected", {
   allocation_table <- load_fu_allocation_data()
   C_df <- form_C_mats(allocation_table)
   # Check type of year column
-  expect_true(inherits(C_df$Year, "numeric"))
+  expect_true(is.numeric(C_df$Year))
   # Check that the Unit column is missing.  It has no meaning for allocations.
   expect_true(is.null(C_df[[IEATools::iea_cols$unit]]))
   # Check some values.
@@ -54,7 +54,7 @@ test_that("form_eta_fu_phi_vecs works as expected", {
   efficiency_table <- load_eta_fu_data()
   eta_fu_phi_u_df <- form_eta_fu_phi_u_vecs(efficiency_table)
   # Check type of year column
-  expect_true(inherits(eta_fu_phi_u_df$Year, "numeric"))
+  expect_true(is.numeric(eta_fu_phi_u_df$Year))
   # Check that the Unit column is missing.  It has no meaning for allocations.
   expect_true(is.null(eta_fu_phi_u_df[[IEATools::iea_cols$unit]]))
 
