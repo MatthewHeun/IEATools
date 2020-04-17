@@ -62,7 +62,7 @@ test_that("arrow_to_paren_byname works as expected", {
   
   # Check with a list of matrices
   mlist <- list(m, m, m)
-  expect_equal(arrow_to_paren_byname(mlist, margin = 1), list(expected, expected))
+  expect_equal(arrow_to_paren_byname(mlist, margin = 1), list(expected, expected, expected))
 })
 
 

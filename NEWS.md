@@ -1,5 +1,14 @@
+* Added functions for row and column notation in lists:
+  `switch_notation_byname()`, `arrow_to_paren_byname()`, and `paren_to_arrow_byname()`.
+  These functions are like `*_byname` functions in the package
+  `matsbyname`: they accept both single matrices and lists of matrices.
+  In that way, they are amenable to pipeline calculations using the 
+  `matsindf` package.
+  Adding this feature exposed bugs in `matsbyname::setrownames_byname()` and 
+  `matsbyname::setcolnames_byname()`. 
+  The bugs in `matsbyname` have been fixed, so these features are now working.
 * Added functions for row and column notation:
-  `paren_to_arrow()`, `arrow_to_paren()`, and switch_notation()`.
+  `paren_to_arrow()`, `arrow_to_paren()`, and `switch_notation()`.
 
 
 # IEATools 0.1.19 (2020-04-01)
