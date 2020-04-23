@@ -77,8 +77,10 @@ test_that("move_to_useful_last_stage works as expected", {
   psut_mats <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     prep_psut()
-  C_data <- load_fu_allocation_data() %>% form_C_mats()
-  eta_fu_data <- load_eta_fu_data() %>% form_eta_fu_phi_u_vecs()
+  C_data <- load_fu_allocation_data() %>% 
+    form_C_mats()
+  eta_fu_data <- load_eta_fu_data() %>% 
+    form_eta_fu_phi_u_vecs()
   
   with_useful <- psut_mats %>% 
     move_last_stage_to_useful(tidy_C_data = C_data, tidy_eta_fu_data = eta_fu_data)

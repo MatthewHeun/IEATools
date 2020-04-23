@@ -5,8 +5,12 @@
 #' 
 #' This function uses information in a filled allocation template (created by `write_fu_allocation_template()`)
 #' to create allocation matrices (`C`). 
-#' rownames of the `C` matricds are taken from the `Ef.product` and `Destination` columns, and
-#' colnames are taken from the `Machine` and `Eu.product` columns.
+#' 
+#' rownames of the `C` matrices are taken from the `Ef.product` and `Destination` columns of `.fu_allocation_table`
+#' and have the form "`Ef.product` `r specify_notation$arrow` `Destination`".
+#' colnames of the `C` matrices are taken from the `Machine` and `Eu.product` columns of `.fu_allocation_table`
+#' and have the form "machine `r specify_notation$arrow` useful energy form".
+#' 
 #' `C` matrices are created for both energy industry own use
 #' and final demand (`C_eiou` and `C_Y`, respectively).
 #' 
@@ -73,7 +77,7 @@ form_C_mats <- function(.fu_allocation_table,
                         product = IEATools::row_col_types$product,
                         industry = IEATools::row_col_types$industry,
                         
-                        sep = " -> ",
+                        sep = IEATools::specify_notation$arrow,
                         
                         tol = 1e-6,
                         
@@ -195,8 +199,25 @@ form_C_mats <- function(.fu_allocation_table,
 }
 
 
-#' Create final-to-useful efficiency vectors (`eta_fu`) and exergy-to-energy ratio vectors (`phi_u`) from a final-to-useful efficiency table
-#'
+#' Create `eta_fu` and `phi_u` vectors
+#' 
+#' This function creates vectors from a filled final-to-useful efficiency table
+#' created by `write_fu_allocation_template()`.
+#' The two vectors are:
+#'   * `eta_fu`: a vector of final-to-useful energy efficiencies, and 
+#'   * `phi_u`: a vector of useful exergy-to-useful energy ratios.
+#' 
+#' The vectors `eta_fu` and `phi_u` have special rownames that indicate 
+#' sources and types of useful energy flows.
+#' Row names have the pattern 
+#' "machine `r specify_notation$arrow` useful energy form" to indicate 
+#' the energy efficiency of "machine" for making "useful energy form"
+#' or the exergy-to-energy ratio of the useful energy form created by machine.
+#' 
+#' Columns are named by the variable in the vector: 
+#' "eta_fu" for final-to-useful efficiencies and
+#' "phi_u" for useful exergy-to-useful energy ratios.
+#' 
 #' @param .eta_fu_table a final-to-useful efficiency table read by `load_eta_fu_allocation_data()`.
 #'                      A template for this table should have been created by `eta_fu_table()` and 
 #'                      `write_eta_fu_table()`.
@@ -236,7 +257,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    rowtypes = IEATools::mat_meta_cols$rowtypes,
                                    coltypes = IEATools::mat_meta_cols$coltypes, 
                                    
-                                   sep = " -> ") {
+                                   sep = IEATools::specify_notation$arrow) {
   
   cleaned <- .eta_fu_table %>% 
     # Eliminate rows titled e_dot_machine or e_dot_machine_perc. These are just helper rows for the analyst.
@@ -289,6 +310,10 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 
 
 #' Move an ECC from final to useful as its last stage
+#' 
+#' This function uses a matrix method to move 
+#' from final energy/exergy 
+#' to useful energy/exergy as the last stage of an energy conversion chain.
 #'
 #' @param .tidy_psut_data A tidy data frame of PSUT matrices that represent an energy conversion chain.
 #'                        Matrix names should be in the `matnames` column, and
@@ -307,7 +332,12 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param C_eiou,C_Y,eta_fu See `IEATools::template_cols`. 
 #'                          `C_eiou` and `C_Y` matrices should be found in the `matvals` column of the `C_Y_data` data frame.
 #'                          `eta_fu` should be found in the `matvals` column of the `eta_fu_data` data frame.
+#' @param sep The string separator between prefix and suffix of compound row and column names. Default is `specify_notation$arrow`,
+#'            namely "`r specify_notation$arrow`".
+#'            The default value matches the default value for the `sep` argument of `matsbyname::vectorize_byname()`, because
+#'            `matsbyname::vectorize_byname()` will be used for further manipulations.
 #' @param .useful A suffix applied to versions of PSUT matrices where useful is the last stage. Default is ".useful".
+#' @param .Y_f_vec_hat an internal matrix name. Default is ".Y_f_vec_hat".
 #' @param .eta_fu_hat an internal matrix name. Default is ".eta_fu_hat".
 #'
 #' @return a version of `.tidy_sut_data` that contains additional rows with useful final stage ECC matrices 
@@ -338,24 +368,44 @@ move_last_stage_to_useful <- function(.tidy_psut_data,
                                       C_Y = IEATools::template_cols$C_Y, 
                                       eta_fu = IEATools::template_cols$eta_fu,
                                       
-                                      .useful = ".useful", 
+                                      sep = IEATools::specify_notation$arrow,
+                                      
+                                      .Y_f_vec_hat = ".Y_f_vec_hat",
+                                      .add_to_U_f = ".add_to_U_f",
+                                      .add_to_V_f = ".add_to_V_f",
+                                      .useful = "_useful", 
                                       .eta_fu_hat = ".eta_fu_hat") {
   
-  # Clean out Unit cols 
-  
+  # Spread the matrices for calculations
   wide <- .tidy_psut_data %>% 
     # Bind the C and eta_fu vectors to the bottom of the .tidy_sut_data frame
     dplyr::bind_rows(tidy_C_data, tidy_eta_fu_data) %>% 
     # Put the matrices in columns in preparation for calculations
-    tidyr::pivot_wider(names_from = matnames, values_from = matvals) %>% 
-    dplyr::mutate(
-      # Calculate eta_fu_hat
-      "{.eta_fu_hat}" := matsbyname::hatize_byname(.data[[eta_fu]])
-      # Swap column names from arrow notation to paren notation
-    )
-
+    tidyr::pivot_wider(names_from = matnames, values_from = matvals)
   
-  # Spread the matrices for calculations
+  tidy_useful <- wide %>% 
+    dplyr::mutate(
+      # Calculate Y_f_vec_hat
+      "{.Y_f_vec_hat}" := matsbyname::vectorize_byname(.data[[Y]]) %>% 
+        # Remove 0 values to reduce size
+        matsbyname::clean_byname() %>%
+        # Hatize
+        matsbyname::hatize_byname(),
+      # Calculate eta_fu_hat
+      "{.eta_fu_hat}" := matsbyname::hatize_byname(.data[[eta_fu]]) %>% 
+        # Swap column names from arrow notation to paren notation
+        arrow_to_paren_byname(margin = 2),
+      # Calculate the matrix that should be added to the U matrix.
+      "{.add_to_U_f}" := matsbyname::matrixproduct_byname(.data[[.Y_f_vec_hat]], .data[[C_Y]]) %>% 
+        # Keep only the prefix in row names
+        # 
+        # Instead, make a function in matsbyname "aggregate_rows_cols_by_pref_suff_byname()"
+        matsbyname::rename_to_pref_suff_byname(sep = sep, keep = "prefix", margin = 1)
+        # Sum rows with same names
+        
+        # Clean rows that have all zeroes
+    )
+  
   
   # Calculate matrices with _useful suffixes for the useful version
   
@@ -364,6 +414,8 @@ move_last_stage_to_useful <- function(.tidy_psut_data,
   # Eliminate suffixes on the useful stage columns and change last_stage to "Useful".
   
   # Bind the useful stage mats to the bottom of the final stage mats
+  # 
+  print("")
 }
 
 

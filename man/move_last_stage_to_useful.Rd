@@ -22,7 +22,11 @@ move_last_stage_to_useful(
   C_eiou = IEATools::template_cols$C_eiou,
   C_Y = IEATools::template_cols$C_Y,
   eta_fu = IEATools::template_cols$eta_fu,
-  .useful = ".useful",
+  sep = IEATools::specify_notation$arrow,
+  .Y_f_vec_hat = ".Y_f_vec_hat",
+  .add_to_U_f = ".add_to_U_f",
+  .add_to_V_f = ".add_to_V_f",
+  .useful = "_useful",
   .eta_fu_hat = ".eta_fu_hat"
 )
 }
@@ -52,6 +56,11 @@ These matrices should be found in the \code{matvals} column of the \code{.tidy_p
 \code{C_eiou} and \code{C_Y} matrices should be found in the \code{matvals} column of the \code{C_Y_data} data frame.
 \code{eta_fu} should be found in the \code{matvals} column of the \code{eta_fu_data} data frame.}
 
+\item{sep}{The string separator between prefix and suffix of compound row and column names. Default is \code{specify_notation$arrow},
+-> tion$arrow\verb{". The default value matches the default value for the }sep\verb{argument of}matsbyname::vectorize_byname()\verb{, because }matsbyname::vectorize_byname()` will be used for further manipulations.}
+
+\item{.Y_f_vec_hat}{an internal matrix name. Default is ".Y_f_vec_hat".}
+
 \item{.useful}{A suffix applied to versions of PSUT matrices where useful is the last stage. Default is ".useful".}
 
 \item{.eta_fu_hat}{an internal matrix name. Default is ".eta_fu_hat".}
@@ -60,5 +69,7 @@ These matrices should be found in the \code{matvals} column of the \code{.tidy_p
 a version of \code{.tidy_sut_data} that contains additional rows with useful final stage ECC matrices
 }
 \description{
-Move an ECC from final to useful as its last stage
+This function uses a matrix method to move
+from final energy/exergy
+to useful energy/exergy as the last stage of an energy conversion chain.
 }
