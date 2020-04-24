@@ -397,10 +397,10 @@ move_last_stage_to_useful <- function(.tidy_psut_data,
         arrow_to_paren_byname(margin = 2),
       # Calculate the matrix that should be added to the U matrix.
       "{.add_to_U_f}" := matsbyname::matrixproduct_byname(.data[[.Y_f_vec_hat]], .data[[C_Y]]) %>% 
-        # Aggregate rows to prefixes
         matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "prefix", margin = 1) %>% 
-        # Clean rows that have all zeroes
-        matsbyname::clean_byname(margin = 1)
+        matsbyname::clean_byname(margin = 1) #, 
+      # Calculate the matrix that should be added to the V matrix.
+      # "{.add_to_V_f}" := matsbyname::colsums_byname()
     )
   
   
