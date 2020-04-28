@@ -30,7 +30,7 @@ fu_allocation_template(
   year_for_maximum_values = 0,
   ef_product = "Ef.product",
   allocation_var = "C_",
-  n_allocation_rows = 3,
+  n_allocation_rows = 4,
   machine = "Machine",
   eu_product = "Eu.product",
   arrange = TRUE,
