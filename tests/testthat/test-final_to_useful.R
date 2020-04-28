@@ -87,4 +87,53 @@ test_that("move_to_useful_last_stage works as expected", {
 
   # Check some of the values  
   
+  # Allocation of ZAF EIOU electricity for lighting and mechanical drive in 2000
+  
+  EIOU_Electricity_Coal_mines <- psut_mats %>% 
+    dplyr::filter(Country == "ZAF", Year == 2000, matnames == "U_EIOU") %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1) %>% 
+    magrittr::extract("Electricity", "Coal mines")
+  
+  alloc_EIOU_ZA_2000 <- C_data %>% 
+    dplyr::filter(Country == "ZAF", matnames == "C_EIOU", Year == 2000) %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1)
+  C_lights <- alloc_EIOU_ZA_2000 %>% 
+    magrittr::extract("Electricity -> Coal mines", "Electric lights -> Light")
+  C_motors <- alloc_EIOU_ZA_2000 %>% 
+    magrittr::extract("Electricity -> Coal mines", "Electric motors -> MD")
+  
+  expected_elect_into_lights_in_mines <- EIOU_Electricity_Coal_mines * C_lights
+  expected_elect_into_motors_in_mines <- EIOU_Electricity_Coal_mines * C_motors
+  
+  eta_lights <- eta_fu_data %>% 
+    dplyr::filter(Country == "ZAF", Year == 2000, matnames == "eta.fu") %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1) %>% 
+    magrittr::extract("Electric lights -> Light", 1)
+  
+  eta_motors <- eta_fu_data %>% 
+    dplyr::filter(Country == "ZAF", Year == 2000, matnames == "eta.fu") %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1) %>% 
+    magrittr::extract("Electric motors -> MD", 1)
+  
+  expected_light_into_mines <- expected_elect_into_lights_in_mines * eta_lights
+  expected_md_into_mines <- expected_elect_into_motors_in_mines * eta_motors
+
+  actual_light_into_mines <- with_useful %>% 
+    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000, matnames == "U_EIOU") %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1) %>% 
+    magrittr::extract("Light [Electric lights]", "Coal mines")
+  
+  actual_md_into_mines <- with_useful %>% 
+    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000, matnames == "U_EIOU") %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1) %>% 
+    magrittr::extract("MD [Electric motors]", "Coal mines")
+
+  expect_equal(actual_light_into_mines, expected_light_into_mines)
+  expect_equal(actual_md_into_mines, expected_md_into_mines)
 })

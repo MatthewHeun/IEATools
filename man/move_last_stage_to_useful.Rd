@@ -12,22 +12,28 @@ move_last_stage_to_useful(
   unit = IEATools::iea_cols$unit,
   final = IEATools::last_stages$final,
   useful = IEATools::last_stages$useful,
+  industry_type = IEATools::row_col_types$industry_type,
+  product_type = IEATools::row_col_types$product_type,
   R = IEATools::psut_cols$R,
   U_eiou = IEATools::psut_cols$U_eiou,
   U_excl_eiou = IEATools::psut_cols$U_excl_eiou,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y,
+  s_units = IEATools::psut_cols$s_units,
   matnames = IEATools::mat_meta_cols$matnames,
   matvals = IEATools::mat_meta_cols$matvals,
   C_eiou = IEATools::template_cols$C_eiou,
   C_Y = IEATools::template_cols$C_Y,
   eta_fu = IEATools::template_cols$eta_fu,
+  phi_u = IEATools::template_cols$phi_u,
   sep = IEATools::specify_notation$arrow,
-  .Y_f_vec_hat = ".Y_f_vec_hat",
+  .Y_f_vec_hat_C_Y = ".Y_f_vec_hat_C_Y",
+  .U_eiou_f_vec_hat_C_eiou = ".U_eiou_f_vec_hat_C_eiou",
+  .eta_fu_hat = ".eta_fu_hat",
   .add_to_U_f = ".add_to_U_f",
+  .add_to_U_eiou = ".add_to_U_eiou",
   .add_to_V_f = ".add_to_V_f",
-  .useful = "_useful",
-  .eta_fu_hat = ".eta_fu_hat"
+  .useful = "_useful"
 )
 }
 \arguments{
@@ -47,6 +53,8 @@ Each of these should be a column in all of \code{.tidy_psut_data}, \code{C_data}
 
 \item{final, useful}{See \code{IEATools::last_stages}.}
 
+\item{industry_type, product_type}{See \code{IEATools::row_col_types}}
+
 \item{R, U_eiou, U_excl_eiou, V, Y}{See \code{IEATools::psut_cols}.
 These matrices should be found in the \code{matvals} column of the \code{.tidy_psut_data} data frame.}
 
@@ -59,11 +67,11 @@ These matrices should be found in the \code{matvals} column of the \code{.tidy_p
 \item{sep}{The string separator between prefix and suffix of compound row and column names. Default is \code{specify_notation$arrow},
 -> tion$arrow\verb{". The default value matches the default value for the }sep\verb{argument of}matsbyname::vectorize_byname()\verb{, because }matsbyname::vectorize_byname()` will be used for further manipulations.}
 
-\item{.Y_f_vec_hat}{an internal matrix name. Default is ".Y_f_vec_hat".}
-
-\item{.useful}{A suffix applied to versions of PSUT matrices where useful is the last stage. Default is ".useful".}
+\item{.Y_f_vec_hat_C_Y}{an internal matrix name for the product of the Y_f_vec_hat and C_Y matrices. Default is ".Y_f_vec_hat_C_Y".}
 
 \item{.eta_fu_hat}{an internal matrix name. Default is ".eta_fu_hat".}
+
+\item{.useful}{A suffix applied to versions of PSUT matrices where useful is the last stage. Default is ".useful".}
 }
 \value{
 a version of \code{.tidy_sut_data} that contains additional rows with useful final stage ECC matrices
@@ -72,4 +80,15 @@ a version of \code{.tidy_sut_data} that contains additional rows with useful fin
 This function uses a matrix method to move
 from final energy/exergy
 to useful energy/exergy as the last stage of an energy conversion chain.
+}
+\examples{
+psut_mats <- load_tidy_iea_df() \%>\% 
+  specify_all() \%>\% 
+  prep_psut()
+C_data <- load_fu_allocation_data() \%>\% 
+  form_C_mats()
+eta_fu_data <- load_eta_fu_data() \%>\% 
+  form_eta_fu_phi_u_vecs()
+psut_mats \%>\% 
+  move_last_stage_to_useful(tidy_C_data = C_data, tidy_eta_fu_data = eta_fu_data)
 }
