@@ -138,7 +138,7 @@ test_that("move_to_useful_last_stage works as expected", {
   expect_equal(actual_md_into_mines, expected_md_into_mines)
   
   
-  # ZAF allocation of Other bituminous coal to Light and MTH.200.C
+  # ZAF allocation of Other bituminous coal to MTH.200.C
   OBC_to_Chem <- psut_mats %>% 
     dplyr::filter(Country == "ZAF", Year == 2000, matnames == "Y") %>% 
     magrittr::extract2("matvals") %>% 
@@ -149,36 +149,55 @@ test_that("move_to_useful_last_stage works as expected", {
     dplyr::filter(Country == "ZAF", matnames == "C_Y", Year == 2000) %>% 
     magrittr::extract2("matvals") %>% 
     magrittr::extract2(1)
-  C_light <- alloc_Y_ZA_2000 %>% 
-    magrittr::extract("Other bituminous coal (Coal mines) -> Chemical and petrochemical", "Electric lights -> Light")
+  
   C_heaters <- alloc_Y_ZA_2000 %>% 
-    magrittr::extract("Other bituminous coal (Coal mines) -> Chemical and petrochemical", "Electric heaters -> MTH.200.C")
+    magrittr::extract("Other bituminous coal [of Coal mines] -> Chemical and petrochemical", "Electric heaters -> MTH.200.C")
   
-  expected_OBC_into_lights_in_chem <- OBC_to_Chem * C_light
   expected_OBC_into_heaters_in_chem <- OBC_to_Chem * C_heaters
-  
+
   eta_heaters <- eta_fu_data %>% 
     dplyr::filter(Country == "ZAF", Year == 2000, matnames == "eta.fu") %>% 
     magrittr::extract2("matvals") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric heaters -> MTH.200.C", 1)
 
-  expected_light_into_chem <- expected_OBC_into_lights_in_chem * eta_lights
   expected_200C_into_chem <- expected_OBC_into_heaters_in_chem * eta_heaters
+  
+  actual_200C_into_chem <- with_useful %>% 
+    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000, matnames == "Y") %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1) %>% 
+    magrittr::extract("MTH.200.C [Electric heaters]", "Chemical and petrochemical")
+
+  expect_equal(actual_200C_into_chem, expected_200C_into_chem)
+
+  # Light is a little more complicated, because some electricity is also used for Light in Chem
+  
+  # First work on OBC
+  Elect_to_Chem <- psut_mats %>% 
+    dplyr::filter(Country == "ZAF", Year == 2000, matnames == "Y") %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1) %>% 
+    magrittr::extract("Electricity", "Chemical and petrochemical")
+  
+  C_OBC_light <- alloc_Y_ZA_2000 %>% 
+    magrittr::extract("Other bituminous coal [of Coal mines] -> Chemical and petrochemical", "Electric lights -> Light")
+  C_Elect_light <- alloc_Y_ZA_2000 %>% 
+    magrittr::extract("Electricity -> Chemical and petrochemical", "Electric lights -> Light")
+
+  expected_OBC_into_lights_in_chem <- OBC_to_Chem * C_OBC_light
+  expected_Elect_into_lights_in_chem <- Elect_to_Chem * C_Elect_light
+  
+  expected_OBC_light_into_chem <- expected_OBC_into_lights_in_chem * eta_lights
+  expected_Elect_light_into_chem <- expected_Elect_into_lights_in_chem * eta_lights
+  expected_light_into_chem <- expected_OBC_light_into_chem + expected_Elect_light_into_chem
   
   actual_light_into_chem <- with_useful %>% 
     dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000, matnames == "Y") %>% 
     magrittr::extract2("matvals") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Light [Electric lights]", "Chemical and petrochemical")
-    
-  actual_200C_into_chem <- with_useful %>% 
-    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000, matnames == "Y") %>% 
-    magrittr::extract2("matvals") %>% 
-    magrittr::extract2(1) %>% 
-    magrittr::extract("MTH.200.C [Electric heaters]", "Chemical and petrochemical")
-  
+
   expect_equal(actual_light_into_chem, expected_light_into_chem)
-  expect_equal(actual_200C_into_chem, expected_200C_into_chem)
     
 })
