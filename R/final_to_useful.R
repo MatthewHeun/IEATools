@@ -419,9 +419,9 @@ move_last_stage_to_useful <- function(.tidy_psut_data,
   tidy_useful_Y <- wide_psut_data %>% 
     dplyr::mutate(
       
-      #### Step 1 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
+      #### Step 1 on the "Pushing Y to useful" tab in file "Matrix f->u example calcs.xlsx"
       
-      # Calculate Y_f_vec_hat_C_Y
+      # Calculate Y_f_vec_hat_C_Y, the matrix product of Y_f_vec_hat and C_Y
       "{.Y_f_vec_hat_C_Y}" := matsbyname::vectorize_byname(.data[[Y]]) %>% 
         matsbyname::clean_byname() %>%
         matsbyname::hatize_byname() %>% 
