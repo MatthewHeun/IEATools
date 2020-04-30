@@ -200,4 +200,54 @@ test_that("move_to_useful_last_stage works as expected", {
 
   expect_equal(actual_light_into_chem, expected_light_into_chem)
     
+  # Allocation of GHA final demand electricity for lighting and mechanical drive Non-ferrous metals in 1971
+  Elect_to_NFM <- psut_mats %>% 
+    dplyr::filter(Country == "GHA", Year == 1971, matnames == "Y") %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1) %>% 
+    magrittr::extract("Electricity", "Non-ferrous metals")
+  
+  alloc_Y_GH_1971 <- C_data %>% 
+    dplyr::filter(Country == "GHA", matnames == "C_Y", Year == 1971) %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1)
+  
+  C_motors <- alloc_Y_GH_1971 %>% 
+    magrittr::extract("Electricity -> Non-ferrous metals", "Electric motors -> MD")
+  C_lights <- alloc_Y_GH_1971 %>% 
+    magrittr::extract("Electricity -> Non-ferrous metals", "Electric lights -> Light")
+  
+  expected_elect_into_motors_in_NFM <- Elect_to_NFM * C_motors
+  expected_elect_into_lights_in_NFM <- Elect_to_NFM * C_lights
+  
+  eta_motors <- eta_fu_data %>% 
+    dplyr::filter(Country == "GHA", Year == 1971, matnames == "eta.fu") %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1) %>% 
+    magrittr::extract("Electric motors -> MD", 1)
+
+  eta_lights <- eta_fu_data %>% 
+    dplyr::filter(Country == "GHA", Year == 1971, matnames == "eta.fu") %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1) %>% 
+    magrittr::extract("Electric lights -> Light", 1)
+  
+  
+  expected_md_into_NFM <- expected_elect_into_motors_in_NFM * eta_motors
+  expected_light_into_NFM <- expected_elect_into_lights_in_NFM * eta_lights
+  
+  actual_md_into_NFM <- with_useful %>% 
+    dplyr::filter(Country == "GHA", Last.stage == "Useful", Year == 1971, matnames == "Y") %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1) %>% 
+    magrittr::extract("MD [Electric motors]", "Non-ferrous metals")
+  
+  actual_light_into_NFM <- with_useful %>% 
+    dplyr::filter(Country == "GHA", Last.stage == "Useful", Year == 1971, matnames == "Y") %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1) %>% 
+    magrittr::extract("Light [Electric lights]", "Non-ferrous metals")
+  
+  expect_equal(actual_md_into_NFM, expected_md_into_NFM)
+  expect_equal(actual_light_into_NFM, expected_light_into_NFM)
 })

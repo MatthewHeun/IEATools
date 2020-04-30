@@ -55,23 +55,33 @@ Each of these should be a column in all of \code{.tidy_psut_data}, \code{C_data}
 
 \item{industry_type, product_type}{See \code{IEATools::row_col_types}}
 
-\item{R, U_eiou, U_excl_eiou, V, Y}{See \code{IEATools::psut_cols}.
+\item{R, U_eiou, U_excl_eiou, V, Y, s_units}{See \code{IEATools::psut_cols}.
 These matrices should be found in the \code{matvals} column of the \code{.tidy_psut_data} data frame.}
 
 \item{matnames, matvals}{See \code{IEATools::mat_meta_cols}.}
 
-\item{C_eiou, C_Y, eta_fu}{See \code{IEATools::template_cols}.
+\item{C_eiou, C_Y, eta_fu, phi_u}{See \code{IEATools::template_cols}.
 \code{C_eiou} and \code{C_Y} matrices should be found in the \code{matvals} column of the \code{C_Y_data} data frame.
-\code{eta_fu} should be found in the \code{matvals} column of the \code{eta_fu_data} data frame.}
+\code{eta_fu} and \code{phi_u} should be found in the \code{matvals} column of the \code{eta_fu_data} data frame.}
 
 \item{sep}{The string separator between prefix and suffix of compound row and column names. Default is \code{specify_notation$arrow},
 -> tion$arrow\verb{". The default value matches the default value for the }sep\verb{argument of}matsbyname::vectorize_byname()\verb{, because }matsbyname::vectorize_byname()` will be used for further manipulations.}
 
 \item{.Y_f_vec_hat_C_Y}{an internal matrix name for the product of the Y_f_vec_hat and C_Y matrices. Default is ".Y_f_vec_hat_C_Y".}
 
+\item{.U_eiou_f_vec_hat_C_eiou}{an internal matrix name for the product of the U_eiou_f_vec_hat and C_eiou matrices. Default is ".U_eiou_f_vec_hat_C_eiou".}
+
 \item{.eta_fu_hat}{an internal matrix name. Default is ".eta_fu_hat".}
 
-\item{.useful}{A suffix applied to versions of PSUT matrices where useful is the last stage. Default is ".useful".}
+\item{.add_to_U_f}{an internal matrix name for the a matrix to be added to the U_excl_eiou_f matrix
+to form the useful form of the U_excl_eiou matrix. Default is ".add_to_U_f".}
+
+\item{.add_to_U_eiou}{an internal matrix name for the a matrix to be added to the U_eiou_f matrix
+to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".}
+
+\item{.add_to_V_f}{an internal matrix name for a matrix to add to the Y_f matrix. Default is ".add_to_V_f".}
+
+\item{.useful}{A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".}
 }
 \value{
 a version of \code{.tidy_sut_data} that contains additional rows with useful final stage ECC matrices

@@ -327,19 +327,25 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                        Each of these should be a column in all of `.tidy_psut_data`, `C_data`, and `eta_fu_data`.
 #' @param final,useful See `IEATools::last_stages`.
 #' @param industry_type,product_type See `IEATools::row_col_types`
-#' @param R,U_eiou,U_excl_eiou,V,Y See `IEATools::psut_cols`. 
+#' @param R,U_eiou,U_excl_eiou,V,Y,s_units See `IEATools::psut_cols`. 
 #'                                 These matrices should be found in the `matvals` column of the `.tidy_psut_data` data frame.
 #' @param matnames,matvals See `IEATools::mat_meta_cols`. 
-#' @param C_eiou,C_Y,eta_fu See `IEATools::template_cols`. 
+#' @param C_eiou,C_Y,eta_fu,phi_u See `IEATools::template_cols`. 
 #'                          `C_eiou` and `C_Y` matrices should be found in the `matvals` column of the `C_Y_data` data frame.
-#'                          `eta_fu` should be found in the `matvals` column of the `eta_fu_data` data frame.
+#'                          `eta_fu` and `phi_u` should be found in the `matvals` column of the `eta_fu_data` data frame.
 #' @param sep The string separator between prefix and suffix of compound row and column names. Default is `specify_notation$arrow`,
 #'            namely "`r specify_notation$arrow`".
 #'            The default value matches the default value for the `sep` argument of `matsbyname::vectorize_byname()`, because
 #'            `matsbyname::vectorize_byname()` will be used for further manipulations.
 #' @param .Y_f_vec_hat_C_Y an internal matrix name for the product of the Y_f_vec_hat and C_Y matrices. Default is ".Y_f_vec_hat_C_Y".
+#' @param .U_eiou_f_vec_hat_C_eiou an internal matrix name for the product of the U_eiou_f_vec_hat and C_eiou matrices. Default is ".U_eiou_f_vec_hat_C_eiou".
 #' @param .eta_fu_hat an internal matrix name. Default is ".eta_fu_hat".
-#' @param .useful A suffix applied to versions of PSUT matrices where useful is the last stage. Default is ".useful".
+#' @param .add_to_U_f an internal matrix name for the a matrix to be added to the U_excl_eiou_f matrix 
+#'                    to form the useful form of the U_excl_eiou matrix. Default is ".add_to_U_f".
+#' @param .add_to_U_eiou an internal matrix name for the a matrix to be added to the U_eiou_f matrix 
+#'                       to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".
+#' @param .add_to_V_f an internal matrix name for a matrix to add to the Y_f matrix. Default is ".add_to_V_f".
+#' @param .useful A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".
 #'
 #' @return a version of `.tidy_sut_data` that contains additional rows with useful final stage ECC matrices 
 #' 
@@ -540,12 +546,16 @@ move_last_stage_to_useful <- function(.tidy_psut_data,
       "{Y}" := .data[[paste0(Y, .useful)]]
     )
   # Add to the bottom of the incoming data frame and return
-  dplyr::bind_rows(
+  out <- dplyr::bind_rows(
     .tidy_psut_data, 
     out %>% 
       tidyr::pivot_longer(c(.data[[R]], .data[[U_excl_eiou]], .data[[U_eiou]], .data[[V]], .data[[Y]], .data[[s_units]]),
                           names_to = matnames, values_to = matvals)
   )
+  
+  # Check energy balance
+  
+  return(out)
 }
 
 

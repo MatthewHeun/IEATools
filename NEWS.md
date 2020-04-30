@@ -1,3 +1,10 @@
+* Added additional tests for bug fixes and new features.
+    * Now up to 500 tests, all passing.
+    * Test coverage remains at 100%.
+* Added function `move_last_stage_to_useful()` and supporting functions
+  `form_C_mats()` and `form_eta_fu_phi_u_vecs()`.
+  These functions use a matrix method to move from last stage of final energy 
+  to last stage of useful energy.
 * Changed default number of rows in an allocation template from 3 to 4,
   per request from Zeke Marshall. 
   Note that the number of rows in the allocaiton template is adjustable 
