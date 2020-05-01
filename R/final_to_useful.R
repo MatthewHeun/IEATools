@@ -5,8 +5,12 @@
 #' 
 #' This function uses information in a filled allocation template (created by `write_fu_allocation_template()`)
 #' to create allocation matrices (`C`). 
-#' rownames of the `C` matricds are taken from the `Ef.product` and `Destination` columns, and
-#' colnames are taken from the `Machine` and `Eu.product` columns.
+#' 
+#' rownames of the `C` matrices are taken from the `Ef.product` and `Destination` columns of `.fu_allocation_table`
+#' and have the form "`Ef.product` `r specify_notation$arrow` `Destination`".
+#' colnames of the `C` matrices are taken from the `Machine` and `Eu.product` columns of `.fu_allocation_table`
+#' and have the form "machine `r specify_notation$arrow` useful energy form".
+#' 
 #' `C` matrices are created for both energy industry own use
 #' and final demand (`C_eiou` and `C_Y`, respectively).
 #' 
@@ -73,7 +77,7 @@ form_C_mats <- function(.fu_allocation_table,
                         product = IEATools::row_col_types$product,
                         industry = IEATools::row_col_types$industry,
                         
-                        sep = " -> ",
+                        sep = IEATools::specify_notation$arrow,
                         
                         tol = 1e-6,
                         
@@ -195,8 +199,25 @@ form_C_mats <- function(.fu_allocation_table,
 }
 
 
-#' Create final-to-useful efficiency vectors (`eta_fu`) and exergy-to-energy ratio vectors (`phi_u`) from a final-to-useful efficiency table
-#'
+#' Create `eta_fu` and `phi_u` vectors
+#' 
+#' This function creates vectors from a filled final-to-useful efficiency table
+#' created by `write_fu_allocation_template()`.
+#' The two vectors are:
+#'   * `eta_fu`: a vector of final-to-useful energy efficiencies, and 
+#'   * `phi_u`: a vector of useful exergy-to-useful energy ratios.
+#' 
+#' The vectors `eta_fu` and `phi_u` have special rownames that indicate 
+#' sources and types of useful energy flows.
+#' Row names have the pattern 
+#' "machine `r specify_notation$arrow` useful energy form" to indicate 
+#' the energy efficiency of "machine" for making "useful energy form"
+#' or the exergy-to-energy ratio of the useful energy form created by machine.
+#' 
+#' Columns are named by the variable in the vector: 
+#' "eta_fu" for final-to-useful efficiencies and
+#' "phi_u" for useful exergy-to-useful energy ratios.
+#' 
 #' @param .eta_fu_table a final-to-useful efficiency table read by `load_eta_fu_allocation_data()`.
 #'                      A template for this table should have been created by `eta_fu_table()` and 
 #'                      `write_eta_fu_table()`.
@@ -236,7 +257,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    rowtypes = IEATools::mat_meta_cols$rowtypes,
                                    coltypes = IEATools::mat_meta_cols$coltypes, 
                                    
-                                   sep = " -> ") {
+                                   sep = IEATools::specify_notation$arrow) {
   
   cleaned <- .eta_fu_table %>% 
     # Eliminate rows titled e_dot_machine or e_dot_machine_perc. These are just helper rows for the analyst.
@@ -289,6 +310,10 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 
 
 #' Move an ECC from final to useful as its last stage
+#' 
+#' This function uses a matrix method to move 
+#' from final energy/exergy 
+#' to useful energy/exergy as the last stage of an energy conversion chain.
 #'
 #' @param .tidy_psut_data A tidy data frame of PSUT matrices that represent an energy conversion chain.
 #'                        Matrix names should be in the `matnames` column, and
@@ -301,21 +326,42 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param last_stage,unit See `IEATools::iea_cols$last_stage`. 
 #'                        Each of these should be a column in all of `.tidy_psut_data`, `C_data`, and `eta_fu_data`.
 #' @param final,useful See `IEATools::last_stages`.
-#' @param R,U_eiou,U_excl_eiou,V,Y See `IEATools::psut_cols`. 
+#' @param industry_type,product_type See `IEATools::row_col_types`
+#' @param R,U_eiou,U_excl_eiou,V,Y,s_units See `IEATools::psut_cols`. 
 #'                                 These matrices should be found in the `matvals` column of the `.tidy_psut_data` data frame.
 #' @param matnames,matvals See `IEATools::mat_meta_cols`. 
-#' @param C_eiou,C_Y,eta_fu See `IEATools::template_cols`. 
+#' @param C_eiou,C_Y,eta_fu,phi_u See `IEATools::template_cols`. 
 #'                          `C_eiou` and `C_Y` matrices should be found in the `matvals` column of the `C_Y_data` data frame.
-#'                          `eta_fu` should be found in the `matvals` column of the `eta_fu_data` data frame.
-#' @param .useful A suffix applied to versions of PSUT matrices where useful is the last stage. Default is ".useful".
+#'                          `eta_fu` and `phi_u` should be found in the `matvals` column of the `eta_fu_data` data frame.
+#' @param sep The string separator between prefix and suffix of compound row and column names. Default is `specify_notation$arrow`,
+#'            namely "`r specify_notation$arrow`".
+#'            The default value matches the default value for the `sep` argument of `matsbyname::vectorize_byname()`, because
+#'            `matsbyname::vectorize_byname()` will be used for further manipulations.
+#' @param .Y_f_vec_hat_C_Y an internal matrix name for the product of the Y_f_vec_hat and C_Y matrices. Default is ".Y_f_vec_hat_C_Y".
+#' @param .U_eiou_f_vec_hat_C_eiou an internal matrix name for the product of the U_eiou_f_vec_hat and C_eiou matrices. Default is ".U_eiou_f_vec_hat_C_eiou".
 #' @param .eta_fu_hat an internal matrix name. Default is ".eta_fu_hat".
+#' @param .add_to_U_f an internal matrix name for the a matrix to be added to the U_excl_eiou_f matrix 
+#'                    to form the useful form of the U_excl_eiou matrix. Default is ".add_to_U_f".
+#' @param .add_to_U_eiou an internal matrix name for the a matrix to be added to the U_eiou_f matrix 
+#'                       to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".
+#' @param .add_to_V_f an internal matrix name for a matrix to add to the Y_f matrix. Default is ".add_to_V_f".
+#' @param .useful A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".
 #'
 #' @return a version of `.tidy_sut_data` that contains additional rows with useful final stage ECC matrices 
 #' 
 #' @export
 #'
 #' @examples
-move_to_useful_last_stage <- function(.tidy_psut_data, 
+#' psut_mats <- load_tidy_iea_df() %>% 
+#'   specify_all() %>% 
+#'   prep_psut()
+#' C_data <- load_fu_allocation_data() %>% 
+#'   form_C_mats()
+#' eta_fu_data <- load_eta_fu_data() %>% 
+#'   form_eta_fu_phi_u_vecs()
+#' psut_mats %>% 
+#'   move_last_stage_to_useful(tidy_C_data = C_data, tidy_eta_fu_data = eta_fu_data)
+move_last_stage_to_useful <- function(.tidy_psut_data, 
                                       tidy_C_data,
                                       tidy_eta_fu_data,
                                       
@@ -325,11 +371,15 @@ move_to_useful_last_stage <- function(.tidy_psut_data,
                                       final = IEATools::last_stages$final,
                                       useful = IEATools::last_stages$useful,
                                       
+                                      industry_type = IEATools::row_col_types$industry_type, 
+                                      product_type = IEATools::row_col_types$product_type,
+                                      
                                       R = IEATools::psut_cols$R, 
                                       U_eiou = IEATools::psut_cols$U_eiou,
                                       U_excl_eiou = IEATools::psut_cols$U_excl_eiou,
                                       V = IEATools::psut_cols$V, 
                                       Y = IEATools::psut_cols$Y, 
+                                      s_units = IEATools::psut_cols$s_units,
                                       
                                       matnames = IEATools::mat_meta_cols$matnames,
                                       matvals = IEATools::mat_meta_cols$matvals,
@@ -337,31 +387,176 @@ move_to_useful_last_stage <- function(.tidy_psut_data,
                                       C_eiou = IEATools::template_cols$C_eiou,
                                       C_Y = IEATools::template_cols$C_Y, 
                                       eta_fu = IEATools::template_cols$eta_fu,
+                                      phi_u = IEATools::template_cols$phi_u,
                                       
-                                      .useful = ".useful", 
-                                      .eta_fu_hat = ".eta_fu_hat") {
+                                      sep = IEATools::specify_notation$arrow,
+                                      
+                                      .Y_f_vec_hat_C_Y = ".Y_f_vec_hat_C_Y",
+                                      .U_eiou_f_vec_hat_C_eiou = ".U_eiou_f_vec_hat_C_eiou",
+                                      .eta_fu_hat = ".eta_fu_hat",
+                                      .add_to_U_f = ".add_to_U_f",
+                                      .add_to_U_eiou = ".add_to_U_eiou",
+                                      .add_to_V_f = ".add_to_V_f",
+                                      .useful = "_useful") {
   
-  # Clean out Unit cols 
-  
-  wide <- .tidy_psut_data %>% 
+  # Spread the matrices for calculations
+  wide_psut_data <- .tidy_psut_data %>% 
     # Bind the C and eta_fu vectors to the bottom of the .tidy_sut_data frame
     dplyr::bind_rows(tidy_C_data, tidy_eta_fu_data) %>% 
     # Put the matrices in columns in preparation for calculations
     tidyr::pivot_wider(names_from = matnames, values_from = matvals) %>% 
     dplyr::mutate(
-      # Calculate eta_fu_hat
-      "{.eta_fu_hat}" := matsbyname::hatize_byname(.data[[eta_fu]])
-      # Swap column names from arrow notation to paren notation
+      # Calculate  .eta_fu_hat, which is need twice below.
+      # Doing the calculation here makes it available for other downstream calculations.
+      "{.eta_fu_hat}" := matsbyname::hatize_byname(.data[[eta_fu]]) %>% 
+        # Swap column names from arrow notation to paren notation
+        arrow_to_paren_byname(margin = 2) %>% 
+        # When changing to paren notation, we're highlighting the fact that 
+        # Industries in rows make Products in columns. 
+        # So we need to change the coltype of the columns to "Product"
+        matsbyname::setcoltype(product_type) ,
+      
     )
+  
+  # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
+  # We take each of these in turn, adjusting the energy conversion chain to account for the fact that 
+  # useful energy is now the final stage.
+  
+  tidy_useful_Y <- wide_psut_data %>% 
+    dplyr::mutate(
+      
+      #### Step 1 on the "Pushing Y to useful" tab in file "Matrix f->u example calcs.xlsx"
+      
+      # Calculate Y_f_vec_hat_C_Y, the matrix product of Y_f_vec_hat and C_Y
+      "{.Y_f_vec_hat_C_Y}" := matsbyname::vectorize_byname(.data[[Y]]) %>% 
+        matsbyname::clean_byname() %>%
+        matsbyname::hatize_byname() %>% 
+        matsbyname::matrixproduct_byname(.data[[C_Y]]),
+      
+      # Calculate eta_fu_hat
+      # Already calculated above.
+      
+      #### Step 2 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
+      
+      # Calculate the matrix that should be added to the U_f matrix.
+      "{.add_to_U_f}" := .data[[.Y_f_vec_hat_C_Y]] %>% 
+        matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "prefix", margin = 1) %>% 
+        matsbyname::clean_byname(margin = 1), 
+      
+      #### Step 3 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
 
+      # Calculate the matrix that should be added to the V_f matrix.
+      "{.add_to_V_f}" := .data[[.Y_f_vec_hat_C_Y]] %>% 
+        matsbyname::colsums_byname() %>% 
+        matsbyname::hatize_byname() %>% 
+        matsbyname::matrixproduct_byname(.data[[.eta_fu_hat]]), 
+      
+      #### Step 4 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
+      
+      # Calculate replacement for Y matrix (Y_useful instead of Y_f)
+      "{paste0(Y, .useful)}" := matsbyname::matrixproduct_byname(.data[[.Y_f_vec_hat_C_Y]], .data[[.eta_fu_hat]]) %>% 
+        matsbyname::transpose_byname() %>% 
+        matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "suffix", margin = 2) %>% 
+        matsbyname::clean_byname(), 
+      
+      #### Step 5
+      
+      # Create U_useful matrix
+      "{paste0(U_excl_eiou, .useful)}" := matsbyname::sum_byname(.data[[U_excl_eiou]], .data[[.add_to_U_f]]),
+      
+      # Create V_useful matrix
+      "{paste0(V, .useful)}" := matsbyname::sum_byname(.data[[V]], .data[[.add_to_V_f]]), 
+      
+      # Eliminate columns we no longer need from the data frame
+      "{.Y_f_vec_hat_C_Y}" := NULL,
+      "{.add_to_U_f}" := NULL,
+      "{.add_to_V_f}" := NULL,
+    )
   
-  # Spread the matrices for calculations
+  tidy_useful_EIOU <- tidy_useful_Y %>% 
+    dplyr::mutate(
+      
+      #### Step 1 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
+      
+      # Calculate U_eiou_f_vec_hat_C_eiou
+      "{.U_eiou_f_vec_hat_C_eiou}" := matsbyname::vectorize_byname(.data[[U_eiou]]) %>% 
+        matsbyname::clean_byname() %>%
+        matsbyname::hatize_byname() %>% 
+        matsbyname::matrixproduct_byname(.data[[C_eiou]]),
+      
+      #### Step 2 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
+      
+      # Calculate the matrix that should be added to the U_f matrix.
+      "{.add_to_U_f}" := .data[[.U_eiou_f_vec_hat_C_eiou]] %>% 
+        matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "prefix", margin = 1) %>% 
+        matsbyname::clean_byname(margin = 1), 
+      
+      #### Step 3 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
+      
+      # Calculate the matrix that should be added to the V_f matrix.
+      "{.add_to_V_f}" := .data[[.U_eiou_f_vec_hat_C_eiou]] %>% 
+        matsbyname::colsums_byname() %>% 
+        matsbyname::hatize_byname() %>% 
+        matsbyname::matrixproduct_byname(.data[[.eta_fu_hat]]), 
+      
+      #### Step 4 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
+      
+      # Calculate replacement for U_eiou_f matrix (U_eiou_useful instead of U_eiou_f)
+      "{paste0(U_eiou, .useful)}" := matsbyname::matrixproduct_byname(.data[[.U_eiou_f_vec_hat_C_eiou]], .data[[.eta_fu_hat]]) %>% 
+        matsbyname::transpose_byname() %>% 
+        matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "suffix", margin = 2) %>% 
+        matsbyname::clean_byname(), 
+      
+      #### Step 5
+      
+      # Add more to the U_useful matrix
+      "{paste0(U_excl_eiou, .useful)}" := matsbyname::sum_byname(.data[[paste0(U_excl_eiou, .useful)]], .data[[.add_to_U_f]]),
+      
+      # Add more to the V_useful matrix
+      "{paste0(V, .useful)}" := matsbyname::sum_byname(.data[[paste0(V, .useful)]], .data[[.add_to_V_f]]), 
+      
+      # Eliminate columns we no longer need from the data frame
+      "{.U_eiou_f_vec_hat_C_eiou}" := NULL,
+      "{.add_to_U_f}" := NULL,
+      "{.add_to_V_f}" := NULL
+    )
   
-  # Calculate matrices with _useful suffixes for the useful version
+  # Prepare the outgoing data frame
+  out <- tidy_useful_EIOU %>% 
+    dplyr::mutate(
+      # Show that these all now have useful last stage
+      "{last_stage}" := useful,
+      # Eliminate unneeded columns associated with the final stage being last stage
+      "{U_eiou}" := NULL,
+      "{U_excl_eiou}" := NULL,
+      "{V}" := NULL,
+      "{Y}" := NULL,
+      # Eliminate other temporary columns
+      "{C_eiou}" := NULL,
+      "{C_Y}" := NULL,
+      "{eta_fu}" := NULL,
+      "{phi_u}" := NULL,
+      "{.eta_fu_hat}" := NULL
+    ) %>% 
+    # Rename columns that are the matrices for useful last stage
+    dplyr::rename(
+      "{U_excl_eiou}" := .data[[paste0(U_excl_eiou, .useful)]], 
+      "{U_eiou}" := .data[[paste0(U_eiou, .useful)]], 
+      "{V}" := .data[[paste0(V, .useful)]], 
+      "{Y}" := .data[[paste0(Y, .useful)]]
+    )
+  # Add to the bottom of the incoming data frame and return
+  out <- dplyr::bind_rows(
+    .tidy_psut_data, 
+    out %>% 
+      tidyr::pivot_longer(c(.data[[R]], .data[[U_excl_eiou]], .data[[U_eiou]], .data[[V]], .data[[Y]], .data[[s_units]]),
+                          names_to = matnames, values_to = matvals)
+  )
   
-  # Eliminate the final stage matrices
+  # Check energy balance
   
-  # Eliminate suffixes on the useful stage columns and change last_stage to "Useful".
-  
-  # Bind the useful stage mats to the bottom of the final stage mats
+  return(out)
 }
+
+
+

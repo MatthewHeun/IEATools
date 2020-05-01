@@ -2,7 +2,7 @@
 % Please edit documentation in R/final_to_useful.R
 \name{form_eta_fu_phi_u_vecs}
 \alias{form_eta_fu_phi_u_vecs}
-\title{Create final-to-useful efficiency vectors (\code{eta_fu}) and exergy-to-energy ratio vectors (\code{phi_u}) from a final-to-useful efficiency table}
+\title{Create \code{eta_fu} and \code{phi_u} vectors}
 \usage{
 form_eta_fu_phi_u_vecs(
   .eta_fu_table,
@@ -22,7 +22,7 @@ form_eta_fu_phi_u_vecs(
   colnames = IEATools::mat_meta_cols$colnames,
   rowtypes = IEATools::mat_meta_cols$rowtypes,
   coltypes = IEATools::mat_meta_cols$coltypes,
-  sep = " -> "
+  sep = IEATools::specify_notation$arrow
 )
 }
 \arguments{
@@ -45,7 +45,25 @@ a tidy data frame with metadata columns (and year) along with \code{matnames} an
 indicating and containing \code{eta_fu} and \code{phi_u} vectors, respectively.
 }
 \description{
-Create final-to-useful efficiency vectors (\code{eta_fu}) and exergy-to-energy ratio vectors (\code{phi_u}) from a final-to-useful efficiency table
+This function creates vectors from a filled final-to-useful efficiency table
+created by \code{write_fu_allocation_template()}.
+The two vectors are:
+\itemize{
+\item \code{eta_fu}: a vector of final-to-useful energy efficiencies, and
+\item \code{phi_u}: a vector of useful exergy-to-useful energy ratios.
+}
+}
+\details{
+The vectors \code{eta_fu} and \code{phi_u} have special rownames that indicate
+sources and types of useful energy flows.
+Row names have the pattern
+"machine  ->  useful energy form" to indicate
+the energy efficiency of "machine" for making "useful energy form"
+or the exergy-to-energy ratio of the useful energy form created by machine.
+
+Columns are named by the variable in the vector:
+"eta_fu" for final-to-useful efficiencies and
+"phi_u" for useful exergy-to-useful energy ratios.
 }
 \examples{
 load_eta_fu_data() \%>\% 

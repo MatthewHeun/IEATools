@@ -80,11 +80,11 @@ test_that("iea_df works after first checking the file with iea_file_OK", {
   isOK <- iea_file_OK(f)
   DF2 <- iea_df(f)
   # Verify that we got the right types of columns
-  expect_true(inherits(DF2$COUNTRY, "character"))
-  expect_true(inherits(DF2$FLOW, "character"))
-  expect_true(inherits(DF2$PRODUCT, "character"))
-  expect_true(inherits(DF2$`1971`, "numeric"))
-  expect_true(inherits(DF2$`2000`, "numeric"))
+  expect_true(is.character(DF2$COUNTRY))
+  expect_true(is.character(DF2$FLOW))
+  expect_true(is.character(DF2$PRODUCT))
+  expect_true(is.numeric(DF2$`1971`))
+  expect_true(is.numeric(DF2$`2000`))
 })
 
 test_that("iea_df works with a plain first row", {

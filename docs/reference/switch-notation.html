@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Rename columns of an IEA data frame — rename_iea_df_cols • IEATools</title>
+<title>Change specification notation — switch-notation • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,17 @@
 
 
 
-<meta property="og:title" content="Rename columns of an IEA data frame — rename_iea_df_cols" />
-<meta property="og:description" content="The IEA data has columns named COUNTRY, FLOW, and PRODUCT.
-This function turns off the shouting,
-renaming the columns (by default) to Country, Flow, and Product." />
+<meta property="og:title" content="Change specification notation — switch-notation" />
+<meta property="og:description" content="IEA data can be &quot;specified&quot; by adding additional information.
+Two notations are useful: arrow and parenthetical.
+Arrow notation is &quot;from -&amp;gt; to&quot;,
+and parenthetical notation is &quot;to [from]&quot;.
+These functions change a vector of strings between the specification notations.
+switch_notation() is the worker function.
+arrow_to_paren() switches from arrow to parenthetical specification notation.
+paren_to_arrow() switches from parenthetical to arrow specification notation.
+
+" />
 
 
 
@@ -132,68 +139,74 @@ renaming the columns (by default) to Country, Flow, and Product." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Rename columns of an IEA data frame</h1>
+    <h1>Change specification notation</h1>
     
-    <div class="hidden name"><code>rename_iea_df_cols.Rd</code></div>
+    <div class="hidden name"><code>switch-notation.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>The IEA data has columns named <code>COUNTRY</code>, <code>FLOW</code>, and <code>PRODUCT</code>.
-This function turns off the shouting,
-renaming the columns (by default) to <code>Country</code>, <code>Flow</code>, and <code>Product</code>.</p>
+    <p>IEA data can be "specified" by adding additional information.
+Two notations are useful: arrow and parenthetical.
+Arrow notation is "from -&gt; to",
+and parenthetical notation is "to [from]".
+These functions change a vector of strings between the specification notations.</p><ul>
+<li><p><code>switch_notation()</code> is the worker function.</p></li>
+<li><p><code>arrow_to_paren()</code> switches from arrow to parenthetical specification notation.</p></li>
+<li><p><code>paren_to_arrow()</code> switches from parenthetical to arrow specification notation.</p></li>
+</ul>
+
     </div>
 
-    <pre class="usage"><span class='fu'>rename_iea_df_cols</span>(
-  <span class='no'>.iea_df</span>,
-  <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"COUNTRY"</span>,
-  <span class='kw'>new_country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"FLOW"</span>,
-  <span class='kw'>new_flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"PRODUCT"</span>,
-  <span class='kw'>new_product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>
+    <pre class="usage"><span class='fu'>switch_notation</span>(<span class='no'>x</span>, <span class='no'>old_start</span>, <span class='no'>old_end</span>, <span class='no'>new_start</span>, <span class='no'>new_end</span>)
+
+<span class='fu'>arrow_to_paren</span>(
+  <span class='no'>x</span>,
+  <span class='kw'>old_start</span> <span class='kw'>=</span> <span class='no'>specify_notation</span>$<span class='no'>arrow</span>,
+  <span class='kw'>old_end</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>new_start</span> <span class='kw'>=</span> <span class='no'>specify_notation</span>$<span class='no'>open</span>,
+  <span class='kw'>new_end</span> <span class='kw'>=</span> <span class='no'>specify_notation</span>$<span class='no'>close</span>
+)
+
+<span class='fu'>paren_to_arrow</span>(
+  <span class='no'>x</span>,
+  <span class='kw'>old_start</span> <span class='kw'>=</span> <span class='no'>specify_notation</span>$<span class='no'>open</span>,
+  <span class='kw'>old_end</span> <span class='kw'>=</span> <span class='no'>specify_notation</span>$<span class='no'>close</span>,
+  <span class='kw'>new_start</span> <span class='kw'>=</span> <span class='no'>specify_notation</span>$<span class='no'>arrow</span>,
+  <span class='kw'>new_end</span> <span class='kw'>=</span> <span class='st'>""</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.iea_df</th>
-      <td><p>a data frame produced by <code><a href='iea_df.html'>iea_df()</a></code></p></td>
+      <th>x</th>
+      <td><p>a vector of strings for which notation is to be switched</p></td>
     </tr>
     <tr>
-      <th>country</th>
-      <td><p>the original name for the country column. (Default is <code>COUNTRY</code>.)</p></td>
+      <th>old_start</th>
+      <td><p>the start of specification notation in <code>strings</code></p></td>
     </tr>
     <tr>
-      <th>new_country</th>
-      <td><p>the new name for the country column. (Default is <code>Country</code>.)</p></td>
+      <th>old_end</th>
+      <td><p>the end of specification notation in <code>strings</code></p></td>
     </tr>
     <tr>
-      <th>flow</th>
-      <td><p>the original name for the flow column. (Default is <code>FLOW</code>.)</p></td>
+      <th>new_start</th>
+      <td><p>the start of specification notation in output</p></td>
     </tr>
     <tr>
-      <th>new_flow</th>
-      <td><p>the new name for the flow column. (Default is <code>Flow</code>.)</p></td>
-    </tr>
-    <tr>
-      <th>product</th>
-      <td><p>the original name for the product column. (Default is <code>PRODUCT</code>.)</p></td>
-    </tr>
-    <tr>
-      <th>new_product</th>
-      <td><p>the new name for the product column. (Default is <code>Product</code>.)</p></td>
+      <th>new_end</th>
+      <td><p>the end of specification notation in output</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.iea_df</code> with renamed columns</p>
+    <p>An object of same length as <code>strings</code> with switched notation.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='iea_df.html'>iea_df</a></span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='st'>",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>rename_iea_df_cols</span>()</div><div class='output co'>#&gt;   Country       Flow   Product 1960 1961
-#&gt; 1   World Production Hard coal   42   43</div></pre>
+    <pre class="examples"><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

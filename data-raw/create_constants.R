@@ -22,6 +22,7 @@ usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 # Otherwise, open and close should not contain any regex special characters.
 specify_notation <- list(open = " [", 
                          close = "]", 
+                         arrow = " -> ",
                          resources_preposition = "of ",
                          eiou_preposition = "to ", 
                          interface_ind_preposition = "of ",
