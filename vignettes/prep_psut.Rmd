@@ -99,6 +99,7 @@ with the `extract_S_units_from_tidy()` function.
 
 ```{r}
 S_units_df <- load_tidy_iea_df() %>% 
+  specify_all() %>% 
   extract_S_units_from_tidy()
 S_units_df %>% 
   glimpse()
@@ -125,8 +126,10 @@ and adds those matrices to the data frame.
 ```{r}
 Simple <- load_tidy_iea_df() %>% 
   specify_all() %>% 
-  prep_psut()
+  prep_psut() %>% 
+  pivot_longer(cols = c(R, U_EIOU, U_excl_EIOU, V, Y, S_units), names_to = "matnames", values_to = "matvals")
 S_units <- load_tidy_iea_df() %>% 
+  specify_all() %>% 
   extract_S_units_from_tidy()
 Complicated <- load_tidy_iea_df() %>% 
   specify_all() %>% 
@@ -163,17 +166,10 @@ for use with PSUT analysis techniques.
 A sequence of three function calls are all that is required.
 
 ```{r}
-Tidy_PSUT_mats <- load_tidy_iea_df() %>% 
+wide_PSUT_mats <- load_tidy_iea_df() %>% 
   specify_all() %>% 
   prep_psut()
-Tidy_PSUT_mats %>% 
+wide_PSUT_mats %>% 
   glimpse()
 ```
 
-If calculations are to be performed, the matrices can be spread so that each matrix is in its own column.
-
-```{r}
-Tidy_PSUT_mats %>% 
-  spread(key = matnames, value = matvals) %>% 
-  glimpse()
-```

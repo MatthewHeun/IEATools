@@ -57,8 +57,11 @@ library(tidyr)
 Simple <- load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 
   prep_psut() \%>\% 
-  pivot_longer(cols = , names_to = "matnames", values_to = "matvals_simple")
+  pivot_longer(cols = c(R, U_EIOU, U_excl_EIOU, V, Y, S_units), 
+               names_to = "matnames",
+               values_to = "matval_simple")
 S_units <- load_tidy_iea_df() \%>\% 
+  specify_all() \%>\% 
   extract_S_units_from_tidy()
 Complicated <- load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 

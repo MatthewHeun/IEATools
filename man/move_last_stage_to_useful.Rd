@@ -44,6 +44,8 @@ The last stage of these ECCs should be final (not useful).
 \code{.sutdata} is likely the result of calling (in sequence)
 \code{load_tidy_iea_df()} \verb{\%>\%} \code{specify_all()} \verb{\%>\%} \code{prep_psut()}}
 
+\item{wide_C_data}{a wide data frame of final-to-useful allocation matrices, probably the result of calling \code{form_C_mats()}.}
+
 \item{wide_eta_fu_data}{a wide data frame of final-to-useful machine efficiency matrices, probably the result of calling \code{form_eta_fu_phi_u_vecs}.}
 
 \item{last_stage, unit}{See \code{IEATools::iea_cols$last_stage}.
@@ -82,8 +84,6 @@ to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".}
 \item{.add_to_V_f}{an internal matrix name for a matrix to add to the Y_f matrix. Default is ".add_to_V_f".}
 
 \item{.useful}{A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".}
-
-\item{tidwide_C_data}{a wide data frame of final-to-useful allocation matrices, probably the result of calling \code{form_C_mats()}.}
 }
 \value{
 a version of \code{.tidy_sut_data} that contains additional rows with useful final stage ECC matrices
@@ -102,5 +102,6 @@ C_data <- load_fu_allocation_data() \%>\%
 eta_fu_data <- load_eta_fu_data() \%>\% 
   form_eta_fu_phi_u_vecs()
 psut_mats \%>\% 
-  move_last_stage_to_useful(tidy_C_data = C_data, tidy_eta_fu_data = eta_fu_data)
+  move_last_stage_to_useful(wide_C_data = C_data, 
+                            wide_eta_fu_data = eta_fu_data)
 }

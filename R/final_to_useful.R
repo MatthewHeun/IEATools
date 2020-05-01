@@ -322,7 +322,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                 The last stage of these ECCs should be final (not useful).
 #'                 `.sutdata` is likely the result of calling (in sequence)
 #'                 `load_tidy_iea_df()` `%>%` `specify_all()` `%>%` `prep_psut()`
-#' @param tidwide_C_data a wide data frame of final-to-useful allocation matrices, probably the result of calling `form_C_mats()`.
+#' @param wide_C_data a wide data frame of final-to-useful allocation matrices, probably the result of calling `form_C_mats()`.
 #' @param wide_eta_fu_data a wide data frame of final-to-useful machine efficiency matrices, probably the result of calling `form_eta_fu_phi_u_vecs`.
 #' @param last_stage,unit See `IEATools::iea_cols$last_stage`. 
 #'                        Each of these should be a column in all of `.tidy_psut_data`, `C_data`, and `eta_fu_data`.
@@ -362,7 +362,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' eta_fu_data <- load_eta_fu_data() %>% 
 #'   form_eta_fu_phi_u_vecs()
 #' psut_mats %>% 
-#'   move_last_stage_to_useful(tidy_C_data = C_data, tidy_eta_fu_data = eta_fu_data)
+#'   move_last_stage_to_useful(wide_C_data = C_data, 
+#'                             wide_eta_fu_data = eta_fu_data)
 move_last_stage_to_useful <- function(.sutdata, 
                                       wide_C_data,
                                       wide_eta_fu_data,
