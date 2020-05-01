@@ -37,8 +37,8 @@
 #' @param .all_1 a temporary column created internally (and not returned unless there is an error)
 #'               that tells whether a 1-vector was created by rowsums.
 #'
-#' @return a tidy data frame with metadata columns (and year) along with `matnames` and `matvals` columns
-#'         indicating and containing `C_eiou` and `C_Y` matrices, respectively.
+#' @return an sutmats data frame with metadata columns (and year) along with columns for 
+#'         `C_eiou` and `C_Y` matrices.
 #'         If not all rows of a C matrix sum to 1, 
 #'         a warning is emitted, and
 #'         a data frame is returned which shows the errors.
@@ -194,8 +194,10 @@ form_C_mats <- function(.fu_allocation_table,
     return(probs)
   }
 
-  # If we passed the test, we can return the out data frame without the verification columns.
-  return(out)
+  # If we passed the test, we can return the out data frame without the verification columns, 
+  # after we pivot wider.
+  out %>% 
+    tidyr::pivot_wider(names_from = matnames, values_from = matvals)
 }
 
 

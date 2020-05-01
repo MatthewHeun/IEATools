@@ -14,8 +14,8 @@ test_that("form_C_mats works as expected", {
   expect_true(is.null(C_df[[IEATools::iea_cols$unit]]))
   # Check some values.
   C_EIOU_GHA_1971 <- C_df %>% 
-    dplyr::filter(Country == "GHA", Year == 1971, matnames == IEATools::template_cols$C_eiou) %>% 
-    magrittr::extract2(IEATools::mat_meta_cols$matvals) %>% 
+    dplyr::filter(Country == "GHA", Year == 1971) %>% 
+    magrittr::extract2(IEATools::template_cols$C_eiou) %>% 
     magrittr::extract2(1)
   r1 <- "Electricity -> Main activity producer electricity plants"
   r2 <- "Refinery gas -> Oil refineries"
@@ -30,8 +30,8 @@ test_that("form_C_mats works as expected", {
   expect_equal(C_EIOU_GHA_1971[[r2, c3]], 1)
   
   C_Y_ZAF_2000 <- C_df %>% 
-    dplyr::filter(Country == "ZAF", Year == 2000, matnames == IEATools::template_cols$C_Y) %>% 
-    magrittr::extract2(IEATools::mat_meta_cols$matvals) %>% 
+    dplyr::filter(Country == "ZAF", Year == 2000) %>% 
+    magrittr::extract2(IEATools::template_cols$C_Y) %>% 
     magrittr::extract2(1)
   r1 <- "Blast furnace gas -> Iron and steel"
   c1 <- "Airplanes -> MD"
