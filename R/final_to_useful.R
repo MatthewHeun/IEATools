@@ -37,7 +37,7 @@
 #' @param .all_1 a temporary column created internally (and not returned unless there is an error)
 #'               that tells whether a 1-vector was created by rowsums.
 #'
-#' @return an sutmats data frame with metadata columns (and year) along with columns for 
+#' @return a wide data frame with metadata columns (and year) along with columns for 
 #'         `C_eiou` and `C_Y` matrices.
 #'         If not all rows of a C matrix sum to 1, 
 #'         a warning is emitted, and
@@ -230,8 +230,7 @@ form_C_mats <- function(.fu_allocation_table,
 #'            The default value matches the default value for the `sep` argument of `matsbyname::vectorize_byname()`, because
 #'            `matsbyname::vectorize_byname()` will be used for further manipulations.
 #'
-#' @return a tidy data frame with metadata columns (and year) along with `matnames` and `matvals` columns
-#'         indicating and containing `eta_fu` and `phi_u` vectors, respectively.
+#' @return a wide data frame with metadata columns (and year) along with columns for `eta_fu` and `phi_u` vectors.
 #' 
 #' @export
 #'
@@ -306,8 +305,9 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
                                    rownames = rownames, colnames = colnames, 
                                    rowtypes = rowtypes, coltypes = coltypes)
-  
-  return(out)
+  # pivot wider to the sutmats format
+  out %>% 
+    tidyr::pivot_wider(names_from = matnames, values_from = matvals)
 }
 
 
@@ -317,20 +317,20 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' from final energy/exergy 
 #' to useful energy/exergy as the last stage of an energy conversion chain.
 #'
-#' @param .tidy_psut_data A tidy data frame of PSUT matrices that represent an energy conversion chain.
-#'                        Matrix names should be in the `matnames` column, and
-#'                        matrices themselves should be in the `matvals` column.
-#'                        The last stage of these ECCs should be final (not useful).
-#'                        `.tidy_psut_data` is likely the result of calling (in sequence)
-#'                        `load_tidy_iea_df()` `%>%` `specify_all()` `%>%` `prep_psut()`
-#' @param tidy_C_data a tidy data frame of final-to-useful allocation matrices, probably the result of calling `form_C_mats()`.
-#' @param tidy_eta_fu_data a tidy data frame of final-to-useful machine efficiency matrices, probably the result of calling `form_eta_fu_phi_u_vecs`.
+#' @param .sutdata A wide data frame of PSUT matrices that represent an energy conversion chain.
+#'                 Matrices should be in column identified by their names.
+#'                 The last stage of these ECCs should be final (not useful).
+#'                 `.sutdata` is likely the result of calling (in sequence)
+#'                 `load_tidy_iea_df()` `%>%` `specify_all()` `%>%` `prep_psut()`
+#' @param tidwide_C_data a wide data frame of final-to-useful allocation matrices, probably the result of calling `form_C_mats()`.
+#' @param wide_eta_fu_data a wide data frame of final-to-useful machine efficiency matrices, probably the result of calling `form_eta_fu_phi_u_vecs`.
 #' @param last_stage,unit See `IEATools::iea_cols$last_stage`. 
 #'                        Each of these should be a column in all of `.tidy_psut_data`, `C_data`, and `eta_fu_data`.
 #' @param final,useful See `IEATools::last_stages`.
 #' @param industry_type,product_type See `IEATools::row_col_types`
 #' @param R,U_eiou,U_excl_eiou,V,Y,s_units See `IEATools::psut_cols`. 
 #'                                 These matrices should be found in the `matvals` column of the `.tidy_psut_data` data frame.
+#' @param sut_meta_cols See `IEATools::sut_meta_cols`.
 #' @param matnames,matvals See `IEATools::mat_meta_cols`. 
 #' @param C_eiou,C_Y,eta_fu,phi_u See `IEATools::template_cols`. 
 #'                          `C_eiou` and `C_Y` matrices should be found in the `matvals` column of the `C_Y_data` data frame.
@@ -363,9 +363,9 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'   form_eta_fu_phi_u_vecs()
 #' psut_mats %>% 
 #'   move_last_stage_to_useful(tidy_C_data = C_data, tidy_eta_fu_data = eta_fu_data)
-move_last_stage_to_useful <- function(.tidy_psut_data, 
-                                      tidy_C_data,
-                                      tidy_eta_fu_data,
+move_last_stage_to_useful <- function(.sutdata, 
+                                      wide_C_data,
+                                      wide_eta_fu_data,
                                       
                                       last_stage = IEATools::iea_cols$last_stage,
                                       unit = IEATools::iea_cols$unit,
@@ -386,6 +386,8 @@ move_last_stage_to_useful <- function(.tidy_psut_data,
                                       matnames = IEATools::mat_meta_cols$matnames,
                                       matvals = IEATools::mat_meta_cols$matvals,
                                       
+                                      sut_meta_cols = IEATools::sut_meta_cols,
+                                      
                                       C_eiou = IEATools::template_cols$C_eiou,
                                       C_Y = IEATools::template_cols$C_Y, 
                                       eta_fu = IEATools::template_cols$eta_fu,
@@ -401,14 +403,12 @@ move_last_stage_to_useful <- function(.tidy_psut_data,
                                       .add_to_V_f = ".add_to_V_f",
                                       .useful = "_useful") {
   
-  # Spread the matrices for calculations
-  wide_psut_data <- .tidy_psut_data %>% 
-    # Bind the C and eta_fu vectors to the bottom of the .tidy_sut_data frame
-    dplyr::bind_rows(tidy_C_data, tidy_eta_fu_data) %>% 
-    # Put the matrices in columns in preparation for calculations
-    tidyr::pivot_wider(names_from = matnames, values_from = matvals) %>% 
+  wide_psut_data <- .sutdata %>% 
+    # Join the C and eta_fu vectors to the right of the .sutdata frame
+    dplyr::full_join(wide_C_data, by = sut_meta_cols %>% unlist() %>% unname()) %>% 
+    dplyr::full_join(wide_eta_fu_data, by = sut_meta_cols %>% unlist() %>% unname()) %>% 
     dplyr::mutate(
-      # Calculate  .eta_fu_hat, which is need twice below.
+      # Calculate .eta_fu_hat, which is needed twice below.
       # Doing the calculation here makes it available for other downstream calculations.
       "{.eta_fu_hat}" := matsbyname::hatize_byname(.data[[eta_fu]]) %>% 
         # Swap column names from arrow notation to paren notation
@@ -416,8 +416,7 @@ move_last_stage_to_useful <- function(.tidy_psut_data,
         # When changing to paren notation, we're highlighting the fact that 
         # Industries in rows make Products in columns. 
         # So we need to change the coltype of the columns to "Product"
-        matsbyname::setcoltype(product_type) ,
-      
+        matsbyname::setcoltype(product_type)
     )
   
   # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
@@ -547,13 +546,8 @@ move_last_stage_to_useful <- function(.tidy_psut_data,
       "{V}" := .data[[paste0(V, .useful)]], 
       "{Y}" := .data[[paste0(Y, .useful)]]
     )
-  # Add to the bottom of the incoming data frame and return
-  out <- dplyr::bind_rows(
-    .tidy_psut_data, 
-    out %>% 
-      tidyr::pivot_longer(c(.data[[R]], .data[[U_excl_eiou]], .data[[U_eiou]], .data[[V]], .data[[Y]], .data[[s_units]]),
-                          names_to = matnames, values_to = matvals)
-  )
+
+  out <- dplyr::bind_rows(.sutdata, out)
   
   # Check energy balance
   

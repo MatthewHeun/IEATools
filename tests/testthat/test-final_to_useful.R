@@ -59,13 +59,13 @@ test_that("form_eta_fu_phi_vecs works as expected", {
   expect_true(is.null(eta_fu_phi_u_df[[IEATools::iea_cols$unit]]))
 
   # Check some values
-  eta_GHA_1971 <- eta_fu_phi_u_df$matvals[[1]]
+  eta_GHA_1971 <- eta_fu_phi_u_df$eta.fu[[1]]
   expect_equal(eta_GHA_1971[["Irons -> MTH.200.C", 1]], 0.85)
   expect_equal(eta_GHA_1971[["Trucks -> MD", 1]], 0.30)
   expect_equal(eta_GHA_1971[["Fans -> MD", 1]], 0.10)
   expect_equal(eta_GHA_1971[["Boat engines -> MD", 1]], 0.30)
 
-  phi_ZAR_2000 <- eta_fu_phi_u_df$matvals[[8]]  
+  phi_ZAR_2000 <- eta_fu_phi_u_df$phi.u[[4]]  
   expect_equal(phi_ZAR_2000[["Generators -> MD", 1]], 1)
   expect_equal(phi_ZAR_2000[["LPG stoves -> LTH.20.C", 1]], 0.01677008)
   expect_equal(phi_ZAR_2000[["Industrial furnaces -> HTH.600.C", 1]], 0.65853519)
@@ -83,21 +83,21 @@ test_that("move_to_useful_last_stage works as expected", {
     form_eta_fu_phi_u_vecs()
   
   with_useful <- psut_mats %>% 
-    move_last_stage_to_useful(tidy_C_data = C_data, tidy_eta_fu_data = eta_fu_data)
+    move_last_stage_to_useful(wide_C_data = C_data, wide_eta_fu_data = eta_fu_data)
 
   # Check some of the values  
   
   # Allocation of ZAF EIOU electricity for lighting and mechanical drive in 2000
   
   EIOU_Electricity_Coal_mines <- psut_mats %>% 
-    dplyr::filter(Country == "ZAF", Year == 2000, matnames == "U_EIOU") %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "ZAF", Year == 2000) %>% 
+    magrittr::extract2("U_EIOU") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electricity", "Coal mines")
   
   alloc_EIOU_ZA_2000 <- C_data %>% 
-    dplyr::filter(Country == "ZAF", matnames == "C_EIOU", Year == 2000) %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "ZAF", Year == 2000) %>% 
+    magrittr::extract2("C_EIOU") %>% 
     magrittr::extract2(1)
   C_lights <- alloc_EIOU_ZA_2000 %>% 
     magrittr::extract("Electricity -> Coal mines", "Electric lights -> Light")
@@ -108,14 +108,14 @@ test_that("move_to_useful_last_stage works as expected", {
   expected_elect_into_motors_in_mines <- EIOU_Electricity_Coal_mines * C_motors
   
   eta_lights <- eta_fu_data %>% 
-    dplyr::filter(Country == "ZAF", Year == 2000, matnames == "eta.fu") %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "ZAF", Year == 2000) %>% 
+    magrittr::extract2("eta.fu") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric lights -> Light", 1)
   
   eta_motors <- eta_fu_data %>% 
-    dplyr::filter(Country == "ZAF", Year == 2000, matnames == "eta.fu") %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "ZAF", Year == 2000) %>% 
+    magrittr::extract2("eta.fu") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric motors -> MD", 1)
   
@@ -123,14 +123,14 @@ test_that("move_to_useful_last_stage works as expected", {
   expected_md_into_mines <- expected_elect_into_motors_in_mines * eta_motors
 
   actual_light_into_mines <- with_useful %>% 
-    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000, matnames == "U_EIOU") %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
+    magrittr::extract2("U_EIOU") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Light [Electric lights]", "Coal mines")
   
   actual_md_into_mines <- with_useful %>% 
-    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000, matnames == "U_EIOU") %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
+    magrittr::extract2("U_EIOU") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("MD [Electric motors]", "Coal mines")
 
@@ -140,14 +140,14 @@ test_that("move_to_useful_last_stage works as expected", {
   
   # ZAF allocation of Other bituminous coal to MTH.200.C
   OBC_to_Chem <- psut_mats %>% 
-    dplyr::filter(Country == "ZAF", Year == 2000, matnames == "Y") %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "ZAF", Year == 2000) %>% 
+    magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Other bituminous coal [of Coal mines]", "Chemical and petrochemical")
   
   alloc_Y_ZA_2000 <- C_data %>% 
-    dplyr::filter(Country == "ZAF", matnames == "C_Y", Year == 2000) %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "ZAF", Year == 2000) %>% 
+    magrittr::extract2("C_Y") %>% 
     magrittr::extract2(1)
   
   C_heaters <- alloc_Y_ZA_2000 %>% 
@@ -156,16 +156,16 @@ test_that("move_to_useful_last_stage works as expected", {
   expected_OBC_into_heaters_in_chem <- OBC_to_Chem * C_heaters
 
   eta_heaters <- eta_fu_data %>% 
-    dplyr::filter(Country == "ZAF", Year == 2000, matnames == "eta.fu") %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "ZAF", Year == 2000) %>% 
+    magrittr::extract2("eta.fu") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric heaters -> MTH.200.C", 1)
 
   expected_200C_into_chem <- expected_OBC_into_heaters_in_chem * eta_heaters
   
   actual_200C_into_chem <- with_useful %>% 
-    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000, matnames == "Y") %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
+    magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("MTH.200.C [Electric heaters]", "Chemical and petrochemical")
 
@@ -175,8 +175,8 @@ test_that("move_to_useful_last_stage works as expected", {
   
   # First work on OBC
   Elect_to_Chem <- psut_mats %>% 
-    dplyr::filter(Country == "ZAF", Year == 2000, matnames == "Y") %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "ZAF", Year == 2000) %>% 
+    magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electricity", "Chemical and petrochemical")
   
@@ -193,8 +193,8 @@ test_that("move_to_useful_last_stage works as expected", {
   expected_light_into_chem <- expected_OBC_light_into_chem + expected_Elect_light_into_chem
   
   actual_light_into_chem <- with_useful %>% 
-    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000, matnames == "Y") %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
+    magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Light [Electric lights]", "Chemical and petrochemical")
 
@@ -202,14 +202,14 @@ test_that("move_to_useful_last_stage works as expected", {
     
   # Allocation of GHA final demand electricity for lighting and mechanical drive Non-ferrous metals in 1971
   Elect_to_NFM <- psut_mats %>% 
-    dplyr::filter(Country == "GHA", Year == 1971, matnames == "Y") %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "GHA", Year == 1971) %>% 
+    magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electricity", "Non-ferrous metals")
   
   alloc_Y_GH_1971 <- C_data %>% 
-    dplyr::filter(Country == "GHA", matnames == "C_Y", Year == 1971) %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "GHA", Year == 1971) %>% 
+    magrittr::extract2("C_Y") %>% 
     magrittr::extract2(1)
   
   C_motors <- alloc_Y_GH_1971 %>% 
@@ -221,14 +221,14 @@ test_that("move_to_useful_last_stage works as expected", {
   expected_elect_into_lights_in_NFM <- Elect_to_NFM * C_lights
   
   eta_motors <- eta_fu_data %>% 
-    dplyr::filter(Country == "GHA", Year == 1971, matnames == "eta.fu") %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "GHA", Year == 1971) %>% 
+    magrittr::extract2("eta.fu") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric motors -> MD", 1)
 
   eta_lights <- eta_fu_data %>% 
-    dplyr::filter(Country == "GHA", Year == 1971, matnames == "eta.fu") %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "GHA", Year == 1971) %>% 
+    magrittr::extract2("eta.fu") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric lights -> Light", 1)
   
@@ -237,14 +237,14 @@ test_that("move_to_useful_last_stage works as expected", {
   expected_light_into_NFM <- expected_elect_into_lights_in_NFM * eta_lights
   
   actual_md_into_NFM <- with_useful %>% 
-    dplyr::filter(Country == "GHA", Last.stage == "Useful", Year == 1971, matnames == "Y") %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "GHA", Last.stage == "Useful", Year == 1971) %>% 
+    magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("MD [Electric motors]", "Non-ferrous metals")
   
   actual_light_into_NFM <- with_useful %>% 
-    dplyr::filter(Country == "GHA", Last.stage == "Useful", Year == 1971, matnames == "Y") %>% 
-    magrittr::extract2("matvals") %>% 
+    dplyr::filter(Country == "GHA", Last.stage == "Useful", Year == 1971) %>% 
+    magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Light [Electric lights]", "Non-ferrous metals")
   

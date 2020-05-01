@@ -69,6 +69,18 @@ mat_meta_cols <- list(matnames = "matnames",
 usethis::use_data(mat_meta_cols, overwrite = TRUE)
 
 
+# 
+# Give names for PSUT meta information columns
+# 
+
+sut_meta_cols <- list(country = iea_cols$country, 
+                      method = iea_cols$method,
+                      energy_type = iea_cols$energy_type,
+                      last_stage = iea_cols$last_stage,
+                      year = iea_cols$year)
+usethis::use_data(sut_meta_cols, overwrite = TRUE)
+                      
+
 #
 # Give the column names of data frames with PSUT data
 #

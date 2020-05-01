@@ -41,8 +41,7 @@ The default value matches the default value for the \code{sep} argument of \code
 \code{matsbyname::vectorize_byname()} will be used for further manipulations.}
 }
 \value{
-a tidy data frame with metadata columns (and year) along with \code{matnames} and \code{matvals} columns
-indicating and containing \code{eta_fu} and \code{phi_u} vectors, respectively.
+a wide data frame with metadata columns (and year) along with columns for \code{eta_fu} and \code{phi_u} vectors.
 }
 \description{
 This function creates vectors from a filled final-to-useful efficiency table

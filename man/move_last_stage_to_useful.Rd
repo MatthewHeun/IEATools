@@ -5,9 +5,9 @@
 \title{Move an ECC from final to useful as its last stage}
 \usage{
 move_last_stage_to_useful(
-  .tidy_psut_data,
-  tidy_C_data,
-  tidy_eta_fu_data,
+  .sutdata,
+  wide_C_data,
+  wide_eta_fu_data,
   last_stage = IEATools::iea_cols$last_stage,
   unit = IEATools::iea_cols$unit,
   final = IEATools::last_stages$final,
@@ -22,6 +22,7 @@ move_last_stage_to_useful(
   s_units = IEATools::psut_cols$s_units,
   matnames = IEATools::mat_meta_cols$matnames,
   matvals = IEATools::mat_meta_cols$matvals,
+  sut_meta_cols = IEATools::sut_meta_cols,
   C_eiou = IEATools::template_cols$C_eiou,
   C_Y = IEATools::template_cols$C_Y,
   eta_fu = IEATools::template_cols$eta_fu,
@@ -37,16 +38,13 @@ move_last_stage_to_useful(
 )
 }
 \arguments{
-\item{.tidy_psut_data}{A tidy data frame of PSUT matrices that represent an energy conversion chain.
-Matrix names should be in the \code{matnames} column, and
-matrices themselves should be in the \code{matvals} column.
+\item{.sutdata}{A wide data frame of PSUT matrices that represent an energy conversion chain.
+Matrices should be in column identified by their names.
 The last stage of these ECCs should be final (not useful).
-\code{.tidy_psut_data} is likely the result of calling (in sequence)
+\code{.sutdata} is likely the result of calling (in sequence)
 \code{load_tidy_iea_df()} \verb{\%>\%} \code{specify_all()} \verb{\%>\%} \code{prep_psut()}}
 
-\item{tidy_C_data}{a tidy data frame of final-to-useful allocation matrices, probably the result of calling \code{form_C_mats()}.}
-
-\item{tidy_eta_fu_data}{a tidy data frame of final-to-useful machine efficiency matrices, probably the result of calling \code{form_eta_fu_phi_u_vecs}.}
+\item{wide_eta_fu_data}{a wide data frame of final-to-useful machine efficiency matrices, probably the result of calling \code{form_eta_fu_phi_u_vecs}.}
 
 \item{last_stage, unit}{See \code{IEATools::iea_cols$last_stage}.
 Each of these should be a column in all of \code{.tidy_psut_data}, \code{C_data}, and \code{eta_fu_data}.}
@@ -59,6 +57,8 @@ Each of these should be a column in all of \code{.tidy_psut_data}, \code{C_data}
 These matrices should be found in the \code{matvals} column of the \code{.tidy_psut_data} data frame.}
 
 \item{matnames, matvals}{See \code{IEATools::mat_meta_cols}.}
+
+\item{sut_meta_cols}{See \code{IEATools::sut_meta_cols}.}
 
 \item{C_eiou, C_Y, eta_fu, phi_u}{See \code{IEATools::template_cols}.
 \code{C_eiou} and \code{C_Y} matrices should be found in the \code{matvals} column of the \code{C_Y_data} data frame.
@@ -82,6 +82,8 @@ to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".}
 \item{.add_to_V_f}{an internal matrix name for a matrix to add to the Y_f matrix. Default is ".add_to_V_f".}
 
 \item{.useful}{A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".}
+
+\item{tidwide_C_data}{a wide data frame of final-to-useful allocation matrices, probably the result of calling \code{form_C_mats()}.}
 }
 \value{
 a version of \code{.tidy_sut_data} that contains additional rows with useful final stage ECC matrices
