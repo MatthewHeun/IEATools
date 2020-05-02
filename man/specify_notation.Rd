@@ -5,7 +5,7 @@
 \alias{specify_notation}
 \title{Specification notation}
 \format{
-A character vector with 14 entries
+A character vector with 15 entries
 }
 \usage{
 specify_notation

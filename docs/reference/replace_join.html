@@ -77,7 +77,7 @@ and adds all unmatched rows from y." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.20</span>
       </span>
     </div>
 
@@ -141,7 +141,7 @@ and adds all unmatched rows from y." />
     </div>
 
     <div class="ref-description">
-    <p>Perform a modified <code><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>dplyr::full_join()</a></code> on <code>x</code> and <code>y</code>,
+    <p>Perform a modified <code><a href='https://dplyr.tidyverse.org/reference/join.html'>dplyr::full_join()</a></code> on <code>x</code> and <code>y</code>,
 returning all columns from <code>c</code>,
 non-matching rows from <code>x</code>,
 and all rows from <code>y</code>.
@@ -153,7 +153,7 @@ and adds all unmatched rows from <code>y</code>.</p>
   <span class='no'>x</span>,
   <span class='no'>y</span>,
   <span class='no'>replace_col</span>,
-  <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>intersect</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>x</span>), <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>y</span>)) <span class='kw'>%&gt;%</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>setdiff</a></span>(<span class='no'>replace_col</span>),
+  <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/setops.html'>intersect</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>x</span>), <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>y</span>)) <span class='kw'>%&gt;%</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/setops.html'>setdiff</a></span>(<span class='no'>replace_col</span>),
   <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>".x"</span>, <span class='st'>".y"</span>),
   <span class='no'>...</span>
@@ -188,16 +188,16 @@ This default ensures that <code>replace_col</code> is not in <code>by</code>, as
     </tr>
     <tr>
       <th>copy</th>
-      <td><p>passed to <code><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>dplyr::left_join()</a></code>. Default value is <code>FALSE</code>.</p></td>
+      <td><p>passed to <code><a href='https://dplyr.tidyverse.org/reference/join.html'>dplyr::left_join()</a></code>. Default value is <code>FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>suffix</th>
-      <td><p>appended to <code>replace_col</code> to form the names of columns created in <code>x</code> during the internal <code><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>dplyr::left_join()</a></code> operation.
-Default is <code><a href='https://rdrr.io/r/base/c.html'>c(".x", ".y")</a></code>, same as the default for <code><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>dplyr::full_join()</a></code>.</p></td>
+      <td><p>appended to <code>replace_col</code> to form the names of columns created in <code>x</code> during the internal <code><a href='https://dplyr.tidyverse.org/reference/join.html'>dplyr::left_join()</a></code> operation.
+Default is <code><a href='https://rdrr.io/r/base/c.html'>c(".x", ".y")</a></code>, same as the default for <code><a href='https://dplyr.tidyverse.org/reference/join.html'>dplyr::full_join()</a></code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>passed to <code><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>dplyr::full_join()</a></code></p></td>
+      <td><p>passed to <code><a href='https://dplyr.tidyverse.org/reference/join.html'>dplyr::full_join()</a></code></p></td>
     </tr>
     </table>
 
@@ -249,7 +249,7 @@ See examples.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

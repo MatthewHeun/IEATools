@@ -28,7 +28,7 @@ form_C_mats(
   coltypes = IEATools::mat_meta_cols$coltypes,
   product = IEATools::row_col_types$product,
   industry = IEATools::row_col_types$industry,
-  sep = " -> ",
+  sep = IEATools::specify_notation$arrow,
   tol = 1e-06,
   C_eiou = IEATools::template_cols$C_eiou,
   C_Y = IEATools::template_cols$C_Y,
@@ -68,8 +68,8 @@ that contains \code{TRUE} or \code{FALSE} depending on whether a rowsum was 1.}
 that tells whether a 1-vector was created by rowsums.}
 }
 \value{
-a tidy data frame with metadata columns (and year) along with \code{matnames} and \code{matvals} columns
-indicating and containing \code{C_eiou} and \code{C_Y} matrices, respectively.
+a wide data frame with metadata columns (and year) along with columns for
+\code{C_eiou} and \code{C_Y} matrices.
 If not all rows of a C matrix sum to 1,
 a warning is emitted, and
 a data frame is returned which shows the errors.
@@ -77,12 +77,16 @@ a data frame is returned which shows the errors.
 \description{
 This function uses information in a filled allocation template (created by \code{write_fu_allocation_template()})
 to create allocation matrices (\code{C}).
-rownames of the \code{C} matricds are taken from the \code{Ef.product} and \code{Destination} columns, and
-colnames are taken from the \code{Machine} and \code{Eu.product} columns.
-\code{C} matrices are created for both energy industry own use
-and final demand (\code{C_eiou} and \code{C_Y}, respectively).
 }
 \details{
+rownames of the \code{C} matrices are taken from the \code{Ef.product} and \code{Destination} columns of \code{.fu_allocation_table}
+and have the form "\code{Ef.product}  ->  \code{Destination}".
+colnames of the \code{C} matrices are taken from the \code{Machine} and \code{Eu.product} columns of \code{.fu_allocation_table}
+and have the form "machine  ->  useful energy form".
+
+\code{C} matrices are created for both energy industry own use
+and final demand (\code{C_eiou} and \code{C_Y}, respectively).
+
 Rows of the output \code{C} matrices should sum to 1.
 If there is a problem, a data frame that shows the errors is returned.
 Such errors probably indicate the FU template was not filled correctly.

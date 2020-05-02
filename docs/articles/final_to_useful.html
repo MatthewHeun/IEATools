@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.20</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Final to Useful Analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-04-01</h4>
+            <h4 class="date">2020-05-01</h4>
       
       
       <div class="hidden name"><code>final_to_useful.Rmd</code></div>
@@ -120,10 +120,6 @@
 <span class="no">Tidy_iea_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()
-<span class="co">#&gt; Warning: The `add` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span>
-<span class="co">#&gt; Please use the `.add` argument instead.</span>
-<span class="co">#&gt; This warning is displayed once every 8 hours.</span>
-<span class="co">#&gt; Call `lifecycle::last_warnings()` to see where this warning was generated.</span>
 <span class="co">#&gt; Rows: 413</span>
 <span class="co">#&gt; Columns: 11</span>
 <span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
@@ -143,7 +139,7 @@
   <span class="fu"><a href="../reference/fu_allocation_template.html">fu_allocation_template</a></span>()
 <span class="no">FU_allocation_template</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()
-<span class="co">#&gt; Rows: 705</span>
+<span class="co">#&gt; Rows: 846</span>
 <span class="co">#&gt; Columns: 15</span>
 <span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
 <span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span>
@@ -157,9 +153,9 @@
 <span class="co">#&gt; $ Eu.product             &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…</span>
 <span class="co">#&gt; $ Destination            &lt;chr&gt; "Oil refineries", "Oil refineries", "Oil refin…</span>
 <span class="co">#&gt; $ Quantity               &lt;chr&gt; "E.dot", "E.dot [%]", "C_1 [%]", "C_2 [%]", "C…</span>
-<span class="co">#&gt; $ Maximum.values         &lt;dbl&gt; 2.642350e+01, 8.867781e-01, NA, NA, NA, 3.7833…</span>
-<span class="co">#&gt; $ `1971`                 &lt;dbl&gt; 1.953040e+01, 8.867781e-01, NA, NA, NA, 2.4936…</span>
-<span class="co">#&gt; $ `2000`                 &lt;dbl&gt; 26.4235000, 0.8747534, NA, NA, NA, 3.7833000, …</span></pre></body></html></div>
+<span class="co">#&gt; $ Maximum.values         &lt;dbl&gt; 2.642350e+01, 8.867781e-01, NA, NA, NA, NA, 3.…</span>
+<span class="co">#&gt; $ `1971`                 &lt;dbl&gt; 1.953040e+01, 8.867781e-01, NA, NA, NA, NA, 2.…</span>
+<span class="co">#&gt; $ `2000`                 &lt;dbl&gt; 26.4235000, 0.8747534, NA, NA, NA, NA, 3.78330…</span></pre></body></html></div>
 <p>To obtain a nicely-formatted Excel spreadsheet, use the <code><a href="../reference/write_fu_allocation_template.html">write_fu_allocation_template()</a></code> function.</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"># FU_allocation_template %&gt;% 
 #   write_fu_allocation_template("~/Desktop/Test_FU_allocation_template.xlsx")</pre></body></html></div>
@@ -210,7 +206,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

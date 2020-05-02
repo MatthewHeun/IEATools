@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create final-to-useful efficiency vectors (<code>eta_fu</code>) and exergy-to-energy ratio vectors (<code>phi_u</code>) from a final-to-useful efficiency table — form_eta_fu_phi_u_vecs • IEATools</title>
+<title>Create <code>eta_fu</code> and <code>phi_u</code> vectors — form_eta_fu_phi_u_vecs • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,14 @@
 
 
 
-<meta property="og:title" content="Create final-to-useful efficiency vectors (<code>eta_fu</code>) and exergy-to-energy ratio vectors (<code>phi_u</code>) from a final-to-useful efficiency table — form_eta_fu_phi_u_vecs" />
-<meta property="og:description" content="Create final-to-useful efficiency vectors (eta_fu) and exergy-to-energy ratio vectors (phi_u) from a final-to-useful efficiency table" />
+<meta property="og:title" content="Create <code>eta_fu</code> and <code>phi_u</code> vectors — form_eta_fu_phi_u_vecs" />
+<meta property="og:description" content="This function creates vectors from a filled final-to-useful efficiency table
+created by write_fu_allocation_template().
+The two vectors are:
+eta_fu: a vector of final-to-useful energy efficiencies, and
+phi_u: a vector of useful exergy-to-useful energy ratios.
+
+" />
 
 
 
@@ -72,7 +78,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.20</span>
       </span>
     </div>
 
@@ -130,13 +136,19 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create final-to-useful efficiency vectors (<code>eta_fu</code>) and exergy-to-energy ratio vectors (<code>phi_u</code>) from a final-to-useful efficiency table</h1>
+    <h1>Create <code>eta_fu</code> and <code>phi_u</code> vectors</h1>
     
     <div class="hidden name"><code>form_eta_fu_phi_u_vecs.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create final-to-useful efficiency vectors (<code>eta_fu</code>) and exergy-to-energy ratio vectors (<code>phi_u</code>) from a final-to-useful efficiency table</p>
+    <p>This function creates vectors from a filled final-to-useful efficiency table
+created by <code><a href='write_fu_allocation_template.html'>write_fu_allocation_template()</a></code>.
+The two vectors are:</p><ul>
+<li><p><code>eta_fu</code>: a vector of final-to-useful energy efficiencies, and</p></li>
+<li><p><code>phi_u</code>: a vector of useful exergy-to-useful energy ratios.</p></li>
+</ul>
+
     </div>
 
     <pre class="usage"><span class='fu'>form_eta_fu_phi_u_vecs</span>(
@@ -157,7 +169,7 @@
   <span class='kw'>colnames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>colnames</span>,
   <span class='kw'>rowtypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>rowtypes</span>,
   <span class='kw'>coltypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>coltypes</span>,
-  <span class='kw'>sep</span> <span class='kw'>=</span> <span class='st'>" -&gt; "</span>
+  <span class='kw'>sep</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>$<span class='no'>arrow</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -191,29 +203,28 @@ The default value matches the default value for the <code>sep</code> argument of
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a tidy data frame with metadata columns (and year) along with <code>matnames</code> and <code>matvals</code> columns
-indicating and containing <code>eta_fu</code> and <code>phi_u</code> vectors, respectively.</p>
+    <p>a wide data frame with metadata columns (and year) along with columns for <code>eta_fu</code> and <code>phi_u</code> vectors.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The vectors <code>eta_fu</code> and <code>phi_u</code> have special rownames that indicate
+sources and types of useful energy flows.
+Row names have the pattern
+"machine  -&gt;  useful energy form" to indicate
+the energy efficiency of "machine" for making "useful energy form"
+or the exergy-to-energy ratio of the useful energy form created by machine.</p>
+<p>Columns are named by the variable in the vector:
+"eta_fu" for final-to-useful efficiencies and
+"phi_u" for useful exergy-to-useful energy ratios.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='load_eta_fu_data.html'>load_eta_fu_data</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>form_eta_fu_phi_u_vecs</span>()</div><div class='output co'>#&gt;   Country Method Energy.type Last.stage matnames Year
-#&gt; 1     GHA    PCM           E      Final   eta.fu 1971
-#&gt; 2     GHA    PCM           E      Final   eta.fu 2000
-#&gt; 3     GHA    PCM           E      Final    phi.u 1971
-#&gt; 4     GHA    PCM           E      Final    phi.u 2000
-#&gt; 5     ZAF    PCM           E      Final   eta.fu 1971
-#&gt; 6     ZAF    PCM           E      Final   eta.fu 2000
-#&gt; 7     ZAF    PCM           E      Final    phi.u 1971
-#&gt; 8     ZAF    PCM           E      Final    phi.u 2000
-#&gt;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  matvals
-#&gt; 1                                                                                                                                                                                                                                                                                                                                                                                           0.30, 0.30, 0.14, 0.30, 0.30, 0.30, 0.85, 0.97, 0.20, 0.85, 0.70, 0.65, 0.10, 0.85, 0.85, 0.85, 0.16, 0.18, 0.30, 0.12, 0.85
-#&gt; 2                                                                                                                                                                                                                                                                                                                                                                                                 0.31, 0.31, 0.14, 0.30, 0.31, 0.30, 0.99, 0.20, 0.95, 0.70, 0.12, 0.86, 0.86, 0.85, 0.16, 0.18, 0.48, 0.31, 0.12, 0.86
-#&gt; 3                                                                                                                                                                                                                                                                                  1.0000000, 1.0000000, 0.2009916, 1.0000000, 1.0000000, 1.0000000, 0.6585352, 0.3698616, 0.1261201, 1.0000000, 0.2009916, 0.3698616, 1.0000000, 0.6585352, 0.3698616, 0.3698616, 0.2009916, 0.2009916, 1.0000000, 0.2009916, 0.3698616
-#&gt; 4                                                                                                                                                                                                                                                                                             1.0000000, 1.0000000, 0.2009916, 1.0000000, 1.0000000, 1.0000000, 0.3698616, 0.1830161, 1.0000000, 0.2009916, 1.0000000, 0.6585352, 0.3698616, 0.3698616, 0.2009916, 0.2009916, 0.3698616, 1.0000000, 0.2009916, 0.3698616
-#&gt; 5                                                                                                                                                                                                                                                                                                                               0.30, 0.30, 0.14, 0.16, 0.25, 0.30, 0.30, 0.45, 0.90, 0.40, 0.20, 0.87, 0.12, 0.80, 0.85, 0.40, 0.20, 0.85, 0.80, 0.30, 0.30, 0.14, 0.16, 0.30, 0.80, 0.40, 0.60, 0.30, 0.12, 0.85, 0.20
-#&gt; 6                                                                                                                                                                                                                                                                   0.31, 0.31, 0.31, 0.14, 0.16, 0.16, 0.31, 0.31, 0.50, 0.95, 0.45, 0.20, 0.96, 0.12, 0.85, 0.90, 0.85, 0.90, 0.45, 0.20, 0.31, 0.90, 0.85, 0.31, 0.31, 0.35, 0.20, 0.30, 0.16, 0.14, 0.16, 0.32, 0.16, 0.35, 0.85, 0.90, 0.62, 0.31, 0.12, 0.85, 0.25
-#&gt; 7                                                                                                                                                 1.00000000, 1.00000000, 0.20099156, 0.01677008, 0.36986157, 1.00000000, 1.00000000, 1.00000000, 0.65853519, 0.36986157, 0.12612006, 1.00000000, 1.00000000, 0.65853519, 0.01677008, 0.36986157, 0.12612006, 0.65853519, 0.36986157, 1.00000000, 0.36986157, 0.36986157, 0.36986157, 0.65853519, 0.36986157, 1.00000000, 1.00000000, 0.20099156, 0.01677008, 0.36986157
-#&gt; 8 1.00000000, 1.00000000, 1.00000000, 0.20099156, 0.01677008, 0.20099156, 1.00000000, 1.00000000, 1.00000000, 0.65853519, 0.36986157, 0.18301611, 1.00000000, 1.00000000, 0.65853519, 0.01677008, 0.36986157, 0.65853519, 0.20099156, 0.36986157, 0.18301611, 1.00000000, 0.65853519, 0.36986157, 1.00000000, 1.00000000, 0.36986157, 0.18301611, 0.01677008, 0.20099156, 0.36986157, 0.20099156, 0.01677008, 0.20099156, 0.36986157, 0.01677008, 0.36986157, 1.00000000, 1.00000000, 0.20099156, 0.01677008, 0.36986157</div></pre>
+  <span class='fu'>form_eta_fu_phi_u_vecs</span>()</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 x 7</span><span>
+#&gt;   Country Method Energy.type Last.stage  Year eta.fu            phi.u           
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span>            </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span>          
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 </span><span style='color: #949494;'>&lt;dbl[,1] [21 × 1</span><span>… </span><span style='color: #949494;'>&lt;dbl[,1] [21 × </span><span>…
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>2</span><span>000 </span><span style='color: #949494;'>&lt;dbl[,1] [20 × 1</span><span>… </span><span style='color: #949494;'>&lt;dbl[,1] [20 × </span><span>…
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span> ZAF     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 </span><span style='color: #949494;'>&lt;dbl[,1] [31 × 1</span><span>… </span><span style='color: #949494;'>&lt;dbl[,1] [30 × </span><span>…
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span> ZAF     PCM    E           Final       </span><span style='text-decoration: underline;'>2</span><span>000 </span><span style='color: #949494;'>&lt;dbl[,1] [41 × 1</span><span>… </span><span style='color: #949494;'>&lt;dbl[,1] [42 × </span><span>…</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -229,7 +240,7 @@ indicating and containing <code>eta_fu</code> and <code>phi_u</code> vectors, re
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.20</span>
       </span>
     </div>
 
@@ -133,6 +133,22 @@
       
     </div>
 
+    <div id="ieatools-0120-2020-05-01" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.20">
+<a href="#ieatools-0120-2020-05-01" class="anchor"></a>IEATools 0.1.20 (2020-05-01)</h1>
+<ul>
+<li>Added additional tests for bug fixes and new features.
+<ul>
+<li>Now up to 500 tests, all passing.</li>
+<li>Test coverage remains at 100%.</li>
+</ul>
+</li>
+<li>Added function <code><a href="../reference/move_last_stage_to_useful.html">move_last_stage_to_useful()</a></code> and supporting functions <code><a href="../reference/form_C_mats.html">form_C_mats()</a></code> and <code><a href="../reference/form_eta_fu_phi_u_vecs.html">form_eta_fu_phi_u_vecs()</a></code>. These functions use a matrix method to move from last stage of final energy to last stage of useful energy.</li>
+<li>Changed default number of rows in an allocation template from 3 to 4, per request from Zeke Marshall. Note that the number of rows in the allocaiton template is adjustable at the time the template is created using the <code>n_allocation_rows</code> argument to <code><a href="../reference/fu_allocation_template.html">fu_allocation_template()</a></code>.</li>
+<li>Added functions for row and column notation in lists: <code><a href="../reference/switch-notation.html">switch_notation_byname()</a></code>, <code><a href="../reference/switch-notation.html">arrow_to_paren_byname()</a></code>, and <code><a href="../reference/switch-notation.html">paren_to_arrow_byname()</a></code>. These functions are like <code>*_byname</code> functions in the package <code>matsbyname</code>: they accept both single matrices and lists of matrices. In that way, they are amenable to pipeline calculations using the <code>matsindf</code> package. Adding this feature exposed bugs in <code><a href="https://rdrr.io/pkg/matsbyname/man/setrownames_byname.html">matsbyname::setrownames_byname()</a></code> and <code><a href="https://rdrr.io/pkg/matsbyname/man/setcolnames_byname.html">matsbyname::setcolnames_byname()</a></code>. The bugs in <code>matsbyname</code> have been fixed, so these features are now working.</li>
+<li>Added functions for row and column notation: <code><a href="../reference/switch-notation.html">paren_to_arrow()</a></code>, <code><a href="../reference/switch-notation.html">arrow_to_paren()</a></code>, and <code><a href="../reference/switch-notation.html">switch_notation()</a></code>.</li>
+</ul>
+</div>
     <div id="ieatools-0119-2020-04-01" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.19">
 <a href="#ieatools-0119-2020-04-01" class="anchor"></a>IEATools 0.1.19 (2020-04-01)</h1>
@@ -366,7 +382,7 @@ For example, “Hard coal (if no detail)” –&gt; “Hard coal (if no detail) 
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

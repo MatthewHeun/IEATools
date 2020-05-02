@@ -77,7 +77,7 @@ on a per-product basis." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.20</span>
       </span>
     </div>
 
@@ -236,42 +236,42 @@ that should be investigated prior to further analysis.</p>
 <span class='co'># The `err` column shows the magnitude of the imbalances.</span>
 <span class='no'>unbalanced</span> <span class='kw'>&lt;-</span> <span class='no'>grouped_iea_df</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='calc_tidy_iea_df_balances.html'>calc_tidy_iea_df_balances</a></span>()
-<span class='no'>unbalanced</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 78 x 12</span><span>
+<span class='no'>unbalanced</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 78 x 12</span><span>
 #&gt;    Country Method Energy.type Last.stage  Year Product Unit  supply_sum
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Aviati… ktoe    0.  </span><span style='color: #555555;'> </span><span>   
-#&gt; </span><span style='color: #555555;'> 2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Charco… ktoe    1.19</span><span style='color: #555555;'>e</span><span>+ 2
-#&gt; </span><span style='color: #555555;'> 3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Crude … ktoe   -</span><span style='color: #BB0000;'>3.55</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-14</span><span>
-#&gt; </span><span style='color: #555555;'> 4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Electr… ktoe    2.35</span><span style='color: #555555;'>e</span><span>+ 2
-#&gt; </span><span style='color: #555555;'> 5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Fuel o… ktoe    9.51</span><span style='color: #555555;'>e</span><span>+ 1
-#&gt; </span><span style='color: #555555;'> 6</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Gas/di… ktoe    2.18</span><span style='color: #555555;'>e</span><span>+ 2
-#&gt; </span><span style='color: #555555;'> 7</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Hydro   ktoe    0.  </span><span style='color: #555555;'> </span><span>   
-#&gt; </span><span style='color: #555555;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Kerose… ktoe   -</span><span style='color: #BB0000;'>3.55</span><span style='color: #555555;'>e</span><span style='color: #BB0000;'>-15</span><span>
-#&gt; </span><span style='color: #555555;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Liquef… ktoe    3.39</span><span style='color: #555555;'>e</span><span>+ 0
-#&gt; </span><span style='color: #555555;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Lubric… ktoe    1.81</span><span style='color: #555555;'>e</span><span>+ 1
-#&gt; </span><span style='color: #555555;'># … with 68 more rows, and 4 more variables: consumption_sum </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   supply_minus_consumption </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, balance_OK </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #555555;'>, err </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='co'># The `tidy_iea_df_balanced` function returns `TRUE` if and only if `all` of the groups (rows) </span>
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Aviati… ktoe    0.  </span><span style='color: #949494;'> </span><span>   
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Charco… ktoe    1.19</span><span style='color: #949494;'>e</span><span>+ 2
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Crude … ktoe   -</span><span style='color: #BB0000;'>3.55</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-14</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Electr… ktoe    2.35</span><span style='color: #949494;'>e</span><span>+ 2
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Fuel o… ktoe    9.51</span><span style='color: #949494;'>e</span><span>+ 1
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Gas/di… ktoe    2.18</span><span style='color: #949494;'>e</span><span>+ 2
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Hydro   ktoe    0.  </span><span style='color: #949494;'> </span><span>   
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Kerose… ktoe   -</span><span style='color: #BB0000;'>3.55</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-15</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Liquef… ktoe    3.39</span><span style='color: #949494;'>e</span><span>+ 0
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Lubric… ktoe    1.81</span><span style='color: #949494;'>e</span><span>+ 1
+#&gt; </span><span style='color: #949494;'># … with 68 more rows, and 4 more variables: consumption_sum </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
+#&gt; </span><span style='color: #949494;'>#   supply_minus_consumption </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, balance_OK </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, err </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='co'># The `tidy_iea_df_balanced` function returns `TRUE` if and only if `all` of the groups (rows) </span>
 <span class='co'># in `unbalanced` are balanced.</span>
 <span class='no'>unbalanced</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='tidy_iea_df_balanced.html'>tidy_iea_df_balanced</a></span>()</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='co'># Fix the imbalances.</span>
 <span class='no'>balanced</span> <span class='kw'>&lt;-</span> <span class='no'>grouped_iea_df</span> <span class='kw'>%&gt;%</span>
   <span class='fu'>fix_tidy_iea_df_balances</span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='calc_tidy_iea_df_balances.html'>calc_tidy_iea_df_balances</a></span>()
-<span class='no'>balanced</span></div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 78 x 12</span><span>
+<span class='no'>balanced</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 78 x 12</span><span>
 #&gt;    Country Method Energy.type Last.stage  Year Product Unit  supply_sum
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Aviati… ktoe        0   
-#&gt; </span><span style='color: #555555;'> 2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Charco… ktoe      119.  
-#&gt; </span><span style='color: #555555;'> 3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Crude … ktoe        0   
-#&gt; </span><span style='color: #555555;'> 4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Electr… ktoe      235.  
-#&gt; </span><span style='color: #555555;'> 5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Fuel o… ktoe       95.1 
-#&gt; </span><span style='color: #555555;'> 6</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Gas/di… ktoe      218.  
-#&gt; </span><span style='color: #555555;'> 7</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Hydro   ktoe        0   
-#&gt; </span><span style='color: #555555;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Kerose… ktoe        0   
-#&gt; </span><span style='color: #555555;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Liquef… ktoe        3.39
-#&gt; </span><span style='color: #555555;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Lubric… ktoe       18.1 
-#&gt; </span><span style='color: #555555;'># … with 68 more rows, and 4 more variables: consumption_sum </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   supply_minus_consumption </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, balance_OK </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #555555;'>, err </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='no'>balanced</span> <span class='kw'>%&gt;%</span>
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Aviati… ktoe        0   
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Charco… ktoe      119.  
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Crude … ktoe        0   
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Electr… ktoe      235.  
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Fuel o… ktoe       95.1 
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Gas/di… ktoe      218.  
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Hydro   ktoe        0   
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Kerose… ktoe        0   
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Liquef… ktoe        3.39
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Lubric… ktoe       18.1 
+#&gt; </span><span style='color: #949494;'># … with 68 more rows, and 4 more variables: consumption_sum </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
+#&gt; </span><span style='color: #949494;'>#   supply_minus_consumption </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, balance_OK </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, err </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='no'>balanced</span> <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='tidy_iea_df_balanced.html'>tidy_iea_df_balanced</a></span>()</div><div class='output co'>#&gt; [1] TRUE</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -288,7 +288,7 @@ that should be investigated prior to further analysis.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

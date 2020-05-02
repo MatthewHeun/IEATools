@@ -22,6 +22,7 @@ usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 # Otherwise, open and close should not contain any regex special characters.
 specify_notation <- list(open = " [", 
                          close = "]", 
+                         arrow = " -> ",
                          resources_preposition = "of ",
                          eiou_preposition = "to ", 
                          interface_ind_preposition = "of ",
@@ -67,6 +68,18 @@ mat_meta_cols <- list(matnames = "matnames",
                       coltypes = "coltypes")
 usethis::use_data(mat_meta_cols, overwrite = TRUE)
 
+
+# 
+# Give names for PSUT meta information columns
+# 
+
+sut_meta_cols <- list(country = iea_cols$country, 
+                      method = iea_cols$method,
+                      energy_type = iea_cols$energy_type,
+                      last_stage = iea_cols$last_stage,
+                      year = iea_cols$year)
+usethis::use_data(sut_meta_cols, overwrite = TRUE)
+                      
 
 #
 # Give the column names of data frames with PSUT data

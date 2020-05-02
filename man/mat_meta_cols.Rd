@@ -3,7 +3,7 @@
 \docType{data}
 \name{mat_meta_cols}
 \alias{mat_meta_cols}
-\title{PSUT matrix meta information column names}
+\title{PSUT matrix formation meta information column names}
 \format{
 A string list with 6 entries
 \describe{
