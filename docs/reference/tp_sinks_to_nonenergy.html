@@ -76,7 +76,7 @@ as non_energy_flow, by default &quot;Non-energy use in industry/transformation/e
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.20</span>
       </span>
     </div>
 
@@ -250,13 +250,18 @@ as <code>non_energy_flow</code>, by default "Non-energy use in industry/transfor
 #&gt; 2           E   Bogus 1971
 #&gt; 3           E   Bogus 1971
 #&gt; 4           E   Bogus 1971</div><div class='input'><span class='no'>DF</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>tp_sinks_to_nonenergy</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 3 x 10</span><span>
-#&gt;   Ledger.side Flow.aggregatio… Flow  Product E.dot Method Last.stage Energy.type
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      
-#&gt; </span><span style='color: #555555;'>1</span><span> Supply      Transformation … Auto… Petrol     -</span><span style='color: #BB0000;'>1</span><span> PCM    Final      E          
-#&gt; </span><span style='color: #555555;'>2</span><span> Supply      Transformation … Auto… MD          1 PCM    Final      E          
-#&gt; </span><span style='color: #555555;'>3</span><span> Consumption Non-energy use   Non-… Coal       10 PCM    Final      E          
-#&gt; </span><span style='color: #555555;'># … with 2 more variables: Country </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Year </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+  <span class='fu'>tp_sinks_to_nonenergy</span>()</div><div class='output co'>#&gt;   Ledger.side   Flow.aggregation.point
+#&gt; 1      Supply Transformation processes
+#&gt; 2      Supply Transformation processes
+#&gt; 3 Consumption           Non-energy use
+#&gt;                                            Flow Product E.dot Method Last.stage
+#&gt; 1                                   Automobiles  Petrol    -1    PCM      Final
+#&gt; 2                                   Automobiles      MD     1    PCM      Final
+#&gt; 3 Non-energy use industry/transformation/energy    Coal    10    PCM      Final
+#&gt;   Energy.type Country Year
+#&gt; 1           E   Bogus 1971
+#&gt; 2           E   Bogus 1971
+#&gt; 3           E   Bogus 1971</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -44,12 +44,18 @@
 Two notations are useful: arrow and parenthetical.
 Arrow notation is &quot;from -&amp;gt; to&quot;,
 and parenthetical notation is &quot;to [from]&quot;.
-These functions change a vector of strings between the specification notations.
+These functions change a vector of strings or matrix row/column names
+between the specification notations.
 switch_notation() is the worker function.
 arrow_to_paren() switches from arrow to parenthetical specification notation.
 paren_to_arrow() switches from parenthetical to arrow specification notation.
+switch_notation_byname() is a worker function.
+arrow_to_paren_byname() switches from arrow to parenthetical specification notation for a matrix or a list of matrices.
+paren_to_arrow_byname() switches from parenthetical to arrow specification notation for a matrix or a list of matrices.
 
-" />
+
+Functions with the name *_byname behave like functions in the byname package.
+Specifically, they can work with a single matrix or a list of matrices supplied to the m argument." />
 
 
 
@@ -81,7 +87,7 @@ paren_to_arrow() switches from parenthetical to arrow specification notation.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.20</span>
       </span>
     </div>
 
@@ -149,30 +155,64 @@ paren_to_arrow() switches from parenthetical to arrow specification notation.
 Two notations are useful: arrow and parenthetical.
 Arrow notation is "from -&gt; to",
 and parenthetical notation is "to [from]".
-These functions change a vector of strings between the specification notations.</p><ul>
+These functions change a vector of strings or matrix row/column names
+between the specification notations.</p><ul>
 <li><p><code>switch_notation()</code> is the worker function.</p></li>
 <li><p><code>arrow_to_paren()</code> switches from arrow to parenthetical specification notation.</p></li>
 <li><p><code>paren_to_arrow()</code> switches from parenthetical to arrow specification notation.</p></li>
+<li><p><code>switch_notation_byname()</code> is a worker function.</p></li>
+<li><p><code>arrow_to_paren_byname()</code> switches from arrow to parenthetical specification notation for a matrix or a list of matrices.</p></li>
+<li><p><code>paren_to_arrow_byname()</code> switches from parenthetical to arrow specification notation for a matrix or a list of matrices.</p></li>
 </ul>
 
+<p>Functions with the name <code>*_byname</code> behave like functions in the <code>byname</code> package.
+Specifically, they can work with a single matrix or a list of matrices supplied to the <code>m</code> argument.</p>
     </div>
 
     <pre class="usage"><span class='fu'>switch_notation</span>(<span class='no'>x</span>, <span class='no'>old_start</span>, <span class='no'>old_end</span>, <span class='no'>new_start</span>, <span class='no'>new_end</span>)
 
 <span class='fu'>arrow_to_paren</span>(
   <span class='no'>x</span>,
-  <span class='kw'>old_start</span> <span class='kw'>=</span> <span class='no'>specify_notation</span>$<span class='no'>arrow</span>,
+  <span class='kw'>old_start</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>$<span class='no'>arrow</span>,
   <span class='kw'>old_end</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>new_start</span> <span class='kw'>=</span> <span class='no'>specify_notation</span>$<span class='no'>open</span>,
-  <span class='kw'>new_end</span> <span class='kw'>=</span> <span class='no'>specify_notation</span>$<span class='no'>close</span>
+  <span class='kw'>new_start</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>$<span class='no'>open</span>,
+  <span class='kw'>new_end</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>$<span class='no'>close</span>
 )
 
 <span class='fu'>paren_to_arrow</span>(
   <span class='no'>x</span>,
-  <span class='kw'>old_start</span> <span class='kw'>=</span> <span class='no'>specify_notation</span>$<span class='no'>open</span>,
-  <span class='kw'>old_end</span> <span class='kw'>=</span> <span class='no'>specify_notation</span>$<span class='no'>close</span>,
-  <span class='kw'>new_start</span> <span class='kw'>=</span> <span class='no'>specify_notation</span>$<span class='no'>arrow</span>,
+  <span class='kw'>old_start</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>$<span class='no'>open</span>,
+  <span class='kw'>old_end</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>$<span class='no'>close</span>,
+  <span class='kw'>new_start</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>$<span class='no'>arrow</span>,
   <span class='kw'>new_end</span> <span class='kw'>=</span> <span class='st'>""</span>
+)
+
+<span class='fu'>arrow_to_paren_byname</span>(
+  <span class='no'>m</span>,
+  <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>),
+  <span class='kw'>old_start</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>$<span class='no'>arrow</span>,
+  <span class='kw'>old_end</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>new_start</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>$<span class='no'>open</span>,
+  <span class='kw'>new_end</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>$<span class='no'>close</span>
+)
+
+<span class='fu'>paren_to_arrow_byname</span>(
+  <span class='no'>m</span>,
+  <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>),
+  <span class='kw'>old_start</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>$<span class='no'>open</span>,
+  <span class='kw'>old_end</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>$<span class='no'>close</span>,
+  <span class='kw'>new_start</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>$<span class='no'>arrow</span>,
+  <span class='kw'>new_end</span> <span class='kw'>=</span> <span class='st'>""</span>
+)
+
+<span class='fu'>switch_notation_byname</span>(
+  <span class='no'>m</span>,
+  <span class='no'>margin</span>,
+  <span class='no'>worker_func</span>,
+  <span class='no'>old_start</span>,
+  <span class='no'>old_end</span>,
+  <span class='no'>new_start</span>,
+  <span class='no'>new_end</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -198,6 +238,19 @@ These functions change a vector of strings between the specification notations.<
       <th>new_end</th>
       <td><p>the end of specification notation in output</p></td>
     </tr>
+    <tr>
+      <th>m</th>
+      <td><p>a single matrix or a list of matrices.</p></td>
+    </tr>
+    <tr>
+      <th>margin</th>
+      <td><p>the margin over which the notation switch should be made:
+<code>1</code> for rows, <code>2</code> for columns, or <code><a href='https://rdrr.io/r/base/c.html'>c(1, 2)</a></code> (the default) for both rows and columns</p></td>
+    </tr>
+    <tr>
+      <th>worker_func</th>
+      <td><p>the function to be called by <code>switch_notation_byname()</code>, one of <code>arrow_to_paren()</code> or <code>paren_to_arrow()</code></p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -205,7 +258,18 @@ These functions change a vector of strings between the specification notations.<
     <p>An object of same length as <code>strings</code> with switched notation.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'>arrow_to_paren</span>(<span class='st'>"a -&gt; b"</span>)</div><div class='output co'>#&gt; [1] "b [a]"</div><div class='input'><span class='fu'>paren_to_arrow</span>(<span class='st'>"b [a]"</span>)</div><div class='output co'>#&gt; [1] "a -&gt; b"</div><div class='input'><span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>,
+              <span class='fl'>3</span>, <span class='fl'>4</span>), <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+            <span class='kw'>dimnames</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a -&gt; b"</span>, <span class='st'>"c -&gt; d"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"f [e]"</span>, <span class='st'>"h [g]"</span>)))
+<span class='no'>m</span></div><div class='output co'>#&gt;        f [e] h [g]
+#&gt; a -&gt; b     1     2
+#&gt; c -&gt; d     3     4</div><div class='input'><span class='fu'>arrow_to_paren_byname</span>(<span class='no'>m</span>)</div><div class='output co'>#&gt;       f [e] h [g]
+#&gt; b [a]     1     2
+#&gt; d [c]     3     4</div><div class='input'><span class='fu'>arrow_to_paren_byname</span>(<span class='no'>m</span>, <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fl'>2</span>) <span class='co'># No changes expected.</span></div><div class='output co'>#&gt;        f [e] h [g]
+#&gt; a -&gt; b     1     2
+#&gt; c -&gt; d     3     4</div><div class='input'><span class='fu'>paren_to_arrow_byname</span>(<span class='no'>m</span>)</div><div class='output co'>#&gt;        e -&gt; f g -&gt; h
+#&gt; a -&gt; b      1      2
+#&gt; c -&gt; d      3      4</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
