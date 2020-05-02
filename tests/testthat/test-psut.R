@@ -106,6 +106,8 @@ test_that("prep_psut works as expected", {
   Simple <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     prep_psut() %>% 
+    tidyr::pivot_longer(cols = c("R", "U_EIOU", "U_excl_EIOU", "V", "Y", "S_units"),
+                        names_to = "matnames", values_to = "matvals") %>% 
     dplyr::rename(matval_simple = matvals)
   S_units <- load_tidy_iea_df() %>% 
     specify_all() %>% 

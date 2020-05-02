@@ -131,7 +131,7 @@
 "row_col_types"
 
 
-#' PSUT matrix meta information column names
+#' PSUT matrix formation meta information column names
 #'
 #' When forming PSUT matrices, meta information is provided in columns.
 #' This list provides the typical names for the meta information columns
@@ -150,6 +150,26 @@
 #' @examples
 #' mat_meta_cols
 "mat_meta_cols"
+
+
+#' PSUT matrix meta information column names
+#'
+#' After forming PSUT matrices, meta information is provided in columns.
+#' This list provides the typical names for the meta information columns
+#' throughout the `IEATools` package.
+#' 
+#' @format A string list with `r length(sut_meta_cols)` entries
+#' \describe{
+#' \item{country}{The name of a column containing countries.}
+#' \item{method}{The name of a column containing methods for calculating primary energy equivalent of renewable electricity. See `IEATools::methods`.}
+#' \item{energy_type}{The name of a column containing energy types. See `IEATools::energy_types`.}
+#' \item{last_stage}{The name of a column containing last stages of energy conversion chain analysis. See `IEATools::last_stages`.}
+#' \item{year}{The name of a column containing years in wide data frames.}
+#' }
+#' 
+#' @examples
+#' sut_meta_cols
+"sut_meta_cols"
 
 
 #' Coal and coal products

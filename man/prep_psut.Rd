@@ -34,7 +34,7 @@ prep_psut(
 \item{matvals}{See \code{IEATools::psut_cols}.}
 }
 \value{
-a tidy PSUT data frame
+a wide PSUT data frame with metadata columns and columns named for each type of matrix
 }
 \description{
 Converts a tidy IEA data frame into a PSUT data frame
@@ -57,8 +57,11 @@ library(tidyr)
 Simple <- load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 
   prep_psut() \%>\% 
-  rename(matval_simple = matvals)
+  pivot_longer(cols = c(R, U_EIOU, U_excl_EIOU, V, Y, S_units), 
+               names_to = "matnames",
+               values_to = "matval_simple")
 S_units <- load_tidy_iea_df() \%>\% 
+  specify_all() \%>\% 
   extract_S_units_from_tidy()
 Complicated <- load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 

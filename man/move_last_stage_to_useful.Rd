@@ -5,9 +5,9 @@
 \title{Move an ECC from final to useful as its last stage}
 \usage{
 move_last_stage_to_useful(
-  .tidy_psut_data,
-  tidy_C_data,
-  tidy_eta_fu_data,
+  .sutdata,
+  wide_C_data,
+  wide_eta_fu_data,
   last_stage = IEATools::iea_cols$last_stage,
   unit = IEATools::iea_cols$unit,
   final = IEATools::last_stages$final,
@@ -22,11 +22,13 @@ move_last_stage_to_useful(
   s_units = IEATools::psut_cols$s_units,
   matnames = IEATools::mat_meta_cols$matnames,
   matvals = IEATools::mat_meta_cols$matvals,
+  sut_meta_cols = IEATools::sut_meta_cols,
   C_eiou = IEATools::template_cols$C_eiou,
   C_Y = IEATools::template_cols$C_Y,
   eta_fu = IEATools::template_cols$eta_fu,
   phi_u = IEATools::template_cols$phi_u,
   sep = IEATools::specify_notation$arrow,
+  tol = 0.001,
   .Y_f_vec_hat_C_Y = ".Y_f_vec_hat_C_Y",
   .U_eiou_f_vec_hat_C_eiou = ".U_eiou_f_vec_hat_C_eiou",
   .eta_fu_hat = ".eta_fu_hat",
@@ -37,16 +39,15 @@ move_last_stage_to_useful(
 )
 }
 \arguments{
-\item{.tidy_psut_data}{A tidy data frame of PSUT matrices that represent an energy conversion chain.
-Matrix names should be in the \code{matnames} column, and
-matrices themselves should be in the \code{matvals} column.
+\item{.sutdata}{A wide data frame of PSUT matrices that represent an energy conversion chain.
+Matrices should be in column identified by their names.
 The last stage of these ECCs should be final (not useful).
-\code{.tidy_psut_data} is likely the result of calling (in sequence)
+\code{.sutdata} is likely the result of calling (in sequence)
 \code{load_tidy_iea_df()} \verb{\%>\%} \code{specify_all()} \verb{\%>\%} \code{prep_psut()}}
 
-\item{tidy_C_data}{a tidy data frame of final-to-useful allocation matrices, probably the result of calling \code{form_C_mats()}.}
+\item{wide_C_data}{a wide data frame of final-to-useful allocation matrices, probably the result of calling \code{form_C_mats()}.}
 
-\item{tidy_eta_fu_data}{a tidy data frame of final-to-useful machine efficiency matrices, probably the result of calling \code{form_eta_fu_phi_u_vecs}.}
+\item{wide_eta_fu_data}{a wide data frame of final-to-useful machine efficiency matrices, probably the result of calling \code{form_eta_fu_phi_u_vecs}.}
 
 \item{last_stage, unit}{See \code{IEATools::iea_cols$last_stage}.
 Each of these should be a column in all of \code{.tidy_psut_data}, \code{C_data}, and \code{eta_fu_data}.}
@@ -60,12 +61,16 @@ These matrices should be found in the \code{matvals} column of the \code{.tidy_p
 
 \item{matnames, matvals}{See \code{IEATools::mat_meta_cols}.}
 
+\item{sut_meta_cols}{See \code{IEATools::sut_meta_cols}.}
+
 \item{C_eiou, C_Y, eta_fu, phi_u}{See \code{IEATools::template_cols}.
 \code{C_eiou} and \code{C_Y} matrices should be found in the \code{matvals} column of the \code{C_Y_data} data frame.
 \code{eta_fu} and \code{phi_u} should be found in the \code{matvals} column of the \code{eta_fu_data} data frame.}
 
 \item{sep}{The string separator between prefix and suffix of compound row and column names. Default is \code{specify_notation$arrow},
 -> tion$arrow\verb{". The default value matches the default value for the }sep\verb{argument of}matsbyname::vectorize_byname()\verb{, because }matsbyname::vectorize_byname()` will be used for further manipulations.}
+
+\item{tol}{the allowable error in energy balances. Default is \code{1e-3}.}
 
 \item{.Y_f_vec_hat_C_Y}{an internal matrix name for the product of the Y_f_vec_hat and C_Y matrices. Default is ".Y_f_vec_hat_C_Y".}
 
@@ -100,5 +105,6 @@ C_data <- load_fu_allocation_data() \%>\%
 eta_fu_data <- load_eta_fu_data() \%>\% 
   form_eta_fu_phi_u_vecs()
 psut_mats \%>\% 
-  move_last_stage_to_useful(tidy_C_data = C_data, tidy_eta_fu_data = eta_fu_data)
+  move_last_stage_to_useful(wide_C_data = C_data, 
+                            wide_eta_fu_data = eta_fu_data)
 }

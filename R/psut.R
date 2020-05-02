@@ -339,7 +339,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' @param matnames,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #' @param matvals See `IEATools::psut_cols`.
 #'
-#' @return a tidy PSUT data frame
+#' @return a wide PSUT data frame with metadata columns and columns named for each type of matrix
 #' 
 #' @export
 #'
@@ -349,8 +349,11 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' Simple <- load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
 #'   prep_psut() %>% 
-#'   rename(matval_simple = matvals)
+#'   pivot_longer(cols = c(R, U_EIOU, U_excl_EIOU, V, Y, S_units), 
+#'                names_to = "matnames",
+#'                values_to = "matval_simple")
 #' S_units <- load_tidy_iea_df() %>% 
+#'   specify_all() %>% 
 #'   extract_S_units_from_tidy()
 #' Complicated <- load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
@@ -399,7 +402,6 @@ prep_psut <- function(.tidy_iea_df,
     add_row_col_meta(flow = flow, product = product, matnames = matnames)
   Collapsed <- Temp %>% 
     # Now collapse to matrices
-    # collapse_to_tidy_psut(e_dot = e_dot, matname = matname, matval = matval, grouping_vars = grouping_vars) %>% 
     collapse_to_tidy_psut(e_dot = e_dot, matnames = matnames, matvals = matvals, rownames = rownames, colnames = colnames,
                           rowtypes = rowtypes, coltypes = coltypes) 
   # Get a list of matrix names for future use
@@ -409,12 +411,19 @@ prep_psut <- function(.tidy_iea_df,
   CollapsedSpread <- Collapsed %>% 
     tidyr::spread(key = matnames, value = matvals)
   meta_cols <- matsindf::everything_except(CollapsedSpread, matrix_names, .symbols = FALSE)
-  WithS_units <- CollapsedSpread %>%  
+  # Add the S_units matrix and return
+  CollapsedSpread %>%  
     # Add the S_units matrix
     dplyr::full_join(S_units, by = matsindf::everything_except(CollapsedSpread, matrix_names, .symbols = FALSE))
-  matrix_names_with_S_units <- WithS_units %>% 
-    matsindf::everything_except(meta_cols, .symbols = FALSE)
+  
+  
+  
+  # WithS_units <- CollapsedSpread %>%  
+  #   # Add the S_units matrix
+  #   dplyr::full_join(S_units, by = matsindf::everything_except(CollapsedSpread, matrix_names, .symbols = FALSE))
+  # matrix_names_with_S_units <- WithS_units %>% 
+  #   matsindf::everything_except(meta_cols, .symbols = FALSE)
   # Now gather everything back together so the outgoing data frame is tidy
-  WithS_units %>% 
-    tidyr::gather(key = matnames, value = matvals, !!!matrix_names_with_S_units)
+  # WithS_units %>% 
+  #   tidyr::gather(key = matnames, value = matvals, !!!matrix_names_with_S_units)
 }

@@ -68,8 +68,8 @@ that contains \code{TRUE} or \code{FALSE} depending on whether a rowsum was 1.}
 that tells whether a 1-vector was created by rowsums.}
 }
 \value{
-a tidy data frame with metadata columns (and year) along with \code{matnames} and \code{matvals} columns
-indicating and containing \code{C_eiou} and \code{C_Y} matrices, respectively.
+a wide data frame with metadata columns (and year) along with columns for
+\code{C_eiou} and \code{C_Y} matrices.
 If not all rows of a C matrix sum to 1,
 a warning is emitted, and
 a data frame is returned which shows the errors.
