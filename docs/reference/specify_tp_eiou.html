@@ -81,7 +81,7 @@ See details for a list of changes made to the .tidy_iea_df data frame." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.20</span>
       </span>
     </div>
 
@@ -242,14 +242,14 @@ To avoid double rows, all like rows are summed before returning.</p>
 <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>specify_tp_eiou</span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>Flow.aggregation.point</span> <span class='kw'>==</span> <span class='st'>"Energy industry own use"</span> <span class='kw'>&amp;</span>
-           <span class='no'>Flow</span> <span class='kw'>==</span> <span class='st'>"Main activity producer electricity plants"</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 4 x 11</span><span>
+           <span class='no'>Flow</span> <span class='kw'>==</span> <span class='st'>"Main activity producer electricity plants"</span>)</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 x 11</span><span>
 #&gt;   Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio… Flow 
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>
-#&gt; </span><span style='color: #555555;'>1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Energy industry… Main…
-#&gt; </span><span style='color: #555555;'>2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>2</span><span>000 Supply      Energy industry… Main…
-#&gt; </span><span style='color: #555555;'>3</span><span> ZAF     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Energy industry… Main…
-#&gt; </span><span style='color: #555555;'>4</span><span> ZAF     PCM    E           Final       </span><span style='text-decoration: underline;'>2</span><span>000 Supply      Energy industry… Main…
-#&gt; </span><span style='color: #555555;'># … with 3 more variables: Product </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, Unit </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, E.dot </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Energy industry… Main…
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>2</span><span>000 Supply      Energy industry… Main…
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span> ZAF     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Energy industry… Main…
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span> ZAF     PCM    E           Final       </span><span style='text-decoration: underline;'>2</span><span>000 Supply      Energy industry… Main…
+#&gt; </span><span style='color: #949494;'># … with 3 more variables: Product </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Unit </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, E.dot </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
