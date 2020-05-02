@@ -28,6 +28,7 @@ move_last_stage_to_useful(
   eta_fu = IEATools::template_cols$eta_fu,
   phi_u = IEATools::template_cols$phi_u,
   sep = IEATools::specify_notation$arrow,
+  tol = 0.001,
   .Y_f_vec_hat_C_Y = ".Y_f_vec_hat_C_Y",
   .U_eiou_f_vec_hat_C_eiou = ".U_eiou_f_vec_hat_C_eiou",
   .eta_fu_hat = ".eta_fu_hat",
@@ -68,6 +69,8 @@ These matrices should be found in the \code{matvals} column of the \code{.tidy_p
 
 \item{sep}{The string separator between prefix and suffix of compound row and column names. Default is \code{specify_notation$arrow},
 -> tion$arrow\verb{". The default value matches the default value for the }sep\verb{argument of}matsbyname::vectorize_byname()\verb{, because }matsbyname::vectorize_byname()` will be used for further manipulations.}
+
+\item{tol}{the allowable error in energy balances. Default is \code{1e-3}.}
 
 \item{.Y_f_vec_hat_C_Y}{an internal matrix name for the product of the Y_f_vec_hat and C_Y matrices. Default is ".Y_f_vec_hat_C_Y".}
 

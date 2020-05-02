@@ -339,6 +339,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'            namely "`r specify_notation$arrow`".
 #'            The default value matches the default value for the `sep` argument of `matsbyname::vectorize_byname()`, because
 #'            `matsbyname::vectorize_byname()` will be used for further manipulations.
+#' @param tol the allowable error in energy balances. Default is `1e-3`.
 #' @param .Y_f_vec_hat_C_Y an internal matrix name for the product of the Y_f_vec_hat and C_Y matrices. Default is ".Y_f_vec_hat_C_Y".
 #' @param .U_eiou_f_vec_hat_C_eiou an internal matrix name for the product of the U_eiou_f_vec_hat and C_eiou matrices. Default is ".U_eiou_f_vec_hat_C_eiou".
 #' @param .eta_fu_hat an internal matrix name. Default is ".eta_fu_hat".
@@ -395,6 +396,8 @@ move_last_stage_to_useful <- function(.sutdata,
                                       phi_u = IEATools::template_cols$phi_u,
                                       
                                       sep = IEATools::specify_notation$arrow,
+                                      
+                                      tol = 1e-3,
                                       
                                       .Y_f_vec_hat_C_Y = ".Y_f_vec_hat_C_Y",
                                       .U_eiou_f_vec_hat_C_eiou = ".U_eiou_f_vec_hat_C_eiou",
@@ -551,6 +554,17 @@ move_last_stage_to_useful <- function(.sutdata,
   out <- dplyr::bind_rows(.sutdata, out)
   
   # Check energy balance
+  verify_ebal <- out %>% 
+    dplyr::mutate(
+      R_plus_V_mat = matsbyname::sum_byname(.data[[R]], .data[[V]]),
+      RV_sums = matsbyname::transpose_byname(R_plus_V_mat) %>% matsbyname::rowsums_byname(),
+      U_sums = matsbyname::sum_byname(.data[[U_eiou]], .data[[U_excl_eiou]]) %>% matsbyname::rowsums_byname(),
+      Y_sums = matsbyname::rowsums_byname(.data[[Y]]), 
+      # (R + V) - U - Y
+      err = matsbyname::difference_byname(RV_sums, U_sums) %>% matsbyname::difference_byname(Y_sums), 
+      OK = err %>% matsbyname::iszero_byname(tol = tol) %>% as.logical()
+    )
+  # Error if there is a problem.
   
   return(out)
 }
