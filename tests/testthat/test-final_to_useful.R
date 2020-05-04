@@ -83,7 +83,7 @@ test_that("move_to_useful_last_stage works as expected", {
     form_eta_fu_phi_u_vecs()
   
   with_useful <- psut_mats %>% 
-    move_last_stage_to_useful(wide_C_data = C_data, wide_eta_fu_data = eta_fu_data)
+    extend_to_useful(wide_C_data = C_data, wide_eta_fu_data = eta_fu_data)
 
   # Check some of the values  
   
@@ -251,3 +251,76 @@ test_that("move_to_useful_last_stage works as expected", {
   expect_equal(actual_md_into_NFM, expected_md_into_NFM)
   expect_equal(actual_light_into_NFM, expected_light_into_NFM)
 })
+
+
+test_that("extend_to_useful_helper works as intended", {
+  # These tests come from the "Pushing Y to Useful" tab in file "Matrix f->u example calcs.xlsx"
+  
+  # Set up some matrices
+  Y_f <- matrix(c(100, 50, 
+                  200, 25), byrow = TRUE, nrow = 2, ncol = 2, 
+                dimnames = list(c("Elect", "Petrol"), c("Residential", "Construction"))) %>% 
+    matsbyname::setrowtype(IEATools::row_col_types$industry) %>% 
+    matsbyname::setcoltype(IEATools::row_col_types$product)
+  
+  Allocation_Table <- tibble::tribble(~Destination, ~Ef.product, ~Machine, ~Eu.product, ~C, 
+                                      "Residential", "Elect", "Lights", "Light", 0.5,
+                                      "Residential", "Elect", "Water heaters", "MTH", 0.5,
+                                      "Construction", "Elect", "Elect motors", "MD", 0.25, 
+                                      "Construction", "Elect", "Lights", "Light", 0.25,
+                                      "Construction", "Elect", "Heaters", "MTH", 0.5,
+                                      "Residential", "Petrol", "Engines", "MD", 0.25,
+                                      "Residential", "Petrol", "Burner", "MTH", 0.75,
+                                      "Construction", "Petrol", "Autos", "MD", 0.6,
+                                      "Construction", "Petrol", "Furnace", "LTH", 0.4)
+  
+  Efficiency_Table <- tibble::tribble(~Machine, ~Eu.product, ~eta.fu,
+                                      "Lights", "Light", 0.45,
+                                      "Water heaters", "MTH", 0.9,
+                                      "Elect motors", "MD", 0.95,
+                                      "Heaters", "MTH", 0.9,
+                                      "Engines", "MD", 0.25,
+                                      "Burner", "MTH", 0.98,
+                                      "Autos", "MD", 0.15,
+                                      "Furnace", "LTH", 0.97)
+  
+  Y_f_vec <- matsbyname::vectorize_byname(Y_f)
+  Y_f_vec_hat <- matsbyname::hatize_byname(Y_f_vec)
+  
+  C_Y <- Allocation_Table %>% 
+    dplyr::mutate(
+      rownames = paste0(Ef.product, IEATools::specify_notation$arrow, Destination), 
+      colnames = paste0(Machine, IEATools::specify_notation$arrow, Eu.product), 
+      rowtypes = IEATools::row_col_types$product, 
+      coltypes = IEATools::row_col_types$industry,
+      matnames = "C_Y", 
+      Destination = NULL, 
+      Ef.product = NULL, 
+      Machine = NULL, 
+      Eu.product = NULL
+    ) %>%
+    dplyr::rename(
+      matvals = C
+    ) %>% 
+    dplyr::group_by(matnames) %>% 
+    matsindf::collapse_to_matrices() %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1)
+  
+  eta.fu_rownames <- Efficiency_Table %>% 
+    dplyr::mutate(
+      rownames = paste0(Machine, IEATools::specify_notation$arrow, Eu.product)
+    ) %>% 
+    magrittr::extract2("rownames")
+  eta_fu <- Efficiency_Table %>% 
+    magrittr::extract2("eta.fu") %>% 
+    matrix(ncol = 1, dimnames = list(eta.fu_rownames, "eta.fu")) %>% 
+    matsbyname::setrowtype(IEATools::row_col_types$industry) %>% 
+    matsbyname::setcoltype(IEATools::row_col_types$product)
+  
+  eta_fu_hat <- matsbyname::hatize_byname(eta_fu)
+  
+  
+    
+})
+
