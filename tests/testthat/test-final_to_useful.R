@@ -320,7 +320,13 @@ test_that("extend_to_useful_helper works as intended", {
   
   eta_fu_hat <- matsbyname::hatize_byname(eta_fu)
   
+  # Calculate expected results
+
   
+  # Calculate actual results
+  
+  
+  # Compare
     
 })
 
