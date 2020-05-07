@@ -600,7 +600,7 @@ extend_to_useful <- function(.sutdata,
 #'         `add_to_U_f` (a matrix to be added to the `U_excl_eiou` matrix),
 #'         `add_to_V_f` (a matrix to be added to the `V` matrix), and 
 #'         `repl_dest_mat` (a matrix to replace either `Y_f` or `U_eiou`).
-extend_to_useful_helper <- function(dest_mat, C, eta_fu, sep, product_type, industry_type) {
+extend_to_useful_helper <- function(dest_mat, C_mat, eta_fu_vec, sep, product_type, industry_type) {
   
   #### Step 1 on the "Pushing Y to useful" tab in file "Matrix f->u example calcs.xlsx"
 
@@ -650,6 +650,6 @@ extend_to_useful_helper <- function(dest_mat, C, eta_fu, sep, product_type, indu
     matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "suffix", margin = 2) %>%
     matsbyname::clean_byname()
   
-  list(add_to_U_f, add_to_V_f, repl_dest_mat)
+  list(add_to_U_f = add_to_U_f, add_to_V_f = add_to_V_f, repl_dest_mat = repl_dest_mat)
 }
 

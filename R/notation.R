@@ -45,98 +45,98 @@
 NULL
 
 
+#' #' @export
+#' #' @rdname switch-notation
+#' switch_notation <- function(x, old_start, old_end, new_start, new_end) {
+#'   if (!is.list(x)) {
+#'     return(switch_notation_notlist(x, old_start = old_start, old_end = old_end, new_start = new_start, new_end = new_end))
+#'   }
+#' 
+#'   # If we get here, we have a list.
+#'   # We need to preserve the character of the list.
+#'   lapply(x, function(s) {
+#'     switch_notation_notlist(s, old_start = old_start, old_end = old_end, new_start = new_start, new_end = new_end)
+#'   })
+#' }
+
+
+# switch_notation_notlist <- function(x, old_start, old_end, new_start, new_end) {
+#   # x does is not a list. So we will proceed as though it is a character or can coerced to a character.
+#   # Eliminate old_end from RHS of x
+#   no_end <- sub(pattern = paste0(old_end, "$"), replacement = "", x = x)
+#   # Split at the first instance of old_start to get two pieces
+#   old_split <- stringi::stri_split_fixed(str = no_end, fixed = TRUE, pattern = old_start, n = 2)
+#   # Rebuild string with RHS new_start LHS new_end
+#   out <- sapply(old_split, function(x) {
+#     # Check the number of pieces. Form a readable error message.
+#     assertthat::assert_that(length(x) <= 2, msg = paste0("switch_notation resulted in three pieces: ", utils::capture.output(cat(x, sep = ", "))))
+#     if (length(x) == 1) {
+#       # There was nothing to switch.
+#       # Simply return the existing string
+#       return(x)
+#     }
+#     old_prefix <- x[[1]]
+#     old_suffix <- x[[2]]
+#     paste0(old_suffix, new_start, old_prefix, new_end)
+#   })
+#   return(out)
+# }
+
+
+#' #' @export
+#' #' @rdname switch-notation
+#' arrow_to_paren <- function(x,
+#'                            old_start = IEATools::specify_notation$arrow, old_end = "",
+#'                            new_start = IEATools::specify_notation$open, new_end = IEATools::specify_notation$close) {
+#'   switch_notation(x,
+#'                   old_start = old_start, old_end = old_end,
+#'                   new_start = new_start, new_end = new_end)
+#' }
+
+
+#' #' @export
+#' #' @rdname switch-notation
+#' paren_to_arrow <- function(x,
+#'                            old_start = IEATools::specify_notation$open, old_end = IEATools::specify_notation$close,
+#'                            new_start = IEATools::specify_notation$arrow, new_end = "") {
+#'   switch_notation(x,
+#'                   old_start = old_start, old_end = old_end,
+#'                   new_start = new_start, new_end = new_end)
+#' }
+
+
 #' @export
 #' @rdname switch-notation
-switch_notation <- function(x, old_start, old_end, new_start, new_end) {
-  if (!is.list(x)) {
-    return(switch_notation_notlist(x, old_start = old_start, old_end = old_end, new_start = new_start, new_end = new_end))
-  } 
-  
-  # If we get here, we have a list.
-  # We need to preserve the character of the list.
-  lapply(x, function(s) {
-    switch_notation_notlist(s, old_start = old_start, old_end = old_end, new_start = new_start, new_end = new_end)
-  })
-}
-
-
-switch_notation_notlist <- function(x, old_start, old_end, new_start, new_end) {
-  # x does is not a list. So we will proceed as though it is a character or can coerced to a character.
-  # Eliminate old_end from RHS of x
-  no_end <- sub(pattern = paste0(old_end, "$"), replacement = "", x = x)
-  # Split at the first instance of old_start to get two pieces
-  old_split <- stringi::stri_split_fixed(str = no_end, fixed = TRUE, pattern = old_start, n = 2)
-  # Rebuild string with RHS new_start LHS new_end
-  out <- sapply(old_split, function(x) {
-    # Check the number of pieces. Form a readable error message.
-    assertthat::assert_that(length(x) <= 2, msg = paste0("switch_notation resulted in three pieces: ", utils::capture.output(cat(x, sep = ", "))))
-    if (length(x) == 1) {
-      # There was nothing to switch.
-      # Simply return the existing string
-      return(x)
-    }
-    old_prefix <- x[[1]]
-    old_suffix <- x[[2]]
-    paste0(old_suffix, new_start, old_prefix, new_end)
-  })
-  return(out)
-}
-
-
-#' @export
-#' @rdname switch-notation
-arrow_to_paren <- function(x,
-                           old_start = IEATools::specify_notation$arrow, old_end = "",
-                           new_start = IEATools::specify_notation$open, new_end = IEATools::specify_notation$close) {
-  switch_notation(x,
-                  old_start = old_start, old_end = old_end,
-                  new_start = new_start, new_end = new_end)
-}
-
-
-#' @export
-#' @rdname switch-notation
-paren_to_arrow <- function(x, 
-                           old_start = IEATools::specify_notation$open, old_end = IEATools::specify_notation$close, 
-                           new_start = IEATools::specify_notation$arrow, new_end = "") {
-  switch_notation(x, 
-                  old_start = old_start, old_end = old_end,
-                  new_start = new_start, new_end = new_end)
-}
-
-
-#' @export
-#' @rdname switch-notation
-arrow_to_paren_byname <- function(m, margin = c(1, 2), 
+arrow_to_paren_byname <- function(m, margin = c(1, 2),
                                   old_start = IEATools::specify_notation$arrow, old_end = "",
                                   new_start = IEATools::specify_notation$open, new_end = IEATools::specify_notation$close) {
-  switch_notation_byname(m, margin, worker_func = arrow_to_paren, 
+  switch_notation_byname(m, margin, worker_func = arrow_to_paren,
                          old_start = old_start, old_end = old_end, new_start = new_start, new_end = new_end)
 }
 
 
 #' @export
 #' @rdname switch-notation
-paren_to_arrow_byname <- function(m, margin = c(1, 2), 
-                                  old_start = IEATools::specify_notation$open, old_end = IEATools::specify_notation$close, 
+paren_to_arrow_byname <- function(m, margin = c(1, 2),
+                                  old_start = IEATools::specify_notation$open, old_end = IEATools::specify_notation$close,
                                   new_start = IEATools::specify_notation$arrow, new_end = "") {
-  switch_notation_byname(m, margin, worker_func = paren_to_arrow, 
+  switch_notation_byname(m, margin, worker_func = paren_to_arrow,
                          old_start = old_start, old_end = old_end, new_start = new_start, new_end = new_end)
 }
 
 
 #' @export
 #' @rdname switch-notation
-switch_notation_byname <- function(m, margin, worker_func, 
+switch_notation_byname <- function(m, margin, worker_func,
                                    old_start, old_end, new_start, new_end) {
   assertthat::assert_that(all(margin %in% c(1, 2)), msg = "margin must be 1, 2, or both.")
-  
+
   out <- m
   if (2 %in% margin) {
     # Transpose the matrices
     transposed <- matsbyname::transpose_byname(out)
     # re-call with margin = 1 to change from arrow to paren notation on the rows (which are really columns)
-    switched <- switch_notation_byname(transposed, margin = 1, worker_func = worker_func, 
+    switched <- switch_notation_byname(transposed, margin = 1, worker_func = worker_func,
                                        old_start = old_start, old_end = old_end, new_start = new_start, new_end = new_end)
     # Transpose
     out <- matsbyname::transpose_byname(switched)

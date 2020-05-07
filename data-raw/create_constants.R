@@ -38,6 +38,16 @@ specify_notation$final_demand_close <- specify_notation$close
 usethis::use_data(specify_notation, overwrite = TRUE)
 
 
+# 
+# Notation
+# 
+
+bracket_notatation <- matsbyname::bracket_notation(suff_start = "[from ")
+usethis::use_data(bracket_notatation)
+arrow_notatation <- matsbyname::arrow_notation()
+usethis::use_data(arrow_notatation)
+
+
 #
 # Give the column names of IEA data frames in typical left-to-right order.
 # 
