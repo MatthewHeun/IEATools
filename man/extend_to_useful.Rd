@@ -27,7 +27,7 @@ extend_to_useful(
   C_Y = IEATools::template_cols$C_Y,
   eta_fu = IEATools::template_cols$eta_fu,
   phi_u = IEATools::template_cols$phi_u,
-  sep = IEATools::specify_notation$arrow,
+  notation = IEATools::arrow_notation,
   tol = 0.001,
   .Y_f_vec_hat_C_Y = ".Y_f_vec_hat_C_Y",
   .U_eiou_f_vec_hat_C_eiou = ".U_eiou_f_vec_hat_C_eiou",
@@ -67,8 +67,8 @@ These matrices should be found in the \code{matvals} column of the \code{.tidy_p
 \code{C_eiou} and \code{C_Y} matrices should be found in the \code{matvals} column of the \code{C_Y_data} data frame.
 \code{eta_fu} and \code{phi_u} should be found in the \code{matvals} column of the \code{eta_fu_data} data frame.}
 
-\item{sep}{The string separator between prefix and suffix of compound row and column names. Default is \code{specify_notation$arrow},
--> tion$arrow\verb{". The default value matches the default value for the }sep\verb{argument of}matsbyname::vectorize_byname()\verb{, because }matsbyname::vectorize_byname()` will be used for further manipulations.}
+\item{notation}{The row and column notation for this template.
+See \code{matsbyname::notation_vec()}. Default is \code{arrow_notation}.}
 
 \item{tol}{the allowable error in energy balances. Default is \code{1e-3}.}
 

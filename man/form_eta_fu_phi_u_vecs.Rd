@@ -22,7 +22,7 @@ form_eta_fu_phi_u_vecs(
   colnames = IEATools::mat_meta_cols$colnames,
   rowtypes = IEATools::mat_meta_cols$rowtypes,
   coltypes = IEATools::mat_meta_cols$coltypes,
-  sep = IEATools::specify_notation$arrow
+  notation = IEATools::arrow_notation
 )
 }
 \arguments{
@@ -36,9 +36,8 @@ A template for this table should have been created by \code{eta_fu_table()} and
 
 \item{matnames, matvals, rownames, colnames, rowtypes, coltypes}{See \code{IEATools::mat_meta_cols}.}
 
-\item{sep}{The string separator between prefix and suffix of compound row and column names. Default is " -> ".
-The default value matches the default value for the \code{sep} argument of \code{matsbyname::vectorize_byname()}, because
-\code{matsbyname::vectorize_byname()} will be used for further manipulations.}
+\item{notation}{The notation used for creating the eta_fu and phi vectors.
+See \code{matsbyname::notation_vec()}. Default is \code{arrow_notation}.}
 }
 \value{
 a wide data frame with metadata columns (and year) along with columns for \code{eta_fu} and \code{phi_u} vectors.
@@ -56,7 +55,7 @@ The two vectors are:
 The vectors \code{eta_fu} and \code{phi_u} have special rownames that indicate
 sources and types of useful energy flows.
 Row names have the pattern
-"machine  ->  useful energy form" to indicate
+"machine -> useful energy form" to indicate
 the energy efficiency of "machine" for making "useful energy form"
 or the exergy-to-energy ratio of the useful energy form created by machine.
 

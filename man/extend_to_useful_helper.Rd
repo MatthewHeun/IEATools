@@ -8,7 +8,7 @@ extend_to_useful_helper(
   dest_mat,
   C_mat,
   eta_fu_vec,
-  sep,
+  notation,
   product_type,
   industry_type
 )
@@ -26,7 +26,7 @@ final-to-useful energy conversion machines (Industries).
 of final-to-useful energy conversion machines (rows).
 \code{eta_fu_vec} should have been created by \code{form_eta_fu_phi_u_vecs()}.}
 
-\item{sep}{a string separator between row and column names}
+\item{notation}{a row and column name notation vector. See \code{matsbyname::notation_vec()}.}
 
 \item{product_type}{a string identifying product row or column types}
 
@@ -39,7 +39,7 @@ a named list containing three items:
 \code{repl_dest_mat} (a matrix to replace either \code{Y_f} or \code{U_eiou}).
 }
 \description{
-The helpful function is needed, because moving from final to useful energy
+The helper function is needed, because moving from final to useful energy
 occurs for both the final demand matrix (\code{Y}) and the energy industry own use matrix (\code{U_eiou}).
 The calculations are identical, so we factor the calculations into this function.
 }

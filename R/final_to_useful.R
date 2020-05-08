@@ -7,9 +7,9 @@
 #' to create allocation matrices (`C`). 
 #' 
 #' rownames of the `C` matrices are taken from the `Ef.product` and `Destination` columns of `.fu_allocation_table`
-#' and have the form "`Ef.product` `r specify_notation$arrow` `Destination`".
+#' and have the form "`Ef.product` `r arrow_notation[["pref_end"]]` `Destination`".
 #' colnames of the `C` matrices are taken from the `Machine` and `Eu.product` columns of `.fu_allocation_table`
-#' and have the form "machine `r specify_notation$arrow` useful energy form".
+#' and have the form "machine `r arrow_notation[["pref_end"]]` useful energy form".
 #' 
 #' `C` matrices are created for both energy industry own use
 #' and final demand (`C_eiou` and `C_Y`, respectively).
@@ -26,10 +26,8 @@
 #' @param quantity,machine,ef_product,eu_product,destination,e_dot_perc,maximum_values,C_eiou,C_Y See `IEATools::template_cols`.
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #' @param product,industry See `IEATools::row_col_types`.
-#' @param sep The string separator between prefix and suffix of compound row and column names. Default is " -> ".
-#'            The default value matches the default value for the `sep` argument of `matsbyname::vectorize_byname()`, because
-#'            `matsbyname::vectorize_byname()` will be used for further manipulations.
-#' @param tol The allowable amount by which a row sum in a `C` matrix can be different from 1. Default is 1e-6.
+#' @param notation the notation used for this template. See `matsbyname::notation_vec()`. Default is `IEATools::arrow_notation`.
+#' @param tol the allowable amount by which a row sum in a `C` matrix can be different from 1. Default is 1e-6.
 #' @param .should_be_1_vector a temporary column created internally for error checking (and not returned unless there is an error). 
 #'                            This column should contain 1 vectors (i.e., vectors filled with 1's).
 #' @param .is_1 a temporary column created internally (and not returned unless there is an error)
@@ -77,8 +75,8 @@ form_C_mats <- function(.fu_allocation_table,
                         product = IEATools::row_col_types$product,
                         industry = IEATools::row_col_types$industry,
                         
-                        sep = IEATools::specify_notation$arrow,
-                        
+                        notation = IEATools::arrow_notation,
+
                         tol = 1e-6,
                         
                         # Names of output matrices
@@ -137,9 +135,9 @@ form_C_mats <- function(.fu_allocation_table,
     # Create row and column names.
     dplyr::mutate(
       # Row names come from Ef.product -> Destination for both C_Y and C_EIOU.
-      "{rownames}" := paste0(.data[[ef_product]], sep, .data[[destination]]),
+      "{rownames}" := matsbyname::paste_pref_suff(pref = .data[[ef_product]], suff = .data[[destination]], notation = notation),
       # Column names come from Machine -> Eu.product for both C_Y and C_EIOU.
-      "{colnames}" := paste0(.data[[machine]], sep, .data[[eu_product]]), 
+      "{colnames}" := matsbyname::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = notation),
       # Row types are Products
       "{rowtypes}" := product,
       # Column types are industries
@@ -212,7 +210,7 @@ form_C_mats <- function(.fu_allocation_table,
 #' The vectors `eta_fu` and `phi_u` have special rownames that indicate 
 #' sources and types of useful energy flows.
 #' Row names have the pattern 
-#' "machine `r specify_notation$arrow` useful energy form" to indicate 
+#' "machine`r arrow_notation[["pref_end"]]`useful energy form" to indicate 
 #' the energy efficiency of "machine" for making "useful energy form"
 #' or the exergy-to-energy ratio of the useful energy form created by machine.
 #' 
@@ -226,9 +224,8 @@ form_C_mats <- function(.fu_allocation_table,
 #' @param unit,year See `IEATools::iea_cols`.
 #' @param quantity,machine,eu_product,e_dot_machine,e_dot_machine_perc,maximum_values,eta_fu,phi_u See `IEATools::template_cols`.
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
-#' @param sep The string separator between prefix and suffix of compound row and column names. Default is " -> ".
-#'            The default value matches the default value for the `sep` argument of `matsbyname::vectorize_byname()`, because
-#'            `matsbyname::vectorize_byname()` will be used for further manipulations.
+#' @param notation The notation used for creating the eta_fu and phi vectors. 
+#'                 See `matsbyname::notation_vec()`. Default is `arrow_notation`.
 #'
 #' @return a wide data frame with metadata columns (and year) along with columns for `eta_fu` and `phi_u` vectors.
 #' 
@@ -258,7 +255,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    rowtypes = IEATools::mat_meta_cols$rowtypes,
                                    coltypes = IEATools::mat_meta_cols$coltypes, 
                                    
-                                   sep = IEATools::specify_notation$arrow) {
+                                   notation = IEATools::arrow_notation) {
   
   cleaned <- .eta_fu_table %>% 
     # Eliminate rows titled e_dot_machine or e_dot_machine_perc. These are just helper rows for the analyst.
@@ -288,7 +285,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
   prepped <- gathered %>% 
     dplyr::mutate(
       # Create rownames from the machine and eu_product rows.
-      "{rownames}" := paste0(.data[[machine]], sep, .data[[eu_product]]),
+      "{rownames}" := matsbyname::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = notation),
       # Eliminate machine and eu_product columns, becasue we no longer need them.
       "{machine}" := NULL,
       "{eu_product}" := NULL,
@@ -335,10 +332,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param C_eiou,C_Y,eta_fu,phi_u See `IEATools::template_cols`. 
 #'                          `C_eiou` and `C_Y` matrices should be found in the `matvals` column of the `C_Y_data` data frame.
 #'                          `eta_fu` and `phi_u` should be found in the `matvals` column of the `eta_fu_data` data frame.
-#' @param sep The string separator between prefix and suffix of compound row and column names. Default is `specify_notation$arrow`,
-#'            namely "`r specify_notation$arrow`".
-#'            The default value matches the default value for the `sep` argument of `matsbyname::vectorize_byname()`, because
-#'            `matsbyname::vectorize_byname()` will be used for further manipulations.
+#' @param notation The row and column notation for this template.  
+#'                 See `matsbyname::notation_vec()`. Default is `arrow_notation`.
 #' @param tol the allowable error in energy balances. Default is `1e-3`.
 #' @param .Y_f_vec_hat_C_Y an internal matrix name for the product of the Y_f_vec_hat and C_Y matrices. Default is ".Y_f_vec_hat_C_Y".
 #' @param .U_eiou_f_vec_hat_C_eiou an internal matrix name for the product of the U_eiou_f_vec_hat and C_eiou matrices. Default is ".U_eiou_f_vec_hat_C_eiou".
@@ -395,7 +390,7 @@ extend_to_useful <- function(.sutdata,
                              eta_fu = IEATools::template_cols$eta_fu,
                              phi_u = IEATools::template_cols$phi_u,
                              
-                             sep = IEATools::specify_notation$arrow,
+                             notation = IEATools::arrow_notation,
                              
                              tol = 1e-3,
                              
@@ -579,7 +574,7 @@ extend_to_useful <- function(.sutdata,
 
 #' A helper function for extending to the useful energy/exergy stage
 #' 
-#' The helpful function is needed, because moving from final to useful energy 
+#' The helper function is needed, because moving from final to useful energy 
 #' occurs for both the final demand matrix (`Y`) and the energy industry own use matrix (`U_eiou`).
 #' The calculations are identical, so we factor the calculations into this function.
 #'
@@ -592,7 +587,7 @@ extend_to_useful <- function(.sutdata,
 #' @param eta_fu_vec an efficiency column vector indicating the efficiency (column) 
 #'               of final-to-useful energy conversion machines (rows).
 #'               `eta_fu_vec` should have been created by `form_eta_fu_phi_u_vecs()`.
-#' @param sep a string separator between row and column names
+#' @param notation a row and column name notation vector. See `matsbyname::notation_vec()`.
 #' @param product_type a string identifying product row or column types
 #' @param industry_type a string identifying industry row or column types
 #'
@@ -600,19 +595,11 @@ extend_to_useful <- function(.sutdata,
 #'         `add_to_U_f` (a matrix to be added to the `U_excl_eiou` matrix),
 #'         `add_to_V_f` (a matrix to be added to the `V` matrix), and 
 #'         `repl_dest_mat` (a matrix to replace either `Y_f` or `U_eiou`).
-extend_to_useful_helper <- function(dest_mat, C_mat, eta_fu_vec, sep, product_type, industry_type) {
+extend_to_useful_helper <- function(dest_mat, C_mat, eta_fu_vec, notation, product_type, industry_type) {
   
   #### Step 1 on the "Pushing Y to useful" tab in file "Matrix f->u example calcs.xlsx"
 
-  dest_mat_vec <- matsbyname::vectorize_byname(dest_mat) %>% 
-    # It is ambiguous how row and column types should be set on dest_mat_vec.
-    # Is dest_mat_vec Product x Product?  Or is it Industry x Industry?  Or a combination?
-    # We choose Product x Product here and adjust row and column types later, 
-    # as needed, to achieve 
-    # Product x Industry for outgoing add_to_U_f and repl_dest_mat 
-    # and
-    # Industry x Product for the outgoing add_to_V_f matrix
-    matsbyname::setrowtype(product_type) %>% matsbyname::setcoltype(product_type)
+  dest_mat_vec <- matsbyname::vectorize_byname(dest_mat, notation = notation)
 
   # Calculate dest_mat_vec_hat_C, the matrix product of dest_mat_vec_hat and C
   # This matrix is useful in several calculations below. We calculate it once here.
@@ -623,20 +610,19 @@ extend_to_useful_helper <- function(dest_mat, C_mat, eta_fu_vec, sep, product_ty
   
   eta_fu_hat <- matsbyname::hatize_byname(eta_fu) %>% 
     # Swap column names from arrow notation to paren notation
-    arrow_to_paren_byname(margin = 2)
+    arrow_to_bracket_byname(margin = 2)
   
   #### Step 2 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
   
   # Calculate the matrix that should be added to the U_f matrix.
   add_to_U_f <- dest_mat_vec_hat_C %>% 
-    matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "prefix", margin = 1) %>%
+    matsbyname::aggregate_to_pref_suff_byname(keep = "prefix", margin = 1, notation = arrow_notation) %>%
     matsbyname::clean_byname(margin = 1)
   
   #### Step 3 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
   
   # Calculate the matrix that should be added to the V_f matrix.
   add_to_V_f <- dest_mat_vec_hat_C %>% 
-    matsbyname::setcoltype(industry_type) %>% setrowtype(industry_type) %>% 
     matsbyname::colsums_byname() %>%
     matsbyname::hatize_byname() %>%
     matsbyname::matrixproduct_byname(eta_fu_hat)
@@ -646,8 +632,7 @@ extend_to_useful_helper <- function(dest_mat, C_mat, eta_fu_vec, sep, product_ty
   # Calculate replacement for the destination matrix (Y_useful instead of Y_f or U_eiou_useful instead of U_eiou)
   repl_dest_mat <- matsbyname::matrixproduct_byname(dest_mat_vec_hat_C, eta_fu_hat) %>%
     matsbyname::transpose_byname() %>%
-    matsbyname::setrowtype(product_type) %>% matsbyname::setcoltype(industry_type) %>% 
-    matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "suffix", margin = 2) %>%
+    matsbyname::aggregate_to_pref_suff_byname(keep = "suffix", margin = 2, notation = arrow_notation) %>%
     matsbyname::clean_byname()
   
   list(add_to_U_f = add_to_U_f, add_to_V_f = add_to_V_f, repl_dest_mat = repl_dest_mat)

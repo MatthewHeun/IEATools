@@ -8,23 +8,19 @@ despecify_col(
   .df,
   col,
   despecified_col,
-  notation = IEATools::specify_notation,
-  .open = notation$open,
-  .close = notation$close
+  notations = list(of_notation, from_notation)
 )
 }
 \arguments{
-\item{.df}{the data frame in which \code{col} exists}
+\item{.df}{the data frame in which \code{col} exists.}
 
-\item{col}{the string name of the column in \code{.df} to be de-specified}
+\item{col}{the string name of the column in \code{.df} to be de-specified.}
 
-\item{despecified_col}{the string name of the column in \code{.df} to contain the de-specified version of \code{col}}
+\item{despecified_col}{the string name of the column in the output data frame to contain the de-specified version of \code{col}.}
 
-\item{notation}{a list of specification notations. Default is \code{IEATools::specify_notation}.}
-
-\item{.open}{the opening string for specification decoration. Default is \code{IEATools::specify_notation$open}.}
-
-\item{.close}{the closing string for specification decoration. Default is \code{IEATools::specify_notation$close}.}
+\item{notation}{the notations used for row and column names. See \code{matsbyname::notation_vec()}.
+Default is \code{list(IEATools::of_notation, IEATools::from_notation)},
+because both \code{IEATools::of_notation} and \code{IEATools::from_notation} can be used in the \code{Flow} column.}
 }
 \value{
 a de-specified version of \code{.df}
@@ -38,10 +34,10 @@ To enable sorting, this function de-specifies a column in \code{.df}.
 }
 \details{
 De-specifying includes the following changes:
-* Any "Resource" flows are replaced by "Production". E.g., "Resources [Coal]" becomes "Production".
+* Any "Resource" flows are replaced by "Production". E.g., "Resources [of Coal]" becomes "Production".
 * All parenthetical decorations are removed.  E.g., "Other bituminous coal [of Coal mines]" becomes "Other bituminous coal".
 
-Identification of parenthetical notation delimiters is determined by the \code{specify_notation} object of this package.
+Identification of parenthetical notation delimiters is determined by a notation object
 }
 \examples{
 library(dplyr)
@@ -49,5 +45,5 @@ load_tidy_iea_df() \%>\%
   specify_all() \%>\% 
   despecify_col(col = "Flow", despecified_col = "clean_Flow") \%>\% 
   select(Flow, Product, E.dot, clean_Flow) \%>\% 
-  filter(endsWith(Flow, specify_notation$close))
+  filter(endsWith(Flow, bracket_notation[["suff_end"]]))
 }

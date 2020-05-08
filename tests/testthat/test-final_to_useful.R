@@ -73,7 +73,7 @@ test_that("form_eta_fu_phi_vecs works as expected", {
 })
 
 
-test_that("move_to_useful_last_stage works as expected", {
+test_that("extend_to_useful works as expected", {
   psut_mats <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     prep_psut()
@@ -260,8 +260,8 @@ test_that("extend_to_useful_helper works as intended", {
   Y_f <- matrix(c(100, 50, 
                   200, 25), byrow = TRUE, nrow = 2, ncol = 2, 
                 dimnames = list(c("Elect", "Petrol"), c("Residential", "Construction"))) %>% 
-    matsbyname::setrowtype(IEATools::row_col_types$industry) %>% 
-    matsbyname::setcoltype(IEATools::row_col_types$product)
+    matsbyname::setrowtype(IEATools::row_col_types$product) %>% 
+    matsbyname::setcoltype(IEATools::row_col_types$industry)
   
   Allocation_Table <- tibble::tribble(~Destination, ~Ef.product, ~Machine, ~Eu.product, ~C, 
                                       "Residential", "Elect", "Lights", "Light", 0.5,
@@ -284,27 +284,15 @@ test_that("extend_to_useful_helper works as intended", {
                                       "Autos", "MD", 0.15,
                                       "Furnace", "LTH", 0.97)
   
-  # Calculate actual results
   
-  res <- IEATools:::extend_to_useful_helper(dest_mat = Y_f, C = C_Y, eta_fu = eta_fu, 
-                                            sep = IEATools::specify_notation$arrow, 
-                                            product_type = IEATools::row_col_types$product,
-                                            industry_type = IEATools::row_col_types$industry)
-  
-  
-  # Calculate expected results
-  
-  ## Step 1
-  
-  Y_f_vec <- matsbyname::vectorize_byname(Y_f)
-  Y_f_vec_hat <- matsbyname::hatize_byname(Y_f_vec)
+  # Calculate some matrices
   
   C_Y <- Allocation_Table %>% 
     dplyr::mutate(
-      rownames = paste0(Ef.product, IEATools::specify_notation$arrow, Destination), 
-      colnames = paste0(Machine, IEATools::specify_notation$arrow, Eu.product), 
-      rowtypes = IEATools::row_col_types$product, 
-      coltypes = IEATools::row_col_types$industry,
+      rownames = matsbyname::paste_pref_suff(pref = Ef.product, suff = Destination, notation = arrow_notation), 
+      colnames = matsbyname::paste_pref_suff(pref = Machine, suff = Eu.product, notation = arrow_notation), 
+      rowtypes = matsbyname::paste_pref_suff(pref = row_col_types$product, suff = row_col_types$industry, notation = arrow_notation),
+      coltypes = matsbyname::paste_pref_suff(pref = row_col_types$industry, suff = row_col_types$product, notation = arrow_notation),
       matnames = "C_Y", 
       Destination = NULL, 
       Ef.product = NULL, 
@@ -319,29 +307,50 @@ test_that("extend_to_useful_helper works as intended", {
     magrittr::extract2("matvals") %>% 
     magrittr::extract2(1)
   
-  Y_f_vec_hat_C_Y <- matsbyname::matrixproduct_byname(Y_f_vec_hat, C_Y) %>% 
-    matsbyname::setrowtype(IEATools::row_col_types$product) %>% 
-    matsbyname::setcoltype(IEATools::row_col_types$product)
-  
   eta.fu_rownames <- Efficiency_Table %>% 
     dplyr::mutate(
-      rownames = paste0(Machine, IEATools::specify_notation$arrow, Eu.product)
+      rownames = matsbyname::paste_pref_suff(pref = Machine, suff = Eu.product, notation = arrow_notation)
     ) %>% 
     magrittr::extract2("rownames")
   eta_fu <- Efficiency_Table %>% 
     magrittr::extract2("eta.fu") %>% 
     matrix(ncol = 1, dimnames = list(eta.fu_rownames, "eta.fu")) %>% 
-    matsbyname::setrowtype(IEATools::row_col_types$industry) %>% 
-    matsbyname::setcoltype(IEATools::row_col_types$product)
+    matsbyname::setrowtype(matsbyname::paste_pref_suff(pref = row_col_types$industry, 
+                                                      suff = row_col_types$product, 
+                                                      notation = arrow_notation))
+  
+  
+  
+  # Calculate actual results
+  
+  res <- IEATools:::extend_to_useful_helper(dest_mat = Y_f, C = C_Y, eta_fu = eta_fu, 
+                                            notation = IEATools::arrow_notation, 
+                                            product_type = IEATools::row_col_types$product,
+                                            industry_type = IEATools::row_col_types$industry)
+  
+  
+  
+  
+  # Calculate expected results
+  
+  ## Step 1
+  
+  Y_f_vec <- matsbyname::vectorize_byname(Y_f, notation = arrow_notation)
+  Y_f_vec_hat <- matsbyname::hatize_byname(Y_f_vec)
+  Y_f_vec_hat_C_Y <- matsbyname::matrixproduct_byname(Y_f_vec_hat, C_Y)
   
   eta_fu_hat <- matsbyname::hatize_byname(eta_fu) %>% 
-    arrow_to_paren_byname(margin = 2)
+    arrow_to_bracket_byname(margin = 2)
+  
+  expect_equal(eta_fu_hat[["Engines -> MD", "MD [from Engines]"]], 
+               Efficiency_Table %>% dplyr::filter(Machine == "Engines") %>% 
+                 magrittr::extract2("eta.fu"))
   
   
   ## Step 2
   
   add_to_U_excl_eiou_expected <- Y_f_vec_hat_C_Y %>% 
-    matsbyname::aggregate_to_pref_suff_byname(sep = IEATools::specify_notation$arrow, keep = "prefix", margin = 1) %>%
+    matsbyname::aggregate_to_pref_suff_byname(keep = "prefix", margin = 1, notation = arrow_notation) %>%
     matsbyname::clean_byname(margin = 1)
   
   expect_equal(res$add_to_U_f, add_to_U_excl_eiou_expected)
@@ -350,24 +359,20 @@ test_that("extend_to_useful_helper works as intended", {
   ## Step 3
   
   add_to_V_expected <- Y_f_vec_hat_C_Y %>% 
-    matsbyname::setcoltype(IEATools::row_col_types$industry) %>%
-    setrowtype(IEATools::row_col_types$industry) %>% 
     matsbyname::colsums_byname() %>%
     matsbyname::hatize_byname() %>%
     matsbyname::matrixproduct_byname(eta_fu_hat)
   
-  expect_equal(res$add_to_V_F, add_to_V_expected)
+  expect_equal(res$add_to_V_f, add_to_V_expected)
 
     
   ## Step 4
   
   Y_f_repl_expected <- matsbyname::matrixproduct_byname(Y_f_vec_hat_C_Y, eta_fu_hat) %>%
     matsbyname::transpose_byname() %>%
-    matsbyname::setrowtype(IEATools::row_col_types$product) %>%
-    matsbyname::setcoltype(IEATools::row_col_types$industry) %>% 
-    matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "suffix", margin = 2) %>%
+    matsbyname::aggregate_to_pref_suff_byname(keep = "suffix", margin = 2, notation = arrow_notation) %>%
     matsbyname::clean_byname()
-  
+
   expect_equal(res$repl_dest_mat, Y_f_repl_expected)
 })
 
