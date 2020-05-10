@@ -323,13 +323,8 @@ test_that("extend_to_useful_helper works as intended", {
   
   # Calculate actual results
   
-  res <- IEATools:::extend_to_useful_helper(dest_mat = Y_f, C = C_Y, eta_fu = eta_fu, 
-                                            notation = IEATools::arrow_notation, 
-                                            product_type = IEATools::row_col_types$product,
-                                            industry_type = IEATools::row_col_types$industry)
-  
-  
-  
+  res <- IEATools:::extend_to_useful_helper(dest_mat = Y_f, C = C_Y, eta_fu = eta_fu)
+
   
   # Calculate expected results
   
@@ -340,7 +335,7 @@ test_that("extend_to_useful_helper works as intended", {
   Y_f_vec_hat_C_Y <- matsbyname::matrixproduct_byname(Y_f_vec_hat, C_Y)
   
   eta_fu_hat <- matsbyname::hatize_byname(eta_fu) %>% 
-    arrow_to_bracket_byname(margin = 2)
+    arrow_to_from_byname(margin = 2)
   
   expect_equal(eta_fu_hat[["Engines -> MD", "MD [from Engines]"]], 
                Efficiency_Table %>% dplyr::filter(Machine == "Engines") %>% 

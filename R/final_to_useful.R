@@ -410,70 +410,71 @@ extend_to_useful <- function(.sutdata,
       # Calculate .eta_fu_hat, which is needed twice below.
       # Doing the calculation here makes it available for other downstream calculations.
       "{.eta_fu_hat}" := matsbyname::hatize_byname(.data[[eta_fu]]) %>% 
-        # Swap column names from arrow notation to paren notation
-        arrow_to_paren_byname(margin = 2) # %>% 
-        # When changing to paren notation, we're highlighting the fact that 
-        # Industries in rows make Products in columns. 
-        # So we need to change the coltype of the columns to "Product"
-        # matsbyname::setcoltype(product_type)
+        # Swap column names from arrow notation to from notation
+        arrow_to_from_byname(margin = 2)
     )
   
   # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
   # We take each of these in turn, adjusting the energy conversion chain to account for the fact that 
   # useful energy is now the final stage.
+
   
-  wide_useful_Y <- wide_psut_data %>% 
+  ########################
+  ########################
+  # 
+  # Use matsindf_apply to do this transformation, using the extend_to_useful_helper function
+  #  
+  ########################
+  ########################
+  
+    
+  wide_useful_Y <- wide_psut_data %>%
     dplyr::mutate(
-      
+
       #### Step 1 on the "Pushing Y to useful" tab in file "Matrix f->u example calcs.xlsx"
-      
+
       # Calculate Y_f_vec_hat_C_Y, the matrix product of Y_f_vec_hat and C_Y
-      "{.Y_f_vec_hat_C_Y}" := matsbyname::vectorize_byname(.data[[Y]]) %>%
-        # It is ambiguous how row and column types should be set on Y_f_vec_hat.
-        # Is Y_f_vec_hat Product x Product?  Or is it Industry x Industry?  Or a combination?
-        # We choose Product x Product here and adjust row and column types later, as needed,
-        # to achieve Product x Industry for U and Y matrices and Industry x Product for the V matrix.
-        matsbyname::setrowtype(product_type) %>% matsbyname::setcoltype(product_type) %>% 
+      "{.Y_f_vec_hat_C_Y}" := matsbyname::vectorize_byname(.data[[Y]], notation = list(notation)) %>%
         matsbyname::clean_byname() %>%
         matsbyname::hatize_byname() %>%
         matsbyname::matrixproduct_byname(.data[[C_Y]]),
-      
+
       # Calculate eta_fu_hat
       # Already calculated above.
-      
+
       #### Step 2 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
-      
+
       # Calculate the matrix that should be added to the U_f matrix.
       "{.add_to_U_f}" := .data[[.Y_f_vec_hat_C_Y]] %>%
         matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "prefix", margin = 1) %>%
         matsbyname::clean_byname(margin = 1),
-      
+
       #### Step 3 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
-      
+
       # Calculate the matrix that should be added to the V_f matrix.
       "{.add_to_V_f}" := .data[[.Y_f_vec_hat_C_Y]] %>%
-        matsbyname::setcoltype(industry_type) %>% setrowtype(industry_type) %>% 
+        matsbyname::setcoltype(industry_type) %>% setrowtype(industry_type) %>%
         matsbyname::colsums_byname() %>%
         matsbyname::hatize_byname() %>%
         matsbyname::matrixproduct_byname(.data[[.eta_fu_hat]]),
-      
+
       #### Step 4 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
-      
+
       # Calculate replacement for Y matrix (Y_useful instead of Y_f)
       "{paste0(Y, .useful)}" := matsbyname::matrixproduct_byname(.data[[.Y_f_vec_hat_C_Y]], .data[[.eta_fu_hat]]) %>%
         matsbyname::transpose_byname() %>%
-        matsbyname::setrowtype(product_type) %>% matsbyname::setcoltype(industry_type) %>% 
+        matsbyname::setrowtype(product_type) %>% matsbyname::setcoltype(industry_type) %>%
         matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "suffix", margin = 2) %>%
         matsbyname::clean_byname(),
-      
+
       #### Step 5
-      
+
       # Create U_useful matrix
       "{paste0(U_excl_eiou, .useful)}" := matsbyname::sum_byname(.data[[U_excl_eiou]], .data[[.add_to_U_f]]),
-      
+
       # Create V_useful matrix
       "{paste0(V, .useful)}" := matsbyname::sum_byname(.data[[V]], .data[[.add_to_V_f]]),
-      
+
       # Eliminate columns we no longer need from the data frame
       "{.Y_f_vec_hat_C_Y}" := NULL,
       "{.add_to_U_f}" := NULL,
@@ -587,19 +588,30 @@ extend_to_useful <- function(.sutdata,
 #' @param eta_fu_vec an efficiency column vector indicating the efficiency (column) 
 #'               of final-to-useful energy conversion machines (rows).
 #'               `eta_fu_vec` should have been created by `form_eta_fu_phi_u_vecs()`.
-#' @param notation a row and column name notation vector. See `matsbyname::notation_vec()`.
-#' @param product_type a string identifying product row or column types
-#' @param industry_type a string identifying industry row or column types
+#' @param product_type a string identifying product row or column types. Default is "`IEATools::row_col_types$product`".
+#' @param industry_type a string identifying industry row or column types. Default is "`IEATools::row_col_types$industry`".
+#' @param arr_note a row and column name notation vector that indicates a `source -> destination` relationship. 
+#'                 `arr_note` is used for the `eta_fu` matrix, among others.
+#'                 See `matsbyname::notation_vec()`.
+#'                 Default is `IEATools::arrow_notation`.
+#' @param from_note a row and column name notation vector that indicates a `destination [from source]` relationship. 
+#'                  `from_note` is used for the columns of some intermediate matrices.
+#'                  See `matsbyname::notation_vec()`.
+#'                  Default is `IEATools::from_notation`.
 #'
 #' @return a named list containing three items: 
 #'         `add_to_U_f` (a matrix to be added to the `U_excl_eiou` matrix),
 #'         `add_to_V_f` (a matrix to be added to the `V` matrix), and 
 #'         `repl_dest_mat` (a matrix to replace either `Y_f` or `U_eiou`).
-extend_to_useful_helper <- function(dest_mat, C_mat, eta_fu_vec, notation, product_type, industry_type) {
+extend_to_useful_helper <- function(dest_mat, C_mat, eta_fu_vec, 
+                                    product_type = IEATools::row_col_types$product, 
+                                    industry_type = IEATools::row_col_types$industry,
+                                    arr_note = arrow_notation, 
+                                    from_note = from_notation) {
   
   #### Step 1 on the "Pushing Y to useful" tab in file "Matrix f->u example calcs.xlsx"
 
-  dest_mat_vec <- matsbyname::vectorize_byname(dest_mat, notation = notation)
+  dest_mat_vec <- matsbyname::vectorize_byname(dest_mat, notation = arr_note)
 
   # Calculate dest_mat_vec_hat_C, the matrix product of dest_mat_vec_hat and C
   # This matrix is useful in several calculations below. We calculate it once here.
@@ -610,8 +622,8 @@ extend_to_useful_helper <- function(dest_mat, C_mat, eta_fu_vec, notation, produ
   
   eta_fu_hat <- matsbyname::hatize_byname(eta_fu) %>% 
     # Swap column names from arrow notation to paren notation
-    arrow_to_bracket_byname(margin = 2)
-  
+    matsbyname::switch_notation_byname(margin = 2, from = arr_note, to = from_note, flip = TRUE)
+
   #### Step 2 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
   
   # Calculate the matrix that should be added to the U_f matrix.

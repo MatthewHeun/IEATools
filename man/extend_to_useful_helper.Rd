@@ -8,9 +8,10 @@ extend_to_useful_helper(
   dest_mat,
   C_mat,
   eta_fu_vec,
-  notation,
-  product_type,
-  industry_type
+  product_type = IEATools::row_col_types$product,
+  industry_type = IEATools::row_col_types$industry,
+  arr_note = arrow_notation,
+  from_note = from_notation
 )
 }
 \arguments{
@@ -26,11 +27,19 @@ final-to-useful energy conversion machines (Industries).
 of final-to-useful energy conversion machines (rows).
 \code{eta_fu_vec} should have been created by \code{form_eta_fu_phi_u_vecs()}.}
 
-\item{notation}{a row and column name notation vector. See \code{matsbyname::notation_vec()}.}
+\item{product_type}{a string identifying product row or column types. Default is "\code{IEATools::row_col_types$product}".}
 
-\item{product_type}{a string identifying product row or column types}
+\item{industry_type}{a string identifying industry row or column types. Default is "\code{IEATools::row_col_types$industry}".}
 
-\item{industry_type}{a string identifying industry row or column types}
+\item{arr_note}{a row and column name notation vector that indicates a \code{source -> destination} relationship.
+\code{arr_note} is used for the \code{eta_fu} matrix, among others.
+See \code{matsbyname::notation_vec()}.
+Default is \code{IEATools::arrow_notation}.}
+
+\item{from_note}{a row and column name notation vector that indicates a \verb{destination [from source]} relationship.
+\code{from_note} is used for the columns of some intermediate matrices.
+See \code{matsbyname::notation_vec()}.
+Default is \code{IEATools::from_notation}.}
 }
 \value{
 a named list containing three items:

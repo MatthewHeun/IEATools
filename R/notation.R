@@ -9,6 +9,8 @@
 #' These functions change matrix row/column names 
 #' between the two notations.
 #' 
+#' * `arrow_to_from()` switches from arrow to from notation.
+#' * `from_to_arrow()` switches from from to arrow notation.
 #' * `arrow_to_bracket()` switches from arrow to bracket notation.
 #' * `bracket_to_arrow()` switches from bracket to arrow notation.
 #'
@@ -22,15 +24,13 @@
 #'               `1` for rows, `2` for columns, or `c(1, 2)` (the default) for both rows and columns
 #'
 #' @examples
-#' arrow_to_bracket("a -> b")
-#' bracket_to_arrow("b [a]")
 #' m <- matrix(c(1, 2, 
 #'               3, 4), nrow = 2, ncol = 2, byrow = TRUE, 
 #'             dimnames = list(c("a -> b", "c -> d"), c("f [e]", "h [g]")))
 #' m
-#' arrow_to_bracket_byname(m)
-#' arrow_to_bracket_byname(m, margin = 2) # No changes expected.
-#' bracket_to_arrow_byname(m)
+#' arrow_to_from_byname(m)
+#' arrow_to_from_byname(m, margin = 2) # No changes expected.
+#' from_to_arrow_byname(m)
 #' 
 #' @name switch-notation
 NULL
@@ -38,14 +38,28 @@ NULL
 
 #' @export
 #' @rdname switch-notation
+arrow_to_from_byname <- function(m, margin = c(1, 2)) {
+  matsbyname::switch_notation_byname(m, margin = margin, from = list(arrow_notation), to = list(from_notation), flip = list(TRUE))
+}
+
+
+#' @export
+#' @rdname switch-notation
+from_to_arrow_byname <- function(m, margin = c(1, 2)) {
+  matsbyname::switch_notation_byname(m, margin = margin, from = list(from_notation), to = list(arrow_notation), flip = list(TRUE))
+}
+
+
+#' @export
+#' @rdname switch-notation
 arrow_to_bracket_byname <- function(m, margin = c(1, 2)) {
-  matsbyname::switch_notation_byname(m, margin = margin, from = arrow_notation, to = bracket_notation, flip = TRUE)
+  matsbyname::switch_notation_byname(m, margin = margin, from = list(arrow_notation), to = list(bracket_notation), flip = list(TRUE))
 }
 
 
 #' @export
 #' @rdname switch-notation
 bracket_to_arrow_byname <- function(m, margin = c(1, 2)) {
-  matsbyname::switch_notation_byname(m, margin = margin, from = bracket_notation, to = arrow_notation, flip = TRUE)
+  matsbyname::switch_notation_byname(m, margin = margin, from = list(bracket_notation), to = list(arrow_notation), flip = list(TRUE))
 }
 

@@ -2,10 +2,16 @@
 % Please edit documentation in R/notation.R
 \name{switch-notation}
 \alias{switch-notation}
+\alias{arrow_to_from_byname}
+\alias{from_to_arrow_byname}
 \alias{arrow_to_bracket_byname}
 \alias{bracket_to_arrow_byname}
 \title{Change specification notation}
 \usage{
+arrow_to_from_byname(m, margin = c(1, 2))
+
+from_to_arrow_byname(m, margin = c(1, 2))
+
 arrow_to_bracket_byname(m, margin = c(1, 2))
 
 bracket_to_arrow_byname(m, margin = c(1, 2))
@@ -28,6 +34,8 @@ and bracket notation is
 These functions change matrix row/column names
 between the two notations.
 \itemize{
+\item \code{arrow_to_from()} switches from arrow to from notation.
+\item \code{from_to_arrow()} switches from from to arrow notation.
 \item \code{arrow_to_bracket()} switches from arrow to bracket notation.
 \item \code{bracket_to_arrow()} switches from bracket to arrow notation.
 }
@@ -36,14 +44,12 @@ Functions with the name \verb{*_byname} behave like functions in the \code{matsb
 Specifically, they can work with a single matrix or a list of matrices supplied to the \code{m} argument.
 }
 \examples{
-arrow_to_bracket("a -> b")
-bracket_to_arrow("b [a]")
 m <- matrix(c(1, 2, 
               3, 4), nrow = 2, ncol = 2, byrow = TRUE, 
             dimnames = list(c("a -> b", "c -> d"), c("f [e]", "h [g]")))
 m
-arrow_to_bracket_byname(m)
-arrow_to_bracket_byname(m, margin = 2) # No changes expected.
-bracket_to_arrow_byname(m)
+arrow_to_from_byname(m)
+arrow_to_from_byname(m, margin = 2) # No changes expected.
+from_to_arrow_byname(m)
 
 }

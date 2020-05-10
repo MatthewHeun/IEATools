@@ -35,3 +35,29 @@ test_that("bracket_to_arrow_byname works as expected", {
   
   expect_equal(bracket_to_arrow_byname(m), expected)
 })
+
+
+test_that("arrow_to_from works as expected", {
+  # Switch column names
+  m <- matrix(c(1, 2, 
+                3, 4), nrow = 2, ncol = 2, byrow = TRUE, dimnames = list(c("a", "b"), c("c -> d", "e -> f")))
+  expected <- m
+  colnames(expected) <- c("d [from c]", "f [from e]")
+  
+  expect_equal(arrow_to_from_byname(m), expected)
+  
+  # Try with 4 matrices
+  a <- arrow_to_from_byname(list(m, m, m, m), margin = 2)
+  expect_equal(a, list(expected, expected, expected, expected))
+})
+
+
+test_that("from_to_arrow_byname works as expected", {
+  # Switch column names
+  m <- matrix(c(1, 2, 
+                3, 4), nrow = 2, ncol = 2, byrow = TRUE, dimnames = list(c("a", "b"), c("d [from c]", "f [from e]")))
+  expected <- m
+  colnames(expected) <- c("c -> d", "e -> f")
+  
+  expect_equal(from_to_arrow_byname(m), expected)
+})
