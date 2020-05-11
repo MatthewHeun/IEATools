@@ -11,7 +11,10 @@ extend_to_useful_helper(
   product_type = IEATools::row_col_types$product,
   industry_type = IEATools::row_col_types$industry,
   arr_note = arrow_notation,
-  from_note = from_notation
+  from_note = from_notation,
+  add_to_U = "add_to_U",
+  add_to_V = "add_to_V",
+  repl_dest = "repl_dest"
 )
 }
 \arguments{
@@ -40,12 +43,18 @@ Default is \code{IEATools::arrow_notation}.}
 \code{from_note} is used for the columns of some intermediate matrices.
 See \code{matsbyname::notation_vec()}.
 Default is \code{IEATools::from_notation}.}
+
+\item{add_to_U}{a string name for the matrix to be added to a use matrix. Default is "add_to_U".}
+
+\item{add_to_V}{a string name for the matrix to be added to a make matrix. Default is "add_to_V".}
+
+\item{repl_dest}{a string name for the matrix to replace the previous destination matrix. Default is "repl_dest_mat".}
 }
 \value{
 a named list containing three items:
-\code{add_to_U_f} (a matrix to be added to the \code{U_excl_eiou} matrix),
-\code{add_to_V_f} (a matrix to be added to the \code{V} matrix), and
-\code{repl_dest_mat} (a matrix to replace either \code{Y_f} or \code{U_eiou}).
+\code{add_to_U_f} (a matrix to be added to a use (\code{U}) matrix),
+\code{add_to_V_f} (a matrix to be added to a make (\code{V}) matrix), and
+\code{repl_dest_mat} (a matrix to replace the destination matrix, typically \code{Y_f} or \code{U_eiou}.
 }
 \description{
 The helper function is needed, because moving from final to useful energy

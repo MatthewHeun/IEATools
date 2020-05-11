@@ -47,6 +47,14 @@ test_that("form_C_mats works as expected", {
   # Check that the diagnostic data frame is correct
   expect_equal(diagnostic_df[[1, IEATools::mat_meta_cols$rownames]], "Refinery gas -> Oil refineries")
   expect_equal(diagnostic_df[[1, ".should_be_1_vector"]], 0.9)
+  
+  # Check the row and column types
+  for (i in 1:nrow(C_df)) {
+    expect_equal(matsbyname::rowtype(C_df$C_EIOU[[i]]), "Product -> Industry")
+    expect_equal(matsbyname::coltype(C_df$C_EIOU[[i]]), "Industry -> Product")
+    expect_equal(matsbyname::rowtype(C_df$C_Y[[i]]), "Product -> Industry")
+    expect_equal(matsbyname::coltype(C_df$C_Y[[i]]), "Industry -> Product")
+  }
 })
 
 
@@ -66,10 +74,138 @@ test_that("form_eta_fu_phi_vecs works as expected", {
   expect_equal(eta_GHA_1971[["Boat engines -> MD", 1]], 0.30)
 
   phi_ZAR_2000 <- eta_fu_phi_u_df$phi.u[[4]]  
-  expect_equal(phi_ZAR_2000[["Generators -> MD", 1]], 1)
-  expect_equal(phi_ZAR_2000[["LPG stoves -> LTH.20.C", 1]], 0.01677008)
-  expect_equal(phi_ZAR_2000[["Industrial furnaces -> HTH.600.C", 1]], 0.65853519)
-  expect_equal(phi_ZAR_2000[["Electric lights -> Light", 1]], 0.18301611)
+  expect_equal(phi_ZAR_2000[["MD [from Generators]", 1]], 1)
+  expect_equal(phi_ZAR_2000[["LTH.20.C [from LPG stoves]", 1]], 0.01677008)
+  expect_equal(phi_ZAR_2000[["HTH.600.C [from Industrial furnaces]", 1]], 0.65853519)
+  expect_equal(phi_ZAR_2000[["Light [from Electric lights]", 1]], 0.18301611)
+  
+  # Check row and column types
+  for (i in 1:nrow(eta_fu_phi_u_df)) {
+    expect_equal(matsbyname::rowtype(eta_fu_phi_u_df$eta.fu[[i]]), "Industry -> Product")
+    expect_null(matsbyname::coltype(eta_fu_phi_u_df$eta.fu[[i]]))
+  }
+  for (i in 1:nrow(eta_fu_phi_u_df)) {
+    expect_equal(matsbyname::rowtype(eta_fu_phi_u_df$phi.u[[i]]), "Product [from Industry]")
+    expect_null(matsbyname::coltype(eta_fu_phi_u_df$phi.u[[i]]))
+  }
+})
+
+
+test_that("extend_to_useful_helper works as intended", {
+  # These tests come from the "Pushing Y to Useful" tab in file "Matrix f->u example calcs.xlsx"
+  
+  # Set up some matrices and data frames
+  Y_f <- matrix(c(100, 50, 
+                  200, 25), byrow = TRUE, nrow = 2, ncol = 2, 
+                dimnames = list(c("Elect", "Petrol"), c("Residential", "Construction"))) %>% 
+    matsbyname::setrowtype(IEATools::row_col_types$product) %>% 
+    matsbyname::setcoltype(IEATools::row_col_types$industry)
+  
+  Allocation_Table <- tibble::tribble(~Destination, ~Ef.product, ~Machine, ~Eu.product, ~C, 
+                                      "Residential", "Elect", "Lights", "Light", 0.5,
+                                      "Residential", "Elect", "Water heaters", "MTH", 0.5,
+                                      "Construction", "Elect", "Elect motors", "MD", 0.25, 
+                                      "Construction", "Elect", "Lights", "Light", 0.25,
+                                      "Construction", "Elect", "Heaters", "MTH", 0.5,
+                                      "Residential", "Petrol", "Engines", "MD", 0.25,
+                                      "Residential", "Petrol", "Burner", "MTH", 0.75,
+                                      "Construction", "Petrol", "Autos", "MD", 0.6,
+                                      "Construction", "Petrol", "Furnace", "LTH", 0.4)
+  
+  Efficiency_Table <- tibble::tribble(~Machine, ~Eu.product, ~eta.fu,
+                                      "Lights", "Light", 0.45,
+                                      "Water heaters", "MTH", 0.9,
+                                      "Elect motors", "MD", 0.95,
+                                      "Heaters", "MTH", 0.9,
+                                      "Engines", "MD", 0.25,
+                                      "Burner", "MTH", 0.98,
+                                      "Autos", "MD", 0.15,
+                                      "Furnace", "LTH", 0.97)
+  
+  
+  # Calculate some matrices
+  
+  C_Y <- Allocation_Table %>% 
+    dplyr::mutate(
+      rownames = matsbyname::paste_pref_suff(pref = Ef.product, suff = Destination, notation = arrow_notation), 
+      colnames = matsbyname::paste_pref_suff(pref = Machine, suff = Eu.product, notation = arrow_notation), 
+      rowtypes = matsbyname::paste_pref_suff(pref = row_col_types$product, suff = row_col_types$industry, notation = arrow_notation),
+      coltypes = matsbyname::paste_pref_suff(pref = row_col_types$industry, suff = row_col_types$product, notation = arrow_notation),
+      matnames = "C_Y", 
+      Destination = NULL, 
+      Ef.product = NULL, 
+      Machine = NULL, 
+      Eu.product = NULL
+    ) %>%
+    dplyr::rename(
+      matvals = C
+    ) %>% 
+    dplyr::group_by(matnames) %>% 
+    matsindf::collapse_to_matrices() %>% 
+    magrittr::extract2("matvals") %>% 
+    magrittr::extract2(1)
+  
+  eta.fu_rownames <- Efficiency_Table %>% 
+    dplyr::mutate(
+      rownames = matsbyname::paste_pref_suff(pref = Machine, suff = Eu.product, notation = arrow_notation)
+    ) %>% 
+    magrittr::extract2("rownames")
+  
+  eta_fu <- Efficiency_Table %>% 
+    magrittr::extract2("eta.fu") %>% 
+    matrix(ncol = 1, dimnames = list(eta.fu_rownames, "eta.fu")) %>% 
+    matsbyname::setrowtype(matsbyname::paste_pref_suff(pref = row_col_types$industry, 
+                                                       suff = row_col_types$product, 
+                                                       notation = arrow_notation))
+  
+  # Calculate actual results
+  
+  res <- IEATools:::extend_to_useful_helper(dest_mat = Y_f, C_mat = C_Y, eta_fu_vec = eta_fu)
+  
+  
+  # Calculate expected results
+  
+  ## Step 1
+  
+  Y_f_vec <- matsbyname::vectorize_byname(Y_f, notation = arrow_notation)
+  Y_f_vec_hat <- matsbyname::hatize_byname(Y_f_vec)
+  Y_f_vec_hat_C_Y <- matsbyname::matrixproduct_byname(Y_f_vec_hat, C_Y)
+  
+  eta_fu_hat <- matsbyname::hatize_byname(eta_fu) %>% 
+    arrow_to_from_byname(margin = 2)
+  
+  expect_equal(eta_fu_hat[["Engines -> MD", "MD [from Engines]"]], 
+               Efficiency_Table %>% dplyr::filter(Machine == "Engines") %>% 
+                 magrittr::extract2("eta.fu"))
+  
+  
+  ## Step 2
+  
+  add_to_U_excl_eiou_expected <- Y_f_vec_hat_C_Y %>% 
+    matsbyname::aggregate_to_pref_suff_byname(keep = "prefix", margin = 1, notation = arrow_notation) %>%
+    matsbyname::clean_byname(margin = 1)
+  
+  expect_equal(res$add_to_U, add_to_U_excl_eiou_expected)
+  
+  
+  ## Step 3
+  
+  add_to_V_expected <- Y_f_vec_hat_C_Y %>% 
+    matsbyname::colsums_byname() %>%
+    matsbyname::hatize_byname() %>%
+    matsbyname::matrixproduct_byname(eta_fu_hat)
+  
+  expect_equal(res$add_to_V, add_to_V_expected)
+  
+  
+  ## Step 4
+  
+  Y_f_repl_expected <- matsbyname::matrixproduct_byname(Y_f_vec_hat_C_Y, eta_fu_hat) %>%
+    matsbyname::transpose_byname() %>%
+    matsbyname::aggregate_to_pref_suff_byname(keep = "suffix", margin = 2, notation = arrow_notation) %>%
+    matsbyname::clean_byname()
+  
+  expect_equal(res$repl_dest, Y_f_repl_expected)
 })
 
 
@@ -253,121 +389,4 @@ test_that("extend_to_useful works as expected", {
 })
 
 
-test_that("extend_to_useful_helper works as intended", {
-  # These tests come from the "Pushing Y to Useful" tab in file "Matrix f->u example calcs.xlsx"
-  
-  # Set up some matrices and data frames
-  Y_f <- matrix(c(100, 50, 
-                  200, 25), byrow = TRUE, nrow = 2, ncol = 2, 
-                dimnames = list(c("Elect", "Petrol"), c("Residential", "Construction"))) %>% 
-    matsbyname::setrowtype(IEATools::row_col_types$product) %>% 
-    matsbyname::setcoltype(IEATools::row_col_types$industry)
-  
-  Allocation_Table <- tibble::tribble(~Destination, ~Ef.product, ~Machine, ~Eu.product, ~C, 
-                                      "Residential", "Elect", "Lights", "Light", 0.5,
-                                      "Residential", "Elect", "Water heaters", "MTH", 0.5,
-                                      "Construction", "Elect", "Elect motors", "MD", 0.25, 
-                                      "Construction", "Elect", "Lights", "Light", 0.25,
-                                      "Construction", "Elect", "Heaters", "MTH", 0.5,
-                                      "Residential", "Petrol", "Engines", "MD", 0.25,
-                                      "Residential", "Petrol", "Burner", "MTH", 0.75,
-                                      "Construction", "Petrol", "Autos", "MD", 0.6,
-                                      "Construction", "Petrol", "Furnace", "LTH", 0.4)
-  
-  Efficiency_Table <- tibble::tribble(~Machine, ~Eu.product, ~eta.fu,
-                                      "Lights", "Light", 0.45,
-                                      "Water heaters", "MTH", 0.9,
-                                      "Elect motors", "MD", 0.95,
-                                      "Heaters", "MTH", 0.9,
-                                      "Engines", "MD", 0.25,
-                                      "Burner", "MTH", 0.98,
-                                      "Autos", "MD", 0.15,
-                                      "Furnace", "LTH", 0.97)
-  
-  
-  # Calculate some matrices
-  
-  C_Y <- Allocation_Table %>% 
-    dplyr::mutate(
-      rownames = matsbyname::paste_pref_suff(pref = Ef.product, suff = Destination, notation = arrow_notation), 
-      colnames = matsbyname::paste_pref_suff(pref = Machine, suff = Eu.product, notation = arrow_notation), 
-      rowtypes = matsbyname::paste_pref_suff(pref = row_col_types$product, suff = row_col_types$industry, notation = arrow_notation),
-      coltypes = matsbyname::paste_pref_suff(pref = row_col_types$industry, suff = row_col_types$product, notation = arrow_notation),
-      matnames = "C_Y", 
-      Destination = NULL, 
-      Ef.product = NULL, 
-      Machine = NULL, 
-      Eu.product = NULL
-    ) %>%
-    dplyr::rename(
-      matvals = C
-    ) %>% 
-    dplyr::group_by(matnames) %>% 
-    matsindf::collapse_to_matrices() %>% 
-    magrittr::extract2("matvals") %>% 
-    magrittr::extract2(1)
-  
-  eta.fu_rownames <- Efficiency_Table %>% 
-    dplyr::mutate(
-      rownames = matsbyname::paste_pref_suff(pref = Machine, suff = Eu.product, notation = arrow_notation)
-    ) %>% 
-    magrittr::extract2("rownames")
-  eta_fu <- Efficiency_Table %>% 
-    magrittr::extract2("eta.fu") %>% 
-    matrix(ncol = 1, dimnames = list(eta.fu_rownames, "eta.fu")) %>% 
-    matsbyname::setrowtype(matsbyname::paste_pref_suff(pref = row_col_types$industry, 
-                                                      suff = row_col_types$product, 
-                                                      notation = arrow_notation))
-  
-  
-  
-  # Calculate actual results
-  
-  res <- IEATools:::extend_to_useful_helper(dest_mat = Y_f, C = C_Y, eta_fu = eta_fu)
-
-  
-  # Calculate expected results
-  
-  ## Step 1
-  
-  Y_f_vec <- matsbyname::vectorize_byname(Y_f, notation = arrow_notation)
-  Y_f_vec_hat <- matsbyname::hatize_byname(Y_f_vec)
-  Y_f_vec_hat_C_Y <- matsbyname::matrixproduct_byname(Y_f_vec_hat, C_Y)
-  
-  eta_fu_hat <- matsbyname::hatize_byname(eta_fu) %>% 
-    arrow_to_from_byname(margin = 2)
-  
-  expect_equal(eta_fu_hat[["Engines -> MD", "MD [from Engines]"]], 
-               Efficiency_Table %>% dplyr::filter(Machine == "Engines") %>% 
-                 magrittr::extract2("eta.fu"))
-  
-  
-  ## Step 2
-  
-  add_to_U_excl_eiou_expected <- Y_f_vec_hat_C_Y %>% 
-    matsbyname::aggregate_to_pref_suff_byname(keep = "prefix", margin = 1, notation = arrow_notation) %>%
-    matsbyname::clean_byname(margin = 1)
-  
-  expect_equal(res$add_to_U_f, add_to_U_excl_eiou_expected)
-
-    
-  ## Step 3
-  
-  add_to_V_expected <- Y_f_vec_hat_C_Y %>% 
-    matsbyname::colsums_byname() %>%
-    matsbyname::hatize_byname() %>%
-    matsbyname::matrixproduct_byname(eta_fu_hat)
-  
-  expect_equal(res$add_to_V_f, add_to_V_expected)
-
-    
-  ## Step 4
-  
-  Y_f_repl_expected <- matsbyname::matrixproduct_byname(Y_f_vec_hat_C_Y, eta_fu_hat) %>%
-    matsbyname::transpose_byname() %>%
-    matsbyname::aggregate_to_pref_suff_byname(keep = "suffix", margin = 2, notation = arrow_notation) %>%
-    matsbyname::clean_byname()
-
-  expect_equal(res$repl_dest_mat, Y_f_repl_expected)
-})
 

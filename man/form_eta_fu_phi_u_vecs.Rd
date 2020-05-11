@@ -22,7 +22,10 @@ form_eta_fu_phi_u_vecs(
   colnames = IEATools::mat_meta_cols$colnames,
   rowtypes = IEATools::mat_meta_cols$rowtypes,
   coltypes = IEATools::mat_meta_cols$coltypes,
-  notation = IEATools::arrow_notation
+  product = IEATools::row_col_types$product,
+  industry = IEATools::row_col_types$industry,
+  arrow_note = IEATools::arrow_notation,
+  from_note = IEATools::from_notation
 )
 }
 \arguments{
@@ -35,6 +38,8 @@ A template for this table should have been created by \code{eta_fu_table()} and
 \item{quantity, machine, eu_product, e_dot_machine, e_dot_machine_perc, maximum_values, eta_fu, phi_u}{See \code{IEATools::template_cols}.}
 
 \item{matnames, matvals, rownames, colnames, rowtypes, coltypes}{See \code{IEATools::mat_meta_cols}.}
+
+\item{product, industry}{See \code{IEATools::row_col_types}.}
 
 \item{notation}{The notation used for creating the eta_fu and phi vectors.
 See \code{matsbyname::notation_vec()}. Default is \code{arrow_notation}.}

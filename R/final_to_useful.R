@@ -138,10 +138,12 @@ form_C_mats <- function(.fu_allocation_table,
       "{rownames}" := matsbyname::paste_pref_suff(pref = .data[[ef_product]], suff = .data[[destination]], notation = notation),
       # Column names come from Machine -> Eu.product for both C_Y and C_EIOU.
       "{colnames}" := matsbyname::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = notation),
-      # Row types are Products
-      "{rowtypes}" := product,
-      # Column types are industries
-      "{coltypes}" := industry,
+      # Row types are Product -> Industry
+      # "{rowtypes}" := product,
+      "{rowtypes}" := matsbyname::paste_pref_suff(pref = product, suff = industry, notation = notation),
+      # Column types are Industry -> Product
+      # "{coltypes}" := industry,
+      "{coltypes}" := matsbyname::paste_pref_suff(pref = industry, suff = product, notation = notation),
       # Eliminate columns we no longer need
       "{ef_product}" := NULL,
       "{machine}" := NULL,
@@ -224,6 +226,7 @@ form_C_mats <- function(.fu_allocation_table,
 #' @param unit,year See `IEATools::iea_cols`.
 #' @param quantity,machine,eu_product,e_dot_machine,e_dot_machine_perc,maximum_values,eta_fu,phi_u See `IEATools::template_cols`.
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
+#' @param product,industry See `IEATools::row_col_types`.
 #' @param notation The notation used for creating the eta_fu and phi vectors. 
 #'                 See `matsbyname::notation_vec()`. Default is `arrow_notation`.
 #'
@@ -255,7 +258,11 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    rowtypes = IEATools::mat_meta_cols$rowtypes,
                                    coltypes = IEATools::mat_meta_cols$coltypes, 
                                    
-                                   notation = IEATools::arrow_notation) {
+                                   product = IEATools::row_col_types$product,
+                                   industry = IEATools::row_col_types$industry,
+                                   
+                                   arrow_note = IEATools::arrow_notation, 
+                                   from_note = IEATools::from_notation) {
   
   cleaned <- .eta_fu_table %>% 
     # Eliminate rows titled e_dot_machine or e_dot_machine_perc. These are just helper rows for the analyst.
@@ -285,14 +292,22 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
   prepped <- gathered %>% 
     dplyr::mutate(
       # Create rownames from the machine and eu_product rows.
-      "{rownames}" := matsbyname::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = notation),
-      # Eliminate machine and eu_product columns, becasue we no longer need them.
+      "{rownames}" := dplyr::case_when(
+        .data[[matnames]] == eta_fu ~ matsbyname::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = arrow_note),
+        .data[[matnames]] == phi_u ~ matsbyname::paste_pref_suff(pref = .data[[eu_product]], suff = .data[[machine]], notation = from_note),
+        TRUE ~ NA_character_
+      ), 
+      # Eliminate machine and eu_product columns, because we no longer need them.
       "{machine}" := NULL,
       "{eu_product}" := NULL,
       # Create colnames according to the name of the matrix to be created
       "{colnames}" := .data[[matnames]],
-      "{rowtypes}" := IEATools::row_col_types$industry,
-      "{coltypes}" := IEATools::row_col_types$product
+      "{rowtypes}" := dplyr::case_when(
+        .data[[matnames]] == eta_fu ~ matsbyname::paste_pref_suff(pref = industry, suff = product, notation = arrow_note),
+        .data[[matnames]] == phi_u ~ matsbyname::paste_pref_suff(pref = product, suff = industry, notation = from_note), 
+        TRUE ~ NA_character_
+      ), 
+      "{coltypes}" := NA_character_ # Will change to NULL later.
     )
 
   # Collapse to matrices (actually, column vectors) and return  
@@ -301,7 +316,10 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     dplyr::group_by(!!!group_cols) %>% 
     matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
                                    rownames = rownames, colnames = colnames, 
-                                   rowtypes = rowtypes, coltypes = coltypes)
+                                   rowtypes = rowtypes, coltypes = coltypes) %>% 
+    dplyr::mutate(
+      matvals = matvals %>% matsbyname::setcoltype(NULL)
+    )
   # pivot wider to the sutmats format
   out %>% 
     tidyr::pivot_wider(names_from = matnames, values_from = matvals)
@@ -343,6 +361,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param .add_to_U_eiou an internal matrix name for the a matrix to be added to the U_eiou_f matrix 
 #'                       to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".
 #' @param .add_to_V_f an internal matrix name for a matrix to add to the Y_f matrix. Default is ".add_to_V_f".
+#' @param .repl_dest an internal matrix name for a matrix that replaces a previous energy destination. Default is ".repl_dest".
 #' @param .useful A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".
 #'
 #' @return a version of `.tidy_sut_data` that contains additional rows with useful final stage ECC matrices 
@@ -363,6 +382,9 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 extend_to_useful <- function(.sutdata, 
                              wide_C_data,
                              wide_eta_fu_data,
+                             
+                             # Outgoing names
+                             
                              
                              last_stage = IEATools::iea_cols$last_stage,
                              unit = IEATools::iea_cols$unit,
@@ -400,6 +422,7 @@ extend_to_useful <- function(.sutdata,
                              .add_to_U_f = ".add_to_U_f",
                              .add_to_U_eiou = ".add_to_U_eiou",
                              .add_to_V_f = ".add_to_V_f",
+                             .repl_dest = ".repl_dest",
                              .useful = "_useful") {
   
   wide_psut_data <- .sutdata %>% 
@@ -418,158 +441,163 @@ extend_to_useful <- function(.sutdata,
   # We take each of these in turn, adjusting the energy conversion chain to account for the fact that 
   # useful energy is now the final stage.
 
+  wide_useful_Y <- matsindf::matsindf_apply(wide_psut_data, FUN = extend_to_useful_helper, 
+                                            # Input columns
+                                            dest_mat = Y,
+                                            C_mat = C_Y,
+                                            eta_fu_vec = eta_fu,
+                                            # Output columns
+                                            add_to_U = .add_to_U_f,
+                                            add_to_V = .add_to_V_f,
+                                            repl_dest = .repl_dest)
   
-  ########################
-  ########################
+  print()
+  
+
+  
+  
+  # wide_useful_Y <- wide_psut_data %>%
+  #   dplyr::mutate(
   # 
-  # Use matsindf_apply to do this transformation, using the extend_to_useful_helper function
-  #  
-  ########################
-  ########################
-  
-    
-  wide_useful_Y <- wide_psut_data %>%
-    dplyr::mutate(
-
-      #### Step 1 on the "Pushing Y to useful" tab in file "Matrix f->u example calcs.xlsx"
-
-      # Calculate Y_f_vec_hat_C_Y, the matrix product of Y_f_vec_hat and C_Y
-      "{.Y_f_vec_hat_C_Y}" := matsbyname::vectorize_byname(.data[[Y]], notation = list(notation)) %>%
-        matsbyname::clean_byname() %>%
-        matsbyname::hatize_byname() %>%
-        matsbyname::matrixproduct_byname(.data[[C_Y]]),
-
-      # Calculate eta_fu_hat
-      # Already calculated above.
-
-      #### Step 2 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
-
-      # Calculate the matrix that should be added to the U_f matrix.
-      "{.add_to_U_f}" := .data[[.Y_f_vec_hat_C_Y]] %>%
-        matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "prefix", margin = 1) %>%
-        matsbyname::clean_byname(margin = 1),
-
-      #### Step 3 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
-
-      # Calculate the matrix that should be added to the V_f matrix.
-      "{.add_to_V_f}" := .data[[.Y_f_vec_hat_C_Y]] %>%
-        matsbyname::setcoltype(industry_type) %>% setrowtype(industry_type) %>%
-        matsbyname::colsums_byname() %>%
-        matsbyname::hatize_byname() %>%
-        matsbyname::matrixproduct_byname(.data[[.eta_fu_hat]]),
-
-      #### Step 4 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
-
-      # Calculate replacement for Y matrix (Y_useful instead of Y_f)
-      "{paste0(Y, .useful)}" := matsbyname::matrixproduct_byname(.data[[.Y_f_vec_hat_C_Y]], .data[[.eta_fu_hat]]) %>%
-        matsbyname::transpose_byname() %>%
-        matsbyname::setrowtype(product_type) %>% matsbyname::setcoltype(industry_type) %>%
-        matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "suffix", margin = 2) %>%
-        matsbyname::clean_byname(),
-
-      #### Step 5
-
-      # Create U_useful matrix
-      "{paste0(U_excl_eiou, .useful)}" := matsbyname::sum_byname(.data[[U_excl_eiou]], .data[[.add_to_U_f]]),
-
-      # Create V_useful matrix
-      "{paste0(V, .useful)}" := matsbyname::sum_byname(.data[[V]], .data[[.add_to_V_f]]),
-
-      # Eliminate columns we no longer need from the data frame
-      "{.Y_f_vec_hat_C_Y}" := NULL,
-      "{.add_to_U_f}" := NULL,
-      "{.add_to_V_f}" := NULL,
-    )
-  
-  wide_useful_EIOU <- wide_useful_Y %>% 
-    dplyr::mutate(
-      
-      #### Step 1 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
-      
-      # Calculate U_eiou_f_vec_hat_C_eiou
-      "{.U_eiou_f_vec_hat_C_eiou}" := matsbyname::vectorize_byname(.data[[U_eiou]]) %>% 
-        matsbyname::clean_byname() %>%
-        matsbyname::hatize_byname() %>% 
-        matsbyname::matrixproduct_byname(.data[[C_eiou]]),
-      
-      #### Step 2 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
-      
-      # Calculate the matrix that should be added to the U_f matrix.
-      "{.add_to_U_f}" := .data[[.U_eiou_f_vec_hat_C_eiou]] %>% 
-        matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "prefix", margin = 1) %>% 
-        matsbyname::clean_byname(margin = 1), 
-      
-      #### Step 3 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
-      
-      # Calculate the matrix that should be added to the V_f matrix.
-      "{.add_to_V_f}" := .data[[.U_eiou_f_vec_hat_C_eiou]] %>% 
-        matsbyname::colsums_byname() %>% 
-        matsbyname::hatize_byname() %>% 
-        matsbyname::matrixproduct_byname(.data[[.eta_fu_hat]]), 
-      
-      #### Step 4 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
-      
-      # Calculate replacement for U_eiou_f matrix (U_eiou_useful instead of U_eiou_f)
-      "{paste0(U_eiou, .useful)}" := matsbyname::matrixproduct_byname(.data[[.U_eiou_f_vec_hat_C_eiou]], .data[[.eta_fu_hat]]) %>% 
-        matsbyname::transpose_byname() %>% 
-        matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "suffix", margin = 2) %>% 
-        matsbyname::clean_byname(), 
-      
-      #### Step 5
-      
-      # Add more to the U_useful matrix
-      "{paste0(U_excl_eiou, .useful)}" := matsbyname::sum_byname(.data[[paste0(U_excl_eiou, .useful)]], .data[[.add_to_U_f]]),
-      
-      # Add more to the V_useful matrix
-      "{paste0(V, .useful)}" := matsbyname::sum_byname(.data[[paste0(V, .useful)]], .data[[.add_to_V_f]]), 
-      
-      # Eliminate columns we no longer need from the data frame
-      "{.U_eiou_f_vec_hat_C_eiou}" := NULL,
-      "{.add_to_U_f}" := NULL,
-      "{.add_to_V_f}" := NULL
-    )
-  
-  # Prepare the outgoing data frame
-  out <- wide_useful_EIOU %>% 
-    dplyr::mutate(
-      # Show that these all now have useful last stage
-      "{last_stage}" := useful,
-      # Eliminate unneeded columns associated with the final stage being last stage
-      "{U_eiou}" := NULL,
-      "{U_excl_eiou}" := NULL,
-      "{V}" := NULL,
-      "{Y}" := NULL,
-      # Eliminate other temporary columns
-      "{C_eiou}" := NULL,
-      "{C_Y}" := NULL,
-      "{eta_fu}" := NULL,
-      "{phi_u}" := NULL,
-      "{.eta_fu_hat}" := NULL
-    ) %>% 
-    # Rename columns that are the matrices for useful last stage
-    dplyr::rename(
-      "{U_excl_eiou}" := .data[[paste0(U_excl_eiou, .useful)]], 
-      "{U_eiou}" := .data[[paste0(U_eiou, .useful)]], 
-      "{V}" := .data[[paste0(V, .useful)]], 
-      "{Y}" := .data[[paste0(Y, .useful)]]
-    )
-
-  out <- dplyr::bind_rows(.sutdata, out)
-  
-  # Check energy balance
-  verify_ebal <- out %>% 
-    dplyr::mutate(
-      R_plus_V_mat = matsbyname::sum_byname(.data[[R]], .data[[V]]),
-      RV_sums = matsbyname::transpose_byname(R_plus_V_mat) %>% matsbyname::rowsums_byname(),
-      U_sums = matsbyname::sum_byname(.data[[U_eiou]], .data[[U_excl_eiou]]) %>% matsbyname::rowsums_byname(),
-      Y_sums = matsbyname::rowsums_byname(.data[[Y]]), 
-      # (R + V) - U - Y
-      err = matsbyname::difference_byname(RV_sums, U_sums) %>% matsbyname::difference_byname(Y_sums), 
-      OK = err %>% matsbyname::iszero_byname(tol = tol) %>% as.logical()
-    )
-  # Error if there is a problem.
-  
-  return(out)
+  #     #### Step 1 on the "Pushing Y to useful" tab in file "Matrix f->u example calcs.xlsx"
+  # 
+  #     # Calculate Y_f_vec_hat_C_Y, the matrix product of Y_f_vec_hat and C_Y
+  #     "{.Y_f_vec_hat_C_Y}" := matsbyname::vectorize_byname(.data[[Y]], notation = list(notation)) %>%
+  #       matsbyname::clean_byname() %>%
+  #       matsbyname::hatize_byname() %>%
+  #       matsbyname::matrixproduct_byname(.data[[C_Y]]),
+  # 
+  #     # Calculate eta_fu_hat
+  #     # Already calculated above.
+  # 
+  #     #### Step 2 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
+  # 
+  #     # Calculate the matrix that should be added to the U_f matrix.
+  #     "{.add_to_U_f}" := .data[[.Y_f_vec_hat_C_Y]] %>%
+  #       matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "prefix", margin = 1) %>%
+  #       matsbyname::clean_byname(margin = 1),
+  # 
+  #     #### Step 3 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
+  # 
+  #     # Calculate the matrix that should be added to the V_f matrix.
+  #     "{.add_to_V_f}" := .data[[.Y_f_vec_hat_C_Y]] %>%
+  #       matsbyname::setcoltype(industry_type) %>% setrowtype(industry_type) %>%
+  #       matsbyname::colsums_byname() %>%
+  #       matsbyname::hatize_byname() %>%
+  #       matsbyname::matrixproduct_byname(.data[[.eta_fu_hat]]),
+  # 
+  #     #### Step 4 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
+  # 
+  #     # Calculate replacement for Y matrix (Y_useful instead of Y_f)
+  #     "{paste0(Y, .useful)}" := matsbyname::matrixproduct_byname(.data[[.Y_f_vec_hat_C_Y]], .data[[.eta_fu_hat]]) %>%
+  #       matsbyname::transpose_byname() %>%
+  #       matsbyname::setrowtype(product_type) %>% matsbyname::setcoltype(industry_type) %>%
+  #       matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "suffix", margin = 2) %>%
+  #       matsbyname::clean_byname(),
+  # 
+  #     #### Step 5
+  # 
+  #     # Create U_useful matrix
+  #     "{paste0(U_excl_eiou, .useful)}" := matsbyname::sum_byname(.data[[U_excl_eiou]], .data[[.add_to_U_f]]),
+  # 
+  #     # Create V_useful matrix
+  #     "{paste0(V, .useful)}" := matsbyname::sum_byname(.data[[V]], .data[[.add_to_V_f]]),
+  # 
+  #     # Eliminate columns we no longer need from the data frame
+  #     "{.Y_f_vec_hat_C_Y}" := NULL,
+  #     "{.add_to_U_f}" := NULL,
+  #     "{.add_to_V_f}" := NULL,
+  #   )
+  # 
+  # wide_useful_EIOU <- wide_useful_Y %>% 
+  #   dplyr::mutate(
+  #     
+  #     #### Step 1 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
+  #     
+  #     # Calculate U_eiou_f_vec_hat_C_eiou
+  #     "{.U_eiou_f_vec_hat_C_eiou}" := matsbyname::vectorize_byname(.data[[U_eiou]]) %>% 
+  #       matsbyname::clean_byname() %>%
+  #       matsbyname::hatize_byname() %>% 
+  #       matsbyname::matrixproduct_byname(.data[[C_eiou]]),
+  #     
+  #     #### Step 2 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
+  #     
+  #     # Calculate the matrix that should be added to the U_f matrix.
+  #     "{.add_to_U_f}" := .data[[.U_eiou_f_vec_hat_C_eiou]] %>% 
+  #       matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "prefix", margin = 1) %>% 
+  #       matsbyname::clean_byname(margin = 1), 
+  #     
+  #     #### Step 3 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
+  #     
+  #     # Calculate the matrix that should be added to the V_f matrix.
+  #     "{.add_to_V_f}" := .data[[.U_eiou_f_vec_hat_C_eiou]] %>% 
+  #       matsbyname::colsums_byname() %>% 
+  #       matsbyname::hatize_byname() %>% 
+  #       matsbyname::matrixproduct_byname(.data[[.eta_fu_hat]]), 
+  #     
+  #     #### Step 4 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
+  #     
+  #     # Calculate replacement for U_eiou_f matrix (U_eiou_useful instead of U_eiou_f)
+  #     "{paste0(U_eiou, .useful)}" := matsbyname::matrixproduct_byname(.data[[.U_eiou_f_vec_hat_C_eiou]], .data[[.eta_fu_hat]]) %>% 
+  #       matsbyname::transpose_byname() %>% 
+  #       matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "suffix", margin = 2) %>% 
+  #       matsbyname::clean_byname(), 
+  #     
+  #     #### Step 5
+  #     
+  #     # Add more to the U_useful matrix
+  #     "{paste0(U_excl_eiou, .useful)}" := matsbyname::sum_byname(.data[[paste0(U_excl_eiou, .useful)]], .data[[.add_to_U_f]]),
+  #     
+  #     # Add more to the V_useful matrix
+  #     "{paste0(V, .useful)}" := matsbyname::sum_byname(.data[[paste0(V, .useful)]], .data[[.add_to_V_f]]), 
+  #     
+  #     # Eliminate columns we no longer need from the data frame
+  #     "{.U_eiou_f_vec_hat_C_eiou}" := NULL,
+  #     "{.add_to_U_f}" := NULL,
+  #     "{.add_to_V_f}" := NULL
+  #   )
+  # 
+  # # Prepare the outgoing data frame
+  # out <- wide_useful_EIOU %>% 
+  #   dplyr::mutate(
+  #     # Show that these all now have useful last stage
+  #     "{last_stage}" := useful,
+  #     # Eliminate unneeded columns associated with the final stage being last stage
+  #     "{U_eiou}" := NULL,
+  #     "{U_excl_eiou}" := NULL,
+  #     "{V}" := NULL,
+  #     "{Y}" := NULL,
+  #     # Eliminate other temporary columns
+  #     "{C_eiou}" := NULL,
+  #     "{C_Y}" := NULL,
+  #     "{eta_fu}" := NULL,
+  #     "{phi_u}" := NULL,
+  #     "{.eta_fu_hat}" := NULL
+  #   ) %>% 
+  #   # Rename columns that are the matrices for useful last stage
+  #   dplyr::rename(
+  #     "{U_excl_eiou}" := .data[[paste0(U_excl_eiou, .useful)]], 
+  #     "{U_eiou}" := .data[[paste0(U_eiou, .useful)]], 
+  #     "{V}" := .data[[paste0(V, .useful)]], 
+  #     "{Y}" := .data[[paste0(Y, .useful)]]
+  #   )
+  # 
+  # out <- dplyr::bind_rows(.sutdata, out)
+  # 
+  # # Check energy balance
+  # verify_ebal <- out %>% 
+  #   dplyr::mutate(
+  #     R_plus_V_mat = matsbyname::sum_byname(.data[[R]], .data[[V]]),
+  #     RV_sums = matsbyname::transpose_byname(R_plus_V_mat) %>% matsbyname::rowsums_byname(),
+  #     U_sums = matsbyname::sum_byname(.data[[U_eiou]], .data[[U_excl_eiou]]) %>% matsbyname::rowsums_byname(),
+  #     Y_sums = matsbyname::rowsums_byname(.data[[Y]]), 
+  #     # (R + V) - U - Y
+  #     err = matsbyname::difference_byname(RV_sums, U_sums) %>% matsbyname::difference_byname(Y_sums), 
+  #     OK = err %>% matsbyname::iszero_byname(tol = tol) %>% as.logical()
+  #   )
+  # # Error if there is a problem.
+  # 
+  # return(out)
 }
 
 
@@ -598,16 +626,23 @@ extend_to_useful <- function(.sutdata,
 #'                  `from_note` is used for the columns of some intermediate matrices.
 #'                  See `matsbyname::notation_vec()`.
 #'                  Default is `IEATools::from_notation`.
+#' @param add_to_U a string name for the matrix to be added to a use matrix. Default is "add_to_U".
+#' @param add_to_V a string name for the matrix to be added to a make matrix. Default is "add_to_V".
+#' @param repl_dest a string name for the matrix to replace the previous destination matrix. Default is "repl_dest_mat".
 #'
 #' @return a named list containing three items: 
-#'         `add_to_U_f` (a matrix to be added to the `U_excl_eiou` matrix),
-#'         `add_to_V_f` (a matrix to be added to the `V` matrix), and 
-#'         `repl_dest_mat` (a matrix to replace either `Y_f` or `U_eiou`).
+#'         `add_to_U_f` (a matrix to be added to a use (`U`) matrix),
+#'         `add_to_V_f` (a matrix to be added to a make (`V`) matrix), and 
+#'         `repl_dest_mat` (a matrix to replace the destination matrix, typically `Y_f` or `U_eiou`.
 extend_to_useful_helper <- function(dest_mat, C_mat, eta_fu_vec, 
                                     product_type = IEATools::row_col_types$product, 
                                     industry_type = IEATools::row_col_types$industry,
                                     arr_note = arrow_notation, 
-                                    from_note = from_notation) {
+                                    from_note = from_notation, 
+                                    # Output names
+                                    add_to_U = "add_to_U", 
+                                    add_to_V = "add_to_V", 
+                                    repl_dest = "repl_dest") {
   
   #### Step 1 on the "Pushing Y to useful" tab in file "Matrix f->u example calcs.xlsx"
 
@@ -620,21 +655,21 @@ extend_to_useful_helper <- function(dest_mat, C_mat, eta_fu_vec,
     matsbyname::hatize_byname() %>%
     matsbyname::matrixproduct_byname(C_mat)
   
-  eta_fu_hat <- matsbyname::hatize_byname(eta_fu) %>% 
+  eta_fu_hat <- matsbyname::hatize_byname(eta_fu_vec) %>% 
     # Swap column names from arrow notation to paren notation
     matsbyname::switch_notation_byname(margin = 2, from = arr_note, to = from_note, flip = TRUE)
 
   #### Step 2 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
   
   # Calculate the matrix that should be added to the U_f matrix.
-  add_to_U_f <- dest_mat_vec_hat_C %>% 
+  add_to_U_f_mat <- dest_mat_vec_hat_C %>% 
     matsbyname::aggregate_to_pref_suff_byname(keep = "prefix", margin = 1, notation = arrow_notation) %>%
     matsbyname::clean_byname(margin = 1)
   
   #### Step 3 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
   
   # Calculate the matrix that should be added to the V_f matrix.
-  add_to_V_f <- dest_mat_vec_hat_C %>% 
+  add_to_V_f_mat <- dest_mat_vec_hat_C %>% 
     matsbyname::colsums_byname() %>%
     matsbyname::hatize_byname() %>%
     matsbyname::matrixproduct_byname(eta_fu_hat)
@@ -647,6 +682,8 @@ extend_to_useful_helper <- function(dest_mat, C_mat, eta_fu_vec,
     matsbyname::aggregate_to_pref_suff_byname(keep = "suffix", margin = 2, notation = arrow_notation) %>%
     matsbyname::clean_byname()
   
-  list(add_to_U_f = add_to_U_f, add_to_V_f = add_to_V_f, repl_dest_mat = repl_dest_mat)
+  # Create the outgoing list and set names according to arguments.
+  list(add_to_U_f_mat, add_to_V_f_mat, repl_dest_mat) %>% 
+    magrittr::set_names(c(add_to_U, add_to_V, repl_dest))
 }
 

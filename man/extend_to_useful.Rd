@@ -35,6 +35,7 @@ extend_to_useful(
   .add_to_U_f = ".add_to_U_f",
   .add_to_U_eiou = ".add_to_U_eiou",
   .add_to_V_f = ".add_to_V_f",
+  .repl_dest = ".repl_dest",
   .useful = "_useful"
 )
 }
@@ -85,6 +86,8 @@ to form the useful form of the U_excl_eiou matrix. Default is ".add_to_U_f".}
 to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".}
 
 \item{.add_to_V_f}{an internal matrix name for a matrix to add to the Y_f matrix. Default is ".add_to_V_f".}
+
+\item{.repl_dest}{an internal matrix name for a matrix that replaces a previous energy destination. Default is ".repl_dest".}
 
 \item{.useful}{A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".}
 }
