@@ -5,6 +5,7 @@
 \title{A helper function for extending to the useful energy/exergy stage}
 \usage{
 extend_to_useful_helper(
+  .sutdata = NULL,
   dest_mat,
   C_mat,
   eta_fu_vec,
@@ -18,17 +19,22 @@ extend_to_useful_helper(
 )
 }
 \arguments{
-\item{dest_mat}{a \code{Y} or \code{U_eiou} matrix (Product x Industry) that is a destination for final energy in an energy conversion chain}
+\item{.sutdata}{a data frame containing \code{dest_mat}, \code{C_mat}, and \code{eta_fu_vec} columns for calculations. Default is \code{NULL}.}
+
+\item{dest_mat}{a \code{Y} or \code{U_eiou} matrix (Product x Industry) that is a destination for final energy in an energy conversion chain
+or the string name of such matrices in \code{.sutadata}.}
 
 \item{C_mat}{an allocation matrix (either \code{Y} or \code{U_eiou}, both Product x Industry),
 indicating the distribution of
 final energy carriers (Products) to
 final-to-useful energy conversion machines (Industries).
-\code{C_mat} should have been created by \code{form_C_mats()}.}
+\code{C_mat} should have been created by \code{form_C_mats()}.
+This argument could also be the string name of such matrices in \code{.sutdata}.}
 
 \item{eta_fu_vec}{an efficiency column vector indicating the efficiency (column)
 of final-to-useful energy conversion machines (rows).
-\code{eta_fu_vec} should have been created by \code{form_eta_fu_phi_u_vecs()}.}
+\code{eta_fu_vec} should have been created by \code{form_eta_fu_phi_u_vecs()}.
+This argument could also be the string name of such matrices in \code{.sutdata}.}
 
 \item{product_type}{a string identifying product row or column types. Default is "\code{IEATools::row_col_types$product}".}
 

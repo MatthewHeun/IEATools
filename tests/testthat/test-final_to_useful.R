@@ -183,7 +183,8 @@ test_that("extend_to_useful_helper works as intended", {
   
   add_to_U_excl_eiou_expected <- Y_f_vec_hat_C_Y %>% 
     matsbyname::aggregate_to_pref_suff_byname(keep = "prefix", margin = 1, notation = arrow_notation) %>%
-    matsbyname::clean_byname(margin = 1)
+    matsbyname::clean_byname(margin = 1) %>% 
+    matsbyname::setcoltype(row_col_types$industry)
   
   expect_equal(res$add_to_U, add_to_U_excl_eiou_expected)
   
@@ -193,7 +194,9 @@ test_that("extend_to_useful_helper works as intended", {
   add_to_V_expected <- Y_f_vec_hat_C_Y %>% 
     matsbyname::colsums_byname() %>%
     matsbyname::hatize_byname() %>%
-    matsbyname::matrixproduct_byname(eta_fu_hat)
+    matsbyname::matrixproduct_byname(eta_fu_hat) %>% 
+    matsbyname::setrowtype(row_col_types$industry) %>% 
+    matsbyname::setcoltype(row_col_types$product)
   
   expect_equal(res$add_to_V, add_to_V_expected)
   
@@ -203,7 +206,9 @@ test_that("extend_to_useful_helper works as intended", {
   Y_f_repl_expected <- matsbyname::matrixproduct_byname(Y_f_vec_hat_C_Y, eta_fu_hat) %>%
     matsbyname::transpose_byname() %>%
     matsbyname::aggregate_to_pref_suff_byname(keep = "suffix", margin = 2, notation = arrow_notation) %>%
-    matsbyname::clean_byname()
+    matsbyname::clean_byname() %>% 
+    matsbyname::setrowtype(row_col_types$product) %>% 
+    matsbyname::setcoltype(row_col_types$industry)
   
   expect_equal(res$repl_dest, Y_f_repl_expected)
 })
