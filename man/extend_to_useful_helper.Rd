@@ -15,7 +15,7 @@ extend_to_useful_helper(
   from_note = from_notation,
   add_to_U = "add_to_U",
   add_to_V = "add_to_V",
-  repl_dest = "repl_dest"
+  add_to_dest = "add_to_dest"
 )
 }
 \arguments{
@@ -54,13 +54,13 @@ Default is \code{IEATools::from_notation}.}
 
 \item{add_to_V}{a string name for the matrix to be added to a make matrix. Default is "add_to_V".}
 
-\item{repl_dest}{a string name for the matrix to replace the previous destination matrix. Default is "repl_dest_mat".}
+\item{add_to_dest}{a string name for the matrix to replace some entries previous destination matrix. Default is "repl_dest".}
 }
 \value{
 a named list containing three items:
 \code{add_to_U_f} (a matrix to be added to a use (\code{U}) matrix),
 \code{add_to_V_f} (a matrix to be added to a make (\code{V}) matrix), and
-\code{repl_dest_mat} (a matrix to replace the destination matrix, typically \code{Y_f} or \code{U_eiou}.
+\code{add_to_dest_mat} (a matrix to replace the destination matrix, typically \code{Y_f} or \code{U_eiou}.
 }
 \description{
 The helper function is needed, because moving from final to useful energy

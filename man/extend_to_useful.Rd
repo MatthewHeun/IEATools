@@ -27,6 +27,8 @@ extend_to_useful(
   C_Y = IEATools::template_cols$C_Y,
   eta_fu = IEATools::template_cols$eta_fu,
   phi_u = IEATools::template_cols$phi_u,
+  interface_ind = IEATools::interface_industries,
+  non_energy_ind = IEATools::non_energy_flows,
   notation = IEATools::arrow_notation,
   tol = 0.001,
   .Y_f_vec_hat_C_Y = ".Y_f_vec_hat_C_Y",
@@ -35,8 +37,9 @@ extend_to_useful(
   .add_to_U_f = ".add_to_U_f",
   .add_to_U_eiou = ".add_to_U_eiou",
   .add_to_V_f = ".add_to_V_f",
-  .repl_dest = ".repl_dest",
-  .useful = "_useful"
+  .add_to_dest = ".repl_dest",
+  .useful = "_useful",
+  .interface = "_interface"
 )
 }
 \arguments{
@@ -68,6 +71,10 @@ These matrices should be found in the \code{matvals} column of the \code{.tidy_p
 \code{C_eiou} and \code{C_Y} matrices should be found in the \code{matvals} column of the \code{C_Y_data} data frame.
 \code{eta_fu} and \code{phi_u} should be found in the \code{matvals} column of the \code{eta_fu_data} data frame.}
 
+\item{interface_ind}{See \code{IEATools::interface_industries}.}
+
+\item{non_energy_ind}{See \code{IEAToosl::non_energy_flows}.}
+
 \item{notation}{The row and column notation for this template.
 See \code{matsbyname::notation_vec()}. Default is \code{arrow_notation}.}
 
@@ -87,9 +94,12 @@ to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".}
 
 \item{.add_to_V_f}{an internal matrix name for a matrix to add to the Y_f matrix. Default is ".add_to_V_f".}
 
-\item{.repl_dest}{an internal matrix name for a matrix that replaces a previous energy destination. Default is ".repl_dest".}
+\item{.add_to_dest}{an internal matrix name for a matrix that replaces a previous energy destination. Default is ".repl_dest".}
 
 \item{.useful}{A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".}
+
+\item{.interface}{A suffix applied to versions of the \code{Y} matrix that contain only interface industries.
+See \code{IEATools::interface_industries}. Default is "_interface".}
 }
 \value{
 a version of \code{.tidy_sut_data} that contains additional rows with useful final stage ECC matrices

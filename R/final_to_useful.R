@@ -350,6 +350,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param C_eiou,C_Y,eta_fu,phi_u See `IEATools::template_cols`. 
 #'                          `C_eiou` and `C_Y` matrices should be found in the `matvals` column of the `C_Y_data` data frame.
 #'                          `eta_fu` and `phi_u` should be found in the `matvals` column of the `eta_fu_data` data frame.
+#' @param interface_ind See `IEATools::interface_industries`.
+#' @param non_energy_ind See `IEAToosl::non_energy_flows`.
 #' @param notation The row and column notation for this template.  
 #'                 See `matsbyname::notation_vec()`. Default is `arrow_notation`.
 #' @param tol the allowable error in energy balances. Default is `1e-3`.
@@ -361,8 +363,10 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param .add_to_U_eiou an internal matrix name for the a matrix to be added to the U_eiou_f matrix 
 #'                       to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".
 #' @param .add_to_V_f an internal matrix name for a matrix to add to the Y_f matrix. Default is ".add_to_V_f".
-#' @param .repl_dest an internal matrix name for a matrix that replaces a previous energy destination. Default is ".repl_dest".
+#' @param .add_to_dest an internal matrix name for a matrix that replaces a previous energy destination. Default is ".repl_dest".
 #' @param .useful A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".
+#' @param .interface A suffix applied to versions of the `Y` matrix that contain only interface industries. 
+#'                   See `IEATools::interface_industries`. Default is "_interface".
 #'
 #' @return a version of `.tidy_sut_data` that contains additional rows with useful final stage ECC matrices 
 #' 
@@ -412,6 +416,9 @@ extend_to_useful <- function(.sutdata,
                              eta_fu = IEATools::template_cols$eta_fu,
                              phi_u = IEATools::template_cols$phi_u,
                              
+                             interface_ind = IEATools::interface_industries,
+                             non_energy_ind = IEATools::non_energy_flows,
+                             
                              notation = IEATools::arrow_notation,
                              
                              tol = 1e-3,
@@ -422,8 +429,9 @@ extend_to_useful <- function(.sutdata,
                              .add_to_U_f = ".add_to_U_f",
                              .add_to_U_eiou = ".add_to_U_eiou",
                              .add_to_V_f = ".add_to_V_f",
-                             .repl_dest = ".repl_dest",
-                             .useful = "_useful") {
+                             .add_to_dest = ".repl_dest",
+                             .useful = "_useful", 
+                             .interface = "_interface") {
   
   wide_psut_data <- .sutdata %>% 
     # Join the C and eta_fu vectors to the right of the .sutdata frame
@@ -441,7 +449,9 @@ extend_to_useful <- function(.sutdata,
   U_excl_eiou_useful <- paste0(U_excl_eiou, .useful)
   U_eiou_useful <- paste0(U_eiou, .useful)
   V_useful <- paste0(V, .useful)
+  Y_int <- paste0(Y, .interface)
   Y_useful <- paste0(Y, .useful)
+  Y_interface <- paste0(Y, .interface)
   
   # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
   # We take each of these in turn, adjusting the energy conversion chain to account for the fact that 
@@ -449,28 +459,35 @@ extend_to_useful <- function(.sutdata,
 
   wide_useful_Y <- wide_psut_data %>% 
     extend_to_useful_helper(dest_mat = Y, C_mat = C_Y, eta_fu_vec = eta_fu, 
-                            add_to_U = .add_to_U_f, add_to_V = .add_to_V_f, repl_dest = .repl_dest) %>% 
+                            add_to_U = .add_to_U_f, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>% 
     dplyr::mutate(
       "{U_excl_eiou_useful}" := matsbyname::sum_byname(.data[[U_excl_eiou]], .data[[.add_to_U_f]]), 
       "{V_useful}" := matsbyname::sum_byname(.data[[V]], .data[[.add_to_V_f]]),
-      "{Y_useful}" := .data[[.repl_dest]], 
+      # We need to keep industries in Y that are interface industries and non-energy flows
+      # (exports, stock changes, international marine and aviation bunkers, and 
+      # imports, though there won't be any imports in the Y matrix, because imports are in the V matrix).
+      "{Y_interface}" := matsbyname::select_cols_byname(.data[[Y]], 
+                                                        retain_pattern = matsbyname::make_pattern(c(interface_ind, non_energy_ind), 
+                                                                                                  pattern_type = "leading")), 
+      "{Y_useful}" := matsbyname::sum_byname(.data[[Y_interface]], .data[[.add_to_dest]]), 
       # Eliminate columns that are no longer needed
-      "{.add_to_U_f}" := NULL, 
+      "{.add_to_U_f}" := NULL,
       "{.add_to_V_f}" := NULL,
-      "{.repl_dest}" := NULL
+      "{.add_to_dest}" := NULL,
+      "{Y_interface}" := NULL
     )
   
   wide_useful_EIOU <- wide_useful_Y %>% 
     extend_to_useful_helper(dest_mat = U_eiou, C_mat = C_eiou, eta_fu_vec = eta_fu, 
-                            add_to_U = .add_to_U_eiou, add_to_V = .add_to_V_f, repl_dest = .repl_dest) %>% 
+                            add_to_U = .add_to_U_eiou, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>% 
     dplyr::mutate(
-      "{U_excl_eiou_useful}" := matsbyname::sum_byname(.data[[U_eiou]], .data[[.add_to_U_eiou]]), 
+      "{U_excl_eiou_useful}" := matsbyname::sum_byname(.data[[U_excl_eiou_useful]], .data[[.add_to_U_eiou]]), 
       "{V_useful}" := matsbyname::sum_byname(.data[[V_useful]], .data[[.add_to_V_f]]), 
-      "{U_eiou_useful}" := .data[[.repl_dest]], 
+      "{U_eiou_useful}" := .data[[.add_to_dest]], 
       # Eliminate columns that are no longer needed
-      "{.add_to_U_eiou}" := NULL, 
+      "{.add_to_U_eiou}" := NULL,
       "{.add_to_V_f}" := NULL,
-      "{.repl_dest}" := NULL
+      "{.add_to_dest}" := NULL
     )
   
   # Prepare the outgoing data frame
@@ -508,7 +525,7 @@ extend_to_useful <- function(.sutdata,
       U_sums = matsbyname::sum_byname(.data[[U_eiou]], .data[[U_excl_eiou]]) %>% matsbyname::rowsums_byname(),
       Y_sums = matsbyname::rowsums_byname(.data[[Y]]),
       # (R + V) - U - Y
-      err = matsbyname::difference_byname(RV_sums, U_sums) %>% matsbyname::difference_byname(Y_sums),
+      err = RV_sums %>% matsbyname::difference_byname(U_sums) %>% matsbyname::difference_byname(Y_sums),
       OK = err %>% matsbyname::iszero_byname(tol = tol) %>% as.logical()
     )
   # Error if there is a problem.
@@ -697,12 +714,12 @@ extend_to_useful <- function(.sutdata,
 #'                  Default is `IEATools::from_notation`.
 #' @param add_to_U a string name for the matrix to be added to a use matrix. Default is "add_to_U".
 #' @param add_to_V a string name for the matrix to be added to a make matrix. Default is "add_to_V".
-#' @param repl_dest a string name for the matrix to replace the previous destination matrix. Default is "repl_dest_mat".
+#' @param add_to_dest a string name for the matrix to replace some entries previous destination matrix. Default is "repl_dest".
 #'
 #' @return a named list containing three items: 
 #'         `add_to_U_f` (a matrix to be added to a use (`U`) matrix),
 #'         `add_to_V_f` (a matrix to be added to a make (`V`) matrix), and 
-#'         `repl_dest_mat` (a matrix to replace the destination matrix, typically `Y_f` or `U_eiou`.
+#'         `add_to_dest_mat` (a matrix to replace the destination matrix, typically `Y_f` or `U_eiou`.
 extend_to_useful_helper <- function(.sutdata = NULL, 
                                     # Input matrix names
                                     dest_mat, C_mat, eta_fu_vec, 
@@ -714,7 +731,7 @@ extend_to_useful_helper <- function(.sutdata = NULL,
                                     # Output names
                                     add_to_U = "add_to_U", 
                                     add_to_V = "add_to_V", 
-                                    repl_dest = "repl_dest") {
+                                    add_to_dest = "add_to_dest") {
   
   helper_func <- function(dest_m, C_m, eta_fu_v) {
     #### Step 1 on the "Pushing Y to useful" tab in file "Matrix f->u example calcs.xlsx"
@@ -755,7 +772,7 @@ extend_to_useful_helper <- function(.sutdata = NULL,
     #### Step 4 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
     
     # Calculate replacement for the destination matrix (Y_useful instead of Y_f or U_eiou_useful instead of U_eiou)
-    repl_dest_mat <- matsbyname::matrixproduct_byname(dest_mat_vec_hat_C, eta_fu_hat) %>%
+    add_to_dest_mat <- matsbyname::matrixproduct_byname(dest_mat_vec_hat_C, eta_fu_hat) %>%
       matsbyname::transpose_byname() %>%
       matsbyname::aggregate_to_pref_suff_byname(keep = "suffix", margin = 2, notation = arrow_notation) %>%
       matsbyname::clean_byname() %>% 
@@ -764,8 +781,8 @@ extend_to_useful_helper <- function(.sutdata = NULL,
       matsbyname::setcoltype(industry_type)
     
     # Create the outgoing list and set names according to arguments.
-    list(add_to_U_f_mat, add_to_V_f_mat, repl_dest_mat) %>% 
-      magrittr::set_names(c(add_to_U, add_to_V, repl_dest))
+    list(add_to_U_f_mat, add_to_V_f_mat, add_to_dest_mat) %>% 
+      magrittr::set_names(c(add_to_U, add_to_V, add_to_dest))
   }
   
   matsindf::matsindf_apply(.sutdata, FUN = helper_func, dest_m = dest_mat, C_m = C_mat, eta_fu_v = eta_fu_vec)
