@@ -463,9 +463,12 @@ extend_to_useful <- function(.sutdata,
     dplyr::mutate(
       "{U_excl_eiou_useful}" := matsbyname::sum_byname(.data[[U_excl_eiou]], .data[[.add_to_U_f]]), 
       "{V_useful}" := matsbyname::sum_byname(.data[[V]], .data[[.add_to_V_f]]),
-      # We need to keep industries in Y that are interface industries and non-energy flows
+      # We need to keep industries in Y that are interface industries 
       # (exports, stock changes, international marine and aviation bunkers, and 
       # imports, though there won't be any imports in the Y matrix, because imports are in the V matrix).
+      # Also keep non-energy flows.
+      # None of the interface industries nor the non-energy flows are in the allocation matrix (C), 
+      # so we must retain them in the Y matrix.
       "{Y_interface}" := matsbyname::select_cols_byname(.data[[Y]], 
                                                         retain_pattern = matsbyname::make_pattern(c(interface_ind, non_energy_ind), 
                                                                                                   pattern_type = "leading")), 
