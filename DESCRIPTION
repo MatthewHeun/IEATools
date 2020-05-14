@@ -26,6 +26,7 @@ Imports:
     matsbyname,
     matsindf,
     openxlsx,
+    purrr,
     rlang,
     tibble,
     tidyr

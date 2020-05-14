@@ -1,13 +1,45 @@
-#' Specification notation
+#' Arrow notation
 #'
-#' A character vector containing the specification notation used in the IEATools package.
-#' Notation for delimiting specification strings is included.
+#' A character vector containing the arrow notation used in the IEATools package.
 #' 
-#' @format A character vector with `r length(specify_notation)` entries
+#' @format A character vector with `r length(arrow_notation)` entries
 #' 
 #' @examples
-#' specify_notation
-"specify_notation"
+#' arrow_notation
+"arrow_notation"
+
+
+#' Bracket notation
+#'
+#' A character vector containing the "from" notation used in the IEATools package.
+#' 
+#' @format A character vector with `r length(bracket_notation)` entries
+#' 
+#' @examples
+#' bracket_notation
+"bracket_notation"
+
+
+#' From notation
+#'
+#' A character vector containing the "from" notation used in the IEATools package.
+#' 
+#' @format A character vector with `r length(from_notation)` entries
+#' 
+#' @examples
+#' from_notation
+"from_notation"
+
+
+#' From notation
+#'
+#' A character vector containing the "of" notation used in the IEATools package.
+#' 
+#' @format A character vector with `r length(of_notation)` entries
+#' 
+#' @examples
+#' of_notation
+"of_notation"
 
 
 #' IEA release years supported by this package

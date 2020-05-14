@@ -20,22 +20,39 @@ usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 
 # Note that open and close are escaped if they contain any of [, ], (, or ). 
 # Otherwise, open and close should not contain any regex special characters.
-specify_notation <- list(open = " [", 
-                         close = "]", 
-                         arrow = " -> ",
-                         resources_preposition = "of ",
-                         eiou_preposition = "to ", 
-                         interface_ind_preposition = "of ",
-                         final_demand_preposition = "to ")
-specify_notation$resources_open <- paste0(specify_notation$open, specify_notation$resources_preposition)
-specify_notation$resources_close <- specify_notation$close
-specify_notation$eiou_open <- paste0(specify_notation$open, specify_notation$eiou_preposition)
-specify_notation$eiou_close <- specify_notation$close
-specify_notation$interface_ind_open <- paste0(specify_notation$open, specify_notation$interface_ind_preposition)
-specify_notation$interface_ind_close <- specify_notation$close
-specify_notation$final_demand_open <- paste0(specify_notation$open, specify_notation$final_demand_preposition)
-specify_notation$final_demand_close <- specify_notation$close
-usethis::use_data(specify_notation, overwrite = TRUE)
+# specify_notation <- list(open = " [", 
+#                          close = "]", 
+#                          arrow = " -> ",
+#                          resources_preposition = "of ",
+#                          eiou_preposition = "to ", 
+#                          interface_ind_preposition = "of ",
+#                          final_demand_preposition = "to ")
+# specify_notation$resources_open <- paste0(specify_notation$open, specify_notation$resources_preposition)
+# specify_notation$resources_close <- specify_notation$close
+# specify_notation$eiou_open <- paste0(specify_notation$open, specify_notation$eiou_preposition)
+# specify_notation$eiou_close <- specify_notation$close
+# specify_notation$interface_ind_open <- paste0(specify_notation$open, specify_notation$interface_ind_preposition)
+# specify_notation$interface_ind_close <- specify_notation$close
+# specify_notation$final_demand_open <- paste0(specify_notation$open, specify_notation$final_demand_preposition)
+# specify_notation$final_demand_close <- specify_notation$close
+# usethis::use_data(specify_notation, overwrite = TRUE)
+
+
+# 
+# Notation
+# 
+
+arrow_notation <- matsbyname::arrow_notation()
+usethis::use_data(arrow_notation, overwrite = TRUE)
+
+bracket_notation <- matsbyname::bracket_notation()
+usethis::use_data(bracket_notation, overwrite = TRUE)
+
+from_notation <- matsbyname::bracket_notation(suff_start = " [from ")
+usethis::use_data(from_notation, overwrite = TRUE)
+
+of_notation <- matsbyname::bracket_notation(suff_start = " [of ")
+usethis::use_data(of_notation, overwrite = TRUE)
 
 
 #
@@ -375,7 +392,7 @@ other_flows <- list(residential = "Residential",
 usethis::use_data(other_flows, overwrite = TRUE)
 
 
-non_energy_flows <- list(non_energy_use_insustry_transformation_energy = "Non-energy use industry/transformation/energy", 
+non_energy_flows <- list(non_energy_use_industry_transformation_energy = "Non-energy use industry/transformation/energy", 
                          non_energy_use_in_transport = "Non-energy use in transport", 
                          non_energy_use_in_other = "Non energy use in other")
 usethis::use_data(non_energy_flows, overwrite = TRUE)
@@ -489,11 +506,14 @@ products <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   # Insert a few items manually.
   # In specify_primary_production(), some Products are renamed to account for the fact that they come from a different industry.
   insert_after(after = primary_coal_products[length(primary_coal_products)], 
-               values = paste0(primary_coal_products, specify_notation$open, "Coal mines", specify_notation$close)) %>% 
+               # values = paste0(primary_coal_products, from_notation[["suff_start"]], "Coal mines", from_notation[["suff_end"]])) %>% 
+               values = matsbyname::paste_pref_suff(pref = primary_coal_products, suff = "Coal mines", notation = bracket_notation)) %>% 
   insert_after(after = primary_oil_products[length(primary_oil_products)], 
-               values = paste0(primary_oil_products, specify_notation$open, "Oil and gas extraction", specify_notation$close)) %>% 
+               # values = paste0(primary_oil_products, from_notation[["suff_start"]], "Oil and gas extraction", from_notation[["suff_end"]])) %>% 
+               values = matsbyname::paste_pref_suff(pref = primary_oil_products, suff = "Oil and gas extraction", notation = bracket_notation)) %>% 
   insert_after(after = "Natural gas", 
-               values = paste0("Natural gas", specify_notation$open, "Oil and gas extraction", specify_notation$close))
+               # values = paste0("Natural gas", from_notation[["suff_start"]], "Oil and gas extraction", from_notation[["suff_end"]]))
+               values = matsbyname::paste_pref_suff(pref = "Natural gas", suff = "Oil and gas extraction", notation = bracket_notation))
 usethis::use_data(products, overwrite = TRUE)
 
 

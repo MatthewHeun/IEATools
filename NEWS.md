@@ -1,12 +1,14 @@
 # IEATools 0.1.20 (2020-05-01)
 
 * Added additional tests for bug fixes and new features.
-    * Now up to 500 tests, all passing.
+    * Now up to 525 tests, all passing.
     * Test coverage remains at 100%.
-* Added function `move_last_stage_to_useful()` and supporting functions
+* Added function `extend_to_useful()` and supporting functions
   `form_C_mats()` and `form_eta_fu_phi_u_vecs()`.
   These functions use a matrix method to move from last stage of final energy 
   to last stage of useful energy.
+  Importantly, an energy balance check is performed 
+  at the end of `extend_to_useful()`, and a warning is emitted if the energy balance check fails.
 * Changed default number of rows in an allocation template from 3 to 4,
   per request from Zeke Marshall. 
   Note that the number of rows in the allocaiton template is adjustable 

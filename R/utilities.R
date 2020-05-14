@@ -191,19 +191,6 @@ extract_TK <- function(heat_types, sep = "."){
   # Grab the units from the strings, which are everything after the last sep.
   # So delete everything before the last sep.
   unit_strings <- sub(pattern = paste0("^.*", sep), replacement = "", x = temporary)
-  # Split the reamining string at sep to obtain the numeric parts and the units
-  # parts <- strsplit(temporary, split = sep, fixed = TRUE) %>% 
-    # Transpose to get the temperatures and units at the top level of the vector.
-    # purrr::transpose()
-  # If we get zero length here, heat_types was probably empty. 
-  # In this even, return NA to indicate the problem.
-  # if (length(parts) == 0) {
-  #   return(NA_real_)
-  # }
-  # Extract the temperatures and units separately.
-  # Doing this allows the use of Map later.
-  # temperature_strings <- parts[[1]]
-  # unit_strings <- parts[[2]]
   convert_to_K <- function(T_string, U_string){
     rawT <- suppressWarnings(T_string %>% as.numeric())
     if (is.na(rawT)) {
