@@ -73,7 +73,7 @@ to create allocation matrices (C)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.20</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.21</span>
       </span>
     </div>
 
@@ -165,7 +165,7 @@ to create allocation matrices (<code>C</code>).</p>
   <span class='kw'>coltypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>coltypes</span>,
   <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>product</span>,
   <span class='kw'>industry</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>industry</span>,
-  <span class='kw'>sep</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>$<span class='no'>arrow</span>,
+  <span class='kw'>notation</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='arrow_notation.html'>arrow_notation</a></span>,
   <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>,
   <span class='kw'>C_eiou</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>C_eiou</span>,
   <span class='kw'>C_Y</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>C_Y</span>,
@@ -204,14 +204,12 @@ A template for this table should have been created by <code>fu_allocation_table(
       <td><p>See <code><a href='row_col_types.html'>IEATools::row_col_types</a></code>.</p></td>
     </tr>
     <tr>
-      <th>sep</th>
-      <td><p>The string separator between prefix and suffix of compound row and column names. Default is " -&gt; ".
-The default value matches the default value for the <code>sep</code> argument of <code><a href='https://rdrr.io/pkg/matsbyname/man/vectorize_byname.html'>matsbyname::vectorize_byname()</a></code>, because
-<code><a href='https://rdrr.io/pkg/matsbyname/man/vectorize_byname.html'>matsbyname::vectorize_byname()</a></code> will be used for further manipulations.</p></td>
+      <th>notation</th>
+      <td><p>the notation used for this template. See <code><a href='https://rdrr.io/pkg/matsbyname/man/row-col-notation.html'>matsbyname::notation_vec()</a></code>. Default is <code><a href='arrow_notation.html'>IEATools::arrow_notation</a></code>.</p></td>
     </tr>
     <tr>
       <th>tol</th>
-      <td><p>The allowable amount by which a row sum in a <code>C</code> matrix can be different from 1. Default is 1e-6.</p></td>
+      <td><p>the allowable amount by which a row sum in a <code>C</code> matrix can be different from 1. Default is 1e-6.</p></td>
     </tr>
     <tr>
       <th>.should_be_1_vector</th>
