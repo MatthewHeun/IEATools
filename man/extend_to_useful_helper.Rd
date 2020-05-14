@@ -11,8 +11,8 @@ extend_to_useful_helper(
   eta_fu_vec,
   product_type = IEATools::row_col_types$product,
   industry_type = IEATools::row_col_types$industry,
-  arr_note = arrow_notation,
-  from_note = from_notation,
+  arr_note = IEATools::arrow_notation,
+  from_note = IEATools::from_notation,
   add_to_U = "add_to_U",
   add_to_V = "add_to_V",
   add_to_dest = "add_to_dest"

@@ -8,7 +8,7 @@ despecify_col(
   .df,
   col,
   despecified_col,
-  notations = list(of_notation, from_notation)
+  notations = list(IEATools::of_notation, IEATools::from_notation)
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ despecify_col(
 
 \item{despecified_col}{the string name of the column in the output data frame to contain the de-specified version of \code{col}.}
 
-\item{notation}{the notations used for row and column names. See \code{matsbyname::notation_vec()}.
+\item{notations}{the notations used for row and column names. See \code{matsbyname::notation_vec()}.
 Default is \code{list(IEATools::of_notation, IEATools::from_notation)},
 because both \code{IEATools::of_notation} and \code{IEATools::from_notation} can be used in the \code{Flow} column.}
 }

@@ -227,8 +227,9 @@ form_C_mats <- function(.fu_allocation_table,
 #' @param quantity,machine,eu_product,e_dot_machine,e_dot_machine_perc,maximum_values,eta_fu,phi_u See `IEATools::template_cols`.
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #' @param product,industry See `IEATools::row_col_types`.
-#' @param notation The notation used for creating the eta_fu and phi vectors. 
-#'                 See `matsbyname::notation_vec()`. Default is `arrow_notation`.
+#' @param arrow_note,from_note Notation vectors used for creating the eta_fu and phi vectors. 
+#'                             See `matsbyname::notation_vec()`. 
+#'                             Defaults are `arrow_notation` and ``from_notation`, respectively.
 #'
 #' @return a wide data frame with metadata columns (and year) along with columns for `eta_fu` and `phi_u` vectors.
 #' 
@@ -370,8 +371,9 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param .err an internal matrix name for calculating energy balance errors. Default is ".err".
 #' @param .e_bal_ok an internal column name for assessing whether energy balance is within acceptable tolerances set by the `tol` argument. Default is ".e_bal_OK".
 #' @param .useful A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".
-#' @param .interface A suffix applied to versions of the `Y` matrix that contain only interface industries. 
-#'                   See `IEATools::interface_industries`. Default is "_interface".
+#' @param .keep_in_Y A suffix applied to versions of the `Y` matrix that contain only industries retained in the move from final to useful last stage, 
+#'                   including strings from the arguments `interface_ind`, `non_energy_ind`, `losses`, and `stat_diffs`. 
+#'                   Default is "_keep_in_Y".
 #'
 #' @return A version of `.tidy_sut_data` that contains additional rows with useful final stage ECC matrices.
 #'         If the energy balance check fails, a warning is emitted and 
@@ -617,8 +619,8 @@ extend_to_useful_helper <- function(.sutdata = NULL,
                                     # Input parameters
                                     product_type = IEATools::row_col_types$product, 
                                     industry_type = IEATools::row_col_types$industry,
-                                    arr_note = arrow_notation, 
-                                    from_note = from_notation, 
+                                    arr_note = IEATools::arrow_notation, 
+                                    from_note = IEATools::from_notation, 
                                     # Output names
                                     add_to_U = "add_to_U", 
                                     add_to_V = "add_to_V", 
@@ -644,7 +646,7 @@ extend_to_useful_helper <- function(.sutdata = NULL,
     
     # Calculate the matrix that should be added to the U_f matrix.
     add_to_U_f_mat <- dest_mat_vec_hat_C %>% 
-      matsbyname::aggregate_to_pref_suff_byname(keep = "prefix", margin = 1, notation = arrow_notation) %>%
+      matsbyname::aggregate_to_pref_suff_byname(keep = "prefix", margin = 1, notation = arr_note) %>%
       matsbyname::clean_byname(margin = 1) %>% 
       # Set column type to industry to match other use matrices.
       matsbyname::setcoltype(industry_type)
@@ -665,7 +667,7 @@ extend_to_useful_helper <- function(.sutdata = NULL,
     # Calculate replacement for the destination matrix (Y_useful instead of Y_f or U_eiou_useful instead of U_eiou)
     add_to_dest_mat <- matsbyname::matrixproduct_byname(dest_mat_vec_hat_C, eta_fu_hat) %>%
       matsbyname::transpose_byname() %>%
-      matsbyname::aggregate_to_pref_suff_byname(keep = "suffix", margin = 2, notation = arrow_notation) %>%
+      matsbyname::aggregate_to_pref_suff_byname(keep = "suffix", margin = 2, notation = arr_note) %>%
       matsbyname::clean_byname() %>% 
       # Set row and column types to match other destination matrices.
       matsbyname::setrowtype(product_type) %>% 

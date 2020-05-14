@@ -39,27 +39,39 @@ NULL
 #' @export
 #' @rdname switch-notation
 arrow_to_from_byname <- function(m, margin = c(1, 2)) {
-  matsbyname::switch_notation_byname(m, margin = margin, from = list(arrow_notation), to = list(from_notation), flip = list(TRUE))
+  matsbyname::switch_notation_byname(m, margin = margin, 
+                                     from = list(IEATools::arrow_notation), 
+                                     to = list(IEATools::from_notation), 
+                                     flip = list(TRUE))
 }
 
 
 #' @export
 #' @rdname switch-notation
 from_to_arrow_byname <- function(m, margin = c(1, 2)) {
-  matsbyname::switch_notation_byname(m, margin = margin, from = list(from_notation), to = list(arrow_notation), flip = list(TRUE))
+  matsbyname::switch_notation_byname(m, margin = margin, 
+                                     from = list(IEATools::from_notation), 
+                                     to = list(IEATools::arrow_notation),
+                                     flip = list(TRUE))
 }
 
 
 #' @export
 #' @rdname switch-notation
 arrow_to_bracket_byname <- function(m, margin = c(1, 2)) {
-  matsbyname::switch_notation_byname(m, margin = margin, from = list(arrow_notation), to = list(bracket_notation), flip = list(TRUE))
+  matsbyname::switch_notation_byname(m, margin = margin, 
+                                     from = list(IEATools::arrow_notation), 
+                                     to = list(IEATools::bracket_notation), 
+                                     flip = list(TRUE))
 }
 
 
 #' @export
 #' @rdname switch-notation
 bracket_to_arrow_byname <- function(m, margin = c(1, 2)) {
-  matsbyname::switch_notation_byname(m, margin = margin, from = list(bracket_notation), to = list(arrow_notation), flip = list(TRUE))
+  matsbyname::switch_notation_byname(m, margin = margin, 
+                                     from = list(IEATools::bracket_notation), 
+                                     to = list(IEATools::arrow_notation), 
+                                     flip = list(TRUE))
 }
 

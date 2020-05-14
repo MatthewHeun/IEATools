@@ -684,7 +684,7 @@ specify_all <- function(.tidy_iea_df){
 #' @param .df the data frame in which `col` exists.
 #' @param col the string name of the column in `.df` to be de-specified.
 #' @param despecified_col the string name of the column in the output data frame to contain the de-specified version of `col`.
-#' @param notation the notations used for row and column names. See `matsbyname::notation_vec()`. 
+#' @param notations the notations used for row and column names. See `matsbyname::notation_vec()`. 
 #'                 Default is `list(IEATools::of_notation, IEATools::from_notation)`, 
 #'                 because both `IEATools::of_notation` and `IEATools::from_notation` can be used in the `Flow` column.
 #'
@@ -699,7 +699,7 @@ specify_all <- function(.tidy_iea_df){
 #'   despecify_col(col = "Flow", despecified_col = "clean_Flow") %>% 
 #'   select(Flow, Product, E.dot, clean_Flow) %>% 
 #'   filter(endsWith(Flow, bracket_notation[["suff_end"]]))
-despecify_col <- function(.df, col, despecified_col, notations = list(of_notation, from_notation)) {
+despecify_col <- function(.df, col, despecified_col, notations = list(IEATools::of_notation, IEATools::from_notation)) {
   out <- .df %>% 
     dplyr::mutate(
       "{despecified_col}" := dplyr::case_when(

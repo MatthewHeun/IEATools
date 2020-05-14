@@ -41,8 +41,9 @@ A template for this table should have been created by \code{eta_fu_table()} and
 
 \item{product, industry}{See \code{IEATools::row_col_types}.}
 
-\item{notation}{The notation used for creating the eta_fu and phi vectors.
-See \code{matsbyname::notation_vec()}. Default is \code{arrow_notation}.}
+\item{arrow_note, from_note}{Notation vectors used for creating the eta_fu and phi vectors.
+See \code{matsbyname::notation_vec()}.
+Defaults are \code{arrow_notation} and ``from_notation`, respectively.}
 }
 \value{
 a wide data frame with metadata columns (and year) along with columns for \code{eta_fu} and \code{phi_u} vectors.

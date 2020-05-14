@@ -111,8 +111,9 @@ to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".}
 
 \item{.useful}{A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".}
 
-\item{.interface}{A suffix applied to versions of the \code{Y} matrix that contain only interface industries.
-See \code{IEATools::interface_industries}. Default is "_interface".}
+\item{.keep_in_Y}{A suffix applied to versions of the \code{Y} matrix that contain only industries retained in the move from final to useful last stage,
+including strings from the arguments \code{interface_ind}, \code{non_energy_ind}, \code{losses}, and \code{stat_diffs}.
+Default is "_keep_in_Y".}
 }
 \value{
 A version of \code{.tidy_sut_data} that contains additional rows with useful final stage ECC matrices.
