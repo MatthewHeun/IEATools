@@ -78,7 +78,7 @@ phi_u: a vector of useful exergy-to-useful energy ratios.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.20</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.21</span>
       </span>
     </div>
 
@@ -169,7 +169,10 @@ The two vectors are:</p><ul>
   <span class='kw'>colnames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>colnames</span>,
   <span class='kw'>rowtypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>rowtypes</span>,
   <span class='kw'>coltypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>coltypes</span>,
-  <span class='kw'>sep</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>$<span class='no'>arrow</span>
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>product</span>,
+  <span class='kw'>industry</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>industry</span>,
+  <span class='kw'>arrow_note</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='arrow_notation.html'>arrow_notation</a></span>,
+  <span class='kw'>from_note</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='from_notation.html'>from_notation</a></span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -194,10 +197,14 @@ A template for this table should have been created by <code>eta_fu_table()</code
       <td><p>See <code><a href='mat_meta_cols.html'>IEATools::mat_meta_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>sep</th>
-      <td><p>The string separator between prefix and suffix of compound row and column names. Default is " -&gt; ".
-The default value matches the default value for the <code>sep</code> argument of <code><a href='https://rdrr.io/pkg/matsbyname/man/vectorize_byname.html'>matsbyname::vectorize_byname()</a></code>, because
-<code><a href='https://rdrr.io/pkg/matsbyname/man/vectorize_byname.html'>matsbyname::vectorize_byname()</a></code> will be used for further manipulations.</p></td>
+      <th>product, industry</th>
+      <td><p>See <code><a href='row_col_types.html'>IEATools::row_col_types</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>arrow_note, from_note</th>
+      <td><p>Notation vectors used for creating the eta_fu and phi vectors.
+See <code><a href='https://rdrr.io/pkg/matsbyname/man/row-col-notation.html'>matsbyname::notation_vec()</a></code>.
+Defaults are <code>arrow_notation</code> and ``from_notation`, respectively.</p></td>
     </tr>
     </table>
 
@@ -209,7 +216,7 @@ The default value matches the default value for the <code>sep</code> argument of
     <p>The vectors <code>eta_fu</code> and <code>phi_u</code> have special rownames that indicate
 sources and types of useful energy flows.
 Row names have the pattern
-"machine  -&gt;  useful energy form" to indicate
+"machine -&gt; useful energy form" to indicate
 the energy efficiency of "machine" for making "useful energy form"
 or the exergy-to-energy ratio of the useful energy form created by machine.</p>
 <p>Columns are named by the variable in the vector:

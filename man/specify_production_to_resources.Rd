@@ -10,9 +10,7 @@ specify_production_to_resources(
   product = "Product",
   production = "Production",
   resources = "Resources",
-  notation = IEATools::specify_notation,
-  .resources_open = notation$resources_open,
-  .resources_close = notation$resources_close
+  notation = IEATools::from_notation
 )
 }
 \arguments{
@@ -27,11 +25,7 @@ specify_production_to_resources(
 \item{resources}{a string identifying resource industries to be added to \code{.tidy_iea_df}.
 Default is "Resources".}
 
-\item{notation}{a list of specification notations. Default is \code{IEATools::specify_notation}.}
-
-\item{.resources_open}{a string that identifies the start of the specification portion of flows. Default is \code{specify_notation$resources_open}.}
-
-\item{.resources_close}{a string that identifies the end of specification portion of  flows. Default is \code{specify_notation$resources_close}.}
+\item{notation}{a list of specification notations. Default is \code{IEATools::bracket_notation}.}
 }
 \value{
 \code{.tidy_iea_df} with \code{Production} changed to \verb{resources .resources_open product .resources_close} in the \code{flow} column

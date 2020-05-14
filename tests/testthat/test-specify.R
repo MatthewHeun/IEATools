@@ -32,10 +32,17 @@ test_that("renamed products are also consumed", {
     dplyr::filter((startsWith(Product, "Hard coal") | Flow == "Coal mines"), Year == 1971)
   Renamed_primary <- Specific_production %>% 
     specify_primary_production()
-  expect_equal(Renamed_primary %>% dplyr::filter(Flow == paste0("Resources", specify_notation$resources_open, "Coal", specify_notation$resources_close)) %>% nrow(), 1)
+  expect_equal(Renamed_primary %>% 
+                 dplyr::filter(Flow == matsbyname::paste_pref_suff(pref = "Resources", suff = "Coal", notation = of_notation)) %>% 
+                 nrow(),
+               1)
   expect_equal(Renamed_primary %>% dplyr::filter(Product == "Electricity") %>% nrow(), 1)
-  expect_equal(Renamed_primary %>% dplyr::filter(Product == paste0("Hard coal (if no detail)", specify_notation$resources_open, "Coal mines", specify_notation$resources_close)) %>% nrow(), 18)
+  expect_equal(Renamed_primary %>% 
+                 dplyr::filter(Product == matsbyname::paste_pref_suff(pref = "Hard coal (if no detail)", suff = "Coal mines", notation = of_notation)) %>% 
+                 nrow(), 
+               18)
 })
+
 
 test_that("interface industries are correctly specified", {
   specified <- load_tidy_iea_df() %>% 
@@ -45,10 +52,11 @@ test_that("interface industries are correctly specified", {
   for (i in interface_industries) {
     # Ensure that there are no interface_industries remaining
     expect_equal(nrow(specified %>% dplyr::filter(Flow == i)), 0)
-    # Ensure that every interface_industry ends with ")", indicating that it has been specified.
-    expect_true(specified %>% dplyr::filter(startsWith(Flow, i) & endsWith(Flow, specify_notation$interface_ind_close)) %>% nrow() > 0)
+    # Ensure that every interface_industry ends with "]", indicating that it has been specified.
+    expect_true(specified %>% dplyr::filter(startsWith(Flow, i) & endsWith(Flow, of_notation[["suff_end"]])) %>% nrow() > 0)
   }
 })
+
 
 test_that("eiou is replaced correctly", {
   Specific_production <- load_tidy_iea_df() %>% 
@@ -87,6 +95,7 @@ test_that("eiou is replaced correctly", {
   expect_equal(specified$E.dot, -20)
 })
 
+
 test_that("specify_all works as expected", {
   Simple <- load_tidy_iea_df() %>% 
     specify_all()
@@ -108,7 +117,7 @@ test_that("despecify_col work as expected", {
   despecified %>% 
     dplyr::select(clean_Flow) %>% 
     unlist() %>% 
-    endsWith(specify_notation$close) %>% 
+    endsWith(of_notation[["suff_end"]]) %>% 
     any() %>% 
     expect_false()
   despecified %>% 
@@ -159,6 +168,7 @@ test_that("tp_sinks_sources() works as expected", {
                tibble::tibble(Country = "Bogus", Flow = "Furnaces"))
 })
 
+
 test_that('tp_sinks_sources(type = "sources") works as expected', {
   # Try to send an ungrouped data frame into the function. Should give 0 rows.
   expect_equal(load_tidy_iea_df() %>% 
@@ -205,10 +215,10 @@ test_that("tp_sinks_to_nonenergy works as expected", {
   # We expect that the original 4 rows are now down to 3.
   expect_equal(nrow(Result), 3)
   # Check that the sink energy was correctly added to existing Non-energy use.
-  expect_equal(Result %>% dplyr::filter(Flow.aggregation.point == "Non-energy use") %>% extract2("E.dot"), 10)
+  expect_equal(Result %>% dplyr::filter(Flow.aggregation.point == "Non-energy use") %>% magrittr::extract2("E.dot"), 10)
   # Check that the original rows are unchanged
-  expect_equal(Result %>% dplyr::filter(Flow == "Automobiles", Product == "Petrol") %>% extract2("E.dot"), -1)
-  expect_equal(Result %>% dplyr::filter(Flow == "Automobiles", Product == "MD") %>% extract2("E.dot"), 1)
+  expect_equal(Result %>% dplyr::filter(Flow == "Automobiles", Product == "Petrol") %>% magrittr::extract2("E.dot"), -1)
+  expect_equal(Result %>% dplyr::filter(Flow == "Automobiles", Product == "MD") %>% magrittr::extract2("E.dot"), 1)
 })
 
 test_that("spreading by years works as expected at each step of specify_all()", {

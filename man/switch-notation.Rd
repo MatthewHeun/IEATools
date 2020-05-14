@@ -2,109 +2,54 @@
 % Please edit documentation in R/notation.R
 \name{switch-notation}
 \alias{switch-notation}
-\alias{switch_notation}
-\alias{arrow_to_paren}
-\alias{paren_to_arrow}
-\alias{arrow_to_paren_byname}
-\alias{paren_to_arrow_byname}
-\alias{switch_notation_byname}
+\alias{arrow_to_from_byname}
+\alias{from_to_arrow_byname}
+\alias{arrow_to_bracket_byname}
+\alias{bracket_to_arrow_byname}
 \title{Change specification notation}
 \usage{
-switch_notation(x, old_start, old_end, new_start, new_end)
+arrow_to_from_byname(m, margin = c(1, 2))
 
-arrow_to_paren(
-  x,
-  old_start = IEATools::specify_notation$arrow,
-  old_end = "",
-  new_start = IEATools::specify_notation$open,
-  new_end = IEATools::specify_notation$close
-)
+from_to_arrow_byname(m, margin = c(1, 2))
 
-paren_to_arrow(
-  x,
-  old_start = IEATools::specify_notation$open,
-  old_end = IEATools::specify_notation$close,
-  new_start = IEATools::specify_notation$arrow,
-  new_end = ""
-)
+arrow_to_bracket_byname(m, margin = c(1, 2))
 
-arrow_to_paren_byname(
-  m,
-  margin = c(1, 2),
-  old_start = IEATools::specify_notation$arrow,
-  old_end = "",
-  new_start = IEATools::specify_notation$open,
-  new_end = IEATools::specify_notation$close
-)
-
-paren_to_arrow_byname(
-  m,
-  margin = c(1, 2),
-  old_start = IEATools::specify_notation$open,
-  old_end = IEATools::specify_notation$close,
-  new_start = IEATools::specify_notation$arrow,
-  new_end = ""
-)
-
-switch_notation_byname(
-  m,
-  margin,
-  worker_func,
-  old_start,
-  old_end,
-  new_start,
-  new_end
-)
+bracket_to_arrow_byname(m, margin = c(1, 2))
 }
 \arguments{
-\item{x}{a vector of strings for which notation is to be switched}
-
-\item{old_start}{the start of specification notation in \code{strings}}
-
-\item{old_end}{the end of specification notation in \code{strings}}
-
-\item{new_start}{the start of specification notation in output}
-
-\item{new_end}{the end of specification notation in output}
-
 \item{m}{a single matrix or a list of matrices.}
 
 \item{margin}{the margin over which the notation switch should be made:
 \code{1} for rows, \code{2} for columns, or \code{c(1, 2)} (the default) for both rows and columns}
-
-\item{worker_func}{the function to be called by \code{switch_notation_byname()}, one of \code{arrow_to_paren()} or \code{paren_to_arrow()}}
 }
 \value{
-An object of same length as \code{strings} with switched notation.
+An object of same length as \code{m} with switched notation.
 }
 \description{
 IEA data can be "specified" by adding additional information.
-Two notations are useful: arrow and parenthetical.
+Two notations are useful: arrow and bracket.
 Arrow notation is "from -> to",
-and parenthetical notation is "to [from]".
-These functions change a vector of strings or matrix row/column names
-between the specification notations.
+and bracket notation is
+"destination [source]".
+These functions change matrix row/column names
+between the two notations.
 \itemize{
-\item \code{switch_notation()} is the worker function.
-\item \code{arrow_to_paren()} switches from arrow to parenthetical specification notation.
-\item \code{paren_to_arrow()} switches from parenthetical to arrow specification notation.
-\item \code{switch_notation_byname()} is a worker function.
-\item \code{arrow_to_paren_byname()} switches from arrow to parenthetical specification notation for a matrix or a list of matrices.
-\item \code{paren_to_arrow_byname()} switches from parenthetical to arrow specification notation for a matrix or a list of matrices.
+\item \code{arrow_to_from()} switches from arrow to from notation.
+\item \code{from_to_arrow()} switches from from to arrow notation.
+\item \code{arrow_to_bracket()} switches from arrow to bracket notation.
+\item \code{bracket_to_arrow()} switches from bracket to arrow notation.
 }
 
-Functions with the name \verb{*_byname} behave like functions in the \code{byname} package.
+Functions with the name \verb{*_byname} behave like functions in the \code{matsbyname} package.
 Specifically, they can work with a single matrix or a list of matrices supplied to the \code{m} argument.
 }
 \examples{
-arrow_to_paren("a -> b")
-paren_to_arrow("b [a]")
 m <- matrix(c(1, 2, 
               3, 4), nrow = 2, ncol = 2, byrow = TRUE, 
             dimnames = list(c("a -> b", "c -> d"), c("f [e]", "h [g]")))
 m
-arrow_to_paren_byname(m)
-arrow_to_paren_byname(m, margin = 2) # No changes expected.
-paren_to_arrow_byname(m)
+arrow_to_from_byname(m)
+arrow_to_from_byname(m, margin = 2) # No changes expected.
+from_to_arrow_byname(m)
 
 }

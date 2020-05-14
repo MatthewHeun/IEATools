@@ -28,7 +28,7 @@ form_C_mats(
   coltypes = IEATools::mat_meta_cols$coltypes,
   product = IEATools::row_col_types$product,
   industry = IEATools::row_col_types$industry,
-  sep = IEATools::specify_notation$arrow,
+  notation = IEATools::arrow_notation,
   tol = 1e-06,
   C_eiou = IEATools::template_cols$C_eiou,
   C_Y = IEATools::template_cols$C_Y,
@@ -52,11 +52,9 @@ A template for this table should have been created by \code{fu_allocation_table(
 
 \item{product, industry}{See \code{IEATools::row_col_types}.}
 
-\item{sep}{The string separator between prefix and suffix of compound row and column names. Default is " -> ".
-The default value matches the default value for the \code{sep} argument of \code{matsbyname::vectorize_byname()}, because
-\code{matsbyname::vectorize_byname()} will be used for further manipulations.}
+\item{notation}{the notation used for this template. See \code{matsbyname::notation_vec()}. Default is \code{IEATools::arrow_notation}.}
 
-\item{tol}{The allowable amount by which a row sum in a \code{C} matrix can be different from 1. Default is 1e-6.}
+\item{tol}{the allowable amount by which a row sum in a \code{C} matrix can be different from 1. Default is 1e-6.}
 
 \item{.should_be_1_vector}{a temporary column created internally for error checking (and not returned unless there is an error).
 This column should contain 1 vectors (i.e., vectors filled with 1's).}

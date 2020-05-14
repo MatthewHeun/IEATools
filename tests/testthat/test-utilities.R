@@ -239,22 +239,22 @@ test_that("sorting works on a specified IEA data frame", {
   # Make sure that the initially-loaded data frame has sorting as expected.
   loaded <- load_tidy_iea_df()
   expect_equal(loaded$Flow[[1]], IEATools::tpes_flows$production)
-  expect_equal(loaded$Flow[[nrow(loaded)]], IEATools::non_energy_flows$non_energy_use_insustry_transformation_energy)
+  expect_equal(loaded$Flow[[nrow(loaded)]], IEATools::non_energy_flows$non_energy_use_industry_transformation_energy)
   
   # Sort the data frame and make sure everything is still in the right place.
   sorted_loaded <- sort_iea_df(loaded)
   expect_equal(sorted_loaded$Flow[[1]], IEATools::tpes_flows$production)
-  expect_equal(sorted_loaded$Flow[[nrow(sorted_loaded)]], IEATools::non_energy_flows$non_energy_use_insustry_transformation_energy)
+  expect_equal(sorted_loaded$Flow[[nrow(sorted_loaded)]], IEATools::non_energy_flows$non_energy_use_industry_transformation_energy)
   
   # Now specify the data frame and make sure sorting still works.
   sorted_specified <- loaded %>% 
     specify_all() %>% 
     sort_iea_df()
-  expect_equal(sorted_specified$Flow[[1]], paste0("Resources", 
-                                                  specify_notation$resources_open, 
-                                                  biofuels_and_waste_products$primary_solid_biofuels, 
-                                                  specify_notation$resources_close))
-  expect_equal(sorted_specified$Flow[[nrow(sorted_specified)]], IEATools::non_energy_flows$non_energy_use_insustry_transformation_energy)
+  expect_equal(sorted_specified$Flow[[1]], 
+               matsbyname::paste_pref_suff(pref = "Resources", suff = biofuels_and_waste_products$primary_solid_biofuels, notation = from_notation))
+  expect_equal(sorted_specified$Flow[[1]], 
+               matsbyname::paste_pref_suff(pref = "Resources", suff = biofuels_and_waste_products$primary_solid_biofuels, notation = from_notation))
+  expect_equal(sorted_specified$Flow[[nrow(sorted_specified)]], non_energy_flows$non_energy_use_industry_transformation_energy)
 })
 
 

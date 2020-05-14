@@ -77,7 +77,7 @@ This function adds a suffix (Product) to each of these interface industries." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.20</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.21</span>
       </span>
     </div>
 
@@ -154,9 +154,7 @@ This function adds a suffix <code>(Product)</code> to each of these interface in
   <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
   <span class='kw'>int_industries</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='interface_industries.html'>interface_industries</a></span>,
   <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
-  <span class='kw'>notation</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='specify_notation.html'>specify_notation</a></span>,
-  <span class='kw'>.interface_ind_open</span> <span class='kw'>=</span> <span class='no'>notation</span>$<span class='no'>interface_ind_open</span>,
-  <span class='kw'>.interface_ind_close</span> <span class='kw'>=</span> <span class='no'>notation</span>$<span class='no'>interface_ind_close</span>
+  <span class='kw'>notation</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='of_notation.html'>of_notation</a></span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -181,15 +179,7 @@ bunkers, or stock changes. Default is <code><a href='interface_industries.html'>
     </tr>
     <tr>
       <th>notation</th>
-      <td><p>a list of specification notations. Default is <code><a href='specify_notation.html'>IEATools::specify_notation</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>.interface_ind_open</th>
-      <td><p>a string that identifies the start of the specification portion of flows. Default is <code>IEATools::specify_notation$interface_ind_open</code>.</p></td>
-    </tr>
-    <tr>
-      <th>.interface_ind_close</th>
-      <td><p>a string that identifies the end of specification portion of  flows. Default is <code>IEATools::specify_notation$interface_ind_close</code>.</p></td>
+      <td><p>a list of specification notations. Default is <code><a href='of_notation.html'>IEATools::of_notation</a></code>.</p></td>
     </tr>
     </table>
 
