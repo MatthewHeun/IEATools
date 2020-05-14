@@ -203,14 +203,14 @@ test_that("extend_to_useful_helper works as intended", {
   
   ## Step 4
   
-  Y_f_repl_expected <- matsbyname::matrixproduct_byname(Y_f_vec_hat_C_Y, eta_fu_hat) %>%
+  add_to_Y_expected <- matsbyname::matrixproduct_byname(Y_f_vec_hat_C_Y, eta_fu_hat) %>%
     matsbyname::transpose_byname() %>%
     matsbyname::aggregate_to_pref_suff_byname(keep = "suffix", margin = 2, notation = arrow_notation) %>%
     matsbyname::clean_byname() %>% 
     matsbyname::setrowtype(row_col_types$product) %>% 
     matsbyname::setcoltype(row_col_types$industry)
   
-  expect_equal(res$repl_dest, Y_f_repl_expected)
+  expect_equal(res$add_to_dest, add_to_Y_expected)
 })
 
 
@@ -267,13 +267,13 @@ test_that("extend_to_useful works as expected", {
     dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
     magrittr::extract2("U_EIOU") %>% 
     magrittr::extract2(1) %>% 
-    magrittr::extract("Light [Electric lights]", "Coal mines")
+    magrittr::extract("Light [from Electric lights]", "Coal mines")
   
   actual_md_into_mines <- with_useful %>% 
     dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
     magrittr::extract2("U_EIOU") %>% 
     magrittr::extract2(1) %>% 
-    magrittr::extract("MD [Electric motors]", "Coal mines")
+    magrittr::extract("MD [from Electric motors]", "Coal mines")
 
   expect_equal(actual_light_into_mines, expected_light_into_mines)
   expect_equal(actual_md_into_mines, expected_md_into_mines)
@@ -308,7 +308,7 @@ test_that("extend_to_useful works as expected", {
     dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
     magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
-    magrittr::extract("MTH.200.C [Electric heaters]", "Chemical and petrochemical")
+    magrittr::extract("MTH.200.C [from Electric heaters]", "Chemical and petrochemical")
 
   expect_equal(actual_200C_into_chem, expected_200C_into_chem)
 
@@ -337,7 +337,7 @@ test_that("extend_to_useful works as expected", {
     dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
     magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
-    magrittr::extract("Light [Electric lights]", "Chemical and petrochemical")
+    magrittr::extract("Light [from Electric lights]", "Chemical and petrochemical")
 
   expect_equal(actual_light_into_chem, expected_light_into_chem)
     
@@ -381,13 +381,13 @@ test_that("extend_to_useful works as expected", {
     dplyr::filter(Country == "GHA", Last.stage == "Useful", Year == 1971) %>% 
     magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
-    magrittr::extract("MD [Electric motors]", "Non-ferrous metals")
+    magrittr::extract("MD [from Electric motors]", "Non-ferrous metals")
   
   actual_light_into_NFM <- with_useful %>% 
     dplyr::filter(Country == "GHA", Last.stage == "Useful", Year == 1971) %>% 
     magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
-    magrittr::extract("Light [Electric lights]", "Non-ferrous metals")
+    magrittr::extract("Light [from Electric lights]", "Non-ferrous metals")
   
   expect_equal(actual_md_into_NFM, expected_md_into_NFM)
   expect_equal(actual_light_into_NFM, expected_light_into_NFM)

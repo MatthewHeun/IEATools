@@ -29,6 +29,8 @@ extend_to_useful(
   phi_u = IEATools::template_cols$phi_u,
   interface_ind = IEATools::interface_industries,
   non_energy_ind = IEATools::non_energy_flows,
+  losses = IEATools::tfc_compare_flows$losses,
+  stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
   notation = IEATools::arrow_notation,
   tol = 0.001,
   .Y_f_vec_hat_C_Y = ".Y_f_vec_hat_C_Y",
@@ -38,8 +40,10 @@ extend_to_useful(
   .add_to_U_eiou = ".add_to_U_eiou",
   .add_to_V_f = ".add_to_V_f",
   .add_to_dest = ".repl_dest",
+  .err = ".err",
+  .e_bal_ok = ".e_bal_ok",
   .useful = "_useful",
-  .interface = "_interface"
+  .keep_in_Y = "_keep_in_Y"
 )
 }
 \arguments{
@@ -71,14 +75,19 @@ These matrices should be found in the \code{matvals} column of the \code{.tidy_p
 \code{C_eiou} and \code{C_Y} matrices should be found in the \code{matvals} column of the \code{C_Y_data} data frame.
 \code{eta_fu} and \code{phi_u} should be found in the \code{matvals} column of the \code{eta_fu_data} data frame.}
 
-\item{interface_ind}{See \code{IEATools::interface_industries}.}
+\item{interface_ind}{See \code{IEATools::interface_industries}. Interface industries are kept same from \code{Y_final} to \code{Y_useful}.}
 
-\item{non_energy_ind}{See \code{IEAToosl::non_energy_flows}.}
+\item{non_energy_ind}{See \code{IEATools::non_energy_flows}. Non-energy industries are kept same from \code{Y_final} to \code{Y_useful}.}
+
+\item{losses}{See \code{IEAtools::tfc_compare_flows}. Losses are kept same from \code{Y_final} to \code{Y_useful}.}
+
+\item{stat_diffs}{See \code{IEAtools::tfc_compare_flows}. Statistical differences are kept same from \code{Y_final} to \code{Y_useful}.}
 
 \item{notation}{The row and column notation for this template.
 See \code{matsbyname::notation_vec()}. Default is \code{arrow_notation}.}
 
-\item{tol}{the allowable error in energy balances. Default is \code{1e-3}.}
+\item{tol}{the allowable error in energy balances for both the incoming matrices (last stage final)
+and the outgoing matrices (last stage useful). Default is \code{1e-3}.}
 
 \item{.Y_f_vec_hat_C_Y}{an internal matrix name for the product of the Y_f_vec_hat and C_Y matrices. Default is ".Y_f_vec_hat_C_Y".}
 
@@ -96,13 +105,19 @@ to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".}
 
 \item{.add_to_dest}{an internal matrix name for a matrix that replaces a previous energy destination. Default is ".repl_dest".}
 
+\item{.err}{an internal matrix name for calculating energy balance errors. Default is ".err".}
+
+\item{.e_bal_ok}{an internal column name for assessing whether energy balance is within acceptable tolerances set by the \code{tol} argument. Default is ".e_bal_OK".}
+
 \item{.useful}{A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".}
 
 \item{.interface}{A suffix applied to versions of the \code{Y} matrix that contain only interface industries.
 See \code{IEATools::interface_industries}. Default is "_interface".}
 }
 \value{
-a version of \code{.tidy_sut_data} that contains additional rows with useful final stage ECC matrices
+A version of \code{.tidy_sut_data} that contains additional rows with useful final stage ECC matrices.
+If the energy balance check fails, a warning is emitted and
+additional diagnostic matrices will appear in the output: \code{.err} and \code{.e_bal_ok}.
 }
 \description{
 This function uses a matrix method to move

@@ -350,11 +350,14 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param C_eiou,C_Y,eta_fu,phi_u See `IEATools::template_cols`. 
 #'                          `C_eiou` and `C_Y` matrices should be found in the `matvals` column of the `C_Y_data` data frame.
 #'                          `eta_fu` and `phi_u` should be found in the `matvals` column of the `eta_fu_data` data frame.
-#' @param interface_ind See `IEATools::interface_industries`.
-#' @param non_energy_ind See `IEAToosl::non_energy_flows`.
-#' @param notation The row and column notation for this template.  
+#' @param interface_ind See `IEATools::interface_industries`. Interface industries are kept same from `Y_final` to `Y_useful`.
+#' @param non_energy_ind See `IEATools::non_energy_flows`. Non-energy industries are kept same from `Y_final` to `Y_useful`.
+#' @param losses See `IEAtools::tfc_compare_flows`. Losses are kept same from `Y_final` to `Y_useful`.
+#' @param stat_diffs See `IEAtools::tfc_compare_flows`. Statistical differences are kept same from `Y_final` to `Y_useful`.
+#' @param notation The row and column notation for this template.
 #'                 See `matsbyname::notation_vec()`. Default is `arrow_notation`.
-#' @param tol the allowable error in energy balances. Default is `1e-3`.
+#' @param tol the allowable error in energy balances for both the incoming matrices (last stage final) 
+#'            and the outgoing matrices (last stage useful). Default is `1e-3`.
 #' @param .Y_f_vec_hat_C_Y an internal matrix name for the product of the Y_f_vec_hat and C_Y matrices. Default is ".Y_f_vec_hat_C_Y".
 #' @param .U_eiou_f_vec_hat_C_eiou an internal matrix name for the product of the U_eiou_f_vec_hat and C_eiou matrices. Default is ".U_eiou_f_vec_hat_C_eiou".
 #' @param .eta_fu_hat an internal matrix name. Default is ".eta_fu_hat".
@@ -364,11 +367,15 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                       to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".
 #' @param .add_to_V_f an internal matrix name for a matrix to add to the Y_f matrix. Default is ".add_to_V_f".
 #' @param .add_to_dest an internal matrix name for a matrix that replaces a previous energy destination. Default is ".repl_dest".
+#' @param .err an internal matrix name for calculating energy balance errors. Default is ".err".
+#' @param .e_bal_ok an internal column name for assessing whether energy balance is within acceptable tolerances set by the `tol` argument. Default is ".e_bal_OK".
 #' @param .useful A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".
 #' @param .interface A suffix applied to versions of the `Y` matrix that contain only interface industries. 
 #'                   See `IEATools::interface_industries`. Default is "_interface".
 #'
-#' @return a version of `.tidy_sut_data` that contains additional rows with useful final stage ECC matrices 
+#' @return A version of `.tidy_sut_data` that contains additional rows with useful final stage ECC matrices.
+#'         If the energy balance check fails, a warning is emitted and 
+#'         additional diagnostic matrices will appear in the output: `.err` and `.e_bal_ok`.
 #' 
 #' @export
 #'
@@ -418,6 +425,8 @@ extend_to_useful <- function(.sutdata,
                              
                              interface_ind = IEATools::interface_industries,
                              non_energy_ind = IEATools::non_energy_flows,
+                             losses = IEATools::tfc_compare_flows$losses,
+                             stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
                              
                              notation = IEATools::arrow_notation,
                              
@@ -430,8 +439,10 @@ extend_to_useful <- function(.sutdata,
                              .add_to_U_eiou = ".add_to_U_eiou",
                              .add_to_V_f = ".add_to_V_f",
                              .add_to_dest = ".repl_dest",
+                             .err = ".err", 
+                             .e_bal_ok = ".e_bal_ok",
                              .useful = "_useful", 
-                             .interface = "_interface") {
+                             .keep_in_Y = "_keep_in_Y") {
   
   wide_psut_data <- .sutdata %>% 
     # Join the C and eta_fu vectors to the right of the .sutdata frame
@@ -449,9 +460,12 @@ extend_to_useful <- function(.sutdata,
   U_excl_eiou_useful <- paste0(U_excl_eiou, .useful)
   U_eiou_useful <- paste0(U_eiou, .useful)
   V_useful <- paste0(V, .useful)
-  Y_int <- paste0(Y, .interface)
   Y_useful <- paste0(Y, .useful)
-  Y_interface <- paste0(Y, .interface)
+  Y_keep <- paste0(Y, .keep_in_Y)
+  
+  # Industries to retain from Y_f to Y_u. 
+  # These industries are not allocated to f-u machines, nor are they tracked for useful energy.
+  Y_keep_inds <- c(interface_ind, non_energy_ind, losses, stat_diffs)
   
   # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
   # We take each of these in turn, adjusting the energy conversion chain to account for the fact that 
@@ -469,15 +483,15 @@ extend_to_useful <- function(.sutdata,
       # Also keep non-energy flows.
       # None of the interface industries nor the non-energy flows are in the allocation matrix (C), 
       # so we must retain them in the Y matrix.
-      "{Y_interface}" := matsbyname::select_cols_byname(.data[[Y]], 
-                                                        retain_pattern = matsbyname::make_pattern(c(interface_ind, non_energy_ind), 
-                                                                                                  pattern_type = "leading")), 
-      "{Y_useful}" := matsbyname::sum_byname(.data[[Y_interface]], .data[[.add_to_dest]]), 
+      "{Y_keep}" := matsbyname::select_cols_byname(.data[[Y]], 
+                                                   retain_pattern = matsbyname::make_pattern(Y_keep_inds, 
+                                                                                             pattern_type = "leading")), 
+      "{Y_useful}" := matsbyname::sum_byname(.data[[Y_keep]], .data[[.add_to_dest]]), 
       # Eliminate columns that are no longer needed
       "{.add_to_U_f}" := NULL,
       "{.add_to_V_f}" := NULL,
       "{.add_to_dest}" := NULL,
-      "{Y_interface}" := NULL
+      "{Y_keep}" := NULL
     )
   
   wide_useful_EIOU <- wide_useful_Y %>% 
@@ -520,169 +534,43 @@ extend_to_useful <- function(.sutdata,
 
   out <- dplyr::bind_rows(.sutdata, out)
   
-  # Check energy balance
+  # Check Product energy balances.
+  # It would be nice to use the Recca function verify_SUT_energy_balance() for this purpose.
+  # However, IEATools is designed to be independent of Recca.
+  # So we need to do our own energy balance here.
+  # Fortunately, energy balance calculations for products are relatively simple.
+  # The energy balance for products is given by rowsums of (R + V)^T - U - Y, which should all equal 0
+  # within acceptable error.
   verify_ebal <- out %>%
     dplyr::mutate(
-      R_plus_V_mat = matsbyname::sum_byname(.data[[R]], .data[[V]]),
-      RV_sums = matsbyname::transpose_byname(R_plus_V_mat) %>% matsbyname::rowsums_byname(),
-      U_sums = matsbyname::sum_byname(.data[[U_eiou]], .data[[U_excl_eiou]]) %>% matsbyname::rowsums_byname(),
-      Y_sums = matsbyname::rowsums_byname(.data[[Y]]),
-      # (R + V) - U - Y
-      err = RV_sums %>% matsbyname::difference_byname(U_sums) %>% matsbyname::difference_byname(Y_sums),
-      OK = err %>% matsbyname::iszero_byname(tol = tol) %>% as.logical()
+      # R_plus_V_mat = matsbyname::sum_byname(.data[[R]], .data[[V]]),
+      # RV_sums = matsbyname::transpose_byname(R_plus_V_mat) %>% matsbyname::rowsums_byname(),
+      # U_sums = matsbyname::sum_byname(.data[[U_eiou]], .data[[U_excl_eiou]]) %>% matsbyname::rowsums_byname(),
+      # Y_sums = matsbyname::rowsums_byname(.data[[Y]]),
+      # # (R + V) - U - Y  
+      # "{.err}" := RV_sums %>% matsbyname::difference_byname(U_sums) %>% matsbyname::difference_byname(Y_sums),
+      # "{.e_bal_ok}" := err %>% matsbyname::iszero_byname(tol = tol) %>% as.logical()
+      
+      
+      # (R + V)^T - U - Y  
+      "{.err}" := matsbyname::sum_byname(.data[[R]], .data[[V]]) %>% # R + V
+        matsbyname::transpose_byname() %>% 
+        matsbyname::difference_byname(.data[[U_excl_eiou]]) %>%      # - U_excl_eiou
+        matsbyname::difference_byname(.data[[U_eiou]]) %>%           # - U_eiou
+        matsbyname::difference_byname(.data[[Y]]) %>%                # - Y
+        matsbyname::rowsums_byname(),
+      "{.e_bal_ok}" := .data[[.err]] %>%
+        matsbyname::iszero_byname(tol = tol) %>% 
+        as.logical()
     )
-  # Error if there is a problem.
+  all_OK <- all(verify_ebal[[.e_bal_ok]])
+  if (!all_OK) {
+    # Emit a warning if there is a problem and return the wrong thing.
+    warning(paste0("Energy is not balanced to within ", tol, " in IEAtools::extend_to_useful(). See columns err and OK for problems."))
+    return(verify_ebal)
+  }
 
-  print()
-  
   return(out)
-
-
-
-  
-  
-  # wide_useful_Y <- wide_psut_data %>%
-  #   dplyr::mutate(
-  # 
-  #     #### Step 1 on the "Pushing Y to useful" tab in file "Matrix f->u example calcs.xlsx"
-  # 
-  #     # Calculate Y_f_vec_hat_C_Y, the matrix product of Y_f_vec_hat and C_Y
-  #     "{.Y_f_vec_hat_C_Y}" := matsbyname::vectorize_byname(.data[[Y]], notation = list(notation)) %>%
-  #       matsbyname::clean_byname() %>%
-  #       matsbyname::hatize_byname() %>%
-  #       matsbyname::matrixproduct_byname(.data[[C_Y]]),
-  # 
-  #     # Calculate eta_fu_hat
-  #     # Already calculated above.
-  # 
-  #     #### Step 2 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
-  # 
-  #     # Calculate the matrix that should be added to the U_f matrix.
-  #     "{.add_to_U_f}" := .data[[.Y_f_vec_hat_C_Y]] %>%
-  #       matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "prefix", margin = 1) %>%
-  #       matsbyname::clean_byname(margin = 1),
-  # 
-  #     #### Step 3 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
-  # 
-  #     # Calculate the matrix that should be added to the V_f matrix.
-  #     "{.add_to_V_f}" := .data[[.Y_f_vec_hat_C_Y]] %>%
-  #       matsbyname::setcoltype(industry_type) %>% setrowtype(industry_type) %>%
-  #       matsbyname::colsums_byname() %>%
-  #       matsbyname::hatize_byname() %>%
-  #       matsbyname::matrixproduct_byname(.data[[.eta_fu_hat]]),
-  # 
-  #     #### Step 4 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
-  # 
-  #     # Calculate replacement for Y matrix (Y_useful instead of Y_f)
-  #     "{paste0(Y, .useful)}" := matsbyname::matrixproduct_byname(.data[[.Y_f_vec_hat_C_Y]], .data[[.eta_fu_hat]]) %>%
-  #       matsbyname::transpose_byname() %>%
-  #       matsbyname::setrowtype(product_type) %>% matsbyname::setcoltype(industry_type) %>%
-  #       matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "suffix", margin = 2) %>%
-  #       matsbyname::clean_byname(),
-  # 
-  #     #### Step 5
-  # 
-  #     # Create U_useful matrix
-  #     "{paste0(U_excl_eiou, .useful)}" := matsbyname::sum_byname(.data[[U_excl_eiou]], .data[[.add_to_U_f]]),
-  # 
-  #     # Create V_useful matrix
-  #     "{paste0(V, .useful)}" := matsbyname::sum_byname(.data[[V]], .data[[.add_to_V_f]]),
-  # 
-  #     # Eliminate columns we no longer need from the data frame
-  #     "{.Y_f_vec_hat_C_Y}" := NULL,
-  #     "{.add_to_U_f}" := NULL,
-  #     "{.add_to_V_f}" := NULL,
-  #   )
-  # 
-  # wide_useful_EIOU <- wide_useful_Y %>% 
-  #   dplyr::mutate(
-  #     
-  #     #### Step 1 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
-  #     
-  #     # Calculate U_eiou_f_vec_hat_C_eiou
-  #     "{.U_eiou_f_vec_hat_C_eiou}" := matsbyname::vectorize_byname(.data[[U_eiou]]) %>% 
-  #       matsbyname::clean_byname() %>%
-  #       matsbyname::hatize_byname() %>% 
-  #       matsbyname::matrixproduct_byname(.data[[C_eiou]]),
-  #     
-  #     #### Step 2 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
-  #     
-  #     # Calculate the matrix that should be added to the U_f matrix.
-  #     "{.add_to_U_f}" := .data[[.U_eiou_f_vec_hat_C_eiou]] %>% 
-  #       matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "prefix", margin = 1) %>% 
-  #       matsbyname::clean_byname(margin = 1), 
-  #     
-  #     #### Step 3 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
-  #     
-  #     # Calculate the matrix that should be added to the V_f matrix.
-  #     "{.add_to_V_f}" := .data[[.U_eiou_f_vec_hat_C_eiou]] %>% 
-  #       matsbyname::colsums_byname() %>% 
-  #       matsbyname::hatize_byname() %>% 
-  #       matsbyname::matrixproduct_byname(.data[[.eta_fu_hat]]), 
-  #     
-  #     #### Step 4 on the "Pushing EIOU to useful" tab in file "Matrix f->U example calcs.xlsx"
-  #     
-  #     # Calculate replacement for U_eiou_f matrix (U_eiou_useful instead of U_eiou_f)
-  #     "{paste0(U_eiou, .useful)}" := matsbyname::matrixproduct_byname(.data[[.U_eiou_f_vec_hat_C_eiou]], .data[[.eta_fu_hat]]) %>% 
-  #       matsbyname::transpose_byname() %>% 
-  #       matsbyname::aggregate_to_pref_suff_byname(sep = sep, keep = "suffix", margin = 2) %>% 
-  #       matsbyname::clean_byname(), 
-  #     
-  #     #### Step 5
-  #     
-  #     # Add more to the U_useful matrix
-  #     "{paste0(U_excl_eiou, .useful)}" := matsbyname::sum_byname(.data[[paste0(U_excl_eiou, .useful)]], .data[[.add_to_U_f]]),
-  #     
-  #     # Add more to the V_useful matrix
-  #     "{paste0(V, .useful)}" := matsbyname::sum_byname(.data[[paste0(V, .useful)]], .data[[.add_to_V_f]]), 
-  #     
-  #     # Eliminate columns we no longer need from the data frame
-  #     "{.U_eiou_f_vec_hat_C_eiou}" := NULL,
-  #     "{.add_to_U_f}" := NULL,
-  #     "{.add_to_V_f}" := NULL
-  #   )
-  # 
-  # # Prepare the outgoing data frame
-  # out <- wide_useful_EIOU %>% 
-  #   dplyr::mutate(
-  #     # Show that these all now have useful last stage
-  #     "{last_stage}" := useful,
-  #     # Eliminate unneeded columns associated with the final stage being last stage
-  #     "{U_eiou}" := NULL,
-  #     "{U_excl_eiou}" := NULL,
-  #     "{V}" := NULL,
-  #     "{Y}" := NULL,
-  #     # Eliminate other temporary columns
-  #     "{C_eiou}" := NULL,
-  #     "{C_Y}" := NULL,
-  #     "{eta_fu}" := NULL,
-  #     "{phi_u}" := NULL,
-  #     "{.eta_fu_hat}" := NULL
-  #   ) %>% 
-  #   # Rename columns that are the matrices for useful last stage
-  #   dplyr::rename(
-  #     "{U_excl_eiou}" := .data[[paste0(U_excl_eiou, .useful)]], 
-  #     "{U_eiou}" := .data[[paste0(U_eiou, .useful)]], 
-  #     "{V}" := .data[[paste0(V, .useful)]], 
-  #     "{Y}" := .data[[paste0(Y, .useful)]]
-  #   )
-  # 
-  # out <- dplyr::bind_rows(.sutdata, out)
-  # 
-  # # Check energy balance
-  # verify_ebal <- out %>% 
-  #   dplyr::mutate(
-  #     R_plus_V_mat = matsbyname::sum_byname(.data[[R]], .data[[V]]),
-  #     RV_sums = matsbyname::transpose_byname(R_plus_V_mat) %>% matsbyname::rowsums_byname(),
-  #     U_sums = matsbyname::sum_byname(.data[[U_eiou]], .data[[U_excl_eiou]]) %>% matsbyname::rowsums_byname(),
-  #     Y_sums = matsbyname::rowsums_byname(.data[[Y]]), 
-  #     # (R + V) - U - Y
-  #     err = matsbyname::difference_byname(RV_sums, U_sums) %>% matsbyname::difference_byname(Y_sums), 
-  #     OK = err %>% matsbyname::iszero_byname(tol = tol) %>% as.logical()
-  #   )
-  # # Error if there is a problem.
-  # 
-  # return(out)
 }
 
 
