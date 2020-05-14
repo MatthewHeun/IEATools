@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Identify all energy types supplied or consumed by Production, Transformation processes, or Energy industry own use — prod_tp_eiou_energy_carriers • IEATools</title>
+<title>A helper function for extending to the useful energy/exergy stage — extend_to_useful_helper • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,10 @@
 
 
 
-<meta property="og:title" content="Identify all energy types supplied or consumed by Production, Transformation processes, or Energy industry own use — prod_tp_eiou_energy_carriers" />
-<meta property="og:description" content="Sometimes, it is helpful to know all types of energy supplied or consumed by Production, Transformation processes, or Energy industry own use.
-This function (optionally) reads an IEA data file or loads an IEA data frame and builds a named list of energy types
-supplied or consumed by Production, Transformation processes, or Energy industry own use." />
+<meta property="og:title" content="A helper function for extending to the useful energy/exergy stage — extend_to_useful_helper" />
+<meta property="og:description" content="The helper function is needed, because moving from final to useful energy
+occurs for both the final demand matrix (Y) and the energy industry own use matrix (U_eiou).
+The calculations are identical, so we factor the calculations into this function." />
 
 
 
@@ -132,94 +132,102 @@ supplied or consumed by Production, Transformation processes, or Energy industry
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Identify all energy types supplied or consumed by Production, Transformation processes, or Energy industry own use</h1>
+    <h1>A helper function for extending to the useful energy/exergy stage</h1>
     
-    <div class="hidden name"><code>prod_tp_eiou_energy_carriers.Rd</code></div>
+    <div class="hidden name"><code>extend_to_useful_helper.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Sometimes, it is helpful to know all types of energy supplied or consumed by Production, Transformation processes, or Energy industry own use.
-This function (optionally) reads an IEA data file or loads an IEA data frame and builds a named list of energy types
-supplied or consumed by Production, Transformation processes, or Energy industry own use.</p>
+    <p>The helper function is needed, because moving from final to useful energy
+occurs for both the final demand matrix (<code>Y</code>) and the energy industry own use matrix (<code>U_eiou</code>).
+The calculations are identical, so we factor the calculations into this function.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>prod_tp_eiou_energy_carriers</span>(
-  <span class='kw'>file_path</span> <span class='kw'>=</span> <span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span>(),
-  <span class='kw'>iea_df</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>(<span class='no'>file_path</span>),
-  <span class='kw'>side</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Consumption"</span>, <span class='st'>"Supply"</span>),
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  <span class='kw'>production</span> <span class='kw'>=</span> <span class='st'>"Production"</span>,
-  <span class='kw'>transformation_processes</span> <span class='kw'>=</span> <span class='st'>"Transformation processes"</span>,
-  <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>,
-  <span class='kw'>stage</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>production</span>, <span class='no'>transformation_processes</span>, <span class='no'>eiou</span>),
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>
+    <pre class="usage"><span class='fu'>extend_to_useful_helper</span>(
+  <span class='kw'>.sutdata</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>dest_mat</span>,
+  <span class='no'>C_mat</span>,
+  <span class='no'>eta_fu_vec</span>,
+  <span class='kw'>product_type</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>product</span>,
+  <span class='kw'>industry_type</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>industry</span>,
+  <span class='kw'>arr_note</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='arrow_notation.html'>arrow_notation</a></span>,
+  <span class='kw'>from_note</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='from_notation.html'>from_notation</a></span>,
+  <span class='kw'>add_to_U</span> <span class='kw'>=</span> <span class='st'>"add_to_U"</span>,
+  <span class='kw'>add_to_V</span> <span class='kw'>=</span> <span class='st'>"add_to_V"</span>,
+  <span class='kw'>add_to_dest</span> <span class='kw'>=</span> <span class='st'>"add_to_dest"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>file_path</th>
-      <td><p>the path to the IEA data file (optional)</p></td>
+      <th>.sutdata</th>
+      <td><p>a data frame containing <code>dest_mat</code>, <code>C_mat</code>, and <code>eta_fu_vec</code> columns for calculations. Default is <code>NULL</code>.</p></td>
     </tr>
     <tr>
-      <th>iea_df</th>
-      <td><p>a data frame containing IEA data. Default is <code><a href='load_tidy_iea_df.html'>IEATools::load_tidy_iea_df(file_path)</a></code>.</p></td>
+      <th>dest_mat</th>
+      <td><p>a <code>Y</code> or <code>U_eiou</code> matrix (Product x Industry) that is a destination for final energy in an energy conversion chain
+or the string name of such matrices in <code>.sutadata</code>.</p></td>
     </tr>
     <tr>
-      <th>side</th>
-      <td><p>refers to the "<code>Consumptiion</code>" or "<code>Supply</code>" side of Production, Transformation processes, or Energy industry own use.
-One of "<code>Consumption</code>" or "<code>Supply</code>". Default is "<code>Consumption</code>".</p></td>
+      <th>C_mat</th>
+      <td><p>an allocation matrix (either <code>Y</code> or <code>U_eiou</code>, both Product x Industry),
+indicating the distribution of
+final energy carriers (Products) to
+final-to-useful energy conversion machines (Industries).
+<code>C_mat</code> should have been created by <code><a href='form_C_mats.html'>form_C_mats()</a></code>.
+This argument could also be the string name of such matrices in <code>.sutdata</code>.</p></td>
     </tr>
     <tr>
-      <th>flow_aggregation_point</th>
-      <td><p>the flow aggregation point column in <code>iea_df</code>. Default is "<code>Flow.aggregation.point</code>".</p></td>
+      <th>eta_fu_vec</th>
+      <td><p>an efficiency column vector indicating the efficiency (column)
+of final-to-useful energy conversion machines (rows).
+<code>eta_fu_vec</code> should have been created by <code><a href='form_eta_fu_phi_u_vecs.html'>form_eta_fu_phi_u_vecs()</a></code>.
+This argument could also be the string name of such matrices in <code>.sutdata</code>.</p></td>
     </tr>
     <tr>
-      <th>production</th>
-      <td><p>the string indicating the production flow. Default is "<code>Production</code>".</p></td>
+      <th>product_type</th>
+      <td><p>a string identifying product row or column types. Default is "<code>IEATools::row_col_types$product</code>".</p></td>
     </tr>
     <tr>
-      <th>transformation_processes</th>
-      <td><p>the string indicating the transformation process stage. Default is "<code>Transformation processes</code>".</p></td>
+      <th>industry_type</th>
+      <td><p>a string identifying industry row or column types. Default is "<code>IEATools::row_col_types$industry</code>".</p></td>
     </tr>
     <tr>
-      <th>eiou</th>
-      <td><p>the string indicating the energy industry own use flow. Default is "<code>Energy industry own use</code>".</p></td>
+      <th>arr_note</th>
+      <td><p>a row and column name notation vector that indicates a <code>source -&gt; destination</code> relationship.
+<code>arr_note</code> is used for the <code>eta_fu</code> matrix, among others.
+See <code><a href='https://rdrr.io/pkg/matsbyname/man/row-col-notation.html'>matsbyname::notation_vec()</a></code>.
+Default is <code><a href='arrow_notation.html'>IEATools::arrow_notation</a></code>.</p></td>
     </tr>
     <tr>
-      <th>stage</th>
-      <td><p>the string indicating the stage for the analysis. One of <code>production</code>, <code>transformation_processes</code>, or <code>eiou</code>.
-Default is <code>production</code>.</p></td>
+      <th>from_note</th>
+      <td><p>a row and column name notation vector that indicates a <code>destination [from source]</code> relationship.
+<code>from_note</code> is used for the columns of some intermediate matrices.
+See <code><a href='https://rdrr.io/pkg/matsbyname/man/row-col-notation.html'>matsbyname::notation_vec()</a></code>.
+Default is <code><a href='from_notation.html'>IEATools::from_notation</a></code>.</p></td>
     </tr>
     <tr>
-      <th>e_dot</th>
-      <td><p>the energy flow rate column in <code>iea_df</code>.  Default is "<code>E.dot</code>".</p></td>
+      <th>add_to_U</th>
+      <td><p>a string name for the matrix to be added to a use matrix. Default is "add_to_U".</p></td>
     </tr>
     <tr>
-      <th>flow</th>
-      <td><p>the flow column in <code>iea_df</code>. Default is "<code>Flow</code>".</p></td>
+      <th>add_to_V</th>
+      <td><p>a string name for the matrix to be added to a make matrix. Default is "add_to_V".</p></td>
     </tr>
     <tr>
-      <th>product</th>
-      <td><p>the product column in <code>iea_df</code>.  Default is "<code>Product</code>".</p></td>
+      <th>add_to_dest</th>
+      <td><p>a string name for the matrix to replace some entries previous destination matrix. Default is "repl_dest".</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list of string vectors</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>a named list containing three items:
+<code>add_to_U_f</code> (a matrix to be added to a use (<code>U</code>) matrix),
+<code>add_to_V_f</code> (a matrix to be added to a make (<code>V</code>) matrix), and
+<code>add_to_dest_mat</code> (a matrix to replace the destination matrix, typically <code>Y_f</code> or <code>U_eiou</code>.</p>
 
-    <p>The names in the returned list are the Production, Transformation processes, or Energy industry own use industries in <code>iea_df</code>.
-The items in the returned list are vectors of energy types produced or consumed by the corresponding industries.</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>prod_tp_eiou_energy_carriers</span>()</div><div class='output co'>#&gt; named list()
-#&gt; attr(,"ptype")
-#&gt; character(0)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
