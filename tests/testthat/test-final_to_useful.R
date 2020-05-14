@@ -391,7 +391,10 @@ test_that("extend_to_useful works as expected", {
   
   expect_equal(actual_md_into_NFM, expected_md_into_NFM)
   expect_equal(actual_light_into_NFM, expected_light_into_NFM)
+  
+  # Check that a warning is emitted when the energy balance check fails.
+  # The default 2019 psut_mats (before fixing energy balance) has a slight energy balance mismatch.
+  # This test sets the tolerance especially tight to force an energy balance failure.
+  expect_warning(with_useful_warn <- psut_mats %>% 
+                   extend_to_useful(wide_C_data = C_data, wide_eta_fu_data = eta_fu_data, tol = 1e-10))
 })
-
-
-

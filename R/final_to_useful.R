@@ -568,7 +568,8 @@ extend_to_useful <- function(.sutdata,
   all_OK <- all(verify_ebal[[.e_bal_ok]])
   if (!all_OK) {
     # Emit a warning if there is a problem and return the wrong thing.
-    warning(paste0("Energy is not balanced to within ", tol, " in IEAtools::extend_to_useful(). See columns err and OK for problems."))
+    warning(paste0("Energy is not balanced to within ", tol, " in IEAtools::extend_to_useful(). See columns ", 
+                   .err, " and ", .e_bal_ok, " for problems."))
     return(verify_ebal)
   }
 
