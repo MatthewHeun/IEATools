@@ -20,15 +20,15 @@
 #'    reassigned to `Oil and gas extraction`.
 #' 2. The `Production` industry for `coal_and_coal_products` 
 #'    is replaced by `Coal mines`.
-#' 3. A `Resources (Coal)` industry is created which becomes the 
+#' 3. A `Resources [of Coal]` industry is created which becomes the 
 #'    source of all primary `coal_and_coal_products` in the energy conversion chain.
-#' 4. Flows from `Resources (Coal)` to `Coal mines` are added.
+#' 4. Flows from `Resources [of Coal]` to `Coal mines` are added.
 #' 5. The `Coal mines (energy)` EIOU `Flow` is replaced by `Coal mines`.
 #' 6. The `Production` industry for `oil_and_oil_products` and `Natural gas`
 #'    is replaced by `Oil and gas extraction`.
-#' 7. A `Resources (Oil and natural gas)` industry is created which becomes the 
+#' 7. A `Resources [of Oil and natural gas]` industry is created which becomes the 
 #'    source of all primary `oil_and_oil_products` and `Natural gas` in the energy conversion chain.
-#' 8. Flows from `Resources (Oil and natural gas)` to `Oil and gas extraction` are added.
+#' 8. Flows from `Resources [of Oil and natural gas]` to `Oil and gas extraction` are added.
 #' 9. The `Oil and gas extraction (energy)` EIOU `Flow` is replaced by `Oil and gas extraction`.
 #' 
 #' Users can specify other changes by adjusting the default argument values.
@@ -193,7 +193,7 @@ specify_primary_production <- function(.tidy_iea_df,
 #' 
 #' The IEA gives resource extraction in rows where the `Flow` is "`Production`".
 #' This function changes the "`Production`" string 
-#' to "`Resources (product)`", 
+#' to "`Resources [of Product]`", 
 #' where `product` is the name of the energy carrier for this resource.
 #' 
 #' This function should be called _after_ `specify_primary_production()`,
@@ -242,11 +242,11 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' If we don't separate these `Flow`s by `Product`, we run into trouble with
 #' upstream swims (e.g., all `Product`s are produced even if only one is needed) and
 #' embodied energy calculations (many types of energy are embodied, even if only one should be).
-#' This function adds a suffix `(Product)` to each of these interface industries.
+#' This function adds a suffix `[of Product]` to each of these interface industries.
 #' 
 #' Note that "`Production`" also needs to be specified, 
-#' but that is accomplished in the [specify_primary_production()] and
-#' [specify_production_to_resources()] functions.
+#' but that is accomplished in the `specify_primary_production()` and
+#' `specify_production_to_resources()` functions.
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
 #' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
@@ -284,8 +284,8 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' Energy industry own use (EIOU) for many transformation processes.
 #' Unfortunately, in some cases
 #' the EIOU flows into industries that aren't included in transformation processes.
-#' For example, `Electricity` is consumed by 
-#' `Own use in electricity, CHP and heat plants`, 
+#' For example, "Electricity" is consumed by 
+#' "Own use in electricity, CHP and heat plants", 
 #' which is not a transformation process.
 #' We have to make some decisions to ensure that 
 #' EIOU is routed to actual transformation processes.
@@ -298,21 +298,23 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' 4. EIOU classified as `non_spec_energy` is sent to `nonspecenergy_reclassify`.
 #' 
 #' After the changes are made, reassigned EIOU may double-up pre-existing EIOU.
-#' For example, a country may already have "`Electricity`" EIOU for "`Main activity poducer electricity plants`"
-#' before "`Nuclear industry`" "`Electricity`" EIOU is reassigned to "`Main activity poducer electricity plants`".
+#' For example, a country may already have "Electricity" EIOU flowing into "Main activity producer electricity plants".
+#' It may also have EIOU flowing into "Nuclear industry". 
+#' When we switch the EIOU flow into "Nuclear industry" into "Main activity producer electricity plants", 
+#' we now have two rows of electricity EIOU into "Main activity producer electricity plants".
 #' To avoid double rows, all like rows are summed before returning.
 #'
 #' @param .tidy_iea_df an IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
-#' @param eiou a string identifying energy industry own use in the flow aggregation point column. Default is "`Energy industry own use`".
-#' @param transformation_processes a string identifying transformation processes in the flow aggregation point column. Default is "`Transformation processes`".
-#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
-#' @param own_use_elect_chp_heat a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "`Own use in electricity, CHP and heat plants`".
-#' @param pumped_storage a string identifying pumped storage plants in the flow column. Default is "`Pumped storage plants`".
-#' @param nuclear_industry a string identifying nuclear plants in the flow column. Default is "`Nuclear industry`".
-#' @param e_dot the name of the energy flow column in `.tidy_iea_df`. Default is "`E.dot`".
-#' @param negzeropos the name of a temporary column created in `.tidy_iea_df`. Default is "`.negzeropos`".
-#' @param main_act_producer_elect a string identifying main activity producer electricity plants. Default is "`Main activity producter electricity plants`".
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
+#' @param eiou a string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".
+#' @param transformation_processes a string identifying transformation processes in the flow aggregation point column. Default is "Transformation processes".
+#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "Flow".
+#' @param own_use_elect_chp_heat a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "Own use in electricity, CHP and heat plants".
+#' @param pumped_storage a string identifying pumped storage plants in the flow column. Default is "Pumped storage plants".
+#' @param nuclear_industry a string identifying nuclear plants in the flow column. Default is "Nuclear industry".
+#' @param e_dot the name of the energy flow column in `.tidy_iea_df`. Default is "E.dot".
+#' @param negzeropos the name of a temporary column created in `.tidy_iea_df`. Default is ".negzeropos".
+#' @param main_act_producer_elect a string identifying main activity producer electricity plants. Default is "Main activity producer electricity plants".
 #'
 #' @return a modified version of `.tidy_iea_df`
 #' 
@@ -369,7 +371,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
         # Non-specified (energy) is an Industry that receives EIOU.
         # However, Non-specified (energy) is not an Industry that makes anything.
         # So, we need to reassign these EIOU flows somwehere.
-        # For the UK, the numbers for "Non-sepcified (energy)" are rather small.
+        # For the UK, the numbers for "Non-specified (energy)" are rather small.
         # In the absence of any better information, we apply 
         # "Non-specified (energy)" to nonspecenergy_reclassify.  
         # !!as.name(flow) == non_spec_energy & !!as.name(flow_aggregation_point) == eiou ~ nonspecenergy_reclassify,

@@ -33,7 +33,7 @@ Default is "Resources".}
 \description{
 The IEA gives resource extraction in rows where the \code{Flow} is "\code{Production}".
 This function changes the "\code{Production}" string
-to "\code{Resources (product)}",
+to "\verb{Resources [of Product]}",
 where \code{product} is the name of the energy carrier for this resource.
 }
 \details{
