@@ -49,8 +49,8 @@ The extended energy balance data from the IEA includes
 Energy industry own use (EIOU) for many transformation processes.
 Unfortunately, in some cases
 the EIOU flows into industries that aren't included in transformation processes.
-For example, \code{Electricity} is consumed by
-\verb{Own use in electricity, CHP and heat plants},
+For example, "Electricity" is consumed by
+"Own use in electricity, CHP and heat plants",
 which is not a transformation process.
 We have to make some decisions to ensure that
 EIOU is routed to actual transformation processes.
@@ -66,10 +66,10 @@ The following changes are made to the \code{.tidy_iea_df} data frame:
 }
 
 After the changes are made, reassigned EIOU may double-up pre-existing EIOU.
-For example, a country may already have \code{Electricity} EIOU flowing into \verb{Main activity producer electricity plants}.
-It may also have EIOU flowing into \verb{Nuclear industry}.
-When we switch the flow into \verb{Nuclear industry} into \verb{Main activity producer electricity plants},
-we now have two rows of electricity EIOU into \verb{Main activity producer electricity plants}.
+For example, a country may already have "Electricity" EIOU flowing into "Main activity producer electricity plants".
+It may also have EIOU flowing into "Nuclear industry".
+When we switch the EIOU flow into "Nuclear industry" into "Main activity producer electricity plants",
+we now have two rows of electricity EIOU into "Main activity producer electricity plants".
 To avoid double rows, all like rows are summed before returning.
 }
 \examples{
