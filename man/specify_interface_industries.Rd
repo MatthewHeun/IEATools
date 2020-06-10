@@ -33,12 +33,12 @@ When \code{Flow} is any of the interface industries, we need to be more specific
 If we don't separate these \code{Flow}s by \code{Product}, we run into trouble with
 upstream swims (e.g., all \code{Product}s are produced even if only one is needed) and
 embodied energy calculations (many types of energy are embodied, even if only one should be).
-This function adds a suffix \code{(Product)} to each of these interface industries.
+This function adds a suffix \verb{[of Product]} to each of these interface industries.
 }
 \details{
 Note that "\code{Production}" also needs to be specified,
-but that is accomplished in the \code{\link[=specify_primary_production]{specify_primary_production()}} and
-\code{\link[=specify_production_to_resources]{specify_production_to_resources()}} functions.
+but that is accomplished in the \code{specify_primary_production()} and
+\code{specify_production_to_resources()} functions.
 }
 \examples{
 load_tidy_iea_df() \%>\% 

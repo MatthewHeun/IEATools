@@ -85,15 +85,15 @@ By default, the following changes are made to \code{.tidy_iea_df}:
 reassigned to \verb{Oil and gas extraction}.
 \item The \code{Production} industry for \code{coal_and_coal_products}
 is replaced by \verb{Coal mines}.
-\item A \code{Resources (Coal)} industry is created which becomes the
+\item A \verb{Resources [of Coal]} industry is created which becomes the
 source of all primary \code{coal_and_coal_products} in the energy conversion chain.
-\item Flows from \code{Resources (Coal)} to \verb{Coal mines} are added.
+\item Flows from \verb{Resources [of Coal]} to \verb{Coal mines} are added.
 \item The \verb{Coal mines (energy)} EIOU \code{Flow} is replaced by \verb{Coal mines}.
 \item The \code{Production} industry for \code{oil_and_oil_products} and \verb{Natural gas}
 is replaced by \verb{Oil and gas extraction}.
-\item A \verb{Resources (Oil and natural gas)} industry is created which becomes the
+\item A \verb{Resources [of Oil and natural gas]} industry is created which becomes the
 source of all primary \code{oil_and_oil_products} and \verb{Natural gas} in the energy conversion chain.
-\item Flows from \verb{Resources (Oil and natural gas)} to \verb{Oil and gas extraction} are added.
+\item Flows from \verb{Resources [of Oil and natural gas]} to \verb{Oil and gas extraction} are added.
 \item The \verb{Oil and gas extraction (energy)} EIOU \code{Flow} is replaced by \verb{Oil and gas extraction}.
 }
 

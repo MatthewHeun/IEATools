@@ -21,25 +21,25 @@ specify_tp_eiou(
 \arguments{
 \item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
 
-\item{eiou}{a string identifying energy industry own use in the flow aggregation point column. Default is "\verb{Energy industry own use}".}
+\item{eiou}{a string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".}
 
-\item{transformation_processes}{a string identifying transformation processes in the flow aggregation point column. Default is "\verb{Transformation processes}".}
+\item{transformation_processes}{a string identifying transformation processes in the flow aggregation point column. Default is "Transformation processes".}
 
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "\code{Flow}".}
+\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "Flow".}
 
-\item{own_use_elect_chp_heat}{a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "\verb{Own use in electricity, CHP and heat plants}".}
+\item{own_use_elect_chp_heat}{a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "Own use in electricity, CHP and heat plants".}
 
-\item{pumped_storage}{a string identifying pumped storage plants in the flow column. Default is "\verb{Pumped storage plants}".}
+\item{pumped_storage}{a string identifying pumped storage plants in the flow column. Default is "Pumped storage plants".}
 
-\item{nuclear_industry}{a string identifying nuclear plants in the flow column. Default is "\verb{Nuclear industry}".}
+\item{nuclear_industry}{a string identifying nuclear plants in the flow column. Default is "Nuclear industry".}
 
-\item{e_dot}{the name of the energy flow column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
+\item{e_dot}{the name of the energy flow column in \code{.tidy_iea_df}. Default is "E.dot".}
 
-\item{negzeropos}{the name of a temporary column created in \code{.tidy_iea_df}. Default is "\code{.negzeropos}".}
+\item{negzeropos}{the name of a temporary column created in \code{.tidy_iea_df}. Default is ".negzeropos".}
 
-\item{main_act_producer_elect}{a string identifying main activity producer electricity plants. Default is "\verb{Main activity producter electricity plants}".}
+\item{main_act_producer_elect}{a string identifying main activity producer electricity plants. Default is "Main activity producer electricity plants".}
 }
 \value{
 a modified version of \code{.tidy_iea_df}
@@ -49,8 +49,8 @@ The extended energy balance data from the IEA includes
 Energy industry own use (EIOU) for many transformation processes.
 Unfortunately, in some cases
 the EIOU flows into industries that aren't included in transformation processes.
-For example, \code{Electricity} is consumed by
-\verb{Own use in electricity, CHP and heat plants},
+For example, "Electricity" is consumed by
+"Own use in electricity, CHP and heat plants",
 which is not a transformation process.
 We have to make some decisions to ensure that
 EIOU is routed to actual transformation processes.
@@ -66,8 +66,10 @@ The following changes are made to the \code{.tidy_iea_df} data frame:
 }
 
 After the changes are made, reassigned EIOU may double-up pre-existing EIOU.
-For example, a country may already have "\code{Electricity}" EIOU for "\verb{Main activity poducer electricity plants}"
-before "\verb{Nuclear industry}" "\code{Electricity}" EIOU is reassigned to "\verb{Main activity poducer electricity plants}".
+For example, a country may already have "Electricity" EIOU flowing into "Main activity producer electricity plants".
+It may also have EIOU flowing into "Nuclear industry".
+When we switch the EIOU flow into "Nuclear industry" into "Main activity producer electricity plants",
+we now have two rows of electricity EIOU into "Main activity producer electricity plants".
 To avoid double rows, all like rows are summed before returning.
 }
 \examples{
