@@ -44,8 +44,8 @@
 Energy industry own use (EIOU) for many transformation processes.
 Unfortunately, in some cases
 the EIOU flows into industries that aren't included in transformation processes.
-For example, Electricity is consumed by
-Own use in electricity, CHP and heat plants,
+For example, &quot;Electricity&quot; is consumed by
+&quot;Own use in electricity, CHP and heat plants&quot;,
 which is not a transformation process.
 We have to make some decisions to ensure that
 EIOU is routed to actual transformation processes.
@@ -81,7 +81,7 @@ See details for a list of changes made to the .tidy_iea_df data frame." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.21</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.22</span>
       </span>
     </div>
 
@@ -149,8 +149,8 @@ See details for a list of changes made to the .tidy_iea_df data frame." />
 Energy industry own use (EIOU) for many transformation processes.
 Unfortunately, in some cases
 the EIOU flows into industries that aren't included in transformation processes.
-For example, <code>Electricity</code> is consumed by
-<code>Own use in electricity, CHP and heat plants</code>,
+For example, "Electricity" is consumed by
+"Own use in electricity, CHP and heat plants",
 which is not a transformation process.
 We have to make some decisions to ensure that
 EIOU is routed to actual transformation processes.
@@ -180,43 +180,43 @@ See details for a list of changes made to the <code>.tidy_iea_df</code> data fra
     </tr>
     <tr>
       <th>flow_aggregation_point</th>
-      <td><p>the name of the flow aggregation point column in <code>.tidy_iea_df</code>. Default is "<code>Flow.aggregation.point</code>".</p></td>
+      <td><p>the name of the flow aggregation point column in <code>.tidy_iea_df</code>. Default is "Flow.aggregation.point".</p></td>
     </tr>
     <tr>
       <th>eiou</th>
-      <td><p>a string identifying energy industry own use in the flow aggregation point column. Default is "<code>Energy industry own use</code>".</p></td>
+      <td><p>a string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".</p></td>
     </tr>
     <tr>
       <th>transformation_processes</th>
-      <td><p>a string identifying transformation processes in the flow aggregation point column. Default is "<code>Transformation processes</code>".</p></td>
+      <td><p>a string identifying transformation processes in the flow aggregation point column. Default is "Transformation processes".</p></td>
     </tr>
     <tr>
       <th>flow</th>
-      <td><p>the name of the flow column in <code>.tidy_iea_df</code>. Default is "<code>Flow</code>".</p></td>
+      <td><p>the name of the flow column in <code>.tidy_iea_df</code>. Default is "Flow".</p></td>
     </tr>
     <tr>
       <th>own_use_elect_chp_heat</th>
-      <td><p>a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "<code>Own use in electricity, CHP and heat plants</code>".</p></td>
+      <td><p>a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "Own use in electricity, CHP and heat plants".</p></td>
     </tr>
     <tr>
       <th>pumped_storage</th>
-      <td><p>a string identifying pumped storage plants in the flow column. Default is "<code>Pumped storage plants</code>".</p></td>
+      <td><p>a string identifying pumped storage plants in the flow column. Default is "Pumped storage plants".</p></td>
     </tr>
     <tr>
       <th>nuclear_industry</th>
-      <td><p>a string identifying nuclear plants in the flow column. Default is "<code>Nuclear industry</code>".</p></td>
+      <td><p>a string identifying nuclear plants in the flow column. Default is "Nuclear industry".</p></td>
     </tr>
     <tr>
       <th>e_dot</th>
-      <td><p>the name of the energy flow column in <code>.tidy_iea_df</code>. Default is "<code>E.dot</code>".</p></td>
+      <td><p>the name of the energy flow column in <code>.tidy_iea_df</code>. Default is "E.dot".</p></td>
     </tr>
     <tr>
       <th>negzeropos</th>
-      <td><p>the name of a temporary column created in <code>.tidy_iea_df</code>. Default is "<code>.negzeropos</code>".</p></td>
+      <td><p>the name of a temporary column created in <code>.tidy_iea_df</code>. Default is ".negzeropos".</p></td>
     </tr>
     <tr>
       <th>main_act_producer_elect</th>
-      <td><p>a string identifying main activity producer electricity plants. Default is "<code>Main activity producter electricity plants</code>".</p></td>
+      <td><p>a string identifying main activity producer electricity plants. Default is "Main activity producer electricity plants".</p></td>
     </tr>
     </table>
 
@@ -233,8 +233,10 @@ See details for a list of changes made to the <code>.tidy_iea_df</code> data fra
 </ol>
 
 <p>After the changes are made, reassigned EIOU may double-up pre-existing EIOU.
-For example, a country may already have "<code>Electricity</code>" EIOU for "<code>Main activity poducer electricity plants</code>"
-before "<code>Nuclear industry</code>" "<code>Electricity</code>" EIOU is reassigned to "<code>Main activity poducer electricity plants</code>".
+For example, a country may already have "Electricity" EIOU flowing into "Main activity producer electricity plants".
+It may also have EIOU flowing into "Nuclear industry".
+When we switch the EIOU flow into "Nuclear industry" into "Main activity producer electricity plants",
+we now have two rows of electricity EIOU into "Main activity producer electricity plants".
 To avoid double rows, all like rows are summed before returning.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
