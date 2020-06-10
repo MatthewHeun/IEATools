@@ -76,7 +76,7 @@ To enable sorting, this function de-specifies a column in .df." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.21</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.22</span>
       </span>
     </div>
 
@@ -151,7 +151,9 @@ To enable sorting, this function de-specifies a column in <code>.df</code>.</p>
   <span class='no'>.df</span>,
   <span class='no'>col</span>,
   <span class='no'>despecified_col</span>,
-  <span class='kw'>notations</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='of_notation.html'>of_notation</a></span>, <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='from_notation.html'>from_notation</a></span>)
+  <span class='kw'>notations</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='of_notation.html'>of_notation</a></span>, <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='from_notation.html'>from_notation</a></span>),
+  <span class='kw'>production</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tpes_flows.html'>tpes_flows</a></span>$<span class='no'>production</span>,
+  <span class='kw'>resources</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tpes_flows.html'>tpes_flows</a></span>$<span class='no'>resources</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -174,6 +176,10 @@ To enable sorting, this function de-specifies a column in <code>.df</code>.</p>
       <td><p>the notations used for row and column names. See <code><a href='https://rdrr.io/pkg/matsbyname/man/row-col-notation.html'>matsbyname::notation_vec()</a></code>.
 Default is <code><a href='https://rdrr.io/r/base/list.html'>list(IEATools::of_notation, IEATools::from_notation)</a></code>,
 because both <code><a href='of_notation.html'>IEATools::of_notation</a></code> and <code><a href='from_notation.html'>IEATools::from_notation</a></code> can be used in the <code>Flow</code> column.</p></td>
+    </tr>
+    <tr>
+      <th>production, resources</th>
+      <td><p>See <code><a href='tpes_flows.html'>IEATools::tpes_flows</a></code>.</p></td>
     </tr>
     </table>
 

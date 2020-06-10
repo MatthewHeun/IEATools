@@ -1,3 +1,5 @@
+# IEATools 0.1.22 (2020-06-10)
+
 * Fixed a bug in `despecify_col()`.
   `resources` and `production` were not correctly using the `tpes_flows` object.
 
