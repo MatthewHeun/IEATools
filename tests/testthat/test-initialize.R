@@ -2,6 +2,28 @@
 context("Initialize IEA data")
 ###########################################################
 
+test_that("use_iso_countries() works as expected", {
+  IEAData <- sample_iea_data_path() %>% 
+    iea_df() %>%
+    rename_iea_df_cols() 
+  IEAData %>% 
+    use_iso_countries() %>% 
+    magrittr::extract2("Country") %>% 
+    unique() %>% 
+    expect_equal(c("GHA", "ZAF"))
+  
+  # Now try with the China exception that has been hard-coded.
+  IEAData %>% 
+    dplyr::mutate(
+      Country = dplyr::recode(Country, Ghana = "China (P.R. of China and Hong Kong, China)")
+    ) %>% 
+    use_iso_countries() %>% 
+    magrittr::extract2("Country") %>% 
+    unique() %>% 
+    expect_equal(c("CHN", "ZAF"))
+})
+
+
 test_that("iea_file_OK works", {
   # Try from a file
   f <- sample_iea_data_path()

@@ -17,8 +17,9 @@
 #'
 #' @return \code{TRUE} if \code{x} starts with any of the strings in \code{target},
 #'         \code{FALSE} otherwise.
-#'         If \code{x} is a vector or list of strings, the return value is the same length as \code{x}
-#'         and contains the result of applying the test to each item in \code{x}.
+#'         If \code{x} is a vector or list of strings, 
+#'         the return value is a vector of the same length as \code{x}
+#'         containing the result of applying the test to each item in \code{x}.
 #'
 #' @export
 #'

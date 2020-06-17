@@ -434,11 +434,24 @@ clean_iea_whitespace <- function(.iea_df,
 #' 
 #' The IEA uses full country names, but it is more concise to use the 3-letter ISO abbreviations.
 #' This function replaces the full country names with ISO abbreviations where possible.
+#' 
+#' Special cases are considered where 
+#' IEA extended energy balance data country names 
+#' differ from 
+#' `countrycode` package country names.
+#' 
+#' |IEA name|`countrycode` name (names)|`use_iso_countries()` decision|
+#' |---------|-------------------|------------------------------|
+#' |"China (P.R. of China and Hong Kong, China)"|"China" and "Hong Kong SAR China"|"CHN"|
 #'
-#' @param .iea_df a data frame containing a `country` column
-#' @param country the name of the country column in `.iea_df`. Default is "Country".
+#' @param .iea_df A data frame containing a `country` column
+#' @param country The name of the country column in `.iea_df`. Default is "Country".
+#' @param iea_china_HK The IEA string for China and Hong Kong. 
+#'                     Default is "China (P.R. of China and Hong Kong, China)".
+#' @param ieatools_china The 3-letter string that replaces `iea_china_HK`. 
+#'                       Default is "CHN".
 #'
-#' @return `.iea_df` with 3-letter ISO country abbreviations
+#' @return `.iea_df` with 3-letter ISO country abbreviations in the `country` column.
 #' 
 #' @export
 #'
@@ -448,7 +461,9 @@ clean_iea_whitespace <- function(.iea_df,
 #'   rename_iea_df_cols() %>% 
 #'   use_iso_countries()
 use_iso_countries <- function(.iea_df, 
-                              country = "Country"){
+                              country = "Country", 
+                              iea_china_HK = "China (P.R. of China and Hong Kong, China)", 
+                              ieatools_china = "CHN"){
   # Eliminates warnings.
   country.name.en <- "country.name.en" 
   iso_type = "iso3c"
@@ -456,23 +471,37 @@ use_iso_countries <- function(.iea_df,
   CountryInfo <- countrycode::codelist %>%
     dplyr::select(!!as.name(country.name.en), !!as.name(iso_type)) %>% 
     dplyr::rename(
-      !!as.name(country) := country.name.en
+      "{country}" := country.name.en
     )
   .iea_df %>%
-    dplyr::left_join(CountryInfo, by = c("Country")) %>% # left_join preserves all rows of IEA data
-    # If there is no ISO abbreviation for the country name, 
-    # we set the ios2c column to be the same as the country column.
-    # This step preserves all countries, even if they don't have a 2-letter ISO abbreviation.
+    dplyr::left_join(CountryInfo, by = country) %>% # left_join preserves all rows of IEA data
     dplyr::mutate(
-      !!as.name(iso_type) := dplyr::case_when(
-        is.na(!!as.name(iso_type)) ~ !!as.name(country), 
-        TRUE ~ !!as.name(iso_type)
+      "{iso_type}" := dplyr::case_when(
+        #
+        # First, deal with some special cases.
+        # 
+        # The IEA extended energy balance data have the country
+        # "China (P.R. of China and Hong Kong, China)", but 
+        # the country name database in the countrycode package has separate entries 
+        # for China CHN and Hong Kong SAR China HKG.
+        # To resolve this issue, we recode
+        # `iea_china_HK` as `ieatools_china`.
+        .data[[country]] == iea_china_HK ~ ieatools_china,
+        #
+        # Next, if we get an NA and we haven't dealt with a country as a special case, 
+        # just set the iso_type column to the value of the country column.
+        is.na(.data[[iso_type]]) ~ .data[[country]],
+
+        # As a default, keep the iso_type value in place.
+        TRUE ~ .data[[iso_type]]
       )
     ) %>% 
     # Now we can get rid of the country column.
     dplyr::select(-!!as.name(country)) %>% 
     # And rename the iso_type column to be country
-    dplyr::rename(!!as.name(country) := iso_type) %>% 
+    dplyr::rename(
+      "{country}" := iso_type
+    ) %>% 
     # And put the country column first.
     dplyr::select(!!as.name(country), dplyr::everything())
 }
