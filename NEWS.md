@@ -1,3 +1,5 @@
+# IEATools 0.1.24 (2020-06-17)
+
 * Fixed a bug where "China (P.R. of China and Hong Kong, China)" 
   was not being coded to "CHN" in `use_iso_countries()`.
   The problem is that the `countrycode` package uses a different name from 
