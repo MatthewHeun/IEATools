@@ -1,3 +1,8 @@
+* Fixed issue #5 in `eta_fu_template()`.
+  The `ke` `eu_product` was not being subtracted, leaving
+  duplicate `KE` products in `eu_product_sort_order`.
+  
+
 # IEATools 0.1.22 (2020-06-10)
 
 * Fixed a bug in `despecify_col()`.
