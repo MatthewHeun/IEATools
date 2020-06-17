@@ -4,19 +4,39 @@
 \alias{use_iso_countries}
 \title{Replace country names with 3-letter ISO abbreviations}
 \usage{
-use_iso_countries(.iea_df, country = "Country")
+use_iso_countries(
+  .iea_df,
+  country = "Country",
+  iea_china_HK = "China (P.R. of China and Hong Kong, China)",
+  ieatools_china = "CHN"
+)
 }
 \arguments{
-\item{.iea_df}{a data frame containing a \code{country} column}
+\item{.iea_df}{A data frame containing a \code{country} column}
 
-\item{country}{the name of the country column in \code{.iea_df}. Default is "Country".}
+\item{country}{The name of the country column in \code{.iea_df}. Default is "Country".}
+
+\item{iea_china_HK}{The IEA string for China and Hong Kong.
+Default is "China (P.R. of China and Hong Kong, China)".}
+
+\item{ieatools_china}{The 3-letter string that replaces \code{iea_china_HK}.
+Default is "CHN".}
 }
 \value{
-\code{.iea_df} with 3-letter ISO country abbreviations
+\code{.iea_df} with 3-letter ISO country abbreviations in the \code{country} column.
 }
 \description{
 The IEA uses full country names, but it is more concise to use the 3-letter ISO abbreviations.
 This function replaces the full country names with ISO abbreviations where possible.
+}
+\details{
+Special cases are considered where
+IEA extended energy balance data country names
+differ from
+\code{countrycode} package country names.\tabular{lll}{
+   IEA name \tab \code{countrycode} name (names) \tab \code{use_iso_countries()} decision \cr
+   "China (P.R. of China and Hong Kong, China)" \tab "China" and "Hong Kong SAR China" \tab "CHN" \cr
+}
 }
 \examples{
 sample_iea_data_path() \%>\% 

@@ -1,8 +1,20 @@
+# IEATools 0.1.24 (2020-06-17)
+
+* Fixed a bug where "China (P.R. of China and Hong Kong, China)" 
+  was not being coded to "CHN" in `use_iso_countries()`.
+  The problem is that the `countrycode` package uses a different name from 
+  the IEA extended energy balance database. 
+  For now, I have coded 
+  "China (P.R. of China and Hong Kong, China)" as "CHN".
+  Another option would be to code it as "CHNHKG".
+
+
 # IEATools 0.1.23 (2020-06-17)
 
-* Fixed issue #5 in `eta_fu_template()`.
-  The `ke` `eu_product` was not being subtracted, leaving
-  duplicate `KE` products in `eu_product_sort_order`.
+* Fixed issue #5 from the PFU-Database repository.
+  The issue involved `IEATools::eta_fu_template()`.
+  The `eu_product` `ke` was not being subtracted, leaving
+  duplicate "KE" products in `eu_product_sort_order`.
   
 
 # IEATools 0.1.22 (2020-06-10)

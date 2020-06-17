@@ -1,7 +1,7 @@
 Package: IEATools
 Type: Package
 Title: Tools for Working with International Energy Agency Data
-Version: 0.1.23
+Version: 0.1.24
 Date: 2020-06-17
 Authors@R: c(person(given = "Matthew", family = "Heun", role = c("aut", "cre"),
                      email = "matthew.heun@me.com"))
