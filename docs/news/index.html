@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.23</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
       </span>
     </div>
 
@@ -133,11 +133,18 @@
       
     </div>
 
+    <div id="ieatools-0124-2020-06-17" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.24">
+<a href="#ieatools-0124-2020-06-17" class="anchor"></a>IEATools 0.1.24 (2020-06-17)</h1>
+<ul>
+<li>Fixed a bug where “China (P.R. of China and Hong Kong, China)” was not being coded to “CHN” in <code><a href="../reference/use_iso_countries.html">use_iso_countries()</a></code>. The problem is that the <code>countrycode</code> package uses a different name from the IEA extended energy balance database. For now, I have coded “China (P.R. of China and Hong Kong, China)” as “CHN”. Another option would be to code it as “CHNHKG”.</li>
+</ul>
+</div>
     <div id="ieatools-0123-2020-06-17" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.23">
 <a href="#ieatools-0123-2020-06-17" class="anchor"></a>IEATools 0.1.23 (2020-06-17)</h1>
 <ul>
-<li>Fixed issue #5 in <code><a href="../reference/eta_fu_template.html">eta_fu_template()</a></code>. The <code>ke</code> <code>eu_product</code> was not being subtracted, leaving duplicate <code>KE</code> products in <code>eu_product_sort_order</code>.</li>
+<li>Fixed issue #5 from the PFU-Database repository. The issue involved <code><a href="../reference/eta_fu_template.html">IEATools::eta_fu_template()</a></code>. The <code>eu_product</code> <code>ke</code> was not being subtracted, leaving duplicate “KE” products in <code>eu_product_sort_order</code>.</li>
 </ul>
 </div>
     <div id="ieatools-0122-2020-06-10" class="section level1">

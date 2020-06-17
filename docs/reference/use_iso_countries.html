@@ -73,7 +73,7 @@ This function replaces the full country names with ISO abbreviations where possi
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.23</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.24</span>
       </span>
     </div>
 
@@ -141,24 +141,50 @@ This function replaces the full country names with ISO abbreviations where possi
 This function replaces the full country names with ISO abbreviations where possible.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>use_iso_countries</span>(<span class='no'>.iea_df</span>, <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>)</pre>
+    <pre class="usage"><span class='fu'>use_iso_countries</span>(
+  <span class='no'>.iea_df</span>,
+  <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>,
+  <span class='kw'>iea_china_HK</span> <span class='kw'>=</span> <span class='st'>"China (P.R. of China and Hong Kong, China)"</span>,
+  <span class='kw'>ieatools_china</span> <span class='kw'>=</span> <span class='st'>"CHN"</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.iea_df</th>
-      <td><p>a data frame containing a <code>country</code> column</p></td>
+      <td><p>A data frame containing a <code>country</code> column</p></td>
     </tr>
     <tr>
       <th>country</th>
-      <td><p>the name of the country column in <code>.iea_df</code>. Default is "Country".</p></td>
+      <td><p>The name of the country column in <code>.iea_df</code>. Default is "Country".</p></td>
+    </tr>
+    <tr>
+      <th>iea_china_HK</th>
+      <td><p>The IEA string for China and Hong Kong.
+Default is "China (P.R. of China and Hong Kong, China)".</p></td>
+    </tr>
+    <tr>
+      <th>ieatools_china</th>
+      <td><p>The 3-letter string that replaces <code>iea_china_HK</code>.
+Default is "CHN".</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>.iea_df</code> with 3-letter ISO country abbreviations</p>
+    <p><code>.iea_df</code> with 3-letter ISO country abbreviations in the <code>country</code> column.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Special cases are considered where
+IEA extended energy balance data country names
+differ from
+<code>countrycode</code> package country names.</p><table class='table'>
+<tr><td>IEA name</td><td><code>countrycode</code> name (names)</td><td><code>use_iso_countries()</code> decision</td></tr>
+<tr><td>"China (P.R. of China and Hong Kong, China)"</td><td>"China" and "Hong Kong SAR China"</td><td>"CHN"</td></tr>
+</table>
+
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span>() <span class='kw'>%&gt;%</span>
