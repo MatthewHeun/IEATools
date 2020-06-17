@@ -795,7 +795,7 @@ eta_fu_template <- function(.fu_allocations,
       magrittr::extract2("ix")
     heat_prods_sorted <- heat_prods[sorted_heat_indices]
     # There may be useful products that we don't know about. Put those at the end, sorted in alphabetical order..
-    leftover_eu_prods <- sort(setdiff(eu_prods, c(md, light, heat_prods)))
+    leftover_eu_prods <- sort(setdiff(eu_prods, c(md, ke, light, heat_prods)))
     # Now compile the order of Eu.products for this data frame.
     eu_product_sort_order <- c(md, ke, light, heat_prods_sorted, leftover_eu_prods)
     # Sort the Maxima data frame to get the order we want.
@@ -869,7 +869,7 @@ eta_fu_template <- function(.fu_allocations,
   
   
   # The rest of the commented code here is no longer needed. 
-  # I'm keeping it for historical purposes as of 23 July 2109.   
+  # I'm keeping it for historical purposes as of 23 July 2019.   
   # By Sept 2019, it can probably be removed.
   
   # The following is something that works.
