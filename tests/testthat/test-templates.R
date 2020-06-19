@@ -345,4 +345,47 @@ test_that("load_eta_fu_data works as expected", {
     expect_true(nrow(Eta_fu) > 0)
   }
 })
+
+
+test_that("complete_fu_allocation_table works as expected", {
+  # The strategy here will be to use Ghana's FU allocation table
+  # with South Africa's as an exemplar.
+  # We'll remove a row from Ghana's table and make sure South Africa's is inserted.
+  fu_table <- load_fu_allocation_data()
   
+  fu_table_GHA <- fu_table %>% 
+    dplyr::filter(Country == "GHA") %>% 
+    # Delete rows from Ghana's table for Residential consumption of PSBs
+    dplyr::filter(!(Flow.aggregation.point == "Other" & Ef.product == "Primary solid biofuels" & Destination == "Residential"))
+  # Verify that those PSB rows have been deleted.
+  fu_table_GHA %>% 
+    dplyr::filter(Flow.aggregation.point == "Other", Ef.product == "Primary solid biofuels", Destination == "Residential") %>% 
+    nrow() %>% 
+    expect_equal(0)
+                
+  fu_table_ZAF <- fu_table %>% 
+    dplyr::filter(Country == "ZAF")
+  # Verify that the ZAF table has rows for Residential consumption of PSBs.
+  fu_table_ZAF %>% 
+    dplyr::filter(Flow.aggregation.point == "Other", Ef.product == "Primary solid biofuels", Destination == "Residential") %>% 
+    nrow() %>% 
+    expect_gt(0)
+  
+  # Get the IEA data for GHA and ZAF
+  tidy_specified_iea_data <- load_tidy_iea_df() %>% 
+    specify_all()
+  
+  # Now send the data into complete_fu_allocation_table()
+  complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+                               exemplar_fu_allocation_tables = fu_table_ZAF, 
+                               tidy_specified_iea_data = tidy_specified_iea_data)
+})
+
+
+test_that("spread and tidy fu_allocation_tables work as expected", {
+  fu_table <- load_fu_allocation_data()
+  tidy <- tidy_fu_allocation_table(fu_table)
+  rewide <- spread_fu_allocation_table(tidy) %>% as.data.frame()
+  # Now run some tests.
+  expect_equal(rewide, fu_table)
+})
