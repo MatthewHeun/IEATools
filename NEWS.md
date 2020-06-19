@@ -1,3 +1,6 @@
+* "CHN" is now a synonum for "People's Republic of China".
+
+
 # IEATools 0.1.24 (2020-06-17)
 
 * Fixed a bug where "China (P.R. of China and Hong Kong, China)" 
