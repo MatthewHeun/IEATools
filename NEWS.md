@@ -1,3 +1,6 @@
+* Non-energy use no longer excluded when generating FU Allocation templates.
+
+
 # IEATools 0.1.25 (2020-06-19)
 
 * "CHN" is now a synonum for "People's Republic of China".
