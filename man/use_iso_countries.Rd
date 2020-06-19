@@ -7,7 +7,7 @@
 use_iso_countries(
   .iea_df,
   country = "Country",
-  iea_china_HK = "China (P.R. of China and Hong Kong, China)",
+  iea_china_HK = "People's Republic of China",
   ieatools_china = "CHN"
 )
 }
@@ -35,7 +35,7 @@ IEA extended energy balance data country names
 differ from
 \code{countrycode} package country names.\tabular{lll}{
    IEA name \tab \code{countrycode} name (names) \tab \code{use_iso_countries()} decision \cr
-   "China (P.R. of China and Hong Kong, China)" \tab "China" and "Hong Kong SAR China" \tab "CHN" \cr
+   "People's Republic of China \tab "China" \tab "CHN" \cr
 }
 }
 \examples{

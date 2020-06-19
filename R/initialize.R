@@ -442,7 +442,7 @@ clean_iea_whitespace <- function(.iea_df,
 #' 
 #' |IEA name|`countrycode` name (names)|`use_iso_countries()` decision|
 #' |---------|-------------------|------------------------------|
-#' |"China (P.R. of China and Hong Kong, China)"|"China" and "Hong Kong SAR China"|"CHN"|
+#' |"People's Republic of China|"China"|"CHN"|
 #'
 #' @param .iea_df A data frame containing a `country` column
 #' @param country The name of the country column in `.iea_df`. Default is "Country".
@@ -462,7 +462,7 @@ clean_iea_whitespace <- function(.iea_df,
 #'   use_iso_countries()
 use_iso_countries <- function(.iea_df, 
                               country = "Country", 
-                              iea_china_HK = "China (P.R. of China and Hong Kong, China)", 
+                              iea_china_HK = "People's Republic of China", 
                               ieatools_china = "CHN"){
   # Eliminates warnings.
   country.name.en <- "country.name.en" 
