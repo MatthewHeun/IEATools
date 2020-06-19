@@ -442,7 +442,7 @@ clean_iea_whitespace <- function(.iea_df,
 #' 
 #' |IEA name|`countrycode` name (names)|`use_iso_countries()` decision|
 #' |---------|-------------------|------------------------------|
-#' |"People's Republic of China|"China"|"CHN"|
+#' |"People's Republic of China"|"China"|"CHN"|
 #'
 #' @param .iea_df A data frame containing a `country` column
 #' @param country The name of the country column in `.iea_df`. Default is "Country".

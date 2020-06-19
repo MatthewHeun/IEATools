@@ -35,7 +35,7 @@ IEA extended energy balance data country names
 differ from
 \code{countrycode} package country names.\tabular{lll}{
    IEA name \tab \code{countrycode} name (names) \tab \code{use_iso_countries()} decision \cr
-   "People's Republic of China \tab "China" \tab "CHN" \cr
+   "People's Republic of China" \tab "China" \tab "CHN" \cr
 }
 }
 \examples{
