@@ -15,7 +15,7 @@ test_that("use_iso_countries() works as expected", {
   # Now try with the China exception that has been hard-coded.
   IEAData %>% 
     dplyr::mutate(
-      Country = dplyr::recode(Country, Ghana = "China (P.R. of China and Hong Kong, China)")
+      Country = dplyr::recode(Country, Ghana = "People's Republic of China")
     ) %>% 
     use_iso_countries() %>% 
     magrittr::extract2("Country") %>% 
