@@ -676,6 +676,14 @@ complete_fu_allocation_table <- function(fu_allocation_table,
   }
   
   for (exemplar in exemplar_fu_allocation_tables) {
+    
+    
+    
+    # Seems like fu_allocation_data_available isn't updated when we get back to the top of the for loop.
+    # Why?
+    
+    
+    
     # Figure out the rows of allocations that are missing and, therefore, 
     # must be obtained from the exemplar country FU Allocations.
     rows_to_get_elsewhere <- dplyr::anti_join(
