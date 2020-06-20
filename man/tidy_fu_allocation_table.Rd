@@ -8,7 +8,7 @@ tidy_fu_allocation_table(
   .fu_allocation_table,
   year = IEATools::iea_cols$year,
   max_vals = IEATools::template_cols$maximum_values,
-  val_col = "values"
+  values = "values"
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ tidy_fu_allocation_table(
 
 \item{max_vals}{See \code{IEATools::template_cols}.}
 
-\item{val_col}{The name of the values column created. Default is "values".}
+\item{values}{The name of the values column created. Default is "values".}
 }
 \value{
 a tidy version of \code{.fu_allocation_table}.
@@ -26,7 +26,7 @@ a tidy version of \code{.fu_allocation_table}.
 \description{
 FU (final-to-useful) allocation tables are not tidy data structures.
 This function converts an FU Allocation table to a tidy data frame
-by pulling the years (and the \code{max_vals} column) into a new column with the name \code{val_col}.
+by pulling the years (and the \code{max_vals} column) into a new column with the name \code{values}.
 }
 \examples{
 load_fu_allocation_data() \%>\% 

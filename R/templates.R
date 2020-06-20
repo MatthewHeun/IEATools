@@ -557,7 +557,7 @@ load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(),
 
 #' Complete an FU Allocation table
 #' 
-#' #' An FU (final-to-useful) Allocation table 
+#' An FU (final-to-useful) Allocation table 
 #' tells how final energy carriers are allocated to final-to-useful machines
 #' in each final demand sector.
 #' A template for an FU Allocation table can be created with 
@@ -583,10 +583,12 @@ load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(),
 #'                            If `NULL`, the table will be constructed exclusively from 
 #'                            information available in the exemplar country tables.
 #' @param exemplar_fu_allocation_tables A vector of FU Allocation tables, each probably created by `load_fu_allocation_data()`. 
-#' @param tidy_iea_data A data frame of specified IEA data in tidy format.
-#' @param country The string name of the country column in `fu_allocation_table`, 
-#'                `exemplar_fu_allocation_tables`, and `tidy_specified_iea_data`.
-#'                Default is `IEATools::iea_cols$country`.
+#' @param tidy_specified_iea_data A data frame of specified IEA data in tidy format.
+#' @param country,method,energy_type,last_stage,ledger_side,flow,product,unit,e_dot,year,flow_aggregation_point See `IEATools::ieacols`.
+#' @param supply,consumption See `IEATools::ledger_sides`.
+#' @param eiou See `IEATools::tfc_compar_flows`.
+#' @param e_dot_perc,destination,machine,eu_product,ef_product,max_vals,quantity See `IEATools::template_cols`.
+#' @param .values The name of a values column created internally. Default is "values".
 #'
 #' @return A completed tidy data frame containing an FU Allocation table to replace argument `tidy_fu_allocation_table`.
 #' 
@@ -601,23 +603,23 @@ complete_fu_allocation_table <- function(fu_allocation_table,
                                          energy_type = IEATools::iea_cols$energy_type,
                                          last_stage = IEATools::iea_cols$last_stage,
                                          ledger_side = IEATools::iea_cols$ledger_side,
-                                         supply = IEATools::ledger_sides$supply,
-                                         consumption = IEATools::ledger_sides$consumption, 
-                                         fap = IEATools::iea_cols$flow_aggregation_point, 
-                                         eiou = IEATools::tfc_compare_flows$energy_industry_own_use, 
                                          flow = IEATools::iea_cols$flow,
                                          product = IEATools::iea_cols$product,
                                          unit = IEATools::iea_cols$unit,
                                          e_dot = IEATools::iea_cols$e_dot, 
+                                         year = IEATools::iea_cols$year, 
+                                         flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point, 
+                                         supply = IEATools::ledger_sides$supply,
+                                         consumption = IEATools::ledger_sides$consumption, 
+                                         eiou = IEATools::tfc_compare_flows$energy_industry_own_use, 
                                          e_dot_perc = IEATools::template_cols$e_dot_perc,
                                          destination = IEATools::template_cols$destination, 
                                          machine = IEATools::template_cols$machine,
                                          eu_product = IEATools::template_cols$eu_product,
                                          ef_product = IEATools::template_cols$ef_product,
-                                         year = IEATools::iea_cols$year, 
                                          max_vals = IEATools::template_cols$maximum_values, 
                                          quantity = IEATools::template_cols$quantity,
-                                         val_col = "values") {
+                                         .values = "values") {
   # Find all countries in fu_allocation_table
   countries <- fu_allocation_table %>% 
     magrittr::extract2(country) %>% 
@@ -632,9 +634,9 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     dplyr::filter(e_dot != 0 & !is.na(e_dot)) %>% 
     # Only need rows that indicate final consumption (on the consumption side of the ledger) or
     # EIOU (on the supply side of the ledger).
-    dplyr::filter(.data[[ledger_side]] == consumption | (.data[[ledger_side]] == supply & .data[[fap]] == eiou)) %>% 
+    dplyr::filter(.data[[ledger_side]] == consumption | (.data[[ledger_side]] == supply & .data[[flow_aggregation_point]] == eiou)) %>% 
     # Keep only the columns of interest to the FU Allocation process
-    dplyr::select(country, method, energy_type, last_stage, ledger_side, fap, unit, product, flow, year) %>% 
+    dplyr::select(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, unit, product, flow, year) %>% 
     # Rename the flow column to be "destination" to match the corresponding column in the FU Analysis tables.
     dplyr::rename(
       "{destination}" := .data[[flow]], 
@@ -651,12 +653,12 @@ complete_fu_allocation_table <- function(fu_allocation_table,
       # Rows where the year column has "Maximum.values" in it.
       .data[[year]] != max_vals, 
       # Rows where the value column has NA are rows where we don't have allocation data.
-      !is.na(.data[[val_col]]), 
+      !is.na(.data[[.values]]), 
       # Rows where quantity is E.dot or E.dot [%] aren't allocation rows
       !.data[[quantity]] %in% c(e_dot, e_dot_perc)
     ) %>% 
     # Now keep only the columns of interest to us.
-    dplyr::select(!c(quantity, machine, eu_product, values)) %>% 
+    dplyr::select(!c(quantity, machine, eu_product, .values)) %>% 
     unique() %>% 
     dplyr::mutate(
       "{year}" := as.numeric(.data[[year]])
@@ -668,7 +670,7 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     allocation_rows_needed, 
     fu_allocation_data_available)
   
-    
+  # Look in exemplar_fu_allocation_tables for missing rows.
    
   
 }
@@ -678,12 +680,12 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 #' 
 #' FU (final-to-useful) allocation tables are not tidy data structures.
 #' This function converts an FU Allocation table to a tidy data frame
-#' by pulling the years (and the `max_vals` column) into a new column with the name `val_col`. 
+#' by pulling the years (and the `max_vals` column) into a new column with the name `values`. 
 #'
 #' @param .fu_allocation_table The FU Allocation table to be tidied.
 #' @param year See `IEATools::iea_cols`.
 #' @param max_vals See `IEATools::template_cols`.
-#' @param val_col The name of the values column created. Default is "values".
+#' @param values The name of the values column created. Default is "values".
 #'
 #' @return a tidy version of `.fu_allocation_table`.
 #' 
@@ -695,11 +697,11 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 tidy_fu_allocation_table <- function(.fu_allocation_table, 
                                      year = IEATools::iea_cols$year,
                                      max_vals = IEATools::template_cols$maximum_values, 
-                                     val_col = "values") {
+                                     values = "values") {
   # Find the year columns in .fu_allocation_table.
   year_cols <- c(max_vals, year_cols(.fu_allocation_table, return_names = TRUE) %>% as.character())
   .fu_allocation_table %>% 
-    tidyr::pivot_longer(cols = year_cols, names_to = year, values_to = val_col)
+    tidyr::pivot_longer(cols = year_cols, names_to = year, values_to = values)
 }
 
 
@@ -713,7 +715,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #' @param .tidy_fu_allocation_table The FU Allocation table to be widened.
 #' @param year See `IEATools::iea_cols`.
 #' @param max_vals See `IEATools::template_cols`.
-#' @param val_col The name of the values column to be spread. Default is "values".
+#' @param values The name of the values column to be spread. Default is "values".
 #'
 #' @return a wide version of `.tidy_fu_allocation_table`.
 #'
@@ -726,9 +728,9 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 spread_fu_allocation_table <- function(.tidy_fu_allocation_table, 
                                        year = IEATools::iea_cols$year,
                                        max_vals = IEATools::template_cols$maximum_values, 
-                                       val_col = "values") {
+                                       values = "values") {
   .tidy_fu_allocation_table %>% 
-    tidyr::pivot_wider(names_from = year, values_from = val_col)
+    tidyr::pivot_wider(names_from = year, values_from = values)
 }
 
 

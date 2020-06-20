@@ -8,7 +8,7 @@ spread_fu_allocation_table(
   .tidy_fu_allocation_table,
   year = IEATools::iea_cols$year,
   max_vals = IEATools::template_cols$maximum_values,
-  val_col = "values"
+  values = "values"
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ spread_fu_allocation_table(
 
 \item{max_vals}{See \code{IEATools::template_cols}.}
 
-\item{val_col}{The name of the values column to be spread. Default is "values".}
+\item{values}{The name of the values column to be spread. Default is "values".}
 }
 \value{
 a wide version of \code{.tidy_fu_allocation_table}.

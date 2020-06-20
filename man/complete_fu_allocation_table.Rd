@@ -13,23 +13,23 @@ complete_fu_allocation_table(
   energy_type = IEATools::iea_cols$energy_type,
   last_stage = IEATools::iea_cols$last_stage,
   ledger_side = IEATools::iea_cols$ledger_side,
-  supply = IEATools::ledger_sides$supply,
-  consumption = IEATools::ledger_sides$consumption,
-  fap = IEATools::iea_cols$flow_aggregation_point,
-  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
   flow = IEATools::iea_cols$flow,
   product = IEATools::iea_cols$product,
   unit = IEATools::iea_cols$unit,
   e_dot = IEATools::iea_cols$e_dot,
+  year = IEATools::iea_cols$year,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  supply = IEATools::ledger_sides$supply,
+  consumption = IEATools::ledger_sides$consumption,
+  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
   e_dot_perc = IEATools::template_cols$e_dot_perc,
   destination = IEATools::template_cols$destination,
   machine = IEATools::template_cols$machine,
   eu_product = IEATools::template_cols$eu_product,
   ef_product = IEATools::template_cols$ef_product,
-  year = IEATools::iea_cols$year,
   max_vals = IEATools::template_cols$maximum_values,
   quantity = IEATools::template_cols$quantity,
-  val_col = "values"
+  .values = "values"
 )
 }
 \arguments{
@@ -40,17 +40,23 @@ information available in the exemplar country tables.}
 
 \item{exemplar_fu_allocation_tables}{A vector of FU Allocation tables, each probably created by \code{load_fu_allocation_data()}.}
 
-\item{country}{The string name of the country column in \code{fu_allocation_table},
-\code{exemplar_fu_allocation_tables}, and \code{tidy_specified_iea_data}.
-Default is \code{IEATools::iea_cols$country}.}
+\item{tidy_specified_iea_data}{A data frame of specified IEA data in tidy format.}
 
-\item{tidy_iea_data}{A data frame of specified IEA data in tidy format.}
+\item{country, method, energy_type, last_stage, ledger_side, flow, product, unit, e_dot, year, flow_aggregation_point}{See \code{IEATools::ieacols}.}
+
+\item{supply, consumption}{See \code{IEATools::ledger_sides}.}
+
+\item{eiou}{See \code{IEATools::tfc_compar_flows}.}
+
+\item{e_dot_perc, destination, machine, eu_product, ef_product, max_vals, quantity}{See \code{IEATools::template_cols}.}
+
+\item{.values}{The name of a values column created internally. Default is "values".}
 }
 \value{
 A completed tidy data frame containing an FU Allocation table to replace argument \code{tidy_fu_allocation_table}.
 }
 \description{
-#' An FU (final-to-useful) Allocation table
+An FU (final-to-useful) Allocation table
 tells how final energy carriers are allocated to final-to-useful machines
 in each final demand sector.
 A template for an FU Allocation table can be created with
