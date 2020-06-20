@@ -582,7 +582,10 @@ load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(),
 #'                            This data frame is probably read by `load_fu_allocation_data()`.
 #'                            If `NULL`, the table will be constructed exclusively from 
 #'                            information available in the exemplar country tables.
-#' @param exemplar_fu_allocation_tables A vector of FU Allocation tables, each probably created by `load_fu_allocation_data()`. 
+#'                            Only one country is allowed in this data frame.
+#' @param exemplar_fu_allocation_tables A list of FU Allocation tables, each probably created by `load_fu_allocation_data()`. 
+#'                                      Note that each exemplar table must contain data for a single country only. 
+#'                                      If more than one country is found, an error occurs.
 #' @param tidy_specified_iea_data A data frame of specified IEA data in tidy format.
 #' @param country,method,energy_type,last_stage,ledger_side,flow,product,unit,e_dot,year,flow_aggregation_point See `IEATools::ieacols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
@@ -621,13 +624,15 @@ complete_fu_allocation_table <- function(fu_allocation_table,
                                          quantity = IEATools::template_cols$quantity,
                                          .values = "values") {
   # Find all countries in fu_allocation_table
-  countries <- fu_allocation_table %>% 
+  country_to_complete <- fu_allocation_table %>% 
     magrittr::extract2(country) %>% 
     unique()
+  assertthat::assert_that(length(country_to_complete) == 1, 
+                          msg = glue::glue("Found more than one country to complete in complete_fu_allocation_table(): {glue::glue_collapse(country_to_complete, sep = ', ', last = ' and ')}"))
   
   # Get all the IEA data for these countries
   country_iea_data <- tidy_specified_iea_data %>% 
-    dplyr::filter(.data[[country]] %in% countries)
+    dplyr::filter(.data[[country]] == country_to_complete)
   # Figure out the rows for which allocations are needed, based on the IEA data.
   allocation_rows_needed <- country_iea_data %>% 
     # Only need rows where we actually have energy to be allocated.
@@ -643,8 +648,7 @@ complete_fu_allocation_table <- function(fu_allocation_table,
       "{ef_product}" := .data[[product]]
     )
 
-
-  # Figure out the allocations that are available.
+  # Figure out the allocations that are available from fu_allocation_table.
   fu_allocation_data_available <- fu_allocation_table %>% 
     # Pivot the FU allocation table to a tidy data frame.
     tidy_fu_allocation_table() %>% 
@@ -664,14 +668,60 @@ complete_fu_allocation_table <- function(fu_allocation_table,
       "{year}" := as.numeric(.data[[year]])
     )
   
-  # Figure out the rows of allocations that are missing and, therefore, 
-  # must be obtained from the exemplar country FU Allocations.
-  rows_to_get_elsewhere <- dplyr::anti_join(
-    allocation_rows_needed, 
-    fu_allocation_data_available)
-  
   # Look in exemplar_fu_allocation_tables for missing rows.
-   
+  # Search until we have information for each of the rows_to_get_elsewhere.
+  n_exemplars <- ifelse(inherits(exemplar_fu_allocation_tables, "data.frame"), 1, length(exemplar_fu_allocation_tables))
+  if (n_exemplars == 1) {
+    exemplar_fu_allocation_tables <- list(exemplar_fu_allocation_tables)
+  }
+  
+  for (exemplar in exemplar_fu_allocation_tables) {
+    # Figure out the rows of allocations that are missing and, therefore, 
+    # must be obtained from the exemplar country FU Allocations.
+    rows_to_get_elsewhere <- dplyr::anti_join(
+      allocation_rows_needed, 
+      fu_allocation_data_available)
+    
+    if (nrow(rows_to_get_elsewhere) == 0) {
+      # If we don't need to get any rows, we can stop looping now.
+      break
+    }
+    
+    # Make sure there is only 1 country in this exemplar.
+    exemplar_countries <- exemplar %>% magrittr::extract2(country) %>% unique()
+    assertthat::assert_that(length(exemplar_countries) == 1, 
+                            msg = glue::glue("Found more than one country in exemplar: {glue::glue_collapse(countries, sep = ', ', last = ' and ')}"))
+    # Figure out which missing rows this exemplar can contribute 
+    exemplar_info_available <- exemplar %>% 
+      # Pivot the FU allocation table to a tidy data frame.
+      tidy_fu_allocation_table() %>% 
+      # Get rid of rows we don't want.
+      dplyr::filter(
+        # Rows where the year column has "Maximum.values" in it.
+        .data[[year]] != max_vals, 
+        # Rows where the value column has NA are rows where we don't have allocation data.
+        !is.na(.data[[.values]]), 
+        # Rows where quantity is E.dot or E.dot [%] aren't allocation rows
+        !.data[[quantity]] %in% c(e_dot, e_dot_perc)
+      ) %>% 
+      # Get rid of the country column, because we don't want two country columns in the rows_to_use data frame.
+      dplyr::select(!country) %>% 
+      dplyr::mutate(
+        "{year}" := as.numeric(.data[[year]])
+      )
+      
+    # We can't join by country, because the exemplar data frame doesn't have the country column.
+    rows_to_use <- dplyr::semi_join(exemplar_info_available, 
+                                    rows_to_get_elsewhere, by = setdiff(colnames(rows_to_get_elsewhere), country)) %>% 
+      dplyr::mutate(
+        # Add the country column
+        "{country}" = country_to_complete
+      )
+    # Join the rows_to_use to the fu_allocation_table
+    fu_allocation_data_available <- fu_allocation_data_available %>% 
+      dplyr::bind_rows(rows_to_use)
+  }
+  
   
 }
 

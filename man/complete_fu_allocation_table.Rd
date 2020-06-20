@@ -36,9 +36,12 @@ complete_fu_allocation_table(
 \item{fu_allocation_table}{The FU allocation table to be completed.
 This data frame is probably read by \code{load_fu_allocation_data()}.
 If \code{NULL}, the table will be constructed exclusively from
-information available in the exemplar country tables.}
+information available in the exemplar country tables.
+Only one country is allowed in this data frame.}
 
-\item{exemplar_fu_allocation_tables}{A vector of FU Allocation tables, each probably created by \code{load_fu_allocation_data()}.}
+\item{exemplar_fu_allocation_tables}{A list of FU Allocation tables, each probably created by \code{load_fu_allocation_data()}.
+Note that each exemplar table must contain data for a single country only.
+If more than one country is found, an error occurs.}
 
 \item{tidy_specified_iea_data}{A data frame of specified IEA data in tidy format.}
 

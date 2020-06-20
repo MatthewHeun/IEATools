@@ -396,7 +396,7 @@ test_that("complete_fu_allocation_table works as expected", {
   
   # Now send the data into complete_fu_allocation_table()
   complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
-                               exemplar_fu_allocation_tables = fu_table_ZAF, 
+                               exemplar_fu_allocation_tables = list(fu_table_ZAF, fu_table_ZAF), 
                                tidy_specified_iea_data = tidy_specified_iea_data)
 })
 
