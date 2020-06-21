@@ -591,6 +591,8 @@ load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(),
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param eiou See `IEATools::tfc_compar_flows`.
 #' @param e_dot_perc,destination,machine,eu_product,ef_product,max_vals,quantity See `IEATools::template_cols`.
+#' @param source The name of a column added to output that describes the source of the allocation values (the C values). 
+#'               Default is "C_source".
 #' @param .values The name of a values column created internally. Default is "values".
 #'
 #' @return A completed tidy data frame containing an FU Allocation table to replace argument `tidy_fu_allocation_table`.

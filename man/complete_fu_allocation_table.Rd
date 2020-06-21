@@ -54,6 +54,9 @@ If more than one country is found, an error occurs.}
 
 \item{e_dot_perc, destination, machine, eu_product, ef_product, max_vals, quantity}{See \code{IEATools::template_cols}.}
 
+\item{source}{The name of a column added to output that describes the source of the allocation values (the C values).
+Default is "C_source".}
+
 \item{.values}{The name of a values column created internally. Default is "values".}
 }
 \value{
