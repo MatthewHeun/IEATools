@@ -770,35 +770,6 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 }
 
 
-#' Spread an FU Allocation table
-#' 
-#' FU (final-to-useful) allocation tables are not tidy data structures, 
-#' but they can be tidied by calling `tidy_fu_allocation_table()`.
-#' This function reverses that process to widen a tidy FU Allocation table
-#' by spreading the years (and the `max_vals` column) into new columns with names taken from the `year` column.
-#'
-#' @param .tidy_fu_allocation_table The FU Allocation table to be widened.
-#' @param year See `IEATools::iea_cols`.
-#' @param max_vals See `IEATools::template_cols`.
-#' @param values The name of the values column to be spread. Default is "values".
-#'
-#' @return a wide version of `.tidy_fu_allocation_table`.
-#'
-#' @export
-#'
-#' @examples
-#' load_fu_allocation_data() %>% 
-#'   tidy_fu_allocation_table() %>% 
-#'   spread_fu_allocation_table()
-spread_fu_allocation_table <- function(.tidy_fu_allocation_table, 
-                                       year = IEATools::iea_cols$year,
-                                       max_vals = IEATools::template_cols$maximum_values, 
-                                       values = ".values") {
-  .tidy_fu_allocation_table %>% 
-    tidyr::pivot_wider(names_from = year, values_from = values)
-}
-
-
 #' Final-to-useful efficiency template
 #' 
 #' Using a filled final-to-useful allocation table, 

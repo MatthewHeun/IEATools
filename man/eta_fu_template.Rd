@@ -2,7 +2,33 @@
 % Please edit documentation in R/templates.R
 \name{eta_fu_template}
 \alias{eta_fu_template}
-\title{Final-to-useful efficiency template}
+\title{#' Spread an FU Allocation table
+#'
+#' FU (final-to-useful) allocation tables are not tidy data structures,
+#' but they can be tidied by calling \code{tidy_fu_allocation_table()}.
+#' This function reverses that process to widen a tidy FU Allocation table
+#' by spreading the years (and the \code{max_vals} column) into new columns with names taken from the \code{year} column.
+#'
+#' @param .tidy_fu_allocation_table The FU Allocation table to be widened.
+#' @param year See \code{IEATools::iea_cols}.
+#' @param max_vals See \code{IEATools::template_cols}.
+#' @param values The name of the values column to be spread. Default is "values".
+#'
+#' @return a wide version of \code{.tidy_fu_allocation_table}.
+#'
+#' @export
+#'
+#' @examples
+#' load_fu_allocation_data() \%>\%
+#'   tidy_fu_allocation_table() \%>\%
+#'   spread_fu_allocation_table()
+spread_fu_allocation_table <- function(.tidy_fu_allocation_table,
+year = IEATools::iea_cols$year,
+max_vals = IEATools::template_cols$maximum_values,
+values = ".values") {
+.tidy_fu_allocation_table \%>\%
+tidyr::pivot_wider(names_from = year, values_from = values)
+}}
 \usage{
 eta_fu_template(
   .fu_allocations,
@@ -121,10 +147,12 @@ Default is 1e-6, or 0.0001\%.}
 a data frame containing row-ordered blank template for final-to-useful machine efficiencies.
 }
 \description{
-Using a filled final-to-useful allocation table,
-this function generates a blank template for final-to-useful machine efficiencies.
+Final-to-useful efficiency template
 }
 \details{
+Using a filled final-to-useful allocation table,
+this function generates a blank template for final-to-useful machine efficiencies.
+
 The template produced by this function includes a column (\code{e_dot_machine_perc_max})
 that contains the percentage of all energy flowing into each final-to-useful machines,
 thereby providing guidance to the analyst about the efficiencies that carry the most weight

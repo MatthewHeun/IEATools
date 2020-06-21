@@ -357,15 +357,6 @@ test_that("load_eta_fu_data works as expected", {
 })
 
 
-test_that("spread and tidy fu_allocation_tables work as expected", {
-  fu_table <- load_fu_allocation_data()
-  tidy <- tidy_fu_allocation_table(fu_table)
-  rewide <- spread_fu_allocation_table(tidy) %>% as.data.frame()
-  # Now run some tests.
-  expect_equal(rewide, fu_table)
-})
-
-
 test_that("complete_fu_allocation_table works as expected", {
   # The strategy here will be to use Ghana's FU allocation table
   # with South Africa's as an exemplar.
