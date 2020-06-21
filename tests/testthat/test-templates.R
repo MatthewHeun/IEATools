@@ -357,7 +357,11 @@ test_that("load_eta_fu_data works as expected", {
 })
 
 
-test_that("complete_fu_allocation_table works as expected", {
+test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
+  
+  # In this test, the 2nd exemplar isn't needed, and the code should 
+  # break out of the for loop.
+  
   # The strategy here will be to use Ghana's FU allocation table
   # with South Africa's as an exemplar.
   # We'll remove a row from Ghana's table and make sure South Africa's is inserted.
@@ -381,7 +385,7 @@ test_that("complete_fu_allocation_table works as expected", {
     nrow() %>% 
     expect_gt(0)
   
-  # Get the IEA data for GHA and ZAF
+  # Get the IEA data for GHA and ZAF and specify it.
   tidy_specified_iea_data <- load_tidy_iea_df() %>% 
     specify_all()
   
@@ -410,8 +414,79 @@ test_that("complete_fu_allocation_table works as expected", {
                   Destination == "Residential") %>% 
     nrow() %>% 
     expect_equal(0)
-  
-  # Build an example with two ZAF FU allocation tables, each giving something different to the GHA table.
 })
 
+
+test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
+  # In this test, we set up an allocation table that has two missing pieces.
+  # The two missing pieces are obtained from 2 exemplars, one missing piece from each.
+  
+  fu_table <- load_fu_allocation_data()
+  fu_table_GHA <- fu_table %>% 
+    dplyr::filter(Country == "GHA") %>% 
+    # Delete rows from Ghana's table for Residential consumption of PSBs
+    dplyr::filter(!(Flow.aggregation.point == "Other" & Ef.product == "Primary solid biofuels" & Destination == "Residential")) %>% 
+    dplyr::filter(!(Flow.aggregation.point == "Energy industry own use" & Ef.product == "Electricity" & Destination == "Main activity producer electricity power plants"))
+  # Ensure that we removed the correct rows from Ghana.
+  fu_table_GHA %>% 
+    dplyr::filter(Flow.aggregation.point == "Other" & Ef.product == "Primary solid biofuels" & Destination == "Residential") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  fu_table_GHA %>% 
+    dplyr::filter(Flow.aggregation.point == "Energy industry own use" & Ef.product == "Electricity" & Destination == "Main activity producer electricity power plants") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  
+  # Now make two exemplars from South Africa, one with country ZAF, the other whose country is renamed to "World".
+  # South Africa has EIOU Electricity consumed by Main activity producer electricity plants but NO Residential PSB consumption.
+  # World has Residential PSB consumption but NO EIOU Electricity consumed by Main activity producer electricity plants.
+  # Ghana will pick up EIOU Electricity consumed by Main activity producer electricity plants from South Africa.
+  # Ghana will pick up Residential PSB consumption from World.
+  fu_table_ZAF <- fu_table %>% 
+    dplyr::filter(Country == "ZAF") %>% 
+    dplyr::filter(!(Flow.aggregation.point == "Other" & Ef.product == "Primary solid biofuels" & Destination == "Residential"))
+  # Ensure we deleted correct rows from this table.
+  fu_table_ZAF %>% 
+    dplyr::filter(Flow.aggregation.point == "Other", Ef.product == "Primary solid biofuels", Destination == "Residential") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  
+  # Second exemplar
+  fu_table_World <- fu_table %>% 
+    dplyr::filter(Country == "ZAF") %>% 
+    dplyr::mutate(
+      Country = "World"
+    ) %>% 
+    dplyr::filter(!(Flow.aggregation.point == "Energy industry own use" & Ef.product == "Electricity" & Destination == "Main activity producer electricity power plants"))
+  # Ensure we removed the correct rows from the World exemplar.
+  fu_table_World %>% 
+    dplyr::filter(Flow.aggregation.point == "Energy industry own use", Ef.product == "Electricity", Destination == "Main activity producer electricity power plants") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  fu_table_World %>% 
+    magrittr::extract2("Country") %>% 
+    unique() %>% 
+    expect_equal("World")
+  
+  # Get the IEA data for GHA and ZAF and specify it.
+  tidy_specified_iea_data <- load_tidy_iea_df() %>% 
+    specify_all()
+  
+  # Now run Ghana through the completion process.
+  completed <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+                                            exemplar_fu_allocation_tables = list(fu_table_ZAF, fu_table_World), 
+                                            tidy_specified_iea_data = tidy_specified_iea_data)
+  
+  # Check that Ghana obtained Residential PSB consumption from World.
+  completed %>% 
+    dplyr::filter(Flow.aggregation.point == "Other", Ef.product == "Primary solid biofuels", Destination == "Residential") %>% 
+    magrittr::extract2("C_source") %>% 
+    unique() %>% 
+    expect_equal("World")
+  # Check that Ghana obtained EIOU Electricity consumed by Main activity producer electricity plants from South Africa. 
+  completed %>% 
+    dplyr::filter(Flow.aggregation.point == "Energy industry own use", Ef.product == "Electricity", Destination == "Main activity producer electricity power plants") %>% 
+    magrittr::extract2("C_source") %>% 
+    expect_equal("ZAF")
+})
 
