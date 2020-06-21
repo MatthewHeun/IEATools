@@ -357,7 +357,7 @@ test_that("load_eta_fu_data works as expected", {
 })
 
 
-test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
+test_that("complete_fu_allocation_table works as expected", {
   
   # In this test, the 2nd exemplar isn't needed, and the code should 
   # break out of the for loop.
@@ -426,14 +426,14 @@ test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
     dplyr::filter(Country == "GHA") %>% 
     # Delete rows from Ghana's table for Residential consumption of PSBs
     dplyr::filter(!(Flow.aggregation.point == "Other" & Ef.product == "Primary solid biofuels" & Destination == "Residential")) %>% 
-    dplyr::filter(!(Flow.aggregation.point == "Energy industry own use" & Ef.product == "Electricity" & Destination == "Main activity producer electricity power plants"))
+    dplyr::filter(!(Flow.aggregation.point == "Energy industry own use" & Ef.product == "Electricity" & Destination == "Main activity producer electricity plants"))
   # Ensure that we removed the correct rows from Ghana.
   fu_table_GHA %>% 
     dplyr::filter(Flow.aggregation.point == "Other" & Ef.product == "Primary solid biofuels" & Destination == "Residential") %>% 
     nrow() %>% 
     expect_equal(0)
   fu_table_GHA %>% 
-    dplyr::filter(Flow.aggregation.point == "Energy industry own use" & Ef.product == "Electricity" & Destination == "Main activity producer electricity power plants") %>% 
+    dplyr::filter(Flow.aggregation.point == "Energy industry own use" & Ef.product == "Electricity" & Destination == "Main activity producer electricity plants") %>% 
     nrow() %>% 
     expect_equal(0)
   
@@ -457,10 +457,10 @@ test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
     dplyr::mutate(
       Country = "World"
     ) %>% 
-    dplyr::filter(!(Flow.aggregation.point == "Energy industry own use" & Ef.product == "Electricity" & Destination == "Main activity producer electricity power plants"))
+    dplyr::filter(!(Flow.aggregation.point == "Energy industry own use" & Ef.product == "Electricity" & Destination == "Main activity producer electricity plants"))
   # Ensure we removed the correct rows from the World exemplar.
   fu_table_World %>% 
-    dplyr::filter(Flow.aggregation.point == "Energy industry own use", Ef.product == "Electricity", Destination == "Main activity producer electricity power plants") %>% 
+    dplyr::filter(Flow.aggregation.point == "Energy industry own use", Ef.product == "Electricity", Destination == "Main activity producer electricity plants") %>% 
     nrow() %>% 
     expect_equal(0)
   fu_table_World %>% 
@@ -485,7 +485,7 @@ test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
     expect_equal("World")
   # Check that Ghana obtained EIOU Electricity consumed by Main activity producer electricity plants from South Africa. 
   completed %>% 
-    dplyr::filter(Flow.aggregation.point == "Energy industry own use", Ef.product == "Electricity", Destination == "Main activity producer electricity power plants") %>% 
+    dplyr::filter(Flow.aggregation.point == "Energy industry own use", Ef.product == "Electricity", Destination == "Main activity producer electricity plants") %>% 
     magrittr::extract2("C_source") %>% 
     expect_equal("ZAF")
 })
