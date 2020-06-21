@@ -370,10 +370,14 @@ test_that("complete_fu_allocation_table works as expected", {
   fu_table_GHA <- fu_table %>% 
     dplyr::filter(Country == "GHA") %>% 
     # Delete rows from Ghana's table for Residential consumption of PSBs
-    dplyr::filter(!(Flow.aggregation.point == "Other" & Ef.product == "Primary solid biofuels" & Destination == "Residential"))
+    dplyr::filter(!(Flow.aggregation.point == IEATools::tfc_flows$other & 
+                      Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
+                      Destination == IEATools::other_flows$residential))
   # Verify that those PSB rows have been deleted.
   fu_table_GHA %>% 
-    dplyr::filter(Flow.aggregation.point == "Other", Ef.product == "Primary solid biofuels", Destination == "Residential") %>% 
+    dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other, 
+                  Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels,
+                  Destination == IEATools::other_flows$residential) %>% 
     nrow() %>% 
     expect_equal(0)
                 
@@ -381,7 +385,9 @@ test_that("complete_fu_allocation_table works as expected", {
     dplyr::filter(Country == "ZAF")
   # Verify that the ZAF table has rows for Residential consumption of PSBs.
   fu_table_ZAF %>% 
-    dplyr::filter(Flow.aggregation.point == "Other", Ef.product == "Primary solid biofuels", Destination == "Residential") %>% 
+    dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other,
+                  Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels,
+                  Destination == IEATools::other_flows$residential) %>% 
     nrow() %>% 
     expect_gt(0)
   
@@ -401,17 +407,17 @@ test_that("complete_fu_allocation_table works as expected", {
   # We should have two Ghana rows for PSBs in Residential
   completed %>% 
     dplyr::filter(Country == "GHA", 
-                  Flow.aggregation.point == "Other", 
-                  Ef.product == "Primary solid biofuels", 
-                  Destination == "Residential") %>% 
+                  Flow.aggregation.point == IEATools::tfc_flows$other, 
+                  Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels, 
+                  Destination == IEATools::other_flows$residential) %>% 
     nrow() %>% 
     expect_equal(2)
   # But their source should not be Ghana.
   completed %>% 
     dplyr::filter(C_source == "GHA", 
-                  Flow.aggregation.point == "Other", 
-                  Ef.product == "Primary solid biofuels", 
-                  Destination == "Residential") %>% 
+                  Flow.aggregation.point == IEATools::tfc_flows$other, 
+                  Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels, 
+                  Destination == IEATools::other_flows$residential) %>% 
     nrow() %>% 
     expect_equal(0)
 })
@@ -425,15 +431,23 @@ test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
   fu_table_GHA <- fu_table %>% 
     dplyr::filter(Country == "GHA") %>% 
     # Delete rows from Ghana's table for Residential consumption of PSBs
-    dplyr::filter(!(Flow.aggregation.point == "Other" & Ef.product == "Primary solid biofuels" & Destination == "Residential")) %>% 
-    dplyr::filter(!(Flow.aggregation.point == "Energy industry own use" & Ef.product == "Electricity" & Destination == "Main activity producer electricity plants"))
+    dplyr::filter(!(Flow.aggregation.point == IEATools::tfc_flows$other & 
+                      Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
+                      Destination == IEATools::other_flows$residential)) %>% 
+    dplyr::filter(!(Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use &
+                      Ef.product == IEATools::electricity_products$electricity &
+                      Destination == IEATools::transformation_processes$main_activity_producer_electricity_plants))
   # Ensure that we removed the correct rows from Ghana.
   fu_table_GHA %>% 
-    dplyr::filter(Flow.aggregation.point == "Other" & Ef.product == "Primary solid biofuels" & Destination == "Residential") %>% 
+    dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other & 
+                    Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
+                    Destination == IEATools::other_flows$residential) %>% 
     nrow() %>% 
     expect_equal(0)
   fu_table_GHA %>% 
-    dplyr::filter(Flow.aggregation.point == "Energy industry own use" & Ef.product == "Electricity" & Destination == "Main activity producer electricity plants") %>% 
+    dplyr::filter(Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use &
+                    Ef.product == IEATools::electricity_products$electricity &
+                    Destination == IEATools::transformation_processes$main_activity_producer_electricity_plants) %>% 
     nrow() %>% 
     expect_equal(0)
   
@@ -444,10 +458,14 @@ test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
   # Ghana will pick up Residential PSB consumption from World.
   fu_table_ZAF <- fu_table %>% 
     dplyr::filter(Country == "ZAF") %>% 
-    dplyr::filter(!(Flow.aggregation.point == "Other" & Ef.product == "Primary solid biofuels" & Destination == "Residential"))
+    dplyr::filter(!(Flow.aggregation.point == IEATools::tfc_flows$other & 
+                      Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
+                      Destination == IEATools::other_flows$residential))
   # Ensure we deleted correct rows from this table.
   fu_table_ZAF %>% 
-    dplyr::filter(Flow.aggregation.point == "Other", Ef.product == "Primary solid biofuels", Destination == "Residential") %>% 
+    dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other,
+                  Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels,
+                  Destination == IEATools::other_flows$residential) %>% 
     nrow() %>% 
     expect_equal(0)
   
@@ -457,10 +475,14 @@ test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
     dplyr::mutate(
       Country = "World"
     ) %>% 
-    dplyr::filter(!(Flow.aggregation.point == "Energy industry own use" & Ef.product == "Electricity" & Destination == "Main activity producer electricity plants"))
+    dplyr::filter(!(Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use &
+                      Ef.product == IEATools::electricity_products$electricity &
+                      Destination == IEATools::transformation_processes$main_activity_producer_electricity_plants))
   # Ensure we removed the correct rows from the World exemplar.
   fu_table_World %>% 
-    dplyr::filter(Flow.aggregation.point == "Energy industry own use", Ef.product == "Electricity", Destination == "Main activity producer electricity plants") %>% 
+    dplyr::filter(Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use,
+                  Ef.product == IEATools::electricity_products$electricity,
+                  Destination == IEATools::transformation_processes$main_activity_producer_electricity_plants) %>% 
     nrow() %>% 
     expect_equal(0)
   fu_table_World %>% 
@@ -479,13 +501,17 @@ test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
   
   # Check that Ghana obtained Residential PSB consumption from World.
   completed %>% 
-    dplyr::filter(Flow.aggregation.point == "Other", Ef.product == "Primary solid biofuels", Destination == "Residential") %>% 
+    dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other, 
+                  Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels,
+                  Destination == IEATools::other_flows$residential) %>% 
     magrittr::extract2("C_source") %>% 
     unique() %>% 
     expect_equal("World")
   # Check that Ghana obtained EIOU Electricity consumed by Main activity producer electricity plants from South Africa. 
   completed %>% 
-    dplyr::filter(Flow.aggregation.point == "Energy industry own use", Ef.product == "Electricity", Destination == "Main activity producer electricity plants") %>% 
+    dplyr::filter(Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use,
+                  Ef.product == IEATools::electricity_products$electricity,
+                  Destination == IEATools::transformation_processes$main_activity_producer_electricity_plants) %>% 
     magrittr::extract2("C_source") %>% 
     expect_equal("ZAF")
 })

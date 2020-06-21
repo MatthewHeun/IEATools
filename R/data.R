@@ -324,6 +324,17 @@
 "biofuels_and_waste_products"
 
 
+#' Electricity products
+#'
+#' A string vector containing names of products classified by the IEA as electricity products.
+#' 
+#' @format A string vector with `r length(electricity_products)` entries
+#' 
+#' @examples
+#' electricity_products
+"electricity_products"
+
+
 #' Total primary energy supply flows
 #'
 #' A string vector containing names of `Total primary energy supply` `Flow`s in the IEA extended energy balances database.

@@ -273,6 +273,14 @@ usethis::use_data(biofuels_and_waste_products, overwrite = TRUE)
 
 
 #
+# Electricity
+# 
+
+electricity_products <- list(electricity = "Electricity")
+usethis::use_data(electricity_products, overwrite = TRUE)
+
+
+#
 # Flow types
 # 
 
