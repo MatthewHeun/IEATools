@@ -622,7 +622,8 @@ complete_fu_allocation_table <- function(fu_allocation_table,
                                          ef_product = IEATools::template_cols$ef_product,
                                          max_vals = IEATools::template_cols$maximum_values, 
                                          quantity = IEATools::template_cols$quantity,
-                                         .values = "values") {
+                                         source = "C_source",
+                                         .values = ".values") {
   # Find all countries in fu_allocation_table
   country_to_complete <- fu_allocation_table %>% 
     magrittr::extract2(country) %>% 
@@ -661,12 +662,16 @@ complete_fu_allocation_table <- function(fu_allocation_table,
       # Rows where quantity is E.dot or E.dot [%] aren't allocation rows
       !.data[[quantity]] %in% c(e_dot, e_dot_perc)
     ) %>% 
+    dplyr::mutate(
+      "{year}" := as.numeric(.data[[year]]), 
+      "{source}" := country_to_complete
+    )
+  # allocated_rows is the rows from the IEA data that have already been allocated.
+  # We don't need to pull data from an exemplar for these rows.
+  allocated_rows <- fu_allocation_data_available %>% 
     # Now keep only the columns of interest to us.
     dplyr::select(!c(quantity, machine, eu_product, .values)) %>% 
-    unique() %>% 
-    dplyr::mutate(
-      "{year}" := as.numeric(.data[[year]])
-    )
+    unique()
   
   # Look in exemplar_fu_allocation_tables for missing rows.
   # Search until we have information for each of the rows_to_get_elsewhere.
@@ -675,20 +680,11 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     exemplar_fu_allocation_tables <- list(exemplar_fu_allocation_tables)
   }
   
-  for (exemplar in exemplar_fu_allocation_tables) {
-    
-    
-    
-    # Seems like fu_allocation_data_available isn't updated when we get back to the top of the for loop.
-    # Why?
-    
-    
-    
+  for (i in 1:n_exemplars) {
+    exemplar <- exemplar_fu_allocation_tables[[i]]
     # Figure out the rows of allocations that are missing and, therefore, 
     # must be obtained from the exemplar country FU Allocations.
-    rows_to_get_elsewhere <- dplyr::anti_join(
-      allocation_rows_needed, 
-      fu_allocation_data_available)
+    rows_to_get_elsewhere <- dplyr::anti_join(allocation_rows_needed, allocated_rows, by = colnames(allocation_rows_needed))
     
     if (nrow(rows_to_get_elsewhere) == 0) {
       # If we don't need to get any rows, we can stop looping now.
@@ -696,9 +692,9 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     }
     
     # Make sure there is only 1 country in this exemplar.
-    exemplar_countries <- exemplar %>% magrittr::extract2(country) %>% unique()
-    assertthat::assert_that(length(exemplar_countries) == 1, 
-                            msg = glue::glue("Found more than one country in exemplar: {glue::glue_collapse(countries, sep = ', ', last = ' and ')}"))
+    exemplar_country <- exemplar %>% magrittr::extract2(country) %>% unique()
+    assertthat::assert_that(length(exemplar_country) == 1, 
+                            msg = glue::glue("Found more than one country in exemplar: {glue::glue_collapse(exemplar_country, sep = ', ', last = ' and ')}"))
     # Figure out which missing rows this exemplar can contribute 
     exemplar_info_available <- exemplar %>% 
       # Pivot the FU allocation table to a tidy data frame.
@@ -718,19 +714,30 @@ complete_fu_allocation_table <- function(fu_allocation_table,
         "{year}" := as.numeric(.data[[year]])
       )
       
-    # We can't join by country, because the exemplar data frame doesn't have the country column.
-    rows_to_use <- dplyr::semi_join(exemplar_info_available, 
-                                    rows_to_get_elsewhere, by = setdiff(colnames(rows_to_get_elsewhere), country)) %>% 
+    # We can't join by country or source, because the exemplar data frame doesn't have those columns.
+    exemplar_rows_to_use <- dplyr::semi_join(exemplar_info_available, 
+                                    rows_to_get_elsewhere, 
+                                    by = colnames(rows_to_get_elsewhere) %>% 
+                                      setdiff(country) %>% 
+                                      setdiff(source)) %>% 
       dplyr::mutate(
         # Add the country column
-        "{country}" = country_to_complete
+        "{country}" := country_to_complete, 
+        "{source}" := exemplar_country
       )
-    # Join the rows_to_use to the fu_allocation_table
+    # Join the exemplar_rows_to_use to fu_allocation_data_available
     fu_allocation_data_available <- fu_allocation_data_available %>% 
-      dplyr::bind_rows(rows_to_use)
-  }
+      dplyr::bind_rows(exemplar_rows_to_use)
+    allocated_rows <- fu_allocation_data_available %>% 
+      # Now keep only the columns of interest to us.
+      dplyr::select(!c(quantity, machine, eu_product, .values)) %>% 
+      unique()
+  } # End of big for loop.
   
-  
+  # Spread (pivot_wider) to put years in columns
+  fu_allocation_data_available %>% 
+    tidyr::pivot_wider(names_from = year, values_from = .values)
+    
 }
 
 
@@ -755,7 +762,7 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 tidy_fu_allocation_table <- function(.fu_allocation_table, 
                                      year = IEATools::iea_cols$year,
                                      max_vals = IEATools::template_cols$maximum_values, 
-                                     values = "values") {
+                                     values = ".values") {
   # Find the year columns in .fu_allocation_table.
   year_cols <- c(max_vals, year_cols(.fu_allocation_table, return_names = TRUE) %>% as.character())
   .fu_allocation_table %>% 
@@ -786,7 +793,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 spread_fu_allocation_table <- function(.tidy_fu_allocation_table, 
                                        year = IEATools::iea_cols$year,
                                        max_vals = IEATools::template_cols$maximum_values, 
-                                       values = "values") {
+                                       values = ".values") {
   .tidy_fu_allocation_table %>% 
     tidyr::pivot_wider(names_from = year, values_from = values)
 }

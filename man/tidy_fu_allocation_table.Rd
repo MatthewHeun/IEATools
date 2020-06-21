@@ -8,7 +8,7 @@ tidy_fu_allocation_table(
   .fu_allocation_table,
   year = IEATools::iea_cols$year,
   max_vals = IEATools::template_cols$maximum_values,
-  values = "values"
+  values = ".values"
 )
 }
 \arguments{

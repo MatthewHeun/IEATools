@@ -395,9 +395,32 @@ test_that("complete_fu_allocation_table works as expected", {
     specify_all()
   
   # Now send the data into complete_fu_allocation_table()
-  complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
-                               exemplar_fu_allocation_tables = list(fu_table_ZAF, fu_table_ZAF), 
-                               tidy_specified_iea_data = tidy_specified_iea_data)
+  completed <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+                                            # Give 2 exemplars so that we stress test the loop.
+                                            exemplar_fu_allocation_tables = list(fu_table_ZAF, fu_table_ZAF), 
+                                            tidy_specified_iea_data = tidy_specified_iea_data)
+  completed %>% 
+    dplyr::filter(C_source == "ZAF") %>% 
+    nrow() %>% 
+    expect_equal(2)
+  # We should have two Ghana rows for PSBs in Residential
+  completed %>% 
+    dplyr::filter(Country == "GHA", 
+                  Flow.aggregation.point == "Other", 
+                  Ef.product == "Primary solid biofuels", 
+                  Destination == "Residential") %>% 
+    nrow() %>% 
+    expect_equal(2)
+  # But their source should not be Ghana.
+  completed %>% 
+    dplyr::filter(C_source == "GHA", 
+                  Flow.aggregation.point == "Other", 
+                  Ef.product == "Primary solid biofuels", 
+                  Destination == "Residential") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  
+  # Build an example with two ZAF FU allocation tables, each giving something different to the GHA table.
 })
 
 

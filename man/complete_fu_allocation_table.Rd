@@ -29,7 +29,8 @@ complete_fu_allocation_table(
   ef_product = IEATools::template_cols$ef_product,
   max_vals = IEATools::template_cols$maximum_values,
   quantity = IEATools::template_cols$quantity,
-  .values = "values"
+  source = "C_source",
+  .values = ".values"
 )
 }
 \arguments{
