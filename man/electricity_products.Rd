@@ -5,7 +5,10 @@
 \alias{electricity_products}
 \title{Electricity products}
 \format{
-A string vector with 1 entries
+A string vector with 1 entries.
+\describe{
+\item{electricity}{The string identifier for Electricity.}
+}
 }
 \usage{
 electricity_products

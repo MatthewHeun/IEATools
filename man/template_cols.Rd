@@ -5,7 +5,7 @@
 \alias{template_cols}
 \title{Final-to-useful template column names}
 \format{
-A string list with 13 entries
+A string list with 15 entries
 \describe{
 \item{ef_product}{The name of the final energy product column in final-to-useful templates.}
 \item{machine}{The name of the machine column in final-to-useful templates.}

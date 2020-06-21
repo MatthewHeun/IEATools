@@ -318,6 +318,19 @@
 #' A string vector containing names of products classified by the IEA as biofuel and waste products.
 #' 
 #' @format A string vector with `r length(biofuels_and_waste_products)` entries
+#' \describe{
+#' \item{industrial_waste}{The string identifier for Industrial waste products.}
+#' \item{municipal_waste_renewable}{The string identifier for renewable municipal waste products.}
+#' \item{municipal_waste_nonrenewable}{The string identifier for non-renewable municipal waste products.}
+#' \item{primary_solid_biofuels}{The string identifier for Primary solid biofuels.}
+#' \item{biogases}{The string identifier for Biogases.}
+#' \item{biogasoline}{The string identifier for Biogasoline.}
+#' \item{biodiesels}{The string identifier for Biodiesels.}
+#' \item{bio_jet_kerosene}{The string identifier for Bio jet kerosene.}
+#' \item{other_liquid_biofuels}{The string identifier for Other liquid biofuels.}
+#' \item{non_specified_primary_biofuels_and_waste}{The string identifier for Non-sepcified primary biofuels and waste.}
+#' \item{charcoal}{The string identifier for Charcoal.}
+#' }
 #' 
 #' @examples
 #' biofuels_and_waste_products
@@ -328,7 +341,10 @@
 #'
 #' A string vector containing names of products classified by the IEA as electricity products.
 #' 
-#' @format A string vector with `r length(electricity_products)` entries
+#' @format A string vector with `r length(electricity_products)` entries.
+#' \describe{
+#' \item{electricity}{The string identifier for Electricity.}
+#' }
 #' 
 #' @examples
 #' electricity_products
@@ -576,6 +592,11 @@
 #' A string list containing types of methods for quantifying the primary equivalent of renewable electricity.
 #' 
 #' @format A string list with `r length(methods)` entries
+#' \describe{
+#' \item{PCM}{Physical content method (used by the IEA).}
+#' \item{RCM}{Resource content method.}
+#' \item{PSM}{Partial substitution method (used by EIA and BP)..}
+#' }
 #' 
 #' @examples
 #' methods

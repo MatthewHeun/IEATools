@@ -29,8 +29,8 @@ complete_fu_allocation_table(
   ef_product = IEATools::template_cols$ef_product,
   max_vals = IEATools::template_cols$maximum_values,
   quantity = IEATools::template_cols$quantity,
-  source = "C_source",
-  .values = ".values"
+  source = IEATools::template_cols$c_source,
+  .values = IEATools::template_cols$.values
 )
 }
 \arguments{
@@ -60,7 +60,7 @@ Default is "C_source".}
 \item{.values}{The name of a values column created internally. Default is "values".}
 }
 \value{
-A completed tidy data frame containing an FU Allocation table to replace argument \code{tidy_fu_allocation_table}.
+A completed tidy data frame containing an FU Allocation table to replace argument \code{fu_allocation_table}.
 }
 \description{
 An FU (final-to-useful) Allocation table
