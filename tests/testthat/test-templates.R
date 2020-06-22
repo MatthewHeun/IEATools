@@ -420,6 +420,22 @@ test_that("complete_fu_allocation_table works as expected", {
                   Destination == IEATools::other_flows$residential) %>% 
     nrow() %>% 
     expect_equal(0)
+  
+  # Try with a missing allocation table.
+  expect_error(complete_fu_allocation_table(exemplar_fu_allocation_tables = list(fu_table_ZAF, fu_table_ZAF), 
+                                            tidy_specified_iea_data = tidy_specified_iea_data), 
+               'argument "fu_allocation_table" is missing, with no default')
+  
+  # Try with missing exemplars
+  expect_error(complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+                                            tidy_specified_iea_data = tidy_specified_iea_data), 
+               'argument "exemplar_fu_allocation_tables" is missing, with no default')
+
+  # Try with missing IEA data
+  expect_error(complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+                                            # Give 2 exemplars so that we stress test the loop.
+                                            exemplar_fu_allocation_tables = list(fu_table_ZAF, fu_table_ZAF)), 
+               'argument "tidy_specified_iea_data" is missing, with no default')
 })
 
 

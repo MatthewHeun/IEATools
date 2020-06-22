@@ -46,6 +46,37 @@
 #' @export
 #'
 #' @examples
+#' fu_table <- load_fu_allocation_data()
+#' # Make an FU Allocation table for Ghana that is missing Residential consumption of PSBs.
+#' # Allocations for Residential consumption of PSBs will be picked up from the exemplar, South Africa.
+#' fu_table_GHA <- fu_table %>% 
+#'   dplyr::filter(Country == "GHA") %>% 
+#'   dplyr::filter(!(Flow.aggregation.point == IEATools::tfc_flows$other & 
+#'                     Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
+#'                     Destination == IEATools::other_flows$residential))
+#' # Make the exemplar, South Africa.
+#' fu_table_ZAF <- fu_table %>% 
+#'   dplyr::filter(Country == "ZAF")
+#' # The South African data have Residential PSB consumption, 
+#' # which will be used to complete the Ghanaian FU Allocation table.
+#' fu_table_ZAF %>% 
+#'   dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other & 
+#'                   Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
+#'                   Destination == IEATools::other_flows$residential) %>% 
+#'   dplyr::select(!c(Method, Energy.type, Last.stage, Flow.aggregation.point))
+#' # Get the IEA data for GHA and ZAF and specify it.
+#' tidy_specified_iea_data <- load_tidy_iea_df() %>% 
+#'   specify_all()
+#' # Now complete the Ghanaian FU Allocation table using information from South Africa.
+#' completed <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+#'                                           exemplar_fu_allocation_tables = list(fu_table_ZAF), 
+#'                                           tidy_specified_iea_data = tidy_specified_iea_data)
+#' # Note that the C_source column shows that these data have been b from South Africa.
+#' completed %>% 
+#'   dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other & 
+#'                   Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
+#'                   Destination == IEATools::other_flows$residential) %>% 
+#'   dplyr::select(!c(Method, Energy.type, Last.stage, Flow.aggregation.point))
 complete_fu_allocation_table <- function(fu_allocation_table, 
                                          exemplar_fu_allocation_tables, 
                                          tidy_specified_iea_data, 
@@ -186,7 +217,7 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 #' @param e_dot The name of the E.dot rows in the `fu_allocation_table`.
 #' @param e_dot_perc The name of the E.dot percentage rows in the `fu_allocation_table`.
 #' @param country The name of the Country column in the `fu_allocation_table`.
-#' @param source The name of the C_source column in the tidy `fu_allocation_table`.
+#' @param c_source The name of the C_source column in the tidy `fu_allocation_table`.
 #'
 #' @return A data frame containing final energy consumption that has been allocated in the `fu_allocation_table`
 fu_allocations_available <- function(.fu_allocation_table, max_vals, year, .values, 
