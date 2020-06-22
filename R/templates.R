@@ -669,14 +669,17 @@ complete_fu_allocation_table <- function(fu_allocation_table,
   # Figure out the rows of allocations that are missing and, therefore, 
   # must be obtained from the exemplar country FU Allocations.
   rows_to_get_elsewhere <- dplyr::anti_join(allocation_rows_needed, allocated_rows, by = colnames(allocation_rows_needed))
-  
-  # Look in exemplar_fu_allocation_tables for missing rows.
-  # Search until we have information for each of the rows_to_get_elsewhere.
-  n_exemplars <- ifelse(inherits(exemplar_fu_allocation_tables, "data.frame"), 1, length(exemplar_fu_allocation_tables))
-  if (n_exemplars == 1) {
+
+  # We expect exemplar_fu_allocation_tables to be a list. 
+  # If it is not a list but rather something that looks like a data frame, 
+  # wrap it in a list.
+  if (!inherits(exemplar_fu_allocation_tables, "list") & inherits(exemplar_fu_allocation_tables, "data.frame")) {
     exemplar_fu_allocation_tables <- list(exemplar_fu_allocation_tables)
   }
-  
+  n_exemplars <- length(exemplar_fu_allocation_tables)
+
+  # Look in exemplar_fu_allocation_tables for missing rows.
+  # Search until we have information for each of the rows_to_get_elsewhere.
   for (i in 1:n_exemplars) {
     if (nrow(rows_to_get_elsewhere) == 0) {
       # If we don't need to get any rows, we can stop looping now.
@@ -684,10 +687,6 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     }
     
     exemplar <- exemplar_fu_allocation_tables[[i]]
-    # Figure out the rows of allocations that are missing and, therefore, 
-    # must be obtained from the exemplar country FU Allocations.
-    # rows_to_get_elsewhere <- dplyr::anti_join(allocation_rows_needed, allocated_rows, by = colnames(allocation_rows_needed))
-
     # Make sure there is only 1 country in this exemplar.
     exemplar_country <- exemplar %>% magrittr::extract2(country) %>% unique()
     assertthat::assert_that(length(exemplar_country) == 1, 
