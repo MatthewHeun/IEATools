@@ -514,5 +514,13 @@ test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
                   Destination == IEATools::transformation_processes$main_activity_producer_electricity_plants) %>% 
     magrittr::extract2("C_source") %>% 
     expect_equal("ZAF")
+  
+  # Try again without enough information to complete the FU Allocation table.
+  # Create this situation by dropping the fu_table_World from the list of exemplars.
+  # In this situation, we cannot allocate the EIOU Electricity rows for Ghana.
+  # This attempt should fail.
+  complete_failure <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+                                                   exemplar_fu_allocation_tables = list(fu_table_ZAF), 
+                                                   tidy_specified_iea_data = tidy_specified_iea_data)
 })
 

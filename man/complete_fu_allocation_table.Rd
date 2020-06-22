@@ -61,6 +61,8 @@ Default is "C_source".}
 }
 \value{
 A completed tidy data frame containing an FU Allocation table to replace argument \code{fu_allocation_table}.
+Note that the \code{max_vals} column is absent on output.
+Also, the \code{e_dot} and \code{e_dot_perc} rows are absent on output.
 }
 \description{
 An FU (final-to-useful) Allocation table
@@ -83,5 +85,6 @@ with data taken from the first exemplar that contains the needed information.
 The \code{tidy_specified_iea_data} data frame should be obtained from a call to \code{specify_all()}.
 
 If \code{fu_allocation_table} can't be completed (because not enough information is available in
-\code{exemplar_fu_allocation_tables}), an error is emitted.
+\code{exemplar_fu_allocation_tables}), an warning is emitted
+and a data frame is returned containing rows from \code{tidy_specified_iea_data} that were not allocated.
 }
