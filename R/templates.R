@@ -655,7 +655,7 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     )
 
   # Figure out the allocations that are available from fu_allocation_table.
-  fu_allocation_data_available <- fu_allocations_available(fu_allocation_table, year_cols = year_cols, year = year, 
+  fu_allocation_data_available <- fu_allocations_available(fu_allocation_table, year = year, 
                                                            .values = .values, max_vals = max_vals, quantity = quantity, 
                                                            e_dot = e_dot, e_dot_perc = e_dot_perc, country = country, source = source)
   # fu_allocation_data_available <- fu_allocation_table %>% 
@@ -720,6 +720,8 @@ complete_fu_allocation_table <- function(fu_allocation_table,
       ) %>% 
       # Get rid of the country column, because we don't want two country columns in the rows_to_use data frame.
       dplyr::select(!country)
+    
+    # exemplar_info_available <- fu_allocations_available(exemplar, year_)
 
     # We can't join by country or source, because the exemplar data frame doesn't have those columns.
     exemplar_rows_to_use <- dplyr::semi_join(exemplar_info_available, 
@@ -754,10 +756,9 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 #' As such, it is not exported.
 #'
 #' @param .fu_allocation_table The FU Allocation table from which allocations are to be determined
-#' @param year_cols The year columns in the `fu_allocation_table`.
+#' @param max_vals The name of maximum value rows in the `fu_allocation_table`.
 #' @param year The Year column in a tidy version of the `fu_allocation_table`.
 #' @param .values The name of the values column in a tidy versino of the `fu_allocation_table`.
-#' @param max_vals The name of maximum value rows in the `fu_allocation_table`.
 #' @param quantity The name of the quantity column in the `fu_allocation_table`.
 #' @param e_dot The name of the E.dot rows in the `fu_allocation_table`.
 #' @param e_dot_perc The name of the E.dot percentage rows in the `fu_allocation_table`.
@@ -765,11 +766,14 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 #' @param source The name of the C_source column in the tidy `fu_allocation_table`.
 #'
 #' @return A data frame containing final energy consummption that has been allocated in the `fu_allocation_table`
-fu_allocations_available <- function(.fu_allocation_table, year_cols, year, .values, max_vals, quantity, e_dot, e_dot_perc, country, source) {
+fu_allocations_available <- function(.fu_allocation_table, max_vals, year, .values, 
+                                     quantity, e_dot, e_dot_perc, country, source) {
+  year_columns <- c(max_vals, year_cols(.fu_allocation_table, return_names = TRUE) %>% 
+                   as.character())
   .fu_allocation_table %>% 
     # Pivot the FU allocation table to a tidy data frame.
     # tidy_fu_allocation_table() %>% 
-    tidyr::pivot_longer(cols = year_cols, names_to = year, values_to = .values) %>% 
+    tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
     # Get rid of rows we don't want.
     dplyr::filter(
       # Rows where the year column has "Maximum.values" in it.

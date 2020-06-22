@@ -6,10 +6,9 @@
 \usage{
 fu_allocations_available(
   .fu_allocation_table,
-  year_cols,
+  max_vals,
   year,
   .values,
-  max_vals,
   quantity,
   e_dot,
   e_dot_perc,
@@ -20,13 +19,11 @@ fu_allocations_available(
 \arguments{
 \item{.fu_allocation_table}{The FU Allocation table from which allocations are to be determined}
 
-\item{year_cols}{The year columns in the \code{fu_allocation_table}.}
+\item{max_vals}{The name of maximum value rows in the \code{fu_allocation_table}.}
 
 \item{year}{The Year column in a tidy version of the \code{fu_allocation_table}.}
 
 \item{.values}{The name of the values column in a tidy versino of the \code{fu_allocation_table}.}
-
-\item{max_vals}{The name of maximum value rows in the \code{fu_allocation_table}.}
 
 \item{quantity}{The name of the quantity column in the \code{fu_allocation_table}.}
 
