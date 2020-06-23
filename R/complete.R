@@ -296,11 +296,12 @@ complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_alloc
                                   e_dot_perc = IEATools::template_cols$e_dot_perc,
                                   e_dot_machine = IEATools::template_cols$e_dot_machine,
                                   e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
-                                  eta_fu = IEATools::template_cols$eta_fu, 
+                                  eta_fu = IEATools::template_cols$eta_fu,
+                                  phi_u = IEATools::template_cols$phi_u,
                                   year = IEATools::iea_cols$year,
                                   quantity = IEATools::template_cols$quantity,
                                   maximum_values = IEATools::template_cols$maximum_values,
-                                  eta_fu_source = IEATools::template_cols$eta_fu_source,
+                                  eta_fu_phi_u_source = IEATools::template_cols$eta_fu_phi_u_source,
                                   phi_source = IEATools::template_cols$phi_source,
                                   .values = IEATools::template_cols$.values) {
   
@@ -332,18 +333,16 @@ complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_alloc
       "{year}" := as.numeric(.data[[year]])
     )
   
-  eta_fu_years <- year_cols(eta_fu_table, return_names = TRUE)
-  eta_fu_data_available <- eta_fu_table %>% 
-    dplyr::filter(.data[[quantity]] != e_dot_machine, .data[[quantity]] != e_dot_machine_perc, .data[[quantity]] == eta_fu) %>% 
-    dplyr::select(!maximum_values) %>% 
-    tidyr::pivot_longer(names_to = year, values_to = .values, eta_fu_years) %>% 
-    dplyr::filter(!is.na(.data[[.values]])) %>% 
-    # dplyr::select(!c(quantity, .values)) %>% 
-    unique() %>% 
-    dplyr::mutate(
-      "{year}" := as.numeric(.data[[year]]), 
-      "{eta_fu_source}" := .data[[country]]
-    )
+  eta_fu_data_available <- find_available_eta_fu_phi_u_info(eta_fu_table, 
+                                                            which_quantity = eta_fu, 
+                                                            quantity = IEATools::template_cols$quantity, 
+                                                            e_dot_machine = e_dot_machine, 
+                                                            e_dot_machine_perc = e_dot_machine_perc,
+                                                            maximum_values = maximum_values, 
+                                                            .values = .values, 
+                                                            year = year,
+                                                            eta_fu_phi_u_source = eta_fu_phi_u_source, 
+                                                            country = country)
   
   # Find out which eta_fu data are missing
   eta_fu_data_missing <- dplyr::anti_join(eta_fu_data_needed, eta_fu_data_available, by = colnames(eta_fu_data_needed))
@@ -371,26 +370,29 @@ complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_alloc
                             msg = paste0("Found more than one country in exemplar: ", exemplar_country))
     
     # Figure out which missing rows this exemplar can contribute 
-    exemplar_info_available <- exemplar %>% 
-      dplyr::filter(.data[[quantity]] != e_dot_machine, .data[[quantity]] != e_dot_machine_perc, .data[[quantity]] == eta_fu) %>% 
-      dplyr::select(!maximum_values) %>% 
-      tidyr::pivot_longer(names_to = year, values_to = .values, eta_fu_years) %>% 
-      dplyr::filter(!is.na(.data[[.values]])) %>% 
-      # dplyr::select(!c(quantity, .values)) %>% 
-      unique() %>% 
-      dplyr::mutate(
-        "{year}" := as.numeric(.data[[year]]), 
-        "{eta_fu_source}" := .data[[country]]
-      ) %>% 
+    exemplar_years <- year_cols(exemplar, return_names = TRUE)
+    
+    # Figure out which missing rows this exemplar can contribute 
+    exemplar_info_available <- find_available_eta_fu_phi_u_info(exemplar,
+                                                                which_quantity = eta_fu,
+                                                                quantity = IEATools::template_cols$quantity,
+                                                                e_dot_machine = e_dot_machine,
+                                                                e_dot_machine_perc = e_dot_machine_perc,
+                                                                maximum_values = maximum_values,
+                                                                .values = .values,
+                                                                year = year,
+                                                                eta_fu_phi_u_source = eta_fu_phi_u_source,
+                                                                country = country) %>%
       # Get rid of the country column, because we don't want two country columns in the rows_to_use data frame.
       dplyr::select(!country)
+    
     
     # Figure out which rows we want to use from the exemplar
     exemplar_rows_to_use <- dplyr::semi_join(exemplar_info_available, 
                                              eta_fu_data_missing, 
                                              by = colnames(eta_fu_data_missing) %>% 
                                                setdiff(country) %>% 
-                                               setdiff(eta_fu_source)) %>% 
+                                               setdiff(eta_fu_phi_u_source)) %>% 
       dplyr::mutate(
         # Add the country column
         "{country}" := country_to_complete, 
@@ -406,3 +408,38 @@ complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_alloc
   eta_fu_data_available %>% 
     tidyr::pivot_wider(names_from = year, values_from = .values)
 }
+
+
+#' Find available information from an eta_fu_table 
+#' 
+#' This is convenience function that minimizes repeated code. 
+#' Thus, it is not exported.
+#'
+#' @param eta_fu_table An efficiency table from which available data are to be obtained.
+#' @param quantity The quantity column in eta_fu_table.
+#' @param which_quantity The quantity you want to look for, usually "eta.fu" (for final-to-useful efficiency) or "phi.u" (for the useful exergy-to-energy ratio).
+#' @param e_dot_machine The row name for energy consumption of the machine.
+#' @param e_dot_machine_perc The row name for percentage of total energy consumptino by the machine.
+#' @param maximum_values The name for the Maximum.values column in eta_fu_table.
+#' @param .values The name for an internally-generated column.
+#' @param year The name of the year column.
+#' @param eta_fu_phi_u_source The name of the source column.
+#' @param country The name of the country column.
+#'
+#' @return A data frame that containing available data in the eta_fu_table.
+find_available_eta_fu_phi_u_info <- function(eta_fu_table, which_quantity, quantity, e_dot_machine, e_dot_machine_perc, 
+                                             maximum_values, .values, year, eta_fu_phi_u_source, country) {
+  eta_fu_years <- year_cols(eta_fu_table, return_names = TRUE)
+  eta_fu_table %>% 
+    dplyr::filter(.data[[quantity]] != e_dot_machine, .data[[quantity]] != e_dot_machine_perc, .data[[quantity]] == which_quantity) %>% 
+    dplyr::select(!maximum_values) %>% 
+    tidyr::pivot_longer(names_to = year, values_to = .values, eta_fu_years) %>% 
+    dplyr::filter(!is.na(.data[[.values]])) %>% 
+    unique() %>% 
+    dplyr::mutate(
+      "{year}" := as.numeric(.data[[year]]), 
+      "{eta_fu_phi_u_source}" := .data[[country]]
+    )
+}
+
+

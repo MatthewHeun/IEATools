@@ -20,10 +20,11 @@ complete_eta_fu_table(
   e_dot_machine = IEATools::template_cols$e_dot_machine,
   e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
   eta_fu = IEATools::template_cols$eta_fu,
+  phi_u = IEATools::template_cols$phi_u,
   year = IEATools::iea_cols$year,
   quantity = IEATools::template_cols$quantity,
   maximum_values = IEATools::template_cols$maximum_values,
-  eta_fu_source = IEATools::template_cols$eta_fu_source,
+  eta_fu_phi_u_source = IEATools::template_cols$eta_fu_phi_u_source,
   phi_source = IEATools::template_cols$phi_source,
   .values = IEATools::template_cols$.values
 )
