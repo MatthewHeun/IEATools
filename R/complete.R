@@ -263,24 +263,38 @@ find_allocated_rows <- function(fu_allocation_table, quantity, machine, eu_produ
 }
 
 
-#' Title
+#' Complete an FU Efficiency table
+#' 
+#' An FU (final-to-useful) Efficiency table 
+#' tells the efficiency with which final energy carriers are converted to useful energy carriers by final-to-useful machines.
+#' It also provides the exergy-to-energy ratio for the useful product (phi.u).
+#' A template for an FU Efficiency table can be created with 
+#' `eta_fu_template()`.
+#' If the analyst does not know some FU efficiencies or exergy-to-energy efficiencies for a given country, 
+#' this function can be used to build a complete FU Efficiency table
+#' by supplying efficiencies and exergy-to-energy ratios from any number of exemplar countries.
+#' 
+#' `eta_fu_table` is the FU Efficiency table to be completed.
+#' Any missing information is obtained from the FU Efficiency tables of the exemplar countries,
+#' provided in the `exemplar_eta_fu_tables` argument.
+#' Each exemplar table is interrogated in order, 
+#' with data taken from the first exemplar that contains the needed information.
+#' 
+#' `fu_allocation_table` supplies information about which data are needed for a complete FU Efficiency table.
+#' The `fu_allocation_table` data frame should be obtained from a call to `load_fu_allocation_data()`. 
+#' 
+#' If `eta_fu_table` can't be completed (because not enough information is available in 
+#' `exemplar_eta_fu_tables`), an warning is emitted
+#' and a data frame is returned containing rows from `fu_allocation_table` that were not found.
 #'
-#' @param eta_fu_table 
-#' @param exemplar_eta_fu_tables 
-#' @param fu_allocation_table 
-#' @param country 
-#' @param method 
-#' @param energy_type 
-#' @param last_stage 
-#' @param unit 
-#' @param machine 
-#' @param eu_product 
-#' @param e_dot 
-#' @param e_dot_perc 
-#' @param year 
-#' @param .values 
+#' @param eta_fu_table The efficiency table to be completed, possibly having missing incomplete rows.
+#' @param exemplar_eta_fu_tables A list of efficiency tables, each queried in turn for information needed by `eta_fu_table`.
+#' @param fu_allocation_table An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
+#' @param country,method,energy_type,last_stage,e_dot,unit,year See `IEATools::iea_cols`.
+#' @param machine,eu_product,e_dot_perc,e_dot_machine,e_dot_machine_perc,eta_fu,phi_u,quantity,maximum_values,eta_fu_phi_u_source,.values See `IEATools::template_cols`.
 #'
-#' @return
+#' @return A version of `eta_fu_table` with missing values filled from `exemplar_eta_fu_tables`.
+#' 
 #' @export
 #'
 #' @examples
@@ -289,20 +303,19 @@ complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_alloc
                                   method = IEATools::iea_cols$method, 
                                   energy_type = IEATools::iea_cols$energy_type,
                                   last_stage = IEATools::iea_cols$last_stage,
+                                  e_dot = IEATools::iea_cols$e_dot,
                                   unit = IEATools::iea_cols$unit,
+                                  year = IEATools::iea_cols$year,
                                   machine = IEATools::template_cols$machine, 
                                   eu_product = IEATools::template_cols$eu_product, 
-                                  e_dot = IEATools::iea_cols$e_dot,
                                   e_dot_perc = IEATools::template_cols$e_dot_perc,
                                   e_dot_machine = IEATools::template_cols$e_dot_machine,
                                   e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
                                   eta_fu = IEATools::template_cols$eta_fu,
                                   phi_u = IEATools::template_cols$phi_u,
-                                  year = IEATools::iea_cols$year,
                                   quantity = IEATools::template_cols$quantity,
                                   maximum_values = IEATools::template_cols$maximum_values,
                                   eta_fu_phi_u_source = IEATools::template_cols$eta_fu_phi_u_source,
-                                  phi_source = IEATools::template_cols$phi_source,
                                   .values = IEATools::template_cols$.values) {
   
   # eta_fu_table should have only 1 country in it
@@ -333,16 +346,11 @@ complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_alloc
       "{year}" := as.numeric(.data[[year]])
     )
   
-  eta_fu_data_available <- find_available_eta_fu_phi_u_info(eta_fu_table, 
-                                                            which_quantity = eta_fu, 
-                                                            quantity = IEATools::template_cols$quantity, 
-                                                            e_dot_machine = e_dot_machine, 
-                                                            e_dot_machine_perc = e_dot_machine_perc,
-                                                            maximum_values = maximum_values, 
-                                                            .values = .values, 
-                                                            year = year,
-                                                            eta_fu_phi_u_source = eta_fu_phi_u_source, 
-                                                            country = country)
+  eta_fu_data_available <- 
+    find_available_eta_fu_phi_u_info(eta_fu_table, which_quantity = eta_fu, quantity = IEATools::template_cols$quantity, 
+                                     e_dot_machine = e_dot_machine, e_dot_machine_perc = e_dot_machine_perc,
+                                     maximum_values = maximum_values, .values = .values, year = year,
+                                     eta_fu_phi_u_source = eta_fu_phi_u_source, country = country)
   
   # Find out which eta_fu data are missing
   eta_fu_data_missing <- dplyr::anti_join(eta_fu_data_needed, eta_fu_data_available, by = colnames(eta_fu_data_needed))
@@ -370,26 +378,19 @@ complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_alloc
                             msg = paste0("Found more than one country in exemplar: ", exemplar_country))
     
     # Figure out which missing rows this exemplar can contribute 
-    exemplar_years <- year_cols(exemplar, return_names = TRUE)
+    # exemplar_years <- year_cols(exemplar, return_names = TRUE)
     
     # Figure out which missing rows this exemplar can contribute 
-    exemplar_info_available <- find_available_eta_fu_phi_u_info(exemplar,
-                                                                which_quantity = eta_fu,
-                                                                quantity = IEATools::template_cols$quantity,
-                                                                e_dot_machine = e_dot_machine,
-                                                                e_dot_machine_perc = e_dot_machine_perc,
-                                                                maximum_values = maximum_values,
-                                                                .values = .values,
-                                                                year = year,
-                                                                eta_fu_phi_u_source = eta_fu_phi_u_source,
-                                                                country = country) %>%
+    exemplar_info_available <- 
+      find_available_eta_fu_phi_u_info(exemplar, which_quantity = eta_fu, quantity = quantity, e_dot_machine = e_dot_machine,
+                                       e_dot_machine_perc = e_dot_machine_perc, maximum_values = maximum_values,
+                                       .values = .values, year = year, eta_fu_phi_u_source = eta_fu_phi_u_source,
+                                       country = country) %>%
       # Get rid of the country column, because we don't want two country columns in the rows_to_use data frame.
       dplyr::select(!country)
     
-    
     # Figure out which rows we want to use from the exemplar
-    exemplar_rows_to_use <- dplyr::semi_join(exemplar_info_available, 
-                                             eta_fu_data_missing, 
+    exemplar_rows_to_use <- dplyr::semi_join(exemplar_info_available, eta_fu_data_missing, 
                                              by = colnames(eta_fu_data_missing) %>% 
                                                setdiff(country) %>% 
                                                setdiff(eta_fu_phi_u_source)) %>% 
@@ -403,7 +404,6 @@ complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_alloc
     # Recalculate what we're missing.
     eta_fu_data_missing <- dplyr::anti_join(eta_fu_data_needed, eta_fu_data_available, by = colnames(eta_fu_data_needed))
   }
-    
   
   eta_fu_data_available %>% 
     tidyr::pivot_wider(names_from = year, values_from = .values)
