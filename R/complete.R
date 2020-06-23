@@ -261,3 +261,84 @@ find_allocated_rows <- function(fu_allocation_table, quantity, machine, eu_produ
     dplyr::select(!c(quantity, machine, eu_product, .values)) %>% 
     unique()
 }
+
+
+#' Title
+#'
+#' @param eta_fu_table 
+#' @param exemplar_eta_fu_tables 
+#' @param fu_allocation_table 
+#' @param country 
+#' @param method 
+#' @param energy_type 
+#' @param last_stage 
+#' @param unit 
+#' @param machine 
+#' @param eu_product 
+#' @param e_dot 
+#' @param e_dot_perc 
+#' @param year 
+#' @param .values 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_allocation_table, 
+                                  country = IEATools::iea_cols$country,
+                                  method = IEATools::iea_cols$method, 
+                                  energy_type = IEATools::iea_cols$energy_type,
+                                  last_stage = IEATools::iea_cols$last_stage,
+                                  unit = IEATools::iea_cols$unit,
+                                  machine = IEATools::template_cols$machine, 
+                                  eu_product = IEATools::template_cols$eu_product, 
+                                  e_dot = IEATools::iea_cols$e_dot,
+                                  e_dot_perc = IEATools::template_cols$e_dot_perc,
+                                  e_dot_machine = IEATools::template_cols$e_dot_machine,
+                                  e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
+                                  eta_fu = IEATools::template_cols$eta_fu, 
+                                  year = IEATools::iea_cols$year,
+                                  quantity = IEATools::template_cols$quantity,
+                                  maximum_values = IEATools::template_cols$maximum_values,
+                                  .values = IEATools::template_cols$.values) {
+  
+  # eta_fu_table should have only 1 country in it
+  country_to_complete <- eta_fu_table %>% 
+    magrittr::extract2(country) %>% 
+    unique()
+  assertthat::assert_that(length(country_to_complete) == 1, 
+                          msg = glue::glue("Found more than one country to complete in complete_fu_allocation_table(): {glue::glue_collapse(country_to_complete, sep = ', ', last = ' and ')}"))
+  
+  # Make sure the country of the eta_ful_table matches the fu_allocation_table
+  assertthat::assert_that(fu_allocation_table %>% magrittr::extract2(country) %>% unique() == country_to_complete, 
+                          msg = paste0("The country of eta_fu_table (", country_to_complete, 
+                                       ") is not the same as the country in the fu_allcoation_table (", fu_allocation_table, 
+                                       "). They must match."))
+
+  # Extract machines and products for this country from the fu_allocation_table
+  # NEED TO MAKE IT TIDY!
+  fu_allocation_years <- year_cols(fu_allocation_table, return_names = TRUE)
+  eta_fu_data_needed <- fu_allocation_table %>% 
+    dplyr::filter(.data[[country]] == country_to_complete) %>% 
+    dplyr::filter(.data[[quantity]] != e_dot & .data[[quantity]] != e_dot_perc) %>% 
+    dplyr::select(!maximum_values) %>% 
+    tidyr::pivot_longer(names_to = year, values_to = .values, fu_allocation_years) %>% 
+    dplyr::filter(!is.na(.values)) %>% 
+    dplyr::select(country, method, energy_type, last_stage, unit, machine, eu_product, year) %>% 
+    unique()
+  
+  eta_fu_years <- year_cols(eta_fu_table, return_names = TRUE)
+  eta_fu_data_provided <- eta_fu_table %>% 
+    dplyr::filter(.data[[quantity]] != e_dot_machine, .data[[quantity]] != e_dot_machine_perc, .data[[quantity]] == eta_fu) %>% 
+    dplyr::select(!maximum_values) %>% 
+    tidyr::pivot_longer(names_to = year, values_to = .values, eta_fu_years) %>% 
+    dplyr::filter(!is.na(.data[[.values]])) %>% 
+    dplyr::select(!c(quantity, .values)) %>% 
+    unique()
+  
+  # Find out which eta_fu data are missing
+  eta_fu_data_missing <- dplyr::anti_join(eta_fu_data_needed, eta_fu_data_provided, by = colnames(eta_fu_data_needed))
+  
+  # phi_u_data_available <- 
+    
+}
