@@ -300,6 +300,8 @@ complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_alloc
                                   year = IEATools::iea_cols$year,
                                   quantity = IEATools::template_cols$quantity,
                                   maximum_values = IEATools::template_cols$maximum_values,
+                                  eta_fu_source = IEATools::template_cols$eta_fu_source,
+                                  phi_source = IEATools::template_cols$phi_source,
                                   .values = IEATools::template_cols$.values) {
   
   # eta_fu_table should have only 1 country in it
@@ -325,20 +327,82 @@ complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_alloc
     tidyr::pivot_longer(names_to = year, values_to = .values, fu_allocation_years) %>% 
     dplyr::filter(!is.na(.values)) %>% 
     dplyr::select(country, method, energy_type, last_stage, unit, machine, eu_product, year) %>% 
-    unique()
+    unique() %>% 
+    dplyr::mutate(
+      "{year}" := as.numeric(.data[[year]])
+    )
   
   eta_fu_years <- year_cols(eta_fu_table, return_names = TRUE)
-  eta_fu_data_provided <- eta_fu_table %>% 
+  eta_fu_data_available <- eta_fu_table %>% 
     dplyr::filter(.data[[quantity]] != e_dot_machine, .data[[quantity]] != e_dot_machine_perc, .data[[quantity]] == eta_fu) %>% 
     dplyr::select(!maximum_values) %>% 
     tidyr::pivot_longer(names_to = year, values_to = .values, eta_fu_years) %>% 
     dplyr::filter(!is.na(.data[[.values]])) %>% 
-    dplyr::select(!c(quantity, .values)) %>% 
-    unique()
+    # dplyr::select(!c(quantity, .values)) %>% 
+    unique() %>% 
+    dplyr::mutate(
+      "{year}" := as.numeric(.data[[year]]), 
+      "{eta_fu_source}" := .data[[country]]
+    )
   
   # Find out which eta_fu data are missing
-  eta_fu_data_missing <- dplyr::anti_join(eta_fu_data_needed, eta_fu_data_provided, by = colnames(eta_fu_data_needed))
+  eta_fu_data_missing <- dplyr::anti_join(eta_fu_data_needed, eta_fu_data_available, by = colnames(eta_fu_data_needed))
   
-  # phi_u_data_available <- 
+  # We expect exemplar_eta_fu_tables to be a list. 
+  # If it is not a list but rather something that looks like a data frame, 
+  # wrap it in a list.
+  if (!inherits(exemplar_eta_fu_tables, "list") & inherits(exemplar_eta_fu_tables, "data.frame")) {
+    exemplar_eta_fu_tables <- list(exemplar_eta_fu_tables)
+  }
+  n_exemplars <- length(exemplar_eta_fu_tables)
+  
+  # Look in exemplar_eta_fu_tables for missing rows.
+  # Search until we have information for each of the eta_fu_data_missing rows.
+  for (i in 1:n_exemplars) {
+    if (nrow(eta_fu_data_missing) == 0) {
+      # If we don't need to get any rows, we can stop looping now.
+      break
+    }
+   
+    exemplar <- exemplar_eta_fu_tables[[i]]
+    # Make sure there is only 1 country in this exemplar.
+    exemplar_country <- exemplar %>% magrittr::extract2(country) %>% unique()
+    assertthat::assert_that(length(exemplar_country) == 1, 
+                            msg = paste0("Found more than one country in exemplar: ", exemplar_country))
     
+    # Figure out which missing rows this exemplar can contribute 
+    exemplar_info_available <- exemplar %>% 
+      dplyr::filter(.data[[quantity]] != e_dot_machine, .data[[quantity]] != e_dot_machine_perc, .data[[quantity]] == eta_fu) %>% 
+      dplyr::select(!maximum_values) %>% 
+      tidyr::pivot_longer(names_to = year, values_to = .values, eta_fu_years) %>% 
+      dplyr::filter(!is.na(.data[[.values]])) %>% 
+      # dplyr::select(!c(quantity, .values)) %>% 
+      unique() %>% 
+      dplyr::mutate(
+        "{year}" := as.numeric(.data[[year]]), 
+        "{eta_fu_source}" := .data[[country]]
+      ) %>% 
+      # Get rid of the country column, because we don't want two country columns in the rows_to_use data frame.
+      dplyr::select(!country)
+    
+    # Figure out which rows we want to use from the exemplar
+    exemplar_rows_to_use <- dplyr::semi_join(exemplar_info_available, 
+                                             eta_fu_data_missing, 
+                                             by = colnames(eta_fu_data_missing) %>% 
+                                               setdiff(country) %>% 
+                                               setdiff(eta_fu_source)) %>% 
+      dplyr::mutate(
+        # Add the country column
+        "{country}" := country_to_complete, 
+      )
+    # Join the exemplar_rows_to_use to fu_allocation_data_available
+    eta_fu_data_available <- eta_fu_data_available %>% 
+      dplyr::bind_rows(exemplar_rows_to_use)
+    # Recalculate what we're missing.
+    eta_fu_data_missing <- dplyr::anti_join(eta_fu_data_needed, eta_fu_data_available, by = colnames(eta_fu_data_needed))
+  }
+    
+  
+  eta_fu_data_available %>% 
+    tidyr::pivot_wider(names_from = year, values_from = .values)
 }

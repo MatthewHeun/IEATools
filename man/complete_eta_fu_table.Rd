@@ -23,6 +23,8 @@ complete_eta_fu_table(
   year = IEATools::iea_cols$year,
   quantity = IEATools::template_cols$quantity,
   maximum_values = IEATools::template_cols$maximum_values,
+  eta_fu_source = IEATools::template_cols$eta_fu_source,
+  phi_source = IEATools::template_cols$phi_source,
   .values = IEATools::template_cols$.values
 )
 }

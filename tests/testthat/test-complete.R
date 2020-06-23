@@ -248,9 +248,13 @@ test_that("complete_eta_fu_table works as expected", {
   
   # Check that we got Automobiles from ZAF
   completed %>% 
-    dplyr::filter(IEATools::template_cols$machine == "Automobiles") %>% 
+    dplyr::filter(.data[[IEATools::template_cols$machine]] == "Automobiles") %>% 
     nrow() %>% 
-    expect_equal(2)
+    expect_equal(1)
+  completed %>% 
+    dplyr::filter(.data[[IEATools::template_cols$machine]] == "Irons") %>% 
+    nrow() %>% 
+    expect_equal(1)
 })
 
 

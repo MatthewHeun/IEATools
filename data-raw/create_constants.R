@@ -134,7 +134,9 @@ template_cols <- list(ef_product = "Ef.product",
                       e_dot_machine_perc = "E.dot_machine [%]", 
                       eta_fu = "eta.fu",
                       phi_u = "phi.u", 
-                      c_source = "C_source", 
+                      c_source = "C.source", 
+                      eta_fu_source = "eta.fu.source",
+                      phi_source = "phi.source",
                       .values = ".values")
 usethis::use_data(template_cols, overwrite = TRUE)
 
