@@ -34,7 +34,7 @@
 #' @param country,ledger_side,flow,product,e_dot,year,flow_aggregation_point See `IEATools::ieacols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param eiou See `IEATools::tfc_compar_flows`.
-#' @param e_dot_perc,destination,machine,eu_product,ef_product,max_vals,quantity See `IEATools::template_cols`.
+#' @param e_dot_perc,destination,machine,eu_product,ef_product,maximum_values,quantity See `IEATools::template_cols`.
 #' @param c_source The name of a column added to output that describes the source of the allocation values (the C values). 
 #'               Default is "C_source".
 #' @param .values The name of a values column created internally. Default is "values".
