@@ -9,13 +9,9 @@ complete_fu_allocation_table(
   exemplar_fu_allocation_tables,
   tidy_specified_iea_data,
   country = IEATools::iea_cols$country,
-  method = IEATools::iea_cols$method,
-  energy_type = IEATools::iea_cols$energy_type,
-  last_stage = IEATools::iea_cols$last_stage,
   ledger_side = IEATools::iea_cols$ledger_side,
   flow = IEATools::iea_cols$flow,
   product = IEATools::iea_cols$product,
-  unit = IEATools::iea_cols$unit,
   e_dot = IEATools::iea_cols$e_dot,
   year = IEATools::iea_cols$year,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -27,7 +23,7 @@ complete_fu_allocation_table(
   machine = IEATools::template_cols$machine,
   eu_product = IEATools::template_cols$eu_product,
   ef_product = IEATools::template_cols$ef_product,
-  max_vals = IEATools::template_cols$maximum_values,
+  maximum_values = IEATools::template_cols$maximum_values,
   quantity = IEATools::template_cols$quantity,
   c_source = IEATools::template_cols$c_source,
   .values = IEATools::template_cols$.values
@@ -46,7 +42,7 @@ If more than one country is found, an error occurs.}
 
 \item{tidy_specified_iea_data}{A data frame of specified IEA data in tidy format.}
 
-\item{country, method, energy_type, last_stage, ledger_side, flow, product, unit, e_dot, year, flow_aggregation_point}{See \code{IEATools::ieacols}.}
+\item{country, ledger_side, flow, product, e_dot, year, flow_aggregation_point}{See \code{IEATools::ieacols}.}
 
 \item{supply, consumption}{See \code{IEATools::ledger_sides}.}
 
