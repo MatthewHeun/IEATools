@@ -275,7 +275,7 @@ complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_alloc
   assertthat::assert_that(length(country_to_complete) == 1, 
                           msg = glue::glue("Found more than one country to complete in complete_fu_allocation_table(): {glue::glue_collapse(country_to_complete, sep = ', ', last = ' and ')}"))
   
-  # Make sure the country of the eta_ful_table matches the fu_allocation_table
+  # Make sure the country of the eta_fu_table matches the fu_allocation_table
   assertthat::assert_that(fu_allocation_table %>% magrittr::extract2(country) %>% unique() == country_to_complete, 
                           msg = paste0("The country of eta_fu_table (", country_to_complete, 
                                        ") is not the same as the country in the fu_allcoation_table (", fu_allocation_table, 
