@@ -256,16 +256,18 @@ test_that("complete_eta_fu_table works as expected", {
                   .data[[IEATools::template_cols$eta_fu_phi_u_source]] == "ZAF", 
                   .data[[IEATools::template_cols$quantity]] == IEATools::template_cols$eta_fu) %>% 
     nrow() %>% 
-    expect_equal(1)
+    expect_equal(2)
   completed %>% 
     dplyr::filter(.data[[IEATools::template_cols$machine]] == "Automobiles", 
-                  .data[[IEATools::template_cols$quantity]] == IEATools::template_cols$eta_fu) %>% 
-    magrittr::extract2("1971") %>% 
+                  .data[[IEATools::template_cols$quantity]] == IEATools::template_cols$eta_fu, 
+                  .data[[IEATools::iea_cols$year]] == 1971) %>% 
+    magrittr::extract2(IEATools::template_cols$.values) %>% 
     expect_equal(0.3)
   completed %>% 
     dplyr::filter(.data[[IEATools::template_cols$machine]] == "Automobiles", 
-                  .data[[IEATools::template_cols$quantity]] == IEATools::template_cols$eta_fu) %>% 
-    magrittr::extract2("2000") %>% 
+                  .data[[IEATools::template_cols$quantity]] == IEATools::template_cols$eta_fu, 
+                  .data[[IEATools::iea_cols$year]] == 2000) %>% 
+    magrittr::extract2(IEATools::template_cols$.values) %>% 
     expect_equal(0.31)
   
   # Check that we got Irons from World
@@ -274,16 +276,18 @@ test_that("complete_eta_fu_table works as expected", {
                   .data[[IEATools::template_cols$eta_fu_phi_u_source]] == "World", 
                   .data[[IEATools::template_cols$quantity]] == IEATools::template_cols$eta_fu) %>% 
     nrow() %>% 
-    expect_equal(1)
+    expect_equal(2)
   completed %>% 
     dplyr::filter(.data[[IEATools::template_cols$machine]] == "Irons", 
-                  .data[[IEATools::template_cols$quantity]] == IEATools::template_cols$eta_fu) %>% 
-    magrittr::extract2("1971") %>% 
+                  .data[[IEATools::template_cols$quantity]] == IEATools::template_cols$eta_fu, 
+                  .data[[IEATools::iea_cols$year]] == 1971) %>% 
+    magrittr::extract2(IEATools::template_cols$.values) %>% 
     expect_equal(0.3)
   completed %>% 
     dplyr::filter(.data[[IEATools::template_cols$machine]] == "Irons", 
-                  .data[[IEATools::template_cols$quantity]] == IEATools::template_cols$eta_fu) %>% 
-    magrittr::extract2("2000") %>% 
+                  .data[[IEATools::template_cols$quantity]] == IEATools::template_cols$eta_fu, 
+                  .data[[IEATools::iea_cols$year]] == 2000) %>% 
+    magrittr::extract2(IEATools::template_cols$.values) %>% 
     expect_equal(0.35)
   
   # Try using two eta_fu_table_ZAF's as the exemplars. 
@@ -296,12 +300,12 @@ test_that("complete_eta_fu_table works as expected", {
     dplyr::filter(.data[[IEATools::template_cols$eta_fu_phi_u_source]] == "ZAF", 
                   .data[[IEATools::template_cols$quantity]] == IEATools::template_cols$eta_fu) %>% 
     nrow() %>% 
-    expect_equal(2)
+    expect_equal(4)
   completed2 %>% 
     dplyr::filter(.data[[IEATools::template_cols$eta_fu_phi_u_source]] == "ZAF", 
                   .data[[IEATools::template_cols$quantity]] == IEATools::template_cols$eta_fu) %>% 
     magrittr::extract2(IEATools::template_cols$machine) %>% 
-    expect_equal(c("Automobiles", "Irons"))
+    expect_equal(c("Automobiles", "Automobiles", "Irons", "Irons"))
     
 })
 

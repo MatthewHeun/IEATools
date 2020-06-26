@@ -403,9 +403,7 @@ complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_alloc
     eta_fu_data_missing <- dplyr::anti_join(eta_fu_data_needed, eta_fu_data_available, by = colnames(eta_fu_data_needed))
   }
   
-  # return(eta_fu_data_available)
-  eta_fu_data_available %>% 
-    tidyr::pivot_wider(names_from = year, values_from = .values)
+  return(eta_fu_data_available)
 }
 
 
