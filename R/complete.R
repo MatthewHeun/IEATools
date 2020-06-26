@@ -110,36 +110,49 @@ complete_fu_allocation_table <- function(fu_allocation_table,
   assertthat::assert_that(length(country_to_complete) == 1, 
                           msg = glue::glue("Found more than one country to complete in complete_fu_allocation_table(): {glue::glue_collapse(country_to_complete, sep = ', ', last = ' and ')}"))
   
-  # Figure out the year columns in the fu_allocation_table
-  year_cols <- c(max_vals, year_cols(fu_allocation_table, return_names = TRUE) %>% as.character())
+  # Figure out the metadata columns in the fu_allocation_table
+  year_columns <- year_cols(fu_allocation_table, return_names = TRUE) %>% as.character()
+  meta_cols <- colnames(fu_allocation_table) %>% 
+    setdiff(c(quantity, max_vals, year_columns))
+  
+  # Trim to essential columns and rows and make tidy.
+  fu_allocation_table <- fu_allocation_table %>% 
+    # Eliminate e_dot and e_dot_perc rows
+    dplyr::filter(!.data[[quantity]] %in% c(e_dot, e_dot_perc)) %>% 
+    # Eliminate Maximum.values column
+    dplyr::select(!max_vals) %>% 
+    # Make tidy.
+    tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
+    dplyr::filter(!is.na(.data[[.values]])) %>% 
+    dplyr::mutate(
+      "{year}" := as.numeric(.data[[year]])
+    )
   
   # Get all the IEA data for these countries
-  country_iea_data <- tidy_specified_iea_data %>% 
-    dplyr::filter(.data[[country]] == country_to_complete)
-  # Figure out the rows for which allocations are needed, based on the IEA data.
-  allocation_rows_needed <- country_iea_data %>% 
+  allocation_rows_needed <- tidy_specified_iea_data %>% 
+    # Figure out the rows for which allocations are needed, based on the IEA data.
+    dplyr::filter(.data[[country]] == country_to_complete) %>% 
     # Only need rows where we actually have energy to be allocated.
     dplyr::filter(e_dot != 0 & !is.na(e_dot)) %>% 
     # Only need rows that indicate final consumption (on the consumption side of the ledger) or
     # EIOU (on the supply side of the ledger).
     dplyr::filter(.data[[ledger_side]] == consumption | (.data[[ledger_side]] == supply & .data[[flow_aggregation_point]] == eiou)) %>% 
     # Keep only the columns of interest to the FU Allocation process
-    dplyr::select(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, unit, product, flow, year) %>% 
+    dplyr::select(dplyr::any_of(c(meta_cols, year, product, flow))) %>% 
+    # dplyr::select(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, unit, product, flow, year) %>% 
     # Rename the flow column to be "destination" to match the corresponding column in the FU Analysis tables.
     dplyr::rename(
       "{destination}" := .data[[flow]], 
       "{ef_product}" := .data[[product]]
     )
   
-  # Figure out the allocations that are available from fu_allocation_table.
-  fu_allocation_data_available <- fu_allocations_available(fu_allocation_table, year = year, 
-                                                           .values = .values, max_vals = max_vals, quantity = quantity, 
-                                                           e_dot = e_dot, e_dot_perc = e_dot_perc, country = country, c_source = c_source)
-  
   # allocated_rows contains the rows of final energy consumption (from the IEA data) that have already been allocated.
   # We don't need to pull data from an exemplar for these rows.
-  allocated_rows <- find_allocated_rows(fu_allocation_data_available, quantity, machine, eu_product, .values)
-  
+  allocated_rows <- fu_allocation_table %>% 
+    # Now keep only the columns of interest to us.
+    dplyr::select(!c(quantity, machine, eu_product, .values)) %>% 
+    unique()
+
   # Figure out the rows of allocations that are missing and, therefore, 
   # must be obtained from the exemplar country FU Allocations.
   rows_to_get_elsewhere <- dplyr::anti_join(allocation_rows_needed, allocated_rows, by = colnames(allocation_rows_needed))
@@ -166,10 +179,19 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     assertthat::assert_that(length(exemplar_country) == 1, 
                             msg = paste0("Found more than one country in exemplar: ", exemplar_country))
     
-    # Figure out which missing rows this exemplar can contribute 
-    exemplar_info_available <- fu_allocations_available(exemplar, year = year, 
-                                                        .values = .values, max_vals = max_vals, quantity = quantity, 
-                                                        e_dot = e_dot, e_dot_perc = e_dot_perc, country = country, c_source = c_source) %>% 
+    exemplar_year_columns <- year_cols(exemplar, return_names = TRUE) %>% as.character()
+    exemplar_info_available <- exemplar %>% 
+      # Eliminate e_dot and e_dot_perc rows
+      dplyr::filter(!.data[[quantity]] %in% c(e_dot, e_dot_perc)) %>% 
+      # Eliminate Maximum.values column
+      dplyr::select(!max_vals) %>% 
+      # Make tidy.
+      tidyr::pivot_longer(cols = exemplar_year_columns, names_to = year, values_to = .values) %>% 
+      dplyr::filter(!is.na(.data[[.values]])) %>% 
+      dplyr::mutate(
+        "{year}" := as.numeric(.data[[year]]), 
+        "{c_source}" := .data[[country]]
+      ) %>% 
       # Get rid of the country column, because we don't want two country columns in the rows_to_use data frame.
       dplyr::select(!country)
     
@@ -184,9 +206,12 @@ complete_fu_allocation_table <- function(fu_allocation_table,
         "{country}" := country_to_complete, 
       )
     # Join the exemplar_rows_to_use to fu_allocation_data_available
-    fu_allocation_data_available <- fu_allocation_data_available %>% 
+    fu_allocation_table <- fu_allocation_table %>% 
       dplyr::bind_rows(exemplar_rows_to_use)
-    allocated_rows <- find_allocated_rows(fu_allocation_data_available, quantity, machine, eu_product, .values)
+    allocated_rows <- fu_allocation_table %>% 
+      # Now keep only the columns of interest to us.
+      dplyr::select(!c(quantity, machine, eu_product, .values)) %>% 
+      unique()
     rows_to_get_elsewhere <- dplyr::anti_join(allocation_rows_needed, allocated_rows, by = colnames(allocation_rows_needed))
   } # End of big for loop.
   
@@ -198,66 +223,7 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     return(rows_to_get_elsewhere)
   }
   
-  return(fu_allocation_data_available)
-}
-
-
-#' Determine which final energy uses are covered in an FU Allocation table
-#' 
-#' This is convenience function that reduces duplicated code in `complete_fu_allocation_table()`.
-#' As such, it is not exported.
-#'
-#' @param .fu_allocation_table The FU Allocation table from which allocations are to be determined
-#' @param max_vals The name of maximum value rows in the `fu_allocation_table`.
-#' @param year The Year column in a tidy version of the `fu_allocation_table`.
-#' @param .values The name of the values column in a tidy versino of the `fu_allocation_table`.
-#' @param quantity The name of the quantity column in the `fu_allocation_table`.
-#' @param e_dot The name of the E.dot rows in the `fu_allocation_table`.
-#' @param e_dot_perc The name of the E.dot percentage rows in the `fu_allocation_table`.
-#' @param country The name of the Country column in the `fu_allocation_table`.
-#' @param c_source The name of the C_source column in the tidy `fu_allocation_table`.
-#'
-#' @return A data frame containing final energy consumption that has been allocated in the `fu_allocation_table`
-fu_allocations_available <- function(.fu_allocation_table, max_vals, year, .values, 
-                                     quantity, e_dot, e_dot_perc, country, c_source) {
-  year_columns <- c(max_vals, year_cols(.fu_allocation_table, return_names = TRUE) %>% 
-                      as.character())
-  .fu_allocation_table %>% 
-    # Pivot the FU allocation table to a tidy data frame.
-    # tidy_fu_allocation_table() %>% 
-    tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
-    # Get rid of rows we don't want.
-    dplyr::filter(
-      # Rows where the year column has "Maximum.values" in it.
-      .data[[year]] != max_vals, 
-      # Rows where the value column has NA are rows where we don't have allocation data.
-      !is.na(.data[[.values]]), 
-      # Rows where quantity is E.dot or E.dot [%] aren't allocation rows
-      !.data[[quantity]] %in% c(e_dot, e_dot_perc)
-    ) %>% 
-    dplyr::mutate(
-      "{year}" := as.numeric(.data[[year]]), 
-      "{c_source}" := .data[[country]]
-    )
-}
-
-#' Find rows of final energy consumption already allocated to final-to-useful machines.
-#' 
-#' This is convenience function that reduces duplicated code in `complete_fu_allocation_table()`.
-#' As such, it is not exported.
-#'
-#' @param fu_allocation_table A tidy final-to-useful allocation table.
-#' @param quantity The name of the Quantity column.
-#' @param machine The name of the Machine column.
-#' @param eu_product The name of the Eu.product column.
-#' @param .values The name of the .valuse column.
-#'
-#' @return A data frame containing unique rows of final energy that are allocated in `fu_allocation_table`.
-find_allocated_rows <- function(fu_allocation_table, quantity, machine, eu_product, .values) {
-  fu_allocation_table %>% 
-    # Now keep only the columns of interest to us.
-    dplyr::select(!c(quantity, machine, eu_product, .values)) %>% 
-    unique()
+  return(fu_allocation_table)
 }
 
 
