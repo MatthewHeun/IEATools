@@ -31,7 +31,7 @@
 #'                                      Note that each exemplar table must contain data for a single country only. 
 #'                                      If more than one country is found, an error occurs.
 #' @param tidy_specified_iea_data A data frame of specified IEA data in tidy format.
-#' @param country,method,energy_type,last_stage,ledger_side,flow,product,unit,e_dot,year,flow_aggregation_point See `IEATools::ieacols`.
+#' @param country,ledger_side,flow,product,e_dot,year,flow_aggregation_point See `IEATools::ieacols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param eiou See `IEATools::tfc_compar_flows`.
 #' @param e_dot_perc,destination,machine,eu_product,ef_product,max_vals,quantity See `IEATools::template_cols`.
@@ -81,13 +81,9 @@ complete_fu_allocation_table <- function(fu_allocation_table,
                                          exemplar_fu_allocation_tables, 
                                          tidy_specified_iea_data, 
                                          country = IEATools::iea_cols$country, 
-                                         method = IEATools::iea_cols$method,
-                                         energy_type = IEATools::iea_cols$energy_type,
-                                         last_stage = IEATools::iea_cols$last_stage,
                                          ledger_side = IEATools::iea_cols$ledger_side,
                                          flow = IEATools::iea_cols$flow,
                                          product = IEATools::iea_cols$product,
-                                         unit = IEATools::iea_cols$unit,
                                          e_dot = IEATools::iea_cols$e_dot, 
                                          year = IEATools::iea_cols$year, 
                                          flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point, 
@@ -99,7 +95,7 @@ complete_fu_allocation_table <- function(fu_allocation_table,
                                          machine = IEATools::template_cols$machine,
                                          eu_product = IEATools::template_cols$eu_product,
                                          ef_product = IEATools::template_cols$ef_product,
-                                         max_vals = IEATools::template_cols$maximum_values, 
+                                         maximum_values = IEATools::template_cols$maximum_values, 
                                          quantity = IEATools::template_cols$quantity,
                                          c_source = IEATools::template_cols$c_source,
                                          .values = IEATools::template_cols$.values) {
@@ -113,7 +109,7 @@ complete_fu_allocation_table <- function(fu_allocation_table,
   # Figure out the metadata columns in the fu_allocation_table
   year_columns <- year_cols(fu_allocation_table, return_names = TRUE) %>% as.character()
   meta_cols <- colnames(fu_allocation_table) %>% 
-    setdiff(c(quantity, max_vals, year_columns))
+    setdiff(c(quantity, maximum_values, year_columns))
   
   # Figure out which IEA rows need to be allocated.
   # Each time we find data in an exemplar to allocate, we will subtract rows from this data frame.
@@ -128,7 +124,6 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     dplyr::filter(.data[[ledger_side]] == consumption | (.data[[ledger_side]] == supply & .data[[flow_aggregation_point]] == eiou)) %>% 
     # Keep only the columns of interest to the FU Allocation process
     dplyr::select(dplyr::any_of(c(meta_cols, year, product, flow))) %>% 
-    # dplyr::select(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, unit, product, flow, year) %>% 
     # Rename the flow column to be "destination" to match the corresponding column in the FU Analysis tables.
     dplyr::rename(
       "{destination}" := .data[[flow]], 
@@ -149,7 +144,7 @@ complete_fu_allocation_table <- function(fu_allocation_table,
   
   # Then eliminate all rows in the data frame to be filled from each exemplar.
   fu_allocation_table <- fu_allocation_table %>% 
-    dplyr::select(!max_vals) %>% 
+    dplyr::select(!maximum_values) %>% 
     tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
     dplyr::mutate(
       "{c_source}" := country_to_complete, 
@@ -166,7 +161,7 @@ complete_fu_allocation_table <- function(fu_allocation_table,
       # Eliminate e_dot and e_dot_perc rows
       dplyr::filter(!.data[[quantity]] %in% c(e_dot, e_dot_perc)) %>% 
       # Eliminate Maximum.values column
-      dplyr::select(!max_vals) %>% 
+      dplyr::select(!maximum_values) %>% 
       # Make tidy.
       tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
       dplyr::filter(!is.na(.data[[.values]])) %>% 
