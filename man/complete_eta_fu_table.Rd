@@ -40,7 +40,7 @@ complete_eta_fu_table(
 \item{machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, eta_fu_phi_u_source, .values}{See \code{IEATools::template_cols}.}
 }
 \value{
-A version of \code{eta_fu_table} with missing values filled from \code{exemplar_eta_fu_tables}.
+A tidy version of \code{eta_fu_table} with missing values filled from \code{exemplar_eta_fu_tables}.
 }
 \description{
 An FU (final-to-useful) Efficiency table

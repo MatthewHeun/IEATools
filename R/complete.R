@@ -198,9 +198,7 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     return(rows_to_get_elsewhere)
   }
   
-  # Spread (pivot_wider) to put years in columns before returning.
-  fu_allocation_data_available %>% 
-    tidyr::pivot_wider(names_from = year, values_from = .values)
+  return(fu_allocation_data_available)
 }
 
 
@@ -293,7 +291,7 @@ find_allocated_rows <- function(fu_allocation_table, quantity, machine, eu_produ
 #' @param country,method,energy_type,last_stage,e_dot,unit,year See `IEATools::iea_cols`.
 #' @param machine,eu_product,e_dot_perc,e_dot_machine,e_dot_machine_perc,eta_fu,phi_u,quantity,maximum_values,eta_fu_phi_u_source,.values See `IEATools::template_cols`.
 #'
-#' @return A version of `eta_fu_table` with missing values filled from `exemplar_eta_fu_tables`.
+#' @return A tidy version of `eta_fu_table` with missing values filled from `exemplar_eta_fu_tables`.
 #' 
 #' @export
 #'
@@ -405,6 +403,7 @@ complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_alloc
     eta_fu_data_missing <- dplyr::anti_join(eta_fu_data_needed, eta_fu_data_available, by = colnames(eta_fu_data_needed))
   }
   
+  # return(eta_fu_data_available)
   eta_fu_data_available %>% 
     tidyr::pivot_wider(names_from = year, values_from = .values)
 }

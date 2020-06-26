@@ -49,15 +49,15 @@ test_that("complete_fu_allocation_table works as expected", {
   completed %>% 
     dplyr::filter(.data[[IEATools::template_cols$c_source]] == "ZAF") %>% 
     nrow() %>% 
-    expect_equal(2)
-  # We should have two Ghana rows for PSBs in Residential
+    expect_equal(4)
+  # We should have four Ghana rows for PSBs in Residential
   completed %>% 
     dplyr::filter(Country == "GHA", 
                   .data[[IEATools::iea_cols$flow_aggregation_point]] == IEATools::tfc_flows$other, 
                   .data[[IEATools::template_cols$ef_product]] == IEATools::biofuels_and_waste_products$primary_solid_biofuels, 
                   .data[[IEATools::template_cols$destination]] == IEATools::other_flows$residential) %>% 
     nrow() %>% 
-    expect_equal(2)
+    expect_equal(4)
   # But their source should not be Ghana.
   completed %>% 
     dplyr::filter(.data[[IEATools::template_cols$c_source]] == "GHA", 
@@ -175,7 +175,7 @@ test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
                   .data[[IEATools::template_cols$ef_product]] == IEATools::electricity_products$electricity,
                   .data[[IEATools::template_cols$destination]] == IEATools::transformation_processes$main_activity_producer_electricity_plants) %>% 
     magrittr::extract2(IEATools::template_cols$c_source) %>% 
-    expect_equal("ZAF")
+    expect_equal(c("ZAF", "ZAF"))
   
   # Try again without enough information to complete the FU Allocation table.
   # Create this situation by dropping the fu_table_World from the list of exemplars.
