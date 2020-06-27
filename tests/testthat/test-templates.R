@@ -10,9 +10,9 @@ check_fu_allocation_template <- function(.DF){
   expect_equal(.DF$Destination[[1]], "Oil refineries")
   expect_equal(.DF$Quantity[[1]], "E.dot")
   last_row <- nrow(.DF)
-  expect_equal(.DF$Flow.aggregation.point[[last_row]], "Other")
-  expect_equal(.DF$Ef.product[[last_row]], "Electricity")
-  expect_equal(.DF$Destination[[last_row]], "Final consumption not elsewhere specified")
+  expect_equal(.DF$Flow.aggregation.point[[last_row]], "Non-energy use")
+  expect_equal(.DF$Ef.product[[last_row]], "Paraffin waxes")
+  expect_equal(.DF$Destination[[last_row]], "Non-energy use industry/transformation/energy")
   expect_equal(.DF$Quantity[[last_row]], "C_4 [%]")
 }
 
@@ -166,13 +166,18 @@ test_that("eta_fu_template works as expected for 2019 data", {
   Eta_fu_template_2019 <- load_fu_allocation_data(sample_fu_allocation_table_path(2019)) %>% 
     eta_fu_template()
   expect_equal(Eta_fu_template_2019$Machine[[1]], "Automobiles")
-  expect_equal(Eta_fu_template_2019$Machine[[nrow(Eta_fu_template_2019)]], "Oil furnaces")
+  expect_equal(Eta_fu_template_2019$Machine[[nrow(Eta_fu_template_2019)]], "Non-energy")
   expect_equal(as.character(Eta_fu_template_2019$Quantity[[1]]), "E.dot_machine")
   expect_equal(as.character(Eta_fu_template_2019$Quantity[[nrow(Eta_fu_template_2019)]]), "phi.u")
   
   eu_products <- Eta_fu_template_2019$Eu.product %>% unique() %>% as.character()
   # Check that the order is as expected.
-  expect_equivalent(eu_products, c("MD", "Light", "HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C"))
+  expect_equivalent(eu_products, c("MD", "Light", "HTH.600.C", "MTH.200.C", "MTH.100.C", 
+                                   "Bitumen", "Lubricants", "Other oil products", 
+                                   "LTH.20.C", 
+                                   "Hard coal (if no detail) [of Coal mines]", 
+                                   "Other bituminous coal [of Coal mines]", 
+                                   "Paraffin waxes", "White spirit & SBP"))
   # Check the class of the year columns. They should be numeric.
   expect_true(is.numeric(Eta_fu_template_2019[["1971"]]))
   expect_true(is.numeric(Eta_fu_template_2019[["2000"]]))
@@ -187,7 +192,12 @@ test_that("eta_fu_template works as expected for 2019 data", {
   
   eu_products2 <- Eta_fu_template_2019_2$Eu.product %>% unique() %>% as.character()
   # Check that the order is as expected.
-  expect_equivalent(eu_products2, c("MTH.100.C", "MTH.200.C", "MD", "Light", "HTH.600.C", "LTH.20.C"))
+  expect_equivalent(eu_products2, c("MTH.100.C", "MTH.200.C", "MD", "Light", "HTH.600.C", 
+                                    "Lubricants", "Other oil products", "Bitumen", 
+                                    "LTH.20.C", 
+                                    "Other bituminous coal [of Coal mines]", 
+                                    "Hard coal (if no detail) [of Coal mines]", 
+                                    "White spirit & SBP", "Paraffin waxes"))
   # Check the class of the year columns. They should be numeric.
   expect_true(is.numeric(Eta_fu_template_2019_2[["1971"]]))
   expect_true(is.numeric(Eta_fu_template_2019_2[["2000"]]))
@@ -303,7 +313,7 @@ test_that("write_eta_fu_template works as expected for 2019 data", {
   # (in this case levels) that are different after reading back in.
   expect_equivalent(Template.reread, Eta_fu_template_2019)
   expect_equal(Template.reread$Machine[[9]], "Diesel trucks")
-  expect_equal(Template.reread$Machine[[261]], "LPG stoves")
+  expect_equal(Template.reread$Machine[[261]], "Wood furnaces")
   expect_equal(as.character(Template.reread$Quantity[[9]]), "E.dot_machine")
   expect_equal(as.character(Template.reread$Quantity[[262]]), "E.dot_machine [%]")
   
@@ -326,7 +336,7 @@ test_that("write_eta_fu_template works as expected for 2019 data", {
   # (in this case levels) that are different after reading back in.
   expect_equivalent(Template_2019.reread2, Eta_fu_template_2019_2)
   expect_equal(Template_2019.reread2$Machine[[9]], "Automobiles")
-  expect_equal(Template_2019.reread2$Machine[[261]], "Gas furnaces")
+  expect_equal(Template_2019.reread2$Machine[[261]], "Non-energy")
   expect_equal(as.character(Template_2019.reread2$Quantity[[9]]), "E.dot_machine")
   expect_equal(as.character(Template_2019.reread2$Quantity[[262]]), "E.dot_machine [%]")
   
@@ -345,4 +355,6 @@ test_that("load_eta_fu_data works as expected", {
     expect_true(nrow(Eta_fu) > 0)
   }
 })
-  
+
+
+
