@@ -467,7 +467,9 @@ extend_to_useful <- function(.sutdata,
   
   # Industries to retain from Y_f to Y_u. 
   # These industries are not allocated to f-u machines, nor are they tracked for useful energy.
-  Y_keep_inds <- c(interface_ind, non_energy_ind, losses, stat_diffs)
+  # As of 19 June 2020, we are including Non-energy uses in the F-U calculations.
+  # Y_keep_inds <- c(interface_ind, non_energy_ind, losses, stat_diffs)
+  Y_keep_inds <- c(interface_ind, losses, stat_diffs)
   
   # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
   # We take each of these in turn, adjusting the energy conversion chain to account for the fact that 

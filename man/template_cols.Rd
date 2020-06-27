@@ -5,7 +5,7 @@
 \alias{template_cols}
 \title{Final-to-useful template column names}
 \format{
-A string list with 13 entries
+A string list with 16 entries
 \describe{
 \item{ef_product}{The name of the final energy product column in final-to-useful templates.}
 \item{machine}{The name of the machine column in final-to-useful templates.}
@@ -20,6 +20,8 @@ A string list with 13 entries
 \item{e_dot_machine_perc}{The name of the machine energy flow percentage column in final-to-useful templates.}
 \item{eta_fu}{The name of the final-to-useful machine efficiency column in final-to-useful templates.}
 \item{phi_u}{The name of the exergy-to-energy ratio column in final-to-useful templates.}
+\item{c_source}{The name of a column containing country identifiers for the source of final-to-useful allocation information.}
+\item{eta_fu_phi_u_source}{The name of a column containing country identifiers for the source of final-to-useful efficiency data and useful exergy-to-energy ratios.}
 }
 }
 \usage{

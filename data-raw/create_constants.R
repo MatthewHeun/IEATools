@@ -133,7 +133,10 @@ template_cols <- list(ef_product = "Ef.product",
                       e_dot_machine = "E.dot_machine",
                       e_dot_machine_perc = "E.dot_machine [%]", 
                       eta_fu = "eta.fu",
-                      phi_u = "phi.u")
+                      phi_u = "phi.u", 
+                      c_source = "C.source", 
+                      eta_fu_phi_u_source = "eta.fu.phi.u.source",
+                      .values = ".values")
 usethis::use_data(template_cols, overwrite = TRUE)
 
 
@@ -270,6 +273,14 @@ biofuels_and_waste_products <- list(industrial_waste = "Industrial waste",
                                     non_specified_primary_biofuels_and_waste = "Non-specified primary biofuels and waste",
                                     charcoal = "Charcoal")
 usethis::use_data(biofuels_and_waste_products, overwrite = TRUE)
+
+
+#
+# Electricity
+# 
+
+electricity_products <- list(electricity = "Electricity")
+usethis::use_data(electricity_products, overwrite = TRUE)
 
 
 #

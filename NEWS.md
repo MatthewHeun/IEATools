@@ -1,3 +1,12 @@
+* Added functions to complete an FU Allocation table and an eta_FU table:
+  `complete_fu_allocation_table()` and `complete_eta_fu_table()`.
+* When generating an efficiency template with `eta_fu_template()`, 
+  any Machine whose name begins with "Non-energy use" 
+  is now given default efficiency (eta.fu) of 0.0001% (i.e., 1e-6) and 
+  phi of 1.0.
+* Non-energy use no longer excluded when generating FU Allocation templates.
+
+
 # IEATools 0.1.25 (2020-06-19)
 
 * "CHN" is now a synonum for "People's Republic of China".

@@ -36,7 +36,9 @@ eta_fu_template(
   e_dot_machine_max = paste0(e_dot_machine, "_max"),
   e_dot_machine_tot = paste0(e_dot_machine, "_tot"),
   e_dot_machine_perc = paste(e_dot_machine, perc),
-  e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc)
+  e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc),
+  non_energy = IEATools::tfc_flows$non_energy_use,
+  non_energy_eff = 1e-06
 )
 }
 \arguments{
@@ -109,6 +111,11 @@ Default is "useful_energy_type".}
 \item{e_dot_machine_perc}{the name of a temporary column percentages of total energy flow into machines.  Default is "\verb{E.dot_machine [\%]}".}
 
 \item{e_dot_machine_max_perc}{the name for a column of maximum percentages (across all years) of total energy flow into machines.  Default is "\verb{E.dot_machine_max [\%]}".}
+
+\item{non_energy}{The prefix for non-energy use in the \code{machine} column. Default is \code{IEATools::tfc_flows$non_energy_use}.}
+
+\item{non_energy_eff}{The efficiency for non-energy use. Non-zero so that we can swim upstream later.
+Default is 1e-6, or 0.0001\%.}
 }
 \value{
 a data frame containing row-ordered blank template for final-to-useful machine efficiencies.

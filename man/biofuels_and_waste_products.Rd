@@ -6,6 +6,19 @@
 \title{Biofuel and waste products}
 \format{
 A string vector with 11 entries
+\describe{
+\item{industrial_waste}{The string identifier for Industrial waste products.}
+\item{municipal_waste_renewable}{The string identifier for renewable municipal waste products.}
+\item{municipal_waste_nonrenewable}{The string identifier for non-renewable municipal waste products.}
+\item{primary_solid_biofuels}{The string identifier for Primary solid biofuels.}
+\item{biogases}{The string identifier for Biogases.}
+\item{biogasoline}{The string identifier for Biogasoline.}
+\item{biodiesels}{The string identifier for Biodiesels.}
+\item{bio_jet_kerosene}{The string identifier for Bio jet kerosene.}
+\item{other_liquid_biofuels}{The string identifier for Other liquid biofuels.}
+\item{non_specified_primary_biofuels_and_waste}{The string identifier for Non-sepcified primary biofuels and waste.}
+\item{charcoal}{The string identifier for Charcoal.}
+}
 }
 \usage{
 biofuels_and_waste_products

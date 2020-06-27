@@ -98,7 +98,9 @@ fu_allocation_template <- function(.tidy_iea_df,
                             all())
   Filtered <- .tidy_iea_df %>% 
     dplyr::filter(!!as.name(ledger_side) == consumption | !!as.name(flow_aggregation_point) == eiou) %>% 
-    dplyr::filter(!!as.name(flow_aggregation_point) != non_energy_use) %>% 
+    # Removing this line, because we are now tracking non-energy use with very low efficiency
+    # so that we can swim upstream, if needed.
+    # dplyr::filter(!!as.name(flow_aggregation_point) != non_energy_use) %>% 
     dplyr::mutate(
       # Ensure that all energy values are positive to calculate totals and percentages accurately.
       !!as.name(e_dot) := abs(!!as.name(e_dot))
@@ -624,6 +626,9 @@ load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(),
 #' @param e_dot_machine_tot the name of a temporary column containing sums of energy flows into a final-to-useful machines. Default is "`E.dot_machine_tot`".
 #' @param e_dot_machine_perc the name of a temporary column percentages of total energy flow into machines.  Default is "`E.dot_machine [%]`".
 #' @param e_dot_machine_max_perc the name for a column of maximum percentages (across all years) of total energy flow into machines.  Default is "`E.dot_machine_max [%]`".
+#' @param non_energy The prefix for non-energy use in the `machine` column. Default is `IEATools::tfc_flows$non_energy_use`. 
+#' @param non_energy_eff The efficiency for non-energy use. Non-zero so that we can swim upstream later.
+#'                       Default is 1e-6, or 0.0001%.
 #'
 #' @return a data frame containing row-ordered blank template for final-to-useful machine efficiencies.
 #' 
@@ -663,7 +668,9 @@ eta_fu_template <- function(.fu_allocations,
                             e_dot_machine_max = paste0(e_dot_machine, "_max"),
                             e_dot_machine_tot = paste0(e_dot_machine, "_tot"), 
                             e_dot_machine_perc = paste(e_dot_machine, perc), 
-                            e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc)){
+                            e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc), 
+                            non_energy = IEATools::tfc_flows$non_energy_use, 
+                            non_energy_eff = 1e-6){
   sort_by <- match.arg(sort_by)
   # Preliminary stuff
   # Ensure that several columns don't exist already in 
@@ -814,8 +821,12 @@ eta_fu_template <- function(.fu_allocations,
   # Annual format, including blanks for eta_fu and phi_u
   Annual <- dplyr::full_join(input_energy, input_energy_percs, by = matsindf::everything_except(input_energy, e_dot_machine, .symbols = FALSE)) %>% 
     dplyr::mutate(
-      # The eta_fu column should be blank, because the analyst will fill it later.
-      !!as.name(eta_fu) := "",
+      # The eta_fu column should be blank, because the analyst will fill it later, 
+      # except for the efficiency of non-energy use, which is small.
+      !!as.name(eta_fu) := dplyr::case_when(
+        startsWith(.data[[machine]], non_energy) ~ as.character(non_energy_eff),
+        TRUE ~ ""
+      ),
       # But the phi_u column can be pre-filled with some exergy/energy ratios.
       # The first attempt uses the carnot_efficiency function,
       # which converts the heat type (e.g., HTH.600.C)
@@ -828,6 +839,8 @@ eta_fu_template <- function(.fu_allocations,
       !!as.name(phi_u) := dplyr::case_when(
         # We know that mechanical drive (md) has a phi_u value of 1.
         !!as.name(eu_product) == md ~ 1,
+        # Give non-energy use phi = 1.
+        startsWith(.data[[machine]], non_energy) ~ 1,
         TRUE ~ !!as.name(phi_u)
       )
     ) %>% 
