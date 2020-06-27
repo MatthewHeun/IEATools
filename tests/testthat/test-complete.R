@@ -221,7 +221,7 @@ test_that("complete_eta_fu_table works as expected", {
     nrow() %>% 
     expect_equal(4)
   
-  # Eliminate 2 machines (Automobiles and Irons) from GHA and see if their efficiencies get picked up from ZAF.
+  # Eliminate 2 machines (Automobiles and Irons) from GHA and see if their efficiencies get picked up from ZAF and World.
   eta_fu_table_GHA_incomplete <- eta_fu_table_GHA %>% 
     dplyr::filter(.data[[IEATools::template_cols$machine]] != "Automobiles", 
                   .data[[IEATools::template_cols$machine]] != "Irons")

@@ -71,3 +71,52 @@ If \code{eta_fu_table} can't be completed (because not enough information is ava
 \code{exemplar_eta_fu_tables}), an warning is emitted
 and a data frame is returned containing rows from \code{fu_allocation_table} that were not found.
 }
+\examples{
+# Load efficiency tables
+eta_fu_table <- load_eta_fu_data()
+eta_fu_table_GHA <- eta_fu_table \%>\% 
+  dplyr::filter(.data[[IEATools::iea_cols$country]] == "GHA")
+eta_fu_table_ZAF <- eta_fu_table \%>\% 
+  dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF")
+# Load an FU Allocation table
+fu_allocation_table <- load_fu_allocation_data() \%>\% 
+  dplyr::select(!IEATools::template_cols$maximum_values) \%>\% 
+  dplyr::filter(!.data[[IEATools::template_cols$quantity]] 
+    \%in\% c(IEATools::iea_cols$e_dot, 
+           IEATools::template_cols$e_dot_perc)) \%>\% 
+  # Make it tidy
+  tidyr::pivot_longer(cols = year_cols(., return_names = TRUE), 
+                      names_to = IEATools::iea_cols$year,
+                      values_to = IEATools::template_cols$.values) \%>\% 
+  dplyr::filter(!is.na(.data[[IEATools::template_cols$.values]]))
+fu_allocation_table_GHA <- fu_allocation_table \%>\% 
+  dplyr::filter(.data[[IEATools::iea_cols$country]] == "GHA") 
+# Eliminate 2 machines (Automobiles and Irons) from GHA and 
+# see if their efficiencies get picked up from ZAF and World.
+eta_fu_table_GHA_incomplete <- eta_fu_table_GHA \%>\% 
+  dplyr::filter(.data[[IEATools::template_cols$machine]] != "Automobiles", 
+                .data[[IEATools::template_cols$machine]] != "Irons")
+# Make exemplar tables from ZAF.
+# The first exemplar (ZAF) will have Automobiles but not Irons.
+exemplar_ZAF <- eta_fu_table_ZAF \%>\% 
+  dplyr::filter(.data[[IEATools::template_cols$machine]] != "Irons")
+# The second exemplar (World) will have Irons, but not Automobiles.
+exemplar_World <- eta_fu_table_ZAF \%>\% 
+  dplyr::filter(.data[[IEATools::template_cols$machine]] != "Automobiles") \%>\% 
+  dplyr::mutate(
+    "{IEATools::iea_cols$country}" := "World"
+  )
+# Now call the completion function to pick up Automobiles from ZAF and Irons from World
+completed <- complete_eta_fu_table(
+               eta_fu_table = eta_fu_table_GHA_incomplete,
+               exemplar_eta_fu_tables = list(exemplar_ZAF, exemplar_World), 
+               tidy_fu_allocation_table = fu_allocation_table_GHA)
+# Check that we got Automobiles from ZAF
+completed \%>\% 
+  dplyr::filter(.data[[IEATools::template_cols$machine]] == "Automobiles", 
+                .data[[IEATools::template_cols$eta_fu_phi_u_source]] == "ZAF")
+# Check that we got Irons from World
+completed \%>\% 
+  dplyr::filter(.data[[IEATools::template_cols$machine]] == "Irons", 
+                .data[[IEATools::template_cols$eta_fu_phi_u_source]] == "World")
+}
