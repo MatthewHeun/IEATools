@@ -61,7 +61,7 @@
   to last stage of useful energy.
 * Changed default number of rows in an allocation template from 3 to 4,
   per request from Zeke Marshall. 
-  Note that the number of rows in the allocaiton template is adjustable 
+  Note that the number of rows in the allocation template is adjustable 
   at the time the template is created using the `n_allocation_rows` argument
   to `fu_allocation_template()`.
 * Added functions for row and column notation in lists:
