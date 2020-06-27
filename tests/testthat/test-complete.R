@@ -182,7 +182,7 @@ test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
   # In this situation, we cannot allocate the Residential PSB rows for Ghana.
   # This attempt should emit a warning.
   expect_warning(complete_failure <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
-                                                                  exemplar_fu_allocation_tables = list(fu_table_ZAF), 
+                                                                  exemplar_fu_allocation_tables = fu_table_ZAF, 
                                                                   tidy_specified_iea_data = tidy_specified_iea_data), 
                  "Didn't complete FU Allocation table for GHA. Returning a data frame of final energy that wasn't allocated.")
   expect_equal(complete_failure[[IEATools::template_cols$ef_product]] %>% unique(), IEATools::biofuels_and_waste_products$primary_solid_biofuels)
@@ -253,6 +253,20 @@ test_that("complete_eta_fu_table works as expected", {
     nrow() %>% 
     expect_equal(0)
 
+  # Try to complete with ONLY ZAF.
+  # Should find that a warning is emitted, because we can't find Irons
+  expect_warning(complete_fail <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
+                                         exemplar_eta_fu_tables = exemplar_ZAF, 
+                                         tidy_fu_allocation_table = fu_allocation_table_GHA), 
+                 "Didn't complete eta FU table for GHA. Returning a data frame of machines for which an efficiency wasn't available.")
+  # Check that the uncompleted machine is Irons.
+  expect_equal(nrow(complete_fail), 4)
+  complete_fail %>% 
+    dplyr::filter(.data[[IEATools::template_cols$machine]] == "Irons") %>% 
+    magrittr::extract2(IEATools::template_cols$machine) %>% 
+    unique() %>% 
+    expect_equal("Irons")
+    
   # Now call the completion function to pick up Automobiles from ZAF and Irons from World
   completed <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
                                      exemplar_eta_fu_tables = list(exemplar_ZAF, exemplar_World), 
