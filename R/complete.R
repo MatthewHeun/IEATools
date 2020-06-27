@@ -236,6 +236,8 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 #' @param exemplar_eta_fu_tables A list of efficiency tables, each queried in turn for information needed by `eta_fu_table`.
 #' @param tidy_fu_allocation_table An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
 #'                                 This data frame should be "tidy," i.e., years are pulled into a column.
+#' @param which_quantity A vector of quantities to be completed in the eta_FU table.
+#'                       Default is `c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)`.
 #' @param country,method,energy_type,last_stage,e_dot,unit,year See `IEATools::iea_cols`.
 #' @param machine,eu_product,e_dot_perc,e_dot_machine,e_dot_machine_perc,eta_fu,phi_u,quantity,maximum_values,eta_fu_phi_u_source,.values See `IEATools::template_cols`.
 #'

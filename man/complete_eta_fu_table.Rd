@@ -37,6 +37,9 @@ complete_eta_fu_table(
 \item{tidy_fu_allocation_table}{An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
 This data frame should be "tidy," i.e., years are pulled into a column.}
 
+\item{which_quantity}{A vector of quantities to be completed in the eta_FU table.
+Default is \code{c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)}.}
+
 \item{country, method, energy_type, last_stage, e_dot, unit, year}{See \code{IEATools::iea_cols}.}
 
 \item{machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, eta_fu_phi_u_source, .values}{See \code{IEATools::template_cols}.}
