@@ -1,3 +1,8 @@
+# IEATools 0.1.26 (2020-06-27)
+
+* New tests for new features.
+    * Now up to 561 tests, all passing.
+    * Test coverage remains at 100%.
 * Added functions to complete an FU Allocation table and an eta_FU table:
   `complete_fu_allocation_table()` and `complete_eta_fu_table()`.
 * When generating an efficiency template with `eta_fu_template()`, 
@@ -9,7 +14,7 @@
 
 # IEATools 0.1.25 (2020-06-19)
 
-* "CHN" is now a synonum for "People's Republic of China".
+* "CHN" is now a synonym for "People's Republic of China".
 
 
 # IEATools 0.1.24 (2020-06-17)

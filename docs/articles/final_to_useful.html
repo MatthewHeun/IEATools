@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.25</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.26</span>
       </span>
     </div>
 
@@ -84,13 +84,13 @@
 
       
 
-      </header><div class="row">
+      </header><script src="final_to_useful_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Final to Useful Analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-06-19</h4>
+            <h4 class="date">2020-06-27</h4>
       
       
       <div class="hidden name"><code>final_to_useful.Rmd</code></div>
@@ -139,7 +139,7 @@
   <span class="fu"><a href="../reference/fu_allocation_template.html">fu_allocation_template</a></span>()
 <span class="no">FU_allocation_template</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()
-<span class="co">#&gt; Rows: 846</span>
+<span class="co">#&gt; Rows: 900</span>
 <span class="co">#&gt; Columns: 15</span>
 <span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
 <span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span>
@@ -172,7 +172,7 @@
   <span class="fu"><a href="../reference/eta_fu_template.html">eta_fu_template</a></span>()
 <span class="no">Eta_fu_template</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()
-<span class="co">#&gt; Rows: 268</span>
+<span class="co">#&gt; Rows: 304</span>
 <span class="co">#&gt; Columns: 11</span>
 <span class="co">#&gt; $ Country        &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"…</span>
 <span class="co">#&gt; $ Method         &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
@@ -182,9 +182,9 @@
 <span class="co">#&gt; $ Machine        &lt;chr&gt; "Automobiles", "Automobiles", "Automobiles", "Automobi…</span>
 <span class="co">#&gt; $ Eu.product     &lt;chr&gt; "MD", "MD", "MD", "MD", "MD", "MD", "MD", "MD", "MD", …</span>
 <span class="co">#&gt; $ Quantity       &lt;chr&gt; "E.dot_machine", "E.dot_machine [%]", "eta.fu", "phi.u…</span>
-<span class="co">#&gt; $ Maximum.values &lt;dbl&gt; 6.192510e+02, 1.156388e-01, NA, NA, 1.877078e+02, 3.50…</span>
-<span class="co">#&gt; $ `1971`         &lt;dbl&gt; 2.172315e+02, 8.391282e-02, NA, 1.000000e+00, 5.946665…</span>
-<span class="co">#&gt; $ `2000`         &lt;dbl&gt; 6.192510e+02, 1.156388e-01, NA, 1.000000e+00, 1.877078…</span></pre></body></html></div>
+<span class="co">#&gt; $ Maximum.values &lt;dbl&gt; 6.192510e+02, 1.141842e-01, NA, NA, 1.877078e+02, 3.46…</span>
+<span class="co">#&gt; $ `1971`         &lt;dbl&gt; 2.172315e+02, 8.333158e-02, NA, 1.000000e+00, 5.946665…</span>
+<span class="co">#&gt; $ `2000`         &lt;dbl&gt; 6.192510e+02, 1.141842e-01, NA, 1.000000e+00, 1.877078…</span></pre></body></html></div>
 <p>To obtain a nicely-formatted Excel spreadsheet, use the <code><a href="../reference/write_fu_allocation_template.html">write_fu_allocation_template()</a></code> function.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"># Eta_fu_template %&gt;% 
 #   write_eta_fu_template("~/Desktop/Test_eta_fu_template.xlsx")</pre></body></html></div>
