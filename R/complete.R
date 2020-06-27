@@ -234,7 +234,8 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 #'
 #' @param eta_fu_table The efficiency table to be completed, possibly having missing incomplete rows.
 #' @param exemplar_eta_fu_tables A list of efficiency tables, each queried in turn for information needed by `eta_fu_table`.
-#' @param fu_allocation_table An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
+#' @param tidy_fu_allocation_table An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
+#'                                 This data frame should be "tidy," i.e., years are pulled into a column.
 #' @param country,method,energy_type,last_stage,e_dot,unit,year See `IEATools::iea_cols`.
 #' @param machine,eu_product,e_dot_perc,e_dot_machine,e_dot_machine_perc,eta_fu,phi_u,quantity,maximum_values,eta_fu_phi_u_source,.values See `IEATools::template_cols`.
 #'
@@ -243,7 +244,10 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 #' @export
 #'
 #' @examples
-complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_allocation_table, 
+complete_eta_fu_table <- function(eta_fu_table, 
+                                  exemplar_eta_fu_tables, 
+                                  tidy_fu_allocation_table, 
+                                  which_quantity = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u),
                                   country = IEATools::iea_cols$country,
                                   method = IEATools::iea_cols$method, 
                                   energy_type = IEATools::iea_cols$energy_type,
@@ -268,37 +272,44 @@ complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_alloc
     magrittr::extract2(country) %>% 
     unique()
   assertthat::assert_that(length(country_to_complete) == 1, 
-                          msg = glue::glue("Found more than one country to complete in complete_fu_allocation_table(): {glue::glue_collapse(country_to_complete, sep = ', ', last = ' and ')}"))
+                          msg = glue::glue("Found more than one country to complete in complete_eta_fu_table(): {glue::glue_collapse(country_to_complete, sep = ', ', last = ' and ')}"))
   
-  # Make sure the country of the eta_fu_table matches the fu_allocation_table
-  assertthat::assert_that(fu_allocation_table %>% magrittr::extract2(country) %>% unique() == country_to_complete, 
+  fu_allocation_country <- tidy_fu_allocation_table %>% 
+    magrittr::extract2(country) %>% 
+    unique()
+  assertthat::assert_that(length(fu_allocation_country) == 1, 
+                          msg = glue::glue("Found more than one country in argument tidy_fu_allocation_table in complete_eta_fu_table(): {glue::glue_collapse(fu_allocation_country, sep = ', ', last = ' and ')}"))
+  
+  # Make sure the country of the eta_fu_table matches the tidy_fu_allocation_table
+  assertthat::assert_that(fu_allocation_country == country_to_complete, 
                           msg = paste0("The country of eta_fu_table (", country_to_complete, 
-                                       ") is not the same as the country in the fu_allcoation_table (", fu_allocation_table, 
+                                       ") is not the same as the country in the tidy_fu_allocation_table (", fu_allocation_country, 
                                        "). They must match."))
-
-  # Extract machines and products for this country from the fu_allocation_table
-  # NEED TO MAKE IT TIDY!
-  fu_allocation_years <- year_cols(fu_allocation_table, return_names = TRUE)
-  eta_fu_data_needed <- fu_allocation_table %>% 
-    dplyr::filter(.data[[country]] == country_to_complete) %>% 
+  
+  # Figure out the metadata columns in the eta_fu_table
+  year_columns <- year_cols(eta_fu_table, return_names = TRUE) %>% as.character()
+  meta_cols <- colnames(eta_fu_table) %>% 
+    setdiff(c(quantity, maximum_values, year_columns))
+  
+  # Extract machines and products for this country from the tidy_fu_allocation_table
+  # fu_allocation_years <- year_cols(tidy_fu_allocation_table, return_names = TRUE)
+  machines_that_need_etas <- tidy_fu_allocation_table %>% 
     dplyr::filter(.data[[quantity]] != e_dot & .data[[quantity]] != e_dot_perc) %>% 
-    dplyr::select(!maximum_values) %>% 
-    tidyr::pivot_longer(names_to = year, values_to = .values, fu_allocation_years) %>% 
+    dplyr::select(!dplyr::any_of(maximum_values)) %>% 
     dplyr::filter(!is.na(.values)) %>% 
-    dplyr::select(country, method, energy_type, last_stage, unit, machine, eu_product, year) %>% 
+    dplyr::select(dplyr::any_of(c(meta_cols, year))) %>% 
     unique() %>% 
     dplyr::mutate(
       "{year}" := as.numeric(.data[[year]])
     )
-  
-  eta_fu_data_available <- 
-    find_available_eta_fu_phi_u_info(eta_fu_table, which_quantity = eta_fu, quantity = IEATools::template_cols$quantity, 
-                                     e_dot_machine = e_dot_machine, e_dot_machine_perc = e_dot_machine_perc,
-                                     maximum_values = maximum_values, .values = .values, year = year,
-                                     eta_fu_phi_u_source = eta_fu_phi_u_source, country = country)
-  
-  # Find out which eta_fu data are missing
-  eta_fu_data_missing <- dplyr::anti_join(eta_fu_data_needed, eta_fu_data_available, by = colnames(eta_fu_data_needed))
+  # Add the quantities that are needed.
+  machines_that_need_etas <- lapply(which_quantity, FUN = function(q) {
+    machines_that_need_etas %>% 
+      dplyr::mutate(
+        "{quantity}" := q
+      )
+  }) %>% 
+    dplyr::bind_rows()
   
   # We expect exemplar_eta_fu_tables to be a list. 
   # If it is not a list but rather something that looks like a data frame, 
@@ -306,84 +317,79 @@ complete_eta_fu_table <- function(eta_fu_table, exemplar_eta_fu_tables, fu_alloc
   if (!inherits(exemplar_eta_fu_tables, "list") & inherits(exemplar_eta_fu_tables, "data.frame")) {
     exemplar_eta_fu_tables <- list(exemplar_eta_fu_tables)
   }
+  
+  # Use a trick here.
+  # Add the eta_fu_table to the front of the exemplar list
+  # so that it acts as the first exemplar.
+  exemplar_eta_fu_tables <- c(list(eta_fu_table), exemplar_eta_fu_tables)
+  
+  # Then eliminate all rows in the data frame to be filled from each exemplar.
+  eta_fu_table <- eta_fu_table %>% 
+    dplyr::select(!maximum_values) %>% 
+    tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
+    dplyr::mutate(
+      "{eta_fu_phi_u_source}" := country_to_complete, 
+      "{year}" := as.numeric(.data[[year]])
+    ) %>% 
+    # Eliminate all rows
+    magrittr::extract(c(), )
+  
   n_exemplars <- length(exemplar_eta_fu_tables)
   
-  # Look in exemplar_eta_fu_tables for missing rows.
-  # Search until we have information for each of the eta_fu_data_missing rows.
   for (i in 1:n_exemplars) {
-    if (nrow(eta_fu_data_missing) == 0) {
-      # If we don't need to get any rows, we can stop looping now.
+    
+    # Trim to the exemplar to essential columns and rows and make tidy.
+    exemplar_info_available <- exemplar_eta_fu_tables[[i]] %>% 
+      # Eliminate e_dot_machine and e_dot_machine_perc rows
+      dplyr::filter(!.data[[quantity]] %in% c(e_dot_machine, e_dot_machine_perc)) %>% 
+      # Eliminate Maximum.values column
+      dplyr::select(!maximum_values) %>% 
+      # Make tidy.
+      tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
+      dplyr::filter(!is.na(.data[[.values]]), .data[[quantity]] %in% which_quantity) %>% 
+      dplyr::mutate(
+        "{year}" := as.numeric(.data[[year]]), 
+        "{eta_fu_phi_u_source}" := .data[[country]], 
+        "{country}" := country_to_complete # Pretend that the exemplar is the country we're analyzing.
+      )
+    
+    # machines_already_specified contains the rows of machines (from the FU allocation data) that have already 
+    # had efficiencies specified.
+    # We don't need to pull data from an exemplar for these rows.
+    machines_already_specified <- eta_fu_table %>% 
+      # Now keep only the columns of interest to us.
+      dplyr::select(dplyr::any_of(c(meta_cols, quantity, year, eta_fu_phi_u_source))) %>% 
+      unique()
+    
+    exemplar_rows_to_use <- dplyr::semi_join(exemplar_info_available, 
+                                             machines_that_need_etas, 
+                                             # We can't join by source, because the exemplar source is different.
+                                             by = colnames(machines_that_need_etas) %>% setdiff(eta_fu_phi_u_source)) 
+    # Join the exemplar_rows_to_use to eta_fu_table
+    eta_fu_table <- eta_fu_table %>% 
+      dplyr::bind_rows(exemplar_rows_to_use)
+    
+    # Figure out the rows of efficiencies that are still missing and, therefore, 
+    # must be obtained from a forthcoming exemplar.
+    machines_that_need_etas <- dplyr::anti_join(machines_that_need_etas, exemplar_rows_to_use, 
+                                                by = colnames(machines_that_need_etas))
+    
+    if (nrow(machines_that_need_etas) == 0) {
       break
     }
-   
-    exemplar <- exemplar_eta_fu_tables[[i]]
-    # Make sure there is only 1 country in this exemplar.
-    exemplar_country <- exemplar %>% magrittr::extract2(country) %>% unique()
-    assertthat::assert_that(length(exemplar_country) == 1, 
-                            msg = paste0("Found more than one country in exemplar: ", exemplar_country))
     
-    # Figure out which missing rows this exemplar can contribute 
-    # exemplar_years <- year_cols(exemplar, return_names = TRUE)
-    
-    # Figure out which missing rows this exemplar can contribute 
-    exemplar_info_available <- 
-      find_available_eta_fu_phi_u_info(exemplar, which_quantity = eta_fu, quantity = quantity, e_dot_machine = e_dot_machine,
-                                       e_dot_machine_perc = e_dot_machine_perc, maximum_values = maximum_values,
-                                       .values = .values, year = year, eta_fu_phi_u_source = eta_fu_phi_u_source,
-                                       country = country) %>%
-      # Get rid of the country column, because we don't want two country columns in the rows_to_use data frame.
-      dplyr::select(!country)
-    
-    # Figure out which rows we want to use from the exemplar
-    exemplar_rows_to_use <- dplyr::semi_join(exemplar_info_available, eta_fu_data_missing, 
-                                             by = colnames(eta_fu_data_missing) %>% 
-                                               setdiff(country) %>% 
-                                               setdiff(eta_fu_phi_u_source)) %>% 
-      dplyr::mutate(
-        # Add the country column
-        "{country}" := country_to_complete, 
-      )
-    # Join the exemplar_rows_to_use to fu_allocation_data_available
-    eta_fu_data_available <- eta_fu_data_available %>% 
-      dplyr::bind_rows(exemplar_rows_to_use)
-    # Recalculate what we're missing.
-    eta_fu_data_missing <- dplyr::anti_join(eta_fu_data_needed, eta_fu_data_available, by = colnames(eta_fu_data_needed))
+  } # End of for loop.
+  
+  # Figure out if we completed everything.
+  # Emit a warning if all final energy was NOT allocated to FU machines.
+  if (nrow(machines_that_need_etas) != 0) {
+    warning("Didn't complete eta FU table for ", country_to_complete,
+            ". Returning a data frame of machines for which an efficiency wasn't available.")
+    return(machines_that_need_etas)
   }
   
-  return(eta_fu_data_available)
+  return(eta_fu_table)
 }
 
-
-#' Find available information from an eta_fu_table 
-#' 
-#' This is convenience function that minimizes repeated code. 
-#' Thus, it is not exported.
-#'
-#' @param eta_fu_table An efficiency table from which available data are to be obtained.
-#' @param quantity The quantity column in eta_fu_table.
-#' @param which_quantity The quantity you want to look for, usually "eta.fu" (for final-to-useful efficiency) or "phi.u" (for the useful exergy-to-energy ratio).
-#' @param e_dot_machine The row name for energy consumption of the machine.
-#' @param e_dot_machine_perc The row name for percentage of total energy consumptino by the machine.
-#' @param maximum_values The name for the Maximum.values column in eta_fu_table.
-#' @param .values The name for an internally-generated column.
-#' @param year The name of the year column.
-#' @param eta_fu_phi_u_source The name of the source column.
-#' @param country The name of the country column.
-#'
-#' @return A data frame that containing available data in the eta_fu_table.
-find_available_eta_fu_phi_u_info <- function(eta_fu_table, which_quantity, quantity, e_dot_machine, e_dot_machine_perc, 
-                                             maximum_values, .values, year, eta_fu_phi_u_source, country) {
-  eta_fu_years <- year_cols(eta_fu_table, return_names = TRUE)
-  eta_fu_table %>% 
-    dplyr::filter(.data[[quantity]] != e_dot_machine, .data[[quantity]] != e_dot_machine_perc, .data[[quantity]] == which_quantity) %>% 
-    dplyr::select(!maximum_values) %>% 
-    tidyr::pivot_longer(names_to = year, values_to = .values, eta_fu_years) %>% 
-    dplyr::filter(!is.na(.data[[.values]])) %>% 
-    unique() %>% 
-    dplyr::mutate(
-      "{year}" := as.numeric(.data[[year]]), 
-      "{eta_fu_phi_u_source}" := .data[[country]]
-    )
-}
 
 

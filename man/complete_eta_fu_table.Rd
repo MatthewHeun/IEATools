@@ -7,7 +7,8 @@
 complete_eta_fu_table(
   eta_fu_table,
   exemplar_eta_fu_tables,
-  fu_allocation_table,
+  tidy_fu_allocation_table,
+  which_quantity = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u),
   country = IEATools::iea_cols$country,
   method = IEATools::iea_cols$method,
   energy_type = IEATools::iea_cols$energy_type,
@@ -33,7 +34,8 @@ complete_eta_fu_table(
 
 \item{exemplar_eta_fu_tables}{A list of efficiency tables, each queried in turn for information needed by \code{eta_fu_table}.}
 
-\item{fu_allocation_table}{An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.}
+\item{tidy_fu_allocation_table}{An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
+This data frame should be "tidy," i.e., years are pulled into a column.}
 
 \item{country, method, energy_type, last_stage, e_dot, unit, year}{See \code{IEATools::iea_cols}.}
 

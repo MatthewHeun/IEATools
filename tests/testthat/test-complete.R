@@ -196,9 +196,17 @@ test_that("complete_eta_fu_table works as expected", {
   eta_fu_table_ZAF <- eta_fu_table %>% 
     dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF")
   
-  fu_allocation_table <- load_fu_allocation_data()
+  fu_allocation_table <- load_fu_allocation_data() %>% 
+    dplyr::select(!IEATools::template_cols$maximum_values) %>% 
+    dplyr::filter(!.data[[IEATools::template_cols$quantity]] %in% c(IEATools::iea_cols$e_dot, 
+                                                                    IEATools::template_cols$e_dot_perc)) %>% 
+    # Make it tidy
+    tidyr::pivot_longer(cols = year_cols(., return_names = TRUE), 
+                        names_to = IEATools::iea_cols$year,
+                        values_to = IEATools::template_cols$.values) %>% 
+    dplyr::filter(!is.na(.data[[IEATools::template_cols$.values]]))
   fu_allocation_table_GHA <- fu_allocation_table %>% 
-    dplyr::filter(.data[[IEATools::iea_cols$country]] == "GHA")
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "GHA") 
   fu_allocation_table_ZAF <- fu_allocation_table %>% 
     dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF")
     
@@ -248,7 +256,7 @@ test_that("complete_eta_fu_table works as expected", {
   # Now call the completion function to pick up Automobiles from ZAF and Irons from World
   completed <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
                                      exemplar_eta_fu_tables = list(exemplar_ZAF, exemplar_World), 
-                                     fu_allocation_table = fu_allocation_table_GHA)
+                                     tidy_fu_allocation_table = fu_allocation_table_GHA)
   
   # Check that we got Automobiles from ZAF
   completed %>% 
@@ -294,7 +302,8 @@ test_that("complete_eta_fu_table works as expected", {
   # It should get everything it needs from the first one, thereafter hitting the break statement
   completed2 <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
                                       exemplar_eta_fu_tables = list(eta_fu_table_ZAF, eta_fu_table_ZAF), 
-                                      fu_allocation_table = fu_allocation_table_GHA)
+                                      tidy_fu_allocation_table = fu_allocation_table_GHA, 
+                                      which_quantity = "eta.fu")
   # Check that completed2 has obtained both Automobiles and Irons from ZAF.
   completed2 %>% 
     dplyr::filter(.data[[IEATools::template_cols$eta_fu_phi_u_source]] == "ZAF", 
