@@ -1,3 +1,6 @@
+* New tests for new features.
+    * Now up to 567 tests, all passing.
+    * Test coverage remains at 100%.
 * Added new function `remove_agg_regions()`
   that removes known aggregation regions from an IEA extended energy balances data frame.
 
