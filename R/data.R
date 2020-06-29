@@ -542,10 +542,58 @@
 #' \item{non_energy_use}{Indicates a flow that aggregates to non-energy use final demand.}
 #' }
 #' 
-#' 
 #' @examples
 #' aggregation_flows
 "aggregation_flows"
+
+
+#' Aggregation regions
+#'
+#' A string vector containing names of regions of the world that represent aggregations
+#' of countries. 
+#' These items appear in `Country` column.
+#' 
+#' @format A string vector with `r length(aggregation_regions)` entries
+#' \describe{
+#' \item{world}{"World"}
+#' \item{oecd_americas}{"OECD Americas"}
+#' \item{oecd_asia_oceana}{"OECD Asia Oceania"}
+#' \item{oecd_europe}{"OECD Europe"}
+#' \item{africa}{"Africa"}
+#' \item{non_oecd_americas}{"Non-OECD Americas"}
+#' \item{non_oecd_asia_excluding_china}{"Non-OECD Asia (excluding China)"}
+#' \item{middle_east}{"Middle East"}
+#' \item{non_oecd_europe_and_eurasia}{"Non-OECD Europe and Eurasia"}
+#' \item{memo_equatirlai_guinea}{"Memo: Equatorial Guinea"}
+#' \item{memo_greenland}{"Memo: Greenland"}
+#' \item{memo_lao_peoples_democratic_republic}{"Memo: Lao People's Democratic Republic"}
+#' \item{memo_mali}{"Memo: Mali"}
+#' \item{memo_palestinian_authority}{"Memo: Palestinian Authority"}
+#' \item{memo_uganda}{"Memo: Uganda"}
+#' \item{memo_africa_un}{"Memo: Africa (UN)"}
+#' \item{memo_americas_un}{"Memo: Americas (UN)"}
+#' \item{memo_asia_un}{"Memo: Asia (UN)"}
+#' \item{memo_europe_un}{"Memo: Europe (UN)"}
+#' \item{memo_oceania_un}{"Memo: Oceania (UN)"}
+#' \item{memo_oecd_total}{"Memo: OECD Total"}
+#' \item{memo_non_oecd_total}{"Memo: Non-OECD Total"}
+#' \item{memo_iea_total}{"Memo: IEA Total"}
+#' \item{memo_iea_and_accession_association_countries}{"Memo: IEA and Accession/Association countries"}
+#' \item{memo_european_union_28}{"Memo: European Union-28"}
+#' \item{memo_fsu_15}{"Memo: FSU 15"}
+#' \item{memo_former_yugoslavia}{"Memo: Former Yugoslavia"}
+#' \item{memo_opec}{"Memo: OPEC"}
+#' \item{memo_asean}{"Memo: ASEAN"}
+#' \item{memo_g7}{"Memo: G7"}
+#' \item{memo_g8}{"Memo: G8"}
+#' \item{memo_g20}{"Memo: G20"}
+#' \item{memo_china_pr_of_china_and_hong_kong_china}{"China (P.R. of China and Hong Kong, China)"}
+#' }
+#' 
+#' @examples
+#' aggregation_regions
+"aggregation_regions"
+
 
 #' Memo and aggregation flow prefixes
 #'

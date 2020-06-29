@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Data pronoun — .data • IEATools</title>
+<title>Aggregation regions — aggregation_regions • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="Data pronoun — .data" />
-<meta property="og:description" content="See rlang::.data for details." />
+<meta property="og:title" content="Aggregation regions — aggregation_regions" />
+<meta property="og:description" content="A string vector containing names of regions of the world that represent aggregations
+of countries.
+These items appear in Country column." />
 
 
 
@@ -130,19 +132,160 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Data pronoun</h1>
+    <h1>Aggregation regions</h1>
     
-    <div class="hidden name"><code>data.Rd</code></div>
+    <div class="hidden name"><code>aggregation_regions.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>See <a href='https://rlang.r-lib.org/reference/tidyeval-data.html'>rlang::.data</a> for details.</p>
+    <p>A string vector containing names of regions of the world that represent aggregations
+of countries.
+These items appear in <code>Country</code> column.</p>
     </div>
 
-    <pre class="usage"><span class='no'>.data</span></pre>
+    <pre class="usage"><span class='no'>aggregation_regions</span></pre>
 
 
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
+    <p>A string vector with 33 entries</p><dl'>
+<dt>world</dt><dd><p>"World"</p></dd>
+<dt>oecd_americas</dt><dd><p>"OECD Americas"</p></dd>
+<dt>oecd_asia_oceana</dt><dd><p>"OECD Asia Oceania"</p></dd>
+<dt>oecd_europe</dt><dd><p>"OECD Europe"</p></dd>
+<dt>africa</dt><dd><p>"Africa"</p></dd>
+<dt>non_oecd_americas</dt><dd><p>"Non-OECD Americas"</p></dd>
+<dt>non_oecd_asia_excluding_china</dt><dd><p>"Non-OECD Asia (excluding China)"</p></dd>
+<dt>middle_east</dt><dd><p>"Middle East"</p></dd>
+<dt>non_oecd_europe_and_eurasia</dt><dd><p>"Non-OECD Europe and Eurasia"</p></dd>
+<dt>memo_equatirlai_guinea</dt><dd><p>"Memo: Equatorial Guinea"</p></dd>
+<dt>memo_greenland</dt><dd><p>"Memo: Greenland"</p></dd>
+<dt>memo_lao_peoples_democratic_republic</dt><dd><p>"Memo: Lao People's Democratic Republic"</p></dd>
+<dt>memo_mali</dt><dd><p>"Memo: Mali"</p></dd>
+<dt>memo_palestinian_authority</dt><dd><p>"Memo: Palestinian Authority"</p></dd>
+<dt>memo_uganda</dt><dd><p>"Memo: Uganda"</p></dd>
+<dt>memo_africa_un</dt><dd><p>"Memo: Africa (UN)"</p></dd>
+<dt>memo_americas_un</dt><dd><p>"Memo: Americas (UN)"</p></dd>
+<dt>memo_asia_un</dt><dd><p>"Memo: Asia (UN)"</p></dd>
+<dt>memo_europe_un</dt><dd><p>"Memo: Europe (UN)"</p></dd>
+<dt>memo_oceania_un</dt><dd><p>"Memo: Oceania (UN)"</p></dd>
+<dt>memo_oecd_total</dt><dd><p>"Memo: OECD Total"</p></dd>
+<dt>memo_non_oecd_total</dt><dd><p>"Memo: Non-OECD Total"</p></dd>
+<dt>memo_iea_total</dt><dd><p>"Memo: IEA Total"</p></dd>
+<dt>memo_iea_and_accession_association_countries</dt><dd><p>"Memo: IEA and Accession/Association countries"</p></dd>
+<dt>memo_european_union_28</dt><dd><p>"Memo: European Union-28"</p></dd>
+<dt>memo_fsu_15</dt><dd><p>"Memo: FSU 15"</p></dd>
+<dt>memo_former_yugoslavia</dt><dd><p>"Memo: Former Yugoslavia"</p></dd>
+<dt>memo_opec</dt><dd><p>"Memo: OPEC"</p></dd>
+<dt>memo_asean</dt><dd><p>"Memo: ASEAN"</p></dd>
+<dt>memo_g7</dt><dd><p>"Memo: G7"</p></dd>
+<dt>memo_g8</dt><dd><p>"Memo: G8"</p></dd>
+<dt>memo_g20</dt><dd><p>"Memo: G20"</p></dd>
+<dt>memo_china_pr_of_china_and_hong_kong_china</dt><dd><p>"China (P.R. of China and Hong Kong, China)"</p></dd>
+
+</dl>
+
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>aggregation_regions</span></div><div class='output co'>#&gt; $world
+#&gt; [1] "World"
+#&gt; 
+#&gt; $oecd_americas
+#&gt; [1] "OECD Americas"
+#&gt; 
+#&gt; $oecd_asia_oceana
+#&gt; [1] "OECD Asia Oceania"
+#&gt; 
+#&gt; $oecd_europe
+#&gt; [1] "OECD Europe"
+#&gt; 
+#&gt; $africa
+#&gt; [1] "Africa"
+#&gt; 
+#&gt; $non_oecd_americas
+#&gt; [1] "Non-OECD Americas"
+#&gt; 
+#&gt; $non_oecd_asia_excluding_china
+#&gt; [1] "Non-OECD Asia (excluding China)"
+#&gt; 
+#&gt; $middle_east
+#&gt; [1] "Middle East"
+#&gt; 
+#&gt; $non_oecd_europe_and_eurasia
+#&gt; [1] "Non-OECD Europe and Eurasia"
+#&gt; 
+#&gt; $memo_equatirlai_guinea
+#&gt; [1] "Memo: Equatorial Guinea"
+#&gt; 
+#&gt; $memo_greenland
+#&gt; [1] "Memo: Greenland"
+#&gt; 
+#&gt; $memo_lao_peoples_democratic_republic
+#&gt; [1] "Memo: Lao People's Democratic Republic"
+#&gt; 
+#&gt; $memo_mali
+#&gt; [1] "Memo: Mali"
+#&gt; 
+#&gt; $memo_palestinian_authority
+#&gt; [1] "Memo: Palestinian Authority"
+#&gt; 
+#&gt; $memo_uganda
+#&gt; [1] "Memo: Uganda"
+#&gt; 
+#&gt; $memo_africa_un
+#&gt; [1] "Memo: Africa (UN)"
+#&gt; 
+#&gt; $memo_americas_un
+#&gt; [1] "Memo: Americas (UN)"
+#&gt; 
+#&gt; $memo_asia_un
+#&gt; [1] "Memo: Asia (UN)"
+#&gt; 
+#&gt; $memo_europe_un
+#&gt; [1] "Memo: Europe (UN)"
+#&gt; 
+#&gt; $memo_oceania_un
+#&gt; [1] "Memo: Oceania (UN)"
+#&gt; 
+#&gt; $memo_oecd_total
+#&gt; [1] "Memo: OECD Total"
+#&gt; 
+#&gt; $memo_non_oecd_total
+#&gt; [1] "Memo: Non-OECD Total"
+#&gt; 
+#&gt; $memo_iea_total
+#&gt; [1] "Memo: IEA Total"
+#&gt; 
+#&gt; $memo_iea_and_accession_association_countries
+#&gt; [1] "Memo: IEA and Accession/Association countries"
+#&gt; 
+#&gt; $memo_european_union_28
+#&gt; [1] "Memo: European Union-28"
+#&gt; 
+#&gt; $memo_fsu_15
+#&gt; [1] "Memo: FSU 15"
+#&gt; 
+#&gt; $memo_former_yugoslavia
+#&gt; [1] "Memo: Former Yugoslavia"
+#&gt; 
+#&gt; $memo_opec
+#&gt; [1] "Memo: OPEC"
+#&gt; 
+#&gt; $memo_asean
+#&gt; [1] "Memo: ASEAN"
+#&gt; 
+#&gt; $memo_g7
+#&gt; [1] "Memo: G7"
+#&gt; 
+#&gt; $memo_g8
+#&gt; [1] "Memo: G8"
+#&gt; 
+#&gt; $memo_g20
+#&gt; [1] "Memo: G20"
+#&gt; 
+#&gt; $memo_china_pr_of_china_and_hong_kong_china
+#&gt; [1] "China (P.R. of China and Hong Kong, China)"
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

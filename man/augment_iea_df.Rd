@@ -160,7 +160,7 @@ The \code{.rownum} column is deleted before returning.}
 \description{
 This function prepares an IEA data frame created by \code{\link[=iea_df]{iea_df()}} for use in R.
 It works on IEA data from the 2018 and 2019 releases
-of the IEA's extended energy balances..
+of the IEA's extended energy balances.
 }
 \details{
 This function solves several problems.

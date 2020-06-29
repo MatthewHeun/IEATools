@@ -1,3 +1,12 @@
+# IEATools 0.1.27 (2020-06-29)
+
+* New tests for new features.
+    * Now up to 567 tests, all passing.
+    * Test coverage remains at 100%.
+* Added new function `remove_agg_regions()`
+  that removes known aggregation regions from an IEA extended energy balances data frame.
+
+
 # IEATools 0.1.26 (2020-06-27)
 
 * New tests for new features.
@@ -61,7 +70,7 @@
   to last stage of useful energy.
 * Changed default number of rows in an allocation template from 3 to 4,
   per request from Zeke Marshall. 
-  Note that the number of rows in the allocaiton template is adjustable 
+  Note that the number of rows in the allocation template is adjustable 
   at the time the template is created using the `n_allocation_rows` argument
   to `fu_allocation_template()`.
 * Added functions for row and column notation in lists:

@@ -535,8 +535,8 @@ use_iso_countries <- function(.iea_df,
 #'   rename_iea_df_cols() %>% 
 #'   remove_agg_memo_flows()
 remove_agg_memo_flows <- function(.iea_df,
-                                  flow = "Flow",
-                                  product = "Product",
+                                  flow = IEATools::iea_cols$flow,
+                                  product = IEATools::iea_cols$product,
                                   agg_flows = IEATools::aggregation_flows,
                                   memo_flow_prefixes = IEATools::memo_aggregation_flow_prefixes, 
                                   memo_product_prefixes = IEATools::memo_aggregation_product_prefixes){
@@ -550,11 +550,38 @@ remove_agg_memo_flows <- function(.iea_df,
 }
 
 
+#' Remove aggregation regions from an IEA data frame
+#' 
+#' The IEA extended energy balances contain several aggregation regions
+#' by default.
+#' In some situations, it may be desirable to remove those aggregation regions.
+#' This function performs that task.
+#'
+#' @param .iea_df The IEA data frame from which you want to remove aggregation regions.
+#' @param country The name of the Country column in `.iea_df`.
+#' @param agg_regions A list of aggregation regions in the `country` column of `.iea_df`.
+#'
+#' @return A version of `.iea_df` with aggregation regions removed.
+#' 
+#' @export
+#'
+#' @examples
+#' tibble::tibble(Year = c(1967, 1995), 
+#'                Country = c("World", "Spain")) %>%
+#'  remove_agg_regions()
+remove_agg_regions <- function(.iea_df, 
+                               country = IEATools::iea_cols$country,
+                               agg_regions = IEATools::aggregation_regions) {
+  .iea_df %>%
+    dplyr::filter(!.data[[country]] %in% agg_regions)
+}
+
+
 #' Augment an IEA data frame
 #' 
 #' This function prepares an IEA data frame created by [iea_df()] for use in R.
 #' It works on IEA data from the 2018 and 2019 releases
-#' of the IEA's extended energy balances..
+#' of the IEA's extended energy balances.
 #' 
 #' This function solves several problems.
 #' The first problem is that metadata in the `COUNTRY`, `FLOW`, and `PRODUCT`
