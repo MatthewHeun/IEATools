@@ -1,3 +1,7 @@
+* Added new function `remove_agg_regions()`
+  that removes known aggregation regions from an IEA extended energy balances data frame.
+
+
 # IEATools 0.1.26 (2020-06-27)
 
 * New tests for new features.
