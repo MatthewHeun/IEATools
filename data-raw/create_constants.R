@@ -439,12 +439,52 @@ usethis::use_data(memo_aggregation_product_prefixes, overwrite = TRUE)
 # Interfaces
 # 
 
-interface_industries = list(imports = "Imports",
-                            exports = "Exports", 
-                            international_aviation_bunkers = "International aviation bunkers",
-                            international_marine_bunkers = "International marine bunkers",
-                            stock_changes = "Stock changes")
+interface_industries <- list(imports = "Imports",
+                             exports = "Exports", 
+                             international_aviation_bunkers = "International aviation bunkers",
+                             international_marine_bunkers = "International marine bunkers",
+                             stock_changes = "Stock changes")
 usethis::use_data(interface_industries, overwrite = TRUE)
+
+
+#
+# Aggregation regions
+# 
+
+aggregation_regions <- list(world = "World",
+                            oecd_americas = "OECD Americas",
+                            oecd_asia_oceana = "OECD Asia Oceania",
+                            oecd_europe = "OECD Europe",
+                            africa = "Africa",
+                            non_oecd_americas = "Non-OECD Americas",
+                            non_oecd_asia_excluding_china = "Non-OECD Asia (excluding China)",
+                            middle_east = "Middle East",
+                            non_oecd_europe_and_eurasia = "Non-OECD Europe and Eurasia",
+                            memo_equatirlai_guinea = "Memo: Equatorial Guinea",
+                            memo_greenland = "Memo: Greenland",
+                            memo_lao_peoples_democratic_republic = "Memo: Lao People's Democratic Republic",
+                            memo_mali = "Memo: Mali",
+                            memo_palestinian_authority = "Memo: Palestinian Authority",
+                            memo_uganda = "Memo: Uganda",
+                            memo_africa_un = "Memo: Africa (UN)",
+                            memo_americas_un = "Memo: Americas (UN)",
+                            memo_asia_un = "Memo: Asia (UN)",
+                            memo_europe_un = "Memo: Europe (UN)",
+                            memo_oceania_un = "Memo: Oceania (UN)",
+                            memo_oecd_total = "Memo: OECD Total",
+                            memo_non_oecd_total = "Memo: Non-OECD Total",
+                            memo_iea_total = "Memo: IEA Total",
+                            memo_iea_and_accession_association_countries = "Memo: IEA and Accession/Association countries",
+                            memo_european_union_28 = "Memo: European Union-28",
+                            memo_fsu_15 = "Memo: FSU 15",
+                            memo_former_yugoslavia = "Memo: Former Yugoslavia",
+                            memo_opec = "Memo: OPEC",
+                            memo_asean = "Memo: ASEAN",
+                            memo_g7 = "Memo: G7",
+                            memo_g8 = "Memo: G8",
+                            memo_g20 = "Memo: G20",
+                            memo_china_pr_of_china_and_hong_kong_china = "China (P.R. of China and Hong Kong, China)")
+usethis::use_data(aggregation_regions, overwrite = TRUE)
 
 
 # 

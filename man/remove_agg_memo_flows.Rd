@@ -6,8 +6,8 @@
 \usage{
 remove_agg_memo_flows(
   .iea_df,
-  flow = "Flow",
-  product = "Product",
+  flow = IEATools::iea_cols$flow,
+  product = IEATools::iea_cols$product,
   agg_flows = IEATools::aggregation_flows,
   memo_flow_prefixes = IEATools::memo_aggregation_flow_prefixes,
   memo_product_prefixes = IEATools::memo_aggregation_product_prefixes

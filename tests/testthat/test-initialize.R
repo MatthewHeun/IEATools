@@ -365,6 +365,20 @@ test_that("remove_agg_memo_flows works as expected", {
   expect_true(IEA_data %>% dplyr::filter(startsWith(Product, memo_product_prefix)) %>% nrow() > 0)
 })
 
+
+test_that("remove_agg_regions works as expected", {
+  tibble::tibble(Year = c(1967, 1995), Country = c("World", "Spain")) %>%
+    remove_agg_regions() %>%
+    expect_equal(tibble::tibble(Year = 1995, Country = "Spain"))
+  
+  n_regions <- length(IEATools::aggregation_regions)
+  result <- tibble::tibble(Year = 1900 + 1:(n_regions+1), Country = unlist(c("Spain", IEATools::aggregation_regions))) %>%
+    remove_agg_regions()
+  expect_equal(result$Year, 1901)
+  expect_equivalent(result[["Country"]], "Spain")
+})
+
+
 test_that("use_iso_countries works as expected", {
   iso3 <- sample_iea_data_path() %>% 
     iea_df() %>% 
