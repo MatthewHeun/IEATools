@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.26</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.27</span>
       </span>
     </div>
 
@@ -133,6 +133,19 @@
       
     </div>
 
+    <div id="ieatools-0127-2020-06-29" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.27">
+<a href="#ieatools-0127-2020-06-29" class="anchor"></a>IEATools 0.1.27 (2020-06-29)</h1>
+<ul>
+<li>New tests for new features.
+<ul>
+<li>Now up to 567 tests, all passing.</li>
+<li>Test coverage remains at 100%.</li>
+</ul>
+</li>
+<li>Added new function <code><a href="../reference/remove_agg_regions.html">remove_agg_regions()</a></code> that removes known aggregation regions from an IEA extended energy balances data frame.</li>
+</ul>
+</div>
     <div id="ieatools-0126-2020-06-27" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.26">
 <a href="#ieatools-0126-2020-06-27" class="anchor"></a>IEATools 0.1.26 (2020-06-27)</h1>
@@ -194,7 +207,7 @@
 </ul>
 </li>
 <li>Added function <code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code> and supporting functions <code><a href="../reference/form_C_mats.html">form_C_mats()</a></code> and <code><a href="../reference/form_eta_fu_phi_u_vecs.html">form_eta_fu_phi_u_vecs()</a></code>. These functions use a matrix method to move from last stage of final energy to last stage of useful energy.</li>
-<li>Changed default number of rows in an allocation template from 3 to 4, per request from Zeke Marshall. Note that the number of rows in the allocaiton template is adjustable at the time the template is created using the <code>n_allocation_rows</code> argument to <code><a href="../reference/fu_allocation_template.html">fu_allocation_template()</a></code>.</li>
+<li>Changed default number of rows in an allocation template from 3 to 4, per request from Zeke Marshall. Note that the number of rows in the allocation template is adjustable at the time the template is created using the <code>n_allocation_rows</code> argument to <code><a href="../reference/fu_allocation_template.html">fu_allocation_template()</a></code>.</li>
 <li>Added functions for row and column notation in lists: <code>switch_notation_byname()</code>, <code>arrow_to_paren_byname()</code>, and <code>paren_to_arrow_byname()</code>. These functions are like <code>*_byname</code> functions in the package <code>matsbyname</code>: they accept both single matrices and lists of matrices. In that way, they are amenable to pipeline calculations using the <code>matsindf</code> package. Adding this feature exposed bugs in <code><a href="https://rdrr.io/pkg/matsbyname/man/setrownames_byname.html">matsbyname::setrownames_byname()</a></code> and <code><a href="https://rdrr.io/pkg/matsbyname/man/setcolnames_byname.html">matsbyname::setcolnames_byname()</a></code>. The bugs in <code>matsbyname</code> have been fixed, so these features are now working.</li>
 <li>Added functions for row and column notation: <code>paren_to_arrow()</code>, <code>arrow_to_paren()</code>, and <code>switch_notation()</code>.</li>
 </ul>
