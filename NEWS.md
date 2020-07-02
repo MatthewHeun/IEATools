@@ -1,3 +1,10 @@
+# IEATools 0.1.28 (2020-07-02)
+
+* "Memo: Greenland", "Memo: Palestinian Authority", and "Memo: Uganda"
+  are no longer included in constant `IEATools::aggregation_regions`, 
+  because these regions are _not_ aggregations.
+
+
 # IEATools 0.1.27 (2020-06-29)
 
 * New tests for new features.
