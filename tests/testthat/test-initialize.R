@@ -376,6 +376,13 @@ test_that("remove_agg_regions works as expected", {
     remove_agg_regions()
   expect_equal(result$Year, 1901)
   expect_equivalent(result[["Country"]], "Spain")
+  
+  # Ensure that Greenland, Palestinian Authority, and Uganda are retained.
+  tibble::tibble(Year = c(1967, 1990, 1995, 2020), Country = c("Memo: Greenland", "Memo: Palestinian Authority", 
+                                                                "Memo: Uganda", "World")) %>% 
+    remove_agg_regions() %>% 
+    magrittr::extract2("Year") %>% 
+    expect_equal(c(1967, 1990, 1995))
 })
 
 
