@@ -450,6 +450,9 @@ usethis::use_data(interface_industries, overwrite = TRUE)
 #
 # Aggregation regions
 # 
+# Note: Greenland, Palestinian Authority, and Uganda are NOT
+# aggregation regions.
+# 
 
 aggregation_regions <- list(world = "World",
                             oecd_americas = "OECD Americas",
@@ -461,11 +464,11 @@ aggregation_regions <- list(world = "World",
                             middle_east = "Middle East",
                             non_oecd_europe_and_eurasia = "Non-OECD Europe and Eurasia",
                             memo_equatirlai_guinea = "Memo: Equatorial Guinea",
-                            memo_greenland = "Memo: Greenland",
+                            # memo_greenland = "Memo: Greenland",
                             memo_lao_peoples_democratic_republic = "Memo: Lao People's Democratic Republic",
                             memo_mali = "Memo: Mali",
-                            memo_palestinian_authority = "Memo: Palestinian Authority",
-                            memo_uganda = "Memo: Uganda",
+                            # memo_palestinian_authority = "Memo: Palestinian Authority",
+                            # memo_uganda = "Memo: Uganda",
                             memo_africa_un = "Memo: Africa (UN)",
                             memo_americas_un = "Memo: Americas (UN)",
                             memo_asia_un = "Memo: Asia (UN)",
