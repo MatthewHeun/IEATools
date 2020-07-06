@@ -5,7 +5,7 @@
 \alias{from_notation}
 \title{From notation}
 \format{
-A character vector with 4 entries
+A character vector with 4 entries.
 }
 \usage{
 from_notation

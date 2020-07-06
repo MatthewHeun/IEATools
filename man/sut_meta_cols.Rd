@@ -5,7 +5,7 @@
 \alias{sut_meta_cols}
 \title{PSUT matrix meta information column names}
 \format{
-A string list with 5 entries
+A string list with 5 entries.
 \describe{
 \item{country}{The name of a column containing countries.}
 \item{method}{The name of a column containing methods for calculating primary energy equivalent of renewable electricity. See \code{IEATools::methods}.}

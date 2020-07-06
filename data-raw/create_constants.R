@@ -140,6 +140,16 @@ template_cols <- list(ef_product = "Ef.product",
 usethis::use_data(template_cols, overwrite = TRUE)
 
 
+#
+# FU analysis file information
+# 
+
+fu_analysis_file_info <- list(fu_analysis_file_suffix = " FU Analysis.xlsx", 
+                              fu_allocation_tab_name = "FU Allocations", 
+                              eta_fu_tab_name = "FU etas")
+usethis::use_data(fu_analysis_file_info, overwrite = TRUE)
+
+
 # 
 # Give row and column types
 # 

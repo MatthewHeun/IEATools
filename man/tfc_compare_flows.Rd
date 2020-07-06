@@ -5,7 +5,7 @@
 \alias{tfc_compare_flows}
 \title{Total final consumption comparison flows}
 \format{
-A string vector with 6 entries
+A string vector with 6 entries.
 \describe{
 \item{total_primary_energy_supply}{The string identifier for Total primary energy supply.}
 \item{transfers}{The string identifier for Transfers.}

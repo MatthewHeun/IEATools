@@ -5,7 +5,7 @@
 \alias{manufacturing_flows}
 \title{Manufacturing flows}
 \format{
-A string vector with 11 entries
+A string vector with 11 entries.
 \describe{
 \item{iron_and_steel}{The string identifying the iron and steel industry.}
 \item{chemical_and_petrochemical}{The string identifying the chemical and petrochemical industry}

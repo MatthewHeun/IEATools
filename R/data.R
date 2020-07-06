@@ -145,6 +145,26 @@
 "template_cols"
 
 
+#' Final-to-useful analysis file information
+#'
+#' A string list containing named expected filename suffixes and tab names in Excel files
+#' associated with final-to-useful analyses. 
+#' Items in the list provide default values for final-to-useful analysis files 
+#' throughout the `IEATools` package.
+#' 
+#' @format A string list with `r length(fu_analysis_file_info)` entries
+#' \describe{
+#' \item{fu_analysis_file_suffix}{The suffix for final-to-useful analysis file names.}
+#' \item{fu_allocation_tab_name}{The string name of final-to-useful allocation tabs.}
+#' \item{eta_fu_tab_name}{The string name of final-to-useful efficiency tabs.}
+#' }
+#' 
+#' @examples
+#' fu_analysis_file_info
+"fu_analysis_file_info"
+
+
+
 #' PSUT matrix row and column types
 #'
 #' PSUT matrices have row and column types. 

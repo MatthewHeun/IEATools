@@ -5,7 +5,7 @@
 \alias{ledger_sides}
 \title{IEA order for ledger side}
 \format{
-A string list with 2 entries
+A string list with 2 entries.
 \describe{
 \item{supply}{The supply side of the ledger.}
 \item{consumption}{The consumption side of the ledger.}

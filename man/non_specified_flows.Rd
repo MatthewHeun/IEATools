@@ -5,7 +5,7 @@
 \alias{non_specified_flows}
 \title{IEA non-specified flows}
 \format{
-A string list with 6 entries
+A string list with 6 entries.
 \describe{
 \item{non_specified_transformation}{The string identifying non-specified transformation process flows.}
 \item{non_specified_energy}{The string identifying non-specified energy industry own use.}

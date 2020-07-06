@@ -5,7 +5,7 @@
 #' Two notations are useful: arrow and bracket.
 #' Arrow notation is "`r matsbyname::paste_pref_suff(pref = "from", suff = "to", notation = arrow_notation)`", 
 #' and bracket notation is
-#' "`r matsbyname::paste_pref_suff(pref = "destination", suff = "source", notation = bracket_notation) %>% gsub(pattern = "[", replacement = paste0("\", "["), x = ., fixed = TRUE) %>% gsub(pattern = "]", replacement = paste0("\", "]"), x = ., fixed = TRUE)`".
+#' "`r matsbyname::paste_pref_suff(pref = "destination", suff = "source", notation = bracket_notation) %>% gsub(pattern = "[", replacement = paste0("\\", "["), x = ., fixed = TRUE) %>% gsub(pattern = "]", replacement = paste0("\\", "]"), x = ., fixed = TRUE)`".
 #' These functions change matrix row/column names 
 #' between the two notations.
 #' 
