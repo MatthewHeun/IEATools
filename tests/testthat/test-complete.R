@@ -15,6 +15,7 @@ test_that("fu_allocation_table_completed() works as expected", {
   
   # Now remove a row that has a fraction.
   fu_allocations_bad_2 <- fu_allocations[-8, ]
+  expect_false(fu_allocation_table_completed(fu_allocations_bad_2, iea_data))
 })
 
 
