@@ -129,8 +129,9 @@
 #' \item{destination}{The name of the destination column in final-to-useful templates.}
 #' \item{quantity}{The name of the quantity column in final-to-useful templates.}
 #' \item{maximum_values}{The name of the maximum values column in final-to-useful templates.}
-#' \item{c_}{The name of the allocation (`C_1`, `C_2`, `C_3`, etc.) columns in final-to-useful templates.}
-#' \item{C}{The name of the allocation (`C`) matrix column.}
+#' \item{C_eiou}{The name of the EIOU allocation rows in final-to-useful templates.}
+#' \item{C_Y}{The name of the final demand allocation rows in final-to-useful templates.}
+#' \item{C_perc}{The name of the percentage allocation rows in final-to-useful templates.}
 #' \item{e_dot_perc}{The name of the energy flow percentage column in final-to-useful templates.}
 #' \item{e_dot_machine}{The name of the column representing energy flow into a machine in final-to-useful templates.}
 #' \item{e_dot_machine_perc}{The name of the machine energy flow percentage column in final-to-useful templates.}
@@ -139,6 +140,7 @@
 #' \item{phi_u}{The name of the exergy-to-energy ratio column in final-to-useful templates.}
 #' \item{c_source}{The name of a column containing country identifiers for the source of final-to-useful allocation information.}
 #' \item{eta_fu_phi_u_source}{The name of a column containing country identifiers for the source of final-to-useful efficiency data and useful exergy-to-energy ratios.}
+#' \item{.values}{The name of a temporary column that holds values.}
 #' }
 #' 
 #' @examples

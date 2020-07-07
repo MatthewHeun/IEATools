@@ -208,22 +208,81 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 }
 
 
-#' Tell whether a final-to-useful allocation table is complete
+#' Tell whether a final-to-useful allocation table has been completed
 #' 
 #' A final-to-useful allocation table is complete iff all of the final energy flows for a country 
-#' are routed to a final-to-useful machine.
+#' are routed to a final-to-useful machine for each year in which those final energy flows exist.
+#' Also, all routes need to add to 100%.
 #'
 #' @param fu_allocation_table The final-to-useful allocation table whose completeness is to be determined.
-#' @param tidy_specified_iea_data  A tidy IEA data frame from which final energy flows are gleaned.
+#' @param specified_iea_data  An IEA data frame from which final energy flows are gleaned.
 #'
 #' @return A boolean telling whether `fu_allocation_table` is complete.
 #' 
 #' @export
 #'
 #' @examples
-fu_allocation_table_is_complete <- function(fu_allocation_table, 
-                                            tidy_specified_iea_data) {
-  
+fu_allocation_table_completed <- function(fu_allocation_table, specified_iea_data, 
+                                          year = IEATools::iea_cols$year, 
+                                          ledger_side = IEATools::iea_cols$ledger_side,
+                                          consumption = IEATools::ledger_sides$consumption,
+                                          e_dot = IEATools::iea_cols$e_dot, 
+                                          maximum_values = IEATools::template_cols$maximum_values, 
+                                          quantity = IEATools::template_cols$quantity, 
+                                          C_perc = IEATools::template_cols$C_perc,
+                                          machine = IEATools::template_cols$machine,
+                                          e_u_product = IEATools::template_cols$eu_product,
+                                          e_dot_perc = IEATools::template_cols$e_dot_perc) {
+  # Accept a non-tidy specified_iea_data frame.
+  iea_year_columns <- specified_iea_data %>% 
+    year_cols(return_names = TRUE)
+  if (length(iea_year_columns) > 0) {
+    specified_iea_data <- specified_iea_data %>% 
+      tidyr::pivot_longer(cols = iea_year_columns, names_to = year, values_to = e_dot) %>% 
+      dplyr::filter(!is.na(.data[[e_dot]]))
+  }
+  # Figure out which rows have been allocated in each year
+  # Accept a non-tidy fu_allocation_table if it arrives.
+  fu_year_columns <- fu_allocation_table %>% 
+    year_cols(return_names = TRUE)
+  if (length(fu_year_columns) > 0) {
+    fu_allocation_table <- fu_allocation_table %>% 
+      dplyr::select(!maximum_values) %>% 
+      dplyr::filter(!.data[[quantity]] %in% c(e_dot, e_dot_perc)) %>% 
+      tidyr::pivot_longer(cols = fu_year_columns, names_to = year, values_to = C_perc) %>% 
+      dplyr::filter(!is.na(.data[[C_perc]])) %>% 
+      dplyr::mutate(
+        "{year}" := as.numeric(.data[[year]])
+      )
+  }
+  # Eliminate the quantity, Machine, and Eu.product columns and summarize.
+  # We should get all 1's.
+  allocation_sums <- fu_allocation_table %>% 
+    dplyr::select(!c(quantity, machine, e_u_product)) %>%
+    matsindf::group_by_everything_except(C_perc) %>% 
+    dplyr::summarise(
+      "{C_perc}" := sum(.data[[C_perc]])
+    )
+  if (!all(allocation_sums[[C_perc]] == 1)) {
+    return(FALSE)
+  }
+  # Figure out the rows of final energy that need to be allocated in each year.
+  rows_to_be_allocatated <- specified_iea_data %>% 
+    dplyr::filter(.data[[ledger_side]] == consumption | 
+                    (.data[[IEATools::iea_cols$flow_aggregation_point]] == IEATools::tfc_compare_flows$energy_industry_own_use)) %>% 
+    dplyr::select(!IEATools::iea_cols$e_dot) %>% 
+    dplyr::rename(
+      "{IEATools::template_cols$ef_product}" := .data[[IEATools::iea_cols$product]], 
+      "{IEATools::template_cols$destination}" := .data[[IEATools::iea_cols$flow]]
+    )
+  # Now check that all rows that need to be allocated have been allocated.
+  allocated_rows <- allocation_sums %>% 
+    dplyr::select(!IEATools::template_cols$C_perc)
+  unallocated_rows <- dplyr::anti_join(rows_to_be_allocatated , allocated_rows, by = colnames(allocated_rows))
+  if (nrow(unallocated_rows) > 0) {
+    return(FALSE)
+  }
+  return(TRUE)
 }
 
 
