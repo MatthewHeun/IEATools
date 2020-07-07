@@ -152,22 +152,25 @@ throughout the <code>IEATools</code> package.</p>
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string list with 16 entries</p><dl'>
+    <p>A string list with 18 entries</p><dl'>
 <dt>ef_product</dt><dd><p>The name of the final energy product column in final-to-useful templates.</p></dd>
 <dt>machine</dt><dd><p>The name of the machine column in final-to-useful templates.</p></dd>
 <dt>eu_product</dt><dd><p>The name of the useful energy product column in final-to-useful templates.</p></dd>
 <dt>destination</dt><dd><p>The name of the destination column in final-to-useful templates.</p></dd>
 <dt>quantity</dt><dd><p>The name of the quantity column in final-to-useful templates.</p></dd>
 <dt>maximum_values</dt><dd><p>The name of the maximum values column in final-to-useful templates.</p></dd>
-<dt>c_</dt><dd><p>The name of the allocation (<code>C_1</code>, <code>C_2</code>, <code>C_3</code>, etc.) columns in final-to-useful templates.</p></dd>
-<dt>C</dt><dd><p>The name of the allocation (<code>C</code>) matrix column.</p></dd>
+<dt>C_eiou</dt><dd><p>The name of the EIOU allocation rows in final-to-useful templates.</p></dd>
+<dt>C_Y</dt><dd><p>The name of the final demand allocation rows in final-to-useful templates.</p></dd>
+<dt>C_perc</dt><dd><p>The name of the percentage allocation rows in final-to-useful templates.</p></dd>
 <dt>e_dot_perc</dt><dd><p>The name of the energy flow percentage column in final-to-useful templates.</p></dd>
 <dt>e_dot_machine</dt><dd><p>The name of the column representing energy flow into a machine in final-to-useful templates.</p></dd>
 <dt>e_dot_machine_perc</dt><dd><p>The name of the machine energy flow percentage column in final-to-useful templates.</p></dd>
+<dt>e_dot_machine_max_perc</dt><dd><p>The name of the machine energy flow maximum percentage column in final-to-useful templates.</p></dd>
 <dt>eta_fu</dt><dd><p>The name of the final-to-useful machine efficiency column in final-to-useful templates.</p></dd>
 <dt>phi_u</dt><dd><p>The name of the exergy-to-energy ratio column in final-to-useful templates.</p></dd>
 <dt>c_source</dt><dd><p>The name of a column containing country identifiers for the source of final-to-useful allocation information.</p></dd>
 <dt>eta_fu_phi_u_source</dt><dd><p>The name of a column containing country identifiers for the source of final-to-useful efficiency data and useful exergy-to-energy ratios.</p></dd>
+<dt>.values</dt><dd><p>The name of a temporary column that holds values.</p></dd>
 
 </dl>
 
@@ -200,6 +203,9 @@ throughout the <code>IEATools</code> package.</p>
 #&gt; $C_Y
 #&gt; [1] "C_Y"
 #&gt; 
+#&gt; $C_perc
+#&gt; [1] "C.perc [%]"
+#&gt; 
 #&gt; $e_dot_perc
 #&gt; [1] "E.dot [%]"
 #&gt; 
@@ -208,6 +214,9 @@ throughout the <code>IEATools</code> package.</p>
 #&gt; 
 #&gt; $e_dot_machine_perc
 #&gt; [1] "E.dot_machine [%]"
+#&gt; 
+#&gt; $e_dot_machine_max_perc
+#&gt; [1] "E.dot_machine_max [%]"
 #&gt; 
 #&gt; $eta_fu
 #&gt; [1] "eta.fu"

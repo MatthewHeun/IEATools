@@ -142,14 +142,13 @@
     <pre class="usage"><span class='fu'>write_eta_fu_template</span>(
   <span class='no'>.eta_fu_template</span>,
   <span class='no'>path</span>,
-  <span class='kw'>eta_fu_tab_name</span> <span class='kw'>=</span> <span class='st'>"FU etas"</span>,
+  <span class='kw'>eta_fu_tab_name</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='fu_analysis_file_info.html'>fu_analysis_file_info</a></span>$<span class='no'>eta_fu_tab_name</span>,
   <span class='kw'>overwrite_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>overwrite_fu_eta_tab</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>eta_fu</span> <span class='kw'>=</span> <span class='st'>"eta.fu"</span>,
-  <span class='kw'>e_dot_machine</span> <span class='kw'>=</span> <span class='st'>"E.dot_machine"</span>,
-  <span class='kw'>perc</span> <span class='kw'>=</span> <span class='st'>"[%]"</span>,
-  <span class='kw'>e_dot_machine_perc</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>e_dot_machine</span>, <span class='no'>perc</span>),
-  <span class='kw'>maximum_values</span> <span class='kw'>=</span> <span class='st'>"Maximum.values"</span>,
+  <span class='kw'>eta_fu</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>eta_fu</span>,
+  <span class='kw'>e_dot_machine</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine</span>,
+  <span class='kw'>e_dot_machine_perc</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine_perc</span>,
+  <span class='kw'>maximum_values</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>maximum_values</span>,
   <span class='kw'>header_row_font_color</span> <span class='kw'>=</span> <span class='st'>"#FFFFFF"</span>,
   <span class='kw'>header_row_shading_color</span> <span class='kw'>=</span> <span class='st'>"#5A80B8"</span>,
   <span class='kw'>e_dot_machine_row_font_color</span> <span class='kw'>=</span> <span class='st'>"#8C87A0"</span>,
@@ -161,8 +160,8 @@
   <span class='kw'>phi_row_font_color</span> <span class='kw'>=</span> <span class='st'>"#000000"</span>,
   <span class='kw'>phi_row_shading_color</span> <span class='kw'>=</span> <span class='st'>"#FFFFFF"</span>,
   <span class='kw'>blank_shading_color</span> <span class='kw'>=</span> <span class='st'>"#808080"</span>,
-  <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='st'>"Quantity"</span>,
-  <span class='kw'>e_dot_machine_max_perc</span> <span class='kw'>=</span> <span class='st'>"E.dot_machine_max [%]"</span>,
+  <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>quantity</span>,
+  <span class='kw'>e_dot_machine_max_perc</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine_max_perc</span>,
   <span class='kw'>.rownum</span> <span class='kw'>=</span> <span class='st'>".rownum"</span>
 )</pre>
 
@@ -196,10 +195,6 @@
     <tr>
       <th>e_dot_machine</th>
       <td><p>a string identifying energy flow into final-to-useful machines. Default is "E.dot_machine".</p></td>
-    </tr>
-    <tr>
-      <th>perc</th>
-      <td><p>the string identifying percentage quantities. Default is "[%]".</p></td>
     </tr>
     <tr>
       <th>e_dot_machine_perc</th>
@@ -286,7 +281,7 @@ Default is "#808080".</p></td>
     <pre class="examples"><div class='input'><span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".xlsx"</span>)
 <span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='eta_fu_template.html'>eta_fu_template</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>write_eta_fu_template</span>(<span class='no'>f</span>)</div><div class='output co'>#&gt; [1] "/var/folders/y7/gl7nw9bd61g2js7pjpkhqr_40000gq/T//RtmpnbYYRr/filecc865c97854.xlsx"</div><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='no'>f</span>)) {
+  <span class='fu'>write_eta_fu_template</span>(<span class='no'>f</span>)</div><div class='output co'>#&gt; [1] "/var/folders/y7/gl7nw9bd61g2js7pjpkhqr_40000gq/T//Rtmpkkrcio/file9f2136e0b3e9.xlsx"</div><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='no'>f</span>)) {
   <span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.remove</a></span>(<span class='no'>f</span>)
 }</div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
