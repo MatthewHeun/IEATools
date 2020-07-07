@@ -73,7 +73,7 @@ test_that("write_fu_allocation_template works as expected", {
     write_fu_allocation_template(f)
   expect_equal(p, f)
   # Now read the tabs back in
-  Allocations <- openxlsx::read.xlsx(f, sheet = "FU Allocations") %>% 
+  Allocations <- openxlsx::read.xlsx(f, sheet = IEATools::fu_analysis_file_info$fu_allocation_tab_name) %>% 
     dplyr::rename(
       Maximum.values.reread = Maximum.values,
       `1971.reread` = `1971`,
@@ -213,7 +213,7 @@ test_that("write_eta_fu_template works as expected for 2018 data", {
   p <- Eta_fu_template_2018 %>% 
     write_eta_fu_template(f, overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)
   # Read the tab back in.
-  Template.reread <- openxlsx::read.xlsx(f, sheet = "FU etas")
+  Template.reread <- openxlsx::read.xlsx(f, sheet = IEATools::fu_analysis_file_info$eta_fu_tab_name)
   # Check that it was read back correctly.
   # Use expect_equivalent instead of expect_equal to ignore attributes 
   # (in this case levels) that are different after reading back in.
@@ -253,7 +253,7 @@ test_that("write_eta_fu_template works as expected for 2018 data", {
   p <- Eta_fu_template_2018_2 %>% 
     write_eta_fu_template(f, overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)
   # Read the tab back in.
-  Template_2018.reread2 <- openxlsx::read.xlsx(f, sheet = "FU etas")
+  Template_2018.reread2 <- openxlsx::read.xlsx(f, sheet = IEATools::fu_analysis_file_info$eta_fu_tab_name)
   # Check that it was read back correctly.
   # Use expect_equivalent instead of expect_equal to ignore attributes 
   # (in this case levels) that are different after reading back in.
@@ -285,12 +285,13 @@ test_that("write_eta_fu_template works as expected for 2018 data", {
     write_eta_fu_template(path = f3, overwrite_file = TRUE)  
   # Verify that the tab was written
   tabnames <- openxlsx::getSheetNames(p3)
-  expect_true("FU etas" %in% tabnames)
+  expect_true(IEATools::fu_analysis_file_info$eta_fu_tab_name %in% tabnames)
   # Now try to write the tab again
   p3 <- Eta_fu_template_2018 %>% 
     write_eta_fu_template(path = f3, overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)  
   expect_error(Eta_fu_template_2018 %>% 
-                 write_eta_fu_template(path = f3, overwrite_file = TRUE), "FU etas already exists")
+                 write_eta_fu_template(path = f3, overwrite_file = TRUE), 
+               paste(IEATools::fu_analysis_file_info$eta_fu_tab_name, "already exists"))
   # Clean up
   if (file.exists(f3)) {
     file.remove(f3)
@@ -307,7 +308,7 @@ test_that("write_eta_fu_template works as expected for 2019 data", {
   p <- Eta_fu_template_2019 %>% 
     write_eta_fu_template(f, overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)
   # Read the tab back in.
-  Template.reread <- openxlsx::read.xlsx(f, sheet = "FU etas")
+  Template.reread <- openxlsx::read.xlsx(f, sheet = IEATools::fu_analysis_file_info$eta_fu_tab_name)
   # Check that it was read back correctly.
   # Use expect_equivalent instead of expect_equal to ignore attributes 
   # (in this case levels) that are different after reading back in.
@@ -330,7 +331,7 @@ test_that("write_eta_fu_template works as expected for 2019 data", {
   p <- Eta_fu_template_2019_2 %>% 
     write_eta_fu_template(f, overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)
   # Read the tab back in.
-  Template_2019.reread2 <- openxlsx::read.xlsx(f, sheet = "FU etas")
+  Template_2019.reread2 <- openxlsx::read.xlsx(f, sheet = IEATools::fu_analysis_file_info$eta_fu_tab_name)
   # Check that it was read back correctly.
   # Use expect_equivalent instead of expect_equal to ignore attributes 
   # (in this case levels) that are different after reading back in.

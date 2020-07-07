@@ -1,3 +1,7 @@
+* Improvements to `switch-notation` documentation.
+* Added constant `IEATools::fu_analysis_file_info`.
+
+
 # IEATools 0.1.28 (2020-07-02)
 
 * "Memo: Greenland", "Memo: Palestinian Authority", and "Memo: Uganda"

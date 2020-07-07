@@ -208,6 +208,25 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 }
 
 
+#' Tell whether a final-to-useful allocation table is complete
+#' 
+#' A final-to-useful allocation table is complete iff all of the final energy flows for a country 
+#' are routed to a final-to-useful machine.
+#'
+#' @param fu_allocation_table The final-to-useful allocation table whose completeness is to be determined.
+#' @param tidy_specified_iea_data  A tidy IEA data frame from which final energy flows are gleaned.
+#'
+#' @return A boolean telling whether `fu_allocation_table` is complete.
+#' 
+#' @export
+#'
+#' @examples
+fu_allocation_table_is_complete <- function(fu_allocation_table, 
+                                            tidy_specified_iea_data) {
+  
+}
+
+
 #' Complete an FU Efficiency table
 #' 
 #' An FU (final-to-useful) Efficiency table 

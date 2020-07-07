@@ -27,29 +27,31 @@ An object of same length as \code{m} with switched notation.
 }
 \description{
 IEA data can be "specified" by adding additional information.
-Two notations are useful: arrow and bracket.
-Arrow notation is "from -> to",
-and bracket notation is
+Three notations are useful: arrow and bracket.
+Arrow notation is "from -> to", and
+bracket notation is
 "destination [source]".
 These functions change matrix row/column names
 between the two notations.
 \itemize{
-\item \code{arrow_to_from()} switches from arrow to from notation.
-\item \code{from_to_arrow()} switches from from to arrow notation.
-\item \code{arrow_to_bracket()} switches from arrow to bracket notation.
-\item \code{bracket_to_arrow()} switches from bracket to arrow notation.
+\item \code{arrow_to_from_byname()} switches from arrow notation to from notation.
+\item \code{from_to_arrow_byname()} switches from from notation to arrow notation.
+\item \code{arrow_to_bracket_byname()} switches from arrow notation to bracket notation.
+\item \code{bracket_to_arrow_byname()} switches from bracket notation to arrow notation.
 }
 
-Functions with the name \verb{*_byname} behave like functions in the \code{matsbyname} package.
+Functions with the \verb{_byname} suffix behave like functions in the \code{matsbyname} package.
 Specifically, they can work with a single matrix or a list of matrices supplied to the \code{m} argument.
 }
 \examples{
-m <- matrix(c(1, 2, 
+m <- matrix(c(1, 2,  
               3, 4), nrow = 2, ncol = 2, byrow = TRUE, 
             dimnames = list(c("a -> b", "c -> d"), c("f [e]", "h [g]")))
 m
 arrow_to_from_byname(m)
 arrow_to_from_byname(m, margin = 2) # No changes expected.
 from_to_arrow_byname(m)
+arrow_to_bracket_byname(m)
+bracket_to_arrow_byname(m)
 
 }
