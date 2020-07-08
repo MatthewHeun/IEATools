@@ -188,12 +188,19 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     
     # Figure out the rows of allocations that are still missing and, therefore, 
     # must be obtained from a forthcoming exemplar.
-    iea_rows_yet_to_be_allocated <- dplyr::anti_join(iea_rows_yet_to_be_allocated, exemplar_rows_to_use, 
+    iea_rows_yet_to_be_allocated <- dplyr::anti_join(iea_rows_yet_to_be_allocated, exemplar_rows_to_use,
                                                      by = colnames(iea_rows_yet_to_be_allocated))
-    
     if (nrow(iea_rows_yet_to_be_allocated) == 0) {
       break
     }
+    
+    # Check to see if we have allocated everything
+    # done <- fu_allocation_table_completed(fu_allocation_table, iea_rows_yet_to_be_allocated)
+    # if (done) {
+    #   break
+    # }
+    
+    
   } # End of for loop.
   
   # Figure out if we completed everything.
@@ -204,6 +211,13 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     return(iea_rows_yet_to_be_allocated)
   }
 
+  # if (!done) {
+  #   warning("Didn't complete FU Allocation table for ", country_to_complete,
+  #           ". Returning a data frame of final energy that wasn't allocated.")
+  #   return(attr(done, "unallocated_rows"))
+  # }
+  
+  
   return(fu_allocation_table)
 }
 
@@ -220,7 +234,8 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 #' @param year,ledger_side,e_dot,flow,product,flow_aggregation_point See `IEATools::iea_cols`.
 #' @param consumption See `IEATools::ledger_sides`.
 #' @param eiou See `IEATools::tfc_compare_flows`.
-#' @param maximum_values,quantity,C_perc,ef_product,destination,machine,e_u_product,e_dot_perc See `IEATools::template_cols`.
+#' @param maximum_values,quantity,.values,ef_product,destination,machine,e_u_product,e_dot_perc,C_source
+#'        See `IEATools::template_cols`.
 #'
 #' @return A boolean telling whether `fu_allocation_table` is complete.
 #' 
@@ -243,7 +258,8 @@ fu_allocation_table_completed <- function(fu_allocation_table,
                                           eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
                                           maximum_values = IEATools::template_cols$maximum_values, 
                                           quantity = IEATools::template_cols$quantity, 
-                                          C_perc = IEATools::template_cols$C_perc,
+                                          .values = IEATools::template_cols$.values,
+                                          C_source = IEATools::template_cols$c_source,
                                           ef_product = IEATools::template_cols$ef_product,
                                           destination = IEATools::template_cols$destination,
                                           machine = IEATools::template_cols$machine,
@@ -265,8 +281,8 @@ fu_allocation_table_completed <- function(fu_allocation_table,
     fu_allocation_table <- fu_allocation_table %>% 
       dplyr::select(!maximum_values) %>% 
       dplyr::filter(!.data[[quantity]] %in% c(e_dot, e_dot_perc)) %>% 
-      tidyr::pivot_longer(cols = fu_year_columns, names_to = year, values_to = C_perc) %>% 
-      dplyr::filter(!is.na(.data[[C_perc]])) %>% 
+      tidyr::pivot_longer(cols = fu_year_columns, names_to = year, values_to = .values) %>% 
+      dplyr::filter(!is.na(.data[[.values]])) %>% 
       dplyr::mutate(
         "{year}" := as.numeric(.data[[year]])
       )
@@ -275,27 +291,44 @@ fu_allocation_table_completed <- function(fu_allocation_table,
   # We should get all 1's.
   allocation_sums <- fu_allocation_table %>% 
     dplyr::select(!c(quantity, machine, e_u_product)) %>%
-    matsindf::group_by_everything_except(C_perc) %>% 
+    matsindf::group_by_everything_except(.values) %>% 
     dplyr::summarise(
-      "{C_perc}" := sum(.data[[C_perc]])
+      "{.values}" := sum(.data[[.values]])
     )
-  if (!all(allocation_sums[[C_perc]] == 1)) {
+  if (!all(allocation_sums[[.values]] == 1)) {
     return(FALSE)
   }
   # Figure out the rows of final energy that need to be allocated in each year.
-  rows_to_be_allocatated <- specified_iea_data %>% 
+  rows_to_be_allocated <- specified_iea_data %>% 
     dplyr::filter(.data[[ledger_side]] == consumption | .data[[flow_aggregation_point]] == eiou) %>% 
-    dplyr::select(!e_dot) %>% 
-    dplyr::rename(
-      "{ef_product}" := .data[[product]], 
-      "{destination}" := .data[[flow]]
+    dplyr::mutate(
+      "{e_dot}" := NULL
     )
+  # Rename some columns if necessary
+  if (product %in% colnames(rows_to_be_allocated)) {
+    rows_to_be_allocated <- rows_to_be_allocated %>% 
+      dplyr::rename(
+        "{ef_product}" := .data[[product]]
+      )
+  }
+  if (flow %in% colnames(rows_to_be_allocated)) {
+    rows_to_be_allocated <- rows_to_be_allocated %>% 
+      dplyr::rename(
+        "{destination}" := .data[[flow]]
+      )
+  }
   # Now check that all rows that need to be allocated have been allocated.
+  # Get rid of some columns that might conflict.
   allocated_rows <- allocation_sums %>% 
-    dplyr::select(!C_perc)
-  unallocated_rows <- dplyr::anti_join(rows_to_be_allocatated , allocated_rows, by = colnames(allocated_rows))
+    dplyr::mutate(
+      "{.values}" := NULL,
+      "{C_source}" := NULL
+    )
+  unallocated_rows <- dplyr::anti_join(rows_to_be_allocated, allocated_rows, by = colnames(allocated_rows))
   if (nrow(unallocated_rows) > 0) {
-    return(FALSE)
+    out <- FALSE
+    attr(out, "unallocated_rows") <- unallocated_rows
+    return(out)
   }
   return(TRUE)
 }
