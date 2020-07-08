@@ -10,12 +10,15 @@ test_that("fu_allocation_table_completed() works as expected", {
   
   # Remove a row from fu_allocations. Now the test for completion should fail.
   # In fact, remove a row that has a 1 in it.
-  fu_allocations_bad <- fu_allocations[-3, ]
-  expect_false(fu_allocation_table_completed(fu_allocations_bad, iea_data))
+  expect_false(fu_allocation_table_completed(fu_allocations[-3, ], iea_data))
   
   # Now remove a row that has a fraction.
-  fu_allocations_bad_2 <- fu_allocations[-8, ]
-  expect_false(fu_allocation_table_completed(fu_allocations_bad_2, iea_data))
+  expect_false(fu_allocation_table_completed(fu_allocations[-8, ], iea_data))
+  
+  # Try with a wide IEAData data frame.
+  expect_true(fu_allocation_table_completed(fu_allocations, iea_data %>% 
+                                              tidyr::pivot_wider(names_from = IEATools::iea_cols$year, 
+                                                                 values_from = IEATools::iea_cols$e_dot)))
 })
 
 
