@@ -2,13 +2,6 @@
 context("Completion functions")
 ###########################################################
 
-test_that("fu_efficiency_table_completed() works as expected", {
-  fu_allocations <- load_fu_allocation_data()
-  fu_efficiencies <- load_eta_fu_data()
-  expect_true(eta_fu_table_completed(fu_efficiencies, fu_allocations))
-})
-
-
 test_that("complete_fu_allocation_table works as expected", {
   
   # In this test, the 2nd exemplar isn't needed, and the code should 
@@ -378,6 +371,27 @@ test_that("complete_eta_fu_table works as expected", {
     magrittr::extract2(IEATools::template_cols$machine) %>% 
     expect_equal(c("Automobiles", "Automobiles", "Irons", "Irons"))
     
+})
+
+
+test_that("eta_fu_table_completed() works as expected", {
+  fu_allocations <- load_fu_allocation_data()
+  fu_efficiencies <- load_eta_fu_data()
+  expect_true(eta_fu_table_completed(fu_efficiencies, fu_allocations))
+  
+  # Remove a couple rows to get a FALSE return value.
+  expect_false(eta_fu_table_completed(fu_efficiencies[-3, ], fu_allocations))
+  
+  # Try with a tall allocations data frame
+  expect_true(eta_fu_table_completed(fu_efficiencies, 
+                                     fu_allocations %>% tidyr::pivot_longer(cols = year_cols(fu_allocations), 
+                                                                            names_to = IEATools::iea_cols$year, 
+                                                                            values_to = IEATools::template_cols$.values)))
+  # Try with a tall efficiencies data frame
+  expect_true(eta_fu_table_completed(fu_efficiencies %>% tidyr::pivot_longer(cols = year_cols(fu_efficiencies), 
+                                                                             names_to = IEATools::iea_cols$year, 
+                                                                             values_to = IEATools::template_cols$.values), 
+                                     fu_allocations))
 })
 
 

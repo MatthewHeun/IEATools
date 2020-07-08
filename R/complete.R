@@ -618,14 +618,16 @@ eta_fu_table_completed <- function(eta_fu_table,
   if (length(fu_year_columns) > 0) {
     # fu_allocation_table is not tidy. Make it so.
     fu_allocation_table <- fu_allocation_table %>% 
-      dplyr::select(!maximum_values) %>% 
-      dplyr::filter(!.data[[quantity]] %in% c(e_dot, e_dot_perc)) %>% 
-      tidyr::pivot_longer(cols = fu_year_columns, names_to = year, values_to = .values) %>% 
-      dplyr::filter(!is.na(.data[[.values]])) %>% 
-      dplyr::mutate(
-        "{year}" := as.numeric(.data[[year]])
-      )
+      tidyr::pivot_longer(cols = fu_year_columns, names_to = year, values_to = .values)
   }
+  fu_allocation_table <- fu_allocation_table %>% 
+    dplyr::mutate(
+      "{maximum_values}" := NULL,
+      "{year}" := as.numeric(.data[[year]])
+    ) %>% 
+    dplyr::filter(!.data[[quantity]] %in% c(e_dot, e_dot_perc)) %>% 
+    dplyr::filter(!is.na(.data[[.values]]))
+  
   # Eliminate unneeded columns to find out which machines NEED efficiencies.
   machines_that_need_efficiencies <- fu_allocation_table %>% 
     dplyr::mutate(
@@ -655,14 +657,21 @@ eta_fu_table_completed <- function(eta_fu_table,
       "{year}" := as.numeric(.data[[year]])
     )
   
+  # Add the quantities that are needed to the outgoing object.
+  machines_that_need_efficiencies <- lapply(which_quantity, FUN = function(q) {
+    # Subtract machines_that_have_efficiencies from machines_that_need_efficiencies via anti_join
+    dplyr::anti_join(machines_that_need_efficiencies, machines_that_have_efficiencies %>% dplyr::filter(.data[[quantity]] == q), 
+                     by = colnames(machines_that_need_efficiencies))
+  }) %>% 
+    dplyr::bind_rows()
   
-  
-  # Subtract machines_that_have_efficiencies from machines_that_need_efficiencies via anti_join
-  unassigned_efficiencies <- dplyr::anti_join(machines_that_need_efficiencies, machines_that_have_efficiencies %>% dplyr::filter(.data[[quantity]] == eta_fu), 
-                                              by = colnames(machines_that_need_efficiencies))
-    
-  unassigned_phis <- dplyr::anti_join(machines_that_need_efficiencies, machines_that_have_efficiencies %>% dplyr::filter(.data[[quantity]] == phi_u), 
-                                      by = colnames(machines_that_need_efficiencies))
+  if (nrow(machines_that_need_efficiencies) > 0) {
+    out <- FALSE
+    # Store the unallocated rows as an attribute on out so others can figure out what went wrong.
+    attr(out, "unallocated_rows") <- machines_that_need_efficiencies
+    return(out)
+  }
+  return(TRUE)
 }
                                           
                                           
