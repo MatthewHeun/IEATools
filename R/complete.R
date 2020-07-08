@@ -114,7 +114,7 @@ complete_fu_allocation_table <- function(fu_allocation_table,
   # Figure out which IEA rows need to be allocated.
   # Each time we find data in an exemplar to allocate, we will subtract rows from this data frame.
   # When we get to zero rows in this data frame, we know we are done.
-  iea_rows_yet_to_be_allocated <- tidy_specified_iea_data %>% 
+  iea_rows_that_must_be_allocated <- tidy_specified_iea_data %>% 
     # Figure out the rows for which allocations are needed, based on the IEA data.
     dplyr::filter(.data[[country]] == country_to_complete) %>% 
     # Only need rows where we actually have energy to be allocated.
@@ -129,6 +129,9 @@ complete_fu_allocation_table <- function(fu_allocation_table,
       "{destination}" := .data[[flow]], 
       "{ef_product}" := .data[[product]]
     )
+  
+  # iea_rows_yet_to_be_allocated is our running accounting of remaining rows.
+  iea_rows_yet_to_be_allocated <- iea_rows_that_must_be_allocated
   
   # We expect exemplar_fu_allocation_tables to be a list. 
   # If it is not a list but rather something that looks like a data frame, 
@@ -190,34 +193,23 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     # must be obtained from a forthcoming exemplar.
     iea_rows_yet_to_be_allocated <- dplyr::anti_join(iea_rows_yet_to_be_allocated, exemplar_rows_to_use,
                                                      by = colnames(iea_rows_yet_to_be_allocated))
-    if (nrow(iea_rows_yet_to_be_allocated) == 0) {
+
+    # Check to see if we have allocated everything
+    done <- fu_allocation_table_completed(fu_allocation_table, iea_rows_that_must_be_allocated)
+    if (done) {
       break
     }
     
-    # Check to see if we have allocated everything
-    # done <- fu_allocation_table_completed(fu_allocation_table, iea_rows_yet_to_be_allocated)
-    # if (done) {
-    #   break
-    # }
-    
-    
   } # End of for loop.
   
-  # Figure out if we completed everything.
-  # Emit a warning if all final energy was NOT allocated to FU machines.
-  if (nrow(iea_rows_yet_to_be_allocated) != 0) {
+  if (!done) {
+    # Emit a warning if all final energy was NOT allocated to FU machines by any of the exemplars..
     warning("Didn't complete FU Allocation table for ", country_to_complete,
             ". Returning a data frame of final energy that wasn't allocated.")
-    return(iea_rows_yet_to_be_allocated)
+    return(attr(done, "unallocated_rows"))
   }
-
-  # if (!done) {
-  #   warning("Didn't complete FU Allocation table for ", country_to_complete,
-  #           ". Returning a data frame of final energy that wasn't allocated.")
-  #   return(attr(done, "unallocated_rows"))
-  # }
   
-  
+  # If we get here, everything was allocated, so return the fu_allocation_table.
   return(fu_allocation_table)
 }
 
@@ -237,7 +229,11 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 #' @param maximum_values,quantity,.values,ef_product,destination,machine,e_u_product,e_dot_perc,C_source
 #'        See `IEATools::template_cols`.
 #'
-#' @return A boolean telling whether `fu_allocation_table` is complete.
+#' @return A boolean telling whether `fu_allocation_table` is complete. 
+#'         If `FALSE`, a data frame of IEA final energy rows that have not been allocated
+#'         is stored in the "unallocated_rows" attribute of the return value. 
+#'         Retrieve with `attr(done, "unallocated_rows")`
+#'         if the result of this function is assigned to the variable `done`.
 #' 
 #' @export
 #'
@@ -327,6 +323,7 @@ fu_allocation_table_completed <- function(fu_allocation_table,
   unallocated_rows <- dplyr::anti_join(rows_to_be_allocated, allocated_rows, by = colnames(allocated_rows))
   if (nrow(unallocated_rows) > 0) {
     out <- FALSE
+    # Store the unallocated rows as an attribute on out so others can figure out what went wrong.
     attr(out, "unallocated_rows") <- unallocated_rows
     return(out)
   }
