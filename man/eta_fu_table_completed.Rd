@@ -7,7 +7,22 @@
 eta_fu_table_completed(
   eta_fu_table,
   fu_allocation_table,
-  which_quantity = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)
+  which_quantity = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u),
+  e_dot = IEATools::iea_cols$e_dot,
+  year = IEATools::iea_cols$year,
+  method = IEATools::iea_cols$method,
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  ef_product = IEATools::template_cols$ef_product,
+  quantity = IEATools::template_cols$quantity,
+  e_dot_perc = IEATools::template_cols$e_dot_perc,
+  e_dot_machine = IEATools::template_cols$e_dot_machine,
+  e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
+  maximum_values = IEATools::template_cols$maximum_values,
+  destination = IEATools::template_cols$destination,
+  eta_fu = IEATools::template_cols$eta_fu,
+  phi_u = IEATools::template_cols$phi_u,
+  .values = IEATools::template_cols$.values
 )
 }
 \arguments{
@@ -28,4 +43,7 @@ if the result of this function is assigned to the variable \code{done}.
 \description{
 A final-to-useful efficiency table is complete iff all of the machines in a final-to-useful allocation table
 have been assigned efficiencies in each year for each country.
+}
+\details{
+This function should really be named \verb{eta_fu_table_completed?}, because it answers a question.
 }
