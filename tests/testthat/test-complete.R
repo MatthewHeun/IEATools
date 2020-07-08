@@ -2,23 +2,10 @@
 context("Completion functions")
 ###########################################################
 
-test_that("fu_allocation_table_completed() works as expected", {
-  iea_data <- load_tidy_iea_df() %>% 
-    specify_all()
+test_that("fu_efficiency_table_completed() works as expected", {
   fu_allocations <- load_fu_allocation_data()
-  expect_true(fu_allocation_table_completed(fu_allocations, iea_data))
-  
-  # Remove a row from fu_allocations. Now the test for completion should fail.
-  # In fact, remove a row that has a 1 in it.
-  expect_false(fu_allocation_table_completed(fu_allocations[-3, ], iea_data))
-  
-  # Now remove a row that has a fraction.
-  expect_false(fu_allocation_table_completed(fu_allocations[-8, ], iea_data))
-  
-  # Try with a wide IEAData data frame.
-  expect_true(fu_allocation_table_completed(fu_allocations, iea_data %>% 
-                                              tidyr::pivot_wider(names_from = IEATools::iea_cols$year, 
-                                                                 values_from = IEATools::iea_cols$e_dot)))
+  fu_efficiencies <- load_eta_fu_data()
+  # expect_true(eta_fu_table_completed(fu_efficiencies, fu_allocations))
 })
 
 
@@ -205,6 +192,26 @@ test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
                                                                   tidy_specified_iea_data = tidy_specified_iea_data), 
                  "Didn't complete FU Allocation table for GHA. Returning a data frame of final energy that wasn't allocated.")
   expect_equal(complete_failure[[IEATools::template_cols$ef_product]] %>% unique(), IEATools::biofuels_and_waste_products$primary_solid_biofuels)
+})
+
+
+test_that("fu_allocation_table_completed() works as expected", {
+  iea_data <- load_tidy_iea_df() %>% 
+    specify_all()
+  fu_allocations <- load_fu_allocation_data()
+  expect_true(fu_allocation_table_completed(fu_allocations, iea_data))
+  
+  # Remove a row from fu_allocations. Now the test for completion should fail.
+  # In fact, remove a row that has a 1 in it.
+  expect_false(fu_allocation_table_completed(fu_allocations[-3, ], iea_data))
+  
+  # Now remove a row that has a fraction.
+  expect_false(fu_allocation_table_completed(fu_allocations[-8, ], iea_data))
+  
+  # Try with a wide IEAData data frame.
+  expect_true(fu_allocation_table_completed(fu_allocations, iea_data %>% 
+                                              tidyr::pivot_wider(names_from = IEATools::iea_cols$year, 
+                                                                 values_from = IEATools::iea_cols$e_dot)))
 })
 
 
