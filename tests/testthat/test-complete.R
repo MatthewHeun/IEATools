@@ -5,7 +5,7 @@ context("Completion functions")
 test_that("fu_efficiency_table_completed() works as expected", {
   fu_allocations <- load_fu_allocation_data()
   fu_efficiencies <- load_eta_fu_data()
-  # expect_true(eta_fu_table_completed(fu_efficiencies, fu_allocations))
+  expect_true(eta_fu_table_completed(fu_efficiencies, fu_allocations))
 })
 
 
