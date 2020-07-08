@@ -1,3 +1,4 @@
+* New function `eta_fu_table_completed()` that tells when an FU Efficiency table is complete.
 * New function `fu_allocation_table_completed()` that tells when an FU Allocation table is complete.
 * Improvements to `switch-notation` documentation.
 * Added constant `IEATools::fu_analysis_file_info`.
