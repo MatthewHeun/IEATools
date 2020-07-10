@@ -5,7 +5,7 @@
 \title{Tell whether a final-to-useful efficiency table has been completed}
 \usage{
 eta_fu_table_completed(
-  eta_fu_table,
+  eta_fu_table = NULL,
   fu_allocation_table,
   which_quantity = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u),
   e_dot = IEATools::iea_cols$e_dot,
@@ -26,7 +26,9 @@ eta_fu_table_completed(
 )
 }
 \arguments{
-\item{eta_fu_table}{The final-to-useful efficiency table whose completeness is to be determined.}
+\item{eta_fu_table}{The final-to-useful efficiency table whose completeness is to be determined.
+If \code{NULL} (the default), all rows in \code{fu_allocation_table} that need efficiencies are returned
+as the "unallocated_rows" attribute of \code{FALSE}.}
 
 \item{fu_allocation_table}{The final-to-useful allocation table whose final-to-useful machines must be assigned efficiencies.}
 
