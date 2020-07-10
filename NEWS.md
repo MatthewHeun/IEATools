@@ -1,4 +1,7 @@
-* Refactored `complete_fu_analysis_table()` and `complete_eta_fu_table()` to use 
+* New tests for new features.
+    * Now up to 567 tests, all passing.
+    * Test coverage remains at 100%.
+* Refactored `complete_fu_allocation_table()` and `complete_eta_fu_table()` to use 
   `fu_allocation_table_completed()` and `eta_fu_table_completed()`.
 * New function `eta_fu_table_completed()` that tells when an FU Efficiency table is complete.
 * New function `fu_allocation_table_completed()` that tells when an FU Allocation table is complete.

@@ -576,16 +576,22 @@ complete_eta_fu_table <- function(eta_fu_table,
 #' @param fu_allocation_table The final-to-useful allocation table whose final-to-useful machines must be assigned efficiencies.
 #' @param which_quantity A vector of quantities to be completed in the eta_FU table.
 #'                       Default is `c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)`.
+#' @param e_dot,year,method,ledger_side,flow_aggregation_point See `IEATools::iea_cols`.
+#' @param ef_product,quantity,e_dot_perc,e_dot_machine,e_dot_machine_perc,maximum_values,destination,eta_fu,phi_u,.values 
+#'        See `IEATools::template_cols`.
 #' 
 #' @export
 #' 
 #' @return A boolean telling whether `eta_fu_table` is complete. 
 #'         If `FALSE`, a data frame of fu_allocation_table machines that lack efficiencies
-#'         is stored in the "machines_without_efficiencies" attribute of the return value. 
-#'         Retrieve with `attr(done, "machines_without_efficiencies")`
+#'         is stored in the "unallocated_rows" attribute of the return value. 
+#'         Retrieve with `attr(done, "unallocated_rows")`
 #'         if the result of this function is assigned to the variable `done`.
 #'
 #' @examples 
+#' fu_allocations <- load_fu_allocation_data()
+#' fu_efficiencies <- load_eta_fu_data()
+#' eta_fu_table_completed(fu_efficiencies, fu_allocations)
 eta_fu_table_completed <- function(eta_fu_table = NULL, 
                                    fu_allocation_table, 
                                    which_quantity = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u), 

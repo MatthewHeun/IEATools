@@ -34,12 +34,16 @@ as the "unallocated_rows" attribute of \code{FALSE}.}
 
 \item{which_quantity}{A vector of quantities to be completed in the eta_FU table.
 Default is \code{c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)}.}
+
+\item{e_dot, year, method, ledger_side, flow_aggregation_point}{See \code{IEATools::iea_cols}.}
+
+\item{ef_product, quantity, e_dot_perc, e_dot_machine, e_dot_machine_perc, maximum_values, destination, eta_fu, phi_u, .values}{See \code{IEATools::template_cols}.}
 }
 \value{
 A boolean telling whether \code{eta_fu_table} is complete.
 If \code{FALSE}, a data frame of fu_allocation_table machines that lack efficiencies
-is stored in the "machines_without_efficiencies" attribute of the return value.
-Retrieve with \code{attr(done, "machines_without_efficiencies")}
+is stored in the "unallocated_rows" attribute of the return value.
+Retrieve with \code{attr(done, "unallocated_rows")}
 if the result of this function is assigned to the variable \code{done}.
 }
 \description{
@@ -48,4 +52,9 @@ have been assigned efficiencies in each year for each country.
 }
 \details{
 This function should really be named \verb{eta_fu_table_completed?}, because it answers a question.
+}
+\examples{
+fu_allocations <- load_fu_allocation_data()
+fu_efficiencies <- load_eta_fu_data()
+eta_fu_table_completed(fu_efficiencies, fu_allocations)
 }
