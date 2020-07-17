@@ -108,8 +108,9 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 
   # Figure out the metadata columns in the fu_allocation_table
   year_columns <- year_cols(fu_allocation_table, return_names = TRUE) %>% as.character()
-  meta_cols <- colnames(fu_allocation_table) %>% 
-    setdiff(c(quantity, maximum_values, year_columns))
+  # meta_columns <- colnames(fu_allocation_table) %>% 
+  #   setdiff(c(quantity, maximum_values, year_columns))
+  meta_columns <- meta_cols(fu_allocation_table, not_meta = c(quantity, maximum_values), return_names = TRUE)
   
   # Figure out which IEA rows need to be allocated.
   # Each time we find data in an exemplar to allocate, we will subtract rows from this data frame.
@@ -257,7 +258,7 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
 
   # Accept a non-tidy specified_iea_data frame if it arrives.
   iea_year_columns <- specified_iea_data %>% 
-    year_cols(return_names = TRUE)
+    year_cols(return_names = TRUE, year = NULL)
   if (length(iea_year_columns) > 0) {
     # specified_iea_data is not tidy. Make it so.
     specified_iea_data <- specified_iea_data %>% 
