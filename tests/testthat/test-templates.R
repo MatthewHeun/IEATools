@@ -185,7 +185,7 @@ test_that("eta_fu_template works as expected for 2019 data", {
   # Now try to sort by importance
   Eta_fu_template_2019_2 <- load_fu_allocation_data(sample_fu_allocation_table_path(2019)) %>% 
     eta_fu_template(sort_by = "importance")
-  expect_equal(Eta_fu_template_2019_2$Machine[[1]], "Wood stoves")
+  expect_equal(Eta_fu_template_2019_2$Machine[[1]], "Wood cookstoves")
   expect_equal(Eta_fu_template_2019_2$Machine[[nrow(Eta_fu_template_2019_2)]], "Gas heaters")
   expect_equal(as.character(Eta_fu_template_2019_2$Quantity[[1]]), "E.dot_machine")
   expect_equal(as.character(Eta_fu_template_2019_2$Quantity[[nrow(Eta_fu_template_2019_2)]]), "phi.u")

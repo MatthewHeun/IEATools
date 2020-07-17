@@ -300,7 +300,7 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
   # Figure out which rows have been allocated in each year
   # Accept a non-tidy fu_allocation_table if it arrives.
   fu_year_columns <- fu_allocation_table %>% 
-    year_cols(return_names = TRUE)
+    year_cols(return_names = TRUE, year = NULL)
   if (length(fu_year_columns) > 0) {
     # fu_allocation_table is not tidy. Make it so.
     fu_allocation_table <- fu_allocation_table %>% 
@@ -613,7 +613,7 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
                                    .values = IEATools::template_cols$.values) {
   
   fu_year_columns <- fu_allocation_table %>% 
-    year_cols(return_names = TRUE)
+    year_cols(return_names = TRUE, year = NULL)
   if (length(fu_year_columns) > 0) {
     # fu_allocation_table is not tidy. Make it so.
     fu_allocation_table <- fu_allocation_table %>% 
@@ -650,7 +650,7 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
   
   # Figure out the machines that HAVE efficiencies
   eta_fu_year_columns <- eta_fu_table %>% 
-    year_cols(return_names = TRUE)
+    year_cols(return_names = TRUE, year = NULL)
   machines_that_have_efficiencies <- eta_fu_table
   if (length(eta_fu_year_columns) > 0) {
     # eta_fu_table is not tidy. Make it so.
