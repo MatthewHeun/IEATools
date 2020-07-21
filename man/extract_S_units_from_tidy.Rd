@@ -12,7 +12,7 @@ extract_S_units_from_tidy(
   product = IEATools::iea_cols$product,
   e_dot = IEATools::iea_cols$e_dot,
   unit = IEATools::iea_cols$unit,
-  product_type = IEATools::row_col_types$unit,
+  product_type = IEATools::row_col_types$product,
   unit_type = IEATools::row_col_types$unit,
   s_units = IEATools::psut_cols$s_units,
   .val = ".val",
