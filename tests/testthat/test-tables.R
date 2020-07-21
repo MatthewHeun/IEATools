@@ -21,25 +21,6 @@ test_that("tidy_fu_allocation_table() works", {
 })
 
 
-test_that("tidy_eta_fu_table() works", {
-  eta_table <- load_eta_fu_data()
-  years <- year_cols(eta_table, return_names = TRUE)
-  tidy <- tidy_eta_fu_table(eta_table)
-  expect_null(tidy[[IEATools::template_cols$maximum_values]])
-  for (yr in years) {
-    expect_null(tidy[[yr]])
-  }
-  tidy %>% 
-    dplyr::filter(.data[[IEATools::template_cols$quantity]] %in% c(IEATools::template_cols$e_dot_machine, IEATools::template_cols$e_dot_machine_perc)) %>% 
-    nrow() %>% 
-    expect_equal(0)
-  
-  # Test that the original is returned if it is already tidy
-  tidy2 <- tidy_eta_fu_table(tidy)
-  expect_equal(tidy2, tidy)
-})
-
-
 test_that("complete_fu_allocation_table works as expected", {
   
   # In this test, the 2nd exemplar isn't needed, and the code should 
@@ -276,6 +257,25 @@ test_that("fu_allocation_table_completed() works as expected", {
   expect_true(fu_allocation_table_completed(fu_allocations, iea_data %>% 
                                               tidyr::pivot_wider(names_from = IEATools::iea_cols$year, 
                                                                  values_from = IEATools::iea_cols$e_dot)))
+})
+
+
+test_that("tidy_eta_fu_table() works", {
+  eta_table <- load_eta_fu_data()
+  years <- year_cols(eta_table, return_names = TRUE)
+  tidy <- tidy_eta_fu_table(eta_table)
+  expect_null(tidy[[IEATools::template_cols$maximum_values]])
+  for (yr in years) {
+    expect_null(tidy[[yr]])
+  }
+  tidy %>% 
+    dplyr::filter(.data[[IEATools::template_cols$quantity]] %in% c(IEATools::template_cols$e_dot_machine, IEATools::template_cols$e_dot_machine_perc)) %>% 
+    nrow() %>% 
+    expect_equal(0)
+  
+  # Test that the original is returned if it is already tidy
+  tidy2 <- tidy_eta_fu_table(tidy)
+  expect_equal(tidy2, tidy)
 })
 
 

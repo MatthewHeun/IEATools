@@ -32,20 +32,18 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
   year_columns <- year_cols(.fu_allocation_table, return_names = TRUE, year = NULL)
   if (length(year_columns) > 0) {
     .fu_allocation_table <- .fu_allocation_table %>% 
-      # Eliminate rows we don't want.
-      dplyr::filter(! .data[[quantity]] %in% c(e_dot, e_dot_perc)) %>% 
-      # Eliminate the maximum_values column.
-      dplyr::mutate(
-        "{maximum_values}" := NULL
-      ) %>% 
-      tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
-      dplyr::mutate(
-        "{year}" := as.numeric(.data[[year]])
-      ) %>% 
-    # Clean out rows that are NA
-      dplyr::filter(!is.na(.data[[.values]]))
+      tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values)
   }
-  return(.fu_allocation_table)
+  .fu_allocation_table %>% 
+    # Eliminate rows we don't want.
+    dplyr::filter(! .data[[quantity]] %in% c(e_dot, e_dot_perc)) %>% 
+    dplyr::mutate(
+      # Eliminate the maximum_values column.
+      "{maximum_values}" := NULL, 
+      "{year}" := as.numeric(.data[[year]])
+    ) %>% 
+    # Clean out rows that are NA
+    dplyr::filter(!is.na(.data[[.values]]))
 }
 
 
@@ -157,10 +155,6 @@ complete_fu_allocation_table <- function(fu_allocation_table,
   assertthat::assert_that(length(country_to_complete) == 1, 
                           msg = glue::glue("Found more than one country to complete in complete_fu_allocation_table(): {glue::glue_collapse(country_to_complete, sep = ', ', last = ' and ')}"))
 
-  # Figure out the metadata columns in the fu_allocation_table
-  year_columns <- year_cols(fu_allocation_table, return_names = TRUE, year = NULL) %>% as.character()
-  meta_columns <- meta_cols(fu_allocation_table, not_meta = c(quantity, maximum_values, .values), return_names = TRUE)
-  
   # Figure out which IEA rows need to be allocated.
   # Each time we find data in an exemplar to allocate, we will subtract rows from this data frame.
   # When we get to zero rows in this data frame, we know we are done.
@@ -186,7 +180,8 @@ complete_fu_allocation_table <- function(fu_allocation_table,
   
   # Tidy the FU allocation table if required.
   fu_allocation_table <- fu_allocation_table %>% 
-    tidy_fu_allocation_table() %>% 
+    tidy_fu_allocation_table(year = year, e_dot = e_dot, e_dot_perc = e_dot_perc, 
+                             quantity = quantity, maximum_values = maximum_values, .values = .values) %>% 
   # Then eliminate all rows in the data frame to be filled from each exemplar.
     dplyr::mutate(
       "{c_source}" := country_to_complete
@@ -342,21 +337,8 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
   # At this point, we have some allocation information.
   # Figure out which rows have been allocated in each year
   # Accept a non-tidy fu_allocation_table if it arrives.
-  fu_year_columns <- fu_allocation_table %>% 
-    year_cols(return_names = TRUE, year = NULL)
-  if (length(fu_year_columns) > 0) {
-    # fu_allocation_table is not tidy. Make it so.
-    fu_allocation_table <- fu_allocation_table %>% 
-      dplyr::select(!maximum_values) %>% 
-      dplyr::filter(!.data[[quantity]] %in% c(e_dot, e_dot_perc)) %>% 
-      tidyr::pivot_longer(cols = fu_year_columns, names_to = year, values_to = .values)
-  }
-  fu_allocation_table <- fu_allocation_table %>% 
-    dplyr::filter(!is.na(.data[[.values]])) %>% 
-    dplyr::mutate(
-      "{year}" := as.numeric(.data[[year]])
-    )
-  
+  fu_allocation_table <- tidy_fu_allocation_table(fu_allocation_table)
+
   # Eliminate the quantity, Machine, and Eu.product columns and summarize.
   # We should get all 1's.
   allocation_sums <- fu_allocation_table %>% 
@@ -399,6 +381,8 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
 #' If `.eta_fu_table` is already tidy, it is returned unmodified.
 #'
 #' @param .eta_fu_table The final-to-useful efficiency table to be tidied.
+#' @param year See `IEATools::iea_cols`. 
+#' @param e_dot_machine,e_dot_machine_perc,quantity,maximum_values,.values See `IEATools::template_cols`.
 #'
 #' @return A tidy version of `.eta_fu_table`.
 #' 
@@ -418,19 +402,17 @@ tidy_eta_fu_table <- function(.eta_fu_table,
   if (length(year_columns) > 0) {
     # We have a non-tidy data frame. Tidy it.
     .eta_fu_table <- .eta_fu_table %>% 
-      # Eliminate rows we don't want.
-      dplyr::filter(! .data[[quantity]] %in% c(e_dot_machine, e_dot_machine_perc)) %>% 
-      dplyr::mutate(
-        "{maximum_values}" := NULL
-      ) %>% 
-      tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
-      dplyr::mutate(
-        "{year}" := as.numeric(.data[[year]])
-      ) %>% 
-      # Clean out rows that are NA
-      dplyr::filter(!is.na(.data[[.values]]))
+      tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values)
   }
-  return(.eta_fu_table)
+  .eta_fu_table %>%
+    # Eliminate rows we don't want.
+    dplyr::filter(! .data[[quantity]] %in% c(e_dot_machine, e_dot_machine_perc)) %>% 
+    # Clean out rows that are NA
+    dplyr::filter(!is.na(.data[[.values]])) %>% 
+    dplyr::mutate(
+      "{maximum_values}" := NULL, 
+      "{year}" := as.numeric(.data[[year]])
+    )
 }
 
 
@@ -596,11 +578,10 @@ complete_eta_fu_table <- function(eta_fu_table,
   
   # Then eliminate all rows in the data frame to be filled from each exemplar.
   eta_fu_table <- eta_fu_table %>% 
-    dplyr::select(!maximum_values) %>% 
-    tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
+    tidy_eta_fu_table(year = year, e_dot_machine = e_dot_machine, e_dot_machine_perc = e_dot_machine_perc, 
+                      quantity = quantity, maximum_values = maximum_values, .values = .values) %>% 
     dplyr::mutate(
       "{eta_fu_phi_u_source}" := country_to_complete, 
-      "{year}" := as.numeric(.data[[year]])
     ) %>% 
     # Eliminate all rows
     magrittr::extract(c(), )
@@ -611,19 +592,14 @@ complete_eta_fu_table <- function(eta_fu_table,
     
     # Trim to the exemplar to essential columns and rows and make tidy.
     exemplar_info_available <- exemplar_eta_fu_tables[[i]] %>% 
-      # Eliminate e_dot_machine and e_dot_machine_perc rows
-      dplyr::filter(!.data[[quantity]] %in% c(e_dot_machine, e_dot_machine_perc)) %>% 
-      # Eliminate Maximum.values column
-      dplyr::select(!maximum_values) %>% 
-      # Make tidy.
-      tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
-      dplyr::filter(!is.na(.data[[.values]]), .data[[quantity]] %in% which_quantity) %>% 
+      tidy_eta_fu_table(year = year, e_dot_machine = e_dot_machine, e_dot_machine_perc = e_dot_machine_perc, 
+                        quantity = quantity, maximum_values = maximum_values, .values = .values) %>% 
+      dplyr::filter(.data[[quantity]] %in% which_quantity) %>%
       dplyr::mutate(
-        "{year}" := as.numeric(.data[[year]]), 
-        "{eta_fu_phi_u_source}" := .data[[country]], 
+        "{eta_fu_phi_u_source}" := .data[[country]],
         "{country}" := country_to_complete # Pretend that the exemplar is the country we're analyzing.
       )
-    
+
     exemplar_rows_to_use <- dplyr::semi_join(exemplar_info_available, 
                                              machines_that_need_etas, 
                                              # We can't join by source, because the exemplar source is different.
@@ -703,21 +679,8 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
                                    phi_u = IEATools::template_cols$phi_u,
                                    .values = IEATools::template_cols$.values) {
   
-  fu_year_columns <- fu_allocation_table %>% 
-    year_cols(return_names = TRUE, year = NULL)
-  if (length(fu_year_columns) > 0) {
-    # fu_allocation_table is not tidy. Make it so.
-    fu_allocation_table <- fu_allocation_table %>% 
-      tidyr::pivot_longer(cols = fu_year_columns, names_to = year, values_to = .values)
-  }
-  fu_allocation_table <- fu_allocation_table %>% 
-    dplyr::mutate(
-      "{maximum_values}" := NULL,
-      "{year}" := as.numeric(.data[[year]])
-    ) %>% 
-    dplyr::filter(!.data[[quantity]] %in% c(e_dot, e_dot_perc)) %>% 
-    dplyr::filter(!is.na(.data[[.values]]))
-  
+  fu_allocation_table <- tidy_fu_allocation_table(fu_allocation_table)
+
   # Eliminate unneeded columns to find out which machines NEED efficiencies.
   machines_that_need_efficiencies <- fu_allocation_table %>% 
     dplyr::mutate(
@@ -740,22 +703,9 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
   }
   
   # Figure out the machines that HAVE efficiencies
-  eta_fu_year_columns <- eta_fu_table %>% 
-    year_cols(return_names = TRUE, year = NULL)
   machines_that_have_efficiencies <- eta_fu_table
-  if (length(eta_fu_year_columns) > 0) {
-    # eta_fu_table is not tidy. Make it so.
-    machines_that_have_efficiencies <- machines_that_have_efficiencies %>% 
-      dplyr::select(!maximum_values) %>% 
-      dplyr::filter(!.data[[quantity]] %in% c(e_dot_machine, e_dot_machine_perc)) %>% 
-      tidyr::pivot_longer(cols = eta_fu_year_columns, names_to = year, values_to = .values)
-  }
-  machines_that_have_efficiencies <- machines_that_have_efficiencies %>% 
-    dplyr::filter(!is.na(.data[[.values]])) %>% 
-    dplyr::mutate(
-      "{year}" := as.numeric(.data[[year]])
-    )
-  
+  machines_that_have_efficiencies <- tidy_eta_fu_table(machines_that_have_efficiencies)
+
   # Add the quantities that are needed to the outgoing object.
   machines_that_need_efficiencies <- lapply(which_quantity, FUN = function(q) {
     # Subtract machines_that_have_efficiencies from machines_that_need_efficiencies via anti_join

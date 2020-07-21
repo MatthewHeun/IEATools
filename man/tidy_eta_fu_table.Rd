@@ -16,6 +16,10 @@ tidy_eta_fu_table(
 }
 \arguments{
 \item{.eta_fu_table}{The final-to-useful efficiency table to be tidied.}
+
+\item{year}{See \code{IEATools::iea_cols}.}
+
+\item{e_dot_machine, e_dot_machine_perc, quantity, maximum_values, .values}{See \code{IEATools::template_cols}.}
 }
 \value{
 A tidy version of \code{.eta_fu_table}.

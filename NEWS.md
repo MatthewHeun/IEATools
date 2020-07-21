@@ -1,3 +1,8 @@
+* New function `tidy_eta_fu_table()` does what the name suggests.
+  This function (and previous new function `tidy_fu_allocation_table()`) 
+  enable elimination of duplicated code in several places.
+
+
 # IEATools 0.1.29 (2020-07-21)
 
 * New tests for new features and old bugs.
