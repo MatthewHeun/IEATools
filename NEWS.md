@@ -10,7 +10,7 @@
 * New function `meta_cols()` gives metadata columns in any IEA data frame.
 * Refactored `complete_fu_allocation_table()` and `complete_eta_fu_table()` to use 
   `fu_allocation_table_completed()` and `eta_fu_table_completed()`.
-* New function `eta_fu_table_completed()` that tells when an FU Efficiency table is complete.
+* New function `eta_fu_table_completed()` tells when an FU Efficiency table is complete.
 * New function `fu_allocation_table_completed()` that tells when an FU Allocation table is complete.
 * Improvements to `switch-notation` documentation.
 * Added constant `IEATools::fu_analysis_file_info`.
