@@ -39,7 +39,10 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
         "{maximum_values}" := NULL
       ) %>% 
       tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
-      # Clean out rows that are NA
+      dplyr::mutate(
+        "{year}" := as.numeric(.data[[year]])
+      ) %>% 
+    # Clean out rows that are NA
       dplyr::filter(!is.na(.data[[.values]]))
   }
   return(.fu_allocation_table)
@@ -182,14 +185,11 @@ complete_fu_allocation_table <- function(fu_allocation_table,
   exemplar_fu_allocation_tables <- c(list(fu_allocation_table), exemplar_fu_allocation_tables)
   
   # Tidy the FU allocation table if required.
-  fu_allocation_table <- tidy_fu_allocation_table(fu_allocation_table)
-  # Then eliminate all rows in the data frame to be filled from each exemplar.
   fu_allocation_table <- fu_allocation_table %>% 
-    # dplyr::select(!maximum_values) %>% 
-    # tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
+    tidy_fu_allocation_table() %>% 
+  # Then eliminate all rows in the data frame to be filled from each exemplar.
     dplyr::mutate(
-      "{c_source}" := country_to_complete, 
-      "{year}" := as.numeric(.data[[year]])
+      "{c_source}" := country_to_complete
     ) %>% 
     # Eliminate all rows
     magrittr::extract(c(), )
@@ -386,12 +386,60 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
 }
 
 
-#' Complete an FU Efficiency table
+#' Tidy a final-to-useful efficiency table
 #' 
-#' An FU (final-to-useful) Efficiency table 
+#' Analysts fill final-to-useful (FU) efficiency tables in a human-readable format
+#' provided by `eta_fu_template()` and `write_eta_fu_template()`.
+#' The templates are not tidy.
+#' However, most code uses in `IEATools` requires tidy data frames.
+#' This function converts an FU efficiency table with years in columns 
+#' to a tidy data frame with years in a `year` column and `eta_fu` and `phi_u` values in a `.values` column.
+#' Identifiers for the variables are in the `quantity` column.
+#' 
+#' If `.eta_fu_table` is already tidy, it is returned unmodified.
+#'
+#' @param .eta_fu_table The final-to-useful efficiency table to be tidied.
+#'
+#' @return A tidy version of `.eta_fu_table`.
+#' 
+#' @export
+#'
+#' @examples
+#' load_eta_fu_data() %>% 
+#'   tidy_eta_fu_table()
+tidy_eta_fu_table <- function(.eta_fu_table, 
+                              year = IEATools::iea_cols$year,
+                              e_dot_machine = IEATools::template_cols$e_dot_machine, 
+                              e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
+                              quantity = IEATools::template_cols$quantity,
+                              maximum_values = IEATools::template_cols$maximum_values, 
+                              .values = IEATools::template_cols$.values) {
+  year_columns <- year_cols(.eta_fu_table, return_names = TRUE, year = NULL)
+  if (length(year_columns) > 0) {
+    # We have a non-tidy data frame. Tidy it.
+    .eta_fu_table <- .eta_fu_table %>% 
+      # Eliminate rows we don't want.
+      dplyr::filter(! .data[[quantity]] %in% c(e_dot_machine, e_dot_machine_perc)) %>% 
+      dplyr::mutate(
+        "{maximum_values}" := NULL
+      ) %>% 
+      tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
+      dplyr::mutate(
+        "{year}" := as.numeric(.data[[year]])
+      ) %>% 
+      # Clean out rows that are NA
+      dplyr::filter(!is.na(.data[[.values]]))
+  }
+  return(.eta_fu_table)
+}
+
+
+#' Complete a final-to-useful efficiency table
+#' 
+#' An FU (final-to-useful) efficiency table 
 #' tells the efficiency with which final energy carriers are converted to useful energy carriers by final-to-useful machines.
 #' It also provides the exergy-to-energy ratio for the useful product (phi.u).
-#' A template for an FU Efficiency table can be created with 
+#' A template for an FU efficiency table can be created with 
 #' `eta_fu_template()`.
 #' If the analyst does not know some FU efficiencies or exergy-to-energy efficiencies for a given country, 
 #' this function can be used to build a complete FU Efficiency table

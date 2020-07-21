@@ -2,7 +2,7 @@
 % Please edit documentation in R/tables.R
 \name{complete_eta_fu_table}
 \alias{complete_eta_fu_table}
-\title{Complete an FU Efficiency table}
+\title{Complete a final-to-useful efficiency table}
 \usage{
 complete_eta_fu_table(
   eta_fu_table,
@@ -48,10 +48,10 @@ Default is \code{c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u
 A tidy version of \code{eta_fu_table} with missing values filled from \code{exemplar_eta_fu_tables}.
 }
 \description{
-An FU (final-to-useful) Efficiency table
+An FU (final-to-useful) efficiency table
 tells the efficiency with which final energy carriers are converted to useful energy carriers by final-to-useful machines.
 It also provides the exergy-to-energy ratio for the useful product (phi.u).
-A template for an FU Efficiency table can be created with
+A template for an FU efficiency table can be created with
 \code{eta_fu_template()}.
 If the analyst does not know some FU efficiencies or exergy-to-energy efficiencies for a given country,
 this function can be used to build a complete FU Efficiency table
