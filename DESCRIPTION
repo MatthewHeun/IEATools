@@ -30,7 +30,8 @@ Imports:
     purrr,
     rlang,
     tibble,
-    tidyr
+    tidyr,
+    tidyselect
 Suggests:
     covr,
     knitr,

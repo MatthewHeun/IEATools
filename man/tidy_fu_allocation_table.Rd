@@ -17,7 +17,7 @@ tidy_fu_allocation_table(
 \arguments{
 \item{.fu_allocation_table}{The final-to-useful allocation table to be tidied.}
 
-\item{year, edot}{See \code{IEATools::iea_cols}.}
+\item{year, e_dot}{See \code{IEATools::iea_cols}.}
 
 \item{e_dot_perc, quantity, maximum_values, .values}{See \code{IEATools::template_cols}.}
 }

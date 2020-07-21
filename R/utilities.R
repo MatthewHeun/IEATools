@@ -98,7 +98,8 @@ year_cols <- function(.df, year_pattern = "^-?\\d+$", year = IEATools::iea_cols$
 #' @param return_names A boolean which tells whether names are returned instead of column indices. 
 #'        Default is `FALSE`.
 #'
-#' @return
+#' @return A vector of string names of metadata columns in `.df`.
+#' 
 #' @export
 #'
 #' @examples

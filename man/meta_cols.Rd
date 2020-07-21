@@ -24,7 +24,7 @@ Default is \code{IEATools::iea_cols$e_dot}.}
 Default is \code{FALSE}.}
 }
 \value{
-
+A vector of string names of metadata columns in \code{.df}.
 }
 \description{
 Determines which columns are metadata columns in an IEA data frame

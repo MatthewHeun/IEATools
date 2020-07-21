@@ -11,7 +11,7 @@
 #' If `.fu_allocation_table` is already tidy, it is returned unmodified.
 #'
 #' @param .fu_allocation_table The final-to-useful allocation table to be tidied.
-#' @param year,edot See `IEATools::iea_cols`.
+#' @param year,e_dot See `IEATools::iea_cols`.
 #' @param e_dot_perc,quantity,maximum_values,.values See `IEATools::template_cols`.
 #'
 #' @return A tidy version of `.fu_allocation_table`.
