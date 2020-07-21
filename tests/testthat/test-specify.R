@@ -26,6 +26,7 @@ test_that("production is converted to resources correctly", {
   expect_equal(DF$Flow[[1]], "Oil and gas extraction")
 })
 
+
 test_that("renamed products are also consumed", {
   Specific_production <- load_tidy_iea_df() %>% 
     # Look at only 1 product to make things simpler
@@ -194,6 +195,7 @@ test_that('tp_sinks_sources(type = "sources") works as expected', {
                tibble::tibble(Country = "Bogus", Flow = "Furnaces"))
 })
 
+
 test_that("tp_sinks_to_nonenergy works as expected", {
   # Make a simple data frame to test this function.
   Tidy <- data.frame(
@@ -220,6 +222,7 @@ test_that("tp_sinks_to_nonenergy works as expected", {
   expect_equal(Result %>% dplyr::filter(Flow == "Automobiles", Product == "Petrol") %>% magrittr::extract2("E.dot"), -1)
   expect_equal(Result %>% dplyr::filter(Flow == "Automobiles", Product == "MD") %>% magrittr::extract2("E.dot"), 1)
 })
+
 
 test_that("spreading by years works as expected at each step of specify_all()", {
   # It should be possible to spread by years after any of these function calls.
