@@ -42,32 +42,89 @@ starts_with_any_of <- function(x, target){
 #' 
 #' It is sometimes helpful to know which columns are years.
 #' This function returns a set of indices 
-#' (or, optionally, the names) of columns in `.fu_df` that represent years.
+#' (or, optionally, the names) of columns in `.df` that represent years.
 #' 
 #' The default `year_pattern` is "`^-?\\d+$`", which matches columns whose names
 #' have zero or one negative signs followed by any number of digits.
+#' 
+#' If `.df` is tidy, it may have a "Year" column which is included in the return value.
+#' To disable this behavior, set `year = NULL`.
 #'
-#' @param .df a non-tidy data frame with years spread to the right in columns.
-#' @param year_pattern a regex pattern that identifies years. Default is "`^-?\\d+$`".
-#' @param return_names a boolean which tells whether names are returned instead of column indices. 
+#' @param .df A data frame with years spread to the right in columns.
+#' @param year_pattern A regex pattern that identifies years. Default is "`^-?\\d+$`".
+#' @param year See `IEATools::iea_cols$year`.
+#' @param return_names A boolean which tells whether names are returned instead of column indices. 
 #'        Default is `FALSE`.
 #'
-#' @return a vector of column indices (when `return_names = FALSE`, the default) or a vector of column names (when `return_names = TRUE`)
+#' @return a vector of column indices (when `return_names = FALSE`, the default) or 
+#'         a vector of column names (when `return_names = TRUE`)
 #'         for those columns that represent years.
 #' 
 #' @export
 #'
 #' @examples
-#' DF <- data.frame(a = c(1, 2), `1967` = c(3, 4), `-10` = c(5, 6), check.names = FALSE)
+#' DF <- data.frame(a = c(1, 2), `1967` = c(3, 4), `-42` = c(5, 6), check.names = FALSE)
 #' DF %>% year_cols()
 #' DF %>% year_cols(return_names = TRUE)
-year_cols <- function(.df, year_pattern = "^-?\\d+$", return_names = FALSE){
+#' DF2 <- data.frame(data.frame(a = c(1, 2), Year = c(1967, 2020)))
+#' DF2 %>% year_cols(return_names = TRUE)
+year_cols <- function(.df, year_pattern = "^-?\\d+$", year = IEATools::iea_cols$year, return_names = FALSE){
+  if (is.numeric(year)) {
+    year <- colnames(.df)[year]
+  }
   colnames <- names(.df)
-  indices <- which(grepl(year_pattern, x = colnames))
+  indices <- c(which(grepl(year_pattern, x = colnames)), which(colnames(.df) == year)) 
   if (return_names) {
     return(colnames[indices])
   }
   return(indices)
+}
+
+
+#' Find metadata columns
+#' 
+#' Determines which columns are metadata columns in an IEA data frame 
+#' by subtracting year columns and `cols_to_exclude` from all columns names in `.df`.
+#' 
+#' A non-tidy data frame will have an `e_dot` column, which is not a metadata column.
+#' Thus, the default value for `not_meta` is `IEATools::iea_cols$e_dot`.
+#' Overriding `not_meta` will change the default behavior to exclude different columns.
+#' 
+#' @param .df A (possibly) non-tidy data frame with years spread to the right in columns.
+#' @param not_meta A vector of column names or position integers identifying columns to *not*
+#'                 include in the return value.
+#'                 Default is `IEATools::iea_cols$e_dot`.
+#' @param years_to_keep A vector of years to retain. Default is `NULL`, which eliminates all year columns.
+#' @param return_names A boolean which tells whether names are returned instead of column indices. 
+#'        Default is `FALSE`.
+#'
+#' @return A vector of string names of metadata columns in `.df`.
+#' 
+#' @export
+#'
+#' @examples
+#' DF <- data.frame(E.dot = 2020, a = c(1, 2), `1967` = c(3, 4), `-42` = c(5, 6), check.names = FALSE)
+#' DF %>% meta_cols()
+#' DF %>% meta_cols(return_names = TRUE)
+meta_cols <- function(.df, 
+                      not_meta = IEATools::iea_cols$e_dot, 
+                      years_to_keep = NULL, 
+                      return_names = FALSE) {
+  column_names <- colnames(.df)
+  if (is.numeric(not_meta)) {
+    # Convert to character vector
+    not_meta <- column_names[not_meta]
+  }
+  # Assume not_meta is a character vector
+  year_columns <- year_cols(.df, return_names = TRUE)
+  year_columns_to_remove <- year_columns %>% 
+    setdiff(as.character(years_to_keep))
+  out <- setdiff(column_names, c(year_columns_to_remove, not_meta))
+  
+  if (!return_names) {
+    out <- which(column_names %in% out, arr.ind = TRUE) %>% as.numeric()
+  }
+  out
 }
 
 

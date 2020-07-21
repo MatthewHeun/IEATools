@@ -129,15 +129,27 @@ template_cols <- list(ef_product = "Ef.product",
                       maximum_values = "Maximum.values",
                       C_eiou = "C_EIOU",
                       C_Y = "C_Y",
+                      C_perc = "C.perc [%]",
                       e_dot_perc = "E.dot [%]",
                       e_dot_machine = "E.dot_machine",
                       e_dot_machine_perc = "E.dot_machine [%]", 
+                      e_dot_machine_max_perc = "E.dot_machine_max [%]",
                       eta_fu = "eta.fu",
                       phi_u = "phi.u", 
                       c_source = "C.source", 
                       eta_fu_phi_u_source = "eta.fu.phi.u.source",
                       .values = ".values")
 usethis::use_data(template_cols, overwrite = TRUE)
+
+
+#
+# FU analysis file information
+# 
+
+fu_analysis_file_info <- list(fu_analysis_file_suffix = " FU Analysis.xlsx", 
+                              fu_allocation_tab_name = "FU Allocations", 
+                              eta_fu_tab_name = "FU etas")
+usethis::use_data(fu_analysis_file_info, overwrite = TRUE)
 
 
 # 

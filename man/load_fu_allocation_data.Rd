@@ -6,7 +6,7 @@
 \usage{
 load_fu_allocation_data(
   path = sample_fu_allocation_table_path(),
-  fu_allocations_tab_name = "FU Allocations"
+  fu_allocations_tab_name = IEATools::fu_analysis_file_info$fu_allocation_tab_name
 )
 }
 \arguments{

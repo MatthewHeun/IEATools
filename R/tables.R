@@ -1,3 +1,51 @@
+#' Tidy a final-to-useful allocation table
+#' 
+#' Analysts fill final-to-useful (FU) allocation tables in a human-readable format
+#' provided by `fu_allocation_template()` and `write_fu_allocation_template()`.
+#' The templates are not tidy.
+#' However, most code uses in `IEATools` requires tidy data frames.
+#' This function converts an FU allocation table with years in columns 
+#' to a tidy data frame with years in a `year` column and `C` values in a `.values` column.
+#' Identifiers for the `C` values are in the `quantity` column.
+#' 
+#' If `.fu_allocation_table` is already tidy, it is returned unmodified.
+#'
+#' @param .fu_allocation_table The final-to-useful allocation table to be tidied.
+#' @param year,e_dot See `IEATools::iea_cols`.
+#' @param e_dot_perc,quantity,maximum_values,.values See `IEATools::template_cols`.
+#'
+#' @return A tidy version of `.fu_allocation_table`.
+#' 
+#' @export
+#'
+#' @examples
+#' load_fu_allocation_data() %>% 
+#'   tidy_fu_allocation_table()
+tidy_fu_allocation_table <- function(.fu_allocation_table, 
+                                     year = IEATools::iea_cols$year, 
+                                     e_dot = IEATools::iea_cols$e_dot,
+                                     e_dot_perc = IEATools::template_cols$e_dot_perc,
+                                     quantity = IEATools::template_cols$quantity,
+                                     maximum_values = IEATools::template_cols$maximum_values, 
+                                     .values = IEATools::template_cols$.values) {
+  # Figure out the year columns in .fu_allocation_table
+  year_columns <- year_cols(.fu_allocation_table, return_names = TRUE, year = NULL)
+  if (length(year_columns) > 0) {
+    .fu_allocation_table <- .fu_allocation_table %>% 
+      # Eliminate rows we don't want.
+      dplyr::filter(! .data[[quantity]] %in% c(e_dot, e_dot_perc)) %>% 
+      # Eliminate the maximum_values column.
+      dplyr::mutate(
+        "{maximum_values}" := NULL
+      ) %>% 
+      tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
+      # Clean out rows that are NA
+      dplyr::filter(!is.na(.data[[.values]]))
+  }
+  return(.fu_allocation_table)
+}
+
+
 #' Complete an FU Allocation table
 #' 
 #' An FU (final-to-useful) Allocation table 
@@ -107,28 +155,19 @@ complete_fu_allocation_table <- function(fu_allocation_table,
                           msg = glue::glue("Found more than one country to complete in complete_fu_allocation_table(): {glue::glue_collapse(country_to_complete, sep = ', ', last = ' and ')}"))
 
   # Figure out the metadata columns in the fu_allocation_table
-  year_columns <- year_cols(fu_allocation_table, return_names = TRUE) %>% as.character()
-  meta_cols <- colnames(fu_allocation_table) %>% 
-    setdiff(c(quantity, maximum_values, year_columns))
+  year_columns <- year_cols(fu_allocation_table, return_names = TRUE, year = NULL) %>% as.character()
+  meta_columns <- meta_cols(fu_allocation_table, not_meta = c(quantity, maximum_values, .values), return_names = TRUE)
   
   # Figure out which IEA rows need to be allocated.
   # Each time we find data in an exemplar to allocate, we will subtract rows from this data frame.
   # When we get to zero rows in this data frame, we know we are done.
-  iea_rows_yet_to_be_allocated <- tidy_specified_iea_data %>% 
-    # Figure out the rows for which allocations are needed, based on the IEA data.
-    dplyr::filter(.data[[country]] == country_to_complete) %>% 
-    # Only need rows where we actually have energy to be allocated.
-    dplyr::filter(e_dot != 0 & !is.na(e_dot)) %>% 
-    # Only need rows that indicate final consumption (on the consumption side of the ledger) or
-    # EIOU (on the supply side of the ledger).
-    dplyr::filter(.data[[ledger_side]] == consumption | (.data[[ledger_side]] == supply & .data[[flow_aggregation_point]] == eiou)) %>% 
-    # Keep only the columns of interest to the FU Allocation process
-    dplyr::select(dplyr::any_of(c(meta_cols, year, product, flow))) %>% 
-    # Rename the flow column to be "destination" to match the corresponding column in the FU Analysis tables.
-    dplyr::rename(
-      "{destination}" := .data[[flow]], 
-      "{ef_product}" := .data[[product]]
-    )
+  # This call should return FALSE, but the attribute "unallocated_rows" is what we're really after.
+  iea_rows_that_must_be_allocated <- fu_allocation_table_completed(specified_iea_data = tidy_specified_iea_data) %>% 
+    attr("unallocated_rows") %>% 
+    dplyr::filter(.data[[country]] %in% country_to_complete)
+    
+  # iea_rows_yet_to_be_allocated is our running accounting of remaining rows.
+  iea_rows_yet_to_be_allocated <- iea_rows_that_must_be_allocated
   
   # We expect exemplar_fu_allocation_tables to be a list. 
   # If it is not a list but rather something that looks like a data frame, 
@@ -142,10 +181,12 @@ complete_fu_allocation_table <- function(fu_allocation_table,
   # so that it acts as the first exemplar.
   exemplar_fu_allocation_tables <- c(list(fu_allocation_table), exemplar_fu_allocation_tables)
   
+  # Tidy the FU allocation table if required.
+  fu_allocation_table <- tidy_fu_allocation_table(fu_allocation_table)
   # Then eliminate all rows in the data frame to be filled from each exemplar.
   fu_allocation_table <- fu_allocation_table %>% 
-    dplyr::select(!maximum_values) %>% 
-    tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
+    # dplyr::select(!maximum_values) %>% 
+    # tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
     dplyr::mutate(
       "{c_source}" := country_to_complete, 
       "{year}" := as.numeric(.data[[year]])
@@ -158,19 +199,14 @@ complete_fu_allocation_table <- function(fu_allocation_table,
   for (i in 1:n_exemplars) {
     # Trim to the exemplar to essential columns and rows and make tidy.
     exemplar_info_available <- exemplar_fu_allocation_tables[[i]] %>% 
-      # Eliminate e_dot and e_dot_perc rows
-      dplyr::filter(!.data[[quantity]] %in% c(e_dot, e_dot_perc)) %>% 
-      # Eliminate Maximum.values column
-      dplyr::select(!maximum_values) %>% 
-      # Make tidy.
-      tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
-      dplyr::filter(!is.na(.data[[.values]])) %>% 
+      tidy_fu_allocation_table(year = year, e_dot = e_dot, e_dot_perc = e_dot_perc, 
+                               quantity = quantity, maximum_values = maximum_values, .values = .values) %>% 
       dplyr::mutate(
         "{year}" := as.numeric(.data[[year]]), 
         "{c_source}" := .data[[country]], 
         "{country}" := country_to_complete # Pretend that the exemplar is the country we're analyzing.
       )
-    
+
     # iea_rows_already_allocated contains the rows of final energy consumption (from the IEA data) that have already been allocated.
     # We don't need to pull data from an exemplar for these rows.
     iea_rows_already_allocated <- fu_allocation_table %>% 
@@ -186,25 +222,167 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     fu_allocation_table <- fu_allocation_table %>% 
       dplyr::bind_rows(exemplar_rows_to_use)
     
-    # Figure out the rows of allocations that are still missing and, therefore, 
-    # must be obtained from a forthcoming exemplar.
-    iea_rows_yet_to_be_allocated <- dplyr::anti_join(iea_rows_yet_to_be_allocated, exemplar_rows_to_use, 
-                                                     by = colnames(iea_rows_yet_to_be_allocated))
-    
-    if (nrow(iea_rows_yet_to_be_allocated) == 0) {
+    # Check to see if we have allocated everything
+    done <- fu_allocation_table_completed(fu_allocation_table, iea_rows_that_must_be_allocated)
+    if (done) {
       break
     }
+
+    # We're not done, so figure out the rows of allocations that are still missing and, therefore,
+    # must be obtained from a forthcoming exemplar.
+    iea_rows_yet_to_be_allocated <- attr(done, "unallocated_rows") %>% 
+      dplyr::filter(.data[[country]] %in% country_to_complete)
+
   } # End of for loop.
   
-  # Figure out if we completed everything.
-  # Emit a warning if all final energy was NOT allocated to FU machines.
-  if (nrow(iea_rows_yet_to_be_allocated) != 0) {
+  if (!done) {
+    # Emit a warning if all final energy was NOT allocated to FU machines by any of the exemplars..
     warning("Didn't complete FU Allocation table for ", country_to_complete,
             ". Returning a data frame of final energy that wasn't allocated.")
-    return(iea_rows_yet_to_be_allocated)
+    return(attr(done, "unallocated_rows"))
   }
-
+  
+  # If we get here, everything was allocated, so return the fu_allocation_table.
   return(fu_allocation_table)
+}
+
+
+#' Tell whether a final-to-useful allocation table has been completed
+#' 
+#' A final-to-useful allocation table is complete iff all of the final energy flows for a country 
+#' are routed to a final-to-useful machine for each year in which those final energy flows exist.
+#' Also, all routes need to add to 100%.
+#' 
+#' This function should really be named `fu_allocation_table_completed?`, because it answers a question.
+#'
+#' @param fu_allocation_table The final-to-useful allocation table whose completeness is to be ascertained.
+#'                            If `NULL` (the default), all rows in `specified_iea_data` that need allocation are returned
+#'                            as the "unallocated_rows" attribute of `FALSE`.
+#' @param specified_iea_data An IEA data frame from which final energy flows are gleaned.
+#'                           This data frame should be generated by `specify_all()`.
+#' @param year,ledger_side,e_dot,flow,product,flow_aggregation_point See `IEATools::iea_cols`.
+#' @param consumption See `IEATools::ledger_sides`.
+#' @param eiou See `IEATools::tfc_compare_flows`.
+#' @param maximum_values,quantity,.values,ef_product,destination,machine,e_u_product,e_dot_perc,C_source
+#'        See `IEATools::template_cols`.
+#'
+#' @return A boolean telling whether `fu_allocation_table` is complete. 
+#'         If `FALSE`, a data frame of IEA final energy rows that have not been allocated
+#'         is stored in the "unallocated_rows" attribute of the return value. 
+#'         Retrieve with `attr(done, "unallocated_rows")`
+#'         if the result of this function is assigned to the variable `done`.
+#' 
+#' @export
+#'
+#' @examples 
+#' iea_data <- load_tidy_iea_df() %>% 
+#'   specify_all()
+#' fu_allocations <- load_fu_allocation_data()
+#' fu_allocation_table_completed(fu_allocations, iea_data)
+fu_allocation_table_completed <- function(fu_allocation_table = NULL, 
+                                          specified_iea_data, 
+                                          year = IEATools::iea_cols$year, 
+                                          ledger_side = IEATools::iea_cols$ledger_side,
+                                          e_dot = IEATools::iea_cols$e_dot, 
+                                          flow = IEATools::iea_cols$flow,
+                                          product = IEATools::iea_cols$product,
+                                          flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                          consumption = IEATools::ledger_sides$consumption,
+                                          eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+                                          maximum_values = IEATools::template_cols$maximum_values, 
+                                          quantity = IEATools::template_cols$quantity, 
+                                          .values = IEATools::template_cols$.values,
+                                          C_source = IEATools::template_cols$c_source,
+                                          ef_product = IEATools::template_cols$ef_product,
+                                          destination = IEATools::template_cols$destination,
+                                          machine = IEATools::template_cols$machine,
+                                          e_u_product = IEATools::template_cols$eu_product,
+                                          e_dot_perc = IEATools::template_cols$e_dot_perc) {
+
+  # Accept a non-tidy specified_iea_data frame if it arrives.
+  iea_year_columns <- specified_iea_data %>% 
+    year_cols(return_names = TRUE, year = NULL)
+  if (length(iea_year_columns) > 0) {
+    # specified_iea_data is not tidy. Make it so.
+    specified_iea_data <- specified_iea_data %>% 
+      tidyr::pivot_longer(cols = iea_year_columns, names_to = year, values_to = e_dot) %>% 
+      dplyr::filter(!is.na(.data[[e_dot]])) %>% 
+      dplyr::mutate(
+        "{year}" := as.numeric(.data[[year]])
+      )
+  }
+  # Figure out the rows of final energy that need to be allocated in each year.
+  rows_to_be_allocated <- specified_iea_data %>% 
+    dplyr::filter(.data[[ledger_side]] == consumption | .data[[flow_aggregation_point]] == eiou) %>% 
+    dplyr::mutate(
+      "{e_dot}" := NULL
+    )
+  # Rename some columns if necessary
+  if (product %in% colnames(rows_to_be_allocated)) {
+    rows_to_be_allocated <- rows_to_be_allocated %>% 
+      dplyr::rename(
+        "{ef_product}" := .data[[product]]
+      )
+  }
+  if (flow %in% colnames(rows_to_be_allocated)) {
+    rows_to_be_allocated <- rows_to_be_allocated %>% 
+      dplyr::rename(
+        "{destination}" := .data[[flow]]
+      )
+  }
+  if (is.null(fu_allocation_table)) {
+    # If fu_allocation_table is NULL, 
+    # the answer is that we have not completed allocation, and 
+    # all rows in rows_to_be_allocated need allocation.
+    out <- FALSE
+    attr(out, "unallocated_rows") <- rows_to_be_allocated
+    return(out)
+  }
+  
+  # At this point, we have some allocation information.
+  # Figure out which rows have been allocated in each year
+  # Accept a non-tidy fu_allocation_table if it arrives.
+  fu_year_columns <- fu_allocation_table %>% 
+    year_cols(return_names = TRUE, year = NULL)
+  if (length(fu_year_columns) > 0) {
+    # fu_allocation_table is not tidy. Make it so.
+    fu_allocation_table <- fu_allocation_table %>% 
+      dplyr::select(!maximum_values) %>% 
+      dplyr::filter(!.data[[quantity]] %in% c(e_dot, e_dot_perc)) %>% 
+      tidyr::pivot_longer(cols = fu_year_columns, names_to = year, values_to = .values)
+  }
+  fu_allocation_table <- fu_allocation_table %>% 
+    dplyr::filter(!is.na(.data[[.values]])) %>% 
+    dplyr::mutate(
+      "{year}" := as.numeric(.data[[year]])
+    )
+  
+  # Eliminate the quantity, Machine, and Eu.product columns and summarize.
+  # We should get all 1's.
+  allocation_sums <- fu_allocation_table %>% 
+    dplyr::select(!c(quantity, machine, e_u_product)) %>%
+    matsindf::group_by_everything_except(.values) %>% 
+    dplyr::summarise(
+      "{.values}" := sum(.data[[.values]])
+    )
+  if (!all(allocation_sums[[.values]] == 1)) {
+    return(FALSE)
+  }
+  # Now check that all rows that need to be allocated have been allocated.
+  # Get rid of some columns that might conflict.
+  allocated_rows <- allocation_sums %>% 
+    dplyr::mutate(
+      "{.values}" := NULL,
+      "{C_source}" := NULL
+    )
+  unallocated_rows <- dplyr::anti_join(rows_to_be_allocated, allocated_rows, by = colnames(allocated_rows))
+  if (nrow(unallocated_rows) > 0) {
+    out <- FALSE
+    # Store the unallocated rows as an attribute on out so others can figure out what went wrong.
+    attr(out, "unallocated_rows") <- unallocated_rows
+    return(out)
+  }
+  return(TRUE)
 }
 
 
@@ -341,16 +519,12 @@ complete_eta_fu_table <- function(eta_fu_table,
     setdiff(c(quantity, maximum_values, year_columns))
   
   # Extract machines and products for this country from the tidy_fu_allocation_table
-  # fu_allocation_years <- year_cols(tidy_fu_allocation_table, return_names = TRUE)
-  machines_that_need_etas <- tidy_fu_allocation_table %>% 
-    dplyr::filter(.data[[quantity]] != e_dot & .data[[quantity]] != e_dot_perc) %>% 
-    dplyr::select(!dplyr::any_of(maximum_values)) %>% 
-    dplyr::filter(!is.na(.values)) %>% 
-    dplyr::select(dplyr::any_of(c(meta_cols, year))) %>% 
-    unique() %>% 
-    dplyr::mutate(
-      "{year}" := as.numeric(.data[[year]])
-    )
+  # This call should fail, but we're really after the 
+  temp_false <- eta_fu_table_completed(fu_allocation_table = tidy_fu_allocation_table)
+  assertthat::assert_that(!temp_false)
+  machines_that_need_etas <- temp_false %>% 
+    attr("unallocated_rows")
+  
   # Add the quantities that are needed.
   machines_that_need_etas <- lapply(which_quantity, FUN = function(q) {
     machines_that_need_etas %>% 
@@ -402,14 +576,6 @@ complete_eta_fu_table <- function(eta_fu_table,
         "{country}" := country_to_complete # Pretend that the exemplar is the country we're analyzing.
       )
     
-    # machines_already_specified contains the rows of machines (from the FU allocation data) that have already 
-    # had efficiencies specified.
-    # We don't need to pull data from an exemplar for these rows.
-    machines_already_specified <- eta_fu_table %>% 
-      # Now keep only the columns of interest to us.
-      dplyr::select(dplyr::any_of(c(meta_cols, quantity, year, eta_fu_phi_u_source))) %>% 
-      unique()
-    
     exemplar_rows_to_use <- dplyr::semi_join(exemplar_info_available, 
                                              machines_that_need_etas, 
                                              # We can't join by source, because the exemplar source is different.
@@ -418,20 +584,20 @@ complete_eta_fu_table <- function(eta_fu_table,
     eta_fu_table <- eta_fu_table %>% 
       dplyr::bind_rows(exemplar_rows_to_use)
     
-    # Figure out the rows of efficiencies that are still missing and, therefore, 
-    # must be obtained from a forthcoming exemplar.
-    machines_that_need_etas <- dplyr::anti_join(machines_that_need_etas, exemplar_rows_to_use, 
-                                                by = colnames(machines_that_need_etas))
+    done <- eta_fu_table_completed(eta_fu_table, tidy_fu_allocation_table, which_quantity = which_quantity)
     
-    if (nrow(machines_that_need_etas) == 0) {
+    if (done) {
       break
     }
+    
+    machines_that_need_etas <- done %>% 
+      attr("unallocated_rows")
     
   } # End of for loop.
   
   # Figure out if we completed everything.
   # Emit a warning if all final energy was NOT allocated to FU machines.
-  if (nrow(machines_that_need_etas) != 0) {
+  if (!done) {
     warning("Didn't complete eta FU table for ", country_to_complete,
             ". Returning a data frame of machines for which an efficiency wasn't available.")
     return(machines_that_need_etas)
@@ -441,4 +607,127 @@ complete_eta_fu_table <- function(eta_fu_table,
 }
 
 
-
+#' Tell whether a final-to-useful efficiency table has been completed
+#' 
+#' A final-to-useful efficiency table is complete iff all of the machines in a final-to-useful allocation table
+#' have been assigned efficiencies in each year for each country. 
+#' 
+#' This function should really be named `eta_fu_table_completed?`, because it answers a question.
+#'
+#' @param eta_fu_table The final-to-useful efficiency table whose completeness is to be determined.
+#'                     If `NULL` (the default), all rows in `fu_allocation_table` that need efficiencies are returned
+#'                     as the "unallocated_rows" attribute of `FALSE`.
+#' @param fu_allocation_table The final-to-useful allocation table whose final-to-useful machines must be assigned efficiencies.
+#' @param which_quantity A vector of quantities to be completed in the eta_FU table.
+#'                       Default is `c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)`.
+#' @param e_dot,year,method,ledger_side,flow_aggregation_point See `IEATools::iea_cols`.
+#' @param ef_product,quantity,e_dot_perc,e_dot_machine,e_dot_machine_perc,maximum_values,destination,eta_fu,phi_u,.values 
+#'        See `IEATools::template_cols`.
+#' 
+#' @export
+#' 
+#' @return A boolean telling whether `eta_fu_table` is complete. 
+#'         If `FALSE`, a data frame of fu_allocation_table machines that lack efficiencies
+#'         is stored in the "unallocated_rows" attribute of the return value. 
+#'         Retrieve with `attr(done, "unallocated_rows")`
+#'         if the result of this function is assigned to the variable `done`.
+#'
+#' @examples 
+#' fu_allocations <- load_fu_allocation_data()
+#' fu_efficiencies <- load_eta_fu_data()
+#' eta_fu_table_completed(fu_efficiencies, fu_allocations)
+eta_fu_table_completed <- function(eta_fu_table = NULL, 
+                                   fu_allocation_table, 
+                                   which_quantity = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u), 
+                                   e_dot = IEATools::iea_cols$e_dot,
+                                   year = IEATools::iea_cols$year,
+                                   method = IEATools::iea_cols$method,
+                                   ledger_side = IEATools::iea_cols$ledger_side,
+                                   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                   ef_product = IEATools::template_cols$ef_product,
+                                   quantity = IEATools::template_cols$quantity,
+                                   e_dot_perc = IEATools::template_cols$e_dot_perc,
+                                   e_dot_machine = IEATools::template_cols$e_dot_machine,
+                                   e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
+                                   maximum_values = IEATools::template_cols$maximum_values,
+                                   destination = IEATools::template_cols$destination,
+                                   eta_fu = IEATools::template_cols$eta_fu,
+                                   phi_u = IEATools::template_cols$phi_u,
+                                   .values = IEATools::template_cols$.values) {
+  
+  fu_year_columns <- fu_allocation_table %>% 
+    year_cols(return_names = TRUE, year = NULL)
+  if (length(fu_year_columns) > 0) {
+    # fu_allocation_table is not tidy. Make it so.
+    fu_allocation_table <- fu_allocation_table %>% 
+      tidyr::pivot_longer(cols = fu_year_columns, names_to = year, values_to = .values)
+  }
+  fu_allocation_table <- fu_allocation_table %>% 
+    dplyr::mutate(
+      "{maximum_values}" := NULL,
+      "{year}" := as.numeric(.data[[year]])
+    ) %>% 
+    dplyr::filter(!.data[[quantity]] %in% c(e_dot, e_dot_perc)) %>% 
+    dplyr::filter(!is.na(.data[[.values]]))
+  
+  # Eliminate unneeded columns to find out which machines NEED efficiencies.
+  machines_that_need_efficiencies <- fu_allocation_table %>% 
+    dplyr::mutate(
+      "{ledger_side}" := NULL,
+      "{flow_aggregation_point}" := NULL,
+      "{ef_product}" := NULL,
+      "{quantity}" := NULL, 
+      "{destination}" := NULL, 
+      "{.values}" := NULL
+    ) %>% 
+    unique()
+  
+  if (is.null(eta_fu_table)) {
+    # If eta_fu_table is NULL, 
+    # the answer is that we have not assigned all efficiencies, and 
+    # all rows in fu_allocation_table need efficiencies, so return machines_that_need_efficiencies.
+    out <- FALSE
+    attr(out, "unallocated_rows") <- machines_that_need_efficiencies
+    return(out)
+  }
+  
+  # Figure out the machines that HAVE efficiencies
+  eta_fu_year_columns <- eta_fu_table %>% 
+    year_cols(return_names = TRUE, year = NULL)
+  machines_that_have_efficiencies <- eta_fu_table
+  if (length(eta_fu_year_columns) > 0) {
+    # eta_fu_table is not tidy. Make it so.
+    machines_that_have_efficiencies <- machines_that_have_efficiencies %>% 
+      dplyr::select(!maximum_values) %>% 
+      dplyr::filter(!.data[[quantity]] %in% c(e_dot_machine, e_dot_machine_perc)) %>% 
+      tidyr::pivot_longer(cols = eta_fu_year_columns, names_to = year, values_to = .values)
+  }
+  machines_that_have_efficiencies <- machines_that_have_efficiencies %>% 
+    dplyr::filter(!is.na(.data[[.values]])) %>% 
+    dplyr::mutate(
+      "{year}" := as.numeric(.data[[year]])
+    )
+  
+  # Add the quantities that are needed to the outgoing object.
+  machines_that_need_efficiencies <- lapply(which_quantity, FUN = function(q) {
+    # Subtract machines_that_have_efficiencies from machines_that_need_efficiencies via anti_join
+    dplyr::anti_join(machines_that_need_efficiencies, machines_that_have_efficiencies %>% dplyr::filter(.data[[quantity]] == q), 
+                     by = colnames(machines_that_need_efficiencies))
+  }) %>% 
+    dplyr::bind_rows()
+  
+  if (nrow(machines_that_need_efficiencies) > 0) {
+    out <- FALSE
+    # Store the unallocated rows as an attribute on out so others can figure out what went wrong.
+    attr(out, "unallocated_rows") <- machines_that_need_efficiencies
+    return(out)
+  }
+  return(TRUE)
+}
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          
+                                          

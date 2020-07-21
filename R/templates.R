@@ -344,38 +344,38 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #' @param path the file path into which the blank template file will be written. 
 #'        Include both folder and file name. 
 #'        If not present, the ".xlsx" extension is added.
-#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "`Ledger.side`".
-#' @param consumption the string identifier for consumption in the `ledger_side` column.  Default is "`Consumption`".
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "`Flow.aggregation.point`".
-#' @param eiou the string identifier for energy industry own use in the `flow_aggregation_point` column. Default is "`Energy industry own use`".
-#' @param fu_allocations_tab_name the name of the tab on which the template will be written. Default is "`FU Allocations`".
-#' @param machine the name of the machine column in output. Default is "`Machine`"
-#' @param eu_product the name of the useful energy product column in output. Default is "`Eu.product`".
-#' @param quantity the name of the quantity column to be created on output. Default is "`Quantity`".
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "Ledger.side".
+#' @param consumption the string identifier for consumption in the `ledger_side` column.  Default is "Consumption".
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
+#' @param eiou the string identifier for energy industry own use in the `flow_aggregation_point` column. Default is "Energy industry own use".
+#' @param fu_allocations_tab_name the name of the tab on which the template will be written. Default is "FU Allocations".
+#' @param machine the name of the machine column in output. Default is "Machine"
+#' @param eu_product the name of the useful energy product column in output. Default is "Eu.product".
+#' @param quantity the name of the quantity column to be created on output. Default is "Quantity".
 #' @param e_dot the name of the energy flow rate column in `.tidy_iea_df` and the name of the energy flow rate rows to be included in the Excel file that is written by this function.
-#'        Default is "`E.dot`".
+#'        Default is "E.dot".
 #' @param e_dot_perc the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
-#'        Default is "`E.dot.perc`".
-#' @param maximum_values the name of the maximum values column in output. Default is "`Maximum.values`".
+#'        Default is "E.dot.perc".
+#' @param maximum_values the name of the maximum values column in output. Default is "Maximum.values".
 #' @param header_row_font_color a hex string representing the font color for the header row in the Excel file that is written by this function.
-#'        Default is "`#FFFFFF`", white.
+#'        Default is "#FFFFFF", white.
 #' @param header_row_shading_color a hex string representing the shading color for the header row in the Excel file that is written by this function.
-#'        Default is "`#5A80B8`", medium blue.
+#'        Default is "#5A80B8", medium blue.
 #' @param energy_row_font_color_fd a hex string representing the font color for `e_dot` and `e_dot_perc` final demand rows in the Excel file that is written by this function.
-#'        Default is "`#104273`", a dark blue color.
+#'        Default is "#104273", a dark blue color.
 #' @param energy_row_shading_color_fd a hex string representing the shading color for `e_dot` and `e_dot_perc` final demand rows in the Excel file that is written by this function.
-#'        Default is "`#104273`", a light blue color.
+#'        Default is "#104273", a light blue color.
 #' @param energy_row_font_color_eiou a hex string representing the font color for `e_dot` and `e_dot_perc` energy industry own use rows in the Excel file that is written by this function.
-#'        Default is "`#104273`", a dark yellow color.
+#'        Default is "#104273", a dark yellow color.
 #' @param energy_row_shading_color_eiou a hex string representing the shading color for `e_dot` and `e_dot_perc` energy industry own use rows in the Excel file that is written by this function.
-#'        Default is "`#104273`", a light yellow color.
+#'        Default is "#104273", a light yellow color.
 #' @param dont_fill_shading_color a hex string representing the shading color for cells that don't require inputs. 
-#'        Default is "`#A8A8A8`", a medium gray color.
+#'        Default is "#A8A8A8", a medium gray color.
 #' @param overwrite_file a boolean that tells whether an existing file at `path` will be overwritten. Default is `FALSE`.
 #'        If `path` already exists and `overwrite = FALSE`, an error is given.
 #' @param n_allocation_rows the number of allocation rows to write for each final energy product. Default is `3`.
 #' @param .rownum a temporary column created internally. `.rownum` must not exist in `.tidy_iea_df` when `write_fu_allocation_template` is called.
-#'        Default is "`.rownum`".
+#'        Default is ".rownum".
 #'
 #' @return the value of the `path` argument
 #' 
@@ -392,17 +392,17 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #' }
 write_fu_allocation_template <- function(.fu_allocation_template, 
                                          path, 
-                                         ledger_side = "Ledger.side",
-                                         consumption = "Consumption",
-                                         flow_aggregation_point = "Flow.aggregation.point",
-                                         eiou = "Energy industry own use",
-                                         fu_allocations_tab_name = "FU Allocations",
-                                         machine = "Machine",
-                                         eu_product = "Eu.product",
-                                         quantity = "Quantity", 
-                                         e_dot = "E.dot",
-                                         e_dot_perc = paste(e_dot, "[%]"), 
-                                         maximum_values = "Maximum.values",
+                                         ledger_side = IEATools::iea_cols$ledger_side,
+                                         consumption = IEATools::ledger_sides$consumption,
+                                         flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                         eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+                                         fu_allocations_tab_name = IEATools::fu_analysis_file_info$fu_allocation_tab_name,
+                                         machine = IEATools::template_cols$machine,
+                                         eu_product = IEATools::template_cols$eu_product,
+                                         quantity = IEATools::template_cols$quantity, 
+                                         e_dot = IEATools::iea_cols$e_dot,
+                                         e_dot_perc = IEATools::template_cols$e_dot_perc, 
+                                         maximum_values = IEATools::template_cols$maximum_values,
                                          header_row_font_color = "#FFFFFF",
                                          header_row_shading_color = "#5A80B8",
                                          energy_row_font_color_fd = "#104273",
@@ -550,7 +550,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
 #' # Loads final-to-useful allocation data supplied with the package
 #' load_fu_allocation_data()
 load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(), 
-                                    fu_allocations_tab_name = "FU Allocations"){
+                                    fu_allocations_tab_name = IEATools::fu_analysis_file_info$fu_allocation_tab_name){
   openxlsx::read.xlsx(path, sheet = fu_allocations_tab_name)
 }
 
@@ -1071,12 +1071,11 @@ eta_fu_template <- function(.fu_allocations,
 #'
 #' @param .eta_fu_template a template for final-to-useful energy efficiency values, generated by `eta_fu_template()`.
 #' @param path the file path where the eta_fu template will be written
-#' @param eta_fu_tab_name the name of the final-to-useful efficiency tab. Default is "FU etas".
+#' @param eta_fu_tab_name the name of the final-to-useful efficiency tab. Default is "`r IEATools::fu_analysis_file_info$eta_fu_tab_name`".
 #' @param overwrite_file a logical telling whether to overwrite a file, if it already exists. Default is `FALSE`.
 #' @param overwrite_fu_eta_tab a logical telling whether to overwrite the final-to-useful efficiency tab, if it already exists. Default is `FALSE`.
 #' @param eta_fu the name of the final-to-useful efficiency rows in `.eta_fu_template`. Default is "eta.fu".
 #' @param e_dot_machine a string identifying energy flow into final-to-useful machines. Default is "E.dot_machine".
-#' @param perc the string identifying percentage quantities. Default is "\[%\]".
 #' @param e_dot_machine_perc a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine \[%\]".
 #' @param maximum_values a string identifying the maximum values column in the outgoing template. Default is "Maximum.values".
 #' @param header_row_font_color a hex string representing the font color for the header row in the Excel file that is written by this function.
@@ -1119,14 +1118,13 @@ eta_fu_template <- function(.fu_allocations,
 #' }
 write_eta_fu_template <- function(.eta_fu_template,
                                   path, 
-                                  eta_fu_tab_name = "FU etas", 
+                                  eta_fu_tab_name = IEATools::fu_analysis_file_info$eta_fu_tab_name, 
                                   overwrite_file = FALSE, 
                                   overwrite_fu_eta_tab = FALSE,
-                                  eta_fu = "eta.fu",
-                                  e_dot_machine = "E.dot_machine",
-                                  perc = "[%]",
-                                  e_dot_machine_perc = paste(e_dot_machine, perc), 
-                                  maximum_values = "Maximum.values",
+                                  eta_fu = IEATools::template_cols$eta_fu,
+                                  e_dot_machine = IEATools::template_cols$e_dot_machine,
+                                  e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc, 
+                                  maximum_values = IEATools::template_cols$maximum_values,
                                   header_row_font_color = "#FFFFFF",
                                   header_row_shading_color = "#5A80B8",
                                   e_dot_machine_row_font_color = "#8C87A0",
@@ -1138,8 +1136,8 @@ write_eta_fu_template <- function(.eta_fu_template,
                                   phi_row_font_color = "#000000",
                                   phi_row_shading_color = "#FFFFFF",
                                   blank_shading_color = "#808080",
-                                  quantity = "Quantity",
-                                  e_dot_machine_max_perc = "E.dot_machine_max [%]",
+                                  quantity = IEATools::template_cols$quantity,
+                                  e_dot_machine_max_perc = IEATools::template_cols$e_dot_machine_max_perc,
                                   .rownum = ".rownum"){
   # Ensure that path ends in .xlsx
   if (!endsWith(path, ".xlsx")) {
@@ -1260,7 +1258,7 @@ write_eta_fu_template <- function(.eta_fu_template,
 #' A filled example can be loaded with the default value of `path`.
 #'
 #' @param path the path from which final-to-useful machine efficiency data will be loaded. Default is the path to sample efficiency data supplied with this package.
-#' @param eta_fu_tab_name the tab in `path` that contains the final-to-useful machine efficiency data. Default is "`FU etas`".
+#' @param eta_fu_tab_name the tab in `path` that contains the final-to-useful machine efficiency data. Default is "`r IEATools::fu_analysis_file_info$eta_fu_tab_name`".
 #'
 #' @return the `eta_fu_tab_name` tab in `path` as a data frame.
 #' 
@@ -1269,7 +1267,7 @@ write_eta_fu_template <- function(.eta_fu_template,
 #' @examples
 #' load_eta_fu_data()
 load_eta_fu_data <- function(path = sample_eta_fu_table_path(), 
-                                    eta_fu_tab_name = "FU etas"){
+                                    eta_fu_tab_name = IEATools::fu_analysis_file_info$eta_fu_tab_name){
   openxlsx::read.xlsx(path, sheet = eta_fu_tab_name)
 }
 

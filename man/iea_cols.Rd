@@ -5,7 +5,7 @@
 \alias{iea_cols}
 \title{IEA data frame column names}
 \format{
-A string list with 11 entries
+A string list with 11 entries.
 \describe{
 \item{country}{The name of a column containing countries.}
 \item{method}{The name of a column containing methods for calculating primary energy equivalent of renewable electricity. See \code{IEATools::methods}.}

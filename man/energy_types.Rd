@@ -5,7 +5,7 @@
 \alias{energy_types}
 \title{Energy type order}
 \format{
-A string list with 2 entries
+A string list with 2 entries.
 }
 \usage{
 energy_types

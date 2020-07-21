@@ -130,4 +130,12 @@ test_that("prep_psut works as expected", {
     as.logical() %>% 
     all() %>% 
     expect_true()
+  # Verify that S_units has the correct row and column types. 
+  # On 21 July 2020, it did not!
+  S_units[[IEATools::psut_cols$s_units]][[1]] %>% 
+    matsbyname::rowtype() %>% 
+    expect_equal(IEATools::row_col_types$product)
+  S_units[[IEATools::psut_cols$s_units]][[1]] %>% 
+    matsbyname::coltype() %>% 
+    expect_equal(IEATools::row_col_types$unit)
 })

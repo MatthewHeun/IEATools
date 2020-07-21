@@ -33,7 +33,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
                                       e_dot = IEATools::iea_cols$e_dot,
                                       unit = IEATools::iea_cols$unit,
                                       # Row and product types
-                                      product_type = IEATools::row_col_types$unit,
+                                      product_type = IEATools::row_col_types$product,
                                       unit_type = IEATools::row_col_types$unit, 
                                       # Output column name
                                       s_units = IEATools::psut_cols$s_units, 

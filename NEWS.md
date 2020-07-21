@@ -1,3 +1,21 @@
+# IEATools 0.1.29 (2020-07-21)
+
+* New tests for new features and old bugs.
+    * Now up to 606 tests, all passing.
+    * Test coverage remains at 100%.
+* `extract_S_units_from_tidy()` now correctly sets rowtype by default.
+  rowtype was `Unit`, but it should have been `Product`.
+* New function `tidy_fu_allocation_table()` makes an FU allocation table tidy if it is not.
+* `year_cols()` now returns the "Year" column, if it exists.
+* New function `meta_cols()` gives metadata columns in any IEA data frame.
+* Refactored `complete_fu_allocation_table()` and `complete_eta_fu_table()` to use 
+  `fu_allocation_table_completed()` and `eta_fu_table_completed()`.
+* New function `eta_fu_table_completed()` that tells when an FU Efficiency table is complete.
+* New function `fu_allocation_table_completed()` that tells when an FU Allocation table is complete.
+* Improvements to `switch-notation` documentation.
+* Added constant `IEATools::fu_analysis_file_info`.
+
+
 # IEATools 0.1.28 (2020-07-02)
 
 * "Memo: Greenland", "Memo: Palestinian Authority", and "Memo: Uganda"

@@ -7,17 +7,17 @@
 write_fu_allocation_template(
   .fu_allocation_template,
   path,
-  ledger_side = "Ledger.side",
-  consumption = "Consumption",
-  flow_aggregation_point = "Flow.aggregation.point",
-  eiou = "Energy industry own use",
-  fu_allocations_tab_name = "FU Allocations",
-  machine = "Machine",
-  eu_product = "Eu.product",
-  quantity = "Quantity",
-  e_dot = "E.dot",
-  e_dot_perc = paste(e_dot, "[\%]"),
-  maximum_values = "Maximum.values",
+  ledger_side = IEATools::iea_cols$ledger_side,
+  consumption = IEATools::ledger_sides$consumption,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+  fu_allocations_tab_name = IEATools::fu_analysis_file_info$fu_allocation_tab_name,
+  machine = IEATools::template_cols$machine,
+  eu_product = IEATools::template_cols$eu_product,
+  quantity = IEATools::template_cols$quantity,
+  e_dot = IEATools::iea_cols$e_dot,
+  e_dot_perc = IEATools::template_cols$e_dot_perc,
+  maximum_values = IEATools::template_cols$maximum_values,
   header_row_font_color = "#FFFFFF",
   header_row_shading_color = "#5A80B8",
   energy_row_font_color_fd = "#104273",
@@ -37,50 +37,50 @@ write_fu_allocation_template(
 Include both folder and file name.
 If not present, the ".xlsx" extension is added.}
 
-\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "\code{Ledger.side}".}
+\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "Ledger.side".}
 
-\item{consumption}{the string identifier for consumption in the \code{ledger_side} column.  Default is "\code{Consumption}".}
+\item{consumption}{the string identifier for consumption in the \code{ledger_side} column.  Default is "Consumption".}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "\code{Flow.aggregation.point}".}
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
 
-\item{eiou}{the string identifier for energy industry own use in the \code{flow_aggregation_point} column. Default is "\verb{Energy industry own use}".}
+\item{eiou}{the string identifier for energy industry own use in the \code{flow_aggregation_point} column. Default is "Energy industry own use".}
 
-\item{fu_allocations_tab_name}{the name of the tab on which the template will be written. Default is "\verb{FU Allocations}".}
+\item{fu_allocations_tab_name}{the name of the tab on which the template will be written. Default is "FU Allocations".}
 
-\item{machine}{the name of the machine column in output. Default is "\code{Machine}"}
+\item{machine}{the name of the machine column in output. Default is "Machine"}
 
-\item{eu_product}{the name of the useful energy product column in output. Default is "\code{Eu.product}".}
+\item{eu_product}{the name of the useful energy product column in output. Default is "Eu.product".}
 
-\item{quantity}{the name of the quantity column to be created on output. Default is "\code{Quantity}".}
+\item{quantity}{the name of the quantity column to be created on output. Default is "Quantity".}
 
 \item{e_dot}{the name of the energy flow rate column in \code{.tidy_iea_df} and the name of the energy flow rate rows to be included in the Excel file that is written by this function.
-Default is "\code{E.dot}".}
+Default is "E.dot".}
 
 \item{e_dot_perc}{the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
-Default is "\code{E.dot.perc}".}
+Default is "E.dot.perc".}
 
-\item{maximum_values}{the name of the maximum values column in output. Default is "\code{Maximum.values}".}
+\item{maximum_values}{the name of the maximum values column in output. Default is "Maximum.values".}
 
 \item{header_row_font_color}{a hex string representing the font color for the header row in the Excel file that is written by this function.
-Default is "\verb{#FFFFFF}", white.}
+Default is "#FFFFFF", white.}
 
 \item{header_row_shading_color}{a hex string representing the shading color for the header row in the Excel file that is written by this function.
-Default is "\verb{#5A80B8}", medium blue.}
+Default is "#5A80B8", medium blue.}
 
 \item{energy_row_font_color_fd}{a hex string representing the font color for \code{e_dot} and \code{e_dot_perc} final demand rows in the Excel file that is written by this function.
-Default is "\verb{#104273}", a dark blue color.}
+Default is "#104273", a dark blue color.}
 
 \item{energy_row_shading_color_fd}{a hex string representing the shading color for \code{e_dot} and \code{e_dot_perc} final demand rows in the Excel file that is written by this function.
-Default is "\verb{#104273}", a light blue color.}
+Default is "#104273", a light blue color.}
 
 \item{energy_row_font_color_eiou}{a hex string representing the font color for \code{e_dot} and \code{e_dot_perc} energy industry own use rows in the Excel file that is written by this function.
-Default is "\verb{#104273}", a dark yellow color.}
+Default is "#104273", a dark yellow color.}
 
 \item{energy_row_shading_color_eiou}{a hex string representing the shading color for \code{e_dot} and \code{e_dot_perc} energy industry own use rows in the Excel file that is written by this function.
-Default is "\verb{#104273}", a light yellow color.}
+Default is "#104273", a light yellow color.}
 
 \item{dont_fill_shading_color}{a hex string representing the shading color for cells that don't require inputs.
-Default is "\verb{#A8A8A8}", a medium gray color.}
+Default is "#A8A8A8", a medium gray color.}
 
 \item{overwrite_file}{a boolean that tells whether an existing file at \code{path} will be overwritten. Default is \code{FALSE}.
 If \code{path} already exists and \code{overwrite = FALSE}, an error is given.}
@@ -88,7 +88,7 @@ If \code{path} already exists and \code{overwrite = FALSE}, an error is given.}
 \item{n_allocation_rows}{the number of allocation rows to write for each final energy product. Default is \code{3}.}
 
 \item{.rownum}{a temporary column created internally. \code{.rownum} must not exist in \code{.tidy_iea_df} when \code{write_fu_allocation_template} is called.
-Default is "\code{.rownum}".}
+Default is ".rownum".}
 }
 \value{
 the value of the \code{path} argument

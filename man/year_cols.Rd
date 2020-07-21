@@ -4,31 +4,44 @@
 \alias{year_cols}
 \title{Find year columns}
 \usage{
-year_cols(.df, year_pattern = "^-?\\\\d+$", return_names = FALSE)
+year_cols(
+  .df,
+  year_pattern = "^-?\\\\d+$",
+  year = IEATools::iea_cols$year,
+  return_names = FALSE
+)
 }
 \arguments{
-\item{.df}{a non-tidy data frame with years spread to the right in columns.}
+\item{.df}{A data frame with years spread to the right in columns.}
 
-\item{year_pattern}{a regex pattern that identifies years. Default is "\verb{^-?\\\\d+$}".}
+\item{year_pattern}{A regex pattern that identifies years. Default is "\verb{^-?\\\\d+$}".}
 
-\item{return_names}{a boolean which tells whether names are returned instead of column indices.
+\item{year}{See \code{IEATools::iea_cols$year}.}
+
+\item{return_names}{A boolean which tells whether names are returned instead of column indices.
 Default is \code{FALSE}.}
 }
 \value{
-a vector of column indices (when \code{return_names = FALSE}, the default) or a vector of column names (when \code{return_names = TRUE})
+a vector of column indices (when \code{return_names = FALSE}, the default) or
+a vector of column names (when \code{return_names = TRUE})
 for those columns that represent years.
 }
 \description{
 It is sometimes helpful to know which columns are years.
 This function returns a set of indices
-(or, optionally, the names) of columns in \code{.fu_df} that represent years.
+(or, optionally, the names) of columns in \code{.df} that represent years.
 }
 \details{
 The default \code{year_pattern} is "\verb{^-?\\\\d+$}", which matches columns whose names
 have zero or one negative signs followed by any number of digits.
+
+If \code{.df} is tidy, it may have a "Year" column which is included in the return value.
+To disable this behavior, set \code{year = NULL}.
 }
 \examples{
-DF <- data.frame(a = c(1, 2), `1967` = c(3, 4), `-10` = c(5, 6), check.names = FALSE)
+DF <- data.frame(a = c(1, 2), `1967` = c(3, 4), `-42` = c(5, 6), check.names = FALSE)
 DF \%>\% year_cols()
 DF \%>\% year_cols(return_names = TRUE)
+DF2 <- data.frame(data.frame(a = c(1, 2), Year = c(1967, 2020)))
+DF2 \%>\% year_cols(return_names = TRUE)
 }

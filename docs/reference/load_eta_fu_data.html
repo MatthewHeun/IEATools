@@ -74,7 +74,7 @@ The Excel file at path contains those allocations." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.28</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.29</span>
       </span>
     </div>
 
@@ -145,7 +145,7 @@ The Excel file at <code>path</code> contains those allocations.</p>
 
     <pre class="usage"><span class='fu'>load_eta_fu_data</span>(
   <span class='kw'>path</span> <span class='kw'>=</span> <span class='fu'><a href='sample_eta_fu_table_path.html'>sample_eta_fu_table_path</a></span>(),
-  <span class='kw'>eta_fu_tab_name</span> <span class='kw'>=</span> <span class='st'>"FU etas"</span>
+  <span class='kw'>eta_fu_tab_name</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='fu_analysis_file_info.html'>fu_analysis_file_info</a></span>$<span class='no'>eta_fu_tab_name</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -157,7 +157,7 @@ The Excel file at <code>path</code> contains those allocations.</p>
     </tr>
     <tr>
       <th>eta_fu_tab_name</th>
-      <td><p>the tab in <code>path</code> that contains the final-to-useful machine efficiency data. Default is "<code>FU etas</code>".</p></td>
+      <td><p>the tab in <code>path</code> that contains the final-to-useful machine efficiency data. Default is "FU etas".</p></td>
     </tr>
     </table>
 
@@ -171,616 +171,311 @@ generated using <code><a href='eta_fu_template.html'>eta_fu_template()</a></code
 <p>A filled example can be loaded with the default value of <code>path</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>load_eta_fu_data</span>()</div><div class='output co'>#&gt;     Country Method Energy.type Last.stage Unit
-#&gt; 1       GHA    PCM           E      Final ktoe
-#&gt; 2       GHA    PCM           E      Final ktoe
-#&gt; 3       GHA    PCM           E      Final ktoe
-#&gt; 4       GHA    PCM           E      Final ktoe
-#&gt; 5       GHA    PCM           E      Final ktoe
-#&gt; 6       GHA    PCM           E      Final ktoe
-#&gt; 7       GHA    PCM           E      Final ktoe
-#&gt; 8       GHA    PCM           E      Final ktoe
-#&gt; 9       GHA    PCM           E      Final ktoe
-#&gt; 10      GHA    PCM           E      Final ktoe
-#&gt; 11      GHA    PCM           E      Final ktoe
-#&gt; 12      GHA    PCM           E      Final ktoe
-#&gt; 13      GHA    PCM           E      Final ktoe
-#&gt; 14      GHA    PCM           E      Final ktoe
-#&gt; 15      GHA    PCM           E      Final ktoe
-#&gt; 16      GHA    PCM           E      Final ktoe
-#&gt; 17      GHA    PCM           E      Final ktoe
-#&gt; 18      GHA    PCM           E      Final ktoe
-#&gt; 19      GHA    PCM           E      Final ktoe
-#&gt; 20      GHA    PCM           E      Final ktoe
-#&gt; 21      GHA    PCM           E      Final ktoe
-#&gt; 22      GHA    PCM           E      Final ktoe
-#&gt; 23      GHA    PCM           E      Final ktoe
-#&gt; 24      GHA    PCM           E      Final ktoe
-#&gt; 25      GHA    PCM           E      Final ktoe
-#&gt; 26      GHA    PCM           E      Final ktoe
-#&gt; 27      GHA    PCM           E      Final ktoe
-#&gt; 28      GHA    PCM           E      Final ktoe
-#&gt; 29      GHA    PCM           E      Final ktoe
-#&gt; 30      GHA    PCM           E      Final ktoe
-#&gt; 31      GHA    PCM           E      Final ktoe
-#&gt; 32      GHA    PCM           E      Final ktoe
-#&gt; 33      GHA    PCM           E      Final ktoe
-#&gt; 34      GHA    PCM           E      Final ktoe
-#&gt; 35      GHA    PCM           E      Final ktoe
-#&gt; 36      GHA    PCM           E      Final ktoe
-#&gt; 37      GHA    PCM           E      Final ktoe
-#&gt; 38      GHA    PCM           E      Final ktoe
-#&gt; 39      GHA    PCM           E      Final ktoe
-#&gt; 40      GHA    PCM           E      Final ktoe
-#&gt; 41      GHA    PCM           E      Final ktoe
-#&gt; 42      GHA    PCM           E      Final ktoe
-#&gt; 43      GHA    PCM           E      Final ktoe
-#&gt; 44      GHA    PCM           E      Final ktoe
-#&gt; 45      GHA    PCM           E      Final ktoe
-#&gt; 46      GHA    PCM           E      Final ktoe
-#&gt; 47      GHA    PCM           E      Final ktoe
-#&gt; 48      GHA    PCM           E      Final ktoe
-#&gt; 49      GHA    PCM           E      Final ktoe
-#&gt; 50      GHA    PCM           E      Final ktoe
-#&gt; 51      GHA    PCM           E      Final ktoe
-#&gt; 52      GHA    PCM           E      Final ktoe
-#&gt; 53      GHA    PCM           E      Final ktoe
-#&gt; 54      GHA    PCM           E      Final ktoe
-#&gt; 55      GHA    PCM           E      Final ktoe
-#&gt; 56      GHA    PCM           E      Final ktoe
-#&gt; 57      GHA    PCM           E      Final ktoe
-#&gt; 58      GHA    PCM           E      Final ktoe
-#&gt; 59      GHA    PCM           E      Final ktoe
-#&gt; 60      GHA    PCM           E      Final ktoe
-#&gt; 61      GHA    PCM           E      Final ktoe
-#&gt; 62      GHA    PCM           E      Final ktoe
-#&gt; 63      GHA    PCM           E      Final ktoe
-#&gt; 64      GHA    PCM           E      Final ktoe
-#&gt; 65      GHA    PCM           E      Final ktoe
-#&gt; 66      GHA    PCM           E      Final ktoe
-#&gt; 67      GHA    PCM           E      Final ktoe
-#&gt; 68      GHA    PCM           E      Final ktoe
-#&gt; 69      GHA    PCM           E      Final ktoe
-#&gt; 70      GHA    PCM           E      Final ktoe
-#&gt; 71      GHA    PCM           E      Final ktoe
-#&gt; 72      GHA    PCM           E      Final ktoe
-#&gt; 73      GHA    PCM           E      Final ktoe
-#&gt; 74      GHA    PCM           E      Final ktoe
-#&gt; 75      GHA    PCM           E      Final ktoe
-#&gt; 76      GHA    PCM           E      Final ktoe
-#&gt; 77      GHA    PCM           E      Final ktoe
-#&gt; 78      GHA    PCM           E      Final ktoe
-#&gt; 79      GHA    PCM           E      Final ktoe
-#&gt; 80      GHA    PCM           E      Final ktoe
-#&gt; 81      GHA    PCM           E      Final ktoe
-#&gt; 82      GHA    PCM           E      Final ktoe
-#&gt; 83      GHA    PCM           E      Final ktoe
-#&gt; 84      GHA    PCM           E      Final ktoe
-#&gt; 85      GHA    PCM           E      Final ktoe
-#&gt; 86      GHA    PCM           E      Final ktoe
-#&gt; 87      GHA    PCM           E      Final ktoe
-#&gt; 88      GHA    PCM           E      Final ktoe
-#&gt; 89      GHA    PCM           E      Final ktoe
-#&gt; 90      GHA    PCM           E      Final ktoe
-#&gt; 91      GHA    PCM           E      Final ktoe
-#&gt; 92      GHA    PCM           E      Final ktoe
-#&gt; 93      GHA    PCM           E      Final ktoe
-#&gt; 94      GHA    PCM           E      Final ktoe
-#&gt; 95      GHA    PCM           E      Final ktoe
-#&gt; 96      GHA    PCM           E      Final ktoe
-#&gt; 97      GHA    PCM           E      Final ktoe
-#&gt; 98      GHA    PCM           E      Final ktoe
-#&gt; 99      GHA    PCM           E      Final ktoe
-#&gt; 100     GHA    PCM           E      Final ktoe
-#&gt; 101     ZAF    PCM           E      Final ktoe
-#&gt; 102     ZAF    PCM           E      Final ktoe
-#&gt; 103     ZAF    PCM           E      Final ktoe
-#&gt; 104     ZAF    PCM           E      Final ktoe
-#&gt; 105     ZAF    PCM           E      Final ktoe
-#&gt; 106     ZAF    PCM           E      Final ktoe
-#&gt; 107     ZAF    PCM           E      Final ktoe
-#&gt; 108     ZAF    PCM           E      Final ktoe
-#&gt; 109     ZAF    PCM           E      Final ktoe
-#&gt; 110     ZAF    PCM           E      Final ktoe
-#&gt; 111     ZAF    PCM           E      Final ktoe
-#&gt; 112     ZAF    PCM           E      Final ktoe
-#&gt; 113     ZAF    PCM           E      Final ktoe
-#&gt; 114     ZAF    PCM           E      Final ktoe
-#&gt; 115     ZAF    PCM           E      Final ktoe
-#&gt; 116     ZAF    PCM           E      Final ktoe
-#&gt; 117     ZAF    PCM           E      Final ktoe
-#&gt; 118     ZAF    PCM           E      Final ktoe
-#&gt; 119     ZAF    PCM           E      Final ktoe
-#&gt; 120     ZAF    PCM           E      Final ktoe
-#&gt; 121     ZAF    PCM           E      Final ktoe
-#&gt; 122     ZAF    PCM           E      Final ktoe
-#&gt; 123     ZAF    PCM           E      Final ktoe
-#&gt; 124     ZAF    PCM           E      Final ktoe
-#&gt; 125     ZAF    PCM           E      Final ktoe
-#&gt; 126     ZAF    PCM           E      Final ktoe
-#&gt; 127     ZAF    PCM           E      Final ktoe
-#&gt; 128     ZAF    PCM           E      Final ktoe
-#&gt; 129     ZAF    PCM           E      Final ktoe
-#&gt; 130     ZAF    PCM           E      Final ktoe
-#&gt; 131     ZAF    PCM           E      Final ktoe
-#&gt; 132     ZAF    PCM           E      Final ktoe
-#&gt; 133     ZAF    PCM           E      Final ktoe
-#&gt; 134     ZAF    PCM           E      Final ktoe
-#&gt; 135     ZAF    PCM           E      Final ktoe
-#&gt; 136     ZAF    PCM           E      Final ktoe
-#&gt; 137     ZAF    PCM           E      Final ktoe
-#&gt; 138     ZAF    PCM           E      Final ktoe
-#&gt; 139     ZAF    PCM           E      Final ktoe
-#&gt; 140     ZAF    PCM           E      Final ktoe
-#&gt; 141     ZAF    PCM           E      Final ktoe
-#&gt; 142     ZAF    PCM           E      Final ktoe
-#&gt; 143     ZAF    PCM           E      Final ktoe
-#&gt; 144     ZAF    PCM           E      Final ktoe
-#&gt; 145     ZAF    PCM           E      Final ktoe
-#&gt; 146     ZAF    PCM           E      Final ktoe
-#&gt; 147     ZAF    PCM           E      Final ktoe
-#&gt; 148     ZAF    PCM           E      Final ktoe
-#&gt; 149     ZAF    PCM           E      Final ktoe
-#&gt; 150     ZAF    PCM           E      Final ktoe
-#&gt; 151     ZAF    PCM           E      Final ktoe
-#&gt; 152     ZAF    PCM           E      Final ktoe
-#&gt; 153     ZAF    PCM           E      Final ktoe
-#&gt; 154     ZAF    PCM           E      Final ktoe
-#&gt; 155     ZAF    PCM           E      Final ktoe
-#&gt; 156     ZAF    PCM           E      Final ktoe
-#&gt; 157     ZAF    PCM           E      Final ktoe
-#&gt; 158     ZAF    PCM           E      Final ktoe
-#&gt; 159     ZAF    PCM           E      Final ktoe
-#&gt; 160     ZAF    PCM           E      Final ktoe
-#&gt; 161     ZAF    PCM           E      Final ktoe
-#&gt; 162     ZAF    PCM           E      Final ktoe
-#&gt; 163     ZAF    PCM           E      Final ktoe
-#&gt; 164     ZAF    PCM           E      Final ktoe
-#&gt; 165     ZAF    PCM           E      Final ktoe
-#&gt; 166     ZAF    PCM           E      Final ktoe
-#&gt; 167     ZAF    PCM           E      Final ktoe
-#&gt; 168     ZAF    PCM           E      Final ktoe
-#&gt; 169     ZAF    PCM           E      Final ktoe
-#&gt; 170     ZAF    PCM           E      Final ktoe
-#&gt; 171     ZAF    PCM           E      Final ktoe
-#&gt; 172     ZAF    PCM           E      Final ktoe
-#&gt; 173     ZAF    PCM           E      Final ktoe
-#&gt; 174     ZAF    PCM           E      Final ktoe
-#&gt; 175     ZAF    PCM           E      Final ktoe
-#&gt; 176     ZAF    PCM           E      Final ktoe
-#&gt; 177     ZAF    PCM           E      Final ktoe
-#&gt; 178     ZAF    PCM           E      Final ktoe
-#&gt; 179     ZAF    PCM           E      Final ktoe
-#&gt; 180     ZAF    PCM           E      Final ktoe
-#&gt; 181     ZAF    PCM           E      Final ktoe
-#&gt; 182     ZAF    PCM           E      Final ktoe
-#&gt; 183     ZAF    PCM           E      Final ktoe
-#&gt; 184     ZAF    PCM           E      Final ktoe
-#&gt; 185     ZAF    PCM           E      Final ktoe
-#&gt; 186     ZAF    PCM           E      Final ktoe
-#&gt; 187     ZAF    PCM           E      Final ktoe
-#&gt; 188     ZAF    PCM           E      Final ktoe
-#&gt; 189     ZAF    PCM           E      Final ktoe
-#&gt; 190     ZAF    PCM           E      Final ktoe
-#&gt; 191     ZAF    PCM           E      Final ktoe
-#&gt; 192     ZAF    PCM           E      Final ktoe
-#&gt; 193     ZAF    PCM           E      Final ktoe
-#&gt; 194     ZAF    PCM           E      Final ktoe
-#&gt; 195     ZAF    PCM           E      Final ktoe
-#&gt; 196     ZAF    PCM           E      Final ktoe
-#&gt; 197     ZAF    PCM           E      Final ktoe
-#&gt; 198     ZAF    PCM           E      Final ktoe
-#&gt; 199     ZAF    PCM           E      Final ktoe
-#&gt; 200     ZAF    PCM           E      Final ktoe
-#&gt; 201     ZAF    PCM           E      Final ktoe
-#&gt; 202     ZAF    PCM           E      Final ktoe
-#&gt; 203     ZAF    PCM           E      Final ktoe
-#&gt; 204     ZAF    PCM           E      Final ktoe
-#&gt; 205     ZAF    PCM           E      Final ktoe
-#&gt; 206     ZAF    PCM           E      Final ktoe
-#&gt; 207     ZAF    PCM           E      Final ktoe
-#&gt; 208     ZAF    PCM           E      Final ktoe
-#&gt; 209     ZAF    PCM           E      Final ktoe
-#&gt; 210     ZAF    PCM           E      Final ktoe
-#&gt; 211     ZAF    PCM           E      Final ktoe
-#&gt; 212     ZAF    PCM           E      Final ktoe
-#&gt; 213     ZAF    PCM           E      Final ktoe
-#&gt; 214     ZAF    PCM           E      Final ktoe
-#&gt; 215     ZAF    PCM           E      Final ktoe
-#&gt; 216     ZAF    PCM           E      Final ktoe
-#&gt; 217     ZAF    PCM           E      Final ktoe
-#&gt; 218     ZAF    PCM           E      Final ktoe
-#&gt; 219     ZAF    PCM           E      Final ktoe
-#&gt; 220     ZAF    PCM           E      Final ktoe
-#&gt; 221     ZAF    PCM           E      Final ktoe
-#&gt; 222     ZAF    PCM           E      Final ktoe
-#&gt; 223     ZAF    PCM           E      Final ktoe
-#&gt; 224     ZAF    PCM           E      Final ktoe
-#&gt; 225     ZAF    PCM           E      Final ktoe
-#&gt; 226     ZAF    PCM           E      Final ktoe
-#&gt; 227     ZAF    PCM           E      Final ktoe
-#&gt; 228     ZAF    PCM           E      Final ktoe
-#&gt; 229     ZAF    PCM           E      Final ktoe
-#&gt; 230     ZAF    PCM           E      Final ktoe
-#&gt; 231     ZAF    PCM           E      Final ktoe
-#&gt; 232     ZAF    PCM           E      Final ktoe
-#&gt; 233     ZAF    PCM           E      Final ktoe
-#&gt; 234     ZAF    PCM           E      Final ktoe
-#&gt; 235     ZAF    PCM           E      Final ktoe
-#&gt; 236     ZAF    PCM           E      Final ktoe
-#&gt; 237     ZAF    PCM           E      Final ktoe
-#&gt; 238     ZAF    PCM           E      Final ktoe
-#&gt; 239     ZAF    PCM           E      Final ktoe
-#&gt; 240     ZAF    PCM           E      Final ktoe
-#&gt; 241     ZAF    PCM           E      Final ktoe
-#&gt; 242     ZAF    PCM           E      Final ktoe
-#&gt; 243     ZAF    PCM           E      Final ktoe
-#&gt; 244     ZAF    PCM           E      Final ktoe
-#&gt; 245     ZAF    PCM           E      Final ktoe
-#&gt; 246     ZAF    PCM           E      Final ktoe
-#&gt; 247     ZAF    PCM           E      Final ktoe
-#&gt; 248     ZAF    PCM           E      Final ktoe
-#&gt; 249     ZAF    PCM           E      Final ktoe
-#&gt; 250     ZAF    PCM           E      Final ktoe
-#&gt; 251     ZAF    PCM           E      Final ktoe
-#&gt; 252     ZAF    PCM           E      Final ktoe
-#&gt; 253     ZAF    PCM           E      Final ktoe
-#&gt; 254     ZAF    PCM           E      Final ktoe
-#&gt; 255     ZAF    PCM           E      Final ktoe
-#&gt; 256     ZAF    PCM           E      Final ktoe
-#&gt; 257     ZAF    PCM           E      Final ktoe
-#&gt; 258     ZAF    PCM           E      Final ktoe
-#&gt; 259     ZAF    PCM           E      Final ktoe
-#&gt; 260     ZAF    PCM           E      Final ktoe
-#&gt; 261     ZAF    PCM           E      Final ktoe
-#&gt; 262     ZAF    PCM           E      Final ktoe
-#&gt; 263     ZAF    PCM           E      Final ktoe
-#&gt; 264     ZAF    PCM           E      Final ktoe
-#&gt; 265     ZAF    PCM           E      Final ktoe
-#&gt; 266     ZAF    PCM           E      Final ktoe
-#&gt; 267     ZAF    PCM           E      Final ktoe
-#&gt; 268     ZAF    PCM           E      Final ktoe
-#&gt; 269     ZAF    PCM           E      Final ktoe
-#&gt; 270     ZAF    PCM           E      Final ktoe
-#&gt; 271     ZAF    PCM           E      Final ktoe
-#&gt; 272     ZAF    PCM           E      Final ktoe
-#&gt; 273     ZAF    PCM           E      Final ktoe
-#&gt; 274     ZAF    PCM           E      Final ktoe
-#&gt; 275     ZAF    PCM           E      Final ktoe
-#&gt; 276     ZAF    PCM           E      Final ktoe
-#&gt; 277     ZAF    PCM           E      Final ktoe
-#&gt; 278     ZAF    PCM           E      Final ktoe
-#&gt; 279     ZAF    PCM           E      Final ktoe
-#&gt; 280     ZAF    PCM           E      Final ktoe
-#&gt; 281     ZAF    PCM           E      Final ktoe
-#&gt; 282     ZAF    PCM           E      Final ktoe
-#&gt; 283     ZAF    PCM           E      Final ktoe
-#&gt; 284     ZAF    PCM           E      Final ktoe
-#&gt; 285     ZAF    PCM           E      Final ktoe
-#&gt; 286     ZAF    PCM           E      Final ktoe
-#&gt; 287     ZAF    PCM           E      Final ktoe
-#&gt; 288     ZAF    PCM           E      Final ktoe
-#&gt; 289     ZAF    PCM           E      Final ktoe
-#&gt; 290     ZAF    PCM           E      Final ktoe
-#&gt; 291     ZAF    PCM           E      Final ktoe
-#&gt; 292     ZAF    PCM           E      Final ktoe
-#&gt; 293     ZAF    PCM           E      Final ktoe
-#&gt; 294     ZAF    PCM           E      Final ktoe
-#&gt; 295     ZAF    PCM           E      Final ktoe
-#&gt; 296     ZAF    PCM           E      Final ktoe
-#&gt; 297     ZAF    PCM           E      Final ktoe
-#&gt; 298     ZAF    PCM           E      Final ktoe
-#&gt; 299     ZAF    PCM           E      Final ktoe
-#&gt; 300     ZAF    PCM           E      Final ktoe
-#&gt; 301     ZAF    PCM           E      Final ktoe
-#&gt; 302     ZAF    PCM           E      Final ktoe
-#&gt; 303     ZAF    PCM           E      Final ktoe
-#&gt; 304     ZAF    PCM           E      Final ktoe
-#&gt;                                           Machine
-#&gt; 1                                     Automobiles
-#&gt; 2                                     Automobiles
-#&gt; 3                                     Automobiles
-#&gt; 4                                     Automobiles
-#&gt; 5                                     Diesel cars
-#&gt; 6                                     Diesel cars
-#&gt; 7                                     Diesel cars
-#&gt; 8                                     Diesel cars
-#&gt; 9                                   Diesel trucks
-#&gt; 10                                  Diesel trucks
-#&gt; 11                                  Diesel trucks
-#&gt; 12                                  Diesel trucks
-#&gt; 13                                Electric motors
-#&gt; 14                                Electric motors
-#&gt; 15                                Electric motors
-#&gt; 16                                Electric motors
-#&gt; 17                                         Trucks
-#&gt; 18                                         Trucks
-#&gt; 19                                         Trucks
-#&gt; 20                                         Trucks
-#&gt; 21                                   Boat engines
-#&gt; 22                                   Boat engines
-#&gt; 23                                   Boat engines
-#&gt; 24                                   Boat engines
-#&gt; 25                                  Diesel trains
-#&gt; 26                                  Diesel trains
-#&gt; 27                                  Diesel trains
-#&gt; 28                                  Diesel trains
-#&gt; 29                                           Fans
-#&gt; 30                                           Fans
-#&gt; 31                                           Fans
-#&gt; 32                                           Fans
-#&gt; 33                                Electric lights
-#&gt; 34                                Electric lights
-#&gt; 35                                Electric lights
-#&gt; 36                                Electric lights
-#&gt; 37                            Industrial furnaces
-#&gt; 38                            Industrial furnaces
-#&gt; 39                            Industrial furnaces
-#&gt; 40                            Industrial furnaces
-#&gt; 41                               Electric heaters
-#&gt; 42                               Electric heaters
-#&gt; 43                               Electric heaters
-#&gt; 44                               Electric heaters
-#&gt; 45                                    Wood stoves
-#&gt; 46                                    Wood stoves
-#&gt; 47                                    Wood stoves
-#&gt; 48                                    Wood stoves
-#&gt; 49                            Industrial furnaces
-#&gt; 50                            Industrial furnaces
-#&gt; 51                            Industrial furnaces
-#&gt; 52                            Industrial furnaces
-#&gt; 53                               Electric heaters
-#&gt; 54                               Electric heaters
-#&gt; 55                               Electric heaters
-#&gt; 56                               Electric heaters
-#&gt; 57                                          Irons
-#&gt; 58                                          Irons
-#&gt; 59                                          Irons
-#&gt; 60                                          Irons
-#&gt; 61                                     LPG stoves
-#&gt; 62                                     LPG stoves
-#&gt; 63                                     LPG stoves
-#&gt; 64                                     LPG stoves
-#&gt; 65                                Electric stoves
-#&gt; 66                                Electric stoves
-#&gt; 67                                Electric stoves
-#&gt; 68                                Electric stoves
-#&gt; 69                                    Wood stoves
-#&gt; 70                                    Wood stoves
-#&gt; 71                                    Wood stoves
-#&gt; 72                                    Wood stoves
-#&gt; 73                                Charcoal stoves
-#&gt; 74                                Charcoal stoves
-#&gt; 75                                Charcoal stoves
-#&gt; 76                                Charcoal stoves
-#&gt; 77                                Kerosene stoves
-#&gt; 78                                Kerosene stoves
-#&gt; 79                                Kerosene stoves
-#&gt; 80                                Kerosene stoves
-#&gt; 81                                     LPG stoves
-#&gt; 82                                     LPG stoves
-#&gt; 83                                     LPG stoves
-#&gt; 84                                     LPG stoves
-#&gt; 85                                Electric stoves
-#&gt; 86                                Electric stoves
-#&gt; 87                                Electric stoves
-#&gt; 88                                Electric stoves
-#&gt; 89                                     Non-energy
-#&gt; 90                                     Non-energy
-#&gt; 91                                     Non-energy
-#&gt; 92                                     Non-energy
-#&gt; 93                                     Non-energy
-#&gt; 94                                     Non-energy
-#&gt; 95                                     Non-energy
-#&gt; 96                                     Non-energy
-#&gt; 97                                     Non-energy
-#&gt; 98                                     Non-energy
-#&gt; 99                                     Non-energy
-#&gt; 100                                    Non-energy
-#&gt; 101                        Steam engines (trains)
-#&gt; 102                        Steam engines (trains)
-#&gt; 103                        Steam engines (trains)
-#&gt; 104                        Steam engines (trains)
-#&gt; 105                               Electric motors
-#&gt; 106                               Electric motors
-#&gt; 107                               Electric motors
-#&gt; 108                               Electric motors
-#&gt; 109                                        Trucks
-#&gt; 110                                        Trucks
-#&gt; 111                                        Trucks
-#&gt; 112                                        Trucks
-#&gt; 113                                   Automobiles
-#&gt; 114                                   Automobiles
-#&gt; 115                                   Automobiles
-#&gt; 116                                   Automobiles
-#&gt; 117                        Industry static motors
-#&gt; 118                        Industry static motors
-#&gt; 119                        Industry static motors
-#&gt; 120                        Industry static motors
-#&gt; 121                                 Diesel trucks
-#&gt; 122                                 Diesel trucks
-#&gt; 123                                 Diesel trucks
-#&gt; 124                                 Diesel trucks
-#&gt; 125                            Diesel automobiles
-#&gt; 126                            Diesel automobiles
-#&gt; 127                            Diesel automobiles
-#&gt; 128                            Diesel automobiles
-#&gt; 129                                          Fans
-#&gt; 130                                          Fans
-#&gt; 131                                          Fans
-#&gt; 132                                          Fans
-#&gt; 133                                     Airplanes
-#&gt; 134                                     Airplanes
-#&gt; 135                                     Airplanes
-#&gt; 136                                     Airplanes
-#&gt; 137                       Industry static engines
-#&gt; 138                       Industry static engines
-#&gt; 139                       Industry static engines
-#&gt; 140                       Industry static engines
-#&gt; 141                          Electric automobiles
-#&gt; 142                          Electric automobiles
-#&gt; 143                          Electric automobiles
-#&gt; 144                          Electric automobiles
-#&gt; 145                                  Boat engines
-#&gt; 146                                  Boat engines
-#&gt; 147                                  Boat engines
-#&gt; 148                                  Boat engines
-#&gt; 149                                    Generators
-#&gt; 150                                    Generators
-#&gt; 151                                    Generators
-#&gt; 152                                    Generators
-#&gt; 153                               Electric lights
-#&gt; 154                               Electric lights
-#&gt; 155                               Electric lights
-#&gt; 156                               Electric lights
-#&gt; 157                               Kerosene lights
-#&gt; 158                               Kerosene lights
-#&gt; 159                               Kerosene lights
-#&gt; 160                               Kerosene lights
-#&gt; 161                                    Gas lights
-#&gt; 162                                    Gas lights
-#&gt; 163                                    Gas lights
-#&gt; 164                                    Gas lights
-#&gt; 165                           Industrial furnaces
-#&gt; 166                           Industrial furnaces
-#&gt; 167                           Industrial furnaces
-#&gt; 168                           Industrial furnaces
-#&gt; 169                              Electric heaters
-#&gt; 170                              Electric heaters
-#&gt; 171                              Electric heaters
-#&gt; 172                              Electric heaters
-#&gt; 173                                   Gas heaters
-#&gt; 174                                   Gas heaters
-#&gt; 175                                   Gas heaters
-#&gt; 176                                   Gas heaters
-#&gt; 177                                   Oil heaters
-#&gt; 178                                   Oil heaters
-#&gt; 179                                   Oil heaters
-#&gt; 180                                   Oil heaters
-#&gt; 181                                  Gas furnaces
-#&gt; 182                                  Gas furnaces
-#&gt; 183                                  Gas furnaces
-#&gt; 184                                  Gas furnaces
-#&gt; 185                           Industrial furnaces
-#&gt; 186                           Industrial furnaces
-#&gt; 187                           Industrial furnaces
-#&gt; 188                           Industrial furnaces
-#&gt; 189                                   Wood stoves
-#&gt; 190                                   Wood stoves
-#&gt; 191                                   Wood stoves
-#&gt; 192                                   Wood stoves
-#&gt; 193                                         Irons
-#&gt; 194                                         Irons
-#&gt; 195                                         Irons
-#&gt; 196                                         Irons
-#&gt; 197                               Kerosene stoves
-#&gt; 198                               Kerosene stoves
-#&gt; 199                               Kerosene stoves
-#&gt; 200                               Kerosene stoves
-#&gt; 201                                   Oil heaters
-#&gt; 202                                   Oil heaters
-#&gt; 203                                   Oil heaters
-#&gt; 204                                   Oil heaters
-#&gt; 205                                   Gas heaters
-#&gt; 206                                   Gas heaters
-#&gt; 207                                   Gas heaters
-#&gt; 208                                   Gas heaters
-#&gt; 209                              Electric heaters
-#&gt; 210                              Electric heaters
-#&gt; 211                              Electric heaters
-#&gt; 212                              Electric heaters
-#&gt; 213                                    LPG stoves
-#&gt; 214                                    LPG stoves
-#&gt; 215                                    LPG stoves
-#&gt; 216                                    LPG stoves
-#&gt; 217                                   Coal stoves
-#&gt; 218                                   Coal stoves
-#&gt; 219                                   Coal stoves
-#&gt; 220                                   Coal stoves
-#&gt; 221                                  Oil furnaces
-#&gt; 222                                  Oil furnaces
-#&gt; 223                                  Oil furnaces
-#&gt; 224                                  Oil furnaces
-#&gt; 225                                  Gas furnaces
-#&gt; 226                                  Gas furnaces
-#&gt; 227                                  Gas furnaces
-#&gt; 228                                  Gas furnaces
-#&gt; 229                               Wood cookstoves
-#&gt; 230                               Wood cookstoves
-#&gt; 231                               Wood cookstoves
-#&gt; 232                               Wood cookstoves
-#&gt; 233                               Charcoal stoves
-#&gt; 234                               Charcoal stoves
-#&gt; 235                               Charcoal stoves
-#&gt; 236                               Charcoal stoves
-#&gt; 237                                LPG cookstoves
-#&gt; 238                                LPG cookstoves
-#&gt; 239                                LPG cookstoves
-#&gt; 240                                LPG cookstoves
-#&gt; 241                                    LPG stoves
-#&gt; 242                                    LPG stoves
-#&gt; 243                                    LPG stoves
-#&gt; 244                                    LPG stoves
-#&gt; 245                                   Coal stoves
-#&gt; 246                                   Coal stoves
-#&gt; 247                                   Coal stoves
-#&gt; 248                                   Coal stoves
-#&gt; 249                               Kerosene stoves
-#&gt; 250                               Kerosene stoves
-#&gt; 251                               Kerosene stoves
-#&gt; 252                               Kerosene stoves
-#&gt; 253                                   Gas heaters
-#&gt; 254                                   Gas heaters
-#&gt; 255                                   Gas heaters
-#&gt; 256                                   Gas heaters
-#&gt; 257                                   Coal stoves
-#&gt; 258                                   Coal stoves
-#&gt; 259                                   Coal stoves
-#&gt; 260                                   Coal stoves
-#&gt; 261                                 Wood furnaces
-#&gt; 262                                 Wood furnaces
-#&gt; 263                                 Wood furnaces
-#&gt; 264                                 Wood furnaces
-#&gt; 265                                  Gas furnaces
-#&gt; 266                                  Gas furnaces
-#&gt; 267                                  Gas furnaces
-#&gt; 268                                  Gas furnaces
-#&gt; 269                               Kerosene stoves
-#&gt; 270                               Kerosene stoves
-#&gt; 271                               Kerosene stoves
-#&gt; 272                               Kerosene stoves
-#&gt; 273                                    LPG stoves
-#&gt; 274                                    LPG stoves
-#&gt; 275                                    LPG stoves
-#&gt; 276                                    LPG stoves
-#&gt; 277                                  Oil furnaces
-#&gt; 278                                  Oil furnaces
-#&gt; 279                                  Oil furnaces
-#&gt; 280                                  Oil furnaces
-#&gt; 281 Non-energy use industry/transformation/energy
-#&gt; 282 Non-energy use industry/transformation/energy
-#&gt; 283 Non-energy use industry/transformation/energy
-#&gt; 284 Non-energy use industry/transformation/energy
-#&gt; 285 Non-energy use industry/transformation/energy
-#&gt; 286 Non-energy use industry/transformation/energy
-#&gt; 287 Non-energy use industry/transformation/energy
-#&gt; 288 Non-energy use industry/transformation/energy
-#&gt; 289 Non-energy use industry/transformation/energy
-#&gt; 290 Non-energy use industry/transformation/energy
-#&gt; 291 Non-energy use industry/transformation/energy
-#&gt; 292 Non-energy use industry/transformation/energy
-#&gt; 293 Non-energy use industry/transformation/energy
-#&gt; 294 Non-energy use industry/transformation/energy
-#&gt; 295 Non-energy use industry/transformation/energy
-#&gt; 296 Non-energy use industry/transformation/energy
-#&gt; 297 Non-energy use industry/transformation/energy
-#&gt; 298 Non-energy use industry/transformation/energy
-#&gt; 299 Non-energy use industry/transformation/energy
-#&gt; 300 Non-energy use industry/transformation/energy
-#&gt; 301 Non-energy use industry/transformation/energy
-#&gt; 302 Non-energy use industry/transformation/energy
-#&gt; 303 Non-energy use industry/transformation/energy
-#&gt; 304 Non-energy use industry/transformation/energy
+    <pre class="examples"><div class='input'><span class='fu'>load_eta_fu_data</span>()</div><div class='output co'>#&gt;     Country Method Energy.type Last.stage Unit                 Machine
+#&gt; 1       GHA    PCM           E      Final ktoe             Automobiles
+#&gt; 2       GHA    PCM           E      Final ktoe             Automobiles
+#&gt; 3       GHA    PCM           E      Final ktoe             Automobiles
+#&gt; 4       GHA    PCM           E      Final ktoe             Automobiles
+#&gt; 5       GHA    PCM           E      Final ktoe             Diesel cars
+#&gt; 6       GHA    PCM           E      Final ktoe             Diesel cars
+#&gt; 7       GHA    PCM           E      Final ktoe             Diesel cars
+#&gt; 8       GHA    PCM           E      Final ktoe             Diesel cars
+#&gt; 9       GHA    PCM           E      Final ktoe           Diesel trucks
+#&gt; 10      GHA    PCM           E      Final ktoe           Diesel trucks
+#&gt; 11      GHA    PCM           E      Final ktoe           Diesel trucks
+#&gt; 12      GHA    PCM           E      Final ktoe           Diesel trucks
+#&gt; 13      GHA    PCM           E      Final ktoe         Electric motors
+#&gt; 14      GHA    PCM           E      Final ktoe         Electric motors
+#&gt; 15      GHA    PCM           E      Final ktoe         Electric motors
+#&gt; 16      GHA    PCM           E      Final ktoe         Electric motors
+#&gt; 17      GHA    PCM           E      Final ktoe                  Trucks
+#&gt; 18      GHA    PCM           E      Final ktoe                  Trucks
+#&gt; 19      GHA    PCM           E      Final ktoe                  Trucks
+#&gt; 20      GHA    PCM           E      Final ktoe                  Trucks
+#&gt; 21      GHA    PCM           E      Final ktoe            Boat engines
+#&gt; 22      GHA    PCM           E      Final ktoe            Boat engines
+#&gt; 23      GHA    PCM           E      Final ktoe            Boat engines
+#&gt; 24      GHA    PCM           E      Final ktoe            Boat engines
+#&gt; 25      GHA    PCM           E      Final ktoe           Diesel trains
+#&gt; 26      GHA    PCM           E      Final ktoe           Diesel trains
+#&gt; 27      GHA    PCM           E      Final ktoe           Diesel trains
+#&gt; 28      GHA    PCM           E      Final ktoe           Diesel trains
+#&gt; 29      GHA    PCM           E      Final ktoe                    Fans
+#&gt; 30      GHA    PCM           E      Final ktoe                    Fans
+#&gt; 31      GHA    PCM           E      Final ktoe                    Fans
+#&gt; 32      GHA    PCM           E      Final ktoe                    Fans
+#&gt; 33      GHA    PCM           E      Final ktoe         Electric lights
+#&gt; 34      GHA    PCM           E      Final ktoe         Electric lights
+#&gt; 35      GHA    PCM           E      Final ktoe         Electric lights
+#&gt; 36      GHA    PCM           E      Final ktoe         Electric lights
+#&gt; 37      GHA    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 38      GHA    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 39      GHA    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 40      GHA    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 41      GHA    PCM           E      Final ktoe        Electric heaters
+#&gt; 42      GHA    PCM           E      Final ktoe        Electric heaters
+#&gt; 43      GHA    PCM           E      Final ktoe        Electric heaters
+#&gt; 44      GHA    PCM           E      Final ktoe        Electric heaters
+#&gt; 45      GHA    PCM           E      Final ktoe             Wood stoves
+#&gt; 46      GHA    PCM           E      Final ktoe             Wood stoves
+#&gt; 47      GHA    PCM           E      Final ktoe             Wood stoves
+#&gt; 48      GHA    PCM           E      Final ktoe             Wood stoves
+#&gt; 49      GHA    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 50      GHA    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 51      GHA    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 52      GHA    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 53      GHA    PCM           E      Final ktoe        Electric heaters
+#&gt; 54      GHA    PCM           E      Final ktoe        Electric heaters
+#&gt; 55      GHA    PCM           E      Final ktoe        Electric heaters
+#&gt; 56      GHA    PCM           E      Final ktoe        Electric heaters
+#&gt; 57      GHA    PCM           E      Final ktoe                   Irons
+#&gt; 58      GHA    PCM           E      Final ktoe                   Irons
+#&gt; 59      GHA    PCM           E      Final ktoe                   Irons
+#&gt; 60      GHA    PCM           E      Final ktoe                   Irons
+#&gt; 61      GHA    PCM           E      Final ktoe              LPG stoves
+#&gt; 62      GHA    PCM           E      Final ktoe              LPG stoves
+#&gt; 63      GHA    PCM           E      Final ktoe              LPG stoves
+#&gt; 64      GHA    PCM           E      Final ktoe              LPG stoves
+#&gt; 65      GHA    PCM           E      Final ktoe         Electric stoves
+#&gt; 66      GHA    PCM           E      Final ktoe         Electric stoves
+#&gt; 67      GHA    PCM           E      Final ktoe         Electric stoves
+#&gt; 68      GHA    PCM           E      Final ktoe         Electric stoves
+#&gt; 69      GHA    PCM           E      Final ktoe         Wood cookstoves
+#&gt; 70      GHA    PCM           E      Final ktoe         Wood cookstoves
+#&gt; 71      GHA    PCM           E      Final ktoe         Wood cookstoves
+#&gt; 72      GHA    PCM           E      Final ktoe         Wood cookstoves
+#&gt; 73      GHA    PCM           E      Final ktoe         Charcoal stoves
+#&gt; 74      GHA    PCM           E      Final ktoe         Charcoal stoves
+#&gt; 75      GHA    PCM           E      Final ktoe         Charcoal stoves
+#&gt; 76      GHA    PCM           E      Final ktoe         Charcoal stoves
+#&gt; 77      GHA    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 78      GHA    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 79      GHA    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 80      GHA    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 81      GHA    PCM           E      Final ktoe              LPG stoves
+#&gt; 82      GHA    PCM           E      Final ktoe              LPG stoves
+#&gt; 83      GHA    PCM           E      Final ktoe              LPG stoves
+#&gt; 84      GHA    PCM           E      Final ktoe              LPG stoves
+#&gt; 85      GHA    PCM           E      Final ktoe         Electric stoves
+#&gt; 86      GHA    PCM           E      Final ktoe         Electric stoves
+#&gt; 87      GHA    PCM           E      Final ktoe         Electric stoves
+#&gt; 88      GHA    PCM           E      Final ktoe         Electric stoves
+#&gt; 89      GHA    PCM           E      Final ktoe              Non-energy
+#&gt; 90      GHA    PCM           E      Final ktoe              Non-energy
+#&gt; 91      GHA    PCM           E      Final ktoe              Non-energy
+#&gt; 92      GHA    PCM           E      Final ktoe              Non-energy
+#&gt; 93      GHA    PCM           E      Final ktoe              Non-energy
+#&gt; 94      GHA    PCM           E      Final ktoe              Non-energy
+#&gt; 95      GHA    PCM           E      Final ktoe              Non-energy
+#&gt; 96      GHA    PCM           E      Final ktoe              Non-energy
+#&gt; 97      GHA    PCM           E      Final ktoe              Non-energy
+#&gt; 98      GHA    PCM           E      Final ktoe              Non-energy
+#&gt; 99      GHA    PCM           E      Final ktoe              Non-energy
+#&gt; 100     GHA    PCM           E      Final ktoe              Non-energy
+#&gt; 101     ZAF    PCM           E      Final ktoe  Steam engines (trains)
+#&gt; 102     ZAF    PCM           E      Final ktoe  Steam engines (trains)
+#&gt; 103     ZAF    PCM           E      Final ktoe  Steam engines (trains)
+#&gt; 104     ZAF    PCM           E      Final ktoe  Steam engines (trains)
+#&gt; 105     ZAF    PCM           E      Final ktoe         Electric motors
+#&gt; 106     ZAF    PCM           E      Final ktoe         Electric motors
+#&gt; 107     ZAF    PCM           E      Final ktoe         Electric motors
+#&gt; 108     ZAF    PCM           E      Final ktoe         Electric motors
+#&gt; 109     ZAF    PCM           E      Final ktoe                  Trucks
+#&gt; 110     ZAF    PCM           E      Final ktoe                  Trucks
+#&gt; 111     ZAF    PCM           E      Final ktoe                  Trucks
+#&gt; 112     ZAF    PCM           E      Final ktoe                  Trucks
+#&gt; 113     ZAF    PCM           E      Final ktoe             Automobiles
+#&gt; 114     ZAF    PCM           E      Final ktoe             Automobiles
+#&gt; 115     ZAF    PCM           E      Final ktoe             Automobiles
+#&gt; 116     ZAF    PCM           E      Final ktoe             Automobiles
+#&gt; 117     ZAF    PCM           E      Final ktoe  Industry static motors
+#&gt; 118     ZAF    PCM           E      Final ktoe  Industry static motors
+#&gt; 119     ZAF    PCM           E      Final ktoe  Industry static motors
+#&gt; 120     ZAF    PCM           E      Final ktoe  Industry static motors
+#&gt; 121     ZAF    PCM           E      Final ktoe           Diesel trucks
+#&gt; 122     ZAF    PCM           E      Final ktoe           Diesel trucks
+#&gt; 123     ZAF    PCM           E      Final ktoe           Diesel trucks
+#&gt; 124     ZAF    PCM           E      Final ktoe           Diesel trucks
+#&gt; 125     ZAF    PCM           E      Final ktoe      Diesel automobiles
+#&gt; 126     ZAF    PCM           E      Final ktoe      Diesel automobiles
+#&gt; 127     ZAF    PCM           E      Final ktoe      Diesel automobiles
+#&gt; 128     ZAF    PCM           E      Final ktoe      Diesel automobiles
+#&gt; 129     ZAF    PCM           E      Final ktoe                    Fans
+#&gt; 130     ZAF    PCM           E      Final ktoe                    Fans
+#&gt; 131     ZAF    PCM           E      Final ktoe                    Fans
+#&gt; 132     ZAF    PCM           E      Final ktoe                    Fans
+#&gt; 133     ZAF    PCM           E      Final ktoe               Airplanes
+#&gt; 134     ZAF    PCM           E      Final ktoe               Airplanes
+#&gt; 135     ZAF    PCM           E      Final ktoe               Airplanes
+#&gt; 136     ZAF    PCM           E      Final ktoe               Airplanes
+#&gt; 137     ZAF    PCM           E      Final ktoe Industry static engines
+#&gt; 138     ZAF    PCM           E      Final ktoe Industry static engines
+#&gt; 139     ZAF    PCM           E      Final ktoe Industry static engines
+#&gt; 140     ZAF    PCM           E      Final ktoe Industry static engines
+#&gt; 141     ZAF    PCM           E      Final ktoe    Electric automobiles
+#&gt; 142     ZAF    PCM           E      Final ktoe    Electric automobiles
+#&gt; 143     ZAF    PCM           E      Final ktoe    Electric automobiles
+#&gt; 144     ZAF    PCM           E      Final ktoe    Electric automobiles
+#&gt; 145     ZAF    PCM           E      Final ktoe            Boat engines
+#&gt; 146     ZAF    PCM           E      Final ktoe            Boat engines
+#&gt; 147     ZAF    PCM           E      Final ktoe            Boat engines
+#&gt; 148     ZAF    PCM           E      Final ktoe            Boat engines
+#&gt; 149     ZAF    PCM           E      Final ktoe              Generators
+#&gt; 150     ZAF    PCM           E      Final ktoe              Generators
+#&gt; 151     ZAF    PCM           E      Final ktoe              Generators
+#&gt; 152     ZAF    PCM           E      Final ktoe              Generators
+#&gt; 153     ZAF    PCM           E      Final ktoe         Electric lights
+#&gt; 154     ZAF    PCM           E      Final ktoe         Electric lights
+#&gt; 155     ZAF    PCM           E      Final ktoe         Electric lights
+#&gt; 156     ZAF    PCM           E      Final ktoe         Electric lights
+#&gt; 157     ZAF    PCM           E      Final ktoe         Kerosene lights
+#&gt; 158     ZAF    PCM           E      Final ktoe         Kerosene lights
+#&gt; 159     ZAF    PCM           E      Final ktoe         Kerosene lights
+#&gt; 160     ZAF    PCM           E      Final ktoe         Kerosene lights
+#&gt; 161     ZAF    PCM           E      Final ktoe              Gas lights
+#&gt; 162     ZAF    PCM           E      Final ktoe              Gas lights
+#&gt; 163     ZAF    PCM           E      Final ktoe              Gas lights
+#&gt; 164     ZAF    PCM           E      Final ktoe              Gas lights
+#&gt; 165     ZAF    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 166     ZAF    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 167     ZAF    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 168     ZAF    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 169     ZAF    PCM           E      Final ktoe        Electric heaters
+#&gt; 170     ZAF    PCM           E      Final ktoe        Electric heaters
+#&gt; 171     ZAF    PCM           E      Final ktoe        Electric heaters
+#&gt; 172     ZAF    PCM           E      Final ktoe        Electric heaters
+#&gt; 173     ZAF    PCM           E      Final ktoe             Gas heaters
+#&gt; 174     ZAF    PCM           E      Final ktoe             Gas heaters
+#&gt; 175     ZAF    PCM           E      Final ktoe             Gas heaters
+#&gt; 176     ZAF    PCM           E      Final ktoe             Gas heaters
+#&gt; 177     ZAF    PCM           E      Final ktoe             Oil heaters
+#&gt; 178     ZAF    PCM           E      Final ktoe             Oil heaters
+#&gt; 179     ZAF    PCM           E      Final ktoe             Oil heaters
+#&gt; 180     ZAF    PCM           E      Final ktoe             Oil heaters
+#&gt; 181     ZAF    PCM           E      Final ktoe            Gas furnaces
+#&gt; 182     ZAF    PCM           E      Final ktoe            Gas furnaces
+#&gt; 183     ZAF    PCM           E      Final ktoe            Gas furnaces
+#&gt; 184     ZAF    PCM           E      Final ktoe            Gas furnaces
+#&gt; 185     ZAF    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 186     ZAF    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 187     ZAF    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 188     ZAF    PCM           E      Final ktoe     Industrial furnaces
+#&gt; 189     ZAF    PCM           E      Final ktoe             Wood stoves
+#&gt; 190     ZAF    PCM           E      Final ktoe             Wood stoves
+#&gt; 191     ZAF    PCM           E      Final ktoe             Wood stoves
+#&gt; 192     ZAF    PCM           E      Final ktoe             Wood stoves
+#&gt; 193     ZAF    PCM           E      Final ktoe                   Irons
+#&gt; 194     ZAF    PCM           E      Final ktoe                   Irons
+#&gt; 195     ZAF    PCM           E      Final ktoe                   Irons
+#&gt; 196     ZAF    PCM           E      Final ktoe                   Irons
+#&gt; 197     ZAF    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 198     ZAF    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 199     ZAF    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 200     ZAF    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 201     ZAF    PCM           E      Final ktoe             Oil heaters
+#&gt; 202     ZAF    PCM           E      Final ktoe             Oil heaters
+#&gt; 203     ZAF    PCM           E      Final ktoe             Oil heaters
+#&gt; 204     ZAF    PCM           E      Final ktoe             Oil heaters
+#&gt; 205     ZAF    PCM           E      Final ktoe             Gas heaters
+#&gt; 206     ZAF    PCM           E      Final ktoe             Gas heaters
+#&gt; 207     ZAF    PCM           E      Final ktoe             Gas heaters
+#&gt; 208     ZAF    PCM           E      Final ktoe             Gas heaters
+#&gt; 209     ZAF    PCM           E      Final ktoe        Electric heaters
+#&gt; 210     ZAF    PCM           E      Final ktoe        Electric heaters
+#&gt; 211     ZAF    PCM           E      Final ktoe        Electric heaters
+#&gt; 212     ZAF    PCM           E      Final ktoe        Electric heaters
+#&gt; 213     ZAF    PCM           E      Final ktoe              LPG stoves
+#&gt; 214     ZAF    PCM           E      Final ktoe              LPG stoves
+#&gt; 215     ZAF    PCM           E      Final ktoe              LPG stoves
+#&gt; 216     ZAF    PCM           E      Final ktoe              LPG stoves
+#&gt; 217     ZAF    PCM           E      Final ktoe             Coal stoves
+#&gt; 218     ZAF    PCM           E      Final ktoe             Coal stoves
+#&gt; 219     ZAF    PCM           E      Final ktoe             Coal stoves
+#&gt; 220     ZAF    PCM           E      Final ktoe             Coal stoves
+#&gt; 221     ZAF    PCM           E      Final ktoe            Oil furnaces
+#&gt; 222     ZAF    PCM           E      Final ktoe            Oil furnaces
+#&gt; 223     ZAF    PCM           E      Final ktoe            Oil furnaces
+#&gt; 224     ZAF    PCM           E      Final ktoe            Oil furnaces
+#&gt; 225     ZAF    PCM           E      Final ktoe            Gas furnaces
+#&gt; 226     ZAF    PCM           E      Final ktoe            Gas furnaces
+#&gt; 227     ZAF    PCM           E      Final ktoe            Gas furnaces
+#&gt; 228     ZAF    PCM           E      Final ktoe            Gas furnaces
+#&gt; 229     ZAF    PCM           E      Final ktoe         Wood cookstoves
+#&gt; 230     ZAF    PCM           E      Final ktoe         Wood cookstoves
+#&gt; 231     ZAF    PCM           E      Final ktoe         Wood cookstoves
+#&gt; 232     ZAF    PCM           E      Final ktoe         Wood cookstoves
+#&gt; 233     ZAF    PCM           E      Final ktoe         Charcoal stoves
+#&gt; 234     ZAF    PCM           E      Final ktoe         Charcoal stoves
+#&gt; 235     ZAF    PCM           E      Final ktoe         Charcoal stoves
+#&gt; 236     ZAF    PCM           E      Final ktoe         Charcoal stoves
+#&gt; 237     ZAF    PCM           E      Final ktoe          LPG cookstoves
+#&gt; 238     ZAF    PCM           E      Final ktoe          LPG cookstoves
+#&gt; 239     ZAF    PCM           E      Final ktoe          LPG cookstoves
+#&gt; 240     ZAF    PCM           E      Final ktoe          LPG cookstoves
+#&gt; 241     ZAF    PCM           E      Final ktoe              LPG stoves
+#&gt; 242     ZAF    PCM           E      Final ktoe              LPG stoves
+#&gt; 243     ZAF    PCM           E      Final ktoe              LPG stoves
+#&gt; 244     ZAF    PCM           E      Final ktoe              LPG stoves
+#&gt; 245     ZAF    PCM           E      Final ktoe             Coal stoves
+#&gt; 246     ZAF    PCM           E      Final ktoe             Coal stoves
+#&gt; 247     ZAF    PCM           E      Final ktoe             Coal stoves
+#&gt; 248     ZAF    PCM           E      Final ktoe             Coal stoves
+#&gt; 249     ZAF    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 250     ZAF    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 251     ZAF    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 252     ZAF    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 253     ZAF    PCM           E      Final ktoe             Gas heaters
+#&gt; 254     ZAF    PCM           E      Final ktoe             Gas heaters
+#&gt; 255     ZAF    PCM           E      Final ktoe             Gas heaters
+#&gt; 256     ZAF    PCM           E      Final ktoe             Gas heaters
+#&gt; 257     ZAF    PCM           E      Final ktoe             Coal stoves
+#&gt; 258     ZAF    PCM           E      Final ktoe             Coal stoves
+#&gt; 259     ZAF    PCM           E      Final ktoe             Coal stoves
+#&gt; 260     ZAF    PCM           E      Final ktoe             Coal stoves
+#&gt; 261     ZAF    PCM           E      Final ktoe           Wood furnaces
+#&gt; 262     ZAF    PCM           E      Final ktoe           Wood furnaces
+#&gt; 263     ZAF    PCM           E      Final ktoe           Wood furnaces
+#&gt; 264     ZAF    PCM           E      Final ktoe           Wood furnaces
+#&gt; 265     ZAF    PCM           E      Final ktoe            Gas furnaces
+#&gt; 266     ZAF    PCM           E      Final ktoe            Gas furnaces
+#&gt; 267     ZAF    PCM           E      Final ktoe            Gas furnaces
+#&gt; 268     ZAF    PCM           E      Final ktoe            Gas furnaces
+#&gt; 269     ZAF    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 270     ZAF    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 271     ZAF    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 272     ZAF    PCM           E      Final ktoe         Kerosene stoves
+#&gt; 273     ZAF    PCM           E      Final ktoe              LPG stoves
+#&gt; 274     ZAF    PCM           E      Final ktoe              LPG stoves
+#&gt; 275     ZAF    PCM           E      Final ktoe              LPG stoves
+#&gt; 276     ZAF    PCM           E      Final ktoe              LPG stoves
+#&gt; 277     ZAF    PCM           E      Final ktoe            Oil furnaces
+#&gt; 278     ZAF    PCM           E      Final ktoe            Oil furnaces
+#&gt; 279     ZAF    PCM           E      Final ktoe            Oil furnaces
+#&gt; 280     ZAF    PCM           E      Final ktoe            Oil furnaces
+#&gt; 281     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 282     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 283     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 284     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 285     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 286     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 287     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 288     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 289     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 290     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 291     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 292     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 293     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 294     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 295     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 296     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 297     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 298     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 299     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 300     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 301     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 302     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 303     ZAF    PCM           E      Final ktoe              Non-energy
+#&gt; 304     ZAF    PCM           E      Final ktoe              Non-energy
 #&gt;                                   Eu.product          Quantity Maximum.values
 #&gt; 1                                         MD     E.dot_machine   6.192510e+02
 #&gt; 2                                         MD E.dot_machine [%]   1.156388e-01
@@ -1353,7 +1048,7 @@ generated using <code><a href='eta_fu_template.html'>eta_fu_template()</a></code
 #&gt; 264 1.677008e-02 1.677008e-02
 #&gt; 265 7.756520e+02 9.715247e+02
 #&gt; 266 2.335346e-02 1.851122e-02
-#&gt; 267 8.500000e-01           NA
+#&gt; 267 8.500000e-01 8.500000e-01
 #&gt; 268 1.677008e-02 1.677008e-02
 #&gt; 269           NA 5.516266e+02
 #&gt; 270           NA 1.051057e-02

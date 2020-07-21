@@ -5,7 +5,7 @@
 \alias{renewable_products}
 \title{Renewable products}
 \format{
-A string vector with 7 entries
+A string vector with 7 entries.
 }
 \usage{
 renewable_products

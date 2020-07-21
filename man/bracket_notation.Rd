@@ -5,7 +5,7 @@
 \alias{bracket_notation}
 \title{Bracket notation}
 \format{
-A character vector with 4 entries
+A character vector with 4 entries.
 }
 \usage{
 bracket_notation

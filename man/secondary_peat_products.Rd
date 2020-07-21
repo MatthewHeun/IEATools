@@ -5,7 +5,7 @@
 \alias{secondary_peat_products}
 \title{Secondary peat products}
 \format{
-A string vector with 1 entry
+A string vector with 1 entries.
 }
 \usage{
 secondary_peat_products

@@ -2,6 +2,23 @@
 context("Completion functions")
 ###########################################################
 
+test_that("tidy_fu_allocation_table() works", {
+  fu_table <- load_fu_allocation_data()
+  years <- year_cols(fu_table, return_names = TRUE)
+  tidy <- tidy_fu_allocation_table(fu_table)
+  expect_null(tidy[[IEATools::template_cols$maximum_values]])
+  for (yr in years) {
+    expect_null(tidy[[yr]])
+  }
+  tidy %>% 
+    dplyr::filter(.data[[IEATools::template_cols$quantity]] %in% c(IEATools::iea_cols$e_dot, IEATools::template_cols$e_dot_perc)) %>% 
+    nrow() %>% 
+    expect_equal(0)
+  
+  # Test that the original is returned if it is already tidy
+  tidy2 <- tidy_fu_allocation_table(tidy)
+  expect_equal(tidy2, tidy)
+})
 
 test_that("complete_fu_allocation_table works as expected", {
   
@@ -85,7 +102,49 @@ test_that("complete_fu_allocation_table works as expected", {
 })
 
 
-test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
+test_that("complete_fu_allocation_table() works with a tidy incomplete fu table", {
+  fu_table <- load_fu_allocation_data()
+  year_columns <- year_cols(fu_table, return_names = TRUE)
+  
+  tidy_fu_table_GHA <- fu_table %>% 
+    dplyr::filter(Country == "GHA") %>% 
+    # Delete rows from Ghana's table for Residential consumption of PSBs
+    dplyr::filter(!(.data[[IEATools::iea_cols$flow_aggregation_point]] == IEATools::tfc_flows$other & 
+                      .data[[IEATools::template_cols$ef_product]] == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
+                      .data[[IEATools::template_cols$destination]] == IEATools::other_flows$residential)) %>% 
+    # Tidy it
+    # Eliminate rows we don't need.
+    dplyr::filter(! .data[[IEATools::template_cols$quantity]] %in% c(IEATools::iea_cols$e_dot, IEATools::template_cols$e_dot_perc)) %>% 
+    dplyr::mutate(
+      "{IEATools::template_cols$maximum_values}" := NULL
+    ) %>% 
+    tidyr::pivot_longer(cols = tidyselect::all_of(year_columns), 
+                        names_to = IEATools::iea_cols$year,
+                        values_to = IEATools::template_cols$.values) %>% 
+    # Clean out rows that are NA
+    dplyr::filter(!is.na(.data[[IEATools::template_cols$.values]]))
+    
+  fu_table_ZAF <- fu_table %>% 
+    dplyr::filter(Country == "ZAF")
+
+  # Get the IEA data for GHA and ZAF and specify it.
+  tidy_specified_iea_data <- load_tidy_iea_df() %>% 
+    specify_all()
+  
+  # Now send the data into complete_fu_allocation_table()
+  completed <- complete_fu_allocation_table(fu_allocation_table = tidy_fu_table_GHA, 
+                                            # Give 2 exemplars so that we stress test the loop.
+                                            exemplar_fu_allocation_tables = list(fu_table_ZAF, fu_table_ZAF), 
+                                            tidy_specified_iea_data = tidy_specified_iea_data)
+  # Ensure that the correct rows have been picked up for GHA from ZAF.
+  completed %>% 
+    dplyr::filter(.data[[IEATools::template_cols$c_source]] == "ZAF") %>% 
+    nrow() %>% 
+    expect_equal(4)
+})
+
+
+test_that("complete_fu_allocation_table() works with 2 exemplars", {
   # In this test, we set up an allocation table that has two missing pieces.
   # The two missing pieces are obtained from 2 exemplars, one missing piece from each.
   
@@ -186,6 +245,26 @@ test_that("complete_fu_allocation_table works as expected with 2 exemplars", {
                                                                   tidy_specified_iea_data = tidy_specified_iea_data), 
                  "Didn't complete FU Allocation table for GHA. Returning a data frame of final energy that wasn't allocated.")
   expect_equal(complete_failure[[IEATools::template_cols$ef_product]] %>% unique(), IEATools::biofuels_and_waste_products$primary_solid_biofuels)
+})
+
+
+test_that("fu_allocation_table_completed() works as expected", {
+  iea_data <- load_tidy_iea_df() %>% 
+    specify_all()
+  fu_allocations <- load_fu_allocation_data()
+  expect_true(fu_allocation_table_completed(fu_allocations, iea_data))
+  
+  # Remove a row from fu_allocations. Now the test for completion should fail.
+  # In fact, remove a row that has a 1 in it.
+  expect_false(fu_allocation_table_completed(fu_allocations[-3, ], iea_data))
+  
+  # Now remove a row that has a fraction.
+  expect_false(fu_allocation_table_completed(fu_allocations[-8, ], iea_data))
+  
+  # Try with a wide IEAData data frame.
+  expect_true(fu_allocation_table_completed(fu_allocations, iea_data %>% 
+                                              tidyr::pivot_wider(names_from = IEATools::iea_cols$year, 
+                                                                 values_from = IEATools::iea_cols$e_dot)))
 })
 
 
@@ -352,6 +431,32 @@ test_that("complete_eta_fu_table works as expected", {
     magrittr::extract2(IEATools::template_cols$machine) %>% 
     expect_equal(c("Automobiles", "Automobiles", "Irons", "Irons"))
     
+})
+
+
+test_that("eta_fu_table_completed() works as expected", {
+  fu_allocations <- load_fu_allocation_data()
+  fu_efficiencies <- load_eta_fu_data()
+  expect_true(eta_fu_table_completed(fu_efficiencies, fu_allocations))
+  
+  # Remove a couple rows to get a FALSE return value.
+  expect_false(eta_fu_table_completed(fu_efficiencies[-3, ], fu_allocations))
+  
+  # Try with a tall allocations data frame
+  expect_true(eta_fu_table_completed(fu_efficiencies, 
+                                     fu_allocations %>% tidyr::pivot_longer(cols = year_cols(fu_allocations), 
+                                                                            names_to = IEATools::iea_cols$year, 
+                                                                            values_to = IEATools::template_cols$.values)))
+  # Try with a tall efficiencies data frame
+  expect_true(eta_fu_table_completed(fu_efficiencies %>% tidyr::pivot_longer(cols = year_cols(fu_efficiencies), 
+                                                                             names_to = IEATools::iea_cols$year, 
+                                                                             values_to = IEATools::template_cols$.values), 
+                                     fu_allocations))
+  
+  # Try with a NULL fu_efficiencies
+  expect_false(eta_fu_table_completed(fu_allocation_table = fu_allocations))
+  expect_true(!is.null(eta_fu_table_completed(fu_allocation_table = fu_allocations) %>% 
+                         attr("unallocated_rows")))
 })
 
 

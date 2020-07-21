@@ -75,7 +75,7 @@ This function saves an Excel workbook to path that contains an analyst's templat
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.28</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.29</span>
       </span>
     </div>
 
@@ -148,17 +148,17 @@ This function saves an Excel workbook to <code>path</code> that contains an anal
     <pre class="usage"><span class='fu'>write_fu_allocation_template</span>(
   <span class='no'>.fu_allocation_template</span>,
   <span class='no'>path</span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
-  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>,
-  <span class='kw'>fu_allocations_tab_name</span> <span class='kw'>=</span> <span class='st'>"FU Allocations"</span>,
-  <span class='kw'>machine</span> <span class='kw'>=</span> <span class='st'>"Machine"</span>,
-  <span class='kw'>eu_product</span> <span class='kw'>=</span> <span class='st'>"Eu.product"</span>,
-  <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='st'>"Quantity"</span>,
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
-  <span class='kw'>e_dot_perc</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>e_dot</span>, <span class='st'>"[%]"</span>),
-  <span class='kw'>maximum_values</span> <span class='kw'>=</span> <span class='st'>"Maximum.values"</span>,
+  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>ledger_side</span>,
+  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='ledger_sides.html'>ledger_sides</a></span>$<span class='no'>consumption</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow_aggregation_point</span>,
+  <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span>$<span class='no'>energy_industry_own_use</span>,
+  <span class='kw'>fu_allocations_tab_name</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='fu_analysis_file_info.html'>fu_analysis_file_info</a></span>$<span class='no'>fu_allocation_tab_name</span>,
+  <span class='kw'>machine</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>machine</span>,
+  <span class='kw'>eu_product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>eu_product</span>,
+  <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>quantity</span>,
+  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>e_dot</span>,
+  <span class='kw'>e_dot_perc</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_perc</span>,
+  <span class='kw'>maximum_values</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>maximum_values</span>,
   <span class='kw'>header_row_font_color</span> <span class='kw'>=</span> <span class='st'>"#FFFFFF"</span>,
   <span class='kw'>header_row_shading_color</span> <span class='kw'>=</span> <span class='st'>"#5A80B8"</span>,
   <span class='kw'>energy_row_font_color_fd</span> <span class='kw'>=</span> <span class='st'>"#104273"</span>,
@@ -186,84 +186,84 @@ If not present, the ".xlsx" extension is added.</p></td>
     </tr>
     <tr>
       <th>ledger_side</th>
-      <td><p>the name of the ledger side column in <code>.tidy_iea_df</code>. Default is "<code>Ledger.side</code>".</p></td>
+      <td><p>the name of the ledger side column in <code>.tidy_iea_df</code>. Default is "Ledger.side".</p></td>
     </tr>
     <tr>
       <th>consumption</th>
-      <td><p>the string identifier for consumption in the <code>ledger_side</code> column.  Default is "<code>Consumption</code>".</p></td>
+      <td><p>the string identifier for consumption in the <code>ledger_side</code> column.  Default is "Consumption".</p></td>
     </tr>
     <tr>
       <th>flow_aggregation_point</th>
-      <td><p>the name of the flow aggregation point column in <code>.tidy_iea_df</code>. Default is "<code>Flow.aggregation.point</code>".</p></td>
+      <td><p>the name of the flow aggregation point column in <code>.tidy_iea_df</code>. Default is "Flow.aggregation.point".</p></td>
     </tr>
     <tr>
       <th>eiou</th>
-      <td><p>the string identifier for energy industry own use in the <code>flow_aggregation_point</code> column. Default is "<code>Energy industry own use</code>".</p></td>
+      <td><p>the string identifier for energy industry own use in the <code>flow_aggregation_point</code> column. Default is "Energy industry own use".</p></td>
     </tr>
     <tr>
       <th>fu_allocations_tab_name</th>
-      <td><p>the name of the tab on which the template will be written. Default is "<code>FU Allocations</code>".</p></td>
+      <td><p>the name of the tab on which the template will be written. Default is "FU Allocations".</p></td>
     </tr>
     <tr>
       <th>machine</th>
-      <td><p>the name of the machine column in output. Default is "<code>Machine</code>"</p></td>
+      <td><p>the name of the machine column in output. Default is "Machine"</p></td>
     </tr>
     <tr>
       <th>eu_product</th>
-      <td><p>the name of the useful energy product column in output. Default is "<code>Eu.product</code>".</p></td>
+      <td><p>the name of the useful energy product column in output. Default is "Eu.product".</p></td>
     </tr>
     <tr>
       <th>quantity</th>
-      <td><p>the name of the quantity column to be created on output. Default is "<code>Quantity</code>".</p></td>
+      <td><p>the name of the quantity column to be created on output. Default is "Quantity".</p></td>
     </tr>
     <tr>
       <th>e_dot</th>
       <td><p>the name of the energy flow rate column in <code>.tidy_iea_df</code> and the name of the energy flow rate rows to be included in the Excel file that is written by this function.
-Default is "<code>E.dot</code>".</p></td>
+Default is "E.dot".</p></td>
     </tr>
     <tr>
       <th>e_dot_perc</th>
       <td><p>the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
-Default is "<code>E.dot.perc</code>".</p></td>
+Default is "E.dot.perc".</p></td>
     </tr>
     <tr>
       <th>maximum_values</th>
-      <td><p>the name of the maximum values column in output. Default is "<code>Maximum.values</code>".</p></td>
+      <td><p>the name of the maximum values column in output. Default is "Maximum.values".</p></td>
     </tr>
     <tr>
       <th>header_row_font_color</th>
       <td><p>a hex string representing the font color for the header row in the Excel file that is written by this function.
-Default is "<code>#FFFFFF</code>", white.</p></td>
+Default is "#FFFFFF", white.</p></td>
     </tr>
     <tr>
       <th>header_row_shading_color</th>
       <td><p>a hex string representing the shading color for the header row in the Excel file that is written by this function.
-Default is "<code>#5A80B8</code>", medium blue.</p></td>
+Default is "#5A80B8", medium blue.</p></td>
     </tr>
     <tr>
       <th>energy_row_font_color_fd</th>
       <td><p>a hex string representing the font color for <code>e_dot</code> and <code>e_dot_perc</code> final demand rows in the Excel file that is written by this function.
-Default is "<code>#104273</code>", a dark blue color.</p></td>
+Default is "#104273", a dark blue color.</p></td>
     </tr>
     <tr>
       <th>energy_row_shading_color_fd</th>
       <td><p>a hex string representing the shading color for <code>e_dot</code> and <code>e_dot_perc</code> final demand rows in the Excel file that is written by this function.
-Default is "<code>#104273</code>", a light blue color.</p></td>
+Default is "#104273", a light blue color.</p></td>
     </tr>
     <tr>
       <th>energy_row_font_color_eiou</th>
       <td><p>a hex string representing the font color for <code>e_dot</code> and <code>e_dot_perc</code> energy industry own use rows in the Excel file that is written by this function.
-Default is "<code>#104273</code>", a dark yellow color.</p></td>
+Default is "#104273", a dark yellow color.</p></td>
     </tr>
     <tr>
       <th>energy_row_shading_color_eiou</th>
       <td><p>a hex string representing the shading color for <code>e_dot</code> and <code>e_dot_perc</code> energy industry own use rows in the Excel file that is written by this function.
-Default is "<code>#104273</code>", a light yellow color.</p></td>
+Default is "#104273", a light yellow color.</p></td>
     </tr>
     <tr>
       <th>dont_fill_shading_color</th>
       <td><p>a hex string representing the shading color for cells that don't require inputs.
-Default is "<code>#A8A8A8</code>", a medium gray color.</p></td>
+Default is "#A8A8A8", a medium gray color.</p></td>
     </tr>
     <tr>
       <th>overwrite_file</th>
@@ -277,7 +277,7 @@ If <code>path</code> already exists and <code>overwrite = FALSE</code>, an error
     <tr>
       <th>.rownum</th>
       <td><p>a temporary column created internally. <code>.rownum</code> must not exist in <code>.tidy_iea_df</code> when <code>write_fu_allocation_template</code> is called.
-Default is "<code>.rownum</code>".</p></td>
+Default is ".rownum".</p></td>
     </tr>
     </table>
 
@@ -303,7 +303,7 @@ approximates flow through the energy conversion chain.</p></li>
 <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='specify_all.html'>specify_all</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='fu_allocation_template.html'>fu_allocation_template</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>write_fu_allocation_template</span>(<span class='no'>f</span>)</div><div class='output co'>#&gt; [1] "/var/folders/y7/gl7nw9bd61g2js7pjpkhqr_40000gq/T//RtmpSuqctq/filef5a7aec52e7.xlsx"</div><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='no'>f</span>)) {
+  <span class='fu'>write_fu_allocation_template</span>(<span class='no'>f</span>)</div><div class='output co'>#&gt; [1] "/var/folders/y7/gl7nw9bd61g2js7pjpkhqr_40000gq/T//Rtmpg2fq23/file6daa5b745a19.xlsx"</div><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='no'>f</span>)) {
   <span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.remove</a></span>(<span class='no'>f</span>)
 }</div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>

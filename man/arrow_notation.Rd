@@ -5,7 +5,7 @@
 \alias{arrow_notation}
 \title{Arrow notation}
 \format{
-A character vector with 4 entries
+A character vector with 4 entries.
 }
 \usage{
 arrow_notation

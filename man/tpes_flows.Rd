@@ -5,7 +5,7 @@
 \alias{tpes_flows}
 \title{Total primary energy supply flows}
 \format{
-A string vector with 7 entries
+A string vector with 7 entries.
 \describe{
 \item{resources}{The string identifier for Resource flows.}
 \item{production}{The string identifier for Production flows.}

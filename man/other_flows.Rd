@@ -5,7 +5,7 @@
 \alias{other_flows}
 \title{Other flows}
 \format{
-A string vector with 6 entries
+A string vector with 6 entries.
 }
 \usage{
 other_flows

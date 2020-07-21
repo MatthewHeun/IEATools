@@ -7,14 +7,13 @@
 write_eta_fu_template(
   .eta_fu_template,
   path,
-  eta_fu_tab_name = "FU etas",
+  eta_fu_tab_name = IEATools::fu_analysis_file_info$eta_fu_tab_name,
   overwrite_file = FALSE,
   overwrite_fu_eta_tab = FALSE,
-  eta_fu = "eta.fu",
-  e_dot_machine = "E.dot_machine",
-  perc = "[\%]",
-  e_dot_machine_perc = paste(e_dot_machine, perc),
-  maximum_values = "Maximum.values",
+  eta_fu = IEATools::template_cols$eta_fu,
+  e_dot_machine = IEATools::template_cols$e_dot_machine,
+  e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
+  maximum_values = IEATools::template_cols$maximum_values,
   header_row_font_color = "#FFFFFF",
   header_row_shading_color = "#5A80B8",
   e_dot_machine_row_font_color = "#8C87A0",
@@ -26,8 +25,8 @@ write_eta_fu_template(
   phi_row_font_color = "#000000",
   phi_row_shading_color = "#FFFFFF",
   blank_shading_color = "#808080",
-  quantity = "Quantity",
-  e_dot_machine_max_perc = "E.dot_machine_max [\%]",
+  quantity = IEATools::template_cols$quantity,
+  e_dot_machine_max_perc = IEATools::template_cols$e_dot_machine_max_perc,
   .rownum = ".rownum"
 )
 }
@@ -45,8 +44,6 @@ write_eta_fu_template(
 \item{eta_fu}{the name of the final-to-useful efficiency rows in \code{.eta_fu_template}. Default is "eta.fu".}
 
 \item{e_dot_machine}{a string identifying energy flow into final-to-useful machines. Default is "E.dot_machine".}
-
-\item{perc}{the string identifying percentage quantities. Default is "[\%]".}
 
 \item{e_dot_machine_perc}{a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine [\%]".}
 

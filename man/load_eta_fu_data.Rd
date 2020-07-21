@@ -6,13 +6,13 @@
 \usage{
 load_eta_fu_data(
   path = sample_eta_fu_table_path(),
-  eta_fu_tab_name = "FU etas"
+  eta_fu_tab_name = IEATools::fu_analysis_file_info$eta_fu_tab_name
 )
 }
 \arguments{
 \item{path}{the path from which final-to-useful machine efficiency data will be loaded. Default is the path to sample efficiency data supplied with this package.}
 
-\item{eta_fu_tab_name}{the tab in \code{path} that contains the final-to-useful machine efficiency data. Default is "\verb{FU etas}".}
+\item{eta_fu_tab_name}{the tab in \code{path} that contains the final-to-useful machine efficiency data. Default is "FU etas".}
 }
 \value{
 the \code{eta_fu_tab_name} tab in \code{path} as a data frame.

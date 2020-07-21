@@ -5,7 +5,7 @@
 \alias{non_energy_flows}
 \title{Non-energy flows}
 \format{
-A string vector with 3 entries
+A string vector with 3 entries.
 }
 \usage{
 non_energy_flows

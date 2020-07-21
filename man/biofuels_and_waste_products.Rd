@@ -5,7 +5,7 @@
 \alias{biofuels_and_waste_products}
 \title{Biofuel and waste products}
 \format{
-A string vector with 11 entries
+A string vector with 11 entries.
 \describe{
 \item{industrial_waste}{The string identifier for Industrial waste products.}
 \item{municipal_waste_renewable}{The string identifier for renewable municipal waste products.}

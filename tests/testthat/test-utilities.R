@@ -19,11 +19,44 @@ test_that("starts_with_any_of() works properly", {
                c(TRUE, TRUE, FALSE, FALSE))
 })
 
+
 test_that("year_cols() works as expected", {
-  DF <- data.frame(a = c(1, 2), `1967` = c(3, 4), `-10` = c(5, 6), check.names = FALSE)
+  DF <- data.frame(a = c(1, 2), `1967` = c(3, 4), `-42` = c(5, 6), check.names = FALSE)
   expect_equal(DF %>% year_cols(), c(2, 3))
-  expect_equal(DF %>% year_cols(return_names = TRUE), c("1967", "-10"))
+  expect_equal(DF %>% year_cols(return_names = TRUE), c("1967", "-42"))
+  
+  DF2 <- data.frame(a = c(1, 2), Year = c(1967, 2020))
+  expect_equal(year_cols(DF2, return_names = TRUE), "Year")
+  expect_equal(year_cols(DF2, year = NULL, return_names = TRUE), c("a")[-1])
+  expect_equal(year_cols(DF2), 2)
+  expect_equal(year_cols(DF2, year = 2), 2)
+  expect_equal(year_cols(DF2, year = 1), 1)
+  # You can shoot yourself in the foot
+  expect_equal(year_cols(DF2, year = 1, return_names = TRUE), "a")
 })
+
+
+test_that("meta_cols() works as expected", {
+  DF <- data.frame(E.dot = -42, a = c(1, 2), `1967` = c(3, 4), `-42` = c(5, 6), check.names = FALSE)
+  expect_equal(meta_cols(DF, return_names = TRUE), "a")  # Because E.dot is excluded by default.
+  
+  expect_equal(meta_cols(DF), 2)
+  expect_equal(meta_cols(DF, not_meta = "a"), 1)
+  expect_equal(meta_cols(DF, not_meta = 2), 1)
+  expect_equal(meta_cols(DF, not_meta = NULL), c(1, 2))
+  expect_equal(meta_cols(DF, not_meta = "E.dot"), 2)
+  expect_equal(meta_cols(DF, not_meta = "E.dot", return_names = TRUE), "a")
+  expect_equal(meta_cols(DF, not_meta = "a"), 1)
+  expect_equal(meta_cols(DF, not_meta = c("E.dot", "a")), c(0)[-1]) # Returns an empty vector
+  expect_equal(meta_cols(DF, not_meta = c(1,2)), c(0)[-1]) # Returns an empty vector
+  expect_equal(meta_cols(DF, not_meta = c(1,2), return_names = TRUE), c("bogus")[-1]) # Returns an empty vector
+  
+  expect_equal(meta_cols(DF, years_to_keep = 1967), c(2, 3))
+  expect_equal(meta_cols(DF, years_to_keep = 1967, return_names = TRUE), c("a", "1967"))
+
+  expect_equal(meta_cols(DF, not_meta = "a", years_to_keep = 1967, return_names = TRUE), c("E.dot", "1967"))
+})
+
 
 test_that("insert_after() works as expected", {
   l <- list("a", "b", "c", "d", "c")
@@ -35,6 +68,7 @@ test_that("insert_after() works as expected", {
   expect_equal(l %>% insert_after(after = NULL, "1"), list("a", "b", "c", "d", "c", "1"))
   expect_equal(l %>% insert_after(values = "1"), list("a", "b", "c", "d", "c", "1"))
 })
+
 
 test_that("extract_TK() works as expected", {
   heats1 <- c("HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C", "LTH.-20.C")

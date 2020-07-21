@@ -5,7 +5,7 @@
 \alias{methods}
 \title{Method order}
 \format{
-A string list with 3 entries
+A string list with 3 entries.
 \describe{
 \item{PCM}{Physical content method (used by the IEA).}
 \item{RCM}{Resource content method.}
