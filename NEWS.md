@@ -1,6 +1,7 @@
 * New tests for new features.
-    * Now up to 592 tests, all passing.
+    * Now up to 604 tests, all passing.
     * Test coverage remains at 100%.
+* New function `tidy_fu_allocation_table()` makes an FU allocation table tidy if it is not.
 * `year_cols()` now returns the "Year" column, if it exists.
 * New function `meta_cols()` gives metadata columns in any IEA data frame.
 * Refactored `complete_fu_allocation_table()` and `complete_eta_fu_table()` to use 
