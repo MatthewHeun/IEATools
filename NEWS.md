@@ -1,5 +1,7 @@
-* New tests for new features.
-    * Now up to 604 tests, all passing.
+# IEATools 0.1.29 (2020-07-21)
+
+* New tests for new features and old bugs.
+    * Now up to 606 tests, all passing.
     * Test coverage remains at 100%.
 * `extract_S_units_from_tidy()` now correctly sets rowtype by default.
   rowtype was `Unit`, but it should have been `Product`.

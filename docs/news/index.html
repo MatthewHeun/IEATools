@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.28</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.29</span>
       </span>
     </div>
 
@@ -133,6 +133,29 @@
       
     </div>
 
+    <div id="ieatools-0129-2020-07-21" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.29">
+<a href="#ieatools-0129-2020-07-21" class="anchor"></a>IEATools 0.1.29 (2020-07-21)</h1>
+<ul>
+<li>New tests for new features and old bugs.
+<ul>
+<li>Now up to 606 tests, all passing.</li>
+<li>Test coverage remains at 100%.</li>
+</ul>
+</li>
+<li>
+<code><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy()</a></code> now correctly sets rowtype by default. rowtype was <code>Unit</code>, but it should have been <code>Product</code>.</li>
+<li>New function <code><a href="../reference/tidy_fu_allocation_table.html">tidy_fu_allocation_table()</a></code> makes an FU allocation table tidy if it is not.</li>
+<li>
+<code><a href="../reference/year_cols.html">year_cols()</a></code> now returns the “Year” column, if it exists.</li>
+<li>New function <code><a href="../reference/meta_cols.html">meta_cols()</a></code> gives metadata columns in any IEA data frame.</li>
+<li>Refactored <code><a href="../reference/complete_fu_allocation_table.html">complete_fu_allocation_table()</a></code> and <code><a href="../reference/complete_eta_fu_table.html">complete_eta_fu_table()</a></code> to use <code><a href="../reference/fu_allocation_table_completed.html">fu_allocation_table_completed()</a></code> and <code><a href="../reference/eta_fu_table_completed.html">eta_fu_table_completed()</a></code>.</li>
+<li>New function <code><a href="../reference/eta_fu_table_completed.html">eta_fu_table_completed()</a></code> that tells when an FU Efficiency table is complete.</li>
+<li>New function <code><a href="../reference/fu_allocation_table_completed.html">fu_allocation_table_completed()</a></code> that tells when an FU Allocation table is complete.</li>
+<li>Improvements to <code>switch-notation</code> documentation.</li>
+<li>Added constant <code><a href="../reference/fu_analysis_file_info.html">IEATools::fu_analysis_file_info</a></code>.</li>
+</ul>
+</div>
     <div id="ieatools-0128-2020-07-02" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.28">
 <a href="#ieatools-0128-2020-07-02" class="anchor"></a>IEATools 0.1.28 (2020-07-02)</h1>

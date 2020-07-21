@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • IEATools</title>
+<title>Find metadata columns — meta_cols • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,9 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Find metadata columns — meta_cols" />
+<meta property="og:description" content="Determines which columns are metadata columns in an IEA data frame
+by subtracting year columns and cols_to_exclude from all columns names in .df." />
 
 
 
@@ -58,7 +60,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -129,26 +131,64 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Find metadata columns</h1>
+    
+    <div class="hidden name"><code>meta_cols.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-        <dt><a href="IEATools.html">IEATools</a></dt>
-        <dd></dt>
-        <dt><a href="final_to_useful.html">Final to Useful Analysis</a></dt>
-        <dd></dt>
-        <dt><a href="fix_iea_data.html">Fixes for IEA Data</a></dt>
-        <dd></dt>
-        <dt><a href="prep_psut.html">Prepare for PSUT analysis</a></dt>
-        <dd></dt>
-        <dt><a href="specify.html">Specify EIOU Industries and Flows</a></dt>
-        <dd></dt>
-      </dl>
+    <div class="ref-description">
+    <p>Determines which columns are metadata columns in an IEA data frame
+by subtracting year columns and <code>cols_to_exclude</code> from all columns names in <code>.df</code>.</p>
     </div>
+
+    <pre class="usage"><span class='fu'>meta_cols</span>(
+  <span class='no'>.df</span>,
+  <span class='kw'>not_meta</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>e_dot</span>,
+  <span class='kw'>years_to_keep</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>return_names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>.df</th>
+      <td><p>A (possibly) non-tidy data frame with years spread to the right in columns.</p></td>
+    </tr>
+    <tr>
+      <th>not_meta</th>
+      <td><p>A vector of column names or position integers identifying columns to <em>not</em>
+include in the return value.
+Default is <code>IEATools::iea_cols$e_dot</code>.</p></td>
+    </tr>
+    <tr>
+      <th>years_to_keep</th>
+      <td><p>A vector of years to retain. Default is <code>NULL</code>, which eliminates all year columns.</p></td>
+    </tr>
+    <tr>
+      <th>return_names</th>
+      <td><p>A boolean which tells whether names are returned instead of column indices.
+Default is <code>FALSE</code>.</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A vector of string names of metadata columns in <code>.df</code>.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>A non-tidy data frame will have an <code>e_dot</code> column, which is not a metadata column.
+Thus, the default value for <code>not_meta</code> is <code>IEATools::iea_cols$e_dot</code>.
+Overriding <code>not_meta</code> will change the default behavior to exclude different columns.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>DF</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>E.dot</span> <span class='kw'>=</span> <span class='fl'>2020</span>, <span class='kw'>a</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>`1967`</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>4</span>), <span class='kw'>`-42`</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>5</span>, <span class='fl'>6</span>), <span class='kw'>check.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='no'>DF</span> <span class='kw'>%&gt;%</span> <span class='fu'>meta_cols</span>()</div><div class='output co'>#&gt; [1] 2</div><div class='input'><span class='no'>DF</span> <span class='kw'>%&gt;%</span> <span class='fu'>meta_cols</span>(<span class='kw'>return_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] "a"</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
