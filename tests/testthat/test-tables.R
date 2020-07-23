@@ -464,4 +464,3 @@ test_that("eta_fu_table_completed() works as expected", {
                          attr("unallocated_rows")))
 })
 
-
