@@ -1,3 +1,5 @@
+# IEATools 0.1.30 (2020-07-24)
+
 * New tests for new features and old bugs.
     * Now up to 611 tests, all passing.
     * Test coverage remains at 100 %.

@@ -44,7 +44,7 @@ Must be one or both of the default values.}
 
 \item{country, method, energy_type, last_stage, e_dot, unit, year}{See \code{IEATools::iea_cols}.}
 
-\item{machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, eta_fu_phi_u_source, .values}{See \code{IEATools::template_cols}.}
+\item{machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, c_source, eta_fu_phi_u_source, .values}{See \code{IEATools::template_cols}.}
 }
 \value{
 A tidy version of \code{eta_fu_table} with missing values filled from \code{exemplar_eta_fu_tables}.
@@ -70,7 +70,7 @@ with data taken from the first exemplar that contains the needed information.
 The \code{fu_allocation_table} data frame should be obtained from a call to \code{load_fu_allocation_data()}.
 
 If \code{eta_fu_table} can't be completed (because not enough information is available in
-\code{exemplar_eta_fu_tables}), an warning is emitted
+\code{exemplar_eta_fu_tables}), a warning is emitted
 and a data frame is returned containing rows from \code{fu_allocation_table} that were not found.
 }
 \examples{
@@ -112,7 +112,7 @@ exemplar_World <- eta_fu_table_ZAF \%>\%
 completed <- complete_eta_fu_table(
                eta_fu_table = eta_fu_table_GHA_incomplete,
                exemplar_eta_fu_tables = list(exemplar_ZAF, exemplar_World), 
-               tidy_fu_allocation_table = fu_allocation_table_GHA)
+               fu_allocation_table = fu_allocation_table_GHA)
 # Check that we got Automobiles from ZAF
 completed \%>\% 
   dplyr::filter(.data[[IEATools::template_cols$machine]] == "Automobiles", 

@@ -437,7 +437,7 @@ tidy_eta_fu_table <- function(.eta_fu_table,
 #' The `fu_allocation_table` data frame should be obtained from a call to `load_fu_allocation_data()`. 
 #' 
 #' If `eta_fu_table` can't be completed (because not enough information is available in 
-#' `exemplar_eta_fu_tables`), an warning is emitted
+#' `exemplar_eta_fu_tables`), a warning is emitted
 #' and a data frame is returned containing rows from `fu_allocation_table` that were not found.
 #'
 #' @param eta_fu_table The efficiency table to be completed, possibly having missing incomplete rows.
@@ -448,7 +448,7 @@ tidy_eta_fu_table <- function(.eta_fu_table,
 #'                       Default is `c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)`.
 #'                       Must be one or both of the default values.
 #' @param country,method,energy_type,last_stage,e_dot,unit,year See `IEATools::iea_cols`.
-#' @param machine,eu_product,e_dot_perc,e_dot_machine,e_dot_machine_perc,eta_fu,phi_u,quantity,maximum_values,eta_fu_phi_u_source,.values See `IEATools::template_cols`.
+#' @param machine,eu_product,e_dot_perc,e_dot_machine,e_dot_machine_perc,eta_fu,phi_u,quantity,maximum_values,c_source,eta_fu_phi_u_source,.values See `IEATools::template_cols`.
 #'
 #' @return A tidy version of `eta_fu_table` with missing values filled from `exemplar_eta_fu_tables`.
 #' 
@@ -493,7 +493,7 @@ tidy_eta_fu_table <- function(.eta_fu_table,
 #' completed <- complete_eta_fu_table(
 #'                eta_fu_table = eta_fu_table_GHA_incomplete,
 #'                exemplar_eta_fu_tables = list(exemplar_ZAF, exemplar_World), 
-#'                tidy_fu_allocation_table = fu_allocation_table_GHA)
+#'                fu_allocation_table = fu_allocation_table_GHA)
 #' # Check that we got Automobiles from ZAF
 #' completed %>% 
 #'   dplyr::filter(.data[[IEATools::template_cols$machine]] == "Automobiles", 
