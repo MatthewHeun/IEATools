@@ -1,3 +1,4 @@
+* Added "vignettes/References.bib" file. References now display properly on readme page.
 * New function `tidy_eta_fu_table()` does what the name suggests.
   This function (and previous new function `tidy_fu_allocation_table()`) 
   enable elimination of duplicated code in several places.
