@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tidy a final-to-useful allocation table — tidy_fu_allocation_table • IEATools</title>
+<title>Tidy a final-to-useful efficiency table — tidy_eta_fu_table • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,14 +39,14 @@
 
 
 
-<meta property="og:title" content="Tidy a final-to-useful allocation table — tidy_fu_allocation_table" />
-<meta property="og:description" content="Analysts fill final-to-useful (FU) allocation tables in a human-readable format
-provided by fu_allocation_template() and write_fu_allocation_template().
+<meta property="og:title" content="Tidy a final-to-useful efficiency table — tidy_eta_fu_table" />
+<meta property="og:description" content="Analysts fill final-to-useful (FU) efficiency tables in a human-readable format
+provided by eta_fu_template() and write_eta_fu_template().
 The templates are not tidy.
 However, most code uses in IEATools requires tidy data frames.
-This function converts an FU allocation table with years in columns
-to a tidy data frame with years in a year column and C values in a .values column.
-Identifiers for the C values are in the quantity column." />
+This function converts an FU efficiency table with years in columns
+to a tidy data frame with years in a year column and eta_fu and phi_u values in a .values column.
+Identifiers for the variables are in the quantity column." />
 
 
 
@@ -136,26 +136,26 @@ Identifiers for the C values are in the quantity column." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Tidy a final-to-useful allocation table</h1>
+    <h1>Tidy a final-to-useful efficiency table</h1>
     
-    <div class="hidden name"><code>tidy_fu_allocation_table.Rd</code></div>
+    <div class="hidden name"><code>tidy_eta_fu_table.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Analysts fill final-to-useful (FU) allocation tables in a human-readable format
-provided by <code><a href='fu_allocation_template.html'>fu_allocation_template()</a></code> and <code><a href='write_fu_allocation_template.html'>write_fu_allocation_template()</a></code>.
+    <p>Analysts fill final-to-useful (FU) efficiency tables in a human-readable format
+provided by <code><a href='eta_fu_template.html'>eta_fu_template()</a></code> and <code><a href='write_eta_fu_template.html'>write_eta_fu_template()</a></code>.
 The templates are not tidy.
 However, most code uses in <code>IEATools</code> requires tidy data frames.
-This function converts an FU allocation table with years in columns
-to a tidy data frame with years in a <code>year</code> column and <code>C</code> values in a <code>.values</code> column.
-Identifiers for the <code>C</code> values are in the <code>quantity</code> column.</p>
+This function converts an FU efficiency table with years in columns
+to a tidy data frame with years in a <code>year</code> column and <code>eta_fu</code> and <code>phi_u</code> values in a <code>.values</code> column.
+Identifiers for the variables are in the <code>quantity</code> column.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tidy_fu_allocation_table</span>(
-  <span class='no'>.fu_allocation_table</span>,
+    <pre class="usage"><span class='fu'>tidy_eta_fu_table</span>(
+  <span class='no'>.eta_fu_table</span>,
   <span class='kw'>year</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>year</span>,
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>e_dot</span>,
-  <span class='kw'>e_dot_perc</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_perc</span>,
+  <span class='kw'>e_dot_machine</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine</span>,
+  <span class='kw'>e_dot_machine_perc</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine_perc</span>,
   <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>quantity</span>,
   <span class='kw'>maximum_values</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>maximum_values</span>,
   <span class='kw'>.values</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>.values</span>
@@ -165,44 +165,42 @@ Identifiers for the <code>C</code> values are in the <code>quantity</code> colum
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.fu_allocation_table</th>
-      <td><p>The final-to-useful allocation table to be tidied.</p></td>
+      <th>.eta_fu_table</th>
+      <td><p>The final-to-useful efficiency table to be tidied.</p></td>
     </tr>
     <tr>
-      <th>year, e_dot</th>
+      <th>year</th>
       <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>e_dot_perc, quantity, maximum_values, .values</th>
+      <th>e_dot_machine, e_dot_machine_perc, quantity, maximum_values, .values</th>
       <td><p>See <code><a href='template_cols.html'>IEATools::template_cols</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A tidy version of <code>.fu_allocation_table</code>.</p>
+    <p>A tidy version of <code>.eta_fu_table</code>.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If <code>.fu_allocation_table</code> is already tidy, it is returned unmodified.</p>
+    <p>If <code>.eta_fu_table</code> is already tidy, it is returned unmodified.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>tidy_fu_allocation_table</span>()</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 266 x 14</span><span>
-#&gt;    Country Method Energy.type Last.stage Ledger.side Flow.aggregatio… Unit 
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> GHA     PCM    E           Final      Consumption Industry         ktoe 
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> GHA     PCM    E           Final      Consumption Industry         ktoe 
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final      Consumption Industry         ktoe 
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final      Consumption Industry         ktoe 
-#&gt; </span><span style='color: #949494;'># … with 256 more rows, and 7 more variables: Ef.product </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Machine </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,</span><span>
-#&gt; </span><span style='color: #949494;'>#   Eu.product </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Destination </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Quantity </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Year </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
-#&gt; </span><span style='color: #949494;'>#   .values </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='load_eta_fu_data.html'>load_eta_fu_data</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'>tidy_eta_fu_table</span>()</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 249 x 10</span><span>
+#&gt;    Country Method Energy.type Last.stage Unit  Machine Eu.product Quantity  Year
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final      ktoe  Automo… MD         eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     PCM    E           Final      ktoe  Automo… MD         eta.fu    </span><span style='text-decoration: underline;'>2</span><span>000
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     PCM    E           Final      ktoe  Automo… MD         phi.u     </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     PCM    E           Final      ktoe  Automo… MD         phi.u     </span><span style='text-decoration: underline;'>2</span><span>000
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> GHA     PCM    E           Final      ktoe  Diesel… MD         eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> GHA     PCM    E           Final      ktoe  Diesel… MD         eta.fu    </span><span style='text-decoration: underline;'>2</span><span>000
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> GHA     PCM    E           Final      ktoe  Diesel… MD         phi.u     </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> GHA     PCM    E           Final      ktoe  Diesel… MD         phi.u     </span><span style='text-decoration: underline;'>2</span><span>000
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final      ktoe  Diesel… MD         eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final      ktoe  Diesel… MD         eta.fu    </span><span style='text-decoration: underline;'>2</span><span>000
+#&gt; </span><span style='color: #949494;'># … with 239 more rows, and 1 more variable: .values </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
