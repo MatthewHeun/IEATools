@@ -524,6 +524,8 @@ complete_eta_fu_table <- function(eta_fu_table,
                                   eta_fu_phi_u_source = IEATools::template_cols$eta_fu_phi_u_source,
                                   .values = IEATools::template_cols$.values) {
   
+  which_quantity <- match.arg(which_quantity, several.ok = TRUE)
+
   # eta_fu_table should have only 1 country in it
   country_to_complete <- eta_fu_table %>% 
     magrittr::extract2(country) %>% 

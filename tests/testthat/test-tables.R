@@ -340,8 +340,8 @@ test_that("complete_eta_fu_table works as expected", {
   # Try to complete with ONLY ZAF.
   # Should find that a warning is emitted, because we can't find Irons
   expect_warning(complete_fail <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
-                                         exemplar_eta_fu_tables = exemplar_ZAF, 
-                                         tidy_fu_allocation_table = fu_allocation_table_GHA), 
+                                                        exemplar_eta_fu_tables = exemplar_ZAF, 
+                                                        tidy_fu_allocation_table = fu_allocation_table_GHA), 
                  "Didn't complete eta FU table for GHA. Returning a data frame of machines for which an efficiency wasn't available.")
   # Check that the uncompleted machine is Irons.
   expect_equal(nrow(complete_fail), 4)

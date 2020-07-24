@@ -1,3 +1,4 @@
+* `which_quantity` argument to `complete_eta_fu_table()` now checked for validity.
 * Added "vignettes/References.bib" file. References now display properly on readme page.
 * New function `tidy_eta_fu_table()` does what the name suggests.
   This function (and previous new function `tidy_fu_allocation_table()`) 
