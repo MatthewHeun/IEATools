@@ -8,7 +8,7 @@ status](https://www.r-pkg.org/badges/version/IEATools)](https://cran.r-project.o
 has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![R build
-status](https://github.com/MatthewHeun/matsbyname/workflows/check-master-develop/badge.svg)](https://github.com/MatthewHeun/matsbyname/actions)
+status](https://github.com/MatthewHeun/IEATools/workflows/check-master-develop/badge.svg)](https://github.com/MatthewHeun/IEATools/actions)
 [![Travis-CI Build
 Status](https://travis-ci.org/MatthewHeun/IEATools.svg?branch=master)](https://travis-ci.org/MatthewHeun/IEATools)
 [![Coverage
@@ -44,7 +44,7 @@ devtools::install_github("MatthewHeun/IEATools", build_vignettes = TRUE)
 ## History
 
 The functions in this package were used in [Heun et
-al. \[-@Heun:2018\]](https://doi.org/10.1016/j.apenergy.2018.05.109).
+al. (2018)](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
 ## More Information
 
@@ -52,3 +52,16 @@ Find more information, including vignettes and function documentation,
 at <https://MatthewHeun.github.io/IEATools/>.
 
 ## References
+
+<div id="refs" class="references">
+
+<div id="ref-Heun:2018">
+
+Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. “A
+Physical Supply-Use Table Framework for Energy Analysis on the Energy
+Conversion Chain.” *Applied Energy* 226 (September): 1134–62.
+<https://doi.org/10.1016/j.apenergy.2018.05.109>.
+
+</div>
+
+</div>
