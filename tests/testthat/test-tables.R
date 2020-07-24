@@ -20,6 +20,7 @@ test_that("tidy_fu_allocation_table() works", {
   expect_equal(tidy2, tidy)
 })
 
+
 test_that("complete_fu_allocation_table works as expected", {
   
   # In this test, the 2nd exemplar isn't needed, and the code should 
@@ -113,17 +114,8 @@ test_that("complete_fu_allocation_table() works with a tidy incomplete fu table"
                       .data[[IEATools::template_cols$ef_product]] == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
                       .data[[IEATools::template_cols$destination]] == IEATools::other_flows$residential)) %>% 
     # Tidy it
-    # Eliminate rows we don't need.
-    dplyr::filter(! .data[[IEATools::template_cols$quantity]] %in% c(IEATools::iea_cols$e_dot, IEATools::template_cols$e_dot_perc)) %>% 
-    dplyr::mutate(
-      "{IEATools::template_cols$maximum_values}" := NULL
-    ) %>% 
-    tidyr::pivot_longer(cols = tidyselect::all_of(year_columns), 
-                        names_to = IEATools::iea_cols$year,
-                        values_to = IEATools::template_cols$.values) %>% 
-    # Clean out rows that are NA
-    dplyr::filter(!is.na(.data[[IEATools::template_cols$.values]]))
-    
+    tidy_fu_allocation_table()
+  
   fu_table_ZAF <- fu_table %>% 
     dplyr::filter(Country == "ZAF")
 
@@ -268,6 +260,25 @@ test_that("fu_allocation_table_completed() works as expected", {
 })
 
 
+test_that("tidy_eta_fu_table() works", {
+  eta_table <- load_eta_fu_data()
+  years <- year_cols(eta_table, return_names = TRUE)
+  tidy <- tidy_eta_fu_table(eta_table)
+  expect_null(tidy[[IEATools::template_cols$maximum_values]])
+  for (yr in years) {
+    expect_null(tidy[[yr]])
+  }
+  tidy %>% 
+    dplyr::filter(.data[[IEATools::template_cols$quantity]] %in% c(IEATools::template_cols$e_dot_machine, IEATools::template_cols$e_dot_machine_perc)) %>% 
+    nrow() %>% 
+    expect_equal(0)
+  
+  # Test that the original is returned if it is already tidy
+  tidy2 <- tidy_eta_fu_table(tidy)
+  expect_equal(tidy2, tidy)
+})
+
+
 test_that("complete_eta_fu_table works as expected", {
   eta_fu_table <- load_eta_fu_data()
   eta_fu_table_GHA <- eta_fu_table %>% 
@@ -276,14 +287,8 @@ test_that("complete_eta_fu_table works as expected", {
     dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF")
   
   fu_allocation_table <- load_fu_allocation_data() %>% 
-    dplyr::select(!IEATools::template_cols$maximum_values) %>% 
-    dplyr::filter(!.data[[IEATools::template_cols$quantity]] %in% c(IEATools::iea_cols$e_dot, 
-                                                                    IEATools::template_cols$e_dot_perc)) %>% 
-    # Make it tidy
-    tidyr::pivot_longer(cols = year_cols(., return_names = TRUE), 
-                        names_to = IEATools::iea_cols$year,
-                        values_to = IEATools::template_cols$.values) %>% 
-    dplyr::filter(!is.na(.data[[IEATools::template_cols$.values]]))
+    tidy_fu_allocation_table()
+    
   fu_allocation_table_GHA <- fu_allocation_table %>% 
     dplyr::filter(.data[[IEATools::iea_cols$country]] == "GHA") 
   fu_allocation_table_ZAF <- fu_allocation_table %>% 
@@ -335,8 +340,8 @@ test_that("complete_eta_fu_table works as expected", {
   # Try to complete with ONLY ZAF.
   # Should find that a warning is emitted, because we can't find Irons
   expect_warning(complete_fail <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
-                                         exemplar_eta_fu_tables = exemplar_ZAF, 
-                                         tidy_fu_allocation_table = fu_allocation_table_GHA), 
+                                                        exemplar_eta_fu_tables = exemplar_ZAF, 
+                                                        fu_allocation_table = fu_allocation_table_GHA), 
                  "Didn't complete eta FU table for GHA. Returning a data frame of machines for which an efficiency wasn't available.")
   # Check that the uncompleted machine is Irons.
   expect_equal(nrow(complete_fail), 4)
@@ -349,7 +354,7 @@ test_that("complete_eta_fu_table works as expected", {
   # Now call the completion function to pick up Automobiles from ZAF and Irons from World
   completed <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
                                      exemplar_eta_fu_tables = list(exemplar_ZAF, exemplar_World), 
-                                     tidy_fu_allocation_table = fu_allocation_table_GHA)
+                                     fu_allocation_table = fu_allocation_table_GHA)
   
   # Check that we got Automobiles from ZAF
   completed %>% 
@@ -417,7 +422,7 @@ test_that("complete_eta_fu_table works as expected", {
   # It should get everything it needs from the first one, thereafter hitting the break statement
   completed2 <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
                                       exemplar_eta_fu_tables = list(eta_fu_table_ZAF, eta_fu_table_ZAF), 
-                                      tidy_fu_allocation_table = fu_allocation_table_GHA, 
+                                      fu_allocation_table = fu_allocation_table_GHA, 
                                       which_quantity = "eta.fu")
   # Check that completed2 has obtained both Automobiles and Irons from ZAF.
   completed2 %>% 
@@ -458,5 +463,4 @@ test_that("eta_fu_table_completed() works as expected", {
   expect_true(!is.null(eta_fu_table_completed(fu_allocation_table = fu_allocations) %>% 
                          attr("unallocated_rows")))
 })
-
 

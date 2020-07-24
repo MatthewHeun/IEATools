@@ -2,12 +2,12 @@
 % Please edit documentation in R/tables.R
 \name{complete_eta_fu_table}
 \alias{complete_eta_fu_table}
-\title{Complete an FU Efficiency table}
+\title{Complete a final-to-useful efficiency table}
 \usage{
 complete_eta_fu_table(
   eta_fu_table,
   exemplar_eta_fu_tables,
-  tidy_fu_allocation_table,
+  fu_allocation_table,
   which_quantity = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u),
   country = IEATools::iea_cols$country,
   method = IEATools::iea_cols$method,
@@ -25,6 +25,7 @@ complete_eta_fu_table(
   phi_u = IEATools::template_cols$phi_u,
   quantity = IEATools::template_cols$quantity,
   maximum_values = IEATools::template_cols$maximum_values,
+  c_source = IEATools::template_cols$c_source,
   eta_fu_phi_u_source = IEATools::template_cols$eta_fu_phi_u_source,
   .values = IEATools::template_cols$.values
 )
@@ -34,24 +35,25 @@ complete_eta_fu_table(
 
 \item{exemplar_eta_fu_tables}{A list of efficiency tables, each queried in turn for information needed by \code{eta_fu_table}.}
 
-\item{tidy_fu_allocation_table}{An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
-This data frame should be "tidy," i.e., years are pulled into a column.}
+\item{fu_allocation_table}{An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
+This data frame can be "tidy" or wide by year.}
 
 \item{which_quantity}{A vector of quantities to be completed in the eta_FU table.
-Default is \code{c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)}.}
+Default is \code{c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)}.
+Must be one or both of the default values.}
 
 \item{country, method, energy_type, last_stage, e_dot, unit, year}{See \code{IEATools::iea_cols}.}
 
-\item{machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, eta_fu_phi_u_source, .values}{See \code{IEATools::template_cols}.}
+\item{machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, c_source, eta_fu_phi_u_source, .values}{See \code{IEATools::template_cols}.}
 }
 \value{
 A tidy version of \code{eta_fu_table} with missing values filled from \code{exemplar_eta_fu_tables}.
 }
 \description{
-An FU (final-to-useful) Efficiency table
+An FU (final-to-useful) efficiency table
 tells the efficiency with which final energy carriers are converted to useful energy carriers by final-to-useful machines.
 It also provides the exergy-to-energy ratio for the useful product (phi.u).
-A template for an FU Efficiency table can be created with
+A template for an FU efficiency table can be created with
 \code{eta_fu_template()}.
 If the analyst does not know some FU efficiencies or exergy-to-energy efficiencies for a given country,
 this function can be used to build a complete FU Efficiency table
@@ -68,7 +70,7 @@ with data taken from the first exemplar that contains the needed information.
 The \code{fu_allocation_table} data frame should be obtained from a call to \code{load_fu_allocation_data()}.
 
 If \code{eta_fu_table} can't be completed (because not enough information is available in
-\code{exemplar_eta_fu_tables}), an warning is emitted
+\code{exemplar_eta_fu_tables}), a warning is emitted
 and a data frame is returned containing rows from \code{fu_allocation_table} that were not found.
 }
 \examples{
@@ -110,7 +112,7 @@ exemplar_World <- eta_fu_table_ZAF \%>\%
 completed <- complete_eta_fu_table(
                eta_fu_table = eta_fu_table_GHA_incomplete,
                exemplar_eta_fu_tables = list(exemplar_ZAF, exemplar_World), 
-               tidy_fu_allocation_table = fu_allocation_table_GHA)
+               fu_allocation_table = fu_allocation_table_GHA)
 # Check that we got Automobiles from ZAF
 completed \%>\% 
   dplyr::filter(.data[[IEATools::template_cols$machine]] == "Automobiles", 

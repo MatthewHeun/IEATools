@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Complete an FU Efficiency table — complete_eta_fu_table • IEATools</title>
+<title>Complete a final-to-useful efficiency table — complete_eta_fu_table • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,11 @@
 
 
 
-<meta property="og:title" content="Complete an FU Efficiency table — complete_eta_fu_table" />
-<meta property="og:description" content="An FU (final-to-useful) Efficiency table
+<meta property="og:title" content="Complete a final-to-useful efficiency table — complete_eta_fu_table" />
+<meta property="og:description" content="An FU (final-to-useful) efficiency table
 tells the efficiency with which final energy carriers are converted to useful energy carriers by final-to-useful machines.
 It also provides the exergy-to-energy ratio for the useful product (phi.u).
-A template for an FU Efficiency table can be created with
+A template for an FU efficiency table can be created with
 eta_fu_template().
 If the analyst does not know some FU efficiencies or exergy-to-energy efficiencies for a given country,
 this function can be used to build a complete FU Efficiency table
@@ -79,7 +79,7 @@ by supplying efficiencies and exergy-to-energy ratios from any number of exempla
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.29</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.30</span>
       </span>
     </div>
 
@@ -137,16 +137,16 @@ by supplying efficiencies and exergy-to-energy ratios from any number of exempla
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Complete an FU Efficiency table</h1>
+    <h1>Complete a final-to-useful efficiency table</h1>
     
     <div class="hidden name"><code>complete_eta_fu_table.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>An FU (final-to-useful) Efficiency table
+    <p>An FU (final-to-useful) efficiency table
 tells the efficiency with which final energy carriers are converted to useful energy carriers by final-to-useful machines.
 It also provides the exergy-to-energy ratio for the useful product (phi.u).
-A template for an FU Efficiency table can be created with
+A template for an FU efficiency table can be created with
 <code><a href='eta_fu_template.html'>eta_fu_template()</a></code>.
 If the analyst does not know some FU efficiencies or exergy-to-energy efficiencies for a given country,
 this function can be used to build a complete FU Efficiency table
@@ -156,7 +156,7 @@ by supplying efficiencies and exergy-to-energy ratios from any number of exempla
     <pre class="usage"><span class='fu'>complete_eta_fu_table</span>(
   <span class='no'>eta_fu_table</span>,
   <span class='no'>exemplar_eta_fu_tables</span>,
-  <span class='no'>tidy_fu_allocation_table</span>,
+  <span class='no'>fu_allocation_table</span>,
   <span class='kw'>which_quantity</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>eta_fu</span>, <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>phi_u</span>),
   <span class='kw'>country</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>country</span>,
   <span class='kw'>method</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>method</span>,
@@ -174,6 +174,7 @@ by supplying efficiencies and exergy-to-energy ratios from any number of exempla
   <span class='kw'>phi_u</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>phi_u</span>,
   <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>quantity</span>,
   <span class='kw'>maximum_values</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>maximum_values</span>,
+  <span class='kw'>c_source</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>c_source</span>,
   <span class='kw'>eta_fu_phi_u_source</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>eta_fu_phi_u_source</span>,
   <span class='kw'>.values</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>.values</span>
 )</pre>
@@ -190,21 +191,22 @@ by supplying efficiencies and exergy-to-energy ratios from any number of exempla
       <td><p>A list of efficiency tables, each queried in turn for information needed by <code>eta_fu_table</code>.</p></td>
     </tr>
     <tr>
-      <th>tidy_fu_allocation_table</th>
+      <th>fu_allocation_table</th>
       <td><p>An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
-This data frame should be "tidy," i.e., years are pulled into a column.</p></td>
+This data frame can be "tidy" or wide by year.</p></td>
     </tr>
     <tr>
       <th>which_quantity</th>
       <td><p>A vector of quantities to be completed in the eta_FU table.
-Default is <code><a href='https://rdrr.io/r/base/c.html'>c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)</a></code>.</p></td>
+Default is <code><a href='https://rdrr.io/r/base/c.html'>c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)</a></code>.
+Must be one or both of the default values.</p></td>
     </tr>
     <tr>
       <th>country, method, energy_type, last_stage, e_dot, unit, year</th>
       <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, eta_fu_phi_u_source, .values</th>
+      <th>machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, c_source, eta_fu_phi_u_source, .values</th>
       <td><p>See <code><a href='template_cols.html'>IEATools::template_cols</a></code>.</p></td>
     </tr>
     </table>
@@ -222,7 +224,7 @@ with data taken from the first exemplar that contains the needed information.</p
 <p><code>fu_allocation_table</code> supplies information about which data are needed for a complete FU Efficiency table.
 The <code>fu_allocation_table</code> data frame should be obtained from a call to <code><a href='load_fu_allocation_data.html'>load_fu_allocation_data()</a></code>.</p>
 <p>If <code>eta_fu_table</code> can't be completed (because not enough information is available in
-<code>exemplar_eta_fu_tables</code>), an warning is emitted
+<code>exemplar_eta_fu_tables</code>), a warning is emitted
 and a data frame is returned containing rows from <code>fu_allocation_table</code> that were not found.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -264,7 +266,7 @@ and a data frame is returned containing rows from <code>fu_allocation_table</cod
 <span class='no'>completed</span> <span class='kw'>&lt;-</span> <span class='fu'>complete_eta_fu_table</span>(
                <span class='kw'>eta_fu_table</span> <span class='kw'>=</span> <span class='no'>eta_fu_table_GHA_incomplete</span>,
                <span class='kw'>exemplar_eta_fu_tables</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>exemplar_ZAF</span>, <span class='no'>exemplar_World</span>),
-               <span class='kw'>tidy_fu_allocation_table</span> <span class='kw'>=</span> <span class='no'>fu_allocation_table_GHA</span>)
+               <span class='kw'>fu_allocation_table</span> <span class='kw'>=</span> <span class='no'>fu_allocation_table_GHA</span>)
 <span class='co'># Check that we got Automobiles from ZAF</span>
 <span class='no'>completed</span> <span class='kw'>%&gt;%</span>
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>.data</span><span class='kw'>[[</span><span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>machine</span>]] <span class='kw'>==</span> <span class='st'>"Automobiles"</span>,
