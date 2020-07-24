@@ -7,7 +7,7 @@
 complete_eta_fu_table(
   eta_fu_table,
   exemplar_eta_fu_tables,
-  tidy_fu_allocation_table,
+  fu_allocation_table,
   which_quantity = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u),
   country = IEATools::iea_cols$country,
   method = IEATools::iea_cols$method,
@@ -25,6 +25,7 @@ complete_eta_fu_table(
   phi_u = IEATools::template_cols$phi_u,
   quantity = IEATools::template_cols$quantity,
   maximum_values = IEATools::template_cols$maximum_values,
+  c_source = IEATools::template_cols$c_source,
   eta_fu_phi_u_source = IEATools::template_cols$eta_fu_phi_u_source,
   .values = IEATools::template_cols$.values
 )
@@ -34,11 +35,12 @@ complete_eta_fu_table(
 
 \item{exemplar_eta_fu_tables}{A list of efficiency tables, each queried in turn for information needed by \code{eta_fu_table}.}
 
-\item{tidy_fu_allocation_table}{An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
-This data frame should be "tidy," i.e., years are pulled into a column.}
+\item{fu_allocation_table}{An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
+This data frame can be "tidy" or wide by year.}
 
 \item{which_quantity}{A vector of quantities to be completed in the eta_FU table.
-Default is \code{c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)}.}
+Default is \code{c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)}.
+Must be one or both of the default values.}
 
 \item{country, method, energy_type, last_stage, e_dot, unit, year}{See \code{IEATools::iea_cols}.}
 

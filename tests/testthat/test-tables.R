@@ -341,7 +341,7 @@ test_that("complete_eta_fu_table works as expected", {
   # Should find that a warning is emitted, because we can't find Irons
   expect_warning(complete_fail <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
                                                         exemplar_eta_fu_tables = exemplar_ZAF, 
-                                                        tidy_fu_allocation_table = fu_allocation_table_GHA), 
+                                                        fu_allocation_table = fu_allocation_table_GHA), 
                  "Didn't complete eta FU table for GHA. Returning a data frame of machines for which an efficiency wasn't available.")
   # Check that the uncompleted machine is Irons.
   expect_equal(nrow(complete_fail), 4)
@@ -354,7 +354,7 @@ test_that("complete_eta_fu_table works as expected", {
   # Now call the completion function to pick up Automobiles from ZAF and Irons from World
   completed <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
                                      exemplar_eta_fu_tables = list(exemplar_ZAF, exemplar_World), 
-                                     tidy_fu_allocation_table = fu_allocation_table_GHA)
+                                     fu_allocation_table = fu_allocation_table_GHA)
   
   # Check that we got Automobiles from ZAF
   completed %>% 
@@ -422,7 +422,7 @@ test_that("complete_eta_fu_table works as expected", {
   # It should get everything it needs from the first one, thereafter hitting the break statement
   completed2 <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
                                       exemplar_eta_fu_tables = list(eta_fu_table_ZAF, eta_fu_table_ZAF), 
-                                      tidy_fu_allocation_table = fu_allocation_table_GHA, 
+                                      fu_allocation_table = fu_allocation_table_GHA, 
                                       which_quantity = "eta.fu")
   # Check that completed2 has obtained both Automobiles and Irons from ZAF.
   completed2 %>% 

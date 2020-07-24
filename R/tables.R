@@ -442,8 +442,8 @@ tidy_eta_fu_table <- function(.eta_fu_table,
 #'
 #' @param eta_fu_table The efficiency table to be completed, possibly having missing incomplete rows.
 #' @param exemplar_eta_fu_tables A list of efficiency tables, each queried in turn for information needed by `eta_fu_table`.
-#' @param tidy_fu_allocation_table An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
-#'                                 This data frame should be "tidy," i.e., years are pulled into a column.
+#' @param fu_allocation_table An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
+#'                            This data frame can be "tidy" or wide by year.
 #' @param which_quantity A vector of quantities to be completed in the eta_FU table.
 #'                       Default is `c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)`.
 #'                       Must be one or both of the default values.
@@ -504,7 +504,7 @@ tidy_eta_fu_table <- function(.eta_fu_table,
 #'                 .data[[IEATools::template_cols$eta_fu_phi_u_source]] == "World")
 complete_eta_fu_table <- function(eta_fu_table, 
                                   exemplar_eta_fu_tables, 
-                                  tidy_fu_allocation_table, 
+                                  fu_allocation_table, 
                                   which_quantity = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u),
                                   country = IEATools::iea_cols$country,
                                   method = IEATools::iea_cols$method, 
@@ -522,6 +522,7 @@ complete_eta_fu_table <- function(eta_fu_table,
                                   phi_u = IEATools::template_cols$phi_u,
                                   quantity = IEATools::template_cols$quantity,
                                   maximum_values = IEATools::template_cols$maximum_values,
+                                  c_source = IEATools::template_cols$c_source,
                                   eta_fu_phi_u_source = IEATools::template_cols$eta_fu_phi_u_source,
                                   .values = IEATools::template_cols$.values) {
   
@@ -534,7 +535,7 @@ complete_eta_fu_table <- function(eta_fu_table,
   assertthat::assert_that(length(country_to_complete) == 1, 
                           msg = glue::glue("Found more than one country to complete in complete_eta_fu_table(): {glue::glue_collapse(country_to_complete, sep = ', ', last = ' and ')}"))
   
-  fu_allocation_country <- tidy_fu_allocation_table %>% 
+  fu_allocation_country <- fu_allocation_table %>% 
     magrittr::extract2(country) %>% 
     unique()
   assertthat::assert_that(length(fu_allocation_country) == 1, 
@@ -545,15 +546,24 @@ complete_eta_fu_table <- function(eta_fu_table,
                           msg = paste0("The country of eta_fu_table (", country_to_complete, 
                                        ") is not the same as the country in the tidy_fu_allocation_table (", fu_allocation_country, 
                                        "). They must match."))
+
+  # We don't care about the source of FU allocation data in this function.
+  # So for the purposes of these calculations, we can remove the c_source column, if it exists. 
+  # Furthermore, the FU allocation table should be in tidy shape for any further work.
+  fu_allocation_table <- fu_allocation_table %>% 
+    dplyr::mutate(
+      "{c_source}" := NULL
+    ) %>% 
+    tidy_fu_allocation_table()
   
   # Figure out the metadata columns in the eta_fu_table
   year_columns <- year_cols(eta_fu_table, return_names = TRUE) %>% as.character()
   meta_cols <- colnames(eta_fu_table) %>% 
     setdiff(c(quantity, maximum_values, year_columns))
   
-  # Extract machines and products for this country from the tidy_fu_allocation_table
+  # Extract machines and products for this country from the fu_allocation_table
   # This call should fail, but we're really after the 
-  temp_false <- eta_fu_table_completed(fu_allocation_table = tidy_fu_allocation_table)
+  temp_false <- eta_fu_table_completed(fu_allocation_table = fu_allocation_table)
   assertthat::assert_that(!temp_false)
   machines_that_need_etas <- temp_false %>% 
     attr("unallocated_rows")
@@ -606,12 +616,14 @@ complete_eta_fu_table <- function(eta_fu_table,
     exemplar_rows_to_use <- dplyr::semi_join(exemplar_info_available, 
                                              machines_that_need_etas, 
                                              # We can't join by source, because the exemplar source is different.
-                                             by = colnames(machines_that_need_etas) %>% setdiff(eta_fu_phi_u_source)) 
+                                             by = colnames(machines_that_need_etas) %>% setdiff(c(c_source, eta_fu_phi_u_source))) 
     # Join the exemplar_rows_to_use to eta_fu_table
     eta_fu_table <- eta_fu_table %>% 
       dplyr::bind_rows(exemplar_rows_to_use)
     
-    done <- eta_fu_table_completed(eta_fu_table, tidy_fu_allocation_table, which_quantity = which_quantity)
+    done <- eta_fu_table_completed(eta_fu_table = eta_fu_table, 
+                                   fu_allocation_table = fu_allocation_table, 
+                                   which_quantity = which_quantity)
     
     if (done) {
       break
