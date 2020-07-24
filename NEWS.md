@@ -1,3 +1,9 @@
+* New tests for new features and old bugs.
+    * Now up to 611 tests, all passing.
+    * Test coverage remains at 100 %.
+* Fixed a bug where a completed final-to-useful allocation table 
+  would have the `C_source` column, 
+  which caused a problem when checking for completion of a final-to-useful efficiency table. 
 * `which_quantity` argument to `complete_eta_fu_table()` now checked for validity.
 * Added "vignettes/References.bib" file. References now display properly on readme page.
 * New function `tidy_eta_fu_table()` does what the name suggests.
@@ -9,7 +15,7 @@
 
 * New tests for new features and old bugs.
     * Now up to 606 tests, all passing.
-    * Test coverage remains at 100%.
+    * Test coverage remains at 100 %.
 * `extract_S_units_from_tidy()` now correctly sets rowtype by default.
   rowtype was `Unit`, but it should have been `Product`.
 * New function `tidy_fu_allocation_table()` makes an FU allocation table tidy if it is not.
@@ -34,7 +40,7 @@
 
 * New tests for new features.
     * Now up to 567 tests, all passing.
-    * Test coverage remains at 100%.
+    * Test coverage remains at 100 %.
 * Added new function `remove_agg_regions()`
   that removes known aggregation regions from an IEA extended energy balances data frame.
 
@@ -43,7 +49,7 @@
 
 * New tests for new features.
     * Now up to 561 tests, all passing.
-    * Test coverage remains at 100%.
+    * Test coverage remains at 100 %.
 * Added functions to complete an FU Allocation table and an eta_FU table:
   `complete_fu_allocation_table()` and `complete_eta_fu_table()`.
 * When generating an efficiency template with `eta_fu_template()`, 
@@ -95,7 +101,7 @@
 
 * Added additional tests for bug fixes and new features.
     * Now up to 500 tests, all passing.
-    * Test coverage remains at 100%.
+    * Test coverage remains at 100 %.
 * Added function `extend_to_useful()` and supporting functions
   `form_C_mats()` and `form_eta_fu_phi_u_vecs()`.
   These functions use a matrix method to move from last stage of final energy 
@@ -126,7 +132,7 @@
   from an efficiency table.
 * Added new test to hit code path for generating diagnostic information
   when FU Allocation table is mal-formed.
-  Code coverage is back up to 100% for testing.
+  Code coverage is back up to 100 % for testing.
 
 
 # IEATools 0.1.18 (2020-03-31)
@@ -270,7 +276,7 @@
 * Integrated with Travis by adding `.travis.yml` file to repository.
   Now, Travis builds the package automatically after each commit.
   In addition, test coverage is calculated after each build.
-* Now at 100% test coverage.
+* Now at 100 % test coverage.
   Got to this point by adding new tests to ensure that all parts of the code are being hit.
   And by adjusting the regex strings in `extract_TK()`.
 
