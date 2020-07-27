@@ -216,22 +216,19 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     # Join the exemplar_rows_to_use to fu_allocation_table
     fu_allocation_table <- fu_allocation_table %>% 
       dplyr::bind_rows(exemplar_rows_to_use)
-    
     # Check to see if we have allocated everything
     done <- fu_allocation_table_completed(fu_allocation_table, iea_rows_that_must_be_allocated)
     if (done) {
       break
     }
-
     # We're not done, so figure out the rows of allocations that are still missing and, therefore,
     # must be obtained from a forthcoming exemplar.
     iea_rows_yet_to_be_allocated <- attr(done, "unallocated_rows") %>% 
       dplyr::filter(.data[[country]] %in% country_to_complete)
-
   } # End of for loop.
-  
+
   if (!done) {
-    # Emit a warning if all final energy was NOT allocated to FU machines by any of the exemplars..
+    # Emit a warning if all final energy was NOT allocated to FU machines by any of the exemplars.
     warning("Didn't complete FU Allocation table for ", country_to_complete,
             ". Returning a data frame of final energy that wasn't allocated.")
     return(attr(done, "unallocated_rows"))
@@ -246,7 +243,8 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 #' 
 #' A final-to-useful allocation table is complete iff all of the final energy flows for a country 
 #' are routed to a final-to-useful machine for each year in which those final energy flows exist.
-#' Also, all routes need to add to 100%.
+#' Also, all routes need to add to 100%, within `.tol`. 
+#' If not, an error is thrown. 
 #' 
 #' This function should really be named `fu_allocation_table_completed?`, because it answers a question.
 #'
@@ -260,6 +258,10 @@ complete_fu_allocation_table <- function(fu_allocation_table,
 #' @param eiou See `IEATools::tfc_compare_flows`.
 #' @param maximum_values,quantity,.values,ef_product,destination,machine,e_u_product,e_dot_perc,C_source
 #'        See `IEATools::template_cols`.
+#' @param .tol The tolerance for error when checking if all allocations for a particular final energy flow
+#'             sum to 1. Default is `1e-10`.
+#' @param .err A column of error terms indicating distance between the sum of C values for a given
+#'             final energy flow and 1.
 #'
 #' @return A boolean telling whether `fu_allocation_table` is complete. 
 #'         If `FALSE`, a data frame of IEA final energy rows that have not been allocated
@@ -292,8 +294,10 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
                                           destination = IEATools::template_cols$destination,
                                           machine = IEATools::template_cols$machine,
                                           e_u_product = IEATools::template_cols$eu_product,
-                                          e_dot_perc = IEATools::template_cols$e_dot_perc) {
-
+                                          e_dot_perc = IEATools::template_cols$e_dot_perc,
+                                          .tol = 1e-10, 
+                                          .err = ".err") {
+  
   # Accept a non-tidy specified_iea_data frame if it arrives.
   iea_year_columns <- specified_iea_data %>% 
     year_cols(return_names = TRUE, year = NULL)
@@ -319,6 +323,7 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
         "{ef_product}" := .data[[product]]
       )
   }
+
   if (flow %in% colnames(rows_to_be_allocated)) {
     rows_to_be_allocated <- rows_to_be_allocated %>% 
       dplyr::rename(
@@ -341,14 +346,23 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
 
   # Eliminate the quantity, Machine, and Eu.product columns and summarize.
   # We should get all 1's.
+  # If not, throw an error.
   allocation_sums <- fu_allocation_table %>% 
     dplyr::select(!c(quantity, machine, e_u_product)) %>%
     matsindf::group_by_everything_except(.values) %>% 
     dplyr::summarise(
       "{.values}" := sum(.data[[.values]])
     )
-  if (!all(allocation_sums[[.values]] == 1)) {
-    return(FALSE)
+  if (! all(abs(allocation_sums[[.values]] - 1) < .tol)) {
+    # Figure out which rows are problems.
+    problematic_sums <- allocation_sums %>% 
+      dplyr::mutate(
+        "{.err}" := .data[[.values]] - 1
+      ) %>% 
+      dplyr::filter(abs(.data[[.err]] >= .tol))
+    # Emit a warning if not all rows sum to 1 within .tol.
+    warning("Not all final energy was allocated to final-to-useful machines. Returning a data frame that shows bad rows.")
+    return(problematic_sums)
   }
   # Now check that all rows that need to be allocated have been allocated.
   # Get rid of some columns that might conflict.
@@ -538,6 +552,7 @@ complete_eta_fu_table <- function(eta_fu_table,
   fu_allocation_country <- fu_allocation_table %>% 
     magrittr::extract2(country) %>% 
     unique()
+  
   assertthat::assert_that(length(fu_allocation_country) == 1, 
                           msg = glue::glue("Found more than one country in argument tidy_fu_allocation_table in complete_eta_fu_table(): {glue::glue_collapse(fu_allocation_country, sep = ', ', last = ' and ')}"))
   
@@ -633,7 +648,7 @@ complete_eta_fu_table <- function(eta_fu_table,
       attr("unallocated_rows")
     
   } # End of for loop.
-  
+
   # Figure out if we completed everything.
   # Emit a warning if all final energy was NOT allocated to FU machines.
   if (!done) {
