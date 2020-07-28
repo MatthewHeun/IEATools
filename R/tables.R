@@ -572,8 +572,8 @@ complete_eta_fu_table <- function(eta_fu_table,
     tidy_fu_allocation_table()
   
   # Figure out the metadata columns in the eta_fu_table
-  year_columns <- year_cols(eta_fu_table, return_names = TRUE) %>% as.character()
-  meta_cols <- colnames(eta_fu_table) %>% 
+  year_columns <- year_cols(eta_fu_table, year = NULL, return_names = TRUE) %>% as.character()
+  meta_columns <- colnames(eta_fu_table) %>% 
     setdiff(c(quantity, maximum_values, year_columns))
   
   # Extract machines and products for this country from the fu_allocation_table
