@@ -359,7 +359,7 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
       dplyr::mutate(
         "{.err}" := .data[[.values]] - 1
       ) %>% 
-      dplyr::filter(abs(.data[[.err]] >= .tol))
+      dplyr::filter(abs(.data[[.err]]) >= .tol)
     # Emit a warning if not all rows sum to 1 within .tol.
     warning("Not all final energy was allocated to final-to-useful machines. Returning a data frame that shows bad rows.")
     return(problematic_sums)
@@ -570,11 +570,6 @@ complete_eta_fu_table <- function(eta_fu_table,
       "{c_source}" := NULL
     ) %>% 
     tidy_fu_allocation_table()
-  
-  # Figure out the metadata columns in the eta_fu_table
-  year_columns <- year_cols(eta_fu_table, year = NULL, return_names = TRUE) %>% as.character()
-  meta_columns <- colnames(eta_fu_table) %>% 
-    setdiff(c(quantity, maximum_values, year_columns))
   
   # Extract machines and products for this country from the fu_allocation_table
   # This call should fail, but we're really after the 
