@@ -79,7 +79,7 @@ by supplying allocations from any number of exemplar countries." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.30</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.31</span>
       </span>
     </div>
 
@@ -241,7 +241,7 @@ with data taken from the first exemplar that contains the needed information.</p
 <p><code>tidy_specified_iea_data</code> supplies information about which data are needed.
 The <code>tidy_specified_iea_data</code> data frame should be obtained from a call to <code><a href='specify_all.html'>specify_all()</a></code>.</p>
 <p>If <code>fu_allocation_table</code> can't be completed (because not enough information is available in
-<code>exemplar_fu_allocation_tables</code>), an warning is emitted
+<code>exemplar_fu_allocation_tables</code>), an error is emitted
 and a data frame is returned containing rows from <code>tidy_specified_iea_data</code> that were not allocated.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
