@@ -68,7 +68,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #' The `tidy_specified_iea_data` data frame should be obtained from a call to `specify_all()`. 
 #' 
 #' If `fu_allocation_table` can't be completed (because not enough information is available in 
-#' `exemplar_fu_allocation_tables`), an warning is emitted
+#' `exemplar_fu_allocation_tables`), an error is emitted
 #' and a data frame is returned containing rows from `tidy_specified_iea_data` that were not allocated.
 #' 
 #' @param fu_allocation_table The FU allocation table to be completed. 
@@ -85,7 +85,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #' @param eiou See `IEATools::tfc_compar_flows`.
 #' @param e_dot_perc,destination,machine,eu_product,ef_product,maximum_values,quantity See `IEATools::template_cols`.
 #' @param c_source The name of a column added to output that describes the source of the allocation values (the C values). 
-#'               Default is "C_source".
+#'                 Default is "C_source".
 #' @param .values The name of a values column created internally. Default is "values".
 #'
 #' @return A completed tidy data frame containing an FU Allocation table to replace argument `fu_allocation_table`.
@@ -228,10 +228,18 @@ complete_fu_allocation_table <- function(fu_allocation_table,
   } # End of for loop.
 
   if (!done) {
-    # Emit a warning if all final energy was NOT allocated to FU machines by any of the exemplars.
-    warning("Didn't complete FU Allocation table for ", country_to_complete,
-            ". Returning a data frame of final energy that wasn't allocated.")
-    return(attr(done, "unallocated_rows"))
+    # Not all final energy was allocated to FU machines by the exemplars.
+    # Make an error message.
+    missing_rows <- attr(done, "unallocated_rows") %>% 
+      dplyr::select(country, year, flow_aggregation_point, destination, ef_product)
+    missing_combos <- paste(missing_rows[[country]], 
+                            missing_rows[[year]],
+                            missing_rows[[flow_aggregation_point]],
+                            missing_rows[[destination]],
+                            missing_rows[[ef_product]], sep = ", ")
+    err_msg <- paste0("Didn't complete FU Allocation table for the following final energy flows: ", missing_combos, 
+                     ". Please check the FU allocation table for typos or misspellings.")
+    stop(err_msg)
   }
   
   # If we get here, everything was allocated, so return the fu_allocation_table.
@@ -554,7 +562,7 @@ complete_eta_fu_table <- function(eta_fu_table,
     unique()
   
   assertthat::assert_that(length(fu_allocation_country) == 1, 
-                          msg = glue::glue("Found more than one country in argument tidy_fu_allocation_table in complete_eta_fu_table(): {glue::glue_collapse(fu_allocation_country, sep = ', ', last = ' and ')}"))
+                          msg = glue::glue("Number of countries is not 1 in argument tidy_fu_allocation_table in complete_eta_fu_table(): {glue::glue_collapse(fu_allocation_country, sep = ', ', last = ' and ')}"))
   
   # Make sure the country of the eta_fu_table matches the tidy_fu_allocation_table
   assertthat::assert_that(fu_allocation_country == country_to_complete, 
