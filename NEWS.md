@@ -1,3 +1,5 @@
+# IEATools 0.1.31 (2020-07-29)
+
 * Adjusted tests for errors instead of warnings.
     * Now at 610 tests, all passing.
     * Test coverage remains at 100 %.
