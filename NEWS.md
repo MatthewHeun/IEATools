@@ -1,3 +1,11 @@
+* Adjusted tests for errors instead of warnings.
+    * Now at 610 tests, all passing.
+    * Test coverage remains at 100 %.
+* `.tol` on allocation sums bumped from `1e-10` to `1e-9`, because some 
+  errors are `3e-10`.
+* Warnings are now errors with *much* more descriptive information.
+
+
 # IEATools 0.1.30 (2020-07-24)
 
 * New tests for new features and old bugs.
