@@ -81,7 +81,7 @@ with data taken from the first exemplar that contains the needed information.
 The \code{tidy_specified_iea_data} data frame should be obtained from a call to \code{specify_all()}.
 
 If \code{fu_allocation_table} can't be completed (because not enough information is available in
-\code{exemplar_fu_allocation_tables}), an warning is emitted
+\code{exemplar_fu_allocation_tables}), an error is emitted
 and a data frame is returned containing rows from \code{tidy_specified_iea_data} that were not allocated.
 }
 \examples{
