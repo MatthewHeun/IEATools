@@ -250,8 +250,8 @@ test_that("fu_allocation_table_completed() works as expected", {
   expect_false(fu_allocation_table_completed(fu_allocations[-3, ], iea_data))
   
   # Now remove a row that has a fraction.
-  expect_warning(fu_allocation_table_completed(fu_allocations[-8, ], iea_data), 
-                 "Not all final energy was allocated to final-to-useful machines. Returning a data frame that shows bad rows.")
+  expect_error(fu_allocation_table_completed(fu_allocations[-8, ], iea_data), 
+               "Not all final energy was allocated to final-to-useful machines to within 1e-09. Problematic final energy flows and their errors are: GHA, 1971, Electricity, Main activity producer electricity plants, -0.5; GHA, 2000, Electricity, Main activity producer electricity plants, -0.5. Please check the FU allocation file for allocations that don't sum to 1.")
   
   # Try with a wide IEAData data frame.
   expect_true(fu_allocation_table_completed(fu_allocations, iea_data %>% 
