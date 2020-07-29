@@ -232,11 +232,10 @@ test_that("complete_fu_allocation_table() works with 2 exemplars", {
   # Create this situation by dropping the fu_table_World from the list of exemplars.
   # In this situation, we cannot allocate the Residential PSB rows for Ghana.
   # This attempt should emit a warning.
-  expect_warning(complete_failure <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
-                                                                  exemplar_fu_allocation_tables = fu_table_ZAF, 
-                                                                  tidy_specified_iea_data = tidy_specified_iea_data), 
-                 "Didn't complete FU Allocation table for GHA. Returning a data frame of final energy that wasn't allocated.")
-  expect_equal(complete_failure[[IEATools::template_cols$ef_product]] %>% unique(), IEATools::biofuels_and_waste_products$primary_solid_biofuels)
+  expect_error(complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+                                            exemplar_fu_allocation_tables = fu_table_ZAF, 
+                                            tidy_specified_iea_data = tidy_specified_iea_data), 
+               "Didn't complete FU Allocation table for the following final energy flows: GHA, 1971, Other, Residential, Primary solid biofuels; GHA, 2000, Other, Residential, Primary solid biofuels. Please check the FU allocation table for typos or misspellings.")
 })
 
 
