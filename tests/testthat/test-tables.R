@@ -339,18 +339,11 @@ test_that("complete_eta_fu_table works as expected", {
 
   # Try to complete with ONLY ZAF.
   # Should find that a warning is emitted, because we can't find Irons
-  expect_warning(complete_fail <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
-                                                        exemplar_eta_fu_tables = exemplar_ZAF, 
-                                                        fu_allocation_table = fu_allocation_table_GHA), 
-                 "Didn't complete eta FU table for GHA. Returning a data frame of machines for which an efficiency wasn't available.")
-  # Check that the uncompleted machine is Irons.
-  expect_equal(nrow(complete_fail), 4)
-  complete_fail %>% 
-    dplyr::filter(.data[[IEATools::template_cols$machine]] == "Irons") %>% 
-    magrittr::extract2(IEATools::template_cols$machine) %>% 
-    unique() %>% 
-    expect_equal("Irons")
-    
+  expect_error(complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
+                                     exemplar_eta_fu_tables = exemplar_ZAF, 
+                                     fu_allocation_table = fu_allocation_table_GHA), 
+               "Irons")
+
   # Now call the completion function to pick up Automobiles from ZAF and Irons from World
   completed <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
                                      exemplar_eta_fu_tables = list(exemplar_ZAF, exemplar_World), 

@@ -538,9 +538,15 @@ write_fu_allocation_template <- function(.fu_allocation_template,
 #' generated using `fu_allocation_template()` and `write_fu_allocation_template()`.
 #' 
 #' A filled example can be loaded with the default value of `path`.
+#' 
+#' Note that any machine named `non_energy_machine` is required to have 
+#' identical values for `Ef.product` and `Eu.product`.
+#' Violations of this requirement cause errors to be thrown.
 #'
-#' @param path the path from which final-to-useful allocation data will be loaded. Default is the path to allocation data supplied with this package.
-#' @param fu_allocations_tab_name the tab in `path` that contains the final-to-useful allocation data. Default is "`FU Allocations`".
+#' @param path The path from which final-to-useful allocation data will be loaded. Default is the path to allocation data supplied with this package.
+#' @param fu_allocations_tab_name See `IEATools::fu_analysis_file_info`.
+#' @param ef_product,eu_product,machine See `IEATools::template_cols`.
+#' @param non_energy_machine The string that identifies a Non-energy machine. Default is "Non-energy".
 #'
 #' @return the `fu_allocations_tab_name` tab in `path` as a data frame.
 #' 
@@ -550,8 +556,36 @@ write_fu_allocation_template <- function(.fu_allocation_template,
 #' # Loads final-to-useful allocation data supplied with the package
 #' load_fu_allocation_data()
 load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(), 
-                                    fu_allocations_tab_name = IEATools::fu_analysis_file_info$fu_allocation_tab_name){
-  openxlsx::read.xlsx(path, sheet = fu_allocations_tab_name)
+                                    fu_allocations_tab_name = IEATools::fu_analysis_file_info$fu_allocation_tab_name, 
+                                    ef_product = IEATools::template_cols$ef_product,
+                                    eu_product = IEATools::template_cols$eu_product,
+                                    flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                    machine = IEATools::template_cols$machine,
+                                    non_energy = "Non-energy"){
+  fu_allocation_table <- openxlsx::read.xlsx(path, sheet = fu_allocations_tab_name)
+  # When "Non-energy" is the Machine, Ef.product and Eu.product should be identical.
+  # It is an easy mistake that isn't true.
+  # So check for that problem.
+  errs <- fu_allocation_table %>%
+    dplyr::filter(.data[[machine]] == non_energy & 
+                    !is.na(.data[[eu_product]]) & 
+                    (.data[[ef_product]] != .data[[eu_product]]))
+  if (nrow(errs) > 0) {
+    # Make an error message and fail.
+    erroneous_rows <- errs %>%
+      dplyr::select(country, flow_aggregation_point, destination, ef_product)
+    erroneous_combos <- paste(erroneous_rows[[country]],
+                              erroneous_rows[[flow_aggregation_point]],
+                              erroneous_rows[[ef_product]],
+                              erroneous_rows[[machine]],
+                              erroneous_rows[[eu_product]], sep = ", ", collapse = "; ")
+    err_msg <- paste0(ef_product, " and ", eu_product, " must be identical when ", machine, " is ", 
+                      non_energy, ". The followingcombionations do not meet that criterion: ", 
+                      erroneous_combos, ". Please check the FU allocation table for typos or misspellings.")
+    stop(err_msg)
+  }
+  # We passed the test, so return the table we loaded earlier.
+  fu_allocation_table
 }
 
 

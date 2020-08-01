@@ -560,6 +560,20 @@ complete_eta_fu_table <- function(eta_fu_table,
   
   which_quantity <- match.arg(which_quantity, several.ok = TRUE)
 
+  # The efficiency table is easier to deal with if it is tidy.
+  eta_fu_table <- eta_fu_table %>% 
+    tidy_eta_fu_table(year = year, e_dot_machine = e_dot_machine, e_dot_machine_perc = e_dot_machine_perc, 
+                      quantity = quantity, maximum_values = maximum_values, .values = .values)
+  
+  if (nrow(fu_allocation_table) == 0) {
+    # If there are no rows in the fu_allocation_table, 
+    # we're being asked to complete an efficiency table 
+    # for a combination of country and year for which no IEA data exists.
+    # In this event, just return an empty eta_fu_table.
+    return(eta_fu_table %>% 
+             magrittr::extract(c(), ))
+  }
+    
   # eta_fu_table should have only 1 country in it
   country_to_complete <- eta_fu_table %>% 
     magrittr::extract2(country) %>% 
@@ -619,8 +633,8 @@ complete_eta_fu_table <- function(eta_fu_table,
   
   # Then eliminate all rows in the data frame to be filled from each exemplar.
   eta_fu_table <- eta_fu_table %>% 
-    tidy_eta_fu_table(year = year, e_dot_machine = e_dot_machine, e_dot_machine_perc = e_dot_machine_perc, 
-                      quantity = quantity, maximum_values = maximum_values, .values = .values) %>% 
+    # tidy_eta_fu_table(year = year, e_dot_machine = e_dot_machine, e_dot_machine_perc = e_dot_machine_perc, 
+    #                   quantity = quantity, maximum_values = maximum_values, .values = .values) %>% 
     dplyr::mutate(
       "{eta_fu_phi_u_source}" := country_to_complete, 
     ) %>% 
@@ -665,9 +679,23 @@ complete_eta_fu_table <- function(eta_fu_table,
   # Figure out if we completed everything.
   # Emit a warning if all final energy was NOT allocated to FU machines.
   if (!done) {
-    warning("Didn't complete eta FU table for ", country_to_complete,
-            ". Returning a data frame of machines for which an efficiency wasn't available.")
-    return(machines_that_need_etas)
+    # warning("Didn't complete eta FU table for ", country_to_complete,
+    #         ". Returning a data frame of machines for which an efficiency wasn't available.")
+    # return(machines_that_need_etas)
+    # Not all machines were assigned eta or phi values by the exemplars.
+    # Make an error message.
+    missing_rows <- attr(done, "unallocated_rows") %>% 
+      dplyr::select(country, year, machine, eu_product)
+    missing_combos <- paste(missing_rows[[country]], 
+                            missing_rows[[year]],
+                            missing_rows[[machine]],
+                            missing_rows[[eu_product]], sep = ", ", collapse = "; ")
+    quantities <- paste(which_quantity, collapse = " and ")
+    err_msg <- paste0("Didn't assign ", 
+                      quantities, 
+                      " when completing the eta_fu table for the following combinations of country, year, machine, and E_u product: ", missing_combos, 
+                      ". Please check the FU allocation table and eta FU table for typos or misspellings.")
+    stop(err_msg)
   }
   
   return(eta_fu_table)
