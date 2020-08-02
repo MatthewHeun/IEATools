@@ -1,5 +1,8 @@
+* Adjusted tests for errors instead of warnings.
+    * Now at 611 tests, all passing.
+    * Test coverage remains at 100 %.
 * New function `check_fu_allocation_data()` verifies that all `Ef.product` and `Eu.product`
-entries are the same when `Machine` is `Non-energy`.
+  entries are identical when `Machine` is `Non-energy`.
 
 
 # IEATools 0.1.31 (2020-07-29)

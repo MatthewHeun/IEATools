@@ -28,7 +28,8 @@ check_fu_allocation_data(
 \code{TRUE} if the checks are successfuls. An error is emitted if the checks fail.
 }
 \description{
-Check validity of a final-to-useful allocation table
+This function checks that \code{ef_product} and \code{eu_product} are identical
+when \code{machine} is \code{non_energy_machine}.
 }
 \examples{
 load_fu_allocation_data() \%>\% 

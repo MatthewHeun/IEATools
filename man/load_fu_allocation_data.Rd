@@ -6,14 +6,14 @@
 \usage{
 load_fu_allocation_data(
   path = sample_fu_allocation_table_path(),
-  country = IEATools::iea_cols$country,
   fu_allocations_tab_name = IEATools::fu_analysis_file_info$fu_allocation_tab_name,
+  country = IEATools::iea_cols$country,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   ef_product = IEATools::template_cols$ef_product,
+  machine = IEATools::template_cols$machine,
   eu_product = IEATools::template_cols$eu_product,
   destination = IEATools::template_cols$destination,
-  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
-  machine = IEATools::template_cols$machine,
-  non_energy = "Non-energy"
+  non_energy_machine = "Non-energy"
 )
 }
 \arguments{
@@ -21,7 +21,9 @@ load_fu_allocation_data(
 
 \item{fu_allocations_tab_name}{See \code{IEATools::fu_analysis_file_info}.}
 
-\item{ef_product, eu_product, machine}{See \code{IEATools::template_cols}.}
+\item{country, flow_aggregation_point}{See IEATools::iea_cols}
+
+\item{ef_product, machine, eu_product, destination}{See \code{IEATools::template_cols}.}
 
 \item{non_energy_machine}{The string that identifies a Non-energy machine. Default is "Non-energy".}
 }

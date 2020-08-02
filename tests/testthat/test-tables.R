@@ -432,6 +432,20 @@ test_that("complete_eta_fu_table works as expected", {
 })
 
 
+test_that("complete_eta_fu_table() returns an empty data frame when the fu_allocation_table has zero rows", {
+  eta_fu_table <- load_eta_fu_data()
+  eta_fu_table_GHA <- eta_fu_table %>% 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "GHA")
+  eta_fu_table_ZAF <- eta_fu_table %>% 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF")
+  fu_allocation_table <- load_fu_allocation_data() %>% 
+    tidy_fu_allocation_table()
+  fu_allocation_table_GHA <- fu_allocation_table[c(), ]
+  result <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA, exemplar_eta_fu_tables = eta_fu_table_ZAF, fu_allocation_table = fu_allocation_table_GHA)
+  expect_equal(nrow(result), 0)
+})
+
+
 test_that("eta_fu_table_completed() works as expected", {
   fu_allocations <- load_fu_allocation_data()
   fu_efficiencies <- load_eta_fu_data()
