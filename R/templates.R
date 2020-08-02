@@ -556,36 +556,88 @@ write_fu_allocation_template <- function(.fu_allocation_template,
 #' # Loads final-to-useful allocation data supplied with the package
 #' load_fu_allocation_data()
 load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(), 
+                                    country = IEATools::iea_cols$country,
                                     fu_allocations_tab_name = IEATools::fu_analysis_file_info$fu_allocation_tab_name, 
                                     ef_product = IEATools::template_cols$ef_product,
                                     eu_product = IEATools::template_cols$eu_product,
+                                    destination = IEATools::template_cols$destination,
                                     flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                     machine = IEATools::template_cols$machine,
                                     non_energy = "Non-energy"){
   fu_allocation_table <- openxlsx::read.xlsx(path, sheet = fu_allocations_tab_name)
+  check_fu_allocation_data(fu_allocation_table, 
+                           country = country,
+                           flow_aggregation_point = flow_aggregation_point, 
+                           machine = machine, ef_product = ef_product, 
+                           eu_product = eu_product, destination = destination,
+                           non_energy = non_energy)
+  # errs <- fu_allocation_table %>%
+  #   dplyr::filter(.data[[machine]] == non_energy & 
+  #                   !is.na(.data[[eu_product]]) & 
+  #                   (.data[[ef_product]] != .data[[eu_product]]))
+  # if (nrow(errs) > 0) {
+  #   # Make an error message and fail.
+  #   erroneous_rows <- errs %>%
+  #     dplyr::select(country, flow_aggregation_point, destination, ef_product)
+  #   erroneous_combos <- paste(erroneous_rows[[country]],
+  #                             erroneous_rows[[flow_aggregation_point]],
+  #                             erroneous_rows[[ef_product]],
+  #                             erroneous_rows[[machine]],
+  #                             erroneous_rows[[eu_product]], sep = ", ", collapse = "; ")
+  #   err_msg <- paste0(ef_product, " and ", eu_product, " must be identical when ", machine, " is ", 
+  #                     non_energy, ". The followingcombionations do not meet that criterion: ", 
+  #                     erroneous_combos, ". Please check the FU allocation table for typos or misspellings.")
+  #   stop(err_msg)
+  # }
+  # We passed the test, so return the table we loaded earlier.
+  fu_allocation_table
+}
+
+
+#' Check validity of a final-to-useful allocation table
+#'
+#' @param .fu_allocation_table The final-to-useful allocation table you want to check.
+#' @param country,flow_aggregation_point See `IEATools::iea_cols`.
+#' @param machine,ef_product,eu_product,destination See `IEATools::template_cols`.
+#' @param non_energy_machine The string that identifies a Non-energy machine. Default is "Non-energy".
+#'
+#' @return `TRUE` if the checks are successfuls. An error is emitted if the checks fail.
+#' @export
+#'
+#' @examples
+#' load_fu_allocation_data() %>% 
+#'   check_fu_allocation_data()
+check_fu_allocation_data <- function(.fu_allocation_table, 
+                                     country = IEATools::iea_cols$country,
+                                     flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                     machine = IEATools::template_cols$machine,
+                                     ef_product = IEATools::template_cols$ef_product,
+                                     eu_product = IEATools::template_cols$eu_product, 
+                                     destination = IEATools::template_cols$destination,
+                                     non_energy_machine = "Non-energy") {
   # When "Non-energy" is the Machine, Ef.product and Eu.product should be identical.
   # It is an easy mistake that isn't true.
   # So check for that problem.
-  errs <- fu_allocation_table %>%
-    dplyr::filter(.data[[machine]] == non_energy & 
+  errs <- .fu_allocation_table %>%
+    dplyr::filter(.data[[machine]] == non_energy_machine & 
                     !is.na(.data[[eu_product]]) & 
                     (.data[[ef_product]] != .data[[eu_product]]))
   if (nrow(errs) > 0) {
     # Make an error message and fail.
     erroneous_rows <- errs %>%
-      dplyr::select(country, flow_aggregation_point, destination, ef_product)
+      dplyr::select(country, flow_aggregation_point, ef_product, machine, eu_product, destination)
     erroneous_combos <- paste(erroneous_rows[[country]],
                               erroneous_rows[[flow_aggregation_point]],
                               erroneous_rows[[ef_product]],
                               erroneous_rows[[machine]],
-                              erroneous_rows[[eu_product]], sep = ", ", collapse = "; ")
+                              erroneous_rows[[eu_product]], 
+                              erroneous_rows[[destination]], sep = ", ", collapse = "; ")
     err_msg <- paste0(ef_product, " and ", eu_product, " must be identical when ", machine, " is ", 
-                      non_energy, ". The followingcombionations do not meet that criterion: ", 
+                      non_energy_machine, ". The following combionations do not meet that criterion: ", 
                       erroneous_combos, ". Please check the FU allocation table for typos or misspellings.")
     stop(err_msg)
   }
-  # We passed the test, so return the table we loaded earlier.
-  fu_allocation_table
+  return(TRUE)
 }
 
 

@@ -348,7 +348,7 @@ test_that("write_eta_fu_template works as expected for 2019 data", {
 })
 
 
-test_that("load_eta_fu_data works as expected", {
+test_that("load_eta_fu_data() works as expected", {
   # Load eta_fu data from package
   for (year in valid_iea_release_years) {
     Eta_fu <- load_eta_fu_data(path = sample_eta_fu_table_path(year))
@@ -358,4 +358,13 @@ test_that("load_eta_fu_data works as expected", {
 })
 
 
+test_that("check_fu_allocation_data() works as expected", {
+  expect_true(load_fu_allocation_data() %>% check_fu_allocation_data())
+  
+  # Make a bogus fu_allocation data frame that should fail and make sure it fails
+  fu_allocation <- tibble::tribble(~Country, ~Flow.aggregation.point, ~Ef.product, ~Machine, ~Eu.product, ~Destination, 
+                                   "Wakanda", "Consumption", "Bitumen", "Non-energy", "Bituman", "Road")
+  expect_error(check_fu_allocation_data(fu_allocation), 
+               "Ef.product and Eu.product must be identical when Machine is Non-energy. The following combionations do not meet that criterion: Wakanda, Consumption, Bitumen, Non-energy, Bituman, Road. Please check the FU allocation table for typos or misspellings.")
+})
 

@@ -6,9 +6,11 @@
 \usage{
 load_fu_allocation_data(
   path = sample_fu_allocation_table_path(),
+  country = IEATools::iea_cols$country,
   fu_allocations_tab_name = IEATools::fu_analysis_file_info$fu_allocation_tab_name,
   ef_product = IEATools::template_cols$ef_product,
   eu_product = IEATools::template_cols$eu_product,
+  destination = IEATools::template_cols$destination,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   machine = IEATools::template_cols$machine,
   non_energy = "Non-energy"
