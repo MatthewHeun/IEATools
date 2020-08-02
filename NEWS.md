@@ -1,3 +1,7 @@
+* New function `check_fu_allocation_data()` verifies that all `Ef.product` and `Eu.product`
+entries are the same when `Machine` is `Non-energy`.
+
+
 # IEATools 0.1.31 (2020-07-29)
 
 * Adjusted tests for errors instead of warnings.
