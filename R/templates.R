@@ -566,6 +566,7 @@ load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(),
                                     destination = IEATools::template_cols$destination,
                                     non_energy_machine = "Non-energy"){
   fu_allocation_table <- openxlsx::read.xlsx(path, sheet = fu_allocations_tab_name)
+  # The call to check_fu_allocation_data will emit an error of there is a problem.
   check_fu_allocation_data(fu_allocation_table, 
                            country = country,
                            flow_aggregation_point = flow_aggregation_point, 
