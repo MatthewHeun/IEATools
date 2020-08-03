@@ -353,8 +353,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                          `eta_fu` and `phi_u` should be found in the `matvals` column of the `eta_fu_data` data frame.
 #' @param interface_ind See `IEATools::interface_industries`. Interface industries are kept same from `Y_final` to `Y_useful`.
 #' @param non_energy_ind See `IEATools::non_energy_flows`. Non-energy industries are kept same from `Y_final` to `Y_useful`.
-#' @param losses See `IEAtools::tfc_compare_flows`. Losses are kept same from `Y_final` to `Y_useful`.
-#' @param stat_diffs See `IEAtools::tfc_compare_flows`. Statistical differences are kept same from `Y_final` to `Y_useful`.
+#' @param losses See `IEATools::tfc_compare_flows`. Losses are kept same from `Y_final` to `Y_useful`.
+#' @param stat_diffs See `IEATools::tfc_compare_flows`. Statistical differences are kept same from `Y_final` to `Y_useful`.
 #' @param notation The row and column notation for this template.
 #'                 See `matsbyname::notation_vec()`. Default is `arrow_notation`.
 #' @param tol the allowable error in energy balances for both the incoming matrices (last stage final) 
@@ -570,7 +570,7 @@ extend_to_useful <- function(.sutdata,
   all_OK <- all(verify_ebal[[.e_bal_ok]])
   if (!all_OK) {
     # Emit a warning if there is a problem and return the wrong thing.
-    warning(paste0("Energy is not balanced to within ", tol, " in IEAtools::extend_to_useful(). See columns ", 
+    warning(paste0("Energy is not balanced to within ", tol, " in IEATools::extend_to_useful(). See columns ", 
                    .err, " and ", .e_bal_ok, " for problems."))
     return(verify_ebal)
   }

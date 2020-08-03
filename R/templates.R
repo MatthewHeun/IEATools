@@ -580,15 +580,26 @@ load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(),
 
 #' Check validity of a final-to-useful allocation table
 #' 
-#' This function checks that `ef_product` and `eu_product` are identical
-#' when `machine` is `non_energy_machine`. 
+#' When analysts fill final-to-useful allocation templates created with
+#' `fu_allocation_template()`, some errors are likely.
+#' This function checks for typical errors and
+#' emits helpful error messages that point the analyst to the location of the problem.
+#' 
+#' This function checks for two typical errors.
+#' 
+#' * First, this function checks that `ef_product` and `eu_product` are identical
+#'   when `machine` is `non_energy_machine`.
+#' * Second, this function checks that `machine` and `eu_product` are present
+#'   when `.values` is not `NA`.
+#'   This check is performed on a tidy version of `.fu_allocation_table`.
 #'
 #' @param .fu_allocation_table The final-to-useful allocation table you want to check.
-#' @param country,flow_aggregation_point See `IEATools::iea_cols`.
-#' @param machine,ef_product,eu_product,destination See `IEATools::template_cols`.
+#' @param country,year,flow_aggregation_point See `IEATools::iea_cols`.
+#' @param machine,ef_product,eu_product,destination,quantity,.values See `IEATools::template_cols`.
 #' @param non_energy_machine The string that identifies a Non-energy machine. Default is "Non-energy".
 #'
-#' @return `TRUE` if the checks are successfuls. An error is emitted if the checks fail.
+#' @return `TRUE` if the checks are successful. An error is emitted if the checks fail.
+#' 
 #' @export
 #'
 #' @examples
@@ -596,11 +607,14 @@ load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(),
 #'   check_fu_allocation_data()
 check_fu_allocation_data <- function(.fu_allocation_table, 
                                      country = IEATools::iea_cols$country,
+                                     year = IEATools::iea_cols$year,
                                      flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                      machine = IEATools::template_cols$machine,
                                      ef_product = IEATools::template_cols$ef_product,
                                      eu_product = IEATools::template_cols$eu_product, 
                                      destination = IEATools::template_cols$destination,
+                                     quantity = IEATools::template_cols$quantity,
+                                     .values = IEATools::template_cols$.values,
                                      non_energy_machine = "Non-energy") {
   # When "Non-energy" is the Machine, Ef.product and Eu.product should be identical.
   # It is an easy mistake that isn't true.
@@ -620,10 +634,39 @@ check_fu_allocation_data <- function(.fu_allocation_table,
                               erroneous_rows[[eu_product]], 
                               erroneous_rows[[destination]], sep = ", ", collapse = "; ")
     err_msg <- paste0(ef_product, " and ", eu_product, " must be identical when ", machine, " is ", 
-                      non_energy_machine, ". The following combionations do not meet that criterion: ", 
+                      non_energy_machine, ". The following combinations do not meet that criterion: ", 
                       erroneous_combos, ". Please check the FU allocation table for typos or misspellings.")
     stop(err_msg)
   }
+  # When filling a final-to-useful allocation template, 
+  # the analyst forgets to fill some Machines and Eu.products. 
+  # Check for those situations and provide a helpful error message.
+  # To check for these situations, we need to first tidy the FU allocations table
+  tidy_fu <- .fu_allocation_table %>% 
+    tidy_fu_allocation_table()
+  # Now check for any cases where one or both of the Machine or Eu.product column is NA 
+  # while the .values column is not NA.
+  errs <- tidy_fu %>% 
+    dplyr::filter((is.na(.data[[machine]]) | is.na(.data[[eu_product]])) & !is.na(.data[[.values]]))
+  if (nrow(errs) > 0) {
+    # Make an error message and fail.
+    erroneous_rows <- errs %>%
+      dplyr::select(country, year, flow_aggregation_point, ef_product, machine, eu_product, destination, quantity)
+    erroneous_combos <- paste(erroneous_rows[[country]],
+                              erroneous_rows[[year]],
+                              erroneous_rows[[flow_aggregation_point]],
+                              erroneous_rows[[ef_product]],
+                              erroneous_rows[[machine]],
+                              erroneous_rows[[eu_product]], 
+                              erroneous_rows[[destination]], 
+                              erroneous_rows[[quantity]], sep = ", ", collapse = "; ")
+    err_msg <- paste0("In the FU Allocations tab, ", 
+                      eu_product, " and ", destination, " must be filled when ", quantity, " is non-zero. ", 
+                      "The following combinations do not meet that criterion: ", 
+                      erroneous_combos, ". Please check the FU allocation table for missing values.")
+    stop(err_msg)
+  }
+    
   return(TRUE)
 }
 

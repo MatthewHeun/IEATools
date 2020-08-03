@@ -79,9 +79,9 @@ These matrices should be found in the \code{matvals} column of the \code{.tidy_p
 
 \item{non_energy_ind}{See \code{IEATools::non_energy_flows}. Non-energy industries are kept same from \code{Y_final} to \code{Y_useful}.}
 
-\item{losses}{See \code{IEAtools::tfc_compare_flows}. Losses are kept same from \code{Y_final} to \code{Y_useful}.}
+\item{losses}{See \code{IEATools::tfc_compare_flows}. Losses are kept same from \code{Y_final} to \code{Y_useful}.}
 
-\item{stat_diffs}{See \code{IEAtools::tfc_compare_flows}. Statistical differences are kept same from \code{Y_final} to \code{Y_useful}.}
+\item{stat_diffs}{See \code{IEATools::tfc_compare_flows}. Statistical differences are kept same from \code{Y_final} to \code{Y_useful}.}
 
 \item{notation}{The row and column notation for this template.
 See \code{matsbyname::notation_vec()}. Default is \code{arrow_notation}.}

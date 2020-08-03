@@ -362,9 +362,16 @@ test_that("check_fu_allocation_data() works as expected", {
   expect_true(load_fu_allocation_data() %>% check_fu_allocation_data())
   
   # Make a bogus fu_allocation data frame that should fail and make sure it fails
-  fu_allocation <- tibble::tribble(~Country, ~Flow.aggregation.point, ~Ef.product, ~Machine, ~Eu.product, ~Destination, 
-                                   "Wakanda", "Consumption", "Bitumen", "Non-energy", "Bituman", "Road")
-  expect_error(check_fu_allocation_data(fu_allocation), 
-               "Ef.product and Eu.product must be identical when Machine is Non-energy. The following combionations do not meet that criterion: Wakanda, Consumption, Bitumen, Non-energy, Bituman, Road. Please check the FU allocation table for typos or misspellings.")
+  # in the situation where Ef.product and Eu.product are not same when Machine is Non-energy.
+  fu_allocation_bad <- tibble::tribble(~Country, ~Flow.aggregation.point, ~Ef.product, ~Machine, ~Eu.product, ~Destination, 
+                                       "Wakanda", "Consumption", "Bitumen", "Non-energy", "Bituman", "Road")
+  expect_error(check_fu_allocation_data(fu_allocation_bad), 
+               "Ef.product and Eu.product must be identical when Machine is Non-energy. The following combinations do not meet that criterion: Wakanda, Consumption, Bitumen, Non-energy, Bituman, Road. Please check the FU allocation table for typos or misspellings.")
+  
+  # Make a bogus fu_allocation data frame that should fail and make sure it fails
+  # in the situation where .values is not NA.
+  fu_allocation_bad2 <- tibble::tribble(~Country, ~Year, ~Flow.aggregation.point, ~Ef.product, ~Machine, ~Eu.product, ~Destination, ~Quantity, ~.values,
+                                        "Wakanda", 2020, "Consumption", "Electricity", NA_character_, "MD", "Industry", "C_1 [%]", "25.0")
+  expect_error(check_fu_allocation_data(fu_allocation_bad2), "In the FU Allocations tab, Eu.product and Destination must be filled when Quantity is non-zero. The following combinations do not meet that criterion: Wakanda, 2020, Consumption, Electricity, NA, MD, Industry, C_1")
 })
 
