@@ -565,7 +565,14 @@ load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(),
                                     eu_product = IEATools::template_cols$eu_product,
                                     destination = IEATools::template_cols$destination,
                                     non_energy_machine = "Non-energy"){
-  fu_allocation_table <- openxlsx::read.xlsx(path, sheet = fu_allocations_tab_name)
+  fu_allocation_table <- openxlsx::read.xlsx(path, sheet = fu_allocations_tab_name) %>% 
+    # Ensure the machine and eu_product columns are character, even if the columns are not filled, except for 
+    # energy flows and percentages.
+    # This condition can occur when we read a template that is not yet filled by an analyst.
+    dplyr::mutate(
+      "{machine}" := as.character(.data[[machine]]), 
+      "{eu_product}" := as.character(.data[[eu_product]])
+    )
   # The call to check_fu_allocation_data will emit an error of there is a problem.
   check_fu_allocation_data(fu_allocation_table, 
                            country = country,
@@ -703,6 +710,8 @@ check_fu_allocation_data <- function(.fu_allocation_table,
 #' When read, values are ratios, not percentages. 
 #' I.e., the values read by this function are in the range 0 <= x <= 1, not 0 <= x <= 100.
 #' If any read values in the `c_perc` rows are outside of the range 0 <= x <= 1, an error is thrown.
+#' 
+#' Note that if `.fu_allocations` is void of any allocation information, an error is thrown.
 #'
 #' @param .fu_allocations a data frame containing a completed final-to-useful allocation template for final demand.
 #'        This data frame can be obtained from the function `load_fu_allocation_data()`.
@@ -787,6 +796,10 @@ eta_fu_template <- function(.fu_allocations,
                             e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc), 
                             non_energy = IEATools::tfc_flows$non_energy_use, 
                             non_energy_eff = 1e-6){
+  # Check whether .fu_allocations has any valid rows in it. If not, throw an error.
+  assertthat::assert_that(.fu_allocations %>% tidy_fu_allocation_table() %>% nrow() > 0, 
+                          msg = ".fu_allocations has no allocation rows.")
+
   sort_by <- match.arg(sort_by)
   # Preliminary stuff
   # Ensure that several columns don't exist already in 
@@ -835,7 +848,7 @@ eta_fu_template <- function(.fu_allocations,
     # Get rid of those rows.
     dplyr::filter(!is.na(!!as.name(e_dot_dest))) %>% 
     dplyr::mutate(
-      # Calcualte the energy flow into each f-->u machine
+      # Calculate the energy flow into each f-->u machine
       # for each row of the table
       # (each combination of Ef.product and Machine.
       !!as.name(e_dot_machine) := !!as.name(c_ratio) * !!as.name(e_dot_dest)
@@ -951,7 +964,7 @@ eta_fu_template <- function(.fu_allocations,
       # Some of the phi_u values will end up as NA, but that's OK.
       # We'll change them later.
       !!as.name(phi_u) := carnot_efficiency(!!as.name(eu_product), T_0 = T_0),
-      # All of the mecahnical drive (md) rows will have NA for phi_u, but we know that it should be 1.
+      # All of the mechanical drive (md) rows will have NA for phi_u, but we know that it should be 1.
       !!as.name(phi_u) := dplyr::case_when(
         # We know that mechanical drive (md) has a phi_u value of 1.
         !!as.name(eu_product) == md ~ 1,
@@ -993,191 +1006,6 @@ eta_fu_template <- function(.fu_allocations,
                           Double-check Machine and Destination names.")
   
   return(out)
-  
-
-  
-  
-  # The rest of the commented code here is no longer needed. 
-  # I'm keeping it for historical purposes as of 23 July 2019.   
-  # By Sept 2019, it can probably be removed.
-  
-  # The following is something that works.
-  # out <- dplyr::full_join(input_energy_max, input_energy_max_percs, by = matsindf::everything_except(input_energy, .year, e_dot_machine, .symbols = FALSE)) %>% 
-  #   # tidyr::gather(key = !!as.name(".key"), value = !!as.name(maximum_values), !!as.name(e_dot_machine_max), !!as.name(e_dot_machine_max_perc)) %>% View
-  #   dplyr::full_join(input_energy, by = matsindf::everything_except(input_energy, e_dot_machine, .year, .symbols = FALSE)) %>% 
-  #   dplyr::full_join(input_energy_percs, by = matsindf::everything_except(input_energy, e_dot_machine, .symbols = FALSE)) %>% 
-  #   dplyr::mutate(
-  #     # The eta_fu column should be blank, because the analyst will fill it later.
-  #     !!as.name(eta_fu) := "",
-  #     # But the phi_u column can be pre-filled with some exergy/energy ratios.
-  #     # The first attempt uses the carnot_efficiency function,
-  #     # which converts the heat type (e.g., HTH.600.C)
-  #     # to a temperature in kelvin and further
-  #     # converts to a Carnot efficiency.
-  #     # Some of the phi_u values will end up as NA, but that's OK.
-  #     # We'll change them later.
-  #     !!as.name(phi_u) := carnot_efficiency(!!as.name(eu_product), T_0 = T_0),
-  #     # All of the mecahnical drive (md) rows will have NA for phi_u, but we know that it should be 1.
-  #     !!as.name(phi_u) := dplyr::case_when(
-  #       # We know that mechanical drive (md) has a phi_u value of 1.
-  #       !!as.name(eu_product) == md ~ 1,
-  #       TRUE ~ !!as.name(phi_u)
-  #     )
-  #   ) %>% 
-  #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), 
-  #                 !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc), !!as.name(eta_fu), !!as.name(phi_u)) %>% 
-  #   tidyr::spread(key = .year, value = .value) %>% View
-  
-  
-  # prelim_out <- .fu_allocations %>% 
-  #   # Keep only the columns of interest to us
-  #   dplyr::select(!!!meta_cols, !!as.name(machine), !!as.name(eu_product)) %>% 
-  #   # Eliminate rows where the analyst didn't fill any machines or products
-  #   dplyr::filter(!is.na(!!as.name(machine)) & !is.na(!!as.name(eu_product))) %>% 
-  #   unique() %>% 
-  #   # Join with maximum percentages of energy input to the fu machines
-  #   dplyr::left_join(input_energy_max_percs, by = matsindf::everything_except(input_energy_max_percs, e_dot_machine_max_perc, .symbols = FALSE)) %>% 
-  #   # Add eta and phi columns (which will become rows in a moment)
-  #   dplyr::mutate(
-  #     # The eta_fu column should be blank, because the analyst will fill it later.
-  #     !!as.name(eta_fu) := "",
-  #     # But the phi_u column can be pre-filled with some exergy/energy ratios.
-  #     # The first attempt uses the carnot_efficiency function,
-  #     # which converts the heat type (e.g., HTH.600.C)
-  #     # to a temperature in kelvin and further
-  #     # converts to a Carnot efficiency.
-  #     # Some of the phi_u values will end up as NA, but that's OK.
-  #     # We'll change them later.
-  #     !!as.name(phi_u) := carnot_efficiency(!!as.name(eu_product), T_0 = T_0),
-  #     # All of the md rows will have NA for phi_u, but we know that it should be 1.
-  #     !!as.name(phi_u) := dplyr::case_when(
-  #       # We know that mechanical drive (md) has a phi_u value of 1.
-  #       !!as.name(eu_product) == md ~ 1, 
-  #       TRUE ~ !!as.name(phi_u)
-  #     )
-  #   ) %>% 
-  #   # Now convert the eta_fu and phi_u columns into rows to be filled by the analyst
-  #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(eta_fu), !!as.name(phi_u))
-  # 
-  # # Establish the sort order of Eu.products for the resulting file.
-  # # We need to create a list of all the Eu.products.
-  # eu_prods <- prelim_out[[eu_product]] %>% unique()
-  # # Then find all the ones that are heat useful energy, identified by the 2nd and third characters being "TH".
-  # heat_prods <- eu_prods[which(substring(eu_prods, 2) %>% startsWith(heat))]
-  # # Sort the heat products by temperature
-  # sorted_heat_indices <- heat_prods %>% 
-  #   extract_TK() %>% 
-  #   sort.int(decreasing = TRUE, index.return = TRUE) %>% 
-  #   magrittr::extract2("ix")
-  # heat_prods_sorted <- heat_prods[sorted_heat_indices]
-  # # There may be useful products that we don't know about. Put those at the end, sorted in alphabetical order..
-  # leftover_eu_prods <- sort(setdiff(eu_prods, c(md, light, heat_prods)))
-  # # Now compile the order of Eu.products for this data frame.
-  # eu_product_sort_order <- c(md, ke, light, heat_prods_sorted, leftover_eu_prods)
-  # 
-  # # We need one of the prelim_out data frames for each year
-  # out <- lapply(year_colnames, function(yr){
-  #   prelim_out %>% 
-  #     dplyr::mutate(
-  #       !!as.name(.year) := yr
-  #     )
-  # }) %>% 
-  #   dplyr::bind_rows() %>% 
-  #   tidyr::spread(key = !!as.name(.year), value = !!as.name(.value)) %>% 
-  #   # Create factors with levels being the sort order.
-  #   dplyr::mutate(
-  #     !!as.name(eu_product) := factor(!!as.name(eu_product), levels = eu_product_sort_order),
-  #     !!as.name(quantity) := factor(!!as.name(quantity), levels = c(eta_fu, phi_u))
-  #   ) %>% 
-  #   # And finally sort the rows and return the result.
-  #   dplyr::arrange(!!!meta_cols, !!as.name(eu_product), dplyr::desc(!!as.name(e_dot_machine_max_perc)), !!as.name(machine), !!as.name(quantity))
-  # # At this point the year columns are of type character. 
-  # # But we want them to be numeric.
-  # # First, find the indices of the year columns. 
-  # year_col_indices <- year_cols(out)
-  # # Change each year column to be type numeric.
-  # for (i in year_col_indices) {
-  #   out[[i]] <- as.numeric(out[[i]])
-  # }
-  # return(out)
-  
-  
-  
-  # Tidy <- input_energy %>% 
-  #   # Eliminate rows where the analyst didn't fill any machines or products
-  #   dplyr::filter(!is.na(!!as.name(machine)) & !is.na(!!as.name(eu_product))) %>% 
-  #   unique() %>% 
-  #   # Add input energy percentages
-  #   dplyr::left_join(input_energy_percs, 
-  #                    by = matsindf::everything_except(input_energy_percs, e_dot_machine_perc, .symbols = FALSE)) %>% 
-  #   dplyr::mutate(
-  #     # The eta_fu column should be blank, because the analyst will fill it later.
-  #     !!as.name(eta_fu) := "",
-  #     # But the phi_u column can be pre-filled with some exergy/energy ratios.
-  #     # The first attempt uses the carnot_efficiency function,
-  #     # which converts the heat type (e.g., HTH.600.C)
-  #     # to a temperature in kelvin and further
-  #     # converts to a Carnot efficiency.
-  #     # Some of the phi_u values will end up as NA, but that's OK.
-  #     # We'll change them later.
-  #     !!as.name(phi_u) := carnot_efficiency(!!as.name(eu_product), T_0 = T_0),
-  #     # All of the md rows will have NA for phi_u, but we know that it should be 1.
-  #     !!as.name(phi_u) := dplyr::case_when(
-  #       # We know that mechanical drive (md) has a phi_u value of 1.
-  #       !!as.name(eu_product) == md ~ 1, 
-  #       TRUE ~ !!as.name(phi_u)
-  #     )
-  #   ) %>% 
-  #   dplyr::mutate(
-  #     # Create columns for eta.fu and phi.u in the Tidy data frame
-  #     !!as.name(eta_fu) := NA_real_,
-  #     !!as.name(phi_u) := NA_real_
-  #   )
-  # 
-  # # Calculate the maximum energy input and energy input percentage to each Machine across all years
-  # Max <- Tidy %>% 
-  #   matsindf::group_by_everything_except(.year, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u) %>% 
-  #   dplyr::summarise(
-  #     !!as.name(e_dot_machine) := max(!!as.name(e_dot_machine)), 
-  #     !!as.name(e_dot_machine_perc) := max(!!as.name(e_dot_machine_perc))
-  #   ) %>% 
-  #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc)) %>% 
-  #   dplyr::mutate(
-  #     # Set the year for max values to 0 so that the max values will appear as the earliest year.
-  #     !!as.name(.year) := year_for_maximum_values #,
-  #     # Need to make this into a character column so that we can add it to "" in the C_ columns later.
-  #     # !!as.name(.value) := as.character(!!as.name(.value))
-  #   )
-  # 
-  # prelim_out <- Tidy %>% 
-  #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc), !!as.name(eta_fu), !!as.name(phi_u)) %>%
-  #   dplyr::bind_rows(Max) %>% 
-  #   # Set levels for the quantity column so that we can get the right order when we spread the years
-  #   dplyr::mutate(
-  #     !!as.name(quantity) := factor(!!as.name(quantity), levels = c(e_dot_machine_max, e_dot_machine_max_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u))
-  #   ) %>% 
-  #   # Now spread by years across the spreadsheet.
-  #   tidyr::spread(key = .year, value = .value) %>% 
-  #   dplyr::rename(
-  #     # Rename the year 0 column
-  #     !!as.name(maximum_values) := !!as.name(year_for_maximum_values)
-  #   )
-  # 
-  # # Establish the sort order of Eu.products for the resulting file.
-  # # We need to create a list of all the Eu.products.
-  # eu_prods <- prelim_out[[eu_product]] %>% unique()
-  # # Then find all the ones that are heat useful energy, identified by the 2nd and third characters being "TH".
-  # heat_prods <- eu_prods[which(substring(eu_prods, 2) %>% startsWith(heat))]
-  # # Sort the heat products by temperature
-  # sorted_heat_indices <- heat_prods %>% 
-  #   extract_TK() %>% 
-  #   sort.int(decreasing = TRUE, index.return = TRUE) %>% 
-  #   magrittr::extract2("ix")
-  # heat_prods_sorted <- heat_prods[sorted_heat_indices]
-  # # There may be useful products that we don't know about. Put those at the end, sorted in alphabetical order..
-  # leftover_eu_prods <- sort(setdiff(eu_prods, c(md, light, heat_prods)))
-  # # Now compile the order of Eu.products for this data frame.
-  # eu_product_sort_order <- c(md, ke, light, heat_prods_sorted, leftover_eu_prods)
 }
 
 

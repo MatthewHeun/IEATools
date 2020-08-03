@@ -152,6 +152,8 @@ Note that the rows labeled "\verb{C_x [\%]}" are formatted by default as percent
 When read, values are ratios, not percentages.
 I.e., the values read by this function are in the range 0 <= x <= 1, not 0 <= x <= 100.
 If any read values in the \code{c_perc} rows are outside of the range 0 <= x <= 1, an error is thrown.
+
+Note that if \code{.fu_allocations} is void of any allocation information, an error is thrown.
 }
 \examples{
 load_fu_allocation_data() \%>\% 
