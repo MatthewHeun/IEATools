@@ -204,6 +204,14 @@ test_that("eta_fu_template works as expected for 2019 data", {
 })
 
 
+test_that("eta_fu_template() works with a tidy fu allocation data", {
+  Eta_fu_template_2019 <- load_fu_allocation_data(sample_fu_allocation_table_path(2019)) %>% 
+    tidy_fu_allocation_table() %>% 
+    eta_fu_template()
+  
+})
+
+
 test_that("write_eta_fu_template works as expected for 2018 data", {
   # Try with default sort order
   Eta_fu_template_2018 <- load_fu_allocation_data(sample_fu_allocation_table_path(2018)) %>% 
