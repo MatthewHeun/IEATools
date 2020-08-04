@@ -43,35 +43,35 @@ eta_fu_template(
 )
 }
 \arguments{
-\item{.fu_allocations}{a data frame containing a completed final-to-useful allocation template for final demand.
+\item{.fu_allocations}{A data frame containing a completed final-to-useful allocation template for final demand.
 This data frame can be obtained from the function \code{load_fu_allocation_data()}.}
 
-\item{T_0}{the dead state temperature (in kelvin) for calculation of heat exergy. Default is \code{298.15} kelvin.}
+\item{T_0}{The dead state temperature (in kelvin) for calculation of heat exergy. Default is \code{298.15} kelvin.}
 
-\item{sort_by}{how to sort rows of eta_fu template.
+\item{sort_by}{How to sort rows of eta_fu template.
 Options are (1) by "useful_energy_type" and (2) by "importance".
 "useful_energy_type" sorts first by \code{md}, \code{light}, \code{ke}, and \code{heat},
 then by magnitude of energy flow into the machine.
 "importance" sorts by magnitude of energy flow into the machine only.
 Default is "useful_energy_type".}
 
-\item{md}{the name of the mechanical drive useful energy carrier in the \code{eu_product} column. Default is "\code{MD}".}
+\item{md}{The name of the mechanical drive useful energy carrier in the \code{eu_product} column. Default is "\code{MD}".}
 
-\item{light}{the name of the light useful energy carrier in the \code{eu_product} column. Default is "\code{Light}".}
+\item{light}{The name of the light useful energy carrier in the \code{eu_product} column. Default is "\code{Light}".}
 
-\item{ke}{the name of the kinetic energy useful energy carrier in the \code{eu_product} column. Default is "\code{KE}".}
+\item{ke}{The name of the kinetic energy useful energy carrier in the \code{eu_product} column. Default is "\code{KE}".}
 
-\item{heat}{the string that identifies heat useful energy carriers in the \code{eu_product} column.  Default is "\code{TH}" for "temperature heat".}
+\item{heat}{The string that identifies heat useful energy carriers in the \code{eu_product} column.  Default is "\code{TH}" for "temperature heat".}
 
-\item{perc}{a string that gives the units for percent. Default is "\verb{[\%]}".}
+\item{perc}{A string that gives the units for percent. Default is "\verb{[\%]}".}
 
-\item{c_}{the string prefix for allocation variables. Default is "\code{C_}".}
+\item{c_}{The string prefix for allocation variables. Default is "\code{C_}".}
 
-\item{c_perc}{the string for generic allocation variables in percentage terms. Default is "\verb{C [\%]}".}
+\item{c_perc}{The string for generic allocation variables in percentage terms. Default is "\verb{C [\%]}".}
 
-\item{c_ratio}{the string for generic allocation variables in ratio terms. Default is "\code{C}".}
+\item{c_ratio}{The string for generic allocation variables in ratio terms. Default is "\code{C}".}
 
-\item{year_for_maximum_values}{the year assumed for the \code{maximum_values} column. Default is \code{0}.}
+\item{year_for_maximum_values}{The year assumed for the \code{maximum_values} column. Default is \code{0}.}
 
 \item{.row_order}{the name of a metadata column used internally for determining row order. Default is ".row_order".}
 
@@ -82,11 +82,9 @@ Default is 1e-6, or 0.0001\%.}
 
 \item{ef_product, machine, eu_product, eta_fu, phi_u, destination, quantity, maximum_values, e_dot_dest, e_dot_machine, e_dot_machine_max, e_dot_machine_tot, e_dot_machine_perc, e_dot_machine_max_perc}{See \code{IEATools::template_cols}.}
 
-\item{.value}{the name of a temporary value column. Default is "\code{.value}".}
+\item{.value}{The name of a temporary value column. Default is "\code{.value}".}
 
 \item{non_energy}{See \code{IEATools::tfc_flows}.}
-
-\item{.year}{the name of a temporary year column. Default is "\code{.year}".}
 }
 \value{
 A data frame containing row-ordered blank template for final-to-useful machine efficiencies.

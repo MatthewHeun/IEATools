@@ -713,32 +713,31 @@ check_fu_allocation_data <- function(.fu_allocation_table,
 #' 
 #' Note that if `.fu_allocations` is void of any allocation information, an error is thrown.
 #'
-#' @param .fu_allocations a data frame containing a completed final-to-useful allocation template for final demand.
+#' @param .fu_allocations A data frame containing a completed final-to-useful allocation template for final demand.
 #'        This data frame can be obtained from the function `load_fu_allocation_data()`.
-#' @param T_0 the dead state temperature (in kelvin) for calculation of heat exergy. Default is `298.15` kelvin.
-#' @param sort_by how to sort rows of eta_fu template. 
+#' @param T_0 The dead state temperature (in kelvin) for calculation of heat exergy. Default is `298.15` kelvin.
+#' @param sort_by How to sort rows of eta_fu template. 
 #'        Options are (1) by "useful_energy_type" and (2) by "importance". 
 #'        "useful_energy_type" sorts first by `md`, `light`, `ke`, and `heat`, 
 #'        then by magnitude of energy flow into the machine.
 #'        "importance" sorts by magnitude of energy flow into the machine only.
 #'        Default is "useful_energy_type".
-#' @param md the name of the mechanical drive useful energy carrier in the `eu_product` column. Default is "`MD`".
-#' @param light the name of the light useful energy carrier in the `eu_product` column. Default is "`Light`".
-#' @param ke the name of the kinetic energy useful energy carrier in the `eu_product` column. Default is "`KE`".
-#' @param heat the string that identifies heat useful energy carriers in the `eu_product` column.  Default is "`TH`" for "temperature heat". 
-#' @param perc a string that gives the units for percent. Default is "`[%]`".
-#' @param c_ the string prefix for allocation variables. Default is "`C_`". 
-#' @param c_perc the string for generic allocation variables in percentage terms. Default is "`C [%]`".
-#' @param c_ratio the string for generic allocation variables in ratio terms. Default is "`C`".
-#' @param .year the name of a temporary year column. Default is "`.year`".
-#' @param year_for_maximum_values the year assumed for the `maximum_values` column. Default is `0`.
-#' @param .value the name of a temporary value column. Default is "`.value`".
+#' @param md The name of the mechanical drive useful energy carrier in the `eu_product` column. Default is "`MD`".
+#' @param light The name of the light useful energy carrier in the `eu_product` column. Default is "`Light`".
+#' @param ke The name of the kinetic energy useful energy carrier in the `eu_product` column. Default is "`KE`".
+#' @param heat The string that identifies heat useful energy carriers in the `eu_product` column.  Default is "`TH`" for "temperature heat". 
+#' @param perc A string that gives the units for percent. Default is "`[%]`".
+#' @param c_ The string prefix for allocation variables. Default is "`C_`". 
+#' @param c_perc The string for generic allocation variables in percentage terms. Default is "`C [%]`".
+#' @param c_ratio The string for generic allocation variables in ratio terms. Default is "`C`".
+#' @param year_for_maximum_values The year assumed for the `maximum_values` column. Default is `0`.
+#' @param .value The name of a temporary value column. Default is "`.value`".
 #' @param .row_order the name of a metadata column used internally for determining row order. Default is ".row_order".
+#' @param non_energy_eff The efficiency for non-energy use, non-zero so we can swim upstream later.
+#'                       Default is 1e-6, or 0.0001%.
 #' @param year,ledger_side,flow_aggregation_point,e_dot See `IEATools::iea_cols`.
 #' @param ef_product,machine,eu_product,eta_fu,phi_u,destination,quantity,maximum_values,e_dot_dest,e_dot_machine,e_dot_machine_max,e_dot_machine_tot,e_dot_machine_perc,e_dot_machine_max_perc See `IEATools::template_cols`.
 #' @param non_energy See `IEATools::tfc_flows`. 
-#' @param non_energy_eff The efficiency for non-energy use, non-zero so we can swim upstream later.
-#'                       Default is 1e-6, or 0.0001%.
 #'
 #' @return A data frame containing row-ordered blank template for final-to-useful machine efficiencies.
 #' 
@@ -795,6 +794,18 @@ eta_fu_template <- function(.fu_allocations,
   
   if (fu_alloc_is_tidy) {
     # Generate an efficiency template that lacks energy rows.
+    # First step is to generate e_dot_info and c_info 
+    # data frames just as we would have done for a non-tidy .fu_allocations data frame
+    
+    
+    
+    
+  } else {
+    # Put the old e_dot_info and c_info code in here
+    
+     
+     
+  
   }
   
   
