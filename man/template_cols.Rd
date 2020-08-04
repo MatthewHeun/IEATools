@@ -5,7 +5,7 @@
 \alias{template_cols}
 \title{Final-to-useful template column names}
 \format{
-A string list with 18 entries
+A string list with 21 entries
 \describe{
 \item{ef_product}{The name of the final energy product column in final-to-useful templates.}
 \item{machine}{The name of the machine column in final-to-useful templates.}
@@ -16,8 +16,11 @@ A string list with 18 entries
 \item{C_eiou}{The name of the EIOU allocation rows in final-to-useful templates.}
 \item{C_Y}{The name of the final demand allocation rows in final-to-useful templates.}
 \item{C_perc}{The name of the percentage allocation rows in final-to-useful templates.}
+\item{e_dot_max}{The name of the maximum E.dot column in final-to-useful templates.}
+\item{e_dot_dest}{The name of the column representing the destination for energy flows in final-to-useful templates.}
 \item{e_dot_perc}{The name of the energy flow percentage column in final-to-useful templates.}
 \item{e_dot_machine}{The name of the column representing energy flow into a machine in final-to-useful templates.}
+\item{e_dot_machine_tot}{The name of the column representing total energy flow into a machine in final-to-useful templates.}
 \item{e_dot_machine_perc}{The name of the machine energy flow percentage column in final-to-useful templates.}
 \item{e_dot_machine_max_perc}{The name of the machine energy flow maximum percentage column in final-to-useful templates.}
 \item{eta_fu}{The name of the final-to-useful machine efficiency column in final-to-useful templates.}
