@@ -871,39 +871,6 @@ eta_fu_template <- function(.fu_allocations,
   }
   
   
-  
-  # # Preliminary stuff
-  # # Grab the years of interest.
-  # year_colnames <- year_cols(.fu_allocations, return_names = TRUE)
-  # # Columns that are not years and are not other specific columns are metadata columns.
-  # # We group by these columns later.
-  # meta_columns <- .fu_allocations %>% 
-  #   matsindf::everything_except(c(year_colnames, ledger_side, flow_aggregation_point, ef_product, machine, eu_product, 
-  #                                 destination, quantity, maximum_values))  
-  # 
-  # # To create the e_dot_machine_max_perc column, 
-  # # we need to calculate the energy flowing into each f-->u machine.
-  # # The first step is to isolate the E.dot rows
-  # e_dot_info <- .fu_allocations %>%
-  #   dplyr::filter(!!as.name(quantity) == e_dot) %>%
-  #   dplyr::select(-maximum_values, -machine, -eu_product, -quantity) %>%
-  #   tidyr::gather(key = !!year, value = !!as.name(e_dot_dest), year_colnames) %>% 
-  #   dplyr::filter(!is.na(!!as.name(e_dot_dest)))
-  # # We also isolate the allocation (C) rows
-  # c_info <- .fu_allocations %>%
-  #   dplyr::filter(startsWith(!!as.name(quantity), c_) & endsWith(!!as.name(quantity), perc)) %>%
-  #   dplyr::filter(!is.na(!!as.name(machine))) %>%
-  #   dplyr::mutate(
-  #     !!as.name(quantity) := dplyr::case_when(
-  #       startsWith(!!as.name(quantity), c_) & endsWith(!!as.name(quantity), perc) ~ c_perc,
-  #       TRUE ~ !!as.name(quantity)
-  #     )
-  #   ) %>%
-  #   dplyr::select(-maximum_values, -quantity) %>%
-  #   tidyr::gather(key = !!year, value = !!as.name(c_perc), year_colnames) %>%
-  #   dplyr::filter(!is.na(!!as.name(c_perc)))
-  
-
   # Verify that all C values are between 0 and 1, inclusive.
   assertthat::assert_that(all(c_info[[c_perc]] >= 0 & c_info[[c_perc]] <= 1), msg = "Not all C values are between 0 and 1 in eta_fu_template.")
   # Now that we know that every C value is between 0 and 1, inclusive,
@@ -913,9 +880,6 @@ eta_fu_template <- function(.fu_allocations,
     dplyr::rename(
       !!as.name(c_ratio) := !!as.name(c_perc)
     )
-  
-  
-  
   
   # Now we join the E.dot and C values and calculate the energy flowing into each final-to-useful machine
   input_energy <- dplyr::full_join(c_info, e_dot_info, 
