@@ -411,7 +411,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
                                          energy_row_shading_color_eiou = "#FCFCAB", 
                                          dont_fill_shading_color = "#A8A8A8",
                                          overwrite_file = FALSE,
-                                         n_allocation_rows = 3,
+                                         n_allocation_rows = 4,
                                          .rownum = ".rownum"){
   matsindf::verify_cols_missing(.fu_allocation_template, .rownum)
   
