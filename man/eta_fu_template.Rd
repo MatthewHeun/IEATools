@@ -23,6 +23,8 @@ eta_fu_template(
   year = IEATools::iea_cols$year,
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  product = IEATools::iea_cols$product,
+  flow = IEATools::iea_cols$flow,
   e_dot = IEATools::iea_cols$e_dot,
   ef_product = IEATools::template_cols$ef_product,
   machine = IEATools::template_cols$machine,
@@ -39,12 +41,20 @@ eta_fu_template(
   e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
   e_dot_machine_max_perc = IEATools::template_cols$e_dot_machine_max_perc,
   .value = IEATools::template_cols$.values,
+  supply = IEATools::ledger_sides$supply,
+  consumption = IEATools::ledger_sides$consumption,
+  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
   non_energy = IEATools::tfc_flows$non_energy_use
 )
 }
 \arguments{
 \item{.fu_allocations}{A data frame containing a completed final-to-useful allocation template for final demand.
 This data frame can be obtained from the function \code{load_fu_allocation_data()}.}
+
+\item{tidy_specified_iea_data}{A tidy data frame containing specified IEA data for the same country(ies)
+as .fu_allocations.
+Strictly speaking, this argument is needed only when
+.fu_allocations is a tidy data frame.}
 
 \item{T_0}{The dead state temperature (in kelvin) for calculation of heat exergy. Default is \code{298.15} kelvin.}
 

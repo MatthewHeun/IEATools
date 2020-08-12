@@ -715,6 +715,10 @@ check_fu_allocation_data <- function(.fu_allocation_table,
 #'
 #' @param .fu_allocations A data frame containing a completed final-to-useful allocation template for final demand.
 #'        This data frame can be obtained from the function `load_fu_allocation_data()`.
+#' @param tidy_specified_iea_data A tidy data frame containing specified IEA data for the same country(ies)
+#'                                as .fu_allocations.
+#'                                Strictly speaking, this argument is needed only when 
+#'                                .fu_allocations is a tidy data frame.
 #' @param T_0 The dead state temperature (in kelvin) for calculation of heat exergy. Default is `298.15` kelvin.
 #' @param sort_by How to sort rows of eta_fu template. 
 #'        Options are (1) by "useful_energy_type" and (2) by "importance". 
@@ -765,6 +769,8 @@ eta_fu_template <- function(.fu_allocations,
                             year = IEATools::iea_cols$year,
                             ledger_side = IEATools::iea_cols$ledger_side,
                             flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                            product = IEATools::iea_cols$product,
+                            flow = IEATools::iea_cols$flow,
                             e_dot = IEATools::iea_cols$e_dot,
                             ef_product = IEATools::template_cols$ef_product,
                             machine = IEATools::template_cols$machine,
@@ -781,6 +787,9 @@ eta_fu_template <- function(.fu_allocations,
                             e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc, 
                             e_dot_machine_max_perc = IEATools::template_cols$e_dot_machine_max_perc,
                             .value = IEATools::template_cols$.values, 
+                            supply = IEATools::ledger_sides$supply,
+                            consumption = IEATools::ledger_sides$consumption,
+                            eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
                             non_energy = IEATools::tfc_flows$non_energy_use){
   # Check whether .fu_allocations has any valid rows in it. If not, throw an error.
   assertthat::assert_that(.fu_allocations %>% tidy_fu_allocation_table() %>% nrow() > 0, 
@@ -789,66 +798,125 @@ eta_fu_template <- function(.fu_allocations,
   sort_by <- match.arg(sort_by)
   
   # Decide if we have a tidy data frame or a wide-by-years data frame.
-  # Algorithm is: if .fu_allocations has a Year colum, it is tidy.
+  # Algorithm: if .fu_allocations has a Year column, it is tidy.
   fu_alloc_is_tidy <- year %in% colnames(.fu_allocations)
   
   if (fu_alloc_is_tidy) {
-    # Generate an efficiency template that lacks energy rows.
-    # First step is to generate e_dot_info and c_info 
-    # data frames just as we would have done for a non-tidy .fu_allocations data frame
+    # Need to create the e_dot_info and c_info data frames from the tidy version of .fu_allocations.
     
+    meta_columns <- .fu_allocations %>%
+      matsindf::everything_except(c(ledger_side, flow_aggregation_point, ef_product, machine, eu_product,
+                                    destination, quantity, maximum_values, year, .value))
     
+    # Work on the e_dot_info data frame.
+    # In the case where the .fu_allocations data frame is tidy, 
+    # we don't have any IEA data coming in with the .fu_allocations data frame.
+    # So we create e_dot_info from tidy_specified_iea_data.
+    # The following modifications to tidy_specified_iea_data are needed.
+    # * filter to contain only Consumption and EIOU
+    # * rename E.dot --> E.dot_dest
+    # * rename Product --> Ef.product
+    # * rename Flow --> Destination
+    e_dot_info <- tidy_specified_iea_data %>% 
+      dplyr::filter(.data[[ledger_side]] == consumption |
+                      (.data[[flow_aggregation_point]] == supply & .data[[flow_aggregation_point]] == eiou)) %>% 
+      dplyr::rename(
+        "{e_dot_dest}" := e_dot,
+        "{ef_product}" := product, 
+        "{destination}" := flow
+      )
     
-    
+    # Now work on c_info.
+    # Turns out that the tidy .fu_allocations is nearly what we need for the 
+    # c_info data frame. 
+    # We need to rename the .values column to the c_perc, and
+    # we need to delete the Quantity column.
+    c_info <- .fu_allocations %>% 
+      dplyr::rename(
+        "{c_perc}" := .data[[.value]]
+      ) %>% 
+      dplyr::mutate(
+        "{quantity}" := NULL
+      )
   } else {
-    # Put the old e_dot_info and c_info code in here
-    
-     
-     
-  
+    # Grab the years of interest.
+    year_colnames <- year_cols(.fu_allocations, return_names = TRUE)
+    # Columns that are not years and are not other specific columns are metadata columns.
+    # We group by these columns later.
+    meta_columns <- .fu_allocations %>%
+      matsindf::everything_except(c(year_colnames, ledger_side, flow_aggregation_point, ef_product, machine, eu_product,
+                                    destination, quantity, maximum_values))
+
+    # To create the e_dot_machine_max_perc column, 
+    # we need to calculate the energy flowing into each f-->u machine.
+    # The first step is to isolate the E.dot rows
+    e_dot_info <- .fu_allocations %>%
+      dplyr::filter(!!as.name(quantity) == e_dot) %>%
+      dplyr::select(-maximum_values, -machine, -eu_product, -quantity) %>%
+      tidyr::gather(key = !!year, value = !!as.name(e_dot_dest), year_colnames) %>% 
+      dplyr::filter(!is.na(!!as.name(e_dot_dest)))
+    # We also isolate the allocation (C) rows
+    c_info <- .fu_allocations %>%
+      dplyr::filter(startsWith(!!as.name(quantity), c_) & endsWith(!!as.name(quantity), perc)) %>%
+      dplyr::filter(!is.na(!!as.name(machine))) %>%
+      dplyr::mutate(
+        !!as.name(quantity) := dplyr::case_when(
+          startsWith(!!as.name(quantity), c_) & endsWith(!!as.name(quantity), perc) ~ c_perc,
+          TRUE ~ !!as.name(quantity)
+        )
+      ) %>%
+      dplyr::select(-maximum_values, -quantity) %>%
+      tidyr::gather(key = !!year, value = !!as.name(c_perc), year_colnames) %>%
+      dplyr::filter(!is.na(!!as.name(c_perc)))
   }
   
   
   
-  # Preliminary stuff
-  # Grab the years of interest.
-  year_colnames <- year_cols(.fu_allocations, return_names = TRUE)
-  # Columns that are not years and are not other specific columns are metadata columns.
-  # We group by these columns later.
-  meta_columns <- .fu_allocations %>% 
-    matsindf::everything_except(c(year_colnames, ledger_side, flow_aggregation_point, ef_product, machine, eu_product, 
-                                  destination, quantity, maximum_values))  
+  # # Preliminary stuff
+  # # Grab the years of interest.
+  # year_colnames <- year_cols(.fu_allocations, return_names = TRUE)
+  # # Columns that are not years and are not other specific columns are metadata columns.
+  # # We group by these columns later.
+  # meta_columns <- .fu_allocations %>% 
+  #   matsindf::everything_except(c(year_colnames, ledger_side, flow_aggregation_point, ef_product, machine, eu_product, 
+  #                                 destination, quantity, maximum_values))  
+  # 
+  # # To create the e_dot_machine_max_perc column, 
+  # # we need to calculate the energy flowing into each f-->u machine.
+  # # The first step is to isolate the E.dot rows
+  # e_dot_info <- .fu_allocations %>%
+  #   dplyr::filter(!!as.name(quantity) == e_dot) %>%
+  #   dplyr::select(-maximum_values, -machine, -eu_product, -quantity) %>%
+  #   tidyr::gather(key = !!year, value = !!as.name(e_dot_dest), year_colnames) %>% 
+  #   dplyr::filter(!is.na(!!as.name(e_dot_dest)))
+  # # We also isolate the allocation (C) rows
+  # c_info <- .fu_allocations %>%
+  #   dplyr::filter(startsWith(!!as.name(quantity), c_) & endsWith(!!as.name(quantity), perc)) %>%
+  #   dplyr::filter(!is.na(!!as.name(machine))) %>%
+  #   dplyr::mutate(
+  #     !!as.name(quantity) := dplyr::case_when(
+  #       startsWith(!!as.name(quantity), c_) & endsWith(!!as.name(quantity), perc) ~ c_perc,
+  #       TRUE ~ !!as.name(quantity)
+  #     )
+  #   ) %>%
+  #   dplyr::select(-maximum_values, -quantity) %>%
+  #   tidyr::gather(key = !!year, value = !!as.name(c_perc), year_colnames) %>%
+  #   dplyr::filter(!is.na(!!as.name(c_perc)))
   
-  # To create the e_dot_machine_max_perc column, 
-  # we need to calculate the energy flowing into each f-->u machine.
-  # The first step is to isolate the E.dot rows
-  e_dot_info <- .fu_allocations %>%
-    dplyr::filter(!!as.name(quantity) == e_dot) %>%
-    dplyr::select(-maximum_values, -machine, -eu_product, -quantity) %>%
-    tidyr::gather(key = !!year, value = !!as.name(e_dot_dest), year_colnames) %>% 
-    dplyr::filter(!is.na(!!as.name(e_dot_dest)))
-  # We also isolate the allocation (C) rows
-  c_info <- .fu_allocations %>%
-    dplyr::filter(startsWith(!!as.name(quantity), c_) & endsWith(!!as.name(quantity), perc)) %>%
-    dplyr::filter(!is.na(!!as.name(machine))) %>%
-    dplyr::mutate(
-      !!as.name(quantity) := dplyr::case_when(
-        startsWith(!!as.name(quantity), c_) & endsWith(!!as.name(quantity), perc) ~ c_perc,
-        TRUE ~ !!as.name(quantity)
-      )
-    ) %>%
-    dplyr::select(-maximum_values, -quantity) %>%
-    tidyr::gather(key = !!year, value = !!as.name(c_perc), year_colnames) %>%
-    dplyr::filter(!is.na(!!as.name(c_perc)))
+
   # Verify that all C values are between 0 and 1, inclusive.
   assertthat::assert_that(all(c_info[[c_perc]] >= 0 & c_info[[c_perc]] <= 1), msg = "Not all C values are between 0 and 1 in eta_fu_template.")
-  # Now that we know that every C value is between 0 and 1, inclusive, 
-  # it is not really appropriate to call these "C [%]".  
+  # Now that we know that every C value is between 0 and 1, inclusive,
+  # it is not really appropriate to call these "C [%]".
   # So, rename the column.
-  c_info <- c_info %>% 
+  c_info <- c_info %>%
     dplyr::rename(
       !!as.name(c_ratio) := !!as.name(c_perc)
     )
+  
+  
+  
+  
   # Now we join the E.dot and C values and calculate the energy flowing into each final-to-useful machine
   input_energy <- dplyr::full_join(c_info, e_dot_info, 
                                    by = matsindf::everything_except(e_dot_info, e_dot_dest, .symbols = FALSE)) %>% 
