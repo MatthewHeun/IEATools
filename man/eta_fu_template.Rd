@@ -20,6 +20,7 @@ eta_fu_template(
   year_for_maximum_values = 0,
   .row_order = ".row_order",
   non_energy_eff = 1e-06,
+  country = IEATools::iea_cols$country,
   year = IEATools::iea_cols$year,
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
