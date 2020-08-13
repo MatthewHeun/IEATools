@@ -766,6 +766,7 @@ eta_fu_template <- function(.fu_allocations,
                             year_for_maximum_values = 0,
                             .row_order = ".row_order",
                             non_energy_eff = 1e-6,
+                            country = IEATools::iea_cols$country,
                             year = IEATools::iea_cols$year,
                             ledger_side = IEATools::iea_cols$ledger_side,
                             flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -808,6 +809,11 @@ eta_fu_template <- function(.fu_allocations,
       matsindf::everything_except(c(ledger_side, flow_aggregation_point, ef_product, machine, eu_product,
                                     destination, quantity, maximum_values, year, .value))
     
+    countries <- .fu_allocations %>% 
+      dplyr::select(country) %>% 
+      unlist() %>% 
+      unique()
+    
     # Work on the e_dot_info data frame.
     # In the case where the .fu_allocations data frame is tidy, 
     # we don't have any IEA data coming in with the .fu_allocations data frame.
@@ -818,8 +824,9 @@ eta_fu_template <- function(.fu_allocations,
     # * rename Product --> Ef.product
     # * rename Flow --> Destination
     e_dot_info <- tidy_specified_iea_data %>% 
+      dplyr::filter(.data[[country]] %in% countries) %>% 
       dplyr::filter(.data[[ledger_side]] == consumption |
-                      (.data[[flow_aggregation_point]] == supply & .data[[flow_aggregation_point]] == eiou)) %>% 
+                      (.data[[ledger_side]] == supply & .data[[flow_aggregation_point]] == eiou)) %>% 
       dplyr::rename(
         "{e_dot_dest}" := e_dot,
         "{ef_product}" := product, 
