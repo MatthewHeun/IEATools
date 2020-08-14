@@ -39,7 +39,7 @@ To get started, data must be obtained and pulled into an R data frame.
 
 ### Obtain IEA data
 
-Purchase the IEA extended energy balances product from (http://data.iea.org).
+Purchase the IEA extended energy balances product from (https://data.iea.org).
 Download the complete extended energy balance data for at least one country
 in a .csv file format as shown in the following figure.
 
