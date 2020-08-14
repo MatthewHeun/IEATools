@@ -76,7 +76,7 @@ throughout the IEATools package." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.31</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.32</span>
       </span>
     </div>
 
@@ -152,7 +152,7 @@ throughout the <code>IEATools</code> package.</p>
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string list with 18 entries</p><dl'>
+    <p>A string list with 21 entries</p><dl'>
 <dt>ef_product</dt><dd><p>The name of the final energy product column in final-to-useful templates.</p></dd>
 <dt>machine</dt><dd><p>The name of the machine column in final-to-useful templates.</p></dd>
 <dt>eu_product</dt><dd><p>The name of the useful energy product column in final-to-useful templates.</p></dd>
@@ -162,8 +162,11 @@ throughout the <code>IEATools</code> package.</p>
 <dt>C_eiou</dt><dd><p>The name of the EIOU allocation rows in final-to-useful templates.</p></dd>
 <dt>C_Y</dt><dd><p>The name of the final demand allocation rows in final-to-useful templates.</p></dd>
 <dt>C_perc</dt><dd><p>The name of the percentage allocation rows in final-to-useful templates.</p></dd>
+<dt>e_dot_max</dt><dd><p>The name of the maximum E.dot column in final-to-useful templates.</p></dd>
+<dt>e_dot_dest</dt><dd><p>The name of the column representing the destination for energy flows in final-to-useful templates.</p></dd>
 <dt>e_dot_perc</dt><dd><p>The name of the energy flow percentage column in final-to-useful templates.</p></dd>
 <dt>e_dot_machine</dt><dd><p>The name of the column representing energy flow into a machine in final-to-useful templates.</p></dd>
+<dt>e_dot_machine_tot</dt><dd><p>The name of the column representing total energy flow into a machine in final-to-useful templates.</p></dd>
 <dt>e_dot_machine_perc</dt><dd><p>The name of the machine energy flow percentage column in final-to-useful templates.</p></dd>
 <dt>e_dot_machine_max_perc</dt><dd><p>The name of the machine energy flow maximum percentage column in final-to-useful templates.</p></dd>
 <dt>eta_fu</dt><dd><p>The name of the final-to-useful machine efficiency column in final-to-useful templates.</p></dd>
@@ -206,11 +209,20 @@ throughout the <code>IEATools</code> package.</p>
 #&gt; $C_perc
 #&gt; [1] "C.perc [%]"
 #&gt; 
+#&gt; $e_dot_max
+#&gt; [1] "E.dot_max"
+#&gt; 
 #&gt; $e_dot_perc
 #&gt; [1] "E.dot [%]"
 #&gt; 
+#&gt; $e_dot_dest
+#&gt; [1] "E.dot_dest"
+#&gt; 
 #&gt; $e_dot_machine
 #&gt; [1] "E.dot_machine"
+#&gt; 
+#&gt; $e_dot_machine_tot
+#&gt; [1] "E.dot_machine_tot"
 #&gt; 
 #&gt; $e_dot_machine_perc
 #&gt; [1] "E.dot_machine [%]"

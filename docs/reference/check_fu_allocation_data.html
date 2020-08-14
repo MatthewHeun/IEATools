@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Total final consumption comparison flows — tfc_compare_flows • IEATools</title>
+<title>Check validity of a final-to-useful allocation table — check_fu_allocation_data • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,11 @@
 
 
 
-<meta property="og:title" content="Total final consumption comparison flows — tfc_compare_flows" />
-<meta property="og:description" content="A string vector containing names of Total final consumption comparison Flows in the IEA extended energy balances database." />
+<meta property="og:title" content="Check validity of a final-to-useful allocation table — check_fu_allocation_data" />
+<meta property="og:description" content="When analysts fill final-to-useful allocation templates created with
+fu_allocation_template(), some errors are likely.
+This function checks for typical errors and
+emits helpful error messages that point the analyst to the location of the problem." />
 
 
 
@@ -130,50 +133,70 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Total final consumption comparison flows</h1>
+    <h1>Check validity of a final-to-useful allocation table</h1>
     
-    <div class="hidden name"><code>tfc_compare_flows.Rd</code></div>
+    <div class="hidden name"><code>check_fu_allocation_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A string vector containing names of <code>Total final consumption</code> comparison <code>Flow</code>s in the IEA extended energy balances database.</p>
+    <p>When analysts fill final-to-useful allocation templates created with
+<code><a href='fu_allocation_template.html'>fu_allocation_template()</a></code>, some errors are likely.
+This function checks for typical errors and
+emits helpful error messages that point the analyst to the location of the problem.</p>
     </div>
 
-    <pre class="usage"><span class='no'>tfc_compare_flows</span></pre>
+    <pre class="usage"><span class='fu'>check_fu_allocation_data</span>(
+  <span class='no'>.fu_allocation_table</span>,
+  <span class='kw'>country</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>country</span>,
+  <span class='kw'>year</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>year</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow_aggregation_point</span>,
+  <span class='kw'>machine</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>machine</span>,
+  <span class='kw'>ef_product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>ef_product</span>,
+  <span class='kw'>eu_product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>eu_product</span>,
+  <span class='kw'>destination</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>destination</span>,
+  <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>quantity</span>,
+  <span class='kw'>.values</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>.values</span>,
+  <span class='kw'>non_energy_machine</span> <span class='kw'>=</span> <span class='st'>"Non-energy"</span>
+)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>.fu_allocation_table</th>
+      <td><p>The final-to-useful allocation table you want to check.</p></td>
+    </tr>
+    <tr>
+      <th>country, year, flow_aggregation_point</th>
+      <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>machine, ef_product, eu_product, destination, quantity, .values</th>
+      <td><p>See <code><a href='template_cols.html'>IEATools::template_cols</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>non_energy_machine</th>
+      <td><p>The string that identifies a Non-energy machine. Default is "Non-energy".</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A string vector with 6 entries.</p><dl'>
-<dt>total_primary_energy_supply</dt><dd><p>The string identifier for Total primary energy supply.</p></dd>
-<dt>transfers</dt><dd><p>The string identifier for Transfers.</p></dd>
-<dt>statistical_differences</dt><dd><p>The string identifier for statistical differences.</p></dd>
-<dt>transformation_processes</dt><dd><p>The string identifier for transformation processes.</p></dd>
-<dt>energy_industry_own_use</dt><dd><p>The string identifier for energy industry own use.</p></dd>
-<dt>losses</dt><dd><p>The string identifier for losses.</p></dd>
+    <p><code>TRUE</code> if the checks are successful. An error is emitted if the checks fail.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-</dl>
+    <p>This function checks for two typical errors.</p><ul>
+<li><p>First, this function checks that <code>ef_product</code> and <code>eu_product</code> are identical
+when <code>machine</code> is <code>non_energy_machine</code>.</p></li>
+<li><p>Second, this function checks that <code>machine</code> and <code>eu_product</code> are present
+when <code>.values</code> is not <code>NA</code>.
+This check is performed on a tidy version of <code>.fu_allocation_table</code>.</p></li>
+</ul>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>tfc_compare_flows</span></div><div class='output co'>#&gt; $total_primary_energy_supply
-#&gt; [1] "Total primary energy supply"
-#&gt; 
-#&gt; $transfers
-#&gt; [1] "Transfers"
-#&gt; 
-#&gt; $statistical_differences
-#&gt; [1] "Statistical differences"
-#&gt; 
-#&gt; $transformation_processes
-#&gt; [1] "Transformation processes"
-#&gt; 
-#&gt; $energy_industry_own_use
-#&gt; [1] "Energy industry own use"
-#&gt; 
-#&gt; $losses
-#&gt; [1] "Losses"
-#&gt; </div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span>() <span class='kw'>%&gt;%</span>
+  <span class='fu'>check_fu_allocation_data</span>()</div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
