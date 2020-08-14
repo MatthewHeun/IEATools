@@ -152,6 +152,26 @@ complete_fu_allocation_table <- function(fu_allocation_table,
   country_to_complete <- fu_allocation_table %>% 
     magrittr::extract2(country) %>% 
     unique()
+  
+  #######
+  #######
+  ####### 
+  # Problem here. 
+  # When the country being analyzed has no data (and we're relying solely on exemplars), 
+  # fu_allocation_table will have no rows.
+  # At that point, country_to_complete has length of 0.
+  # So, the assertion below fails.
+  # 
+  # To fix, probably need to also pass country into this function (via argument country_to_complete).
+  # The default value could be the statement above.
+  # But that will also allow sending the country name in here.
+  # 
+  # I should also check to see if something similar could happen in complete_eta_fu_table().
+  #######
+  #######
+  ####### 
+  
+  
   assertthat::assert_that(length(country_to_complete) == 1, 
                           msg = glue::glue("Found more than one country to complete in complete_fu_allocation_table(): {glue::glue_collapse(country_to_complete, sep = ', ', last = ' and ')}"))
 
