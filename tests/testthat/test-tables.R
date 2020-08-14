@@ -339,18 +339,11 @@ test_that("complete_eta_fu_table works as expected", {
 
   # Try to complete with ONLY ZAF.
   # Should find that a warning is emitted, because we can't find Irons
-  expect_warning(complete_fail <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
-                                                        exemplar_eta_fu_tables = exemplar_ZAF, 
-                                                        fu_allocation_table = fu_allocation_table_GHA), 
-                 "Didn't complete eta FU table for GHA. Returning a data frame of machines for which an efficiency wasn't available.")
-  # Check that the uncompleted machine is Irons.
-  expect_equal(nrow(complete_fail), 4)
-  complete_fail %>% 
-    dplyr::filter(.data[[IEATools::template_cols$machine]] == "Irons") %>% 
-    magrittr::extract2(IEATools::template_cols$machine) %>% 
-    unique() %>% 
-    expect_equal("Irons")
-    
+  expect_error(complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
+                                     exemplar_eta_fu_tables = exemplar_ZAF, 
+                                     fu_allocation_table = fu_allocation_table_GHA), 
+               "Irons")
+
   # Now call the completion function to pick up Automobiles from ZAF and Irons from World
   completed <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
                                      exemplar_eta_fu_tables = list(exemplar_ZAF, exemplar_World), 
@@ -436,6 +429,20 @@ test_that("complete_eta_fu_table works as expected", {
     magrittr::extract2(IEATools::template_cols$machine) %>% 
     expect_equal(c("Automobiles", "Automobiles", "Irons", "Irons"))
     
+})
+
+
+test_that("complete_eta_fu_table() returns an empty data frame when the fu_allocation_table has zero rows", {
+  eta_fu_table <- load_eta_fu_data()
+  eta_fu_table_GHA <- eta_fu_table %>% 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "GHA")
+  eta_fu_table_ZAF <- eta_fu_table %>% 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF")
+  fu_allocation_table <- load_fu_allocation_data() %>% 
+    tidy_fu_allocation_table()
+  fu_allocation_table_GHA <- fu_allocation_table[c(), ]
+  result <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA, exemplar_eta_fu_tables = eta_fu_table_ZAF, fu_allocation_table = fu_allocation_table_GHA)
+  expect_equal(nrow(result), 0)
 })
 
 

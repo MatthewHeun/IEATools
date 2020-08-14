@@ -411,7 +411,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
                                          energy_row_shading_color_eiou = "#FCFCAB", 
                                          dont_fill_shading_color = "#A8A8A8",
                                          overwrite_file = FALSE,
-                                         n_allocation_rows = 3,
+                                         n_allocation_rows = 4,
                                          .rownum = ".rownum"){
   matsindf::verify_cols_missing(.fu_allocation_template, .rownum)
   
@@ -538,9 +538,16 @@ write_fu_allocation_template <- function(.fu_allocation_template,
 #' generated using `fu_allocation_template()` and `write_fu_allocation_template()`.
 #' 
 #' A filled example can be loaded with the default value of `path`.
+#' 
+#' Note that any machine named `non_energy_machine` is required to have 
+#' identical values for `Ef.product` and `Eu.product`.
+#' Violations of this requirement cause errors to be thrown.
 #'
-#' @param path the path from which final-to-useful allocation data will be loaded. Default is the path to allocation data supplied with this package.
-#' @param fu_allocations_tab_name the tab in `path` that contains the final-to-useful allocation data. Default is "`FU Allocations`".
+#' @param path The path from which final-to-useful allocation data will be loaded. Default is the path to allocation data supplied with this package.
+#' @param fu_allocations_tab_name See `IEATools::fu_analysis_file_info`.
+#' @param country,flow_aggregation_point See IEATools::iea_cols
+#' @param ef_product,machine,eu_product,destination See `IEATools::template_cols`.
+#' @param non_energy_machine The string that identifies a Non-energy machine. Default is "Non-energy".
 #'
 #' @return the `fu_allocations_tab_name` tab in `path` as a data frame.
 #' 
@@ -550,8 +557,124 @@ write_fu_allocation_template <- function(.fu_allocation_template,
 #' # Loads final-to-useful allocation data supplied with the package
 #' load_fu_allocation_data()
 load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(), 
-                                    fu_allocations_tab_name = IEATools::fu_analysis_file_info$fu_allocation_tab_name){
-  openxlsx::read.xlsx(path, sheet = fu_allocations_tab_name)
+                                    fu_allocations_tab_name = IEATools::fu_analysis_file_info$fu_allocation_tab_name, 
+                                    country = IEATools::iea_cols$country,
+                                    flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                    ef_product = IEATools::template_cols$ef_product,
+                                    machine = IEATools::template_cols$machine,
+                                    eu_product = IEATools::template_cols$eu_product,
+                                    destination = IEATools::template_cols$destination,
+                                    non_energy_machine = "Non-energy"){
+  fu_allocation_table <- openxlsx::read.xlsx(path, sheet = fu_allocations_tab_name) %>% 
+    # Ensure the machine and eu_product columns are character, even if the columns are not filled, except for 
+    # energy flows and percentages.
+    # This condition can occur when we read a template that is not yet filled by an analyst.
+    dplyr::mutate(
+      "{machine}" := as.character(.data[[machine]]), 
+      "{eu_product}" := as.character(.data[[eu_product]])
+    )
+  # The call to check_fu_allocation_data will emit an error of there is a problem.
+  check_fu_allocation_data(fu_allocation_table, 
+                           country = country,
+                           flow_aggregation_point = flow_aggregation_point, 
+                           machine = machine, ef_product = ef_product, 
+                           eu_product = eu_product, destination = destination,
+                           non_energy_machine = non_energy_machine)
+  # We passed the test, so return the table we loaded earlier.
+  fu_allocation_table
+}
+
+
+#' Check validity of a final-to-useful allocation table
+#' 
+#' When analysts fill final-to-useful allocation templates created with
+#' `fu_allocation_template()`, some errors are likely.
+#' This function checks for typical errors and
+#' emits helpful error messages that point the analyst to the location of the problem.
+#' 
+#' This function checks for two typical errors.
+#' 
+#' * First, this function checks that `ef_product` and `eu_product` are identical
+#'   when `machine` is `non_energy_machine`.
+#' * Second, this function checks that `machine` and `eu_product` are present
+#'   when `.values` is not `NA`.
+#'   This check is performed on a tidy version of `.fu_allocation_table`.
+#'
+#' @param .fu_allocation_table The final-to-useful allocation table you want to check.
+#' @param country,year,flow_aggregation_point See `IEATools::iea_cols`.
+#' @param machine,ef_product,eu_product,destination,quantity,.values See `IEATools::template_cols`.
+#' @param non_energy_machine The string that identifies a Non-energy machine. Default is "Non-energy".
+#'
+#' @return `TRUE` if the checks are successful. An error is emitted if the checks fail.
+#' 
+#' @export
+#'
+#' @examples
+#' load_fu_allocation_data() %>% 
+#'   check_fu_allocation_data()
+check_fu_allocation_data <- function(.fu_allocation_table, 
+                                     country = IEATools::iea_cols$country,
+                                     year = IEATools::iea_cols$year,
+                                     flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                     machine = IEATools::template_cols$machine,
+                                     ef_product = IEATools::template_cols$ef_product,
+                                     eu_product = IEATools::template_cols$eu_product, 
+                                     destination = IEATools::template_cols$destination,
+                                     quantity = IEATools::template_cols$quantity,
+                                     .values = IEATools::template_cols$.values,
+                                     non_energy_machine = "Non-energy") {
+  # When "Non-energy" is the Machine, Ef.product and Eu.product should be identical.
+  # It is an easy mistake that isn't true.
+  # So check for that problem.
+  errs <- .fu_allocation_table %>%
+    dplyr::filter(.data[[machine]] == non_energy_machine & 
+                    !is.na(.data[[eu_product]]) & 
+                    (.data[[ef_product]] != .data[[eu_product]]))
+  if (nrow(errs) > 0) {
+    # Make an error message and fail.
+    erroneous_rows <- errs %>%
+      dplyr::select(country, flow_aggregation_point, ef_product, machine, eu_product, destination)
+    erroneous_combos <- paste(erroneous_rows[[country]],
+                              erroneous_rows[[flow_aggregation_point]],
+                              erroneous_rows[[ef_product]],
+                              erroneous_rows[[machine]],
+                              erroneous_rows[[eu_product]], 
+                              erroneous_rows[[destination]], sep = ", ", collapse = "; ")
+    err_msg <- paste0(ef_product, " and ", eu_product, " must be identical when ", machine, " is ", 
+                      non_energy_machine, ". The following combinations do not meet that criterion: ", 
+                      erroneous_combos, ". Please check the FU allocation table for typos or misspellings.")
+    stop(err_msg)
+  }
+  # When filling a final-to-useful allocation template, 
+  # the analyst forgets to fill some Machines and Eu.products. 
+  # Check for those situations and provide a helpful error message.
+  # To check for these situations, we need to first tidy the FU allocations table
+  tidy_fu <- .fu_allocation_table %>% 
+    tidy_fu_allocation_table()
+  # Now check for any cases where one or both of the Machine or Eu.product column is NA 
+  # while the .values column is not NA.
+  errs <- tidy_fu %>% 
+    dplyr::filter((is.na(.data[[machine]]) | is.na(.data[[eu_product]])) & !is.na(.data[[.values]]))
+  if (nrow(errs) > 0) {
+    # Make an error message and fail.
+    erroneous_rows <- errs %>%
+      dplyr::select(country, year, flow_aggregation_point, ef_product, machine, eu_product, destination, quantity)
+    erroneous_combos <- paste(erroneous_rows[[country]],
+                              erroneous_rows[[year]],
+                              erroneous_rows[[flow_aggregation_point]],
+                              erroneous_rows[[ef_product]],
+                              erroneous_rows[[machine]],
+                              erroneous_rows[[eu_product]], 
+                              erroneous_rows[[destination]], 
+                              erroneous_rows[[quantity]], sep = ", ", collapse = "; ")
+    err_msg <- paste0("In the FU Allocations tab, ", 
+                      eu_product, " and ", destination, " must be filled when ", quantity, " is non-zero. ", 
+                      "The following combinations do not meet that criterion: ", 
+                      erroneous_combos, ". Please check the FU allocation table for missing values.")
+    stop(err_msg)
+  }
+    
+  return(TRUE)
 }
 
 
@@ -587,50 +710,42 @@ load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(),
 #' When read, values are ratios, not percentages. 
 #' I.e., the values read by this function are in the range 0 <= x <= 1, not 0 <= x <= 100.
 #' If any read values in the `c_perc` rows are outside of the range 0 <= x <= 1, an error is thrown.
+#' 
+#' Note that if `.fu_allocations` is void of any allocation information, an error is thrown.
 #'
-#' @param .fu_allocations a data frame containing a completed final-to-useful allocation template for final demand.
+#' @param .fu_allocations A data frame containing a completed final-to-useful allocation template for final demand.
 #'        This data frame can be obtained from the function `load_fu_allocation_data()`.
-#' @param T_0 the dead state temperature (in kelvin) for calculation of heat exergy. Default is `298.15` kelvin.
-#' @param sort_by how to sort rows of eta_fu template. 
+#' @param tidy_specified_iea_data A tidy data frame containing specified IEA data for the same country(ies)
+#'                                as .fu_allocations.
+#'                                Strictly speaking, this argument is needed only when 
+#'                                .fu_allocations is a tidy data frame.
+#' @param T_0 The dead state temperature (in kelvin) for calculation of heat exergy. Default is `298.15` kelvin.
+#' @param sort_by How to sort rows of eta_fu template. 
 #'        Options are (1) by "useful_energy_type" and (2) by "importance". 
 #'        "useful_energy_type" sorts first by `md`, `light`, `ke`, and `heat`, 
 #'        then by magnitude of energy flow into the machine.
 #'        "importance" sorts by magnitude of energy flow into the machine only.
 #'        Default is "useful_energy_type".
-#' @param ledger_side the name of the ledger side column in `.fu_allocations`. Default is "`Ledger.side`".
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.fu_allocations`. Default is "`Flow.aggregation.point`".
-#' @param ef_product the name of the final energy product column in `.fu_allocations`. Default is "`Ef.product`".
-#' @param machine the name of the machine column in `.fu_allocations`. Default is "`Machine`".
-#' @param eu_product the name of the useful energy product column in `.fu_allocations`. Default is "`Eu.product`".
-#' @param md the name of the mechanical drive useful energy carrier in the `eu_product` column. Default is "`MD`".
-#' @param light the name of the light useful energy carrier in the `eu_product` column. Default is "`Light`".
-#' @param ke the name of the kinetic energy useful energy carrier in the `eu_product` column. Default is "`KE`".
-#' @param heat the string that identifies heat useful energy carriers in the `eu_product` column.  Default is "`TH`" for "temperature heat". 
-#' @param eta_fu the name for final-to-useful energy efficiencies to be entered by the analyst.  Default is "`eta.fu`". 
-#' @param phi_u the name for the exergy-to-energy ratio for useful energy carriers to be entered by the analyst.  Default is "`phi.u`". 
-#' @param destination the name for the destination for final and useful energy (an sector). Default is "`Destination`".
-#' @param quantity the name for the quantity column in `.fu_allocations`. Default is "`Quantity`".
-#' @param maximum_values the name for the maximum values column in `.fu_allocations`. Default is "`Maximum.values`".
-#' @param perc a string that gives the units for percent. Default is "`[%]`".
-#' @param e_dot the name for energy flow rates. Default is "`E.dot`".
-#' @param c_ the string prefix for allocation variables. Default is "`C_`". 
-#' @param c_perc the string for generic allocation variables in percentage terms. Default is "`C [%]`".
-#' @param c_ratio the string for generic allocation variables in ratio terms. Default is "`C`".
-#' @param .year the name of a temporary year column. Default is "`.year`".
-#' @param year_for_maximum_values the year assumed for the `maximum_values` column. Default is `0`.
-#' @param .value the name of a temporary value column. Default is "`.value`".
+#' @param md The name of the mechanical drive useful energy carrier in the `eu_product` column. Default is "`MD`".
+#' @param light The name of the light useful energy carrier in the `eu_product` column. Default is "`Light`".
+#' @param ke The name of the kinetic energy useful energy carrier in the `eu_product` column. Default is "`KE`".
+#' @param heat The string that identifies heat useful energy carriers in the `eu_product` column.  Default is "`TH`" for "temperature heat". 
+#' @param perc A string that gives the units for percent. Default is "`[%]`".
+#' @param c_ The string prefix for allocation variables. Default is "`C_`". 
+#' @param c_perc The string for generic allocation variables in percentage terms. Default is "`C [%]`".
+#' @param c_ratio The string for generic allocation variables in ratio terms. Default is "`C`".
+#' @param year_for_maximum_values The year assumed for the `maximum_values` column. Default is `0`.
+#' @param .value The name of a temporary value column. Default is "`.value`".
 #' @param .row_order the name of a metadata column used internally for determining row order. Default is ".row_order".
-#' @param e_dot_dest the name of a temporary column containing energy flows into a destination. Default is "`E.dot_dest`".
-#' @param e_dot_machine the name of a temporary column containing energy flows into final-to-useful machines. Default is "`E.dot_machine`".
-#' @param e_dot_machine_max the name of a temporary column containing maximum energy flows into final-to-useful machines. Default is "E.dot_machine_max".
-#' @param e_dot_machine_tot the name of a temporary column containing sums of energy flows into a final-to-useful machines. Default is "`E.dot_machine_tot`".
-#' @param e_dot_machine_perc the name of a temporary column percentages of total energy flow into machines.  Default is "`E.dot_machine [%]`".
-#' @param e_dot_machine_max_perc the name for a column of maximum percentages (across all years) of total energy flow into machines.  Default is "`E.dot_machine_max [%]`".
-#' @param non_energy The prefix for non-energy use in the `machine` column. Default is `IEATools::tfc_flows$non_energy_use`. 
-#' @param non_energy_eff The efficiency for non-energy use. Non-zero so that we can swim upstream later.
+#' @param non_energy_eff The efficiency for non-energy use, non-zero so we can swim upstream later.
 #'                       Default is 1e-6, or 0.0001%.
+#' @param country,year,ledger_side,flow_aggregation_point,flow,product,e_dot See `IEATools::iea_cols`.
+#' @param ef_product,machine,eu_product,eta_fu,phi_u,destination,quantity,maximum_values,e_dot_dest,e_dot_machine,e_dot_machine_max,e_dot_machine_tot,e_dot_machine_perc,e_dot_machine_max_perc See `IEATools::template_cols`.
+#' @param supply,consumption See `IEATools::ledger_sides`.
+#' @param eiou See `IEATools::tfc_compare_flows`.
+#' @param non_energy See `IEATools::tfc_flows`. 
 #'
-#' @return a data frame containing row-ordered blank template for final-to-useful machine efficiencies.
+#' @return A data frame containing row-ordered blank template for final-to-useful machine efficiencies.
 #' 
 #' @export
 #'
@@ -638,80 +753,142 @@ load_fu_allocation_data <- function(path = sample_fu_allocation_table_path(),
 #' load_fu_allocation_data() %>% 
 #'   eta_fu_template()
 eta_fu_template <- function(.fu_allocations, 
+                            tidy_specified_iea_data,
                             T_0 = 298.15, 
                             sort_by = c("useful_energy_type", "importance"),
-                            ledger_side = "Ledger.side",
-                            flow_aggregation_point = "Flow.aggregation.point",
-                            ef_product = "Ef.product",
-                            machine = "Machine",
-                            eu_product = "Eu.product", 
                             md = "MD", 
                             light = "Light",
                             ke = "KE", 
                             heat = "TH", 
-                            eta_fu = "eta.fu", 
-                            phi_u = "phi.u",
-                            destination = "Destination",
-                            quantity = "Quantity", 
-                            maximum_values = "Maximum.values",
                             perc = "[%]",
-                            e_dot = "E.dot",
                             c_ = "C_",
                             c_perc = paste(substr(c_, 1, 1), perc),
                             c_ratio = substr(c_, 1, 1),
-                            .year = ".year",
                             year_for_maximum_values = 0,
-                            .value = ".value", 
                             .row_order = ".row_order",
-                            e_dot_dest = paste0(e_dot, "_dest"),
-                            e_dot_machine = paste0(e_dot, "_machine"), 
-                            e_dot_machine_max = paste0(e_dot_machine, "_max"),
-                            e_dot_machine_tot = paste0(e_dot_machine, "_tot"), 
-                            e_dot_machine_perc = paste(e_dot_machine, perc), 
-                            e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc), 
-                            non_energy = IEATools::tfc_flows$non_energy_use, 
-                            non_energy_eff = 1e-6){
+                            non_energy_eff = 1e-6,
+                            country = IEATools::iea_cols$country,
+                            year = IEATools::iea_cols$year,
+                            ledger_side = IEATools::iea_cols$ledger_side,
+                            flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                            product = IEATools::iea_cols$product,
+                            flow = IEATools::iea_cols$flow,
+                            e_dot = IEATools::iea_cols$e_dot,
+                            ef_product = IEATools::template_cols$ef_product,
+                            machine = IEATools::template_cols$machine,
+                            eu_product = IEATools::template_cols$eu_product, 
+                            eta_fu = IEATools::template_cols$eta_fu, 
+                            phi_u = IEATools::template_cols$phi_u,
+                            destination = IEATools::template_cols$destination,
+                            quantity = IEATools::template_cols$quantity, 
+                            maximum_values = IEATools::template_cols$maximum_values,
+                            e_dot_dest = IEATools::template_cols$e_dot_dest,
+                            e_dot_machine = IEATools::template_cols$e_dot_machine, 
+                            e_dot_machine_max = IEATools::template_cols$e_dot_max,
+                            e_dot_machine_tot = IEATools::template_cols$e_dot_machine_tot,
+                            e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc, 
+                            e_dot_machine_max_perc = IEATools::template_cols$e_dot_machine_max_perc,
+                            .value = IEATools::template_cols$.values, 
+                            supply = IEATools::ledger_sides$supply,
+                            consumption = IEATools::ledger_sides$consumption,
+                            eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+                            non_energy = IEATools::tfc_flows$non_energy_use){
+  # Check whether .fu_allocations has any valid rows in it. If not, throw an error.
+  assertthat::assert_that(.fu_allocations %>% tidy_fu_allocation_table() %>% nrow() > 0, 
+                          msg = ".fu_allocations has no allocation rows.")
+
   sort_by <- match.arg(sort_by)
-  # Preliminary stuff
-  # Ensure that several columns don't exist already in 
-  # Grab the years of interest.
-  year_colnames <- year_cols(.fu_allocations, return_names = TRUE)
-  # Columns that are not years and are not other specific columns are metadata columns.
-  # We group by these columns later.
-  meta_cols <- .fu_allocations %>% 
-    matsindf::everything_except(c(year_colnames, ledger_side, flow_aggregation_point, ef_product, machine, eu_product, 
-                                  destination, quantity, maximum_values))  
   
-  # To create the e_dot_machine_max_perc column, 
-  # we need to calculate the energy flowing into each f-->u machine.
-  # The first step is to isolate the E.dot rows
-  e_dot_info <- .fu_allocations %>%
-    dplyr::filter(!!as.name(quantity) == e_dot) %>%
-    dplyr::select(-maximum_values, -machine, -eu_product, -quantity) %>%
-    tidyr::gather(key = .year, value = !!as.name(e_dot_dest), year_colnames) %>% 
-    dplyr::filter(!is.na(!!as.name(e_dot_dest)))
-  # We also isolate the allocation (C) rows
-  c_info <- .fu_allocations %>%
-    dplyr::filter(startsWith(!!as.name(quantity), c_) & endsWith(!!as.name(quantity), perc)) %>%
-    dplyr::filter(!is.na(!!as.name(machine))) %>%
-    dplyr::mutate(
-      !!as.name(quantity) := dplyr::case_when(
-        startsWith(!!as.name(quantity), c_) & endsWith(!!as.name(quantity), perc) ~ c_perc,
-        TRUE ~ !!as.name(quantity)
+  # Decide if we have a tidy data frame or a wide-by-years data frame.
+  # Algorithm: if .fu_allocations has a Year column, it is tidy.
+  fu_alloc_is_tidy <- year %in% colnames(.fu_allocations)
+  
+  if (fu_alloc_is_tidy) {
+    # Need to create the e_dot_info and c_info data frames from the tidy version of .fu_allocations.
+    
+    meta_columns <- .fu_allocations %>%
+      matsindf::everything_except(c(ledger_side, flow_aggregation_point, ef_product, machine, eu_product,
+                                    destination, quantity, maximum_values, year, .value))
+    
+    countries <- .fu_allocations %>% 
+      dplyr::select(country) %>% 
+      unlist() %>% 
+      unique()
+    
+    # Work on the e_dot_info data frame.
+    # In the case where the .fu_allocations data frame is tidy, 
+    # we don't have any IEA data coming in with the .fu_allocations data frame.
+    # So we create e_dot_info from tidy_specified_iea_data.
+    # The following modifications to tidy_specified_iea_data are needed.
+    # * filter to contain only Consumption and EIOU
+    # * rename E.dot --> E.dot_dest
+    # * rename Product --> Ef.product
+    # * rename Flow --> Destination
+    e_dot_info <- tidy_specified_iea_data %>% 
+      dplyr::filter(.data[[country]] %in% countries) %>% 
+      dplyr::filter(.data[[ledger_side]] == consumption |
+                      (.data[[ledger_side]] == supply & .data[[flow_aggregation_point]] == eiou)) %>% 
+      dplyr::rename(
+        "{e_dot_dest}" := e_dot,
+        "{ef_product}" := product, 
+        "{destination}" := flow
       )
-    ) %>%
-    dplyr::select(-maximum_values, -quantity) %>%
-    tidyr::gather(key = .year, value = !!as.name(c_perc), year_colnames) %>%
-    dplyr::filter(!is.na(!!as.name(c_perc)))
+    
+    # Now work on c_info.
+    # Turns out that the tidy .fu_allocations is nearly what we need for the 
+    # c_info data frame. 
+    # We need to rename the .values column to the c_perc, and
+    # we need to delete the Quantity column.
+    c_info <- .fu_allocations %>% 
+      dplyr::rename(
+        "{c_perc}" := .data[[.value]]
+      ) %>% 
+      dplyr::mutate(
+        "{quantity}" := NULL
+      )
+  } else {
+    # Grab the years of interest.
+    year_colnames <- year_cols(.fu_allocations, return_names = TRUE)
+    # Columns that are not years and are not other specific columns are metadata columns.
+    # We group by these columns later.
+    meta_columns <- .fu_allocations %>%
+      matsindf::everything_except(c(year_colnames, ledger_side, flow_aggregation_point, ef_product, machine, eu_product,
+                                    destination, quantity, maximum_values))
+
+    # To create the e_dot_machine_max_perc column, 
+    # we need to calculate the energy flowing into each f-->u machine.
+    # The first step is to isolate the E.dot rows
+    e_dot_info <- .fu_allocations %>%
+      dplyr::filter(!!as.name(quantity) == e_dot) %>%
+      dplyr::select(-maximum_values, -machine, -eu_product, -quantity) %>%
+      tidyr::gather(key = !!year, value = !!as.name(e_dot_dest), year_colnames) %>% 
+      dplyr::filter(!is.na(!!as.name(e_dot_dest)))
+    # We also isolate the allocation (C) rows
+    c_info <- .fu_allocations %>%
+      dplyr::filter(startsWith(!!as.name(quantity), c_) & endsWith(!!as.name(quantity), perc)) %>%
+      dplyr::filter(!is.na(!!as.name(machine))) %>%
+      dplyr::mutate(
+        !!as.name(quantity) := dplyr::case_when(
+          startsWith(!!as.name(quantity), c_) & endsWith(!!as.name(quantity), perc) ~ c_perc,
+          TRUE ~ !!as.name(quantity)
+        )
+      ) %>%
+      dplyr::select(-maximum_values, -quantity) %>%
+      tidyr::gather(key = !!year, value = !!as.name(c_perc), year_colnames) %>%
+      dplyr::filter(!is.na(!!as.name(c_perc)))
+  }
+  
+  
   # Verify that all C values are between 0 and 1, inclusive.
   assertthat::assert_that(all(c_info[[c_perc]] >= 0 & c_info[[c_perc]] <= 1), msg = "Not all C values are between 0 and 1 in eta_fu_template.")
-  # Now that we know that every C value is between 0 and 1, inclusive, 
-  # it is not really appropriate to call these "C [%]".  
+  # Now that we know that every C value is between 0 and 1, inclusive,
+  # it is not really appropriate to call these "C [%]".
   # So, rename the column.
-  c_info <- c_info %>% 
+  c_info <- c_info %>%
     dplyr::rename(
       !!as.name(c_ratio) := !!as.name(c_perc)
     )
+  
   # Now we join the E.dot and C values and calculate the energy flowing into each final-to-useful machine
   input_energy <- dplyr::full_join(c_info, e_dot_info, 
                                    by = matsindf::everything_except(e_dot_info, e_dot_dest, .symbols = FALSE)) %>% 
@@ -719,26 +896,26 @@ eta_fu_template <- function(.fu_allocations,
     # Get rid of those rows.
     dplyr::filter(!is.na(!!as.name(e_dot_dest))) %>% 
     dplyr::mutate(
-      # Calcualte the energy flow into each f-->u machine
+      # Calculate the energy flow into each f-->u machine
       # for each row of the table
       # (each combination of Ef.product and Machine.
       !!as.name(e_dot_machine) := !!as.name(c_ratio) * !!as.name(e_dot_dest)
     ) %>% 
     # Group by the metadata columns, year, the Machine column, and the eu_product column, because we want to calculate the 
     # amount of energy going into each machine in each year for a given purpose.
-    dplyr::group_by(!!!meta_cols, !!as.name(.year), !!as.name(machine), !!as.name(eu_product)) %>% 
+    dplyr::group_by(!!!meta_columns, !!as.name(year), !!as.name(machine), !!as.name(eu_product)) %>% 
     # Summarise to aggregate the energy going into each machine.
     dplyr::summarise(
       !!as.name(e_dot_machine) := sum(!!as.name(e_dot_machine))
     ) %>% 
     dplyr::ungroup() %>% 
     dplyr::mutate(
-      !!as.name(.year) := as.numeric(!!as.name(.year))
+      !!as.name(year) := as.numeric(!!as.name(year))
     )
   # Calculate maximum input energy for each combination of metadata variables
   input_energy_max <- input_energy %>% 
     dplyr::filter(!is.na(!!as.name(e_dot_machine))) %>% 
-    dplyr::group_by(!!!meta_cols, !!as.name(machine), !!as.name(eu_product)) %>% 
+    dplyr::group_by(!!!meta_columns, !!as.name(machine), !!as.name(eu_product)) %>% 
     dplyr::summarise(
       !!as.name(e_dot_machine_max) := max(!!as.name(e_dot_machine))
     ) %>% 
@@ -749,7 +926,7 @@ eta_fu_template <- function(.fu_allocations,
     # That is pretty unforgiving when calculating the totals.
     # So we remove NA columns when calculating totals. 
     dplyr::filter(!is.na(!!as.name(e_dot_machine))) %>% 
-    dplyr::group_by(!!!meta_cols, !!as.name(.year)) %>% 
+    dplyr::group_by(!!!meta_columns, !!as.name(year)) %>% 
     dplyr::summarise(
       !!as.name(e_dot_machine_tot) := sum(!!as.name(e_dot_machine))
     ) %>% 
@@ -767,14 +944,14 @@ eta_fu_template <- function(.fu_allocations,
     )
   # Calculate the maximum percentage of all input energy across all years for each machine and eu_product combination
   input_energy_max_percs <- input_energy_percs %>% 
-    dplyr::group_by(!!!meta_cols, !!as.name(machine), !!as.name(eu_product)) %>% 
+    dplyr::group_by(!!!meta_columns, !!as.name(machine), !!as.name(eu_product)) %>% 
     dplyr::summarise(
       !!as.name(e_dot_machine_max_perc) := max(!!as.name(e_dot_machine_perc))
     ) %>% 
     dplyr::ungroup()
    
   # Find the maxima across years for each combination of machine and eu_product
-  Maxima <- dplyr::full_join(input_energy_max, input_energy_max_percs, by = matsindf::everything_except(input_energy, .year, e_dot_machine, .symbols = FALSE)) %>% 
+  Maxima <- dplyr::full_join(input_energy_max, input_energy_max_percs, by = matsindf::everything_except(input_energy, year, e_dot_machine, .symbols = FALSE)) %>% 
     dplyr::rename(
       !!as.name(e_dot_machine) := !!as.name(e_dot_machine_max),
       !!as.name(e_dot_machine_perc) := !!as.name(e_dot_machine_max_perc)
@@ -785,9 +962,9 @@ eta_fu_template <- function(.fu_allocations,
   if (sort_by == "importance") {
     row_order <- Maxima %>% 
       dplyr::filter(!!as.name(quantity) == e_dot_machine_perc) %>% 
-      dplyr::arrange(!!!meta_cols, dplyr::desc(!!as.name(maximum_values))) %>% 
+      dplyr::arrange(!!!meta_columns, dplyr::desc(!!as.name(maximum_values))) %>% 
       dplyr::mutate(
-        !!as.name(.row_order) := paste(!!!meta_cols, !!as.name(machine), !!as.name(eu_product), sep = "+")
+        !!as.name(.row_order) := paste(!!!meta_columns, !!as.name(machine), !!as.name(eu_product), sep = "+")
       ) %>% 
       magrittr::extract2(.row_order)
   } else if (sort_by == "useful_energy_type") {
@@ -811,9 +988,9 @@ eta_fu_template <- function(.fu_allocations,
       dplyr::mutate(
         !!as.name(eu_product) := factor(!!as.name(eu_product), levels = eu_product_sort_order)
       ) %>% 
-      dplyr::arrange(!!!meta_cols, !!as.name(eu_product), dplyr::desc(!!as.name(maximum_values))) %>% 
+      dplyr::arrange(!!!meta_columns, !!as.name(eu_product), dplyr::desc(!!as.name(maximum_values))) %>% 
       dplyr::mutate(
-        !!as.name(.row_order) := paste(!!!meta_cols, !!as.name(machine), !!as.name(eu_product), sep = "+")
+        !!as.name(.row_order) := paste(!!!meta_columns, !!as.name(machine), !!as.name(eu_product), sep = "+")
       ) %>% 
       magrittr::extract2(.row_order)
   }
@@ -835,7 +1012,7 @@ eta_fu_template <- function(.fu_allocations,
       # Some of the phi_u values will end up as NA, but that's OK.
       # We'll change them later.
       !!as.name(phi_u) := carnot_efficiency(!!as.name(eu_product), T_0 = T_0),
-      # All of the mecahnical drive (md) rows will have NA for phi_u, but we know that it should be 1.
+      # All of the mechanical drive (md) rows will have NA for phi_u, but we know that it should be 1.
       !!as.name(phi_u) := dplyr::case_when(
         # We know that mechanical drive (md) has a phi_u value of 1.
         !!as.name(eu_product) == md ~ 1,
@@ -846,16 +1023,16 @@ eta_fu_template <- function(.fu_allocations,
     ) %>% 
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), 
                   !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc), !!as.name(eta_fu), !!as.name(phi_u)) %>% 
-    tidyr::spread(key = .year, value = .value)
+    tidyr::spread(key = !!year, value = .value)
   
   # Prepare the outgoing data frame.
   out <- dplyr::full_join(Maxima, Annual, by = matsindf::everything_except(Maxima, maximum_values, .symbols = FALSE)) %>% 
     dplyr::mutate(
       !!as.name(quantity) := factor(!!as.name(quantity), levels = c(e_dot_machine, e_dot_machine_perc, eta_fu, phi_u)), 
-      !!as.name(.row_order) := paste(!!!meta_cols, !!as.name(machine), !!as.name(eu_product), sep = "+"), 
+      !!as.name(.row_order) := paste(!!!meta_columns, !!as.name(machine), !!as.name(eu_product), sep = "+"), 
       !!as.name(.row_order) := factor(!!as.name(.row_order), levels = row_order)
     ) %>% 
-    dplyr::arrange(!!!meta_cols, !!as.name(.row_order), !!as.name(quantity), !!as.name(maximum_values)) %>% 
+    dplyr::arrange(!!!meta_columns, !!as.name(.row_order), !!as.name(quantity), !!as.name(maximum_values)) %>% 
     dplyr::mutate(
       !!as.name(.row_order) := NULL,
       # Remove the factorization of the quantity column
@@ -877,191 +1054,6 @@ eta_fu_template <- function(.fu_allocations,
                           Double-check Machine and Destination names.")
   
   return(out)
-  
-
-  
-  
-  # The rest of the commented code here is no longer needed. 
-  # I'm keeping it for historical purposes as of 23 July 2019.   
-  # By Sept 2019, it can probably be removed.
-  
-  # The following is something that works.
-  # out <- dplyr::full_join(input_energy_max, input_energy_max_percs, by = matsindf::everything_except(input_energy, .year, e_dot_machine, .symbols = FALSE)) %>% 
-  #   # tidyr::gather(key = !!as.name(".key"), value = !!as.name(maximum_values), !!as.name(e_dot_machine_max), !!as.name(e_dot_machine_max_perc)) %>% View
-  #   dplyr::full_join(input_energy, by = matsindf::everything_except(input_energy, e_dot_machine, .year, .symbols = FALSE)) %>% 
-  #   dplyr::full_join(input_energy_percs, by = matsindf::everything_except(input_energy, e_dot_machine, .symbols = FALSE)) %>% 
-  #   dplyr::mutate(
-  #     # The eta_fu column should be blank, because the analyst will fill it later.
-  #     !!as.name(eta_fu) := "",
-  #     # But the phi_u column can be pre-filled with some exergy/energy ratios.
-  #     # The first attempt uses the carnot_efficiency function,
-  #     # which converts the heat type (e.g., HTH.600.C)
-  #     # to a temperature in kelvin and further
-  #     # converts to a Carnot efficiency.
-  #     # Some of the phi_u values will end up as NA, but that's OK.
-  #     # We'll change them later.
-  #     !!as.name(phi_u) := carnot_efficiency(!!as.name(eu_product), T_0 = T_0),
-  #     # All of the mecahnical drive (md) rows will have NA for phi_u, but we know that it should be 1.
-  #     !!as.name(phi_u) := dplyr::case_when(
-  #       # We know that mechanical drive (md) has a phi_u value of 1.
-  #       !!as.name(eu_product) == md ~ 1,
-  #       TRUE ~ !!as.name(phi_u)
-  #     )
-  #   ) %>% 
-  #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), 
-  #                 !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc), !!as.name(eta_fu), !!as.name(phi_u)) %>% 
-  #   tidyr::spread(key = .year, value = .value) %>% View
-  
-  
-  # prelim_out <- .fu_allocations %>% 
-  #   # Keep only the columns of interest to us
-  #   dplyr::select(!!!meta_cols, !!as.name(machine), !!as.name(eu_product)) %>% 
-  #   # Eliminate rows where the analyst didn't fill any machines or products
-  #   dplyr::filter(!is.na(!!as.name(machine)) & !is.na(!!as.name(eu_product))) %>% 
-  #   unique() %>% 
-  #   # Join with maximum percentages of energy input to the fu machines
-  #   dplyr::left_join(input_energy_max_percs, by = matsindf::everything_except(input_energy_max_percs, e_dot_machine_max_perc, .symbols = FALSE)) %>% 
-  #   # Add eta and phi columns (which will become rows in a moment)
-  #   dplyr::mutate(
-  #     # The eta_fu column should be blank, because the analyst will fill it later.
-  #     !!as.name(eta_fu) := "",
-  #     # But the phi_u column can be pre-filled with some exergy/energy ratios.
-  #     # The first attempt uses the carnot_efficiency function,
-  #     # which converts the heat type (e.g., HTH.600.C)
-  #     # to a temperature in kelvin and further
-  #     # converts to a Carnot efficiency.
-  #     # Some of the phi_u values will end up as NA, but that's OK.
-  #     # We'll change them later.
-  #     !!as.name(phi_u) := carnot_efficiency(!!as.name(eu_product), T_0 = T_0),
-  #     # All of the md rows will have NA for phi_u, but we know that it should be 1.
-  #     !!as.name(phi_u) := dplyr::case_when(
-  #       # We know that mechanical drive (md) has a phi_u value of 1.
-  #       !!as.name(eu_product) == md ~ 1, 
-  #       TRUE ~ !!as.name(phi_u)
-  #     )
-  #   ) %>% 
-  #   # Now convert the eta_fu and phi_u columns into rows to be filled by the analyst
-  #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(eta_fu), !!as.name(phi_u))
-  # 
-  # # Establish the sort order of Eu.products for the resulting file.
-  # # We need to create a list of all the Eu.products.
-  # eu_prods <- prelim_out[[eu_product]] %>% unique()
-  # # Then find all the ones that are heat useful energy, identified by the 2nd and third characters being "TH".
-  # heat_prods <- eu_prods[which(substring(eu_prods, 2) %>% startsWith(heat))]
-  # # Sort the heat products by temperature
-  # sorted_heat_indices <- heat_prods %>% 
-  #   extract_TK() %>% 
-  #   sort.int(decreasing = TRUE, index.return = TRUE) %>% 
-  #   magrittr::extract2("ix")
-  # heat_prods_sorted <- heat_prods[sorted_heat_indices]
-  # # There may be useful products that we don't know about. Put those at the end, sorted in alphabetical order..
-  # leftover_eu_prods <- sort(setdiff(eu_prods, c(md, light, heat_prods)))
-  # # Now compile the order of Eu.products for this data frame.
-  # eu_product_sort_order <- c(md, ke, light, heat_prods_sorted, leftover_eu_prods)
-  # 
-  # # We need one of the prelim_out data frames for each year
-  # out <- lapply(year_colnames, function(yr){
-  #   prelim_out %>% 
-  #     dplyr::mutate(
-  #       !!as.name(.year) := yr
-  #     )
-  # }) %>% 
-  #   dplyr::bind_rows() %>% 
-  #   tidyr::spread(key = !!as.name(.year), value = !!as.name(.value)) %>% 
-  #   # Create factors with levels being the sort order.
-  #   dplyr::mutate(
-  #     !!as.name(eu_product) := factor(!!as.name(eu_product), levels = eu_product_sort_order),
-  #     !!as.name(quantity) := factor(!!as.name(quantity), levels = c(eta_fu, phi_u))
-  #   ) %>% 
-  #   # And finally sort the rows and return the result.
-  #   dplyr::arrange(!!!meta_cols, !!as.name(eu_product), dplyr::desc(!!as.name(e_dot_machine_max_perc)), !!as.name(machine), !!as.name(quantity))
-  # # At this point the year columns are of type character. 
-  # # But we want them to be numeric.
-  # # First, find the indices of the year columns. 
-  # year_col_indices <- year_cols(out)
-  # # Change each year column to be type numeric.
-  # for (i in year_col_indices) {
-  #   out[[i]] <- as.numeric(out[[i]])
-  # }
-  # return(out)
-  
-  
-  
-  # Tidy <- input_energy %>% 
-  #   # Eliminate rows where the analyst didn't fill any machines or products
-  #   dplyr::filter(!is.na(!!as.name(machine)) & !is.na(!!as.name(eu_product))) %>% 
-  #   unique() %>% 
-  #   # Add input energy percentages
-  #   dplyr::left_join(input_energy_percs, 
-  #                    by = matsindf::everything_except(input_energy_percs, e_dot_machine_perc, .symbols = FALSE)) %>% 
-  #   dplyr::mutate(
-  #     # The eta_fu column should be blank, because the analyst will fill it later.
-  #     !!as.name(eta_fu) := "",
-  #     # But the phi_u column can be pre-filled with some exergy/energy ratios.
-  #     # The first attempt uses the carnot_efficiency function,
-  #     # which converts the heat type (e.g., HTH.600.C)
-  #     # to a temperature in kelvin and further
-  #     # converts to a Carnot efficiency.
-  #     # Some of the phi_u values will end up as NA, but that's OK.
-  #     # We'll change them later.
-  #     !!as.name(phi_u) := carnot_efficiency(!!as.name(eu_product), T_0 = T_0),
-  #     # All of the md rows will have NA for phi_u, but we know that it should be 1.
-  #     !!as.name(phi_u) := dplyr::case_when(
-  #       # We know that mechanical drive (md) has a phi_u value of 1.
-  #       !!as.name(eu_product) == md ~ 1, 
-  #       TRUE ~ !!as.name(phi_u)
-  #     )
-  #   ) %>% 
-  #   dplyr::mutate(
-  #     # Create columns for eta.fu and phi.u in the Tidy data frame
-  #     !!as.name(eta_fu) := NA_real_,
-  #     !!as.name(phi_u) := NA_real_
-  #   )
-  # 
-  # # Calculate the maximum energy input and energy input percentage to each Machine across all years
-  # Max <- Tidy %>% 
-  #   matsindf::group_by_everything_except(.year, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u) %>% 
-  #   dplyr::summarise(
-  #     !!as.name(e_dot_machine) := max(!!as.name(e_dot_machine)), 
-  #     !!as.name(e_dot_machine_perc) := max(!!as.name(e_dot_machine_perc))
-  #   ) %>% 
-  #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc)) %>% 
-  #   dplyr::mutate(
-  #     # Set the year for max values to 0 so that the max values will appear as the earliest year.
-  #     !!as.name(.year) := year_for_maximum_values #,
-  #     # Need to make this into a character column so that we can add it to "" in the C_ columns later.
-  #     # !!as.name(.value) := as.character(!!as.name(.value))
-  #   )
-  # 
-  # prelim_out <- Tidy %>% 
-  #   tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc), !!as.name(eta_fu), !!as.name(phi_u)) %>%
-  #   dplyr::bind_rows(Max) %>% 
-  #   # Set levels for the quantity column so that we can get the right order when we spread the years
-  #   dplyr::mutate(
-  #     !!as.name(quantity) := factor(!!as.name(quantity), levels = c(e_dot_machine_max, e_dot_machine_max_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u))
-  #   ) %>% 
-  #   # Now spread by years across the spreadsheet.
-  #   tidyr::spread(key = .year, value = .value) %>% 
-  #   dplyr::rename(
-  #     # Rename the year 0 column
-  #     !!as.name(maximum_values) := !!as.name(year_for_maximum_values)
-  #   )
-  # 
-  # # Establish the sort order of Eu.products for the resulting file.
-  # # We need to create a list of all the Eu.products.
-  # eu_prods <- prelim_out[[eu_product]] %>% unique()
-  # # Then find all the ones that are heat useful energy, identified by the 2nd and third characters being "TH".
-  # heat_prods <- eu_prods[which(substring(eu_prods, 2) %>% startsWith(heat))]
-  # # Sort the heat products by temperature
-  # sorted_heat_indices <- heat_prods %>% 
-  #   extract_TK() %>% 
-  #   sort.int(decreasing = TRUE, index.return = TRUE) %>% 
-  #   magrittr::extract2("ix")
-  # heat_prods_sorted <- heat_prods[sorted_heat_indices]
-  # # There may be useful products that we don't know about. Put those at the end, sorted in alphabetical order..
-  # leftover_eu_prods <- sort(setdiff(eu_prods, c(md, light, heat_prods)))
-  # # Now compile the order of Eu.products for this data frame.
-  # eu_product_sort_order <- c(md, ke, light, heat_prods_sorted, leftover_eu_prods)
 }
 
 

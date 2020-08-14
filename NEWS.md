@@ -1,3 +1,13 @@
+# IEATools 0.1.32 (2020-03-13)
+
+* `eta_fu_template()` now accepts tidy data frames.
+* Adjusted tests for errors instead of warnings.
+    * Now at 611 tests, all passing.
+    * Test coverage remains at 100 %.
+* New function `check_fu_allocation_data()` verifies that all `Ef.product` and `Eu.product`
+  entries are identical when `Machine` is `Non-energy`.
+
+
 # IEATools 0.1.31 (2020-07-29)
 
 * Adjusted tests for errors instead of warnings.

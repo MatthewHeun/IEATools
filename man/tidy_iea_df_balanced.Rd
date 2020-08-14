@@ -2,7 +2,7 @@
 % Please edit documentation in R/energy_balance.R
 \name{tidy_iea_df_balanced}
 \alias{tidy_iea_df_balanced}
-\title{Tell whether \emph{all} rows of a tidy IEA data frame is balanced}
+\title{Tell whether \emph{all} rows of a tidy IEA data frame are balanced}
 \usage{
 tidy_iea_df_balanced(.tidy_iea_df_balances, balance_OK = "balance_OK")
 }
