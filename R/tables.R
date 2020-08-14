@@ -120,7 +120,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #' completed <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
 #'                                           exemplar_fu_allocation_tables = list(fu_table_ZAF), 
 #'                                           tidy_specified_iea_data = tidy_specified_iea_data)
-#' # Note that the C_source column shows that these data have been b from South Africa.
+#' # Note that the C_source column shows that these data have been taken from South Africa.
 #' completed %>% 
 #'   dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other & 
 #'                   Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
