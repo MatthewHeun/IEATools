@@ -73,7 +73,7 @@ this function generates a blank template for final-to-useful machine efficiencie
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.31</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.32</span>
       </span>
     </div>
 
@@ -143,39 +143,46 @@ this function generates a blank template for final-to-useful machine efficiencie
 
     <pre class="usage"><span class='fu'>eta_fu_template</span>(
   <span class='no'>.fu_allocations</span>,
+  <span class='no'>tidy_specified_iea_data</span>,
   <span class='kw'>T_0</span> <span class='kw'>=</span> <span class='fl'>298.15</span>,
   <span class='kw'>sort_by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"useful_energy_type"</span>, <span class='st'>"importance"</span>),
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  <span class='kw'>ef_product</span> <span class='kw'>=</span> <span class='st'>"Ef.product"</span>,
-  <span class='kw'>machine</span> <span class='kw'>=</span> <span class='st'>"Machine"</span>,
-  <span class='kw'>eu_product</span> <span class='kw'>=</span> <span class='st'>"Eu.product"</span>,
   <span class='kw'>md</span> <span class='kw'>=</span> <span class='st'>"MD"</span>,
   <span class='kw'>light</span> <span class='kw'>=</span> <span class='st'>"Light"</span>,
   <span class='kw'>ke</span> <span class='kw'>=</span> <span class='st'>"KE"</span>,
   <span class='kw'>heat</span> <span class='kw'>=</span> <span class='st'>"TH"</span>,
-  <span class='kw'>eta_fu</span> <span class='kw'>=</span> <span class='st'>"eta.fu"</span>,
-  <span class='kw'>phi_u</span> <span class='kw'>=</span> <span class='st'>"phi.u"</span>,
-  <span class='kw'>destination</span> <span class='kw'>=</span> <span class='st'>"Destination"</span>,
-  <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='st'>"Quantity"</span>,
-  <span class='kw'>maximum_values</span> <span class='kw'>=</span> <span class='st'>"Maximum.values"</span>,
   <span class='kw'>perc</span> <span class='kw'>=</span> <span class='st'>"[%]"</span>,
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
   <span class='kw'>c_</span> <span class='kw'>=</span> <span class='st'>"C_"</span>,
   <span class='kw'>c_perc</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span>(<span class='no'>c_</span>, <span class='fl'>1</span>, <span class='fl'>1</span>), <span class='no'>perc</span>),
   <span class='kw'>c_ratio</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span>(<span class='no'>c_</span>, <span class='fl'>1</span>, <span class='fl'>1</span>),
-  <span class='kw'>.year</span> <span class='kw'>=</span> <span class='st'>".year"</span>,
   <span class='kw'>year_for_maximum_values</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>.value</span> <span class='kw'>=</span> <span class='st'>".value"</span>,
   <span class='kw'>.row_order</span> <span class='kw'>=</span> <span class='st'>".row_order"</span>,
-  <span class='kw'>e_dot_dest</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>e_dot</span>, <span class='st'>"_dest"</span>),
-  <span class='kw'>e_dot_machine</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>e_dot</span>, <span class='st'>"_machine"</span>),
-  <span class='kw'>e_dot_machine_max</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>e_dot_machine</span>, <span class='st'>"_max"</span>),
-  <span class='kw'>e_dot_machine_tot</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>e_dot_machine</span>, <span class='st'>"_tot"</span>),
-  <span class='kw'>e_dot_machine_perc</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>e_dot_machine</span>, <span class='no'>perc</span>),
-  <span class='kw'>e_dot_machine_max_perc</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>e_dot_machine</span>, <span class='st'>"_max"</span>, <span class='st'>" "</span>, <span class='no'>perc</span>),
-  <span class='kw'>non_energy</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_flows.html'>tfc_flows</a></span>$<span class='no'>non_energy_use</span>,
-  <span class='kw'>non_energy_eff</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>
+  <span class='kw'>non_energy_eff</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>,
+  <span class='kw'>country</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>country</span>,
+  <span class='kw'>year</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>year</span>,
+  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>ledger_side</span>,
+  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow_aggregation_point</span>,
+  <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>product</span>,
+  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow</span>,
+  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>e_dot</span>,
+  <span class='kw'>ef_product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>ef_product</span>,
+  <span class='kw'>machine</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>machine</span>,
+  <span class='kw'>eu_product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>eu_product</span>,
+  <span class='kw'>eta_fu</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>eta_fu</span>,
+  <span class='kw'>phi_u</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>phi_u</span>,
+  <span class='kw'>destination</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>destination</span>,
+  <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>quantity</span>,
+  <span class='kw'>maximum_values</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>maximum_values</span>,
+  <span class='kw'>e_dot_dest</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_dest</span>,
+  <span class='kw'>e_dot_machine</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine</span>,
+  <span class='kw'>e_dot_machine_max</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_max</span>,
+  <span class='kw'>e_dot_machine_tot</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine_tot</span>,
+  <span class='kw'>e_dot_machine_perc</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine_perc</span>,
+  <span class='kw'>e_dot_machine_max_perc</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine_max_perc</span>,
+  <span class='kw'>.value</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>.values</span>,
+  <span class='kw'>supply</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='ledger_sides.html'>ledger_sides</a></span>$<span class='no'>supply</span>,
+  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='ledger_sides.html'>ledger_sides</a></span>$<span class='no'>consumption</span>,
+  <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span>$<span class='no'>energy_industry_own_use</span>,
+  <span class='kw'>non_energy</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_flows.html'>tfc_flows</a></span>$<span class='no'>non_energy_use</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -183,16 +190,23 @@ this function generates a blank template for final-to-useful machine efficiencie
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.fu_allocations</th>
-      <td><p>a data frame containing a completed final-to-useful allocation template for final demand.
+      <td><p>A data frame containing a completed final-to-useful allocation template for final demand.
 This data frame can be obtained from the function <code><a href='load_fu_allocation_data.html'>load_fu_allocation_data()</a></code>.</p></td>
     </tr>
     <tr>
+      <th>tidy_specified_iea_data</th>
+      <td><p>A tidy data frame containing specified IEA data for the same country(ies)
+as .fu_allocations.
+Strictly speaking, this argument is needed only when
+.fu_allocations is a tidy data frame.</p></td>
+    </tr>
+    <tr>
       <th>T_0</th>
-      <td><p>the dead state temperature (in kelvin) for calculation of heat exergy. Default is <code>298.15</code> kelvin.</p></td>
+      <td><p>The dead state temperature (in kelvin) for calculation of heat exergy. Default is <code>298.15</code> kelvin.</p></td>
     </tr>
     <tr>
       <th>sort_by</th>
-      <td><p>how to sort rows of eta_fu template.
+      <td><p>How to sort rows of eta_fu template.
 Options are (1) by "useful_energy_type" and (2) by "importance".
 "useful_energy_type" sorts first by <code>md</code>, <code>light</code>, <code>ke</code>, and <code>heat</code>,
 then by magnitude of energy flow into the machine.
@@ -200,135 +214,79 @@ then by magnitude of energy flow into the machine.
 Default is "useful_energy_type".</p></td>
     </tr>
     <tr>
-      <th>ledger_side</th>
-      <td><p>the name of the ledger side column in <code>.fu_allocations</code>. Default is "<code>Ledger.side</code>".</p></td>
-    </tr>
-    <tr>
-      <th>flow_aggregation_point</th>
-      <td><p>the name of the flow aggregation point column in <code>.fu_allocations</code>. Default is "<code>Flow.aggregation.point</code>".</p></td>
-    </tr>
-    <tr>
-      <th>ef_product</th>
-      <td><p>the name of the final energy product column in <code>.fu_allocations</code>. Default is "<code>Ef.product</code>".</p></td>
-    </tr>
-    <tr>
-      <th>machine</th>
-      <td><p>the name of the machine column in <code>.fu_allocations</code>. Default is "<code>Machine</code>".</p></td>
-    </tr>
-    <tr>
-      <th>eu_product</th>
-      <td><p>the name of the useful energy product column in <code>.fu_allocations</code>. Default is "<code>Eu.product</code>".</p></td>
-    </tr>
-    <tr>
       <th>md</th>
-      <td><p>the name of the mechanical drive useful energy carrier in the <code>eu_product</code> column. Default is "<code>MD</code>".</p></td>
+      <td><p>The name of the mechanical drive useful energy carrier in the <code>eu_product</code> column. Default is "<code>MD</code>".</p></td>
     </tr>
     <tr>
       <th>light</th>
-      <td><p>the name of the light useful energy carrier in the <code>eu_product</code> column. Default is "<code>Light</code>".</p></td>
+      <td><p>The name of the light useful energy carrier in the <code>eu_product</code> column. Default is "<code>Light</code>".</p></td>
     </tr>
     <tr>
       <th>ke</th>
-      <td><p>the name of the kinetic energy useful energy carrier in the <code>eu_product</code> column. Default is "<code>KE</code>".</p></td>
+      <td><p>The name of the kinetic energy useful energy carrier in the <code>eu_product</code> column. Default is "<code>KE</code>".</p></td>
     </tr>
     <tr>
       <th>heat</th>
-      <td><p>the string that identifies heat useful energy carriers in the <code>eu_product</code> column.  Default is "<code>TH</code>" for "temperature heat".</p></td>
-    </tr>
-    <tr>
-      <th>eta_fu</th>
-      <td><p>the name for final-to-useful energy efficiencies to be entered by the analyst.  Default is "<code>eta.fu</code>".</p></td>
-    </tr>
-    <tr>
-      <th>phi_u</th>
-      <td><p>the name for the exergy-to-energy ratio for useful energy carriers to be entered by the analyst.  Default is "<code>phi.u</code>".</p></td>
-    </tr>
-    <tr>
-      <th>destination</th>
-      <td><p>the name for the destination for final and useful energy (an sector). Default is "<code>Destination</code>".</p></td>
-    </tr>
-    <tr>
-      <th>quantity</th>
-      <td><p>the name for the quantity column in <code>.fu_allocations</code>. Default is "<code>Quantity</code>".</p></td>
-    </tr>
-    <tr>
-      <th>maximum_values</th>
-      <td><p>the name for the maximum values column in <code>.fu_allocations</code>. Default is "<code>Maximum.values</code>".</p></td>
+      <td><p>The string that identifies heat useful energy carriers in the <code>eu_product</code> column.  Default is "<code>TH</code>" for "temperature heat".</p></td>
     </tr>
     <tr>
       <th>perc</th>
-      <td><p>a string that gives the units for percent. Default is "<code>[%]</code>".</p></td>
-    </tr>
-    <tr>
-      <th>e_dot</th>
-      <td><p>the name for energy flow rates. Default is "<code>E.dot</code>".</p></td>
+      <td><p>A string that gives the units for percent. Default is "<code>[%]</code>".</p></td>
     </tr>
     <tr>
       <th>c_</th>
-      <td><p>the string prefix for allocation variables. Default is "<code>C_</code>".</p></td>
+      <td><p>The string prefix for allocation variables. Default is "<code>C_</code>".</p></td>
     </tr>
     <tr>
       <th>c_perc</th>
-      <td><p>the string for generic allocation variables in percentage terms. Default is "<code>C [%]</code>".</p></td>
+      <td><p>The string for generic allocation variables in percentage terms. Default is "<code>C [%]</code>".</p></td>
     </tr>
     <tr>
       <th>c_ratio</th>
-      <td><p>the string for generic allocation variables in ratio terms. Default is "<code>C</code>".</p></td>
-    </tr>
-    <tr>
-      <th>.year</th>
-      <td><p>the name of a temporary year column. Default is "<code>.year</code>".</p></td>
+      <td><p>The string for generic allocation variables in ratio terms. Default is "<code>C</code>".</p></td>
     </tr>
     <tr>
       <th>year_for_maximum_values</th>
-      <td><p>the year assumed for the <code>maximum_values</code> column. Default is <code>0</code>.</p></td>
-    </tr>
-    <tr>
-      <th>.value</th>
-      <td><p>the name of a temporary value column. Default is "<code>.value</code>".</p></td>
+      <td><p>The year assumed for the <code>maximum_values</code> column. Default is <code>0</code>.</p></td>
     </tr>
     <tr>
       <th>.row_order</th>
       <td><p>the name of a metadata column used internally for determining row order. Default is ".row_order".</p></td>
     </tr>
     <tr>
-      <th>e_dot_dest</th>
-      <td><p>the name of a temporary column containing energy flows into a destination. Default is "<code>E.dot_dest</code>".</p></td>
+      <th>non_energy_eff</th>
+      <td><p>The efficiency for non-energy use, non-zero so we can swim upstream later.
+Default is 1e-6, or 0.0001%.</p></td>
     </tr>
     <tr>
-      <th>e_dot_machine</th>
-      <td><p>the name of a temporary column containing energy flows into final-to-useful machines. Default is "<code>E.dot_machine</code>".</p></td>
+      <th>country, year, ledger_side, flow_aggregation_point, flow, product, e_dot</th>
+      <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>e_dot_machine_max</th>
-      <td><p>the name of a temporary column containing maximum energy flows into final-to-useful machines. Default is "E.dot_machine_max".</p></td>
+      <th>ef_product, machine, eu_product, eta_fu, phi_u, destination, quantity, maximum_values, e_dot_dest, e_dot_machine, e_dot_machine_max, e_dot_machine_tot, e_dot_machine_perc, e_dot_machine_max_perc</th>
+      <td><p>See <code><a href='template_cols.html'>IEATools::template_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>e_dot_machine_tot</th>
-      <td><p>the name of a temporary column containing sums of energy flows into a final-to-useful machines. Default is "<code>E.dot_machine_tot</code>".</p></td>
+      <th>.value</th>
+      <td><p>The name of a temporary value column. Default is "<code>.value</code>".</p></td>
     </tr>
     <tr>
-      <th>e_dot_machine_perc</th>
-      <td><p>the name of a temporary column percentages of total energy flow into machines.  Default is "<code>E.dot_machine [%]</code>".</p></td>
+      <th>supply, consumption</th>
+      <td><p>See <code><a href='ledger_sides.html'>IEATools::ledger_sides</a></code>.</p></td>
     </tr>
     <tr>
-      <th>e_dot_machine_max_perc</th>
-      <td><p>the name for a column of maximum percentages (across all years) of total energy flow into machines.  Default is "<code>E.dot_machine_max [%]</code>".</p></td>
+      <th>eiou</th>
+      <td><p>See <code><a href='tfc_compare_flows.html'>IEATools::tfc_compare_flows</a></code>.</p></td>
     </tr>
     <tr>
       <th>non_energy</th>
-      <td><p>The prefix for non-energy use in the <code>machine</code> column. Default is <code>IEATools::tfc_flows$non_energy_use</code>.</p></td>
-    </tr>
-    <tr>
-      <th>non_energy_eff</th>
-      <td><p>The efficiency for non-energy use. Non-zero so that we can swim upstream later.
-Default is 1e-6, or 0.0001%.</p></td>
+      <td><p>See <code><a href='tfc_flows.html'>IEATools::tfc_flows</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a data frame containing row-ordered blank template for final-to-useful machine efficiencies.</p>
+    <p>A data frame containing row-ordered blank template for final-to-useful machine efficiencies.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The template produced by this function includes a column (<code>e_dot_machine_perc_max</code>)
@@ -355,6 +313,7 @@ The default value for <code>T_0</code> is <code>298.15 K</code> (<code>25 °C</c
 When read, values are ratios, not percentages.
 I.e., the values read by this function are in the range 0 &lt;= x &lt;= 1, not 0 &lt;= x &lt;= 100.
 If any read values in the <code>c_perc</code> rows are outside of the range 0 &lt;= x &lt;= 1, an error is thrown.</p>
+<p>Note that if <code>.fu_allocations</code> is void of any allocation information, an error is thrown.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span>() <span class='kw'>%&gt;%</span>
