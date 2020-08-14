@@ -89,11 +89,15 @@ Default is "useful_energy_type".}
 \item{non_energy_eff}{The efficiency for non-energy use, non-zero so we can swim upstream later.
 Default is 1e-6, or 0.0001\%.}
 
-\item{year, ledger_side, flow_aggregation_point, e_dot}{See \code{IEATools::iea_cols}.}
+\item{country, year, ledger_side, flow_aggregation_point, flow, product, e_dot}{See \code{IEATools::iea_cols}.}
 
 \item{ef_product, machine, eu_product, eta_fu, phi_u, destination, quantity, maximum_values, e_dot_dest, e_dot_machine, e_dot_machine_max, e_dot_machine_tot, e_dot_machine_perc, e_dot_machine_max_perc}{See \code{IEATools::template_cols}.}
 
 \item{.value}{The name of a temporary value column. Default is "\code{.value}".}
+
+\item{supply, consumption}{See \code{IEATools::ledger_sides}.}
+
+\item{eiou}{See \code{IEATools::tfc_compare_flows}.}
 
 \item{non_energy}{See \code{IEATools::tfc_flows}.}
 }

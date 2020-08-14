@@ -739,8 +739,10 @@ check_fu_allocation_data <- function(.fu_allocation_table,
 #' @param .row_order the name of a metadata column used internally for determining row order. Default is ".row_order".
 #' @param non_energy_eff The efficiency for non-energy use, non-zero so we can swim upstream later.
 #'                       Default is 1e-6, or 0.0001%.
-#' @param year,ledger_side,flow_aggregation_point,e_dot See `IEATools::iea_cols`.
+#' @param country,year,ledger_side,flow_aggregation_point,flow,product,e_dot See `IEATools::iea_cols`.
 #' @param ef_product,machine,eu_product,eta_fu,phi_u,destination,quantity,maximum_values,e_dot_dest,e_dot_machine,e_dot_machine_max,e_dot_machine_tot,e_dot_machine_perc,e_dot_machine_max_perc See `IEATools::template_cols`.
+#' @param supply,consumption See `IEATools::ledger_sides`.
+#' @param eiou See `IEATools::tfc_compare_flows`.
 #' @param non_energy See `IEATools::tfc_flows`. 
 #'
 #' @return A data frame containing row-ordered blank template for final-to-useful machine efficiencies.
@@ -762,7 +764,6 @@ eta_fu_template <- function(.fu_allocations,
                             c_ = "C_",
                             c_perc = paste(substr(c_, 1, 1), perc),
                             c_ratio = substr(c_, 1, 1),
-                            # year = ".year",
                             year_for_maximum_values = 0,
                             .row_order = ".row_order",
                             non_energy_eff = 1e-6,
