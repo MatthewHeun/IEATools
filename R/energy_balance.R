@@ -109,7 +109,7 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
 }
 
 
-#' Tell whether _all_ rows of a tidy IEA data frame is balanced
+#' Tell whether _all_ rows of a tidy IEA data frame are balanced
 #'
 #' This function provides a handy way to tell if _all_ rows of `.tidy_iea_df_balance`
 #' are in balance.

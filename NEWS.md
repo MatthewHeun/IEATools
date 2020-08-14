@@ -1,3 +1,4 @@
+* `eta_fu_template()` now accepts tidy data frames.
 * Adjusted tests for errors instead of warnings.
     * Now at 611 tests, all passing.
     * Test coverage remains at 100 %.

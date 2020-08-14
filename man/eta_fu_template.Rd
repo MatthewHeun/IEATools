@@ -6,119 +6,103 @@
 \usage{
 eta_fu_template(
   .fu_allocations,
+  tidy_specified_iea_data,
   T_0 = 298.15,
   sort_by = c("useful_energy_type", "importance"),
-  ledger_side = "Ledger.side",
-  flow_aggregation_point = "Flow.aggregation.point",
-  ef_product = "Ef.product",
-  machine = "Machine",
-  eu_product = "Eu.product",
   md = "MD",
   light = "Light",
   ke = "KE",
   heat = "TH",
-  eta_fu = "eta.fu",
-  phi_u = "phi.u",
-  destination = "Destination",
-  quantity = "Quantity",
-  maximum_values = "Maximum.values",
   perc = "[\%]",
-  e_dot = "E.dot",
   c_ = "C_",
   c_perc = paste(substr(c_, 1, 1), perc),
   c_ratio = substr(c_, 1, 1),
-  .year = ".year",
   year_for_maximum_values = 0,
-  .value = ".value",
   .row_order = ".row_order",
-  e_dot_dest = paste0(e_dot, "_dest"),
-  e_dot_machine = paste0(e_dot, "_machine"),
-  e_dot_machine_max = paste0(e_dot_machine, "_max"),
-  e_dot_machine_tot = paste0(e_dot_machine, "_tot"),
-  e_dot_machine_perc = paste(e_dot_machine, perc),
-  e_dot_machine_max_perc = paste0(e_dot_machine, "_max", " ", perc),
-  non_energy = IEATools::tfc_flows$non_energy_use,
-  non_energy_eff = 1e-06
+  non_energy_eff = 1e-06,
+  country = IEATools::iea_cols$country,
+  year = IEATools::iea_cols$year,
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  product = IEATools::iea_cols$product,
+  flow = IEATools::iea_cols$flow,
+  e_dot = IEATools::iea_cols$e_dot,
+  ef_product = IEATools::template_cols$ef_product,
+  machine = IEATools::template_cols$machine,
+  eu_product = IEATools::template_cols$eu_product,
+  eta_fu = IEATools::template_cols$eta_fu,
+  phi_u = IEATools::template_cols$phi_u,
+  destination = IEATools::template_cols$destination,
+  quantity = IEATools::template_cols$quantity,
+  maximum_values = IEATools::template_cols$maximum_values,
+  e_dot_dest = IEATools::template_cols$e_dot_dest,
+  e_dot_machine = IEATools::template_cols$e_dot_machine,
+  e_dot_machine_max = IEATools::template_cols$e_dot_max,
+  e_dot_machine_tot = IEATools::template_cols$e_dot_machine_tot,
+  e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
+  e_dot_machine_max_perc = IEATools::template_cols$e_dot_machine_max_perc,
+  .value = IEATools::template_cols$.values,
+  supply = IEATools::ledger_sides$supply,
+  consumption = IEATools::ledger_sides$consumption,
+  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+  non_energy = IEATools::tfc_flows$non_energy_use
 )
 }
 \arguments{
-\item{.fu_allocations}{a data frame containing a completed final-to-useful allocation template for final demand.
+\item{.fu_allocations}{A data frame containing a completed final-to-useful allocation template for final demand.
 This data frame can be obtained from the function \code{load_fu_allocation_data()}.}
 
-\item{T_0}{the dead state temperature (in kelvin) for calculation of heat exergy. Default is \code{298.15} kelvin.}
+\item{tidy_specified_iea_data}{A tidy data frame containing specified IEA data for the same country(ies)
+as .fu_allocations.
+Strictly speaking, this argument is needed only when
+.fu_allocations is a tidy data frame.}
 
-\item{sort_by}{how to sort rows of eta_fu template.
+\item{T_0}{The dead state temperature (in kelvin) for calculation of heat exergy. Default is \code{298.15} kelvin.}
+
+\item{sort_by}{How to sort rows of eta_fu template.
 Options are (1) by "useful_energy_type" and (2) by "importance".
 "useful_energy_type" sorts first by \code{md}, \code{light}, \code{ke}, and \code{heat},
 then by magnitude of energy flow into the machine.
 "importance" sorts by magnitude of energy flow into the machine only.
 Default is "useful_energy_type".}
 
-\item{ledger_side}{the name of the ledger side column in \code{.fu_allocations}. Default is "\code{Ledger.side}".}
+\item{md}{The name of the mechanical drive useful energy carrier in the \code{eu_product} column. Default is "\code{MD}".}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.fu_allocations}. Default is "\code{Flow.aggregation.point}".}
+\item{light}{The name of the light useful energy carrier in the \code{eu_product} column. Default is "\code{Light}".}
 
-\item{ef_product}{the name of the final energy product column in \code{.fu_allocations}. Default is "\code{Ef.product}".}
+\item{ke}{The name of the kinetic energy useful energy carrier in the \code{eu_product} column. Default is "\code{KE}".}
 
-\item{machine}{the name of the machine column in \code{.fu_allocations}. Default is "\code{Machine}".}
+\item{heat}{The string that identifies heat useful energy carriers in the \code{eu_product} column.  Default is "\code{TH}" for "temperature heat".}
 
-\item{eu_product}{the name of the useful energy product column in \code{.fu_allocations}. Default is "\code{Eu.product}".}
+\item{perc}{A string that gives the units for percent. Default is "\verb{[\%]}".}
 
-\item{md}{the name of the mechanical drive useful energy carrier in the \code{eu_product} column. Default is "\code{MD}".}
+\item{c_}{The string prefix for allocation variables. Default is "\code{C_}".}
 
-\item{light}{the name of the light useful energy carrier in the \code{eu_product} column. Default is "\code{Light}".}
+\item{c_perc}{The string for generic allocation variables in percentage terms. Default is "\verb{C [\%]}".}
 
-\item{ke}{the name of the kinetic energy useful energy carrier in the \code{eu_product} column. Default is "\code{KE}".}
+\item{c_ratio}{The string for generic allocation variables in ratio terms. Default is "\code{C}".}
 
-\item{heat}{the string that identifies heat useful energy carriers in the \code{eu_product} column.  Default is "\code{TH}" for "temperature heat".}
-
-\item{eta_fu}{the name for final-to-useful energy efficiencies to be entered by the analyst.  Default is "\code{eta.fu}".}
-
-\item{phi_u}{the name for the exergy-to-energy ratio for useful energy carriers to be entered by the analyst.  Default is "\code{phi.u}".}
-
-\item{destination}{the name for the destination for final and useful energy (an sector). Default is "\code{Destination}".}
-
-\item{quantity}{the name for the quantity column in \code{.fu_allocations}. Default is "\code{Quantity}".}
-
-\item{maximum_values}{the name for the maximum values column in \code{.fu_allocations}. Default is "\code{Maximum.values}".}
-
-\item{perc}{a string that gives the units for percent. Default is "\verb{[\%]}".}
-
-\item{e_dot}{the name for energy flow rates. Default is "\code{E.dot}".}
-
-\item{c_}{the string prefix for allocation variables. Default is "\code{C_}".}
-
-\item{c_perc}{the string for generic allocation variables in percentage terms. Default is "\verb{C [\%]}".}
-
-\item{c_ratio}{the string for generic allocation variables in ratio terms. Default is "\code{C}".}
-
-\item{.year}{the name of a temporary year column. Default is "\code{.year}".}
-
-\item{year_for_maximum_values}{the year assumed for the \code{maximum_values} column. Default is \code{0}.}
-
-\item{.value}{the name of a temporary value column. Default is "\code{.value}".}
+\item{year_for_maximum_values}{The year assumed for the \code{maximum_values} column. Default is \code{0}.}
 
 \item{.row_order}{the name of a metadata column used internally for determining row order. Default is ".row_order".}
 
-\item{e_dot_dest}{the name of a temporary column containing energy flows into a destination. Default is "\code{E.dot_dest}".}
-
-\item{e_dot_machine}{the name of a temporary column containing energy flows into final-to-useful machines. Default is "\code{E.dot_machine}".}
-
-\item{e_dot_machine_max}{the name of a temporary column containing maximum energy flows into final-to-useful machines. Default is "E.dot_machine_max".}
-
-\item{e_dot_machine_tot}{the name of a temporary column containing sums of energy flows into a final-to-useful machines. Default is "\code{E.dot_machine_tot}".}
-
-\item{e_dot_machine_perc}{the name of a temporary column percentages of total energy flow into machines.  Default is "\verb{E.dot_machine [\%]}".}
-
-\item{e_dot_machine_max_perc}{the name for a column of maximum percentages (across all years) of total energy flow into machines.  Default is "\verb{E.dot_machine_max [\%]}".}
-
-\item{non_energy}{The prefix for non-energy use in the \code{machine} column. Default is \code{IEATools::tfc_flows$non_energy_use}.}
-
-\item{non_energy_eff}{The efficiency for non-energy use. Non-zero so that we can swim upstream later.
+\item{non_energy_eff}{The efficiency for non-energy use, non-zero so we can swim upstream later.
 Default is 1e-6, or 0.0001\%.}
+
+\item{country, year, ledger_side, flow_aggregation_point, flow, product, e_dot}{See \code{IEATools::iea_cols}.}
+
+\item{ef_product, machine, eu_product, eta_fu, phi_u, destination, quantity, maximum_values, e_dot_dest, e_dot_machine, e_dot_machine_max, e_dot_machine_tot, e_dot_machine_perc, e_dot_machine_max_perc}{See \code{IEATools::template_cols}.}
+
+\item{.value}{The name of a temporary value column. Default is "\code{.value}".}
+
+\item{supply, consumption}{See \code{IEATools::ledger_sides}.}
+
+\item{eiou}{See \code{IEATools::tfc_compare_flows}.}
+
+\item{non_energy}{See \code{IEATools::tfc_flows}.}
 }
 \value{
-a data frame containing row-ordered blank template for final-to-useful machine efficiencies.
+A data frame containing row-ordered blank template for final-to-useful machine efficiencies.
 }
 \description{
 Using a filled final-to-useful allocation table,
