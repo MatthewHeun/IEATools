@@ -43,8 +43,7 @@ If more than one country is found, an error occurs.}
 
 \item{tidy_specified_iea_data}{A data frame of specified IEA data in tidy format.}
 
-\item{country_to_complete}{The country whose FU Allocation table is to be completed.
-Default is \code{fu_allocation_table \%>\% magrittr::extract2(country) \%>\% unique()}.}
+\item{country_to_complete}{The country whose FU Allocation table is to be completed.}
 
 \item{country, ledger_side, flow, product, e_dot, year, flow_aggregation_point}{See \code{IEATools::ieacols}.}
 
@@ -87,15 +86,6 @@ The \code{tidy_specified_iea_data} data frame should be obtained from a call to 
 If \code{fu_allocation_table} can't be completed (because not enough information is available in
 \code{exemplar_fu_allocation_tables}), an error is emitted
 and a data frame is returned containing rows from \code{tidy_specified_iea_data} that were not allocated.
-
-Note that the argument \code{country_to_complete} has a default value of
-\code{fu_allocation_table \%>\% magrittr::extract2(country) \%>\% unique()},
-which pulls the country from the \code{fu_allocation_table}.
-However, there are times when the incoming \code{fu_allocation_table} will have no rows,
-such as when a country is to be fully completed from an exemplar country.
-In those cases, the default value for \code{country_to_complete} will be \code{NULL},
-and this function will throw an error.
-Be sure to specify a value for \code{country_to_complete} to avoid those potential errors.
 
 Only 1 country can be specified in \code{country_to_complete}.
 More than 1 country will throw an error.
