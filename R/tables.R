@@ -79,11 +79,11 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #'                            If `NULL`, the table will be constructed exclusively from 
 #'                            information available in the exemplar country tables.
 #'                            Only one country is allowed in this data frame.
+#' @param country_to_complete The country whose FU Allocation table is to be completed. 
 #' @param exemplar_fu_allocation_tables A list of FU Allocation tables, each probably created by `load_fu_allocation_data()`. 
 #'                                      Note that each exemplar table must contain data for a single country only. 
 #'                                      If more than one country is found, an error occurs.
 #' @param tidy_specified_iea_data A data frame of specified IEA data in tidy format.
-#' @param country_to_complete The country whose FU Allocation table is to be completed. 
 #' @param country,ledger_side,flow,product,e_dot,year,flow_aggregation_point See `IEATools::ieacols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param eiou See `IEATools::tfc_compar_flows`.
@@ -122,9 +122,9 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #'   specify_all()
 #' # Now complete the Ghanaian FU Allocation table using information from South Africa.
 #' completed <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+#'                                           country_to_be_completed = "GHA",
 #'                                           exemplar_fu_allocation_tables = list(fu_table_ZAF), 
-#'                                           tidy_specified_iea_data = tidy_specified_iea_data, 
-#'                                           country_to_be_completed = "GHA")
+#'                                           tidy_specified_iea_data = tidy_specified_iea_data)
 #' # Note that the C_source column shows that these data have been taken from South Africa.
 #' completed %>% 
 #'   dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other & 
@@ -132,10 +132,9 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #'                   Destination == IEATools::other_flows$residential) %>% 
 #'   dplyr::select(!c(Method, Energy.type, Last.stage, Flow.aggregation.point))
 complete_fu_allocation_table <- function(fu_allocation_table, 
+                                         country_to_complete,
                                          exemplar_fu_allocation_tables, 
                                          tidy_specified_iea_data, 
-                                         # country_to_complete = fu_allocation_table %>% magrittr::extract2(country) %>% unique(),
-                                         country_to_complete,
                                          country = IEATools::iea_cols$country, 
                                          ledger_side = IEATools::iea_cols$ledger_side,
                                          flow = IEATools::iea_cols$flow,
