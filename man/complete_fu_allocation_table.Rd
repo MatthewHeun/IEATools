@@ -8,6 +8,8 @@ complete_fu_allocation_table(
   fu_allocation_table,
   exemplar_fu_allocation_tables,
   tidy_specified_iea_data,
+  country_to_complete = fu_allocation_table \%>\% magrittr::extract2(country) \%>\%
+    unique(),
   country = IEATools::iea_cols$country,
   ledger_side = IEATools::iea_cols$ledger_side,
   flow = IEATools::iea_cols$flow,
@@ -42,6 +44,9 @@ If more than one country is found, an error occurs.}
 
 \item{tidy_specified_iea_data}{A data frame of specified IEA data in tidy format.}
 
+\item{country_to_complete}{The country whose FU Allocation table is to be completed.
+Default is \code{fu_allocation_table \%>\% magrittr::extract2(country) \%>\% unique()}.}
+
 \item{country, ledger_side, flow, product, e_dot, year, flow_aggregation_point}{See \code{IEATools::ieacols}.}
 
 \item{supply, consumption}{See \code{IEATools::ledger_sides}.}
@@ -56,7 +61,7 @@ Default is "C_source".}
 \item{.values}{The name of a values column created internally. Default is "values".}
 }
 \value{
-A completed tidy data frame containing an FU Allocation table to replace argument \code{fu_allocation_table}.
+A tidy data frame containing a completed FU Allocation table to replace argument \code{fu_allocation_table}.
 Note that the \code{max_vals} column is absent on output.
 Also, the \code{e_dot} and \code{e_dot_perc} rows are absent on output.
 }
@@ -66,7 +71,7 @@ tells how final energy carriers are allocated to final-to-useful machines
 in each final demand sector.
 A template for an FU Allocation table can be created with
 \code{fu_allocation_template()}.
-If the analyst does not know some FU allocations for a given country,
+If the analyst does not know some (or any) FU allocations for a given country,
 this function can be used to build a complete FU allocation table
 by supplying allocations from any number of exemplar countries.
 }
@@ -83,6 +88,18 @@ The \code{tidy_specified_iea_data} data frame should be obtained from a call to 
 If \code{fu_allocation_table} can't be completed (because not enough information is available in
 \code{exemplar_fu_allocation_tables}), an error is emitted
 and a data frame is returned containing rows from \code{tidy_specified_iea_data} that were not allocated.
+
+Note that the argument \code{country_to_complete} has a default value of
+\code{fu_allocation_table \%>\% magrittr::extract2(country) \%>\% unique()},
+which pulls the country from the \code{fu_allocation_table}.
+However, there are times when the incoming \code{fu_allocation_table} will have no rows,
+such as when a country is to be fully completed from an exemplar country.
+In those cases, the default value for \code{country_to_complete} will be \code{NULL},
+and this function will throw an error.
+Be sure to specify a value for \code{country_to_complete} to avoid those potential errors.
+
+Only 1 country can be specified in \code{country_to_complete}.
+More than 1 country will throw an error.
 }
 \examples{
 fu_table <- load_fu_allocation_data()
