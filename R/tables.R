@@ -122,7 +122,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #'   specify_all()
 #' # Now complete the Ghanaian FU Allocation table using information from South Africa.
 #' completed <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
-#'                                           country_to_be_completed = "GHA",
+#'                                           country_to_complete = "GHA",
 #'                                           exemplar_fu_allocation_tables = list(fu_table_ZAF), 
 #'                                           tidy_specified_iea_data = tidy_specified_iea_data)
 #' # Note that the C_source column shows that these data have been taken from South Africa.
