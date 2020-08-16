@@ -26,7 +26,7 @@ prep_psut(
   U_excl_eiou = IEATools::psut_cols$U_excl_eiou,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y,
-  S_units = IEATools::psut_cols$s_units
+  s_units = IEATools::psut_cols$s_units
 )
 }
 \arguments{
@@ -38,10 +38,10 @@ prep_psut(
 
 \item{matnames, rownames, colnames, rowtypes, coltypes}{See \code{IEATools::mat_meta_cols}.}
 
-\item{matvals, R, U_eiou, U_excl_eiou, V, Y}{See \code{IEATools::psut_cols}.}
+\item{matvals, R, U_eiou, U_excl_eiou, V, Y, s_units}{See \code{IEATools::psut_cols}.}
 }
 \value{
-a wide PSUT data frame with metadata columns and columns named for each type of matrix
+A wide-by-matrix data frame with metadata columns and columns named for each type of matrix.
 }
 \description{
 Converts a tidy IEA data frame into a PSUT data frame
@@ -57,6 +57,9 @@ This function bundles several others:
 
 Furthermore, it extracts \code{S_units} matrices using \code{extract_S_units_from_tidy()}
 and adds those matrices to the data frame.
+
+If \code{.tidy_iea_df} is a zero-row data frame,
+the return value is a zer-row data frame with expected columns.
 }
 \examples{
 library(dplyr)
