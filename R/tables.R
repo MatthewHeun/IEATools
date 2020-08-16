@@ -133,7 +133,8 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #' # Now complete the Ghanaian FU Allocation table using information from South Africa.
 #' completed <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
 #'                                           exemplar_fu_allocation_tables = list(fu_table_ZAF), 
-#'                                           tidy_specified_iea_data = tidy_specified_iea_data)
+#'                                           tidy_specified_iea_data = tidy_specified_iea_data, 
+#'                                           country_to_be_completed = "GHA")
 #' # Note that the C_source column shows that these data have been taken from South Africa.
 #' completed %>% 
 #'   dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other & 
@@ -143,7 +144,8 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 complete_fu_allocation_table <- function(fu_allocation_table, 
                                          exemplar_fu_allocation_tables, 
                                          tidy_specified_iea_data, 
-                                         country_to_complete = fu_allocation_table %>% magrittr::extract2(country) %>% unique(),
+                                         # country_to_complete = fu_allocation_table %>% magrittr::extract2(country) %>% unique(),
+                                         country_to_complete,
                                          country = IEATools::iea_cols$country, 
                                          ledger_side = IEATools::iea_cols$ledger_side,
                                          flow = IEATools::iea_cols$flow,
