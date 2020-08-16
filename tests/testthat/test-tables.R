@@ -165,7 +165,6 @@ test_that("complete_fu_allocation_table() works with an empty tidy fu table", {
                                             tidy_specified_iea_data = tidy_specified_iea_data, 
                                             country_to_complete = "GHA"), 
                "Didn't complete FU Allocation table for the following final energy flows: GHA, 1971, Industry, Non-ferrous metals, Electricity;")
-
 })
   
   
