@@ -6,6 +6,7 @@
 \usage{
 complete_fu_allocation_table(
   fu_allocation_table,
+  country_to_complete,
   exemplar_fu_allocation_tables,
   tidy_specified_iea_data,
   country = IEATools::iea_cols$country,
@@ -36,6 +37,8 @@ If \code{NULL}, the table will be constructed exclusively from
 information available in the exemplar country tables.
 Only one country is allowed in this data frame.}
 
+\item{country_to_complete}{The country whose FU Allocation table is to be completed.}
+
 \item{exemplar_fu_allocation_tables}{A list of FU Allocation tables, each probably created by \code{load_fu_allocation_data()}.
 Note that each exemplar table must contain data for a single country only.
 If more than one country is found, an error occurs.}
@@ -56,7 +59,7 @@ Default is "C_source".}
 \item{.values}{The name of a values column created internally. Default is "values".}
 }
 \value{
-A completed tidy data frame containing an FU Allocation table to replace argument \code{fu_allocation_table}.
+A tidy data frame containing a completed FU Allocation table to replace argument \code{fu_allocation_table}.
 Note that the \code{max_vals} column is absent on output.
 Also, the \code{e_dot} and \code{e_dot_perc} rows are absent on output.
 }
@@ -66,7 +69,7 @@ tells how final energy carriers are allocated to final-to-useful machines
 in each final demand sector.
 A template for an FU Allocation table can be created with
 \code{fu_allocation_template()}.
-If the analyst does not know some FU allocations for a given country,
+If the analyst does not know some (or any) FU allocations for a given country,
 this function can be used to build a complete FU allocation table
 by supplying allocations from any number of exemplar countries.
 }
@@ -83,6 +86,9 @@ The \code{tidy_specified_iea_data} data frame should be obtained from a call to 
 If \code{fu_allocation_table} can't be completed (because not enough information is available in
 \code{exemplar_fu_allocation_tables}), an error is emitted
 and a data frame is returned containing rows from \code{tidy_specified_iea_data} that were not allocated.
+
+Only 1 country can be specified in \code{country_to_complete}.
+More than 1 country will throw an error.
 }
 \examples{
 fu_table <- load_fu_allocation_data()
@@ -108,6 +114,7 @@ tidy_specified_iea_data <- load_tidy_iea_df() \%>\%
   specify_all()
 # Now complete the Ghanaian FU Allocation table using information from South Africa.
 completed <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+                                          country_to_complete = "GHA",
                                           exemplar_fu_allocation_tables = list(fu_table_ZAF), 
                                           tidy_specified_iea_data = tidy_specified_iea_data)
 # Note that the C_source column shows that these data have been taken from South Africa.

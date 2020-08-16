@@ -54,7 +54,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #' in each final demand sector.
 #' A template for an FU Allocation table can be created with 
 #' `fu_allocation_template()`.
-#' If the analyst does not know some FU allocations for a given country, 
+#' If the analyst does not know some (or any) FU allocations for a given country, 
 #' this function can be used to build a complete FU allocation table
 #' by supplying allocations from any number of exemplar countries.
 #' 
@@ -71,11 +71,15 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #' `exemplar_fu_allocation_tables`), an error is emitted
 #' and a data frame is returned containing rows from `tidy_specified_iea_data` that were not allocated.
 #' 
+#' Only 1 country can be specified in `country_to_complete`. 
+#' More than 1 country will throw an error.
+#' 
 #' @param fu_allocation_table The FU allocation table to be completed. 
 #'                            This data frame is probably read by `load_fu_allocation_data()`.
 #'                            If `NULL`, the table will be constructed exclusively from 
 #'                            information available in the exemplar country tables.
 #'                            Only one country is allowed in this data frame.
+#' @param country_to_complete The country whose FU Allocation table is to be completed. 
 #' @param exemplar_fu_allocation_tables A list of FU Allocation tables, each probably created by `load_fu_allocation_data()`. 
 #'                                      Note that each exemplar table must contain data for a single country only. 
 #'                                      If more than one country is found, an error occurs.
@@ -88,7 +92,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #'                 Default is "C_source".
 #' @param .values The name of a values column created internally. Default is "values".
 #'
-#' @return A completed tidy data frame containing an FU Allocation table to replace argument `fu_allocation_table`.
+#' @return A tidy data frame containing a completed FU Allocation table to replace argument `fu_allocation_table`.
 #'         Note that the `max_vals` column is absent on output.
 #'         Also, the `e_dot` and `e_dot_perc` rows are absent on output.
 #' 
@@ -118,6 +122,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #'   specify_all()
 #' # Now complete the Ghanaian FU Allocation table using information from South Africa.
 #' completed <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+#'                                           country_to_complete = "GHA",
 #'                                           exemplar_fu_allocation_tables = list(fu_table_ZAF), 
 #'                                           tidy_specified_iea_data = tidy_specified_iea_data)
 #' # Note that the C_source column shows that these data have been taken from South Africa.
@@ -127,6 +132,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #'                   Destination == IEATools::other_flows$residential) %>% 
 #'   dplyr::select(!c(Method, Energy.type, Last.stage, Flow.aggregation.point))
 complete_fu_allocation_table <- function(fu_allocation_table, 
+                                         country_to_complete,
                                          exemplar_fu_allocation_tables, 
                                          tidy_specified_iea_data, 
                                          country = IEATools::iea_cols$country, 
@@ -148,32 +154,11 @@ complete_fu_allocation_table <- function(fu_allocation_table,
                                          quantity = IEATools::template_cols$quantity,
                                          c_source = IEATools::template_cols$c_source,
                                          .values = IEATools::template_cols$.values) {
-  # Find all countries in fu_allocation_table
-  country_to_complete <- fu_allocation_table %>% 
-    magrittr::extract2(country) %>% 
-    unique()
-  
-  #######
-  #######
-  ####### 
-  # Problem here. 
-  # When the country being analyzed has no data (and we're relying solely on exemplars), 
-  # fu_allocation_table will have no rows.
-  # At that point, country_to_complete has length of 0.
-  # So, the assertion below fails.
-  # 
-  # To fix, probably need to also pass country into this function (via argument country_to_complete).
-  # The default value could be the statement above.
-  # But that will also allow sending the country name in here.
-  # 
-  # I should also check to see if something similar could happen in complete_eta_fu_table().
-  #######
-  #######
-  ####### 
-  
-  
-  assertthat::assert_that(length(country_to_complete) == 1, 
-                          msg = glue::glue("Found more than one country to complete in complete_fu_allocation_table(): {glue::glue_collapse(country_to_complete, sep = ', ', last = ' and ')}"))
+  # Make sure country_to_complete has length 1
+  assertthat::assert_that(length(country_to_complete) == 1, msg = paste0("Found ", length(country_to_complete), " countries in IEATools::country_to_complete. Must be 1."))
+  # Filter the fu_allocation_table to include only country_to_complete
+  fu_allocation_table <- fu_allocation_table %>% 
+    dplyr::filter(.data[[country]] == country_to_complete)
 
   # Figure out which IEA rows need to be allocated.
   # Each time we find data in an exemplar to allocate, we will subtract rows from this data frame.

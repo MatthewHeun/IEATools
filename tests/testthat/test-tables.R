@@ -61,6 +61,7 @@ test_that("complete_fu_allocation_table works as expected", {
   
   # Now send the data into complete_fu_allocation_table()
   completed <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+                                            country_to_complete = "GHA",
                                             # Give 2 exemplars so that we stress test the loop.
                                             exemplar_fu_allocation_tables = list(fu_table_ZAF, fu_table_ZAF), 
                                             tidy_specified_iea_data = tidy_specified_iea_data)
@@ -86,17 +87,20 @@ test_that("complete_fu_allocation_table works as expected", {
     expect_equal(0)
   
   # Try with a missing allocation table.
-  expect_error(complete_fu_allocation_table(exemplar_fu_allocation_tables = list(fu_table_ZAF, fu_table_ZAF), 
+  expect_error(complete_fu_allocation_table(country_to_complete = "GHA",
+                                            exemplar_fu_allocation_tables = list(fu_table_ZAF, fu_table_ZAF), 
                                             tidy_specified_iea_data = tidy_specified_iea_data), 
                'argument "fu_allocation_table" is missing, with no default')
   
   # Try with missing exemplars
   expect_error(complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+                                            country_to_complete = "GHA",
                                             tidy_specified_iea_data = tidy_specified_iea_data), 
                'argument "exemplar_fu_allocation_tables" is missing, with no default')
   
   # Try with missing IEA data
   expect_error(complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+                                            country_to_complete = "GHA",
                                             # Give 2 exemplars so that we stress test the loop.
                                             exemplar_fu_allocation_tables = list(fu_table_ZAF, fu_table_ZAF)), 
                'argument "tidy_specified_iea_data" is missing, with no default')
@@ -105,8 +109,7 @@ test_that("complete_fu_allocation_table works as expected", {
 
 test_that("complete_fu_allocation_table() works with a tidy incomplete fu table", {
   fu_table <- load_fu_allocation_data()
-  year_columns <- year_cols(fu_table, return_names = TRUE)
-  
+
   tidy_fu_table_GHA <- fu_table %>% 
     dplyr::filter(Country == "GHA") %>% 
     # Delete rows from Ghana's table for Residential consumption of PSBs
@@ -125,6 +128,7 @@ test_that("complete_fu_allocation_table() works with a tidy incomplete fu table"
   
   # Now send the data into complete_fu_allocation_table()
   completed <- complete_fu_allocation_table(fu_allocation_table = tidy_fu_table_GHA, 
+                                            country_to_complete = "GHA",
                                             # Give 2 exemplars so that we stress test the loop.
                                             exemplar_fu_allocation_tables = list(fu_table_ZAF, fu_table_ZAF), 
                                             tidy_specified_iea_data = tidy_specified_iea_data)
@@ -136,6 +140,39 @@ test_that("complete_fu_allocation_table() works with a tidy incomplete fu table"
 })
 
 
+test_that("complete_fu_allocation_table() works with an empty tidy fu table", {
+  # We have a bug where an empty (no rows) tidy data frame sent into complete_fu_allocation_table() causes an error.
+  # This test makes sure that the bug is solved and stays fixed.
+  fu_table <- load_fu_allocation_data()
+
+  tidy_fu_table_GHA <- fu_table %>% 
+    # Keep only GHA rows.
+    dplyr::filter(Country == "GHA") %>% 
+    # Tidy it
+    tidy_fu_allocation_table() 
+  # Delete all rows from Ghana's table
+  empty_fu_table_GHA <- tidy_fu_table_GHA[0, ]
+  
+  fu_table_ZAF <- fu_table %>% 
+    dplyr::filter(Country == "ZAF")
+  
+  # Get the IEA data for GHA and ZAF and specify it.
+  tidy_specified_iea_data <- load_tidy_iea_df() %>% 
+    specify_all()
+  
+  # Now send the IEA data and the empty GHA FU allocation data frame data into complete_fu_allocation_table(), 
+  # This call triggers the error we are trying to solve.
+  # But it causes a different error, as ZAF doesn't have all the rows for GHA.
+  # Here, we just make sure we see the error we expect.
+  expect_error(complete_fu_allocation_table(fu_allocation_table = empty_fu_table_GHA, 
+                                            country_to_complete = "GHA",
+                                            # Give 2 exemplars so that we stress test the loop.
+                                            exemplar_fu_allocation_tables = list(fu_table_ZAF, fu_table_ZAF), 
+                                            tidy_specified_iea_data = tidy_specified_iea_data), 
+               "Didn't complete FU Allocation table for the following final energy flows: GHA, 1971, Industry, Non-ferrous metals, Electricity;")
+})
+  
+  
 test_that("complete_fu_allocation_table() works with 2 exemplars", {
   # In this test, we set up an allocation table that has two missing pieces.
   # The two missing pieces are obtained from 2 exemplars, one missing piece from each.
@@ -209,6 +246,7 @@ test_that("complete_fu_allocation_table() works with 2 exemplars", {
   
   # Now run Ghana through the completion process.
   completed <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+                                            country_to_complete = "GHA",
                                             exemplar_fu_allocation_tables = list(fu_table_ZAF, fu_table_World), 
                                             tidy_specified_iea_data = tidy_specified_iea_data)
   
@@ -233,6 +271,7 @@ test_that("complete_fu_allocation_table() works with 2 exemplars", {
   # In this situation, we cannot allocate the Residential PSB rows for Ghana.
   # This attempt should emit a warning.
   expect_error(complete_fu_allocation_table(fu_allocation_table = fu_table_GHA, 
+                                            country_to_complete = "GHA",
                                             exemplar_fu_allocation_tables = fu_table_ZAF, 
                                             tidy_specified_iea_data = tidy_specified_iea_data), 
                "Didn't complete FU Allocation table for the following final energy flows: GHA, 1971, Other, Residential, Primary solid biofuels; GHA, 2000, Other, Residential, Primary solid biofuels. Please check the FU allocation table for typos or misspellings.")
