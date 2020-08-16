@@ -6,6 +6,7 @@
 \usage{
 prep_psut(
   .tidy_iea_df,
+  year = IEATools::iea_cols$year,
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   flow = IEATools::iea_cols$flow,
@@ -19,19 +20,25 @@ prep_psut(
   colnames = IEATools::mat_meta_cols$colnames,
   rowtypes = IEATools::mat_meta_cols$rowtypes,
   coltypes = IEATools::mat_meta_cols$coltypes,
-  matvals = IEATools::psut_cols$matvals
+  matvals = IEATools::psut_cols$matvals,
+  R = IEATools::psut_cols$R,
+  U_eiou = IEATools::psut_cols$U_eiou,
+  U_excl_eiou = IEATools::psut_cols$U_excl_eiou,
+  V = IEATools::psut_cols$V,
+  Y = IEATools::psut_cols$Y,
+  S_units = IEATools::psut_cols$s_units
 )
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame that has been specified with \code{specify_all()}.}
 
-\item{ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
+\item{year, ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
 
 \item{supply, consumption}{See \code{IEATools::ledger_sides}.}
 
 \item{matnames, rownames, colnames, rowtypes, coltypes}{See \code{IEATools::mat_meta_cols}.}
 
-\item{matvals}{See \code{IEATools::psut_cols}.}
+\item{matvals, R, U_eiou, U_excl_eiou, V, Y}{See \code{IEATools::psut_cols}.}
 }
 \value{
 a wide PSUT data frame with metadata columns and columns named for each type of matrix
