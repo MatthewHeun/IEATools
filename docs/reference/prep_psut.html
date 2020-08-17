@@ -73,7 +73,7 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.32</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.33</span>
       </span>
     </div>
 
@@ -143,6 +143,7 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y).</p>
 
     <pre class="usage"><span class='fu'>prep_psut</span>(
   <span class='no'>.tidy_iea_df</span>,
+  <span class='kw'>year</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>year</span>,
   <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>ledger_side</span>,
   <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow_aggregation_point</span>,
   <span class='kw'>flow</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow</span>,
@@ -156,7 +157,13 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y).</p>
   <span class='kw'>colnames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>colnames</span>,
   <span class='kw'>rowtypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>rowtypes</span>,
   <span class='kw'>coltypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>coltypes</span>,
-  <span class='kw'>matvals</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>matvals</span>
+  <span class='kw'>matvals</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>matvals</span>,
+  <span class='kw'>R</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>R</span>,
+  <span class='kw'>U_eiou</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>U_eiou</span>,
+  <span class='kw'>U_feed</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>U_feed</span>,
+  <span class='kw'>V</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>V</span>,
+  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>Y</span>,
+  <span class='kw'>s_units</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>s_units</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -167,7 +174,7 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y).</p>
       <td><p>a tidy data frame that has been specified with <code><a href='specify_all.html'>specify_all()</a></code>.</p></td>
     </tr>
     <tr>
-      <th>ledger_side, flow_aggregation_point, flow, product, e_dot, unit</th>
+      <th>year, ledger_side, flow_aggregation_point, flow, product, e_dot, unit</th>
       <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
@@ -179,14 +186,14 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y).</p>
       <td><p>See <code><a href='mat_meta_cols.html'>IEATools::mat_meta_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>matvals</th>
+      <th>matvals, R, U_eiou, U_feed, V, Y, s_units</th>
       <td><p>See <code><a href='psut_cols.html'>IEATools::psut_cols</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a wide PSUT data frame with metadata columns and columns named for each type of matrix</p>
+    <p>A wide-by-matrix data frame with metadata columns and columns named for each type of matrix.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function bundles several others:</p><ol>
@@ -197,6 +204,8 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y).</p>
 
 <p>Furthermore, it extracts <code>S_units</code> matrices using <code><a href='extract_S_units_from_tidy.html'>extract_S_units_from_tidy()</a></code>
 and adds those matrices to the data frame.</p>
+<p>If <code>.tidy_iea_df</code> is a zero-row data frame,
+the return value is a zer-row data frame with expected columns.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
@@ -208,7 +217,7 @@ and adds those matrices to the data frame.</p>
 #&gt; <span class='message'>    matches</span></div><div class='input'><span class='no'>Simple</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='specify_all.html'>specify_all</a></span>() <span class='kw'>%&gt;%</span>
   <span class='fu'>prep_psut</span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_longer.html'>pivot_longer</a></span>(<span class='kw'>cols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>R</span>, <span class='no'>U_EIOU</span>, <span class='no'>U_excl_EIOU</span>, <span class='no'>V</span>, <span class='no'>Y</span>, <span class='no'>S_units</span>),
+  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_longer.html'>pivot_longer</a></span>(<span class='kw'>cols</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>R</span>, <span class='no'>U_EIOU</span>, <span class='no'>U_feed</span>, <span class='no'>V</span>, <span class='no'>Y</span>, <span class='no'>S_units</span>),
                <span class='kw'>names_to</span> <span class='kw'>=</span> <span class='st'>"matnames"</span>,
                <span class='kw'>values_to</span> <span class='kw'>=</span> <span class='st'>"matval_simple"</span>)
 <span class='no'>S_units</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
@@ -222,7 +231,7 @@ and adds those matrices to the data frame.</p>
   <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matnames</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matvals</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>full_join</a></span>(<span class='no'>S_units</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Method"</span>, <span class='st'>"Energy.type"</span>, <span class='st'>"Last.stage"</span>,
                             <span class='st'>"Country"</span>, <span class='st'>"Year"</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/gather.html'>gather</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matnames</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matvals</span>, <span class='no'>R</span>, <span class='no'>U_EIOU</span>, <span class='no'>U_excl_EIOU</span>,
+  <span class='fu'><a href='https://tidyr.tidyverse.org/reference/gather.html'>gather</a></span>(<span class='kw'>key</span> <span class='kw'>=</span> <span class='no'>matnames</span>, <span class='kw'>value</span> <span class='kw'>=</span> <span class='no'>matvals</span>, <span class='no'>R</span>, <span class='no'>U_EIOU</span>, <span class='no'>U_feed</span>,
                                         <span class='no'>V</span>, <span class='no'>Y</span>, <span class='no'>S_units</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span>(<span class='kw'>matval_complicated</span> <span class='kw'>=</span> <span class='no'>matvals</span>)
 <span class='co'># Simple and Complicated are same.</span>
