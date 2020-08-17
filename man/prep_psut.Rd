@@ -23,7 +23,7 @@ prep_psut(
   matvals = IEATools::psut_cols$matvals,
   R = IEATools::psut_cols$R,
   U_eiou = IEATools::psut_cols$U_eiou,
-  U_excl_eiou = IEATools::psut_cols$U_excl_eiou,
+  U_feed = IEATools::psut_cols$U_feed,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y,
   s_units = IEATools::psut_cols$s_units
@@ -38,7 +38,7 @@ prep_psut(
 
 \item{matnames, rownames, colnames, rowtypes, coltypes}{See \code{IEATools::mat_meta_cols}.}
 
-\item{matvals, R, U_eiou, U_excl_eiou, V, Y, s_units}{See \code{IEATools::psut_cols}.}
+\item{matvals, R, U_eiou, U_feed, V, Y, s_units}{See \code{IEATools::psut_cols}.}
 }
 \value{
 A wide-by-matrix data frame with metadata columns and columns named for each type of matrix.
@@ -67,7 +67,7 @@ library(tidyr)
 Simple <- load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 
   prep_psut() \%>\% 
-  pivot_longer(cols = c(R, U_EIOU, U_excl_EIOU, V, Y, S_units), 
+  pivot_longer(cols = c(R, U_EIOU, U_feed, V, Y, S_units), 
                names_to = "matnames",
                values_to = "matval_simple")
 S_units <- load_tidy_iea_df() \%>\% 
@@ -81,7 +81,7 @@ Complicated <- load_tidy_iea_df() \%>\%
   spread(key = matnames, value = matvals) \%>\% 
   full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
                             "Country", "Year")) \%>\% 
-  gather(key = matnames, value = matvals, R, U_EIOU, U_excl_EIOU, 
+  gather(key = matnames, value = matvals, R, U_EIOU, U_feed, 
                                         V, Y, S_units) \%>\% 
   rename(matval_complicated = matvals)
 # Simple and Complicated are same.
