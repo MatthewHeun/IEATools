@@ -225,8 +225,8 @@ primary_oil_products <- list(crude_ngl_feedstocks_if_no_detail = "Crude/NGL/feed
                              crude_oil = "Crude oil", 
                              natural_gas_liquids = "Natural gas liquids",
                              additives_blending_components = "Additives/blending components",
-                             otehr_hydrocarbons = "Other hydrocarbons", 
-                             oil_shals_and_oil_sands = "Oil shale and oil sands")
+                             other_hydrocarbons = "Other hydrocarbons", 
+                             oil_shales_and_oil_sands = "Oil shale and oil sands")
 usethis::use_data(primary_oil_products, overwrite = TRUE)
 
 oil_and_oil_products <- list(primary_oil_products,
