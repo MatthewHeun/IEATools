@@ -4,7 +4,7 @@
 * Fixed bugs with completion code.
 
 
-# IEATools 0.1.32 (2020-03-13)
+# IEATools 0.1.32 (2020-08-13)
 
 * `eta_fu_template()` now accepts tidy data frames.
 * Adjusted tests for errors instead of warnings.
