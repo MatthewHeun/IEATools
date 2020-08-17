@@ -12,6 +12,7 @@ test_that("S_units_from_tidy works as expected", {
   }
 })
 
+
 test_that("add_psut_matnames works as expected", {
   With_matnames <- load_tidy_iea_df() %>% 
     specify_all() %>% 
@@ -45,6 +46,7 @@ test_that("add_psut_matnames works as expected", {
   expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_excl_EIOU") %>% all())
   expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
 })
+
 
 test_that("add_row_col_meta works as expected", {
   With_meta <- load_tidy_iea_df() %>% 
@@ -84,6 +86,7 @@ test_that("add_row_col_meta works as expected", {
     expect_true()
 })
 
+
 test_that("collapse_to_psut works expected", {
   With_mats <- load_tidy_iea_df() %>% 
     specify_all() %>% 
@@ -102,7 +105,8 @@ test_that("collapse_to_psut works expected", {
     expect_true()
 })
 
-test_that("prep_psut works as expected", {
+
+test_that("prep_psut() works as expected", {
   Simple <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     prep_psut() %>% 
@@ -138,4 +142,23 @@ test_that("prep_psut works as expected", {
   S_units[[IEATools::psut_cols$s_units]][[1]] %>% 
     matsbyname::coltype() %>% 
     expect_equal(IEATools::row_col_types$unit)
+})
+
+
+test_that("prep_psut() works as expected with empty .tidy_iea_df", {
+  iea_data <- load_tidy_iea_df() %>% 
+    specify_all()
+  empty_iea_data <- iea_data[0, ]
+  
+  zero_psut <- prep_psut(empty_iea_data)
+  cn <- colnames(zero_psut)
+  for (col_name in c(IEATools::iea_cols$country, 
+                     IEATools::iea_cols$method,
+                     IEATools::iea_cols$energy_type,
+                     IEATools::iea_cols$last_stage,
+                     IEATools::iea_cols$year,
+                     "R", "U_EIOU", "U_excl_EIOU", "V", "Y", "S_units")) {
+    expect_true(col_name %in% cn)
+  }
+  expect_equal(nrow(zero_psut), 0)
 })

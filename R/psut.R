@@ -332,14 +332,17 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' 
 #' Furthermore, it extracts `S_units` matrices using `extract_S_units_from_tidy()`
 #' and adds those matrices to the data frame.
+#' 
+#' If `.tidy_iea_df` is a zero-row data frame, 
+#' the return value is a zer-row data frame with expected columns.
 #'
 #' @param .tidy_iea_df a tidy data frame that has been specified with `specify_all()`.
-#' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
+#' @param year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param matnames,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
-#' @param matvals See `IEATools::psut_cols`.
+#' @param matvals,R,U_eiou,U_excl_eiou,V,Y,s_units See `IEATools::psut_cols`.
 #'
-#' @return a wide PSUT data frame with metadata columns and columns named for each type of matrix
+#' @return A wide-by-matrix data frame with metadata columns and columns named for each type of matrix.
 #' 
 #' @export
 #'
@@ -377,6 +380,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #'   as.logical() %>% 
 #'   all()
 prep_psut <- function(.tidy_iea_df, 
+                      year = IEATools::iea_cols$year,
                       ledger_side = IEATools::iea_cols$ledger_side, 
                       flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                       flow = IEATools::iea_cols$flow, 
@@ -390,7 +394,34 @@ prep_psut <- function(.tidy_iea_df,
                       colnames = IEATools::mat_meta_cols$colnames, 
                       rowtypes = IEATools::mat_meta_cols$rowtypes, 
                       coltypes = IEATools::mat_meta_cols$coltypes,
-                      matvals = IEATools::psut_cols$matvals){
+                      matvals = IEATools::psut_cols$matvals, 
+                      R = IEATools::psut_cols$R,
+                      U_eiou = IEATools::psut_cols$U_eiou,
+                      U_excl_eiou = IEATools::psut_cols$U_excl_eiou,
+                      V = IEATools::psut_cols$V,
+                      Y = IEATools::psut_cols$Y,
+                      s_units = IEATools::psut_cols$s_units){
+  if (nrow(.tidy_iea_df) == 0) {
+    # We can get a no-row data frame for .tidy_iea_df. 
+    # If so, we should return a no-row data frame with empty columns added.
+    meta_columns <- meta_cols(.tidy_iea_df, 
+                              return_names = TRUE, 
+                              not_meta = c(ledger_side, flow_aggregation_point, flow, product, e_dot, unit))
+    out <- .tidy_iea_df %>% 
+      dplyr::select(!!!meta_columns, !!year)
+    # Make a tibble with no rows for the remainder of the columns, 
+    # R, U_eiou, U_excl_eiou, V, Y, S_units (6 in total)
+    # Use 1.1 for the value so that columns are created as double type columns.
+    mats_cols <- as.list(rep(1.1, 6)) %>% 
+      magrittr::set_names(c(R, U_eiou, U_excl_eiou, V, Y, s_units)) %>% 
+      as.data.frame()
+    # Eliminate the row in the data frame
+    zero_length_mats_cols <- mats_cols[0, ]
+    # Join to out
+    return(dplyr::bind_cols(out, zero_length_mats_cols))
+  } 
+
+  # We actually have some rows in .tidy_iea_df, so work with them
   S_units <- extract_S_units_from_tidy(.tidy_iea_df, 
                                        product = product, 
                                        unit = unit)
@@ -410,20 +441,9 @@ prep_psut <- function(.tidy_iea_df,
   # Spread to put each matrix into its own column
   CollapsedSpread <- Collapsed %>% 
     tidyr::spread(key = matnames, value = matvals)
-  meta_cols <- matsindf::everything_except(CollapsedSpread, matrix_names, .symbols = FALSE)
+  # meta_cols <- matsindf::everything_except(CollapsedSpread, matrix_names, .symbols = FALSE)
   # Add the S_units matrix and return
   CollapsedSpread %>%  
     # Add the S_units matrix
     dplyr::full_join(S_units, by = matsindf::everything_except(CollapsedSpread, matrix_names, .symbols = FALSE))
-  
-  
-  
-  # WithS_units <- CollapsedSpread %>%  
-  #   # Add the S_units matrix
-  #   dplyr::full_join(S_units, by = matsindf::everything_except(CollapsedSpread, matrix_names, .symbols = FALSE))
-  # matrix_names_with_S_units <- WithS_units %>% 
-  #   matsindf::everything_except(meta_cols, .symbols = FALSE)
-  # Now gather everything back together so the outgoing data frame is tidy
-  # WithS_units %>% 
-  #   tidyr::gather(key = matnames, value = matvals, !!!matrix_names_with_S_units)
 }
