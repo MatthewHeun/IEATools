@@ -1,3 +1,6 @@
+# IEATools 0.1.33 (2020-08-17)
+
+* Change from `U_excl_EIOU` to `U_feed` everywhere.
 * `fix_tidy_iea_df_balances()` now deals correctly with a no-row IEA data frame.
 * Fixed a potential bug when deleting the `.err` column
   in fix_tidy_iea_df_balances.

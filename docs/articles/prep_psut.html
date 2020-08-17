@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.32</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.33</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Prepare for PSUT analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-08-13</h4>
+            <h4 class="date">2020-08-17</h4>
       
       
       <div class="hidden name"><code>prep_psut.Rmd</code></div>
@@ -172,7 +172,7 @@
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "Final", "Fi…</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 2000, 2000, 2000, 2000, 200…</span>
-<span class="co">#&gt; $ matnames    &lt;chr&gt; "R", "U_EIOU", "U_excl_EIOU", "V", "Y", "R", "U_EIOU", "U…</span>
+<span class="co">#&gt; $ matnames    &lt;chr&gt; "R", "U_EIOU", "U_feed", "V", "Y", "R", "U_EIOU", "U_feed…</span>
 <span class="co">#&gt; $ matvals     &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[4 x 3]&gt;, &lt;mat…</span>
 <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span>(<span class="no">Tidy_PSUT</span>$<span class="no">matvals</span><span class="kw">[[</span><span class="fl">1</span>]])
 <span class="co">#&gt; [1] "matrix" "array"</span>
@@ -232,7 +232,7 @@
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">Simple</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/prep_psut.html">prep_psut</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu">pivot_longer</span>(<span class="kw">cols</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">R</span>, <span class="no">U_EIOU</span>, <span class="no">U_excl_EIOU</span>, <span class="no">V</span>, <span class="no">Y</span>, <span class="no">S_units</span>), <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">"matnames"</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">"matvals"</span>)
+  <span class="fu">pivot_longer</span>(<span class="kw">cols</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">R</span>, <span class="no">U_EIOU</span>, <span class="no">U_feed</span>, <span class="no">V</span>, <span class="no">Y</span>, <span class="no">S_units</span>), <span class="kw">names_to</span> <span class="kw">=</span> <span class="st">"matnames"</span>, <span class="kw">values_to</span> <span class="kw">=</span> <span class="st">"matvals"</span>)
 <span class="no">S_units</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy</a></span>()
@@ -244,7 +244,7 @@
   <span class="fu">spread</span>(<span class="kw">key</span> <span class="kw">=</span> <span class="no">matnames</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="no">matvals</span>) <span class="kw">%&gt;%</span>
   <span class="fu">full_join</span>(<span class="no">S_units</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Method"</span>, <span class="st">"Energy.type"</span>, <span class="st">"Last.stage"</span>,
                             <span class="st">"Country"</span>, <span class="st">"Year"</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu">gather</span>(<span class="kw">key</span> <span class="kw">=</span> <span class="no">matnames</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="no">matvals</span>, <span class="no">R</span>, <span class="no">U_EIOU</span>, <span class="no">U_excl_EIOU</span>,
+  <span class="fu">gather</span>(<span class="kw">key</span> <span class="kw">=</span> <span class="no">matnames</span>, <span class="kw">value</span> <span class="kw">=</span> <span class="no">matvals</span>, <span class="no">R</span>, <span class="no">U_EIOU</span>, <span class="no">U_feed</span>,
          <span class="no">V</span>, <span class="no">Y</span>, <span class="no">S_units</span>)
 <span class="co"># Simple and Complicated are same.</span>
 <span class="fu">full_join</span>(<span class="no">Simple</span> <span class="kw">%&gt;%</span> <span class="fu">rename</span>(<span class="kw">matval_simple</span> <span class="kw">=</span> <span class="no">matvals</span>),
@@ -266,7 +266,7 @@
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "Final", "Fi…</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 2000, 2000, 2000, 200…</span>
-<span class="co">#&gt; $ matnames    &lt;chr&gt; "R", "U_EIOU", "U_excl_EIOU", "V", "Y", "S_units", "R", "…</span>
+<span class="co">#&gt; $ matnames    &lt;chr&gt; "R", "U_EIOU", "U_feed", "V", "Y", "S_units", "R", "U_EIO…</span>
 <span class="co">#&gt; $ matvals     &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[4 x 3]&gt;, &lt;mat…</span>
 <span class="co"># U_EIOU for Ghana in 1971</span>
 <span class="no">Simple</span>$<span class="no">matvals</span><span class="kw">[[</span><span class="fl">5</span>]]
@@ -514,7 +514,7 @@
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
 <span class="co">#&gt; $ R           &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[3 x 3]&gt;, &lt;mat…</span>
 <span class="co">#&gt; $ U_EIOU      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 3]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ U_excl_EIOU &lt;list&gt; [&lt;matrix[4 x 3]&gt;, &lt;matrix[3 x 3]&gt;, &lt;matrix[7 x 10]&gt;, &lt;ma…</span>
+<span class="co">#&gt; $ U_feed      &lt;list&gt; [&lt;matrix[4 x 3]&gt;, &lt;matrix[3 x 3]&gt;, &lt;matrix[7 x 10]&gt;, &lt;ma…</span>
 <span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[10 x 12]&gt;, &lt;matrix[14 x 14]&gt;, &lt;matrix[13 x 19]&gt;…</span>
 <span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[12 x 21]&gt;, &lt;matrix[13 x 20]&gt;, &lt;matrix[18 x 26]&gt;…</span>
 <span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[22 x 1]&gt;, &lt;…</span></pre></body></html></div>
