@@ -1,5 +1,8 @@
 # IEATools 0.1.33 (2020-08-17)
 
+* New tests for new features and old bugs.
+    * Now at 634 tests, all passing.
+    * Test coverage remains at 100 %.
 * Change from `U_excl_EIOU` to `U_feed` everywhere.
 * `fix_tidy_iea_df_balances()` now deals correctly with a no-row IEA data frame.
 * Fixed a potential bug when deleting the `.err` column
@@ -10,7 +13,7 @@
 # IEATools 0.1.32 (2020-08-13)
 
 * `eta_fu_template()` now accepts tidy data frames.
-* Adjusted tests for errors instead of warnings.
+* New tests for new features and old bugs.
     * Now at 611 tests, all passing.
     * Test coverage remains at 100 %.
 * New function `check_fu_allocation_data()` verifies that all `Ef.product` and `Eu.product`
