@@ -181,12 +181,12 @@ test_that("extend_to_useful_helper works as intended", {
   
   ## Step 2
   
-  add_to_U_excl_eiou_expected <- Y_f_vec_hat_C_Y %>% 
+  add_to_U_feed_expected <- Y_f_vec_hat_C_Y %>% 
     matsbyname::aggregate_to_pref_suff_byname(keep = "prefix", margin = 1, notation = arrow_notation) %>%
     matsbyname::clean_byname(margin = 1) %>% 
     matsbyname::setcoltype(row_col_types$industry)
   
-  expect_equal(res$add_to_U, add_to_U_excl_eiou_expected)
+  expect_equal(res$add_to_U, add_to_U_feed_expected)
   
   
   ## Step 3

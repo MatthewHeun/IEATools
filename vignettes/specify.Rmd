@@ -139,7 +139,7 @@ Specific_primary_production %>%
 
 Furthermore, the added flows from the `Resource` industries are
 tagged as `Transformation processes` and
-belong in the `U_excl_EIOU` and `V` matrices.
+belong in the `U_feed` and `V` matrices.
 The EIOU flows are shown to belong in the `U_EIOU` matrix.
 
 ```{r}

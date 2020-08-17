@@ -9,7 +9,7 @@ A string list with 12 entries.
 \describe{
 \item{resources,R}{The name of a column in a wide data frame containing resource (\code{R}) matrices.}
 \item{use,U}{The name of a column in a wide data frame containing use (\code{U}) matrices.}
-\item{U_excl_eiou}{The name of a column in a wide data frame containing use (\code{U}) matrices that exclude energy industry own use.}
+\item{U_feed}{The name of a column in a wide data frame containing use (\code{U}) matrices that exclude energy industry own use.}
 \item{U_EIOU}{The name of a column in a wide data frame containing use (\code{U}) matrices that contain exclusively energy industry own use.}
 \item{make,V}{The name of a column in a wide data frame containing make (\code{V}) matrices.}
 \item{final_demand,Y}{The name of a column in a wide data frame containing final demand (\code{Y}) matrices.}

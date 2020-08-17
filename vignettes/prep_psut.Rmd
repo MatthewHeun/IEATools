@@ -127,7 +127,7 @@ and adds those matrices to the data frame.
 Simple <- load_tidy_iea_df() %>% 
   specify_all() %>% 
   prep_psut() %>% 
-  pivot_longer(cols = c(R, U_EIOU, U_excl_EIOU, V, Y, S_units), names_to = "matnames", values_to = "matvals")
+  pivot_longer(cols = c(R, U_EIOU, U_feed, V, Y, S_units), names_to = "matnames", values_to = "matvals")
 S_units <- load_tidy_iea_df() %>% 
   specify_all() %>% 
   extract_S_units_from_tidy()
@@ -139,7 +139,7 @@ Complicated <- load_tidy_iea_df() %>%
   spread(key = matnames, value = matvals) %>% 
   full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
                             "Country", "Year")) %>% 
-  gather(key = matnames, value = matvals, R, U_EIOU, U_excl_EIOU, 
+  gather(key = matnames, value = matvals, R, U_EIOU, U_feed, 
          V, Y, S_units)
 # Simple and Complicated are same.
 full_join(Simple %>% rename(matval_simple = matvals), 

@@ -87,7 +87,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #' @param neg_supply_in_fd For "Exports", "International aviation bunkers", "International marine bunkers", and "Stock changes", see `IEATools::tpes_flows`.
 #'        For "Losses" and "Statistica differnces", see `IEATools::tfc_compare_flows`.
 #' @param matnames See `IEATools::mat_meta_cols`.
-#' @param R,U_excl_EIOU,U_EIOU,V,Y See `IEATools::psut_matnames`.
+#' @param R,U_feed,U_EIOU,V,Y See `IEATools::psut_matnames`.
 #'
 #' @return `.tidy_iea_df` with an added column `matnames`.
 #'
@@ -120,13 +120,13 @@ add_psut_matnames <- function(.tidy_iea_df,
                               # Output column
                               matnames = IEATools::mat_meta_cols$matnames,
                               # Output identifiers for
-                              # use matrix excluding EIOU (U_excl_EIOU),
+                              # use matrix excluding EIOU (U_feed),
                               # use matrix energy industry own use items (U_EIOU),
                               # make (V), and
                               # final demand (Y)
                               # matrices.
                               R = IEATools::psut_cols$R, 
-                              U_excl_EIOU = IEATools::psut_cols$U_excl_eiou, 
+                              U_feed = IEATools::psut_cols$U_feed, 
                               U_EIOU = IEATools::psut_cols$U_eiou,
                               V = IEATools::psut_cols$V, 
                               Y = IEATools::psut_cols$Y){
@@ -147,8 +147,8 @@ add_psut_matnames <- function(.tidy_iea_df,
         # Negative values on the supply side that have Flow %in% neg_supply_in_fd go in the final demand matrix
         .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 & starts_with_any_of(!!as.name(flow), neg_supply_in_fd) ~ Y,
         # All other negative values on the Supply side of the ledger belong in the use matrix
-        # that excludes EIOU (U_excl_EIOU).
-        .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 ~ U_excl_EIOU,
+        # that excludes EIOU (U_feed).
+        .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 ~ U_feed,
         # Identify any places where our logic is faulty.
         TRUE ~ NA_character_
       )
@@ -340,7 +340,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' @param year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param matnames,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
-#' @param matvals,R,U_eiou,U_excl_eiou,V,Y,s_units See `IEATools::psut_cols`.
+#' @param matvals,R,U_eiou,U_feed,V,Y,s_units See `IEATools::psut_cols`.
 #'
 #' @return A wide-by-matrix data frame with metadata columns and columns named for each type of matrix.
 #' 
@@ -352,7 +352,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' Simple <- load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
 #'   prep_psut() %>% 
-#'   pivot_longer(cols = c(R, U_EIOU, U_excl_EIOU, V, Y, S_units), 
+#'   pivot_longer(cols = c(R, U_EIOU, U_feed, V, Y, S_units), 
 #'                names_to = "matnames",
 #'                values_to = "matval_simple")
 #' S_units <- load_tidy_iea_df() %>% 
@@ -366,7 +366,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #'   spread(key = matnames, value = matvals) %>% 
 #'   full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
 #'                             "Country", "Year")) %>% 
-#'   gather(key = matnames, value = matvals, R, U_EIOU, U_excl_EIOU, 
+#'   gather(key = matnames, value = matvals, R, U_EIOU, U_feed, 
 #'                                         V, Y, S_units) %>% 
 #'   rename(matval_complicated = matvals)
 #' # Simple and Complicated are same.
@@ -397,7 +397,7 @@ prep_psut <- function(.tidy_iea_df,
                       matvals = IEATools::psut_cols$matvals, 
                       R = IEATools::psut_cols$R,
                       U_eiou = IEATools::psut_cols$U_eiou,
-                      U_excl_eiou = IEATools::psut_cols$U_excl_eiou,
+                      U_feed = IEATools::psut_cols$U_feed,
                       V = IEATools::psut_cols$V,
                       Y = IEATools::psut_cols$Y,
                       s_units = IEATools::psut_cols$s_units){
@@ -410,10 +410,10 @@ prep_psut <- function(.tidy_iea_df,
     out <- .tidy_iea_df %>% 
       dplyr::select(!!!meta_columns, !!year)
     # Make a tibble with no rows for the remainder of the columns, 
-    # R, U_eiou, U_excl_eiou, V, Y, S_units (6 in total)
+    # R, U_eiou, U_feed, V, Y, S_units (6 in total)
     # Use 1.1 for the value so that columns are created as double type columns.
     mats_cols <- as.list(rep(1.1, 6)) %>% 
-      magrittr::set_names(c(R, U_eiou, U_excl_eiou, V, Y, s_units)) %>% 
+      magrittr::set_names(c(R, U_eiou, U_feed, V, Y, s_units)) %>% 
       as.data.frame()
     # Eliminate the row in the data frame
     zero_length_mats_cols <- mats_cols[0, ]
