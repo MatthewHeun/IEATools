@@ -161,6 +161,10 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' an error will be emitted, and execution will halt.
 #' This behavior is intended to identify any places where there are gross energy imbalances
 #' that should be investigated prior to further analysis.
+#' 
+#' If `.tidy_iea_df` has no rows 
+#' (as could happen with a country for which data are unavailable for a given year),
+#' `.tidy_iea_df` is returned unmodified (i.e., with no rows).
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
 #' @param max_fix the maximum energy balance that will be fixed without giving an error. Default is 5.
@@ -217,6 +221,9 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
                                      statistical_differences = IEATools::tfc_compare_flows$statistical_differences,
                                      # Name used for error column internally
                                      .err = ".err"){
+  if (nrow(.tidy_iea_df) == 0) {
+    return(.tidy_iea_df)
+  }
   grouping_names <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot)
   grouping_strings <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot, .symbols = FALSE)
   e_bal_errors <- .tidy_iea_df %>% 

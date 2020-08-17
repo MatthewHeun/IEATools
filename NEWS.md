@@ -1,3 +1,6 @@
+* `fix_tidy_iea_df_balances()` now deals correctly with a no-row IEA data frame.
+* Fixed a potential bug when deleting the `.err` column
+  in fix_tidy_iea_df_balances.
 * Fixed bugs with completion code.
 
 
