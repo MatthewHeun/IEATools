@@ -248,9 +248,10 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
       "{e_dot}" := dplyr::case_when(
         .data[[flow]] == statistical_differences ~ .data[[e_dot]] - .data[[.err]],
         TRUE ~ .data[[e_dot]]
-      )
-    ) %>% 
-    dplyr::select(-.err)
+      ), 
+      # Remove the .err column
+      "{.err}" := NULL
+    )
   if (remove_zeroes) {
     out <- out %>% 
       dplyr::filter(!(.data[[e_dot]] == 0))
