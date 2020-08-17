@@ -65,6 +65,10 @@ If energy balance for any product is greater than \code{max_fix} (default 5),
 an error will be emitted, and execution will halt.
 This behavior is intended to identify any places where there are gross energy imbalances
 that should be investigated prior to further analysis.
+
+If \code{.tidy_iea_df} has no rows
+(as could happen with a country for which data are unavailable for a given year),
+\code{.tidy_iea_df} is returned unmodified (i.e., with no rows).
 }
 \examples{
 library(dplyr)

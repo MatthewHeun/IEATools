@@ -344,7 +344,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                        Each of these should be a column in all of `.tidy_psut_data`, `C_data`, and `eta_fu_data`.
 #' @param final,useful See `IEATools::last_stages`.
 #' @param industry_type,product_type See `IEATools::row_col_types`
-#' @param R,U_eiou,U_excl_eiou,V,Y,s_units See `IEATools::psut_cols`. 
+#' @param R,U_eiou,U_feed,V,Y,s_units See `IEATools::psut_cols`. 
 #'                                 These matrices should be found in the `matvals` column of the `.tidy_psut_data` data frame.
 #' @param sut_meta_cols See `IEATools::sut_meta_cols`.
 #' @param matnames,matvals See `IEATools::mat_meta_cols`. 
@@ -362,8 +362,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param .Y_f_vec_hat_C_Y an internal matrix name for the product of the Y_f_vec_hat and C_Y matrices. Default is ".Y_f_vec_hat_C_Y".
 #' @param .U_eiou_f_vec_hat_C_eiou an internal matrix name for the product of the U_eiou_f_vec_hat and C_eiou matrices. Default is ".U_eiou_f_vec_hat_C_eiou".
 #' @param .eta_fu_hat an internal matrix name. Default is ".eta_fu_hat".
-#' @param .add_to_U_f an internal matrix name for the a matrix to be added to the U_excl_eiou_f matrix 
-#'                    to form the useful form of the U_excl_eiou matrix. Default is ".add_to_U_f".
+#' @param .add_to_U_f an internal matrix name for the a matrix to be added to the U_feed_f matrix 
+#'                    to form the useful form of the U_feed matrix. Default is ".add_to_U_f".
 #' @param .add_to_U_eiou an internal matrix name for the a matrix to be added to the U_eiou_f matrix 
 #'                       to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".
 #' @param .add_to_V_f an internal matrix name for a matrix to add to the Y_f matrix. Default is ".add_to_V_f".
@@ -410,7 +410,7 @@ extend_to_useful <- function(.sutdata,
                              
                              R = IEATools::psut_cols$R, 
                              U_eiou = IEATools::psut_cols$U_eiou,
-                             U_excl_eiou = IEATools::psut_cols$U_excl_eiou,
+                             U_feed = IEATools::psut_cols$U_feed,
                              V = IEATools::psut_cols$V, 
                              Y = IEATools::psut_cols$Y, 
                              s_units = IEATools::psut_cols$s_units,
@@ -459,7 +459,7 @@ extend_to_useful <- function(.sutdata,
     )
   
   # New column names
-  U_excl_eiou_useful <- paste0(U_excl_eiou, .useful)
+  U_feed_useful <- paste0(U_feed, .useful)
   U_eiou_useful <- paste0(U_eiou, .useful)
   V_useful <- paste0(V, .useful)
   Y_useful <- paste0(Y, .useful)
@@ -479,7 +479,7 @@ extend_to_useful <- function(.sutdata,
     extend_to_useful_helper(dest_mat = Y, C_mat = C_Y, eta_fu_vec = eta_fu, 
                             add_to_U = .add_to_U_f, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>% 
     dplyr::mutate(
-      "{U_excl_eiou_useful}" := matsbyname::sum_byname(.data[[U_excl_eiou]], .data[[.add_to_U_f]]), 
+      "{U_feed_useful}" := matsbyname::sum_byname(.data[[U_feed]], .data[[.add_to_U_f]]), 
       "{V_useful}" := matsbyname::sum_byname(.data[[V]], .data[[.add_to_V_f]]),
       # We need to keep industries in Y that are interface industries 
       # (exports, stock changes, international marine and aviation bunkers, and 
@@ -502,7 +502,7 @@ extend_to_useful <- function(.sutdata,
     extend_to_useful_helper(dest_mat = U_eiou, C_mat = C_eiou, eta_fu_vec = eta_fu, 
                             add_to_U = .add_to_U_eiou, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>% 
     dplyr::mutate(
-      "{U_excl_eiou_useful}" := matsbyname::sum_byname(.data[[U_excl_eiou_useful]], .data[[.add_to_U_eiou]]), 
+      "{U_feed_useful}" := matsbyname::sum_byname(.data[[U_feed_useful]], .data[[.add_to_U_eiou]]), 
       "{V_useful}" := matsbyname::sum_byname(.data[[V_useful]], .data[[.add_to_V_f]]), 
       "{U_eiou_useful}" := .data[[.add_to_dest]], 
       # Eliminate columns that are no longer needed
@@ -518,7 +518,7 @@ extend_to_useful <- function(.sutdata,
       "{last_stage}" := useful,
       # Eliminate unneeded columns associated with the final stage being last stage
       "{U_eiou}" := NULL,
-      "{U_excl_eiou}" := NULL,
+      "{U_feed}" := NULL,
       "{V}" := NULL,
       "{Y}" := NULL,
       # Eliminate other temporary columns
@@ -530,7 +530,7 @@ extend_to_useful <- function(.sutdata,
     ) %>%
     # Rename columns to align with columns in final stage data in .sutdata
     dplyr::rename(
-      "{U_excl_eiou}" := .data[[paste0(U_excl_eiou, .useful)]],
+      "{U_feed}" := .data[[paste0(U_feed, .useful)]],
       "{U_eiou}" := .data[[paste0(U_eiou, .useful)]],
       "{V}" := .data[[paste0(V, .useful)]],
       "{Y}" := .data[[paste0(Y, .useful)]]
@@ -549,7 +549,7 @@ extend_to_useful <- function(.sutdata,
     dplyr::mutate(
       # R_plus_V_mat = matsbyname::sum_byname(.data[[R]], .data[[V]]),
       # RV_sums = matsbyname::transpose_byname(R_plus_V_mat) %>% matsbyname::rowsums_byname(),
-      # U_sums = matsbyname::sum_byname(.data[[U_eiou]], .data[[U_excl_eiou]]) %>% matsbyname::rowsums_byname(),
+      # U_sums = matsbyname::sum_byname(.data[[U_eiou]], .data[[U_feed]]) %>% matsbyname::rowsums_byname(),
       # Y_sums = matsbyname::rowsums_byname(.data[[Y]]),
       # # (R + V) - U - Y  
       # "{.err}" := RV_sums %>% matsbyname::difference_byname(U_sums) %>% matsbyname::difference_byname(Y_sums),
@@ -559,7 +559,7 @@ extend_to_useful <- function(.sutdata,
       # (R + V)^T - U - Y  
       "{.err}" := matsbyname::sum_byname(.data[[R]], .data[[V]]) %>% # R + V
         matsbyname::transpose_byname() %>% 
-        matsbyname::difference_byname(.data[[U_excl_eiou]]) %>%      # - U_excl_eiou
+        matsbyname::difference_byname(.data[[U_feed]]) %>%           # - U_feed
         matsbyname::difference_byname(.data[[U_eiou]]) %>%           # - U_eiou
         matsbyname::difference_byname(.data[[Y]]) %>%                # - Y
         matsbyname::rowsums_byname(),

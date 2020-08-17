@@ -28,6 +28,15 @@ test_that("calc_tidy_iea_df_balance works correctly for 2019 data", {
 })
 
 
+test_that("fix_tidy_iea_df_balance works correctly for no-row data frame", {
+  Ebal_2019 <- load_tidy_iea_df(sample_iea_data_path(2019))
+  Ebal_2019 <- Ebal_2019[0, ]
+  res <- fix_tidy_iea_df_balances(Ebal_2019)
+  expect_equal(nrow(res), 0)
+  expect_equal(colnames(res), colnames(Ebal_2019))
+})
+
+
 test_that("fix_tidy_iea_df_balance works correctly for all valid years", {
   for (year in valid_iea_release_years) {
     unbalanced <- load_tidy_iea_df(sample_iea_data_path(year))

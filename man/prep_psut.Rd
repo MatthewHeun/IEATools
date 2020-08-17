@@ -6,6 +6,7 @@
 \usage{
 prep_psut(
   .tidy_iea_df,
+  year = IEATools::iea_cols$year,
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   flow = IEATools::iea_cols$flow,
@@ -19,22 +20,28 @@ prep_psut(
   colnames = IEATools::mat_meta_cols$colnames,
   rowtypes = IEATools::mat_meta_cols$rowtypes,
   coltypes = IEATools::mat_meta_cols$coltypes,
-  matvals = IEATools::psut_cols$matvals
+  matvals = IEATools::psut_cols$matvals,
+  R = IEATools::psut_cols$R,
+  U_eiou = IEATools::psut_cols$U_eiou,
+  U_feed = IEATools::psut_cols$U_feed,
+  V = IEATools::psut_cols$V,
+  Y = IEATools::psut_cols$Y,
+  s_units = IEATools::psut_cols$s_units
 )
 }
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame that has been specified with \code{specify_all()}.}
 
-\item{ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
+\item{year, ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
 
 \item{supply, consumption}{See \code{IEATools::ledger_sides}.}
 
 \item{matnames, rownames, colnames, rowtypes, coltypes}{See \code{IEATools::mat_meta_cols}.}
 
-\item{matvals}{See \code{IEATools::psut_cols}.}
+\item{matvals, R, U_eiou, U_feed, V, Y, s_units}{See \code{IEATools::psut_cols}.}
 }
 \value{
-a wide PSUT data frame with metadata columns and columns named for each type of matrix
+A wide-by-matrix data frame with metadata columns and columns named for each type of matrix.
 }
 \description{
 Converts a tidy IEA data frame into a PSUT data frame
@@ -50,6 +57,9 @@ This function bundles several others:
 
 Furthermore, it extracts \code{S_units} matrices using \code{extract_S_units_from_tidy()}
 and adds those matrices to the data frame.
+
+If \code{.tidy_iea_df} is a zero-row data frame,
+the return value is a zer-row data frame with expected columns.
 }
 \examples{
 library(dplyr)
@@ -57,7 +67,7 @@ library(tidyr)
 Simple <- load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 
   prep_psut() \%>\% 
-  pivot_longer(cols = c(R, U_EIOU, U_excl_EIOU, V, Y, S_units), 
+  pivot_longer(cols = c(R, U_EIOU, U_feed, V, Y, S_units), 
                names_to = "matnames",
                values_to = "matval_simple")
 S_units <- load_tidy_iea_df() \%>\% 
@@ -71,7 +81,7 @@ Complicated <- load_tidy_iea_df() \%>\%
   spread(key = matnames, value = matvals) \%>\% 
   full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
                             "Country", "Year")) \%>\% 
-  gather(key = matnames, value = matvals, R, U_EIOU, U_excl_EIOU, 
+  gather(key = matnames, value = matvals, R, U_EIOU, U_feed, 
                                         V, Y, S_units) \%>\% 
   rename(matval_complicated = matvals)
 # Simple and Complicated are same.

@@ -81,7 +81,7 @@ specific industries." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.32</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.33</span>
       </span>
     </div>
 
@@ -163,7 +163,7 @@ specific industries.</p>
   <span class='kw'>liquefaction_regas</span> <span class='kw'>=</span> <span class='st'>"Liquefaction (LNG) / regasification plants"</span>,
   <span class='kw'>liquefaction_regas_reassign</span> <span class='kw'>=</span> <span class='st'>"Oil and gas extraction"</span>,
   <span class='kw'>production_products</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='primary_coal_products.html'>primary_coal_products</a></span>,
-    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='primary_oil_products.html'>primary_oil_products</a></span>, <span class='st'>"Natural gas"</span>)),
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='primary_oil_products.html'>primary_oil_products</a></span>, <span class='kw'>natural_gas</span> <span class='kw'>=</span> <span class='st'>"Natural gas"</span>)),
   <span class='kw'>production_products_short_names</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Coal"</span>, <span class='st'>"Oil and natural gas"</span>),
   <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
   <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>,
@@ -287,9 +287,9 @@ source of all primary <code>oil_and_oil_products</code> and <code>Natural gas</c
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>             </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   
 #&gt; </span><span style='color: #BCBCBC;'>1</span><span> ZAF     E            </span><span style='text-decoration: underline;'>1</span><span>971 Energy industry … Coal … Electrici… -</span><span style='color: #BB0000;'>5.24</span><span style='color: #949494;'>e</span><span>1 U_EIOU  
 #&gt; </span><span style='color: #BCBCBC;'>2</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Energy industry … Coal … Electrici… -</span><span style='color: #BB0000;'>2.37</span><span style='color: #949494;'>e</span><span>2 U_EIOU  
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> ZAF     E            </span><span style='text-decoration: underline;'>1</span><span>971 Transformation p… Coal … Hard coal… -</span><span style='color: #BB0000;'>3.31</span><span style='color: #949494;'>e</span><span>4 U_excl_…
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Transformation p… Coal … Coking co… -</span><span style='color: #BB0000;'>2.37</span><span style='color: #949494;'>e</span><span>3 U_excl_…
-#&gt; </span><span style='color: #BCBCBC;'>5</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Transformation p… Coal … Other bit… -</span><span style='color: #BB0000;'>1.25</span><span style='color: #949494;'>e</span><span>5 U_excl_…
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span> ZAF     E            </span><span style='text-decoration: underline;'>1</span><span>971 Transformation p… Coal … Hard coal… -</span><span style='color: #BB0000;'>3.31</span><span style='color: #949494;'>e</span><span>4 U_feed  
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Transformation p… Coal … Coking co… -</span><span style='color: #BB0000;'>2.37</span><span style='color: #949494;'>e</span><span>3 U_feed  
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Transformation p… Coal … Other bit… -</span><span style='color: #BB0000;'>1.25</span><span style='color: #949494;'>e</span><span>5 U_feed  
 #&gt; </span><span style='color: #BCBCBC;'>6</span><span> ZAF     E            </span><span style='text-decoration: underline;'>1</span><span>971 Transformation p… Coal … Hard coal…  3.31</span><span style='color: #949494;'>e</span><span>4 V       
 #&gt; </span><span style='color: #BCBCBC;'>7</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Transformation p… Coal … Coking co…  2.37</span><span style='color: #949494;'>e</span><span>3 V       
 #&gt; </span><span style='color: #BCBCBC;'>8</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Transformation p… Coal … Other bit…  1.25</span><span style='color: #949494;'>e</span><span>5 V       </div><div class='input'><span class='co'># EIOU by "Liquefaction (LNG) / regasification plants" is reassigned to "Oil and gas extraction"</span>

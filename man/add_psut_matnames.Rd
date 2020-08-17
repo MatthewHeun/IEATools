@@ -23,7 +23,7 @@ add_psut_matnames(
     IEATools::tfc_compare_flows$statistical_differences),
   matnames = IEATools::mat_meta_cols$matnames,
   R = IEATools::psut_cols$R,
-  U_excl_EIOU = IEATools::psut_cols$U_excl_eiou,
+  U_feed = IEATools::psut_cols$U_feed,
   U_EIOU = IEATools::psut_cols$U_eiou,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y
@@ -45,7 +45,7 @@ For "Losses" and "Statistica differnces", see \code{IEATools::tfc_compare_flows}
 
 \item{matnames}{See \code{IEATools::mat_meta_cols}.}
 
-\item{R, U_excl_EIOU, U_EIOU, V, Y}{See \code{IEATools::psut_matnames}.}
+\item{R, U_feed, U_EIOU, V, Y}{See \code{IEATools::psut_matnames}.}
 }
 \value{
 \code{.tidy_iea_df} with an added column \code{matnames}.

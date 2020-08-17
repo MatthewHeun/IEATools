@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.32</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.33</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Specify EIOU Industries and Flows</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-08-13</h4>
+            <h4 class="date">2020-08-17</h4>
       
       
       <div class="hidden name"><code>specify.Rmd</code></div>
@@ -200,7 +200,7 @@
 <span class="co">#&gt; [4] Flow                   Product                E.dot                 </span>
 <span class="co">#&gt; [7] matnames              </span>
 <span class="co">#&gt; &lt;0 rows&gt; (or 0-length row.names)</span></pre></body></html></div>
-<p>Furthermore, the added flows from the <code>Resource</code> industries are tagged as <code>Transformation processes</code> and belong in the <code>U_excl_EIOU</code> and <code>V</code> matrices. The EIOU flows are shown to belong in the <code>U_EIOU</code> matrix.</p>
+<p>Furthermore, the added flows from the <code>Resource</code> industries are tagged as <code>Transformation processes</code> and belong in the <code>U_feed</code> and <code>V</code> matrices. The EIOU flows are shown to belong in the <code>U_EIOU</code> matrix.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">Specific_primary_production</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">Flow</span> <span class="kw">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Coal mines"</span>, <span class="st">"Oil and gas extraction"</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>()
@@ -236,38 +236,22 @@
 <span class="co">#&gt; 13 Transformation processes Oil and gas extraction</span>
 <span class="co">#&gt; 14 Transformation processes Oil and gas extraction</span>
 <span class="co">#&gt; 15 Transformation processes Oil and gas extraction</span>
-<span class="co">#&gt;                                            Product Unit        E.dot</span>
-<span class="co">#&gt; 1                                      Electricity ktoe     -52.3646</span>
-<span class="co">#&gt; 2                                      Electricity ktoe    -237.4033</span>
-<span class="co">#&gt; 3                                      Electricity ktoe      -0.0860</span>
-<span class="co">#&gt; 4                         Hard coal (if no detail) ktoe  -33064.4311</span>
-<span class="co">#&gt; 5                                      Coking coal ktoe   -2371.9304</span>
-<span class="co">#&gt; 6                            Other bituminous coal ktoe -124554.3759</span>
-<span class="co">#&gt; 7         Hard coal (if no detail) [of Coal mines] ktoe   33064.4311</span>
-<span class="co">#&gt; 8                      Coking coal [of Coal mines] ktoe    2371.9304</span>
-<span class="co">#&gt; 9            Other bituminous coal [of Coal mines] ktoe  124554.3759</span>
-<span class="co">#&gt; 10                                       Crude oil ktoe    -666.8167</span>
-<span class="co">#&gt; 11                                     Natural gas ktoe   -1397.7644</span>
-<span class="co">#&gt; 12                             Natural gas liquids ktoe    -276.6636</span>
-<span class="co">#&gt; 13           Crude oil [of Oil and gas extraction] ktoe     666.8167</span>
-<span class="co">#&gt; 14         Natural gas [of Oil and gas extraction] ktoe    1397.7644</span>
-<span class="co">#&gt; 15 Natural gas liquids [of Oil and gas extraction] ktoe     276.6636</span>
-<span class="co">#&gt;       matnames</span>
-<span class="co">#&gt; 1       U_EIOU</span>
-<span class="co">#&gt; 2       U_EIOU</span>
-<span class="co">#&gt; 3       U_EIOU</span>
-<span class="co">#&gt; 4  U_excl_EIOU</span>
-<span class="co">#&gt; 5  U_excl_EIOU</span>
-<span class="co">#&gt; 6  U_excl_EIOU</span>
-<span class="co">#&gt; 7            V</span>
-<span class="co">#&gt; 8            V</span>
-<span class="co">#&gt; 9            V</span>
-<span class="co">#&gt; 10 U_excl_EIOU</span>
-<span class="co">#&gt; 11 U_excl_EIOU</span>
-<span class="co">#&gt; 12 U_excl_EIOU</span>
-<span class="co">#&gt; 13           V</span>
-<span class="co">#&gt; 14           V</span>
-<span class="co">#&gt; 15           V</span>
+<span class="co">#&gt;                                            Product Unit        E.dot matnames</span>
+<span class="co">#&gt; 1                                      Electricity ktoe     -52.3646   U_EIOU</span>
+<span class="co">#&gt; 2                                      Electricity ktoe    -237.4033   U_EIOU</span>
+<span class="co">#&gt; 3                                      Electricity ktoe      -0.0860   U_EIOU</span>
+<span class="co">#&gt; 4                         Hard coal (if no detail) ktoe  -33064.4311   U_feed</span>
+<span class="co">#&gt; 5                                      Coking coal ktoe   -2371.9304   U_feed</span>
+<span class="co">#&gt; 6                            Other bituminous coal ktoe -124554.3759   U_feed</span>
+<span class="co">#&gt; 7         Hard coal (if no detail) [of Coal mines] ktoe   33064.4311        V</span>
+<span class="co">#&gt; 8                      Coking coal [of Coal mines] ktoe    2371.9304        V</span>
+<span class="co">#&gt; 9            Other bituminous coal [of Coal mines] ktoe  124554.3759        V</span>
+<span class="co">#&gt; 10                                       Crude oil ktoe    -666.8167   U_feed</span>
+<span class="co">#&gt; 11                                     Natural gas ktoe   -1397.7644   U_feed</span>
+<span class="co">#&gt; 12                             Natural gas liquids ktoe    -276.6636   U_feed</span>
+<span class="co">#&gt; 13           Crude oil [of Oil and gas extraction] ktoe     666.8167        V</span>
+<span class="co">#&gt; 14         Natural gas [of Oil and gas extraction] ktoe    1397.7644        V</span>
+<span class="co">#&gt; 15 Natural gas liquids [of Oil and gas extraction] ktoe     276.6636        V</span>
 <span class="no">Specific_primary_production</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">Flow.aggregation.point</span> <span class="kw">==</span> <span class="st">"Energy industry own use"</span> ) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">Country</span>, <span class="no">Year</span>, <span class="no">Flow</span>, <span class="no">Product</span>, <span class="no">E.dot</span>, <span class="no">matnames</span>) <span class="kw">%&gt;%</span>

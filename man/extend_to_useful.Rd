@@ -16,7 +16,7 @@ extend_to_useful(
   product_type = IEATools::row_col_types$product,
   R = IEATools::psut_cols$R,
   U_eiou = IEATools::psut_cols$U_eiou,
-  U_excl_eiou = IEATools::psut_cols$U_excl_eiou,
+  U_feed = IEATools::psut_cols$U_feed,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y,
   s_units = IEATools::psut_cols$s_units,
@@ -64,7 +64,7 @@ Each of these should be a column in all of \code{.tidy_psut_data}, \code{C_data}
 
 \item{industry_type, product_type}{See \code{IEATools::row_col_types}}
 
-\item{R, U_eiou, U_excl_eiou, V, Y, s_units}{See \code{IEATools::psut_cols}.
+\item{R, U_eiou, U_feed, V, Y, s_units}{See \code{IEATools::psut_cols}.
 These matrices should be found in the \code{matvals} column of the \code{.tidy_psut_data} data frame.}
 
 \item{matnames, matvals}{See \code{IEATools::mat_meta_cols}.}
@@ -95,8 +95,8 @@ and the outgoing matrices (last stage useful). Default is \code{1e-3}.}
 
 \item{.eta_fu_hat}{an internal matrix name. Default is ".eta_fu_hat".}
 
-\item{.add_to_U_f}{an internal matrix name for the a matrix to be added to the U_excl_eiou_f matrix
-to form the useful form of the U_excl_eiou matrix. Default is ".add_to_U_f".}
+\item{.add_to_U_f}{an internal matrix name for the a matrix to be added to the U_feed_f matrix
+to form the useful form of the U_feed matrix. Default is ".add_to_U_f".}
 
 \item{.add_to_U_eiou}{an internal matrix name for the a matrix to be added to the U_eiou_f matrix
 to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".}
