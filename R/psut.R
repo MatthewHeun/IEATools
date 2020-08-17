@@ -411,6 +411,7 @@ prep_psut <- function(.tidy_iea_df,
       dplyr::select(!!!meta_columns, !!year)
     # Make a tibble with no rows for the remainder of the columns, 
     # R, U_eiou, U_excl_eiou, V, Y, S_units (6 in total)
+    # Use 1.1 for the value so that columns are created as double type columns.
     mats_cols <- as.list(rep(1.1, 6)) %>% 
       magrittr::set_names(c(R, U_eiou, U_excl_eiou, V, Y, s_units)) %>% 
       as.data.frame()
