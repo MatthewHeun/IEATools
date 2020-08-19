@@ -1,3 +1,8 @@
+# IEATools 0.1.34 (2020-08-19)
+
+* Updated documentation.
+
+
 # IEATools 0.1.33 (2020-08-17)
 
 * New tests for new features and old bugs.
