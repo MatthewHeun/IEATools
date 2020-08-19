@@ -1,4 +1,4 @@
-* Updated comments
+* Updated documentation.
 
 
 # IEATools 0.1.33 (2020-08-17)
