@@ -16,8 +16,10 @@ specify_primary_production(
   eiou = "Energy industry own use",
   transformation_processes = "Transformation processes",
   flow = "Flow",
+  ledger_side = IEATools::iea_cols$ledger_side,
   resources = "Resources",
-  production = "Production",
+  production = IEATools::tpes_flows$production,
+  consumption = IEATools::ledger_sides$consumption,
   e_dot = "E.dot",
   product = "Product",
   notation = IEATools::of_notation
@@ -49,12 +51,14 @@ Default is "\verb{Energy industry own use}".}
 \item{transformation_processes}{a string identifying transformation processes in the flow column of \code{.tidy_iea_df}.
 Default is "\verb{Transformation processes}".}
 
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}.  Default is "\code{Flow}".}
+\item{ledger_side, flow}{See \code{IEATools::iea_cols}.}
 
 \item{resources}{a string identifying resource industries to be added to \code{.tidy_iea_df}.
 Default is "\code{Resources}".}
 
 \item{production}{a string identifying production in the flow column. Default is "\code{Production}".}
+
+\item{consumption}{See \code{IEATools::ledger_sides}.}
 
 \item{e_dot}{the name of the energy column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
 

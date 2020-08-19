@@ -52,7 +52,8 @@
 #'        Default is "`Energy industry own use`".
 #' @param transformation_processes a string identifying transformation processes in the flow column of `.tidy_iea_df`. 
 #'        Default is "`Transformation processes`".
-#' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
+#' @param ledger_side,flow See `IEATools::iea_cols`.
+#' @param consumption See `IEATools::ledger_sides`.
 #' @param resources a string identifying resource industries to be added to `.tidy_iea_df`. 
 #'        Default is "`Resources`".
 #' @param production a string identifying production in the flow column. Default is "`Production`".
@@ -92,8 +93,10 @@ specify_primary_production <- function(.tidy_iea_df,
                                        eiou = "Energy industry own use",
                                        transformation_processes = "Transformation processes",
                                        flow = "Flow", 
+                                       ledger_side = IEATools::iea_cols$ledger_side,
                                        resources = "Resources",
-                                       production = "Production", 
+                                       production = IEATools::tpes_flows$production,
+                                       consumption = IEATools::ledger_sides$consumption,
                                        e_dot = "E.dot",
                                        product = "Product", 
                                        notation = IEATools::of_notation){
@@ -176,9 +179,7 @@ specify_primary_production <- function(.tidy_iea_df,
     dplyr::summarise(!!as.name(e_dot) := sum(!!as.name(e_dot))) %>% 
     dplyr::ungroup()
 
-  # specify_func is called for its side effect of modifying .tidy_iea_df,
-  # so we don't assign the result to any value.
-  # Rather, we simply return the modified version of .tidy_iea_df.
+  # Now specify all primary production 
   for (i in 1:length(eiou_destinations)) {
     .tidy_iea_df <- specify_primary_func(.tidf = .tidy_iea_df,
                                          eiou_dest = eiou_destinations[[i]], 
