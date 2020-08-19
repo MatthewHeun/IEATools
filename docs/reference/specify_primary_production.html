@@ -81,7 +81,7 @@ specific industries." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.33</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.34</span>
       </span>
     </div>
 
@@ -169,8 +169,10 @@ specific industries.</p>
   <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>,
   <span class='kw'>transformation_processes</span> <span class='kw'>=</span> <span class='st'>"Transformation processes"</span>,
   <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
+  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>ledger_side</span>,
   <span class='kw'>resources</span> <span class='kw'>=</span> <span class='st'>"Resources"</span>,
-  <span class='kw'>production</span> <span class='kw'>=</span> <span class='st'>"Production"</span>,
+  <span class='kw'>production</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tpes_flows.html'>tpes_flows</a></span>$<span class='no'>production</span>,
+  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='ledger_sides.html'>ledger_sides</a></span>$<span class='no'>consumption</span>,
   <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='st'>"E.dot"</span>,
   <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
   <span class='kw'>notation</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='of_notation.html'>of_notation</a></span>
@@ -223,8 +225,8 @@ Default is "<code>Energy industry own use</code>".</p></td>
 Default is "<code>Transformation processes</code>".</p></td>
     </tr>
     <tr>
-      <th>flow</th>
-      <td><p>the name of the flow column in <code>.tidy_iea_df</code>.  Default is "<code>Flow</code>".</p></td>
+      <th>ledger_side, flow</th>
+      <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
       <th>resources</th>
@@ -234,6 +236,10 @@ Default is "<code>Resources</code>".</p></td>
     <tr>
       <th>production</th>
       <td><p>a string identifying production in the flow column. Default is "<code>Production</code>".</p></td>
+    </tr>
+    <tr>
+      <th>consumption</th>
+      <td><p>See <code><a href='ledger_sides.html'>IEATools::ledger_sides</a></code>.</p></td>
     </tr>
     <tr>
       <th>e_dot</th>
