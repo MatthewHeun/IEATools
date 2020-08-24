@@ -59,7 +59,7 @@ Furthermore, it extracts \code{S_units} matrices using \code{extract_S_units_fro
 and adds those matrices to the data frame.
 
 If \code{.tidy_iea_df} is a zero-row data frame,
-the return value is a zer-row data frame with expected columns.
+the return value is a zero-row data frame with expected columns.
 }
 \examples{
 library(dplyr)

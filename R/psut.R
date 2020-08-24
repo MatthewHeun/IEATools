@@ -85,7 +85,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #' @param production,resources See `IEATools::tpes_flows`.
 #' @param eiou See `IEATools::tfc_compare_flows`.
 #' @param neg_supply_in_fd For "Exports", "International aviation bunkers", "International marine bunkers", and "Stock changes", see `IEATools::tpes_flows`.
-#'        For "Losses" and "Statistica differnces", see `IEATools::tfc_compare_flows`.
+#'        For "Losses" and "Statistical differences", see `IEATools::tfc_compare_flows`.
 #' @param matnames See `IEATools::mat_meta_cols`.
 #' @param R,U_feed,U_EIOU,V,Y See `IEATools::psut_matnames`.
 #'
@@ -334,7 +334,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' and adds those matrices to the data frame.
 #' 
 #' If `.tidy_iea_df` is a zero-row data frame, 
-#' the return value is a zer-row data frame with expected columns.
+#' the return value is a zero-row data frame with expected columns.
 #'
 #' @param .tidy_iea_df a tidy data frame that has been specified with `specify_all()`.
 #' @param year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.

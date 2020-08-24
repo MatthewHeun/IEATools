@@ -16,7 +16,7 @@ A string vector with 11 entries.
 \item{biodiesels}{The string identifier for Biodiesels.}
 \item{bio_jet_kerosene}{The string identifier for Bio jet kerosene.}
 \item{other_liquid_biofuels}{The string identifier for Other liquid biofuels.}
-\item{non_specified_primary_biofuels_and_waste}{The string identifier for Non-sepcified primary biofuels and waste.}
+\item{non_specified_primary_biofuels_and_waste}{The string identifier for Non-specified primary biofuels and waste.}
 \item{charcoal}{The string identifier for Charcoal.}
 }
 }

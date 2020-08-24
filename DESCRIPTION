@@ -36,5 +36,6 @@ Suggests:
     covr,
     knitr,
     testthat,
-    rmarkdown
+    rmarkdown,
+    spelling
 VignetteBuilder: knitr
