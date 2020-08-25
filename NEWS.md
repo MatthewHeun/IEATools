@@ -1,4 +1,5 @@
-* Removed a check for energy industry own use in `specify_primary_production()`.
+* Removed an erroneous check for
+  energy industry own use in `specify_primary_production()`.
   In fact, we need to specify all cases,
   not only if energy industry own use is present.
   This change solves a bug in a `drake` workflow.
