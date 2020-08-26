@@ -1,3 +1,6 @@
+# IEATools 0.1.35 (2020-08-26)
+
+* First version that works with full SEAPSUT workflow.
 * Removed an erroneous check for
   energy industry own use in `specify_primary_production()`.
   In fact, we need to specify all cases,
