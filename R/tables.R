@@ -609,7 +609,7 @@ complete_eta_fu_table <- function(eta_fu_table,
     tidy_fu_allocation_table()
   
   # Extract machines and products for this country from the fu_allocation_table
-  # This call should fail, but we're really after the 
+  # This call should fail, but we're really after machines_that_need_etas
   temp_false <- eta_fu_table_completed(fu_allocation_table = fu_allocation_table)
   assertthat::assert_that(!temp_false)
   machines_that_need_etas <- temp_false %>% 
