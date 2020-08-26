@@ -1,3 +1,14 @@
+# IEATools 0.1.35 (2020-08-26)
+
+* First version that works with full SEAPSUT workflow.
+* Removed an erroneous check for
+  energy industry own use in `specify_primary_production()`.
+  In fact, we need to specify all cases,
+  not only if energy industry own use is present.
+  This change solves a bug in a `drake` workflow.
+* Added spell checking to build process.
+
+
 # IEATools 0.1.34 (2020-08-19)
 
 * Updated documentation.

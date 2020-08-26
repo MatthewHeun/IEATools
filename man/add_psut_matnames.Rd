@@ -41,7 +41,7 @@ add_psut_matnames(
 \item{eiou}{See \code{IEATools::tfc_compare_flows}.}
 
 \item{neg_supply_in_fd}{For "Exports", "International aviation bunkers", "International marine bunkers", and "Stock changes", see \code{IEATools::tpes_flows}.
-For "Losses" and "Statistica differnces", see \code{IEATools::tfc_compare_flows}.}
+For "Losses" and "Statistical differences", see \code{IEATools::tfc_compare_flows}.}
 
 \item{matnames}{See \code{IEATools::mat_meta_cols}.}
 
