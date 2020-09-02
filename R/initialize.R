@@ -950,3 +950,101 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
     tidy_iea_df(remove_zeroes = remove_zeroes)
 }
 
+
+
+#' Loads region concordance matrix
+#' 
+#' This functions loads a user-defined regional concordance matrix that re-routes each IEA region to a user-defined region.
+#' By default, the concordance matrix used re-routes IEA regions to Exiobase sectors. See details for more information.
+#' 
+#' The regional concordance matrix must have a first column named "IEA_regions", that identifies the IEA regions to be re-routed,
+#' and a second column "Destination_regions", that identifies the new regions to IEA regions are re-routed. 
+#' There is no need to include all IEA regions; 
+#' those that are not included will be removed when calling the `aggregate_regions()` function.
+#' IEA regions that are rerouted to "NA" or to an empty vakye are aslso removed when calling the `aggregate_regions()` function.
+#' 
+#' @param file_path The path of the file to be loaded. By default, a concordance table converting IEA regions into Exiobase regions
+#' is loaded.
+#' 
+#' @return A three column concordance table (as a data frame) mapping the "IEA_regions" column to a "Destination_regions" column, using
+#' a "Country" column (with iso country IDs) as intermediate, which is added to the loaded concordance table within the function. For
+#' those IEA regions that do not match to an ISO code (for instance, "World marine bunkers"), the full IEA region name is kept in the "Country" column.
+#' 
+#' @export
+read_regions_concordance <- function(file_path = "data-raw/default_mapping_exiobase.csv"){
+  concordance_table <- read.csv(file_path) %>%
+    dplyr::mutate(Country = IEA_regions) %>%
+    use_iso_countries() %>%
+    dplyr::filter(! (is.na(Destination_regions) | Destination_regions == "" | is.null(Destination_regions)))
+  return(concordance_table)
+}
+# --- EAR, 02/09/2020
+
+#' Aggregates IEA regions based on a user-defined concordance matrix
+#' 
+#' Takes as input a tidy dataframe, the file of a country concordance table, and aggregates flows per regions following the
+#' user-defined concordance table. The boolean argument "net_trade" enables to perform the aggregation by keeping only net imports
+#' and/or net exports or by keeping gross imports and exports.
+#' 
+#' @param .tidy_iea_df The `.tidy_iea_df` data frame that needs to be aggregated by regions. The `.tidy_iea_df` is likely
+#' to have been obtained with the `load_tidy_iea_df()` function.
+#' @param file_path The path of the file to be loaded. By default, a concordance table converting IEA regions into Exiobase regions
+#' is loaded.
+#' @param net_trade The boolean that defines whether imports and exports by aggregation region should be converted 
+#' into net imports / exports or not. Default is FALSE.
+#' 
+#' @return A `.tidy_iea_df` that contains the data of the input `.tidy_iea_df` aggregated by regions as specified in the user-defined
+#' country concordance table provided.
+#' 
+#' @export
+aggregate_regions <- function(.tidy_iea_df,
+                              file_path = "data-raw/default_mapping_exiobase.csv",
+                              net_trade = FALSE){
+  
+  concordance_table <- read_regions_concordance(file_path)
+  
+  iea_code_regions <- concordance_table[["Country"]]
+  dest_regions <- as.character(concordance_table[["Destination_regions"]])# maybe as character?
+  
+  aggregated_tidy_iea_df <-.tidy_iea_df %>%
+    dplyr::filter(Country %in% iea_code_regions) %>%
+    dplyr::inner_join(concordance_table, by = "Country") %>%
+    dplyr::mutate(
+      Country = Destination_regions
+    ) %>%
+    dplyr::group_by(Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
+    dplyr::summarise(E.dot = sum(E.dot)) #%>%
+    #use_iso_countries()
+  
+  if (net_trade == TRUE){
+    aggregated_net_trade <- aggregated_tidy_iea_df %>% 
+      dplyr::filter(Flow == "Imports" | Flow == "Exports") %>% 
+      tidyr::pivot_wider(names_from = Flow, values_from = E.dot) %>% 
+      dplyr::mutate(
+        Imports = tidyr::replace_na(Imports, 0),
+        Exports = tidyr::replace_na(Exports, 0),
+        Net_Imports = Imports + Exports
+      ) %>% 
+      tidyr::pivot_longer(cols = c("Imports", "Exports", "Net_Imports"), names_to = "Flow", values_to = "E.dot") %>%
+      dplyr::filter(Flow == "Net_Imports") %>% 
+      dplyr::mutate(
+        Flow = dplyr::case_when(
+          E.dot > 0 ~ "Imports",
+          E.dot < 0 ~ "Exports",
+          E.dot == 0 ~ "Net_Imports"
+        )
+      ) %>% 
+      dplyr::filter(E.dot != 0) %>%
+      dplyr::arrange(Year, Country, desc(Ledger.side), Flow.aggregation.point, Flow)
+      
+    aggregated_tidy_iea_df <- aggregated_tidy_iea_df %>% 
+      dplyr::filter(! Flow %in% c("Imports", "Exports")) %>%
+      dplyr::bind_rows(aggregated_net_trade) %>%
+      dplyr::arrange(Year, Country, desc(Ledger.side), Flow.aggregation.point, Flow)
+  }
+  
+  return(aggregated_tidy_iea_df)
+}
+# --- EAR, 02/09/2020
+
+

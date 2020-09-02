@@ -497,3 +497,96 @@ test_that("spreading by years works as expected after load_tidy_iea_df()", {
 })
 
 
+test_that("Loading regional concordance matrix works as intended", {
+  concordance_matrix <- read_regions_concordance(file_path = "../testdata/concordance_table_testing.csv")
+
+  expect_equal(nrow(concordance_matrix %>% dplyr::filter(IEA_regions == "Angola")), 0) # Testing that NAs are gotten rid of
+  expect_equal(nrow(concordance_matrix %>% dplyr::filter(IEA_regions == "Argentina")), 0) # Testing empty celles are gotten rid of
+
+  expect_equal(nrow(concordance_matrix %>%
+                 dplyr::filter(IEA_regions == "France" & Destination_regions == "Fr") %>%
+                 dplyr::select(Destination_regions)), 1)
+})
+#--- EAR, 02/09/2020
+
+
+test_that("Aggregating by countries works as intended", {
+
+  ### 1. First, checking that it works well when net_trade flag is FALSE.
+  tidy_GHA_ZAF_df <- load_tidy_iea_df()
+
+  aggregated_regions <- aggregate_regions(tidy_GHA_ZAF_df,
+                                          file_path = "../testdata/checking_aggregation_GHA_ZAF.csv",
+                                          net_trade = FALSE)
+
+  manual_aggregation <- tidy_GHA_ZAF_df %>%
+    dplyr::group_by(Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
+    dplyr::summarise(E.dot.aggregated = sum(E.dot))
+
+  comparing <- aggregated_regions %>%
+    dplyr::full_join(manual_aggregation) %>%
+    dplyr::mutate(
+      difference = E.dot.aggregated - E.dot
+    )
+
+  # Testing that all rows are perfectly equal and that there are the same number of rows
+
+  count_non_null_differences <- comparing %>%
+    dplyr::filter(difference != 0) %>%
+    nrow()
+
+  expect_equal(count_non_null_differences, 0)
+  expect_equal(nrow(aggregated_regions), nrow(manual_aggregation))
+
+
+  ### 2. Second, now we check that it works well when net_trade is TRUE.
+
+  aggregated_regions <- aggregate_regions(tidy_GHA_ZAF_df,
+                                          file_path = "../testdata/checking_aggregation_GHA_ZAF.csv",
+                                          net_trade = TRUE)
+
+  manual_aggregation_excl_ie <- tidy_GHA_ZAF_df %>%
+    dplyr::filter(! Flow %in% c("Imports", "Exports")) %>%
+    dplyr::group_by(Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
+    dplyr::summarise(E.dot.aggregated = sum(E.dot))
+
+  manual_aggregation_ie <- tidy_GHA_ZAF_df %>%
+    dplyr::filter(Flow %in% c("Imports", "Exports")) %>%
+    dplyr::group_by(Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
+    dplyr::summarise(E.dot.aggregated = sum(E.dot)) %>%
+    tidyr::pivot_wider(names_from = Flow, values_from = E.dot.aggregated) %>%
+    dplyr::mutate(
+      Imports = tidyr::replace_na(Imports, 0),
+      Exports = tidyr::replace_na(Exports, 0),
+      Net_Imports = Imports + Exports
+    ) %>%
+    dplyr::select(-c("Imports", "Exports")) %>%
+    tidyr::pivot_longer(cols = Net_Imports, names_to = "Flow", values_to = "E.dot.aggregated") %>%
+    dplyr::mutate(
+      Flow = dplyr::case_when(
+        E.dot.aggregated > 0 ~ "Imports",
+        E.dot.aggregated < 0 ~ "Exports",
+        E.dot.aggregated == 0 ~ "Net_Imports"
+      )
+    ) %>%
+    dplyr::filter(E.dot.aggregated != 0)
+
+  manual_aggregation <- dplyr::bind_rows(manual_aggregation_excl_ie, manual_aggregation_ie)
+
+  comparing <- aggregated_regions %>%
+    dplyr::full_join(manual_aggregation) %>%
+    dplyr::mutate(
+      difference = E.dot.aggregated - E.dot
+    )
+
+  # Testing that all rows are perfectly equal and that there are the same number of rows
+
+  count_non_null_differences <- comparing %>%
+    dplyr::filter(difference != 0) %>%
+    nrow()
+
+  expect_equal(count_non_null_differences, 0)
+  expect_equal(nrow(aggregated_regions), nrow(manual_aggregation))
+
+})
+# --- EAR, 02/09/2020
