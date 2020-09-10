@@ -511,4 +511,33 @@ test_that("eta_fu_table_completed() works as expected", {
 })
 
 
+test_that("complete_eta_fu_table() works when we have more allocation data than efficiency data", {
+  eta_fu_table <- load_eta_fu_data()
+  eta_fu_table_GHA <- eta_fu_table %>% 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "GHA", 
+                  # Eliminate rows so we invoke the exemplar process
+                  .data[[IEATools::template_cols$machine]] != "Irons") %>% 
+    tidy_eta_fu_table() %>% 
+    # Now empty it out
+    magrittr::extract(c(), )
 
+  eta_fu_table_ZAF <- eta_fu_table %>% 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF")
+  
+  fu_allocation_table <- load_fu_allocation_data() %>% 
+    tidy_fu_allocation_table()
+  fu_allocation_table_GHA <- fu_allocation_table %>% 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "GHA") %>% 
+    # Eliminate some machines in GHA that are not present in the exemplar (ZAF).
+    dplyr::filter(! .data[[IEATools::template_cols$machine]] %in% 
+                    c("Boat engines", "LPG stoves", "Kerosene stoves",
+                      "Diesel cars", "Diesel trains", "Electric stoves", "Non-energy"))
+
+  # Try to complete the GHA table
+  result <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA,
+                                  exemplar_eta_fu_tables = eta_fu_table_ZAF, 
+                                  fu_allocation_table = fu_allocation_table_GHA)
+  # Verify that we successfully received a result
+  expect_true(! is.null(result))
+  expect_equal(nrow(result), 54)
+})
