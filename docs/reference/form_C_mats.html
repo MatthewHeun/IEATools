@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create allocation matrices (<code>C</code>) from an allocation table — form_C_mats • IEATools</title>
+<title>Create allocation matrices (C) from an allocation table — form_C_mats • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Create allocation matrices (<code>C</code>) from an allocation table — form_C_mats" />
+<meta property="og:title" content="Create allocation matrices (C) from an allocation table — form_C_mats" />
 <meta property="og:description" content="This function uses information in a filled allocation template (created by write_fu_allocation_template())
 to create allocation matrices (C)." />
 
@@ -73,7 +73,7 @@ to create allocation matrices (C)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.36</span>
       </span>
     </div>
 
@@ -142,36 +142,36 @@ to create allocation matrices (<code>C</code>).</p>
     </div>
 
     <pre class="usage"><span class='fu'>form_C_mats</span>(
-  <span class='no'>.fu_allocation_table</span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>ledger_side</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow_aggregation_point</span>,
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>e_dot</span>,
-  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>unit</span>,
-  <span class='kw'>year</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>year</span>,
-  <span class='kw'>supply</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='ledger_sides.html'>ledger_sides</a></span>$<span class='no'>supply</span>,
-  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='ledger_sides.html'>ledger_sides</a></span>$<span class='no'>consumption</span>,
-  <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>quantity</span>,
-  <span class='kw'>machine</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>machine</span>,
-  <span class='kw'>ef_product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>ef_product</span>,
-  <span class='kw'>eu_product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>eu_product</span>,
-  <span class='kw'>destination</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>destination</span>,
-  <span class='kw'>e_dot_perc</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_perc</span>,
-  <span class='kw'>maximum_values</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>maximum_values</span>,
-  <span class='kw'>matnames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>matnames</span>,
-  <span class='kw'>matvals</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>matvals</span>,
-  <span class='kw'>rownames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>rownames</span>,
-  <span class='kw'>colnames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>colnames</span>,
-  <span class='kw'>rowtypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>rowtypes</span>,
-  <span class='kw'>coltypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>coltypes</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>product</span>,
-  <span class='kw'>industry</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>industry</span>,
-  <span class='kw'>notation</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='arrow_notation.html'>arrow_notation</a></span>,
-  <span class='kw'>tol</span> <span class='kw'>=</span> <span class='fl'>1e-06</span>,
-  <span class='kw'>C_eiou</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>C_eiou</span>,
-  <span class='kw'>C_Y</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>C_Y</span>,
-  <span class='kw'>.should_be_1_vector</span> <span class='kw'>=</span> <span class='st'>".should_be_1_vector"</span>,
-  <span class='kw'>.is_1</span> <span class='kw'>=</span> <span class='st'>".is_1"</span>,
-  <span class='kw'>.all_1</span> <span class='kw'>=</span> <span class='st'>".all_1"</span>
+  <span class='kw'>.fu_allocation_table</span>,
+  ledger_side = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>ledger_side</span>,
+  flow_aggregation_point = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow_aggregation_point</span>,
+  e_dot = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>e_dot</span>,
+  unit = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>unit</span>,
+  year = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>year</span>,
+  supply = <span class='kw'>IEATools</span>::<span class='kw'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='kw'>supply</span>,
+  consumption = <span class='kw'>IEATools</span>::<span class='kw'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='kw'>consumption</span>,
+  quantity = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>quantity</span>,
+  machine = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>machine</span>,
+  ef_product = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>ef_product</span>,
+  eu_product = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>eu_product</span>,
+  destination = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>destination</span>,
+  e_dot_perc = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_perc</span>,
+  maximum_values = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>maximum_values</span>,
+  matnames = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>matnames</span>,
+  matvals = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>matvals</span>,
+  rownames = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>rownames</span>,
+  colnames = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>colnames</span>,
+  rowtypes = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>rowtypes</span>,
+  coltypes = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>coltypes</span>,
+  product = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>product</span>,
+  industry = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>industry</span>,
+  notation = <span class='kw'>IEATools</span>::<span class='kw'><a href='arrow_notation.html'>arrow_notation</a></span>,
+  tol = <span class='fl'>1e-06</span>,
+  C_eiou = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>C_eiou</span>,
+  C_Y = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>C_Y</span>,
+  .should_be_1_vector = <span class='st'>".should_be_1_vector"</span>,
+  .is_1 = <span class='st'>".is_1"</span>,
+  .all_1 = <span class='st'>".all_1"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -248,8 +248,9 @@ If there is a problem, a data frame that shows the errors is returned.
 Such errors probably indicate the FU template was not filled correctly.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>form_C_mats</span>()</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 x 7</span><span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'>form_C_mats</span>()
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 x 7</span><span>
 #&gt;   Country Method Energy.type Last.stage  Year C_EIOU           C_Y              
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span>           </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span>           
 #&gt; </span><span style='color: #BCBCBC;'>1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 </span><span style='color: #949494;'>&lt;dbl[,3] [2 × 3</span><span>… </span><span style='color: #949494;'>&lt;dbl[,21] [23 × </span><span>…
@@ -271,7 +272,7 @@ Such errors probably indicate the FU template was not filled correctly.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

@@ -74,7 +74,7 @@ The Excel file at path contains those allocations." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.36</span>
       </span>
     </div>
 
@@ -144,15 +144,15 @@ The Excel file at <code>path</code> contains those allocations.</p>
     </div>
 
     <pre class="usage"><span class='fu'>load_fu_allocation_data</span>(
-  <span class='kw'>path</span> <span class='kw'>=</span> <span class='fu'><a href='sample_fu_allocation_table_path.html'>sample_fu_allocation_table_path</a></span>(),
-  <span class='kw'>fu_allocations_tab_name</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='fu_analysis_file_info.html'>fu_analysis_file_info</a></span>$<span class='no'>fu_allocation_tab_name</span>,
-  <span class='kw'>country</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>country</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow_aggregation_point</span>,
-  <span class='kw'>ef_product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>ef_product</span>,
-  <span class='kw'>machine</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>machine</span>,
-  <span class='kw'>eu_product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>eu_product</span>,
-  <span class='kw'>destination</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>destination</span>,
-  <span class='kw'>non_energy_machine</span> <span class='kw'>=</span> <span class='st'>"Non-energy"</span>
+  path = <span class='fu'><a href='sample_fu_allocation_table_path.html'>sample_fu_allocation_table_path</a></span>(),
+  fu_allocations_tab_name = <span class='kw'>IEATools</span>::<span class='kw'><a href='fu_analysis_file_info.html'>fu_analysis_file_info</a></span><span class='op'>$</span><span class='kw'>fu_allocation_tab_name</span>,
+  country = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>country</span>,
+  flow_aggregation_point = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow_aggregation_point</span>,
+  ef_product = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>ef_product</span>,
+  machine = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>machine</span>,
+  eu_product = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>eu_product</span>,
+  destination = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>destination</span>,
+  non_energy_machine = <span class='st'>"Non-energy"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -194,7 +194,8 @@ Violations of this requirement cause errors to be thrown.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Loads final-to-useful allocation data supplied with the package</span>
-<span class='fu'>load_fu_allocation_data</span>()</div><div class='output co'>#&gt;     Country Method Energy.type Last.stage Ledger.side  Flow.aggregation.point
+<span class='fu'>load_fu_allocation_data</span>()
+</div><div class='output co'>#&gt;     Country Method Energy.type Last.stage Ledger.side  Flow.aggregation.point
 #&gt; 1       GHA    PCM           E      Final      Supply Energy industry own use
 #&gt; 2       GHA    PCM           E      Final      Supply Energy industry own use
 #&gt; 3       GHA    PCM           E      Final      Supply Energy industry own use
@@ -3979,7 +3980,7 @@ Violations of this requirement cause errors to be thrown.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

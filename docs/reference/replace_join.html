@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title><code>full_join</code> with replacement — replace_join • IEATools</title>
+<title>full_join with replacement — replace_join • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="<code>full_join</code> with replacement — replace_join" />
+<meta property="og:title" content="full_join with replacement — replace_join" />
 <meta property="og:description" content="Perform a modified dplyr::full_join() on x and y,
 returning all columns from c,
 non-matching rows from x,
@@ -77,7 +77,7 @@ and adds all unmatched rows from y." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.36</span>
       </span>
     </div>
 
@@ -150,13 +150,13 @@ and adds all unmatched rows from <code>y</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>replace_join</span>(
-  <span class='no'>x</span>,
-  <span class='no'>y</span>,
-  <span class='no'>replace_col</span>,
-  <span class='kw'>by</span> <span class='kw'>=</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>intersect</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>x</span>), <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>y</span>)) <span class='kw'>%&gt;%</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/reexports.html'>setdiff</a></span>(<span class='no'>replace_col</span>),
-  <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>".x"</span>, <span class='st'>".y"</span>),
-  <span class='no'>...</span>
+  <span class='kw'>x</span>,
+  <span class='kw'>y</span>,
+  <span class='kw'>replace_col</span>,
+  by = <span class='kw'>dplyr</span>::<span class='fu'><a href='https://rdrr.io/pkg/generics/man/setops.html'>intersect</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>x</span>), <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>y</span>)) <span class='op'>%&gt;%</span> <span class='kw'>dplyr</span>::<span class='fu'><a href='https://rdrr.io/pkg/generics/man/setops.html'>setdiff</a></span>(<span class='kw'>replace_col</span>),
+  copy = <span class='fl'>FALSE</span>,
+  suffix = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>".x"</span>, <span class='st'>".y"</span>),
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -213,23 +213,28 @@ See examples.</p>
 <p>If <code>replace_col</code> is not in both <code>x</code> and <code>y</code>, <code>x</code> is returned, unmodified.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>DFA</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"A"</span>, <span class='st'>"B"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='no'>DFB</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>3</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"C"</span>, <span class='st'>"D"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'>replace_join</span>(<span class='no'>DFA</span>, <span class='no'>DFB</span>, <span class='kw'>replace_col</span> <span class='kw'>=</span> <span class='st'>"y"</span>)</div><div class='output co'>#&gt;   x y
+    <pre class="examples"><div class='input'><span class='kw'>DFA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(x = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>), y = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"A"</span>, <span class='st'>"B"</span>), stringsAsFactors = <span class='fl'>FALSE</span>)
+<span class='kw'>DFB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(x = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>3</span>), y = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"C"</span>, <span class='st'>"D"</span>), stringsAsFactors = <span class='fl'>FALSE</span>)
+<span class='fu'>replace_join</span>(<span class='kw'>DFA</span>, <span class='kw'>DFB</span>, replace_col = <span class='st'>"y"</span>)
+</div><div class='output co'>#&gt;   x y
 #&gt; 1 1 A
 #&gt; 2 2 C
-#&gt; 3 3 D</div><div class='input'><span class='fu'>replace_join</span>(<span class='no'>DFB</span>, <span class='no'>DFA</span>, <span class='kw'>replace_col</span> <span class='kw'>=</span> <span class='st'>"y"</span>)</div><div class='output co'>#&gt;   x y
+#&gt; 3 3 D</div><div class='input'><span class='fu'>replace_join</span>(<span class='kw'>DFB</span>, <span class='kw'>DFA</span>, replace_col = <span class='st'>"y"</span>)
+</div><div class='output co'>#&gt;   x y
 #&gt; 1 2 B
 #&gt; 2 3 D
-#&gt; 3 1 A</div><div class='input'><span class='no'>DFC</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"M"</span>, <span class='st'>"N"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'>replace_join</span>(<span class='no'>DFA</span>, <span class='no'>DFC</span>, <span class='kw'>replace_col</span> <span class='kw'>=</span> <span class='st'>"y"</span>)</div><div class='output co'>#&gt;   x y
+#&gt; 3 1 A</div><div class='input'><span class='kw'>DFC</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(x = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>), y = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"M"</span>, <span class='st'>"N"</span>), stringsAsFactors = <span class='fl'>FALSE</span>)
+<span class='fu'>replace_join</span>(<span class='kw'>DFA</span>, <span class='kw'>DFC</span>, replace_col = <span class='st'>"y"</span>)
+</div><div class='output co'>#&gt;   x y
 #&gt; 1 1 A
 #&gt; 2 2 M
-#&gt; 3 2 N</div><div class='input'><span class='fu'>replace_join</span>(<span class='no'>DFC</span>, <span class='no'>DFA</span>, <span class='kw'>replace_col</span> <span class='kw'>=</span> <span class='st'>"y"</span>)</div><div class='output co'>#&gt;   x y
+#&gt; 3 2 N</div><div class='input'><span class='fu'>replace_join</span>(<span class='kw'>DFC</span>, <span class='kw'>DFA</span>, replace_col = <span class='st'>"y"</span>)
+</div><div class='output co'>#&gt;   x y
 #&gt; 1 2 B
 #&gt; 2 2 B
-#&gt; 3 1 A</div><div class='input'><span class='no'>DFD</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"A"</span>, <span class='st'>"B"</span>), <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'>replace_join</span>(<span class='no'>DFC</span>, <span class='no'>DFD</span>, <span class='kw'>replace_col</span> <span class='kw'>=</span> <span class='st'>"y"</span>)</div><div class='output co'>#&gt;   x y
+#&gt; 3 1 A</div><div class='input'><span class='kw'>DFD</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(x = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>), y = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"A"</span>, <span class='st'>"B"</span>), stringsAsFactors = <span class='fl'>FALSE</span>)
+<span class='fu'>replace_join</span>(<span class='kw'>DFC</span>, <span class='kw'>DFD</span>, replace_col = <span class='st'>"y"</span>)
+</div><div class='output co'>#&gt;   x y
 #&gt; 1 2 A
 #&gt; 2 2 B
 #&gt; 3 2 A
@@ -249,7 +254,7 @@ See examples.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>
