@@ -80,7 +80,7 @@ tp_sinks_to_nonenergy()
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.36</span>
       </span>
     </div>
 
@@ -155,7 +155,7 @@ It bundles several others:</p><ol>
 
     </div>
 
-    <pre class="usage"><span class='fu'>specify_all</span>(<span class='no'>.tidy_iea_df</span>)</pre>
+    <pre class="usage"><span class='fu'>specify_all</span>(<span class='kw'>.tidy_iea_df</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -177,8 +177,9 @@ See examples for two ways to achieve the same result.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Simple</span>
-<span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>specify_all</span>()</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 413 x 11</span><span>
+<span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'>specify_all</span>()
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 413 x 11</span><span>
 #&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           
 #&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
@@ -193,12 +194,13 @@ See examples for two ways to achieve the same result.</p>
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other           
 #&gt; </span><span style='color: #949494;'># … with 403 more rows, and 4 more variables: Flow </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Product </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,</span><span>
 #&gt; </span><span style='color: #949494;'>#   Unit </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, E.dot </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='co'># Complicated</span>
-<span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='specify_primary_production.html'>specify_primary_production</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='specify_production_to_resources.html'>specify_production_to_resources</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='specify_tp_eiou.html'>specify_tp_eiou</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='specify_interface_industries.html'>specify_interface_industries</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='tp_sinks_to_nonenergy.html'>tp_sinks_to_nonenergy</a></span>()</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 413 x 11</span><span>
+<span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='specify_primary_production.html'>specify_primary_production</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='specify_production_to_resources.html'>specify_production_to_resources</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='specify_tp_eiou.html'>specify_tp_eiou</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='specify_interface_industries.html'>specify_interface_industries</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='tp_sinks_to_nonenergy.html'>tp_sinks_to_nonenergy</a></span>()
+</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 413 x 11</span><span>
 #&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           
 #&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
@@ -228,7 +230,7 @@ See examples for two ways to achieve the same result.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

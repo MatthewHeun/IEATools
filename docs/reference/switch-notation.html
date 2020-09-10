@@ -86,7 +86,7 @@ Specifically, they can work with a single matrix or a list of matrices supplied 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.36</span>
       </span>
     </div>
 
@@ -167,13 +167,13 @@ between the two notations.</p><ul>
 Specifically, they can work with a single matrix or a list of matrices supplied to the <code>m</code> argument.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>arrow_to_from_byname</span>(<span class='no'>m</span>, <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>))
+    <pre class="usage"><span class='fu'>arrow_to_from_byname</span>(<span class='kw'>m</span>, margin = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>))
 
-<span class='fu'>from_to_arrow_byname</span>(<span class='no'>m</span>, <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>))
+<span class='fu'>from_to_arrow_byname</span>(<span class='kw'>m</span>, margin = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>))
 
-<span class='fu'>arrow_to_bracket_byname</span>(<span class='no'>m</span>, <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>))
+<span class='fu'>arrow_to_bracket_byname</span>(<span class='kw'>m</span>, margin = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>))
 
-<span class='fu'>bracket_to_arrow_byname</span>(<span class='no'>m</span>, <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>))</pre>
+<span class='fu'>bracket_to_arrow_byname</span>(<span class='kw'>m</span>, margin = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>))</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -194,20 +194,26 @@ Specifically, they can work with a single matrix or a list of matrices supplied 
     <p>An object of same length as <code>m</code> with switched notation.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>,
-              <span class='fl'>3</span>, <span class='fl'>4</span>), <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>byrow</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-            <span class='kw'>dimnames</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a -&gt; b"</span>, <span class='st'>"c -&gt; d"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"f [e]"</span>, <span class='st'>"h [g]"</span>)))
-<span class='no'>m</span></div><div class='output co'>#&gt;        f [e] h [g]
+    <pre class="examples"><div class='input'><span class='kw'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>,  
+              <span class='fl'>3</span>, <span class='fl'>4</span>), nrow = <span class='fl'>2</span>, ncol = <span class='fl'>2</span>, byrow = <span class='fl'>TRUE</span>, 
+            dimnames = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"a -&gt; b"</span>, <span class='st'>"c -&gt; d"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"f [e]"</span>, <span class='st'>"h [g]"</span>)))
+<span class='kw'>m</span>
+</div><div class='output co'>#&gt;        f [e] h [g]
 #&gt; a -&gt; b     1     2
-#&gt; c -&gt; d     3     4</div><div class='input'><span class='fu'>arrow_to_from_byname</span>(<span class='no'>m</span>)</div><div class='output co'>#&gt;            f [e] h [g]
+#&gt; c -&gt; d     3     4</div><div class='input'><span class='fu'>arrow_to_from_byname</span>(<span class='kw'>m</span>)
+</div><div class='output co'>#&gt;            f [e] h [g]
 #&gt; b [from a]     1     2
-#&gt; d [from c]     3     4</div><div class='input'><span class='fu'>arrow_to_from_byname</span>(<span class='no'>m</span>, <span class='kw'>margin</span> <span class='kw'>=</span> <span class='fl'>2</span>) <span class='co'># No changes expected.</span></div><div class='output co'>#&gt;        f [e] h [g]
+#&gt; d [from c]     3     4</div><div class='input'><span class='fu'>arrow_to_from_byname</span>(<span class='kw'>m</span>, margin = <span class='fl'>2</span>) <span class='co'># No changes expected.</span>
+</div><div class='output co'>#&gt;        f [e] h [g]
 #&gt; a -&gt; b     1     2
-#&gt; c -&gt; d     3     4</div><div class='input'><span class='fu'>from_to_arrow_byname</span>(<span class='no'>m</span>)</div><div class='output co'>#&gt;        f [e] h [g]
+#&gt; c -&gt; d     3     4</div><div class='input'><span class='fu'>from_to_arrow_byname</span>(<span class='kw'>m</span>)
+</div><div class='output co'>#&gt;        f [e] h [g]
 #&gt; a -&gt; b     1     2
-#&gt; c -&gt; d     3     4</div><div class='input'><span class='fu'>arrow_to_bracket_byname</span>(<span class='no'>m</span>)</div><div class='output co'>#&gt;       f [e] h [g]
+#&gt; c -&gt; d     3     4</div><div class='input'><span class='fu'>arrow_to_bracket_byname</span>(<span class='kw'>m</span>)
+</div><div class='output co'>#&gt;       f [e] h [g]
 #&gt; b [a]     1     2
-#&gt; d [c]     3     4</div><div class='input'><span class='fu'>bracket_to_arrow_byname</span>(<span class='no'>m</span>)</div><div class='output co'>#&gt;        e -&gt; f g -&gt; h
+#&gt; d [c]     3     4</div><div class='input'><span class='fu'>bracket_to_arrow_byname</span>(<span class='kw'>m</span>)
+</div><div class='output co'>#&gt;        e -&gt; f g -&gt; h
 #&gt; a -&gt; b      1      2
 #&gt; c -&gt; d      3      4</div><div class='input'>
 </div></pre>
@@ -226,7 +232,7 @@ Specifically, they can work with a single matrix or a list of matrices supplied 
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

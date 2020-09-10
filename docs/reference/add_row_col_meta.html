@@ -74,7 +74,7 @@ information to .tidy_iea_df." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.36</span>
       </span>
     </div>
 
@@ -144,23 +144,23 @@ information to <code>.tidy_iea_df</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>add_row_col_meta</span>(
-  <span class='no'>.tidy_iea_df</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>product</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow</span>,
-  <span class='kw'>matnames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>matnames</span>,
-  <span class='kw'>U</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>U</span>,
-  <span class='kw'>U_EIOU</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>U_eiou</span>,
-  <span class='kw'>R</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>R</span>,
-  <span class='kw'>V</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>V</span>,
-  <span class='kw'>Y</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='psut_cols.html'>psut_cols</a></span>$<span class='no'>Y</span>,
-  <span class='kw'>industry_type</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>industry</span>,
-  <span class='kw'>product_type</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>product</span>,
-  <span class='kw'>sector_type</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>sector</span>,
-  <span class='kw'>resource_type</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>resource</span>,
-  <span class='kw'>rownames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>rownames</span>,
-  <span class='kw'>colnames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>colnames</span>,
-  <span class='kw'>rowtypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>rowtypes</span>,
-  <span class='kw'>coltypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>coltypes</span>
+  <span class='kw'>.tidy_iea_df</span>,
+  product = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>product</span>,
+  flow = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow</span>,
+  matnames = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>matnames</span>,
+  U = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>U</span>,
+  U_EIOU = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>U_eiou</span>,
+  R = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>R</span>,
+  V = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>V</span>,
+  Y = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>Y</span>,
+  industry_type = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>industry</span>,
+  product_type = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>product</span>,
+  sector_type = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>sector</span>,
+  resource_type = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>resource</span>,
+  rownames = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>rownames</span>,
+  colnames = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>colnames</span>,
+  rowtypes = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>rowtypes</span>,
+  coltypes = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>coltypes</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -232,10 +232,11 @@ Default is "Industry".</p></td>
 <code>rowtype</code>, and <code>coltype</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='add_psut_matnames.html'>add_psut_matnames</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>add_row_col_meta</span>()</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 402 x 16</span><span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+<span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='add_psut_matnames.html'>add_psut_matnames</a></span>() <span class='op'>%&gt;%</span>
+  <span class='fu'>add_row_col_meta</span>()
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 402 x 16</span><span>
 #&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           
 #&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e…
@@ -266,7 +267,7 @@ Default is "Industry".</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>
