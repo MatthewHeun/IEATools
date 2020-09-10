@@ -1,11 +1,6 @@
 pandoc: 2.7.3
-pkgdown: 1.5.1
+pkgdown: 1.6.0
 pkgdown_sha: ~
-articles:
-  IEATools: IEATools.html
-  final_to_useful: final_to_useful.html
-  fix_iea_data: fix_iea_data.html
-  prep_psut: prep_psut.html
-  specify: specify.html
-last_built: 2020-08-26T17:22Z
+articles: []
+last_built: 2020-09-10T21:25Z
 

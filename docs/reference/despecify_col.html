@@ -76,7 +76,7 @@ To enable sorting, this function de-specifies a column in .df." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.36</span>
       </span>
     </div>
 
@@ -148,12 +148,12 @@ To enable sorting, this function de-specifies a column in <code>.df</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>despecify_col</span>(
-  <span class='no'>.df</span>,
-  <span class='no'>col</span>,
-  <span class='no'>despecified_col</span>,
-  <span class='kw'>notations</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='of_notation.html'>of_notation</a></span>, <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='from_notation.html'>from_notation</a></span>),
-  <span class='kw'>production</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tpes_flows.html'>tpes_flows</a></span>$<span class='no'>production</span>,
-  <span class='kw'>resources</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tpes_flows.html'>tpes_flows</a></span>$<span class='no'>resources</span>
+  <span class='kw'>.df</span>,
+  <span class='kw'>col</span>,
+  <span class='kw'>despecified_col</span>,
+  notations = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>IEATools</span>::<span class='kw'><a href='of_notation.html'>of_notation</a></span>, <span class='kw'>IEATools</span>::<span class='kw'><a href='from_notation.html'>from_notation</a></span>),
+  production = <span class='kw'>IEATools</span>::<span class='kw'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='kw'>production</span>,
+  resources = <span class='kw'>IEATools</span>::<span class='kw'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='kw'>resources</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -194,12 +194,13 @@ because both <code><a href='of_notation.html'>IEATools::of_notation</a></code> a
 <p>Identification of parenthetical notation delimiters is determined by a notation object</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='specify_all.html'>specify_all</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>despecify_col</span>(<span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>, <span class='kw'>despecified_col</span> <span class='kw'>=</span> <span class='st'>"clean_Flow"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>Flow</span>, <span class='no'>Product</span>, <span class='no'>E.dot</span>, <span class='no'>clean_Flow</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/startsWith.html'>endsWith</a></span>(<span class='no'>Flow</span>, <span class='no'>bracket_notation</span><span class='kw'>[[</span><span class='st'>"suff_end"</span>]]))</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 83 x 4</span><span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+<span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='specify_all.html'>specify_all</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'>despecify_col</span>(col = <span class='st'>"Flow"</span>, despecified_col = <span class='st'>"clean_Flow"</span>) <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='kw'>Flow</span>, <span class='kw'>Product</span>, <span class='kw'>E.dot</span>, <span class='kw'>clean_Flow</span>) <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/startsWith.html'>endsWith</a></span>(<span class='kw'>Flow</span>, <span class='kw'>bracket_notation</span>[[<span class='st'>"suff_end"</span>]]))
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 83 x 4</span><span>
 #&gt;    Flow                                  Product                E.dot clean_Flow
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                                 </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span>    
 #&gt; </span><span style='color: #BCBCBC;'> 1</span><span> Exports [of Fuel oil]                 Fuel oil             -</span><span style='color: #BB0000;'>178.</span><span>   </span><span style='color: #949494;'>&lt;chr [1]&gt;</span><span> 
@@ -228,7 +229,7 @@ because both <code><a href='of_notation.html'>IEATools::of_notation</a></code> a
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

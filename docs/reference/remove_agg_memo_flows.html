@@ -74,7 +74,7 @@ This function does so, using default identifying strings for aggregations and me
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.36</span>
       </span>
     </div>
 
@@ -144,12 +144,12 @@ This function does so, using default identifying strings for aggregations and me
     </div>
 
     <pre class="usage"><span class='fu'>remove_agg_memo_flows</span>(
-  <span class='no'>.iea_df</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>product</span>,
-  <span class='kw'>agg_flows</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='aggregation_flows.html'>aggregation_flows</a></span>,
-  <span class='kw'>memo_flow_prefixes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='memo_aggregation_flow_prefixes.html'>memo_aggregation_flow_prefixes</a></span>,
-  <span class='kw'>memo_product_prefixes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='memo_aggregation_product_prefixes.html'>memo_aggregation_product_prefixes</a></span>
+  <span class='kw'>.iea_df</span>,
+  flow = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow</span>,
+  product = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>product</span>,
+  agg_flows = <span class='kw'>IEATools</span>::<span class='kw'><a href='aggregation_flows.html'>aggregation_flows</a></span>,
+  memo_flow_prefixes = <span class='kw'>IEATools</span>::<span class='kw'><a href='memo_aggregation_flow_prefixes.html'>memo_aggregation_flow_prefixes</a></span>,
+  memo_product_prefixes = <span class='kw'>IEATools</span>::<span class='kw'><a href='memo_aggregation_product_prefixes.html'>memo_aggregation_product_prefixes</a></span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -192,10 +192,11 @@ There are several places where trailing spaces are found, such as "Nuclear indus
 This function strips all leading and trailing spaces in the <code>Flow</code> and <code>Product</code> columns.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='iea_df.html'>iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='rename_iea_df_cols.html'>rename_iea_df_cols</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>remove_agg_memo_flows</span>()</div><div class='output co'>#&gt;            Country                                          Flow
+    <pre class="examples"><div class='input'><span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='iea_df.html'>iea_df</a></span>() <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='rename_iea_df_cols.html'>rename_iea_df_cols</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'>remove_agg_memo_flows</span>()
+</div><div class='output co'>#&gt;            Country                                          Flow
 #&gt; 1            Ghana                                    Production
 #&gt; 2            Ghana                                    Production
 #&gt; 3            Ghana                                    Production
@@ -30309,7 +30310,7 @@ This function strips all leading and trailing spaces in the <code>Flow</code> an
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

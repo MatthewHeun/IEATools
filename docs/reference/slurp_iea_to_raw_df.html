@@ -84,7 +84,7 @@ Files should have a return character at the end of their final line." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.36</span>
       </span>
     </div>
 
@@ -164,11 +164,11 @@ Files should have a return character at the end of their final line.</p>
     </div>
 
     <pre class="usage"><span class='fu'>slurp_iea_to_raw_df</span>(
-  <span class='kw'>.iea_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>text</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>expected_1st_line_start</span> <span class='kw'>=</span> <span class='st'>",,TIME"</span>,
-  <span class='kw'>expected_2nd_line_start</span> <span class='kw'>=</span> <span class='st'>"COUNTRY,FLOW,PRODUCT"</span>,
-  <span class='kw'>expected_simple_start</span> <span class='kw'>=</span> <span class='no'>expected_2nd_line_start</span>
+  .iea_file = <span class='kw'>NULL</span>,
+  text = <span class='kw'>NULL</span>,
+  expected_1st_line_start = <span class='st'>",,TIME"</span>,
+  expected_2nd_line_start = <span class='st'>"COUNTRY,FLOW,PRODUCT"</span>,
+  expected_simple_start = <span class='kw'>expected_2nd_line_start</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -211,16 +211,19 @@ because column names in the output are constructed from the header line(s) of <c
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># 2018 and earlier file format</span>
-<span class='fu'>slurp_iea_to_raw_df</span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>",,TIME,1960,1961\n"</span>,
+<span class='fu'>slurp_iea_to_raw_df</span>(text = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>",,TIME,1960,1961\n"</span>,
                      <span class='st'>"COUNTRY,FLOW,PRODUCT\n"</span>,
-                     <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))</div><div class='output co'>#&gt;    COUNTRY       FLOW                  PRODUCT 1960 1961
+                     <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))
+</div><div class='output co'>#&gt;    COUNTRY       FLOW                  PRODUCT 1960 1961
 #&gt; 1:   World Production Hard coal (if no detail)   42   43</div><div class='input'><span class='co'># With extra commas on the 2nd line</span>
-<span class='fu'>slurp_iea_to_raw_df</span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>",,TIME,1960,1961\n"</span>,
+<span class='fu'>slurp_iea_to_raw_df</span>(text = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>",,TIME,1960,1961\n"</span>,
                      <span class='st'>"COUNTRY,FLOW,PRODUCT,,,\n"</span>,
-                     <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))</div><div class='output co'>#&gt;    COUNTRY       FLOW                  PRODUCT 1960 1961
+                     <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))
+</div><div class='output co'>#&gt;    COUNTRY       FLOW                  PRODUCT 1960 1961
 #&gt; 1:   World Production Hard coal (if no detail)   42   43</div><div class='input'><span class='co'># With a clean first line (2019 file format)</span>
-<span class='fu'>slurp_iea_to_raw_df</span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"COUNTRY,FLOW,PRODUCT,1960,1961\n"</span>,
-                     <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))</div><div class='output co'>#&gt;    COUNTRY       FLOW                  PRODUCT 1960 1961
+<span class='fu'>slurp_iea_to_raw_df</span>(text = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"COUNTRY,FLOW,PRODUCT,1960,1961\n"</span>,
+                     <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))
+</div><div class='output co'>#&gt;    COUNTRY       FLOW                  PRODUCT 1960 1961
 #&gt; 1:   World Production Hard coal (if no detail)   42   43</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -237,7 +240,7 @@ because column names in the output are constructed from the header line(s) of <c
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

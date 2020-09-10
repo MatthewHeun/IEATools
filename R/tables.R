@@ -583,7 +583,8 @@ complete_eta_fu_table <- function(eta_fu_table,
   country_to_complete <- eta_fu_table %>% 
     magrittr::extract2(country) %>% 
     unique()
-  assertthat::assert_that(length(country_to_complete) == 1, 
+  # 0-length country_to_complete is OK, because it means we lack any eta_fu information for this country/year combination
+  assertthat::assert_that(length(country_to_complete) <= 1, 
                           msg = glue::glue("Found more than one country to complete in complete_eta_fu_table(): {glue::glue_collapse(country_to_complete, sep = ', ', last = ' and ')}"))
   
   fu_allocation_country <- fu_allocation_table %>% 
@@ -593,11 +594,18 @@ complete_eta_fu_table <- function(eta_fu_table,
   assertthat::assert_that(length(fu_allocation_country) == 1, 
                           msg = glue::glue("Number of countries is not 1 in argument tidy_fu_allocation_table in complete_eta_fu_table(): {glue::glue_collapse(fu_allocation_country, sep = ', ', last = ' and ')}"))
   
-  # Make sure the country of the eta_fu_table matches the tidy_fu_allocation_table
-  assertthat::assert_that(fu_allocation_country == country_to_complete, 
-                          msg = paste0("The country of eta_fu_table (", country_to_complete, 
-                                       ") is not the same as the country in the tidy_fu_allocation_table (", fu_allocation_country, 
-                                       "). They must match."))
+  if (length(country_to_complete == 1)) {
+    # Make sure the country of the eta_fu_table matches the tidy_fu_allocation_table
+    assertthat::assert_that(fu_allocation_country == country_to_complete, 
+                            msg = paste0("The country of eta_fu_table (", country_to_complete, 
+                                         ") is not the same as the country in the tidy_fu_allocation_table (", fu_allocation_country, 
+                                         "). They must match."))
+  } else {
+    # There are no countries in eta_fu_table, presumably because 
+    # no efficiency or exergy-to-energy ratio data were supplied for this year. 
+    # In this event, assume that the fu_allocation_country is the country that we want to complete.
+    country_to_complete <- fu_allocation_country
+  }
 
   # We don't care about the source of FU allocation data in this function.
   # So for the purposes of these calculations, we can remove the c_source column, if it exists. 

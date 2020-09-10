@@ -76,7 +76,7 @@ to load a raw data frame of data." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.36</span>
       </span>
     </div>
 
@@ -148,17 +148,17 @@ to load a raw data frame of data.</p>
     </div>
 
     <pre class="usage"><span class='fu'>iea_df</span>(
-  <span class='kw'>.iea_file</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>text</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>expected_1st_line_start</span> <span class='kw'>=</span> <span class='st'>",,TIME"</span>,
-  <span class='kw'>expected_2nd_line_start</span> <span class='kw'>=</span> <span class='st'>"COUNTRY,FLOW,PRODUCT"</span>,
-  <span class='kw'>expected_simple_start</span> <span class='kw'>=</span> <span class='no'>expected_2nd_line_start</span>,
-  <span class='kw'>.slurped_iea_df</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"FLOW"</span>,
-  <span class='kw'>missing_data</span> <span class='kw'>=</span> <span class='st'>".."</span>,
-  <span class='kw'>not_applicable_data</span> <span class='kw'>=</span> <span class='st'>"x"</span>,
-  <span class='kw'>confidential_data</span> <span class='kw'>=</span> <span class='st'>"c"</span>,
-  <span class='kw'>estimated_year</span> <span class='kw'>=</span> <span class='st'>"E"</span>
+  .iea_file = <span class='kw'>NULL</span>,
+  text = <span class='kw'>NULL</span>,
+  expected_1st_line_start = <span class='st'>",,TIME"</span>,
+  expected_2nd_line_start = <span class='st'>"COUNTRY,FLOW,PRODUCT"</span>,
+  expected_simple_start = <span class='kw'>expected_2nd_line_start</span>,
+  .slurped_iea_df = <span class='kw'>NULL</span>,
+  flow = <span class='st'>"FLOW"</span>,
+  missing_data = <span class='st'>".."</span>,
+  not_applicable_data = <span class='st'>"x"</span>,
+  confidential_data = <span class='st'>"c"</span>,
+  estimated_year = <span class='st'>"E"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -270,16 +270,19 @@ passing the output of this function to the <code>.iea_df</code> argument of <cod
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Original file format</span>
-<span class='fu'>iea_df</span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>",,TIME,1960,1961\n"</span>,
+<span class='fu'>iea_df</span>(text = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>",,TIME,1960,1961\n"</span>,
                      <span class='st'>"COUNTRY,FLOW,PRODUCT\n"</span>,
-                     <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))</div><div class='output co'>#&gt;   COUNTRY       FLOW                  PRODUCT 1960 1961
+                     <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))
+</div><div class='output co'>#&gt;   COUNTRY       FLOW                  PRODUCT 1960 1961
 #&gt; 1   World Production Hard coal (if no detail)   42   43</div><div class='input'><span class='co'># With extra commas on the 2nd line</span>
-<span class='fu'>iea_df</span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>",,TIME,1960,1961\n"</span>,
+<span class='fu'>iea_df</span>(text = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>",,TIME,1960,1961\n"</span>,
                      <span class='st'>"COUNTRY,FLOW,PRODUCT,,,\n"</span>,
-                     <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))</div><div class='output co'>#&gt;   COUNTRY       FLOW                  PRODUCT 1960 1961
+                     <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))
+</div><div class='output co'>#&gt;   COUNTRY       FLOW                  PRODUCT 1960 1961
 #&gt; 1   World Production Hard coal (if no detail)   42   43</div><div class='input'><span class='co'># With a clean first line</span>
-<span class='fu'>iea_df</span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"COUNTRY,FLOW,PRODUCT,1960,1961\n"</span>,
-                     <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))</div><div class='output co'>#&gt;   COUNTRY       FLOW                  PRODUCT 1960 1961
+<span class='fu'>iea_df</span>(text = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"COUNTRY,FLOW,PRODUCT,1960,1961\n"</span>,
+                     <span class='st'>"World,Production,Hard coal (if no detail),42,43"</span>))
+</div><div class='output co'>#&gt;   COUNTRY       FLOW                  PRODUCT 1960 1961
 #&gt; 1   World Production Hard coal (if no detail)   42   43</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -296,7 +299,7 @@ passing the output of this function to the <code>.iea_df</code> argument of <cod
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

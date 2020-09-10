@@ -4,12 +4,12 @@ citEntry(entry = "Manual",
   title        = "IEATools: Tools for munging and manipulating IEA extended energy balance data",
   author       = personList(as.person("Matthew Kuperus Heun")),
   year         = "2020",
-  note         = "R package version 0.1.35",
+  note         = "R package version 0.1.36",
   url          = "https://github.com/MatthewHeun/IEATools",
 
   textVersion  =
   paste("Matthew Kuperus Heun (2020).",
         "IEATools: Tools for munging and manipulating IEA extended energy balance data.",
-        "R package version 0.1.35.",
+        "R package version 0.1.36.",
         "https://github.com/MatthewHeun/IEATools")
 )

@@ -78,7 +78,7 @@ Identifiers for the variables are in the quantity column." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.36</span>
       </span>
     </div>
 
@@ -152,13 +152,13 @@ Identifiers for the variables are in the <code>quantity</code> column.</p>
     </div>
 
     <pre class="usage"><span class='fu'>tidy_eta_fu_table</span>(
-  <span class='no'>.eta_fu_table</span>,
-  <span class='kw'>year</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>year</span>,
-  <span class='kw'>e_dot_machine</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine</span>,
-  <span class='kw'>e_dot_machine_perc</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine_perc</span>,
-  <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>quantity</span>,
-  <span class='kw'>maximum_values</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>maximum_values</span>,
-  <span class='kw'>.values</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>.values</span>
+  <span class='kw'>.eta_fu_table</span>,
+  year = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>year</span>,
+  e_dot_machine = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_machine</span>,
+  e_dot_machine_perc = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_machine_perc</span>,
+  quantity = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>quantity</span>,
+  maximum_values = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>maximum_values</span>,
+  .values = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>.values</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -186,8 +186,9 @@ Identifiers for the variables are in the <code>quantity</code> column.</p>
     <p>If <code>.eta_fu_table</code> is already tidy, it is returned unmodified.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='load_eta_fu_data.html'>load_eta_fu_data</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>tidy_eta_fu_table</span>()</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 249 x 10</span><span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='load_eta_fu_data.html'>load_eta_fu_data</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'>tidy_eta_fu_table</span>()
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 249 x 10</span><span>
 #&gt;    Country Method Energy.type Last.stage Unit  Machine Eu.product Quantity  Year
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final      ktoe  Automo… MD         eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
@@ -216,7 +217,7 @@ Identifiers for the variables are in the <code>quantity</code> column.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>
