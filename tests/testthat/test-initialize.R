@@ -510,7 +510,9 @@ test_that("Loading regional concordance matrix works as intended", {
 #--- EAR, 02/09/2020
 
 
-test_that("Aggregating by countries works as intended", {
+# This code tests that South Africa (ZAF) and Ghana (GHA) get aggregated properly into a GHA_ZAF country.
+# So there is only one aggregation region as output in this test.
+test_that("Aggregating South Africa and Ghana works as intended", {
 
   ### 1. First, checking that it works well when net_trade flag is FALSE.
   tidy_GHA_ZAF_df <- load_tidy_iea_df()
@@ -590,3 +592,113 @@ test_that("Aggregating by countries works as intended", {
 
 })
 # --- EAR, 02/09/2020
+
+
+# This code tests that aggregation by regions works as intended by;
+# (1) Aggregating South Africa (ZAF) and Matt's Great Country (MGC), a duplicate of South Africa;
+# (2) Aggregating Ghana (GHA) and Emmanuel's Great Country (EGC), a duplicate of Ghana;
+# There are therefore two aggregation regions as output.
+test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
+  
+  ### 1. First, checking that it works well when net_trade flag is FALSE.
+  tidy_GHA_ZAF_EGC_MGC_df <- load_tidy_iea_df("../testdata/iea_GHA_ZAF_MGC_EGC.csv")
+  
+  aggregated_regions <- aggregate_regions(tidy_GHA_ZAF_EGC_MGC_df,
+                                          file_path = "../testdata/checking_aggregation_GHA_ZAF_MGC_EGC.csv",
+                                          net_trade = FALSE)
+  
+  manual_aggregation <- tidy_GHA_ZAF_EGC_MGC_df %>%
+    dplyr::mutate(
+      Country = dplyr::case_when(
+        Country == "ZAF" ~ "ZAF_MGC",
+        Country == "Matt Great Country" ~ "ZAF_MGC",
+        Country == "GHA" ~ "GHA_EGC",
+        Country == "Emmanuel Great Country" ~ "GHA_EGC"
+      )
+    ) %>%
+    dplyr::group_by(Country, Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
+    dplyr::summarise(E.dot.aggregated = sum(E.dot))
+  
+  comparing <- aggregated_regions %>%
+    dplyr::full_join(manual_aggregation) %>%
+    dplyr::mutate(
+      difference = E.dot.aggregated - E.dot
+    )
+  
+  # Testing that all rows are perfectly equal and that there are the same number of rows
+  
+  count_non_null_differences <- comparing %>%
+    dplyr::filter(difference != 0) %>%
+    nrow()
+  
+  expect_equal(count_non_null_differences, 0)
+  expect_equal(nrow(aggregated_regions), nrow(manual_aggregation))
+  
+  
+  ### 2. Second, now we check that it works well when net_trade is TRUE.
+  
+  aggregated_regions <- aggregate_regions(tidy_GHA_ZAF_EGC_MGC_df,
+                                          file_path = "../testdata/checking_aggregation_GHA_ZAF_MGC_EGC.csv",
+                                          net_trade = TRUE)
+  
+  manual_aggregation_excl_ie <- tidy_GHA_ZAF_EGC_MGC_df %>%
+    dplyr::filter(! Flow %in% c("Imports", "Exports")) %>%
+    dplyr::mutate(
+      Country = dplyr::case_when(
+        Country == "ZAF" ~ "ZAF_MGC",
+        Country == "Matt Great Country" ~ "ZAF_MGC",
+        Country == "GHA" ~ "GHA_EGC",
+        Country == "Emmanuel Great Country" ~ "GHA_EGC"
+      )
+    ) %>%
+    dplyr::group_by(Country, Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
+    dplyr::summarise(E.dot.aggregated = sum(E.dot))
+  
+  manual_aggregation_ie <- tidy_GHA_ZAF_EGC_MGC_df %>%
+    dplyr::filter(Flow %in% c("Imports", "Exports")) %>%
+    dplyr::mutate(
+      Country = dplyr::case_when(
+        Country == "ZAF" ~ "ZAF_MGC",
+        Country == "Matt Great Country" ~ "ZAF_MGC",
+        Country == "GHA" ~ "GHA_EGC",
+        Country == "Emmanuel Great Country" ~ "GHA_EGC"
+      )
+    ) %>%
+    dplyr::group_by(Country, Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
+    dplyr::summarise(E.dot.aggregated = sum(E.dot)) %>%
+    tidyr::pivot_wider(names_from = Flow, values_from = E.dot.aggregated) %>%
+    dplyr::mutate(
+      Imports = tidyr::replace_na(Imports, 0),
+      Exports = tidyr::replace_na(Exports, 0),
+      Net_Imports = Imports + Exports
+    ) %>%
+    dplyr::select(-c("Imports", "Exports")) %>%
+    tidyr::pivot_longer(cols = Net_Imports, names_to = "Flow", values_to = "E.dot.aggregated") %>%
+    dplyr::mutate(
+      Flow = dplyr::case_when(
+        E.dot.aggregated > 0 ~ "Imports",
+        E.dot.aggregated < 0 ~ "Exports",
+        E.dot.aggregated == 0 ~ "Net_Imports"
+      )
+    ) %>%
+    dplyr::filter(E.dot.aggregated != 0)
+  
+  manual_aggregation <- dplyr::bind_rows(manual_aggregation_excl_ie, manual_aggregation_ie)
+  
+  comparing <- aggregated_regions %>%
+    dplyr::full_join(manual_aggregation) %>%
+    dplyr::mutate(
+      difference = E.dot.aggregated - E.dot
+    )
+  
+  # Testing that all rows are perfectly equal and that there are the same number of rows
+  
+  count_non_null_differences <- comparing %>%
+    dplyr::filter(difference != 0) %>%
+    nrow()
+  
+  expect_equal(count_non_null_differences, 0)
+  expect_equal(nrow(aggregated_regions), nrow(manual_aggregation))
+  
+})
+# --- EAR, 10/09/2020
