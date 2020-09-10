@@ -1047,4 +1047,5 @@ aggregate_regions <- function(.tidy_iea_df,
 }
 # --- EAR, 02/09/2020
 
+#Tidy_IEA_df <- load_tidy_iea_df("/home/manolo/Documents/Extended-Energy-Balances-2018/IEA Extended Energy Balances 2019.csv")
 
