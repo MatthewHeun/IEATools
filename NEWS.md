@@ -1,3 +1,10 @@
+* Fixed bug where missing eta_fu info caused failure.
+  Needed to allow for an empty `eta_fu_table` in `complete_eta_fu_table()`.
+* New tests for the fixed bug.
+    * Now at 636 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # IEATools 0.1.35 (2020-08-26)
 
 * First version that works with full SEAPSUT workflow.
