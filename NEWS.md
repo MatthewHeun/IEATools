@@ -1,3 +1,5 @@
+# IEATools 0.1.36 (2020-09-10)
+
 * Fixed bug where missing eta_fu info caused failure.
   Needed to allow for an empty `eta_fu_table` in `complete_eta_fu_table()`.
 * New tests for the fixed bug.
