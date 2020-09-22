@@ -4,25 +4,33 @@
 \alias{read_regions_concordance}
 \title{Loads region concordance matrix}
 \usage{
-read_regions_concordance(file_path = "data-raw/default_mapping_exiobase.csv")
+read_regions_concordance(
+  file_path = "data-raw/default_mapping_exiobase.csv",
+  country = IEATools::iea_cols$country,
+  iea_regions = "IEA_regions",
+  destination_regions = "Destination_regions"
+)
 }
 \arguments{
 \item{file_path}{The path of the file to be loaded. By default, a concordance table converting IEA regions into Exiobase regions
 is loaded.}
 }
 \value{
-A three column concordance table (as a data frame) mapping the "IEA_regions" column to a "Destination_regions" column, using
-a "Country" column (with iso country IDs) as intermediate, which is added to the loaded concordance table within the function. For
-those IEA regions that do not match to an ISO code (for instance, "World marine bunkers"), the full IEA region name is kept in the "Country" column.
+A three column concordance table (as a data frame) mapping the \code{iea_regions} column to a \code{destination_regions} column, using
+a \code{country} column (with 3-letter iso country IDs) as intermediate, which is added to the loaded concordance table within the function. For
+those IEA regions that do not match to an ISO code (for instance, "World marine bunkers"), the full IEA region name is kept in the \code{country} column.
 }
 \description{
 This functions loads a user-defined regional concordance matrix that re-routes each IEA region to a user-defined region.
 By default, the concordance matrix used re-routes IEA regions to Exiobase sectors. See details for more information.
 }
 \details{
-The regional concordance matrix must have a first column named "IEA_regions", that identifies the IEA regions to be re-routed,
-and a second column "Destination_regions", that identifies the new regions to IEA regions are re-routed.
+The regional concordance matrix must have a first column named \code{iea_regions}, that identifies the IEA regions to be re-routed,
+and a second column \code{destination_regions}, that identifies the new regions to IEA regions are re-routed.
 There is no need to include all IEA regions;
 those that are not included will be removed when calling the \code{aggregate_regions()} function.
-IEA regions that are rerouted to "NA" or to an empty vakye are aslso removed when calling the \code{aggregate_regions()} function.
+IEA regions that are rerouted to "NA" or to an empty value are also removed when calling the \code{aggregate_regions()} function.
+}
+\examples{
+read_regions_concordance()
 }

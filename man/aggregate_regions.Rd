@@ -7,7 +7,9 @@
 aggregate_regions(
   .tidy_iea_df,
   file_path = "data-raw/default_mapping_exiobase.csv",
-  net_trade = FALSE
+  net_trade = FALSE,
+  country = IEATools::iea_cols$country,
+  destination_regions = "Destination_regions"
 )
 }
 \arguments{

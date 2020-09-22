@@ -957,26 +957,33 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
 #' This functions loads a user-defined regional concordance matrix that re-routes each IEA region to a user-defined region.
 #' By default, the concordance matrix used re-routes IEA regions to Exiobase sectors. See details for more information.
 #' 
-#' The regional concordance matrix must have a first column named "IEA_regions", that identifies the IEA regions to be re-routed,
-#' and a second column "Destination_regions", that identifies the new regions to IEA regions are re-routed. 
+#' The regional concordance matrix must have a first column named `iea_regions`, that identifies the IEA regions to be re-routed,
+#' and a second column `destination_regions`, that identifies the new regions to IEA regions are re-routed. 
 #' There is no need to include all IEA regions; 
 #' those that are not included will be removed when calling the `aggregate_regions()` function.
-#' IEA regions that are rerouted to "NA" or to an empty vakye are aslso removed when calling the `aggregate_regions()` function.
+#' IEA regions that are rerouted to "NA" or to an empty value are also removed when calling the `aggregate_regions()` function.
 #' 
 #' @param file_path The path of the file to be loaded. By default, a concordance table converting IEA regions into Exiobase regions
 #' is loaded.
 #' 
-#' @return A three column concordance table (as a data frame) mapping the "IEA_regions" column to a "Destination_regions" column, using
-#' a "Country" column (with iso country IDs) as intermediate, which is added to the loaded concordance table within the function. For
-#' those IEA regions that do not match to an ISO code (for instance, "World marine bunkers"), the full IEA region name is kept in the "Country" column.
+#' @return A three column concordance table (as a data frame) mapping the `iea_regions` column to a `destination_regions` column, using
+#' a `country` column (with 3-letter iso country IDs) as intermediate, which is added to the loaded concordance table within the function. For
+#' those IEA regions that do not match to an ISO code (for instance, "World marine bunkers"), the full IEA region name is kept in the `country` column.
 #' 
 #' @export
-read_regions_concordance <- function(file_path = "data-raw/default_mapping_exiobase.csv"){
-  concordance_table <- read.csv(file_path) %>%
-    dplyr::mutate(Country = IEA_regions) %>%
-    use_iso_countries() %>%
-    dplyr::filter(! (is.na(Destination_regions) | Destination_regions == "" | is.null(Destination_regions)))
-  return(concordance_table)
+#' 
+#' @examples 
+#' read_regions_concordance()
+read_regions_concordance <- function(file_path = "data-raw/default_mapping_exiobase.csv", 
+                                     country = IEATools::iea_cols$country, 
+                                     iea_regions = "IEA_regions",
+                                     destination_regions = "Destination_regions"){
+  read.csv(file_path) %>%
+    dplyr::mutate(
+      "{country}" := .data[[iea_regions]]
+    ) %>%
+    use_iso_countries(country = country) %>%
+    dplyr::filter(! (is.na(.data[[destination_regions]]) | .data[[destination_regions]] == "" | is.null(.data[[destination_regions]])))
 }
 # --- EAR, 02/09/2020
 
@@ -999,11 +1006,13 @@ read_regions_concordance <- function(file_path = "data-raw/default_mapping_exiob
 #' @export
 aggregate_regions <- function(.tidy_iea_df,
                               file_path = "data-raw/default_mapping_exiobase.csv",
-                              net_trade = FALSE){
+                              net_trade = FALSE, 
+                              country = IEATools::iea_cols$country, 
+                              destination_regions = "Destination_regions"){
   
   concordance_table <- read_regions_concordance(file_path)
   
-  iea_code_regions <- concordance_table[["Country"]]
+  iea_code_regions <- concordance_table[[country]]
   dest_regions <- as.character(concordance_table[["Destination_regions"]])# maybe as character?
   
   aggregated_tidy_iea_df <-.tidy_iea_df %>%
