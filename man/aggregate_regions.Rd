@@ -6,7 +6,7 @@
 \usage{
 aggregate_regions(
   .tidy_iea_df,
-  file_path = "data-raw/default_mapping_exiobase.csv",
+  aggregation_table = "aggregation_table",
   net_trade = FALSE,
   country = IEATools::iea_cols$country,
   destination_regions = "Destination_regions"
@@ -16,11 +16,11 @@ aggregate_regions(
 \item{.tidy_iea_df}{The \code{.tidy_iea_df} data frame that needs to be aggregated by regions. The \code{.tidy_iea_df} is likely
 to have been obtained with the \code{load_tidy_iea_df()} function.}
 
-\item{file_path}{The path of the file to be loaded. By default, a concordance table converting IEA regions into Exiobase regions
-is loaded.}
-
 \item{net_trade}{The boolean that defines whether imports and exports by aggregation region should be converted
 into net imports / exports or not. Default is FALSE.}
+
+\item{file_path}{The path of the file to be loaded. By default, a concordance table converting IEA regions into Exiobase regions
+is loaded.}
 }
 \value{
 A \code{.tidy_iea_df} that contains the data of the input \code{.tidy_iea_df} aggregated by regions as specified in the user-defined

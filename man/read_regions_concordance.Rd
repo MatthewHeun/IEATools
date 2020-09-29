@@ -2,35 +2,49 @@
 % Please edit documentation in R/initialize.R
 \name{read_regions_concordance}
 \alias{read_regions_concordance}
-\title{Loads region concordance matrix}
+\title{Loads region aggregation table}
 \usage{
 read_regions_concordance(
-  file_path = "data-raw/default_mapping_exiobase.csv",
+  file_path = default_aggregation_table_path(2019),
   country = IEATools::iea_cols$country,
   iea_regions = "IEA_regions",
   destination_regions = "Destination_regions"
 )
 }
 \arguments{
-\item{file_path}{The path of the file to be loaded. By default, a concordance table converting IEA regions into Exiobase regions
-is loaded.}
+\item{file_path}{The path of the file (xlsx file) to be loaded. The default path leads to an aggregation table converting IEA regions
+into Exiobase regions for 2019 IEA data is loaded. Using the \code{default_aggregation_table_path()} function, the user can
+select the default IEA regions to Exiobase regions aggregation table for a different year.}
+
+\item{country}{The name of the country column.
+Default is "country".}
+
+\item{iea_regions}{The name of the column containing IEA regions.
+Default is "IEA_regions".}
+
+\item{destination_regions}{The name of the column containing the destination regions.
+Default is "Destination_regions".}
 }
 \value{
-A three column concordance table (as a data frame) mapping the \code{iea_regions} column to a \code{destination_regions} column, using
-a \code{country} column (with 3-letter iso country IDs) as intermediate, which is added to the loaded concordance table within the function. For
-those IEA regions that do not match to an ISO code (for instance, "World marine bunkers"), the full IEA region name is kept in the \code{country} column.
+A three column concordance table (as a data frame) mapping the \code{iea_regions} column to a \code{destination_regions} column,
+using a \code{country} column (with iso country IDs) as intermediate, which is added to the loaded aggregation table
+within the function.
+For those IEA regions that do not match to an ISO code (for instance, "World marine bunkers"),
+the full IEA region name is kept in the \code{country} column.
 }
 \description{
-This functions loads a user-defined regional concordance matrix that re-routes each IEA region to a user-defined region.
-By default, the concordance matrix used re-routes IEA regions to Exiobase sectors. See details for more information.
+This functions loads a user-defined aggregation table that re-routes each IEA region to a user-defined region.
+By default, the concordance matrix used re-routes IEA regions to Exiobase regions. See details for more information.
 }
 \details{
-The regional concordance matrix must have a first column named \code{iea_regions}, that identifies the IEA regions to be re-routed,
-and a second column \code{destination_regions}, that identifies the new regions to IEA regions are re-routed.
+The aggregation table must have a column that identifies the IEA regions to be re-routed (default is "IEA_regions"),
+and a second column that identifies the new regions to IEA regions are re-routed (default is "Destination_regions").
 There is no need to include all IEA regions;
 those that are not included will be removed when calling the \code{aggregate_regions()} function.
-IEA regions that are rerouted to "NA" or to an empty value are also removed when calling the \code{aggregate_regions()} function.
+IEA regions that are rerouted to "NA" or to an empty vakye are aslso removed when calling the \code{aggregate_regions()} function.
 }
 \examples{
-read_regions_concordance()
+read_regions_concordance() # Returns the default aggregation table for the year 2019
+read_regions_concordance(file_path = default_aggregation_table_path(2020)) # Returns the default aggregation table for the year 2020
+read_regions_concordance(file_path = "extdata/checking_aggregation_GHA_ZAF.xslx") # Returns an aggregation table that aggregates Ghana and South Africa into a new GHAZAF region
 }

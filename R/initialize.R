@@ -1035,7 +1035,8 @@ aggregate_regions <- function(.tidy_iea_df,
       aggregation_table, by = country
       ) %>%
     dplyr::mutate(#ask Matt here
-      Country = Destination_regions
+      # Country = Destination_regions
+      "{country}" := .data[[destination_regions]]
     ) %>%
     dplyr::group_by(#ask Matt here
       Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit
