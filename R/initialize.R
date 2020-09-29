@@ -952,38 +952,50 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
 
 
 
-#' Loads region concordance matrix
+#' Loads region aggregation table
 #' 
-#' This functions loads a user-defined regional concordance matrix that re-routes each IEA region to a user-defined region.
-#' By default, the concordance matrix used re-routes IEA regions to Exiobase sectors. See details for more information.
+#' This functions loads a user-defined aggregation table that re-routes each IEA region to a user-defined region.
+#' By default, the concordance matrix used re-routes IEA regions to Exiobase regions. See details for more information.
 #' 
-#' The regional concordance matrix must have a first column named `iea_regions`, that identifies the IEA regions to be re-routed,
-#' and a second column `destination_regions`, that identifies the new regions to IEA regions are re-routed. 
+#' The aggregation table must have a column that identifies the IEA regions to be re-routed (default is "IEA_regions"),
+#' and a second column that identifies the new regions to IEA regions are re-routed (default is "Destination_regions"). 
 #' There is no need to include all IEA regions; 
 #' those that are not included will be removed when calling the `aggregate_regions()` function.
-#' IEA regions that are rerouted to "NA" or to an empty value are also removed when calling the `aggregate_regions()` function.
+#' IEA regions that are rerouted to "NA" or to an empty vakye are aslso removed when calling the `aggregate_regions()` function.
 #' 
-#' @param file_path The path of the file to be loaded. By default, a concordance table converting IEA regions into Exiobase regions
-#' is loaded.
+#' @param file_path The path of the file (xlsx file) to be loaded. The default path leads to an aggregation table converting IEA regions 
+#' into Exiobase regions for 2019 IEA data is loaded. Using the `default_aggregation_table_path()` function, the user can
+#' select the default IEA regions to Exiobase regions aggregation table for a different year.
+#' @param country The name of the country column. 
+#' Default is "country".
+#' @param iea_regions The name of the column containing IEA regions.
+#' Default is "IEA_regions".
+#' @param destination_regions The name of the column containing the destination regions.
+#' Default is "Destination_regions".
 #' 
-#' @return A three column concordance table (as a data frame) mapping the `iea_regions` column to a `destination_regions` column, using
-#' a `country` column (with 3-letter iso country IDs) as intermediate, which is added to the loaded concordance table within the function. For
-#' those IEA regions that do not match to an ISO code (for instance, "World marine bunkers"), the full IEA region name is kept in the `country` column.
+#' @return A three column concordance table (as a data frame) mapping the `iea_regions` column to a `destination_regions` column,
+#' using a `country` column (with iso country IDs) as intermediate, which is added to the loaded aggregation table 
+#' within the function. 
+#' For those IEA regions that do not match to an ISO code (for instance, "World marine bunkers"), 
+#' the full IEA region name is kept in the `country` column.
 #' 
 #' @export
 #' 
-#' @examples 
-#' read_regions_concordance()
-read_regions_concordance <- function(file_path = "data-raw/default_mapping_exiobase.csv", 
-                                     country = IEATools::iea_cols$country, 
+#' @examples
+#' read_regions_concordance() # Returns the default aggregation table for the year 2019
+#' read_regions_concordance(file_path = default_aggregation_table_path(2020)) # Returns the default aggregation table for the year 2020
+#' read_regions_concordance(file_path = "extdata/checking_aggregation_GHA_ZAF.xslx") # Returns an aggregation table that aggregates Ghana and South Africa into a new GHAZAF region
+read_regions_concordance <- function(file_path = default_aggregation_table_path(2019),
+                                     country = IEATools::iea_cols$country,
                                      iea_regions = "IEA_regions",
                                      destination_regions = "Destination_regions"){
-  read.csv(file_path) %>%
+  concordance_table <- openxlsx::read.xlsx(file_path) %>%
     dplyr::mutate(
       "{country}" := .data[[iea_regions]]
     ) %>%
     use_iso_countries(country = country) %>%
     dplyr::filter(! (is.na(.data[[destination_regions]]) | .data[[destination_regions]] == "" | is.null(.data[[destination_regions]])))
+  return(concordance_table)
 }
 # --- EAR, 02/09/2020
 
@@ -1004,26 +1016,28 @@ read_regions_concordance <- function(file_path = "data-raw/default_mapping_exiob
 #' country concordance table provided.
 #' 
 #' @export
+#' 
+#' @examples 
 aggregate_regions <- function(.tidy_iea_df,
-                              file_path = "data-raw/default_mapping_exiobase.csv",
+                              aggregation_table = "aggregation_table",
                               net_trade = FALSE, 
                               country = IEATools::iea_cols$country, 
                               destination_regions = "Destination_regions"){
   
-  concordance_table <- read_regions_concordance(file_path)
+  #concordance_table <- read_regions_concordance(file_path)
   
-  iea_code_regions <- concordance_table[[country]]
-  dest_regions <- as.character(concordance_table[["Destination_regions"]])# maybe as character?
+  iea_code_regions <- aggregation_table[[country]]
+  dest_regions <- as.character(aggregation_table[["Destination_regions"]])# maybe as character?
   
   aggregated_tidy_iea_df <-.tidy_iea_df %>%
     dplyr::filter(Country %in% iea_code_regions) %>%
-    dplyr::inner_join(concordance_table, by = "Country") %>%
+    dplyr::inner_join(aggregation_table, by = "Country") %>%
     dplyr::mutate(
       Country = Destination_regions
     ) %>%
     dplyr::group_by(Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot = sum(E.dot)) #%>%
-    #use_iso_countries()
+  #use_iso_countries()
   
   if (net_trade == TRUE){
     aggregated_net_trade <- aggregated_tidy_iea_df %>% 
@@ -1045,7 +1059,7 @@ aggregate_regions <- function(.tidy_iea_df,
       ) %>% 
       dplyr::filter(E.dot != 0) %>%
       dplyr::arrange(Year, Country, desc(Ledger.side), Flow.aggregation.point, Flow)
-      
+    
     aggregated_tidy_iea_df <- aggregated_tidy_iea_df %>% 
       dplyr::filter(! Flow %in% c("Imports", "Exports")) %>%
       dplyr::bind_rows(aggregated_net_trade) %>%
