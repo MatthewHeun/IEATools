@@ -1024,20 +1024,25 @@ aggregate_regions <- function(.tidy_iea_df,
                               country = IEATools::iea_cols$country, 
                               destination_regions = "Destination_regions"){
   
-  #concordance_table <- read_regions_concordance(file_path)
-  
   iea_code_regions <- aggregation_table[[country]]
-  dest_regions <- as.character(aggregation_table[["Destination_regions"]])# maybe as character?
+  dest_regions <- as.character(aggregation_table[[destination_regions]])
   
   aggregated_tidy_iea_df <-.tidy_iea_df %>%
-    dplyr::filter(Country %in% iea_code_regions) %>%
-    dplyr::inner_join(aggregation_table, by = "Country") %>%
-    dplyr::mutate(
+    dplyr::filter(
+      .data[[country]] %in% iea_code_regions
+      ) %>%
+    dplyr::inner_join(
+      aggregation_table, by = country
+      ) %>%
+    dplyr::mutate(#ask Matt here
       Country = Destination_regions
     ) %>%
-    dplyr::group_by(Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
-    dplyr::summarise(E.dot = sum(E.dot)) #%>%
-  #use_iso_countries()
+    dplyr::group_by(#ask Matt here
+      Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit
+      ) %>%
+    dplyr::summarise(#ask Matt here
+      E.dot = sum(E.dot)
+      )
   
   if (net_trade == TRUE){
     aggregated_net_trade <- aggregated_tidy_iea_df %>% 
