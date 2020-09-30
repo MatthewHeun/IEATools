@@ -609,7 +609,16 @@ test_that("Aggregating South Africa and Ghana works as intended", {
 test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
   
   ### 1. First, checking that it works well when net_trade flag is FALSE.
-  tidy_GHA_ZAF_EGC_MGC_df <- load_tidy_iea_df("../testdata/iea_GHA_ZAF_MGC_EGC.csv")
+  tidy_GHA_ZAF_df <- load_tidy_iea_df()
+  
+  tidy_GHA_ZAF_EGC_MGC_df <- dplyr::bind_rows(
+    tidy_GHA_ZAF_df,
+    tidy_GHA_ZAF_df %>% 
+      dplyr::mutate(
+        "{IEATools::iea_cols$country}" := dplyr::case_when(
+          .data[[IEATools::iea_cols$country]] == "GHA" ~ "Emmanuel Great Country",
+          .data[[IEATools::iea_cols$country]] == "ZAF" ~ "Matt Great Country"
+        )))
   
   aggregation_table_GHA_ZAF_EGC_MGC <- tibble::tribble(
     ~IEA_regions, ~Destination_regions, ~Country,
