@@ -1011,18 +1011,27 @@ read_aggregation_table <- function(file_path = default_aggregation_table_path(20
 #' @param aggregation_table An aggregation table that routes the IEA regions (`iea_regions` column) to destination regions
 #' (`destination_regions` column). The aggregation table can be built manually 
 #' or loaded from an Excel file with the `read_aggregation_table()` function.
+#' Default is the 2019 IEA to Exiobase aggregation table `read_aggregation_table()`.
 #' @param net_trade The boolean that defines whether imports and exports by aggregation region should be converted 
-#' into net imports / exports or not. Default is FALSE.
-#' @param destination_regions The name of the 
-#' @param iea_regions
-#' @param imports
-#' @param exports
-#' @param net_imports
-#' @param country
-#' @param e_dot
-#' @param flow
-#' @param ledger_side
-#' @param flow_aggregation_point
+#' into net imports / exports or not. Default is `FALSE`.
+#' @param destination_regions The name of the `destination_regions` in the `aggregation_table` data frame.
+#' Default is "Destination_regions".
+#' @param iea_regions The name of the `iea_regions` in the `aggregation_table` data frame.
+#' Default is "IEA_regions".
+#' @param imports The name of the `imports` flow in the `.tidy_iea_df`. 
+#' Default is `IEATools::interface_industries$imports`.
+#' @param exports The name of the `exports` flow in the `.tidy_iea_df`. 
+#' Default is `IEATools::interface_industries$exports`.
+#' @param country The name of the `country` column in the `.tidy_iea_df`.
+#' Default is `IEATools::iea_cols$country`.
+#' @param e_dot The name of the `e_dot` column in the `.tidy_iea_df`.
+#' Default is `IEATools::iea_cols$e_dot`.
+#' @param flow The name of the `flow` column in the `.tidy_iea_df`.
+#' Default is `IEATools::iea_cols$flow`.
+#' @param ledger_side The name of the `ledger_side` column in the `.tidy_iea_df`.
+#' Default is `IEATools::iea_cols$ledger_side`.
+#' @param flow_aggregation_point The name of the `flow_aggregation_point` column in the `.tidy_iea_df`.
+#' Default is `IEATools::iea_cols$flow_aggregation_point`.
 #' 
 #' @return A `.tidy_iea_df` that contains the data of the input `.tidy_iea_df` aggregated by regions as specified in the user-defined
 #' country concordance table provided.
@@ -1031,13 +1040,12 @@ read_aggregation_table <- function(file_path = default_aggregation_table_path(20
 #' 
 #' @examples 
 aggregate_regions <- function(.tidy_iea_df,
-                              aggregation_table = read_regions_concordance(),
+                              aggregation_table = read_aggregation_table(),
                               net_trade = FALSE, 
                               destination_regions = "Destination_regions",
                               iea_regions = "IEA_regions",
                               imports = IEATools::interface_industries$imports,
                               exports = IEATools::interface_industries$exports,
-                              net_imports = "Net_Imports",
                               country = IEATools::iea_cols$country,
                               e_dot = IEATools::iea_cols$e_dot,
                               flow = IEATools::iea_cols$flow,
@@ -1072,15 +1080,15 @@ aggregate_regions <- function(.tidy_iea_df,
       dplyr::mutate(
         "{imports}" := tidyr::replace_na(.data[[imports]], 0),
         "{exports}" := tidyr::replace_na(.data[[exports]], 0),
-        "{net_imports}" := .data[[imports]] + .data[[exports]]
+        "Net_Imports" := .data[[imports]] + .data[[exports]]
       ) %>% 
-      tidyr::pivot_longer(cols = c({imports}, {exports}, {net_imports}), names_to = flow, values_to = e_dot) %>%
-      dplyr::filter(.data[[flow]] == net_imports) %>% 
+      tidyr::pivot_longer(cols = c({imports}, {exports}, "Net_Imports"), names_to = flow, values_to = e_dot) %>%
+      dplyr::filter(.data[[flow]] == "Net_Imports") %>% 
       dplyr::mutate(
         "{flow}" = dplyr::case_when(
-          .data[[e_dot]] > 0 ~ {imports},
-          .data[[e_dot]] < 0 ~ {exports},
-          .data[[e_dot]] == 0 ~ {net_imports}
+          .data[[e_dot]] >= 0 ~ {imports},
+          .data[[e_dot]] < 0 ~ {exports}#,
+          #.data[[e_dot]] == 0 ~ {net_imports}
         )
       ) %>% 
       dplyr::filter(.data[[e_dot]] != 0) %>%
