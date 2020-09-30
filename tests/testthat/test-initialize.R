@@ -496,8 +496,8 @@ test_that("spreading by years works as expected after load_tidy_iea_df()", {
   }
 })
 
-
-test_that("Loading regional concordance matrix works as intended", {
+# Tests regarding the regional aggregation process
+test_that("Loading regional aggregation table works as intended", {
   concordance_matrix <- read_regions_concordance(file_path = "../testdata/concordance_table_testing.xlsx")
 
   expect_equal(nrow(concordance_matrix %>% dplyr::filter(IEA_regions == "Angola")), 0) # Testing that NAs are gotten rid of
