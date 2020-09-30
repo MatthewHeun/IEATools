@@ -13,13 +13,12 @@ read_aggregation_table(
 }
 \arguments{
 \item{file_path}{The path of the file (xlsx file) to be loaded. The default path leads to an aggregation table converting IEA regions
-into Exiobase regions for 2019 IEA data is loaded. Using the \code{default_aggregation_table_path()} function, the user can
+into Exiobase regions for 2019 IEA data. Using the \code{default_aggregation_table_path()} function, the user can
 select the default IEA regions to Exiobase regions aggregation table for a different year.}
 
-\item{country}{The name of the country column.
-Default is "country".}
+\item{country}{The name of the \verb{country`` column in the aggregation table returned by the data frame.  This column contains iso codes for the }iea_regions\verb{column of the aggregation table. Default is}IEATools::iea_cols$country`.}
 
-\item{iea_regions}{The name of the column containing IEA regions.
+\item{iea_regions}{The name of the column containing IEA regions in the aggregation table.
 Default is "IEA_regions".}
 
 \item{destination_regions}{The name of the column containing the destination regions.
@@ -34,7 +33,8 @@ the full IEA region name is kept in the \code{country} column.
 }
 \description{
 This functions loads a user-defined aggregation table that re-routes each IEA region to a user-defined region.
-By default, the concordance matrix used re-routes IEA regions to Exiobase regions. See details for more information.
+By default, the concordance matrix used re-routes IEA regions to Exiobase regions (for 2019 version of IEA data).
+See details for more information.
 }
 \details{
 The aggregation table must have a column that identifies the IEA regions to be re-routed (default is "IEA_regions"),
@@ -44,7 +44,10 @@ those that are not included will be removed when calling the \code{aggregate_reg
 IEA regions that are rerouted to "NA" or to an empty vakye are aslso removed when calling the \code{aggregate_regions()} function.
 }
 \examples{
-read_aggregation_table() # Returns the default aggregation table for the year 2019
-read_aggregation_table(file_path = default_aggregation_table_path(2020)) # Returns the default aggregation table for the year 2020
-read_aggregation_table(file_path = "extdata/checking_aggregation_GHA_ZAF.xslx") # Returns an aggregation table that aggregates Ghana and South Africa into a new GHAZAF region
+# Returns the default aggregation table for the year 2019
+read_aggregation_table()
+# Returns the default aggregation table for the year 2020
+read_aggregation_table(file_path = default_aggregation_table_path(2020))
+# Returns an aggregation table that aggregates Ghana and South Africa into a new GHAZAF region
+read_aggregation_table(file_path = "extdata/checking_aggregation_GHA_ZAF.xslx") 
 }

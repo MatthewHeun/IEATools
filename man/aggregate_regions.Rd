@@ -6,13 +6,12 @@
 \usage{
 aggregate_regions(
   .tidy_iea_df,
-  aggregation_table = read_regions_concordance(),
+  aggregation_table = read_aggregation_table(),
   net_trade = FALSE,
   destination_regions = "Destination_regions",
   iea_regions = "IEA_regions",
   imports = IEATools::interface_industries$imports,
   exports = IEATools::interface_industries$exports,
-  net_imports = "Net_Imports",
   country = IEATools::iea_cols$country,
   e_dot = IEATools::iea_cols$e_dot,
   flow = IEATools::iea_cols$flow,
@@ -27,16 +26,45 @@ to have been obtained with the \code{load_tidy_iea_df()} function.}
 
 \item{aggregation_table}{An aggregation table that routes the IEA regions (\code{iea_regions} column) to destination regions
 (\code{destination_regions} column). The aggregation table can be built manually
-or loaded from an Excel file with the \code{read_aggregation_table()} function.}
+or loaded from an Excel file with the \code{read_aggregation_table()} function.
+Default is the 2019 IEA to Exiobase aggregation table, as provided by the \code{read_aggregation_table()} function.}
 
 \item{net_trade}{The boolean that defines whether imports and exports by aggregation region should be converted
-into net imports / exports or not. Default is FALSE.}
+into net imports / exports or not. Default is \code{FALSE}.}
 
-\item{flow_aggregation_point}{}
+\item{destination_regions}{The name of the \code{destination_regions} in the \code{aggregation_table} data frame.
+Default is "Destination_regions".}
+
+\item{iea_regions}{The name of the \code{iea_regions} in the \code{aggregation_table} data frame.
+Default is "IEA_regions".}
+
+\item{imports}{The name of the \code{imports} flow in the \code{.tidy_iea_df}.
+Default is \code{IEATools::interface_industries$imports}.}
+
+\item{exports}{The name of the \code{exports} flow in the \code{.tidy_iea_df}.
+Default is \code{IEATools::interface_industries$exports}.}
+
+\item{country}{The name of the \code{country} column in the \code{.tidy_iea_df}.
+Default is \code{IEATools::iea_cols$country}.}
+
+\item{e_dot}{The name of the \code{e_dot} column in the \code{.tidy_iea_df}.
+Default is \code{IEATools::iea_cols$e_dot}.}
+
+\item{flow}{The name of the \code{flow} column in the \code{.tidy_iea_df}.
+Default is \code{IEATools::iea_cols$flow}.}
+
+\item{year}{The name of the \code{year} column in the \code{.tidy_iea_df}.
+Default is \code{IEATools::iea_cols$year}.}
+
+\item{ledger_side}{The name of the \code{ledger_side} column in the \code{.tidy_iea_df}.
+Default is \code{IEATools::iea_cols$ledger_side}.}
+
+\item{flow_aggregation_point}{The name of the \code{flow_aggregation_point} column in the \code{.tidy_iea_df}.
+Default is \code{IEATools::iea_cols$flow_aggregation_point}.}
 }
 \value{
 A \code{.tidy_iea_df} that contains the data of the input \code{.tidy_iea_df} aggregated by regions as specified in the user-defined
-country concordance table provided.
+country aggregation table provided.
 }
 \description{
 Takes as input a tidy dataframe, an aggregation table routing IEA regions to destination regions (as a data frame),

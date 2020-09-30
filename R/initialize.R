@@ -955,7 +955,8 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
 #' Loads region aggregation table
 #' 
 #' This functions loads a user-defined aggregation table that re-routes each IEA region to a user-defined region.
-#' By default, the concordance matrix used re-routes IEA regions to Exiobase regions. See details for more information.
+#' By default, the concordance matrix used re-routes IEA regions to Exiobase regions (for 2019 version of IEA data).
+#' See details for more information.
 #' 
 #' The aggregation table must have a column that identifies the IEA regions to be re-routed (default is "IEA_regions"),
 #' and a second column that identifies the new regions to IEA regions are re-routed (default is "Destination_regions"). 
@@ -964,11 +965,12 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
 #' IEA regions that are rerouted to "NA" or to an empty vakye are aslso removed when calling the `aggregate_regions()` function.
 #' 
 #' @param file_path The path of the file (xlsx file) to be loaded. The default path leads to an aggregation table converting IEA regions 
-#' into Exiobase regions for 2019 IEA data is loaded. Using the `default_aggregation_table_path()` function, the user can
+#' into Exiobase regions for 2019 IEA data. Using the `default_aggregation_table_path()` function, the user can
 #' select the default IEA regions to Exiobase regions aggregation table for a different year.
-#' @param country The name of the country column. 
-#' Default is "country".
-#' @param iea_regions The name of the column containing IEA regions.
+#' @param country The name of the `country`` column in the aggregation table returned by the data frame. 
+#' This column contains iso codes for the `iea_regions` column of the aggregation table.
+#' Default is `IEATools::iea_cols$country`.
+#' @param iea_regions The name of the column containing IEA regions in the aggregation table.
 #' Default is "IEA_regions".
 #' @param destination_regions The name of the column containing the destination regions.
 #' Default is "Destination_regions".
@@ -982,9 +984,12 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
 #' @export
 #' 
 #' @examples
-#' read_aggregation_table() # Returns the default aggregation table for the year 2019
-#' read_aggregation_table(file_path = default_aggregation_table_path(2020)) # Returns the default aggregation table for the year 2020
-#' read_aggregation_table(file_path = "extdata/checking_aggregation_GHA_ZAF.xslx") # Returns an aggregation table that aggregates Ghana and South Africa into a new GHAZAF region
+#' # Returns the default aggregation table for the year 2019
+#' read_aggregation_table()
+#' # Returns the default aggregation table for the year 2020
+#' read_aggregation_table(file_path = default_aggregation_table_path(2020))
+#' # Returns an aggregation table that aggregates Ghana and South Africa into a new GHAZAF region
+#' read_aggregation_table(file_path = "extdata/checking_aggregation_GHA_ZAF.xslx") 
 read_aggregation_table <- function(file_path = default_aggregation_table_path(2019),
                                      country = IEATools::iea_cols$country,
                                      iea_regions = "IEA_regions",
@@ -1011,7 +1016,7 @@ read_aggregation_table <- function(file_path = default_aggregation_table_path(20
 #' @param aggregation_table An aggregation table that routes the IEA regions (`iea_regions` column) to destination regions
 #' (`destination_regions` column). The aggregation table can be built manually 
 #' or loaded from an Excel file with the `read_aggregation_table()` function.
-#' Default is the 2019 IEA to Exiobase aggregation table `read_aggregation_table()`.
+#' Default is the 2019 IEA to Exiobase aggregation table, as provided by the `read_aggregation_table()` function.
 #' @param net_trade The boolean that defines whether imports and exports by aggregation region should be converted 
 #' into net imports / exports or not. Default is `FALSE`.
 #' @param destination_regions The name of the `destination_regions` in the `aggregation_table` data frame.
@@ -1028,17 +1033,17 @@ read_aggregation_table <- function(file_path = default_aggregation_table_path(20
 #' Default is `IEATools::iea_cols$e_dot`.
 #' @param flow The name of the `flow` column in the `.tidy_iea_df`.
 #' Default is `IEATools::iea_cols$flow`.
+#' @param year The name of the `year` column in the `.tidy_iea_df`.
+#' Default is `IEATools::iea_cols$year`.
 #' @param ledger_side The name of the `ledger_side` column in the `.tidy_iea_df`.
 #' Default is `IEATools::iea_cols$ledger_side`.
 #' @param flow_aggregation_point The name of the `flow_aggregation_point` column in the `.tidy_iea_df`.
 #' Default is `IEATools::iea_cols$flow_aggregation_point`.
 #' 
 #' @return A `.tidy_iea_df` that contains the data of the input `.tidy_iea_df` aggregated by regions as specified in the user-defined
-#' country concordance table provided.
+#' country aggregation table provided.
 #' 
 #' @export
-#' 
-#' @examples 
 aggregate_regions <- function(.tidy_iea_df,
                               aggregation_table = read_aggregation_table(),
                               net_trade = FALSE, 
@@ -1092,12 +1097,12 @@ aggregate_regions <- function(.tidy_iea_df,
         )
       ) %>% 
       dplyr::filter(.data[[e_dot]] != 0) %>%
-      dplyr::arrange({year}, {country}, desc({ledger_side}), {flow_aggregation_point}, {flow})
+      dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
     
     aggregated_tidy_iea_df <- aggregated_tidy_iea_df %>% 
       dplyr::filter(! .data[[flow]] %in% c({imports}, {exports})) %>%
       dplyr::bind_rows(aggregated_net_trade) %>%
-      dplyr::arrange({year}, {country}, desc({ledger_side}), {flow_aggregation_point}, {flow})
+      dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
   }
   
   return(aggregated_tidy_iea_df)
