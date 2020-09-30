@@ -517,7 +517,13 @@ test_that("Aggregating South Africa and Ghana works as intended", {
   ### 1. First, checking that it works well when net_trade flag is FALSE.
   tidy_GHA_ZAF_df <- load_tidy_iea_df()
 
-  aggregation_table_GHA_ZAF <- read_aggregation_table(file_path = "../testdata/checking_aggregation_GHA_ZAF.xlsx")
+  aggregation_table_GHA_ZAF <- tibble::tribble(
+    ~IEA_regions, ~Destination_regions, ~Country,
+    "Ghana", "GHAZAF", "GHA",
+    "South Africa", "GHAZAF", "ZAF", 
+    "Spain", "Spain", "ESP",
+    "France", "France", "FRA"
+  )
   
   aggregated_regions <- aggregate_regions(tidy_GHA_ZAF_df,
                                           aggregation_table = aggregation_table_GHA_ZAF,
@@ -605,7 +611,15 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
   ### 1. First, checking that it works well when net_trade flag is FALSE.
   tidy_GHA_ZAF_EGC_MGC_df <- load_tidy_iea_df("../testdata/iea_GHA_ZAF_MGC_EGC.csv")
   
-  aggregation_table_GHA_ZAF_EGC_MGC <- read_aggregation_table(file_path = "../testdata/checking_aggregation_GHA_ZAF_MGC_EGC.xlsx")
+  aggregation_table_GHA_ZAF_EGC_MGC <- tibble::tribble(
+    ~IEA_regions, ~Destination_regions, ~Country,
+    "Ghana", "GHA_EGC", "GHA",
+    "South Africa", "ZAF_MGC", "ZAF", 
+    "Matt Great Country", "ZAF_MGC", "Matt Great Country",
+    "Emmanuel Great Country", "GHA_EGC", "Emmanuel Great Country",
+    "Spain", "Spain", "ESP",
+    "France", "France", "FRA"
+  )
   
   aggregated_regions <- aggregate_regions(tidy_GHA_ZAF_EGC_MGC_df,
                                           aggregation_table = aggregation_table_GHA_ZAF_EGC_MGC,
