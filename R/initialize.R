@@ -1021,10 +1021,14 @@ read_regions_concordance <- function(file_path = default_aggregation_table_path(
 aggregate_regions <- function(.tidy_iea_df,
                               aggregation_table = "aggregation_table",
                               net_trade = FALSE, 
+                              destination_regions = "Destination_regions",
+                              iea_regions = "IEA_regions",
+                              imports = IEATools::interface_industries$imports,
+                              exports = IEATools::interface_industries$exports,
+                              net_imports = "Net_Imports",
                               country = IEATools::iea_cols$country,
                               e_dot = IEATools::iea_cols$e_dot,
-                              destination_regions = "Destination_regions",
-                              iea_regions = "IEA_regions"){
+                              flow = IEATools::iea_cols$flow){
   
   iea_code_regions <- aggregation_table[[country]]
   dest_regions <- as.character(aggregation_table[[destination_regions]])
@@ -1048,7 +1052,7 @@ aggregate_regions <- function(.tidy_iea_df,
   
   if (net_trade == TRUE){
     aggregated_net_trade <- aggregated_tidy_iea_df %>% 
-      dplyr::filter(Flow == "Imports" | Flow == "Exports") %>% 
+      dplyr::filter(.data[[flow]] == imports | Flow == exports) %>% 
       tidyr::pivot_wider(names_from = Flow, values_from = E.dot) %>% 
       dplyr::mutate(
         Imports = tidyr::replace_na(Imports, 0),
