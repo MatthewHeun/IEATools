@@ -1055,8 +1055,8 @@ aggregate_regions <- function(.tidy_iea_df,
       dplyr::filter(.data[[flow]] == imports | Flow == exports) %>% 
       tidyr::pivot_wider(names_from = .data[[flow]], values_from = .data[[e_dot]]) %>% 
       dplyr::mutate(
-        Imports = tidyr::replace_na(Imports, 0),
-        Exports = tidyr::replace_na(Exports, 0),
+        "{imports}" := tidyr::replace_na(.data[[imports]], 0),
+        "{exports}" := tidyr::replace_na(.data[[exports]], 0),
         Net_Imports = Imports + Exports
       ) %>% 
       tidyr::pivot_longer(cols = c("Imports", "Exports", "Net_Imports"), names_to = "Flow", values_to = "E.dot") %>%
