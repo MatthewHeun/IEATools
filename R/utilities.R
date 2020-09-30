@@ -720,7 +720,7 @@ replace_join <- function(x, y, replace_col,
 #' 
 #' @param version the desired version (expressed as the year of IEA data release) of 
 #'                the aggregation table. 
-#'                Options are 2018, 2019 (default), and 2020. 
+#'                Options are 2019 (default), and 2020. 
 #'
 #' @return the path to the default aggregation table for the desired IEA data version
 #' 
@@ -729,19 +729,16 @@ replace_join <- function(x, y, replace_col,
 #' @examples
 #' default_aggregation_table_path()     # Assumes 2019
 #' default_aggregation_table_path(2019) # Same
-#' # Returns path for default aggregation table appropriate for 2018 IEA data release
-#' default_aggregation_table_path(2018) 
+#' # Returns path for default aggregation table appropriate for 2020 IEA data release
+#' default_aggregation_table_path(2020) 
 default_aggregation_table_path <- function(version = 2019) {
-  if (version == 2018) {
-    return(file.path("extdata", "default-aggregation-table-2018.xlsx") %>% 
-             system.file(package = "IEATools"))
-  } else if (version == 2019) {
+  if (version == 2019) {
     return(file.path("extdata", "default-aggregation-table-2019.xlsx") %>% 
              system.file(package = "IEATools"))
   } else if (version == 2020) {
     return(file.path("extdata", "default-aggregation-table-2020.xlsx") %>% 
              system.file(package = "IEATools"))
   }
-  stop("Only 2018, 2019, and 2020 are supported in default_aggregation_table_path()")
+  stop("Only 2019, and 2020 are supported in default_aggregation_table_path()")
 }
 # EAR - 29/09/2020

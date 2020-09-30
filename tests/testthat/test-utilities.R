@@ -400,7 +400,6 @@ test_that("replace_join works as expected", {
 # Testing default_aggregation_table_path() function
 test_that("default_aggregation_table_path works correctly", {
   expect_true(default_aggregation_table_path() %>% endsWith("default-aggregation-table-2019.xlsx"))
-  expect_true(endsWith(default_aggregation_table_path(2018), "default-aggregation-table-2018.xlsx"))
-  expect_error(default_aggregation_table_path(2017), "Only 2018, 2019, and 2020 are supported in default_aggregation_table_path()")
+  expect_error(default_aggregation_table_path(2018), "Only 2019, and 2020 are supported in default_aggregation_table_path()")
 })
 # EAR - 29/09/2020
