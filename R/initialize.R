@@ -1062,13 +1062,13 @@ aggregate_regions <- function(.tidy_iea_df,
       tidyr::pivot_longer(cols = c({imports}, {exports}, {net_imports}), names_to = flow, values_to = e_dot) %>%
       dplyr::filter(.data[[flow]] == net_imports) %>% 
       dplyr::mutate(
-        Flow = dplyr::case_when(
-          E.dot > 0 ~ "Imports",
-          E.dot < 0 ~ "Exports",
-          E.dot == 0 ~ "Net_Imports"
+        "{flow}" = dplyr::case_when(
+          .data[[e_dot]] > 0 ~ {imports},
+          .data[[e_dot]] < 0 ~ {exports},
+          .data[[e_dot]] == 0 ~ {net_imports}
         )
       ) %>% 
-      dplyr::filter(E.dot != 0) %>%
+      dplyr::filter(.data[[e_dot]] != 0) %>%
       dplyr::arrange(Year, Country, desc(Ledger.side), Flow.aggregation.point, Flow)
     
     aggregated_tidy_iea_df <- aggregated_tidy_iea_df %>% 
