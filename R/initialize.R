@@ -1028,7 +1028,10 @@ aggregate_regions <- function(.tidy_iea_df,
                               net_imports = "Net_Imports",
                               country = IEATools::iea_cols$country,
                               e_dot = IEATools::iea_cols$e_dot,
-                              flow = IEATools::iea_cols$flow){
+                              flow = IEATools::iea_cols$flow,
+                              year = IEATools::iea_cols$year,
+                              ledger_side = IEATools::iea_cols$ledger_side,
+                              flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point){
   
   iea_code_regions <- aggregation_table[[country]]
   dest_regions <- as.character(aggregation_table[[destination_regions]])
@@ -1069,17 +1072,14 @@ aggregate_regions <- function(.tidy_iea_df,
         )
       ) %>% 
       dplyr::filter(.data[[e_dot]] != 0) %>%
-      dplyr::arrange(Year, Country, desc(Ledger.side), Flow.aggregation.point, Flow)
+      dplyr::arrange({year}, {country}, desc({ledger_side}), {flow_aggregation_point}, {flow})
     
     aggregated_tidy_iea_df <- aggregated_tidy_iea_df %>% 
-      dplyr::filter(! Flow %in% c("Imports", "Exports")) %>%
+      dplyr::filter(! .data[[flow]] %in% c({imports}, {exports})) %>%
       dplyr::bind_rows(aggregated_net_trade) %>%
-      dplyr::arrange(Year, Country, desc(Ledger.side), Flow.aggregation.point, Flow)
+      dplyr::arrange({year}, {country}, desc({ledger_side}), {flow_aggregation_point}, {flow})
   }
   
   return(aggregated_tidy_iea_df)
 }
 # --- EAR, 02/09/2020
-
-#Tidy_IEA_df <- load_tidy_iea_df("/home/manolo/Documents/Extended-Energy-Balances-2018/IEA Extended Energy Balances 2019.csv")
-
