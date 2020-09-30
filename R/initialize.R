@@ -1021,8 +1021,10 @@ read_regions_concordance <- function(file_path = default_aggregation_table_path(
 aggregate_regions <- function(.tidy_iea_df,
                               aggregation_table = "aggregation_table",
                               net_trade = FALSE, 
-                              country = IEATools::iea_cols$country, 
-                              destination_regions = "Destination_regions"){
+                              country = IEATools::iea_cols$country,
+                              e_dot = IEATools::iea_cols$e_dot,
+                              destination_regions = "Destination_regions",
+                              iea_regions = "IEA_regions"){
   
   iea_code_regions <- aggregation_table[[country]]
   dest_regions <- as.character(aggregation_table[[destination_regions]])
@@ -1034,15 +1036,14 @@ aggregate_regions <- function(.tidy_iea_df,
     dplyr::inner_join(
       aggregation_table, by = country
       ) %>%
-    dplyr::mutate(#ask Matt here
+    dplyr::mutate(
       # Country = Destination_regions
-      "{country}" := .data[[destination_regions]]
+      "{country}" := .data[[destination_regions]],
+      "{iea_regions}" := NULL # Or else, we would also group_by IEA regions - and thus not perform any aggregation!
     ) %>%
-    dplyr::group_by(#ask Matt here
-      Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit
-      ) %>%
-    dplyr::summarise(#ask Matt here
-      E.dot = sum(E.dot)
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
       )
   
   if (net_trade == TRUE){
