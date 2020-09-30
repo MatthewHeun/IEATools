@@ -498,7 +498,7 @@ test_that("spreading by years works as expected after load_tidy_iea_df()", {
 
 # Tests regarding the regional aggregation process
 test_that("Loading regional aggregation table works as intended", {
-  concordance_matrix <- read_regions_concordance(file_path = "../testdata/concordance_table_testing.xlsx")
+  concordance_matrix <- read_aggregation_table(file_path = "../testdata/concordance_table_testing.xlsx")
 
   expect_equal(nrow(concordance_matrix %>% dplyr::filter(IEA_regions == "Angola")), 0) # Testing that NAs are gotten rid of
   expect_equal(nrow(concordance_matrix %>% dplyr::filter(IEA_regions == "Argentina")), 0) # Testing empty celles are gotten rid of
@@ -517,7 +517,7 @@ test_that("Aggregating South Africa and Ghana works as intended", {
   ### 1. First, checking that it works well when net_trade flag is FALSE.
   tidy_GHA_ZAF_df <- load_tidy_iea_df()
 
-  aggregation_table_GHA_ZAF <- read_regions_concordance(file_path = "../testdata/checking_aggregation_GHA_ZAF.xlsx")
+  aggregation_table_GHA_ZAF <- read_aggregation_table(file_path = "../testdata/checking_aggregation_GHA_ZAF.xlsx")
   
   aggregated_regions <- aggregate_regions(tidy_GHA_ZAF_df,
                                           aggregation_table = aggregation_table_GHA_ZAF,
@@ -605,7 +605,7 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
   ### 1. First, checking that it works well when net_trade flag is FALSE.
   tidy_GHA_ZAF_EGC_MGC_df <- load_tidy_iea_df("../testdata/iea_GHA_ZAF_MGC_EGC.csv")
   
-  aggregation_table_GHA_ZAF_EGC_MGC <- read_regions_concordance(file_path = "../testdata/checking_aggregation_GHA_ZAF_MGC_EGC.xlsx")
+  aggregation_table_GHA_ZAF_EGC_MGC <- read_aggregation_table(file_path = "../testdata/checking_aggregation_GHA_ZAF_MGC_EGC.xlsx")
   
   aggregated_regions <- aggregate_regions(tidy_GHA_ZAF_EGC_MGC_df,
                                           aggregation_table = aggregation_table_GHA_ZAF_EGC_MGC,

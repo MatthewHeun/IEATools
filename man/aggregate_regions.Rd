@@ -2,32 +2,45 @@
 % Please edit documentation in R/initialize.R
 \name{aggregate_regions}
 \alias{aggregate_regions}
-\title{Aggregates IEA regions based on a user-defined concordance matrix}
+\title{Aggregates IEA regions based on a user-defined aggregation table.}
 \usage{
 aggregate_regions(
   .tidy_iea_df,
-  aggregation_table = "aggregation_table",
+  aggregation_table = read_regions_concordance(),
   net_trade = FALSE,
+  destination_regions = "Destination_regions",
+  iea_regions = "IEA_regions",
+  imports = IEATools::interface_industries$imports,
+  exports = IEATools::interface_industries$exports,
+  net_imports = "Net_Imports",
   country = IEATools::iea_cols$country,
-  destination_regions = "Destination_regions"
+  e_dot = IEATools::iea_cols$e_dot,
+  flow = IEATools::iea_cols$flow,
+  year = IEATools::iea_cols$year,
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point
 )
 }
 \arguments{
 \item{.tidy_iea_df}{The \code{.tidy_iea_df} data frame that needs to be aggregated by regions. The \code{.tidy_iea_df} is likely
 to have been obtained with the \code{load_tidy_iea_df()} function.}
 
+\item{aggregation_table}{An aggregation table that routes the IEA regions (\code{iea_regions} column) to destination regions
+(\code{destination_regions} column). The aggregation table can be built manually
+or loaded from an Excel file with the \code{read_aggregation_table()} function.}
+
 \item{net_trade}{The boolean that defines whether imports and exports by aggregation region should be converted
 into net imports / exports or not. Default is FALSE.}
 
-\item{file_path}{The path of the file to be loaded. By default, a concordance table converting IEA regions into Exiobase regions
-is loaded.}
+\item{flow_aggregation_point}{}
 }
 \value{
 A \code{.tidy_iea_df} that contains the data of the input \code{.tidy_iea_df} aggregated by regions as specified in the user-defined
 country concordance table provided.
 }
 \description{
-Takes as input a tidy dataframe, the file of a country concordance table, and aggregates flows per regions following the
-user-defined concordance table. The boolean argument "net_trade" enables to perform the aggregation by keeping only net imports
+Takes as input a tidy dataframe, an aggregation table routing IEA regions to destination regions (as a data frame),
+and aggregates flows per regions following the user-defined aggregation table.
+The boolean argument `net_trade`` enables to perform the aggregation by keeping only net imports
 and/or net exports or by keeping gross imports and exports.
 }

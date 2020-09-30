@@ -982,10 +982,10 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
 #' @export
 #' 
 #' @examples
-#' read_regions_concordance() # Returns the default aggregation table for the year 2019
-#' read_regions_concordance(file_path = default_aggregation_table_path(2020)) # Returns the default aggregation table for the year 2020
-#' read_regions_concordance(file_path = "extdata/checking_aggregation_GHA_ZAF.xslx") # Returns an aggregation table that aggregates Ghana and South Africa into a new GHAZAF region
-read_regions_concordance <- function(file_path = default_aggregation_table_path(2019),
+#' read_aggregation_table() # Returns the default aggregation table for the year 2019
+#' read_aggregation_table(file_path = default_aggregation_table_path(2020)) # Returns the default aggregation table for the year 2020
+#' read_aggregation_table(file_path = "extdata/checking_aggregation_GHA_ZAF.xslx") # Returns an aggregation table that aggregates Ghana and South Africa into a new GHAZAF region
+read_aggregation_table <- function(file_path = default_aggregation_table_path(2019),
                                      country = IEATools::iea_cols$country,
                                      iea_regions = "IEA_regions",
                                      destination_regions = "Destination_regions"){
@@ -999,18 +999,30 @@ read_regions_concordance <- function(file_path = default_aggregation_table_path(
 }
 # --- EAR, 02/09/2020
 
-#' Aggregates IEA regions based on a user-defined concordance matrix
+#' Aggregates IEA regions based on a user-defined aggregation table.
 #' 
-#' Takes as input a tidy dataframe, the file of a country concordance table, and aggregates flows per regions following the
-#' user-defined concordance table. The boolean argument "net_trade" enables to perform the aggregation by keeping only net imports
+#' Takes as input a tidy dataframe, an aggregation table routing IEA regions to destination regions (as a data frame), 
+#' and aggregates flows per regions following the user-defined aggregation table. 
+#' The boolean argument `net_trade`` enables to perform the aggregation by keeping only net imports
 #' and/or net exports or by keeping gross imports and exports.
 #' 
 #' @param .tidy_iea_df The `.tidy_iea_df` data frame that needs to be aggregated by regions. The `.tidy_iea_df` is likely
 #' to have been obtained with the `load_tidy_iea_df()` function.
-#' @param file_path The path of the file to be loaded. By default, a concordance table converting IEA regions into Exiobase regions
-#' is loaded.
+#' @param aggregation_table An aggregation table that routes the IEA regions (`iea_regions` column) to destination regions
+#' (`destination_regions` column). The aggregation table can be built manually 
+#' or loaded from an Excel file with the `read_aggregation_table()` function.
 #' @param net_trade The boolean that defines whether imports and exports by aggregation region should be converted 
 #' into net imports / exports or not. Default is FALSE.
+#' @param destination_regions The name of the 
+#' @param iea_regions
+#' @param imports
+#' @param exports
+#' @param net_imports
+#' @param country
+#' @param e_dot
+#' @param flow
+#' @param ledger_side
+#' @param flow_aggregation_point
 #' 
 #' @return A `.tidy_iea_df` that contains the data of the input `.tidy_iea_df` aggregated by regions as specified in the user-defined
 #' country concordance table provided.
@@ -1019,7 +1031,7 @@ read_regions_concordance <- function(file_path = default_aggregation_table_path(
 #' 
 #' @examples 
 aggregate_regions <- function(.tidy_iea_df,
-                              aggregation_table = "aggregation_table",
+                              aggregation_table = read_regions_concordance(),
                               net_trade = FALSE, 
                               destination_regions = "Destination_regions",
                               iea_regions = "IEA_regions",
