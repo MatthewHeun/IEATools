@@ -1002,7 +1002,7 @@ read_aggregation_table <- function(file_path = default_aggregation_table_path(20
     dplyr::filter(! (is.na(.data[[destination_regions]]) | .data[[destination_regions]] == "" | is.null(.data[[destination_regions]])))
   return(concordance_table)
 }
-# --- EAR, 02/09/2020
+# --- EAR, 01/10/2020
 
 #' Aggregates IEA regions based on a user-defined aggregation table.
 #' 
@@ -1107,4 +1107,4 @@ aggregate_regions <- function(.tidy_iea_df,
   
   return(aggregated_tidy_iea_df)
 }
-# --- EAR, 02/09/2020
+# --- EAR, 01/10/2020

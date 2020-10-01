@@ -733,10 +733,10 @@ replace_join <- function(x, y, replace_col,
 #' default_aggregation_table_path(2020) 
 default_aggregation_table_path <- function(version = 2019) {
   if (version == 2019) {
-    return(file.path("extdata", "default-aggregation-table-2019.xlsx") %>% 
+    return(file.path("extdata", "aggregation_table_iea_exiobase_2019.xlsx") %>% 
              system.file(package = "IEATools"))
   } else if (version == 2020) {
-    return(file.path("extdata", "default-aggregation-table-2020.xlsx") %>% 
+    return(file.path("extdata", "aggregation_table_iea_exiobase_2020.xlsx") %>% 
              system.file(package = "IEATools"))
   }
   stop("Only 2019, and 2020 are supported in default_aggregation_table_path()")

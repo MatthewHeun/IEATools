@@ -498,14 +498,41 @@ test_that("spreading by years works as expected after load_tidy_iea_df()", {
 
 # Tests regarding the regional aggregation process
 test_that("Loading regional aggregation table works as intended", {
-  concordance_matrix <- read_aggregation_table(file_path = "../testdata/concordance_table_testing.xlsx")
+  
+  # First using default 2019 aggregation table
+  aggregation_table <- read_aggregation_table()
+  
+  # Testing empty celles are gotten rid of
+  expect_equal(nrow(aggregation_table %>% dplyr::filter(IEA_regions == "OECD Americas")), 0)
+  expect_equal(nrow(aggregation_table %>% dplyr::filter(IEA_regions == "Memo: Mali")), 0) 
 
-  expect_equal(nrow(concordance_matrix %>% dplyr::filter(IEA_regions == "Angola")), 0) # Testing that NAs are gotten rid of
-  expect_equal(nrow(concordance_matrix %>% dplyr::filter(IEA_regions == "Argentina")), 0) # Testing empty celles are gotten rid of
-
-  expect_equal(nrow(concordance_matrix %>%
-                 dplyr::filter(IEA_regions == "France" & Destination_regions == "Fr") %>%
+  # Testing correct destinations
+  expect_equal(nrow(aggregation_table %>%
+                 dplyr::filter(IEA_regions == "France" & Destination_regions == "France") %>%
                  dplyr::select(Destination_regions)), 1)
+  
+  expect_equal(nrow(aggregation_table %>%
+                      dplyr::filter(IEA_regions == "Paraguay" & Destination_regions == "RoW America") %>%
+                      dplyr::select(Destination_regions)), 1)
+  
+  
+  # Changing file, now using 2020 aggregation table
+  aggregation_table <- read_aggregation_table(file_path = system.file("extdata", 
+                                                                      "aggregation_table_iea_exiobase_2020.xlsx",
+                                                                      package = "IEATools"))
+  
+  # Testing empty celles are gotten rid of
+  expect_equal(nrow(aggregation_table %>% dplyr::filter(IEA_regions == "OECD Americas")), 0)
+  expect_equal(nrow(aggregation_table %>% dplyr::filter(IEA_regions == "Memo: Mali")), 0) 
+  
+  # Testing correct destinations
+  expect_equal(nrow(aggregation_table %>%
+                      dplyr::filter(IEA_regions == "France" & Destination_regions == "France") %>%
+                      dplyr::select(Destination_regions)), 1)
+  
+  expect_equal(nrow(aggregation_table %>%
+                      dplyr::filter(IEA_regions == "Paraguay" & Destination_regions == "RoW America") %>%
+                      dplyr::select(Destination_regions)), 1)
 })
 #--- EAR, 02/09/2020
 
@@ -599,7 +626,7 @@ test_that("Aggregating South Africa and Ghana works as intended", {
   expect_equal(nrow(aggregated_regions), nrow(manual_aggregation))
 
 })
-# --- EAR, 02/09/2020
+# --- EAR, 01/10/2020
 
 
 # This code tests that aggregation by regions works as intended by;
@@ -608,8 +635,13 @@ test_that("Aggregating South Africa and Ghana works as intended", {
 # There are therefore two aggregation regions as output.
 test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
   
-  ### 1. First, checking that it works well when net_trade flag is FALSE.
   tidy_GHA_ZAF_df <- load_tidy_iea_df()
+  
+  ### 0. Checking that the aggregation works with the default aggregation table (iea -> exiobase; 2019 iea data)
+  default_aggregation_2019 <- tidy_GHA_ZAF_df %>% 
+    aggregate_regions()
+  
+  ### 1. First, checking that it works well when net_trade flag is FALSE.
   
   tidy_GHA_ZAF_EGC_MGC_df <- dplyr::bind_rows(
     tidy_GHA_ZAF_df,
@@ -728,4 +760,4 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
   expect_equal(nrow(aggregated_regions), nrow(manual_aggregation))
   
 })
-# --- EAR, 10/09/2020
+# --- EAR, 01/10/2020
