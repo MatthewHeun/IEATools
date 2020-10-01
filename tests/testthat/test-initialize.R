@@ -541,8 +541,15 @@ test_that("Loading regional aggregation table works as intended", {
 # So there is only one aggregation region as output in this test.
 test_that("Aggregating South Africa and Ghana works as intended", {
 
-  ### 1. First, checking that it works well when net_trade flag is FALSE.
   tidy_GHA_ZAF_df <- load_tidy_iea_df()
+  
+  ### 0. Checking that the aggregation works with the default aggregation table (iea -> exiobase; 2019 iea data)
+  default_aggregation_2019 <- tidy_GHA_ZAF_df %>% 
+    aggregate_regions()
+  
+  expect_equal(default_aggregation_2019 %>% nrow(), 402)
+  
+  ### 1. First, checking that it works well when net_trade flag is FALSE.
 
   aggregation_table_GHA_ZAF <- tibble::tribble(
     ~IEA_regions, ~Destination_regions, ~Country,
@@ -635,13 +642,9 @@ test_that("Aggregating South Africa and Ghana works as intended", {
 # There are therefore two aggregation regions as output.
 test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
   
+  ### 1. First, checking that it works well when net_trade flag is FALSE.
   tidy_GHA_ZAF_df <- load_tidy_iea_df()
   
-  ### 0. Checking that the aggregation works with the default aggregation table (iea -> exiobase; 2019 iea data)
-  default_aggregation_2019 <- tidy_GHA_ZAF_df %>% 
-    aggregate_regions()
-  
-  ### 1. First, checking that it works well when net_trade flag is FALSE.
   
   tidy_GHA_ZAF_EGC_MGC_df <- dplyr::bind_rows(
     tidy_GHA_ZAF_df,
