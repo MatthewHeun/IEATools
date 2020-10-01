@@ -9,7 +9,7 @@ default_aggregation_table_path(version = 2019)
 \arguments{
 \item{version}{the desired version (expressed as the year of IEA data release) of
 the aggregation table.
-Options are 2018, 2019 (default), and 2020.}
+Options are 2019 (default), and 2020.}
 }
 \value{
 the path to the default aggregation table for the desired IEA data version
@@ -20,6 +20,6 @@ The path to the default aggregation table
 \examples{
 default_aggregation_table_path()     # Assumes 2019
 default_aggregation_table_path(2019) # Same
-# Returns path for default aggregation table appropriate for 2018 IEA data release
-default_aggregation_table_path(2018) 
+# Returns path for default aggregation table appropriate for 2020 IEA data release
+default_aggregation_table_path(2020) 
 }

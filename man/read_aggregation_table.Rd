@@ -49,5 +49,4 @@ read_aggregation_table()
 # Returns the default aggregation table for the year 2020
 read_aggregation_table(file_path = default_aggregation_table_path(2020))
 # Returns an aggregation table that aggregates Ghana and South Africa into a new GHAZAF region
-read_aggregation_table(file_path = "extdata/checking_aggregation_GHA_ZAF.xslx") 
 }

@@ -989,7 +989,6 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
 #' # Returns the default aggregation table for the year 2020
 #' read_aggregation_table(file_path = default_aggregation_table_path(2020))
 #' # Returns an aggregation table that aggregates Ghana and South Africa into a new GHAZAF region
-#' read_aggregation_table(file_path = "extdata/checking_aggregation_GHA_ZAF.xslx") 
 read_aggregation_table <- function(file_path = default_aggregation_table_path(2019),
                                      country = IEATools::iea_cols$country,
                                      iea_regions = "IEA_regions",
