@@ -962,7 +962,7 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
 #' and a second column that identifies the new regions to IEA regions are re-routed (default is "Destination_regions"). 
 #' There is no need to include all IEA regions; 
 #' those that are not included will be removed when calling the `aggregate_regions()` function.
-#' IEA regions that are rerouted to "NA" or to an empty vakye are aslso removed when calling the `aggregate_regions()` function.
+#' IEA regions that are rerouted to "NA" or to an empty value are also removed when calling the `aggregate_regions()` function.
 #' 
 #' @param file_path The path of the file (xlsx file) to be loaded. The default path leads to an aggregation table converting IEA regions 
 #' into Exiobase regions for 2019 IEA data. Using the `default_aggregation_table_path()` function, the user can
