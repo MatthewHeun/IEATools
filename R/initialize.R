@@ -968,7 +968,7 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
 #' into Exiobase regions for 2019 IEA data. Using the `default_aggregation_table_path()` function, the user can
 #' select the default IEA regions to Exiobase regions aggregation table for a different year.
 #' @param country The name of the `country`` column in the aggregation table returned by the data frame. 
-#' This column contains iso codes for the `iea_regions` column of the aggregation table.
+#' This column contains ISO codes for the `iea_regions` column of the aggregation table.
 #' Default is `IEATools::iea_cols$country`.
 #' @param iea_regions The name of the column containing IEA regions in the aggregation table.
 #' Default is "IEA_regions".
@@ -976,7 +976,7 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
 #' Default is "Destination_regions".
 #' 
 #' @return A three column concordance table (as a data frame) mapping the `iea_regions` column to a `destination_regions` column,
-#' using a `country` column (with iso country IDs) as intermediate, which is added to the loaded aggregation table 
+#' using a `country` column (with ISO country IDs) as intermediate, which is added to the loaded aggregation table 
 #' within the function. 
 #' For those IEA regions that do not match to an ISO code (for instance, "World marine bunkers"), 
 #' the full IEA region name is kept in the `country` column.

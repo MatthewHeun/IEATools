@@ -16,7 +16,7 @@ read_aggregation_table(
 into Exiobase regions for 2019 IEA data. Using the \code{default_aggregation_table_path()} function, the user can
 select the default IEA regions to Exiobase regions aggregation table for a different year.}
 
-\item{country}{The name of the \verb{country`` column in the aggregation table returned by the data frame.  This column contains iso codes for the }iea_regions\verb{column of the aggregation table. Default is}IEATools::iea_cols$country`.}
+\item{country}{The name of the \verb{country`` column in the aggregation table returned by the data frame.  This column contains ISO codes for the }iea_regions\verb{column of the aggregation table. Default is}IEATools::iea_cols$country`.}
 
 \item{iea_regions}{The name of the column containing IEA regions in the aggregation table.
 Default is "IEA_regions".}
@@ -26,7 +26,7 @@ Default is "Destination_regions".}
 }
 \value{
 A three column concordance table (as a data frame) mapping the \code{iea_regions} column to a \code{destination_regions} column,
-using a \code{country} column (with iso country IDs) as intermediate, which is added to the loaded aggregation table
+using a \code{country} column (with ISO country IDs) as intermediate, which is added to the loaded aggregation table
 within the function.
 For those IEA regions that do not match to an ISO code (for instance, "World marine bunkers"),
 the full IEA region name is kept in the \code{country} column.
@@ -41,7 +41,7 @@ The aggregation table must have a column that identifies the IEA regions to be r
 and a second column that identifies the new regions to IEA regions are re-routed (default is "Destination_regions").
 There is no need to include all IEA regions;
 those that are not included will be removed when calling the \code{aggregate_regions()} function.
-IEA regions that are rerouted to "NA" or to an empty vakye are aslso removed when calling the \code{aggregate_regions()} function.
+IEA regions that are rerouted to "NA" or to an empty value are also removed when calling the \code{aggregate_regions()} function.
 }
 \examples{
 # Returns the default aggregation table for the year 2019
