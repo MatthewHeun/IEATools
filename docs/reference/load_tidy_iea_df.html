@@ -81,7 +81,7 @@ tidy_iea_df().
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.36</span>
       </span>
     </div>
 
@@ -157,7 +157,7 @@ This function bundles several others:</p><ol>
 
     </div>
 
-    <pre class="usage"><span class='fu'>load_tidy_iea_df</span>(<span class='kw'>.iea_file</span> <span class='kw'>=</span> <span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span>(), <span class='kw'>remove_zeroes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>load_tidy_iea_df</span>(.iea_file = <span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span>(), remove_zeroes = <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -182,19 +182,21 @@ See examples for two ways to achieve the same result.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Check the file first</span>
-<span class='fu'><a href='iea_file_OK.html'>iea_file_OK</a></span>(<span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span>())</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='co'># Take a simple approach</span>
-<span class='no'>simple</span> <span class='kw'>&lt;-</span> <span class='fu'>load_tidy_iea_df</span>()
+<span class='fu'><a href='iea_file_OK.html'>iea_file_OK</a></span>(<span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span>())
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='co'># Take a simple approach</span>
+<span class='kw'>simple</span> <span class='op'>&lt;-</span> <span class='fu'>load_tidy_iea_df</span>()
 <span class='co'># Take the complicated approach</span>
-<span class='no'>complicated</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='iea_df.html'>iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='rename_iea_df_cols.html'>rename_iea_df_cols</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='clean_iea_whitespace.html'>clean_iea_whitespace</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='remove_agg_memo_flows.html'>remove_agg_memo_flows</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='use_iso_countries.html'>use_iso_countries</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='augment_iea_df.html'>augment_iea_df</a></span>() <span class='kw'>%&gt;%</span>
+<span class='kw'>complicated</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='iea_df.html'>iea_df</a></span>() <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='rename_iea_df_cols.html'>rename_iea_df_cols</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='clean_iea_whitespace.html'>clean_iea_whitespace</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='remove_agg_memo_flows.html'>remove_agg_memo_flows</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='use_iso_countries.html'>use_iso_countries</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='augment_iea_df.html'>augment_iea_df</a></span>() <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='tidy_iea_df.html'>tidy_iea_df</a></span>()
 <span class='co'># simple and complicated should be exactly the same</span>
-<span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span>(<span class='no'>simple</span> <span class='kw'>==</span> <span class='no'>complicated</span>)</div><div class='output co'>#&gt; [1] TRUE</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/base/all.html'>all</a></span>(<span class='kw'>simple</span> <span class='op'>==</span> <span class='kw'>complicated</span>)
+</div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -210,7 +212,7 @@ See examples for two ways to achieve the same result.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

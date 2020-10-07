@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.36</span>
       </span>
     </div>
 
@@ -140,29 +140,29 @@
     </div>
 
     <pre class="usage"><span class='fu'>write_eta_fu_template</span>(
-  <span class='no'>.eta_fu_template</span>,
-  <span class='no'>path</span>,
-  <span class='kw'>eta_fu_tab_name</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='fu_analysis_file_info.html'>fu_analysis_file_info</a></span>$<span class='no'>eta_fu_tab_name</span>,
-  <span class='kw'>overwrite_file</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>overwrite_fu_eta_tab</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>eta_fu</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>eta_fu</span>,
-  <span class='kw'>e_dot_machine</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine</span>,
-  <span class='kw'>e_dot_machine_perc</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine_perc</span>,
-  <span class='kw'>maximum_values</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>maximum_values</span>,
-  <span class='kw'>header_row_font_color</span> <span class='kw'>=</span> <span class='st'>"#FFFFFF"</span>,
-  <span class='kw'>header_row_shading_color</span> <span class='kw'>=</span> <span class='st'>"#5A80B8"</span>,
-  <span class='kw'>e_dot_machine_row_font_color</span> <span class='kw'>=</span> <span class='st'>"#8C87A0"</span>,
-  <span class='kw'>e_dot_machine_row_shading_color</span> <span class='kw'>=</span> <span class='st'>"#E3DFEB"</span>,
-  <span class='kw'>e_dot_machine_perc_row_font_color</span> <span class='kw'>=</span> <span class='st'>"#8C87A0"</span>,
-  <span class='kw'>e_dot_machine_perc_row_shading_color</span> <span class='kw'>=</span> <span class='st'>"#E3DFEB"</span>,
-  <span class='kw'>eta_row_font_color</span> <span class='kw'>=</span> <span class='st'>"#000000"</span>,
-  <span class='kw'>eta_row_shading_color</span> <span class='kw'>=</span> <span class='st'>"#FFFFFF"</span>,
-  <span class='kw'>phi_row_font_color</span> <span class='kw'>=</span> <span class='st'>"#000000"</span>,
-  <span class='kw'>phi_row_shading_color</span> <span class='kw'>=</span> <span class='st'>"#FFFFFF"</span>,
-  <span class='kw'>blank_shading_color</span> <span class='kw'>=</span> <span class='st'>"#808080"</span>,
-  <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>quantity</span>,
-  <span class='kw'>e_dot_machine_max_perc</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine_max_perc</span>,
-  <span class='kw'>.rownum</span> <span class='kw'>=</span> <span class='st'>".rownum"</span>
+  <span class='kw'>.eta_fu_template</span>,
+  <span class='kw'>path</span>,
+  eta_fu_tab_name = <span class='kw'>IEATools</span>::<span class='kw'><a href='fu_analysis_file_info.html'>fu_analysis_file_info</a></span><span class='op'>$</span><span class='kw'>eta_fu_tab_name</span>,
+  overwrite_file = <span class='fl'>FALSE</span>,
+  overwrite_fu_eta_tab = <span class='fl'>FALSE</span>,
+  eta_fu = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>eta_fu</span>,
+  e_dot_machine = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_machine</span>,
+  e_dot_machine_perc = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_machine_perc</span>,
+  maximum_values = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>maximum_values</span>,
+  header_row_font_color = <span class='st'>"#FFFFFF"</span>,
+  header_row_shading_color = <span class='st'>"#5A80B8"</span>,
+  e_dot_machine_row_font_color = <span class='st'>"#8C87A0"</span>,
+  e_dot_machine_row_shading_color = <span class='st'>"#E3DFEB"</span>,
+  e_dot_machine_perc_row_font_color = <span class='st'>"#8C87A0"</span>,
+  e_dot_machine_perc_row_shading_color = <span class='st'>"#E3DFEB"</span>,
+  eta_row_font_color = <span class='st'>"#000000"</span>,
+  eta_row_shading_color = <span class='st'>"#FFFFFF"</span>,
+  phi_row_font_color = <span class='st'>"#000000"</span>,
+  phi_row_shading_color = <span class='st'>"#FFFFFF"</span>,
+  blank_shading_color = <span class='st'>"#808080"</span>,
+  quantity = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>quantity</span>,
+  e_dot_machine_max_perc = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_machine_max_perc</span>,
+  .rownum = <span class='st'>".rownum"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -278,12 +278,14 @@ Default is "#808080".</p></td>
     <p>the <code>path</code> argument</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(<span class='kw'>fileext</span> <span class='kw'>=</span> <span class='st'>".xlsx"</span>)
-<span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='eta_fu_template.html'>eta_fu_template</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>write_eta_fu_template</span>(<span class='no'>f</span>)</div><div class='output co'>#&gt; [1] "/var/folders/y7/gl7nw9bd61g2js7pjpkhqr_40000gq/T//RtmpmKQigE/file7be9700f9f6.xlsx"</div><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='no'>f</span>)) {
-  <span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.remove</a></span>(<span class='no'>f</span>)
-}</div><div class='output co'>#&gt; [1] TRUE</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>f</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span>(fileext = <span class='st'>".xlsx"</span>)
+<span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='eta_fu_template.html'>eta_fu_template</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'>write_eta_fu_template</span>(<span class='kw'>f</span>)
+</div><div class='output co'>#&gt; [1] "/var/folders/_z/j2bgrwl576b_ht2jnqntvnm00000gq/T//RtmpmBWemQ/file41cd16a192e7.xlsx"</div><div class='input'><span class='co'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='kw'>f</span>)) {
+  <span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.remove</a></span>(<span class='kw'>f</span>)
+}
+</div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -299,7 +301,7 @@ Default is "#808080".</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>
