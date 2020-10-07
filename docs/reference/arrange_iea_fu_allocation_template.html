@@ -76,7 +76,7 @@ It sorts columns (left-to-right) in the order of energy flow through the energy 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.37</span>
       </span>
     </div>
 
@@ -148,21 +148,21 @@ It sorts columns (left-to-right) in the order of energy flow through the energy 
     </div>
 
     <pre class="usage"><span class='fu'>arrange_iea_fu_allocation_template</span>(
-  <span class='no'>.fu_allocation_template</span>,
-  <span class='kw'>rowcol</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"both"</span>, <span class='st'>"row"</span>, <span class='st'>"col"</span>),
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  <span class='kw'>ef_product</span> <span class='kw'>=</span> <span class='st'>"Ef.product"</span>,
-  <span class='kw'>machine</span> <span class='kw'>=</span> <span class='st'>"Machine"</span>,
-  <span class='kw'>eu_product</span> <span class='kw'>=</span> <span class='st'>"Eu.product"</span>,
-  <span class='kw'>destination</span> <span class='kw'>=</span> <span class='st'>"Destination"</span>,
-  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>,
-  <span class='kw'>fap_dest_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='fap_flows.html'>fap_flows</a></span>,
-  <span class='kw'>ef_product_order</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='products.html'>products</a></span>,
-  <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='st'>"Quantity"</span>,
-  <span class='kw'>maximum_values</span> <span class='kw'>=</span> <span class='st'>"Maximum.values"</span>,
-  <span class='kw'>.temp_sort</span> <span class='kw'>=</span> <span class='st'>".fap_flow"</span>,
-  <span class='kw'>.clean_ef_product</span> <span class='kw'>=</span> <span class='st'>".clean_Ef_product"</span>
+  <span class='kw'>.fu_allocation_template</span>,
+  rowcol = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"both"</span>, <span class='st'>"row"</span>, <span class='st'>"col"</span>),
+  ledger_side = <span class='st'>"Ledger.side"</span>,
+  flow_aggregation_point = <span class='st'>"Flow.aggregation.point"</span>,
+  ef_product = <span class='st'>"Ef.product"</span>,
+  machine = <span class='st'>"Machine"</span>,
+  eu_product = <span class='st'>"Eu.product"</span>,
+  destination = <span class='st'>"Destination"</span>,
+  unit = <span class='st'>"Unit"</span>,
+  fap_dest_order = <span class='kw'>IEATools</span>::<span class='kw'><a href='fap_flows.html'>fap_flows</a></span>,
+  ef_product_order = <span class='kw'>IEATools</span>::<span class='kw'><a href='products.html'>products</a></span>,
+  quantity = <span class='st'>"Quantity"</span>,
+  maximum_values = <span class='st'>"Maximum.values"</span>,
+  .temp_sort = <span class='st'>".fap_flow"</span>,
+  .clean_ef_product = <span class='st'>".clean_Ef_product"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -258,10 +258,11 @@ The column order is:</p><ul>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>Template</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='specify_all.html'>specify_all</a></span>() <span class='kw'>%&gt;%</span>
+    <pre class="examples"><div class='input'><span class='kw'>Template</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='specify_all.html'>specify_all</a></span>() <span class='op'>%&gt;%</span>
   <span class='fu'><a href='fu_allocation_template.html'>fu_allocation_template</a></span>()
-<span class='no'>Template</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 900 x 15</span><span>
+<span class='kw'>Template</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 900 x 15</span><span>
 #&gt;    Country Method Energy.type Last.stage Ledger.side Flow.aggregatio… Unit 
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
@@ -276,8 +277,9 @@ The column order is:</p><ul>
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
 #&gt; </span><span style='color: #949494;'># … with 890 more rows, and 8 more variables: Ef.product </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Machine </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
 #&gt; </span><span style='color: #949494;'>#   Eu.product </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, Destination </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Quantity </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Maximum.values </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
-#&gt; </span><span style='color: #949494;'>#   `1971` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `2000` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='no'>Template</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>arrange_iea_fu_allocation_template</span>()</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 900 x 15</span><span>
+#&gt; </span><span style='color: #949494;'>#   `1971` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, `2000` </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='kw'>Template</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>arrange_iea_fu_allocation_template</span>()
+</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 900 x 15</span><span>
 #&gt;    Country Method Energy.type Last.stage Ledger.side Flow.aggregatio… Unit 
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final      Supply      Energy industry… ktoe 
@@ -308,7 +310,7 @@ The column order is:</p><ul>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

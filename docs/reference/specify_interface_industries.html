@@ -77,7 +77,7 @@ This function adds a suffix [of Product] to each of these interface industries."
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.37</span>
       </span>
     </div>
 
@@ -150,11 +150,11 @@ This function adds a suffix <code>[of Product]</code> to each of these interface
     </div>
 
     <pre class="usage"><span class='fu'>specify_interface_industries</span>(
-  <span class='no'>.tidy_iea_df</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>int_industries</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='interface_industries.html'>interface_industries</a></span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
-  <span class='kw'>notation</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='of_notation.html'>of_notation</a></span>
+  <span class='kw'>.tidy_iea_df</span>,
+  flow = <span class='st'>"Flow"</span>,
+  int_industries = <span class='kw'>IEATools</span>::<span class='kw'><a href='interface_industries.html'>interface_industries</a></span>,
+  product = <span class='st'>"Product"</span>,
+  notation = <span class='kw'>IEATools</span>::<span class='kw'><a href='of_notation.html'>of_notation</a></span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -193,8 +193,9 @@ but that is accomplished in the <code><a href='specify_primary_production.html'>
 <code><a href='specify_production_to_resources.html'>specify_production_to_resources()</a></code> functions.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>specify_interface_industries</span>()</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 402 x 11</span><span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'>specify_interface_industries</span>()
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 402 x 11</span><span>
 #&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           
 #&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary e…
@@ -224,7 +225,7 @@ but that is accomplished in the <code><a href='specify_primary_production.html'>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

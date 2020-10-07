@@ -1,3 +1,23 @@
+# IEATools 0.1.37 (2020-10-07)
+
+* New `aggregate_regions()` function that enables to aggregate regions
+of a `.tidy_iea_df` based on a user-defined aggregation table.
+* Underlying `read_aggregation_region_table()` and 
+`default_aggregation_region_table_path()` to enable the `aggregate_regions()`
+function to work.
+* Default IEA to Exiobase mapping provided as .xlsx file in the extdata folder.
+* Now 656 tests, all passing.
+* Test coverage remains at 100 %.
+
+# IEATools 0.1.36 (2020-09-10)
+
+* Fixed bug where missing eta_fu info caused failure.
+  Needed to allow for an empty `eta_fu_table` in `complete_eta_fu_table()`.
+* New tests for the fixed bug.
+    * Now at 636 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # IEATools 0.1.35 (2020-08-26)
 
 * First version that works with full SEAPSUT workflow.

@@ -75,7 +75,7 @@ where product is the name of the energy carrier for this resource." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.37</span>
       </span>
     </div>
 
@@ -146,12 +146,12 @@ where <code>product</code> is the name of the energy carrier for this resource.<
     </div>
 
     <pre class="usage"><span class='fu'>specify_production_to_resources</span>(
-  <span class='no'>.tidy_iea_df</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
-  <span class='kw'>production</span> <span class='kw'>=</span> <span class='st'>"Production"</span>,
-  <span class='kw'>resources</span> <span class='kw'>=</span> <span class='st'>"Resources"</span>,
-  <span class='kw'>notation</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='from_notation.html'>from_notation</a></span>
+  <span class='kw'>.tidy_iea_df</span>,
+  flow = <span class='st'>"Flow"</span>,
+  product = <span class='st'>"Product"</span>,
+  production = <span class='st'>"Production"</span>,
+  resources = <span class='st'>"Resources"</span>,
+  notation = <span class='kw'>IEATools</span>::<span class='kw'><a href='from_notation.html'>from_notation</a></span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -196,9 +196,10 @@ If this function is called first,
 EIOU will not be accounted correctly.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='specify_primary_production.html'>specify_primary_production</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>specify_production_to_resources</span>()</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 414 x 11</span><span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='specify_primary_production.html'>specify_primary_production</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'>specify_production_to_resources</span>()
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 414 x 11</span><span>
 #&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           
 #&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
@@ -228,7 +229,7 @@ EIOU will not be accounted correctly.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

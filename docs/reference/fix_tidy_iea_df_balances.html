@@ -77,7 +77,7 @@ on a per-product basis." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.37</span>
       </span>
     </div>
 
@@ -150,19 +150,19 @@ on a per-product basis.</p>
     </div>
 
     <pre class="usage"><span class='fu'>fix_tidy_iea_df_balances</span>(
-  <span class='no'>.tidy_iea_df</span>,
-  <span class='kw'>max_fix</span> <span class='kw'>=</span> <span class='fl'>5</span>,
-  <span class='kw'>remove_zeroes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>ledger_side</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow_aggregation_point</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>flow</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>product</span>,
-  <span class='kw'>e_dot</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>e_dot</span>,
-  <span class='kw'>supply</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='ledger_sides.html'>ledger_sides</a></span>$<span class='no'>supply</span>,
-  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='ledger_sides.html'>ledger_sides</a></span>$<span class='no'>consumption</span>,
-  <span class='kw'>tfc_compare</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='aggregation_flows.html'>aggregation_flows</a></span>$<span class='no'>tfc_compare</span>,
-  <span class='kw'>statistical_differences</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span>$<span class='no'>statistical_differences</span>,
-  <span class='kw'>.err</span> <span class='kw'>=</span> <span class='st'>".err"</span>
+  <span class='kw'>.tidy_iea_df</span>,
+  max_fix = <span class='fl'>5</span>,
+  remove_zeroes = <span class='fl'>TRUE</span>,
+  ledger_side = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>ledger_side</span>,
+  flow_aggregation_point = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow_aggregation_point</span>,
+  flow = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow</span>,
+  product = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>product</span>,
+  e_dot = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>e_dot</span>,
+  supply = <span class='kw'>IEATools</span>::<span class='kw'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='kw'>supply</span>,
+  consumption = <span class='kw'>IEATools</span>::<span class='kw'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='kw'>consumption</span>,
+  tfc_compare = <span class='kw'>IEATools</span>::<span class='kw'><a href='aggregation_flows.html'>aggregation_flows</a></span><span class='op'>$</span><span class='kw'>tfc_compare</span>,
+  statistical_differences = <span class='kw'>IEATools</span>::<span class='kw'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='kw'>statistical_differences</span>,
+  .err = <span class='st'>".err"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -226,20 +226,21 @@ that should be investigated prior to further analysis.</p>
 <code>.tidy_iea_df</code> is returned unmodified (i.e., with no rows).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
 <span class='co'># Balances are calculated for each group.</span>
 <span class='co'># Remember that grouping should _not_ be done on</span>
 <span class='co'># the `flow_aggregation_point`, `Flow`, or `ledger_side` columns.</span>
-<span class='no'>grouped_iea_df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>Country</span>, <span class='no'>Method</span>, <span class='no'>Energy.type</span>, <span class='no'>Last.stage</span>, <span class='no'>Year</span>, <span class='no'>Product</span>)
+<span class='kw'>grouped_iea_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='kw'>Country</span>, <span class='kw'>Method</span>, <span class='kw'>Energy.type</span>, <span class='kw'>Last.stage</span>, <span class='kw'>Year</span>, <span class='kw'>Product</span>)
 <span class='co'># unbalanced will not be balanced, because the IEA data are not in perfect balance.</span>
 <span class='co'># Because we have grouped by key variables, </span>
 <span class='co'># `calc_tidy_iea_df_balances` provides energy balances </span>
 <span class='co'># on a per-product basis.</span>
 <span class='co'># The `err` column shows the magnitude of the imbalances.</span>
-<span class='no'>unbalanced</span> <span class='kw'>&lt;-</span> <span class='no'>grouped_iea_df</span> <span class='kw'>%&gt;%</span>
+<span class='kw'>unbalanced</span> <span class='op'>&lt;-</span> <span class='kw'>grouped_iea_df</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='calc_tidy_iea_df_balances.html'>calc_tidy_iea_df_balances</a></span>()
-<span class='no'>unbalanced</span></div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 78 x 12</span><span>
+<span class='kw'>unbalanced</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 78 x 12</span><span>
 #&gt;    Country Method Energy.type Last.stage  Year Product Unit  supply_sum
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Aviati… ktoe    0.  </span><span style='color: #949494;'> </span><span>   
@@ -255,12 +256,14 @@ that should be investigated prior to further analysis.</p>
 #&gt; </span><span style='color: #949494;'># … with 68 more rows, and 4 more variables: consumption_sum </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
 #&gt; </span><span style='color: #949494;'>#   supply_minus_consumption </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, balance_OK </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, err </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='co'># The `tidy_iea_df_balanced` function returns `TRUE` if and only if `all` of the groups (rows) </span>
 <span class='co'># in `unbalanced` are balanced.</span>
-<span class='no'>unbalanced</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='tidy_iea_df_balanced.html'>tidy_iea_df_balanced</a></span>()</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='co'># Fix the imbalances.</span>
-<span class='no'>balanced</span> <span class='kw'>&lt;-</span> <span class='no'>grouped_iea_df</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>fix_tidy_iea_df_balances</span>() <span class='kw'>%&gt;%</span>
+<span class='kw'>unbalanced</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='tidy_iea_df_balanced.html'>tidy_iea_df_balanced</a></span>()
+</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='co'># Fix the imbalances.</span>
+<span class='kw'>balanced</span> <span class='op'>&lt;-</span> <span class='kw'>grouped_iea_df</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>fix_tidy_iea_df_balances</span>() <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='calc_tidy_iea_df_balances.html'>calc_tidy_iea_df_balances</a></span>()
-<span class='no'>balanced</span></div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 78 x 12</span><span>
+<span class='kw'>balanced</span>
+</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 78 x 12</span><span>
 #&gt;    Country Method Energy.type Last.stage  Year Product Unit  supply_sum
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Aviati… ktoe        0   
@@ -274,8 +277,9 @@ that should be investigated prior to further analysis.</p>
 #&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Liquef… ktoe        3.39
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Lubric… ktoe       18.1 
 #&gt; </span><span style='color: #949494;'># … with 68 more rows, and 4 more variables: consumption_sum </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
-#&gt; </span><span style='color: #949494;'>#   supply_minus_consumption </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, balance_OK </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, err </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='no'>balanced</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='tidy_iea_df_balanced.html'>tidy_iea_df_balanced</a></span>()</div><div class='output co'>#&gt; [1] TRUE</div></span></pre>
+#&gt; </span><span style='color: #949494;'>#   supply_minus_consumption </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, balance_OK </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, err </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='kw'>balanced</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='tidy_iea_df_balanced.html'>tidy_iea_df_balanced</a></span>()
+</div><div class='output co'>#&gt; [1] TRUE</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -291,7 +295,7 @@ that should be investigated prior to further analysis.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

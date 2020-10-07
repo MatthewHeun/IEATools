@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.37</span>
       </span>
     </div>
 
@@ -133,25 +133,49 @@
       
     </div>
 
-    <div id="ieatools-0135-2020-08-26" class="section level1">
+    <div id="ieatools-0-1-37-2020-10-07" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.37">
+<a href="#ieatools-0-1-37-2020-10-07" class="anchor"></a>IEATools 0.1.37 (2020-10-07)</h1>
+<ul>
+<li>New <code><a href="../reference/aggregate_regions.html">aggregate_regions()</a></code> function that enables to aggregate regions of a <code>.tidy_iea_df</code> based on a user-defined aggregation table.</li>
+<li>Underlying <code><a href="../reference/read_aggregation_region_table.html">read_aggregation_region_table()</a></code> and <code><a href="../reference/default_aggregation_region_table_path.html">default_aggregation_region_table_path()</a></code> to enable the <code><a href="../reference/aggregate_regions.html">aggregate_regions()</a></code> function to work.</li>
+<li>Default IEA to Exiobase mapping provided as .xlsx file in the extdata folder.</li>
+<li>Now 656 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</div>
+    <div id="ieatools-0-1-36-2020-09-10" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.36">
+<a href="#ieatools-0-1-36-2020-09-10" class="anchor"></a>IEATools 0.1.36 (2020-09-10)</h1>
+<ul>
+<li>Fixed bug where missing eta_fu info caused failure. Needed to allow for an empty <code>eta_fu_table</code> in <code><a href="../reference/complete_eta_fu_table.html">complete_eta_fu_table()</a></code>.</li>
+<li>New tests for the fixed bug.
+<ul>
+<li>Now at 636 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="ieatools-0-1-35-2020-08-26" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.35">
-<a href="#ieatools-0135-2020-08-26" class="anchor"></a>IEATools 0.1.35 (2020-08-26)</h1>
+<a href="#ieatools-0-1-35-2020-08-26" class="anchor"></a>IEATools 0.1.35 (2020-08-26)</h1>
 <ul>
 <li>First version that works with full SEAPSUT workflow.</li>
 <li>Removed an erroneous check for energy industry own use in <code><a href="../reference/specify_primary_production.html">specify_primary_production()</a></code>. In fact, we need to specify all cases, not only if energy industry own use is present. This change solves a bug in a <code>drake</code> workflow.</li>
 <li>Added spell checking to build process.</li>
 </ul>
 </div>
-    <div id="ieatools-0134-2020-08-19" class="section level1">
+    <div id="ieatools-0-1-34-2020-08-19" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.34">
-<a href="#ieatools-0134-2020-08-19" class="anchor"></a>IEATools 0.1.34 (2020-08-19)</h1>
+<a href="#ieatools-0-1-34-2020-08-19" class="anchor"></a>IEATools 0.1.34 (2020-08-19)</h1>
 <ul>
 <li>Updated documentation.</li>
 </ul>
 </div>
-    <div id="ieatools-0133-2020-08-17" class="section level1">
+    <div id="ieatools-0-1-33-2020-08-17" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.33">
-<a href="#ieatools-0133-2020-08-17" class="anchor"></a>IEATools 0.1.33 (2020-08-17)</h1>
+<a href="#ieatools-0-1-33-2020-08-17" class="anchor"></a>IEATools 0.1.33 (2020-08-17)</h1>
 <ul>
 <li>New tests for new features and old bugs.
 <ul>
@@ -166,9 +190,9 @@
 <li>Fixed bugs with completion code.</li>
 </ul>
 </div>
-    <div id="ieatools-0132-2020-08-13" class="section level1">
+    <div id="ieatools-0-1-32-2020-08-13" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.32">
-<a href="#ieatools-0132-2020-08-13" class="anchor"></a>IEATools 0.1.32 (2020-08-13)</h1>
+<a href="#ieatools-0-1-32-2020-08-13" class="anchor"></a>IEATools 0.1.32 (2020-08-13)</h1>
 <ul>
 <li>
 <code><a href="../reference/eta_fu_template.html">eta_fu_template()</a></code> now accepts tidy data frames.</li>
@@ -181,9 +205,9 @@
 <li>New function <code><a href="../reference/check_fu_allocation_data.html">check_fu_allocation_data()</a></code> verifies that all <code>Ef.product</code> and <code>Eu.product</code> entries are identical when <code>Machine</code> is <code>Non-energy</code>.</li>
 </ul>
 </div>
-    <div id="ieatools-0131-2020-07-29" class="section level1">
+    <div id="ieatools-0-1-31-2020-07-29" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.31">
-<a href="#ieatools-0131-2020-07-29" class="anchor"></a>IEATools 0.1.31 (2020-07-29)</h1>
+<a href="#ieatools-0-1-31-2020-07-29" class="anchor"></a>IEATools 0.1.31 (2020-07-29)</h1>
 <ul>
 <li>Adjusted tests for errors instead of warnings.
 <ul>
@@ -196,9 +220,9 @@
 <li>Warnings are now errors with <em>much</em> more descriptive information.</li>
 </ul>
 </div>
-    <div id="ieatools-0130-2020-07-24" class="section level1">
+    <div id="ieatools-0-1-30-2020-07-24" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.30">
-<a href="#ieatools-0130-2020-07-24" class="anchor"></a>IEATools 0.1.30 (2020-07-24)</h1>
+<a href="#ieatools-0-1-30-2020-07-24" class="anchor"></a>IEATools 0.1.30 (2020-07-24)</h1>
 <ul>
 <li>New tests for new features and old bugs.
 <ul>
@@ -213,9 +237,9 @@
 <li>New function <code><a href="../reference/tidy_eta_fu_table.html">tidy_eta_fu_table()</a></code> does what the name suggests. This function (and previous new function <code><a href="../reference/tidy_fu_allocation_table.html">tidy_fu_allocation_table()</a></code>) enable elimination of duplicated code in several places.</li>
 </ul>
 </div>
-    <div id="ieatools-0129-2020-07-21" class="section level1">
+    <div id="ieatools-0-1-29-2020-07-21" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.29">
-<a href="#ieatools-0129-2020-07-21" class="anchor"></a>IEATools 0.1.29 (2020-07-21)</h1>
+<a href="#ieatools-0-1-29-2020-07-21" class="anchor"></a>IEATools 0.1.29 (2020-07-21)</h1>
 <ul>
 <li>New tests for new features and old bugs.
 <ul>
@@ -236,16 +260,16 @@
 <li>Added constant <code><a href="../reference/fu_analysis_file_info.html">IEATools::fu_analysis_file_info</a></code>.</li>
 </ul>
 </div>
-    <div id="ieatools-0128-2020-07-02" class="section level1">
+    <div id="ieatools-0-1-28-2020-07-02" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.28">
-<a href="#ieatools-0128-2020-07-02" class="anchor"></a>IEATools 0.1.28 (2020-07-02)</h1>
+<a href="#ieatools-0-1-28-2020-07-02" class="anchor"></a>IEATools 0.1.28 (2020-07-02)</h1>
 <ul>
 <li>“Memo: Greenland”, “Memo: Palestinian Authority”, and “Memo: Uganda” are no longer included in constant <code><a href="../reference/aggregation_regions.html">IEATools::aggregation_regions</a></code>, because these regions are <em>not</em> aggregations.</li>
 </ul>
 </div>
-    <div id="ieatools-0127-2020-06-29" class="section level1">
+    <div id="ieatools-0-1-27-2020-06-29" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.27">
-<a href="#ieatools-0127-2020-06-29" class="anchor"></a>IEATools 0.1.27 (2020-06-29)</h1>
+<a href="#ieatools-0-1-27-2020-06-29" class="anchor"></a>IEATools 0.1.27 (2020-06-29)</h1>
 <ul>
 <li>New tests for new features.
 <ul>
@@ -256,9 +280,9 @@
 <li>Added new function <code><a href="../reference/remove_agg_regions.html">remove_agg_regions()</a></code> that removes known aggregation regions from an IEA extended energy balances data frame.</li>
 </ul>
 </div>
-    <div id="ieatools-0126-2020-06-27" class="section level1">
+    <div id="ieatools-0-1-26-2020-06-27" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.26">
-<a href="#ieatools-0126-2020-06-27" class="anchor"></a>IEATools 0.1.26 (2020-06-27)</h1>
+<a href="#ieatools-0-1-26-2020-06-27" class="anchor"></a>IEATools 0.1.26 (2020-06-27)</h1>
 <ul>
 <li>New tests for new features.
 <ul>
@@ -271,44 +295,44 @@
 <li>Non-energy use no longer excluded when generating FU Allocation templates.</li>
 </ul>
 </div>
-    <div id="ieatools-0125-2020-06-19" class="section level1">
+    <div id="ieatools-0-1-25-2020-06-19" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.25">
-<a href="#ieatools-0125-2020-06-19" class="anchor"></a>IEATools 0.1.25 (2020-06-19)</h1>
+<a href="#ieatools-0-1-25-2020-06-19" class="anchor"></a>IEATools 0.1.25 (2020-06-19)</h1>
 <ul>
 <li>“CHN” is now a synonym for “People’s Republic of China”.</li>
 </ul>
 </div>
-    <div id="ieatools-0124-2020-06-17" class="section level1">
+    <div id="ieatools-0-1-24-2020-06-17" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.24">
-<a href="#ieatools-0124-2020-06-17" class="anchor"></a>IEATools 0.1.24 (2020-06-17)</h1>
+<a href="#ieatools-0-1-24-2020-06-17" class="anchor"></a>IEATools 0.1.24 (2020-06-17)</h1>
 <ul>
 <li>Fixed a bug where “China (P.R. of China and Hong Kong, China)” was not being coded to “CHN” in <code><a href="../reference/use_iso_countries.html">use_iso_countries()</a></code>. The problem is that the <code>countrycode</code> package uses a different name from the IEA extended energy balance database. For now, I have coded “China (P.R. of China and Hong Kong, China)” as “CHN”. Another option would be to code it as “CHNHKG”.</li>
 </ul>
 </div>
-    <div id="ieatools-0123-2020-06-17" class="section level1">
+    <div id="ieatools-0-1-23-2020-06-17" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.23">
-<a href="#ieatools-0123-2020-06-17" class="anchor"></a>IEATools 0.1.23 (2020-06-17)</h1>
+<a href="#ieatools-0-1-23-2020-06-17" class="anchor"></a>IEATools 0.1.23 (2020-06-17)</h1>
 <ul>
 <li>Fixed issue #5 from the PFU-Database repository. The issue involved <code><a href="../reference/eta_fu_template.html">IEATools::eta_fu_template()</a></code>. The <code>eu_product</code> <code>ke</code> was not being subtracted, leaving duplicate “KE” products in <code>eu_product_sort_order</code>.</li>
 </ul>
 </div>
-    <div id="ieatools-0122-2020-06-10" class="section level1">
+    <div id="ieatools-0-1-22-2020-06-10" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.22">
-<a href="#ieatools-0122-2020-06-10" class="anchor"></a>IEATools 0.1.22 (2020-06-10)</h1>
+<a href="#ieatools-0-1-22-2020-06-10" class="anchor"></a>IEATools 0.1.22 (2020-06-10)</h1>
 <ul>
 <li>Fixed a bug in <code><a href="../reference/despecify_col.html">despecify_col()</a></code>. <code>resources</code> and <code>production</code> were not correctly using the <code>tpes_flows</code> object.</li>
 </ul>
 </div>
-    <div id="ieatools-0121-2020-05-14" class="section level1">
+    <div id="ieatools-0-1-21-2020-05-14" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.21">
-<a href="#ieatools-0121-2020-05-14" class="anchor"></a>IEATools 0.1.21 (2020-05-14)</h1>
+<a href="#ieatools-0-1-21-2020-05-14" class="anchor"></a>IEATools 0.1.21 (2020-05-14)</h1>
 <ul>
 <li>Bug fixes in <code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code>. Importantly, an energy balance check is now performed at the end of <code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code>, and a warning is emitted if the energy balance check fails.</li>
 </ul>
 </div>
-    <div id="ieatools-0120-2020-05-01" class="section level1">
+    <div id="ieatools-0-1-20-2020-05-01" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.20">
-<a href="#ieatools-0120-2020-05-01" class="anchor"></a>IEATools 0.1.20 (2020-05-01)</h1>
+<a href="#ieatools-0-1-20-2020-05-01" class="anchor"></a>IEATools 0.1.20 (2020-05-01)</h1>
 <ul>
 <li>Added additional tests for bug fixes and new features.
 <ul>
@@ -322,24 +346,24 @@
 <li>Added functions for row and column notation: <code>paren_to_arrow()</code>, <code>arrow_to_paren()</code>, and <code>switch_notation()</code>.</li>
 </ul>
 </div>
-    <div id="ieatools-0119-2020-04-01" class="section level1">
+    <div id="ieatools-0-1-19-2020-04-01" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.19">
-<a href="#ieatools-0119-2020-04-01" class="anchor"></a>IEATools 0.1.19 (2020-04-01)</h1>
+<a href="#ieatools-0-1-19-2020-04-01" class="anchor"></a>IEATools 0.1.19 (2020-04-01)</h1>
 <ul>
 <li>New function <code><a href="../reference/form_eta_fu_phi_u_vecs.html">form_eta_fu_phi_u_vecs()</a></code> which creates column vectors of final-to-useful efficiencies (eta_fu) and exergy-to-energy ratios (phi_u) from an efficiency table.</li>
 <li>Added new test to hit code path for generating diagnostic information when FU Allocation table is mal-formed. Code coverage is back up to 100 % for testing.</li>
 </ul>
 </div>
-    <div id="ieatools-0118-2020-03-31" class="section level1">
+    <div id="ieatools-0-1-18-2020-03-31" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.18">
-<a href="#ieatools-0118-2020-03-31" class="anchor"></a>IEATools 0.1.18 (2020-03-31)</h1>
+<a href="#ieatools-0-1-18-2020-03-31" class="anchor"></a>IEATools 0.1.18 (2020-03-31)</h1>
 <ul>
 <li>New function <code><a href="../reference/form_C_mats.html">form_C_mats()</a></code> which makes a data frame of C matrices (a.k.a. final-to-useful allocation matrices) and metadata from an FU Allocation table.</li>
 </ul>
 </div>
-    <div id="ieatools-0117-2020-03-25" class="section level1">
+    <div id="ieatools-0-1-17-2020-03-25" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.17">
-<a href="#ieatools-0117-2020-03-25" class="anchor"></a>IEATools 0.1.17 (2020-03-25)</h1>
+<a href="#ieatools-0-1-17-2020-03-25" class="anchor"></a>IEATools 0.1.17 (2020-03-25)</h1>
 <ul>
 <li>Added several new member objects to standard names across the package:
 <ul>
@@ -355,9 +379,9 @@
 <code><a href="../reference/extract_TK.html">extract_TK()</a></code> now accepts strings formulated for “cooling” in addition to “heating.” Thus, “LTC.15.C” is now accepted and parses correctly.</li>
 </ul>
 </div>
-    <div id="ieatools-0116-2020-03-24" class="section level1">
+    <div id="ieatools-0-1-16-2020-03-24" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.16">
-<a href="#ieatools-0116-2020-03-24" class="anchor"></a>IEATools 0.1.16 (2020-03-24)</h1>
+<a href="#ieatools-0-1-16-2020-03-24" class="anchor"></a>IEATools 0.1.16 (2020-03-24)</h1>
 <ul>
 <li>Now up to 444 tests, which all pass.</li>
 <li>
@@ -371,9 +395,9 @@
 <li>Added names to all constants for easier programming.</li>
 </ul>
 </div>
-    <div id="ieatools-0115-2020-03-16" class="section level1">
+    <div id="ieatools-0-1-15-2020-03-16" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.15">
-<a href="#ieatools-0115-2020-03-16" class="anchor"></a>IEATools 0.1.15 (2020-03-16)</h1>
+<a href="#ieatools-0-1-15-2020-03-16" class="anchor"></a>IEATools 0.1.15 (2020-03-16)</h1>
 <ul>
 <li>Now up to 429 tests!</li>
 <li>Added a <code>fix_iea_data</code> vignette. See <a href="https://matthewheun.github.io/IEATools/articles/fix_iea_data.html">Fixes for IEA Data</a>.</li>
@@ -390,18 +414,18 @@
 <li>Completed function called <code><a href="../reference/fix_GHA_psb.html">fix_GHA_psb()</a></code> which smooths Ghana’s Primary solid biofuels data in the years 1991–1999.</li>
 </ul>
 </div>
-    <div id="ieatools-0114-2020-03-11" class="section level1">
+    <div id="ieatools-0-1-14-2020-03-11" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.14">
-<a href="#ieatools-0114-2020-03-11" class="anchor"></a>IEATools 0.1.14 (2020-03-11)</h1>
+<a href="#ieatools-0-1-14-2020-03-11" class="anchor"></a>IEATools 0.1.14 (2020-03-11)</h1>
 <ul>
 <li>Fixed an issue with argument names: overwrite –&gt; overwrite_file. The change was made in the <code>IEATools</code> package develop branch against which the latest version of the PFU-Database repository was built. However, the argument name change needs to be on the master branch of <code>IEATools</code> so that <code>install_github()</code> gets the updated argument name.</li>
 <li>Added stub functions to fix certain IEA data. This capability is in development and not yet working.</li>
 <li>Added a script to make internal data frames for fixing IEA data. This capability is in development and not yet working.</li>
 </ul>
 </div>
-    <div id="ieatools-0113-2020-03-08" class="section level1">
+    <div id="ieatools-0-1-13-2020-03-08" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.13">
-<a href="#ieatools-0113-2020-03-08" class="anchor"></a>IEATools 0.1.13 (2020-03-08)</h1>
+<a href="#ieatools-0-1-13-2020-03-08" class="anchor"></a>IEATools 0.1.13 (2020-03-08)</h1>
 <ul>
 <li>Added template tests for both 2018 and 2019.</li>
 <li>Added new sample allocation and F–&gt;U efficiency tables for 2019 data.</li>
@@ -424,50 +448,50 @@ No FLOWs end with those strings in the 2019 data. There is no harm to leave the 
 <code><a href="../reference/iea_df.html">iea_df()</a></code> now removes white space, even from “FLOW” entries that are quoted to protect commas.</li>
 </ul>
 </div>
-    <div id="ieatools-0112-2020-02-26" class="section level1">
+    <div id="ieatools-0-1-12-2020-02-26" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.12">
-<a href="#ieatools-0112-2020-02-26" class="anchor"></a>IEATools 0.1.12 (2020-02-26)</h1>
+<a href="#ieatools-0-1-12-2020-02-26" class="anchor"></a>IEATools 0.1.12 (2020-02-26)</h1>
 <ul>
 <li>
 <code><a href="../reference/iea_df.html">iea_df()</a></code> now reads files with a clean header line.</li>
 <li>Improved documentation on the energy balance functions, especially <code><a href="../reference/fix_tidy_iea_df_balances.html">fix_tidy_iea_df_balances()</a></code>, where clarifying examples are now provided.</li>
 </ul>
 </div>
-    <div id="ieatools-0111-2020-02-14" class="section level1">
+    <div id="ieatools-0-1-11-2020-02-14" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.11">
-<a href="#ieatools-0111-2020-02-14" class="anchor"></a>IEATools 0.1.11 (2020-02-14)</h1>
+<a href="#ieatools-0-1-11-2020-02-14" class="anchor"></a>IEATools 0.1.11 (2020-02-14)</h1>
 <ul>
 <li>
 <code><a href="../reference/iea_df.html">iea_df()</a></code> now deletes columns that end with <code>estimated_year</code>, whose default value is “E”. This feature allows us to process IEA data files with column names such as “2014E”.</li>
 </ul>
 </div>
-    <div id="ieatools-0110-2020-01-22" class="section level1">
+    <div id="ieatools-0-1-10-2020-01-22" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.10">
-<a href="#ieatools-0110-2020-01-22" class="anchor"></a>IEATools 0.1.10 (2020-01-22)</h1>
+<a href="#ieatools-0-1-10-2020-01-22" class="anchor"></a>IEATools 0.1.10 (2020-01-22)</h1>
 <ul>
 <li>Integrated with <a href="http://www.codecov.io">codecov.io</a> by adding <code>codecov.yml</code> file to repository.</li>
 <li>Integrated with Travis by adding <code>.travis.yml</code> file to repository. Now, Travis builds the package automatically after each commit. In addition, test coverage is calculated after each build.</li>
 <li>Now at 100 % test coverage. Got to this point by adding new tests to ensure that all parts of the code are being hit. And by adjusting the regex strings in <code><a href="../reference/extract_TK.html">extract_TK()</a></code>.</li>
 </ul>
 </div>
-    <div id="ieatools-019-2020-01-15" class="section level1">
+    <div id="ieatools-0-1-9-2020-01-15" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.9">
-<a href="#ieatools-019-2020-01-15" class="anchor"></a>IEATools 0.1.9 (2020-01-15)</h1>
+<a href="#ieatools-0-1-9-2020-01-15" class="anchor"></a>IEATools 0.1.9 (2020-01-15)</h1>
 <ul>
 <li>Added GitHub Pages website.</li>
 </ul>
 </div>
-    <div id="ieatools-018-2019-07-24" class="section level1">
+    <div id="ieatools-0-1-8-2019-07-24" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.8">
-<a href="#ieatools-018-2019-07-24" class="anchor"></a>IEATools 0.1.8 (2019-07-24)</h1>
+<a href="#ieatools-0-1-8-2019-07-24" class="anchor"></a>IEATools 0.1.8 (2019-07-24)</h1>
 <ul>
 <li>Efficiency template now includes energy flows into final-to-useful machines for each year, indicating to analysts which years need no efficiency or exergy-to-energy ratio.</li>
 <li>New <code>sort_by</code> argument for <code><a href="../reference/eta_fu_template.html">eta_fu_template()</a></code> allows “useful_energy_type” and “importance”. “useful_energy_type” sorts first by <code>md</code>, <code>light</code>, <code>ke</code>, and <code>heat</code>, then by magnitude of energy flow into the machine. “importance” sorts by magnitude of energy flow into the machine only. Default is “useful_energy_type”.</li>
 </ul>
 </div>
-    <div id="ieatools-017-2019-04-18" class="section level1">
+    <div id="ieatools-0-1-7-2019-04-18" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.7">
-<a href="#ieatools-017-2019-04-18" class="anchor"></a>IEATools 0.1.7 (2019-04-18)</h1>
+<a href="#ieatools-0-1-7-2019-04-18" class="anchor"></a>IEATools 0.1.7 (2019-04-18)</h1>
 <ul>
 <li>Allocation template now sorting rows in IEA order.</li>
 <li>All specified primary flows now consumed somewhere in the ECC.</li>
@@ -478,9 +502,9 @@ For example, “Hard coal (if no detail)” –&gt; “Hard coal (if no detail) 
 <code><a href="../reference/specify_tp_eiou.html">specify_tp_eiou()</a></code> now aggregates inputs and outputs separately at the end of its specification process. Doing so avoids a situation where resource extraction industries would look like a Transformation process sink industry when inputs and outputs were netted together.</li>
 </ul>
 </div>
-    <div id="ieatools-016-2019-04-06" class="section level1">
+    <div id="ieatools-0-1-6-2019-04-06" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.6">
-<a href="#ieatools-016-2019-04-06" class="anchor"></a>IEATools 0.1.6 (2019-04-06)</h1>
+<a href="#ieatools-0-1-6-2019-04-06" class="anchor"></a>IEATools 0.1.6 (2019-04-06)</h1>
 <ul>
 <li>Updated all three vignettes to reflect the new functions and demonstrate their use.</li>
 <li>New function <code><a href="../reference/augment_iea_df.html">augment_iea_df()</a></code> now removes <code>(energy)</code>, <code>(transf.)</code>, and <code>(transformation)</code> suffixes from the <code>Flow</code> column after adding the <code>Flow.aggregation.point</code> column.</li>
@@ -496,44 +520,44 @@ For example, “Hard coal (if no detail)” –&gt; “Hard coal (if no detail) 
 <li>Added function to create an S_units matrix from tidy data.</li>
 </ul>
 </div>
-    <div id="ieadata-015-2018-08-10" class="section level1">
+    <div id="ieadata-0-1-5-2018-08-10" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.5">
-<a href="#ieadata-015-2018-08-10" class="anchor"></a>IEAData 0.1.5 (2018-08-10)</h1>
+<a href="#ieadata-0-1-5-2018-08-10" class="anchor"></a>IEAData 0.1.5 (2018-08-10)</h1>
 <ul>
 <li>Trying again. Doesn’t seem like data were pushed to GitHub.</li>
 </ul>
 </div>
-    <div id="ieadata-014-2018-08-10" class="section level1">
+    <div id="ieadata-0-1-4-2018-08-10" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.4">
-<a href="#ieadata-014-2018-08-10" class="anchor"></a>IEAData 0.1.4 (2018-08-10)</h1>
+<a href="#ieadata-0-1-4-2018-08-10" class="anchor"></a>IEAData 0.1.4 (2018-08-10)</h1>
 <ul>
 <li>Now includes “World” as a country.</li>
 </ul>
 </div>
-    <div id="ieadata-013-2018-07-29" class="section level1">
+    <div id="ieadata-0-1-3-2018-07-29" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.3">
-<a href="#ieadata-013-2018-07-29" class="anchor"></a>IEAData 0.1.3 (2018-07-29)</h1>
+<a href="#ieadata-0-1-3-2018-07-29" class="anchor"></a>IEAData 0.1.3 (2018-07-29)</h1>
 <ul>
 <li>New version of FixedHNFuels.tsv file from Noah Ver Beek.</li>
 </ul>
 </div>
-    <div id="ieadata-012-2018-07-27" class="section level1">
+    <div id="ieadata-0-1-2-2018-07-27" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.2">
-<a href="#ieadata-012-2018-07-27" class="anchor"></a>IEAData 0.1.2 (2018-07-27)</h1>
+<a href="#ieadata-0-1-2-2018-07-27" class="anchor"></a>IEAData 0.1.2 (2018-07-27)</h1>
 <ul>
 <li>Fixed bug in which data are replaced for Honduras.</li>
 </ul>
 </div>
-    <div id="ieadata-011-2018-07-27" class="section level1">
+    <div id="ieadata-0-1-1-2018-07-27" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.1">
-<a href="#ieadata-011-2018-07-27" class="anchor"></a>IEAData 0.1.1 (2018-07-27)</h1>
+<a href="#ieadata-0-1-1-2018-07-27" class="anchor"></a>IEAData 0.1.1 (2018-07-27)</h1>
 <ul>
 <li>Added fixes for Honduras data from Noah Ver Beek.</li>
 </ul>
 </div>
-    <div id="ieadata-010-2018-05-25" class="section level1">
+    <div id="ieadata-0-1-0-2018-05-25" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.0">
-<a href="#ieadata-010-2018-05-25" class="anchor"></a>IEAData 0.1.0 (2018-05-25)</h1>
+<a href="#ieadata-0-1-0-2018-05-25" class="anchor"></a>IEAData 0.1.0 (2018-05-25)</h1>
 <ul>
 <li>Initial release.</li>
 </ul>
@@ -555,7 +579,7 @@ For example, “Hard coal (if no detail)” –&gt; “Hard coal (if no detail) 
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
