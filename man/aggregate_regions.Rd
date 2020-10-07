@@ -6,7 +6,7 @@
 \usage{
 aggregate_regions(
   .tidy_iea_df,
-  aggregation_table = read_aggregation_table(),
+  aggregation_table = read_aggregation_region_table(),
   net_trade = FALSE,
   destination_regions = "Destination_regions",
   iea_regions = "IEA_regions",
@@ -17,7 +17,8 @@ aggregate_regions(
   flow = IEATools::iea_cols$flow,
   year = IEATools::iea_cols$year,
   ledger_side = IEATools::iea_cols$ledger_side,
-  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  .net_imports = "Net_Imports"
 )
 }
 \arguments{
@@ -26,8 +27,8 @@ to have been obtained with the \code{load_tidy_iea_df()} function.}
 
 \item{aggregation_table}{An aggregation table that routes the IEA regions (\code{iea_regions} column) to destination regions
 (\code{destination_regions} column). The aggregation table can be built manually
-or loaded from an Excel file with the \code{read_aggregation_table()} function.
-Default is the 2019 IEA to Exiobase aggregation table, as provided by the \code{read_aggregation_table()} function.}
+or loaded from an Excel file with the \code{read_aggregation_region_table()} function.
+Default is the 2019 IEA to Exiobase aggregation table, as provided by the \code{read_aggregation_region_table()} function.}
 
 \item{net_trade}{The boolean that defines whether imports and exports by aggregation region should be converted
 into net imports / exports or not. Default is \code{FALSE}.}
@@ -61,6 +62,10 @@ Default is \code{IEATools::iea_cols$ledger_side}.}
 
 \item{flow_aggregation_point}{The name of the \code{flow_aggregation_point} column in the \code{.tidy_iea_df}.
 Default is \code{IEATools::iea_cols$flow_aggregation_point}.}
+
+\item{.net_imports}{The name of the \code{.net_import} variable, that is only used internally to the function. Not returned.
+Default is "Net_Imports". It is suggested that this parameter is only used in the particular case that there is a column
+or a flow named "Net_Imports" in the \code{.tidy_iea_df} input data frame.}
 }
 \value{
 A \code{.tidy_iea_df} that contains the data of the input \code{.tidy_iea_df} aggregated by regions as specified in the user-defined

@@ -500,7 +500,7 @@ test_that("spreading by years works as expected after load_tidy_iea_df()", {
 test_that("Loading regional aggregation table works as intended", {
   
   # First using default 2019 aggregation table
-  aggregation_table <- read_aggregation_table()
+  aggregation_table <- read_aggregation_region_table()
   
   # Testing empty celles are gotten rid of
   expect_equal(nrow(aggregation_table %>% dplyr::filter(IEA_regions == "OECD Americas")), 0)
@@ -517,7 +517,7 @@ test_that("Loading regional aggregation table works as intended", {
   
   
   # Changing file, now using 2020 aggregation table
-  aggregation_table <- read_aggregation_table(file_path = system.file("extdata", 
+  aggregation_table <- read_aggregation_region_table(file_path = system.file("extdata", 
                                                                       "aggregation_table_iea_exiobase_2020.xlsx",
                                                                       package = "IEATools"))
   

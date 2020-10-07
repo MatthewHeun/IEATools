@@ -727,11 +727,11 @@ replace_join <- function(x, y, replace_col,
 #' @export
 #'
 #' @examples
-#' default_aggregation_table_path()     # Assumes 2019
-#' default_aggregation_table_path(2019) # Same
+#' default_aggregation_region_table_path()     # Assumes 2019
+#' default_aggregation_region_table_path(2019) # Same
 #' # Returns path for default aggregation table appropriate for 2020 IEA data release
-#' default_aggregation_table_path(2020) 
-default_aggregation_table_path <- function(version = 2019) {
+#' default_aggregation_region_table_path(2020) 
+default_aggregation_region_table_path <- function(version = 2019) {
   if (version == 2019) {
     return(file.path("extdata", "aggregation_table_iea_exiobase_2019.xlsx") %>% 
              system.file(package = "IEATools"))
@@ -739,6 +739,6 @@ default_aggregation_table_path <- function(version = 2019) {
     return(file.path("extdata", "aggregation_table_iea_exiobase_2020.xlsx") %>% 
              system.file(package = "IEATools"))
   }
-  stop("Only 2019, and 2020 are supported in default_aggregation_table_path()")
+  stop("Only 2019, and 2020 are supported in default_aggregation_region_table_path()")
 }
 # EAR - 29/09/2020

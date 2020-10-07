@@ -964,9 +964,13 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
 #' those that are not included will be removed when calling the `aggregate_regions()` function.
 #' IEA regions that are rerouted to "NA" or to an empty value are also removed when calling the `aggregate_regions()` function.
 #' 
+#' Note that the default IEA to Exiobase mapping are only valid for the time periods relevant to Exiobase (from 1995 onwards). 
+#' Using it for previous years will lead to a situation where the energy consumption of particular countries, 
+#' like Former Soviet Union or Former Yugoslavia, disappear from the data frame (because they do not correspond to an Exiobase region.
+#' 
 #' @param file_path The path of the file (xlsx file) to be loaded. The default path leads to an aggregation table converting IEA regions 
-#' into Exiobase regions for 2019 IEA data. Using the `default_aggregation_table_path()` function, the user can
-#' select the default IEA regions to Exiobase regions aggregation table for a different year.
+#' into Exiobase regions for 2019 IEA data. Using the `default_aggregation_region_table_path()` function, the user can
+#' select the default IEA regions to Exiobase regions aggregation table for a different year. 
 #' @param country The name of the `country`` column in the aggregation table returned by the data frame. 
 #' This column contains ISO codes for the `iea_regions` column of the aggregation table.
 #' Default is `IEATools::iea_cols$country`.
@@ -985,11 +989,11 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
 #' 
 #' @examples
 #' # Returns the default aggregation table for the year 2019
-#' read_aggregation_table()
+#' read_aggregation_region_table()
 #' # Returns the default aggregation table for the year 2020
-#' read_aggregation_table(file_path = default_aggregation_table_path(2020))
+#' read_aggregation_region_table(file_path = default_aggregation_region_table_path(2020))
 #' # Returns an aggregation table that aggregates Ghana and South Africa into a new GHAZAF region
-read_aggregation_table <- function(file_path = default_aggregation_table_path(2019),
+read_aggregation_region_table <- function(file_path = default_aggregation_region_table_path(2019),
                                      country = IEATools::iea_cols$country,
                                      iea_regions = "IEA_regions",
                                      destination_regions = "Destination_regions"){
@@ -1014,8 +1018,8 @@ read_aggregation_table <- function(file_path = default_aggregation_table_path(20
 #' to have been obtained with the `load_tidy_iea_df()` function.
 #' @param aggregation_table An aggregation table that routes the IEA regions (`iea_regions` column) to destination regions
 #' (`destination_regions` column). The aggregation table can be built manually 
-#' or loaded from an Excel file with the `read_aggregation_table()` function.
-#' Default is the 2019 IEA to Exiobase aggregation table, as provided by the `read_aggregation_table()` function.
+#' or loaded from an Excel file with the `read_aggregation_region_table()` function.
+#' Default is the 2019 IEA to Exiobase aggregation table, as provided by the `read_aggregation_region_table()` function.
 #' @param net_trade The boolean that defines whether imports and exports by aggregation region should be converted 
 #' into net imports / exports or not. Default is `FALSE`.
 #' @param destination_regions The name of the `destination_regions` in the `aggregation_table` data frame.
@@ -1038,13 +1042,16 @@ read_aggregation_table <- function(file_path = default_aggregation_table_path(20
 #' Default is `IEATools::iea_cols$ledger_side`.
 #' @param flow_aggregation_point The name of the `flow_aggregation_point` column in the `.tidy_iea_df`.
 #' Default is `IEATools::iea_cols$flow_aggregation_point`.
+#' @param .net_imports The name of the `.net_import` variable, that is only used internally to the function. Not returned.
+#' Default is "Net_Imports". It is suggested that this parameter is only used in the particular case that there is a column
+#' or a flow named "Net_Imports" in the `.tidy_iea_df` input data frame.
 #' 
 #' @return A `.tidy_iea_df` that contains the data of the input `.tidy_iea_df` aggregated by regions as specified in the user-defined
 #' country aggregation table provided.
 #' 
 #' @export
 aggregate_regions <- function(.tidy_iea_df,
-                              aggregation_table = read_aggregation_table(),
+                              aggregation_table = read_aggregation_region_table(),
                               net_trade = FALSE, 
                               destination_regions = "Destination_regions",
                               iea_regions = "IEA_regions",
@@ -1055,7 +1062,8 @@ aggregate_regions <- function(.tidy_iea_df,
                               flow = IEATools::iea_cols$flow,
                               year = IEATools::iea_cols$year,
                               ledger_side = IEATools::iea_cols$ledger_side,
-                              flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point){
+                              flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                              .net_imports = "Net_Imports"){
   
   iea_code_regions <- aggregation_table[[country]]
   dest_regions <- as.character(aggregation_table[[destination_regions]])
@@ -1084,10 +1092,10 @@ aggregate_regions <- function(.tidy_iea_df,
       dplyr::mutate(
         "{imports}" := tidyr::replace_na(.data[[imports]], 0),
         "{exports}" := tidyr::replace_na(.data[[exports]], 0),
-        "Net_Imports" := .data[[imports]] + .data[[exports]]
+        "{.net_imports}" := .data[[imports]] + .data[[exports]]
       ) %>% 
-      tidyr::pivot_longer(cols = c({imports}, {exports}, "Net_Imports"), names_to = flow, values_to = e_dot) %>%
-      dplyr::filter(.data[[flow]] == "Net_Imports") %>% 
+      tidyr::pivot_longer(cols = c({imports}, {exports}, {.net_imports}), names_to = flow, values_to = e_dot) %>%
+      dplyr::filter(.data[[flow]] == {.net_imports}) %>% 
       dplyr::mutate(
         "{flow}" = dplyr::case_when(
           .data[[e_dot]] >= 0 ~ {imports},
