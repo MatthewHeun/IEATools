@@ -52,5 +52,4 @@ like Former Soviet Union or Former Yugoslavia, disappear from the data frame (be
 read_aggregation_region_table()
 # Returns the default aggregation table for the year 2020
 read_aggregation_region_table(file_path = default_aggregation_region_table_path(2020))
-# Returns an aggregation table that aggregates Ghana and South Africa into a new GHAZAF region
 }

@@ -6,7 +6,8 @@ of a `.tidy_iea_df` based on a user-defined aggregation table.
 `default_aggregation_region_table_path()` to enable the `aggregate_regions()`
 function to work.
 * Default IEA to Exiobase mapping provided as .xlsx file in the extdata folder.
-* Now 655 tests, all passing.
+* Now 656 tests, all passing.
+* Test coverage remains at 100 %.
 
 # IEATools 0.1.36 (2020-09-10)
 

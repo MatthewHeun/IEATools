@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Oil and oil products — oil_and_oil_products • IEATools</title>
+<title>The path to the default aggregation table — default_aggregation_region_table_path • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Oil and oil products — oil_and_oil_products" />
-<meta property="og:description" content="A string vector containing names of products classified by the IEA as oil and oil products." />
+<meta property="og:title" content="The path to the default aggregation table — default_aggregation_region_table_path" />
+<meta property="og:description" content="The path to the default aggregation table" />
 
 
 
@@ -130,96 +130,38 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Oil and oil products</h1>
+    <h1>The path to the default aggregation table</h1>
     
-    <div class="hidden name"><code>oil_and_oil_products.Rd</code></div>
+    <div class="hidden name"><code>default_aggregation_region_table_path.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A string vector containing names of products classified by the IEA as oil and oil products.</p>
+    <p>The path to the default aggregation table</p>
     </div>
 
-    <pre class="usage"><span class='kw'>oil_and_oil_products</span></pre>
+    <pre class="usage"><span class='fu'>default_aggregation_region_table_path</span>(version = <span class='fl'>2019</span>)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>version</th>
+      <td><p>the desired version (expressed as the year of IEA data release) of
+the aggregation table.
+Options are 2019 (default), and 2020.</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A string vector with 24 entries.</p>
+    <p>the path to the default aggregation table for the desired IEA data version</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>oil_and_oil_products</span>
-</div><div class='output co'>#&gt; $crude_ngl_feedstocks_if_no_detail
-#&gt; [1] "Crude/NGL/feedstocks (if no detail)"
-#&gt; 
-#&gt; $crude_oil
-#&gt; [1] "Crude oil"
-#&gt; 
-#&gt; $natural_gas_liquids
-#&gt; [1] "Natural gas liquids"
-#&gt; 
-#&gt; $additives_blending_components
-#&gt; [1] "Additives/blending components"
-#&gt; 
-#&gt; $other_hydrocarbons
-#&gt; [1] "Other hydrocarbons"
-#&gt; 
-#&gt; $oil_shales_and_oil_sands
-#&gt; [1] "Oil shale and oil sands"
-#&gt; 
-#&gt; $refinery_feedstocks
-#&gt; [1] "Refinery feedstocks"
-#&gt; 
-#&gt; $refinery_gas
-#&gt; [1] "Refinery gas"
-#&gt; 
-#&gt; $ethane
-#&gt; [1] "Ethane"
-#&gt; 
-#&gt; $liquefied_petroleum_gases_lpg
-#&gt; [1] "Liquefied petroleum gases (LPG)"
-#&gt; 
-#&gt; $motor_gasoline_excl_biofuels
-#&gt; [1] "Motor gasoline excl. biofuels"
-#&gt; 
-#&gt; $aviation_gasoline
-#&gt; [1] "Aviation gasoline"
-#&gt; 
-#&gt; $gasoline_type_jet_fuel
-#&gt; [1] "Gasoline type jet fuel"
-#&gt; 
-#&gt; $kerosene_type_jet_fuel_excl_biofuels
-#&gt; [1] "Kerosene type jet fuel excl. biofuels"
-#&gt; 
-#&gt; $other_kerosene
-#&gt; [1] "Other kerosene"
-#&gt; 
-#&gt; $gas_diesel_oil_excl_biofuels
-#&gt; [1] "Gas/diesel oil excl. biofuels"
-#&gt; 
-#&gt; $fuel_oil
-#&gt; [1] "Fuel oil"
-#&gt; 
-#&gt; $naptha
-#&gt; [1] "Naphtha"
-#&gt; 
-#&gt; $white_spirit_SBP
-#&gt; [1] "White spirit &amp; SBP"
-#&gt; 
-#&gt; $lubricants
-#&gt; [1] "Lubricants"
-#&gt; 
-#&gt; $bitumen
-#&gt; [1] "Bitumen"
-#&gt; 
-#&gt; $paraffin_waxes
-#&gt; [1] "Paraffin waxes"
-#&gt; 
-#&gt; $petroleum_coke
-#&gt; [1] "Petroleum coke"
-#&gt; 
-#&gt; $other_oil_products
-#&gt; [1] "Other oil products"
-#&gt; </div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>default_aggregation_region_table_path</span>()     <span class='co'># Assumes 2019</span>
+</div><div class='output co'>#&gt; [1] "/home/manolo/Documents/z_IEATools/inst/extdata/aggregation_table_iea_exiobase_2019.xlsx"</div><div class='input'><span class='fu'>default_aggregation_region_table_path</span>(<span class='fl'>2019</span>) <span class='co'># Same</span>
+</div><div class='output co'>#&gt; [1] "/home/manolo/Documents/z_IEATools/inst/extdata/aggregation_table_iea_exiobase_2019.xlsx"</div><div class='input'><span class='co'># Returns path for default aggregation table appropriate for 2020 IEA data release</span>
+<span class='fu'>default_aggregation_region_table_path</span>(<span class='fl'>2020</span>) 
+</div><div class='output co'>#&gt; [1] "/home/manolo/Documents/z_IEATools/inst/extdata/aggregation_table_iea_exiobase_2020.xlsx"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

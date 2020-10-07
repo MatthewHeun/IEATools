@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract a unit summation matrix from a tidy data frame — extract_S_units_from_tidy • IEATools</title>
+<title>Aggregates IEA regions based on a user-defined aggregation table. — aggregate_regions • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,11 @@
 
 
 
-<meta property="og:title" content="Extract a unit summation matrix from a tidy data frame — extract_S_units_from_tidy" />
-<meta property="og:description" content="Unit summation matrices have products in rows and units in columns, with
-1s where a product is expressed in the unit and 0s otherwise." />
+<meta property="og:title" content="Aggregates IEA regions based on a user-defined aggregation table. — aggregate_regions" />
+<meta property="og:description" content="Takes as input a tidy dataframe, an aggregation table routing IEA regions to destination regions (as a data frame),
+and aggregates flows per regions following the user-defined aggregation table.
+The boolean argument `net_trade`` enables to perform the aggregation by keeping only net imports
+and/or net exports or by keeping gross imports and exports." />
 
 
 
@@ -131,30 +133,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract a unit summation matrix from a tidy data frame</h1>
+    <h1>Aggregates IEA regions based on a user-defined aggregation table.</h1>
     
-    <div class="hidden name"><code>extract_S_units_from_tidy.Rd</code></div>
+    <div class="hidden name"><code>aggregate_regions.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Unit summation matrices have products in rows and units in columns, with
-<code>1</code>s where a product is expressed in the unit and <code>0</code>s otherwise.</p>
+    <p>Takes as input a tidy dataframe, an aggregation table routing IEA regions to destination regions (as a data frame),
+and aggregates flows per regions following the user-defined aggregation table.
+The boolean argument `net_trade`` enables to perform the aggregation by keeping only net imports
+and/or net exports or by keeping gross imports and exports.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>extract_S_units_from_tidy</span>(
+    <pre class="usage"><span class='fu'>aggregate_regions</span>(
   <span class='kw'>.tidy_iea_df</span>,
+  aggregation_table = <span class='fu'><a href='read_aggregation_region_table.html'>read_aggregation_region_table</a></span>(),
+  net_trade = <span class='fl'>FALSE</span>,
+  destination_regions = <span class='st'>"Destination_regions"</span>,
+  iea_regions = <span class='st'>"IEA_regions"</span>,
+  imports = <span class='kw'>IEATools</span>::<span class='kw'><a href='interface_industries.html'>interface_industries</a></span><span class='op'>$</span><span class='kw'>imports</span>,
+  exports = <span class='kw'>IEATools</span>::<span class='kw'><a href='interface_industries.html'>interface_industries</a></span><span class='op'>$</span><span class='kw'>exports</span>,
+  country = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>country</span>,
+  e_dot = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>e_dot</span>,
+  flow = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow</span>,
+  year = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>year</span>,
   ledger_side = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>ledger_side</span>,
   flow_aggregation_point = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow_aggregation_point</span>,
-  flow = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow</span>,
-  product = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>product</span>,
-  e_dot = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>e_dot</span>,
-  unit = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>unit</span>,
-  product_type = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>product</span>,
-  unit_type = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>unit</span>,
-  s_units = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>s_units</span>,
-  .val = <span class='st'>".val"</span>,
-  .rowtype = <span class='st'>".rowtype"</span>,
-  .coltype = <span class='st'>".coltype"</span>
+  .net_imports = <span class='st'>"Net_Imports"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -162,58 +167,84 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.tidy_iea_df</th>
-      <td><p>the tidy data frame from which a unit summation <code>S_units</code> matrix is to be formed.</p></td>
+      <td><p>The <code>.tidy_iea_df</code> data frame that needs to be aggregated by regions. The <code>.tidy_iea_df</code> is likely
+to have been obtained with the <code><a href='load_tidy_iea_df.html'>load_tidy_iea_df()</a></code> function.</p></td>
     </tr>
     <tr>
-      <th>ledger_side, flow_aggregation_point, flow, product, e_dot, unit</th>
-      <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
+      <th>aggregation_table</th>
+      <td><p>An aggregation table that routes the IEA regions (<code>iea_regions</code> column) to destination regions
+(<code>destination_regions</code> column). The aggregation table can be built manually
+or loaded from an Excel file with the <code><a href='read_aggregation_region_table.html'>read_aggregation_region_table()</a></code> function.
+Default is the 2019 IEA to Exiobase aggregation table, as provided by the <code><a href='read_aggregation_region_table.html'>read_aggregation_region_table()</a></code> function.</p></td>
     </tr>
     <tr>
-      <th>product_type, unit_type</th>
-      <td><p>See <code><a href='row_col_types.html'>IEATools::row_col_types</a></code>.</p></td>
+      <th>net_trade</th>
+      <td><p>The boolean that defines whether imports and exports by aggregation region should be converted
+into net imports / exports or not. Default is <code>FALSE</code>.</p></td>
     </tr>
     <tr>
-      <th>s_units</th>
-      <td><p>See <code><a href='psut_cols.html'>IEATools::psut_cols</a></code>.</p></td>
+      <th>destination_regions</th>
+      <td><p>The name of the <code>destination_regions</code> in the <code>aggregation_table</code> data frame.
+Default is "Destination_regions".</p></td>
     </tr>
     <tr>
-      <th>.val</th>
-      <td><p>the name of a temporary value column to be created in <code>.tidy_iea_df</code>. Default is ".val".</p></td>
+      <th>iea_regions</th>
+      <td><p>The name of the <code>iea_regions</code> in the <code>aggregation_table</code> data frame.
+Default is "IEA_regions".</p></td>
     </tr>
     <tr>
-      <th>.rowtype</th>
-      <td><p>the name of a temporary rowtype column created in <code>.tidy_iea_df</code>. Default is ".rowtype".</p></td>
+      <th>imports</th>
+      <td><p>The name of the <code>imports</code> flow in the <code>.tidy_iea_df</code>.
+Default is <code>IEATools::interface_industries$imports</code>.</p></td>
     </tr>
     <tr>
-      <th>.coltype</th>
-      <td><p>the name of a temporary coltype column created in <code>.tidy_iea_df</code>. Default is ".coltype".</p></td>
+      <th>exports</th>
+      <td><p>The name of the <code>exports</code> flow in the <code>.tidy_iea_df</code>.
+Default is <code>IEATools::interface_industries$exports</code>.</p></td>
+    </tr>
+    <tr>
+      <th>country</th>
+      <td><p>The name of the <code>country</code> column in the <code>.tidy_iea_df</code>.
+Default is <code>IEATools::iea_cols$country</code>.</p></td>
+    </tr>
+    <tr>
+      <th>e_dot</th>
+      <td><p>The name of the <code>e_dot</code> column in the <code>.tidy_iea_df</code>.
+Default is <code>IEATools::iea_cols$e_dot</code>.</p></td>
+    </tr>
+    <tr>
+      <th>flow</th>
+      <td><p>The name of the <code>flow</code> column in the <code>.tidy_iea_df</code>.
+Default is <code>IEATools::iea_cols$flow</code>.</p></td>
+    </tr>
+    <tr>
+      <th>year</th>
+      <td><p>The name of the <code>year</code> column in the <code>.tidy_iea_df</code>.
+Default is <code>IEATools::iea_cols$year</code>.</p></td>
+    </tr>
+    <tr>
+      <th>ledger_side</th>
+      <td><p>The name of the <code>ledger_side</code> column in the <code>.tidy_iea_df</code>.
+Default is <code>IEATools::iea_cols$ledger_side</code>.</p></td>
+    </tr>
+    <tr>
+      <th>flow_aggregation_point</th>
+      <td><p>The name of the <code>flow_aggregation_point</code> column in the <code>.tidy_iea_df</code>.
+Default is <code>IEATools::iea_cols$flow_aggregation_point</code>.</p></td>
+    </tr>
+    <tr>
+      <th>.net_imports</th>
+      <td><p>The name of the <code>.net_import</code> variable, that is only used internally to the function. Not returned.
+Default is "Net_Imports". It is suggested that this parameter is only used in the particular case that there is a column
+or a flow named "Net_Imports" in the <code>.tidy_iea_df</code> input data frame.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a data frame containing grouping variables and a new column of unit summation matrices called <code>s_unit</code>.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>A <code>.tidy_iea_df</code> that contains the data of the input <code>.tidy_iea_df</code> aggregated by regions as specified in the user-defined
+country aggregation table provided.</p>
 
-    <p><code>.tidy_iea_df</code> should be grouped as needed, typically on
-<code>Country</code>, <code>Year</code>, <code>Energy.type</code>, <code>Last.stage</code>, etc., but
-<em>not</em> on <code>Unit</code>, <code>Flow</code> or <code>Product</code>.
-<code>.tidy_iea_df</code> is typically obtained from <code><a href='tidy_iea_df.html'>tidy_iea_df()</a></code>.</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
-<span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
-  <span class='fu'>extract_S_units_from_tidy</span>()
-</div><div class='output co'>#&gt;   Country Method Energy.type Last.stage Year
-#&gt; 1     GHA    PCM           E      Final 1971
-#&gt; 2     GHA    PCM           E      Final 2000
-#&gt; 3     ZAF    PCM           E      Final 1971
-#&gt; 4     ZAF    PCM           E      Final 2000
-#&gt;                                                                           S_units
-#&gt; 1                                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-#&gt; 2                                  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-#&gt; 3                   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-#&gt; 4 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
