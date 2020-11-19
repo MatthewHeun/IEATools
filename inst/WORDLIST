@@ -18,6 +18,8 @@ CHP
 codecov
 colname
 coltype
+colvec
+colvecwithdims
 csv
 de
 De
@@ -33,6 +35,8 @@ eiou
 EIOU
 et
 exergy
+Exiobase
+extdata
 fap
 FFFFFF
 FixedHNFuels
@@ -46,6 +50,7 @@ GridCo
 GTL
 GWh
 HTH
+hatinv
 https
 iea
 IEA
@@ -53,6 +58,7 @@ IEA's
 IEAData
 ies
 IndustryElectricity
+inversetranspose
 io
 Johnstone
 KE
@@ -61,9 +67,14 @@ Kuperus
 lifecycle
 LTC
 mal
+mathbf
+mathrm
 matnames
+matwithdims
 MatthewHeun
+MTH
 negzeropos
+newcommand
 nonenergy
 PCM
 perc
@@ -82,11 +93,13 @@ rownum
 rowsum
 rowsums
 rowtype
+rowvec
 SEAPSUT
 TFC
 TJ
 tp
 transf
+transposeinverse
 tsv
 unallocated
 unmatching
@@ -98,6 +111,7 @@ vectorized
 Ver
 VRA
 whitespece
+widehat
 WIP
 xlsx
 ZAF

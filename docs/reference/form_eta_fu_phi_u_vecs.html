@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create <code>eta_fu</code> and <code>phi_u</code> vectors — form_eta_fu_phi_u_vecs • IEATools</title>
+<title>Create eta_fu and phi_u vectors — form_eta_fu_phi_u_vecs • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Create <code>eta_fu</code> and <code>phi_u</code> vectors — form_eta_fu_phi_u_vecs" />
+<meta property="og:title" content="Create eta_fu and phi_u vectors — form_eta_fu_phi_u_vecs" />
 <meta property="og:description" content="This function creates vectors from a filled final-to-useful efficiency table
 created by write_fu_allocation_template().
 The two vectors are:
@@ -78,7 +78,7 @@ phi_u: a vector of useful exergy-to-useful energy ratios.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.38</span>
       </span>
     </div>
 
@@ -151,29 +151,29 @@ The two vectors are:</p><ul>
 
     </div>
 
-    <pre class="usage"><span class='fu'>form_eta_fu_phi_u_vecs</span>(
-  <span class='no'>.eta_fu_table</span>,
-  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>unit</span>,
-  <span class='kw'>year</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='iea_cols.html'>iea_cols</a></span>$<span class='no'>year</span>,
-  <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>quantity</span>,
-  <span class='kw'>machine</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>machine</span>,
-  <span class='kw'>eu_product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>eu_product</span>,
-  <span class='kw'>e_dot_machine</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine</span>,
-  <span class='kw'>e_dot_machine_perc</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>e_dot_machine_perc</span>,
-  <span class='kw'>maximum_values</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>maximum_values</span>,
-  <span class='kw'>eta_fu</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>eta_fu</span>,
-  <span class='kw'>phi_u</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='template_cols.html'>template_cols</a></span>$<span class='no'>phi_u</span>,
-  <span class='kw'>matnames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>matnames</span>,
-  <span class='kw'>matvals</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>matvals</span>,
-  <span class='kw'>rownames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>rownames</span>,
-  <span class='kw'>colnames</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>colnames</span>,
-  <span class='kw'>rowtypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>rowtypes</span>,
-  <span class='kw'>coltypes</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='mat_meta_cols.html'>mat_meta_cols</a></span>$<span class='no'>coltypes</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>product</span>,
-  <span class='kw'>industry</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='row_col_types.html'>row_col_types</a></span>$<span class='no'>industry</span>,
-  <span class='kw'>arrow_note</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='arrow_notation.html'>arrow_notation</a></span>,
-  <span class='kw'>from_note</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='from_notation.html'>from_notation</a></span>
-)</pre>
+    <pre class="usage"><span class='fu'>form_eta_fu_phi_u_vecs</span><span class='op'>(</span>
+  <span class='va'>.eta_fu_table</span>,
+  unit <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>unit</span>,
+  year <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>year</span>,
+  quantity <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>quantity</span>,
+  machine <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>machine</span>,
+  eu_product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eu_product</span>,
+  e_dot_machine <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>e_dot_machine</span>,
+  e_dot_machine_perc <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>e_dot_machine_perc</span>,
+  maximum_values <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>maximum_values</span>,
+  eta_fu <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu</span>,
+  phi_u <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>phi_u</span>,
+  matnames <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>matnames</span>,
+  matvals <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>matvals</span>,
+  rownames <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>rownames</span>,
+  colnames <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>colnames</span>,
+  rowtypes <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>rowtypes</span>,
+  coltypes <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>coltypes</span>,
+  product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='va'>product</span>,
+  industry <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='va'>industry</span>,
+  arrow_note <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='arrow_notation.html'>arrow_notation</a></span>,
+  from_note <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='from_notation.html'>from_notation</a></span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -210,7 +210,8 @@ Defaults are <code>arrow_notation</code> and ``from_notation`, respectively.</p>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a wide data frame with metadata columns (and year) along with columns for <code>eta_fu</code> and <code>phi_u</code> vectors.</p>
+    <p>a wide-by-matrices data frame with metadata columns (and year)
+along with columns for <code>eta_fu</code> and <code>phi_u</code> vectors.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The vectors <code>eta_fu</code> and <code>phi_u</code> have special rownames that indicate
@@ -224,8 +225,9 @@ or the exergy-to-energy ratio of the useful energy form created by machine.</p>
 "phi_u" for useful exergy-to-useful energy ratios.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='load_eta_fu_data.html'>load_eta_fu_data</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>form_eta_fu_phi_u_vecs</span>()</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 x 7</span><span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='load_eta_fu_data.html'>load_eta_fu_data</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>form_eta_fu_phi_u_vecs</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 x 7</span><span>
 #&gt;   Country Method Energy.type Last.stage  Year eta.fu            phi.u           
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span>            </span><span style='color: #949494;font-style: italic;'>&lt;list&gt;</span><span>          
 #&gt; </span><span style='color: #BCBCBC;'>1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 </span><span style='color: #949494;'>&lt;dbl[,1] [22 × 1</span><span>… </span><span style='color: #949494;'>&lt;dbl[,1] [22 × </span><span>…
@@ -247,7 +249,7 @@ or the exergy-to-energy ratio of the useful energy form created by machine.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

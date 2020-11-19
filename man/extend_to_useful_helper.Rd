@@ -60,7 +60,7 @@ Default is \code{IEATools::from_notation}.}
 a named list containing three items:
 \code{add_to_U_f} (a matrix to be added to a use (\code{U}) matrix),
 \code{add_to_V_f} (a matrix to be added to a make (\code{V}) matrix), and
-\code{add_to_dest_mat} (a matrix to replace the destination matrix, typically \code{Y_f} or \code{U_eiou}.
+\code{add_to_dest_mat} (a matrix to replace the destination matrix, typically \code{Y_f} or \code{U_eiou}).
 }
 \description{
 The helper function is needed, because moving from final to useful energy

@@ -340,7 +340,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' @param year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param matnames,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
-#' @param matvals,R,U_eiou,U_feed,V,Y,s_units See `IEATools::psut_cols`.
+#' @param matvals,R,U_eiou,U_feed,U,V,Y,s_units See `IEATools::psut_cols`.
 #'
 #' @return A wide-by-matrix data frame with metadata columns and columns named for each type of matrix.
 #' 
@@ -398,6 +398,7 @@ prep_psut <- function(.tidy_iea_df,
                       R = IEATools::psut_cols$R,
                       U_eiou = IEATools::psut_cols$U_eiou,
                       U_feed = IEATools::psut_cols$U_feed,
+                      U = IEATools::psut_cols$U,
                       V = IEATools::psut_cols$V,
                       Y = IEATools::psut_cols$Y,
                       s_units = IEATools::psut_cols$s_units){
@@ -437,13 +438,20 @@ prep_psut <- function(.tidy_iea_df,
                           rowtypes = rowtypes, coltypes = coltypes) 
   # Get a list of matrix names for future use
   matrix_names <- Collapsed[[matnames]] %>% 
-    unique()
+    unique() %>% 
+    # We add U later, so append it here.
+    append(U)
   # Spread to put each matrix into its own column
   CollapsedSpread <- Collapsed %>% 
-    tidyr::spread(key = matnames, value = matvals)
-  # meta_cols <- matsindf::everything_except(CollapsedSpread, matrix_names, .symbols = FALSE)
-  # Add the S_units matrix and return
-  CollapsedSpread %>%  
-    # Add the S_units matrix
+    tidyr::spread(key = matnames, value = matvals) %>% 
+    dplyr::mutate(
+      # Add the U matrix.
+      "{U}" := matsbyname::sum_byname(.data[[U_feed]], .data[[U_eiou]])
+    ) %>% 
+    # Rearrange columns to get a more-natural location for the U matrix.
+    dplyr::relocate(.data[[U]], .after = .data[[U_feed]])
+  
+  CollapsedSpread %>% 
+    # Add the S_units matrix and return
     dplyr::full_join(S_units, by = matsindf::everything_except(CollapsedSpread, matrix_names, .symbols = FALSE))
 }

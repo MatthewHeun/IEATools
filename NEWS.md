@@ -1,3 +1,34 @@
+# IEATools 0.1.38 (2020-11-19)
+
+* `prep_psut()` now returns a column for the `U` matrix 
+  in addition to `U_feed` and `U_EIOU` columns.
+* Completed the first draft of a vignette on moving
+  from final energy to useful energy 
+  at the last stage of an energy conversion chain.
+* Still at 656 tests, all passing.
+* Test coverage remains at 100 %.
+
+
+# IEATools 0.1.37 (2020-10-07)
+
+* New `aggregate_regions()` function that enables regional aggregation
+  of a `.tidy_iea_df` based on a user-defined aggregation table.
+* Underlying `read_aggregation_region_table()` and 
+  `default_aggregation_region_table_path()` enables `aggregate_regions()`.
+* Default IEA to Exiobase mapping provided as .xlsx file in the extdata folder.
+* Now 656 tests, all passing.
+* Test coverage remains at 100 %.
+
+
+# IEATools 0.1.36 (2020-09-10)
+
+* Fixed bug where missing eta_fu info caused failure.
+  Needed to allow for an empty `eta_fu_table` in `complete_eta_fu_table()`.
+* New tests for the fixed bug.
+    * Now at 636 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # IEATools 0.1.35 (2020-08-26)
 
 * First version that works with full SEAPSUT workflow.

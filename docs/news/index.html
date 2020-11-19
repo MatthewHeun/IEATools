@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.38</span>
       </span>
     </div>
 
@@ -133,6 +133,41 @@
       
     </div>
 
+    <div id="ieatools-0138-2020-11-19" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.38">
+<a href="#ieatools-0138-2020-11-19" class="anchor"></a>IEATools 0.1.38 (2020-11-19)</h1>
+<ul>
+<li>
+<code><a href="../reference/prep_psut.html">prep_psut()</a></code> now returns a column for the <code>U</code> matrix in addition to <code>U_feed</code> and <code>U_EIOU</code> columns.</li>
+<li>Completed the first draft of a vignette on moving from final energy to useful energy at the last stage of an energy conversion chain.</li>
+<li>Still at 656 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</div>
+    <div id="ieatools-0137-2020-10-07" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.37">
+<a href="#ieatools-0137-2020-10-07" class="anchor"></a>IEATools 0.1.37 (2020-10-07)</h1>
+<ul>
+<li>New <code><a href="../reference/aggregate_regions.html">aggregate_regions()</a></code> function that enables regional aggregation of a <code>.tidy_iea_df</code> based on a user-defined aggregation table.</li>
+<li>Underlying <code><a href="../reference/read_aggregation_region_table.html">read_aggregation_region_table()</a></code> and <code><a href="../reference/default_aggregation_region_table_path.html">default_aggregation_region_table_path()</a></code> enables <code><a href="../reference/aggregate_regions.html">aggregate_regions()</a></code>.</li>
+<li>Default IEA to Exiobase mapping provided as .xlsx file in the extdata folder.</li>
+<li>Now 656 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</div>
+    <div id="ieatools-0136-2020-09-10" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.36">
+<a href="#ieatools-0136-2020-09-10" class="anchor"></a>IEATools 0.1.36 (2020-09-10)</h1>
+<ul>
+<li>Fixed bug where missing eta_fu info caused failure. Needed to allow for an empty <code>eta_fu_table</code> in <code><a href="../reference/complete_eta_fu_table.html">complete_eta_fu_table()</a></code>.</li>
+<li>New tests for the fixed bug.
+<ul>
+<li>Now at 636 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
     <div id="ieatools-0135-2020-08-26" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.35">
 <a href="#ieatools-0135-2020-08-26" class="anchor"></a>IEATools 0.1.35 (2020-08-26)</h1>
@@ -555,7 +590,7 @@ For example, “Hard coal (if no detail)” –&gt; “Hard coal (if no detail) 
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

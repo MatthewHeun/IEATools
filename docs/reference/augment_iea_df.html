@@ -74,7 +74,7 @@ of the IEA's extended energy balances." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.35</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.38</span>
       </span>
     </div>
 
@@ -143,56 +143,56 @@ It works on IEA data from the 2018 and 2019 releases
 of the IEA's extended energy balances.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>augment_iea_df</span>(
-  <span class='no'>.iea_df</span>,
-  <span class='kw'>country</span> <span class='kw'>=</span> <span class='st'>"Country"</span>,
-  <span class='kw'>ledger_side</span> <span class='kw'>=</span> <span class='st'>"Ledger.side"</span>,
-  <span class='kw'>flow_aggregation_point</span> <span class='kw'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  <span class='kw'>flow</span> <span class='kw'>=</span> <span class='st'>"Flow"</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='st'>"Product"</span>,
-  <span class='kw'>energy_type</span> <span class='kw'>=</span> <span class='st'>"Energy.type"</span>,
-  <span class='kw'>energy_type_val</span> <span class='kw'>=</span> <span class='st'>"E"</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"Method"</span>,
-  <span class='kw'>method_val</span> <span class='kw'>=</span> <span class='st'>"PCM"</span>,
-  <span class='kw'>last_stage</span> <span class='kw'>=</span> <span class='st'>"Last.stage"</span>,
-  <span class='kw'>last_stage_val</span> <span class='kw'>=</span> <span class='st'>"Final"</span>,
-  <span class='kw'>unit</span> <span class='kw'>=</span> <span class='st'>"Unit"</span>,
-  <span class='kw'>unit_val</span> <span class='kw'>=</span> <span class='st'>"ktoe"</span>,
-  <span class='kw'>supply</span> <span class='kw'>=</span> <span class='st'>"Supply"</span>,
-  <span class='kw'>consumption</span> <span class='kw'>=</span> <span class='st'>"Consumption"</span>,
-  <span class='kw'>tpes</span> <span class='kw'>=</span> <span class='st'>"Total primary energy supply"</span>,
-  <span class='kw'>tpes_flows</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tpes_flows.html'>tpes_flows</a></span>,
-  <span class='kw'>tfc_compare</span> <span class='kw'>=</span> <span class='st'>"TFC compare"</span>,
-  <span class='kw'>tfc_compare_flows</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span>,
-  <span class='kw'>transfers</span> <span class='kw'>=</span> <span class='st'>"Transfers"</span>,
-  <span class='kw'>statistical_differences</span> <span class='kw'>=</span> <span class='st'>"Statistical differences"</span>,
-  <span class='kw'>losses</span> <span class='kw'>=</span> <span class='st'>"Losses"</span>,
-  <span class='kw'>transformation_processes</span> <span class='kw'>=</span> <span class='st'>"Transformation processes"</span>,
-  <span class='kw'>tp_flows_suffix</span> <span class='kw'>=</span> <span class='st'>"(transf.)"</span>,
-  <span class='kw'>nstp_flows_suffix</span> <span class='kw'>=</span> <span class='st'>"(transformation)"</span>,
-  <span class='kw'>mapep</span> <span class='kw'>=</span> <span class='st'>"Main activity producer electricity plants"</span>,
-  <span class='kw'>eiou</span> <span class='kw'>=</span> <span class='st'>"Energy industry own use"</span>,
-  <span class='kw'>eiou_flows_suffix</span> <span class='kw'>=</span> <span class='st'>"(energy)"</span>,
-  <span class='kw'>coal_mines</span> <span class='kw'>=</span> <span class='st'>"Coal mines"</span>,
-  <span class='kw'>non_specified</span> <span class='kw'>=</span> <span class='st'>"Non-specified"</span>,
-  <span class='kw'>tfc</span> <span class='kw'>=</span> <span class='st'>"Total final consumption"</span>,
-  <span class='kw'>tfc_flows</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='tfc_flows.html'>tfc_flows</a></span>,
-  <span class='kw'>industry</span> <span class='kw'>=</span> <span class='st'>"Industry"</span>,
-  <span class='kw'>industry_flows</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='industry_flows.html'>industry_flows</a></span>,
-  <span class='kw'>iron_and_steel</span> <span class='kw'>=</span> <span class='st'>"Iron and steel"</span>,
-  <span class='kw'>mining_and_quarrying</span> <span class='kw'>=</span> <span class='st'>"Mining and quarrying"</span>,
-  <span class='kw'>transport</span> <span class='kw'>=</span> <span class='st'>"Transport"</span>,
-  <span class='kw'>transport_flows</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='transport_flows.html'>transport_flows</a></span>,
-  <span class='kw'>other</span> <span class='kw'>=</span> <span class='st'>"Other"</span>,
-  <span class='kw'>other_flows</span> <span class='kw'>=</span> <span class='kw pkg'>IEATools</span><span class='kw ns'>::</span><span class='no'><a href='other_flows.html'>other_flows</a></span>,
-  <span class='kw'>non_energy</span> <span class='kw'>=</span> <span class='st'>"Non-energy use"</span>,
-  <span class='kw'>non_energy_prefix</span> <span class='kw'>=</span> <span class='st'>"Non-energy use"</span>,
-  <span class='kw'>electricity_output</span> <span class='kw'>=</span> <span class='st'>"Electricity output (GWh)"</span>,
-  <span class='kw'>electricity_output_flows_prefix</span> <span class='kw'>=</span> <span class='st'>"Electricity output (GWh)-"</span>,
-  <span class='kw'>heat_output</span> <span class='kw'>=</span> <span class='st'>"Heat output"</span>,
-  <span class='kw'>heat_output_flows_prefix</span> <span class='kw'>=</span> <span class='st'>"Heat output-"</span>,
-  <span class='kw'>.rownum</span> <span class='kw'>=</span> <span class='st'>".rownum"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>augment_iea_df</span><span class='op'>(</span>
+  <span class='va'>.iea_df</span>,
+  country <span class='op'>=</span> <span class='st'>"Country"</span>,
+  ledger_side <span class='op'>=</span> <span class='st'>"Ledger.side"</span>,
+  flow_aggregation_point <span class='op'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
+  flow <span class='op'>=</span> <span class='st'>"Flow"</span>,
+  product <span class='op'>=</span> <span class='st'>"Product"</span>,
+  energy_type <span class='op'>=</span> <span class='st'>"Energy.type"</span>,
+  energy_type_val <span class='op'>=</span> <span class='st'>"E"</span>,
+  method <span class='op'>=</span> <span class='st'>"Method"</span>,
+  method_val <span class='op'>=</span> <span class='st'>"PCM"</span>,
+  last_stage <span class='op'>=</span> <span class='st'>"Last.stage"</span>,
+  last_stage_val <span class='op'>=</span> <span class='st'>"Final"</span>,
+  unit <span class='op'>=</span> <span class='st'>"Unit"</span>,
+  unit_val <span class='op'>=</span> <span class='st'>"ktoe"</span>,
+  supply <span class='op'>=</span> <span class='st'>"Supply"</span>,
+  consumption <span class='op'>=</span> <span class='st'>"Consumption"</span>,
+  tpes <span class='op'>=</span> <span class='st'>"Total primary energy supply"</span>,
+  tpes_flows <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tpes_flows.html'>tpes_flows</a></span>,
+  tfc_compare <span class='op'>=</span> <span class='st'>"TFC compare"</span>,
+  tfc_compare_flows <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span>,
+  transfers <span class='op'>=</span> <span class='st'>"Transfers"</span>,
+  statistical_differences <span class='op'>=</span> <span class='st'>"Statistical differences"</span>,
+  losses <span class='op'>=</span> <span class='st'>"Losses"</span>,
+  transformation_processes <span class='op'>=</span> <span class='st'>"Transformation processes"</span>,
+  tp_flows_suffix <span class='op'>=</span> <span class='st'>"(transf.)"</span>,
+  nstp_flows_suffix <span class='op'>=</span> <span class='st'>"(transformation)"</span>,
+  mapep <span class='op'>=</span> <span class='st'>"Main activity producer electricity plants"</span>,
+  eiou <span class='op'>=</span> <span class='st'>"Energy industry own use"</span>,
+  eiou_flows_suffix <span class='op'>=</span> <span class='st'>"(energy)"</span>,
+  coal_mines <span class='op'>=</span> <span class='st'>"Coal mines"</span>,
+  non_specified <span class='op'>=</span> <span class='st'>"Non-specified"</span>,
+  tfc <span class='op'>=</span> <span class='st'>"Total final consumption"</span>,
+  tfc_flows <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tfc_flows.html'>tfc_flows</a></span>,
+  industry <span class='op'>=</span> <span class='st'>"Industry"</span>,
+  industry_flows <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='industry_flows.html'>industry_flows</a></span>,
+  iron_and_steel <span class='op'>=</span> <span class='st'>"Iron and steel"</span>,
+  mining_and_quarrying <span class='op'>=</span> <span class='st'>"Mining and quarrying"</span>,
+  transport <span class='op'>=</span> <span class='st'>"Transport"</span>,
+  transport_flows <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='transport_flows.html'>transport_flows</a></span>,
+  other <span class='op'>=</span> <span class='st'>"Other"</span>,
+  other_flows <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='other_flows.html'>other_flows</a></span>,
+  non_energy <span class='op'>=</span> <span class='st'>"Non-energy use"</span>,
+  non_energy_prefix <span class='op'>=</span> <span class='st'>"Non-energy use"</span>,
+  electricity_output <span class='op'>=</span> <span class='st'>"Electricity output (GWh)"</span>,
+  electricity_output_flows_prefix <span class='op'>=</span> <span class='st'>"Electricity output (GWh)-"</span>,
+  heat_output <span class='op'>=</span> <span class='st'>"Heat output"</span>,
+  heat_output_flows_prefix <span class='op'>=</span> <span class='st'>"Heat output-"</span>,
+  .rownum <span class='op'>=</span> <span class='st'>".rownum"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -431,7 +431,7 @@ If neither "<code>Losses</code>" nor "<code>Total final consumption</code>" <cod
 an error is generated.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='iea_df.html'>iea_df</a></span>(<span class='kw'>text</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>",,TIME,1960,1961\n"</span>,
+    <pre class="examples"><div class='input'><span class='fu'><a href='iea_df.html'>iea_df</a></span><span class='op'>(</span>text <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>",,TIME,1960,1961\n"</span>,
                      <span class='st'>"COUNTRY,FLOW,PRODUCT\n"</span>,
                      <span class='st'>"World,Production,Hard coal (if no detail),42,43\n"</span>,
                      <span class='st'>"World,Statistical differences,Hard coal (if no detail),7,8\n"</span>,
@@ -441,9 +441,10 @@ an error is generated.</p>
                      <span class='st'>"World,Coal mines,Hard coal (if no detail),13,14\n"</span>,
                      <span class='st'>"World,Non-specified,Hard coal (if no detail),11,12\n"</span>,
                      <span class='st'>"World,Losses,Hard coal (if no detail),1,2\n"</span>,
-                     <span class='st'>"World,Iron and steel,Hard coal (if no detail),5,6\n"</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='rename_iea_df_cols.html'>rename_iea_df_cols</a></span>() <span class='kw'>%&gt;%</span>
-  <span class='fu'>augment_iea_df</span>()</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 8 x 11</span><span>
+                     <span class='st'>"World,Iron and steel,Hard coal (if no detail),5,6\n"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='rename_iea_df_cols.html'>rename_iea_df_cols</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>augment_iea_df</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 8 x 11</span><span>
 #&gt;   Country Method Energy.type Last.stage Ledger.side Flow.aggregatio… Flow 
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>            </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
 #&gt; </span><span style='color: #BCBCBC;'>1</span><span> World   PCM    E           Final      Supply      Total primary e… Prod…
@@ -471,7 +472,7 @@ an error is generated.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
