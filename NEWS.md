@@ -1,3 +1,8 @@
+* Completed the first draft of a vignette on moving
+  from final energy to useful energy 
+  at the last stage of an energy conversion chain.
+
+
 # IEATools 0.1.37 (2020-10-07)
 
 * New `aggregate_regions()` function that enables regional aggregation
