@@ -75,7 +75,7 @@ and terminology, although .tidy_iea_df does not necessarily need to contain IEA 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.37</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.38</span>
       </span>
     </div>
 
@@ -145,30 +145,30 @@ The default argument values assume that <code>.tidy_iea_df</code> uses IEA-style
 and terminology, although <code>.tidy_iea_df</code> does not necessarily need to contain IEA data.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_psut_matnames</span>(
-  <span class='kw'>.tidy_iea_df</span>,
-  ledger_side = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>ledger_side</span>,
-  flow_aggregation_point = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow_aggregation_point</span>,
-  flow = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow</span>,
-  product = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>product</span>,
-  e_dot = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>e_dot</span>,
-  supply = <span class='kw'>IEATools</span>::<span class='kw'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='kw'>supply</span>,
-  consumption = <span class='kw'>IEATools</span>::<span class='kw'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='kw'>consumption</span>,
-  production = <span class='kw'>IEATools</span>::<span class='kw'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='kw'>production</span>,
-  resources = <span class='kw'>IEATools</span>::<span class='kw'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='kw'>resources</span>,
-  eiou = <span class='kw'>IEATools</span>::<span class='kw'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='kw'>energy_industry_own_use</span>,
-  neg_supply_in_fd = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>IEATools</span>::<span class='kw'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='kw'>exports</span>,
-    <span class='kw'>IEATools</span>::<span class='kw'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='kw'>international_aviation_bunkers</span>,
-    <span class='kw'>IEATools</span>::<span class='kw'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='kw'>international_marine_bunkers</span>,
-    <span class='kw'>IEATools</span>::<span class='kw'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='kw'>stock_changes</span>, <span class='kw'>IEATools</span>::<span class='kw'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='kw'>losses</span>,
-    <span class='kw'>IEATools</span>::<span class='kw'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='kw'>statistical_differences</span>),
-  matnames = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>matnames</span>,
-  R = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>R</span>,
-  U_feed = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>U_feed</span>,
-  U_EIOU = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>U_eiou</span>,
-  V = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>V</span>,
-  Y = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>Y</span>
-)</pre>
+    <pre class="usage"><span class='fu'>add_psut_matnames</span><span class='op'>(</span>
+  <span class='va'>.tidy_iea_df</span>,
+  ledger_side <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>ledger_side</span>,
+  flow_aggregation_point <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow_aggregation_point</span>,
+  flow <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow</span>,
+  product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>product</span>,
+  e_dot <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>e_dot</span>,
+  supply <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='va'>supply</span>,
+  consumption <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='va'>consumption</span>,
+  production <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='va'>production</span>,
+  resources <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='va'>resources</span>,
+  eiou <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='va'>energy_industry_own_use</span>,
+  neg_supply_in_fd <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='va'>exports</span>,
+    <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='va'>international_aviation_bunkers</span>,
+    <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='va'>international_marine_bunkers</span>,
+    <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='va'>stock_changes</span>, <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='va'>losses</span>,
+    <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='va'>statistical_differences</span><span class='op'>)</span>,
+  matnames <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>matnames</span>,
+  R <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>R</span>,
+  U_feed <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>U_feed</span>,
+  U_EIOU <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>U_eiou</span>,
+  V <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>V</span>,
+  Y <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>Y</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -221,7 +221,7 @@ So be sure to group <code>.tidy_iea_df</code> before calling this function.</p>
 An error will occur if <code>.tidy_iea_df</code> already has a column named ".R".</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:testthat’:</span>
 #&gt; <span class='message'></span>
@@ -229,9 +229,9 @@ An error will occur if <code>.tidy_iea_df</code> already has a column named ".R"
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
-  <span class='fu'>add_psut_matnames</span>() <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://tibble.tidyverse.org/reference/glimpse.html'>glimpse</a></span>()
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>add_psut_matnames</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://tibble.tidyverse.org/reference/glimpse.html'>glimpse</a></span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Rows: 402
 #&gt; Columns: 12
 #&gt; $ Country                <span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…

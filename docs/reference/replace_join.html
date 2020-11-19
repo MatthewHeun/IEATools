@@ -77,7 +77,7 @@ and adds all unmatched rows from y." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.37</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.38</span>
       </span>
     </div>
 
@@ -149,15 +149,15 @@ Essentially <code>replace_join()</code> replaces matching rows in <code>x</code>
 and adds all unmatched rows from <code>y</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>replace_join</span>(
-  <span class='kw'>x</span>,
-  <span class='kw'>y</span>,
-  <span class='kw'>replace_col</span>,
-  by = <span class='kw'>dplyr</span>::<span class='fu'><a href='https://rdrr.io/pkg/generics/man/setops.html'>intersect</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>x</span>), <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='kw'>y</span>)) <span class='op'>%&gt;%</span> <span class='kw'>dplyr</span>::<span class='fu'><a href='https://rdrr.io/pkg/generics/man/setops.html'>setdiff</a></span>(<span class='kw'>replace_col</span>),
-  copy = <span class='fl'>FALSE</span>,
-  suffix = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>".x"</span>, <span class='st'>".y"</span>),
-  <span class='kw'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>replace_join</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  <span class='va'>y</span>,
+  <span class='va'>replace_col</span>,
+  by <span class='op'>=</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://generics.r-lib.org/reference/setops.html'>intersect</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://generics.r-lib.org/reference/setops.html'>setdiff</a></span><span class='op'>(</span><span class='va'>replace_col</span><span class='op'>)</span>,
+  copy <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  suffix <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>".x"</span>, <span class='st'>".y"</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -213,27 +213,27 @@ See examples.</p>
 <p>If <code>replace_col</code> is not in both <code>x</code> and <code>y</code>, <code>x</code> is returned, unmodified.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>DFA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(x = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>), y = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"A"</span>, <span class='st'>"B"</span>), stringsAsFactors = <span class='fl'>FALSE</span>)
-<span class='kw'>DFB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(x = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>3</span>), y = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"C"</span>, <span class='st'>"D"</span>), stringsAsFactors = <span class='fl'>FALSE</span>)
-<span class='fu'>replace_join</span>(<span class='kw'>DFA</span>, <span class='kw'>DFB</span>, replace_col = <span class='st'>"y"</span>)
+    <pre class="examples"><div class='input'><span class='va'>DFA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span><span class='op'>)</span>, y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A"</span>, <span class='st'>"B"</span><span class='op'>)</span>, stringsAsFactors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='va'>DFB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>3</span><span class='op'>)</span>, y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"C"</span>, <span class='st'>"D"</span><span class='op'>)</span>, stringsAsFactors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>replace_join</span><span class='op'>(</span><span class='va'>DFA</span>, <span class='va'>DFB</span>, replace_col <span class='op'>=</span> <span class='st'>"y"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   x y
 #&gt; 1 1 A
 #&gt; 2 2 C
-#&gt; 3 3 D</div><div class='input'><span class='fu'>replace_join</span>(<span class='kw'>DFB</span>, <span class='kw'>DFA</span>, replace_col = <span class='st'>"y"</span>)
+#&gt; 3 3 D</div><div class='input'><span class='fu'>replace_join</span><span class='op'>(</span><span class='va'>DFB</span>, <span class='va'>DFA</span>, replace_col <span class='op'>=</span> <span class='st'>"y"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   x y
 #&gt; 1 2 B
 #&gt; 2 3 D
-#&gt; 3 1 A</div><div class='input'><span class='kw'>DFC</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(x = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>), y = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"M"</span>, <span class='st'>"N"</span>), stringsAsFactors = <span class='fl'>FALSE</span>)
-<span class='fu'>replace_join</span>(<span class='kw'>DFA</span>, <span class='kw'>DFC</span>, replace_col = <span class='st'>"y"</span>)
+#&gt; 3 1 A</div><div class='input'><span class='va'>DFC</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span><span class='op'>)</span>, y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"M"</span>, <span class='st'>"N"</span><span class='op'>)</span>, stringsAsFactors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>replace_join</span><span class='op'>(</span><span class='va'>DFA</span>, <span class='va'>DFC</span>, replace_col <span class='op'>=</span> <span class='st'>"y"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   x y
 #&gt; 1 1 A
 #&gt; 2 2 M
-#&gt; 3 2 N</div><div class='input'><span class='fu'>replace_join</span>(<span class='kw'>DFC</span>, <span class='kw'>DFA</span>, replace_col = <span class='st'>"y"</span>)
+#&gt; 3 2 N</div><div class='input'><span class='fu'>replace_join</span><span class='op'>(</span><span class='va'>DFC</span>, <span class='va'>DFA</span>, replace_col <span class='op'>=</span> <span class='st'>"y"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   x y
 #&gt; 1 2 B
 #&gt; 2 2 B
-#&gt; 3 1 A</div><div class='input'><span class='kw'>DFD</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(x = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>2</span>), y = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"A"</span>, <span class='st'>"B"</span>), stringsAsFactors = <span class='fl'>FALSE</span>)
-<span class='fu'>replace_join</span>(<span class='kw'>DFC</span>, <span class='kw'>DFD</span>, replace_col = <span class='st'>"y"</span>)
+#&gt; 3 1 A</div><div class='input'><span class='va'>DFD</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>2</span><span class='op'>)</span>, y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A"</span>, <span class='st'>"B"</span><span class='op'>)</span>, stringsAsFactors <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>replace_join</span><span class='op'>(</span><span class='va'>DFC</span>, <span class='va'>DFD</span>, replace_col <span class='op'>=</span> <span class='st'>"y"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   x y
 #&gt; 1 2 A
 #&gt; 2 2 B

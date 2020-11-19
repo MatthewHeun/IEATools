@@ -161,7 +161,7 @@ functions can be used to move the last stage of an energy conversion chain
 from final energy to useful energy.
 
 
-## Allocation ($\mat{C}$) matrices
+## Allocation (C) matrices
 
 Next, the `C` values from the allocation table must be arranged into $\mat{C}$ matrices
 using the `form_C_mats()` function.
@@ -178,7 +178,7 @@ $\mat{C}_{EIOU}$ and $\mat{C}_Y$.
 Both are needed later.
 
 
-## Efficiency ($\colvec{\eta}_{fu}$) and exergy-to-energy ratio ($\colvec{\phi}$) vectors
+## Efficiency and exergy-to-energy ratio vectors
 
 Next, vectors containing final-to-useful energy efficiencies ($\colvec{\eta}_{fu}$) and
 exergy-to-energy ratios ($\colvec{\phi}$) must be formed

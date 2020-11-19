@@ -73,7 +73,7 @@ this function generates a blank template for final-to-useful machine efficiencie
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.37</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.38</span>
       </span>
     </div>
 
@@ -141,49 +141,49 @@ this function generates a blank template for final-to-useful machine efficiencie
 this function generates a blank template for final-to-useful machine efficiencies.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>eta_fu_template</span>(
-  <span class='kw'>.fu_allocations</span>,
-  <span class='kw'>tidy_specified_iea_data</span>,
-  T_0 = <span class='fl'>298.15</span>,
-  sort_by = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"useful_energy_type"</span>, <span class='st'>"importance"</span>),
-  md = <span class='st'>"MD"</span>,
-  light = <span class='st'>"Light"</span>,
-  ke = <span class='st'>"KE"</span>,
-  heat = <span class='st'>"TH"</span>,
-  perc = <span class='st'>"[%]"</span>,
-  c_ = <span class='st'>"C_"</span>,
-  c_perc = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span>(<span class='kw'>c_</span>, <span class='fl'>1</span>, <span class='fl'>1</span>), <span class='kw'>perc</span>),
-  c_ratio = <span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span>(<span class='kw'>c_</span>, <span class='fl'>1</span>, <span class='fl'>1</span>),
-  year_for_maximum_values = <span class='fl'>0</span>,
-  .row_order = <span class='st'>".row_order"</span>,
-  non_energy_eff = <span class='fl'>1e-06</span>,
-  country = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>country</span>,
-  year = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>year</span>,
-  ledger_side = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>ledger_side</span>,
-  flow_aggregation_point = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow_aggregation_point</span>,
-  product = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>product</span>,
-  flow = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow</span>,
-  e_dot = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>e_dot</span>,
-  ef_product = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>ef_product</span>,
-  machine = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>machine</span>,
-  eu_product = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>eu_product</span>,
-  eta_fu = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>eta_fu</span>,
-  phi_u = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>phi_u</span>,
-  destination = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>destination</span>,
-  quantity = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>quantity</span>,
-  maximum_values = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>maximum_values</span>,
-  e_dot_dest = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_dest</span>,
-  e_dot_machine = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_machine</span>,
-  e_dot_machine_max = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_max</span>,
-  e_dot_machine_tot = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_machine_tot</span>,
-  e_dot_machine_perc = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_machine_perc</span>,
-  e_dot_machine_max_perc = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_machine_max_perc</span>,
-  .value = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>.values</span>,
-  supply = <span class='kw'>IEATools</span>::<span class='kw'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='kw'>supply</span>,
-  consumption = <span class='kw'>IEATools</span>::<span class='kw'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='kw'>consumption</span>,
-  eiou = <span class='kw'>IEATools</span>::<span class='kw'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='kw'>energy_industry_own_use</span>,
-  non_energy = <span class='kw'>IEATools</span>::<span class='kw'><a href='tfc_flows.html'>tfc_flows</a></span><span class='op'>$</span><span class='kw'>non_energy_use</span>
-)</pre>
+    <pre class="usage"><span class='fu'>eta_fu_template</span><span class='op'>(</span>
+  <span class='va'>.fu_allocations</span>,
+  <span class='va'>tidy_specified_iea_data</span>,
+  T_0 <span class='op'>=</span> <span class='fl'>298.15</span>,
+  sort_by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"useful_energy_type"</span>, <span class='st'>"importance"</span><span class='op'>)</span>,
+  md <span class='op'>=</span> <span class='st'>"MD"</span>,
+  light <span class='op'>=</span> <span class='st'>"Light"</span>,
+  ke <span class='op'>=</span> <span class='st'>"KE"</span>,
+  heat <span class='op'>=</span> <span class='st'>"TH"</span>,
+  perc <span class='op'>=</span> <span class='st'>"[%]"</span>,
+  c_ <span class='op'>=</span> <span class='st'>"C_"</span>,
+  c_perc <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>c_</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>, <span class='va'>perc</span><span class='op'>)</span>,
+  c_ratio <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>c_</span>, <span class='fl'>1</span>, <span class='fl'>1</span><span class='op'>)</span>,
+  year_for_maximum_values <span class='op'>=</span> <span class='fl'>0</span>,
+  .row_order <span class='op'>=</span> <span class='st'>".row_order"</span>,
+  non_energy_eff <span class='op'>=</span> <span class='fl'>1e-06</span>,
+  country <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>country</span>,
+  year <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>year</span>,
+  ledger_side <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>ledger_side</span>,
+  flow_aggregation_point <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow_aggregation_point</span>,
+  product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>product</span>,
+  flow <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow</span>,
+  e_dot <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>e_dot</span>,
+  ef_product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>ef_product</span>,
+  machine <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>machine</span>,
+  eu_product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eu_product</span>,
+  eta_fu <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu</span>,
+  phi_u <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>phi_u</span>,
+  destination <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>destination</span>,
+  quantity <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>quantity</span>,
+  maximum_values <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>maximum_values</span>,
+  e_dot_dest <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>e_dot_dest</span>,
+  e_dot_machine <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>e_dot_machine</span>,
+  e_dot_machine_max <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>e_dot_max</span>,
+  e_dot_machine_tot <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>e_dot_machine_tot</span>,
+  e_dot_machine_perc <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>e_dot_machine_perc</span>,
+  e_dot_machine_max_perc <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>e_dot_machine_max_perc</span>,
+  .value <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>.values</span>,
+  supply <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='va'>supply</span>,
+  consumption <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='va'>consumption</span>,
+  eiou <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='va'>energy_industry_own_use</span>,
+  non_energy <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tfc_flows.html'>tfc_flows</a></span><span class='op'>$</span><span class='va'>non_energy_use</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -316,8 +316,8 @@ If any read values in the <code>c_perc</code> rows are outside of the range 0 &l
 <p>Note that if <code>.fu_allocations</code> is void of any allocation information, an error is thrown.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span>() <span class='op'>%&gt;%</span> 
-  <span class='fu'>eta_fu_template</span>()
+    <pre class="examples"><div class='input'><span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>eta_fu_template</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 304 x 11</span><span>
 #&gt;    Country Method Energy.type Last.stage Unit  Machine Eu.product Quantity
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   

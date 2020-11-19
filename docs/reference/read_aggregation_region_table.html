@@ -74,7 +74,7 @@ See details for more information." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.37</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.38</span>
       </span>
     </div>
 
@@ -143,12 +143,12 @@ By default, the concordance matrix used re-routes IEA regions to Exiobase region
 See details for more information.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>read_aggregation_region_table</span>(
-  file_path = <span class='fu'><a href='default_aggregation_region_table_path.html'>default_aggregation_region_table_path</a></span>(<span class='fl'>2019</span>),
-  country = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>country</span>,
-  iea_regions = <span class='st'>"IEA_regions"</span>,
-  destination_regions = <span class='st'>"Destination_regions"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>read_aggregation_region_table</span><span class='op'>(</span>
+  file_path <span class='op'>=</span> <span class='fu'><a href='default_aggregation_region_table_path.html'>default_aggregation_region_table_path</a></span><span class='op'>(</span><span class='fl'>2019</span><span class='op'>)</span>,
+  country <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>country</span>,
+  iea_regions <span class='op'>=</span> <span class='st'>"IEA_regions"</span>,
+  destination_regions <span class='op'>=</span> <span class='st'>"Destination_regions"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -189,13 +189,13 @@ and a second column that identifies the new regions to IEA regions are re-routed
 There is no need to include all IEA regions;
 those that are not included will be removed when calling the <code><a href='aggregate_regions.html'>aggregate_regions()</a></code> function.
 IEA regions that are rerouted to "NA" or to an empty value are also removed when calling the <code><a href='aggregate_regions.html'>aggregate_regions()</a></code> function.</p>
-<p>Note that the default IEA to Exiobase mapping are only valid for the time periods relevant to Exiobase (from 1995 onwards).
+<p>Note that the default IEA to Exiobase mapping are only valid for the time periods relevant to Exiobase (from 1995 onward).
 Using it for previous years will lead to a situation where the energy consumption of particular countries,
 like Former Soviet Union or Former Yugoslavia, disappear from the data frame (because they do not correspond to an Exiobase region.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Returns the default aggregation table for the year 2019</span>
-<span class='fu'>read_aggregation_region_table</span>()
+<span class='fu'>read_aggregation_region_table</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                              Country                      IEA_regions
 #&gt; 1                                ALB                          Albania
 #&gt; 2                                DZA                          Algeria
@@ -484,7 +484,7 @@ like Former Soviet Union or Former Yugoslavia, disappear from the data frame (be
 #&gt; 141          RoW America
 #&gt; 142 RoW Asia and Pacific
 #&gt; 143          RoW America</div><div class='input'><span class='co'># Returns the default aggregation table for the year 2020</span>
-<span class='fu'>read_aggregation_region_table</span>(file_path = <span class='fu'><a href='default_aggregation_region_table_path.html'>default_aggregation_region_table_path</a></span>(<span class='fl'>2020</span>))
+<span class='fu'>read_aggregation_region_table</span><span class='op'>(</span>file_path <span class='op'>=</span> <span class='fu'><a href='default_aggregation_region_table_path.html'>default_aggregation_region_table_path</a></span><span class='op'>(</span><span class='fl'>2020</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                              Country                      IEA_regions
 #&gt; 1                                ALB                          Albania
 #&gt; 2                                DZA                          Algeria

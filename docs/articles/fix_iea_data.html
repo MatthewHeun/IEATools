@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.37</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.38</span>
       </span>
     </div>
 
@@ -84,13 +84,14 @@
 
       
 
-      </header><div class="row">
+      </header><script src="fix_iea_data_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="fix_iea_data_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+<script src="fix_iea_data_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Fixes for IEA Data</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-10-07</h4>
+            <h4 class="date">2020-11-19</h4>
       
       
       <div class="hidden name"><code>fix_iea_data.Rmd</code></div>
@@ -117,19 +118,19 @@ Our approach to this problem is to smooth out the large peak in PSB consumption 
 <p>M. K. Heun and P. E. Brockway. Meeting 2030 primary energy and economic growth goals: Mission impossible? Applied Energy, 251(112697):1–24, May 2019</p>
 <p>for additional details. See (<a href="http://www.doi.org/10.1016/j.apenergy.2019.01.255" class="uri">http://www.doi.org/10.1016/j.apenergy.2019.01.255</a>).</p>
 <p>An example data frame can be constructed from the example data supplied with this package using <code><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df()</a></code>. We pretend that 1971 is 1991 and 2000 is 1992.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw">example_tidy_iea_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">Country</span> <span class="op">==</span> <span class="st">"GHA"</span>) <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">Product</span> <span class="op">==</span> <span class="st">"Primary solid biofuels"</span>) <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
-    <span class="kw">Year</span> <span class="op">:=</span> <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span>(
-      <span class="kw">Year</span> <span class="op">==</span> <span class="fl">1971</span> <span class="op">~</span> <span class="fl">1991</span>,
-      <span class="kw">Year</span> <span class="op">==</span> <span class="fl">2000</span> <span class="op">~</span> <span class="fl">1992</span>
-    )
-  ) 
-<span class="kw">example_tidy_iea_df</span> <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">Product</span> <span class="op">==</span> <span class="st">"Primary solid biofuels"</span>) <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">Year</span>, <span class="kw">Flow.aggregation.point</span>, <span class="kw">Flow</span>, <span class="kw">E.dot</span>, <span class="kw">Unit</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">example_tidy_iea_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"GHA"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Product</span> <span class="op">==</span> <span class="st">"Primary solid biofuels"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>
+    <span class="va">Year</span> <span class="op">:=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span>
+      <span class="va">Year</span> <span class="op">==</span> <span class="fl">1971</span> <span class="op">~</span> <span class="fl">1991</span>,
+      <span class="va">Year</span> <span class="op">==</span> <span class="fl">2000</span> <span class="op">~</span> <span class="fl">1992</span>
+    <span class="op">)</span>
+  <span class="op">)</span> 
+<span class="va">example_tidy_iea_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Product</span> <span class="op">==</span> <span class="st">"Primary solid biofuels"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Year</span>, <span class="va">Flow.aggregation.point</span>, <span class="va">Flow</span>, <span class="va">E.dot</span>, <span class="va">Unit</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 10 x 5</span>
 <span class="co">#&gt;     Year Flow.aggregation.point     Flow                             E.dot Unit </span>
 <span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;                      &lt;chr&gt;                            &lt;dbl&gt; &lt;chr&gt;</span>
@@ -143,26 +144,24 @@ Our approach to this problem is to smooth out the large peak in PSB consumption 
 <span class="co">#&gt;  8  1992 Other                      Residential                     2.02e3 ktoe </span>
 <span class="co">#&gt;  9  1992 Other                      Commercial and public services  8.67e1 ktoe </span>
 <span class="co">#&gt; 10  1992 Other                      Agriculture/forestry            2.79e0 ktoe</span>
-<span class="kw">fixed</span> <span class="op">&lt;-</span> <span class="kw">example_tidy_iea_df</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/fix_GHA_psb.html">fix_GHA_psb</a></span>()
-</pre></div>
+<span class="va">fixed</span> <span class="op">&lt;-</span> <span class="va">example_tidy_iea_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/fix_GHA_psb.html">fix_GHA_psb</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>Comparing production of Primary solid biofuels in 1991 shows that production rates have changed.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="kw">example_tidy_iea_df</span> <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">Year</span> <span class="op">==</span> <span class="fl">1991</span>, <span class="kw">Flow</span> <span class="op">==</span> <span class="st">"Production"</span>) <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="st">"E.dot"</span>, <span class="st">"Unit"</span>)
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">example_tidy_iea_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Year</span> <span class="op">==</span> <span class="fl">1991</span>, <span class="va">Flow</span> <span class="op">==</span> <span class="st">"Production"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="st">"E.dot"</span>, <span class="st">"Unit"</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 1 x 2</span>
 <span class="co">#&gt;   E.dot Unit </span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;</span>
 <span class="co">#&gt; 1 2088. ktoe</span>
-<span class="kw">fixed</span> <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">Year</span> <span class="op">==</span> <span class="fl">1991</span>, <span class="kw">Flow</span> <span class="op">==</span> <span class="st">"Production"</span>) <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="st">"E.dot"</span>, <span class="st">"Unit"</span>)
+<span class="va">fixed</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Year</span> <span class="op">==</span> <span class="fl">1991</span>, <span class="va">Flow</span> <span class="op">==</span> <span class="st">"Production"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="st">"E.dot"</span>, <span class="st">"Unit"</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 1 x 2</span>
 <span class="co">#&gt;   E.dot Unit </span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;</span>
-<span class="co">#&gt; 1  4025 ktoe</span>
-</pre></div>
+<span class="co">#&gt; 1  4025 ktoe</span></code></pre></div>
 <p>The private object <code>Fixed_GHA_PSB</code> contains the replacement Primary solid biofuels data.</p>
 </div>
 <div id="ghana-industry-electricity" class="section level3">
@@ -177,21 +176,20 @@ Our approach to this problem is to smooth out the large peak in PSB consumption 
 <p>All other Electricity consumed in Industry is classified as “Industry not specified elsewhere”.</p>
 <p>However, annual reports from the Ghana Grid Company (<a href="http://www.gridcogh.com">GridCo</a>) and the Volta River Authority (<a href="https://www.vra.com">VRA</a>) provide a means to continue providing specifics from 1974 to today. Gaining this specificity is especially helpful for the “Non-ferrous metals” category, because the pot lines at the Volta Aluminum Company (<a href="http://www.valcotema.com">VALCO</a>) convert electricity into high-temperature heat for aluminum smelting operations, injecting large amounts of high-exergy heat into the economy.</p>
 <p>To add specificity to Ghana’s Industry Electricity consumption, use the <code><a href="../reference/fix_GHA_industry_electricity.html">fix_GHA_industry_electricity()</a></code> function with the example data supplied with the package (<code><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df()</a></code>).</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="kw">example_tidy_iea_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">Country</span> <span class="op">==</span> <span class="st">"GHA"</span>)
-<span class="kw">fixed</span> <span class="op">&lt;-</span> <span class="kw">example_tidy_iea_df</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/fix_GHA_industry_electricity.html">fix_GHA_industry_electricity</a></span>()
-</pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">example_tidy_iea_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"GHA"</span><span class="op">)</span>
+<span class="va">fixed</span> <span class="op">&lt;-</span> <span class="va">example_tidy_iea_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/fix_GHA_industry_electricity.html">fix_GHA_industry_electricity</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>The 1973 data already have specific Industry Electricity consumption., but the 2000 data do not.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="kw">example_tidy_iea_df</span> <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">Flow</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Mining and quarrying"</span>,
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">example_tidy_iea_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Flow</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Mining and quarrying"</span>,
                      <span class="st">"Non-ferrous metals"</span>,
                      <span class="st">"Textile and leather"</span>, 
-                     <span class="st">"Industry not elsewhere specified"</span>), 
-         <span class="kw">Product</span> <span class="op">==</span> <span class="st">"Electricity"</span>) <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="st">"Year"</span>, <span class="st">"Flow"</span>, <span class="st">"E.dot"</span>, <span class="st">"Unit"</span>)
+                     <span class="st">"Industry not elsewhere specified"</span><span class="op">)</span>, 
+         <span class="va">Product</span> <span class="op">==</span> <span class="st">"Electricity"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="st">"Year"</span>, <span class="st">"Flow"</span>, <span class="st">"E.dot"</span>, <span class="st">"Unit"</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 5 x 4</span>
 <span class="co">#&gt;    Year Flow                              E.dot Unit </span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;                             &lt;dbl&gt; &lt;chr&gt;</span>
@@ -199,17 +197,16 @@ Our approach to this problem is to smooth out the large peak in PSB consumption 
 <span class="co">#&gt; 2  1971 Non-ferrous metals               170.   ktoe </span>
 <span class="co">#&gt; 3  1971 Textile and leather                1.46 ktoe </span>
 <span class="co">#&gt; 4  1971 Industry not elsewhere specified  21.9  ktoe </span>
-<span class="co">#&gt; 5  2000 Industry not elsewhere specified 370.   ktoe</span>
-</pre></div>
+<span class="co">#&gt; 5  2000 Industry not elsewhere specified 370.   ktoe</span></code></pre></div>
 <p>The “fixed” data have added specificity.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="kw">fixed</span> <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">Flow</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Mining and quarrying"</span>,
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fixed</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Flow</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Mining and quarrying"</span>,
                      <span class="st">"Non-ferrous metals"</span>,
                      <span class="st">"Textile and leather"</span>, 
-                     <span class="st">"Industry not elsewhere specified"</span>), 
-         <span class="kw">Product</span> <span class="op">==</span> <span class="st">"Electricity"</span>) <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="st">"Year"</span>, <span class="st">"Flow"</span>, <span class="st">"E.dot"</span>, <span class="st">"Unit"</span>)
+                     <span class="st">"Industry not elsewhere specified"</span><span class="op">)</span>, 
+         <span class="va">Product</span> <span class="op">==</span> <span class="st">"Electricity"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="st">"Year"</span>, <span class="st">"Flow"</span>, <span class="st">"E.dot"</span>, <span class="st">"Unit"</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 8 x 4</span>
 <span class="co">#&gt;    Year Flow                              E.dot Unit </span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;                             &lt;dbl&gt; &lt;chr&gt;</span>
@@ -220,28 +217,26 @@ Our approach to this problem is to smooth out the large peak in PSB consumption 
 <span class="co">#&gt; 5  2000 Industry not elsewhere specified 104.   ktoe </span>
 <span class="co">#&gt; 6  2000 Mining and quarrying              45.4  ktoe </span>
 <span class="co">#&gt; 7  2000 Non-ferrous metals               219.   ktoe </span>
-<span class="co">#&gt; 8  2000 Textile and leather                2.27 ktoe</span>
-</pre></div>
+<span class="co">#&gt; 8  2000 Textile and leather                2.27 ktoe</span></code></pre></div>
 <p>Note that the 2000 data are still in balance, with the sum of “Mining and quarrying”, “Non-ferrous metals”, “Textile and leather”, and “Industry not elsewhere specified” <em>after</em> fixing equal to “Industry not elsewhere specified” <em>before</em> the fixing.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="kw">example_tidy_iea_df</span> <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">Year</span> <span class="op">==</span> <span class="fl">2000</span>, 
-         <span class="kw">Product</span> <span class="op">==</span> <span class="st">"Electricity"</span>, 
-         <span class="kw">Flow</span> <span class="op">==</span> <span class="st">"Industry not elsewhere specified"</span>) <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">E.dot</span>) <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span>()
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">example_tidy_iea_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Year</span> <span class="op">==</span> <span class="fl">2000</span>, 
+         <span class="va">Product</span> <span class="op">==</span> <span class="st">"Electricity"</span>, 
+         <span class="va">Flow</span> <span class="op">==</span> <span class="st">"Industry not elsewhere specified"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">E.dot</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; [1] 370.2494</span>
-<span class="kw">fixed</span> <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">Year</span> <span class="op">==</span> <span class="fl">2000</span>, 
-         <span class="kw">Product</span> <span class="op">==</span> <span class="st">"Electricity"</span>, 
-         <span class="kw">Flow</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Mining and quarrying"</span>,
+<span class="va">fixed</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Year</span> <span class="op">==</span> <span class="fl">2000</span>, 
+         <span class="va">Product</span> <span class="op">==</span> <span class="st">"Electricity"</span>, 
+         <span class="va">Flow</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Mining and quarrying"</span>,
                      <span class="st">"Non-ferrous metals"</span>,
                      <span class="st">"Textile and leather"</span>, 
-                     <span class="st">"Industry not elsewhere specified"</span>)) <span class="op">%&gt;%</span> 
-  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="kw">E.dot</span>) <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>()
-<span class="co">#&gt; [1] 370.2494</span>
-</pre></div>
+                     <span class="st">"Industry not elsewhere specified"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">E.dot</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; [1] 370.2494</span></code></pre></div>
 <p>The private object <code>Fixed_GHA_Industry_Electricity</code> contains the replacement Industry electricity data.</p>
 </div>
 </div>
