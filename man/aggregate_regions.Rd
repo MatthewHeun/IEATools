@@ -78,10 +78,14 @@ The boolean argument `net_trade`` enables to perform the aggregation by keeping 
 and/or net exports or by keeping gross imports and exports.
 }
 \examples{
-# Performs the regional aggregation using the default IEA to Exiobase mapping for IEA data 2019,
-# using the example `.tidy_iea_df` returned by the `load_tidy_iea_df()` function when run without argument.
+# Performs the regional aggregation using the default IEA to Exiobase mapping 
+# for IEA data 2019, using the example `.tidy_iea_df` 
+# returned by the `load_tidy_iea_df()` function when run without argument.
 aggregate_regions(.tidy_iea_df = load_tidy_iea_df())
-# Performs the regional aggregation using the default IEA to Exiobase mapping for IEA data 2020,
-# using the example `.tidy_iea_df` returned by the `load_tidy_iea_df()` function when run without argument.
-aggregate_regions(.tidy_iea_df = load_tidy_iea_df(), aggregation_table = read_aggregation_region_table(default_aggregation_region_table_path(2020)))
+# Performs the regional aggregation using the default IEA to Exiobase mapping 
+# for IEA data 2020, using the example `.tidy_iea_df` 
+# returned by the `load_tidy_iea_df()` function when run without argument.
+aggregate_regions(.tidy_iea_df = load_tidy_iea_df(), 
+                  aggregation_table = read_aggregation_region_table(
+                    default_aggregation_region_table_path(2020)))
 }

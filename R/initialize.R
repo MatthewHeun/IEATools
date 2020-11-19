@@ -964,7 +964,7 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
 #' those that are not included will be removed when calling the `aggregate_regions()` function.
 #' IEA regions that are rerouted to "NA" or to an empty value are also removed when calling the `aggregate_regions()` function.
 #' 
-#' Note that the default IEA to Exiobase mapping are only valid for the time periods relevant to Exiobase (from 1995 onwards). 
+#' Note that the default IEA to Exiobase mapping are only valid for the time periods relevant to Exiobase (from 1995 onward). 
 #' Using it for previous years will lead to a situation where the energy consumption of particular countries, 
 #' like Former Soviet Union or Former Yugoslavia, disappear from the data frame (because they do not correspond to an Exiobase region.
 #' 
@@ -1051,12 +1051,16 @@ read_aggregation_region_table <- function(file_path = default_aggregation_region
 #' @export
 #' 
 #' @examples
-#' # Performs the regional aggregation using the default IEA to Exiobase mapping for IEA data 2019,
-#' # using the example `.tidy_iea_df` returned by the `load_tidy_iea_df()` function when run without argument.
+#' # Performs the regional aggregation using the default IEA to Exiobase mapping 
+#' # for IEA data 2019, using the example `.tidy_iea_df` 
+#' # returned by the `load_tidy_iea_df()` function when run without argument.
 #' aggregate_regions(.tidy_iea_df = load_tidy_iea_df())
-#' # Performs the regional aggregation using the default IEA to Exiobase mapping for IEA data 2020,
-#' # using the example `.tidy_iea_df` returned by the `load_tidy_iea_df()` function when run without argument.
-#' aggregate_regions(.tidy_iea_df = load_tidy_iea_df(), aggregation_table = read_aggregation_region_table(default_aggregation_region_table_path(2020)))
+#' # Performs the regional aggregation using the default IEA to Exiobase mapping 
+#' # for IEA data 2020, using the example `.tidy_iea_df` 
+#' # returned by the `load_tidy_iea_df()` function when run without argument.
+#' aggregate_regions(.tidy_iea_df = load_tidy_iea_df(), 
+#'                   aggregation_table = read_aggregation_region_table(
+#'                     default_aggregation_region_table_path(2020)))
 aggregate_regions <- function(.tidy_iea_df,
                               aggregation_table = read_aggregation_region_table(),
                               net_trade = FALSE, 

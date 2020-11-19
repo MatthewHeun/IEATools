@@ -333,24 +333,25 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' from final energy/exergy 
 #' to useful energy/exergy as the last stage of an energy conversion chain.
 #'
-#' @param .sutdata A wide data frame of PSUT matrices that represent an energy conversion chain.
-#'                 Matrices should be in column identified by their names.
+#' @param .sutdata A wide-by-matrices data frame of PSUT matrices that represent an energy conversion chain.
+#'                 Each row of `.sutdata` should contain the matrices that represent the energy conversion chain.
+#'                 Matrices should be in columns identified by their names.
 #'                 The last stage of these ECCs should be final (not useful).
 #'                 `.sutdata` is likely the result of calling (in sequence)
-#'                 `load_tidy_iea_df()` `%>%` `specify_all()` `%>%` `prep_psut()`
+#'                 `load_tidy_iea_df()`, `specify_all()`, and `prep_psut()`.
 #' @param wide_C_data a wide data frame of final-to-useful allocation matrices, probably the result of calling `form_C_mats()`.
 #' @param wide_eta_fu_data a wide data frame of final-to-useful machine efficiency matrices, probably the result of calling `form_eta_fu_phi_u_vecs`.
 #' @param last_stage,unit See `IEATools::iea_cols$last_stage`. 
-#'                        Each of these should be a column in all of `.tidy_psut_data`, `C_data`, and `eta_fu_data`.
+#'                        Each of these should be a column in `.sutdata`, `C_data`, and `eta_fu_data`.
 #' @param final,useful See `IEATools::last_stages`.
 #' @param industry_type,product_type See `IEATools::row_col_types`
 #' @param R,U_eiou,U_feed,V,Y,s_units See `IEATools::psut_cols`. 
-#'                                 These matrices should be found in the `matvals` column of the `.tidy_psut_data` data frame.
+#'                                    These matrices should be found in the `matvals` column of the `.tidy_psut_data` data frame.
 #' @param sut_meta_cols See `IEATools::sut_meta_cols`.
 #' @param matnames,matvals See `IEATools::mat_meta_cols`. 
 #' @param C_eiou,C_Y,eta_fu,phi_u See `IEATools::template_cols`. 
-#'                          `C_eiou` and `C_Y` matrices should be found in the `matvals` column of the `C_Y_data` data frame.
-#'                          `eta_fu` and `phi_u` should be found in the `matvals` column of the `eta_fu_data` data frame.
+#'                          `C_eiou` and `C_Y` matrices should be found in columns of the `wide_C_data` data frame.
+#'                          `eta_fu` and `phi_u` should be found in columns of the `wide_eta_fu_data` data frame.
 #' @param interface_ind See `IEATools::interface_industries`. Interface industries are kept same from `Y_final` to `Y_useful`.
 #' @param non_energy_ind See `IEATools::non_energy_flows`. Non-energy industries are kept same from `Y_final` to `Y_useful`.
 #' @param losses See `IEATools::tfc_compare_flows`. Losses are kept same from `Y_final` to `Y_useful`.
@@ -615,7 +616,7 @@ extend_to_useful <- function(.sutdata,
 #' @return a named list containing three items: 
 #'         `add_to_U_f` (a matrix to be added to a use (`U`) matrix),
 #'         `add_to_V_f` (a matrix to be added to a make (`V`) matrix), and 
-#'         `add_to_dest_mat` (a matrix to replace the destination matrix, typically `Y_f` or `U_eiou`.
+#'         `add_to_dest_mat` (a matrix to replace the destination matrix, typically `Y_f` or `U_eiou`).
 extend_to_useful_helper <- function(.sutdata = NULL, 
                                     # Input matrix names
                                     dest_mat, C_mat, eta_fu_vec, 

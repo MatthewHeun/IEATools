@@ -43,7 +43,7 @@ There is no need to include all IEA regions;
 those that are not included will be removed when calling the \code{aggregate_regions()} function.
 IEA regions that are rerouted to "NA" or to an empty value are also removed when calling the \code{aggregate_regions()} function.
 
-Note that the default IEA to Exiobase mapping are only valid for the time periods relevant to Exiobase (from 1995 onwards).
+Note that the default IEA to Exiobase mapping are only valid for the time periods relevant to Exiobase (from 1995 onward).
 Using it for previous years will lead to a situation where the energy consumption of particular countries,
 like Former Soviet Union or Former Yugoslavia, disappear from the data frame (because they do not correspond to an Exiobase region.
 }

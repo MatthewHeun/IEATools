@@ -47,18 +47,19 @@ extend_to_useful(
 )
 }
 \arguments{
-\item{.sutdata}{A wide data frame of PSUT matrices that represent an energy conversion chain.
-Matrices should be in column identified by their names.
+\item{.sutdata}{A wide-by-matrices data frame of PSUT matrices that represent an energy conversion chain.
+Each row of \code{.sutdata} should contain the matrices that represent the energy conversion chain.
+Matrices should be in columns identified by their names.
 The last stage of these ECCs should be final (not useful).
 \code{.sutdata} is likely the result of calling (in sequence)
-\code{load_tidy_iea_df()} \verb{\%>\%} \code{specify_all()} \verb{\%>\%} \code{prep_psut()}}
+\code{load_tidy_iea_df()}, \code{specify_all()}, and \code{prep_psut()}.}
 
 \item{wide_C_data}{a wide data frame of final-to-useful allocation matrices, probably the result of calling \code{form_C_mats()}.}
 
 \item{wide_eta_fu_data}{a wide data frame of final-to-useful machine efficiency matrices, probably the result of calling \code{form_eta_fu_phi_u_vecs}.}
 
 \item{last_stage, unit}{See \code{IEATools::iea_cols$last_stage}.
-Each of these should be a column in all of \code{.tidy_psut_data}, \code{C_data}, and \code{eta_fu_data}.}
+Each of these should be a column in \code{.sutdata}, \code{C_data}, and \code{eta_fu_data}.}
 
 \item{final, useful}{See \code{IEATools::last_stages}.}
 
@@ -72,8 +73,8 @@ These matrices should be found in the \code{matvals} column of the \code{.tidy_p
 \item{sut_meta_cols}{See \code{IEATools::sut_meta_cols}.}
 
 \item{C_eiou, C_Y, eta_fu, phi_u}{See \code{IEATools::template_cols}.
-\code{C_eiou} and \code{C_Y} matrices should be found in the \code{matvals} column of the \code{C_Y_data} data frame.
-\code{eta_fu} and \code{phi_u} should be found in the \code{matvals} column of the \code{eta_fu_data} data frame.}
+\code{C_eiou} and \code{C_Y} matrices should be found in columns of the \code{wide_C_data} data frame.
+\code{eta_fu} and \code{phi_u} should be found in columns of the \code{wide_eta_fu_data} data frame.}
 
 \item{interface_ind}{See \code{IEATools::interface_industries}. Interface industries are kept same from \code{Y_final} to \code{Y_useful}.}
 
