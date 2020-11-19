@@ -122,7 +122,7 @@ form_C_mats <- function(.fu_allocation_table,
   year_names <- year_cols(cleaned, return_names = TRUE)
   gathered <- cleaned %>% 
     # Gather to put years in a column
-    tidyr::pivot_longer(year_names, names_to = year, values_to = matvals) %>% 
+    tidyr::pivot_longer(cols = year_names, names_to = year, values_to = matvals) %>% 
     # Eliminate rows where C is NA. They came from places where data are not available.
     dplyr::filter(!is.na(.data[[matvals]])) %>% 
     # Make sure the year column is numeric
