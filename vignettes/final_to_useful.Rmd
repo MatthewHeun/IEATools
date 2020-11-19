@@ -43,15 +43,15 @@ to useful energy through a process that involves
 (b) defining the efficiency of those final-to-useful energy conversion machines, and
 (c) calculating the useful energy injected into the the final demand economic sectors.
 
-The `IEATools` package provides several functions to assist with the 
-final-to-useful analysis process, and
-this vignette demonstrates their use.
+The `IEATools` package provides several functions to assist the process of pushing 
+from final energy to useful energy.
+This vignette demonstrates their use.
 
 
 ## Allocation
 
 Extending the IEA's extended energy balance data to the useful stage begins 
-with defining allocations from final energy carriers to final-to-useful energy conversion machines.
+with defining allocations of final energy carriers to final-to-useful energy conversion machines.
 To demonstrate this process, we'll use the sample IEA data bundled with this package.
 
 ```{r}
@@ -62,9 +62,9 @@ Tidy_iea_data <- load_tidy_iea_df() %>%
   glimpse()
 ```
 
-The next step is to develop a blank template for final-to-useful allocations.
-`fu_allocation_template()` builds a final-to-useful allocation template
-in which the analyst can provide allocation values (`C`) in percentages.
+The next step is to develop a blank template in which the analyst 
+can provide final-to-useful allocation values (`C`) in percentages.
+`fu_allocation_template()` builds a final-to-useful allocation template.
 
 ```{r}
 FU_allocation_template <- load_tidy_iea_df() %>% 
@@ -78,7 +78,7 @@ To obtain a nicely-formatted Excel spreadsheet, use the
 `write_fu_allocation_template()` function.
 
 ```{r}
-# FU_allocation_template %>% 
+# FU_allocation_template %>%
 #   write_fu_allocation_template("~/Desktop/Test_FU_allocation_template.xlsx")
 ```
 
@@ -86,11 +86,14 @@ The analyst should complete all of the unshaded cells in the `Machine` and `Eu.p
 `Machine` should contain names of final-to-useful machines such as "Automobiles," "Industrial heat/furnace," etc.
 `Eu.product` should be filled with names of useful energy carriers such as "HTH.600.C", "MD", or "Light".
 Note that later processing will parse the heat categories for their temperature, and the required format is `*TH.nnn.U`, where
-* the first character is arbitrary, but `H`, `M`, and `L` are typical for high, medium, and low temperature heat, respectively,
+
+* `*` (the first character) is arbitrary, 
+  but `H`, `M`, and `L` are typical for high, medium, and low temperature heat, respectively,
 * `TH.` is required,
 * `nnn` can be any number of digits, optionally preceded by a negative sign, 
 * `.` is required, and
-* `U` is the temperature unit, one of `C`, `F`, `R`, or `K` for ° Celsius, ° Fahrenheit, rankine, or kelvin, respectively.
+* `U` is the temperature unit, one of `C`, `F`, `R`, or `K` for degrees Celsius, degrees Fahrenheit, 
+  rankine, or kelvin, respectively.
 
 The `C` rows representation allocations of `E.dot` energy to final-to-useful machines for each year of available IEA data.
 Three allocation rows (`C_1 [%]`, `C_2 [%]`, and `C_3 [%]`) are provided for each combination 
@@ -108,7 +111,7 @@ allowing the analyst to focus more attention on larger energy flows, as desired.
 
 After completing the final-to-useful allocation table,
 the analyst must specify the efficiencies of the final-to-useful machines.
-To assist with this task, `eta_fu_template()` can be invoked.
+To assist with this task, the `eta_fu_template()` function can be invoked.
 To demonstrate, we'll use `load_fu_allocation_data()`, 
 a function that reads a completed allocation table out of an excel file.
 The default `path` argument of `load_fu_allocation_data()`
@@ -126,7 +129,7 @@ To obtain a nicely-formatted Excel spreadsheet, use the
 `write_fu_allocation_template()` function.
 
 ```{r}
-# Eta_fu_template %>% 
+# Eta_fu_template %>%
 #   write_eta_fu_template("~/Desktop/Test_eta_fu_template.xlsx")
 ```
-
+The analyst should complete
