@@ -1,10 +1,9 @@
 # IEATools 0.1.37 (2020-10-07)
 
-* New `aggregate_regions()` function that enables to aggregate regions
-of a `.tidy_iea_df` based on a user-defined aggregation table.
+* New `aggregate_regions()` function that enables regional aggregation
+  of a `.tidy_iea_df` based on a user-defined aggregation table.
 * Underlying `read_aggregation_region_table()` and 
-`default_aggregation_region_table_path()` to enable the `aggregate_regions()`
-function to work.
+  `default_aggregation_region_table_path()` enables `aggregate_regions()`.
 * Default IEA to Exiobase mapping provided as .xlsx file in the extdata folder.
 * Now 656 tests, all passing.
 * Test coverage remains at 100 %.
