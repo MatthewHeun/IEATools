@@ -1,3 +1,6 @@
+# IEATools 0.1.39 (2020-11-19)
+
+* Fixed a dormant bug in `form_eta_fu_phi_u_vecs()` exposed by new code.
 * `form_eta_fu_phi_u_vecs()` now accepts tidy data frames on input.
   This change allows better integration with the `SEAPSUTWorkflow` package.
 * `form_C_mats()` now accepts tidy data frames on input.
