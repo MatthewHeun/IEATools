@@ -335,7 +335,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    rownames = rownames, colnames = colnames, 
                                    rowtypes = rowtypes, coltypes = coltypes) %>% 
     dplyr::mutate(
-      matvals = .data[[matvals]] %>% matsbyname::setcoltype(NULL)
+      "{matvals}" := .data[[matvals]] %>% matsbyname::setcoltype(NULL)
     )
   # pivot wider to the sutmats format
   out %>% 
