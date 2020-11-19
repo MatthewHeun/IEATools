@@ -1,3 +1,14 @@
+# IEATools 0.1.39 (2020-11-19)
+
+* Fixed a dormant bug in `form_eta_fu_phi_u_vecs()` exposed by new code.
+* `form_eta_fu_phi_u_vecs()` now accepts tidy data frames on input.
+  This change allows better integration with the `SEAPSUTWorkflow` package.
+* `form_C_mats()` now accepts tidy data frames on input.
+  This change allows better integration with the `SEAPSUTWorkflow` package.
+* Still at 656 tests, all passing.
+* Test coverage remains at 100 %.
+
+
 # IEATools 0.1.38 (2020-11-19)
 
 * `prep_psut()` now returns a column for the `U` matrix 

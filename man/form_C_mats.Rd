@@ -40,7 +40,8 @@ form_C_mats(
 \arguments{
 \item{.fu_allocation_table}{a final-to-useful allocation table read by \code{load_fu_allocation_data()}.
 A template for this table should have been created by \code{fu_allocation_table()} and
-\code{write_fu_allocation_table()}.}
+\code{write_fu_allocation_table()}.
+This object can also be a tidy data frame with year data gathered into a Year column.}
 
 \item{ledger_side, flow_aggregation_point, e_dot, unit, year}{See \code{IEATools::iea_cols}.}
 
