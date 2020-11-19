@@ -46,7 +46,8 @@ See \code{matsbyname::notation_vec()}.
 Defaults are \code{arrow_notation} and ``from_notation`, respectively.}
 }
 \value{
-a wide data frame with metadata columns (and year) along with columns for \code{eta_fu} and \code{phi_u} vectors.
+a wide-by-matrices data frame with metadata columns (and year)
+along with columns for \code{eta_fu} and \code{phi_u} vectors.
 }
 \description{
 This function creates vectors from a filled final-to-useful efficiency table

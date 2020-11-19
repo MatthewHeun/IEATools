@@ -20,6 +20,16 @@ library(dplyr)
 library(IEATools)
 ```
 
+<!-- Establish some helpful LaTeX shortcuts for equations -->
+\newcommand{\transpose}[1]{#1^\mathrm{T}}
+\newcommand{\inverse}[1]{#1^{\mathrm{-}1}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\colvec}[1]{\mathbf{#1}}
+\newcommand{\rowvec}[1]{\transpose{\colvec{#1}}}
+\newcommand{\inversetranspose}[1]{\transpose{\left( \inverse{\mat{#1}} \right)}}
+\newcommand{\transposeinverse}[1]{\inverse{\left( \transpose{\mat{#1}} \right)}}
+\newcommand{\hatinv}[1]{\inverse{\widehat{#1}}}
+
 
 ## Introduction
 
@@ -45,7 +55,8 @@ to useful energy through a process that involves
 
 The `IEATools` package provides several functions to assist the process of pushing 
 from final energy to useful energy.
-This vignette demonstrates their use.
+This vignette demonstrates their use
+and suggests a workflow for this process.
 
 
 ## Allocation
@@ -107,7 +118,7 @@ The `Maximum.values` column provides an indication of which `Destination`s recei
 allowing the analyst to focus more attention on larger energy flows, as desired.
 
 
-## Final-to-useful efficiencies
+## Final-to-useful efficiencies and useful exergy-to-energy ratios
 
 After completing the final-to-useful allocation table,
 the analyst must specify the efficiencies of the final-to-useful machines.
@@ -132,4 +143,109 @@ To obtain a nicely-formatted Excel spreadsheet, use the
 # Eta_fu_template %>%
 #   write_eta_fu_template("~/Desktop/Test_eta_fu_template.xlsx")
 ```
-The analyst should complete
+The analyst should fill all unshaded cells in `eta.fu` rows with 
+final-to-useful energy efficiency values (in %). 
+`phi.u` rows should be completed with exergy-to-energy ratios for the useful stage energy carrier.
+Note that many `phi.u` values are already filled for cases where the 
+phi value is known or easily calculable, 
+specifically mechanical drive (phi = 1) and heat (phi = 1 - T_0/T_H, where T_H is the heat temperature
+embedded in the `*TH.nnn.U` useful exergy string).
+
+The `Maximum.values` column provides an indication of which `Destination`s receive more energy than others,
+allowing the analyst to focus more attention on larger energy flows, as desired.
+The `E.dot_machine` and `E.dot_machine [%]` rows indicate energy flows and percentages
+into each final-to-useful machine in each year.
+
+After allocations and efficiencies are specified (by completing the templates),
+functions can be used to move the last stage of an energy conversion chain 
+from final energy to useful energy.
+
+
+## Allocation ($\mat{C}$) matrices
+
+Next, the `C` values from the allocation table must be arranged into $\mat{C}$ matrices
+using the `form_C_mats()` function.
+
+
+```{r}
+C_mats <- load_fu_allocation_data() %>% 
+  form_C_mats()
+glimpse(C_mats)
+```
+
+Note that two types of $\mat{C}$ matrices are formed, 
+$\mat{C}_{EIOU}$ and $\mat{C}_Y$.
+Both are needed later.
+
+
+## Efficiency ($\colvec{\eta}_{fu}$) and exergy-to-energy ratio ($\colvec{\phi}$) vectors
+
+Next, vectors containing final-to-useful energy efficiencies ($\colvec{\eta}_{fu}$) and
+exergy-to-energy ratios ($\colvec{\phi}$) must be formed
+using the `form_eta_fu_phi_u_vecs()` function.
+
+```{r}
+eta_fu_vecs <- load_eta_fu_data() %>% 
+  form_eta_fu_phi_u_vecs()
+glimpse(eta_fu_vecs)
+```
+
+
+## Extend to useful
+
+To extend an energy conversion chain (ECC) to the useful stage, 
+first convert the IEA data into physical supply-use table format
+with final energy being the last stage of the energy conversion chain.
+
+```{r}
+psut_mats_final <- load_tidy_iea_df() %>% 
+  specify_all() %>% 
+  prep_psut()
+glimpse(psut_mats_final)
+```
+
+Then use the allocation and efficiency matrices to extend to the useful stage
+with the `extend_to_useful()` function.
+
+```{r}
+psut_mats_useful <- psut_mats_final %>% 
+  extend_to_useful(wide_C_data = C_mats, 
+                   wide_eta_fu_data = eta_fu_vecs)
+glimpse(psut_mats_useful)
+```
+
+Notice that several additional rows have been created in the data frame.
+The additional rows contain versions of ECC matrices wherein the last stage of the ECC
+is useful energy.
+Extending to the useful stage means many additional energy products
+are included in the energy conversion chain. 
+For example, the $\mat{Y}$ matrix includes additional rows for
+mechanical drive (MD), heat (MTH.100.C, e.g.), and light.
+
+```{r}
+# A Y matrix where final energy is the last stage of the energy conversion chain
+rownames(psut_mats_useful$Y[[1]])
+
+# A Y matrix where useful energy is the last stage of the energy conversion chain
+rownames(psut_mats_useful$Y[[5]])
+```
+
+<!-- It would be nice to calculate the energy balance of all rows of the data frame here,
+     showing that extending to the useful stage does not affect the energy balance of the ECC
+     when done correctly.  
+     Unfortunately, the function to perform those energy balances resides in the Recca package. 
+     By design, IEATools cannot depend on Recca. -->
+
+
+## Summary
+
+The process of moving from final energy to useful energy as the last stage of an energy conversion chain
+is aided by several functions in the `IEATools` package.
+In particular,
+
+* `prep_psut()`,
+* `form_C_mats()`,
+* `form_eta_fu_phi_u_vecs()`, and
+* `extend_to_useful()`
+
+provide a convenient workflow for that process.

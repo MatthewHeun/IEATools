@@ -35,7 +35,7 @@
 #' @param .all_1 a temporary column created internally (and not returned unless there is an error)
 #'               that tells whether a 1-vector was created by rowsums.
 #'
-#' @return a wide data frame with metadata columns (and year) along with columns for 
+#' @return a wide-by-matrices data frame with metadata columns (and year) along with columns for 
 #'         `C_eiou` and `C_Y` matrices.
 #'         If not all rows of a C matrix sum to 1, 
 #'         a warning is emitted, and
@@ -231,7 +231,8 @@ form_C_mats <- function(.fu_allocation_table,
 #'                             See `matsbyname::notation_vec()`. 
 #'                             Defaults are `arrow_notation` and ``from_notation`, respectively.
 #'
-#' @return a wide data frame with metadata columns (and year) along with columns for `eta_fu` and `phi_u` vectors.
+#' @return a wide-by-matrices data frame with metadata columns (and year) 
+#'         along with columns for `eta_fu` and `phi_u` vectors.
 #' 
 #' @export
 #'
