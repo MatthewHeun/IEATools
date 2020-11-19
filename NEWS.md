@@ -1,3 +1,7 @@
+* `form_C_mats()` now accepts tidy data frames on input.
+  This change allows better integration with the `SEAPSUTWorkflow` package.
+
+
 # IEATools 0.1.38 (2020-11-19)
 
 * `prep_psut()` now returns a column for the `U` matrix 
