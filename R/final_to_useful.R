@@ -21,6 +21,7 @@
 #' @param .fu_allocation_table a final-to-useful allocation table read by `load_fu_allocation_data()`.
 #'                             A template for this table should have been created by `fu_allocation_table()` and 
 #'                             `write_fu_allocation_table()`.
+#'                             This object can also be a tidy data frame with year data gathered into a Year column.
 #' @param ledger_side,flow_aggregation_point,e_dot,unit,year See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param quantity,machine,ef_product,eu_product,destination,e_dot_perc,maximum_values,C_eiou,C_Y See `IEATools::template_cols`.
@@ -120,9 +121,16 @@ form_C_mats <- function(.fu_allocation_table,
     dplyr::filter(! (is.na(.data[[machine]]) & is.na(.data[[eu_product]])) )
   # Gather years into a tidy data frame.
   year_names <- year_cols(cleaned, return_names = TRUE)
+  # It could be that the incoming .fu_allocation_table is already gathered (pivtoed longer).
+  # If so, don't need to pivot longer here.
+  # Detect if it is already pivoted longer by whether or not a year column is present.
+  # If not, need to gather.
+  if (!(year %in% colnames(cleaned))) {
+    cleaned <- cleaned %>% 
+      # Gather to put years in a column
+      tidyr::pivot_longer(cols = year_names, names_to = year, values_to = matvals)  
+  }
   gathered <- cleaned %>% 
-    # Gather to put years in a column
-    tidyr::pivot_longer(cols = year_names, names_to = year, values_to = matvals) %>% 
     # Eliminate rows where C is NA. They came from places where data are not available.
     dplyr::filter(!is.na(.data[[matvals]])) %>% 
     # Make sure the year column is numeric
