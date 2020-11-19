@@ -1,3 +1,5 @@
+# IEATools 0.1.38 (2020-11-19)
+
 * `prep_psut()` now returns a column for the `U` matrix 
   in addition to `U_feed` and `U_EIOU` columns.
 * Completed the first draft of a vignette on moving

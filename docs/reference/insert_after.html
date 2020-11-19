@@ -74,7 +74,7 @@ This function provides that functionality." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.37</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.38</span>
       </span>
     </div>
 
@@ -143,13 +143,13 @@ after another known item rather than at an index of the list as <code><a href='h
 This function provides that functionality.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>insert_after</span>(
-  <span class='kw'>x</span>,
-  after = <span class='kw'>NULL</span>,
-  <span class='kw'>values</span>,
-  .after_all = <span class='fl'>TRUE</span>,
-  .equals_function = <span class='kw'>`==`</span>
-)</pre>
+    <pre class="usage"><span class='fu'>insert_after</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  after <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>values</span>,
+  .after_all <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  .equals_function <span class='op'>=</span> <span class='va'>`==`</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -191,7 +191,7 @@ I.e., <code>values</code> are inserted in <code>x</code> after each position in 
 <p>If <code><a href='https://rdrr.io/r/base/NULL.html'>is.null(after)</a></code>, <code>values</code> is inserted once at the end of the list.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>insert_after</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"c"</span>, <span class='st'>"d"</span>, <span class='st'>"c"</span>), after = <span class='st'>"c"</span>, values = <span class='st'>"1"</span>)
+    <pre class="examples"><div class='input'><span class='fu'>insert_after</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"a"</span>, <span class='st'>"b"</span>, <span class='st'>"c"</span>, <span class='st'>"d"</span>, <span class='st'>"c"</span><span class='op'>)</span>, after <span class='op'>=</span> <span class='st'>"c"</span>, values <span class='op'>=</span> <span class='st'>"1"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [[1]]
 #&gt; [1] "a"
 #&gt; 
