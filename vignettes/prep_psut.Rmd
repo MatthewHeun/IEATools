@@ -163,7 +163,7 @@ Simple$matvals[[5]]
 Taken together, 
 the functions in this package make it possible to prepare IEA extended energy balance data
 for use with PSUT analysis techniques. 
-A sequence of three function calls are all that is required.
+A sequence of three function calls is all that is required.
 
 ```{r}
 wide_PSUT_mats <- load_tidy_iea_df() %>% 

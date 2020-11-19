@@ -220,6 +220,29 @@ psut_mats_useful <- psut_mats_final %>%
 glimpse(psut_mats_useful)
 ```
 
+Notice that several additional rows have been created in the data frame.
+The additional rows contain versions of ECC matrices wherein the last stage of the ECC
+is useful energy.
+Extending to the useful stage means many additional energy products
+are included in the energy conversion chain. 
+For example, the $\mat{Y}$ matrix includes additional rows for
+mechanical drive (MD), heat (MTH.100.C, e.g.), and light.
+
+```{r}
+# A Y matrix where final energy is the last stage of the energy conversion chain
+rownames(psut_mats_useful$Y[[1]])
+
+# A Y matrix where useful energy is the last stage of the energy conversion chain
+rownames(psut_mats_useful$Y[[5]])
+```
+
+If everything is done correctly, energy balance is preserved in the energy conversion chains.
+
+```{r}
+psut_mats_useful %>% 
+  Recca::verify_SUT_energy_balance()
+```
+
 
 ## Summary
 
