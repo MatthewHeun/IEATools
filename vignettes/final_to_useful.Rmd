@@ -30,12 +30,6 @@ library(IEATools)
 \newcommand{\transposeinverse}[1]{\inverse{\left( \transpose{\mat{#1}} \right)}}
 \newcommand{\hatinv}[1]{\inverse{\widehat{#1}}}
 
-\newcommand{\matwithdims}[3]{\underset{\mathrm{#2} \times \mathrm{#3}}{\mat{#1}}}
-\newcommand{\colvecwithdims}[2]{\underset{\mathrm{#2} \times 1}{\colvec{#1}}}
-
-\newcommand{\Lpp}{\matwithdims{L}{p}{p}}
-\newcommand{\Lip}{\matwithdims{L}{i}{p}}
-
 
 ## Introduction
 
@@ -184,10 +178,10 @@ $\mat{C}_{EIOU}$ and $\mat{C}_Y$.
 Both are needed later.
 
 
-## Efficiency ($\mat{\eta}_{fu}$) and exergy-to-energy ratio ($\mat{\phi}$) vectors
+## Efficiency ($\colvec{\eta}_{fu}$) and exergy-to-energy ratio ($\colvec{\phi}$) vectors
 
-Next, vectors containing final-to-useful energy efficiencies ($\mat{\eta}_{fu}$) and
-exergy-to-energy ratios ($\mat{\phi}$) must be formed
+Next, vectors containing final-to-useful energy efficiencies ($\colvec{\eta}_{fu}$) and
+exergy-to-energy ratios ($\colvec{\phi}$) must be formed
 using the `form_eta_fu_phi_u_vecs()` function.
 
 ```{r}
@@ -236,12 +230,11 @@ rownames(psut_mats_useful$Y[[1]])
 rownames(psut_mats_useful$Y[[5]])
 ```
 
-If everything is done correctly, energy balance is preserved in the energy conversion chains.
-
-```{r}
-psut_mats_useful %>% 
-  Recca::verify_SUT_energy_balance()
-```
+<!-- It would be nice to calculate the energy balance of all rows of the data frame here,
+     showing that extending to the useful stage does not affect the energy balance of the ECC
+     when done correctly.  
+     Unfortunately, the function to perform those energy balances resides in the Recca package. 
+     By design, IEATools cannot depend on Recca. -->
 
 
 ## Summary
