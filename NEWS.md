@@ -1,3 +1,5 @@
+* `form_eta_fu_phi_u_vecs()` now accepts tidy data frames on input.
+  This change allows better integration with the `SEAPSUTWorkflow` package.
 * `form_C_mats()` now accepts tidy data frames on input.
   This change allows better integration with the `SEAPSUTWorkflow` package.
 
