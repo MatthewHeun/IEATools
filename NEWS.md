@@ -1,6 +1,10 @@
+* `prep_psut()` now returns a column for the `U` matrix 
+  in addition to `U_feed` and `U_EIOU` columns.
 * Completed the first draft of a vignette on moving
   from final energy to useful energy 
   at the last stage of an energy conversion chain.
+* Still at 656 tests, all passing.
+* Test coverage remains at 100 %.
 
 
 # IEATools 0.1.37 (2020-10-07)
