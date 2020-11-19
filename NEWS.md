@@ -2,6 +2,8 @@
   This change allows better integration with the `SEAPSUTWorkflow` package.
 * `form_C_mats()` now accepts tidy data frames on input.
   This change allows better integration with the `SEAPSUTWorkflow` package.
+* Still at 656 tests, all passing.
+* Test coverage remains at 100 %.
 
 
 # IEATools 0.1.38 (2020-11-19)
