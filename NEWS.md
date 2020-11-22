@@ -1,5 +1,5 @@
 * The API of `extend_to_useful()` now assumes that 
-  columns `C_Y`, `C_eiou`, `eta_fu` columns are present in the incoming `.sutdata` 
+  columns `C_Y`, `C_eiou`, and `eta_fu` are present in the incoming `.sutdata` 
   data frame.
   This change makes the API of `extend_to_useful()` more consistent with 
   the APIs of other functions in the package.
