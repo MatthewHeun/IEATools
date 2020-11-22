@@ -6,8 +6,6 @@
 \usage{
 extend_to_useful(
   .sutdata,
-  wide_C_data,
-  wide_eta_fu_data,
   last_stage = IEATools::iea_cols$last_stage,
   unit = IEATools::iea_cols$unit,
   final = IEATools::last_stages$final,
@@ -17,6 +15,7 @@ extend_to_useful(
   R = IEATools::psut_cols$R,
   U_eiou = IEATools::psut_cols$U_eiou,
   U_feed = IEATools::psut_cols$U_feed,
+  U = IEATools::psut_cols$U,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y,
   s_units = IEATools::psut_cols$s_units,
@@ -52,11 +51,9 @@ Each row of \code{.sutdata} should contain the matrices that represent the energ
 Matrices should be in columns identified by their names.
 The last stage of these ECCs should be final (not useful).
 \code{.sutdata} is likely the result of calling (in sequence)
-\code{load_tidy_iea_df()}, \code{specify_all()}, and \code{prep_psut()}.}
-
-\item{wide_C_data}{a wide data frame of final-to-useful allocation matrices, probably the result of calling \code{form_C_mats()}.}
-
-\item{wide_eta_fu_data}{a wide data frame of final-to-useful machine efficiency matrices, probably the result of calling \code{form_eta_fu_phi_u_vecs}.}
+\code{load_tidy_iea_df()}, \code{specify_all()}, and \code{prep_psut()}.
+\code{.sutdata} should also include columns of matrices \code{C_Y}, \code{C_eiou}, and \code{eta_fu},
+probably created by functions \code{form_C_mats()} and \code{form_eta_fu_phi_u_vecs()}.}
 
 \item{last_stage, unit}{See \code{IEATools::iea_cols$last_stage}.
 Each of these should be a column in \code{.sutdata}, \code{C_data}, and \code{eta_fu_data}.}
@@ -65,8 +62,8 @@ Each of these should be a column in \code{.sutdata}, \code{C_data}, and \code{et
 
 \item{industry_type, product_type}{See \code{IEATools::row_col_types}}
 
-\item{R, U_eiou, U_feed, V, Y, s_units}{See \code{IEATools::psut_cols}.
-These matrices should be found in the \code{matvals} column of the \code{.tidy_psut_data} data frame.}
+\item{R, U_eiou, U_feed, U, V, Y, s_units}{See \code{IEATools::psut_cols}.
+These matrices should be found in columns of the \code{.sutdata} data frame.}
 
 \item{matnames, matvals}{See \code{IEATools::mat_meta_cols}.}
 
@@ -117,7 +114,7 @@ including strings from the arguments \code{interface_ind}, \code{non_energy_ind}
 Default is "_keep_in_Y".}
 }
 \value{
-A version of \code{.tidy_sut_data} that contains additional rows with useful final stage ECC matrices.
+A version of \code{.sutdata} that contains additional rows with useful final stage ECC matrices.
 If the energy balance check fails, a warning is emitted and
 additional diagnostic matrices will appear in the output: \code{.err} and \code{.e_bal_ok}.
 }
