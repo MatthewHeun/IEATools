@@ -1,10 +1,6 @@
 library(magrittr)
 library(testthat)
 
-###########################################################
-context("Final to useful")
-###########################################################
-
 test_that("form_C_mats works as expected", {
   allocation_table <- load_fu_allocation_data()
   C_df <- form_C_mats(allocation_table)
