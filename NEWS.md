@@ -1,3 +1,10 @@
+* The API of `extend_to_useful()` now assumes that 
+  columns `C_Y`, `C_eiou`, `eta_fu` are present in the incoming `.sutdata` 
+  data frame.
+  This change makes the API of `extend_to_useful()` more consistent with 
+  the APIs of other functions in the package.
+
+
 # IEATools 0.1.39 (2020-11-19)
 
 * Fixed a dormant bug in `form_eta_fu_phi_u_vecs()` exposed by new code.
