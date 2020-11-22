@@ -124,14 +124,20 @@ from final energy/exergy
 to useful energy/exergy as the last stage of an energy conversion chain.
 }
 \examples{
-psut_mats <- load_tidy_iea_df() \%>\% 
-  specify_all() \%>\% 
-  prep_psut()
 C_data <- load_fu_allocation_data() \%>\% 
   form_C_mats()
 eta_fu_data <- load_eta_fu_data() \%>\% 
   form_eta_fu_phi_u_vecs()
+  m_cols <- eta_fu_data \%>\% 
+    IEATools::meta_cols(return_names = TRUE,
+                        years_to_keep = IEATools::iea_cols$year,
+                        not_meta = c(IEATools::template_cols$eta_fu,
+                                     IEATools::template_cols$phi_u))
+psut_mats <- load_tidy_iea_df() \%>\% 
+  specify_all() \%>\% 
+  prep_psut() \%>\% 
+  dplyr::full_join(C_data, by = m_cols) \%>\% 
+  dplyr::full_join(eta_fu_data, by = m_cols)
 psut_mats \%>\% 
-  extend_to_useful(wide_C_data = C_data, 
-                            wide_eta_fu_data = eta_fu_data)
+  extend_to_useful()
 }
