@@ -1,8 +1,12 @@
+* Now setting row name of column sums in `extend_to_useful_helper()`
+  to get around a bug that occurs when a 1x1 matrix is column summed.
 * The API of `extend_to_useful()` now assumes that 
   columns `C_Y`, `C_eiou`, and `eta_fu` are present in the incoming `.sutdata` 
   data frame.
   This change makes the API of `extend_to_useful()` more consistent with 
   the APIs of other functions in the package.
+* Still at 656 tests, all passing.
+* Test coverage remains at 100 %.
 
 
 # IEATools 0.1.39 (2020-11-19)
