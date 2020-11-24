@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.39</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.40</span>
       </span>
     </div>
 
@@ -84,14 +84,14 @@
 
       
 
-      </header><script src="final_to_useful_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="final_to_useful_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+      </header><script src="final_to_useful_files/header-attrs-2.5/header-attrs.js"></script><link href="final_to_useful_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
 <script src="final_to_useful_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Final to Useful Analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-11-19</h4>
+            <h4 class="date">2020-11-23</h4>
       
       
       <div class="hidden name"><code>final_to_useful.Rmd</code></div>
@@ -101,7 +101,6 @@
     
     
 <!-- Establish some helpful LaTeX shortcuts for equations -->
-
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
@@ -252,14 +251,24 @@
 <div id="extend-to-useful" class="section level2">
 <h2 class="hasAnchor">
 <a href="#extend-to-useful" class="anchor"></a>Extend to useful</h2>
-<p>To extend an energy conversion chain (ECC) to the useful stage, first convert the IEA data into physical supply-use table format with final energy being the last stage of the energy conversion chain.</p>
+<p>To extend an energy conversion chain (ECC) to the useful stage, first convert the IEA data into physical supply-use table format with final energy being the last stage of the energy conversion chain. Thereafter, join the <span class="math inline">\(\mathbf{C}\)</span> matrices and <span class="math inline">\(\mathbf{\eta_{fu}}\)</span> vectors to the data frame of PSUT matrices.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">psut_mats_final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<code class="sourceCode R"><span class="co"># Get a list of the metadata columns.</span>
+<span class="co"># This list will be the same for C_mats.</span>
+<span class="va">m_cols</span> <span class="op">&lt;-</span> <span class="va">eta_fu_vecs</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/meta_cols.html">meta_cols</a></span><span class="op">(</span>return_names <span class="op">=</span> <span class="cn">TRUE</span>,
+            years_to_keep <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="../reference/iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">year</span>,
+            not_meta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="../reference/template_cols.html">template_cols</a></span><span class="op">$</span><span class="va">eta_fu</span>, <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="../reference/template_cols.html">template_cols</a></span><span class="op">$</span><span class="va">phi_u</span><span class="op">)</span><span class="op">)</span>
+<span class="va">m_cols</span>
+<span class="co">#&gt; [1] "Country"     "Method"      "Energy.type" "Last.stage"  "Year"</span>
+<span class="va">psut_mats_final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/prep_psut.html">prep_psut</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="../reference/prep_psut.html">prep_psut</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span><span class="va">C_mats</span>, by <span class="op">=</span> <span class="va">m_cols</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span><span class="va">eta_fu_vecs</span>, by <span class="op">=</span> <span class="va">m_cols</span><span class="op">)</span>
 <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">psut_mats_final</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 4</span>
-<span class="co">#&gt; Columns: 12</span>
+<span class="co">#&gt; Columns: 16</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF"</span>
 <span class="co">#&gt; $ Method      &lt;chr&gt; "PCM", "PCM", "PCM", "PCM"</span>
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E"</span>
@@ -271,12 +280,15 @@
 <span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[6 x 3]&gt;, &lt;matrix[5 x 3]&gt;, &lt;matrix[9 x 10]&gt;, &lt;ma…</span>
 <span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[10 x 12]&gt;, &lt;matrix[14 x 14]&gt;, &lt;matrix[13 x 19]&gt;…</span>
 <span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[12 x 21]&gt;, &lt;matrix[13 x 20]&gt;, &lt;matrix[18 x 26]&gt;…</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[22 x 1]&gt;, &lt;…</span></code></pre></div>
+<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[22 x 1]&gt;, &lt;…</span>
+<span class="co">#&gt; $ C_EIOU      &lt;list&gt; [&lt;matrix[2 x 3]&gt;, &lt;matrix[2 x 3]&gt;, &lt;matrix[3 x 3]&gt;, &lt;mat…</span>
+<span class="co">#&gt; $ C_Y         &lt;list&gt; [&lt;matrix[23 x 21]&gt;, &lt;matrix[24 x 22]&gt;, &lt;matrix[45 x 31]&gt;…</span>
+<span class="co">#&gt; $ eta.fu      &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[33 x 1]&gt;, &lt;…</span>
+<span class="co">#&gt; $ phi.u       &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[32 x 1]&gt;, &lt;…</span></code></pre></div>
 <p>Then use the allocation and efficiency matrices to extend to the useful stage with the <code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code> function.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">psut_mats_useful</span> <span class="op">&lt;-</span> <span class="va">psut_mats_final</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/extend_to_useful.html">extend_to_useful</a></span><span class="op">(</span>wide_C_data <span class="op">=</span> <span class="va">C_mats</span>, 
-                   wide_eta_fu_data <span class="op">=</span> <span class="va">eta_fu_vecs</span><span class="op">)</span>
+  <span class="fu"><a href="../reference/extend_to_useful.html">extend_to_useful</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">psut_mats_useful</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 8</span>
 <span class="co">#&gt; Columns: 12</span>

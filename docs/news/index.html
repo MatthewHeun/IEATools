@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.39</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.40</span>
       </span>
     </div>
 
@@ -133,6 +133,16 @@
       
     </div>
 
+    <div id="ieatools-0140-2020-11-23" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.40">
+<a href="#ieatools-0140-2020-11-23" class="anchor"></a>IEATools 0.1.40 (2020-11-23)</h1>
+<ul>
+<li>Now setting row name of column sums in <code><a href="../reference/extend_to_useful_helper.html">extend_to_useful_helper()</a></code> to get around a bug that occurs when a 1x1 matrix is column summed.</li>
+<li>The API of <code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code> now assumes that columns <code>C_Y</code>, <code>C_eiou</code>, and <code>eta_fu</code> are present in the incoming <code>.sutdata</code> data frame. This change makes the API of <code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code> more consistent with the APIs of other functions in the package.</li>
+<li>Still at 656 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</div>
     <div id="ieatools-0139-2020-11-19" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.39">
 <a href="#ieatools-0139-2020-11-19" class="anchor"></a>IEATools 0.1.39 (2020-11-19)</h1>

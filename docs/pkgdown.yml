@@ -1,4 +1,4 @@
-pandoc: 2.7.3
+pandoc: 2.11.1.1
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
@@ -7,5 +7,5 @@ articles:
   fix_iea_data: fix_iea_data.html
   prep_psut: prep_psut.html
   specify: specify.html
-last_built: 2020-11-19T21:37Z
+last_built: 2020-11-24T01:52Z
 
