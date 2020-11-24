@@ -1,3 +1,5 @@
+# IEATools 0.1.40 (2020-11-23)
+
 * Now setting row name of column sums in `extend_to_useful_helper()`
   to get around a bug that occurs when a 1x1 matrix is column summed.
 * The API of `extend_to_useful()` now assumes that 
