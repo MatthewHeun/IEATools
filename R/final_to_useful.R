@@ -667,7 +667,7 @@ extend_to_useful_helper <- function(.sutdata = NULL,
     
     # Calculate the matrix that should be added to the V_f matrix.
     add_to_V_f_mat <- dest_mat_vec_hat_C %>% 
-      matsbyname::colsums_byname() %>%
+      matsbyname::colsums_byname(rowname = NULL) %>%
       matsbyname::hatize_byname() %>%
       matsbyname::matrixproduct_byname(eta_fu_hat) %>% 
       # Set row and column type to match other make matrices.
