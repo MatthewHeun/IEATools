@@ -196,11 +196,22 @@ glimpse(eta_fu_vecs)
 To extend an energy conversion chain (ECC) to the useful stage, 
 first convert the IEA data into physical supply-use table format
 with final energy being the last stage of the energy conversion chain.
+Thereafter, join the $\mat{C}$ matrices and $\colvec{\eta_{fu}}$ vectors
+to the data frame of PSUT matrices.
 
 ```{r}
+# Get a list of the metadata columns.
+# This list will be the same for C_mats.
+m_cols <- eta_fu_vecs %>% 
+  meta_cols(return_names = TRUE,
+            years_to_keep = IEATools::iea_cols$year,
+            not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
+m_cols
 psut_mats_final <- load_tidy_iea_df() %>% 
   specify_all() %>% 
-  prep_psut()
+  prep_psut() %>% 
+  dplyr::full_join(C_mats, by = m_cols) %>% 
+  dplyr::full_join(eta_fu_vecs, by = m_cols)
 glimpse(psut_mats_final)
 ```
 
@@ -209,8 +220,7 @@ with the `extend_to_useful()` function.
 
 ```{r}
 psut_mats_useful <- psut_mats_final %>% 
-  extend_to_useful(wide_C_data = C_mats, 
-                   wide_eta_fu_data = eta_fu_vecs)
+  extend_to_useful()
 glimpse(psut_mats_useful)
 ```
 

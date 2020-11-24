@@ -355,14 +355,14 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                 The last stage of these ECCs should be final (not useful).
 #'                 `.sutdata` is likely the result of calling (in sequence)
 #'                 `load_tidy_iea_df()`, `specify_all()`, and `prep_psut()`.
-#' @param wide_C_data a wide data frame of final-to-useful allocation matrices, probably the result of calling `form_C_mats()`.
-#' @param wide_eta_fu_data a wide data frame of final-to-useful machine efficiency matrices, probably the result of calling `form_eta_fu_phi_u_vecs`.
+#'                 `.sutdata` should also include columns of matrices `C_Y`, `C_eiou`, and `eta_fu`,
+#'                 probably created by functions `form_C_mats()` and `form_eta_fu_phi_u_vecs()`.
 #' @param last_stage,unit See `IEATools::iea_cols$last_stage`. 
 #'                        Each of these should be a column in `.sutdata`, `C_data`, and `eta_fu_data`.
 #' @param final,useful See `IEATools::last_stages`.
 #' @param industry_type,product_type See `IEATools::row_col_types`
-#' @param R,U_eiou,U_feed,V,Y,s_units See `IEATools::psut_cols`. 
-#'                                    These matrices should be found in the `matvals` column of the `.tidy_psut_data` data frame.
+#' @param R,U_eiou,U_feed,U,V,Y,s_units See `IEATools::psut_cols`. 
+#'                                    These matrices should be found in columns of the `.sutdata` data frame.
 #' @param sut_meta_cols See `IEATools::sut_meta_cols`.
 #' @param matnames,matvals See `IEATools::mat_meta_cols`. 
 #' @param C_eiou,C_Y,eta_fu,phi_u See `IEATools::template_cols`. 
@@ -392,29 +392,30 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                   including strings from the arguments `interface_ind`, `non_energy_ind`, `losses`, and `stat_diffs`. 
 #'                   Default is "_keep_in_Y".
 #'
-#' @return A version of `.tidy_sut_data` that contains additional rows with useful final stage ECC matrices.
+#' @return A version of `.sutdata` that contains additional rows with useful final stage ECC matrices.
 #'         If the energy balance check fails, a warning is emitted and 
 #'         additional diagnostic matrices will appear in the output: `.err` and `.e_bal_ok`.
 #' 
 #' @export
 #'
 #' @examples
-#' psut_mats <- load_tidy_iea_df() %>% 
-#'   specify_all() %>% 
-#'   prep_psut()
 #' C_data <- load_fu_allocation_data() %>% 
 #'   form_C_mats()
 #' eta_fu_data <- load_eta_fu_data() %>% 
 #'   form_eta_fu_phi_u_vecs()
+#'   m_cols <- eta_fu_data %>% 
+#'     IEATools::meta_cols(return_names = TRUE,
+#'                         years_to_keep = IEATools::iea_cols$year,
+#'                         not_meta = c(IEATools::template_cols$eta_fu,
+#'                                      IEATools::template_cols$phi_u))
+#' psut_mats <- load_tidy_iea_df() %>% 
+#'   specify_all() %>% 
+#'   prep_psut() %>% 
+#'   dplyr::full_join(C_data, by = m_cols) %>% 
+#'   dplyr::full_join(eta_fu_data, by = m_cols)
 #' psut_mats %>% 
-#'   extend_to_useful(wide_C_data = C_data, 
-#'                             wide_eta_fu_data = eta_fu_data)
+#'   extend_to_useful()
 extend_to_useful <- function(.sutdata, 
-                             wide_C_data,
-                             wide_eta_fu_data,
-                             
-                             # Outgoing names
-                             
                              
                              last_stage = IEATools::iea_cols$last_stage,
                              unit = IEATools::iea_cols$unit,
@@ -428,6 +429,7 @@ extend_to_useful <- function(.sutdata,
                              R = IEATools::psut_cols$R, 
                              U_eiou = IEATools::psut_cols$U_eiou,
                              U_feed = IEATools::psut_cols$U_feed,
+                             U = IEATools::psut_cols$U,
                              V = IEATools::psut_cols$V, 
                              Y = IEATools::psut_cols$Y, 
                              s_units = IEATools::psut_cols$s_units,
@@ -465,8 +467,8 @@ extend_to_useful <- function(.sutdata,
   
   wide_psut_data <- .sutdata %>% 
     # Join the C and eta_fu vectors to the right of the .sutdata frame
-    dplyr::full_join(wide_C_data, by = sut_meta_cols %>% unlist() %>% unname()) %>% 
-    dplyr::full_join(wide_eta_fu_data, by = sut_meta_cols %>% unlist() %>% unname()) %>% 
+    # dplyr::full_join(wide_C_data, by = sut_meta_cols %>% unlist() %>% unname()) %>% 
+    # dplyr::full_join(wide_eta_fu_data, by = sut_meta_cols %>% unlist() %>% unname()) %>% 
     dplyr::mutate(
       # Calculate .eta_fu_hat, which is needed twice below.
       # Doing the calculation here makes it available for other downstream calculations.
@@ -478,20 +480,18 @@ extend_to_useful <- function(.sutdata,
   # New column names
   U_feed_useful <- paste0(U_feed, .useful)
   U_eiou_useful <- paste0(U_eiou, .useful)
+  U_useful <- paste0(U, .useful)
   V_useful <- paste0(V, .useful)
   Y_useful <- paste0(Y, .useful)
   Y_keep <- paste0(Y, .keep_in_Y)
   
   # Industries to retain from Y_f to Y_u. 
   # These industries are not allocated to f-u machines, nor are they tracked for useful energy.
-  # As of 19 June 2020, we are including Non-energy uses in the F-U calculations.
-  # Y_keep_inds <- c(interface_ind, non_energy_ind, losses, stat_diffs)
   Y_keep_inds <- c(interface_ind, losses, stat_diffs)
   
   # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
   # We take each of these in turn, adjusting the energy conversion chain to account for the fact that 
   # useful energy is now the final stage.
-
   wide_useful_Y <- wide_psut_data %>% 
     extend_to_useful_helper(dest_mat = Y, C_mat = C_Y, eta_fu_vec = eta_fu, 
                             add_to_U = .add_to_U_f, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>% 
@@ -520,41 +520,42 @@ extend_to_useful <- function(.sutdata,
                             add_to_U = .add_to_U_eiou, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>% 
     dplyr::mutate(
       "{U_feed_useful}" := matsbyname::sum_byname(.data[[U_feed_useful]], .data[[.add_to_U_eiou]]), 
-      "{V_useful}" := matsbyname::sum_byname(.data[[V_useful]], .data[[.add_to_V_f]]), 
       "{U_eiou_useful}" := .data[[.add_to_dest]], 
+      "{U_useful}" := matsbyname::sum_byname(.data[[U_feed_useful]], .data[[U_eiou_useful]]),
+      "{V_useful}" := matsbyname::sum_byname(.data[[V_useful]], .data[[.add_to_V_f]]), 
+      # Show that these all now have useful last stage
+      "{last_stage}" := useful,
       # Eliminate columns that are no longer needed
+      "{.eta_fu_hat}" := NULL,
       "{.add_to_U_eiou}" := NULL,
       "{.add_to_V_f}" := NULL,
-      "{.add_to_dest}" := NULL
+      "{.add_to_dest}" := NULL,
+      # Eliminate last-stage-is-final versions of matrices
+      "{U_eiou}" := NULL,
+      "{U_feed}" := NULL,
+      "{U}" := NULL,
+      "{V}" := NULL,
+      "{Y}" := NULL
+    ) %>% 
+    dplyr::rename(
+      # Rename the useful columns to be regular names so we can rbind later
+      "{U_feed}" := .data[[U_feed_useful]],
+      "{U_eiou}" := .data[[U_eiou_useful]],
+      "{U}" := .data[[U_useful]],
+      "{V}" := .data[[V_useful]], 
+      "{Y}" := .data[[Y_useful]]
     )
   
   # Prepare the outgoing data frame
-  out <- wide_useful_EIOU %>%
+  out <- dplyr::bind_rows(.sutdata, wide_useful_EIOU) %>% 
     dplyr::mutate(
-      # Show that these all now have useful last stage
-      "{last_stage}" := useful,
-      # Eliminate unneeded columns associated with the final stage being last stage
-      "{U_eiou}" := NULL,
-      "{U_feed}" := NULL,
-      "{V}" := NULL,
-      "{Y}" := NULL,
-      # Eliminate other temporary columns
+      # Eliminate temporary columns that were used in the calculations
       "{C_eiou}" := NULL,
       "{C_Y}" := NULL,
       "{eta_fu}" := NULL,
-      "{phi_u}" := NULL,
-      "{.eta_fu_hat}" := NULL
-    ) %>%
-    # Rename columns to align with columns in final stage data in .sutdata
-    dplyr::rename(
-      "{U_feed}" := .data[[paste0(U_feed, .useful)]],
-      "{U_eiou}" := .data[[paste0(U_eiou, .useful)]],
-      "{V}" := .data[[paste0(V, .useful)]],
-      "{Y}" := .data[[paste0(Y, .useful)]]
+      "{phi_u}" := NULL
     )
 
-  out <- dplyr::bind_rows(.sutdata, out)
-  
   # Check Product energy balances.
   # It would be nice to use the Recca function verify_SUT_energy_balance() for this purpose.
   # However, IEATools is designed to be independent of Recca.
@@ -564,18 +565,9 @@ extend_to_useful <- function(.sutdata,
   # within acceptable error.
   verify_ebal <- out %>%
     dplyr::mutate(
-      # R_plus_V_mat = matsbyname::sum_byname(.data[[R]], .data[[V]]),
-      # RV_sums = matsbyname::transpose_byname(R_plus_V_mat) %>% matsbyname::rowsums_byname(),
-      # U_sums = matsbyname::sum_byname(.data[[U_eiou]], .data[[U_feed]]) %>% matsbyname::rowsums_byname(),
-      # Y_sums = matsbyname::rowsums_byname(.data[[Y]]),
-      # # (R + V) - U - Y  
-      # "{.err}" := RV_sums %>% matsbyname::difference_byname(U_sums) %>% matsbyname::difference_byname(Y_sums),
-      # "{.e_bal_ok}" := err %>% matsbyname::iszero_byname(tol = tol) %>% as.logical()
-      
-      
       # (R + V)^T - U - Y  
       "{.err}" := matsbyname::sum_byname(.data[[R]], .data[[V]]) %>% # R + V
-        matsbyname::transpose_byname() %>% 
+        matsbyname::transpose_byname() %>%                           # (R + V)^T
         matsbyname::difference_byname(.data[[U_feed]]) %>%           # - U_feed
         matsbyname::difference_byname(.data[[U_eiou]]) %>%           # - U_eiou
         matsbyname::difference_byname(.data[[Y]]) %>%                # - Y
@@ -675,7 +667,7 @@ extend_to_useful_helper <- function(.sutdata = NULL,
     
     # Calculate the matrix that should be added to the V_f matrix.
     add_to_V_f_mat <- dest_mat_vec_hat_C %>% 
-      matsbyname::colsums_byname() %>%
+      matsbyname::colsums_byname(rowname = NULL) %>%
       matsbyname::hatize_byname() %>%
       matsbyname::matrixproduct_byname(eta_fu_hat) %>% 
       # Set row and column type to match other make matrices.
