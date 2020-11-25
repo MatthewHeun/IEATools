@@ -1,3 +1,6 @@
+* Cleaned up (removed) unused arguments to `final_to_useful()`.
+
+
 # IEATools 0.1.40 (2020-11-23)
 
 * Now setting row name of column sums in `extend_to_useful_helper()`
