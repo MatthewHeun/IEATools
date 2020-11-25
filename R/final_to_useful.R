@@ -357,27 +357,22 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                 `load_tidy_iea_df()`, `specify_all()`, and `prep_psut()`.
 #'                 `.sutdata` should also include columns of matrices `C_Y`, `C_eiou`, and `eta_fu`,
 #'                 probably created by functions `form_C_mats()` and `form_eta_fu_phi_u_vecs()`.
-#' @param last_stage,unit See `IEATools::iea_cols$last_stage`. 
+#' @param last_stage See `IEATools::iea_cols$last_stage`. 
 #'                        Each of these should be a column in `.sutdata`, `C_data`, and `eta_fu_data`.
 #' @param final,useful See `IEATools::last_stages`.
 #' @param industry_type,product_type See `IEATools::row_col_types`
-#' @param R,U_eiou,U_feed,U,V,Y,s_units See `IEATools::psut_cols`. 
+#' @param R,U_eiou,U_feed,U,V,Y See `IEATools::psut_cols`. 
 #'                                    These matrices should be found in columns of the `.sutdata` data frame.
-#' @param sut_meta_cols See `IEATools::sut_meta_cols`.
-#' @param matnames,matvals See `IEATools::mat_meta_cols`. 
 #' @param C_eiou,C_Y,eta_fu,phi_u See `IEATools::template_cols`. 
 #'                          `C_eiou` and `C_Y` matrices should be found in columns of the `wide_C_data` data frame.
 #'                          `eta_fu` and `phi_u` should be found in columns of the `wide_eta_fu_data` data frame.
 #' @param interface_ind See `IEATools::interface_industries`. Interface industries are kept same from `Y_final` to `Y_useful`.
-#' @param non_energy_ind See `IEATools::non_energy_flows`. Non-energy industries are kept same from `Y_final` to `Y_useful`.
 #' @param losses See `IEATools::tfc_compare_flows`. Losses are kept same from `Y_final` to `Y_useful`.
 #' @param stat_diffs See `IEATools::tfc_compare_flows`. Statistical differences are kept same from `Y_final` to `Y_useful`.
 #' @param notation The row and column notation for this template.
 #'                 See `matsbyname::notation_vec()`. Default is `arrow_notation`.
 #' @param tol the allowable error in energy balances for both the incoming matrices (last stage final) 
 #'            and the outgoing matrices (last stage useful). Default is `1e-3`.
-#' @param .Y_f_vec_hat_C_Y an internal matrix name for the product of the Y_f_vec_hat and C_Y matrices. Default is ".Y_f_vec_hat_C_Y".
-#' @param .U_eiou_f_vec_hat_C_eiou an internal matrix name for the product of the U_eiou_f_vec_hat and C_eiou matrices. Default is ".U_eiou_f_vec_hat_C_eiou".
 #' @param .eta_fu_hat an internal matrix name. Default is ".eta_fu_hat".
 #' @param .add_to_U_f an internal matrix name for the a matrix to be added to the U_feed_f matrix 
 #'                    to form the useful form of the U_feed matrix. Default is ".add_to_U_f".
@@ -418,8 +413,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 extend_to_useful <- function(.sutdata, 
                              
                              last_stage = IEATools::iea_cols$last_stage,
-                             unit = IEATools::iea_cols$unit,
-                             
+
                              final = IEATools::last_stages$final,
                              useful = IEATools::last_stages$useful,
                              
@@ -432,12 +426,6 @@ extend_to_useful <- function(.sutdata,
                              U = IEATools::psut_cols$U,
                              V = IEATools::psut_cols$V, 
                              Y = IEATools::psut_cols$Y, 
-                             s_units = IEATools::psut_cols$s_units,
-                             
-                             matnames = IEATools::mat_meta_cols$matnames,
-                             matvals = IEATools::mat_meta_cols$matvals,
-                             
-                             sut_meta_cols = IEATools::sut_meta_cols,
                              
                              C_eiou = IEATools::template_cols$C_eiou,
                              C_Y = IEATools::template_cols$C_Y, 
@@ -445,7 +433,6 @@ extend_to_useful <- function(.sutdata,
                              phi_u = IEATools::template_cols$phi_u,
                              
                              interface_ind = IEATools::interface_industries,
-                             non_energy_ind = IEATools::non_energy_flows,
                              losses = IEATools::tfc_compare_flows$losses,
                              stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
                              
@@ -453,8 +440,6 @@ extend_to_useful <- function(.sutdata,
                              
                              tol = 1e-3,
                              
-                             .Y_f_vec_hat_C_Y = ".Y_f_vec_hat_C_Y",
-                             .U_eiou_f_vec_hat_C_eiou = ".U_eiou_f_vec_hat_C_eiou",
                              .eta_fu_hat = ".eta_fu_hat",
                              .add_to_U_f = ".add_to_U_f",
                              .add_to_U_eiou = ".add_to_U_eiou",
@@ -466,9 +451,6 @@ extend_to_useful <- function(.sutdata,
                              .keep_in_Y = "_keep_in_Y") {
   
   wide_psut_data <- .sutdata %>% 
-    # Join the C and eta_fu vectors to the right of the .sutdata frame
-    # dplyr::full_join(wide_C_data, by = sut_meta_cols %>% unlist() %>% unname()) %>% 
-    # dplyr::full_join(wide_eta_fu_data, by = sut_meta_cols %>% unlist() %>% unname()) %>% 
     dplyr::mutate(
       # Calculate .eta_fu_hat, which is needed twice below.
       # Doing the calculation here makes it available for other downstream calculations.

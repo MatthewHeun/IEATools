@@ -7,7 +7,6 @@
 extend_to_useful(
   .sutdata,
   last_stage = IEATools::iea_cols$last_stage,
-  unit = IEATools::iea_cols$unit,
   final = IEATools::last_stages$final,
   useful = IEATools::last_stages$useful,
   industry_type = IEATools::row_col_types$industry,
@@ -18,22 +17,15 @@ extend_to_useful(
   U = IEATools::psut_cols$U,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y,
-  s_units = IEATools::psut_cols$s_units,
-  matnames = IEATools::mat_meta_cols$matnames,
-  matvals = IEATools::mat_meta_cols$matvals,
-  sut_meta_cols = IEATools::sut_meta_cols,
   C_eiou = IEATools::template_cols$C_eiou,
   C_Y = IEATools::template_cols$C_Y,
   eta_fu = IEATools::template_cols$eta_fu,
   phi_u = IEATools::template_cols$phi_u,
   interface_ind = IEATools::interface_industries,
-  non_energy_ind = IEATools::non_energy_flows,
   losses = IEATools::tfc_compare_flows$losses,
   stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
   notation = IEATools::arrow_notation,
   tol = 0.001,
-  .Y_f_vec_hat_C_Y = ".Y_f_vec_hat_C_Y",
-  .U_eiou_f_vec_hat_C_eiou = ".U_eiou_f_vec_hat_C_eiou",
   .eta_fu_hat = ".eta_fu_hat",
   .add_to_U_f = ".add_to_U_f",
   .add_to_U_eiou = ".add_to_U_eiou",
@@ -55,27 +47,21 @@ The last stage of these ECCs should be final (not useful).
 \code{.sutdata} should also include columns of matrices \code{C_Y}, \code{C_eiou}, and \code{eta_fu},
 probably created by functions \code{form_C_mats()} and \code{form_eta_fu_phi_u_vecs()}.}
 
-\item{last_stage, unit}{See \code{IEATools::iea_cols$last_stage}.
+\item{last_stage}{See \code{IEATools::iea_cols$last_stage}.
 Each of these should be a column in \code{.sutdata}, \code{C_data}, and \code{eta_fu_data}.}
 
 \item{final, useful}{See \code{IEATools::last_stages}.}
 
 \item{industry_type, product_type}{See \code{IEATools::row_col_types}}
 
-\item{R, U_eiou, U_feed, U, V, Y, s_units}{See \code{IEATools::psut_cols}.
+\item{R, U_eiou, U_feed, U, V, Y}{See \code{IEATools::psut_cols}.
 These matrices should be found in columns of the \code{.sutdata} data frame.}
-
-\item{matnames, matvals}{See \code{IEATools::mat_meta_cols}.}
-
-\item{sut_meta_cols}{See \code{IEATools::sut_meta_cols}.}
 
 \item{C_eiou, C_Y, eta_fu, phi_u}{See \code{IEATools::template_cols}.
 \code{C_eiou} and \code{C_Y} matrices should be found in columns of the \code{wide_C_data} data frame.
 \code{eta_fu} and \code{phi_u} should be found in columns of the \code{wide_eta_fu_data} data frame.}
 
 \item{interface_ind}{See \code{IEATools::interface_industries}. Interface industries are kept same from \code{Y_final} to \code{Y_useful}.}
-
-\item{non_energy_ind}{See \code{IEATools::non_energy_flows}. Non-energy industries are kept same from \code{Y_final} to \code{Y_useful}.}
 
 \item{losses}{See \code{IEATools::tfc_compare_flows}. Losses are kept same from \code{Y_final} to \code{Y_useful}.}
 
@@ -86,10 +72,6 @@ See \code{matsbyname::notation_vec()}. Default is \code{arrow_notation}.}
 
 \item{tol}{the allowable error in energy balances for both the incoming matrices (last stage final)
 and the outgoing matrices (last stage useful). Default is \code{1e-3}.}
-
-\item{.Y_f_vec_hat_C_Y}{an internal matrix name for the product of the Y_f_vec_hat and C_Y matrices. Default is ".Y_f_vec_hat_C_Y".}
-
-\item{.U_eiou_f_vec_hat_C_eiou}{an internal matrix name for the product of the U_eiou_f_vec_hat and C_eiou matrices. Default is ".U_eiou_f_vec_hat_C_eiou".}
 
 \item{.eta_fu_hat}{an internal matrix name. Default is ".eta_fu_hat".}
 
