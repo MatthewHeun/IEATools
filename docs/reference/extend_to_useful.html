@@ -74,7 +74,7 @@ to useful energy/exergy as the last stage of an energy conversion chain." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.40</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.41</span>
       </span>
     </div>
 
@@ -146,7 +146,6 @@ to useful energy/exergy as the last stage of an energy conversion chain.</p>
     <pre class="usage"><span class='fu'>extend_to_useful</span><span class='op'>(</span>
   <span class='va'>.sutdata</span>,
   last_stage <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>last_stage</span>,
-  unit <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>unit</span>,
   final <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='last_stages.html'>last_stages</a></span><span class='op'>$</span><span class='va'>final</span>,
   useful <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='last_stages.html'>last_stages</a></span><span class='op'>$</span><span class='va'>useful</span>,
   industry_type <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='va'>industry</span>,
@@ -157,22 +156,15 @@ to useful energy/exergy as the last stage of an energy conversion chain.</p>
   U <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>U</span>,
   V <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>V</span>,
   Y <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>Y</span>,
-  s_units <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>s_units</span>,
-  matnames <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>matnames</span>,
-  matvals <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>matvals</span>,
-  sut_meta_cols <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='sut_meta_cols.html'>sut_meta_cols</a></span>,
   C_eiou <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>C_eiou</span>,
   C_Y <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>C_Y</span>,
   eta_fu <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu</span>,
   phi_u <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>phi_u</span>,
   interface_ind <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='interface_industries.html'>interface_industries</a></span>,
-  non_energy_ind <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='non_energy_flows.html'>non_energy_flows</a></span>,
   losses <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='va'>losses</span>,
   stat_diffs <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='va'>statistical_differences</span>,
   notation <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='arrow_notation.html'>arrow_notation</a></span>,
   tol <span class='op'>=</span> <span class='fl'>0.001</span>,
-  .Y_f_vec_hat_C_Y <span class='op'>=</span> <span class='st'>".Y_f_vec_hat_C_Y"</span>,
-  .U_eiou_f_vec_hat_C_eiou <span class='op'>=</span> <span class='st'>".U_eiou_f_vec_hat_C_eiou"</span>,
   .eta_fu_hat <span class='op'>=</span> <span class='st'>".eta_fu_hat"</span>,
   .add_to_U_f <span class='op'>=</span> <span class='st'>".add_to_U_f"</span>,
   .add_to_U_eiou <span class='op'>=</span> <span class='st'>".add_to_U_eiou"</span>,
@@ -199,7 +191,7 @@ The last stage of these ECCs should be final (not useful).
 probably created by functions <code><a href='form_C_mats.html'>form_C_mats()</a></code> and <code><a href='form_eta_fu_phi_u_vecs.html'>form_eta_fu_phi_u_vecs()</a></code>.</p></td>
     </tr>
     <tr>
-      <th>last_stage, unit</th>
+      <th>last_stage</th>
       <td><p>See <code>IEATools::iea_cols$last_stage</code>.
 Each of these should be a column in <code>.sutdata</code>, <code>C_data</code>, and <code>eta_fu_data</code>.</p></td>
     </tr>
@@ -212,17 +204,9 @@ Each of these should be a column in <code>.sutdata</code>, <code>C_data</code>, 
       <td><p>See <code><a href='row_col_types.html'>IEATools::row_col_types</a></code></p></td>
     </tr>
     <tr>
-      <th>R, U_eiou, U_feed, U, V, Y, s_units</th>
+      <th>R, U_eiou, U_feed, U, V, Y</th>
       <td><p>See <code><a href='psut_cols.html'>IEATools::psut_cols</a></code>.
 These matrices should be found in columns of the <code>.sutdata</code> data frame.</p></td>
-    </tr>
-    <tr>
-      <th>matnames, matvals</th>
-      <td><p>See <code><a href='mat_meta_cols.html'>IEATools::mat_meta_cols</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>sut_meta_cols</th>
-      <td><p>See <code><a href='sut_meta_cols.html'>IEATools::sut_meta_cols</a></code>.</p></td>
     </tr>
     <tr>
       <th>C_eiou, C_Y, eta_fu, phi_u</th>
@@ -233,10 +217,6 @@ These matrices should be found in columns of the <code>.sutdata</code> data fram
     <tr>
       <th>interface_ind</th>
       <td><p>See <code><a href='interface_industries.html'>IEATools::interface_industries</a></code>. Interface industries are kept same from <code>Y_final</code> to <code>Y_useful</code>.</p></td>
-    </tr>
-    <tr>
-      <th>non_energy_ind</th>
-      <td><p>See <code><a href='non_energy_flows.html'>IEATools::non_energy_flows</a></code>. Non-energy industries are kept same from <code>Y_final</code> to <code>Y_useful</code>.</p></td>
     </tr>
     <tr>
       <th>losses</th>
@@ -255,14 +235,6 @@ See <code><a href='https://rdrr.io/pkg/matsbyname/man/row-col-notation.html'>mat
       <th>tol</th>
       <td><p>the allowable error in energy balances for both the incoming matrices (last stage final)
 and the outgoing matrices (last stage useful). Default is <code>1e-3</code>.</p></td>
-    </tr>
-    <tr>
-      <th>.Y_f_vec_hat_C_Y</th>
-      <td><p>an internal matrix name for the product of the Y_f_vec_hat and C_Y matrices. Default is ".Y_f_vec_hat_C_Y".</p></td>
-    </tr>
-    <tr>
-      <th>.U_eiou_f_vec_hat_C_eiou</th>
-      <td><p>an internal matrix name for the product of the U_eiou_f_vec_hat and C_eiou matrices. Default is ".U_eiou_f_vec_hat_C_eiou".</p></td>
     </tr>
     <tr>
       <th>.eta_fu_hat</th>

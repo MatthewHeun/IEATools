@@ -416,7 +416,7 @@ prod_tp_eiou_energy_carriers <- function(file_path = sample_iea_data_path(),
 #' Nick Johnstone (IEA Chief Statistician) and Matthew Kuperus Heun (IEATools developer)
 #' on Monday, 3 June 2019.
 #'
-#' @param version the desired version (expressed as the year of release) of sample data. 
+#' @param version The desired version (expressed as the year of release) of sample data. 
 #'                Options are 2019 (default) and 2018. 
 #'
 #' @return the path to a sample data file.

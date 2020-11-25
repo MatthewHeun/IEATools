@@ -7,7 +7,7 @@
 sample_iea_data_path(version = 2019)
 }
 \arguments{
-\item{version}{the desired version (expressed as the year of release) of sample data.
+\item{version}{The desired version (expressed as the year of release) of sample data.
 Options are 2019 (default) and 2018.}
 }
 \value{
