@@ -8,7 +8,6 @@
 A string list with 13 entries.
 \describe{
 \item{resources,R}{The name of a column in a wide-by-matrices data frame containing resource (\code{R}) matrices.}
-\item{use,U}{The name of a column in a wide-by-matrices data frame containing use (\code{U}) matrices.}
 \item{U_feed}{The name of a column in a wide-by-matrices data frame containing use (\code{U}) matrices that exclude energy industry own use.}
 \item{U_eiou}{The name of a column in a wide-by-matrices data frame containing use (\code{U}) matrices that contain exclusively energy industry own use.}
 \item{U}{The name of a column in a wide data-by-matrices frame containing use (\code{U}) matrices that are the sum of \code{U_feed} and \code{U_eiou} matrices.}

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.41</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.42</span>
       </span>
     </div>
 
@@ -91,7 +91,7 @@
       <h1 data-toc-skip>Final to Useful Analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-11-25</h4>
+            <h4 class="date">2020-11-30</h4>
       
       
       <div class="hidden name"><code>final_to_useful.Rmd</code></div>
@@ -268,7 +268,7 @@
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span><span class="va">eta_fu_vecs</span>, by <span class="op">=</span> <span class="va">m_cols</span><span class="op">)</span>
 <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">psut_mats_final</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 4</span>
-<span class="co">#&gt; Columns: 16</span>
+<span class="co">#&gt; Columns: 17</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF"</span>
 <span class="co">#&gt; $ Method      &lt;chr&gt; "PCM", "PCM", "PCM", "PCM"</span>
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E"</span>
@@ -278,6 +278,7 @@
 <span class="co">#&gt; $ U_EIOU      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 3]&gt;, &lt;mat…</span>
 <span class="co">#&gt; $ U_feed      &lt;list&gt; [&lt;matrix[4 x 3]&gt;, &lt;matrix[3 x 3]&gt;, &lt;matrix[7 x 10]&gt;, &lt;ma…</span>
 <span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[6 x 3]&gt;, &lt;matrix[5 x 3]&gt;, &lt;matrix[9 x 10]&gt;, &lt;ma…</span>
+<span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[6 x 3]&gt;, &lt;matrix[5 x 3]&gt;, &lt;matrix[9 x 10]&gt;, &lt;ma…</span>
 <span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[10 x 12]&gt;, &lt;matrix[14 x 14]&gt;, &lt;matrix[13 x 19]&gt;…</span>
 <span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[12 x 21]&gt;, &lt;matrix[13 x 20]&gt;, &lt;matrix[18 x 26]&gt;…</span>
 <span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[22 x 1]&gt;, &lt;…</span>
@@ -291,7 +292,7 @@
   <span class="fu"><a href="../reference/extend_to_useful.html">extend_to_useful</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">psut_mats_useful</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 8</span>
-<span class="co">#&gt; Columns: 12</span>
+<span class="co">#&gt; Columns: 13</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF", "GHA", "GHA", "ZAF", "ZAF"</span>
 <span class="co">#&gt; $ Method      &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"</span>
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E"</span>
@@ -301,6 +302,7 @@
 <span class="co">#&gt; $ U_EIOU      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 3]&gt;, &lt;mat…</span>
 <span class="co">#&gt; $ U_feed      &lt;list&gt; [&lt;matrix[4 x 3]&gt;, &lt;matrix[3 x 3]&gt;, &lt;matrix[7 x 10]&gt;, &lt;ma…</span>
 <span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[6 x 3]&gt;, &lt;matrix[5 x 3]&gt;, &lt;matrix[9 x 10]&gt;, &lt;ma…</span>
+<span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[6 x 3]&gt;, &lt;matrix[5 x 3]&gt;, &lt;matrix[9 x 10]&gt;, &lt;ma…</span>
 <span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[10 x 12]&gt;, &lt;matrix[14 x 14]&gt;, &lt;matrix[13 x 19]&gt;…</span>
 <span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[12 x 21]&gt;, &lt;matrix[13 x 20]&gt;, &lt;matrix[18 x 26]&gt;…</span>
 <span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[22 x 1]&gt;, &lt;…</span></code></pre></div>
