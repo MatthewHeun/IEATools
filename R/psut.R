@@ -340,7 +340,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' @param year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param matnames,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
-#' @param matvals,R,U_eiou,U_feed,U,V,Y,s_units See `IEATools::psut_cols`.
+#' @param matvals,R,U_eiou,U_feed,U,r_eiou,V,Y,s_units See `IEATools::psut_cols`.
 #'
 #' @return A wide-by-matrix data frame with metadata columns and columns named for each type of matrix.
 #' 
@@ -398,6 +398,7 @@ prep_psut <- function(.tidy_iea_df,
                       R = IEATools::psut_cols$R,
                       U_eiou = IEATools::psut_cols$U_eiou,
                       U_feed = IEATools::psut_cols$U_feed,
+                      r_eiou = IEATools::psut_cols$r_eiou,
                       U = IEATools::psut_cols$U,
                       V = IEATools::psut_cols$V,
                       Y = IEATools::psut_cols$Y,
@@ -439,17 +440,23 @@ prep_psut <- function(.tidy_iea_df,
   # Get a list of matrix names for future use
   matrix_names <- Collapsed[[matnames]] %>% 
     unique() %>% 
-    # We add U later, so append it here.
-    append(U)
+    # We add U and r_eiou later, so append them here.
+    append(U) %>% 
+    append(r_eiou)
   # Spread to put each matrix into its own column
   CollapsedSpread <- Collapsed %>% 
     tidyr::spread(key = matnames, value = matvals) %>% 
     dplyr::mutate(
       # Add the U matrix.
-      "{U}" := matsbyname::sum_byname(.data[[U_feed]], .data[[U_eiou]])
+      "{U}" := matsbyname::sum_byname(.data[[U_feed]], .data[[U_eiou]]), 
+      # Add r_EIOU matrices
+      # Create r_EIOU, a matrix that identifies the ratio of EIOU to total energy used.
+      "{r_eiou}" := matsbyname::quotient_byname(.data[[U_eiou]], U),
+      "{r_eiou}" := matsbyname::replaceNaN_byname(.data[[r_eiou]], val = 0)
     ) %>% 
-    # Rearrange columns to get a more-natural location for the U matrix.
-    dplyr::relocate(.data[[U]], .after = .data[[U_feed]])
+    # Rearrange columns to get more-natural locations for the U and r_EIOU matrices.
+    dplyr::relocate(.data[[U]], .after = .data[[U_feed]]) %>% 
+    dplyr::relocate(.data[[r_eiou]], .after = .data[[U]])
   
   CollapsedSpread %>% 
     # Add the S_units matrix and return

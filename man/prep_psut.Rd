@@ -24,6 +24,7 @@ prep_psut(
   R = IEATools::psut_cols$R,
   U_eiou = IEATools::psut_cols$U_eiou,
   U_feed = IEATools::psut_cols$U_feed,
+  r_eiou = IEATools::psut_cols$r_eiou,
   U = IEATools::psut_cols$U,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y,
@@ -39,7 +40,7 @@ prep_psut(
 
 \item{matnames, rownames, colnames, rowtypes, coltypes}{See \code{IEATools::mat_meta_cols}.}
 
-\item{matvals, R, U_eiou, U_feed, U, V, Y, s_units}{See \code{IEATools::psut_cols}.}
+\item{matvals, R, U_eiou, U_feed, U, r_eiou, V, Y, s_units}{See \code{IEATools::psut_cols}.}
 }
 \value{
 A wide-by-matrix data frame with metadata columns and columns named for each type of matrix.

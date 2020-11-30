@@ -1,3 +1,8 @@
+* `prep_psut()` now creates `r_EIOU` matrices
+* Now up to 658 tests, all passing.
+* Test coverage remains at 100 %.
+
+
 # IEATools 0.1.41 (2020-11-25)
 
 * Cleaned up (removed) unused arguments to `final_to_useful()`.

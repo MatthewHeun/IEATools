@@ -96,13 +96,14 @@
 #' 
 #' @format A string list with `r length(psut_cols)` entries.
 #' \describe{
-#' \item{resources,R}{The name of a column in a wide data frame containing resource (`R`) matrices.}
-#' \item{use,U}{The name of a column in a wide data frame containing use (`U`) matrices.}
-#' \item{U_feed}{The name of a column in a wide data frame containing use (`U`) matrices that exclude energy industry own use.}
-#' \item{U_EIOU}{The name of a column in a wide data frame containing use (`U`) matrices that contain exclusively energy industry own use.}
-#' \item{make,V}{The name of a column in a wide data frame containing make (`V`) matrices.}
-#' \item{final_demand,Y}{The name of a column in a wide data frame containing final demand (`Y`) matrices.}
-#' \item{s_units}{The name of a column in a wide data frame containing unit summation (`S_units`) matrices.}
+#' \item{resources,R}{The name of a column in a wide-by-matrices data frame containing resource (`R`) matrices.}
+#' \item{U_feed}{The name of a column in a wide-by-matrices data frame containing use (`U`) matrices that exclude energy industry own use.}
+#' \item{U_eiou}{The name of a column in a wide-by-matrices data frame containing use (`U`) matrices that contain exclusively energy industry own use.}
+#' \item{U}{The name of a column in a wide data-by-matrices frame containing use (`U`) matrices that are the sum of `U_feed` and `U_eiou` matrices.} 
+#' \item{r_eiou}{The name of a column in a wide-by-matrices data frame containing the ratio of `U_eiou` and `U` matrices.}
+#' \item{make,V}{The name of a column in a wide-by-matrices data frame containing make (`V`) matrices.}
+#' \item{final_demand,Y}{The name of a column in a wide-by-matrices data frame containing final demand (`Y`) matrices.}
+#' \item{s_units}{The name of a column in a wide-by-matrices data frame containing unit summation (`S_units`) matrices.}
 #' \item{matvals}{The name of a column in a tidy data frame containing matrices.}
 #' }
 #' 
