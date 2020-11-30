@@ -74,7 +74,7 @@ throughout the IEATools package." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.41</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.42</span>
       </span>
     </div>
 
@@ -148,14 +148,15 @@ throughout the <code>IEATools</code> package.</p>
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string list with 12 entries.</p><dl>
-<dt>resources,R</dt><dd><p>The name of a column in a wide data frame containing resource (<code>R</code>) matrices.</p></dd>
-<dt>use,U</dt><dd><p>The name of a column in a wide data frame containing use (<code>U</code>) matrices.</p></dd>
-<dt>U_feed</dt><dd><p>The name of a column in a wide data frame containing use (<code>U</code>) matrices that exclude energy industry own use.</p></dd>
-<dt>U_EIOU</dt><dd><p>The name of a column in a wide data frame containing use (<code>U</code>) matrices that contain exclusively energy industry own use.</p></dd>
-<dt>make,V</dt><dd><p>The name of a column in a wide data frame containing make (<code>V</code>) matrices.</p></dd>
-<dt>final_demand,Y</dt><dd><p>The name of a column in a wide data frame containing final demand (<code>Y</code>) matrices.</p></dd>
-<dt>s_units</dt><dd><p>The name of a column in a wide data frame containing unit summation (<code>S_units</code>) matrices.</p></dd>
+    <p>A string list with 13 entries.</p><dl>
+<dt>resources,R</dt><dd><p>The name of a column in a wide-by-matrices data frame containing resource (<code>R</code>) matrices.</p></dd>
+<dt>U_feed</dt><dd><p>The name of a column in a wide-by-matrices data frame containing use (<code>U</code>) matrices that exclude energy industry own use.</p></dd>
+<dt>U_eiou</dt><dd><p>The name of a column in a wide-by-matrices data frame containing use (<code>U</code>) matrices that contain exclusively energy industry own use.</p></dd>
+<dt>U</dt><dd><p>The name of a column in a wide data-by-matrices frame containing use (<code>U</code>) matrices that are the sum of <code>U_feed</code> and <code>U_eiou</code> matrices.</p></dd>
+<dt>r_eiou</dt><dd><p>The name of a column in a wide-by-matrices data frame containing the ratio of <code>U_eiou</code> and <code>U</code> matrices.</p></dd>
+<dt>make,V</dt><dd><p>The name of a column in a wide-by-matrices data frame containing make (<code>V</code>) matrices.</p></dd>
+<dt>final_demand,Y</dt><dd><p>The name of a column in a wide-by-matrices data frame containing final demand (<code>Y</code>) matrices.</p></dd>
+<dt>s_units</dt><dd><p>The name of a column in a wide-by-matrices data frame containing unit summation (<code>S_units</code>) matrices.</p></dd>
 <dt>matvals</dt><dd><p>The name of a column in a tidy data frame containing matrices.</p></dd>
 
 </dl>
@@ -185,6 +186,9 @@ E.g., both <code>resources</code> and <code>R</code> point to the "R" column nam
 #&gt; 
 #&gt; $U_eiou
 #&gt; [1] "U_EIOU"
+#&gt; 
+#&gt; $r_eiou
+#&gt; [1] "r_EIOU"
 #&gt; 
 #&gt; $make
 #&gt; [1] "V"
