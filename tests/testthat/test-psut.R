@@ -162,3 +162,19 @@ test_that("prep_psut() works as expected with empty .tidy_iea_df", {
   }
   expect_equal(nrow(zero_psut), 0)
 })
+
+
+test_that("prep_psut() correctly makes columns of U and r_EIOU matrices", {
+  psut <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    prep_psut()
+  
+  psut_with_test_cols <- psut %>% 
+    dplyr::mutate(
+      U_test = matsbyname::sum_byname(U_feed, U_EIOU), 
+      r_EIOU_test = matsbyname::quotient_byname(U_EIOU, U),
+      r_EIOU_test = matsbyname::replaceNaN_byname(r_EIOU, val = 0)
+    )
+  expect_equal(psut_with_test_cols[["U_test"]], psut_with_test_cols[["U"]])
+  expect_equal(psut_with_test_cols[["r_EIOU_test"]], psut_with_test_cols[["r_EIOU"]])
+})
