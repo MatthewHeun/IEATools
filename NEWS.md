@@ -1,3 +1,11 @@
+# IEATools 0.1.43 (2020-12-05)
+
+* `extend_to_useful()` now creates `r_EIOU` matrices
+* New tests for the new feature.
+    * Now up to 659 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # IEATools 0.1.42 (2020-11-30)
 
 * `prep_psut()` now creates `r_EIOU` matrices

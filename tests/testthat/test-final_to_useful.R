@@ -399,4 +399,17 @@ test_that("extend_to_useful works as expected", {
   # This test sets the tolerance especially tight to force an energy balance failure.
   expect_warning(with_useful_warn <- psut_mats %>% 
                    extend_to_useful(tol = 1e-10))
+  
+  # Verify that we have correct r_EIOU matrices for the useful stage.
+  r_EIOU_check <- with_useful %>% 
+    dplyr::mutate(
+      r_EIOU_check = matsbyname::quotient_byname(U_EIOU, U) %>% 
+        matsbyname::replaceNaN_byname(val = 0), 
+      should_be_zero = matsbyname::difference_byname(r_EIOU_check, r_EIOU), 
+      is_zero = matsbyname::iszero_byname(should_be_zero)
+    )
+  expect_true(all(unlist(r_EIOU_check$is_zero)))
+  
 })
+
+

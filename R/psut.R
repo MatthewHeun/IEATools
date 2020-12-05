@@ -451,8 +451,8 @@ prep_psut <- function(.tidy_iea_df,
       "{U}" := matsbyname::sum_byname(.data[[U_feed]], .data[[U_eiou]]), 
       # Add r_EIOU matrices
       # Create r_EIOU, a matrix that identifies the ratio of EIOU to total energy used.
-      "{r_eiou}" := matsbyname::quotient_byname(.data[[U_eiou]], U),
-      "{r_eiou}" := matsbyname::replaceNaN_byname(.data[[r_eiou]], val = 0)
+      "{r_eiou}" := matsbyname::quotient_byname(.data[[U_eiou]], U) %>% 
+        matsbyname::replaceNaN_byname(val = 0)
     ) %>% 
     # Rearrange columns to get more-natural locations for the U and r_EIOU matrices.
     dplyr::relocate(.data[[U]], .after = .data[[U_feed]]) %>% 

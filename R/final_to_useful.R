@@ -361,8 +361,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                        Each of these should be a column in `.sutdata`, `C_data`, and `eta_fu_data`.
 #' @param final,useful See `IEATools::last_stages`.
 #' @param industry_type,product_type See `IEATools::row_col_types`
-#' @param R,U_eiou,U_feed,U,V,Y See `IEATools::psut_cols`. 
-#'                                    These matrices should be found in columns of the `.sutdata` data frame.
+#' @param R,U_eiou,U_feed,U,r_eiou,V,Y See `IEATools::psut_cols`. 
+#'                                       These columns should be present in the `.sutdata` data frame.
 #' @param C_eiou,C_Y,eta_fu,phi_u See `IEATools::template_cols`. 
 #'                          `C_eiou` and `C_Y` matrices should be found in columns of the `wide_C_data` data frame.
 #'                          `eta_fu` and `phi_u` should be found in columns of the `wide_eta_fu_data` data frame.
@@ -424,6 +424,7 @@ extend_to_useful <- function(.sutdata,
                              U_eiou = IEATools::psut_cols$U_eiou,
                              U_feed = IEATools::psut_cols$U_feed,
                              U = IEATools::psut_cols$U,
+                             r_eiou = IEATools::psut_cols$r_eiou,
                              V = IEATools::psut_cols$V, 
                              Y = IEATools::psut_cols$Y, 
                              
@@ -463,6 +464,7 @@ extend_to_useful <- function(.sutdata,
   U_feed_useful <- paste0(U_feed, .useful)
   U_eiou_useful <- paste0(U_eiou, .useful)
   U_useful <- paste0(U, .useful)
+  r_eiou_useful <- paste0(r_eiou, .useful)
   V_useful <- paste0(V, .useful)
   Y_useful <- paste0(Y, .useful)
   Y_keep <- paste0(Y, .keep_in_Y)
@@ -504,6 +506,8 @@ extend_to_useful <- function(.sutdata,
       "{U_feed_useful}" := matsbyname::sum_byname(.data[[U_feed_useful]], .data[[.add_to_U_eiou]]), 
       "{U_eiou_useful}" := .data[[.add_to_dest]], 
       "{U_useful}" := matsbyname::sum_byname(.data[[U_feed_useful]], .data[[U_eiou_useful]]),
+      "{r_eiou_useful}" := matsbyname::quotient_byname(.data[[U_eiou_useful]], .data[[U_useful]]) %>% 
+        matsbyname::replaceNaN_byname(val = 0),
       "{V_useful}" := matsbyname::sum_byname(.data[[V_useful]], .data[[.add_to_V_f]]), 
       # Show that these all now have useful last stage
       "{last_stage}" := useful,
@@ -516,6 +520,7 @@ extend_to_useful <- function(.sutdata,
       "{U_eiou}" := NULL,
       "{U_feed}" := NULL,
       "{U}" := NULL,
+      "{r_eiou}" := NULL,
       "{V}" := NULL,
       "{Y}" := NULL
     ) %>% 
@@ -524,6 +529,7 @@ extend_to_useful <- function(.sutdata,
       "{U_feed}" := .data[[U_feed_useful]],
       "{U_eiou}" := .data[[U_eiou_useful]],
       "{U}" := .data[[U_useful]],
+      "{r_eiou}" := .data[[r_eiou_useful]],
       "{V}" := .data[[V_useful]], 
       "{Y}" := .data[[Y_useful]]
     )
