@@ -15,6 +15,7 @@ extend_to_useful(
   U_eiou = IEATools::psut_cols$U_eiou,
   U_feed = IEATools::psut_cols$U_feed,
   U = IEATools::psut_cols$U,
+  r_eiou = IEATools::psut_cols$r_eiou,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y,
   C_eiou = IEATools::template_cols$C_eiou,
@@ -54,8 +55,8 @@ Each of these should be a column in \code{.sutdata}, \code{C_data}, and \code{et
 
 \item{industry_type, product_type}{See \code{IEATools::row_col_types}}
 
-\item{R, U_eiou, U_feed, U, V, Y}{See \code{IEATools::psut_cols}.
-These matrices should be found in columns of the \code{.sutdata} data frame.}
+\item{R, U_eiou, U_feed, U, r_eiou, V, Y}{See \code{IEATools::psut_cols}.
+These columns should be present in the \code{.sutdata} data frame.}
 
 \item{C_eiou, C_Y, eta_fu, phi_u}{See \code{IEATools::template_cols}.
 \code{C_eiou} and \code{C_Y} matrices should be found in columns of the \code{wide_C_data} data frame.
