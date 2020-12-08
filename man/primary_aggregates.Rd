@@ -33,7 +33,9 @@ This function works similar to \code{dplyr::summarise()}:
 it distills \code{.ieadata} to many fewer rows
 according to the grouping variables
 \code{country}, \code{method}, \code{energy_type}, \code{last_stage}, and \code{year}.
-\code{.ieadata} is grouped internally.
+\code{.ieadata} is grouped by those variables internally.
+Any grouping variables present in \code{.ieadata} are retained
+for calculating primary aggregate energy.
 Grouping columns are removed before output.
 }
 \examples{

@@ -292,20 +292,49 @@ test_that("primary_aggregates() works as expected", {
 
 
 test_that("finaldemand_aggregates_IEA() works as expected", {
-  iea_result <- UKEnergy2000tidy %>%
-    # Can calculate only when all entries are in same units, i.e., only when last stage is final or useful energy.
-    dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
-    dplyr::group_by(Country, Year, Energy.type, Last.stage) %>%
+  result <- load_tidy_iea_df() %>% 
     finaldemand_aggregates_IEA()
-  sut_result <- UKEnergy2000mats %>%
-    tidyr::spread(key = matrix.name, value = matrix) %>%
+  
+  # Do our own aggregation
+  net_energy <- load_tidy_iea_df() %>% 
+    dplyr::filter(.data[[IEATools::iea_cols$ledger_side]] == IEATools::ledger_sides$consumption) %>% 
+    dplyr::group_by(.data[[IEATools::iea_cols$country]], 
+                    .data[[IEATools::iea_cols$method]], 
+                    .data[[IEATools::iea_cols$energy_type]], 
+                    .data[[IEATools::iea_cols$last_stage]], 
+                    .data[[IEATools::iea_cols$year]]) %>% 
+    dplyr::summarise(
+      # Net energy
+      final_demand_net = sum(E.dot), 
+      .groups = "drop"
+    )
+  
+  gross_less_net <- load_tidy_iea_df() %>% 
+    dplyr::filter(.data[[IEATools::iea_cols$flow_aggregation_point]] == IEATools::tfc_compare_flows$energy_industry_own_use) %>% 
+    dplyr::group_by(.data[[IEATools::iea_cols$country]], 
+                    .data[[IEATools::iea_cols$method]], 
+                    .data[[IEATools::iea_cols$energy_type]], 
+                    .data[[IEATools::iea_cols$last_stage]], 
+                    .data[[IEATools::iea_cols$year]]) %>% 
+    dplyr::summarise(
+      # Net energy
+      eiou = abs(sum(E.dot)), 
+      .groups = "drop"
+    )
+  
+  expected <- dplyr::full_join(net_energy, gross_less_net, 
+                               by = c(IEATools::iea_cols$country, 
+                                      IEATools::iea_cols$method, 
+                                      IEATools::iea_cols$energy_type, 
+                                      IEATools::iea_cols$last_stage, 
+                                      IEATools::iea_cols$year)) %>% 
     dplyr::mutate(
-      fd_sectors = rep(list(c("Residential", "Transport")), times = nrow(.))
-    ) %>%
-    dplyr::filter(Last.stage %in% c(IEATools::last_stages$final, IEATools::last_stages$useful)) %>%
-    finaldemand_aggregates(fd_sectors = "fd_sectors")
-  expect_equal(iea_result[["EX_fd_net_IEA.ktoe"]], sut_result[["EX_fd_net.ktoe"]] %>% unlist())
-  expect_equal(iea_result[["EX_fd_gross_IEA.ktoe"]], sut_result[["EX_fd_gross.ktoe"]] %>% unlist())
+      final_demand_gross = final_demand_net + eiou, 
+      eiou = NULL
+    )
+    
+  # Make sure we get the same thing.
+  
 })
 
 

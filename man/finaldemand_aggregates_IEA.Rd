@@ -6,12 +6,18 @@
 \usage{
 finaldemand_aggregates_IEA(
   .ieadata,
-  ledger_side = "Ledger.side",
-  flow_aggregation_point = "Flow.aggregation.point",
-  flow = "Flow",
-  energy = "E.dot",
-  consumption = "Consumption",
-  eiou = "Energy industry own use",
+  country = IEATools::iea_cols$country,
+  method = IEATools::iea_cols$method,
+  energy_type = IEATools::iea_cols$energy_type,
+  last_stage = IEATools::iea_cols$last_stage,
+  year = IEATools::iea_cols$year,
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  flow = IEATools::iea_cols$flow,
+  e_dot = IEATools::iea_cols$e_dot,
+  consumption = IEATools::ledger_sides$consumption,
+  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+  diff_colname = ".gross_less_net",
   aggregate_net_finaldemand = Recca::aggregate_cols$aggregate_net_finaldemand_iea,
   aggregate_gross_finaldemand = Recca::aggregate_cols$aggregate_gross_finaldemand_iea
 )
@@ -28,9 +34,6 @@ Default is "\code{Flow.aggregation.point}".}
 \item{flow}{the name of the column that contains flow information.
 Default is "\code{Flow}".}
 
-\item{energy}{the name of the column that contains energy information.
-Default is "\code{E.dot}".}
-
 \item{consumption}{the identifier for consumption in the \code{flow_aggregation_point} column.
 Default is "\code{Consumption}".}
 
@@ -42,6 +45,9 @@ Default is "\code{EX_fd_net_IEA.ktoe}".}
 
 \item{aggregate_gross_finaldemand}{the name of the output column containing aggregates of gross final demand.
 Default is "\code{EX_fd_gross_IEA.ktoe}".}
+
+\item{energy}{the name of the column that contains energy information.
+Default is "\code{E.dot}".}
 }
 \value{
 a data frame containing grouping columns of \code{.ieadata} and
