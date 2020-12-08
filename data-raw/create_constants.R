@@ -441,6 +441,16 @@ aggregation_flows <- list(total_primary_energy_supply = "Total primary energy su
                           non_energy_use = "Non-energy use")
 usethis::use_data(aggregation_flows, overwrite = TRUE)
 
+
+#
+# Default names for columns in aggregate data frames
+#
+aggregate_cols <- list(aggregate_primary = "EX.p",
+                       net_aggregate_demand = "EX.d_net",
+                       gross_aggregate_demand = "EX.d_gross")
+usethis::use_data(aggregate_cols, overwrite = TRUE)
+
+
 memo_aggregation_flow_prefixes = list(memo = "Memo: ", 
                                       electricity_output_GWh = "Electricity output (GWh)", 
                                       heat_output = "Heat output")
