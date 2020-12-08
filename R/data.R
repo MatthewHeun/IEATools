@@ -557,6 +557,22 @@
 #' 
 #' @format A string vector with `r length(aggregation_flows)` entries.
 #' \describe{
+#' \item{aggregate_primary}{The name of the column containing aggregated primary energy.}
+#' \item{net_aggregate_demand}{The name of the column containing aggregated net final demand energy.}
+#' \item{gross_aggregate_demand}{The name of the column containing aggregated gross final demand energy.}
+#' }
+#' 
+#' @examples
+#' aggregation_flows
+"aggregation_flows"
+
+
+#' Aggregation columns
+#'
+#' A string vector containing names of aggregation columns.
+#' 
+#' @format A string vector with `r length(aggregate_cols)` entries.
+#' \describe{
 #' \item{total_primary_energy_supply}{Indicates a flow that aggregates to total primary energy supply.}
 #' \item{total_final_consumption}{Indicates a flow that aggregates to total final consumption.}
 #' \item{transformation_processes}{Indicates a flow involved in transformation processes.}
@@ -570,8 +586,8 @@
 #' }
 #' 
 #' @examples
-#' aggregation_flows
-"aggregation_flows"
+#' aggregate_cols
+"aggregate_cols"
 
 
 #' Aggregation regions

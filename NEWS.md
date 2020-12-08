@@ -1,3 +1,16 @@
+# IEATools 0.1.44 (2020-12-08)
+
+* Moved `primary_aggregates_IEA()` and `finaldemand_aggregates_IEA()` 
+  from the `Recca` package to `IEATools`.
+  Functions renamed to remove the `_IEA` suffix.
+  Hosting the functions in `Recca` must have made sense at some point.
+  But now it is clear these functions should be in `IEATools`, 
+  because they aggregate IEA-style tidy data frames.
+* New tests for the new feature.
+    * Now up to 661 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # IEATools 0.1.43 (2020-12-05)
 
 * `extend_to_useful()` now creates `r_EIOU` matrices
