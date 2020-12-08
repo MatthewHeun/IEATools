@@ -285,15 +285,15 @@ test_that("primary_aggregates() works as expected", {
                     .data[[IEATools::iea_cols$energy_type]], 
                     .data[[IEATools::iea_cols$last_stage]], 
                     .data[[IEATools::iea_cols$year]]) %>% 
-    dplyr::summarise(E.dot = sum(.data[["E.dot"]]), .groups = "drop")
+    dplyr::summarise(EX.p = sum(.data[["E.dot"]]), .groups = "drop")
   
   expect_equal(result, expected)
 })
 
 
-test_that("finaldemand_aggregates_IEA() works as expected", {
+test_that("finaldemand_aggregates() works as expected", {
   result <- load_tidy_iea_df() %>% 
-    finaldemand_aggregates_IEA()
+    finaldemand_aggregates()
   
   # Do our own aggregation
   net_energy <- load_tidy_iea_df() %>% 
@@ -305,7 +305,7 @@ test_that("finaldemand_aggregates_IEA() works as expected", {
                     .data[[IEATools::iea_cols$year]]) %>% 
     dplyr::summarise(
       # Net energy
-      final_demand_net = sum(E.dot), 
+      EX.d_net = sum(E.dot), 
       .groups = "drop"
     )
   
@@ -329,12 +329,12 @@ test_that("finaldemand_aggregates_IEA() works as expected", {
                                       IEATools::iea_cols$last_stage, 
                                       IEATools::iea_cols$year)) %>% 
     dplyr::mutate(
-      final_demand_gross = final_demand_net + eiou, 
+      EX.d_gross = EX.d_net + eiou, 
       eiou = NULL
     )
     
   # Make sure we get the same thing.
-  
+  expect_equal(result, expected)
 })
 
 

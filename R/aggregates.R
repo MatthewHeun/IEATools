@@ -4,24 +4,26 @@
 #' This function works similar to `dplyr::summarise()`:
 #' it distills `.ieadata` to many fewer rows
 #' according to the grouping variables
-#' `country`, `method`, `energy_type`, `last_stage`, and `year`.
+#' `country`, `method`, `energy_type`, `last_stage`, and `year`, 
+#' and, possibly, additional grouping variables in the input (`.ieadata`).
 #' `.ieadata` is grouped by those variables internally.
 #' Any grouping variables present in `.ieadata` are retained 
 #' for calculating primary aggregate energy.
-#' Grouping columns are removed before output.
+#' Grouping is removed before output.
 #'
 #' @param .ieadata The data frame containing IEA data.
 #' @param country,method,energy_type,last_stage,year,flow_aggregation_point,e_dot See `IEATools::iea_cols`.
-#' @param total_primary_energy_supply See `IEATools::aggregation_flows$total_primary_energy_supply`.
+#' @param total_primary_energy_supply See `IEATools::aggregation_flows`.
+#' @param ex_p See `IEATools::aggregate_cols`.
 #'
 #' @return A data frame containing the `country`, `method`, `energy_type`, `last_stage`, and `year` 
-#'         columns of  `.ieadata` and a column named with the value of `e_dot`.
+#'         columns of  `.ieadata` and a column named with the value of `ex_p`.
 #'
 #' @export
 #'
 #' @examples
 #' load_tidy_iea_df() %>% 
-#'   primary_aggregates_IEA()
+#'   primary_aggregates()
 primary_aggregates <- function(.ieadata,
                                # Input names
                                country = IEATools::iea_cols$country,
@@ -30,14 +32,15 @@ primary_aggregates <- function(.ieadata,
                                last_stage = IEATools::iea_cols$last_stage,
                                year = IEATools::iea_cols$year,
                                flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                               e_dot = IEATools::iea_cols$e_dot,
                                total_primary_energy_supply = IEATools::aggregation_flows$total_primary_energy_supply,
                                # Output name
-                               e_dot = IEATools::aggregate_cols$aggregate_primary){
+                               ex_p = IEATools::aggregate_cols$aggregate_primary){
   .ieadata %>%
     dplyr::filter(.data[[flow_aggregation_point]] == total_primary_energy_supply) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .add = TRUE) %>% 
     dplyr::summarise(
-      "{e_dot}" := sum(.data[[e_dot]]), 
+      "{ex_p}" := sum(.data[[e_dot]]), 
       .groups = "drop"
     )
 }
@@ -48,70 +51,48 @@ primary_aggregates <- function(.ieadata,
 #' Calculates total aggregate final demand energy from a data frame of IEA data
 #' on both net and gross bases.
 #'
-#' This function is named with "_IEA", because it is meant to operate on
-#' tidy, IEA-style data frames.
-#' The function \link{finaldemand_aggregates} does the same thing,
-#' but it is meant to operate on SUT-style data frames.
+#' This function works similar to `dplyr::summarise()`:
+#' it distills `.ieadata` to many fewer rows
+#' according to the grouping variables
+#' `country`, `method`, `energy_type`, `last_stage`, and `year`, 
+#' and, possibly, additional grouping variables in the input (`.ieadata`)..
+#' `.ieadata` is grouped by those variables internally.
+#' Any grouping variables present in `.ieadata` are retained 
+#' for calculating primary aggregate energy.
+#' Grouping is removed before output.
 #'
-#' Note that all items in \code{.ieadata} must be in same units.
-#'
-#' This function works similar to \code{\link[dplyr]{summarise}}:
-#' it distills \code{.ieadata} to many fewer rows
-#' according to the grouping variables.
-#' Thus, \code{.ieadata} should be grouped prior to passing into this function.
-#' Grouping columns are preserved on output.
-#'
-#' @param .ieadata a data frame with columns of IEA data.
-#' @param ledger_side the name of the ledger side column in \code{.ieadata}.
-#'        Default is "\code{Ledger.side}".
-#' @param flow_aggregation_point the name of the flow aggregation point column in \code{.ieadata}.
-#'        Default is "\code{Flow.aggregation.point}".
-#' @param flow the name of the column that contains flow information.
-#'        Default is "\code{Flow}".
-#' @param energy the name of the column that contains energy information.
-#'        Default is "\code{E.dot}".
-#' @param consumption the identifier for consumption in the \code{flow_aggregation_point} column.
-#'        Default is "\code{Consumption}".
-#' @param eiou the identifier for energy industry own use in the \code{flow_aggregation_point} column.
-#'        Default is "\code{Energy industry own use}".
-#' @param aggregate_net_finaldemand the name of the output column containing aggregates of net final demand.
-#'        Default is "\code{EX_fd_net_IEA.ktoe}".
-#' @param aggregate_gross_finaldemand the name of the output column containing aggregates of gross final demand.
-#'        Default is "\code{EX_fd_gross_IEA.ktoe}".
+#' @param .ieadata A data frame with columns of IEA data.
+#' @param country,method,energy_type,last_stage,year,ledger_side,flow_integration_point,flow,e_dot See `IEATools::iea_cols`.
+#' @param consumption See `IEATools::ledger_sides`.
+#' @param eiou See `IEATools::tfc_compare_flows`.
+#' @param net_aggregate_demand,gross_aggregate_demand See `IEATools::aggregate_cols`.
 #'
 #' @export
 #'
-#' @return a data frame containing grouping columns of \code{.ieadata} and
+#' @return A data frame containing grouping columns of `.ieadata` and
 #'         two additional columns containing net and gross final demand.
 #'
 #' @examples
-#' library(dplyr)
-#' # Works only when all entries are in same units.
-#' # When Last.stage is services, different units are involved.
-#' # Thus, filter to rows in UKEnergy2000tidy where Last.stage is final or useful.
-#' print(names(UKEnergy2000tidy))
-#' UKEnergy2000tidy %>%
-#'   group_by(Country, Year, Energy.type, Last.stage) %>%
-#'   filter(Last.stage %in% c("Final", "Useful")) %>%
-#'   finaldemand_aggregates_IEA()
-finaldemand_aggregates_IEA <- function(.ieadata,
-                                       # Input names
-                                       country = IEATools::iea_cols$country,
-                                       method = IEATools::iea_cols$method,
-                                       energy_type = IEATools::iea_cols$energy_type,
-                                       last_stage = IEATools::iea_cols$last_stage,
-                                       year = IEATools::iea_cols$year,
-                                       ledger_side = IEATools::iea_cols$ledger_side,
-                                       flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
-                                       flow = IEATools::iea_cols$flow,
-                                       e_dot = IEATools::iea_cols$e_dot,
-                                       consumption = IEATools::ledger_sides$consumption,
-                                       eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
-                                       # Internal working column names
-                                       diff_colname = ".gross_less_net",
-                                       # Output names
-                                       aggregate_net_finaldemand = Recca::aggregate_cols$aggregate_net_finaldemand_iea,
-                                       aggregate_gross_finaldemand = Recca::aggregate_cols$aggregate_gross_finaldemand_iea){
+#' load_tidy_iea_df() %>% 
+#'   finaldemand_aggregates()
+finaldemand_aggregates <- function(.ieadata,
+                                   # Input names
+                                   country = IEATools::iea_cols$country,
+                                   method = IEATools::iea_cols$method,
+                                   energy_type = IEATools::iea_cols$energy_type,
+                                   last_stage = IEATools::iea_cols$last_stage,
+                                   year = IEATools::iea_cols$year,
+                                   ledger_side = IEATools::iea_cols$ledger_side,
+                                   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                   flow = IEATools::iea_cols$flow,
+                                   e_dot = IEATools::iea_cols$e_dot,
+                                   consumption = IEATools::ledger_sides$consumption,
+                                   eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+                                   # Internal working column names
+                                   diff_colname = ".gross_less_net",
+                                   # Output names
+                                   net_aggregate_demand = IEATools::aggregate_cols$net_aggregate_demand,
+                                   gross_aggregate_demand = IEATools::aggregate_cols$gross_aggregate_demand){
   
   # Group internally by the metadata columns
   .ieadata <- .ieadata %>% 
@@ -126,7 +107,7 @@ finaldemand_aggregates_IEA <- function(.ieadata,
   net <- .ieadata %>%
     dplyr::filter(starts_with_any_of(.data[[ledger_side]], consumption)) %>%
     dplyr::summarise(
-      "{aggregate_net_finaldemand}" := sum(.data[[e_dot]]), 
+      "{net_aggregate_demand}" := sum(.data[[e_dot]]), 
       .groups = "drop"
     )
   # Now calculate additional energy, gross - net = eiou
@@ -140,7 +121,7 @@ finaldemand_aggregates_IEA <- function(.ieadata,
   # Add net and gross_less_net to obtain gross and return the resulting data frame.
   dplyr::full_join(net, gross_less_net, by = dplyr::group_vars(.ieadata)) %>%
     dplyr::mutate(
-      "{aggregate_gross_finaldemand}" := .data[[aggregate_net_finaldemand]] + .data[[diff_colname]], 
+      "{gross_aggregate_demand}" := .data[[net_aggregate_demand]] + .data[[diff_colname]], 
       # Eliminate the working column before output
       "{diff_colname}" := NULL
     )
