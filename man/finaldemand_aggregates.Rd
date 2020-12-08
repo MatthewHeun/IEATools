@@ -25,11 +25,14 @@ finaldemand_aggregates(
 \arguments{
 \item{.ieadata}{A data frame with columns of IEA data.}
 
-\item{country, method, energy_type, last_stage, year, ledger_side, flow_integration_point, flow, e_dot}{See \code{IEATools::iea_cols}.}
+\item{country, method, energy_type, last_stage, year, ledger_side, flow_aggregation_point, flow, e_dot}{See \code{IEATools::iea_cols}.}
 
 \item{consumption}{See \code{IEATools::ledger_sides}.}
 
 \item{eiou}{See \code{IEATools::tfc_compare_flows}.}
+
+\item{diff_colname}{The name of a column containing differences between gross and net final demand.
+Default is ".gross_less_net".}
 
 \item{net_aggregate_demand, gross_aggregate_demand}{See \code{IEATools::aggregate_cols}.}
 }

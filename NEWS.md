@@ -4,6 +4,9 @@
   Hosting the functions in `Recca` must have made sense at some point.
   But now it is clear these functions should be in `IEATools`, 
   because they aggregate IEA-style tidy data frames.
+* New tests for the new feature.
+    * Now up to 661 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # IEATools 0.1.43 (2020-12-05)

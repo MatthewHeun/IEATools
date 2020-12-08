@@ -62,9 +62,11 @@ primary_aggregates <- function(.ieadata,
 #' Grouping is removed before output.
 #'
 #' @param .ieadata A data frame with columns of IEA data.
-#' @param country,method,energy_type,last_stage,year,ledger_side,flow_integration_point,flow,e_dot See `IEATools::iea_cols`.
+#' @param country,method,energy_type,last_stage,year,ledger_side,flow_aggregation_point,flow,e_dot See `IEATools::iea_cols`.
 #' @param consumption See `IEATools::ledger_sides`.
 #' @param eiou See `IEATools::tfc_compare_flows`.
+#' @param diff_colname The name of a column containing differences between gross and net final demand.
+#'                     Default is ".gross_less_net".
 #' @param net_aggregate_demand,gross_aggregate_demand See `IEATools::aggregate_cols`.
 #'
 #' @export
