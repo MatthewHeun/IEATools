@@ -83,7 +83,7 @@ use the tidy_iea_df_balanced() function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.44</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.45</span>
       </span>
     </div>
 
@@ -161,23 +161,23 @@ To test whether all balances are OK,
 use the <code><a href='tidy_iea_df_balanced.html'>tidy_iea_df_balanced()</a></code> function.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calc_tidy_iea_df_balances</span><span class='op'>(</span>
-  <span class='va'>.tidy_iea_df</span>,
-  ledger_side <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>ledger_side</span>,
-  flow_aggregation_point <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow_aggregation_point</span>,
-  flow <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow</span>,
-  product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>product</span>,
-  e_dot <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>e_dot</span>,
-  unit <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>unit</span>,
-  supply <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='va'>supply</span>,
-  consumption <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='va'>consumption</span>,
-  supply_sum <span class='op'>=</span> <span class='st'>"supply_sum"</span>,
-  consumption_sum <span class='op'>=</span> <span class='st'>"consumption_sum"</span>,
-  supply_minus_consumption <span class='op'>=</span> <span class='st'>"supply_minus_consumption"</span>,
-  balance_OK <span class='op'>=</span> <span class='st'>"balance_OK"</span>,
-  err <span class='op'>=</span> <span class='st'>"err"</span>,
-  tol <span class='op'>=</span> <span class='fl'>1e-06</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>calc_tidy_iea_df_balances</span>(
+  <span class='kw'>.tidy_iea_df</span>,
+  ledger_side = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>ledger_side</span>,
+  flow_aggregation_point = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow_aggregation_point</span>,
+  flow = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow</span>,
+  product = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>product</span>,
+  e_dot = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>e_dot</span>,
+  unit = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>unit</span>,
+  supply = <span class='kw'>IEATools</span>::<span class='kw'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='kw'>supply</span>,
+  consumption = <span class='kw'>IEATools</span>::<span class='kw'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='kw'>consumption</span>,
+  supply_sum = <span class='st'>"supply_sum"</span>,
+  consumption_sum = <span class='st'>"consumption_sum"</span>,
+  supply_minus_consumption = <span class='st'>"supply_minus_consumption"</span>,
+  balance_OK = <span class='st'>"balance_OK"</span>,
+  err = <span class='st'>"err"</span>,
+  tol = <span class='fl'>1e-06</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -259,10 +259,10 @@ If not, <code>balance_OK</code> will be <code>FALSE</code>.</p></li>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='va'>Ebal</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>calc_tidy_iea_df_balances</span><span class='op'>(</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>Ebal</span>, <span class='fl'>5</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+<span class='kw'>Ebal</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'>calc_tidy_iea_df_balances</span>()
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='kw'>Ebal</span>, <span class='fl'>5</span>)
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 5 x 12</span><span>
 #&gt;   Country Method Energy.type Last.stage  Year Product Unit  supply_sum
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>

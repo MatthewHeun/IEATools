@@ -73,7 +73,7 @@ have been assigned efficiencies in each year for each country." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.44</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.45</span>
       </span>
     </div>
 
@@ -141,26 +141,26 @@ have been assigned efficiencies in each year for each country." />
 have been assigned efficiencies in each year for each country.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>eta_fu_table_completed</span><span class='op'>(</span>
-  eta_fu_table <span class='op'>=</span> <span class='cn'>NULL</span>,
-  <span class='va'>fu_allocation_table</span>,
-  which_quantity <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu</span>, <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>phi_u</span><span class='op'>)</span>,
-  e_dot <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>e_dot</span>,
-  year <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>year</span>,
-  method <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>method</span>,
-  ledger_side <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>ledger_side</span>,
-  flow_aggregation_point <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow_aggregation_point</span>,
-  ef_product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>ef_product</span>,
-  quantity <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>quantity</span>,
-  e_dot_perc <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>e_dot_perc</span>,
-  e_dot_machine <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>e_dot_machine</span>,
-  e_dot_machine_perc <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>e_dot_machine_perc</span>,
-  maximum_values <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>maximum_values</span>,
-  destination <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>destination</span>,
-  eta_fu <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu</span>,
-  phi_u <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>phi_u</span>,
-  .values <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>.values</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>eta_fu_table_completed</span>(
+  eta_fu_table = <span class='kw'>NULL</span>,
+  <span class='kw'>fu_allocation_table</span>,
+  which_quantity = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>eta_fu</span>, <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>phi_u</span>),
+  e_dot = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>e_dot</span>,
+  year = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>year</span>,
+  method = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>method</span>,
+  ledger_side = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>ledger_side</span>,
+  flow_aggregation_point = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow_aggregation_point</span>,
+  ef_product = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>ef_product</span>,
+  quantity = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>quantity</span>,
+  e_dot_perc = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_perc</span>,
+  e_dot_machine = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_machine</span>,
+  e_dot_machine_perc = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_machine_perc</span>,
+  maximum_values = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>maximum_values</span>,
+  destination = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>destination</span>,
+  eta_fu = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>eta_fu</span>,
+  phi_u = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>phi_u</span>,
+  .values = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>.values</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -202,9 +202,9 @@ if the result of this function is assigned to the variable <code>done</code>.</p
     <p>This function should really be named <code>eta_fu_table_completed?</code>, because it answers a question.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>fu_allocations</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>fu_efficiencies</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_eta_fu_data.html'>load_eta_fu_data</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='fu'>eta_fu_table_completed</span><span class='op'>(</span><span class='va'>fu_efficiencies</span>, <span class='va'>fu_allocations</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'>fu_allocations</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span>()
+<span class='kw'>fu_efficiencies</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_eta_fu_data.html'>load_eta_fu_data</a></span>()
+<span class='fu'>eta_fu_table_completed</span>(<span class='kw'>fu_efficiencies</span>, <span class='kw'>fu_allocations</span>)
 </div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

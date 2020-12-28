@@ -286,7 +286,7 @@ aggregate_regions <- function(.tidy_iea_df,
       tidyr::pivot_longer(cols = c({imports}, {exports}, {.net_imports}), names_to = flow, values_to = e_dot) %>%
       dplyr::filter(.data[[flow]] == {.net_imports}) %>% 
       dplyr::mutate(
-        "{flow}" = dplyr::case_when(
+        "{flow}" := dplyr::case_when(
           .data[[e_dot]] >= 0 ~ {imports},
           .data[[e_dot]] < 0 ~ {exports}#,
           #.data[[e_dot]] == 0 ~ {net_imports}

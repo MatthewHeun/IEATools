@@ -75,7 +75,7 @@ to temperatures by extracting the temperature (in Kelvin) from the middle of the
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.44</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.45</span>
       </span>
     </div>
 
@@ -145,7 +145,7 @@ This function converts heat types (e.g., "<code>HTH.600.C</code>")
 to temperatures by extracting the temperature (in Kelvin) from the middle of the string.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>extract_TK</span><span class='op'>(</span><span class='va'>heat_types</span>, sep <span class='op'>=</span> <span class='st'>"."</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>extract_TK</span>(<span class='kw'>heat_types</span>, sep = <span class='st'>"."</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -175,7 +175,7 @@ to temperatures by extracting the temperature (in Kelvin) from the middle of the
 <p>If <code>heat_type</code> does not conform to the pattern shown above, <code>NA</code> is the likely result.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>extract_TK</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"HTH.600.C"</span>, <span class='st'>"LTH.-20.567.C"</span>, <span class='st'>"LTH.-40.F"</span>, <span class='st'>"LTH.-40.C"</span><span class='op'>)</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'>extract_TK</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"HTH.600.C"</span>, <span class='st'>"LTH.-20.567.C"</span>, <span class='st'>"LTH.-40.F"</span>, <span class='st'>"LTH.-40.C"</span>))
 </div><div class='output co'>#&gt; [1] 873.150 252.583 233.150 233.150</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -79,7 +79,7 @@ by supplying allocations from any number of exemplar countries." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.44</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.45</span>
       </span>
     </div>
 
@@ -153,31 +153,31 @@ this function can be used to build a complete FU allocation table
 by supplying allocations from any number of exemplar countries.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>complete_fu_allocation_table</span><span class='op'>(</span>
-  <span class='va'>fu_allocation_table</span>,
-  <span class='va'>country_to_complete</span>,
-  <span class='va'>exemplar_fu_allocation_tables</span>,
-  <span class='va'>tidy_specified_iea_data</span>,
-  country <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>country</span>,
-  ledger_side <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>ledger_side</span>,
-  flow <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow</span>,
-  product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>product</span>,
-  e_dot <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>e_dot</span>,
-  year <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>year</span>,
-  flow_aggregation_point <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow_aggregation_point</span>,
-  supply <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='va'>supply</span>,
-  consumption <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='va'>consumption</span>,
-  eiou <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='va'>energy_industry_own_use</span>,
-  e_dot_perc <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>e_dot_perc</span>,
-  destination <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>destination</span>,
-  machine <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>machine</span>,
-  eu_product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eu_product</span>,
-  ef_product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>ef_product</span>,
-  maximum_values <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>maximum_values</span>,
-  quantity <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>quantity</span>,
-  c_source <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>c_source</span>,
-  .values <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>.values</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>complete_fu_allocation_table</span>(
+  <span class='kw'>fu_allocation_table</span>,
+  <span class='kw'>country_to_complete</span>,
+  <span class='kw'>exemplar_fu_allocation_tables</span>,
+  <span class='kw'>tidy_specified_iea_data</span>,
+  country = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>country</span>,
+  ledger_side = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>ledger_side</span>,
+  flow = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow</span>,
+  product = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>product</span>,
+  e_dot = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>e_dot</span>,
+  year = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>year</span>,
+  flow_aggregation_point = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow_aggregation_point</span>,
+  supply = <span class='kw'>IEATools</span>::<span class='kw'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='kw'>supply</span>,
+  consumption = <span class='kw'>IEATools</span>::<span class='kw'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='kw'>consumption</span>,
+  eiou = <span class='kw'>IEATools</span>::<span class='kw'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='kw'>energy_industry_own_use</span>,
+  e_dot_perc = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>e_dot_perc</span>,
+  destination = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>destination</span>,
+  machine = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>machine</span>,
+  eu_product = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>eu_product</span>,
+  ef_product = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>ef_product</span>,
+  maximum_values = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>maximum_values</span>,
+  quantity = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>quantity</span>,
+  c_source = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>c_source</span>,
+  .values = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>.values</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -252,24 +252,24 @@ and a data frame is returned containing rows from <code>tidy_specified_iea_data<
 More than 1 country will throw an error.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>fu_table</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span><span class='op'>(</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'>fu_table</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span>()
 <span class='co'># Make an FU Allocation table for Ghana that is missing Residential consumption of PSBs.</span>
 <span class='co'># Allocations for Residential consumption of PSBs will be picked up from the exemplar, South Africa.</span>
-<span class='va'>fu_table_GHA</span> <span class='op'>&lt;-</span> <span class='va'>fu_table</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Country</span> <span class='op'>==</span> <span class='st'>"GHA"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='op'>!</span><span class='op'>(</span><span class='va'>Flow.aggregation.point</span> <span class='op'>==</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tfc_flows.html'>tfc_flows</a></span><span class='op'>$</span><span class='va'>other</span> <span class='op'>&amp;</span> 
-                    <span class='va'>Ef.product</span> <span class='op'>==</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='biofuels_and_waste_products.html'>biofuels_and_waste_products</a></span><span class='op'>$</span><span class='va'>primary_solid_biofuels</span> <span class='op'>&amp;</span> 
-                    <span class='va'>Destination</span> <span class='op'>==</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='other_flows.html'>other_flows</a></span><span class='op'>$</span><span class='va'>residential</span><span class='op'>)</span><span class='op'>)</span>
+<span class='kw'>fu_table_GHA</span> <span class='op'>&lt;-</span> <span class='kw'>fu_table</span> <span class='op'>%&gt;%</span> 
+  <span class='kw'>dplyr</span>::<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>Country</span> <span class='op'>==</span> <span class='st'>"GHA"</span>) <span class='op'>%&gt;%</span> 
+  <span class='kw'>dplyr</span>::<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='op'>!</span>(<span class='kw'>Flow.aggregation.point</span> <span class='op'>==</span> <span class='kw'>IEATools</span>::<span class='kw'><a href='tfc_flows.html'>tfc_flows</a></span><span class='op'>$</span><span class='kw'>other</span> <span class='op'>&amp;</span> 
+                    <span class='kw'>Ef.product</span> <span class='op'>==</span> <span class='kw'>IEATools</span>::<span class='kw'><a href='biofuels_and_waste_products.html'>biofuels_and_waste_products</a></span><span class='op'>$</span><span class='kw'>primary_solid_biofuels</span> <span class='op'>&amp;</span> 
+                    <span class='kw'>Destination</span> <span class='op'>==</span> <span class='kw'>IEATools</span>::<span class='kw'><a href='other_flows.html'>other_flows</a></span><span class='op'>$</span><span class='kw'>residential</span>))
 <span class='co'># Make the exemplar, South Africa.</span>
-<span class='va'>fu_table_ZAF</span> <span class='op'>&lt;-</span> <span class='va'>fu_table</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Country</span> <span class='op'>==</span> <span class='st'>"ZAF"</span><span class='op'>)</span>
+<span class='kw'>fu_table_ZAF</span> <span class='op'>&lt;-</span> <span class='kw'>fu_table</span> <span class='op'>%&gt;%</span> 
+  <span class='kw'>dplyr</span>::<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>Country</span> <span class='op'>==</span> <span class='st'>"ZAF"</span>)
 <span class='co'># The South African data have Residential PSB consumption, </span>
 <span class='co'># which will be used to complete the Ghanaian FU Allocation table.</span>
-<span class='va'>fu_table_ZAF</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Flow.aggregation.point</span> <span class='op'>==</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tfc_flows.html'>tfc_flows</a></span><span class='op'>$</span><span class='va'>other</span> <span class='op'>&amp;</span> 
-                  <span class='va'>Ef.product</span> <span class='op'>==</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='biofuels_and_waste_products.html'>biofuels_and_waste_products</a></span><span class='op'>$</span><span class='va'>primary_solid_biofuels</span> <span class='op'>&amp;</span> 
-                  <span class='va'>Destination</span> <span class='op'>==</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='other_flows.html'>other_flows</a></span><span class='op'>$</span><span class='va'>residential</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>Method</span>, <span class='va'>Energy.type</span>, <span class='va'>Last.stage</span>, <span class='va'>Flow.aggregation.point</span><span class='op'>)</span><span class='op'>)</span>
+<span class='kw'>fu_table_ZAF</span> <span class='op'>%&gt;%</span> 
+  <span class='kw'>dplyr</span>::<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>Flow.aggregation.point</span> <span class='op'>==</span> <span class='kw'>IEATools</span>::<span class='kw'><a href='tfc_flows.html'>tfc_flows</a></span><span class='op'>$</span><span class='kw'>other</span> <span class='op'>&amp;</span> 
+                  <span class='kw'>Ef.product</span> <span class='op'>==</span> <span class='kw'>IEATools</span>::<span class='kw'><a href='biofuels_and_waste_products.html'>biofuels_and_waste_products</a></span><span class='op'>$</span><span class='kw'>primary_solid_biofuels</span> <span class='op'>&amp;</span> 
+                  <span class='kw'>Destination</span> <span class='op'>==</span> <span class='kw'>IEATools</span>::<span class='kw'><a href='other_flows.html'>other_flows</a></span><span class='op'>$</span><span class='kw'>residential</span>) <span class='op'>%&gt;%</span> 
+  <span class='kw'>dplyr</span>::<span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>Method</span>, <span class='kw'>Energy.type</span>, <span class='kw'>Last.stage</span>, <span class='kw'>Flow.aggregation.point</span>))
 </div><div class='output co'>#&gt;   Country Ledger.side Unit             Ef.product         Machine Eu.product
 #&gt; 1     ZAF Consumption ktoe Primary solid biofuels            &lt;NA&gt;       &lt;NA&gt;
 #&gt; 2     ZAF Consumption ktoe Primary solid biofuels            &lt;NA&gt;       &lt;NA&gt;
@@ -282,19 +282,19 @@ More than 1 country will throw an error.</p>
 #&gt; 3 Residential   C_1 [%]             NA    0.5000000    0.5000000
 #&gt; 4 Residential   C_2 [%]             NA    0.5000000    0.5000000
 #&gt; 5 Residential   C_3 [%]             NA           NA           NA</div><div class='input'><span class='co'># Get the IEA data for GHA and ZAF and specify it.</span>
-<span class='va'>tidy_specified_iea_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='specify_all.html'>specify_all</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='kw'>tidy_specified_iea_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='specify_all.html'>specify_all</a></span>()
 <span class='co'># Now complete the Ghanaian FU Allocation table using information from South Africa.</span>
-<span class='va'>completed</span> <span class='op'>&lt;-</span> <span class='fu'>complete_fu_allocation_table</span><span class='op'>(</span>fu_allocation_table <span class='op'>=</span> <span class='va'>fu_table_GHA</span>, 
-                                          country_to_complete <span class='op'>=</span> <span class='st'>"GHA"</span>,
-                                          exemplar_fu_allocation_tables <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>fu_table_ZAF</span><span class='op'>)</span>, 
-                                          tidy_specified_iea_data <span class='op'>=</span> <span class='va'>tidy_specified_iea_data</span><span class='op'>)</span>
+<span class='kw'>completed</span> <span class='op'>&lt;-</span> <span class='fu'>complete_fu_allocation_table</span>(fu_allocation_table = <span class='kw'>fu_table_GHA</span>, 
+                                          country_to_complete = <span class='st'>"GHA"</span>,
+                                          exemplar_fu_allocation_tables = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>fu_table_ZAF</span>), 
+                                          tidy_specified_iea_data = <span class='kw'>tidy_specified_iea_data</span>)
 <span class='co'># Note that the C_source column shows that these data have been taken from South Africa.</span>
-<span class='va'>completed</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Flow.aggregation.point</span> <span class='op'>==</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tfc_flows.html'>tfc_flows</a></span><span class='op'>$</span><span class='va'>other</span> <span class='op'>&amp;</span> 
-                  <span class='va'>Ef.product</span> <span class='op'>==</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='biofuels_and_waste_products.html'>biofuels_and_waste_products</a></span><span class='op'>$</span><span class='va'>primary_solid_biofuels</span> <span class='op'>&amp;</span> 
-                  <span class='va'>Destination</span> <span class='op'>==</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='other_flows.html'>other_flows</a></span><span class='op'>$</span><span class='va'>residential</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>Method</span>, <span class='va'>Energy.type</span>, <span class='va'>Last.stage</span>, <span class='va'>Flow.aggregation.point</span><span class='op'>)</span><span class='op'>)</span>
+<span class='kw'>completed</span> <span class='op'>%&gt;%</span> 
+  <span class='kw'>dplyr</span>::<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>Flow.aggregation.point</span> <span class='op'>==</span> <span class='kw'>IEATools</span>::<span class='kw'><a href='tfc_flows.html'>tfc_flows</a></span><span class='op'>$</span><span class='kw'>other</span> <span class='op'>&amp;</span> 
+                  <span class='kw'>Ef.product</span> <span class='op'>==</span> <span class='kw'>IEATools</span>::<span class='kw'><a href='biofuels_and_waste_products.html'>biofuels_and_waste_products</a></span><span class='op'>$</span><span class='kw'>primary_solid_biofuels</span> <span class='op'>&amp;</span> 
+                  <span class='kw'>Destination</span> <span class='op'>==</span> <span class='kw'>IEATools</span>::<span class='kw'><a href='other_flows.html'>other_flows</a></span><span class='op'>$</span><span class='kw'>residential</span>) <span class='op'>%&gt;%</span> 
+  <span class='kw'>dplyr</span>::<span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>Method</span>, <span class='kw'>Energy.type</span>, <span class='kw'>Last.stage</span>, <span class='kw'>Flow.aggregation.point</span>))
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 x 11</span><span>
 #&gt;   Country Ledger.side Unit  Ef.product Machine Eu.product Destination Quantity
 #&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   

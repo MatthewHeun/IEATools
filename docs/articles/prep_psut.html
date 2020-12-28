@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.44</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.45</span>
       </span>
     </div>
 
@@ -84,14 +84,13 @@
 
       
 
-      </header><script src="prep_psut_files/header-attrs-2.5/header-attrs.js"></script><link href="prep_psut_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="prep_psut_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Prepare for PSUT analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-12-08</h4>
+            <h4 class="date">2020-12-28</h4>
       
       
       <div class="hidden name"><code>prep_psut.Rmd</code></div>
@@ -109,10 +108,10 @@
 <h2 class="hasAnchor">
 <a href="#adding-psut-matrix-names-add_psut_matnames" class="anchor"></a>Adding PSUT matrix names (<code>add_psut_matnames()</code>)</h2>
 <p>The first step to converting the IEA extended energy balance data into PSUT matrices is identifying the matrix in which each datum belongs. The <code><a href="../reference/add_psut_matnames.html">add_psut_matnames()</a></code> function performs this task. It adds a column named “matnames” (by default but changeable by the user) that contains one of <code>R</code>, <code>U</code>, <code>V</code>, or <code>Y</code> to identify the Resources, Use, Make, or Final demand matrix.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/add_psut_matnames.html">add_psut_matnames</a></span>() <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>()
 <span class="co">#&gt; Rows: 402</span>
 <span class="co">#&gt; Columns: 12</span>
 <span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
@@ -126,17 +125,18 @@
 <span class="co">#&gt; $ Product                &lt;chr&gt; "Primary solid biofuels", "Hydro", "Crude oil"…</span>
 <span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span>
 <span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 2087.5131, 250.1290, 916.2081, 1.0700, 21.3051…</span>
-<span class="co">#&gt; $ matnames               &lt;chr&gt; "R", "R", "V", "V", "V", "V", "V", "Y", "Y", "…</span></code></pre></div>
+<span class="co">#&gt; $ matnames               &lt;chr&gt; "R", "R", "V", "V", "V", "V", "V", "Y", "Y", "…</span>
+</pre></div>
 </div>
 <div id="add-matrix-metadata-add_row_col_meta" class="section level2">
 <h2 class="hasAnchor">
 <a href="#add-matrix-metadata-add_row_col_meta" class="anchor"></a>Add matrix metadata (<code>add_row_col_meta()</code>)</h2>
 <p>The next step is to add information to identify the rows and columns for each datum. The <code><a href="../reference/add_row_col_meta.html">add_row_col_meta()</a></code> function performs this task by adding <code>rowname</code>, <code>colname</code>, <code>rowtype</code>, and <code>coltype</code> columns which identify the names and types of rows and columns in the PSUT matrices. <code><a href="../reference/add_row_col_meta.html">add_row_col_meta()</a></code> should be called after calling <code><a href="../reference/add_psut_matnames.html">add_psut_matnames()</a></code>, because it relies on the the <code>matnames</code> column to determine names and types.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/add_row_col_meta.html">add_row_col_meta</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/add_psut_matnames.html">add_psut_matnames</a></span>() <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_row_col_meta.html">add_row_col_meta</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>()
 <span class="co">#&gt; Rows: 402</span>
 <span class="co">#&gt; Columns: 16</span>
 <span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
@@ -154,21 +154,22 @@
 <span class="co">#&gt; $ rownames               &lt;chr&gt; "Production", "Production", "Imports", "Import…</span>
 <span class="co">#&gt; $ colnames               &lt;chr&gt; "Primary solid biofuels", "Hydro", "Crude oil"…</span>
 <span class="co">#&gt; $ rowtypes               &lt;chr&gt; "Industry", "Industry", "Industry", "Industry"…</span>
-<span class="co">#&gt; $ coltypes               &lt;chr&gt; "Product", "Product", "Product", "Product", "P…</span></code></pre></div>
+<span class="co">#&gt; $ coltypes               &lt;chr&gt; "Product", "Product", "Product", "Product", "P…</span>
+</pre></div>
 </div>
 <div id="collapse-to-matrices-collapse_to_tidy_psut" class="section level2">
 <h2 class="hasAnchor">
 <a href="#collapse-to-matrices-collapse_to_tidy_psut" class="anchor"></a>Collapse to matrices (<code>collapse_to_tidy_psut()</code>)</h2>
 <p>After identifying row and column names and types, the next step is to collapse the data into PSUT matrices. The <code><a href="../reference/collapse_to_tidy_psut.html">collapse_to_tidy_psut()</a></code> function performs this task using the <code><a href="https://rdrr.io/pkg/matsindf/man/collapse_to_matrices.html">matsindf::collapse_to_matrices()</a></code> function internally. The <code>matvals</code> column is added to the data frame and contain matrix names for each row of the data frame. <code><a href="../reference/collapse_to_tidy_psut.html">collapse_to_tidy_psut()</a></code> ensures that all entries in each matrix are non-negative.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Tidy_PSUT</span> <span class="op">&lt;-</span> 
-<span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/add_row_col_meta.html">add_row_col_meta</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/collapse_to_tidy_psut.html">collapse_to_tidy_psut</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">Tidy_PSUT</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="kw">Tidy_PSUT</span> <span class="op">&lt;-</span> 
+<span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/add_psut_matnames.html">add_psut_matnames</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/add_row_col_meta.html">add_row_col_meta</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/collapse_to_tidy_psut.html">collapse_to_tidy_psut</a></span>()
+<span class="kw">Tidy_PSUT</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>()
 <span class="co">#&gt; Rows: 20</span>
 <span class="co">#&gt; Columns: 7</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "…</span>
@@ -178,27 +179,28 @@
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 2000, 2000, 2000, 2000, 200…</span>
 <span class="co">#&gt; $ matnames    &lt;chr&gt; "R", "U_EIOU", "U_feed", "V", "Y", "R", "U_EIOU", "U_feed…</span>
 <span class="co">#&gt; $ matvals     &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[4 x 3]&gt;, &lt;mat…</span>
-<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">Tidy_PSUT</span><span class="op">$</span><span class="va">matvals</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
-<span class="co">#&gt; [1] "matrix" "array"</span>
-<span class="va">Tidy_PSUT</span><span class="op">$</span><span class="va">matvals</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
+<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span>(<span class="kw">Tidy_PSUT</span><span class="op">$</span><span class="kw">matvals</span>[[<span class="fl">1</span>]])
+<span class="co">#&gt; [1] "matrix"</span>
+<span class="kw">Tidy_PSUT</span><span class="op">$</span><span class="kw">matvals</span>[[<span class="fl">1</span>]]
 <span class="co">#&gt;                                           Hydro Primary solid biofuels</span>
 <span class="co">#&gt; Resources [from Hydro]                  250.129                  0.000</span>
 <span class="co">#&gt; Resources [from Primary solid biofuels]   0.000               2087.513</span>
 <span class="co">#&gt; attr(,"rowtype")</span>
 <span class="co">#&gt; [1] "Industry"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "Product"</span></code></pre></div>
+<span class="co">#&gt; [1] "Product"</span>
+</pre></div>
 </div>
 <div id="generate-s_units-matrices-extract_s_units_from_tidy" class="section level2">
 <h2 class="hasAnchor">
 <a href="#generate-s_units-matrices-extract_s_units_from_tidy" class="anchor"></a>Generate <code>S_units</code> matrices (<code>extract_S_units_from_tidy()</code>)</h2>
 <p>A matrix of Products and Units can be obtained from a tidy IEA data frame with the <code><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy()</a></code> function.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">S_units_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">S_units_df</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="kw">S_units_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy</a></span>()
+<span class="kw">S_units_df</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>()
 <span class="co">#&gt; Rows: 4</span>
 <span class="co">#&gt; Columns: 6</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF"</span>
@@ -207,7 +209,7 @@
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
 <span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[22 x 1]&gt;, &lt;…</span>
-<span class="va">S_units_df</span><span class="op">$</span><span class="va">S_units</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
+<span class="kw">S_units_df</span><span class="op">$</span><span class="kw">S_units</span>[[<span class="fl">1</span>]]
 <span class="co">#&gt;                                       ktoe</span>
 <span class="co">#&gt; Aviation gasoline                        1</span>
 <span class="co">#&gt; Charcoal                                 1</span>
@@ -226,7 +228,8 @@
 <span class="co">#&gt; attr(,"rowtype")</span>
 <span class="co">#&gt; [1] "Product"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "Unit"</span></code></pre></div>
+<span class="co">#&gt; [1] "Unit"</span>
+</pre></div>
 </div>
 <div id="putting-it-all-together-prep_psut" class="section level2">
 <h2 class="hasAnchor">
@@ -234,37 +237,37 @@
 <p><code><a href="../reference/prep_psut.html">prep_psut()</a></code> is a convenience function. It converts a tidy IEA data frame that has gone through <code><a href="../reference/specify_all.html">specify_all()</a></code> into a PSUT data frame by collapsing the IEA data into PSUT matrices (R, U, V, and Y).</p>
 <p>This function bundles several others: 1. <code><a href="../reference/add_psut_matnames.html">add_psut_matnames()</a></code> 2. <code><a href="../reference/add_row_col_meta.html">add_row_col_meta()</a></code> 3. <code><a href="../reference/collapse_to_tidy_psut.html">collapse_to_tidy_psut()</a></code></p>
 <p>Furthermore, it extracts <code>S_units</code> matrices using <code><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy()</a></code> and adds those matrices to the data frame.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Simple</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/prep_psut.html">prep_psut</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">R</span>, <span class="va">U_EIOU</span>, <span class="va">U_feed</span>, <span class="va">V</span>, <span class="va">Y</span>, <span class="va">S_units</span><span class="op">)</span>, names_to <span class="op">=</span> <span class="st">"matnames"</span>, values_to <span class="op">=</span> <span class="st">"matvals"</span><span class="op">)</span>
-<span class="va">S_units</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">Complicated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/add_row_col_meta.html">add_row_col_meta</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/collapse_to_tidy_psut.html">collapse_to_tidy_psut</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/spread.html">spread</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">matnames</span>, value <span class="op">=</span> <span class="va">matvals</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span><span class="va">S_units</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Method"</span>, <span class="st">"Energy.type"</span>, <span class="st">"Last.stage"</span>, 
-                            <span class="st">"Country"</span>, <span class="st">"Year"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/gather.html">gather</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">matnames</span>, value <span class="op">=</span> <span class="va">matvals</span>, <span class="va">R</span>, <span class="va">U_EIOU</span>, <span class="va">U_feed</span>, 
-         <span class="va">V</span>, <span class="va">Y</span>, <span class="va">S_units</span><span class="op">)</span>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="kw">Simple</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/prep_psut.html">prep_psut</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span>(cols = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">R</span>, <span class="kw">U_EIOU</span>, <span class="kw">U_feed</span>, <span class="kw">V</span>, <span class="kw">Y</span>, <span class="kw">S_units</span>), names_to = <span class="st">"matnames"</span>, values_to = <span class="st">"matvals"</span>)
+<span class="kw">S_units</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy</a></span>()
+<span class="kw">Complicated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/add_psut_matnames.html">add_psut_matnames</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/add_row_col_meta.html">add_row_col_meta</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/collapse_to_tidy_psut.html">collapse_to_tidy_psut</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/spread.html">spread</a></span>(key = <span class="kw">matnames</span>, value = <span class="kw">matvals</span>) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span>(<span class="kw">S_units</span>, by = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Method"</span>, <span class="st">"Energy.type"</span>, <span class="st">"Last.stage"</span>, 
+                            <span class="st">"Country"</span>, <span class="st">"Year"</span>)) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/gather.html">gather</a></span>(key = <span class="kw">matnames</span>, value = <span class="kw">matvals</span>, <span class="kw">R</span>, <span class="kw">U_EIOU</span>, <span class="kw">U_feed</span>, 
+         <span class="kw">V</span>, <span class="kw">Y</span>, <span class="kw">S_units</span>)
 <span class="co"># Simple and Complicated are same.</span>
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span><span class="va">Simple</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>matval_simple <span class="op">=</span> <span class="va">matvals</span><span class="op">)</span>, 
-          <span class="va">Complicated</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>matval_complicated <span class="op">=</span> <span class="va">matvals</span><span class="op">)</span>, 
-          by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Method"</span>, <span class="st">"Energy.type"</span>, <span class="st">"Last.stage"</span>, <span class="st">"Country"</span>, <span class="st">"Year"</span>, <span class="st">"matnames"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>
-    same <span class="op">=</span> <span class="fu">matsbyname</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/equal_byname.html">equal_byname</a></span><span class="op">(</span><span class="va">matval_simple</span>, <span class="va">matval_complicated</span><span class="op">)</span>
-  <span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">magrittr</span><span class="fu">::</span><span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span><span class="op">(</span><span class="st">"same"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/logical.html">as.logical</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span>(<span class="kw">Simple</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(matval_simple = <span class="kw">matvals</span>), 
+          <span class="kw">Complicated</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(matval_complicated = <span class="kw">matvals</span>), 
+          by = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Method"</span>, <span class="st">"Energy.type"</span>, <span class="st">"Last.stage"</span>, <span class="st">"Country"</span>, <span class="st">"Year"</span>, <span class="st">"matnames"</span>)) <span class="op">%&gt;%</span> 
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(
+    same = <span class="kw">matsbyname</span>::<span class="fu"><a href="https://rdrr.io/pkg/matsbyname/man/equal_byname.html">equal_byname</a></span>(<span class="kw">matval_simple</span>, <span class="kw">matval_complicated</span>)
+  ) <span class="op">%&gt;%</span> 
+  <span class="kw">magrittr</span>::<span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html">extract2</a></span>(<span class="st">"same"</span>) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/logical.html">as.logical</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span>()
 <span class="co">#&gt; [1] TRUE</span>
-<span class="va">Simple</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+<span class="kw">Simple</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>()
 <span class="co">#&gt; Rows: 24</span>
 <span class="co">#&gt; Columns: 9</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "…</span>
@@ -277,7 +280,7 @@
 <span class="co">#&gt; $ matnames    &lt;chr&gt; "R", "U_EIOU", "U_feed", "V", "Y", "S_units", "R", "U_EIO…</span>
 <span class="co">#&gt; $ matvals     &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[4 x 3]&gt;, &lt;mat…</span>
 <span class="co"># U_EIOU for Ghana in 1971</span>
-<span class="va">Simple</span><span class="op">$</span><span class="va">matvals</span><span class="op">[[</span><span class="fl">5</span><span class="op">]</span><span class="op">]</span>
+<span class="kw">Simple</span><span class="op">$</span><span class="kw">matvals</span>[[<span class="fl">5</span>]]
 <span class="co">#&gt;                                       Agriculture/forestry</span>
 <span class="co">#&gt; Aviation gasoline                                   0.0000</span>
 <span class="co">#&gt; Charcoal                                            0.0000</span>
@@ -502,18 +505,19 @@
 <span class="co">#&gt; attr(,"rowtype")</span>
 <span class="co">#&gt; [1] "Product"</span>
 <span class="co">#&gt; attr(,"coltype")</span>
-<span class="co">#&gt; [1] "Industry"</span></code></pre></div>
+<span class="co">#&gt; [1] "Industry"</span>
+</pre></div>
 </div>
 <div id="conclusion" class="section level2">
 <h2 class="hasAnchor">
 <a href="#conclusion" class="anchor"></a>Conclusion</h2>
 <p>Taken together, the functions in this package make it possible to prepare IEA extended energy balance data for use with PSUT analysis techniques. A sequence of three function calls is all that is required.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">wide_PSUT_mats</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/prep_psut.html">prep_psut</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">wide_PSUT_mats</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="kw">wide_PSUT_mats</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/prep_psut.html">prep_psut</a></span>()
+<span class="kw">wide_PSUT_mats</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>()
 <span class="co">#&gt; Rows: 4</span>
 <span class="co">#&gt; Columns: 13</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF"</span>
@@ -528,7 +532,8 @@
 <span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[6 x 3]&gt;, &lt;matrix[5 x 3]&gt;, &lt;matrix[9 x 10]&gt;, &lt;ma…</span>
 <span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[10 x 12]&gt;, &lt;matrix[14 x 14]&gt;, &lt;matrix[13 x 19]&gt;…</span>
 <span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[12 x 21]&gt;, &lt;matrix[13 x 20]&gt;, &lt;matrix[18 x 26]&gt;…</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[22 x 1]&gt;, &lt;…</span></code></pre></div>
+<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[22 x 1]&gt;, &lt;…</span>
+</pre></div>
 </div>
   </div>
 

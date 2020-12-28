@@ -79,7 +79,7 @@ where T_0 and T are expected to be in kelvin units." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.44</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.45</span>
       </span>
     </div>
 
@@ -153,7 +153,7 @@ by applying the Carnot efficiency equation: <code><a href='https://rdrr.io/r/bas
 where T_0 and T are expected to be in kelvin units.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>carnot_efficiency</span><span class='op'>(</span><span class='va'>heat_types</span>, T_0 <span class='op'>=</span> <span class='fl'>298.15</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>carnot_efficiency</span>(<span class='kw'>heat_types</span>, T_0 = <span class='fl'>298.15</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -182,8 +182,8 @@ same length as <code>heat_types</code>.</p>
     <div class='dont-index'><p><code><a href='extract_TK.html'>extract_TK()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>carnot_efficiency</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"HTH.600.C"</span>, <span class='st'>"MTH.200.C"</span>, <span class='st'>"MTH.100.C"</span>, <span class='st'>"LTH.20.C"</span>, <span class='st'>"LTH.-10.C"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.65853519 0.36986157 0.20099156 0.01677008 0.11739058</div><div class='input'><span class='fu'>carnot_efficiency</span><span class='op'>(</span><span class='st'>"LTH.-30.F"</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'>carnot_efficiency</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"HTH.600.C"</span>, <span class='st'>"MTH.200.C"</span>, <span class='st'>"MTH.100.C"</span>, <span class='st'>"LTH.20.C"</span>, <span class='st'>"LTH.-10.C"</span>))
+</div><div class='output co'>#&gt; [1] 0.65853519 0.36986157 0.20099156 0.01677008 0.11739058</div><div class='input'><span class='fu'>carnot_efficiency</span>(<span class='st'>"LTH.-30.F"</span>)
 </div><div class='output co'>#&gt; [1] 0.1993776</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
