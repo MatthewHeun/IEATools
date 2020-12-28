@@ -75,7 +75,7 @@ where product is the name of the energy carrier for this resource." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.44</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.45</span>
       </span>
     </div>
 
@@ -145,14 +145,14 @@ to "<code>Resources [of Product]</code>",
 where <code>product</code> is the name of the energy carrier for this resource.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>specify_production_to_resources</span><span class='op'>(</span>
-  <span class='va'>.tidy_iea_df</span>,
-  flow <span class='op'>=</span> <span class='st'>"Flow"</span>,
-  product <span class='op'>=</span> <span class='st'>"Product"</span>,
-  production <span class='op'>=</span> <span class='st'>"Production"</span>,
-  resources <span class='op'>=</span> <span class='st'>"Resources"</span>,
-  notation <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='from_notation.html'>from_notation</a></span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>specify_production_to_resources</span>(
+  <span class='kw'>.tidy_iea_df</span>,
+  flow = <span class='st'>"Flow"</span>,
+  product = <span class='st'>"Product"</span>,
+  production = <span class='st'>"Production"</span>,
+  resources = <span class='st'>"Resources"</span>,
+  notation = <span class='kw'>IEATools</span>::<span class='kw'><a href='from_notation.html'>from_notation</a></span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -196,9 +196,9 @@ If this function is called first,
 EIOU will not be accounted correctly.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='specify_primary_production.html'>specify_primary_production</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>specify_production_to_resources</span><span class='op'>(</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='specify_primary_production.html'>specify_primary_production</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'>specify_production_to_resources</span>()
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 414 x 11</span><span>
 #&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.44</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.45</span>
       </span>
     </div>
 
@@ -84,14 +84,13 @@
 
       
 
-      </header><script src="final_to_useful_files/header-attrs-2.5/header-attrs.js"></script><link href="final_to_useful_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="final_to_useful_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Final to Useful Analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-12-08</h4>
+            <h4 class="date">2020-12-28</h4>
       
       
       <div class="hidden name"><code>final_to_useful.Rmd</code></div>
@@ -101,6 +100,7 @@
     
     
 <!-- Establish some helpful LaTeX shortcuts for equations -->
+
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
@@ -117,12 +117,12 @@
 <h2 class="hasAnchor">
 <a href="#allocation" class="anchor"></a>Allocation</h2>
 <p>Extending the IEA’s extended energy balance data to the useful stage begins with defining allocations of final energy carriers to final-to-useful energy conversion machines. To demonstrate this process, we’ll use the sample IEA data bundled with this package.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">IEATools</span><span class="op">)</span>
-<span class="va">Tidy_iea_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://dplyr.tidyverse.org">dplyr</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">IEATools</span>)
+<span class="kw">Tidy_iea_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>()
 <span class="co">#&gt; Rows: 413</span>
 <span class="co">#&gt; Columns: 11</span>
 <span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
@@ -135,14 +135,15 @@
 <span class="co">#&gt; $ Flow                   &lt;chr&gt; "Industry not elsewhere specified", "Industry …</span>
 <span class="co">#&gt; $ Product                &lt;chr&gt; "Electricity", "Fuel oil", "Gas/diesel oil exc…</span>
 <span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span>
-<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 21.9261, 88.3348, 39.2997, 145.6960, 16.6810, …</span></code></pre></div>
+<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 21.9261, 88.3348, 39.2997, 145.6960, 16.6810, …</span>
+</pre></div>
 <p>The next step is to develop a blank template in which the analyst can provide final-to-useful allocation values (<code>C</code>) in percentages. <code><a href="../reference/fu_allocation_template.html">fu_allocation_template()</a></code> builds a final-to-useful allocation template.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">FU_allocation_template</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/fu_allocation_template.html">fu_allocation_template</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">FU_allocation_template</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="kw">FU_allocation_template</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/fu_allocation_template.html">fu_allocation_template</a></span>()
+<span class="kw">FU_allocation_template</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>()
 <span class="co">#&gt; Rows: 900</span>
 <span class="co">#&gt; Columns: 15</span>
 <span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
@@ -159,11 +160,13 @@
 <span class="co">#&gt; $ Quantity               &lt;chr&gt; "E.dot", "E.dot [%]", "C_1 [%]", "C_2 [%]", "C…</span>
 <span class="co">#&gt; $ Maximum.values         &lt;dbl&gt; 2.642350e+01, 8.867781e-01, NA, NA, NA, NA, 3.…</span>
 <span class="co">#&gt; $ `1971`                 &lt;dbl&gt; 1.953040e+01, 8.867781e-01, NA, NA, NA, NA, 2.…</span>
-<span class="co">#&gt; $ `2000`                 &lt;dbl&gt; 26.4235000, 0.8747534, NA, NA, NA, NA, 3.78330…</span></code></pre></div>
+<span class="co">#&gt; $ `2000`                 &lt;dbl&gt; 26.4235000, 0.8747534, NA, NA, NA, NA, 3.78330…</span>
+</pre></div>
 <p>To obtain a nicely-formatted Excel spreadsheet, use the <code><a href="../reference/write_fu_allocation_template.html">write_fu_allocation_template()</a></code> function.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># FU_allocation_template %&gt;%</span>
-<span class="co">#   write_fu_allocation_template("~/Desktop/Test_FU_allocation_template.xlsx")</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+<span class="co"># FU_allocation_template %&gt;%</span>
+<span class="co">#   write_fu_allocation_template("~/Desktop/Test_FU_allocation_template.xlsx")</span>
+</pre></div>
 <p>The analyst should complete all of the unshaded cells in the <code>Machine</code> and <code>Eu.product</code> columns. <code>Machine</code> should contain names of final-to-useful machines such as “Automobiles,” “Industrial heat/furnace,” etc. <code>Eu.product</code> should be filled with names of useful energy carriers such as “HTH.600.C”, “MD”, or “Light”. Note that later processing will parse the heat categories for their temperature, and the required format is <code>*TH.nnn.U</code>, where</p>
 <ul>
 <li>
@@ -185,11 +188,11 @@
 <h2 class="hasAnchor">
 <a href="#final-to-useful-efficiencies-and-useful-exergy-to-energy-ratios" class="anchor"></a>Final-to-useful efficiencies and useful exergy-to-energy ratios</h2>
 <p>After completing the final-to-useful allocation table, the analyst must specify the efficiencies of the final-to-useful machines. To assist with this task, the <code><a href="../reference/eta_fu_template.html">eta_fu_template()</a></code> function can be invoked. To demonstrate, we’ll use <code><a href="../reference/load_fu_allocation_data.html">load_fu_allocation_data()</a></code>, a function that reads a completed allocation table out of an excel file. The default <code>path</code> argument of <code><a href="../reference/load_fu_allocation_data.html">load_fu_allocation_data()</a></code> points to a completed final-to-useful allocation table that is provided with <code>IEATools</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Eta_fu_template</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_fu_allocation_data.html">load_fu_allocation_data</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/eta_fu_template.html">eta_fu_template</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">Eta_fu_template</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="kw">Eta_fu_template</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_fu_allocation_data.html">load_fu_allocation_data</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/eta_fu_template.html">eta_fu_template</a></span>()
+<span class="kw">Eta_fu_template</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>()
 <span class="co">#&gt; Rows: 304</span>
 <span class="co">#&gt; Columns: 11</span>
 <span class="co">#&gt; $ Country        &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"…</span>
@@ -202,11 +205,13 @@
 <span class="co">#&gt; $ Quantity       &lt;chr&gt; "E.dot_machine", "E.dot_machine [%]", "eta.fu", "phi.u…</span>
 <span class="co">#&gt; $ Maximum.values &lt;dbl&gt; 6.192510e+02, 1.141842e-01, NA, NA, 1.877078e+02, 3.46…</span>
 <span class="co">#&gt; $ `1971`         &lt;dbl&gt; 2.172315e+02, 8.333158e-02, NA, 1.000000e+00, 5.946665…</span>
-<span class="co">#&gt; $ `2000`         &lt;dbl&gt; 6.192510e+02, 1.141842e-01, NA, 1.000000e+00, 1.877078…</span></code></pre></div>
+<span class="co">#&gt; $ `2000`         &lt;dbl&gt; 6.192510e+02, 1.141842e-01, NA, 1.000000e+00, 1.877078…</span>
+</pre></div>
 <p>To obtain a nicely-formatted Excel spreadsheet, use the <code><a href="../reference/write_fu_allocation_template.html">write_fu_allocation_template()</a></code> function.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Eta_fu_template %&gt;%</span>
-<span class="co">#   write_eta_fu_template("~/Desktop/Test_eta_fu_template.xlsx")</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+<span class="co"># Eta_fu_template %&gt;%</span>
+<span class="co">#   write_eta_fu_template("~/Desktop/Test_eta_fu_template.xlsx")</span>
+</pre></div>
 <p>The analyst should fill all unshaded cells in <code>eta.fu</code> rows with final-to-useful energy efficiency values (in %). <code>phi.u</code> rows should be completed with exergy-to-energy ratios for the useful stage energy carrier. Note that many <code>phi.u</code> values are already filled for cases where the phi value is known or easily calculable, specifically mechanical drive (phi = 1) and heat (phi = 1 - T_0/T_H, where T_H is the heat temperature embedded in the <code>*TH.nnn.U</code> useful exergy string).</p>
 <p>The <code>Maximum.values</code> column provides an indication of which <code>Destination</code>s receive more energy than others, allowing the analyst to focus more attention on larger energy flows, as desired. The <code>E.dot_machine</code> and <code>E.dot_machine [%]</code> rows indicate energy flows and percentages into each final-to-useful machine in each year.</p>
 <p>After allocations and efficiencies are specified (by completing the templates), functions can be used to move the last stage of an energy conversion chain from final energy to useful energy.</p>
@@ -215,10 +220,10 @@
 <h2 class="hasAnchor">
 <a href="#allocation-c-matrices" class="anchor"></a>Allocation (C) matrices</h2>
 <p>Next, the <code>C</code> values from the allocation table must be arranged into <span class="math inline">\(\mathbf{C}\)</span> matrices using the <code><a href="../reference/form_C_mats.html">form_C_mats()</a></code> function.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">C_mats</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_fu_allocation_data.html">load_fu_allocation_data</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/form_C_mats.html">form_C_mats</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">C_mats</span><span class="op">)</span>
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="kw">C_mats</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_fu_allocation_data.html">load_fu_allocation_data</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/form_C_mats.html">form_C_mats</a></span>()
+<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(<span class="kw">C_mats</span>)
 <span class="co">#&gt; Rows: 4</span>
 <span class="co">#&gt; Columns: 7</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF"</span>
@@ -227,17 +232,18 @@
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
 <span class="co">#&gt; $ C_EIOU      &lt;list&gt; [&lt;matrix[2 x 3]&gt;, &lt;matrix[2 x 3]&gt;, &lt;matrix[3 x 3]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ C_Y         &lt;list&gt; [&lt;matrix[23 x 21]&gt;, &lt;matrix[24 x 22]&gt;, &lt;matrix[45 x 31]&gt;…</span></code></pre></div>
+<span class="co">#&gt; $ C_Y         &lt;list&gt; [&lt;matrix[23 x 21]&gt;, &lt;matrix[24 x 22]&gt;, &lt;matrix[45 x 31]&gt;…</span>
+</pre></div>
 <p>Note that two types of <span class="math inline">\(\mathbf{C}\)</span> matrices are formed, <span class="math inline">\(\mathbf{C}_{EIOU}\)</span> and <span class="math inline">\(\mathbf{C}_Y\)</span>. Both are needed later.</p>
 </div>
 <div id="efficiency-and-exergy-to-energy-ratio-vectors" class="section level2">
 <h2 class="hasAnchor">
 <a href="#efficiency-and-exergy-to-energy-ratio-vectors" class="anchor"></a>Efficiency and exergy-to-energy ratio vectors</h2>
 <p>Next, vectors containing final-to-useful energy efficiencies (<span class="math inline">\(\mathbf{\eta}_{fu}\)</span>) and exergy-to-energy ratios (<span class="math inline">\(\mathbf{\phi}\)</span>) must be formed using the <code><a href="../reference/form_eta_fu_phi_u_vecs.html">form_eta_fu_phi_u_vecs()</a></code> function.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">eta_fu_vecs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_eta_fu_data.html">load_eta_fu_data</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/form_eta_fu_phi_u_vecs.html">form_eta_fu_phi_u_vecs</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">eta_fu_vecs</span><span class="op">)</span>
+<div class="sourceCode" id="cb7"><pre class="downlit">
+<span class="kw">eta_fu_vecs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_eta_fu_data.html">load_eta_fu_data</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/form_eta_fu_phi_u_vecs.html">form_eta_fu_phi_u_vecs</a></span>()
+<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(<span class="kw">eta_fu_vecs</span>)
 <span class="co">#&gt; Rows: 4</span>
 <span class="co">#&gt; Columns: 7</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF"</span>
@@ -246,27 +252,28 @@
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
 <span class="co">#&gt; $ eta.fu      &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[33 x 1]&gt;, &lt;…</span>
-<span class="co">#&gt; $ phi.u       &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[32 x 1]&gt;, &lt;…</span></code></pre></div>
+<span class="co">#&gt; $ phi.u       &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[32 x 1]&gt;, &lt;…</span>
+</pre></div>
 </div>
 <div id="extend-to-useful" class="section level2">
 <h2 class="hasAnchor">
 <a href="#extend-to-useful" class="anchor"></a>Extend to useful</h2>
 <p>To extend an energy conversion chain (ECC) to the useful stage, first convert the IEA data into physical supply-use table format with final energy being the last stage of the energy conversion chain. Thereafter, join the <span class="math inline">\(\mathbf{C}\)</span> matrices and <span class="math inline">\(\mathbf{\eta_{fu}}\)</span> vectors to the data frame of PSUT matrices.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Get a list of the metadata columns.</span>
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="co"># Get a list of the metadata columns.</span>
 <span class="co"># This list will be the same for C_mats.</span>
-<span class="va">m_cols</span> <span class="op">&lt;-</span> <span class="va">eta_fu_vecs</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/meta_cols.html">meta_cols</a></span><span class="op">(</span>return_names <span class="op">=</span> <span class="cn">TRUE</span>,
-            years_to_keep <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="../reference/iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">year</span>,
-            not_meta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="../reference/template_cols.html">template_cols</a></span><span class="op">$</span><span class="va">eta_fu</span>, <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="../reference/template_cols.html">template_cols</a></span><span class="op">$</span><span class="va">phi_u</span><span class="op">)</span><span class="op">)</span>
-<span class="va">m_cols</span>
+<span class="kw">m_cols</span> <span class="op">&lt;-</span> <span class="kw">eta_fu_vecs</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/meta_cols.html">meta_cols</a></span>(return_names = <span class="fl">TRUE</span>,
+            years_to_keep = <span class="kw">IEATools</span>::<span class="kw"><a href="../reference/iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="kw">year</span>,
+            not_meta = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">IEATools</span>::<span class="kw"><a href="../reference/template_cols.html">template_cols</a></span><span class="op">$</span><span class="kw">eta_fu</span>, <span class="kw">IEATools</span>::<span class="kw"><a href="../reference/template_cols.html">template_cols</a></span><span class="op">$</span><span class="kw">phi_u</span>))
+<span class="kw">m_cols</span>
 <span class="co">#&gt; [1] "Country"     "Method"      "Energy.type" "Last.stage"  "Year"</span>
-<span class="va">psut_mats_final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/prep_psut.html">prep_psut</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span><span class="va">C_mats</span>, by <span class="op">=</span> <span class="va">m_cols</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span><span class="va">eta_fu_vecs</span>, by <span class="op">=</span> <span class="va">m_cols</span><span class="op">)</span>
-<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">psut_mats_final</span><span class="op">)</span>
+<span class="kw">psut_mats_final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/prep_psut.html">prep_psut</a></span>() <span class="op">%&gt;%</span> 
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span>(<span class="kw">C_mats</span>, by = <span class="kw">m_cols</span>) <span class="op">%&gt;%</span> 
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span>(<span class="kw">eta_fu_vecs</span>, by = <span class="kw">m_cols</span>)
+<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(<span class="kw">psut_mats_final</span>)
 <span class="co">#&gt; Rows: 4</span>
 <span class="co">#&gt; Columns: 17</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF"</span>
@@ -285,12 +292,13 @@
 <span class="co">#&gt; $ C_EIOU      &lt;list&gt; [&lt;matrix[2 x 3]&gt;, &lt;matrix[2 x 3]&gt;, &lt;matrix[3 x 3]&gt;, &lt;mat…</span>
 <span class="co">#&gt; $ C_Y         &lt;list&gt; [&lt;matrix[23 x 21]&gt;, &lt;matrix[24 x 22]&gt;, &lt;matrix[45 x 31]&gt;…</span>
 <span class="co">#&gt; $ eta.fu      &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[33 x 1]&gt;, &lt;…</span>
-<span class="co">#&gt; $ phi.u       &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[32 x 1]&gt;, &lt;…</span></code></pre></div>
+<span class="co">#&gt; $ phi.u       &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[32 x 1]&gt;, &lt;…</span>
+</pre></div>
 <p>Then use the allocation and efficiency matrices to extend to the useful stage with the <code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code> function.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">psut_mats_useful</span> <span class="op">&lt;-</span> <span class="va">psut_mats_final</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/extend_to_useful.html">extend_to_useful</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">psut_mats_useful</span><span class="op">)</span>
+<div class="sourceCode" id="cb9"><pre class="downlit">
+<span class="kw">psut_mats_useful</span> <span class="op">&lt;-</span> <span class="kw">psut_mats_final</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/extend_to_useful.html">extend_to_useful</a></span>()
+<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(<span class="kw">psut_mats_useful</span>)
 <span class="co">#&gt; Rows: 8</span>
 <span class="co">#&gt; Columns: 13</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF", "GHA", "GHA", "ZAF", "ZAF"</span>
@@ -305,11 +313,12 @@
 <span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[6 x 3]&gt;, &lt;matrix[5 x 3]&gt;, &lt;matrix[9 x 10]&gt;, &lt;ma…</span>
 <span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[10 x 12]&gt;, &lt;matrix[14 x 14]&gt;, &lt;matrix[13 x 19]&gt;…</span>
 <span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[12 x 21]&gt;, &lt;matrix[13 x 20]&gt;, &lt;matrix[18 x 26]&gt;…</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[22 x 1]&gt;, &lt;…</span></code></pre></div>
+<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[22 x 1]&gt;, &lt;…</span>
+</pre></div>
 <p>Notice that several additional rows have been created in the data frame. The additional rows contain versions of ECC matrices wherein the last stage of the ECC is useful energy. Extending to the useful stage means many additional energy products are included in the energy conversion chain. For example, the <span class="math inline">\(\mathbf{Y}\)</span> matrix includes additional rows for mechanical drive (MD), heat (MTH.100.C, e.g.), and light.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># A Y matrix where final energy is the last stage of the energy conversion chain</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">psut_mats_useful</span><span class="op">$</span><span class="va">Y</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+<div class="sourceCode" id="cb10"><pre class="downlit">
+<span class="co"># A Y matrix where final energy is the last stage of the energy conversion chain</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span>(<span class="kw">psut_mats_useful</span><span class="op">$</span><span class="kw">Y</span>[[<span class="fl">1</span>]])
 <span class="co">#&gt;  [1] "Aviation gasoline"                    </span>
 <span class="co">#&gt;  [2] "Charcoal"                             </span>
 <span class="co">#&gt;  [3] "Crude oil [of Oil and gas extraction]"</span>
@@ -324,7 +333,7 @@
 <span class="co">#&gt; [12] "Primary solid biofuels"</span>
 
 <span class="co"># A Y matrix where useful energy is the last stage of the energy conversion chain</span>
-<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">psut_mats_useful</span><span class="op">$</span><span class="va">Y</span><span class="op">[[</span><span class="fl">5</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span>(<span class="kw">psut_mats_useful</span><span class="op">$</span><span class="kw">Y</span>[[<span class="fl">5</span>]])
 <span class="co">#&gt;  [1] "Aviation gasoline"                    </span>
 <span class="co">#&gt;  [2] "Charcoal"                             </span>
 <span class="co">#&gt;  [3] "Crude oil [of Oil and gas extraction]"</span>
@@ -357,7 +366,8 @@
 <span class="co">#&gt; [30] "MTH.200.C [from Irons]"               </span>
 <span class="co">#&gt; [31] "MTH.200.C [from Wood stoves]"         </span>
 <span class="co">#&gt; [32] "Other kerosene"                       </span>
-<span class="co">#&gt; [33] "Primary solid biofuels"</span></code></pre></div>
+<span class="co">#&gt; [33] "Primary solid biofuels"</span>
+</pre></div>
 <!-- It would be nice to calculate the energy balance of all rows of the data frame here,
      showing that extending to the useful stage does not affect the energy balance of the ECC
      when done correctly.  

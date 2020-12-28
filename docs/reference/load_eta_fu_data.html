@@ -74,7 +74,7 @@ The Excel file at path contains those allocations." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.44</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.45</span>
       </span>
     </div>
 
@@ -143,10 +143,10 @@ efficiencies of final-to-useful energy conversion machines are defined by the an
 The Excel file at <code>path</code> contains those allocations.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>load_eta_fu_data</span><span class='op'>(</span>
-  path <span class='op'>=</span> <span class='fu'><a href='sample_eta_fu_table_path.html'>sample_eta_fu_table_path</a></span><span class='op'>(</span><span class='op'>)</span>,
-  eta_fu_tab_name <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='fu_analysis_file_info.html'>fu_analysis_file_info</a></span><span class='op'>$</span><span class='va'>eta_fu_tab_name</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>load_eta_fu_data</span>(
+  path = <span class='fu'><a href='sample_eta_fu_table_path.html'>sample_eta_fu_table_path</a></span>(),
+  eta_fu_tab_name = <span class='kw'>IEATools</span>::<span class='kw'><a href='fu_analysis_file_info.html'>fu_analysis_file_info</a></span><span class='op'>$</span><span class='kw'>eta_fu_tab_name</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -171,7 +171,7 @@ generated using <code><a href='eta_fu_template.html'>eta_fu_template()</a></code
 <p>A filled example can be loaded with the default value of <code>path</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>load_eta_fu_data</span><span class='op'>(</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'>load_eta_fu_data</span>()
 </div><div class='output co'>#&gt;     Country Method Energy.type Last.stage Unit                 Machine
 #&gt; 1       GHA    PCM           E      Final ktoe             Automobiles
 #&gt; 2       GHA    PCM           E      Final ktoe             Automobiles
