@@ -69,7 +69,8 @@ iea_cols <- list(country = "Country",
                  flow = "Flow", 
                  product = "Product", 
                  unit = "Unit", 
-                 e_dot = "E.dot")
+                 e_dot = "E.dot",
+                 matnames = "matnames")
 usethis::use_data(iea_cols, overwrite = TRUE)
 
 
