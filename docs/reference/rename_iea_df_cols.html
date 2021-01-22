@@ -143,15 +143,15 @@ This function turns off the shouting,
 renaming the columns (by default) to <code>Country</code>, <code>Flow</code>, and <code>Product</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>rename_iea_df_cols</span><span class='op'>(</span>
-  <span class='va'>.iea_df</span>,
-  country <span class='op'>=</span> <span class='st'>"COUNTRY"</span>,
-  new_country <span class='op'>=</span> <span class='st'>"Country"</span>,
-  flow <span class='op'>=</span> <span class='st'>"FLOW"</span>,
-  new_flow <span class='op'>=</span> <span class='st'>"Flow"</span>,
-  product <span class='op'>=</span> <span class='st'>"PRODUCT"</span>,
-  new_product <span class='op'>=</span> <span class='st'>"Product"</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>rename_iea_df_cols</span>(
+  <span class='kw'>.iea_df</span>,
+  country = <span class='st'>"COUNTRY"</span>,
+  new_country = <span class='st'>"Country"</span>,
+  flow = <span class='st'>"FLOW"</span>,
+  new_flow = <span class='st'>"Flow"</span>,
+  product = <span class='st'>"PRODUCT"</span>,
+  new_product = <span class='st'>"Product"</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -191,8 +191,8 @@ renaming the columns (by default) to <code>Country</code>, <code>Flow</code>, an
     <p><code>.iea_df</code> with renamed columns</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='iea_df.html'>iea_df</a></span><span class='op'>(</span>text <span class='op'>=</span> <span class='st'>",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>rename_iea_df_cols</span><span class='op'>(</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='iea_df.html'>iea_df</a></span>(text = <span class='st'>",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43"</span>) <span class='op'>%&gt;%</span> 
+  <span class='fu'>rename_iea_df_cols</span>()
 </div><div class='output co'>#&gt;   Country       Flow   Product 1960 1961
 #&gt; 1   World Production Hard coal   42   43</div></pre>
   </div>

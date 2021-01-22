@@ -147,19 +147,19 @@ This function reclassifies energy flowing into transformation process sinks
 as <code>non_energy_flow</code>, by default "Non-energy use in industry/transformation/energy".</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tp_sinks_to_nonenergy</span><span class='op'>(</span>
-  <span class='va'>.tidy_iea_df</span>,
-  ledger_side <span class='op'>=</span> <span class='st'>"Ledger.side"</span>,
-  consumption <span class='op'>=</span> <span class='st'>"Consumption"</span>,
-  flow_aggregation_point <span class='op'>=</span> <span class='st'>"Flow.aggregation.point"</span>,
-  non_energy_flow_agg_point <span class='op'>=</span> <span class='st'>"Non-energy use"</span>,
-  transformation_processes <span class='op'>=</span> <span class='st'>"Transformation processes"</span>,
-  eiou <span class='op'>=</span> <span class='st'>"Energy industry own use"</span>,
-  flow <span class='op'>=</span> <span class='st'>"Flow"</span>,
-  non_energy_flow <span class='op'>=</span> <span class='st'>"Non-energy use industry/transformation/energy"</span>,
-  product <span class='op'>=</span> <span class='st'>"Product"</span>,
-  e_dot <span class='op'>=</span> <span class='st'>"E.dot"</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>tp_sinks_to_nonenergy</span>(
+  <span class='kw'>.tidy_iea_df</span>,
+  ledger_side = <span class='st'>"Ledger.side"</span>,
+  consumption = <span class='st'>"Consumption"</span>,
+  flow_aggregation_point = <span class='st'>"Flow.aggregation.point"</span>,
+  non_energy_flow_agg_point = <span class='st'>"Non-energy use"</span>,
+  transformation_processes = <span class='st'>"Transformation processes"</span>,
+  eiou = <span class='st'>"Energy industry own use"</span>,
+  flow = <span class='st'>"Flow"</span>,
+  non_energy_flow = <span class='st'>"Non-energy use industry/transformation/energy"</span>,
+  product = <span class='st'>"Product"</span>,
+  e_dot = <span class='st'>"E.dot"</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -215,27 +215,27 @@ as <code>non_energy_flow</code>, by default "Non-energy use in industry/transfor
     <p><code>.tidy_iea_df</code> with energy sunk in Transformation processes sinks reassigned to Non-energy use</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-<span class='va'>DF</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
-  Ledger.side <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Supply"</span>, <span class='st'>"Supply"</span>, <span class='st'>"Supply"</span>, <span class='st'>"Consumption"</span><span class='op'>)</span>,
-  Flow.aggregation.point <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Transformation processes"</span>, 
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+<span class='kw'>DF</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
+  Ledger.side = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Supply"</span>, <span class='st'>"Supply"</span>, <span class='st'>"Supply"</span>, <span class='st'>"Consumption"</span>),
+  Flow.aggregation.point = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Transformation processes"</span>, 
                              <span class='st'>"Transformation processes"</span>, 
                              <span class='st'>"Transformation processes"</span>, 
-                             <span class='st'>"Non-energy use"</span><span class='op'>)</span>, 
-  Flow <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Automobiles"</span>, <span class='st'>"Automobiles"</span>, <span class='st'>"Furnaces"</span>, 
-           <span class='st'>"Non-energy use industry/transformation/energy"</span><span class='op'>)</span>,
-  Product <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Petrol"</span>, <span class='st'>"MD"</span>, <span class='st'>"Coal"</span>, <span class='st'>"Coal"</span><span class='op'>)</span>,
-  E.dot <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>1</span>, <span class='fl'>1</span>, <span class='op'>-</span><span class='fl'>2</span>, <span class='fl'>8</span><span class='op'>)</span>, 
-  stringsAsFactors <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
-    Method <span class='op'>=</span> <span class='st'>"PCM"</span>, 
-    Last.stage <span class='op'>=</span> <span class='st'>"Final"</span>,
-    Energy.type <span class='op'>=</span> <span class='st'>"E"</span>,
-    Country <span class='op'>=</span> <span class='st'>"Bogus"</span>,
-    Year <span class='op'>=</span> <span class='fl'>1971</span>
-  <span class='op'>)</span>
-<span class='va'>DF</span>
+                             <span class='st'>"Non-energy use"</span>), 
+  Flow = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Automobiles"</span>, <span class='st'>"Automobiles"</span>, <span class='st'>"Furnaces"</span>, 
+           <span class='st'>"Non-energy use industry/transformation/energy"</span>),
+  Product = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Petrol"</span>, <span class='st'>"MD"</span>, <span class='st'>"Coal"</span>, <span class='st'>"Coal"</span>),
+  E.dot = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='op'>-</span><span class='fl'>1</span>, <span class='fl'>1</span>, <span class='op'>-</span><span class='fl'>2</span>, <span class='fl'>8</span>), 
+  stringsAsFactors = <span class='fl'>FALSE</span>
+) <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(
+    Method = <span class='st'>"PCM"</span>, 
+    Last.stage = <span class='st'>"Final"</span>,
+    Energy.type = <span class='st'>"E"</span>,
+    Country = <span class='st'>"Bogus"</span>,
+    Year = <span class='fl'>1971</span>
+  )
+<span class='kw'>DF</span>
 </div><div class='output co'>#&gt;   Ledger.side   Flow.aggregation.point
 #&gt; 1      Supply Transformation processes
 #&gt; 2      Supply Transformation processes
@@ -250,8 +250,8 @@ as <code>non_energy_flow</code>, by default "Non-energy use in industry/transfor
 #&gt; 1           E   Bogus 1971
 #&gt; 2           E   Bogus 1971
 #&gt; 3           E   Bogus 1971
-#&gt; 4           E   Bogus 1971</div><div class='input'><span class='va'>DF</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>tp_sinks_to_nonenergy</span><span class='op'>(</span><span class='op'>)</span>
+#&gt; 4           E   Bogus 1971</div><div class='input'><span class='kw'>DF</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>tp_sinks_to_nonenergy</span>()
 </div><div class='output co'>#&gt;   Ledger.side   Flow.aggregation.point
 #&gt; 1      Supply Transformation processes
 #&gt; 2      Supply Transformation processes

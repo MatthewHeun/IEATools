@@ -145,22 +145,22 @@ The boolean argument `net_trade`` enables to perform the aggregation by keeping 
 and/or net exports or by keeping gross imports and exports.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>aggregate_regions</span><span class='op'>(</span>
-  <span class='va'>.tidy_iea_df</span>,
-  aggregation_table <span class='op'>=</span> <span class='fu'><a href='read_aggregation_region_table.html'>read_aggregation_region_table</a></span><span class='op'>(</span><span class='op'>)</span>,
-  net_trade <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  destination_regions <span class='op'>=</span> <span class='st'>"Destination_regions"</span>,
-  iea_regions <span class='op'>=</span> <span class='st'>"IEA_regions"</span>,
-  imports <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='interface_industries.html'>interface_industries</a></span><span class='op'>$</span><span class='va'>imports</span>,
-  exports <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='interface_industries.html'>interface_industries</a></span><span class='op'>$</span><span class='va'>exports</span>,
-  country <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>country</span>,
-  e_dot <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>e_dot</span>,
-  flow <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow</span>,
-  year <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>year</span>,
-  ledger_side <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>ledger_side</span>,
-  flow_aggregation_point <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow_aggregation_point</span>,
-  .net_imports <span class='op'>=</span> <span class='st'>"Net_Imports"</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>aggregate_regions</span>(
+  <span class='kw'>.tidy_iea_df</span>,
+  aggregation_table = <span class='fu'><a href='read_aggregation_region_table.html'>read_aggregation_region_table</a></span>(),
+  net_trade = <span class='fl'>FALSE</span>,
+  destination_regions = <span class='st'>"Destination_regions"</span>,
+  iea_regions = <span class='st'>"IEA_regions"</span>,
+  imports = <span class='kw'>IEATools</span>::<span class='kw'><a href='interface_industries.html'>interface_industries</a></span><span class='op'>$</span><span class='kw'>imports</span>,
+  exports = <span class='kw'>IEATools</span>::<span class='kw'><a href='interface_industries.html'>interface_industries</a></span><span class='op'>$</span><span class='kw'>exports</span>,
+  country = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>country</span>,
+  e_dot = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>e_dot</span>,
+  flow = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow</span>,
+  year = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>year</span>,
+  ledger_side = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>ledger_side</span>,
+  flow_aggregation_point = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow_aggregation_point</span>,
+  .net_imports = <span class='st'>"Net_Imports"</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -249,7 +249,7 @@ country aggregation table provided.</p>
     <pre class="examples"><div class='input'><span class='co'># Performs the regional aggregation using the default IEA to Exiobase mapping </span>
 <span class='co'># for IEA data 2019, using the example `.tidy_iea_df` </span>
 <span class='co'># returned by the `load_tidy_iea_df()` function when run without argument.</span>
-<span class='fu'>aggregate_regions</span><span class='op'>(</span>.tidy_iea_df <span class='op'>=</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>aggregate_regions</span>(.tidy_iea_df = <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>())
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 402 x 12</span><span>
 #&gt; </span><span style='color: #949494;'># Groups:   Country, Method, Energy.type, Last.stage, Year, Ledger.side,
 #&gt; #   Flow.aggregation.point, Flow, Product, Unit [402]</span><span>
@@ -269,9 +269,9 @@ country aggregation table provided.</p>
 #&gt; </span><span style='color: #949494;'>#   Unit </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Destination_regions </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, E.dot </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='co'># Performs the regional aggregation using the default IEA to Exiobase mapping </span>
 <span class='co'># for IEA data 2020, using the example `.tidy_iea_df` </span>
 <span class='co'># returned by the `load_tidy_iea_df()` function when run without argument.</span>
-<span class='fu'>aggregate_regions</span><span class='op'>(</span>.tidy_iea_df <span class='op'>=</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span>, 
-                  aggregation_table <span class='op'>=</span> <span class='fu'><a href='read_aggregation_region_table.html'>read_aggregation_region_table</a></span><span class='op'>(</span>
-                    <span class='fu'><a href='default_aggregation_region_table_path.html'>default_aggregation_region_table_path</a></span><span class='op'>(</span><span class='fl'>2020</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>aggregate_regions</span>(.tidy_iea_df = <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>(), 
+                  aggregation_table = <span class='fu'><a href='read_aggregation_region_table.html'>read_aggregation_region_table</a></span>(
+                    <span class='fu'><a href='default_aggregation_region_table_path.html'>default_aggregation_region_table_path</a></span>(<span class='fl'>2020</span>)))
 </div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 402 x 12</span><span>
 #&gt; </span><span style='color: #949494;'># Groups:   Country, Method, Energy.type, Last.stage, Year, Ledger.side,
 #&gt; #   Flow.aggregation.point, Flow, Product, Unit [402]</span><span>

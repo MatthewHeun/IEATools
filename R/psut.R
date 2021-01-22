@@ -9,7 +9,7 @@
 #' `.tidy_iea_df` is typically obtained from `tidy_iea_df()`.
 #'
 #' @param .tidy_iea_df the tidy data frame from which a unit summation `S_units` matrix is to be formed.
-#' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
+#' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit,matnames See `IEATools::iea_cols`.
 #' @param s_units See `IEATools::psut_cols`.
 #' @param product_type,unit_type See `IEATools::row_col_types`.
 #' @param .val the name of a temporary value column to be created in `.tidy_iea_df`. Default is ".val".
@@ -70,6 +70,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #' wherein each row of `.tidy_iea_df` is a single value in an energy conversion chain.
 #' The default argument values assume that `.tidy_iea_df` uses IEA-style nomenclature
 #' and terminology, although `.tidy_iea_df` does not necessarily need to contain IEA data.
+#' If the `.tidy_iea_df` does already have a `matnames` column, then the function returns the `.tidy_iea_df` without modifying it.
 #'
 #' In a reasonable workflow, this function would be followed by a call to
 #' `add_row_col_meta()` and `matsindf::collapse_to_matrices()`.
@@ -164,14 +165,18 @@ add_psut_matnames <- function(.tidy_iea_df,
 #' Add row, column, row type, and column type metadata
 #' 
 #' After calling `add_psut_matnames()`, call this function
-#' to add row, column, row type, and column type 
-#' information to `.tidy_iea_df`.
+#' to add `rownames`, `colnames`, `rowtypes`, and `coltypes` columns to `.tidy_iea_df`.
+#' 
+#' If the `.tidy_iea_df` already has `rownames`, `colnames`, `rowtypes`, and `coltypes` columns, 
+#' then the function returns the `.tidy_iea_df` without modifying it.
+#' If the `.tidy_iea_df` only has some of the `rownames`, `colnames`, `rowtypes`, and `coltypes` columns, but not all of them,
+#' an error is returned.
 #'
 #' @param .tidy_iea_df a data frame containing column `matnames`
 #' @param flow,product See `IEATools::iea_cols`.
 #' @param matnames the name of the column in `.tidy_iea_df` that contains names of matrices
 #'        (a string).  Default is "matnames".
-#' @param R,U,U_EIOU,V,Y See `IEATools::psut_cols`.
+#' @param R,U,U_EIOU,V,Y,Epsilon See `IEATools::psut_cols`.
 #' @param industry_type the name that identifies production industries and
 #'        and transformation processes (a string). Default is "Industry".
 #' @param product_type the name that identifies energy carriers (a string).
@@ -282,6 +287,7 @@ add_row_col_meta <- function(.tidy_iea_df,
 #' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
 #' @param matnames,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #' @param matvals See `IEATools::psut_cols`.
+#' @param Epsilon Name of the Epsilon matrix. See `IEATools::psut_cols`.
 #'
 #' @return `.tidy_iea_df` with all values converted to matrices in the `matvals` column
 #' 
@@ -362,7 +368,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' @param year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param matnames,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
-#' @param matvals,R,U_eiou,U_feed,U,r_eiou,V,Y,s_units See `IEATools::psut_cols`.
+#' @param matvals,R,U_eiou,U_feed,U,r_eiou,V,Y,s_units,Epsilon See `IEATools::psut_cols`.
 #'
 #' @return A wide-by-matrix data frame with metadata columns and columns named for each type of matrix.
 #' 

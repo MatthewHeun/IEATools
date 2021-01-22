@@ -55,6 +55,7 @@ This function adds a column of matrix names to a tidy data frame
 wherein each row of \code{.tidy_iea_df} is a single value in an energy conversion chain.
 The default argument values assume that \code{.tidy_iea_df} uses IEA-style nomenclature
 and terminology, although \code{.tidy_iea_df} does not necessarily need to contain IEA data.
+If the \code{.tidy_iea_df} does already have a \code{matnames} column, then the function returns the \code{.tidy_iea_df} without modifying it.
 }
 \details{
 In a reasonable workflow, this function would be followed by a call to

@@ -5,7 +5,7 @@
 \alias{psut_cols}
 \title{Physical Supply-Use Table (PSUT) data frame column names}
 \format{
-A string list with 13 entries.
+A string list with 14 entries.
 \describe{
 \item{resources,R}{The name of a column in a wide-by-matrices data frame containing resource (\code{R}) matrices.}
 \item{U_feed}{The name of a column in a wide-by-matrices data frame containing use (\code{U}) matrices that exclude energy industry own use.}

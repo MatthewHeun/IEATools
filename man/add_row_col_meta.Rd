@@ -14,6 +14,7 @@ add_row_col_meta(
   R = IEATools::psut_cols$R,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y,
+  Epsilon = IEATools::psut_cols$Epsilon,
   industry_type = IEATools::row_col_types$industry,
   product_type = IEATools::row_col_types$product,
   sector_type = IEATools::row_col_types$sector,
@@ -32,7 +33,7 @@ add_row_col_meta(
 \item{matnames}{the name of the column in \code{.tidy_iea_df} that contains names of matrices
 (a string).  Default is "matnames".}
 
-\item{R, U, U_EIOU, V, Y}{See \code{IEATools::psut_cols}.}
+\item{R, U, U_EIOU, V, Y, Epsilon}{See \code{IEATools::psut_cols}.}
 
 \item{industry_type}{the name that identifies production industries and
 and transformation processes (a string). Default is "Industry".}
@@ -65,8 +66,13 @@ Default is "Industry".}
 }
 \description{
 After calling \code{add_psut_matnames()}, call this function
-to add row, column, row type, and column type
-information to \code{.tidy_iea_df}.
+to add \code{rownames}, \code{colnames}, \code{rowtypes}, and \code{coltypes} columns to \code{.tidy_iea_df}.
+}
+\details{
+If the \code{.tidy_iea_df} already has \code{rownames}, \code{colnames}, \code{rowtypes}, and \code{coltypes} columns,
+then the function returns the \code{.tidy_iea_df} without modifying it.
+If the \code{.tidy_iea_df} only has some of the \code{rownames}, \code{colnames}, \code{rowtypes}, and \code{coltypes} columns, but not all of them,
+an error is returned.
 }
 \examples{
 library(dplyr)

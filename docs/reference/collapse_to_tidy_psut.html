@@ -139,21 +139,22 @@
     <p>Call this function after calling <code>add_row_col_meta()`` to collapse </code>.tidy_iea_df` into a tidy PSUT data frame.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>collapse_to_tidy_psut</span><span class='op'>(</span>
-  <span class='va'>.tidy_iea_df</span>,
-  ledger_side <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>ledger_side</span>,
-  flow_aggregation_point <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow_aggregation_point</span>,
-  flow <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow</span>,
-  product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>product</span>,
-  e_dot <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>e_dot</span>,
-  unit <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>unit</span>,
-  matnames <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>matnames</span>,
-  rownames <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>rownames</span>,
-  colnames <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>colnames</span>,
-  rowtypes <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>rowtypes</span>,
-  coltypes <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>coltypes</span>,
-  matvals <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>matvals</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>collapse_to_tidy_psut</span>(
+  <span class='kw'>.tidy_iea_df</span>,
+  ledger_side = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>ledger_side</span>,
+  flow_aggregation_point = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow_aggregation_point</span>,
+  flow = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow</span>,
+  product = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>product</span>,
+  e_dot = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>e_dot</span>,
+  unit = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>unit</span>,
+  Epsilon = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>Epsilon</span>,
+  matnames = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>matnames</span>,
+  rownames = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>rownames</span>,
+  colnames = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>colnames</span>,
+  rowtypes = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>rowtypes</span>,
+  coltypes = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>coltypes</span>,
+  matvals = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>matvals</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -165,6 +166,10 @@
     <tr>
       <th>ledger_side, flow_aggregation_point, flow, product, e_dot, unit</th>
       <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>Epsilon</th>
+      <td><p>Name of the Epsilon matrix. See <code><a href='psut_cols.html'>IEATools::psut_cols</a></code>.</p></td>
     </tr>
     <tr>
       <th>matnames, rownames, colnames, rowtypes, coltypes</th>
@@ -185,11 +190,11 @@
 before creating the matrices.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='specify_all.html'>specify_all</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='add_psut_matnames.html'>add_psut_matnames</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='add_row_col_meta.html'>add_row_col_meta</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>collapse_to_tidy_psut</span><span class='op'>(</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='specify_all.html'>specify_all</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='add_psut_matnames.html'>add_psut_matnames</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='add_row_col_meta.html'>add_row_col_meta</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'>collapse_to_tidy_psut</span>()
 </div><div class='output co'>#&gt;    Country Method Energy.type Last.stage Year matnames
 #&gt; 1      GHA    PCM           E      Final 1971        R
 #&gt; 2      GHA    PCM           E      Final 1971   U_EIOU
