@@ -207,6 +207,7 @@ add_row_col_meta <- function(.tidy_iea_df,
                              R = IEATools::psut_cols$R, 
                              V = IEATools::psut_cols$V,
                              Y = IEATools::psut_cols$Y,
+                             Epsilon = IEATools::psut_cols$Epsilon,
                              # Row and column Type identifiers
                              industry_type = IEATools::row_col_types$industry,
                              product_type = IEATools::row_col_types$product, 
@@ -225,6 +226,7 @@ add_row_col_meta <- function(.tidy_iea_df,
         .data[[matnames]] == R ~ .data[[flow]],
         .data[[matnames]] == V ~ .data[[flow]],
         .data[[matnames]] == Y ~ .data[[product]],
+        .data[[matnames]] == Epsilon ~ .data[[product]],
         TRUE ~ NA_character_
       ),
       !!as.name(colnames) := dplyr::case_when(
@@ -232,6 +234,7 @@ add_row_col_meta <- function(.tidy_iea_df,
         .data[[matnames]] == V ~ .data[[product]],
         .data[[matnames]] == R ~ .data[[product]],
         .data[[matnames]] == Y ~ .data[[flow]],
+        .data[[matnames]] == Epsilon ~ .data[[flow]],
         TRUE ~ NA_character_
       ),
       !!as.name(rowtypes) := dplyr::case_when(
@@ -239,6 +242,7 @@ add_row_col_meta <- function(.tidy_iea_df,
         .data[[matnames]] == R ~ resource_type,
         .data[[matnames]] == V ~ industry_type,
         .data[[matnames]] == Y ~ product_type,
+        .data[[matnames]] == Epsilon ~ product_type,
         TRUE ~ NA_character_
       ),
       !!as.name(coltypes) := dplyr::case_when(
@@ -246,6 +250,7 @@ add_row_col_meta <- function(.tidy_iea_df,
         .data[[matnames]] == R ~ product_type,
         .data[[matnames]] == V ~ product_type,
         .data[[matnames]] == Y ~ sector_type,
+        .data[[matnames]] == Epsilon ~ sector_type,
         TRUE ~ NA_character_
       )
     )
@@ -283,6 +288,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
                                   product = IEATools::iea_cols$product,
                                   e_dot = IEATools::iea_cols$e_dot,
                                   unit = IEATools::iea_cols$unit, 
+                                  Epsilon = IEATools::psut_cols$Epsilon,
                                   matnames = IEATools::mat_meta_cols$matnames,
                                   rownames = IEATools::mat_meta_cols$rownames,
                                   colnames = IEATools::mat_meta_cols$colnames,
@@ -293,8 +299,11 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
   matsindf::verify_cols_missing(.tidy_iea_df, matvals)
   .tidy_iea_df %>% 
     dplyr::mutate(
-      # All values in the matrices must be positive
-      "{e_dot}" := abs(.data[[e_dot]])
+      # All values in the matrices must be positive, but for Epsilon matrix terms.
+      "{e_dot}" := dplyr::case_when(
+        .data[[matnames]] == Epsilon ~ .data[[e_dot]],
+        TRUE ~ abs(.data[[e_dot]])
+      )
     ) %>%
     dplyr::mutate(
       # Eliminate columns that we no longer need.

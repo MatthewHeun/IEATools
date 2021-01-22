@@ -52,6 +52,20 @@ test_that("add_row_col_meta works as expected", {
   With_meta <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     add_psut_matnames() %>% 
+    tibble::add_row(
+      Country = c("GHA", "GHA"),
+      Method = c("PCM", "PCM"),
+      Energy.type = c("E", "E"),
+      Last.stage = c("Final", "Final"),
+      Year = c(1971, 1971),
+      Ledger.side = c("Consumption", "Supply"),
+      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
+      Product = c("Electricity", "Crude oil"),
+      Unit = c("ktoe", "ktoe"),
+      E.dot = c(100, -100),
+      matnames = psut_cols$Epsilon
+    ) %>% 
     add_row_col_meta()
   # Ensure that every row is filled in the new columns.
   expect_false(any(is.na(With_meta$rownames)))
@@ -63,6 +77,8 @@ test_that("add_row_col_meta works as expected", {
   expect_true(With_meta %>% dplyr::filter(matnames == "R" | matnames == "V") %>% magrittr::extract2("coltypes") %>% magrittr::equals("Product") %>% all())
   expect_true(With_meta %>% dplyr::filter(startsWith(matnames, "U") | matnames == "Y") %>% magrittr::extract2("rowtypes") %>% magrittr::equals("Product") %>% all())
   expect_true(With_meta %>% dplyr::filter(startsWith(matnames, "U") | matnames == "Y") %>% magrittr::extract2("coltypes") %>% magrittr::equals("Industry") %>% all())
+  expect_true(With_meta %>% dplyr::filter(startsWith(matnames, "Epsilon")) %>% magrittr::extract2("rowtypes") %>% magrittr::equals("Product") %>% all())
+  expect_true(With_meta %>% dplyr::filter(startsWith(matnames, "Epsilon")) %>% magrittr::extract2("coltypes") %>% magrittr::equals("Industry") %>% all())
   # Ensure that row and column identifiers are correct
   # Rows of R and V are the Flow names
   magrittr::equals(With_meta %>% dplyr::filter(matnames == "R" | matnames == "V") %>% magrittr::extract2("rownames"), 
@@ -79,9 +95,20 @@ test_that("add_row_col_meta works as expected", {
                    With_meta %>% dplyr::filter(matnames == "U" | matnames == "Y") %>% magrittr::extract2("Product")) %>% 
     all() %>% 
     expect_true()
+  # Rows of Epsilon are the Product names
+  magrittr::equals(With_meta %>% dplyr::filter(matnames == "Epsilon") %>% magrittr::extract2("rownames"), 
+                   With_meta %>% dplyr::filter(matnames == "Epsilon") %>% magrittr::extract2("Product")) %>% 
+    all() %>% 
+    expect_true()
+  
   # Columns of U and Y are the Flow names
   magrittr::equals(With_meta %>% dplyr::filter(matnames == "U" | matnames == "Y") %>% magrittr::extract2("colnames"), 
                    With_meta %>% dplyr::filter(matnames == "U" | matnames == "Y") %>% magrittr::extract2("Flow")) %>% 
+    all() %>% 
+    expect_true()
+  
+  magrittr::equals(With_meta %>% dplyr::filter(matnames == "Epsilon") %>% magrittr::extract2("colnames"), 
+                   With_meta %>% dplyr::filter(matnames == "Epsilon") %>% magrittr::extract2("Flow")) %>% 
     all() %>% 
     expect_true()
 })
@@ -91,11 +118,26 @@ test_that("collapse_to_psut works expected", {
   With_mats <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     add_psut_matnames() %>% 
+    tibble::add_row(
+      Country = c("GHA", "GHA"),
+      Method = c("PCM", "PCM"),
+      Energy.type = c("E", "E"),
+      Last.stage = c("Final", "Final"),
+      Year = c(1971, 1971),
+      Ledger.side = c("Consumption", "Supply"),
+      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
+      Product = c("Electricity", "Crude oil"),
+      Unit = c("ktoe", "ktoe"),
+      E.dot = c(100, -100),
+      matnames = psut_cols$Epsilon
+    ) %>% 
     add_row_col_meta() %>% 
     collapse_to_tidy_psut()
-  expect_equal(nrow(With_mats), 20)
-  # Ensure that all values in the matrices are positive.
+  expect_equal(nrow(With_mats), 21)
+  # Ensure that all values in the matrices (excluding Epsilon) are positive.
   With_mats %>%
+    dplyr::filter(matnames != "Epsilon") %>% 
     dplyr::mutate(
       gezero = matsbyname::compare_byname(matvals, ">=", 0) %>% matsbyname::all_byname()
     ) %>% 
