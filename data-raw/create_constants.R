@@ -114,6 +114,7 @@ psut_cols <- list(resources = "R",
                   V = "V", 
                   final_demand = "Y",
                   Y = "Y", 
+                  Epsilon = "Epsilon",
                   s_units = "S_units", 
                   matvals = "matvals")
 usethis::use_data(psut_cols, overwrite = TRUE)
