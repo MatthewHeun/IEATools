@@ -32,6 +32,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
                                       product = IEATools::iea_cols$product, 
                                       e_dot = IEATools::iea_cols$e_dot,
                                       unit = IEATools::iea_cols$unit,
+                                      matnames = IEATools::iea_cols$matnames,
                                       # Row and product types
                                       product_type = IEATools::row_col_types$product,
                                       unit_type = IEATools::row_col_types$unit, 
@@ -41,7 +42,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
                                       .val = ".val", 
                                       .rowtype = ".rowtype", 
                                       .coltype = ".coltype"){
-  grouping_vars <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, unit)
+  grouping_vars <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, unit, matnames)
   matsindf::verify_cols_missing(.tidy_iea_df, c(s_units, .val, .rowtype, .coltype))
   .tidy_iea_df %>% 
     dplyr::group_by(!!!grouping_vars) %>% 
@@ -130,7 +131,11 @@ add_psut_matnames <- function(.tidy_iea_df,
                               U_EIOU = IEATools::psut_cols$U_eiou,
                               V = IEATools::psut_cols$V, 
                               Y = IEATools::psut_cols$Y){
-  matsindf::verify_cols_missing(.tidy_iea_df, matnames)
+  
+  # If the matrix names column already exist in the .tidy_iea_df, then the function should not perform any operation.
+  if (matnames %in% colnames(.tidy_iea_df)){
+    return(.tidy_iea_df)
+  }
   
   .tidy_iea_df %>%
     dplyr::mutate(
@@ -218,7 +223,15 @@ add_row_col_meta <- function(.tidy_iea_df,
                              colnames = IEATools::mat_meta_cols$colnames,
                              rowtypes = IEATools::mat_meta_cols$rowtypes, 
                              coltypes = IEATools::mat_meta_cols$coltypes){
+  
+  # If all o rownames, colnames, rowtypes, and coltypes are in the column names, then don't do anything.
+  if (all(c(rownames, colnames, rowtypes, coltypes) %in% colnames(.tidy_iea_df))){
+    return(.tidy_iea_df)
+  }
+  
+  # Else, do everything as planned before.
   matsindf::verify_cols_missing(.tidy_iea_df, c(rownames, colnames, rowtypes, coltypes))
+  
   .tidy_iea_df %>%
     dplyr::mutate(
       "{rownames}" := dplyr::case_when(
@@ -411,6 +424,7 @@ prep_psut <- function(.tidy_iea_df,
                       U = IEATools::psut_cols$U,
                       V = IEATools::psut_cols$V,
                       Y = IEATools::psut_cols$Y,
+                      Epsilon = IEATools::psut_cols$Epsilon,
                       s_units = IEATools::psut_cols$s_units){
   if (nrow(.tidy_iea_df) == 0) {
     # We can get a no-row data frame for .tidy_iea_df. 
@@ -423,8 +437,8 @@ prep_psut <- function(.tidy_iea_df,
     # Make a tibble with no rows for the remainder of the columns, 
     # R, U_eiou, U_feed, V, Y, S_units (6 in total)
     # Use 1.1 for the value so that columns are created as double type columns.
-    mats_cols <- as.list(rep(1.1, 6)) %>% 
-      magrittr::set_names(c(R, U_eiou, U_feed, V, Y, s_units)) %>% 
+    mats_cols <- as.list(rep(1.1, 7)) %>% 
+      magrittr::set_names(c(R, U_eiou, U_feed, V, Y, s_units, Epsilon)) %>% 
       as.data.frame()
     # Eliminate the row in the data frame
     zero_length_mats_cols <- mats_cols[0, ]

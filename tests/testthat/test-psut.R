@@ -45,6 +45,46 @@ test_that("add_psut_matnames works as expected", {
   # Transfers
   expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
   expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  
+  With_matnames <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    add_psut_matnames() %>% 
+    tibble::add_row(
+      Country = c("GHA", "GHA"),
+      Method = c("PCM", "PCM"),
+      Energy.type = c("E", "E"),
+      Last.stage = c("Final", "Final"),
+      Year = c(1971, 1971),
+      Ledger.side = c("Consumption", "Supply"),
+      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
+      Product = c("Electricity", "Crude oil"),
+      Unit = c("ktoe", "ktoe"),
+      E.dot = c(100, -100),
+      matnames = psut_cols$Epsilon
+    ) %>% 
+    add_psut_matnames()
+  
+  expect_equal(With_matnames %>% dplyr::filter(matnames == "Epsilon") %>% nrow(), 2)
+  
+  With_matnames_2 <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    add_psut_matnames() %>% 
+    tibble::add_row(
+      Country = c("GHA", "GHA"),
+      Method = c("PCM", "PCM"),
+      Energy.type = c("E", "E"),
+      Last.stage = c("Final", "Final"),
+      Year = c(1971, 1971),
+      Ledger.side = c("Consumption", "Supply"),
+      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
+      Product = c("Electricity", "Crude oil"),
+      Unit = c("ktoe", "ktoe"),
+      E.dot = c(100, -100),
+      matnames = psut_cols$Epsilon)
+  
+  expect_true(all(With_matnames == With_matnames_2))
 })
 
 
@@ -111,6 +151,83 @@ test_that("add_row_col_meta works as expected", {
                    With_meta %>% dplyr::filter(matnames == "Epsilon") %>% magrittr::extract2("Flow")) %>% 
     all() %>% 
     expect_true()
+  
+  # If columns are already there, add_row_col_meta() shouldn't do anything.
+  With_meta <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    add_psut_matnames() %>% 
+    tibble::add_row(
+      Country = c("GHA", "GHA"),
+      Method = c("PCM", "PCM"),
+      Energy.type = c("E", "E"),
+      Last.stage = c("Final", "Final"),
+      Year = c(1971, 1971),
+      Ledger.side = c("Consumption", "Supply"),
+      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
+      Product = c("Electricity", "Crude oil"),
+      Unit = c("ktoe", "ktoe"),
+      E.dot = c(100, -100),
+      matnames = psut_cols$Epsilon
+    ) %>% 
+    tibble::add_column(
+      rownames = "a very odd name",
+      colnames = "a WEIRD name",
+      rowtypes = "a damn weird row type",
+      coltypes = "a bloody strange col type"
+    )
+  
+  With_meta_2 <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    add_psut_matnames() %>% 
+    tibble::add_row(
+      Country = c("GHA", "GHA"),
+      Method = c("PCM", "PCM"),
+      Energy.type = c("E", "E"),
+      Last.stage = c("Final", "Final"),
+      Year = c(1971, 1971),
+      Ledger.side = c("Consumption", "Supply"),
+      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
+      Product = c("Electricity", "Crude oil"),
+      Unit = c("ktoe", "ktoe"),
+      E.dot = c(100, -100),
+      matnames = psut_cols$Epsilon
+    ) %>% 
+    tibble::add_column(
+      rownames = "a very odd name",
+      colnames = "a WEIRD name",
+      rowtypes = "a damn weird row type",
+      coltypes = "a bloody strange col type"
+    ) %>% 
+    add_row_col_meta()
+  
+  expect_true(all(With_meta == With_meta_2))
+  
+  
+  # Now, expect error if only one of the 4 expected columns is present.
+  With_meta <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    add_psut_matnames() %>% 
+    tibble::add_row(
+      Country = c("GHA", "GHA"),
+      Method = c("PCM", "PCM"),
+      Energy.type = c("E", "E"),
+      Last.stage = c("Final", "Final"),
+      Year = c(1971, 1971),
+      Ledger.side = c("Consumption", "Supply"),
+      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
+      Product = c("Electricity", "Crude oil"),
+      Unit = c("ktoe", "ktoe"),
+      E.dot = c(100, -100),
+      matnames = psut_cols$Epsilon
+    ) %>% 
+    tibble::add_column(
+      rownames = "a very odd name"
+    )
+  
+  expect_error(With_meta %>% add_row_col_meta())
 })
 
 
@@ -199,7 +316,7 @@ test_that("prep_psut() works as expected with empty .tidy_iea_df", {
                      IEATools::iea_cols$energy_type,
                      IEATools::iea_cols$last_stage,
                      IEATools::iea_cols$year,
-                     "R", "U_EIOU", "U_feed", "V", "Y", "S_units")) {
+                     "R", "U_EIOU", "U_feed", "V", "Y", "S_units", "Epsilon")) {
     expect_true(col_name %in% cn)
   }
   expect_equal(nrow(zero_psut), 0)
@@ -220,3 +337,45 @@ test_that("prep_psut() correctly makes columns of U and r_EIOU matrices", {
   expect_equal(psut_with_test_cols[["U_test"]], psut_with_test_cols[["U"]])
   expect_equal(psut_with_test_cols[["r_EIOU_test"]], psut_with_test_cols[["r_EIOU"]])
 })
+
+
+test_that("prep_psut() correctly works with Epsilon flows", {
+  
+  PSUT_flows_with_Epsilon <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    add_psut_matnames() %>% 
+    tibble::add_row(
+      Country = c("GHA", "GHA"),
+      Method = c("PCM", "PCM"),
+      Energy.type = c("E", "E"),
+      Last.stage = c("Final", "Final"),
+      Year = c(1971, 1971),
+      Ledger.side = c("Consumption", "Supply"),
+      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
+      Product = c("Electricity", "Crude oil"),
+      Unit = c("ktoe", "ktoe"),
+      E.dot = c(100, -100),
+      matnames = c(psut_cols$Epsilon, psut_cols$Epsilon)
+    ) %>%
+    prep_psut()
+
+  expect_true(
+    all(c("R", "V", "U_feed", "U_EIOU", "Y", "S_units", "Epsilon") %in% colnames(PSUT_flows_with_Epsilon))
+  )
+  
+  epsilon_expected_value = matrix(nrow = 2, ncol = 2,
+                                  c(0, 100, -100, 0))
+  
+  expect_true(
+    all(epsilon_expected_value == (PSUT_flows_with_Epsilon %>%
+                                     dplyr::select(Epsilon) %>% 
+                                     dplyr::pull() %>% 
+                                     dplyr::first())
+  ))
+})
+
+
+
+
+
