@@ -70,24 +70,24 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #' wherein each row of `.tidy_iea_df` is a single value in an energy conversion chain.
 #' The default argument values assume that `.tidy_iea_df` uses IEA-style nomenclature
 #' and terminology, although `.tidy_iea_df` does not necessarily need to contain IEA data.
-#' If the `.tidy_iea_df` does already have a `matnames` column, then the function returns the `.tidy_iea_df` without modifying it.
-#'
-#' In a reasonable workflow, this function would be followed by a call to
+#' In a typical workflow, this function would be followed by a call to
 #' `add_row_col_meta()` and `matsindf::collapse_to_matrices()`.
 #'
 #' This function respects groups when identifying entries in the resource matrix (`R`).
 #' So be sure to group `.tidy_iea_df` before calling this function.
 #'
-#' Internally, this function adds a temporary column to `.tidy_iea_df` called ".R".
-#' An error will occur if `.tidy_iea_df` already has a column named ".R".
-#'
+#' If `.tidy_iea_df` already has a `matnames` column, 
+#' this function returns the `.tidy_iea_df` without modification, 
+#' assuming that the caller has already supplied a destination
+#' matrix name for each row of `.tidy_iea_df`.
+#' 
 #' @param .tidy_iea_df a data frame with `ledger_side`, `flow_aggregation_point`, `flow`, and `e_dot` columns.
 #' @param ledger_side,flow_aggregation_point,flow,product,e_dot See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param production,resources See `IEATools::tpes_flows`.
 #' @param eiou See `IEATools::tfc_compare_flows`.
 #' @param neg_supply_in_fd For "Exports", "International aviation bunkers", "International marine bunkers", and "Stock changes", see `IEATools::tpes_flows`.
-#'        For "Losses" and "Statistical differences", see `IEATools::tfc_compare_flows`.
+#'                         For "Losses" and "Statistical differences", see `IEATools::tfc_compare_flows`.
 #' @param matnames See `IEATools::mat_meta_cols`.
 #' @param R,U_feed,U_EIOU,V,Y See `IEATools::psut_matnames`.
 #'
@@ -133,7 +133,8 @@ add_psut_matnames <- function(.tidy_iea_df,
                               V = IEATools::psut_cols$V, 
                               Y = IEATools::psut_cols$Y){
   
-  # If the matrix names column already exist in the .tidy_iea_df, then the function should not perform any operation.
+  # If the matrix names column already exist in the .tidy_iea_df, 
+  # then the function should not perform any operation.
   if (matnames %in% colnames(.tidy_iea_df)){
     return(.tidy_iea_df)
   }
@@ -149,9 +150,9 @@ add_psut_matnames <- function(.tidy_iea_df,
         .data[[ledger_side]] == supply & .data[[e_dot]] > 0 ~ V,
         # Negative values on the supply side of the ledger with Flow == "Energy industry own use"
         # are put into the U_EIOU matrix
-        .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 & !!as.name(flow_aggregation_point) == eiou ~ U_EIOU,
+        .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 & .data[[flow_aggregation_point]] == eiou ~ U_EIOU,
         # Negative values on the supply side that have Flow %in% neg_supply_in_fd go in the final demand matrix
-        .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 & starts_with_any_of(!!as.name(flow), neg_supply_in_fd) ~ Y,
+        .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 & starts_with_any_of(.data[[flow]], neg_supply_in_fd) ~ Y,
         # All other negative values on the Supply side of the ledger belong in the use matrix
         # that excludes EIOU (U_feed).
         .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 ~ U_feed,
@@ -247,7 +248,7 @@ add_row_col_meta <- function(.tidy_iea_df,
         .data[[matnames]] == Epsilon ~ .data[[product]],
         TRUE ~ NA_character_
       ),
-      !!as.name(colnames) := dplyr::case_when(
+      "{colnames}" := dplyr::case_when(
         startsWith(.data[[matnames]], U) ~ .data[[flow]],
         .data[[matnames]] == V ~ .data[[product]],
         .data[[matnames]] == R ~ .data[[product]],
@@ -255,7 +256,7 @@ add_row_col_meta <- function(.tidy_iea_df,
         .data[[matnames]] == Epsilon ~ .data[[flow]],
         TRUE ~ NA_character_
       ),
-      !!as.name(rowtypes) := dplyr::case_when(
+      "{rowtypes}" := dplyr::case_when(
         startsWith(.data[[matnames]], U) ~ product_type,
         .data[[matnames]] == R ~ resource_type,
         .data[[matnames]] == V ~ industry_type,
@@ -263,7 +264,7 @@ add_row_col_meta <- function(.tidy_iea_df,
         .data[[matnames]] == Epsilon ~ product_type,
         TRUE ~ NA_character_
       ),
-      !!as.name(coltypes) := dplyr::case_when(
+      "{coltypes}" := dplyr::case_when(
         startsWith(.data[[matnames]], U) ~ industry_type,
         .data[[matnames]] == R ~ product_type,
         .data[[matnames]] == V ~ product_type,
