@@ -227,7 +227,40 @@ test_that("add_row_col_meta works as expected", {
       rownames = "a very odd name"
     )
   
-  expect_error(With_meta %>% add_row_col_meta())
+  expect_error(With_meta %>% add_row_col_meta(), regexp = "'rownames' is")
+  
+  
+  # Verify that any added column triggers the error. 
+  # This time do "colnames"
+  load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    add_psut_matnames() %>% 
+    dplyr::mutate(
+      "{IEATools::mat_meta_cols$colnames}" := "a bad colname"
+    ) %>% 
+    add_row_col_meta() %>% 
+    testthat::expect_error(regexp = "'colnames' is ")
+
+  # rowtypes  
+  load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    add_psut_matnames() %>% 
+    dplyr::mutate(
+      "{IEATools::mat_meta_cols$rowtypes}" := "a bad rowtype"
+    ) %>% 
+    add_row_col_meta() %>% 
+    testthat::expect_error(regexp = "'rowtypes' is ")
+
+  # coltypes  
+  load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    add_psut_matnames() %>% 
+    dplyr::mutate(
+      "{IEATools::mat_meta_cols$coltypes}" := "a bad coltype"
+    ) %>% 
+    add_row_col_meta() %>% 
+    testthat::expect_error(regexp = "'coltypes' is ")
+
 })
 
 

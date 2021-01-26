@@ -35,29 +35,9 @@ add_row_col_meta(
 
 \item{R, U, U_EIOU, V, Y, Epsilon}{See \code{IEATools::psut_cols}.}
 
-\item{industry_type}{the name that identifies production industries and
-and transformation processes (a string). Default is "Industry".}
+\item{industry_type, product_type, sector_type, resource_type}{See \code{IEATools::row_col_types}.}
 
-\item{product_type}{the name that identifies energy carriers (a string).
-Default is "Product".}
-
-\item{sector_type}{the name that identifies final demand sectors (a string).
-Default is "Industry".}
-
-\item{resource_type}{the name that identifies resource sectors (a string).
-Default is "Industry".}
-
-\item{rownames}{the name of the output column that contains row names for matrices
-(a string). Default is "rowname".}
-
-\item{colnames}{the name of the output column that contains column names for matrices
-(a string). Default is "colname".}
-
-\item{rowtypes}{the name of the output column that contains row types for matrices
-(a string). Default is "rowtype".}
-
-\item{coltypes}{the name of the output column that contains column types for matrices
-(a string). Default is "coltype".}
+\item{rownames, colnames, rowtypes, coltypes}{See \code{IEATools::mat_meta_cols}.}
 }
 \value{
 \code{.tidy_iea_df} with additional columns named
@@ -69,9 +49,9 @@ After calling \code{add_psut_matnames()}, call this function
 to add \code{rownames}, \code{colnames}, \code{rowtypes}, and \code{coltypes} columns to \code{.tidy_iea_df}.
 }
 \details{
-If the \code{.tidy_iea_df} already has \code{rownames}, \code{colnames}, \code{rowtypes}, and \code{coltypes} columns,
-then the function returns the \code{.tidy_iea_df} without modifying it.
-If the \code{.tidy_iea_df} only has some of the \code{rownames}, \code{colnames}, \code{rowtypes}, and \code{coltypes} columns, but not all of them,
+If \code{.tidy_iea_df} already contains all of \code{rownames}, \code{colnames}, \code{rowtypes}, and \code{coltypes},
+\code{.tidy_iea_df} is returned without modification.
+If \code{.tidy_iea_df} contains some but not all of \code{rownames}, \code{colnames}, \code{rowtypes}, or \code{coltypes},
 an error is returned.
 }
 \examples{

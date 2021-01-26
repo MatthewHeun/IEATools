@@ -168,9 +168,9 @@ add_psut_matnames <- function(.tidy_iea_df,
 #' After calling `add_psut_matnames()`, call this function
 #' to add `rownames`, `colnames`, `rowtypes`, and `coltypes` columns to `.tidy_iea_df`.
 #' 
-#' If the `.tidy_iea_df` already has `rownames`, `colnames`, `rowtypes`, and `coltypes` columns, 
-#' then the function returns the `.tidy_iea_df` without modifying it.
-#' If the `.tidy_iea_df` only has some of the `rownames`, `colnames`, `rowtypes`, and `coltypes` columns, but not all of them,
+#' If `.tidy_iea_df` already contains all of `rownames`, `colnames`, `rowtypes`, and `coltypes`, 
+#' `.tidy_iea_df` is returned without modification.
+#' If `.tidy_iea_df` contains some but not all of `rownames`, `colnames`, `rowtypes`, or `coltypes`, 
 #' an error is returned.
 #'
 #' @param .tidy_iea_df a data frame containing column `matnames`
@@ -178,22 +178,8 @@ add_psut_matnames <- function(.tidy_iea_df,
 #' @param matnames the name of the column in `.tidy_iea_df` that contains names of matrices
 #'        (a string).  Default is "matnames".
 #' @param R,U,U_EIOU,V,Y,Epsilon See `IEATools::psut_cols`.
-#' @param industry_type the name that identifies production industries and
-#'        and transformation processes (a string). Default is "Industry".
-#' @param product_type the name that identifies energy carriers (a string).
-#'        Default is "Product".
-#' @param sector_type the name that identifies final demand sectors (a string).
-#'        Default is "Industry".
-#' @param resource_type the name that identifies resource sectors (a string).
-#'        Default is "Industry".
-#' @param rownames the name of the output column that contains row names for matrices
-#'        (a string). Default is "rowname".
-#' @param colnames the name of the output column that contains column names for matrices
-#'        (a string). Default is "colname".
-#' @param rowtypes the name of the output column that contains row types for matrices
-#'        (a string). Default is "rowtype".
-#' @param coltypes the name of the output column that contains column types for matrices
-#'        (a string). Default is "coltype".
+#' @param industry_type,product_type,sector_type,resource_type See `IEATools::row_col_types`.
+#' @param rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #'
 #' @return `.tidy_iea_df` with additional columns named
 #'         `rowname`, `colname`,
@@ -230,7 +216,7 @@ add_row_col_meta <- function(.tidy_iea_df,
                              rowtypes = IEATools::mat_meta_cols$rowtypes, 
                              coltypes = IEATools::mat_meta_cols$coltypes){
   
-  # If all o rownames, colnames, rowtypes, and coltypes are in the column names, then don't do anything.
+  # If all of rownames, colnames, rowtypes, and coltypes are in the column names, then don't do anything.
   if (all(c(rownames, colnames, rowtypes, coltypes) %in% colnames(.tidy_iea_df))){
     return(.tidy_iea_df)
   }
