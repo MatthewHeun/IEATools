@@ -276,7 +276,7 @@ aggregate_regions <- function(.tidy_iea_df,
   
   if (net_trade == TRUE){
     aggregated_net_trade <- aggregated_tidy_iea_df %>% 
-      dplyr::filter(.data[[flow]] == imports | .data[[flow]] == exports) %>% 
+      dplyr::filter(stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports)) %>% 
       tidyr::pivot_wider(names_from = .data[[flow]], values_from = .data[[e_dot]]) %>% 
       dplyr::mutate(
         "{imports}" := tidyr::replace_na(.data[[imports]], 0),
