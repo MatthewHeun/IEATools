@@ -42,6 +42,8 @@
 #'        a `Ledger.side` column.
 #' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
+#' @param matnames See `IEATools::mat_meta_cols`.
+#' @param balancing The ledger side of balancing flows, if any balancing flow has been added to the `.tidy_iea_df`.
 #' @param supply_sum the name of a new column that will contain the sum of all supply for that group.
 #'        Default is "supply_sum".
 #' @param consumption_sum the name of a new column that will contain the sum of all consumption for that group.
@@ -73,6 +75,8 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
                             unit = IEATools::iea_cols$unit,
                             supply = IEATools::ledger_sides$supply,
                             consumption = IEATools::ledger_sides$consumption,
+                            matnames = IEATools::mat_meta_cols$matnames,
+                            balancing = "balancing",
                             # Output column names
                             supply_sum = "supply_sum",
                             consumption_sum = "consumption_sum",
@@ -81,8 +85,9 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
                             err = "err",
                             tol = 1e-6){
   # Calculate sums on a per-group basis
-  grouping_names <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot)
-  grouping_strings <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot, .symbols = FALSE)
+  grouping_names <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot, matnames)
+  grouping_strings <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot, matnames, .symbols = FALSE)
+  
   Tidy <- .tidy_iea_df %>% 
     dplyr::group_by(!!!grouping_names)
   SupplySum <- Tidy %>%
@@ -90,7 +95,7 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
     dplyr::summarise("{supply_sum}" := sum(.data[[e_dot]]))
   # Calculate the consumption sum on a per-group basis
   ConsumptionSum <- Tidy %>%
-    dplyr::filter(.data[[ledger_side]] == consumption) %>%
+    dplyr::filter(.data[[ledger_side]] == consumption | .data[[ledger_side]] == balancing) %>%
     dplyr::summarise("{consumption_sum}" := sum(.data[[e_dot]]))
   # Return the difference between supply and consumption
   dplyr::full_join(SupplySum, ConsumptionSum, by = grouping_strings) %>% 
@@ -107,6 +112,7 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
     ) %>% 
     dplyr::ungroup()
 }
+
 
 
 #' Tell whether _all_ rows of a tidy IEA data frame are balanced
