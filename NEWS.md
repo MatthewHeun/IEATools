@@ -1,4 +1,7 @@
 
+* `calc_tidy_iea_df_balances` function updated
+  so that it also accounts for balancing flows 
+  when checking balances.
 * New bug in `aggregate_regions()` hotfixed.
 * New option for "Epsilon" matrices and 
   PSUT columns enables removal of some `Flow`s 

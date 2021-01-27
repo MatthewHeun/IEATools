@@ -213,6 +213,8 @@ read_aggregation_region_table <- function(file_path = default_aggregation_region
 #' Default is `IEATools::iea_cols$e_dot`.
 #' @param flow The name of the `flow` column in the `.tidy_iea_df`.
 #' Default is `IEATools::iea_cols$flow`.
+#' @param product The name of the `product` column in the `.tidy_iea_df`.
+#' Default is `IEATools::iea_cols$product`.
 #' @param year The name of the `year` column in the `.tidy_iea_df`.
 #' Default is `IEATools::iea_cols$year`.
 #' @param ledger_side The name of the `ledger_side` column in the `.tidy_iea_df`.
