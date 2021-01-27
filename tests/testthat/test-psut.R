@@ -209,25 +209,11 @@ test_that("add_row_col_meta works as expected", {
   With_meta <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     add_psut_matnames() %>% 
-    tibble::add_row(
-      Country = c("GHA", "GHA"),
-      Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
-      Last.stage = c("Final", "Final"),
-      Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
-      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
-      Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
-      Product = c("Electricity", "Crude oil"),
-      Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
-      matnames = psut_cols$Epsilon
+    dplyr::mutate(
+      "{IEATools::mat_meta_cols$rownames}" := "a very odd rowname"
     ) %>% 
-    tibble::add_column(
-      rownames = "a very odd name"
-    )
-  
-  expect_error(With_meta %>% add_row_col_meta(), regexp = "'rownames' is")
+    add_row_col_meta() %>% 
+    expect_error(regexp = "'rownames' is")
   
   
   # Verify that any added column triggers the error. 
