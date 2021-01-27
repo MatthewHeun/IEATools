@@ -1,3 +1,18 @@
+# IEATools 0.1.46 ()
+
+* `prep_psut` function as well as helpers
+(`add_psut_matnames` and `add_row_col_meta`)
+now defer matrix naming and metadata addition 
+if `matnames` and all of `rownames`, `colnames`, `rowtypes`, and `coltypes` 
+are present in `.tidy_iea_df`.  
+This behavior change allows other matrix, row, and column naming schemes 
+as well as other rowtype and coltype naming schemes.
+
+# IEATools 0.1.45 (2012-12-28)
+
+* Bug in the `aggregate_regions` function hotfixed;
+* Still 661 tests, coverage remains at 100%.
+
 # IEATools 0.1.44 (2020-12-08)
 
 * Moved `primary_aggregates_IEA()` and `finaldemand_aggregates_IEA()` 
