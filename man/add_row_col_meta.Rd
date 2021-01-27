@@ -14,7 +14,7 @@ add_row_col_meta(
   R = IEATools::psut_cols$R,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y,
-  Epsilon = IEATools::psut_cols$Epsilon,
+  Epsilon = IEATools::psut_cols$epsilon,
   industry_type = IEATools::row_col_types$industry,
   product_type = IEATools::row_col_types$product,
   sector_type = IEATools::row_col_types$sector,

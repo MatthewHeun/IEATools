@@ -28,7 +28,7 @@ prep_psut(
   U = IEATools::psut_cols$U,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y,
-  Epsilon = IEATools::psut_cols$Epsilon,
+  Epsilon = IEATools::psut_cols$epsilon,
   s_units = IEATools::psut_cols$s_units
 )
 }

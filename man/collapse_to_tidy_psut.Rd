@@ -12,7 +12,7 @@ collapse_to_tidy_psut(
   product = IEATools::iea_cols$product,
   e_dot = IEATools::iea_cols$e_dot,
   unit = IEATools::iea_cols$unit,
-  Epsilon = IEATools::psut_cols$Epsilon,
+  Epsilon = IEATools::psut_cols$epsilon,
   matnames = IEATools::mat_meta_cols$matnames,
   rownames = IEATools::mat_meta_cols$rownames,
   colnames = IEATools::mat_meta_cols$colnames,

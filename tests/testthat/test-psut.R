@@ -61,7 +61,7 @@ test_that("add_psut_matnames works as expected", {
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
       E.dot = c(100, -100),
-      matnames = psut_cols$Epsilon
+      matnames = psut_cols$epsilon
     ) %>% 
     add_psut_matnames()
   
@@ -82,7 +82,7 @@ test_that("add_psut_matnames works as expected", {
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
       E.dot = c(100, -100),
-      matnames = psut_cols$Epsilon)
+      matnames = psut_cols$epsilon)
   
   expect_true(all(With_matnames == With_matnames_2))
 })
@@ -104,7 +104,7 @@ test_that("add_row_col_meta works as expected", {
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
       E.dot = c(100, -100),
-      matnames = psut_cols$Epsilon
+      matnames = psut_cols$epsilon
     ) %>% 
     add_row_col_meta()
   # Ensure that every row is filled in the new columns.
@@ -168,7 +168,7 @@ test_that("add_row_col_meta works as expected", {
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
       E.dot = c(100, -100),
-      matnames = psut_cols$Epsilon
+      matnames = psut_cols$epsilon
     ) %>% 
     tibble::add_column(
       rownames = "a very odd name",
@@ -192,7 +192,7 @@ test_that("add_row_col_meta works as expected", {
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
       E.dot = c(100, -100),
-      matnames = psut_cols$Epsilon
+      matnames = psut_cols$epsilon
     ) %>% 
     tibble::add_column(
       rownames = "a very odd name",
@@ -200,9 +200,12 @@ test_that("add_row_col_meta works as expected", {
       rowtypes = "a damn weird row type",
       coltypes = "a bloody strange col type"
     ) %>% 
-    add_row_col_meta()
-  
-  expect_true(all(With_meta == With_meta_2))
+    add_row_col_meta() %>% 
+    magrittr::equals(With_meta) %>% 
+    all() %>% 
+    expect_true()
+
+  # expect_true(all(With_meta == With_meta_2))
   
   
   # Now, expect error if only one of the 4 expected columns is present.
@@ -266,7 +269,7 @@ test_that("collapse_to_psut works expected", {
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
       E.dot = c(100, -100),
-      matnames = psut_cols$Epsilon
+      matnames = psut_cols$epsilon
     ) %>% 
     add_row_col_meta() %>% 
     collapse_to_tidy_psut()
@@ -375,7 +378,7 @@ test_that("prep_psut() correctly works with Epsilon flows", {
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
       E.dot = c(100, -100),
-      matnames = c(psut_cols$Epsilon, psut_cols$Epsilon)
+      matnames = c(psut_cols$epsilon, psut_cols$epsilon)
     ) %>%
     prep_psut()
 
