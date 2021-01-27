@@ -143,12 +143,12 @@ Items in the list provide default values for column name function arguments
 throughout the <code>IEATools</code> package.</p>
     </div>
 
-    <pre class="usage"><span class='va'>psut_cols</span></pre>
+    <pre class="usage"><span class='kw'>psut_cols</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string list with 13 entries.</p><dl>
+    <p>A string list with 14 entries.</p><dl>
 <dt>resources,R</dt><dd><p>The name of a column in a wide-by-matrices data frame containing resource (<code>R</code>) matrices.</p></dd>
 <dt>U_feed</dt><dd><p>The name of a column in a wide-by-matrices data frame containing use (<code>U</code>) matrices that exclude energy industry own use.</p></dd>
 <dt>U_eiou</dt><dd><p>The name of a column in a wide-by-matrices data frame containing use (<code>U</code>) matrices that contain exclusively energy industry own use.</p></dd>
@@ -168,7 +168,7 @@ thereby providing synonyms.
 E.g., both <code>resources</code> and <code>R</code> point to the "R" column name.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>psut_cols</span>
+    <pre class="examples"><div class='input'><span class='kw'>psut_cols</span>
 </div><div class='output co'>#&gt; $resources
 #&gt; [1] "R"
 #&gt; 
@@ -201,6 +201,9 @@ E.g., both <code>resources</code> and <code>R</code> point to the "R" column nam
 #&gt; 
 #&gt; $Y
 #&gt; [1] "Y"
+#&gt; 
+#&gt; $Epsilon
+#&gt; [1] "Epsilon"
 #&gt; 
 #&gt; $s_units
 #&gt; [1] "S_units"

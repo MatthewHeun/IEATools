@@ -1,5 +1,19 @@
 
 * New bug in `aggregate_regions()` hotfixed.
+* New option for "Epsilon" matrices and 
+  PSUT columns enables removal of some `Flow`s 
+  for footprinting analyses (and maybe other work in the future).
+* When `matnames` is present in `.tidy_iea_df`, 
+  `add_psut_matnames()` now returns `.tidy_iea_df` unmodified.
+  This new feature enables other functions for assigning matrix names.
+* When all of `rownames`, `colnames`, `rowtypes`, and `coltypes` 
+  are present in `.tidy_iea_df`,
+  `add_row_col_meta()` now returns `.tidy_iea_df` unmodified.
+  This new feature enables other functions for assigning row and column names
+  and row and column types.
+* New tests for the new feature.
+    * Now up to 675 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # IEATools 0.1.45 (2012-12-28)

@@ -46,6 +46,10 @@ load_tidy_iea_df() %>%
   glimpse()
 ```
 
+Note that when a `matnames` column already exists in `.tidy_iea_df`,
+`add_psut_matnames()` returns the input data frame without modification.
+This behavior allows other matrix naming conventions.
+
 
 ## Add matrix metadata (`add_row_col_meta()`)
 
@@ -65,6 +69,16 @@ load_tidy_iea_df() %>%
   add_row_col_meta() %>% 
   glimpse()
 ```
+
+Note that if all of `rowname`, `colname`, `rowtype`, or `coltype` columns
+are already present in `.tidy_iea_data`, 
+`add_row_col_meta()` returns the input data frame without modification. 
+This behavior allows other matrix row, column, 
+rowtype, and coltype naming conventions.
+
+If some but not all of `rowname`, `colname`, `rowtype`, and `coltype` columns
+are present in in `.tidy_iea_data`, 
+`add_row_col_meta()`returns an error.
 
 
 ## Collapse to matrices (`collapse_to_tidy_psut()`)

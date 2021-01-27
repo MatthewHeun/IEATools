@@ -143,39 +143,39 @@ from final energy/exergy
 to useful energy/exergy as the last stage of an energy conversion chain.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>extend_to_useful</span><span class='op'>(</span>
-  <span class='va'>.sutdata</span>,
-  last_stage <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>last_stage</span>,
-  final <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='last_stages.html'>last_stages</a></span><span class='op'>$</span><span class='va'>final</span>,
-  useful <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='last_stages.html'>last_stages</a></span><span class='op'>$</span><span class='va'>useful</span>,
-  industry_type <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='va'>industry</span>,
-  product_type <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='va'>product</span>,
-  R <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>R</span>,
-  U_eiou <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>U_eiou</span>,
-  U_feed <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>U_feed</span>,
-  U <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>U</span>,
-  r_eiou <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>r_eiou</span>,
-  V <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>V</span>,
-  Y <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>Y</span>,
-  C_eiou <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>C_eiou</span>,
-  C_Y <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>C_Y</span>,
-  eta_fu <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu</span>,
-  phi_u <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>phi_u</span>,
-  interface_ind <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='interface_industries.html'>interface_industries</a></span>,
-  losses <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='va'>losses</span>,
-  stat_diffs <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='va'>statistical_differences</span>,
-  notation <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='arrow_notation.html'>arrow_notation</a></span>,
-  tol <span class='op'>=</span> <span class='fl'>0.001</span>,
-  .eta_fu_hat <span class='op'>=</span> <span class='st'>".eta_fu_hat"</span>,
-  .add_to_U_f <span class='op'>=</span> <span class='st'>".add_to_U_f"</span>,
-  .add_to_U_eiou <span class='op'>=</span> <span class='st'>".add_to_U_eiou"</span>,
-  .add_to_V_f <span class='op'>=</span> <span class='st'>".add_to_V_f"</span>,
-  .add_to_dest <span class='op'>=</span> <span class='st'>".repl_dest"</span>,
-  .err <span class='op'>=</span> <span class='st'>".err"</span>,
-  .e_bal_ok <span class='op'>=</span> <span class='st'>".e_bal_ok"</span>,
-  .useful <span class='op'>=</span> <span class='st'>"_useful"</span>,
-  .keep_in_Y <span class='op'>=</span> <span class='st'>"_keep_in_Y"</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>extend_to_useful</span>(
+  <span class='kw'>.sutdata</span>,
+  last_stage = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>last_stage</span>,
+  final = <span class='kw'>IEATools</span>::<span class='kw'><a href='last_stages.html'>last_stages</a></span><span class='op'>$</span><span class='kw'>final</span>,
+  useful = <span class='kw'>IEATools</span>::<span class='kw'><a href='last_stages.html'>last_stages</a></span><span class='op'>$</span><span class='kw'>useful</span>,
+  industry_type = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>industry</span>,
+  product_type = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>product</span>,
+  R = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>R</span>,
+  U_eiou = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>U_eiou</span>,
+  U_feed = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>U_feed</span>,
+  U = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>U</span>,
+  r_eiou = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>r_eiou</span>,
+  V = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>V</span>,
+  Y = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>Y</span>,
+  C_eiou = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>C_eiou</span>,
+  C_Y = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>C_Y</span>,
+  eta_fu = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>eta_fu</span>,
+  phi_u = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>phi_u</span>,
+  interface_ind = <span class='kw'>IEATools</span>::<span class='kw'><a href='interface_industries.html'>interface_industries</a></span>,
+  losses = <span class='kw'>IEATools</span>::<span class='kw'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='kw'>losses</span>,
+  stat_diffs = <span class='kw'>IEATools</span>::<span class='kw'><a href='tfc_compare_flows.html'>tfc_compare_flows</a></span><span class='op'>$</span><span class='kw'>statistical_differences</span>,
+  notation = <span class='kw'>IEATools</span>::<span class='kw'><a href='arrow_notation.html'>arrow_notation</a></span>,
+  tol = <span class='fl'>0.001</span>,
+  .eta_fu_hat = <span class='st'>".eta_fu_hat"</span>,
+  .add_to_U_f = <span class='st'>".add_to_U_f"</span>,
+  .add_to_U_eiou = <span class='st'>".add_to_U_eiou"</span>,
+  .add_to_V_f = <span class='st'>".add_to_V_f"</span>,
+  .add_to_dest = <span class='st'>".repl_dest"</span>,
+  .err = <span class='st'>".err"</span>,
+  .e_bal_ok = <span class='st'>".e_bal_ok"</span>,
+  .useful = <span class='st'>"_useful"</span>,
+  .keep_in_Y = <span class='st'>"_keep_in_Y"</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -286,22 +286,22 @@ If the energy balance check fails, a warning is emitted and
 additional diagnostic matrices will appear in the output: <code>.err</code> and <code>.e_bal_ok</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>C_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='form_C_mats.html'>form_C_mats</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>eta_fu_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_eta_fu_data.html'>load_eta_fu_data</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='form_eta_fu_phi_u_vecs.html'>form_eta_fu_phi_u_vecs</a></span><span class='op'>(</span><span class='op'>)</span>
-  <span class='va'>m_cols</span> <span class='op'>&lt;-</span> <span class='va'>eta_fu_data</span> <span class='op'>%&gt;%</span> 
-    <span class='fu'>IEATools</span><span class='fu'>::</span><span class='fu'><a href='meta_cols.html'>meta_cols</a></span><span class='op'>(</span>return_names <span class='op'>=</span> <span class='cn'>TRUE</span>,
-                        years_to_keep <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>year</span>,
-                        not_meta <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu</span>,
-                                     <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>phi_u</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>psut_mats</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='specify_all.html'>specify_all</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='prep_psut.html'>prep_psut</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>full_join</a></span><span class='op'>(</span><span class='va'>C_data</span>, by <span class='op'>=</span> <span class='va'>m_cols</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>full_join</a></span><span class='op'>(</span><span class='va'>eta_fu_data</span>, by <span class='op'>=</span> <span class='va'>m_cols</span><span class='op'>)</span>
-<span class='va'>psut_mats</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>extend_to_useful</span><span class='op'>(</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'>C_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='form_C_mats.html'>form_C_mats</a></span>()
+<span class='kw'>eta_fu_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_eta_fu_data.html'>load_eta_fu_data</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='form_eta_fu_phi_u_vecs.html'>form_eta_fu_phi_u_vecs</a></span>()
+  <span class='kw'>m_cols</span> <span class='op'>&lt;-</span> <span class='kw'>eta_fu_data</span> <span class='op'>%&gt;%</span> 
+    <span class='kw'>IEATools</span>::<span class='fu'><a href='meta_cols.html'>meta_cols</a></span>(return_names = <span class='fl'>TRUE</span>,
+                        years_to_keep = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>year</span>,
+                        not_meta = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>eta_fu</span>,
+                                     <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>phi_u</span>))
+<span class='kw'>psut_mats</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='specify_all.html'>specify_all</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='prep_psut.html'>prep_psut</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='kw'>dplyr</span>::<span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>full_join</a></span>(<span class='kw'>C_data</span>, by = <span class='kw'>m_cols</span>) <span class='op'>%&gt;%</span> 
+  <span class='kw'>dplyr</span>::<span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>full_join</a></span>(<span class='kw'>eta_fu_data</span>, by = <span class='kw'>m_cols</span>)
+<span class='kw'>psut_mats</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>extend_to_useful</span>()
 </div><div class='output co'>#&gt;   Country Method Energy.type Last.stage Year
 #&gt; 1     GHA    PCM           E      Final 1971
 #&gt; 2     GHA    PCM           E      Final 2000

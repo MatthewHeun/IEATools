@@ -147,22 +147,22 @@ This function uses <code><a href='https://tidyr.tidyverse.org/reference/gather.h
 make an IEA data frame tidy.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tidy_iea_df</span><span class='op'>(</span>
-  <span class='va'>.iea_df</span>,
-  col_names <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span>,
-  year <span class='op'>=</span> <span class='va'>col_names</span><span class='op'>$</span><span class='va'>year</span>,
-  e_dot <span class='op'>=</span> <span class='va'>col_names</span><span class='op'>$</span><span class='va'>e_dot</span>,
-  method <span class='op'>=</span> <span class='va'>col_names</span><span class='op'>$</span><span class='va'>method</span>,
-  last_stage <span class='op'>=</span> <span class='va'>col_names</span><span class='op'>$</span><span class='va'>last_stage</span>,
-  country <span class='op'>=</span> <span class='va'>col_names</span><span class='op'>$</span><span class='va'>country</span>,
-  ledger_side <span class='op'>=</span> <span class='va'>col_names</span><span class='op'>$</span><span class='va'>ledger_side</span>,
-  flow_aggregation_point <span class='op'>=</span> <span class='va'>col_names</span><span class='op'>$</span><span class='va'>flow_aggregation_point</span>,
-  energy_type <span class='op'>=</span> <span class='va'>col_names</span><span class='op'>$</span><span class='va'>energy_type</span>,
-  unit <span class='op'>=</span> <span class='va'>col_names</span><span class='op'>$</span><span class='va'>unit</span>,
-  flow <span class='op'>=</span> <span class='va'>col_names</span><span class='op'>$</span><span class='va'>flow</span>,
-  product <span class='op'>=</span> <span class='va'>col_names</span><span class='op'>$</span><span class='va'>product</span>,
-  remove_zeroes <span class='op'>=</span> <span class='cn'>TRUE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>tidy_iea_df</span>(
+  <span class='kw'>.iea_df</span>,
+  col_names = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span>,
+  year = <span class='kw'>col_names</span><span class='op'>$</span><span class='kw'>year</span>,
+  e_dot = <span class='kw'>col_names</span><span class='op'>$</span><span class='kw'>e_dot</span>,
+  method = <span class='kw'>col_names</span><span class='op'>$</span><span class='kw'>method</span>,
+  last_stage = <span class='kw'>col_names</span><span class='op'>$</span><span class='kw'>last_stage</span>,
+  country = <span class='kw'>col_names</span><span class='op'>$</span><span class='kw'>country</span>,
+  ledger_side = <span class='kw'>col_names</span><span class='op'>$</span><span class='kw'>ledger_side</span>,
+  flow_aggregation_point = <span class='kw'>col_names</span><span class='op'>$</span><span class='kw'>flow_aggregation_point</span>,
+  energy_type = <span class='kw'>col_names</span><span class='op'>$</span><span class='kw'>energy_type</span>,
+  unit = <span class='kw'>col_names</span><span class='op'>$</span><span class='kw'>unit</span>,
+  flow = <span class='kw'>col_names</span><span class='op'>$</span><span class='kw'>flow</span>,
+  product = <span class='kw'>col_names</span><span class='op'>$</span><span class='kw'>product</span>,
+  remove_zeroes = <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -233,13 +233,13 @@ make an IEA data frame tidy.</p>
     <p>Default argument values assume that <code><a href='rename_iea_df_cols.html'>rename_iea_df_cols()</a></code> has been called on <code>.iea_df</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='iea_df.html'>iea_df</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='rename_iea_df_cols.html'>rename_iea_df_cols</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='remove_agg_memo_flows.html'>remove_agg_memo_flows</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='use_iso_countries.html'>use_iso_countries</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='augment_iea_df.html'>augment_iea_df</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>tidy_iea_df</span><span class='op'>(</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='iea_df.html'>iea_df</a></span>() <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='rename_iea_df_cols.html'>rename_iea_df_cols</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='remove_agg_memo_flows.html'>remove_agg_memo_flows</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='use_iso_countries.html'>use_iso_countries</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='augment_iea_df.html'>augment_iea_df</a></span>() <span class='op'>%&gt;%</span> 
+  <span class='fu'>tidy_iea_df</span>()
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 402 x 11</span><span>
 #&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           

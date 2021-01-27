@@ -55,16 +55,17 @@ This function adds a column of matrix names to a tidy data frame
 wherein each row of \code{.tidy_iea_df} is a single value in an energy conversion chain.
 The default argument values assume that \code{.tidy_iea_df} uses IEA-style nomenclature
 and terminology, although \code{.tidy_iea_df} does not necessarily need to contain IEA data.
+In a typical workflow, this function would be followed by a call to
+\code{add_row_col_meta()} and \code{matsindf::collapse_to_matrices()}.
 }
 \details{
-In a reasonable workflow, this function would be followed by a call to
-\code{add_row_col_meta()} and \code{matsindf::collapse_to_matrices()}.
-
 This function respects groups when identifying entries in the resource matrix (\code{R}).
 So be sure to group \code{.tidy_iea_df} before calling this function.
 
-Internally, this function adds a temporary column to \code{.tidy_iea_df} called ".R".
-An error will occur if \code{.tidy_iea_df} already has a column named ".R".
+If \code{.tidy_iea_df} already has a \code{matnames} column,
+this function returns the \code{.tidy_iea_df} without modification,
+assuming that the caller has already supplied a destination
+matrix name for each row of \code{.tidy_iea_df}.
 }
 \examples{
 library(dplyr)

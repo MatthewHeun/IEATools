@@ -12,6 +12,7 @@ extract_S_units_from_tidy(
   product = IEATools::iea_cols$product,
   e_dot = IEATools::iea_cols$e_dot,
   unit = IEATools::iea_cols$unit,
+  matnames = IEATools::iea_cols$mat_meta_cols$matnames,
   product_type = IEATools::row_col_types$product,
   unit_type = IEATools::row_col_types$unit,
   s_units = IEATools::psut_cols$s_units,
@@ -23,7 +24,7 @@ extract_S_units_from_tidy(
 \arguments{
 \item{.tidy_iea_df}{the tidy data frame from which a unit summation \code{S_units} matrix is to be formed.}
 
-\item{ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
+\item{ledger_side, flow_aggregation_point, flow, product, e_dot, unit, matnames}{See \code{IEATools::iea_cols}.}
 
 \item{product_type, unit_type}{See \code{IEATools::row_col_types}.}
 
