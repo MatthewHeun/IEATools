@@ -273,7 +273,8 @@ aggregate_regions <- function(.tidy_iea_df,
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
-    )
+    ) %>% 
+    dplyr::select(-.data[[destination_regions]])
   
   if (net_trade == TRUE){
     aggregated_net_trade <- aggregated_tidy_iea_df %>% 
@@ -294,7 +295,7 @@ aggregate_regions <- function(.tidy_iea_df,
       tidyr::pivot_longer(cols = c({imports}, {exports}, {.net_imports}), names_to = flow, values_to = e_dot) %>%
       dplyr::filter(.data[[flow]] == {.net_imports}) %>% 
       dplyr::mutate(
-        "{flow}" = dplyr::case_when(
+        "{flow}" := dplyr::case_when(
           .data[[e_dot]] >= 0 ~ {imports},
           .data[[e_dot]] < 0 ~ {exports}#,
           #.data[[e_dot]] == 0 ~ {net_imports}
@@ -307,7 +308,7 @@ aggregate_regions <- function(.tidy_iea_df,
       dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
     
     aggregated_tidy_iea_df <- aggregated_tidy_iea_df %>% 
-      dplyr::filter(! .data[[flow]] %in% c({imports}, {exports})) %>%
+      dplyr::filter(! (stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports))) %>%
       dplyr::bind_rows(aggregated_net_trade) %>%
       dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
   }
