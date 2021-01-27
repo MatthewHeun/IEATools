@@ -43,13 +43,14 @@ test_that("Loading regional aggregation table works as intended", {
 # So there is only one aggregation region as output in this test.
 test_that("Aggregating South Africa and Ghana works as intended", {
   
-  tidy_GHA_ZAF_df <- load_tidy_iea_df()
+  tidy_GHA_ZAF_df <- load_tidy_iea_df() %>% 
+    specify_all()
   
   ### 0. Checking that the aggregation works with the default aggregation table (iea -> exiobase; 2019 iea data)
   default_aggregation_2019 <- tidy_GHA_ZAF_df %>% 
     aggregate_regions()
   
-  expect_equal(default_aggregation_2019 %>% nrow(), 402)
+  expect_equal(default_aggregation_2019 %>% nrow(), 413)
   
   ### 1. First, checking that it works well when net_trade flag is FALSE.
   
@@ -69,19 +70,14 @@ test_that("Aggregating South Africa and Ghana works as intended", {
     dplyr::group_by(Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot))
   
+  # Testing that all rows are perfectly equal and that there are the same number of rows
   comparing <- aggregated_regions %>%
     dplyr::full_join(manual_aggregation) %>%
     dplyr::mutate(
-      difference = E.dot.aggregated - E.dot
+      is_equal = E.dot.aggregated == E.dot
     )
   
-  # Testing that all rows are perfectly equal and that there are the same number of rows
-  
-  count_non_null_differences <- comparing %>%
-    dplyr::filter(difference != 0) %>%
-    nrow()
-  
-  expect_equal(count_non_null_differences, 0)
+  expect_true(all(comparing$is_equal))
   expect_equal(nrow(aggregated_regions), nrow(manual_aggregation))
   
   
@@ -92,12 +88,13 @@ test_that("Aggregating South Africa and Ghana works as intended", {
                                           net_trade = TRUE)
   
   manual_aggregation_excl_ie <- tidy_GHA_ZAF_df %>%
-    dplyr::filter(! Flow %in% c("Imports", "Exports")) %>%
+    dplyr::filter(! (stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports"))) %>%
     dplyr::group_by(Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot))
   
+  # This here needs being modified.
   manual_aggregation_ie <- tidy_GHA_ZAF_df %>%
-    dplyr::filter(Flow %in% c("Imports", "Exports")) %>%
+    dplyr::filter(stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports")) %>%
     dplyr::group_by(Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot)) %>%
     tidyr::pivot_wider(names_from = Flow, values_from = E.dot.aggregated) %>%
