@@ -1,3 +1,13 @@
+
+* New bug in `aggregate_regions()` hotfixed.
+
+
+# IEATools 0.1.45 (2012-12-28)
+
+* Bug in `aggregate_regions()` hotfixed.
+* Still 661 tests, coverage remains at 100%.
+
+
 # IEATools 0.1.44 (2020-12-08)
 
 * Moved `primary_aggregates_IEA()` and `finaldemand_aggregates_IEA()` 
