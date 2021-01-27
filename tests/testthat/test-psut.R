@@ -204,9 +204,6 @@ test_that("add_row_col_meta works as expected", {
     magrittr::equals(With_meta) %>% 
     all() %>% 
     expect_true()
-
-  # expect_true(all(With_meta == With_meta_2))
-  
   
   # Now, expect error if only one of the 4 expected columns is present.
   With_meta <- load_tidy_iea_df() %>% 
