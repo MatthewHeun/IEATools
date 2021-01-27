@@ -163,7 +163,8 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
         "{IEATools::iea_cols$country}" := dplyr::case_when(
           .data[[IEATools::iea_cols$country]] == "GHA" ~ "Emmanuel Great Country",
           .data[[IEATools::iea_cols$country]] == "ZAF" ~ "Matt Great Country"
-        )))
+        ))) %>% 
+    specify_all()
   
   aggregation_table_GHA_ZAF_EGC_MGC <- tibble::tribble(
     ~IEA_regions, ~Destination_regions, ~Country,
@@ -214,7 +215,7 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
                                           net_trade = TRUE)
   
   manual_aggregation_excl_ie <- tidy_GHA_ZAF_EGC_MGC_df %>%
-    dplyr::filter(! Flow %in% c("Imports", "Exports")) %>%
+    dplyr::filter(! (stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports"))) %>%
     dplyr::mutate(
       Country = dplyr::case_when(
         Country == "ZAF" ~ "ZAF_MGC",
@@ -223,11 +224,11 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
         Country == "Emmanuel Great Country" ~ "GHA_EGC"
       )
     ) %>%
-    dplyr::group_by(Country, Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
+    dplyr::group_by(Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot))
   
   manual_aggregation_ie <- tidy_GHA_ZAF_EGC_MGC_df %>%
-    dplyr::filter(Flow %in% c("Imports", "Exports")) %>%
+    dplyr::filter((stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports"))) %>%
     dplyr::mutate(
       Country = dplyr::case_when(
         Country == "ZAF" ~ "ZAF_MGC",
@@ -236,8 +237,15 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
         Country == "Emmanuel Great Country" ~ "GHA_EGC"
       )
     ) %>%
-    dplyr::group_by(Country, Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
+    dplyr::group_by(Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot)) %>%
+    dplyr::mutate(
+      Flow = dplyr::case_when(
+        stringr::str_detect(Flow, "Imports") ~ "Imports",
+        stringr::str_detect(Flow, "Exports") ~ "Exports",
+        TRUE ~ Flow
+      )
+    ) %>% 
     tidyr::pivot_wider(names_from = Flow, values_from = E.dot.aggregated) %>%
     dplyr::mutate(
       Imports = tidyr::replace_na(Imports, 0),
@@ -253,7 +261,10 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
         E.dot.aggregated == 0 ~ "Net_Imports"
       )
     ) %>%
-    dplyr::filter(E.dot.aggregated != 0)
+    dplyr::filter(E.dot.aggregated != 0) %>% 
+    dplyr::mutate(
+      Flow = stringr::str_c(Flow, " [of ", Product, "]")
+    )
   
   manual_aggregation <- dplyr::bind_rows(manual_aggregation_excl_ie, manual_aggregation_ie)
   
@@ -274,10 +285,6 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
   
 })
 # --- EAR, 01/10/2020
-
-
-
-
 
 
 test_that("primary_aggregates() works as expected", {
