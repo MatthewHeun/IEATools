@@ -31,7 +31,8 @@ Imports:
     rlang,
     tibble,
     tidyr,
-    tidyselect
+    tidyselect,
+    stringr
 Suggests:
     covr,
     knitr,

@@ -18,6 +18,7 @@ aggregate_regions(
   year = IEATools::iea_cols$year,
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  product = IEATools::iea_cols$product,
   .net_imports = "Net_Imports"
 )
 }
@@ -62,6 +63,9 @@ Default is \code{IEATools::iea_cols$ledger_side}.}
 
 \item{flow_aggregation_point}{The name of the \code{flow_aggregation_point} column in the \code{.tidy_iea_df}.
 Default is \code{IEATools::iea_cols$flow_aggregation_point}.}
+
+\item{product}{The name of the \code{product} column in the \code{.tidy_iea_df}.
+Default is \code{IEATools::iea_cols$product}.}
 
 \item{.net_imports}{The name of the \code{.net_import} variable, that is only used internally to the function. Not returned.
 Default is "Net_Imports". It is suggested that this parameter is only used in the particular case that there is a column

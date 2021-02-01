@@ -495,7 +495,7 @@ aggregation_regions <- list(world = "World",
                             memo_lao_peoples_democratic_republic = "Memo: Lao People's Democratic Republic",
                             memo_mali = "Memo: Mali",
                             # memo_palestinian_authority = "Memo: Palestinian Authority",
-                            # memo_uganda = "Memo: Uganda",
+                            memo_uganda = "Memo: Uganda",
                             memo_africa_un = "Memo: Africa (UN)",
                             memo_americas_un = "Memo: Americas (UN)",
                             memo_asia_un = "Memo: Asia (UN)",
@@ -513,7 +513,9 @@ aggregation_regions <- list(world = "World",
                             memo_g7 = "Memo: G7",
                             memo_g8 = "Memo: G8",
                             memo_g20 = "Memo: G20",
-                            memo_china_pr_of_china_and_hong_kong_china = "China (P.R. of China and Hong Kong, China)")
+                            memo_china_pr_of_china_and_hong_kong_china = "China (P.R. of China and Hong Kong, China)",
+                            world_aviation_bunkers = "World aviation bunkers",
+                            world_marine_bunkers = "World marine bunkers")
 usethis::use_data(aggregation_regions, overwrite = TRUE)
 
 
