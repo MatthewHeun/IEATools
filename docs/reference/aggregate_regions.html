@@ -75,7 +75,7 @@ and/or net exports or by keeping gross imports and exports." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.44</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.46</span>
       </span>
     </div>
 
@@ -159,6 +159,7 @@ and/or net exports or by keeping gross imports and exports.</p>
   year = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>year</span>,
   ledger_side = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>ledger_side</span>,
   flow_aggregation_point = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow_aggregation_point</span>,
+  product = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>product</span>,
   .net_imports = <span class='st'>"Net_Imports"</span>
 )</pre>
 
@@ -233,6 +234,11 @@ Default is <code>IEATools::iea_cols$ledger_side</code>.</p></td>
 Default is <code>IEATools::iea_cols$flow_aggregation_point</code>.</p></td>
     </tr>
     <tr>
+      <th>product</th>
+      <td><p>The name of the <code>product</code> column in the <code>.tidy_iea_df</code>.
+Default is <code>IEATools::iea_cols$product</code>.</p></td>
+    </tr>
+    <tr>
       <th>.net_imports</th>
       <td><p>The name of the <code>.net_import</code> variable, that is only used internally to the function. Not returned.
 Default is "Net_Imports". It is suggested that this parameter is only used in the particular case that there is a column
@@ -250,7 +256,7 @@ country aggregation table provided.</p>
 <span class='co'># for IEA data 2019, using the example `.tidy_iea_df` </span>
 <span class='co'># returned by the `load_tidy_iea_df()` function when run without argument.</span>
 <span class='fu'>aggregate_regions</span>(.tidy_iea_df = <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>())
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 402 x 12</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 402 x 11</span><span>
 #&gt; </span><span style='color: #949494;'># Groups:   Country, Method, Energy.type, Last.stage, Year, Ledger.side,
 #&gt; #   Flow.aggregation.point, Flow, Product, Unit [402]</span><span>
 #&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
@@ -265,14 +271,14 @@ country aggregation table provided.</p>
 #&gt; </span><span style='color: #BCBCBC;'> 8</span><span> RoW Af… PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Non-energy use  
 #&gt; </span><span style='color: #BCBCBC;'> 9</span><span> RoW Af… PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other           
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> RoW Af… PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other           
-#&gt; </span><span style='color: #949494;'># … with 392 more rows, and 5 more variables: Flow </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Product </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,</span><span>
-#&gt; </span><span style='color: #949494;'>#   Unit </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Destination_regions </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, E.dot </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='co'># Performs the regional aggregation using the default IEA to Exiobase mapping </span>
+#&gt; </span><span style='color: #949494;'># … with 392 more rows, and 4 more variables: Flow </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Product </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,</span><span>
+#&gt; </span><span style='color: #949494;'>#   Unit </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, E.dot </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='co'># Performs the regional aggregation using the default IEA to Exiobase mapping </span>
 <span class='co'># for IEA data 2020, using the example `.tidy_iea_df` </span>
 <span class='co'># returned by the `load_tidy_iea_df()` function when run without argument.</span>
 <span class='fu'>aggregate_regions</span>(.tidy_iea_df = <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>(), 
                   aggregation_table = <span class='fu'><a href='read_aggregation_region_table.html'>read_aggregation_region_table</a></span>(
                     <span class='fu'><a href='default_aggregation_region_table_path.html'>default_aggregation_region_table_path</a></span>(<span class='fl'>2020</span>)))
-</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 402 x 12</span><span>
+</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 402 x 11</span><span>
 #&gt; </span><span style='color: #949494;'># Groups:   Country, Method, Energy.type, Last.stage, Year, Ledger.side,
 #&gt; #   Flow.aggregation.point, Flow, Product, Unit [402]</span><span>
 #&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
@@ -287,8 +293,8 @@ country aggregation table provided.</p>
 #&gt; </span><span style='color: #BCBCBC;'> 8</span><span> RoW Af… PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Non-energy use  
 #&gt; </span><span style='color: #BCBCBC;'> 9</span><span> RoW Af… PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other           
 #&gt; </span><span style='color: #BCBCBC;'>10</span><span> RoW Af… PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other           
-#&gt; </span><span style='color: #949494;'># … with 392 more rows, and 5 more variables: Flow </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Product </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,</span><span>
-#&gt; </span><span style='color: #949494;'>#   Unit </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Destination_regions </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, E.dot </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+#&gt; </span><span style='color: #949494;'># … with 392 more rows, and 4 more variables: Flow </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Product </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,</span><span>
+#&gt; </span><span style='color: #949494;'>#   Unit </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, E.dot </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -300,7 +306,7 @@ country aggregation table provided.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">

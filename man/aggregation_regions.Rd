@@ -5,7 +5,7 @@
 \alias{aggregation_regions}
 \title{Aggregation regions}
 \format{
-A string vector with 30 entries.
+A string vector with 33 entries.
 \describe{
 \item{world}{"World"}
 \item{oecd_americas}{"OECD Americas"}

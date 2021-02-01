@@ -1,4 +1,6 @@
 
+# IEATools 0.1.46 (2012-02-01)
+
 * `calc_tidy_iea_df_balances` function updated
   so that it also accounts for balancing flows 
   when checking balances.
@@ -25,6 +27,7 @@
 * Still 661 tests, coverage remains at 100%.
 
 
+>>>>>>> release-0.1.46
 # IEATools 0.1.44 (2020-12-08)
 
 * Moved `primary_aggregates_IEA()` and `finaldemand_aggregates_IEA()` 
