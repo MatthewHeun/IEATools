@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.45</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.46</span>
       </span>
     </div>
 
@@ -133,13 +133,46 @@
       
     </div>
 
-    <div id="ieatools-0145-2020-12-28" class="section level1">
-<h1 class="page-header" data-toc-text="0.1.45">
-<a href="#ieatools-0145-2020-12-28" class="anchor"></a>IEATools 0.1.45 (2020-12-28)</h1>
+    <div id="ieatools-0146-2012-02-01" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.46">
+<a href="#ieatools-0146-2012-02-01" class="anchor"></a>IEATools 0.1.46 (2012-02-01)</h1>
 <ul>
-<li>Minor bug in the <code><a href="../reference/aggregate_regions.html">aggregate_regions()</a></code> function corrected.</li>
+<li>
+<code>calc_tidy_iea_df_balances</code> function updated so that it also accounts for balancing flows when checking balances.</li>
+<li>New bug in <code><a href="../reference/aggregate_regions.html">aggregate_regions()</a></code> hotfixed.</li>
+<li>New option for “Epsilon” matrices and PSUT columns enables removal of some <code>Flow</code>s for footprinting analyses (and maybe other work in the future).</li>
+<li>When <code>matnames</code> is present in <code>.tidy_iea_df</code>, <code><a href="../reference/add_psut_matnames.html">add_psut_matnames()</a></code> now returns <code>.tidy_iea_df</code> unmodified. This new feature enables other functions for assigning matrix names.</li>
+<li>When all of <code>rownames</code>, <code>colnames</code>, <code>rowtypes</code>, and <code>coltypes</code> are present in <code>.tidy_iea_df</code>, <code><a href="../reference/add_row_col_meta.html">add_row_col_meta()</a></code> now returns <code>.tidy_iea_df</code> unmodified. This new feature enables other functions for assigning row and column names and row and column types.</li>
+<li>New tests for the new feature.
+<ul>
+<li>Now up to 675 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="ieatools-0145-2012-12-28" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.45">
+<a href="#ieatools-0145-2012-12-28" class="anchor"></a>IEATools 0.1.45 (2012-12-28)</h1>
+<ul>
+<li>Bug in <code><a href="../reference/aggregate_regions.html">aggregate_regions()</a></code> hotfixed.</li>
 <li>Still 661 tests, coverage remains at 100%.</li>
 </ul>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>release-0.1.46</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
 </div>
     <div id="ieatools-0144-2020-12-08" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.44">
@@ -667,7 +700,7 @@ For example, “Hard coal (if no detail)” –&gt; “Hard coal (if no detail) 
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">

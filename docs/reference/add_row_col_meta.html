@@ -41,8 +41,7 @@
 
 <meta property="og:title" content="Add row, column, row type, and column type metadata — add_row_col_meta" />
 <meta property="og:description" content="After calling add_psut_matnames(), call this function
-to add row, column, row type, and column type
-information to .tidy_iea_df." />
+to add rownames, colnames, rowtypes, and coltypes columns to .tidy_iea_df." />
 
 
 
@@ -74,7 +73,7 @@ information to .tidy_iea_df." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.45</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.46</span>
       </span>
     </div>
 
@@ -139,8 +138,7 @@ information to .tidy_iea_df." />
 
     <div class="ref-description">
     <p>After calling <code><a href='add_psut_matnames.html'>add_psut_matnames()</a></code>, call this function
-to add row, column, row type, and column type
-information to <code>.tidy_iea_df</code>.</p>
+to add <code>rownames</code>, <code>colnames</code>, <code>rowtypes</code>, and <code>coltypes</code> columns to <code>.tidy_iea_df</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>add_row_col_meta</span>(
@@ -153,6 +151,7 @@ information to <code>.tidy_iea_df</code>.</p>
   R = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>R</span>,
   V = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>V</span>,
   Y = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>Y</span>,
+  Epsilon = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>epsilon</span>,
   industry_type = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>industry</span>,
   product_type = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>product</span>,
   sector_type = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>sector</span>,
@@ -180,48 +179,16 @@ information to <code>.tidy_iea_df</code>.</p>
 (a string).  Default is "matnames".</p></td>
     </tr>
     <tr>
-      <th>R, U, U_EIOU, V, Y</th>
+      <th>R, U, U_EIOU, V, Y, Epsilon</th>
       <td><p>See <code><a href='psut_cols.html'>IEATools::psut_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>industry_type</th>
-      <td><p>the name that identifies production industries and
-and transformation processes (a string). Default is "Industry".</p></td>
+      <th>industry_type, product_type, sector_type, resource_type</th>
+      <td><p>See <code><a href='row_col_types.html'>IEATools::row_col_types</a></code>.</p></td>
     </tr>
     <tr>
-      <th>product_type</th>
-      <td><p>the name that identifies energy carriers (a string).
-Default is "Product".</p></td>
-    </tr>
-    <tr>
-      <th>sector_type</th>
-      <td><p>the name that identifies final demand sectors (a string).
-Default is "Industry".</p></td>
-    </tr>
-    <tr>
-      <th>resource_type</th>
-      <td><p>the name that identifies resource sectors (a string).
-Default is "Industry".</p></td>
-    </tr>
-    <tr>
-      <th>rownames</th>
-      <td><p>the name of the output column that contains row names for matrices
-(a string). Default is "rowname".</p></td>
-    </tr>
-    <tr>
-      <th>colnames</th>
-      <td><p>the name of the output column that contains column names for matrices
-(a string). Default is "colname".</p></td>
-    </tr>
-    <tr>
-      <th>rowtypes</th>
-      <td><p>the name of the output column that contains row types for matrices
-(a string). Default is "rowtype".</p></td>
-    </tr>
-    <tr>
-      <th>coltypes</th>
-      <td><p>the name of the output column that contains column types for matrices
-(a string). Default is "coltype".</p></td>
+      <th>rownames, colnames, rowtypes, coltypes</th>
+      <td><p>See <code><a href='mat_meta_cols.html'>IEATools::mat_meta_cols</a></code>.</p></td>
     </tr>
     </table>
 
@@ -230,6 +197,12 @@ Default is "Industry".</p></td>
     <p><code>.tidy_iea_df</code> with additional columns named
 <code>rowname</code>, <code>colname</code>,
 <code>rowtype</code>, and <code>coltype</code>.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>If <code>.tidy_iea_df</code> already contains all of <code>rownames</code>, <code>colnames</code>, <code>rowtypes</code>, and <code>coltypes</code>,
+<code>.tidy_iea_df</code> is returned without modification.
+If <code>.tidy_iea_df</code> contains some but not all of <code>rownames</code>, <code>colnames</code>, <code>rowtypes</code>, or <code>coltypes</code>,
+an error is returned.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
@@ -263,7 +236,7 @@ Default is "Industry".</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">

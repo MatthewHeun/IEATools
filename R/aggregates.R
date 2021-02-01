@@ -213,6 +213,8 @@ read_aggregation_region_table <- function(file_path = default_aggregation_region
 #' Default is `IEATools::iea_cols$e_dot`.
 #' @param flow The name of the `flow` column in the `.tidy_iea_df`.
 #' Default is `IEATools::iea_cols$flow`.
+#' @param product The name of the `product` column in the `.tidy_iea_df`.
+#' Default is `IEATools::iea_cols$product`.
 #' @param year The name of the `year` column in the `.tidy_iea_df`.
 #' Default is `IEATools::iea_cols$year`.
 #' @param ledger_side The name of the `ledger_side` column in the `.tidy_iea_df`.
@@ -252,6 +254,7 @@ aggregate_regions <- function(.tidy_iea_df,
                               year = IEATools::iea_cols$year,
                               ledger_side = IEATools::iea_cols$ledger_side,
                               flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                              product = IEATools::iea_cols$product,
                               .net_imports = "Net_Imports"){
   
   iea_code_regions <- aggregation_table[[country]]
@@ -272,11 +275,19 @@ aggregate_regions <- function(.tidy_iea_df,
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
-    )
+    ) %>% 
+    dplyr::select(-.data[[destination_regions]])
   
   if (net_trade == TRUE){
     aggregated_net_trade <- aggregated_tidy_iea_df %>% 
-      dplyr::filter(.data[[flow]] == imports | .data[[flow]] == exports) %>% 
+      dplyr::filter(stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports)) %>% 
+      dplyr::mutate(
+        "{flow}" := dplyr::case_when(
+          stringr::str_detect(.data[[flow]], imports) ~ imports,
+          stringr::str_detect(.data[[flow]], exports) ~ exports,
+          TRUE ~ .data[[flow]]
+        )
+      ) %>%
       tidyr::pivot_wider(names_from = .data[[flow]], values_from = .data[[e_dot]]) %>% 
       dplyr::mutate(
         "{imports}" := tidyr::replace_na(.data[[imports]], 0),
@@ -293,10 +304,13 @@ aggregate_regions <- function(.tidy_iea_df,
         )
       ) %>% 
       dplyr::filter(.data[[e_dot]] != 0) %>%
+      dplyr::mutate(
+        "{flow}" := stringr::str_c(.data[[flow]], " [of ", .data[[product]], "]", sep = "")
+      ) %>%
       dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
     
     aggregated_tidy_iea_df <- aggregated_tidy_iea_df %>% 
-      dplyr::filter(! .data[[flow]] %in% c({imports}, {exports})) %>%
+      dplyr::filter(! (stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports))) %>%
       dplyr::bind_rows(aggregated_net_trade) %>%
       dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
   }

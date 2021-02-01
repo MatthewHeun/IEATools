@@ -83,7 +83,7 @@ use the tidy_iea_df_balanced() function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.45</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.46</span>
       </span>
     </div>
 
@@ -171,6 +171,8 @@ use the <code><a href='tidy_iea_df_balanced.html'>tidy_iea_df_balanced()</a></co
   unit = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>unit</span>,
   supply = <span class='kw'>IEATools</span>::<span class='kw'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='kw'>supply</span>,
   consumption = <span class='kw'>IEATools</span>::<span class='kw'><a href='ledger_sides.html'>ledger_sides</a></span><span class='op'>$</span><span class='kw'>consumption</span>,
+  matnames = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>matnames</span>,
+  balancing = <span class='st'>"balancing"</span>,
   supply_sum = <span class='st'>"supply_sum"</span>,
   consumption_sum = <span class='st'>"consumption_sum"</span>,
   supply_minus_consumption = <span class='st'>"supply_minus_consumption"</span>,
@@ -196,6 +198,14 @@ a <code>Ledger.side</code> column.</p></td>
     <tr>
       <th>supply, consumption</th>
       <td><p>See <code><a href='ledger_sides.html'>IEATools::ledger_sides</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>matnames</th>
+      <td><p>See <code><a href='mat_meta_cols.html'>IEATools::mat_meta_cols</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>balancing</th>
+      <td><p>The ledger side of balancing flows, if any balancing flow has been added to the <code>.tidy_iea_df</code>.</p></td>
     </tr>
     <tr>
       <th>supply_sum</th>
@@ -284,7 +294,7 @@ If not, <code>balance_OK</code> will be <code>FALSE</code>.</p></li>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">

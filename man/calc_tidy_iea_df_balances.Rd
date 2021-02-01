@@ -14,6 +14,8 @@ calc_tidy_iea_df_balances(
   unit = IEATools::iea_cols$unit,
   supply = IEATools::ledger_sides$supply,
   consumption = IEATools::ledger_sides$consumption,
+  matnames = IEATools::mat_meta_cols$matnames,
+  balancing = "balancing",
   supply_sum = "supply_sum",
   consumption_sum = "consumption_sum",
   supply_minus_consumption = "supply_minus_consumption",
@@ -31,6 +33,10 @@ a \code{Ledger.side} column.}
 \item{ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
 
 \item{supply, consumption}{See \code{IEATools::ledger_sides}.}
+
+\item{matnames}{See \code{IEATools::mat_meta_cols}.}
+
+\item{balancing}{The ledger side of balancing flows, if any balancing flow has been added to the \code{.tidy_iea_df}.}
 
 \item{supply_sum}{the name of a new column that will contain the sum of all supply for that group.
 Default is "supply_sum".}

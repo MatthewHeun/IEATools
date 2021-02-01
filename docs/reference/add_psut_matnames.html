@@ -43,7 +43,9 @@
 <meta property="og:description" content="This function adds a column of matrix names to a tidy data frame
 wherein each row of .tidy_iea_df is a single value in an energy conversion chain.
 The default argument values assume that .tidy_iea_df uses IEA-style nomenclature
-and terminology, although .tidy_iea_df does not necessarily need to contain IEA data." />
+and terminology, although .tidy_iea_df does not necessarily need to contain IEA data.
+In a typical workflow, this function would be followed by a call to
+add_row_col_meta() and matsindf::collapse_to_matrices()." />
 
 
 
@@ -75,7 +77,7 @@ and terminology, although .tidy_iea_df does not necessarily need to contain IEA 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.45</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.46</span>
       </span>
     </div>
 
@@ -142,7 +144,9 @@ and terminology, although .tidy_iea_df does not necessarily need to contain IEA 
     <p>This function adds a column of matrix names to a tidy data frame
 wherein each row of <code>.tidy_iea_df</code> is a single value in an energy conversion chain.
 The default argument values assume that <code>.tidy_iea_df</code> uses IEA-style nomenclature
-and terminology, although <code>.tidy_iea_df</code> does not necessarily need to contain IEA data.</p>
+and terminology, although <code>.tidy_iea_df</code> does not necessarily need to contain IEA data.
+In a typical workflow, this function would be followed by a call to
+<code><a href='add_row_col_meta.html'>add_row_col_meta()</a></code> and <code><a href='https://rdrr.io/pkg/matsindf/man/collapse_to_matrices.html'>matsindf::collapse_to_matrices()</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>add_psut_matnames</span>(
@@ -213,12 +217,12 @@ For "Losses" and "Statistical differences", see <code><a href='tfc_compare_flows
     <p><code>.tidy_iea_df</code> with an added column <code>matnames</code>.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>In a reasonable workflow, this function would be followed by a call to
-<code><a href='add_row_col_meta.html'>add_row_col_meta()</a></code> and <code><a href='https://rdrr.io/pkg/matsindf/man/collapse_to_matrices.html'>matsindf::collapse_to_matrices()</a></code>.</p>
-<p>This function respects groups when identifying entries in the resource matrix (<code>R</code>).
+    <p>This function respects groups when identifying entries in the resource matrix (<code>R</code>).
 So be sure to group <code>.tidy_iea_df</code> before calling this function.</p>
-<p>Internally, this function adds a temporary column to <code>.tidy_iea_df</code> called ".R".
-An error will occur if <code>.tidy_iea_df</code> already has a column named ".R".</p>
+<p>If <code>.tidy_iea_df</code> already has a <code>matnames</code> column,
+this function returns the <code>.tidy_iea_df</code> without modification,
+assuming that the caller has already supplied a destination
+matrix name for each row of <code>.tidy_iea_df</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
@@ -257,7 +261,7 @@ An error will occur if <code>.tidy_iea_df</code> already has a column named ".R"
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">

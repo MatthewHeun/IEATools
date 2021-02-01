@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.45</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.46</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Prepare for PSUT analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2020-12-28</h4>
+            <h4 class="date">2021-02-01</h4>
       
       
       <div class="hidden name"><code>prep_psut.Rmd</code></div>
@@ -127,6 +127,7 @@
 <span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 2087.5131, 250.1290, 916.2081, 1.0700, 21.3051…</span>
 <span class="co">#&gt; $ matnames               &lt;chr&gt; "R", "R", "V", "V", "V", "V", "V", "Y", "Y", "…</span>
 </pre></div>
+<p>Note that when a <code>matnames</code> column already exists in <code>.tidy_iea_df</code>, <code><a href="../reference/add_psut_matnames.html">add_psut_matnames()</a></code> returns the input data frame without modification. This behavior allows other matrix naming conventions.</p>
 </div>
 <div id="add-matrix-metadata-add_row_col_meta" class="section level2">
 <h2 class="hasAnchor">
@@ -156,6 +157,8 @@
 <span class="co">#&gt; $ rowtypes               &lt;chr&gt; "Industry", "Industry", "Industry", "Industry"…</span>
 <span class="co">#&gt; $ coltypes               &lt;chr&gt; "Product", "Product", "Product", "Product", "P…</span>
 </pre></div>
+<p>Note that if all of <code>rowname</code>, <code>colname</code>, <code>rowtype</code>, or <code>coltype</code> columns are already present in <code>.tidy_iea_data</code>, <code><a href="../reference/add_row_col_meta.html">add_row_col_meta()</a></code> returns the input data frame without modification. This behavior allows other matrix row, column, rowtype, and coltype naming conventions.</p>
+<p>If some but not all of <code>rowname</code>, <code>colname</code>, <code>rowtype</code>, and <code>coltype</code> columns are present in in <code>.tidy_iea_data</code>, <code><a href="../reference/add_row_col_meta.html">add_row_col_meta()</a></code>returns an error.</p>
 </div>
 <div id="collapse-to-matrices-collapse_to_tidy_psut" class="section level2">
 <h2 class="hasAnchor">
@@ -548,7 +551,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Matthew Heun.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">

@@ -43,13 +43,14 @@ test_that("Loading regional aggregation table works as intended", {
 # So there is only one aggregation region as output in this test.
 test_that("Aggregating South Africa and Ghana works as intended", {
   
-  tidy_GHA_ZAF_df <- load_tidy_iea_df()
+  tidy_GHA_ZAF_df <- load_tidy_iea_df() %>% 
+    specify_all()
   
   ### 0. Checking that the aggregation works with the default aggregation table (iea -> exiobase; 2019 iea data)
   default_aggregation_2019 <- tidy_GHA_ZAF_df %>% 
     aggregate_regions()
   
-  expect_equal(default_aggregation_2019 %>% nrow(), 402)
+  expect_equal(default_aggregation_2019 %>% nrow(), 413)
   
   ### 1. First, checking that it works well when net_trade flag is FALSE.
   
@@ -69,19 +70,14 @@ test_that("Aggregating South Africa and Ghana works as intended", {
     dplyr::group_by(Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot))
   
+  # Testing that all rows are perfectly equal and that there are the same number of rows
   comparing <- aggregated_regions %>%
     dplyr::full_join(manual_aggregation) %>%
     dplyr::mutate(
-      difference = E.dot.aggregated - E.dot
+      is_equal = E.dot.aggregated == E.dot
     )
   
-  # Testing that all rows are perfectly equal and that there are the same number of rows
-  
-  count_non_null_differences <- comparing %>%
-    dplyr::filter(difference != 0) %>%
-    nrow()
-  
-  expect_equal(count_non_null_differences, 0)
+  expect_true(all(comparing$is_equal))
   expect_equal(nrow(aggregated_regions), nrow(manual_aggregation))
   
   
@@ -92,13 +88,24 @@ test_that("Aggregating South Africa and Ghana works as intended", {
                                           net_trade = TRUE)
   
   manual_aggregation_excl_ie <- tidy_GHA_ZAF_df %>%
-    dplyr::filter(! Flow %in% c("Imports", "Exports")) %>%
-    dplyr::group_by(Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
-    dplyr::summarise(E.dot.aggregated = sum(E.dot))
+    dplyr::filter(! (stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports"))) %>%
+    dplyr::group_by(Method, Last.stage, Energy.type, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
+    dplyr::summarise(E.dot.aggregated = sum(E.dot)) %>% 
+    dplyr::mutate(
+      Country = "GHAZAF"
+    )
   
+  # This here needs being modified.
   manual_aggregation_ie <- tidy_GHA_ZAF_df %>%
-    dplyr::filter(Flow %in% c("Imports", "Exports")) %>%
-    dplyr::group_by(Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
+    dplyr::filter(stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports")) %>%
+    dplyr::mutate(
+      Flow = dplyr::case_when(
+        stringr::str_detect(Flow, "Imports") ~ "Imports",
+        stringr::str_detect(Flow, "Exports") ~ "Exports",
+        TRUE ~ Flow
+      )
+    ) %>% 
+    dplyr::group_by(Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot)) %>%
     tidyr::pivot_wider(names_from = Flow, values_from = E.dot.aggregated) %>%
     dplyr::mutate(
@@ -115,25 +122,26 @@ test_that("Aggregating South Africa and Ghana works as intended", {
         E.dot.aggregated == 0 ~ "Net_Imports"
       )
     ) %>%
-    dplyr::filter(E.dot.aggregated != 0)
+    dplyr::filter(E.dot.aggregated != 0) %>% 
+    dplyr::mutate(
+      Flow = stringr::str_c(Flow, " [of ", Product, "]")
+    ) %>% 
+    dplyr::mutate(
+      Country = "GHAZAF"
+    )
   
   manual_aggregation <- dplyr::bind_rows(manual_aggregation_excl_ie, manual_aggregation_ie)
   
   comparing <- aggregated_regions %>%
-    dplyr::full_join(manual_aggregation) %>%
+    dplyr::full_join(manual_aggregation, by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", "Flow", "Product", "Unit")) %>%
     dplyr::mutate(
-      difference = E.dot.aggregated - E.dot
+      is_equal = E.dot.aggregated == E.dot
     )
-  
+
   # Testing that all rows are perfectly equal and that there are the same number of rows
   
-  count_non_null_differences <- comparing %>%
-    dplyr::filter(difference != 0) %>%
-    nrow()
-  
-  expect_equal(count_non_null_differences, 0)
+  expect_true(all(comparing$is_equal))
   expect_equal(nrow(aggregated_regions), nrow(manual_aggregation))
-  
 })
 # --- EAR, 01/10/2020
 
@@ -155,7 +163,8 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
         "{IEATools::iea_cols$country}" := dplyr::case_when(
           .data[[IEATools::iea_cols$country]] == "GHA" ~ "Emmanuel Great Country",
           .data[[IEATools::iea_cols$country]] == "ZAF" ~ "Matt Great Country"
-        )))
+        ))) %>% 
+    specify_all()
   
   aggregation_table_GHA_ZAF_EGC_MGC <- tibble::tribble(
     ~IEA_regions, ~Destination_regions, ~Country,
@@ -206,7 +215,7 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
                                           net_trade = TRUE)
   
   manual_aggregation_excl_ie <- tidy_GHA_ZAF_EGC_MGC_df %>%
-    dplyr::filter(! Flow %in% c("Imports", "Exports")) %>%
+    dplyr::filter(! (stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports"))) %>%
     dplyr::mutate(
       Country = dplyr::case_when(
         Country == "ZAF" ~ "ZAF_MGC",
@@ -215,11 +224,11 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
         Country == "Emmanuel Great Country" ~ "GHA_EGC"
       )
     ) %>%
-    dplyr::group_by(Country, Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
+    dplyr::group_by(Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot))
   
   manual_aggregation_ie <- tidy_GHA_ZAF_EGC_MGC_df %>%
-    dplyr::filter(Flow %in% c("Imports", "Exports")) %>%
+    dplyr::filter((stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports"))) %>%
     dplyr::mutate(
       Country = dplyr::case_when(
         Country == "ZAF" ~ "ZAF_MGC",
@@ -228,8 +237,15 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
         Country == "Emmanuel Great Country" ~ "GHA_EGC"
       )
     ) %>%
-    dplyr::group_by(Country, Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
+    dplyr::group_by(Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot)) %>%
+    dplyr::mutate(
+      Flow = dplyr::case_when(
+        stringr::str_detect(Flow, "Imports") ~ "Imports",
+        stringr::str_detect(Flow, "Exports") ~ "Exports",
+        TRUE ~ Flow
+      )
+    ) %>% 
     tidyr::pivot_wider(names_from = Flow, values_from = E.dot.aggregated) %>%
     dplyr::mutate(
       Imports = tidyr::replace_na(Imports, 0),
@@ -245,7 +261,10 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
         E.dot.aggregated == 0 ~ "Net_Imports"
       )
     ) %>%
-    dplyr::filter(E.dot.aggregated != 0)
+    dplyr::filter(E.dot.aggregated != 0) %>% 
+    dplyr::mutate(
+      Flow = stringr::str_c(Flow, " [of ", Product, "]")
+    )
   
   manual_aggregation <- dplyr::bind_rows(manual_aggregation_excl_ie, manual_aggregation_ie)
   
@@ -266,10 +285,6 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
   
 })
 # --- EAR, 01/10/2020
-
-
-
-
 
 
 test_that("primary_aggregates() works as expected", {

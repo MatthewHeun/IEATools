@@ -9,7 +9,7 @@
 #' `.tidy_iea_df` is typically obtained from `tidy_iea_df()`.
 #'
 #' @param .tidy_iea_df the tidy data frame from which a unit summation `S_units` matrix is to be formed.
-#' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
+#' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit,matnames See `IEATools::iea_cols`.
 #' @param s_units See `IEATools::psut_cols`.
 #' @param product_type,unit_type See `IEATools::row_col_types`.
 #' @param .val the name of a temporary value column to be created in `.tidy_iea_df`. Default is ".val".
@@ -32,6 +32,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
                                       product = IEATools::iea_cols$product, 
                                       e_dot = IEATools::iea_cols$e_dot,
                                       unit = IEATools::iea_cols$unit,
+                                      matnames = IEATools::iea_cols$mat_meta_cols$matnames,
                                       # Row and product types
                                       product_type = IEATools::row_col_types$product,
                                       unit_type = IEATools::row_col_types$unit, 
@@ -41,7 +42,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
                                       .val = ".val", 
                                       .rowtype = ".rowtype", 
                                       .coltype = ".coltype"){
-  grouping_vars <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, unit)
+  grouping_vars <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, unit, matnames)
   matsindf::verify_cols_missing(.tidy_iea_df, c(s_units, .val, .rowtype, .coltype))
   .tidy_iea_df %>% 
     dplyr::group_by(!!!grouping_vars) %>% 
@@ -69,23 +70,24 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #' wherein each row of `.tidy_iea_df` is a single value in an energy conversion chain.
 #' The default argument values assume that `.tidy_iea_df` uses IEA-style nomenclature
 #' and terminology, although `.tidy_iea_df` does not necessarily need to contain IEA data.
-#'
-#' In a reasonable workflow, this function would be followed by a call to
+#' In a typical workflow, this function would be followed by a call to
 #' `add_row_col_meta()` and `matsindf::collapse_to_matrices()`.
 #'
 #' This function respects groups when identifying entries in the resource matrix (`R`).
 #' So be sure to group `.tidy_iea_df` before calling this function.
 #'
-#' Internally, this function adds a temporary column to `.tidy_iea_df` called ".R".
-#' An error will occur if `.tidy_iea_df` already has a column named ".R".
-#'
+#' If `.tidy_iea_df` already has a `matnames` column, 
+#' this function returns the `.tidy_iea_df` without modification, 
+#' assuming that the caller has already supplied a destination
+#' matrix name for each row of `.tidy_iea_df`.
+#' 
 #' @param .tidy_iea_df a data frame with `ledger_side`, `flow_aggregation_point`, `flow`, and `e_dot` columns.
 #' @param ledger_side,flow_aggregation_point,flow,product,e_dot See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param production,resources See `IEATools::tpes_flows`.
 #' @param eiou See `IEATools::tfc_compare_flows`.
 #' @param neg_supply_in_fd For "Exports", "International aviation bunkers", "International marine bunkers", and "Stock changes", see `IEATools::tpes_flows`.
-#'        For "Losses" and "Statistical differences", see `IEATools::tfc_compare_flows`.
+#'                         For "Losses" and "Statistical differences", see `IEATools::tfc_compare_flows`.
 #' @param matnames See `IEATools::mat_meta_cols`.
 #' @param R,U_feed,U_EIOU,V,Y See `IEATools::psut_matnames`.
 #'
@@ -130,7 +132,12 @@ add_psut_matnames <- function(.tidy_iea_df,
                               U_EIOU = IEATools::psut_cols$U_eiou,
                               V = IEATools::psut_cols$V, 
                               Y = IEATools::psut_cols$Y){
-  matsindf::verify_cols_missing(.tidy_iea_df, matnames)
+  
+  # If the matrix names column already exist in the .tidy_iea_df, 
+  # then the function should not perform any operation.
+  if (matnames %in% colnames(.tidy_iea_df)){
+    return(.tidy_iea_df)
+  }
   
   .tidy_iea_df %>%
     dplyr::mutate(
@@ -143,9 +150,9 @@ add_psut_matnames <- function(.tidy_iea_df,
         .data[[ledger_side]] == supply & .data[[e_dot]] > 0 ~ V,
         # Negative values on the supply side of the ledger with Flow == "Energy industry own use"
         # are put into the U_EIOU matrix
-        .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 & !!as.name(flow_aggregation_point) == eiou ~ U_EIOU,
+        .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 & .data[[flow_aggregation_point]] == eiou ~ U_EIOU,
         # Negative values on the supply side that have Flow %in% neg_supply_in_fd go in the final demand matrix
-        .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 & starts_with_any_of(!!as.name(flow), neg_supply_in_fd) ~ Y,
+        .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 & starts_with_any_of(.data[[flow]], neg_supply_in_fd) ~ Y,
         # All other negative values on the Supply side of the ledger belong in the use matrix
         # that excludes EIOU (U_feed).
         .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 ~ U_feed,
@@ -159,30 +166,20 @@ add_psut_matnames <- function(.tidy_iea_df,
 #' Add row, column, row type, and column type metadata
 #' 
 #' After calling `add_psut_matnames()`, call this function
-#' to add row, column, row type, and column type 
-#' information to `.tidy_iea_df`.
+#' to add `rownames`, `colnames`, `rowtypes`, and `coltypes` columns to `.tidy_iea_df`.
+#' 
+#' If `.tidy_iea_df` already contains all of `rownames`, `colnames`, `rowtypes`, and `coltypes`, 
+#' `.tidy_iea_df` is returned without modification.
+#' If `.tidy_iea_df` contains some but not all of `rownames`, `colnames`, `rowtypes`, or `coltypes`, 
+#' an error is returned.
 #'
 #' @param .tidy_iea_df a data frame containing column `matnames`
 #' @param flow,product See `IEATools::iea_cols`.
 #' @param matnames the name of the column in `.tidy_iea_df` that contains names of matrices
 #'        (a string).  Default is "matnames".
-#' @param R,U,U_EIOU,V,Y See `IEATools::psut_cols`.
-#' @param industry_type the name that identifies production industries and
-#'        and transformation processes (a string). Default is "Industry".
-#' @param product_type the name that identifies energy carriers (a string).
-#'        Default is "Product".
-#' @param sector_type the name that identifies final demand sectors (a string).
-#'        Default is "Industry".
-#' @param resource_type the name that identifies resource sectors (a string).
-#'        Default is "Industry".
-#' @param rownames the name of the output column that contains row names for matrices
-#'        (a string). Default is "rowname".
-#' @param colnames the name of the output column that contains column names for matrices
-#'        (a string). Default is "colname".
-#' @param rowtypes the name of the output column that contains row types for matrices
-#'        (a string). Default is "rowtype".
-#' @param coltypes the name of the output column that contains column types for matrices
-#'        (a string). Default is "coltype".
+#' @param R,U,U_EIOU,V,Y,Epsilon See `IEATools::psut_cols`.
+#' @param industry_type,product_type,sector_type,resource_type See `IEATools::row_col_types`.
+#' @param rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #'
 #' @return `.tidy_iea_df` with additional columns named
 #'         `rowname`, `colname`,
@@ -207,6 +204,7 @@ add_row_col_meta <- function(.tidy_iea_df,
                              R = IEATools::psut_cols$R, 
                              V = IEATools::psut_cols$V,
                              Y = IEATools::psut_cols$Y,
+                             Epsilon = IEATools::psut_cols$epsilon,
                              # Row and column Type identifiers
                              industry_type = IEATools::row_col_types$industry,
                              product_type = IEATools::row_col_types$product, 
@@ -217,7 +215,15 @@ add_row_col_meta <- function(.tidy_iea_df,
                              colnames = IEATools::mat_meta_cols$colnames,
                              rowtypes = IEATools::mat_meta_cols$rowtypes, 
                              coltypes = IEATools::mat_meta_cols$coltypes){
+  
+  # If all of rownames, colnames, rowtypes, and coltypes are in the column names, then don't do anything.
+  if (all(c(rownames, colnames, rowtypes, coltypes) %in% colnames(.tidy_iea_df))){
+    return(.tidy_iea_df)
+  }
+  
+  # Else, do everything as planned before.
   matsindf::verify_cols_missing(.tidy_iea_df, c(rownames, colnames, rowtypes, coltypes))
+  
   .tidy_iea_df %>%
     dplyr::mutate(
       "{rownames}" := dplyr::case_when(
@@ -225,27 +231,31 @@ add_row_col_meta <- function(.tidy_iea_df,
         .data[[matnames]] == R ~ .data[[flow]],
         .data[[matnames]] == V ~ .data[[flow]],
         .data[[matnames]] == Y ~ .data[[product]],
+        .data[[matnames]] == Epsilon ~ .data[[product]],
         TRUE ~ NA_character_
       ),
-      !!as.name(colnames) := dplyr::case_when(
+      "{colnames}" := dplyr::case_when(
         startsWith(.data[[matnames]], U) ~ .data[[flow]],
         .data[[matnames]] == V ~ .data[[product]],
         .data[[matnames]] == R ~ .data[[product]],
         .data[[matnames]] == Y ~ .data[[flow]],
+        .data[[matnames]] == Epsilon ~ .data[[flow]],
         TRUE ~ NA_character_
       ),
-      !!as.name(rowtypes) := dplyr::case_when(
+      "{rowtypes}" := dplyr::case_when(
         startsWith(.data[[matnames]], U) ~ product_type,
         .data[[matnames]] == R ~ resource_type,
         .data[[matnames]] == V ~ industry_type,
         .data[[matnames]] == Y ~ product_type,
+        .data[[matnames]] == Epsilon ~ product_type,
         TRUE ~ NA_character_
       ),
-      !!as.name(coltypes) := dplyr::case_when(
+      "{coltypes}" := dplyr::case_when(
         startsWith(.data[[matnames]], U) ~ industry_type,
         .data[[matnames]] == R ~ product_type,
         .data[[matnames]] == V ~ product_type,
         .data[[matnames]] == Y ~ sector_type,
+        .data[[matnames]] == Epsilon ~ sector_type,
         TRUE ~ NA_character_
       )
     )
@@ -264,6 +274,7 @@ add_row_col_meta <- function(.tidy_iea_df,
 #' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
 #' @param matnames,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #' @param matvals See `IEATools::psut_cols`.
+#' @param Epsilon Name of the Epsilon matrix. See `IEATools::psut_cols`.
 #'
 #' @return `.tidy_iea_df` with all values converted to matrices in the `matvals` column
 #' 
@@ -283,6 +294,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
                                   product = IEATools::iea_cols$product,
                                   e_dot = IEATools::iea_cols$e_dot,
                                   unit = IEATools::iea_cols$unit, 
+                                  Epsilon = IEATools::psut_cols$epsilon,
                                   matnames = IEATools::mat_meta_cols$matnames,
                                   rownames = IEATools::mat_meta_cols$rownames,
                                   colnames = IEATools::mat_meta_cols$colnames,
@@ -293,8 +305,11 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
   matsindf::verify_cols_missing(.tidy_iea_df, matvals)
   .tidy_iea_df %>% 
     dplyr::mutate(
-      # All values in the matrices must be positive
-      "{e_dot}" := abs(.data[[e_dot]])
+      # All values in the matrices must be positive, but for Epsilon matrix terms.
+      "{e_dot}" := dplyr::case_when(
+        .data[[matnames]] == Epsilon ~ .data[[e_dot]],
+        TRUE ~ abs(.data[[e_dot]])
+      )
     ) %>%
     dplyr::mutate(
       # Eliminate columns that we no longer need.
@@ -340,7 +355,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' @param year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param matnames,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
-#' @param matvals,R,U_eiou,U_feed,U,r_eiou,V,Y,s_units See `IEATools::psut_cols`.
+#' @param matvals,R,U_eiou,U_feed,U,r_eiou,V,Y,s_units,Epsilon See `IEATools::psut_cols`.
 #'
 #' @return A wide-by-matrix data frame with metadata columns and columns named for each type of matrix.
 #' 
@@ -402,6 +417,7 @@ prep_psut <- function(.tidy_iea_df,
                       U = IEATools::psut_cols$U,
                       V = IEATools::psut_cols$V,
                       Y = IEATools::psut_cols$Y,
+                      Epsilon = IEATools::psut_cols$epsilon,
                       s_units = IEATools::psut_cols$s_units){
   if (nrow(.tidy_iea_df) == 0) {
     # We can get a no-row data frame for .tidy_iea_df. 
@@ -414,8 +430,8 @@ prep_psut <- function(.tidy_iea_df,
     # Make a tibble with no rows for the remainder of the columns, 
     # R, U_eiou, U_feed, V, Y, S_units (6 in total)
     # Use 1.1 for the value so that columns are created as double type columns.
-    mats_cols <- as.list(rep(1.1, 6)) %>% 
-      magrittr::set_names(c(R, U_eiou, U_feed, V, Y, s_units)) %>% 
+    mats_cols <- as.list(rep(1.1, 7)) %>% 
+      magrittr::set_names(c(R, U_eiou, U_feed, V, Y, s_units, Epsilon)) %>% 
       as.data.frame()
     # Eliminate the row in the data frame
     zero_length_mats_cols <- mats_cols[0, ]
