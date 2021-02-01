@@ -2,14 +2,14 @@ citHeader("To cite package ‘IEATools’ in publications use:")
 
 citEntry(entry = "Manual",
   title        = "IEATools: Tools for munging and manipulating IEA extended energy balance data",
-  author       = personList(as.person("Matthew Kuperus Heun")),
+  author       = personList(as.person("Matthew Kuperus Heun"), as.person("Emmanuel Aramendia")),
   year         = "2020",
-  note         = "R package version 0.1.44",
+  note         = "R package version 0.1.46",
   url          = "https://github.com/MatthewHeun/IEATools",
 
   textVersion  =
-  paste("Matthew Kuperus Heun (2020).",
+  paste("Matthew Kuperus Heun , Emmanuel Aramendia (2020).",
         "IEATools: Tools for munging and manipulating IEA extended energy balance data.",
-        "R package version 0.1.44.",
+        "R package version 0.1.46.",
         "https://github.com/MatthewHeun/IEATools")
 )
