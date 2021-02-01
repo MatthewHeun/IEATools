@@ -10,5 +10,5 @@ citEntry(entry = "Manual",
   textVersion  =
   paste("Matthew Kuperus Heun , Emmanuel Aramendia (2020).",
         "IEATools: Tools for munging and manipulating IEA extended energy balance data.",
-        "R package version 0.1.46.", release-0.1.46, "https://github.com/MatthewHeun/IEATools")
+        "R package version 0.1.46.")
 )
