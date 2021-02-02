@@ -390,7 +390,9 @@ specify_tp_eiou <- function(.tidy_iea_df,
                             main_act_producer_elect = "Main activity producer electricity plants"){
   .tidy_iea_df %>% 
     matsindf::verify_cols_missing(negzeropos)
+  
   .tidy_iea_df %>% 
+    route_pumped_storage() %>% 
     dplyr::mutate(
       !!as.name(flow) := dplyr::case_when(
         # Apply "Own use in electricity, CHP and heat plants" to "Main activity producer electricity plants"
@@ -411,7 +413,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
         # apply EIOU by Pumped storage plants to 
         # the Industry in which production from Pumped storage plants is accounted:
         # Main activity producer electricity plants.
-        !!as.name(flow) == pumped_storage & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
+        #!!as.name(flow) == pumped_storage & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
         
         # If Nuclear is used, we need to reclassify EIOU by Nuclear plants
         # to Main activity producer electricity plants.
