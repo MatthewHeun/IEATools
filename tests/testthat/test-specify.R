@@ -82,18 +82,6 @@ test_that("eiou is replaced correctly", {
     magrittr::extract2("Flow") %>% 
     unique()
   expect_false(eiou %>% endsWith("(energy)") %>% any())
-  
-  # Try a bogus data frame with an EIOU Flow of "Nuclear industry". 
-  # Make sure it is converted to "Main activity producer electricity plants".
-  unspecified <- data.frame(Country = c("HU", "HU"), 
-                            Flow.aggregation.point = c("Energy industry own use", "Energy industry own use"),
-                            Flow = c("Nuclear industry", "Nuclear industry"), 
-                            E.dot = c(-10, -10),
-                            stringsAsFactors = FALSE)
-  specified <- unspecified %>% 
-    specify_tp_eiou()
-  expect_equal(specified$Flow, "Main activity producer electricity plants")
-  expect_equal(specified$E.dot, -20)
 })
 
 
