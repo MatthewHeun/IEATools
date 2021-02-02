@@ -269,6 +269,9 @@ add_row_col_meta <- function(.tidy_iea_df,
 #' 
 #' This function ensures that all energy flow numbers are positive
 #' before creating the matrices.
+#' 
+#' Note that the `.tidy_iea_df` is ungrouped using the function 
+#' `dplyr::ungroup()` prior to undergoing any modification.
 #'
 #' @param .tidy_iea_df a data frame containing `matnames` and several other columns
 #' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
