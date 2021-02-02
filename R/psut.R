@@ -303,7 +303,9 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
                                   # Name of output column of matrices
                                   matvals = IEATools::psut_cols$matvals){
   matsindf::verify_cols_missing(.tidy_iea_df, matvals)
+  
   .tidy_iea_df %>% 
+    dplyr::ungroup() %>% 
     dplyr::mutate(
       # All values in the matrices must be positive, but for Epsilon matrix terms.
       "{e_dot}" := dplyr::case_when(
