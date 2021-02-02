@@ -8,10 +8,18 @@ context("Specify EIOU")
 test_that("specify_tp_eiou works as expected for Own use in electricity, CHP and heat plants", {
   # Make a bogus data frame
   EIOU <- data.frame(Country = c("US", "US"), 
+                     Method = c("PCM", "PCM"),
+                     Energy.type = c("E", "E"),
+                     Last.stage = c("Final", "Final"),
+                     Year = c(2000, 2000),
                      Flow.aggregation.point = c("Energy industry own use", "nothing"),
                      Flow = c("Own use in electricity, CHP and heat plants", "Own use in electricity, CHP and heat plants"), 
+                     Ledger.side = c("Supply", "Supply"),
+                     Unit = c("ktoe", "ktoe"),
+                     Product = c("Brown coal", "Crude oil"),
                      E.dot = c(-10, -10),
                      stringsAsFactors = FALSE)
+  
   EIOU_fixed <- specify_tp_eiou(EIOU)
   # The first row is expected to change, because its Product is "Electricity"
   expect_equal(EIOU_fixed$Flow[[1]], "Main activity producer electricity plants")

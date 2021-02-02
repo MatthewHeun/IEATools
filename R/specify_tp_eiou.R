@@ -294,6 +294,7 @@ add_nuclear_industry <- function(.tidy_iea_df,
            (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(nuclear, electricity, heat)))
     ) %>%
     tidyr::pivot_wider(names_from = .data[[product]], values_from = .data[[e_dot]]) %>%
+    dplyr::select(-tidyselect::any_of({e_dot})) %>% 
     tibble::add_column(!!products_tibble[! names(products_tibble) %in% names(.)]) %>%
     dplyr::mutate(
       "{nuclear}" := tidyr::replace_na(.data[[nuclear]], 0),
