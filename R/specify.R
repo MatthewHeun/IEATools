@@ -392,6 +392,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
     matsindf::verify_cols_missing(negzeropos)
   
   .tidy_iea_df %>% 
+    gather_producer_autoproducer() %>% 
     route_pumped_storage() %>% 
     dplyr::mutate(
       !!as.name(flow) := dplyr::case_when(
