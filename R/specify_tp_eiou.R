@@ -1,22 +1,73 @@
-# This is a script for specify_tp_eiou subfunctions.
 
-# Meant to go to the IEATools package
-# This function gathers producers and autoproducers
-
+#' Gather main activity producer and autoproducer industries
+#' 
+#' The IEA extended energy balances include both main activity producer 
+#' and autoproducer industries for electricity, heat, and CHP plants. 
+#' See details for an explication of each.
+#' This function gathers main activity producer and autoproducer, for each
+#' of the three types of plants: electricity, heat, and CHP plants.
+#' This function is called within the `specify_all()` function.
+#' 
+#' Autoproducer plants are those that consume in-situ the energy they produce. 
+#' For instance, an iron and steel plant that produces electricity 
+#' and directly consumes it would be classified as an autoproducer electricity plant.
+#' Conversely, main activity producer plants are those that produce
+#' a product, be it electricity, heat, or both (CHP plants) and sell it
+#' to the market.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
+#' @param flow_aggregation_point The name of the flow aggregation point column in the `.tidy_iea_df`.
+#'                               Default is `IEATools::iea_cols$flow_aggregation_point`.
+#' @param flow The name of the flow column in the `.tidy_iea_df`.
+#'             Default is `IEATools::iea_cols$flow`.
+#' @param e_dot The name of the energy column in the `.tidy_iea_df`.
+#'              Default is `IEATools::iea_cols$flow`.
+#' @param transformation_processes A string identifying transformation processes in the `flow_aggregation_point` column of the `.tidy_iea_df`
+#'                                 Default is `IEATools::aggregation_flows$flow_aggregation_point`.
+#' @param negzeropos The name of a temporary column created in `.tidy_iea_df`. 
+#'                   Default is ".negzeropos".
+#' @param autoproducer_elect A string identifying "Autoproducer electricity plants" in the `flow` column of the `.tidy_iea_df`.
+#'                           Default is `IEATools::transformation_processes$autoproducer_electricity_plants`.
+#' @param autoproducer_chp A string identifying "Autoproducer CHP plants" in the `flow` column of the `.tidy_iea_df`.
+#'                         Default is `IEATools::transformation_processes$autoproducer_CHP_plants`.
+#' @param autoproducer_heat A string identifying "Autoproducer heat plants" in the `flow` column of the `.tidy_iea_df`.
+#'                          Default is `IEATools::transformation_processes$autoproducer_heat_plants`.
+#' @param main_act_producer_elect A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
+#'                                Default is `IEATools::transformation_processes$main_activity_producer_electricity_plants`.
+#' @param main_act_producer_heat A string identifying "Main activity producer heat plants" in the `flow` column of the `.tidy_iea_df`.
+#'                               Default is `IEATools::transformation_processes$main_activity_producer_heat_plants`.
+#' @param main_act_producer_chp A string identifying "Main activity producer CHP plants" in the `flow` column of the `.tidy_iea_df`.
+#'                              Default is `IEATools::transformation_processes$main_activity_producer_CHP_plants`.
+#'
+#' @return The `tidy_iea_df` with autoproducer plants merged with main activity producer plants.
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' # The following should return something
+#' load_tidy_iea_df() %>% 
+#'   gather_producer_autoproducer() %>% 
+#'   dplyr::filter(Flow == IEATools::transformation_processes$main_activity_producer_electricity_plants)
+#' # The following should return an empty data frame
+#' load_tidy_iea_df() %>% 
+#'   gather_producer_autoproducer() %>% 
+#'   dplyr::filter(Flow == IEATools::transformation_processes$autoproducer_electricity_plants)
 gather_producer_autoproducer <- function(.tidy_iea_df,
+                                         # Column names
                                          flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
-                                         transformation_processes = "Transformation processes",
                                          flow = IEATools::iea_cols$flow,
                                          e_dot = IEATools::iea_cols$e_dot,
+                                         # Other parameters
+                                         transformation_processes = IEATools::aggregation_flows$transformation_processes,
                                          negzeropos = ".negzeropos",
-                                         # Autoproducer industries
-                                         autoproducer_elect = "Autoproducer electricity plants",
-                                         autoproducer_chp = "Autoproducer CHP plants",
-                                         autoproducer_heat = "Autoproducer heat plants",
-                                         # Main activity industries - to which autoproducer industries are re-routed
-                                         main_act_producer_elect = "Main activity producer electricity plants",
-                                         main_act_producer_heat = "Main activity producer heat plants",
-                                         main_act_producer_chp = "Main activity producer CHP plants"){
+                                         # Autoproducer industries names
+                                         autoproducer_elect = IEATools::transformation_processes$autoproducer_electricity_plants,
+                                         autoproducer_chp = IEATools::transformation_processes$autoproducer_CHP_plants,
+                                         autoproducer_heat = IEATools::transformation_processes$autoproducer_heat_plants,
+                                         # Main activity industries names
+                                         main_act_producer_elect = IEATools::transformation_processes$main_activity_producer_electricity_plants,
+                                         main_act_producer_heat = IEATools::transformation_processes$main_activity_producer_heat_plants,
+                                         main_act_producer_chp = IEATools::transformation_processes$main_activity_producer_CHP_plants){
   
   .tidy_iea_df %>%
     dplyr::mutate(
@@ -47,6 +98,7 @@ gather_producer_autoproducer <- function(.tidy_iea_df,
     ) %>%
     dplyr::ungroup()
 }
+
 
 
 
