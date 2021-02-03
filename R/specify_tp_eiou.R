@@ -458,6 +458,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
 
 # This function adds a nuclear industry to the PSUT.
 add_nuclear_industry <- function(.tidy_iea_df,
+                                 # Column names
                                  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                  flow = IEATools::iea_cols$flow,
                                  e_dot = IEATools::iea_cols$e_dot,
@@ -469,20 +470,27 @@ add_nuclear_industry <- function(.tidy_iea_df,
                                  country = IEATools::iea_cols$country,
                                  year = IEATools::iea_cols$year,
                                  unit = IEATools::iea_cols$unit,
-                                 eiou = "Energy industry own use",
-                                 transformation_processes = "Transformation processes",
-                                 own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
-                                 nuclear_industry = "Nuclear industry",
-                                 negzeropos = ".negzeropos",
-                                 main_act_producer_elect = "Main activity producer electricity plants",
-                                 main_act_producer_chp = "Main activity producer CHP plants",
-                                 autoproducer_elect = "Autoproducer electricity plants",
-                                 autoproducer_chp = "Autoproducer CHP plants",
-                                 nuclear = "Nuclear",#perhaps to change if it becomes Nuclear [from Resources]
+                                 # Strings identifying flows, ledger sides, flow aggregation points, and products
+                                 eiou = IEATools::aggregation_flows$energy_industry_own_use,
+                                 transformation_processes = IEATools::aggregation_flows$transformation_processes,
+                                 own_use_elect_chp_heat = IEATools::eiou_flows$own_use_elect_chp_heat_plants,
+                                 nuclear_industry = IEATools::eiou_flows$nuclear_industry,
+                                 main_act_producer_elect = IEATools::transformation_processes$main_activity_producer_electricity_plants,
+                                 main_act_producer_chp = IEATools::transformation_processes$main_activity_producer_CHP_plants,
+                                 autoproducer_elect = IEATools::transformation_processes$autoproducer_electricity_plants,
+                                 autoproducer_chp = IEATools::transformation_processes$autoproducer_CHP_plants,
+                                 nuclear = "Nuclear",
                                  electricity = "Electricity",
-                                 heat = "Heat"){
+                                 heat = "Heat",
+                                 # Strings identifying temporary column names
+                                 negzeropos = ".negzeropos",
+                                 share_elect_output_From_Func = ".share_elect_output_From_Func",
+                                 Electricity_Nuclear = "Electricity_Nuclear",
+                                 Heat_Nuclear = "Heat_Nuclear",
+                                 # Constant
+                                 ratio_output_to_nuclear_fuel = 0.33){
   
-  
+  # An empty tibble with all three product names as columns
   products_tibble = tibble::tibble(!!nuclear := NA,
                                    !!electricity := NA,
                                    !!heat := NA)
@@ -503,21 +511,21 @@ add_nuclear_industry <- function(.tidy_iea_df,
       "{heat}" := tidyr::replace_na(.data[[heat]], 0)
     ) %>%
     dplyr::mutate(
-      share_elect_output_From_Func = .data[[electricity]] / (.data[[electricity]] + .data[[heat]]),
-      "{electricity}" := .data[[electricity]] + (.data[[nuclear]] * 0.33) * .data[["share_elect_output_From_Func"]],
-      "{heat}" := .data[[heat]] + (.data[[nuclear]] * 0.33) * (1 - .data[["share_elect_output_From_Func"]]),
-      Electricity_Nuclear = - .data[[nuclear]] * 0.33 * share_elect_output_From_Func,
-      Heat_Nuclear = - .data[[nuclear]] * 0.33 * (1 - share_elect_output_From_Func)
+      "{share_elect_output_From_Func}" := .data[[electricity]] / (.data[[electricity]] + .data[[heat]]),
+      "{electricity}" := .data[[electricity]] + (.data[[nuclear]] * ratio_output_to_nuclear_fuel) * .data[[share_elect_output_From_Func]],
+      "{heat}" := .data[[heat]] + (.data[[nuclear]] * ratio_output_to_nuclear_fuel) * (1 - .data[[share_elect_output_From_Func]]),
+      "{Electricity_Nuclear}" := - .data[[nuclear]] * ratio_output_to_nuclear_fuel * .data[[share_elect_output_From_Func]],
+      "{Heat_Nuclear}" := - .data[[nuclear]] * ratio_output_to_nuclear_fuel * (1 - .data[[share_elect_output_From_Func]])
     ) %>%
-    dplyr::select(-.data[["share_elect_output_From_Func"]]) %>%
-    tidyr::pivot_longer(cols = c({electricity}, {heat}, {nuclear}, "Electricity_Nuclear", "Heat_Nuclear"), values_to = {e_dot}, names_to = {product}) %>%
+    dplyr::select(-.data[[share_elect_output_From_Func]]) %>%
+    tidyr::pivot_longer(cols = c({electricity}, {heat}, {nuclear}, {Electricity_Nuclear}, {Heat_Nuclear}), values_to = {e_dot}, names_to = {product}) %>%
     dplyr::filter(.data[[e_dot]] != 0) %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
         stringr::str_detect(.data[[product]], nuclear) ~ nuclear_industry,
         TRUE ~ .data[[flow]]
       ),
-      "{product}" := stringr::str_remove(.data[[product]], "_Nuclear")
+      "{product}" := stringr::str_remove(.data[[product]], stringr::str_c("_", nuclear))
     )
   
   
