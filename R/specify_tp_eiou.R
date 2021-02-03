@@ -178,10 +178,9 @@ route_pumped_storage <- function(.tidy_iea_df,
 }
 
 
-# This function re-routes the "Own use in electricity, CHP and heat plants" EIOU flow to the different main activity activities
-# Using the shares of each main activity supply.
 
 route_own_use_elect_chp_heat <- function(.tidy_iea_df,
+                                         split_using_shares_of = c("input", "output"),
                                          # Column names
                                          country = IEATools::iea_cols$country,
                                          flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -202,72 +201,97 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
                                          main_act_producer_elect = IEATools::transformation_processes$main_activity_producer_electricity_plants,
                                          main_act_producer_chp = IEATools::transformation_processes$main_activity_producer_CHP_plants,
                                          main_act_producer_heat = IEATools::transformation_processes$main_activity_producer_heat_plants,
-                                         # Temporary column name
-                                         negzeropos = ".negzeropos"){
+                                         # Temporary column names
+                                         negzeropos = ".negzeropos",
+                                         n_counting = ".n_counting",
+                                         # Temporary data frames names
+                                         df_observations_included_tidy_iea_df = ".df_observations_included_tidy_iea_df"
+                                         ){
   
+  split_using_shares_of <- match.arg(split_using_shares_of)
   
-  # Check whether one of the three main activity elect, heat, and/or chp exists in the TP - supply,
+  # The function check whether one of the three main activity elect, heat, and/or chp exists in the TP - supply,
   # for each (Country, Method, Energy.type, Last.stage, Year)
-  # If not, then route to main activity elect as the code originally did
-  # Store results in a tidy_iea_df_routed_own_use_missing_activities data frame.
-  # tidy_iea_df_routed_own_use_missing_activities <- .tidy_iea_df %>%
-  #   dplyr::group_by({country}, {method}, {energy_type}, {last_stage}, {year}) %>%
-  #   dplyr::filter(!(main_act_producer_elect %in% .data[[flow]] |
-  #                     main_act_producer_chp %in% .data[[flow]] |
-  #                     main_act_producer_heat %in% .data[[flow]])) %>%
-  # dplyr::mutate(
-  #   "{flow}" := dplyr::case_when(
-  #     (.data[[flow]] == own_use_elect_chp_heat & .data[[flow_aggregation_point]] == eiou) ~ main_act_producer_elect,
-  #     TRUE ~ .data[[flow]]
-  #   )
-  # )
+  # If not, then it routes "Own use in electricity, CHP and heat plants" to "Main activity producer electricity plants".
+  # If one of the three main activities elect, heat, and/or CHP EXISTS as a supplying transformation process,
+  # Then it ascribes ... 
   
-  # Now, we move to the other case - one of the three main activities elect, heat, and/or CHP EXISTS in the TP - supply.
-  # So each time we need to start by doing the inverse filter.
-  
-  # HEre's an alternative to expand(nesting())
+  # Returns all the combinations of (Country, Method, Energy.type, Last.stage, Year) present in the .tidy_iea_df
   df_observations_included_tidy_iea_df <- .tidy_iea_df %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
     dplyr::summarise(
-      n_From_Func = dplyr::n()
+      n_counting = dplyr::n()
     ) %>%
-    dplyr::select(-n_From_Func)
-  #tidyr::expand(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]])
+    dplyr::select(-n_counting)
   
   
-  total_main_activity_output <- .tidy_iea_df %>%
-    dplyr::filter(
-      .data[[flow]] %in% c(main_act_producer_elect, main_act_producer_chp, main_act_producer_heat)
-      & .data[[flow_aggregation_point]] == transformation_processes
-      & .data[[ledger_side]] == supply
-      & .data[[e_dot]] > 0
-    ) %>%
-    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[ledger_side]], .data[[flow_aggregation_point]]) %>%
-    dplyr::summarise(
-      Total_supply_main_activity_From_Func = sum(.data[[e_dot]])
-    )
+  # Calculates total input or output per main activity producer, according to the value passed to the split_using_shares_of argument
   
+  if (split_using_shares_of == "input"){
+    total_main_activity_output <- .tidy_iea_df %>%
+      dplyr::filter(
+        .data[[flow]] %in% c(main_act_producer_elect, main_act_producer_chp, main_act_producer_heat)
+        & .data[[flow_aggregation_point]] == transformation_processes
+        & .data[[ledger_side]] == supply
+        & .data[[e_dot]] < 0
+      ) %>%
+      dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[ledger_side]], .data[[flow_aggregation_point]]) %>%
+      dplyr::summarise(
+        Total_supply_main_activity_From_Func = sum(.data[[e_dot]])
+      )
+  } else if (split_using_shares_of == "output"){
+    total_main_activity_output <- .tidy_iea_df %>%
+      dplyr::filter(
+        .data[[flow]] %in% c(main_act_producer_elect, main_act_producer_chp, main_act_producer_heat)
+        & .data[[flow_aggregation_point]] == transformation_processes
+        & .data[[ledger_side]] == supply
+        & .data[[e_dot]] > 0
+      ) %>%
+      dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[ledger_side]], .data[[flow_aggregation_point]]) %>%
+      dplyr::summarise(
+        Total_supply_main_activity_From_Func = sum(.data[[e_dot]])
+      )
+  }
+  
+  # Find out which observations (Country, Method, Energy.type, Last.stage, Year) are NOT in the total computed
   list_not_included_total_main_activity_output <- df_observations_included_tidy_iea_df %>%
     dplyr::anti_join(total_main_activity_output, by = c({country}, {method}, {energy_type}, {last_stage}, {year})) %>%
     tidyr::unite(col = "ID", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
     dplyr::pull()
   
+  # Now, finds input or output per main activity, according to the value passed to the split_using_shares_of argument
   
-  output_per_main_activity <- .tidy_iea_df %>%
-    dplyr::filter(
-      .data[[flow]] %in% c(main_act_producer_elect, main_act_producer_chp, main_act_producer_heat)
-      & .data[[flow_aggregation_point]] == transformation_processes
-      & .data[[ledger_side]] == supply
-      & .data[[e_dot]] > 0
-    ) %>%
-    dplyr::group_by(
-      .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[flow]], .data[[unit]], .data[[ledger_side]], .data[[flow_aggregation_point]]
-    ) %>%
-    dplyr::summarise(
-      Supply_per_main_activity_From_Func = sum(.data[[e_dot]])
-    )
-  
-  
+  if (split_using_shares_of == "input"){
+    output_per_main_activity <- .tidy_iea_df %>%
+      dplyr::filter(
+        .data[[flow]] %in% c(main_act_producer_elect, main_act_producer_chp, main_act_producer_heat)
+        & .data[[flow_aggregation_point]] == transformation_processes
+        & .data[[ledger_side]] == supply
+        & .data[[e_dot]] < 0
+      ) %>%
+      dplyr::group_by(
+        .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[flow]], .data[[unit]], .data[[ledger_side]], .data[[flow_aggregation_point]]
+      ) %>%
+      dplyr::summarise(
+        Supply_per_main_activity_From_Func = sum(.data[[e_dot]])
+      )
+  } else if (split_using_shares_of == "output"){
+    output_per_main_activity <- .tidy_iea_df %>%
+      dplyr::filter(
+        .data[[flow]] %in% c(main_act_producer_elect, main_act_producer_chp, main_act_producer_heat)
+        & .data[[flow_aggregation_point]] == transformation_processes
+        & .data[[ledger_side]] == supply
+        & .data[[e_dot]] > 0
+      ) %>%
+      dplyr::group_by(
+        .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[flow]], .data[[unit]], .data[[ledger_side]], .data[[flow_aggregation_point]]
+      ) %>%
+      dplyr::summarise(
+        Supply_per_main_activity_From_Func = sum(.data[[e_dot]])
+      )
+  }
+
+  # Now, figure out the shares of input or output per main activity
   share_output_per_main_activity <- output_per_main_activity %>%
     dplyr::left_join(
       total_main_activity_output, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {ledger_side}, {flow_aggregation_point})
@@ -278,6 +302,8 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
     dplyr::select(-.data[[flow_aggregation_point]])
   
   
+  # Then, routes the "Own use in electricity, CHP and heat plants" EIOU flow to the different main activity producer plants,
+  # According to the shares previously determined.
   routed_own_use_with_main_activity <- .tidy_iea_df %>%
     dplyr::filter(.data[[flow]] == own_use_elect_chp_heat) %>%
     dplyr::filter(!(stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_")
@@ -301,7 +327,8 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
     dplyr::select(-Share_supply_per_main_activity_From_Func, -Supply_per_main_activity_From_Func, -Total_supply_main_activity_From_Func)
   
   
-  
+  # Routes the "Own use in electricity, CHP and heat plants" to "Main activity producer electricity plants"
+  # When no Main activity producer plants are in transformation processes.
   routed_own_use_without_main_activity <- .tidy_iea_df %>%
     dplyr::filter(.data[[flow]] == own_use_elect_chp_heat) %>%
     dplyr::filter(stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_")
@@ -313,10 +340,10 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
       )
     )
   
-  
+  # Bindng rows.
   routed_own_use <- dplyr::bind_rows(routed_own_use_with_main_activity, routed_own_use_without_main_activity)
   
-  
+  # Adding up and returning data frame.
   tidy_iea_df_routed_own_use <- .tidy_iea_df %>%
     dplyr::filter(.data[[flow]] != own_use_elect_chp_heat) %>%
     dplyr::bind_rows(routed_own_use) %>%

@@ -177,7 +177,7 @@ test_that("route_own_use_elect_chp_heat works", {
     IEATools::specify_production_to_resources() %>%
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
-    route_own_use_elect_chp_heat()
+    route_own_use_elect_chp_heat(split_using_shares_of = "output")
   
   main_activity_eiou <- test %>%
     dplyr::filter(stringr::str_detect(Flow, "Main activity"), Country == "A", Flow.aggregation.point == "Energy industry own use")
@@ -245,7 +245,7 @@ test_that("route_own_use_elect_chp_heat works", {
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
     dplyr::filter(! Flow %in% c("Main activity producer electricity plants", "Main activity producer CHP plants", "Main activity producer heat plants")) %>%
-    route_own_use_elect_chp_heat()
+    route_own_use_elect_chp_heat(split_using_shares_of = "output")
   
   expect_true("Main activity producer electricity plants" %in% second_test$Flow)
   expect_false("Own use in electricity, CHP and heat plants" %in% second_test$Flow)
@@ -267,7 +267,7 @@ test_that("add_nuclear_industry works", {
     IEATools::specify_production_to_resources() %>%
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
-    route_own_use_elect_chp_heat() %>%
+    route_own_use_elect_chp_heat(split_using_shares_of = "output") %>%
     add_nuclear_industry()
   
   # One test on total length
@@ -341,7 +341,7 @@ test_that("add_nuclear_industry works", {
     IEATools::specify_production_to_resources() %>%
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
-    route_own_use_elect_chp_heat() %>%
+    route_own_use_elect_chp_heat(split_using_shares_of = "output") %>%
     add_nuclear_industry()
   
   # One test on total length
@@ -433,7 +433,7 @@ test_that("route_non_specified_eiou works", {
     IEATools::specify_production_to_resources() %>%
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
-    route_own_use_elect_chp_heat() %>%
+    route_own_use_elect_chp_heat(split_using_shares_of = "output") %>%
     add_nuclear_industry() %>%
     route_non_specified_eiou()
   
@@ -550,7 +550,7 @@ test_that("route_non_specified_eiou works", {
     IEATools::specify_production_to_resources() %>%
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
-    route_own_use_elect_chp_heat() %>%
+    route_own_use_elect_chp_heat(split_using_shares_of = "output") %>%
     add_nuclear_industry() %>%
     dplyr::filter(! (Flow.aggregation.point == "Energy industry own use" & Flow != "Non-specified")) %>%
     route_non_specified_eiou()
@@ -577,7 +577,7 @@ test_that("route_non_specified_tp works", {
     IEATools::specify_production_to_resources() %>%
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
-    route_own_use_elect_chp_heat() %>%
+    route_own_use_elect_chp_heat(split_using_shares_of = "output") %>%
     add_nuclear_industry() %>%
     route_non_specified_eiou() %>%
     tibble::add_row(
@@ -752,7 +752,7 @@ test_that("route_non_specified_tp works", {
     IEATools::specify_production_to_resources() %>%
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
-    route_own_use_elect_chp_heat() %>%
+    route_own_use_elect_chp_heat(split_using_shares_of = "output") %>%
     add_nuclear_industry() %>%
     route_non_specified_eiou() %>%
     dplyr::filter(! (Flow.aggregation.point == "Transformation processes" & Flow != "Non-specified")) %>%
@@ -779,7 +779,7 @@ test_that("route_non_specified_flows works", {
     IEATools::specify_production_to_resources() %>%
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
-    route_own_use_elect_chp_heat() %>%
+    route_own_use_elect_chp_heat(split_using_shares_of = "output") %>%
     add_nuclear_industry() %>%
     tibble::add_row(
       Country = "B",
