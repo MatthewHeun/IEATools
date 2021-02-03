@@ -564,18 +564,9 @@ add_nuclear_industry <- function(.tidy_iea_df,
 
 
 route_non_specified_flows <- function(.tidy_iea_df,
-                                      flow_aggregation_point = "Flow.aggregation.point",
-                                      eiou = "Energy industry own use",
-                                      transformation_processes = "Transformation processes",
-                                      flow = "Flow",
-                                      # Industries that receive EIOU but are not in Transformation processes
-                                      own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
-                                      pumped_storage = "Pumped storage plants",
-                                      nuclear_industry = "Nuclear industry",
-                                      e_dot = "E.dot",
-                                      negzeropos = ".negzeropos",
-                                      # Places where the EIOU will e reassigned
-                                      main_act_producer_elect = "Main activity producer electricity plants"){
+                                      is_non_specified_eiou_routed = c(TRUE, FALSE),
+                                      is_non_specified_tp_routed = c(TRUE, FALSE)
+                                      ){
   
   .tidy_iea_df %>%
     route_non_specified_eiou() %>%
