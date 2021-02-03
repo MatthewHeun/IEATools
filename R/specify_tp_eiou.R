@@ -102,16 +102,52 @@ gather_producer_autoproducer <- function(.tidy_iea_df,
 
 
 
+#' Route pumped storage to Main activity electricity producer plant
+#' 
+#' The function routes the Energy industry own use "Pumped storage plant" flow
+#' to the "Main activity producer electricity plant" EIOU flow.
+#' This function is called within the `specify_all()` function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
+#' @param flow_aggregation_point The name of the flow aggregation point column in the `.tidy_iea_df`.
+#'                               Default is `IEATools::iea_cols$flow_aggregation_point`.
+#' @param flow The name of the flow column in the `.tidy_iea_df`.
+#'             Default is `IEATools::iea_cols$flow`.
+#' @param e_dot The name of the energy column in the `.tidy_iea_df`.
+#'              Default is `IEATools::iea_cols$flow`.
+#' @param eiou A string identifying "Energy industry own use" in the `flow_aggregation_point` column of the `.tidy_iea_df`.
+#'             Default is `IEATools::aggregation_flows$energy_industry_own_use`.
+#' @param pumped_storage A string identifying "Pumped storage plants" in the `flow` column of the `.tidy_iea_df`.
+#'                       Default is `IEATools::transformation_processes$pumped_storage_plants`.
+#' @param main_act_producer_elect A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
+#'                                Default is `IEATools::transformation_processes$main_activity_producer_electricity_plants`.
+#' @param negzeropos 
+#'
+#' @return A modified `.tidy_iea_df` with "Pumped storage plants" industry routed 
+#' to the "Main activity producer electricity plant" industry.
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' # The following should return something
+#' load_tidy_iea_df() %>% 
+#'   gather_producer_autoproducer() %>% 
+#'   dplyr::filter(Flow == IEATools::transformation_processes$main_activity_producer_electricity_plants)
+#' # The following should return an empty data frame
+#' load_tidy_iea_df() %>% 
+#'   gather_producer_autoproducer() %>% 
+#'   dplyr::filter(Flow == IEATools::transformation_processes$pumped_storage_plants)
 route_pumped_storage <- function(.tidy_iea_df,
+                                 # Column names
                                  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
-                                 eiou = "Energy industry own use",
                                  flow = IEATools::iea_cols$flow,
-                                 # Industries that receive EIOU but are not in Transformation processes
-                                 pumped_storage = "Pumped storage plants",
                                  e_dot = IEATools::iea_cols$e_dot,
-                                 negzeropos = ".negzeropos",
-                                 # Places where the EIOU will e reassigned
-                                 main_act_producer_elect = "Main activity producer electricity plants"){
+                                 # Flow and flow aggregation point names
+                                 eiou = IEATools::aggregation_flows$energy_industry_own_use,
+                                 pumped_storage = IEATools::transformation_processes$pumped_storage_plants,
+                                 main_act_producer_elect = IEATools::transformation_processes$main_activity_producer_electricity_plants,
+                                 # Temporary column name
+                                 negzeropos = ".negzeropos"){
   
   .tidy_iea_df %>%
     dplyr::mutate(
