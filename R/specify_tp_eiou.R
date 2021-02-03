@@ -118,7 +118,7 @@ gather_producer_autoproducer <- function(.tidy_iea_df,
 #' @param eiou A string identifying "Energy industry own use" in the `flow_aggregation_point` column of the `.tidy_iea_df`.
 #'             Default is `IEATools::aggregation_flows$energy_industry_own_use`.
 #' @param pumped_storage A string identifying "Pumped storage plants" in the `flow` column of the `.tidy_iea_df`.
-#'                       Default is `IEATools::transformation_processes$pumped_storage_plants`.
+#'                       Default is `IEATools::eiou_flows$pumped_storage_plants`.
 #' @param main_act_producer_elect A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
 #'                                Default is `IEATools::transformation_processes$main_activity_producer_electricity_plants`.
 #' @param negzeropos 
@@ -144,7 +144,7 @@ route_pumped_storage <- function(.tidy_iea_df,
                                  e_dot = IEATools::iea_cols$e_dot,
                                  # Flow and flow aggregation point names
                                  eiou = IEATools::aggregation_flows$energy_industry_own_use,
-                                 pumped_storage = IEATools::transformation_processes$pumped_storage_plants,
+                                 pumped_storage = IEATools::eiou_flows$pumped_storage_plants,
                                  main_act_producer_elect = IEATools::transformation_processes$main_activity_producer_electricity_plants,
                                  # Temporary column name
                                  negzeropos = ".negzeropos"){
@@ -182,6 +182,7 @@ route_pumped_storage <- function(.tidy_iea_df,
 # Using the shares of each main activity supply.
 
 route_own_use_elect_chp_heat <- function(.tidy_iea_df,
+                                         # Column names
                                          country = IEATools::iea_cols$country,
                                          flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                          flow = IEATools::iea_cols$flow,
@@ -193,14 +194,16 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
                                          product = IEATools::iea_cols$product,
                                          unit = IEATools::iea_cols$unit,
                                          e_dot = IEATools::iea_cols$e_dot,
-                                         supply = "Supply",
-                                         eiou = "Energy industry own use",
-                                         transformation_processes = "Transformation processes",
-                                         own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
-                                         negzeropos = ".negzeropos",
-                                         main_act_producer_elect = "Main activity producer electricity plants",
-                                         main_act_producer_chp = "Main activity producer CHP plants",
-                                         main_act_producer_heat = "Main activity producer heat plants"){
+                                         # Strings identifying flows, ledger sides, and flow aggregation points
+                                         supply = IEATools::ledger_sides$supply,
+                                         eiou =  IEATools::aggregation_flows$energy_industry_own_use,
+                                         transformation_processes = IEATools::aggregation_flows$transformation_processes,
+                                         own_use_elect_chp_heat = IEATools::eiou_flows$own_use_elect_chp_heat_plants,
+                                         main_act_producer_elect = IEATools::transformation_processes$main_activity_producer_electricity_plants,
+                                         main_act_producer_chp = IEATools::transformation_processes$main_activity_producer_CHP_plants,
+                                         main_act_producer_heat = IEATools::transformation_processes$main_activity_producer_heat_plants,
+                                         # Temporary column name
+                                         negzeropos = ".negzeropos"){
   
   
   # Check whether one of the three main activity elect, heat, and/or chp exists in the TP - supply,
