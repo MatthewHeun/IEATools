@@ -455,8 +455,41 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
 
 
 
-
-# This function adds a nuclear industry to the PSUT.
+#' Title
+#'
+#' @param .tidy_iea_df 
+#' @param flow_aggregation_point 
+#' @param flow 
+#' @param e_dot 
+#' @param product 
+#' @param method 
+#' @param ledger_side 
+#' @param last_stage 
+#' @param energy_type 
+#' @param country 
+#' @param year 
+#' @param unit 
+#' @param eiou 
+#' @param transformation_processes 
+#' @param own_use_elect_chp_heat 
+#' @param nuclear_industry 
+#' @param main_act_producer_elect 
+#' @param main_act_producer_chp 
+#' @param autoproducer_elect 
+#' @param autoproducer_chp 
+#' @param nuclear 
+#' @param electricity 
+#' @param heat 
+#' @param negzeropos 
+#' @param share_elect_output_From_Func 
+#' @param Electricity_Nuclear 
+#' @param Heat_Nuclear 
+#' @param ratio_output_to_nuclear_fuel 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 add_nuclear_industry <- function(.tidy_iea_df,
                                  # Column names
                                  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -563,14 +596,18 @@ add_nuclear_industry <- function(.tidy_iea_df,
 
 
 
-route_non_specified_flows <- function(.tidy_iea_df,
-                                      is_non_specified_eiou_routed = c(TRUE, FALSE),
-                                      is_non_specified_tp_routed = c(TRUE, FALSE)
+route_non_specified_flows <- function(.tidy_iea_df#,
+                                      #is_non_specified_eiou_routed = c(TRUE, FALSE),
+                                      #is_non_specified_tp_routed = c(TRUE, FALSE)
                                       ){
+  
+  # is_non_specified_eiou_routed <- match.arg(is_non_specified_eiou_routed)
+  # is_non_specified_tp_routed <- match.arg(is_non_specified_tp_routed)
   
   .tidy_iea_df %>%
     route_non_specified_eiou() %>%
     route_non_specified_tp()
+
 }
 
 
