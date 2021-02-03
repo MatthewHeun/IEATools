@@ -343,9 +343,28 @@ transformation_processes <- list(main_activity_producer_electricity_plants = "Ma
                                  gas_to_liquid_gtl_plants = "Gas-to-liquids (GTL) plants",
                                  for_blended_natural_gas = "For blended natural gas",
                                  charcoal_production_plants = "Charcoal production plants",
-                                 non_specified_transformation = "Non-specified (transformation)",
-                                 pumped_storage_plants = "Pumped storage plants")
+                                 non_specified_transformation = "Non-specified (transformation)")
 usethis::use_data(transformation_processes, overwrite = TRUE)
+
+
+eiou_flows <- list(bkb_peat_briquette_plants = "BKB/peat briquette plants",
+                   blast_furnaces = "Blast furnaces",
+                   charcoal_plants = "Charcoal production plants",
+                   coal_liquefaction_plants = "Coal liquefaction plants",
+                   coal_mines = "Coal mines",
+                   coke_ovens = "Coke ovens",
+                   gas_work = "Gas works",
+                   gas_to_liquids_plants = "Gas-to-liquids (GTL) plants",
+                   gasification_plants = "Gasification plants for biogases",
+                   liquefaction_regasification_plants = "Liquefaction (LNG) / regasification plants",
+                   non_specified_eiou = "Non-specified (energy)",
+                   nuclear_industry = "Nuclear industry",
+                   oil_and_gas_extraction = "Oil and gas extraction",
+                   oil_refineries = "Oil refineries",
+                   own_use_elect_chp_heat_plants = "Own use in electricity, CHP and heat plants",
+                   patent_fuel_plants = "Patent fuel plants",
+                   pumped_storage_plants = "Pumped storage plants")
+usethis::use_data(eiou_flows, overwrite = TRUE)
 
 
 tfc_flows <- list(industry = "Industry",
