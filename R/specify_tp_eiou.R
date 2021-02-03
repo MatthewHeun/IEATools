@@ -121,7 +121,8 @@ gather_producer_autoproducer <- function(.tidy_iea_df,
 #'                       Default is `IEATools::eiou_flows$pumped_storage_plants`.
 #' @param main_act_producer_elect A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
 #'                                Default is `IEATools::transformation_processes$main_activity_producer_electricity_plants`.
-#' @param negzeropos 
+#' @param negzeropos The name of a temporary column created in `.tidy_iea_df`. 
+#'                   Default is ".negzeropos".
 #'
 #' @return A modified `.tidy_iea_df` with "Pumped storage plants" industry routed 
 #' to the "Main activity producer electricity plant" industry.
@@ -180,43 +181,86 @@ route_pumped_storage <- function(.tidy_iea_df,
 
 
 #' Routes own use in electricity, chp, and heat plants EIOU flow to main activity producer flows
+#' 
+#' This function routes the "Own use in electricity, CHP and heat plants" 
+#' Energy Industry Own Use flow to each of the three electricity, CHP and heat
+#' main activity producer plants.
+#' 
+#' The function either performs the routing using the share of outputs or of inputs of each
+#' of the three main activity producer industries. 
+#' 
+#' The method is selected using the `split_using_shares_of` argument, 
+#' to which either the have the "input" or "output" value can be passed.
+#' 
+#' When none of the main activity producer industries is present in the data frame,
+#' the "Own use in electricity, CHP and heat plants" flow is ascribed by default to the
+#' "Main activity producer electricity plant".
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
-#' @param split_using_shares_of 
-#' @param country 
+#' @param split_using_shares_of A string that identifies which method is to be used for splitting the `own_use_elect_chp_heat` flow.
+#'                              Default is "input". The other valid value is "output". See details for more information.
+#' @param country The name of the country column in the `.tidy_iea_df`.
+#'              Default is `IEATools::iea_cols$country`.
 #' @param flow_aggregation_point The name of the flow aggregation point column in the `.tidy_iea_df`.
 #'                               Default is `IEATools::iea_cols$flow_aggregation_point`.
 #' @param flow The name of the flow column in the `.tidy_iea_df`.
 #'             Default is `IEATools::iea_cols$flow`.
-#' @param ledger_side 
-#' @param method 
-#' @param energy_type 
-#' @param last_stage 
-#' @param year 
-#' @param product 
-#' @param unit 
-#' @param e_dot 
-#' @param supply 
-#' @param eiou 
-#' @param transformation_processes 
-#' @param own_use_elect_chp_heat 
+#' @param ledger_side The name of the ledger side column in the `.tidy_iea_df`.
+#'                    Default is `IEATools::iea_cols$ledger_side`.
+#' @param method The name of the method column in the `.tidy_iea_df`.
+#'               Default is `IEATools::iea_cols$method`.
+#' @param energy_type The name of the energy_type column in the `.tidy_iea_df`.
+#'                    Default is `IEATools::iea_cols$energy_type`.
+#' @param last_stage The name of the last stage column in the `.tidy_iea_df`.
+#'                   Default is `IEATools::iea_cols$last_stage`.
+#' @param year The name of the year column in the `.tidy_iea_df`.
+#'             Default is `IEATools::iea_cols$flow`.
+#' @param product The name of the product column in the `.tidy_iea_df`.
+#'                Default is `IEATools::iea_cols$product`.
+#' @param unit The name of the unit column in the `.tidy_iea_df`.
+#'             Default is `IEATools::iea_cols$unit`.
+#' @param e_dot The name of the energy column in the `.tidy_iea_df`.
+#'              Default is `IEATools::iea_cols$flow`.
+#' @param supply A string identifying "Supply" in the `ledger_side` column of the `.tidy_iea_df`.
+#'               Default is `IEATools::ledger_sides$supply`.
+#' @param eiou A string identifying "Energy industry own use" in the `flow_aggregation_point` column of the `.tidy_iea_df`.
+#'             Default is `IEATools::aggregation_flows$energy_industry_own_use`.
+#' @param transformation_processes A string identifying transformation processes in the `flow_aggregation_point` column of the `.tidy_iea_df`
+#'                                 Default is `IEATools::aggregation_flows$flow_aggregation_point`.
+#' @param own_use_elect_chp_heat A string identifying "Own use in electricity, CHP and heat plants" in the `flow` column of the `.tidy_iea_df`.
+#'                               Default is `IEATools::eiou_flows$own_use_elect_chp_heat_plants`.
 #' @param main_act_producer_elect A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
 #'                                Default is `IEATools::transformation_processes$main_activity_producer_electricity_plants`.
 #' @param main_act_producer_chp A string identifying "Main activity producer CHP plants" in the `flow` column of the `.tidy_iea_df`.
 #'                              Default is `IEATools::transformation_processes$main_activity_producer_heat_plants`.
 #' @param main_act_producer_heat A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
 #'                               Default is `IEATools::transformation_processes$main_activity_producer_heat_plants`.
-#' @param negzeropos 
-#' @param n_counting 
-#' @param destination_flow 
-#' @param Total_main_activity_From_Func 
-#' @param Total_per_main_activity_From_Func 
-#' @param Share_per_main_activity_From_Func 
+#' @param negzeropos The name of a temporary column created in `.tidy_iea_df`. 
+#'                   Default is ".negzeropos".
+#' @param n_counting The name of a temporary column created in `.tidy_iea_df`. 
+#'                   Default is ".n_counting".
+#' @param destination_flow The name of a temporary column created in `.tidy_iea_df`. 
+#'                         Default is ".destination_flow".
+#' @param Total_main_activity_From_Func The name of a temporary column created in `.tidy_iea_df`. 
+#'                                      Default is ".Total_main_activity_From_Func".
+#' @param Total_per_main_activity_From_Func The name of a temporary column created in `.tidy_iea_df`. 
+#'                                          Default is ".Total_per_main_activity_From_Func".
+#' @param Share_per_main_activity_From_Func The name of a temporary column created in `.tidy_iea_df`. 
+#'                                          Default is ".Share_per_main_activity_From_Func".
 #'
-#' @return
+#' @return A modified version of the `.tidy_iea_df`, in which the `own_use_elect_chp_heat` flow has been routed to the main activity producer industries.
 #' @export
 #'
 #' @examples
+#' library(dplyr)
+#' # The following should return something
+#' load_tidy_iea_df() %>% 
+#'   route_own_use_elect_chp_heat() %>% 
+#'   dplyr::filter(Flow == IEATools::transformation_processes$main_activity_producer_electricity_plants)
+#' # The following should return an empty data frame
+#' load_tidy_iea_df() %>% 
+#'   route_own_use_elect_chp_heat() %>% 
+#'   dplyr::filter(Flow == IEATools::eiou_flows$own_use_elect_chp_heat_plants)
 route_own_use_elect_chp_heat <- function(.tidy_iea_df,
                                          split_using_shares_of = c("input", "output"),
                                          # Column names
