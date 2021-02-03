@@ -343,7 +343,8 @@ transformation_processes <- list(main_activity_producer_electricity_plants = "Ma
                                  gas_to_liquid_gtl_plants = "Gas-to-liquids (GTL) plants",
                                  for_blended_natural_gas = "For blended natural gas",
                                  charcoal_production_plants = "Charcoal production plants",
-                                 non_specified_transformation = "Non-specified (transformation)")
+                                 non_specified_transformation = "Non-specified (transformation)",
+                                 pumped_storage_plants = "Pumped storage plants")
 usethis::use_data(transformation_processes, overwrite = TRUE)
 
 
