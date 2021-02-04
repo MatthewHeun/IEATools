@@ -455,41 +455,88 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
 
 
 
-#' Title
+#' Adds a nuclear industry
+#' 
+#' In the IEA World Energy Extended Balances, there is a "Nuclear industry" Energy industry own use flow, 
+#' but there is no "Nuclear industry" in transformation processes flows, 
+#' which prevents from defining a nuclear industry in the PSUT.
+#' However, using the World Energy Extended Balances documentation, one can deduce from the amount of nuclear fuel used
+#' by "Main activity producer electricity plants" and "Main activity producer CHP plants" 
+#' the energy transformation due to the nuclear industry. This is what this function does.
+#' 
+#' The World Energy Extended Balances documentation states that "The primary energy equivalent of nuclear electricity is
+#' calculated from the gross generation by assuming a 33% conversion efficiency. The calculation to be carried out
+#' is the following: gross electricity generation in TWh x0.086 / 0.33 = primary energy equivalent in Mtoe."
+#' 
+#' Hence this function does the following:
+#'  * the Nuclear fuel consumed by Main activity producer electricity & heat plants is ascribed to nuclear industry plants;
+#'  * the output of Main activity producer electricity and heat plants to be directed to nuclear plants is determined by
+#'        multiplying their nuclear fuel consumption per 0.33. In the case of CHP plants, that output is divided into
+#'        heat and electricity according to the shares of output of each of these two products;
+#'  * the output ascribed to nuclear plants is subtracted from Main activity producer electricity and heat plants.
+#' 
+#' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
+#' @param flow_aggregation_point The name of the flow aggregation point column in the `.tidy_iea_df`.
+#'                               Default is `IEATools::iea_cols$flow_aggregation_point`.
+#' @param flow The name of the flow column in the `.tidy_iea_df`.
+#'             Default is `IEATools::iea_cols$flow`.
+#' @param e_dot The name of the energy column in the `.tidy_iea_df`.
+#'              Default is `IEATools::iea_cols$e_dot`.
+#' @param product The name of the product column in the `.tidy_iea_df`.
+#'                Default is `IEATools::iea_cols$product`.
+#' @param method The name of the method column in the `.tidy_iea_df`.
+#'               Default is `IEATools::iea_cols$method`.
+#' @param ledger_side The name of the ledger side column in the `.tidy_iea_df`.
+#'                    Default is `IEATools::iea_cols$ledger_side`.
+#' @param last_stage The name of the last stage column in the `.tidy_iea_df`.
+#'                   Default is `IEATools::iea_cols$last_stage`.
+#' @param energy_type The name of the energy type column in the `.tidy_iea_df`.
+#'                    Default is `IEATools::iea_cols$energy_type`.
+#' @param country The name of the country column in the `.tidy_iea_df`.
+#'                Default is `IEATools::iea_cols$country`.
+#' @param year The name of the year column in the `.tidy_iea_df`.
+#'             Default is `IEATools::iea_cols$year`.
+#' @param unit The name of the unit column in the `.tidy_iea_df`.
+#'             Default is `IEATools::iea_cols$unit`.
+#' @param eiou A string identifying the energy industry own use in the `flow_aggregation_point` column in the `.tidy_iea_df`.
+#'             Default is `IEATools::aggregation_flows$energy_industry_own_use`.
+#' @param transformation_processes A string identifying the transformation processes in the `flow_aggregation_point` column in the `.tidy_iea_df`.
+#'                                 Default is `IEATools::aggregation_flows$transformation_processes`.
+#' @param nuclear_industry A string identifying "Nuclear industry" in the `flow` column of the `.tidy_iea_df`.
+#'                         Default is `IEATools::eiou_flows$nuclear_industry`.
+#' @param main_act_producer_elect A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
+#'                                Default is `IEATools::transformation_processes$main_activity_producer_electricity_plants`.
+#' @param main_act_producer_chp A string identifying "Main activity producer CHP plants" in the `flow` column of the `.tidy_iea_df`.
+#'                              Default is `IEATools::transformation_processes$main_activity_producer_CHP_plants`.
+#' @param autoproducer_elect A string identifying "Autoproducer electricity plants" in the `flow` column of the `.tidy_iea_df`.
+#'                           Default is `IEATools::transformation_processes$autoproducer_electricity_plants`.
+#' @param autoproducer_chp A string identifying "Autoproducer CHP plants" in the `flow` column of the `.tidy_iea_df`.
+#'                         Default is `IEATools::transformation_processes$autoproducer_CHP_plants`.
+#' @param nuclear A string identifying the "Nuclear" product in the `product` column of the `tidy_iea_df`.
+#'                Default is "Nuclear".
+#' @param electricity A string identifying the "Electricity" product in the `product` column of the `tidy_iea_df`.
+#'                    Default is "Electricity".
+#' @param heat A string identifying the "Heat" product in the `product` column of the `tidy_iea_df`.
+#'             Default is "Heat".
+#' @param negzeropos The name of a temporary column added to the data frame.
+#'                   Default is ".negzeropos".
+#' @param share_elect_output_From_Func A temporary column added to the data frame.
+#'                                     Default is ".share_elect_output_From_Func".
+#' @param Electricity_Nuclear A temporary column and product name added to the data frame, which identifies the production of electricity by nuclear plants.
+#'                            Default is "Electricity_Nuclear".
+#' @param Heat_Nuclear A temporary column and product name added to the data frame, which identifies the production of heat by nuclear plants.
+#'                     Default is "Heat_Nuclear".
+#' @param ratio_output_to_nuclear_fuel A parameter that describes the correspondance between input of nuclear fuel and output of electricity and/or heat.
+#'                                     The IEA World Energy Extended Balances state that the value adopted in the balances is 0.33, which is therefore
+#'                                     the default value of the parameter.
 #'
-#' @param .tidy_iea_df 
-#' @param flow_aggregation_point 
-#' @param flow 
-#' @param e_dot 
-#' @param product 
-#' @param method 
-#' @param ledger_side 
-#' @param last_stage 
-#' @param energy_type 
-#' @param country 
-#' @param year 
-#' @param unit 
-#' @param eiou 
-#' @param transformation_processes 
-#' @param own_use_elect_chp_heat 
-#' @param nuclear_industry 
-#' @param main_act_producer_elect 
-#' @param main_act_producer_chp 
-#' @param autoproducer_elect 
-#' @param autoproducer_chp 
-#' @param nuclear 
-#' @param electricity 
-#' @param heat 
-#' @param negzeropos 
-#' @param share_elect_output_From_Func 
-#' @param Electricity_Nuclear 
-#' @param Heat_Nuclear 
-#' @param ratio_output_to_nuclear_fuel 
-#'
-#' @return
+#' @return A modified version of the `.tidy_iea_df`, with a nuclear industry added as an additional transformation process.
 #' @export
 #'
 #' @examples
+#' library(dplyr)
+#' load_tidy_iea_df() %>% 
+#'   add_nuclear_industry()
 add_nuclear_industry <- function(.tidy_iea_df,
                                  # Column names
                                  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -506,7 +553,6 @@ add_nuclear_industry <- function(.tidy_iea_df,
                                  # Strings identifying flows, ledger sides, flow aggregation points, and products
                                  eiou = IEATools::aggregation_flows$energy_industry_own_use,
                                  transformation_processes = IEATools::aggregation_flows$transformation_processes,
-                                 own_use_elect_chp_heat = IEATools::eiou_flows$own_use_elect_chp_heat_plants,
                                  nuclear_industry = IEATools::eiou_flows$nuclear_industry,
                                  main_act_producer_elect = IEATools::transformation_processes$main_activity_producer_electricity_plants,
                                  main_act_producer_chp = IEATools::transformation_processes$main_activity_producer_CHP_plants,
@@ -589,7 +635,6 @@ add_nuclear_industry <- function(.tidy_iea_df,
       "{negzeropos}" := NULL
     ) %>%
     dplyr::ungroup()
-  
   
   return(to_return)
 }
