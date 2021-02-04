@@ -376,6 +376,7 @@ specify_interface_industries <- function(.tidy_iea_df,
 #'   filter(Flow.aggregation.point == "Energy industry own use" & 
 #'            Flow == "Main activity producer electricity plants")
 specify_tp_eiou <- function(.tidy_iea_df,
+                            split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
                             flow_aggregation_point = "Flow.aggregation.point",
                             eiou = "Energy industry own use",
                             transformation_processes = "Transformation processes",
@@ -391,10 +392,14 @@ specify_tp_eiou <- function(.tidy_iea_df,
   .tidy_iea_df %>% 
     matsindf::verify_cols_missing(negzeropos)
   
+  split_own_use_elect_chp_heat_using_shares_of <- match.arg(split_own_use_elect_chp_heat_using_shares_of)
+  
   .tidy_iea_df %>% 
     gather_producer_autoproducer() %>% 
     route_pumped_storage() %>% 
-    route_own_use_elect_chp_heat() %>% 
+    route_own_use_elect_chp_heat(
+      split_using_shares_of = split_own_use_elect_chp_heat_using_shares_of
+      ) %>% 
     add_nuclear_industry() %>% 
     route_non_specified_flows() #%>%
     #dplyr::ungroup()
@@ -714,11 +719,17 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #'   specify_tp_eiou() %>% 
 #'   specify_interface_industries() %>% 
 #'   tp_sinks_to_nonenergy()
-specify_all <- function(.tidy_iea_df){
+specify_all <- function(.tidy_iea_df,
+                        split_own_use_elect_chp_heat_using_shares_of = c("input", "output")){
+  
+  split_own_use_elect_chp_heat_using_shares_of = match.arg(split_own_use_elect_chp_heat_using_shares_of)
+  
   .tidy_iea_df %>% 
     specify_primary_production() %>% 
     specify_production_to_resources() %>% 
-    specify_tp_eiou() %>% 
+    specify_tp_eiou(
+      split_own_use_elect_chp_heat_using_shares_of = split_own_use_elect_chp_heat_using_shares_of
+      ) %>% 
     specify_interface_industries() %>% 
     tp_sinks_to_nonenergy()
 }
