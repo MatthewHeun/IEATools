@@ -377,6 +377,8 @@ specify_interface_industries <- function(.tidy_iea_df,
 #'            Flow == "Main activity producer electricity plants")
 specify_tp_eiou <- function(.tidy_iea_df,
                             split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
+                            is_non_specified_eiou_routed = TRUE,
+                            is_non_specified_tp_routed = TRUE,
                             flow_aggregation_point = "Flow.aggregation.point",
                             eiou = "Energy industry own use",
                             transformation_processes = "Transformation processes",
@@ -401,7 +403,11 @@ specify_tp_eiou <- function(.tidy_iea_df,
       split_using_shares_of = split_own_use_elect_chp_heat_using_shares_of
       ) %>% 
     add_nuclear_industry() %>% 
-    route_non_specified_flows() #%>%
+    route_non_specified_flows(
+      is_non_specified_eiou_routed = is_non_specified_eiou_routed,
+      is_non_specified_tp_routed = is_non_specified_tp_routed
+      
+    ) #%>%
     #dplyr::ungroup()
     #dplyr::mutate(
       #!!as.name(flow) := dplyr::case_when(
@@ -720,7 +726,9 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #'   specify_interface_industries() %>% 
 #'   tp_sinks_to_nonenergy()
 specify_all <- function(.tidy_iea_df,
-                        split_own_use_elect_chp_heat_using_shares_of = c("input", "output")){
+                        split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
+                        is_non_specified_eiou_routed = TRUE,
+                        is_non_specified_tp_routed = TRUE){
   
   split_own_use_elect_chp_heat_using_shares_of = match.arg(split_own_use_elect_chp_heat_using_shares_of)
   
@@ -728,7 +736,9 @@ specify_all <- function(.tidy_iea_df,
     specify_primary_production() %>% 
     specify_production_to_resources() %>% 
     specify_tp_eiou(
-      split_own_use_elect_chp_heat_using_shares_of = split_own_use_elect_chp_heat_using_shares_of
+      split_own_use_elect_chp_heat_using_shares_of = split_own_use_elect_chp_heat_using_shares_of,
+      is_non_specified_eiou_routed = is_non_specified_eiou_routed,
+      is_non_specified_tp_routed = is_non_specified_tp_routed
       ) %>% 
     specify_interface_industries() %>% 
     tp_sinks_to_nonenergy()

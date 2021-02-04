@@ -641,22 +641,43 @@ add_nuclear_industry <- function(.tidy_iea_df,
 
 
 
-route_non_specified_flows <- function(.tidy_iea_df#,
-                                      #is_non_specified_eiou_routed = c(TRUE, FALSE),
-                                      #is_non_specified_tp_routed = c(TRUE, FALSE)
+#' Routes non specified flows
+#'
+#' This function is a wrapper of the functions 
+#' `route_non_specified_eiou` and `route_non_specified_tp`.
+#' It is called within the `specify_all` function.
+#' 
+#' See `route_non_specified_eiou` and `route_non_specified_tp` functions documentations for additional details.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
+#' @param is_non_specified_eiou_routed A boolean that indicates whether non specified EIOU flows should be routed to existing
+#'                                     industries or kept as non specified.
+#' @param is_non_specified_tp_routed A boolean that indicates whether non specified transformation processes flows should be routed to existing
+#'                                   industries or kept as non specified.
+#'
+#' @return A modified version of the `.tidy_iea_df` with non specified flows routed to existing industries.
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' load_tidy_iea_df() %>% 
+#'   route_non_specified_flows()
+route_non_specified_flows <- function(.tidy_iea_df,
+                                      is_non_specified_eiou_routed = TRUE,
+                                      is_non_specified_tp_routed = TRUE
                                       ){
-  
-  # is_non_specified_eiou_routed <- match.arg(is_non_specified_eiou_routed)
-  # is_non_specified_tp_routed <- match.arg(is_non_specified_tp_routed)
-  
   .tidy_iea_df %>%
-    route_non_specified_eiou() %>%
-    route_non_specified_tp()
-
+    route_non_specified_eiou(
+      routing_non_specified_eiou = is_non_specified_eiou_routed
+    ) %>%
+    route_non_specified_tp(
+      routing_non_specified_tp = is_non_specified_tp_routed
+    )
 }
 
 
 route_non_specified_eiou <- function(.tidy_iea_df,
+                                     routing_non_specified_eiou = TRUE,
                                      country = IEATools::iea_cols$country,
                                      flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                      flow = IEATools::iea_cols$flow,
@@ -670,19 +691,27 @@ route_non_specified_eiou <- function(.tidy_iea_df,
                                      e_dot = IEATools::iea_cols$e_dot,
                                      non_spec = "Non-specified",
                                      eiou = "Energy industry own use",
-                                     negzeropos = ".negzeropos"){
+                                     negzeropos = ".negzeropos",
+                                     n_counting = ".n_counting",
+                                     Total_eiou_excl_nonspec_From_Func = ".Total_eiou_excl_nonspec_From_Func",
+                                     EIOU_per_industry_From_Func = ".EIOU_per_industry_From_Func",
+                                     Share_eiou_per_industry_From_Func = ".Share_eiou_per_industry_From_Func",
+                                     destination_flow = ".destination_flow"){
   
   
-  # Here's an alternative to expand
+  if (isFALSE(routing_non_specified_eiou)){
+    return(.tidy_iea_df)
+  }
+  
+  # Figuring out lists of observations (Country, Method, Energy_type, Last_stage, Year)
   df_observations_included_tidy_iea_df <- .tidy_iea_df %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
     dplyr::summarise(
-      n_From_Func = dplyr::n()
+      "{n_counting}" := dplyr::n()
     ) %>%
-    dplyr::select(-n_From_Func)
-  #tidyr::expand(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]])
-  
-  
+    dplyr::select(-.data[[n_counting]])
+
+  # Calculating total EIOU flows excluding non-specified flows.  
   total_eiou_excl_nonspec <- .tidy_iea_df %>%
     dplyr::filter(
       .data[[flow_aggregation_point]] == eiou & .data[[flow]] != non_spec
@@ -691,10 +720,10 @@ route_non_specified_eiou <- function(.tidy_iea_df,
       .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[ledger_side]], .data[[flow_aggregation_point]]
     ) %>%
     dplyr::summarise(
-      Total_eiou_excl_nonspec_From_Func = sum(.data[[e_dot]])
+      "{Total_eiou_excl_nonspec_From_Func}" := sum(.data[[e_dot]])
     )
   
-  
+  # Figuring out which observations (Country, Method, Energy_type, Last_stage, Year) do not have an EIOU flow other than non-specified
   list_not_included_total_eiou <- df_observations_included_tidy_iea_df %>%
     dplyr::anti_join(total_eiou_excl_nonspec, by = c({country}, {method}, {energy_type}, {last_stage}, {year})) %>%
     tidyr::unite(col = "ID", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
@@ -709,7 +738,7 @@ route_non_specified_eiou <- function(.tidy_iea_df,
       .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[flow]], .data[[unit]], .data[[ledger_side]], .data[[flow_aggregation_point]]
     ) %>%
     dplyr::summarise(
-      EIOU_per_industry_From_Func = sum(.data[[e_dot]])
+      "{EIOU_per_industry_From_Func}" := sum(.data[[e_dot]])
     )
   
   
@@ -718,7 +747,7 @@ route_non_specified_eiou <- function(.tidy_iea_df,
       total_eiou_excl_nonspec, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {ledger_side}, {flow_aggregation_point})
     ) %>%
     dplyr::mutate(
-      Share_eiou_per_industry_From_Func = EIOU_per_industry_From_Func / Total_eiou_excl_nonspec_From_Func
+      "{Share_eiou_per_industry_From_Func}" := .data[[EIOU_per_industry_From_Func]] / .data[[Total_eiou_excl_nonspec_From_Func]]
     ) %>%
     dplyr::select(-.data[[flow_aggregation_point]])
   
@@ -741,19 +770,19 @@ route_non_specified_eiou <- function(.tidy_iea_df,
       .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[flow_aggregation_point]], .data[[ledger_side]]
     ) %>%
     tidyr::crossing(
-      destination_flow := list_eiou_flows_excl_nonspec
+      "{destination_flow}" := list_eiou_flows_excl_nonspec
     ) %>%
     dplyr::mutate(
-      "{flow}" := .data[["destination_flow"]]
+      "{flow}" := .data[[destination_flow]]
     ) %>%
     dplyr::select(-destination_flow) %>%
     dplyr::inner_join(
       share_eiou_per_industry, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow}, {unit}, {ledger_side})
     ) %>%
     dplyr::mutate(
-      "{e_dot}" := .data[[e_dot]] * Share_eiou_per_industry_From_Func
+      "{e_dot}" := .data[[e_dot]] * .data[[Share_eiou_per_industry_From_Func]]
     ) %>%
-    dplyr::select(-Share_eiou_per_industry_From_Func, -EIOU_per_industry_From_Func, -Total_eiou_excl_nonspec_From_Func)
+    dplyr::select(-.data[[Share_eiou_per_industry_From_Func]], -.data[[EIOU_per_industry_From_Func]], -.data[[Total_eiou_excl_nonspec_From_Func]])
   
   
   # Second, when EIOU flows are not available
@@ -798,12 +827,12 @@ route_non_specified_eiou <- function(.tidy_iea_df,
     dplyr::ungroup()
   
   return(tidy_iea_df_routed_nonspec_energy)
-  
 }
 
 
 
 route_non_specified_tp <- function(.tidy_iea_df,
+                                   routing_non_specified_tp = TRUE,
                                    country = IEATools::iea_cols$country,
                                    flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                    flow = IEATools::iea_cols$flow,
