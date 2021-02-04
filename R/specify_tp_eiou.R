@@ -880,6 +880,62 @@ route_non_specified_eiou <- function(.tidy_iea_df,
 
 
 
+#' Routes non-specified transformation processes flows to existing industries
+#' 
+#' Says what it does
+#' 
+#' Write any detail
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
+#' @param routing_non_specified_tp A boolean indicating whether non-specified EIOU flows should be redirected to other existing industries.
+#'                                 If FALSE, the function returns the input data frame.
+#'                                 Default is TRUE.
+#' @param country The name of the country column in the `.tidy_iea_df`.
+#'                Default is `IEATools::iea_cols$country`.
+#' @param flow_aggregation_point The name of the flow aggregation point column in the `.tidy_iea_df`.
+#'                Default is `IEATools::iea_cols$flow_aggregation_point`.
+#' @param flow The name of the flow column in the `.tidy_iea_df`.
+#'                Default is `IEATools::iea_cols$flow`.
+#' @param ledger_side The name of the ledger side column in the `.tidy_iea_df`.
+#'                Default is `IEATools::iea_cols$ledger_side`.
+#' @param method The name of the method column in the `.tidy_iea_df`.
+#'                Default is `IEATools::iea_cols$method`.
+#' @param energy_type The name of the energy type column in the `.tidy_iea_df`.
+#'                Default is `IEATools::iea_cols$energy_type`.
+#' @param last_stage The name of the last stage column in the `.tidy_iea_df`.
+#'                Default is `IEATools::iea_cols$last_stage`.
+#' @param year The name of the country year in the `.tidy_iea_df`.
+#'                Default is `IEATools::iea_cols$year`.
+#' @param product The name of the product column in the `.tidy_iea_df`.
+#'                Default is `IEATools::iea_cols$product`.
+#' @param unit The name of the unit column in the `.tidy_iea_df`.
+#'                Default is `IEATools::iea_cols$unit`.
+#' @param e_dot The name of the energy column in the `.tidy_iea_df`.
+#'                Default is `IEATools::iea_cols$energy`.
+#' @param transformation_processes A string that identifies "Transformation processes" in the `flow_aggregation_point` column of the `.tidy_iea_df`.
+#'                                 Default is `IEATools::aggregation_flows$transformation_processes`.
+#' @param non_spec A string that identifies "Non-specified" flows in the `flow` column of the `.tidy_iea_df`.
+#'                 Default is "Non-specified".
+#' @param negzeropos The name of a temporary column added to the data frame.
+#'                   Default is ".negzeropos".
+#' @param n_counting The name of a temporary column added to the data frame.
+#'                   Default is ".n_counting".
+#' @param Total_input_output_by_prod_excl_nonspec_From_Func The name of a temporary column added to the data frame.
+#'                                                          Default is ".Total_input_output_by_prod_excl_nonspec_From_Func".
+#' @param Input_output_by_prod_per_tp_From_Func The name of a temporary column added to the data frame.
+#'                                              Default is ".Input_output_by_prod_per_tp_From_Func".
+#' @param Share_input_output_by_prod_per_tp_From_Func The name of a temporary column added to the data frame.
+#'                                                    Default is ".Share_input_output_by_prod_per_tp_From_Func".
+#' @param destination_flow The name of a temporary column added to the data frame.
+#'                         Default is ".destination_flow".
+#'
+#' @return A modified version of the `.tidy_iea_df` with non-specified transformation processes flows routes to existing industries.
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' load_tidy_iea_df() %>% 
+#'   route_non_specified_tp()
 route_non_specified_tp <- function(.tidy_iea_df,
                                    routing_non_specified_tp = TRUE,
                                    # Column names
@@ -895,7 +951,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
                                    unit = IEATools::iea_cols$unit,
                                    e_dot = IEATools::iea_cols$e_dot,
                                    # Strings identifying flow aggregation point and flow
-                                   transformation_processes = "Transformation processes",
+                                   transformation_processes = IEATools::aggregation_flows$transformation_processes,
                                    non_spec = "Non-specified",
                                    # Temporary column names
                                    negzeropos = ".negzeropos",
