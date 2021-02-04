@@ -1051,4 +1051,30 @@ test_that("route_non_specified_flows works", {
                  dplyr::pull(),
                (623-620.6897+67),
                tolerance = 0.001)
+  
+  first_version_test <- AB_data %>%
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat(
+      split_using_shares_of = "output"
+      ) %>%
+    add_nuclear_industry() %>%
+    route_non_specified_flows(
+      is_non_specified_eiou_routed = FALSE,
+      is_non_specified_tp_routed = FALSE
+    )
+  
+  second_version_test <- AB_data %>%
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat(
+      split_using_shares_of = "output"
+    ) %>%
+    add_nuclear_industry()
+  
+  expect_true(all(first_version_test == second_version_test))
 })
