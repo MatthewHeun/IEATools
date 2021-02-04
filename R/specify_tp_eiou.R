@@ -882,9 +882,11 @@ route_non_specified_eiou <- function(.tidy_iea_df,
 
 #' Routes non-specified transformation processes flows to existing industries
 #' 
-#' Says what it does
-#' 
-#' Write any detail
+#' This function routes non-specified transformation processes flows to existing industries.
+#' It does so using the shares of product use and supply of the other transformation processes.
+#' If no transformation processes consume or supply a product that is present in the non-specified flows,
+#' then the flow remains non-specified.
+#' Note that the `routing_non_specified_eiou` parameter enables to switch on and off the routing of the non-specified EIOU flow.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
 #' @param routing_non_specified_tp A boolean indicating whether non-specified EIOU flows should be redirected to other existing industries.
@@ -961,7 +963,11 @@ route_non_specified_tp <- function(.tidy_iea_df,
                                    Share_input_output_by_prod_per_tp_From_Func = ".Share_input_output_by_prod_per_tp_From_Func",
                                    destination_flow = ".destination_flow"){
   
+  if (isFALSE(routing_non_specified_tp)){
+    return(.tidy_iea_df)
+  }
   
+  # Getting a list of all observations (Country, Method, Energy type, LAst stage, Year, Product, and Sign) included in transformation processes
   df_observations_included_tidy_iea_df <- .tidy_iea_df %>%
     dplyr::filter(.data[[flow_aggregation_point]] == transformation_processes) %>%
     dplyr::mutate(
@@ -977,7 +983,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
     ) %>%
     dplyr::select(-.data[[n_counting]])
   
-  
+  # Figuring out total input and output by product in transformation processes, excluding non-specified flows
   total_input_output_by_prod_tps <- .tidy_iea_df %>%
     dplyr::filter(
       .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] != non_spec
@@ -997,12 +1003,13 @@ route_non_specified_tp <- function(.tidy_iea_df,
       "{Total_input_output_by_prod_excl_nonspec_From_Func}" := sum(.data[[e_dot]])
     )
   
+  # Figuring out the list of products and signs not available in the transformation processes elsewhere than in non-specified
   list_not_included_total_input_output_by_prod_tps <- df_observations_included_tidy_iea_df %>%
     dplyr::anti_join(total_input_output_by_prod_tps, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product}, {negzeropos})) %>%
     tidyr::unite(col = "ID", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[negzeropos]]) %>%
     dplyr::pull()
   
-  
+  # Figuring out input and output by product for each transformation process
   input_output_by_prod_per_tp <- .tidy_iea_df %>%
     dplyr::filter(
       .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] != non_spec
@@ -1022,7 +1029,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
       "{Input_output_by_prod_per_tp_From_Func}" := sum(.data[[e_dot]])
     )
   
-  
+  # Figuring out the shares of input and output for each product by transformation process
   share_input_output_by_prod_per_tp <- input_output_by_prod_per_tp %>%
     dplyr::left_join(
       total_input_output_by_prod_tps,
@@ -1033,15 +1040,14 @@ route_non_specified_tp <- function(.tidy_iea_df,
     ) %>%
     dplyr::select(-.data[[flow_aggregation_point]])
   
-  
-  
+  # Figuring out the list of observations excluding non-specified
   list_tp_flows_excl_nonspec <- .tidy_iea_df %>%
     dplyr::filter(.data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] != non_spec) %>%
     tidyr::expand(.data[[flow]]) %>%
     dplyr::pull()
   
   
-  # When tps with the given product and sign are available in the data frame
+  # When tps with the given product and sign are available in the data frame, then we split the flow
   routed_nonspec_tp_with_io_by_prod <- .tidy_iea_df %>%
     dplyr::filter(
       .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] == non_spec
@@ -1078,7 +1084,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
                   -.data[[Total_input_output_by_prod_excl_nonspec_From_Func]])
   
   
-  # When tps with the given product and sign are NOT available in the data frame
+  # When tps with the given product and sign are NOT available in the data frame, then we keep the flow as it is
   routed_nonspec_tp_without_io_by_prod <- .tidy_iea_df %>%
     dplyr::filter(
       .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] == non_spec
@@ -1124,5 +1130,4 @@ route_non_specified_tp <- function(.tidy_iea_df,
     dplyr::ungroup()
   
   return(tidy_iea_df_routed_nonspec_tp)
-  
 }
