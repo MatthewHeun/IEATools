@@ -80,17 +80,17 @@ Default is ".negzeropos".}
 \item{n_counting}{The name of a temporary column added to the data frame.
 Default is ".n_counting".}
 
-\item{destination_flow}{The name of a temporary column added to the data frame.
-Default is ".destination_flow".}
-
-\item{Total_input_output_by_prod_excl_nonspec_From_Func}{The name of a temporary column added to the data frame.
+\item{Total_input_output_by_prod_excl_nonspec}{The name of a temporary column added to the data frame.
 Default is ".Total_input_output_by_prod_excl_nonspec_From_Func".}
 
-\item{Input_output_by_prod_per_tp_From_Func}{The name of a temporary column added to the data frame.
+\item{Input_output_by_prod_per_tp}{The name of a temporary column added to the data frame.
 Default is ".Input_output_by_prod_per_tp_From_Func".}
 
-\item{Share_input_output_by_prod_per_tp_From_Func}{The name of a temporary column added to the data frame.
+\item{Share_input_output_by_prod_per_tp}{The name of a temporary column added to the data frame.
 Default is ".Share_input_output_by_prod_per_tp_From_Func".}
+
+\item{destination_flow}{The name of a temporary column added to the data frame.
+Default is ".destination_flow".}
 }
 \value{
 A modified version of the \code{.tidy_iea_df} with non-specified transformation processes flows routes to existing industries.
