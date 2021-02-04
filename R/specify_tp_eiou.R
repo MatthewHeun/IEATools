@@ -882,6 +882,7 @@ route_non_specified_eiou <- function(.tidy_iea_df,
 
 route_non_specified_tp <- function(.tidy_iea_df,
                                    routing_non_specified_tp = TRUE,
+                                   # Column names
                                    country = IEATools::iea_cols$country,
                                    flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                    flow = IEATools::iea_cols$flow,
@@ -893,9 +894,16 @@ route_non_specified_tp <- function(.tidy_iea_df,
                                    product = IEATools::iea_cols$product,
                                    unit = IEATools::iea_cols$unit,
                                    e_dot = IEATools::iea_cols$e_dot,
+                                   # Strings identifying flow aggregation point and flow
                                    transformation_processes = "Transformation processes",
                                    non_spec = "Non-specified",
-                                   negzeropos = ".negzeropos"){
+                                   # Temporary column names
+                                   negzeropos = ".negzeropos",
+                                   n_counting = ".n_counting",
+                                   Total_input_output_by_prod_excl_nonspec_From_Func = ".Total_input_output_by_prod_excl_nonspec_From_Func",
+                                   Input_output_by_prod_per_tp_From_Func = ".Input_output_by_prod_per_tp_From_Func",
+                                   Share_input_output_by_prod_per_tp_From_Func = ".Share_input_output_by_prod_per_tp_From_Func",
+                                   destination_flow = ".destination_flow"){
   
   
   df_observations_included_tidy_iea_df <- .tidy_iea_df %>%
@@ -909,10 +917,9 @@ route_non_specified_tp <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[negzeropos]]) %>%
     dplyr::summarise(
-      n_From_Func = dplyr::n()
+      "{n_counting}" := dplyr::n()
     ) %>%
-    dplyr::select(-n_From_Func)
-  #tidyr::expand(tidyr::nesting(.env[[country]], .env[[method]], .env[[energy_type]], .env[[last_stage]], .env[[year]], .env[[product]], .env[[negzeropos]]))
+    dplyr::select(-.data[[n_counting]])
   
   
   total_input_output_by_prod_tps <- .tidy_iea_df %>%
@@ -931,7 +938,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
       .data[[flow_aggregation_point]], .data[[product]], .data[[negzeropos]]
     ) %>%
     dplyr::summarise(
-      Total_input_output_by_prod_excl_nonspec_From_Func = sum(.data[[e_dot]])
+      "{Total_input_output_by_prod_excl_nonspec_From_Func}" := sum(.data[[e_dot]])
     )
   
   list_not_included_total_input_output_by_prod_tps <- df_observations_included_tidy_iea_df %>%
@@ -956,7 +963,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
       .data[[flow_aggregation_point]], .data[[flow]], .data[[product]], .data[[negzeropos]]
     ) %>%
     dplyr::summarise(
-      Input_output_by_prod_per_tp_From_Func = sum(.data[[e_dot]])
+      "{Input_output_by_prod_per_tp_From_Func}" := sum(.data[[e_dot]])
     )
   
   
@@ -966,7 +973,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
       by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {ledger_side}, {flow_aggregation_point}, {product}, {negzeropos})
     ) %>%
     dplyr::mutate(
-      Share_input_output_by_prod_per_tp_From_Func = Input_output_by_prod_per_tp_From_Func / Total_input_output_by_prod_excl_nonspec_From_Func
+      "{Share_input_output_by_prod_per_tp_From_Func}" := .data[[Input_output_by_prod_per_tp_From_Func]] / .data[[Total_input_output_by_prod_excl_nonspec_From_Func]]
     ) %>%
     dplyr::select(-.data[[flow_aggregation_point]])
   
@@ -997,10 +1004,10 @@ route_non_specified_tp <- function(.tidy_iea_df,
       .data[[ledger_side]], .data[[product]], .data[[negzeropos]]
     ) %>%
     tidyr::crossing(
-      destination_flow := list_tp_flows_excl_nonspec
+      "{destination_flow}" := list_tp_flows_excl_nonspec
     ) %>%
     dplyr::mutate(
-      "{flow}" := .data[["destination_flow"]]
+      "{flow}" := .data[[destination_flow]]
     ) %>%
     dplyr::select(-destination_flow) %>%
     dplyr::inner_join(
@@ -1008,11 +1015,11 @@ route_non_specified_tp <- function(.tidy_iea_df,
       by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow_aggregation_point}, {flow}, {unit}, {ledger_side}, {product}, {negzeropos})
     ) %>%
     dplyr::mutate(
-      "{e_dot}" := .data[[e_dot]] * Share_input_output_by_prod_per_tp_From_Func
+      "{e_dot}" := .data[[e_dot]] * .data[[Share_input_output_by_prod_per_tp_From_Func]]
     ) %>%
-    dplyr::select(-Share_input_output_by_prod_per_tp_From_Func,
-                  -Input_output_by_prod_per_tp_From_Func,
-                  -Total_input_output_by_prod_excl_nonspec_From_Func)
+    dplyr::select(-.data[[Share_input_output_by_prod_per_tp_From_Func]],
+                  -.data[[Input_output_by_prod_per_tp_From_Func]],
+                  -.data[[Total_input_output_by_prod_excl_nonspec_From_Func]])
   
   
   # When tps with the given product and sign are NOT available in the data frame
