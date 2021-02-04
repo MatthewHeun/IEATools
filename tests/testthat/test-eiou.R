@@ -1078,3 +1078,45 @@ test_that("route_non_specified_flows works", {
   
   expect_true(all(first_version_test == second_version_test))
 })
+
+
+test_that("specify_all() function keeps balance",{
+  
+  # First with default dataset
+  dummy_dataset <- load_tidy_iea_df() %>% 
+    specify_all()
+  
+  expect_true(
+    dummy_dataset %>% 
+      tidy_iea_df_balanced()
+  )
+  
+  dummy_dataset <- load_tidy_iea_df() %>% 
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat(split_using_shares_of = "output") %>%
+    add_nuclear_industry() %>% 
+    route_non_specified_flows()
+  
+  expect_true(
+    dummy_dataset %>% 
+      tidy_iea_df_balanced()
+  )
+  
+  # Now with A-B country example.
+  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+  
+  AB_data %>% 
+    tidy_iea_df_balanced()
+  
+  AB_data_specified <- AB_data %>% 
+    specify_all()
+  
+  expect_true(AB_data_specified %>% 
+                tidy_iea_df_balanced())
+})
