@@ -44,14 +44,8 @@
 #'
 #' @examples
 #' library(dplyr)
-#' # The following should return something
 #' load_tidy_iea_df() %>% 
-#'   gather_producer_autoproducer() %>% 
-#'   dplyr::filter(Flow == IEATools::transformation_processes$main_activity_producer_electricity_plants)
-#' # The following should return an empty data frame
-#' load_tidy_iea_df() %>% 
-#'   gather_producer_autoproducer() %>% 
-#'   dplyr::filter(Flow == IEATools::transformation_processes$autoproducer_electricity_plants)
+#'   gather_producer_autoproducer()
 gather_producer_autoproducer <- function(.tidy_iea_df,
                                          # Column names
                                          flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -130,14 +124,8 @@ gather_producer_autoproducer <- function(.tidy_iea_df,
 #'
 #' @examples
 #' library(dplyr)
-#' # The following should return something
 #' load_tidy_iea_df() %>% 
-#'   gather_producer_autoproducer() %>% 
-#'   dplyr::filter(Flow == IEATools::transformation_processes$main_activity_producer_electricity_plants)
-#' # The following should return an empty data frame
-#' load_tidy_iea_df() %>% 
-#'   gather_producer_autoproducer() %>% 
-#'   dplyr::filter(Flow == IEATools::transformation_processes$pumped_storage_plants)
+#'   gather_producer_autoproducer()
 route_pumped_storage <- function(.tidy_iea_df,
                                  # Column names
                                  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -184,7 +172,8 @@ route_pumped_storage <- function(.tidy_iea_df,
 #' 
 #' This function routes the "Own use in electricity, CHP and heat plants" 
 #' Energy Industry Own Use flow to each of the three electricity, CHP and heat
-#' main activity producer plants.
+#' main activity producer plants. 
+#' The function is called within the `specify_all()` function.
 #' 
 #' The function either performs the routing using the share of outputs or of inputs of each
 #' of the three main activity producer industries. 
@@ -253,14 +242,8 @@ route_pumped_storage <- function(.tidy_iea_df,
 #'
 #' @examples
 #' library(dplyr)
-#' # The following should return something
 #' load_tidy_iea_df() %>% 
-#'   route_own_use_elect_chp_heat() %>% 
-#'   dplyr::filter(Flow == IEATools::transformation_processes$main_activity_producer_electricity_plants)
-#' # The following should return an empty data frame
-#' load_tidy_iea_df() %>% 
-#'   route_own_use_elect_chp_heat() %>% 
-#'   dplyr::filter(Flow == IEATools::eiou_flows$own_use_elect_chp_heat_plants)
+#'   route_own_use_elect_chp_heat()
 route_own_use_elect_chp_heat <- function(.tidy_iea_df,
                                          split_using_shares_of = c("input", "output"),
                                          # Column names
@@ -463,6 +446,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
 #' However, using the World Energy Extended Balances documentation, one can deduce from the amount of nuclear fuel used
 #' by "Main activity producer electricity plants" and "Main activity producer CHP plants" 
 #' the energy transformation due to the nuclear industry. This is what this function does.
+#' The function is called within the `specify_all()` function.
 #' 
 #' The World Energy Extended Balances documentation states that "The primary energy equivalent of nuclear electricity is
 #' calculated from the gross generation by assuming a 33% conversion efficiency. The calculation to be carried out
@@ -645,7 +629,7 @@ add_nuclear_industry <- function(.tidy_iea_df,
 #'
 #' This function is a wrapper of the functions 
 #' `route_non_specified_eiou` and `route_non_specified_tp`.
-#' It is called within the `specify_all` function.
+#' It is called within the `specify_all()` function.
 #' 
 #' See `route_non_specified_eiou` and `route_non_specified_tp` functions documentations for additional details.
 #'
@@ -682,6 +666,7 @@ route_non_specified_flows <- function(.tidy_iea_df,
 #' It does so using the shares of EIOU use of the other EIOU industries.
 #' If no EIOU flow different from "Non-specified" is available in the `.tidy_iea_df`,
 #' then the "Non-specified" EIOU flow is kept as it is.
+#' The function is called within the `route_non_specified_flows()` function.
 #' Note that the `routing_non_specified_eiou` parameter enables to switch on and off the routing of the non-specified EIOU flow.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
@@ -886,6 +871,7 @@ route_non_specified_eiou <- function(.tidy_iea_df,
 #' It does so using the shares of product use and supply of the other transformation processes.
 #' If no transformation processes consume or supply a product that is present in the non-specified flows,
 #' then the flow remains non-specified.
+#' The function is called within the `route_non_specified_flows()` function.
 #' Note that the `routing_non_specified_eiou` parameter enables to switch on and off the routing of the non-specified EIOU flow.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
@@ -922,11 +908,11 @@ route_non_specified_eiou <- function(.tidy_iea_df,
 #'                   Default is ".negzeropos".
 #' @param n_counting The name of a temporary column added to the data frame.
 #'                   Default is ".n_counting".
-#' @param Total_input_output_by_prod_excl_nonspec_From_Func The name of a temporary column added to the data frame.
+#' @param Total_input_output_by_prod_excl_nonspec The name of a temporary column added to the data frame.
 #'                                                          Default is ".Total_input_output_by_prod_excl_nonspec_From_Func".
-#' @param Input_output_by_prod_per_tp_From_Func The name of a temporary column added to the data frame.
+#' @param Input_output_by_prod_per_tp The name of a temporary column added to the data frame.
 #'                                              Default is ".Input_output_by_prod_per_tp_From_Func".
-#' @param Share_input_output_by_prod_per_tp_From_Func The name of a temporary column added to the data frame.
+#' @param Share_input_output_by_prod_per_tp The name of a temporary column added to the data frame.
 #'                                                    Default is ".Share_input_output_by_prod_per_tp_From_Func".
 #' @param destination_flow The name of a temporary column added to the data frame.
 #'                         Default is ".destination_flow".
@@ -958,9 +944,9 @@ route_non_specified_tp <- function(.tidy_iea_df,
                                    # Temporary column names
                                    negzeropos = ".negzeropos",
                                    n_counting = ".n_counting",
-                                   Total_input_output_by_prod_excl_nonspec_From_Func = ".Total_input_output_by_prod_excl_nonspec_From_Func",
-                                   Input_output_by_prod_per_tp_From_Func = ".Input_output_by_prod_per_tp_From_Func",
-                                   Share_input_output_by_prod_per_tp_From_Func = ".Share_input_output_by_prod_per_tp_From_Func",
+                                   Total_input_output_by_prod_excl_nonspec = ".Total_input_output_by_prod_excl_nonspec",
+                                   Input_output_by_prod_per_tp = ".Input_output_by_prod_per_tp",
+                                   Share_input_output_by_prod_per_tp = ".Share_input_output_by_prod_per_tp",
                                    destination_flow = ".destination_flow"){
   
   if (isFALSE(routing_non_specified_tp)){
@@ -1000,7 +986,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
       .data[[flow_aggregation_point]], .data[[product]], .data[[negzeropos]]
     ) %>%
     dplyr::summarise(
-      "{Total_input_output_by_prod_excl_nonspec_From_Func}" := sum(.data[[e_dot]])
+      "{Total_input_output_by_prod_excl_nonspec}" := sum(.data[[e_dot]])
     )
   
   # Figuring out the list of products and signs not available in the transformation processes elsewhere than in non-specified
@@ -1026,7 +1012,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
       .data[[flow_aggregation_point]], .data[[flow]], .data[[product]], .data[[negzeropos]]
     ) %>%
     dplyr::summarise(
-      "{Input_output_by_prod_per_tp_From_Func}" := sum(.data[[e_dot]])
+      "{Input_output_by_prod_per_tp}" := sum(.data[[e_dot]])
     )
   
   # Figuring out the shares of input and output for each product by transformation process
@@ -1036,7 +1022,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
       by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {ledger_side}, {flow_aggregation_point}, {product}, {negzeropos})
     ) %>%
     dplyr::mutate(
-      "{Share_input_output_by_prod_per_tp_From_Func}" := .data[[Input_output_by_prod_per_tp_From_Func]] / .data[[Total_input_output_by_prod_excl_nonspec_From_Func]]
+      "{Share_input_output_by_prod_per_tp}" := .data[[Input_output_by_prod_per_tp]] / .data[[Total_input_output_by_prod_excl_nonspec]]
     ) %>%
     dplyr::select(-.data[[flow_aggregation_point]])
   
@@ -1077,11 +1063,11 @@ route_non_specified_tp <- function(.tidy_iea_df,
       by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow_aggregation_point}, {flow}, {unit}, {ledger_side}, {product}, {negzeropos})
     ) %>%
     dplyr::mutate(
-      "{e_dot}" := .data[[e_dot]] * .data[[Share_input_output_by_prod_per_tp_From_Func]]
+      "{e_dot}" := .data[[e_dot]] * .data[[Share_input_output_by_prod_per_tp]]
     ) %>%
-    dplyr::select(-.data[[Share_input_output_by_prod_per_tp_From_Func]],
-                  -.data[[Input_output_by_prod_per_tp_From_Func]],
-                  -.data[[Total_input_output_by_prod_excl_nonspec_From_Func]])
+    dplyr::select(-.data[[Share_input_output_by_prod_per_tp]],
+                  -.data[[Input_output_by_prod_per_tp]],
+                  -.data[[Total_input_output_by_prod_excl_nonspec]])
   
   
   # When tps with the given product and sign are NOT available in the data frame, then we keep the flow as it is

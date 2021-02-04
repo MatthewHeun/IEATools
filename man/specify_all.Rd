@@ -4,10 +4,26 @@
 \alias{specify_all}
 \title{Specify all industries}
 \usage{
-specify_all(.tidy_iea_df)
+specify_all(
+  .tidy_iea_df,
+  split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
+  is_non_specified_eiou_routed = TRUE,
+  is_non_specified_tp_routed = TRUE
+)
 }
 \arguments{
-\item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
+\item{.tidy_iea_df}{A tidy data frame containing IEA extended energy balance data}
+
+\item{split_own_use_elect_chp_heat_using_shares_of}{Indicates whether the input or outputs to
+Main activity producer plants should be use for
+splitting the Own use in electricity, chp and heat plants
+EIOU flow. Default is "input".}
+
+\item{is_non_specified_eiou_routed}{Boolean stating whether non-specified EIOU flows should be routed to existing industries
+Default is TRUE.}
+
+\item{is_non_specified_tp_routed}{Boolean stating whether non-specified transformation processes flows should be routed to existing industries
+Default is TRUE.}
 }
 \value{
 an enhanced and corrected version of \code{.tidy_iea_df}
