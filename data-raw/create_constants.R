@@ -447,6 +447,20 @@ transport_flows <- list(world_aviation_bunkers = "World aviation bunkers",
                         transport_not_elsewhere_specified = "Transport not elsewhere specified")
 usethis::use_data(transport_flows, overwrite = TRUE)
 
+# A constant containing domestic transport flows. This constant is the same as 
+# transport flows except it does not contain "World marine bunkers" or
+# "World aviation bunkers"
+transport_domestic_flows <- list(domestic_aviation = "Domestic aviation",
+                                 road = "Road",
+                                 rail = "Rail",
+                                 pipeline_transport = "Pipeline transport",
+                                 domestic_navigation = "Domestic navigation",
+                                 # 2019
+                                 non_specified_transport = "Non-specified (transport)",
+                                 # 2020
+                                 transport_not_elsewhere_specified = "Transport not elsewhere specified")
+usethis::use_data(transport_domestic_flows, overwrite = TRUE)
+
 
 other_flows <- list(residential = "Residential", 
                     commercial_and_public_services = "Commercial and public services",
