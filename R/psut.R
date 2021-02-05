@@ -32,7 +32,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
                                       product = IEATools::iea_cols$product, 
                                       e_dot = IEATools::iea_cols$e_dot,
                                       unit = IEATools::iea_cols$unit,
-                                      matnames = IEATools::iea_cols$mat_meta_cols$matnames,
+                                      matnames = IEATools::mat_meta_cols$matnames,
                                       # Row and product types
                                       product_type = IEATools::row_col_types$product,
                                       unit_type = IEATools::row_col_types$unit, 
@@ -42,8 +42,10 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
                                       .val = ".val", 
                                       .rowtype = ".rowtype", 
                                       .coltype = ".coltype"){
+  
   grouping_vars <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, unit, matnames)
   matsindf::verify_cols_missing(.tidy_iea_df, c(s_units, .val, .rowtype, .coltype))
+  
   .tidy_iea_df %>% 
     dplyr::group_by(!!!grouping_vars) %>% 
     dplyr::select(!!!grouping_vars, .data[[product]], .data[[unit]]) %>%
