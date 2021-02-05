@@ -346,6 +346,15 @@ transformation_processes <- list(main_activity_producer_electricity_plants = "Ma
                                  non_specified_transformation = "Non-specified (transformation)")
 usethis::use_data(transformation_processes, overwrite = TRUE)
 
+# A constant containing all EIOU flows, namely all transformation processes
+# along with "Oil and gas extraction" and "Coal mines"
+eiou_flows <- list(transformation_processes,
+                   coal_mines = "Coal mines",
+                   oil_and_gas_extraction = "Oil and gas extraction") %>% 
+  unlist() %>% 
+  as.list()
+usethis::use_data(industry_flows, overwrite = TRUE)
+
 
 tfc_flows <- list(industry = "Industry",
                   transport = "Transport",
