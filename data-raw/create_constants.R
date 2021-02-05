@@ -343,7 +343,9 @@ transformation_processes <- list(main_activity_producer_electricity_plants = "Ma
                                  gas_to_liquid_gtl_plants = "Gas-to-liquids (GTL) plants",
                                  for_blended_natural_gas = "For blended natural gas",
                                  charcoal_production_plants = "Charcoal production plants",
-                                 non_specified_transformation = "Non-specified (transformation)")
+                                 non_specified_transformation = "Non-specified (transformation)",
+                                 # 2019
+                                 non_specified_energy = "Non-specified (energy)")
 usethis::use_data(transformation_processes, overwrite = TRUE)
 
 # A constant containing all EIOU flows, namely all transformation processes
@@ -353,7 +355,7 @@ eiou_flows <- list(transformation_processes,
                    oil_and_gas_extraction = "Oil and gas extraction") %>% 
   unlist() %>% 
   as.list()
-usethis::use_data(industry_flows, overwrite = TRUE)
+usethis::use_data(eiou_flows, overwrite = TRUE)
 
 
 tfc_flows <- list(industry = "Industry",
@@ -429,6 +431,7 @@ industry_net_flows <- list(# manufacturing flows
                            non_specified_industry = "Non-specified (industry)", 
                            # 2019
                            industry_not_elsewhere_specified = "Industry not elsewhere specified")
+usethis::use_data(industry_net_flows, overwrite = TRUE)
 
 
 transport_flows <- list(world_aviation_bunkers = "World aviation bunkers",
