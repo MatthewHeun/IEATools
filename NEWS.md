@@ -1,4 +1,8 @@
 
+* `extract_S_units_from_tidy()` function hotfixed so that
+  it also works when the `.tidy_iea_df` data frame already
+  has a `matnames` column.
+
 # IEATools 0.1.46 (2012-02-01)
 
 * `calc_tidy_iea_df_balances` function updated
