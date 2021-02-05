@@ -406,6 +406,30 @@ industry_flows <- list(mining_and_quarrying = "Mining and quarrying",
   as.list()
 usethis::use_data(industry_flows, overwrite = TRUE)
 
+# A constant containing non-eiou industry flows
+industry_net_flows <- list(# manufacturing flows
+                           iron_and_steel = "Iron and steel",
+                           chemical_and_petrochemical = "Chemical and petrochemical",
+                           non_ferrous_metals = "Non-ferrous metals",
+                           non_metallic_minerals = "Non-metallic minerals",
+                           transport_equipment = "Transport equipment",
+                           machinery = "Machinery",
+                           food_and_tobacco = "Food and tobacco",
+                           # 2018
+                           paper_pulp_and_print = "Paper, pulp and print",
+                           # 2019
+                           paper_pulp_and_printing = "Paper, pulp and printing",
+                           wood_and_wood_products = "Wood and wood products",
+                           textile_and_leather = "Textile and leather",
+                           # Non-manufacturing flows
+                           mining_and_quarrying = "Mining and quarrying", 
+                           construction = "Construction",
+                           # Non-specified industry
+                           # 2018
+                           non_specified_industry = "Non-specified (industry)", 
+                           # 2019
+                           industry_not_elsewhere_specified = "Industry not elsewhere specified")
+
 
 transport_flows <- list(world_aviation_bunkers = "World aviation bunkers",
                         domestic_aviation = "Domestic aviation",
@@ -414,7 +438,10 @@ transport_flows <- list(world_aviation_bunkers = "World aviation bunkers",
                         pipeline_transport = "Pipeline transport", 
                         world_marine_bunkers = "World marine bunkers",
                         domestic_navigation = "Domestic navigation",
-                        non_specified_transport = "Non-specified (transport)")
+                        # 2019
+                        non_specified_transport = "Non-specified (transport)",
+                        # 2020
+                        transport_not_elsewhere_specified = "Transport not elsewhere specified")
 usethis::use_data(transport_flows, overwrite = TRUE)
 
 
