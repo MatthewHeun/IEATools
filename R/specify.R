@@ -83,25 +83,23 @@
 #' ) %>% 
 #'   specify_primary_production()
 specify_primary_production <- function(.tidy_iea_df,
-                                       coal_mines = "Coal mines",
-                                       oil_gas_extraction = "Oil and gas extraction",
-                                       liquefaction_regas = "Liquefaction (LNG) / regasification plants",
-                                       liquefaction_regas_reassign = "Oil and gas extraction",
-                                       production_products = list(IEATools::primary_coal_products, 
-                                                                  c(IEATools::primary_oil_products, natural_gas = "Natural gas")),
-                                       production_products_short_names = c("Coal", "Oil and natural gas"),
-                                       flow_aggregation_point = "Flow.aggregation.point",
-                                       eiou = "Energy industry own use",
-                                       transformation_processes = "Transformation processes",
-                                       flow = "Flow", 
                                        ledger_side = IEATools::iea_cols$ledger_side,
-                                       resources = "Resources",
+                                       flow = IEATools::iea_cols$flow,
+                                       product = IEATools::iea_cols$product,
+                                       e_dot = IEATools::iea_cols$e_dot,
+                                       list_primary_coal_products = IEATools::primary_coal_products,
+                                       list_primary_oil_products = IEATools::primary_oil_products,
+                                       list_primary_gas_products = list(natural_gas = "Natural gas"),
                                        production = IEATools::tpes_flows$production,
-                                       consumption = IEATools::ledger_sides$consumption,
-                                       e_dot = "E.dot",
-                                       product = "Product", 
-                                       notation = IEATools::of_notation){
+                                       coal_mines = IEATools::industry_flows$coal_mines,
+                                       oil_gas_extraction = IEATools::industry_flows$oil_and_gas_extraction,
+                                       liquefaction_regas = "Liquefaction (LNG) / regasification plants",
+                                       liquefaction_regas_reassign = IEATools::industry_flows$oil_and_gas_extraction,
+                                       transformation_processes = IEATools::aggregation_flows$transformation_processes,
+                                       resources = IEATools::tpes_flows$resources,
+                                       ){
   
+  production_products <- c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)
   
   # First, we define resource flows, i.e. flows supplied by resources
   resource_outputs_flows <- .tidy_iea_df %>% 
@@ -110,8 +108,8 @@ specify_primary_production <- function(.tidy_iea_df,
     ) %>% 
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
-        .data[[product]] %in% IEATools::primary_coal_products ~ stringr::str_c(resources, " [of Coal]", sep = ""),
-        .data[[product]] %in% c(IEATools::primary_oil_products, natural_gas = "Natural gas") ~ stringr::str_c(resources, " [of Oil and natural gas]", sep = "")
+        .data[[product]] %in% list_primary_coal_products ~ stringr::str_c(resources, " [of Coal]", sep = ""),
+        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ stringr::str_c(resources, " [of Oil and natural gas]", sep = "")
       ),
       "{product}" := stringr::str_c(.data[[product]], " [from Resources]")
     )
@@ -123,11 +121,10 @@ specify_primary_production <- function(.tidy_iea_df,
     ) %>% 
     dplyr::mutate(
       "{production}" := dplyr::case_when(
-        .data[[product]] %in% IEATools::coal_and_coal_products ~ coal_mines,
-        .data[[product]] %in% c(IEATools::primary_oil_products, natural_gas = "Natural gas") ~ oil_gas_extraction
+        .data[[product]] %in% list_primary_coal_products ~ coal_mines,
+        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction
       )
     )
-  
   
   # Third, we define extractive industries inputs
   extractive_industries_input_flows <- .tidy_iea_df %>% 
@@ -136,8 +133,8 @@ specify_primary_production <- function(.tidy_iea_df,
     ) %>% 
     dplyr::mutate(
       "{production}" := dplyr::case_when(
-        .data[[product]] %in% IEATools::coal_and_coal_products ~ coal_mines,
-        .data[[product]] %in% c(IEATools::primary_oil_products, natural_gas = "Natural gas") ~ oil_gas_extraction
+        .data[[product]] %in% list_primary_coal_products ~ coal_mines,
+        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction
       ),
       "{product}" := stringr::str_c(.data[[product]], " [from Resources]"),
       "{e_dot" := -.data[[e_dot]]
@@ -162,7 +159,7 @@ specify_primary_production <- function(.tidy_iea_df,
     # so we need to sum those rows.
     matsindf::group_by_everything_except(e_dot) %>% 
     dplyr::summarise(
-      "{e_dot}" := sum(!!as.name(e_dot))
+      "{e_dot}" := sum(.data[[e_dot]])
       ) %>% 
     dplyr::ungroup()
   
