@@ -121,7 +121,7 @@ specify_primary_production <- function(.tidy_iea_df,
       .data[[flow]] == production & .data[[product]] %in% production_products
     ) %>% 
     dplyr::mutate(
-      "{production}" := dplyr::case_when(
+      "{flow}" := dplyr::case_when(
         .data[[product]] %in% list_primary_coal_products ~ coal_mines,
         .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction
       ),
@@ -134,7 +134,7 @@ specify_primary_production <- function(.tidy_iea_df,
       .data[[flow]] == production & .data[[product]] %in% production_products
     ) %>% 
     dplyr::mutate(
-      "{production}" := dplyr::case_when(
+      "{flow}" := dplyr::case_when(
         .data[[product]] %in% list_primary_coal_products ~ coal_mines,
         .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction
       ),
