@@ -130,10 +130,26 @@ specify_primary_production <- function(.tidy_iea_df,
     )
   
   
-  
-  
-  
-  
+  # Fourth, we add all these flows to the input .tidy_iea_df
+  .tidy_iea_df %>% 
+    dplyr::bind_rows(
+      resource_outputs_flows,
+      extractive_industries_output_flows,
+      extractive_industries_input_flows
+    ) %>% 
+    # Here we need to reassign EIOU tagged as "Liquefaction (LNG) / regasification plants" to 
+    # the Oil and gas extraction sector.
+    dplyr::mutate(
+      !!as.name(flow) := dplyr::case_when(
+        !!as.name(flow) == liquefaction_regas ~ liquefaction_regas_reassign, 
+        TRUE ~ !!as.name(flow)
+      )
+    ) %>% 
+    # After reassigning, we may have multiple rows of liquefaction_regas_reassign,
+    # so we need to sum those rows.
+    matsindf::group_by_everything_except(e_dot) %>% 
+    dplyr::summarise(!!as.name(e_dot) := sum(!!as.name(e_dot))) %>% 
+    dplyr::ungroup()
   
   
   specify_primary_func <- function(.tidf, eiou_dest, prod_prods, prod_short_name){
