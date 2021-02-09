@@ -101,6 +101,41 @@ specify_primary_production <- function(.tidy_iea_df,
                                        product = "Product", 
                                        notation = IEATools::of_notation){
   
+  
+  # First, we define resource flows, i.e. flows supplied by resources
+  resource_outputs_flows <- .tidy_iea_df %>% 
+    dplyr::filter(
+      .data[[flow]] == production & .data[[product]] %in% production_products
+    ) %>% 
+    dplyr::mutate(
+      "{flow}" := dplyr::case_when(
+        .data[[product]] %in% IEATools::primary_coal_products ~ ,
+        .data[[product]] %in% c(IEATools::primary_oil_products, natural_gas = "Natural gas") ~ 
+      ),
+      "{product}" := stringr::str_c()
+    )
+  
+  
+  # Second, we define extractive industries outputs
+  extractive_industries_output_flows <- .tidy_iea_df %>% 
+    dplyr::filter(
+      .data[[flow]] == production & .data[[product]] %in% production_products
+    )
+  
+  
+  # Third, we define extractive industries inputs
+  extractive_industries_input_flows <- .tidy_iea_df %>% 
+    dplyr::filter(
+      .data[[flow]] == production & .data[[product]] %in% production_products
+    )
+  
+  
+  
+  
+  
+  
+  
+  
   specify_primary_func <- function(.tidf, eiou_dest, prod_prods, prod_short_name){
     # Convert from the Production industry to Resources (prod_short_name)
     # For example, Flow = Production, Product = Anthracite becomes Flow = Resources (Coal), Product = Anthracite
@@ -178,7 +213,7 @@ specify_primary_production <- function(.tidy_iea_df,
   # Now specify all primary production 
   for (i in 1:length(eiou_destinations)) {
     .tidy_iea_df <- specify_primary_func(.tidf = .tidy_iea_df,
-                                         eiou_dest = eiou_destinations[[i]], 
+                                         eiou_dest = eiou_destinations[[i]],
                                          prod_prods = production_products[[i]],
                                          prod_short_name = production_products_short_names[[i]])
   }
