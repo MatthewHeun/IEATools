@@ -84,6 +84,7 @@
 #'   specify_primary_production()
 specify_primary_production <- function(.tidy_iea_df,
                                        ledger_side = IEATools::iea_cols$ledger_side,
+                                       flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                        flow = IEATools::iea_cols$flow,
                                        product = IEATools::iea_cols$product,
                                        e_dot = IEATools::iea_cols$e_dot,
@@ -123,7 +124,8 @@ specify_primary_production <- function(.tidy_iea_df,
       "{production}" := dplyr::case_when(
         .data[[product]] %in% list_primary_coal_products ~ coal_mines,
         .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction
-      )
+      ),
+      "{flow_aggregation_point}" := transformation_processes
     )
   
   # Third, we define extractive industries inputs
@@ -137,7 +139,8 @@ specify_primary_production <- function(.tidy_iea_df,
         .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction
       ),
       "{product}" := stringr::str_c(.data[[product]], " [from Resources]"),
-      "{e_dot" := -.data[[e_dot]]
+      "{e_dot" := -.data[[e_dot]],
+      "{flow_aggregation_point}" := transformation_processes
     )
   
   # Fourth, we add all these flows to the input .tidy_iea_df
