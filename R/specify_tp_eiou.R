@@ -647,8 +647,8 @@ add_nuclear_industry <- function(.tidy_iea_df,
 #' load_tidy_iea_df() %>% 
 #'   route_non_specified_flows()
 route_non_specified_flows <- function(.tidy_iea_df,
-                                      is_non_specified_eiou_routed = TRUE,
-                                      is_non_specified_tp_routed = TRUE
+                                      is_non_specified_eiou_routed = as.logical(TRUE),
+                                      is_non_specified_tp_routed = as.logical(TRUE)
                                       ){
   .tidy_iea_df %>%
     route_non_specified_eiou(
@@ -720,7 +720,7 @@ route_non_specified_flows <- function(.tidy_iea_df,
 #' load_tidy_iea_df() %>% 
 #'   route_non_specified_eiou()
 route_non_specified_eiou <- function(.tidy_iea_df,
-                                     routing_non_specified_eiou = TRUE,
+                                     routing_non_specified_eiou = as.logical(TRUE),
                                      # Column names
                                      country = IEATools::iea_cols$country,
                                      flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -925,7 +925,7 @@ route_non_specified_eiou <- function(.tidy_iea_df,
 #' load_tidy_iea_df() %>% 
 #'   route_non_specified_tp()
 route_non_specified_tp <- function(.tidy_iea_df,
-                                   routing_non_specified_tp = TRUE,
+                                   routing_non_specified_tp = as.logical(TRUE),
                                    # Column names
                                    country = IEATools::iea_cols$country,
                                    flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,

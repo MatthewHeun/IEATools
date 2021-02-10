@@ -385,8 +385,8 @@ specify_interface_industries <- function(.tidy_iea_df,
 #'            Flow == "Main activity producer electricity plants")
 specify_tp_eiou <- function(.tidy_iea_df,
                             split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
-                            is_non_specified_eiou_routed = TRUE,
-                            is_non_specified_tp_routed = TRUE,
+                            is_non_specified_eiou_routed = as.logical(TRUE),
+                            is_non_specified_tp_routed = as.logical(TRUE),
                             flow_aggregation_point = "Flow.aggregation.point",
                             eiou = "Energy industry own use",
                             transformation_processes = "Transformation processes",
@@ -682,8 +682,8 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #'   tp_sinks_to_nonenergy()
 specify_all <- function(.tidy_iea_df,
                         split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
-                        is_non_specified_eiou_routed = TRUE,
-                        is_non_specified_tp_routed = TRUE){
+                        is_non_specified_eiou_routed = as.logical(TRUE),
+                        is_non_specified_tp_routed = as.logical(TRUE)){
   
   split_own_use_elect_chp_heat_using_shares_of = match.arg(split_own_use_elect_chp_heat_using_shares_of)
   
