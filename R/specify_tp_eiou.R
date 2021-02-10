@@ -647,15 +647,15 @@ add_nuclear_industry <- function(.tidy_iea_df,
 #' load_tidy_iea_df() %>% 
 #'   route_non_specified_flows()
 route_non_specified_flows <- function(.tidy_iea_df,
-                                      is_non_specified_eiou_routed = as.logical(TRUE),
-                                      is_non_specified_tp_routed = as.logical(TRUE)
+                                      is_non_specified_eiou_routed = TRUE,
+                                      is_non_specified_tp_routed = TRUE
                                       ){
   .tidy_iea_df %>%
     route_non_specified_eiou(
-      routing_non_specified_eiou = is_non_specified_eiou_routed
+      routing_non_specified_eiou = as.logical(is_non_specified_eiou_routed)
     ) %>%
     route_non_specified_tp(
-      routing_non_specified_tp = is_non_specified_tp_routed
+      routing_non_specified_tp = as.logical(is_non_specified_tp_routed)
     )
 }
 
@@ -720,7 +720,7 @@ route_non_specified_flows <- function(.tidy_iea_df,
 #' load_tidy_iea_df() %>% 
 #'   route_non_specified_eiou()
 route_non_specified_eiou <- function(.tidy_iea_df,
-                                     routing_non_specified_eiou = as.logical(TRUE),
+                                     routing_non_specified_eiou = TRUE,
                                      # Column names
                                      country = IEATools::iea_cols$country,
                                      flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -925,7 +925,7 @@ route_non_specified_eiou <- function(.tidy_iea_df,
 #' load_tidy_iea_df() %>% 
 #'   route_non_specified_tp()
 route_non_specified_tp <- function(.tidy_iea_df,
-                                   routing_non_specified_tp = as.logical(TRUE),
+                                   routing_non_specified_tp = TRUE,
                                    # Column names
                                    country = IEATools::iea_cols$country,
                                    flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
