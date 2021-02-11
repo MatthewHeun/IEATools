@@ -175,8 +175,8 @@ test_that("eta_fu_template works as expected for 2019 data", {
   expect_equivalent(eu_products, c("MD", "Light", "HTH.600.C", "MTH.200.C", "MTH.100.C", 
                                    "Bitumen", "Lubricants", "Other oil products", 
                                    "LTH.20.C", 
-                                   "Hard coal (if no detail) [of Coal mines]", 
-                                   "Other bituminous coal [of Coal mines]", 
+                                   "Hard coal (if no detail)", 
+                                   "Other bituminous coal", 
                                    "Paraffin waxes", "White spirit & SBP"))
   # Check the class of the year columns. They should be numeric.
   expect_true(is.numeric(Eta_fu_template_2019[["1971"]]))
@@ -195,8 +195,8 @@ test_that("eta_fu_template works as expected for 2019 data", {
   expect_equivalent(eu_products2, c("MTH.100.C", "MTH.200.C", "MD", "Light", "HTH.600.C", 
                                     "Lubricants", "Other oil products", "Bitumen", 
                                     "LTH.20.C", 
-                                    "Other bituminous coal [of Coal mines]", 
-                                    "Hard coal (if no detail) [of Coal mines]", 
+                                    "Other bituminous coal", 
+                                    "Hard coal (if no detail)", 
                                     "White spirit & SBP", "Paraffin waxes"))
   # Check the class of the year columns. They should be numeric.
   expect_true(is.numeric(Eta_fu_template_2019_2[["1971"]]))
@@ -223,8 +223,8 @@ test_that("eta_fu_template() works with tidy fu allocation data", {
   expect_equivalent(eu_products, c("MD", "Light", "HTH.600.C", "MTH.200.C", "MTH.100.C", 
                                    "Bitumen", "Lubricants", "Other oil products", 
                                    "LTH.20.C", 
-                                   "Hard coal (if no detail) [of Coal mines]", 
-                                   "Other bituminous coal [of Coal mines]", 
+                                   "Hard coal (if no detail)", 
+                                   "Other bituminous coal", 
                                    "Paraffin waxes", "White spirit & SBP"))
   # Check the class of the year columns. They should be numeric.
   expect_true(is.numeric(Eta_fu_template_2019[["1971"]]))
