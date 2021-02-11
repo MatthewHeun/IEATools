@@ -320,6 +320,17 @@
 "primary_oil_products"
 
 
+#' Primary gas products
+#'
+#' A string vector containing names of products classified by the IEA as primary gas products.
+#' 
+#' @format A string vector with `r length(primary_gas_products)` entries.
+#' 
+#' @examples 
+#' primary_gas_products
+"primary_gas_products"
+
+
 #' Secondary oil products
 #'
 #' A string vector containing names of products classified by the IEA as `oil_and_oil_products` that are not `primary_coal_products`.

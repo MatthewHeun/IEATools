@@ -6,65 +6,70 @@
 \usage{
 specify_primary_production(
   .tidy_iea_df,
-  eiou_destinations = c("Coal mines", "Oil and gas extraction"),
-  liquefaction_regas = "Liquefaction (LNG) / regasification plants",
-  liquefaction_regas_reassign = "Oil and gas extraction",
-  production_products = list(IEATools::primary_coal_products,
-    c(IEATools::primary_oil_products, natural_gas = "Natural gas")),
-  production_products_short_names = c("Coal", "Oil and natural gas"),
-  flow_aggregation_point = "Flow.aggregation.point",
-  eiou = "Energy industry own use",
-  transformation_processes = "Transformation processes",
-  flow = "Flow",
   ledger_side = IEATools::iea_cols$ledger_side,
-  resources = "Resources",
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  flow = IEATools::iea_cols$flow,
+  product = IEATools::iea_cols$product,
+  e_dot = IEATools::iea_cols$e_dot,
+  list_primary_coal_products = IEATools::primary_coal_products,
+  list_primary_oil_products = IEATools::primary_oil_products,
+  list_primary_gas_products = IEATools::primary_gas_products,
   production = IEATools::tpes_flows$production,
-  consumption = IEATools::ledger_sides$consumption,
-  e_dot = "E.dot",
-  product = "Product",
-  notation = IEATools::of_notation
+  coal_mines = IEATools::industry_flows$coal_mines,
+  oil_gas_extraction = IEATools::industry_flows$oil_and_gas_extraction,
+  liquefaction_regas = "Liquefaction (LNG) / regasification plants",
+  liquefaction_regas_reassign = IEATools::industry_flows$oil_and_gas_extraction,
+  transformation_processes = IEATools::aggregation_flows$transformation_processes,
+  resources = IEATools::tpes_flows$resources,
+  resource_products_notation = IEATools::from_notation,
+  resources_flow_notation = IEATools::of_notation
 )
 }
 \arguments{
 \item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{rename_iea_df_cols()}}
 
-\item{eiou_destinations}{a vector of destinations for EIOU for primary production of coal and coal products and oil and natural gas.
-Default is \code{c("Coal mines", "Oil and gas extraction")}.}
+\item{ledger_side, flow}{See \code{IEATools::iea_cols}.}
+
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}.
+Default is "\code{Flow.aggregation.point}".}
+
+\item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
+
+\item{e_dot}{the name of the energy column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
+
+\item{list_primary_coal_products}{the list of primary coal products for which the production industry needs to be changed.
+Default is \code{IEATools::primary_coal_products}.}
+
+\item{list_primary_oil_products}{the list of primary oil products for which the production industry needs to be changed.
+Default is \code{IEATools::primary_oil_products}.}
+
+\item{list_primary_gas_products}{the list of primary gas products for which the production industry needs to be changed.
+Default is \code{IEATools::primary_gas_products}.}
+
+\item{production}{a string identifying production in the flow column. Default is "\code{Production}".}
+
+\item{coal_mines}{The name of the new industry that produces primary coal products.
+Default is \code{IEATools::industry_flows$coal_mines}.}
+
+\item{oil_gas_extraction}{The name of the new industry that produces primary oil and gas products.
+Default is \code{IEATools::industry_flows$oil_and_gas_extraction}.}
 
 \item{liquefaction_regas}{a string identifying liquefaction and regasification plants. Default is "Liquefaction (LNG) / regasification plants".}
 
 \item{liquefaction_regas_reassign}{a string identifying the industry to which EIOU into \code{liquefaction_regas} will be reassigned.
 Default is "\verb{Oil and gas extraction}".}
 
-\item{production_products}{a list of products for which we want to specify primary industries.
-Default is \code{list(primary_coal_products, c(primary_oil_products, "Natural gas"))}.}
-
-\item{production_products_short_names}{a vector of short names for primary industries.
-Default is \code{c("Coal", "Oil and natural gas")}.}
-
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}.
-Default is "\code{Flow.aggregation.point}".}
-
-\item{eiou}{a string identifying energy industry own use in the \code{Flow.aggregation.point} column of \code{.tidy_iea_df}.
-Default is "\verb{Energy industry own use}".}
-
 \item{transformation_processes}{a string identifying transformation processes in the flow column of \code{.tidy_iea_df}.
 Default is "\verb{Transformation processes}".}
-
-\item{ledger_side, flow}{See \code{IEATools::iea_cols}.}
 
 \item{resources}{a string identifying resource industries to be added to \code{.tidy_iea_df}.
 Default is "\code{Resources}".}
 
-\item{production}{a string identifying production in the flow column. Default is "\code{Production}".}
+\item{resource_products_notation}{The notation to be used for defining products coming from the new resource industries.
+Default is \code{IEATools::from_notation}.}
 
-\item{consumption}{See \code{IEATools::ledger_sides}.}
-
-\item{e_dot}{the name of the energy column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
-
-\item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
-
-\item{notation}{a list of specification notations. Default is \code{IEATools::of_notation}.}
+\item{resources_flow_notation}{The notation to be used for defining the new resource industries.
+Default is \code{resources_flow_notation = IEATools::of_notation}.}
 }
 \value{
 \code{.tidy_iea_df} with adjusted production information for primary energy
@@ -111,7 +116,7 @@ library(dplyr)
 load_tidy_iea_df() \%>\% 
   specify_primary_production() \%>\% 
   add_psut_matnames() \%>\% 
-  filter(Flow \%in\% c("Resources (Coal)", "Coal mines")) \%>\%
+  dplyr::filter(Flow == "Coal mines" | stringr::str_detect(Flow, "Resources")) \%>\% 
   select(-Method, -Last.stage, -Ledger.side, -Unit)
 # EIOU by "Liquefaction (LNG) / regasification plants" is reassigned to "Oil and gas extraction"
 data.frame(

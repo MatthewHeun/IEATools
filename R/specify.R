@@ -37,29 +37,33 @@
 #' `load_tidy_iea_df()`.
 #'
 #' @param .tidy_iea_df an IEA data frame whose columns have been renamed by `rename_iea_df_cols()`
-#' @param eiou_destinations a vector of destinations for EIOU for primary production of coal and coal products and oil and natural gas.
-#'        Default is `c("Coal mines", "Oil and gas extraction")`.
 #' @param liquefaction_regas a string identifying liquefaction and regasification plants. Default is "Liquefaction (LNG) / regasification plants".
 #' @param liquefaction_regas_reassign a string identifying the industry to which EIOU into `liquefaction_regas` will be reassigned.
 #'        Default is "`Oil and gas extraction`".
-#' @param production_products a list of products for which we want to specify primary industries.
-#'        Default is `list(primary_coal_products, c(primary_oil_products, "Natural gas"))`.
-#' @param production_products_short_names a vector of short names for primary industries. 
-#'        Default is `c("Coal", "Oil and natural gas")`.
 #' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. 
 #'        Default is "`Flow.aggregation.point`".
-#' @param eiou a string identifying energy industry own use in the `Flow.aggregation.point` column of `.tidy_iea_df`.
-#'        Default is "`Energy industry own use`".
 #' @param transformation_processes a string identifying transformation processes in the flow column of `.tidy_iea_df`. 
 #'        Default is "`Transformation processes`".
 #' @param ledger_side,flow See `IEATools::iea_cols`.
-#' @param consumption See `IEATools::ledger_sides`.
 #' @param resources a string identifying resource industries to be added to `.tidy_iea_df`. 
 #'        Default is "`Resources`".
 #' @param production a string identifying production in the flow column. Default is "`Production`".
 #' @param e_dot the name of the energy column in `.tidy_iea_df`. Default is "`E.dot`".
+#' @param list_primary_coal_products the list of primary coal products for which the production industry needs to be changed.
+#'        Default is `IEATools::primary_coal_products`.
+#' @param list_primary_oil_products the list of primary oil products for which the production industry needs to be changed.
+#'        Default is `IEATools::primary_oil_products`.
+#' @param list_primary_gas_products the list of primary gas products for which the production industry needs to be changed.
+#'        Default is `IEATools::primary_gas_products`.
+#' @param coal_mines The name of the new industry that produces primary coal products.
+#'        Default is `IEATools::industry_flows$coal_mines`.
+#' @param oil_gas_extraction The name of the new industry that produces primary oil and gas products.
+#'        Default is `IEATools::industry_flows$oil_and_gas_extraction`.
+#' @param resource_products_notation The notation to be used for defining products coming from the new resource industries.
+#'        Default is `IEATools::from_notation`.
+#' @param resources_flow_notation The notation to be used for defining the new resource industries.
+#'        Default is `resources_flow_notation = IEATools::of_notation`.
 #' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
-#' @param notation a list of specification notations. Default is `IEATools::of_notation`.
 #'
 #' @return `.tidy_iea_df` with adjusted production information for primary energy 
 #'         for both coal and coal products and oil and gas extraction
@@ -71,7 +75,7 @@
 #' load_tidy_iea_df() %>% 
 #'   specify_primary_production() %>% 
 #'   add_psut_matnames() %>% 
-#'   filter(Flow %in% c("Resources (Coal)", "Coal mines")) %>%
+#'   dplyr::filter(Flow == "Coal mines" | stringr::str_detect(Flow, "Resources")) %>% 
 #'   select(-Method, -Last.stage, -Ledger.side, -Unit)
 #' # EIOU by "Liquefaction (LNG) / regasification plants" is reassigned to "Oil and gas extraction"
 #' data.frame(
