@@ -31,17 +31,23 @@ test_that("renamed products are also consumed", {
   Specific_production <- load_tidy_iea_df() %>% 
     # Look at only 1 product to make things simpler
     dplyr::filter((startsWith(Product, "Hard coal") | Flow == "Coal mines"), Year == 1971)
+  
   Renamed_primary <- Specific_production %>% 
     specify_primary_production()
+  
   expect_equal(Renamed_primary %>% 
                  dplyr::filter(Flow == matsbyname::paste_pref_suff(pref = "Resources", suff = "Coal", notation = of_notation)) %>% 
                  nrow(),
                1)
+  
   expect_equal(Renamed_primary %>% dplyr::filter(Product == "Electricity") %>% nrow(), 1)
+  
   expect_equal(Renamed_primary %>% 
-                 dplyr::filter(Product == matsbyname::paste_pref_suff(pref = "Hard coal (if no detail)", suff = "Coal mines", notation = of_notation)) %>% 
+                 dplyr::filter(
+                   Product == matsbyname::paste_pref_suff(pref = "Hard coal (if no detail)", suff = "Resources", notation = from_notation)
+                   ) %>% 
                  nrow(), 
-               18)
+               2)
 })
 
 
