@@ -97,7 +97,9 @@ specify_primary_production <- function(.tidy_iea_df,
                                        liquefaction_regas = "Liquefaction (LNG) / regasification plants",
                                        liquefaction_regas_reassign = IEATools::industry_flows$oil_and_gas_extraction,
                                        transformation_processes = IEATools::aggregation_flows$transformation_processes,
-                                       resources = IEATools::tpes_flows$resources
+                                       resources = IEATools::tpes_flows$resources,
+                                       resource_products_notation = IEATools::from_notation,
+                                       resources_flow_notation = IEATools::of_notation
                                        ){
   
   production_products <- c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)
@@ -109,10 +111,10 @@ specify_primary_production <- function(.tidy_iea_df,
     ) %>% 
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
-        .data[[product]] %in% list_primary_coal_products ~ stringr::str_c(resources, " [of Coal]", sep = ""),
-        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ stringr::str_c(resources, " [of Oil and natural gas]", sep = "")
+        .data[[product]] %in% list_primary_coal_products ~ stringr::str_c(resources, resources_flow_notation[["suff_start"]], "Coal", resources_flow_notation[["suff_end"]], sep = ""),
+        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ stringr::str_c(resources, resources_flow_notation[["suff_start"]], "Oil and natural gas", resources_flow_notation[["suff_end"]], sep = "")
       ),
-      "{product}" := stringr::str_c(.data[[product]], " [from Resources]")
+      "{product}" := stringr::str_c(.data[[product]], resource_products_notation[["suff_start"]], resources, resource_products_notation[["suff_end"]])
     )
   
   # Second, we define extractive industries outputs
@@ -138,7 +140,7 @@ specify_primary_production <- function(.tidy_iea_df,
         .data[[product]] %in% list_primary_coal_products ~ coal_mines,
         .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction
       ),
-      "{product}" := stringr::str_c(.data[[product]], " [from Resources]"),
+      "{product}" := stringr::str_c(.data[[product]], resource_products_notation[["suff_start"]], resources, resource_products_notation[["suff_end"]], sep = ""),
       "{e_dot}" := -.data[[e_dot]],
       "{flow_aggregation_point}" := transformation_processes
     )
