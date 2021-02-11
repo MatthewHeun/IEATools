@@ -90,7 +90,7 @@ specify_primary_production <- function(.tidy_iea_df,
                                        e_dot = IEATools::iea_cols$e_dot,
                                        list_primary_coal_products = IEATools::primary_coal_products,
                                        list_primary_oil_products = IEATools::primary_oil_products,
-                                       list_primary_gas_products = list(natural_gas = "Natural gas"),
+                                       list_primary_gas_products = IEATools::primary_gas_products,
                                        production = IEATools::tpes_flows$production,
                                        coal_mines = IEATools::industry_flows$coal_mines,
                                        oil_gas_extraction = IEATools::industry_flows$oil_and_gas_extraction,
@@ -170,90 +170,6 @@ specify_primary_production <- function(.tidy_iea_df,
     dplyr::ungroup()
 }
   
-  # specify_primary_func <- function(.tidf, eiou_dest, prod_prods, prod_short_name){
-  #   # Convert from the Production industry to Resources (prod_short_name)
-  #   # For example, Flow = Production, Product = Anthracite becomes Flow = Resources (Coal), Product = Anthracite
-  #   res_name <- resources
-  #   end_string <- paste0(notation[["suff_start"]], prod_short_name, notation[["suff_end"]])
-  #   
-  #   if (!endsWith(resources, end_string)) {
-  #     res_name <- matsbyname::paste_pref_suff(pref = res_name, suff = prod_short_name, notation = notation)
-  #   }
-  #   # Replace Production with res_name in Production rows
-  #   .tidf <- .tidf %>% 
-  #     dplyr::mutate(
-  #       "{flow}" := dplyr::case_when(
-  #         .data[[flow]] == production & .data[[product]] %in% prod_prods ~ res_name,
-  #         TRUE ~ .data[[flow]]
-  #       )
-  #     )
-  # 
-  #   
-  #   # Find the places where the Production energy is consumed,
-  #   # for example, Hard coal (if no detail).
-  #   # These pieces of consumed energy need to be renamed
-  #   # according to notation.
-  #   .tidf <- .tidf %>% 
-  #     dplyr::mutate(
-  #       "{product}" := dplyr::case_when(
-  #         .data[[product]] %in% prod_prods & 
-  #           !startsWith(.data[[flow]], resources) ~ matsbyname::paste_pref_suff(pref = .data[[product]], suff = eiou_dest, notation = notation), 
-  #         TRUE ~ .data[[product]]
-  #       )
-  #     )
-  #   
-  #   # Find rows of production of prods
-  #   Resource_rows <- .tidf %>% 
-  #     dplyr::filter(.data[[flow]] == res_name & .data[[product]] %in% prod_prods)
-  #   # Make rows for input of prod into eiou_dest
-  #   Input <- Resource_rows %>% 
-  #     dplyr::mutate(
-  #       "{flow_aggregation_point}" := transformation_processes,
-  #       "{flow}" := eiou_dest,
-  #       # Convert to an input (negative)
-  #       "{e_dot}" := -.data[[e_dot]]
-  #     )
-  #   # Make rows for production of prod by eiou_dest
-  #   Output <- Input %>% 
-  #     dplyr::mutate(
-  #       # Convert the Product to the specified product, i.e., product (eiou_dest)
-  #       "{product}" := matsbyname::paste_pref_suff(pref = .data[[product]], suff = .data[[flow]], notation = notation),
-  #       "{e_dot}" := -.data[[e_dot]]
-  #     )
-  #   
-  #   # Put it all together
-  #   .tidf <- .tidf %>% 
-  #     # Add rows for additional flow from Resources to the EIOU industry to .tidy_iea_df
-  #     dplyr::bind_rows(Input, Output)
-  # 
-  #   return(.tidf)
-  #}
-  
-  # The first task is to reassign EIOU tagged as "Liquefaction (LNG) / regasification plants" to 
-  # the Oil and gas extraction sector.
-#   .tidy_iea_df <- .tidy_iea_df %>% 
-#     dplyr::mutate(
-#       !!as.name(flow) := dplyr::case_when(
-#         !!as.name(flow) == liquefaction_regas ~ liquefaction_regas_reassign, 
-#         TRUE ~ !!as.name(flow)
-#       )
-#     ) %>% 
-#     # After reassigning, we may have multiple rows of liquefaction_regas_reassign,
-#     # so we need to sum those rows.
-#     matsindf::group_by_everything_except(e_dot) %>% 
-#     dplyr::summarise(!!as.name(e_dot) := sum(!!as.name(e_dot))) %>% 
-#     dplyr::ungroup()
-# 
-#   # Now specify all primary production 
-#   for (i in 1:length(eiou_destinations)) {
-#     .tidy_iea_df <- specify_primary_func(.tidf = .tidy_iea_df,
-#                                          eiou_dest = eiou_destinations[[i]],
-#                                          prod_prods = production_products[[i]],
-#                                          prod_short_name = production_products_short_names[[i]])
-#   }
-#   return(.tidy_iea_df)
-# }
-
 
 #' Convert Production Flows to Resource Flows
 #' 
