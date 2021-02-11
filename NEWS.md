@@ -1,4 +1,5 @@
-
+* `specify_primary_production()` function changed, the product
+  naming is now modified.
 * `extract_S_units_from_tidy()` function hotfixed so that
   it also works when the `.tidy_iea_df` data frame already
   has a `matnames` column.
