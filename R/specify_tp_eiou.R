@@ -1023,8 +1023,9 @@ route_non_specified_tp <- function(.tidy_iea_df,
     ) %>%
     dplyr::mutate(
       "{Share_input_output_by_prod_per_tp}" := .data[[Input_output_by_prod_per_tp]] / .data[[Total_input_output_by_prod_excl_nonspec]]
-    ) %>%
-    dplyr::select(-.data[[flow_aggregation_point]])
+    ) #%>%
+    # dplyr::ungroup() %>% 
+    # dplyr::select(-.data[[flow_aggregation_point]])
   
   # Figuring out the list of observations excluding non-specified
   list_tp_flows_excl_nonspec <- .tidy_iea_df %>%
