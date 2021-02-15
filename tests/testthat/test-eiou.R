@@ -289,6 +289,14 @@ test_that("route_own_use_elect_chp_heat works", {
     route_pumped_storage() %>%
     route_own_use_elect_chp_heat(split_using_shares_of = "output")
   
+  expect_equal(
+    third_test %>% 
+      dplyr::filter(Flow == "Own use in electricity, CHP and heat plants") %>% 
+      nrow(),
+    0
+  )
+  
+  # here add more...
   
   
   
@@ -328,6 +336,7 @@ test_that("route_own_use_elect_chp_heat works", {
 # and modifying the Main activity producer electricity and CHP plants
 test_that("add_nuclear_industry works", {
   
+  # First with AB data
   A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
   AB_data <- A_B_path %>%
@@ -486,6 +495,20 @@ test_that("add_nuclear_industry works", {
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                1.1)
+  
+  # Now with default IEA data
+  res <- load_tidy_iea_df() %>% 
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat() %>%
+    add_nuclear_industry()
+  
+  res %>% 
+    dplyr::filter(stringr::str_detect(Flow, "Nuclear")) %>% 
+    nrow() %>% 
+    expect_equal(3)
 })
 
 
