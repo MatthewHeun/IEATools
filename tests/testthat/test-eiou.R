@@ -141,7 +141,7 @@ test_that("gather_producer_autoproducer works", {
       dplyr::select(Flow) %>% 
       dplyr::distinct() %>% 
       nrow(),
-    2)
+    1)
 })
 
 
@@ -1262,3 +1262,38 @@ test_that("specify_all() function keeps balance",{
   expect_true(AB_data_specified %>% 
                 tidy_iea_df_balanced())
 })
+
+
+test_that("specify_all can also not split the non-specified flows", {
+  
+  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+  
+  first_test <- AB_data %>%
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat() %>%
+    add_nuclear_industry()
+  
+  second_test <- AB_data %>%
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat() %>%
+    add_nuclear_industry() %>% 
+    route_non_specified_flows(
+      route_non_specified_eiou = FALSE,
+      route_non_specified_tp = FALSE
+    )
+  
+  expect_true(
+    all(first_test == second_test)
+  )
+})
+
+
