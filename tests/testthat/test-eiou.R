@@ -517,6 +517,7 @@ test_that("add_nuclear_industry works", {
 
 test_that("route_non_specified_eiou works", {
   
+  # First AB data
   A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
   AB_data <- A_B_path %>%
@@ -655,6 +656,21 @@ test_that("route_non_specified_eiou works", {
                  dplyr::pull(),
                c("Non-specified", "Non-specified", "Non-specified"))
   
+  
+  # Now default data
+  res <- load_tidy_iea_df() %>% 
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat() %>%
+    add_nuclear_industry() %>%
+    route_non_specified_eiou()
+  
+  res %>% 
+    dplyr::filter(stringr::str_detect(Flow, "Non-specified") & Flow.aggregation.point == "Ennergy industry own use") %>% 
+    nrow() %>% 
+    expect_equal(0)
 })
 
 
@@ -856,6 +872,22 @@ test_that("route_non_specified_tp works", {
                  dplyr::select(Flow) %>%
                  dplyr::pull(),
                c("Non-specified", "Non-specified", "Non-specified", "Non-specified"))
+  
+  # Now default data
+  res <- load_tidy_iea_df() %>% 
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat() %>%
+    add_nuclear_industry() %>%
+    route_non_specified_eiou() %>% 
+    route_non_specified_tp()
+  
+  res %>% 
+    dplyr::filter(stringr::str_detect(Flow, "Non-specified") & Flow.aggregation.point == "Transformation processes") %>% 
+    nrow() %>% 
+    expect_equal(0)
 })
 
 
@@ -1170,6 +1202,23 @@ test_that("route_non_specified_flows works", {
     add_nuclear_industry()
   
   expect_true(all(first_version_test == second_version_test))
+  
+  
+  # Now with default iea data
+  res <- load_tidy_iea_df() %>% 
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat() %>%
+    add_nuclear_industry() %>%
+    route_non_specified_eiou() %>% 
+    route_non_specified_tp()
+  
+  res %>% 
+    dplyr::filter(stringr::str_detect(Flow, "Non-specified") & (Flow.aggregation.point %in% c("Transformation processes", "Energy industry own use"))) %>% 
+    nrow() %>% 
+    expect_equal(0)
 })
 
 
