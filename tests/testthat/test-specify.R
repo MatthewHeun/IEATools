@@ -36,7 +36,7 @@ test_that("renamed products are also consumed", {
     specify_primary_production()
   
   expect_equal(Renamed_primary %>% 
-                 dplyr::filter(Flow == matsbyname::paste_pref_suff(pref = "Resources", suff = "Coal", notation = of_notation)) %>% 
+                 dplyr::filter(Flow == matsbyname::paste_pref_suff(pref = "Resources", suff = "Hard coal (if no detail)", notation = of_notation)) %>% 
                  nrow(),
                1)
   

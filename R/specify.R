@@ -36,34 +36,34 @@
 #' Be sure to call this function _after_ calling `augment_iea_df()` or
 #' `load_tidy_iea_df()`.
 #'
-#' @param .tidy_iea_df an IEA data frame whose columns have been renamed by `rename_iea_df_cols()`
-#' @param liquefaction_regas a string identifying liquefaction and regasification plants. Default is "Liquefaction (LNG) / regasification plants".
-#' @param liquefaction_regas_reassign a string identifying the industry to which EIOU into `liquefaction_regas` will be reassigned.
-#'        Default is "`Oil and gas extraction`".
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. 
-#'        Default is "`Flow.aggregation.point`".
-#' @param transformation_processes a string identifying transformation processes in the flow column of `.tidy_iea_df`. 
-#'        Default is "`Transformation processes`".
-#' @param ledger_side,flow See `IEATools::iea_cols`.
-#' @param resources a string identifying resource industries to be added to `.tidy_iea_df`. 
-#'        Default is "`Resources`".
-#' @param production a string identifying production in the flow column. Default is "`Production`".
-#' @param e_dot the name of the energy column in `.tidy_iea_df`. Default is "`E.dot`".
-#' @param list_primary_coal_products the list of primary coal products for which the production industry needs to be changed.
-#'        Default is `IEATools::primary_coal_products`.
-#' @param list_primary_oil_products the list of primary oil products for which the production industry needs to be changed.
-#'        Default is `IEATools::primary_oil_products`.
-#' @param list_primary_gas_products the list of primary gas products for which the production industry needs to be changed.
-#'        Default is `IEATools::primary_gas_products`.
+#' @param .tidy_iea_df An IEA data frame whose columns have been renamed by `rename_iea_df_cols()`.
+#' @param liquefaction_regas A string identifying liquefaction and regasification plants. 
+#'                           Default is "Liquefaction (LNG) / regasification plants".
+#' @param liquefaction_regas_reassign A string identifying the industry to which EIOU into `liquefaction_regas` will be reassigned.
+#'                                    Default is "Oil and gas extraction".
+#' @param transformation_processes A string identifying transformation processes in the flow column of `.tidy_iea_df`. 
+#'                                 Default is "Transformation processes".
+#' @param ledger_side,flow,product,flow_aggregation_point See `IEATools::iea_cols`.
+#' @param resources A string identifying resource industries to be added to `.tidy_iea_df`. 
+#'                  Default is "`Resources`".
+#' @param production A string identifying production in the flow column. Default is "`Production`".
+#' @param e_dot The name of the energy column in `.tidy_iea_df`. Default is "`E.dot`".
+#' @param list_primary_coal_products The list of primary coal products for which the production industry needs to be changed.
+#'                                   Default is `IEATools::primary_coal_products`.
+#' @param list_primary_oil_products The list of primary oil products for which the production industry needs to be changed.
+#'                                  Default is `IEATools::primary_oil_products`.
+#' @param list_primary_gas_products The list of primary gas products for which the production industry needs to be changed.
+#'                                  Default is `IEATools::primary_gas_products`.
 #' @param coal_mines The name of the new industry that produces primary coal products.
-#'        Default is `IEATools::industry_flows$coal_mines`.
+#'                   Default is `IEATools::industry_flows$coal_mines`.
 #' @param oil_gas_extraction The name of the new industry that produces primary oil and gas products.
-#'        Default is `IEATools::industry_flows$oil_and_gas_extraction`.
+#'                           Default is `IEATools::industry_flows$oil_and_gas_extraction`.
 #' @param resource_products_notation The notation to be used for defining products coming from the new resource industries.
-#'        Default is `IEATools::from_notation`.
+#'                                   E.g., the Crude oil product will be called "Crude oil \[from Resources\]".
+#'                                   Default is `IEATools::from_notation`.
 #' @param resources_flow_notation The notation to be used for defining the new resource industries.
-#'        Default is `resources_flow_notation = IEATools::of_notation`.
-#' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
+#'                                E.g., the Crude oil resource will be called "Resources \[of Crude oil\]".
+#'                                Default is `IEATools::of_notation`.
 #'
 #' @return `.tidy_iea_df` with adjusted production information for primary energy 
 #'         for both coal and coal products and oil and gas extraction
@@ -103,8 +103,7 @@ specify_primary_production <- function(.tidy_iea_df,
                                        transformation_processes = IEATools::aggregation_flows$transformation_processes,
                                        resources = IEATools::tpes_flows$resources,
                                        resource_products_notation = IEATools::from_notation,
-                                       resources_flow_notation = IEATools::of_notation
-                                       ){
+                                       resources_flow_notation = IEATools::of_notation){
   
   production_products <- c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)
   
@@ -115,10 +114,22 @@ specify_primary_production <- function(.tidy_iea_df,
     ) %>% 
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
-        .data[[product]] %in% list_primary_coal_products ~ stringr::str_c(resources, resources_flow_notation[["suff_start"]], "Coal", resources_flow_notation[["suff_end"]], sep = ""),
-        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ stringr::str_c(resources, resources_flow_notation[["suff_start"]], "Oil and natural gas", resources_flow_notation[["suff_end"]], sep = "")
+        .data[[product]] %in% list_primary_coal_products ~ stringr::str_c(resources, 
+                                                                          resources_flow_notation[["suff_start"]], 
+                                                                          .data[[product]], 
+                                                                          resources_flow_notation[["suff_end"]], 
+                                                                          sep = ""),
+        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ stringr::str_c(resources, 
+                                                                                                       resources_flow_notation[["suff_start"]], 
+                                                                                                       .data[[product]], 
+                                                                                                       resources_flow_notation[["suff_end"]], 
+                                                                                                       sep = "")
       ),
-      "{product}" := stringr::str_c(.data[[product]], resource_products_notation[["suff_start"]], resources, resource_products_notation[["suff_end"]])
+      "{product}" := stringr::str_c(.data[[product]], 
+                                    resource_products_notation[["suff_start"]], 
+                                    resources, 
+                                    resource_products_notation[["suff_end"]],
+                                    sep = "")
     )
   
   # Second, we define extractive industries outputs
@@ -144,7 +155,11 @@ specify_primary_production <- function(.tidy_iea_df,
         .data[[product]] %in% list_primary_coal_products ~ coal_mines,
         .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction
       ),
-      "{product}" := stringr::str_c(.data[[product]], resource_products_notation[["suff_start"]], resources, resource_products_notation[["suff_end"]], sep = ""),
+      "{product}" := stringr::str_c(.data[[product]], 
+                                    resource_products_notation[["suff_start"]], 
+                                    resources, 
+                                    resource_products_notation[["suff_end"]], 
+                                    sep = ""),
       "{e_dot}" := -.data[[e_dot]],
       "{flow_aggregation_point}" := transformation_processes
     )

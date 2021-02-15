@@ -26,27 +26,22 @@ specify_primary_production(
 )
 }
 \arguments{
-\item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{rename_iea_df_cols()}}
+\item{.tidy_iea_df}{An IEA data frame whose columns have been renamed by \code{rename_iea_df_cols()}.}
 
-\item{ledger_side, flow}{See \code{IEATools::iea_cols}.}
+\item{ledger_side, flow, product, flow_aggregation_point}{See \code{IEATools::iea_cols}.}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}.
-Default is "\code{Flow.aggregation.point}".}
+\item{e_dot}{The name of the energy column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
 
-\item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
-
-\item{e_dot}{the name of the energy column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
-
-\item{list_primary_coal_products}{the list of primary coal products for which the production industry needs to be changed.
+\item{list_primary_coal_products}{The list of primary coal products for which the production industry needs to be changed.
 Default is \code{IEATools::primary_coal_products}.}
 
-\item{list_primary_oil_products}{the list of primary oil products for which the production industry needs to be changed.
+\item{list_primary_oil_products}{The list of primary oil products for which the production industry needs to be changed.
 Default is \code{IEATools::primary_oil_products}.}
 
-\item{list_primary_gas_products}{the list of primary gas products for which the production industry needs to be changed.
+\item{list_primary_gas_products}{The list of primary gas products for which the production industry needs to be changed.
 Default is \code{IEATools::primary_gas_products}.}
 
-\item{production}{a string identifying production in the flow column. Default is "\code{Production}".}
+\item{production}{A string identifying production in the flow column. Default is "\code{Production}".}
 
 \item{coal_mines}{The name of the new industry that produces primary coal products.
 Default is \code{IEATools::industry_flows$coal_mines}.}
@@ -54,22 +49,25 @@ Default is \code{IEATools::industry_flows$coal_mines}.}
 \item{oil_gas_extraction}{The name of the new industry that produces primary oil and gas products.
 Default is \code{IEATools::industry_flows$oil_and_gas_extraction}.}
 
-\item{liquefaction_regas}{a string identifying liquefaction and regasification plants. Default is "Liquefaction (LNG) / regasification plants".}
+\item{liquefaction_regas}{A string identifying liquefaction and regasification plants.
+Default is "Liquefaction (LNG) / regasification plants".}
 
-\item{liquefaction_regas_reassign}{a string identifying the industry to which EIOU into \code{liquefaction_regas} will be reassigned.
-Default is "\verb{Oil and gas extraction}".}
+\item{liquefaction_regas_reassign}{A string identifying the industry to which EIOU into \code{liquefaction_regas} will be reassigned.
+Default is "Oil and gas extraction".}
 
-\item{transformation_processes}{a string identifying transformation processes in the flow column of \code{.tidy_iea_df}.
-Default is "\verb{Transformation processes}".}
+\item{transformation_processes}{A string identifying transformation processes in the flow column of \code{.tidy_iea_df}.
+Default is "Transformation processes".}
 
-\item{resources}{a string identifying resource industries to be added to \code{.tidy_iea_df}.
+\item{resources}{A string identifying resource industries to be added to \code{.tidy_iea_df}.
 Default is "\code{Resources}".}
 
 \item{resource_products_notation}{The notation to be used for defining products coming from the new resource industries.
+E.g., the Crude oil product will be called "Crude oil [from Resources]".
 Default is \code{IEATools::from_notation}.}
 
 \item{resources_flow_notation}{The notation to be used for defining the new resource industries.
-Default is \code{resources_flow_notation = IEATools::of_notation}.}
+E.g., the Crude oil resource will be called "Resources [of Crude oil]".
+Default is \code{IEATools::of_notation}.}
 }
 \value{
 \code{.tidy_iea_df} with adjusted production information for primary energy
