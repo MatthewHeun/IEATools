@@ -260,6 +260,16 @@ secondary_oil_products <- setdiff(oil_and_oil_products, primary_oil_products) %>
 usethis::use_data(secondary_oil_products, overwrite = TRUE)
 
 
+#
+# Natural gas
+#
+
+primary_gas_products <- list(natural_gas = "Natural gas") %>% 
+  unlist() %>% 
+  as.list()
+usethis::use_data(primary_gas_products, overwrite = TRUE)
+
+
 # 
 # Renewables
 # 

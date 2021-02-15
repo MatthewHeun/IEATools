@@ -36,30 +36,34 @@
 #' Be sure to call this function _after_ calling `augment_iea_df()` or
 #' `load_tidy_iea_df()`.
 #'
-#' @param .tidy_iea_df an IEA data frame whose columns have been renamed by `rename_iea_df_cols()`
-#' @param eiou_destinations a vector of destinations for EIOU for primary production of coal and coal products and oil and natural gas.
-#'        Default is `c("Coal mines", "Oil and gas extraction")`.
-#' @param liquefaction_regas a string identifying liquefaction and regasification plants. Default is "Liquefaction (LNG) / regasification plants".
-#' @param liquefaction_regas_reassign a string identifying the industry to which EIOU into `liquefaction_regas` will be reassigned.
-#'        Default is "`Oil and gas extraction`".
-#' @param production_products a list of products for which we want to specify primary industries.
-#'        Default is `list(primary_coal_products, c(primary_oil_products, "Natural gas"))`.
-#' @param production_products_short_names a vector of short names for primary industries. 
-#'        Default is `c("Coal", "Oil and natural gas")`.
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. 
-#'        Default is "`Flow.aggregation.point`".
-#' @param eiou a string identifying energy industry own use in the `Flow.aggregation.point` column of `.tidy_iea_df`.
-#'        Default is "`Energy industry own use`".
-#' @param transformation_processes a string identifying transformation processes in the flow column of `.tidy_iea_df`. 
-#'        Default is "`Transformation processes`".
-#' @param ledger_side,flow See `IEATools::iea_cols`.
-#' @param consumption See `IEATools::ledger_sides`.
-#' @param resources a string identifying resource industries to be added to `.tidy_iea_df`. 
-#'        Default is "`Resources`".
-#' @param production a string identifying production in the flow column. Default is "`Production`".
-#' @param e_dot the name of the energy column in `.tidy_iea_df`. Default is "`E.dot`".
-#' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
-#' @param notation a list of specification notations. Default is `IEATools::of_notation`.
+#' @param .tidy_iea_df An IEA data frame whose columns have been renamed by `rename_iea_df_cols()`.
+#' @param liquefaction_regas A string identifying liquefaction and regasification plants. 
+#'                           Default is "Liquefaction (LNG) / regasification plants".
+#' @param liquefaction_regas_reassign A string identifying the industry to which EIOU into `liquefaction_regas` will be reassigned.
+#'                                    Default is "Oil and gas extraction".
+#' @param transformation_processes A string identifying transformation processes in the flow column of `.tidy_iea_df`. 
+#'                                 Default is "Transformation processes".
+#' @param ledger_side,flow,product,flow_aggregation_point See `IEATools::iea_cols`.
+#' @param resources A string identifying resource industries to be added to `.tidy_iea_df`. 
+#'                  Default is "`Resources`".
+#' @param production A string identifying production in the flow column. Default is "`Production`".
+#' @param e_dot The name of the energy column in `.tidy_iea_df`. Default is "`E.dot`".
+#' @param list_primary_coal_products The list of primary coal products for which the production industry needs to be changed.
+#'                                   Default is `IEATools::primary_coal_products`.
+#' @param list_primary_oil_products The list of primary oil products for which the production industry needs to be changed.
+#'                                  Default is `IEATools::primary_oil_products`.
+#' @param list_primary_gas_products The list of primary gas products for which the production industry needs to be changed.
+#'                                  Default is `IEATools::primary_gas_products`.
+#' @param coal_mines The name of the new industry that produces primary coal products.
+#'                   Default is `IEATools::industry_flows$coal_mines`.
+#' @param oil_gas_extraction The name of the new industry that produces primary oil and gas products.
+#'                           Default is `IEATools::industry_flows$oil_and_gas_extraction`.
+#' @param resource_products_notation The notation to be used for defining products coming from the new resource industries.
+#'                                   E.g., the Crude oil product will be called "Crude oil \[from Resources\]".
+#'                                   Default is `IEATools::from_notation`.
+#' @param resources_flow_notation The notation to be used for defining the new resource industries.
+#'                                E.g., the Crude oil resource will be called "Resources \[of Crude oil\]".
+#'                                Default is `IEATools::of_notation`.
 #'
 #' @return `.tidy_iea_df` with adjusted production information for primary energy 
 #'         for both coal and coal products and oil and gas extraction
@@ -71,7 +75,7 @@
 #' load_tidy_iea_df() %>% 
 #'   specify_primary_production() %>% 
 #'   add_psut_matnames() %>% 
-#'   filter(Flow %in% c("Resources (Coal)", "Coal mines")) %>%
+#'   dplyr::filter(Flow == "Coal mines" | stringr::str_detect(Flow, "Resources")) %>% 
 #'   select(-Method, -Last.stage, -Ledger.side, -Unit)
 #' # EIOU by "Liquefaction (LNG) / regasification plants" is reassigned to "Oil and gas extraction"
 #' data.frame(
@@ -83,160 +87,110 @@
 #' ) %>% 
 #'   specify_primary_production()
 specify_primary_production <- function(.tidy_iea_df,
-                                       eiou_destinations = c("Coal mines", "Oil and gas extraction"),
-                                       liquefaction_regas = "Liquefaction (LNG) / regasification plants",
-                                       liquefaction_regas_reassign = "Oil and gas extraction",
-                                       production_products = list(IEATools::primary_coal_products, 
-                                                                  c(IEATools::primary_oil_products, natural_gas = "Natural gas")),
-                                       production_products_short_names = c("Coal", "Oil and natural gas"),
-                                       flow_aggregation_point = "Flow.aggregation.point",
-                                       eiou = "Energy industry own use",
-                                       transformation_processes = "Transformation processes",
-                                       flow = "Flow", 
                                        ledger_side = IEATools::iea_cols$ledger_side,
-                                       resources = "Resources",
+                                       flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                       flow = IEATools::iea_cols$flow,
+                                       product = IEATools::iea_cols$product,
+                                       e_dot = IEATools::iea_cols$e_dot,
+                                       list_primary_coal_products = IEATools::primary_coal_products,
+                                       list_primary_oil_products = IEATools::primary_oil_products,
+                                       list_primary_gas_products = IEATools::primary_gas_products,
                                        production = IEATools::tpes_flows$production,
-                                       consumption = IEATools::ledger_sides$consumption,
-                                       e_dot = "E.dot",
-                                       product = "Product", 
-                                       notation = IEATools::of_notation){
-  specify_primary_func <- function(.tidf, eiou_dest, prod_prods, prod_short_name){
-    # Convert from the Production industry to Resources (prod_short_name)
-    # For example, Flow = Production, Product = Anthracite becomes Flow = Resources (Coal), Product = Anthracite
-    res_name <- resources
-    end_string <- paste0(notation[["suff_start"]], prod_short_name, notation[["suff_end"]])
-    if (!endsWith(resources, end_string)) {
-      res_name <- matsbyname::paste_pref_suff(pref = res_name, suff = prod_short_name, notation = notation)
-    }
-    # Replace Production with res_name in Production rows
-    .tidf <- .tidf %>% 
-      dplyr::mutate(
-        "{flow}" := dplyr::case_when(
-          .data[[flow]] == production & .data[[product]] %in% prod_prods ~ res_name,
-          TRUE ~ .data[[flow]]
-        )
-      )
-
-    
-    # Previously, I was checking whether EIOU was present before renaming 
-    # the production products. 
-    # But I should have been doing that for EVERY product.
-    # Thus, I am commenting this code that relied on the EIOU check
-    # on 25 Aug 2020.
-    # The commented code below can be deleted in due course, 
-    # say Nov 2020.
-    # ---MKH
-
-    # EIOU <- .tidf %>% 
-    #   dplyr::filter(!!as.name(flow_aggregation_point) == eiou & 
-    #                   !!as.name(flow) == eiou_dest)
-    # if (nrow(EIOU) > 0) {
-    #   # We have EIOU rows, so we have more work to do.
-    #   
-    #   # Find the places where the Production energy is consumed,
-    #   # for example, Hard coal (if no detail).
-    #   # These pieces of consumed energy need to be renamed
-    #   # to "product (eiou_dest)"
-    #   # i.e., the product is produced by (is from) eiou_dest.
-    #   .tidf <- .tidf %>% 
-    #     dplyr::mutate(
-    #       "{product}" := dplyr::case_when(
-    #         .data[[product]] %in% prod_prods & 
-    #           !startsWith(.data[[flow]], resources) ~ matsbyname::paste_pref_suff(pref = .data[[product]], suff = eiou_dest, notation = notation), 
-    #         TRUE ~ .data[[product]]
-    #       )
-    #     )
-    # 
-    #   # Find rows of production of prods
-    #   Resource_rows <- .tidf %>% 
-    #     dplyr::filter(.data[[flow]] == res_name & .data[[product]] %in% prod_prods)
-    #   # Make rows for input of prod into eiou_dest
-    #   Input <- Resource_rows %>% 
-    #     dplyr::mutate(
-    #       "{flow_aggregation_point}" := transformation_processes,
-    #       "{flow}" := eiou_dest,
-    #       # Convert to an input (negative)
-    #       "{e_dot}" := -.data[[e_dot]]
-    #     )
-    #   # Make rows for production of prod by eiou_dest
-    #   Output <- Input %>% 
-    #     dplyr::mutate(
-    #       # Convert the Product to the specified product, i.e., product (eiou_dest)
-    #       "{product}" := matsbyname::paste_pref_suff(pref = .data[[product]], suff = .data[[flow]], notation = notation),
-    #       "{e_dot}" := -.data[[e_dot]]
-    #     )
-    #   
-    #   # Put it all together
-    #   .tidf <- .tidf %>% 
-    #     # Add rows for additional flow from Resources to the EIOU industry to .tidy_iea_df
-    #     dplyr::bind_rows(Input, Output)
-    # }
-
-    # Find the places where the Production energy is consumed,
-    # for example, Hard coal (if no detail).
-    # These pieces of consumed energy need to be renamed
-    # according to notation.
-    .tidf <- .tidf %>% 
-      dplyr::mutate(
-        "{product}" := dplyr::case_when(
-          .data[[product]] %in% prod_prods & 
-            !startsWith(.data[[flow]], resources) ~ matsbyname::paste_pref_suff(pref = .data[[product]], suff = eiou_dest, notation = notation), 
-          TRUE ~ .data[[product]]
-        )
-      )
-    
-    # Find rows of production of prods
-    Resource_rows <- .tidf %>% 
-      dplyr::filter(.data[[flow]] == res_name & .data[[product]] %in% prod_prods)
-    # Make rows for input of prod into eiou_dest
-    Input <- Resource_rows %>% 
-      dplyr::mutate(
-        "{flow_aggregation_point}" := transformation_processes,
-        "{flow}" := eiou_dest,
-        # Convert to an input (negative)
-        "{e_dot}" := -.data[[e_dot]]
-      )
-    # Make rows for production of prod by eiou_dest
-    Output <- Input %>% 
-      dplyr::mutate(
-        # Convert the Product to the specified product, i.e., product (eiou_dest)
-        "{product}" := matsbyname::paste_pref_suff(pref = .data[[product]], suff = .data[[flow]], notation = notation),
-        "{e_dot}" := -.data[[e_dot]]
-      )
-    
-    # Put it all together
-    .tidf <- .tidf %>% 
-      # Add rows for additional flow from Resources to the EIOU industry to .tidy_iea_df
-      dplyr::bind_rows(Input, Output)
-
-    return(.tidf)
-  }
+                                       coal_mines = IEATools::industry_flows$coal_mines,
+                                       oil_gas_extraction = IEATools::industry_flows$oil_and_gas_extraction,
+                                       liquefaction_regas = "Liquefaction (LNG) / regasification plants",
+                                       liquefaction_regas_reassign = IEATools::industry_flows$oil_and_gas_extraction,
+                                       transformation_processes = IEATools::aggregation_flows$transformation_processes,
+                                       resources = IEATools::tpes_flows$resources,
+                                       resource_products_notation = IEATools::from_notation,
+                                       resources_flow_notation = IEATools::of_notation){
   
-  # The first task is to reassign EIOU tagged as "Liquefaction (LNG) / regasification plants" to 
-  # the Oil and gas extraction sector.
-  .tidy_iea_df <- .tidy_iea_df %>% 
+  production_products <- c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)
+  
+  # First, we define resource flows, i.e. flows supplied by resources
+  resource_outputs_flows <- .tidy_iea_df %>% 
+    dplyr::filter(
+      .data[[flow]] == production & .data[[product]] %in% production_products
+    ) %>% 
     dplyr::mutate(
-      !!as.name(flow) := dplyr::case_when(
-        !!as.name(flow) == liquefaction_regas ~ liquefaction_regas_reassign, 
-        TRUE ~ !!as.name(flow)
+      "{flow}" := dplyr::case_when(
+        .data[[product]] %in% list_primary_coal_products ~ stringr::str_c(resources, 
+                                                                          resources_flow_notation[["suff_start"]], 
+                                                                          .data[[product]], 
+                                                                          resources_flow_notation[["suff_end"]], 
+                                                                          sep = ""),
+        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ stringr::str_c(resources, 
+                                                                                                       resources_flow_notation[["suff_start"]], 
+                                                                                                       .data[[product]], 
+                                                                                                       resources_flow_notation[["suff_end"]], 
+                                                                                                       sep = "")
+      ),
+      "{product}" := stringr::str_c(.data[[product]], 
+                                    resource_products_notation[["suff_start"]], 
+                                    resources, 
+                                    resource_products_notation[["suff_end"]],
+                                    sep = "")
+    )
+  
+  # Second, we define extractive industries outputs
+  extractive_industries_output_flows <- .tidy_iea_df %>% 
+    dplyr::filter(
+      .data[[flow]] == production & .data[[product]] %in% production_products
+    ) %>% 
+    dplyr::mutate(
+      "{flow}" := dplyr::case_when(
+        .data[[product]] %in% list_primary_coal_products ~ coal_mines,
+        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction
+      ),
+      "{flow_aggregation_point}" := transformation_processes
+    )
+  
+  # Third, we define extractive industries inputs
+  extractive_industries_input_flows <- .tidy_iea_df %>% 
+    dplyr::filter(
+      .data[[flow]] == production & .data[[product]] %in% production_products
+    ) %>% 
+    dplyr::mutate(
+      "{flow}" := dplyr::case_when(
+        .data[[product]] %in% list_primary_coal_products ~ coal_mines,
+        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction
+      ),
+      "{product}" := stringr::str_c(.data[[product]], 
+                                    resource_products_notation[["suff_start"]], 
+                                    resources, 
+                                    resource_products_notation[["suff_end"]], 
+                                    sep = ""),
+      "{e_dot}" := -.data[[e_dot]],
+      "{flow_aggregation_point}" := transformation_processes
+    )
+  
+  # Fourth, we add all these flows to the input .tidy_iea_df
+  .tidy_iea_df %>% 
+    dplyr::filter(
+      ! (.data[[flow]] == production & .data[[product]] %in% production_products)
+    ) %>% 
+    dplyr::bind_rows(
+      resource_outputs_flows,
+      extractive_industries_output_flows,
+      extractive_industries_input_flows
+    ) %>% 
+    # Here we need to reassign EIOU tagged as "Liquefaction (LNG) / regasification plants" to 
+    # the Oil and gas extraction sector.
+    dplyr::mutate(
+      "{flow}" := dplyr::case_when(
+        .data[[flow]] == liquefaction_regas ~ liquefaction_regas_reassign, 
+        TRUE ~ .data[[flow]]
       )
     ) %>% 
     # After reassigning, we may have multiple rows of liquefaction_regas_reassign,
     # so we need to sum those rows.
     matsindf::group_by_everything_except(e_dot) %>% 
-    dplyr::summarise(!!as.name(e_dot) := sum(!!as.name(e_dot))) %>% 
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+      ) %>% 
     dplyr::ungroup()
-
-  # Now specify all primary production 
-  for (i in 1:length(eiou_destinations)) {
-    .tidy_iea_df <- specify_primary_func(.tidf = .tidy_iea_df,
-                                         eiou_dest = eiou_destinations[[i]], 
-                                         prod_prods = production_products[[i]],
-                                         prod_short_name = production_products_short_names[[i]])
-  }
-  return(.tidy_iea_df)
 }
-
+  
 
 #' Convert Production Flows to Resource Flows
 #' 
@@ -268,11 +222,11 @@ specify_primary_production <- function(.tidy_iea_df,
 #'   specify_primary_production() %>% 
 #'   specify_production_to_resources()
 specify_production_to_resources <- function(.tidy_iea_df, 
-                                    flow = "Flow",
-                                    product = "Product",
-                                    production = "Production",
-                                    resources = "Resources",
-                                    notation = IEATools::from_notation){
+                                            flow = "Flow",
+                                            product = "Product",
+                                            production = "Production",
+                                            resources = "Resources",
+                                            notation = IEATools::from_notation){
   # Take any remaining "Production" rows and convert them to Resources (Product).
   .tidy_iea_df %>% 
     dplyr::mutate(

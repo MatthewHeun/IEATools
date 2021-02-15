@@ -1,4 +1,5 @@
-
+* `specify_primary_production()` function changed, the product
+  naming is now modified.
 * `extract_S_units_from_tidy()` function hotfixed so that
   it also works when the `.tidy_iea_df` data frame already
   has a `matnames` column.
@@ -31,7 +32,6 @@
 * Still 661 tests, coverage remains at 100%.
 
 
->>>>>>> release-0.1.46
 # IEATools 0.1.44 (2020-12-08)
 
 * Moved `primary_aggregates_IEA()` and `finaldemand_aggregates_IEA()` 
