@@ -7,8 +7,8 @@
 specify_all(
   .tidy_iea_df,
   split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
-  is_non_specified_eiou_routed = TRUE,
-  is_non_specified_tp_routed = TRUE
+  route_non_specified_eiou = TRUE,
+  route_non_specified_tp = TRUE
 )
 }
 \arguments{
@@ -16,13 +16,13 @@ specify_all(
 
 \item{split_own_use_elect_chp_heat_using_shares_of}{Indicates whether the input or outputs to
 Main activity producer plants should be use for
-splitting the Own use in electricity, chp and heat plants
+splitting the Own use in electricity, CHP and heat plants
 EIOU flow. Default is "input".}
 
-\item{is_non_specified_eiou_routed}{Boolean stating whether non-specified EIOU flows should be routed to existing industries
+\item{route_non_specified_eiou}{Boolean stating whether non-specified EIOU flows should be routed to existing industries
 Default is TRUE.}
 
-\item{is_non_specified_tp_routed}{Boolean stating whether non-specified transformation processes flows should be routed to existing industries
+\item{route_non_specified_tp}{Boolean stating whether non-specified transformation processes flows should be routed to existing industries
 Default is TRUE.}
 }
 \value{

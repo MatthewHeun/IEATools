@@ -6,8 +6,8 @@
 \usage{
 route_non_specified_flows(
   .tidy_iea_df,
-  is_non_specified_eiou_routed = TRUE,
-  is_non_specified_tp_routed = TRUE
+  route_non_specified_eiou = TRUE,
+  route_non_specified_tp = TRUE
 )
 }
 \arguments{

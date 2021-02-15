@@ -1062,8 +1062,8 @@ test_that("route_non_specified_flows works", {
       ) %>%
     add_nuclear_industry() %>%
     route_non_specified_flows(
-      is_non_specified_eiou_routed = FALSE,
-      is_non_specified_tp_routed = FALSE
+      route_non_specified_eiou = FALSE,
+      route_non_specified_tp = FALSE
     )
   
   second_version_test <- AB_data %>%

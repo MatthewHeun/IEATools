@@ -358,12 +358,12 @@ specify_interface_industries <- function(.tidy_iea_df,
 #'                                                     Main activity producer plants should be use for
 #'                                                     splitting the Own use in electricity, chp and heat plants
 #'                                                     EIOU flow. Default is "input".
-#' @param is_non_specified_eiou_routed Boolean stating whether non-specified EIOU flows should be routed to existing industries
-#'                                     Default is TRUE.
-#' @param is_non_specified_tp_routed Boolean stating whether non-specified transformation processes flows should be routed to existing industries
-#'                                   Default is TRUE.
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
-#' @param eiou a string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".
+#' @param route_non_specified_eiou Boolean stating whether non-specified EIOU flows should be routed to existing industries
+#'                                 Default is TRUE.
+#' @param route_non_specified_tp Boolean stating whether non-specified transformation processes flows should be routed to existing industries
+#'                               Default is TRUE.
+#' @param flow_aggregation_point The name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
+#' @param eiou A string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".
 #' @param transformation_processes a string identifying transformation processes in the flow aggregation point column. Default is "Transformation processes".
 #' @param flow the name of the flow column in `.tidy_iea_df`. Default is "Flow".
 #' @param own_use_elect_chp_heat a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "Own use in electricity, CHP and heat plants".
@@ -385,8 +385,8 @@ specify_interface_industries <- function(.tidy_iea_df,
 #'            Flow == "Main activity producer electricity plants")
 specify_tp_eiou <- function(.tidy_iea_df,
                             split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
-                            is_non_specified_eiou_routed = TRUE,
-                            is_non_specified_tp_routed = TRUE,
+                            route_non_specified_eiou = TRUE,
+                            route_non_specified_tp = TRUE,
                             flow_aggregation_point = "Flow.aggregation.point",
                             eiou = "Energy industry own use",
                             transformation_processes = "Transformation processes",
@@ -409,12 +409,11 @@ specify_tp_eiou <- function(.tidy_iea_df,
     route_pumped_storage() %>% 
     route_own_use_elect_chp_heat(
       split_using_shares_of = split_own_use_elect_chp_heat_using_shares_of
-      ) %>% 
+    ) %>% 
     add_nuclear_industry() %>% 
     route_non_specified_flows(
-      is_non_specified_eiou_routed = as.logical(is_non_specified_eiou_routed),
-      is_non_specified_tp_routed = as.logical(is_non_specified_tp_routed)
-      
+      route_non_specified_eiou = route_non_specified_eiou,
+      route_non_specified_tp = route_non_specified_tp
     ) 
 }
 
@@ -657,12 +656,12 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #' @param .tidy_iea_df A tidy data frame containing IEA extended energy balance data
 #' @param split_own_use_elect_chp_heat_using_shares_of Indicates whether the input or outputs to
 #'                                                     Main activity producer plants should be use for
-#'                                                     splitting the Own use in electricity, chp and heat plants
+#'                                                     splitting the Own use in electricity, CHP and heat plants
 #'                                                     EIOU flow. Default is "input".
-#' @param is_non_specified_eiou_routed Boolean stating whether non-specified EIOU flows should be routed to existing industries
-#'                                     Default is TRUE.
-#' @param is_non_specified_tp_routed Boolean stating whether non-specified transformation processes flows should be routed to existing industries
-#'                                   Default is TRUE.
+#' @param route_non_specified_eiou Boolean stating whether non-specified EIOU flows should be routed to existing industries
+#'                                 Default is TRUE.
+#' @param route_non_specified_tp Boolean stating whether non-specified transformation processes flows should be routed to existing industries
+#'                               Default is TRUE.
 #'
 #' @return an enhanced and corrected version of `.tidy_iea_df` 
 #'         that is ready for physical supply-use table (PSUT) analysis.
@@ -682,8 +681,8 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #'   tp_sinks_to_nonenergy()
 specify_all <- function(.tidy_iea_df,
                         split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
-                        is_non_specified_eiou_routed = TRUE,
-                        is_non_specified_tp_routed = TRUE){
+                        route_non_specified_eiou = TRUE,
+                        route_non_specified_tp = TRUE){
   
   split_own_use_elect_chp_heat_using_shares_of = match.arg(split_own_use_elect_chp_heat_using_shares_of)
   
@@ -692,9 +691,9 @@ specify_all <- function(.tidy_iea_df,
     specify_production_to_resources() %>% 
     specify_tp_eiou(
       split_own_use_elect_chp_heat_using_shares_of = split_own_use_elect_chp_heat_using_shares_of,
-      is_non_specified_eiou_routed = as.logical(is_non_specified_eiou_routed),
-      is_non_specified_tp_routed = as.logical(is_non_specified_tp_routed)
-      ) %>% 
+      route_non_specified_eiou = route_non_specified_eiou,
+      route_non_specified_tp = route_non_specified_tp
+    ) %>% 
     specify_interface_industries() %>% 
     tp_sinks_to_nonenergy()
 }
