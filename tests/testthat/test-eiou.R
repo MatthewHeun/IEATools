@@ -296,8 +296,61 @@ test_that("route_own_use_elect_chp_heat works", {
     0
   )
   
-  # here add more...
   
+  # Now use the input shares for calculations
+  fourth_test <- AB_data %>%
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat()
+  
+  
+  fourth_test %>% 
+    dplyr::filter(Country == "B",
+                  Product == "Electricity",
+                  Flow.aggregation.point == "Energy industry own use",
+                  Flow == "Main activity producer heat plants") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(-15.65137,
+                 tolerance = 0.001)
+  
+  fourth_test %>% 
+    dplyr::filter(Country == "B",
+                  Product == "Natural gas [of Oil and gas extraction]",
+                  Flow.aggregation.point == "Energy industry own use",
+                  Flow == "Main activity producer heat plants") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(-52.17123,
+                 tolerance = 0.001)
+  
+  fourth_test %>% 
+    dplyr::filter(Country == "B",
+                  Product == "Blast furnace gas",
+                  Flow.aggregation.point == "Energy industry own use",
+                  Flow == "Main activity producer CHP plants") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(-6.159532,
+                 tolerance = 0.001)
+  
+  
+  fourth_test %>% 
+    dplyr::filter(Country == "A",
+                  Product == "Electricity",
+                  Flow.aggregation.point == "Energy industry own use",
+                  Flow == "Main activity producer CHP plants") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(-1.648352,
+                 tolerance = 0.001)
+  
+  fourth_test %>% 
+    dplyr::filter(Country == "A",
+                  Product == "Electricity",
+                  Flow.aggregation.point == "Energy industry own use",
+                  Flow == "Main activity producer heat plants") %>% 
+    magrittr::extract2("E.dot") %>% 
+    expect_equal(-1.318681,
+                 tolerance = 0.001)
   
   
   # Now, we test with the tidy default iea data
