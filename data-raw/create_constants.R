@@ -594,10 +594,16 @@ fap_flows <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   # Add entries for those, too.
   insert_after(after = "TFC compare_Statistical differences", 
                values = c("Transformation processes_Coal mines", "Transformation processes_Oil and gas extraction")) %>% 
+  # Inserting Nuclear industry as a transformation process
+  insert_after(after = "Transformation processes_Oil and gas extraction",
+               values = "Transformation processes_Nuclear industry") %>% 
   # Energy industry own use_Own use in electricity, CHP and heat plants, 
   # Pumped storage plants, and Nuclear industry is reassigned to Main activity producer electricity plants in specify_tp_eiou()
   insert_after(after = "Energy industry own use_Nuclear industry", 
-               values = "Energy industry own use_Main activity producer electricity plants")
+               values = "Energy industry own use_Main activity producer electricity plants") %>% 
+  # Inserting Main activity producer CHP plants and Main activity producer heat plants as EIOU flows
+  insert_after(after = "Energy industry own use_Main activity producer electricity plants",
+               values = c("Energy industry own use_Main activity producer CHP plants", "Energy industry own use_Main activity producer heat plants"))
 usethis::use_data(fap_flows, overwrite = TRUE)
 
 
