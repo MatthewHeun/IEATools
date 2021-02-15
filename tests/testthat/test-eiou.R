@@ -66,6 +66,7 @@ test_that("specify_tp_eiou works for sample data", {
 # Testing the function that gathers "Main activity producer" and "Autoproducer" flows/industries.
 test_that("gather_producer_autoproducer works", {
   
+  # First, with AB data
   A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
   AB_data <- A_B_path %>%
@@ -125,6 +126,22 @@ test_that("gather_producer_autoproducer works", {
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -847)
+  
+  # Second, with default iea data
+  res <- load_tidy_iea_df() %>% 
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer()
+  
+  expect_equal(
+    res %>% 
+      dplyr::filter(stringr::str_detect(Flow, "Main activity producer") |
+                      stringr::str_detect(Flow, "Autoproducer")
+                    ) %>% 
+      dplyr::select(Flow) %>% 
+      dplyr::distinct() %>% 
+      nrow(),
+    2)
 })
 
 
@@ -132,6 +149,7 @@ test_that("gather_producer_autoproducer works", {
 # Testing the function that routes the "Pumped storage" EIOU flow to "Main activity producer electricity plants."
 test_that("route_pumped_storage works", {
   
+  # First with AB data
   A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
   AB_data <- A_B_path %>%
@@ -160,6 +178,18 @@ test_that("route_pumped_storage works", {
                  dplyr::pull(),
                -299)
   
+  # Second with tidy default data
+  res <- IEATools::load_tidy_iea_df() %>% 
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage()
+  
+  expect_equal(
+    res %>% 
+      dplyr::filter(Flow == "Pumped storage plants") %>% nrow(),
+    0)
+    
 })
 
 
@@ -249,6 +279,47 @@ test_that("route_own_use_elect_chp_heat works", {
   
   expect_true("Main activity producer electricity plants" %in% second_test$Flow)
   expect_false("Own use in electricity, CHP and heat plants" %in% second_test$Flow)
+  
+  
+  
+  third_test <- AB_data %>%
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat(split_using_shares_of = "output")
+  
+  
+  
+  
+  # Now, we test with the tidy default iea data
+  res <- load_tidy_iea_df() %>% 
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat()
+  
+  expect_equal(
+    res %>% 
+      dplyr::filter(Flow == "Own use in electricity, CHP and heat plants") %>% 
+      nrow(),
+    0
+  )
+  
+  res <- load_tidy_iea_df() %>% 
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat(split_using_shares_of = "output")
+  
+  expect_equal(
+    res %>% 
+      dplyr::filter(Flow == "Own use in electricity, CHP and heat plants") %>% 
+      nrow(),
+    0
+  )
 })
 
 
