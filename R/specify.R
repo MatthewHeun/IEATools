@@ -222,11 +222,11 @@ specify_primary_production <- function(.tidy_iea_df,
 #'   specify_primary_production() %>% 
 #'   specify_production_to_resources()
 specify_production_to_resources <- function(.tidy_iea_df, 
-                                    flow = "Flow",
-                                    product = "Product",
-                                    production = "Production",
-                                    resources = "Resources",
-                                    notation = IEATools::from_notation){
+                                            flow = "Flow",
+                                            product = "Product",
+                                            production = "Production",
+                                            resources = "Resources",
+                                            notation = IEATools::from_notation){
   # Take any remaining "Production" rows and convert them to Resources (Product).
   .tidy_iea_df %>% 
     dplyr::mutate(
