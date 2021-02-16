@@ -119,7 +119,7 @@ gather_producer_autoproducer <- function(.tidy_iea_df,
 #'                   Default is ".negzeropos".
 #'
 #' @return A modified `.tidy_iea_df` with "Pumped storage plants" industry routed 
-#' to the "Main activity producer electricity plant" industry.
+#'         to the "Main activity producer electricity plant" industry.
 #' @export
 #'
 #' @examples
