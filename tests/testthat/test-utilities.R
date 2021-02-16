@@ -288,7 +288,6 @@ test_that("sorting works on a specified IEA data frame", {
                matsbyname::paste_pref_suff(pref = "Resources", suff = biofuels_and_waste_products$primary_solid_biofuels, notation = from_notation))
   expect_equal(sorted_specified$Flow[[1]], 
                matsbyname::paste_pref_suff(pref = "Resources", suff = biofuels_and_waste_products$primary_solid_biofuels, notation = from_notation))
-  expect_equal(sorted_specified$Flow[[nrow(sorted_specified)]], non_energy_flows$non_energy_use_industry_transformation_energy)
 })
 
 

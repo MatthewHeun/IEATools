@@ -41,6 +41,9 @@ Call this function after calling \verb{add_row_col_meta()`` to collapse }.tidy_i
 \details{
 This function ensures that all energy flow numbers are positive
 before creating the matrices.
+
+Note that the \code{.tidy_iea_df} is ungrouped using the function
+\code{dplyr::ungroup()} prior to undergoing any modification.
 }
 \examples{
 load_tidy_iea_df() \%>\% 

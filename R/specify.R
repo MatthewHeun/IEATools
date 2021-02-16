@@ -308,8 +308,16 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' To avoid double rows, all like rows are summed before returning.
 #'
 #' @param .tidy_iea_df an IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
-#' @param eiou a string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".
+#' @param split_own_use_elect_chp_heat_using_shares_of Indicates whether the input or outputs to
+#'                                                     Main activity producer plants should be use for
+#'                                                     splitting the Own use in electricity, chp and heat plants
+#'                                                     EIOU flow. Default is "input".
+#' @param route_non_specified_eiou Boolean stating whether non-specified EIOU flows should be routed to existing industries
+#'                                 Default is TRUE.
+#' @param route_non_specified_tp Boolean stating whether non-specified transformation processes flows should be routed to existing industries
+#'                               Default is TRUE.
+#' @param flow_aggregation_point The name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
+#' @param eiou A string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".
 #' @param transformation_processes a string identifying transformation processes in the flow aggregation point column. Default is "Transformation processes".
 #' @param flow the name of the flow column in `.tidy_iea_df`. Default is "Flow".
 #' @param own_use_elect_chp_heat a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "Own use in electricity, CHP and heat plants".
@@ -330,6 +338,9 @@ specify_interface_industries <- function(.tidy_iea_df,
 #'   filter(Flow.aggregation.point == "Energy industry own use" & 
 #'            Flow == "Main activity producer electricity plants")
 specify_tp_eiou <- function(.tidy_iea_df,
+                            split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
+                            route_non_specified_eiou = TRUE,
+                            route_non_specified_tp = TRUE,
                             flow_aggregation_point = "Flow.aggregation.point",
                             eiou = "Energy industry own use",
                             transformation_processes = "Transformation processes",
@@ -344,67 +355,20 @@ specify_tp_eiou <- function(.tidy_iea_df,
                             main_act_producer_elect = "Main activity producer electricity plants"){
   .tidy_iea_df %>% 
     matsindf::verify_cols_missing(negzeropos)
+  
+  split_own_use_elect_chp_heat_using_shares_of <- match.arg(split_own_use_elect_chp_heat_using_shares_of)
+  
   .tidy_iea_df %>% 
-    dplyr::mutate(
-      !!as.name(flow) := dplyr::case_when(
-        # Apply "Own use in electricity, CHP and heat plants" to "Main activity producer electricity plants"
-        # This solves a problem in Ghana where "Own use in electricity, CHP and heat plants" 
-        # would lead to a zero row in the make matrix.
-        # There is no Industry that makes "Own use in electricity, CHP and heat plants".
-        # In the absence of further information, and assuming that there is more 
-        # electricity production than CHP or heat production in each country, 
-        # we apply "Own use in electricity, CHP and heat plants" to
-        # "Main activity producer electricity plants".
-        !!as.name(flow) == own_use_elect_chp_heat & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
-        
-        # When pumped storage is in the mix, 
-        # the IEA data helpfully indicates EIOU assigned to "Pumped storage plants".
-        # However, Pumped storage plants do not make any electricity, 
-        # so there is no appropriate Industry for its EIOU.
-        # To fix this problem, 
-        # apply EIOU by Pumped storage plants to 
-        # the Industry in which production from Pumped storage plants is accounted:
-        # Main activity producer electricity plants.
-        !!as.name(flow) == pumped_storage & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
-        
-        # If Nuclear is used, we need to reclassify EIOU by Nuclear plants
-        # to Main activity producer electricity plants.
-        !!as.name(flow) == nuclear_industry & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
-        
-        # Non-specified (energy) is an Industry that receives EIOU.
-        # However, Non-specified (energy) is not an Industry that makes anything.
-        # So, we need to reassign these EIOU flows somwehere.
-        # For the UK, the numbers for "Non-specified (energy)" are rather small.
-        # In the absence of any better information, we apply 
-        # "Non-specified (energy)" to nonspecenergy_reclassify.  
-        # !!as.name(flow) == non_spec_energy & !!as.name(flow_aggregation_point) == eiou ~ nonspecenergy_reclassify,
-        
-        # Otherwise, just keep the same value for the flow column.
-        TRUE ~ !!as.name(flow)
-      )
+    gather_producer_autoproducer() %>% 
+    route_pumped_storage() %>% 
+    route_own_use_elect_chp_heat(
+      split_using_shares_of = split_own_use_elect_chp_heat_using_shares_of
     ) %>% 
-    dplyr::mutate(
-      # Add a column that tells whether E.dot is negative, zero, or positive.
-      # The goa is to sum like input or like outputs of a Transformation process.
-      # Unless we differentiate by the sign of E.dot, 
-      # we'll be getting net energy flows, which we don't want.
-      !!as.name(negzeropos) := dplyr::case_when(
-        !!as.name(e_dot) < 0 ~ "neg", 
-        !!as.name(e_dot) == 0 ~ "zero",
-        !!as.name(e_dot) > 0 ~ "pos"
-      )
-    ) %>% 
-    # Now sum similar rows using summarise.
-    # Group by everything except the energy flow rate column, "E.dot".
-    matsindf::group_by_everything_except(e_dot) %>% 
-    dplyr::summarise(
-      !!as.name(e_dot) := sum(!!as.name(e_dot))
-    ) %>% 
-    dplyr::mutate(
-      # Eliminate the column we added.
-      !!as.name(negzeropos) := NULL
-    ) %>% 
-    dplyr::ungroup()
+    add_nuclear_industry() %>% 
+    route_non_specified_flows(
+      route_non_specified_eiou = route_non_specified_eiou,
+      route_non_specified_tp = route_non_specified_tp
+    ) 
 }
 
 
@@ -643,7 +607,15 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
 #'
-#' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
+#' @param .tidy_iea_df A tidy data frame containing IEA extended energy balance data
+#' @param split_own_use_elect_chp_heat_using_shares_of Indicates whether the input or outputs to
+#'                                                     Main activity producer plants should be use for
+#'                                                     splitting the Own use in electricity, CHP and heat plants
+#'                                                     EIOU flow. Default is "input".
+#' @param route_non_specified_eiou Boolean stating whether non-specified EIOU flows should be routed to existing industries
+#'                                 Default is TRUE.
+#' @param route_non_specified_tp Boolean stating whether non-specified transformation processes flows should be routed to existing industries
+#'                               Default is TRUE.
 #'
 #' @return an enhanced and corrected version of `.tidy_iea_df` 
 #'         that is ready for physical supply-use table (PSUT) analysis.
@@ -661,11 +633,21 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #'   specify_tp_eiou() %>% 
 #'   specify_interface_industries() %>% 
 #'   tp_sinks_to_nonenergy()
-specify_all <- function(.tidy_iea_df){
+specify_all <- function(.tidy_iea_df,
+                        split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
+                        route_non_specified_eiou = TRUE,
+                        route_non_specified_tp = TRUE){
+  
+  split_own_use_elect_chp_heat_using_shares_of = match.arg(split_own_use_elect_chp_heat_using_shares_of)
+  
   .tidy_iea_df %>% 
     specify_primary_production() %>% 
     specify_production_to_resources() %>% 
-    specify_tp_eiou() %>% 
+    specify_tp_eiou(
+      split_own_use_elect_chp_heat_using_shares_of = split_own_use_elect_chp_heat_using_shares_of,
+      route_non_specified_eiou = route_non_specified_eiou,
+      route_non_specified_tp = route_non_specified_tp
+    ) %>% 
     specify_interface_industries() %>% 
     tp_sinks_to_nonenergy()
 }

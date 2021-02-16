@@ -7,8 +7,11 @@ output:
     fig_caption: yes
 vignette: >
   %\VignetteIndexEntry{Specify EIOU Industries and Flows}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include = FALSE}
@@ -23,27 +26,23 @@ library(magrittr)
 
 ## Introduction
 
-The IEA extended energy balance data include
-some `Flow`s that are `Energy industry own use` (EIOU),
-the consumption of energy by energy-producing industries.
-This vignette demonstrates how to deal with the EIOU flows,
-especially if an analyst is moving toward performing
-Physical Supply-Use Table (PSUT) analyses
-with the IEA data.
-In particular, this vignette will identify some of the problems with using such flows
-(as they are present in data from the IEA)
-and how to use functions in the `IEATools` package to
-prepare for PSUT analysis.
+The IEA extended energy balance data include some `Flow`s that are
+`Energy industry own use` (EIOU), the consumption of energy by
+energy-producing industries. This vignette demonstrates how to deal with
+the EIOU flows, especially if an analyst is moving toward performing
+Physical Supply-Use Table (PSUT) analyses with the IEA data. In
+particular, this vignette will identify some of the problems with using
+such flows (as they are present in data from the IEA) and how to use
+functions in the `IEATools` package to prepare for PSUT analysis.
 
-We'll use data supplied with this package and
-accessed by the `load_tidy_iea_df()` function
-to illustrate.
-
+We'll use data supplied with this package and accessed by the
+`load_tidy_iea_df()` function to illustrate.
 
 ### The IEA approach to Energy Industry Own Use (EIOU) flows
 
-The EIOU flows can be found as shown in the following code.
-The `Flow` column indicates the industry to which EIOU of type `Product` is flowing.
+The EIOU flows can be found as shown in the following code. The `Flow`
+column indicates the industry to which EIOU of type `Product` is
+flowing.
 
 ```{r}
 library(dplyr)
@@ -61,11 +60,11 @@ And `EIOU`-consuming industries can be found by the following code.
 EIOU_flows$Flow %>% unique()
 ```
 
-Note that one of the industries that receives EIOU is `Coal mines (energy)`,
-but coal is not produced by `Coal mines (energy)` in the IEA data.
-(The suffix `(energy)` indicates EIOU.)
-Rather, coal (of various types) first appears in
-rows where the `Flow` is `Production`.
+Note that one of the industries that receives EIOU is
+`Coal mines (energy)`, but coal is not produced by `Coal mines (energy)`
+in the IEA data. (The suffix `(energy)` indicates EIOU.) Rather, coal
+(of various types) first appears in rows where the `Flow` is
+`Production`.
 
 ```{r}
 load_tidy_iea_df() %>%
@@ -75,57 +74,63 @@ load_tidy_iea_df() %>%
   unique()
 ```
 
-
 ### Problems with the IEA approach to EIOU
 
-There are two problems with the IEA's approach to energy industry own use (EIOU).
+There are two problems with the IEA's approach to energy industry own
+use (EIOU).
 
-* Assigning all originating flows to `Production` (as the IEA does)
-  means that some EIOU is routed to an industry that does not produce anything.
-  In the example above, `Electricity` is routed to `Coal mines (energy)`, but
-  coal is produced by `Production`.
-* Furthermore, if all primary energy carriers originate at `Production`,
-  there will be problems with "upstream swims" in an Input-Output analysis:
-  demand for one primary energy carrier will imply proportional demand
-  for all other primary energy carriers.
-
+-   Assigning all originating flows to `Production` (as the IEA does)
+    means that some EIOU is routed to an industry that does not produce
+    anything. In the example above, `Electricity` is routed to
+    `Coal mines (energy)`, but coal is produced by `Production`.
+-   Furthermore, if all primary energy carriers originate at
+    `Production`, there will be problems with "upstream swims" in an
+    Input-Output analysis: demand for one primary energy carrier will
+    imply proportional demand for all other primary energy carriers.
 
 ### Solving the problems presented by the IEA's approach to EIOU
 
-To solve these problems,
-generic `Production` `Flow`s need to be specified.
-In the example above,
-`coal_and_coal_product`s should be produced by `Coal mines`,
-not the generic `Production` industry.
-The `specify_primary_production()` function accomplishes this task.
+To solve these problems, generic `Production` `Flow`s need to be
+specified. In the example above, `coal_and_coal_product`s should be
+produced by `Coal mines`, not the generic `Production` industry. The
+`specify_primary_production()` function accomplishes this task.
 
 ## Identify primary production (`specify_primary_production()`)
 
-By default, the `specify_primary_produciton()` function
-performs the following actions:
+By default, the `specify_primary_produciton()` function performs the
+following actions:
 
-* Coal and coal products
-    * The `Production` industry for `coal_and_coal_products`
-      is replaced by `Coal mines`.
-    * A `Resources (Coal)` industry is created which becomes the
-      source of all primary `coal_and_coal_products` in the energy conversion chain.
-    * Flows from `Resources (Coal)` to `Coal mines` are added,
-      such that `Resources (Coal)` makes primary `coal_and_coal_products` but
-      doesn't use any energy.
-    * The `Coal mines (energy)` EIOU `Flow` is replaced by `Coal mines`.
-* Oil and oil products and Natural gas
-    * The `Production` industry for `oil_and_oil_products` and `Natural gas`
-      is replaced by `Oil and gas extraction`.
-    * A `Resources (Oil and natural gas)` industry is created which becomes the
-      source of all primary `oil_and_oil_products` and `Natural gas` in the energy conversion chain.
-    * Flows from `Resources (Oil and natural gas)` to `Oil and gas extraction` are added,
-      such that `Resources (Oil and natural gas)` makes primary `Oil_and_oil_products` and `Natural gas`
-      but doesn't use any energy.
-    * The `Oil and gas extraction (energy)` EIOU `Flow` is replaced by `Oil and gas extraction`.
+-   Coal and coal products
 
-The code below demonstrates `specify_primary_production()`.
-Note that the `Resources` `Flow`s are tagged as belonging to the Resources matrix (`R`)
-by the `add_psut_matnames()` function.
+    -   The `Production` industry for `coal_and_coal_products` is
+        replaced by `Coal mines`.
+    -   A `Resources (Coal)` industry is created which becomes the
+        source of all primary `coal_and_coal_products` in the energy
+        conversion chain.
+    -   Flows from `Resources (Coal)` to `Coal mines` are added, such
+        that `Resources (Coal)` makes primary `coal_and_coal_products`
+        but doesn't use any energy.
+    -   The `Coal mines (energy)` EIOU `Flow` is replaced by
+        `Coal mines`.
+
+-   Oil and oil products and Natural gas
+
+    -   The `Production` industry for `oil_and_oil_products` and
+        `Natural gas` is replaced by `Oil and gas extraction`.
+    -   A `Resources (Oil and natural gas)` industry is created which
+        becomes the source of all primary `oil_and_oil_products` and
+        `Natural gas` in the energy conversion chain.
+    -   Flows from `Resources (Oil and natural gas)` to
+        `Oil and gas extraction` are added, such that
+        `Resources (Oil and natural gas)` makes primary
+        `Oil_and_oil_products` and `Natural gas` but doesn't use any
+        energy.
+    -   The `Oil and gas extraction (energy)` EIOU `Flow` is replaced by
+        `Oil and gas extraction`.
+
+The code below demonstrates `specify_primary_production()`. Note that
+the `Resources` `Flow`s are tagged as belonging to the Resources matrix
+(`R`) by the `add_psut_matnames()` function.
 
 ```{r}
 Specific_primary_production <- load_tidy_iea_df() %>%
@@ -137,10 +142,9 @@ Specific_primary_production %>%
   as.data.frame()
 ```
 
-Furthermore, the added flows from the `Resource` industries are
-tagged as `Transformation processes` and
-belong in the `U_feed` and `V` matrices.
-The EIOU flows are shown to belong in the `U_EIOU` matrix.
+Furthermore, the added flows from the `Resource` industries are tagged
+as `Transformation processes` and belong in the `U_feed` and `V`
+matrices. The EIOU flows are shown to belong in the `U_EIOU` matrix.
 
 ```{r}
 Specific_primary_production %>%
@@ -152,18 +156,16 @@ Specific_primary_production %>%
   as.data.frame()
 ```
 
-
 ## Convert `Production` to `Resources` (`specify_production_to_resources()`)
 
-The IEA extended energy balances give resource extraction in rows where the `Flow` is "`Production`".
-`specify_production_to_resources()` changes the "`Production`" string
-to "`Resources (product)`",
-where `product` is the name of the energy carrier for this resource.
-`specify_production_to_resources()` should be called _after_ `specify_primary_production()`,
-which adjusts for energy industry own use
-of some primary energy producing industries.
-If this function is called first,
-energy industry own use will not be accounted correctly.
+The IEA extended energy balances give resource extraction in rows where
+the `Flow` is "`Production`". `specify_production_to_resources()`
+changes the "`Production`" string to "`Resources (product)`", where
+`product` is the name of the energy carrier for this resource.
+`specify_production_to_resources()` should be called *after*
+`specify_primary_production()`, which adjusts for energy industry own
+use of some primary energy producing industries. If this function is
+called first, energy industry own use will not be accounted correctly.
 
 ```{r}
 load_tidy_iea_df() %>%
@@ -173,22 +175,23 @@ load_tidy_iea_df() %>%
   glimpse()
 ```
 
-
 ## Be more specific about interface industries (`specify_interface_industries()`)
 
-An interface industry is one that moves energy carriers into or out of a country.
-When `Flow` is any of the interface industries, we need to be more specific.
-If we don't separate these `Flow`s by `Product`, we run into trouble
-in the PSUT framework:
+An interface industry is one that moves energy carriers into or out of a
+country. When `Flow` is any of the interface industries, we need to be
+more specific. If we don't separate these `Flow`s by `Product`, we run
+into trouble in the PSUT framework:
 
-* upstream swims will result in all `Product`s being produced even if only one is needed and
-* embodied energy calculations will result in many types of energy being embodied, even if only one should be.
+-   upstream swims will result in all `Product`s being produced even if
+    only one is needed and
+-   embodied energy calculations will result in many types of energy
+    being embodied, even if only one should be.
 
-To solve these problems, `specify_interface_industries()`
-adds a suffix ` (Product)` to each of these interface industries.
+To solve these problems, `specify_interface_industries()` adds a suffix
+`(Product)` to each of these interface industries.
 
-Note that "`Production`" `Flow`s also needs to be specified,
-but that is accomplished in the `specify_primary_production()` and
+Note that "`Production`" `Flow`s also needs to be specified, but that is
+accomplished in the `specify_primary_production()` and
 `specify_production_to_resources()` functions.
 
 ```{r}
@@ -198,84 +201,135 @@ load_tidy_iea_df() %>%
   glimpse()
 ```
 
-
 ## Be more specific about Transformation process Energy industry own use (`specify_tp_eiou()`)
 
-The extended energy balance data from the IEA includes
-"Energy industry own use" (EIOU) for many transformation processes.
-Unfortunately, in some cases
-the EIOU flows into industries that aren't included in transformation processes.
-For example, `Electricity` is consumed by
-`Own use in electricity, CHP and heat plants`,
-which is not a transformation process.
-We have to make some decisions to ensure that
-EIOU is routed to actual transformation processes.
-Changes made to the `.tidy_iea_df` data frame are:
+The extended energy balance data from the IEA present some issues when
+linking "Energy Industry Own Use" (EIOU) flows to "Transformation
+processes" flows:
 
-1. EIOU classified as `own_use_elect_chp_heat` (by default "Own use in electricity, CHP and heat plants")
-   is sent to `main_act_producer_elect` (by default "Main activity producer electricity plants").
-2. EIOU classified as `pumped_storage` (by default "Pumped storage plants"")
-   is sent to `main_act_producer_elect`.
-3. EIOU classified as `nuclear_industry` (by default "Nuclear industry") is sent to `main_act_producer_elect`.
-4. EIOU classified as `non_spec_energy` (by default "Non-specified (energy)")
-   is sent to `nonspecenergy_reclassify` (by default "Non-specified (transformation)").
+1.  In some instances the data includes "Energy industry own use" (EIOU)
+    flows for industries that are not described as transformation
+    processes. For instance, the "Nuclear industry" appears as an EIOU
+    flow but does not appear as a transformation process.
+2.  In some other instances the data includes transformation processes
+    for which no "Energy Industry Own Use" flow is reported. For
+    instance, the "Main activity producer electricity plants" is a
+    transformation process, but no EIOU is associated.
+
+The `specify_tp_eiou` function enables to deal with these
+inconsistencies. Effectively, it is a convenience function that bundles
+together several other functions:
+
+1.  `gather_producer_autoproducer()`
+2.  `route_pumped_storage()`
+3.  `route_own_use_elect_chp_heat()`
+4.  `add_nuclear_industry()`
+5.  `route_non_specified_eiou()`
+6.  `route_non_specified_tp()`
+
+Details can be found in the documentation of each function, but
+essentially they do the following:
+
+1.  The `gather_producer_autoproducer()` function gathers *separately*
+    the transformation processes "Main activity producer plants" and
+    "Autoproducer plants" for each of three types: electricity, heat,
+    and CHP.
+2.  The `route_pumped_storage()` function routes the "Pumped storage
+    plants" EIOU flow to "Main activity producer electricity plants."
+3.  The `route_own_use_elect_chp_heat()` routes the "Own use in
+    electricity, heat and CHP plants" EIOU flow to "Main activity
+    producer electricity plants", "Main activity producer CHP plants,"
+    and "Main activity producer heat plants." It does so according to
+    either the input or output shares of each of the industries,
+    depending on the arguments of the function.
+4.  The `add_nuclear_industry()` function adds a nuclear industry in
+    transformation processes, and modifies each of the "Main activity
+    producer electricity plants" and "Main activity producer CHP plants"
+    according to their inputs of nuclear fuel as reported by the IEA.
+5.  The `route_non_specified_eiou()` function routes the "Non-specified"
+    EIOU flow to the different EIOU industries. It performs the split
+    according to the shares of use of EIOU of all EIOU industries
+    (excluding the non-specified one).
+6.  The `route_non_specified_tp()` function routes the "Non-specified"
+    transformation processes flows to the different transformation
+    processes industries. It performs the split according to the shares
+    of use and supply of each product, by each transformation process
+    industry (excluding the non-specified one).
+
+The following two pieces of code are therefore equivalent:
 
 ```{r}
 load_tidy_iea_df() %>%
   specify_tp_eiou() %>%
-  filter(Flow.aggregation.point == "Energy industry own use" &
-           Flow == "Main activity producer electricity plants") %>%
+  glimpse()
+
+load_tidy_iea_df() %>% 
+  gather_producer_autoproducer() %>% 
+  route_pumped_storage() %>% 
+  route_own_use_elect_chp_heat() %>% 
+  add_nuclear_industry() %>% 
+  route_non_specified_eiou() %>% 
+  route_non_specified_tp() %>% 
   glimpse()
 ```
 
-
 ## Identify Transformation process sinks and sources (`tp_sinks_sources()`)
 
-In the IEA extended energy balance data,
-transformation processes (tp) ought to both consume and produce energy.
-But some transformation processes consume energy without producing any energy;
-others produce without consuming.
-Such transformation processes can be called "transformation sinks" and
-"transformation sources," respectively.
-This function finds and identifies transformation processes that act as sinks or sources.
+In the IEA extended energy balance data, transformation processes (tp)
+ought to both consume and produce energy. But some transformation
+processes consume energy without producing any energy; others produce
+without consuming. Such transformation processes can be called
+"transformation sinks" and "transformation sources," respectively. This
+function finds and identifies transformation processes that act as sinks
+or sources.
 
-It is important to identify transformation sinks,
-because they cause two problems for physical supply-use table (PSUT) analysis.
-First, when swimming upstream, a PSUT analysis cannot "see" the sunk energy carriers,
-because they have no downstream effects.
-Thus, upstream swims cannot conserve energy.
-Second, when calculating embodied energy for each downstream energy carrier,
-the sunk energy carriers cannot be embodied in any final demand energy carriers.
-Thus, embodied energy calculations cannot conserve energy.
+It is important to identify transformation sinks, because they cause two
+problems for physical supply-use table (PSUT) analysis. First, when
+swimming upstream, a PSUT analysis cannot "see" the sunk energy
+carriers, because they have no downstream effects. Thus, upstream swims
+cannot conserve energy. Second, when calculating embodied energy for
+each downstream energy carrier, the sunk energy carriers cannot be
+embodied in any final demand energy carriers. Thus, embodied energy
+calculations cannot conserve energy.
 
-Transformation sources can also cause problems for physical supply-use table (PSUT) analysis.
-In particular, when swimming upstream, a PSUT analysis will "see" the final energy sources,
-but cannot see any associated primary energy carriers.
+Transformation sources can also cause problems for physical supply-use
+table (PSUT) analysis. In particular, when swimming upstream, a PSUT
+analysis will "see" the final energy sources, but cannot see any
+associated primary energy carriers.
 
-Transformation sinks and sources are identified by the following algorithm:
+Transformation sinks and sources are identified by the following
+algorithm:
 
-1. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that consume energy (negative value for `E.dot`).
-   Energy consumption can be for the transformation process itself or for Energy industry own use.
-2. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that produce energy (positive value for `E.dot`).
-3. Take the set difference between the two (consumers less producers for sinks and producers less consumers for sources).
-   The set difference is the list of transformation sinks or sources, respectively.
+1.  Identify (per group in `.tidy_iea_df`) all
+    `Transformation processes` that consume energy (negative value for
+    `E.dot`). Energy consumption can be for the transformation process
+    itself or for Energy industry own use.
+2.  Identify (per group in `.tidy_iea_df`) all
+    `Transformation processes` that produce energy (positive value for
+    `E.dot`).
+3.  Take the set difference between the two (consumers less producers
+    for sinks and producers less consumers for sources). The set
+    difference is the list of transformation sinks or sources,
+    respectively.
 
-`tp_sinks_sources()` is a function not unlike `dplyr::summarise()`;
-it returns a summary containing grouping variables and industries that are transformation sinks or sources.
-The various `specify_*()` functions should also be called _before_ calling [tp_sinks_sources()].
-The `specify_*()` functions clean up the IEA data, ensuring that energy is routed to the right places.
+`tp_sinks_sources()` is a function not unlike `dplyr::summarise()`; it
+returns a summary containing grouping variables and industries that are
+transformation sinks or sources. The various `specify_*()` functions
+should also be called *before* calling [tp_sinks_sources()]. The
+`specify_*()` functions clean up the IEA data, ensuring that energy is
+routed to the right places.
 
 Note that this function only identifies transformation sinks or sources;
-it does not fix the problem.
-To solve the problem of transformation sinks,
-see the [tp_sinks_to_nonenergy()] function.
-`tp_sinks_to_nonenergy()` uses the output of `tp_sinks_sources()`
-to route energy consumed by transformation sinks to `Non-energy use industry/transformation/energy`.
-There is no function to solve the problem of transformation sources at this time.
+it does not fix the problem. To solve the problem of transformation
+sinks, see the [tp_sinks_to_nonenergy()] function.
+`tp_sinks_to_nonenergy()` uses the output of `tp_sinks_sources()` to
+route energy consumed by transformation sinks to
+`Non-energy use industry/transformation/energy`. There is no function to
+solve the problem of transformation sources at this time.
 
-`tp_sinks_sources()` returns metadata columns and the `Flow` column.
-The `Flow` column contains industries that are sinks or sources,
-depending on the value of the `type` argument.
+`tp_sinks_sources()` returns metadata columns and the `Flow` column. The
+`Flow` column contains industries that are sinks or sources, depending
+on the value of the `type` argument.
 
 ```{r}
 # The included data sets to not have any transformation process sinks or sources.
@@ -295,13 +349,12 @@ data.frame(Flow = c("Automobiles", "Automobiles", "Furnaces"),
   tp_sinks_sources(type = "sources")
 ```
 
-
 ## Convert Transformation process sinks to Non-energy flows (`tp_sinks_to_nonenergy()` )
 
-This function reclassifies energy flowing into transformation process sinks
-as `non_energy_flow`, by default "Non-energy use in industry/transformation/energy".
-If there was already some Non-energy use,
-the new Non-energy use is added to the existing Non-energy use.
+This function reclassifies energy flowing into transformation process
+sinks as `non_energy_flow`, by default "Non-energy use in
+industry/transformation/energy". If there was already some Non-energy
+use, the new Non-energy use is added to the existing Non-energy use.
 
 `tp_sinks_to_nonenergy()` uses the `tp_sinks_sources()` function
 internally to identify transformation process sinks.
@@ -337,17 +390,15 @@ DF %>%
   as.data.frame()
 ```
 
-
 ## Put it all together (`specify_all()`)
 
-`specify_all()` is a convenience function that
-bundles several others:
+`specify_all()` is a convenience function that bundles several others:
 
-1. `specify_primary_production()`
-2. `specify_production_to_resources()`
-3. `specify_tp_eiou()`
-4. `specify_interface_industries()`
-5. `tp_sinks_to_nonenergy()`
+1.  `specify_primary_production()`
+2.  `specify_production_to_resources()`
+3.  `specify_tp_eiou()`
+4.  `specify_interface_industries()`
+5.  `tp_sinks_to_nonenergy()`
 
 Each bundled function is called in turn using default arguments.
 
@@ -365,6 +416,8 @@ all(Simple == Complicated)
 
 ## Conclusion
 
-This vignette demonstrated how to specify details of primary and transformation process flows.
-The next step could be to prepare the IEA data for use within the PSUT framework.
-For details, see the [Prep PSUT](https://matthewheun.github.io/IEATools/articles/prep_psut.html) vignette.
+This vignette demonstrated how to specify details of primary and
+transformation process flows. The next step could be to prepare the IEA
+data for use within the PSUT framework. For details, see the [Prep
+PSUT](https://matthewheun.github.io/IEATools/articles/prep_psut.html)
+vignette.

@@ -784,3 +784,16 @@
 #' @examples
 #' non_specified_flows
 "non_specified_flows"
+
+
+#' Energy Industry Own Use flows
+#'
+#' A string list containing named names of EIOU flows in the IEA World Energy Extended Balances data.
+#' Items in the list provide default values for EIOU flows function arguments
+#' throughout the `IEATools` package.
+#' 
+#' @format A string list with `r length(eiou_flows)` entries.
+#' 
+#' @examples
+#' eiou_flows
+"eiou_flows"

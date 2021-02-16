@@ -271,6 +271,9 @@ add_row_col_meta <- function(.tidy_iea_df,
 #' 
 #' This function ensures that all energy flow numbers are positive
 #' before creating the matrices.
+#' 
+#' Note that the `.tidy_iea_df` is ungrouped using the function 
+#' `dplyr::ungroup()` prior to undergoing any modification.
 #'
 #' @param .tidy_iea_df a data frame containing `matnames` and several other columns
 #' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
@@ -305,7 +308,9 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
                                   # Name of output column of matrices
                                   matvals = IEATools::psut_cols$matvals){
   matsindf::verify_cols_missing(.tidy_iea_df, matvals)
+  
   .tidy_iea_df %>% 
+    dplyr::ungroup() %>% 
     dplyr::mutate(
       # All values in the matrices must be positive, but for Epsilon matrix terms.
       "{e_dot}" := dplyr::case_when(
