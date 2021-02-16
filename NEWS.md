@@ -1,4 +1,15 @@
-* `specify_primary_production()` function changed, the product
+# IEATools 0.1.47 (2012-02-16)
+
+* New `specify_all()` function coded, so that it now splits non-specified
+  industries, splits the IEA "Own use in electricity, CHP and heat plants"
+  flow in main activity producer electricity, heat, and CHP plants, and so that
+  a nuclear industry is added when needed.
+* Sub-functions for the specify_all() function 
+  are called within the `specify_tp_eiou()` function.
+* These include the `gather_producer_autoproducer()`,
+  the `route_pumped_storage()`, the `route_own_use_elect_chp_heat()`,
+  the `add_nuclear_industry()`, and the `route_non_specified_flows()` functions.
+*`specify_primary_production()` function changed, the product
   naming is now modified.
 * `extract_S_units_from_tidy()` function hotfixed so that
   it also works when the `.tidy_iea_df` data frame already

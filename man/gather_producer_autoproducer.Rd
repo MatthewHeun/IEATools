@@ -11,16 +11,12 @@ gather_producer_autoproducer(
   e_dot = IEATools::iea_cols$e_dot,
   transformation_processes = IEATools::aggregation_flows$transformation_processes,
   negzeropos = ".negzeropos",
- 
-    autoproducer_elect = IEATools::transformation_processes$autoproducer_electricity_plants,
+  autoproducer_elect = IEATools::main_act_plants$autoprod_elect_plants,
   autoproducer_chp = IEATools::transformation_processes$autoproducer_CHP_plants,
   autoproducer_heat = IEATools::transformation_processes$autoproducer_heat_plants,
- 
-    main_act_producer_elect = IEATools::transformation_processes$main_activity_producer_electricity_plants,
- 
-    main_act_producer_heat = IEATools::transformation_processes$main_activity_producer_heat_plants,
- 
-    main_act_producer_chp = IEATools::transformation_processes$main_activity_producer_CHP_plants
+  main_act_producer_elect = IEATools::main_act_plants$main_act_prod_elect_plants,
+  main_act_producer_heat = IEATools::main_act_plants$main_act_prod_heat_plants,
+  main_act_producer_chp = IEATools::main_act_plants$main_act_prod_chp_plants
 )
 }
 \arguments{
@@ -42,7 +38,7 @@ Default is \code{IEATools::aggregation_flows$flow_aggregation_point}.}
 Default is ".negzeropos".}
 
 \item{autoproducer_elect}{A string identifying "Autoproducer electricity plants" in the \code{flow} column of the \code{.tidy_iea_df}.
-Default is \code{IEATools::transformation_processes$autoproducer_electricity_plants}.}
+Default is \code{IEATools::main_act_plants$autoprod_elect_plants}.}
 
 \item{autoproducer_chp}{A string identifying "Autoproducer CHP plants" in the \code{flow} column of the \code{.tidy_iea_df}.
 Default is \code{IEATools::transformation_processes$autoproducer_CHP_plants}.}
@@ -51,13 +47,13 @@ Default is \code{IEATools::transformation_processes$autoproducer_CHP_plants}.}
 Default is \code{IEATools::transformation_processes$autoproducer_heat_plants}.}
 
 \item{main_act_producer_elect}{A string identifying "Main activity producer electricity plants" in the \code{flow} column of the \code{.tidy_iea_df}.
-Default is \code{IEATools::transformation_processes$main_activity_producer_electricity_plants}.}
+Default is \code{IEATools::main_act_plants$main_act_prod_elect_plants}.}
 
 \item{main_act_producer_heat}{A string identifying "Main activity producer heat plants" in the \code{flow} column of the \code{.tidy_iea_df}.
-Default is \code{IEATools::transformation_processes$main_activity_producer_heat_plants}.}
+Default is \code{IEATools::main_act_plants$main_act_prod_heat_plants}.}
 
 \item{main_act_producer_chp}{A string identifying "Main activity producer CHP plants" in the \code{flow} column of the \code{.tidy_iea_df}.
-Default is \code{IEATools::transformation_processes$main_activity_producer_CHP_plants}.}
+Default is \code{IEATools::main_act_plants$main_act_prod_chp_plants}.}
 }
 \value{
 The \code{tidy_iea_df} with autoproducer plants merged with main activity producer plants.

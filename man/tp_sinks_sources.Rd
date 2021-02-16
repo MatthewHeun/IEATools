@@ -33,7 +33,7 @@ tp_sinks_sources(
 \item{e_dot}{the name of the energy rate column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
 }
 \value{
-the \code{grouping_vars} and the \code{flow} column,
+The \code{grouping_vars} and the \code{flow} column,
 with one row for each industry that is a transformation sink or source.
 Industries that are transformation sinks or sources are named in the \code{flow} column.
 }

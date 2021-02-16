@@ -27,17 +27,17 @@
 #' @param negzeropos The name of a temporary column created in `.tidy_iea_df`. 
 #'                   Default is ".negzeropos".
 #' @param autoproducer_elect A string identifying "Autoproducer electricity plants" in the `flow` column of the `.tidy_iea_df`.
-#'                           Default is `IEATools::transformation_processes$autoproducer_electricity_plants`.
+#'                           Default is `IEATools::main_act_plants$autoprod_elect_plants`.
 #' @param autoproducer_chp A string identifying "Autoproducer CHP plants" in the `flow` column of the `.tidy_iea_df`.
 #'                         Default is `IEATools::transformation_processes$autoproducer_CHP_plants`.
 #' @param autoproducer_heat A string identifying "Autoproducer heat plants" in the `flow` column of the `.tidy_iea_df`.
 #'                          Default is `IEATools::transformation_processes$autoproducer_heat_plants`.
 #' @param main_act_producer_elect A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
-#'                                Default is `IEATools::transformation_processes$main_activity_producer_electricity_plants`.
+#'                                Default is `IEATools::main_act_plants$main_act_prod_elect_plants`.
 #' @param main_act_producer_heat A string identifying "Main activity producer heat plants" in the `flow` column of the `.tidy_iea_df`.
-#'                               Default is `IEATools::transformation_processes$main_activity_producer_heat_plants`.
+#'                               Default is `IEATools::main_act_plants$main_act_prod_heat_plants`.
 #' @param main_act_producer_chp A string identifying "Main activity producer CHP plants" in the `flow` column of the `.tidy_iea_df`.
-#'                              Default is `IEATools::transformation_processes$main_activity_producer_CHP_plants`.
+#'                              Default is `IEATools::main_act_plants$main_act_prod_chp_plants`.
 #'
 #' @return The `tidy_iea_df` with autoproducer plants merged with main activity producer plants.
 #' @export
@@ -55,13 +55,13 @@ gather_producer_autoproducer <- function(.tidy_iea_df,
                                          transformation_processes = IEATools::aggregation_flows$transformation_processes,
                                          negzeropos = ".negzeropos",
                                          # Autoproducer industries names
-                                         autoproducer_elect = IEATools::transformation_processes$autoproducer_electricity_plants,
+                                         autoproducer_elect = IEATools::main_act_plants$autoprod_elect_plants,
                                          autoproducer_chp = IEATools::transformation_processes$autoproducer_CHP_plants,
                                          autoproducer_heat = IEATools::transformation_processes$autoproducer_heat_plants,
                                          # Main activity industries names
-                                         main_act_producer_elect = IEATools::transformation_processes$main_activity_producer_electricity_plants,
-                                         main_act_producer_heat = IEATools::transformation_processes$main_activity_producer_heat_plants,
-                                         main_act_producer_chp = IEATools::transformation_processes$main_activity_producer_CHP_plants){
+                                         main_act_producer_elect = IEATools::main_act_plants$main_act_prod_elect_plants,
+                                         main_act_producer_heat = IEATools::main_act_plants$main_act_prod_heat_plants,
+                                         main_act_producer_chp = IEATools::main_act_plants$main_act_prod_chp_plants){
   
   .tidy_iea_df %>%
     dplyr::mutate(
@@ -114,12 +114,12 @@ gather_producer_autoproducer <- function(.tidy_iea_df,
 #' @param pumped_storage A string identifying "Pumped storage plants" in the `flow` column of the `.tidy_iea_df`.
 #'                       Default is `IEATools::eiou_flows$pumped_storage_plants`.
 #' @param main_act_producer_elect A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
-#'                                Default is `IEATools::transformation_processes$main_activity_producer_electricity_plants`.
+#'                                Default is `IEATools::main_act_plants$main_act_prod_elect_plants`.
 #' @param negzeropos The name of a temporary column created in `.tidy_iea_df`. 
 #'                   Default is ".negzeropos".
 #'
 #' @return A modified `.tidy_iea_df` with "Pumped storage plants" industry routed 
-#' to the "Main activity producer electricity plant" industry.
+#'         to the "Main activity producer electricity plant" industry.
 #' @export
 #'
 #' @examples
@@ -134,7 +134,7 @@ route_pumped_storage <- function(.tidy_iea_df,
                                  # Flow and flow aggregation point names
                                  eiou = IEATools::aggregation_flows$energy_industry_own_use,
                                  pumped_storage = IEATools::eiou_flows$pumped_storage_plants,
-                                 main_act_producer_elect = IEATools::transformation_processes$main_activity_producer_electricity_plants,
+                                 main_act_producer_elect = IEATools::main_act_plants$main_act_prod_elect_plants,
                                  # Temporary column name
                                  negzeropos = ".negzeropos"){
   
@@ -219,11 +219,11 @@ route_pumped_storage <- function(.tidy_iea_df,
 #' @param own_use_elect_chp_heat A string identifying "Own use in electricity, CHP and heat plants" in the `flow` column of the `.tidy_iea_df`.
 #'                               Default is `IEATools::eiou_flows$own_use_elect_chp_heat_plants`.
 #' @param main_act_producer_elect A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
-#'                                Default is `IEATools::transformation_processes$main_activity_producer_electricity_plants`.
+#'                                Default is `IEATools::main_act_plants$main_act_prod_elect_plants`.
 #' @param main_act_producer_chp A string identifying "Main activity producer CHP plants" in the `flow` column of the `.tidy_iea_df`.
-#'                              Default is `IEATools::transformation_processes$main_activity_producer_heat_plants`.
+#'                              Default is `IEATools::main_act_plants$main_act_prod_heat_plants`.
 #' @param main_act_producer_heat A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
-#'                               Default is `IEATools::transformation_processes$main_activity_producer_heat_plants`.
+#'                               Default is `IEATools::main_act_plants$main_act_prod_heat_plants`.
 #' @param negzeropos The name of a temporary column created in `.tidy_iea_df`. 
 #'                   Default is ".negzeropos".
 #' @param n_counting The name of a temporary column created in `.tidy_iea_df`. 
@@ -263,9 +263,9 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
                                          eiou =  IEATools::aggregation_flows$energy_industry_own_use,
                                          transformation_processes = IEATools::aggregation_flows$transformation_processes,
                                          own_use_elect_chp_heat = IEATools::eiou_flows$own_use_elect_chp_heat_plants,
-                                         main_act_producer_elect = IEATools::transformation_processes$main_activity_producer_electricity_plants,
-                                         main_act_producer_chp = IEATools::transformation_processes$main_activity_producer_CHP_plants,
-                                         main_act_producer_heat = IEATools::transformation_processes$main_activity_producer_heat_plants,
+                                         main_act_producer_elect = IEATools::main_act_plants$main_act_prod_elect_plants,
+                                         main_act_producer_chp = IEATools::main_act_plants$main_act_prod_chp_plants,
+                                         main_act_producer_heat = IEATools::main_act_plants$main_act_prod_heat_plants,
                                          # Temporary column names
                                          negzeropos = ".negzeropos",
                                          n_counting = ".n_counting",
@@ -489,11 +489,11 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
 #' @param nuclear_industry A string identifying "Nuclear industry" in the `flow` column of the `.tidy_iea_df`.
 #'                         Default is `IEATools::eiou_flows$nuclear_industry`.
 #' @param main_act_producer_elect A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
-#'                                Default is `IEATools::transformation_processes$main_activity_producer_electricity_plants`.
+#'                                Default is `IEATools::main_act_plants$main_act_prod_elect_plants`.
 #' @param main_act_producer_chp A string identifying "Main activity producer CHP plants" in the `flow` column of the `.tidy_iea_df`.
-#'                              Default is `IEATools::transformation_processes$main_activity_producer_CHP_plants`.
+#'                              Default is `IEATools::main_act_plants$main_act_prod_chp_plants`.
 #' @param autoproducer_elect A string identifying "Autoproducer electricity plants" in the `flow` column of the `.tidy_iea_df`.
-#'                           Default is `IEATools::transformation_processes$autoproducer_electricity_plants`.
+#'                           Default is `IEATools::main_act_plants$autoprod_elect_plants`.
 #' @param autoproducer_chp A string identifying "Autoproducer CHP plants" in the `flow` column of the `.tidy_iea_df`.
 #'                         Default is `IEATools::transformation_processes$autoproducer_CHP_plants`.
 #' @param nuclear A string identifying the "Nuclear" product in the `product` column of the `tidy_iea_df`.
@@ -538,9 +538,9 @@ add_nuclear_industry <- function(.tidy_iea_df,
                                  eiou = IEATools::aggregation_flows$energy_industry_own_use,
                                  transformation_processes = IEATools::aggregation_flows$transformation_processes,
                                  nuclear_industry = IEATools::eiou_flows$nuclear_industry,
-                                 main_act_producer_elect = IEATools::transformation_processes$main_activity_producer_electricity_plants,
-                                 main_act_producer_chp = IEATools::transformation_processes$main_activity_producer_CHP_plants,
-                                 autoproducer_elect = IEATools::transformation_processes$autoproducer_electricity_plants,
+                                 main_act_producer_elect = IEATools::main_act_plants$main_act_prod_elect_plants,
+                                 main_act_producer_chp = IEATools::main_act_plants$main_act_prod_chp_plants,
+                                 autoproducer_elect = IEATools::main_act_plants$autoprod_elect_plants,
                                  autoproducer_chp = IEATools::transformation_processes$autoproducer_CHP_plants,
                                  nuclear = "Nuclear",
                                  electricity = "Electricity",
@@ -634,9 +634,9 @@ add_nuclear_industry <- function(.tidy_iea_df,
 #' See `route_non_specified_eiou` and `route_non_specified_tp` functions documentations for additional details.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
-#' @param is_non_specified_eiou_routed A boolean that indicates whether non specified EIOU flows should be routed to existing
+#' @param route_non_specified_eiou A boolean that indicates whether non specified EIOU flows should be routed to existing
 #'                                     industries or kept as non specified.
-#' @param is_non_specified_tp_routed A boolean that indicates whether non specified transformation processes flows should be routed to existing
+#' @param route_non_specified_tp A boolean that indicates whether non specified transformation processes flows should be routed to existing
 #'                                   industries or kept as non specified.
 #'
 #' @return A modified version of the `.tidy_iea_df` with non specified flows routed to existing industries.
@@ -670,7 +670,7 @@ route_non_specified_flows <- function(.tidy_iea_df,
 #' Note that the `routing_non_specified_eiou` parameter enables to switch on and off the routing of the non-specified EIOU flow.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
-#' @param routing_non_specified_eiou A boolean indicating whether non-specified EIOU flows should be redirected to other existing industries.
+#' @param route_non_specified_eiou A boolean indicating whether non-specified EIOU flows should be redirected to other existing industries.
 #'                                   If FALSE, the function returns the input data frame.
 #'                                   Default is TRUE.
 #' @param country The name of the country column in the `.tidy_iea_df`.
@@ -875,7 +875,7 @@ route_non_specified_eiou <- function(.tidy_iea_df,
 #' Note that the `routing_non_specified_eiou` parameter enables to switch on and off the routing of the non-specified EIOU flow.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
-#' @param routing_non_specified_tp A boolean indicating whether non-specified EIOU flows should be redirected to other existing industries.
+#' @param route_non_specified_tp A boolean indicating whether non-specified EIOU flows should be redirected to other existing industries.
 #'                                 If FALSE, the function returns the input data frame.
 #'                                 Default is TRUE.
 #' @param country The name of the country column in the `.tidy_iea_df`.

@@ -22,12 +22,9 @@ route_own_use_elect_chp_heat(
   eiou = IEATools::aggregation_flows$energy_industry_own_use,
   transformation_processes = IEATools::aggregation_flows$transformation_processes,
   own_use_elect_chp_heat = IEATools::eiou_flows$own_use_elect_chp_heat_plants,
- 
-    main_act_producer_elect = IEATools::transformation_processes$main_activity_producer_electricity_plants,
- 
-    main_act_producer_chp = IEATools::transformation_processes$main_activity_producer_CHP_plants,
- 
-    main_act_producer_heat = IEATools::transformation_processes$main_activity_producer_heat_plants,
+  main_act_producer_elect = IEATools::main_act_plants$main_act_prod_elect_plants,
+  main_act_producer_chp = IEATools::main_act_plants$main_act_prod_chp_plants,
+  main_act_producer_heat = IEATools::main_act_plants$main_act_prod_heat_plants,
   negzeropos = ".negzeropos",
   n_counting = ".n_counting",
   destination_flow = ".destination_flow",
@@ -88,13 +85,13 @@ Default is \code{IEATools::aggregation_flows$flow_aggregation_point}.}
 Default is \code{IEATools::eiou_flows$own_use_elect_chp_heat_plants}.}
 
 \item{main_act_producer_elect}{A string identifying "Main activity producer electricity plants" in the \code{flow} column of the \code{.tidy_iea_df}.
-Default is \code{IEATools::transformation_processes$main_activity_producer_electricity_plants}.}
+Default is \code{IEATools::main_act_plants$main_act_prod_elect_plants}.}
 
 \item{main_act_producer_chp}{A string identifying "Main activity producer CHP plants" in the \code{flow} column of the \code{.tidy_iea_df}.
-Default is \code{IEATools::transformation_processes$main_activity_producer_heat_plants}.}
+Default is \code{IEATools::main_act_plants$main_act_prod_heat_plants}.}
 
 \item{main_act_producer_heat}{A string identifying "Main activity producer electricity plants" in the \code{flow} column of the \code{.tidy_iea_df}.
-Default is \code{IEATools::transformation_processes$main_activity_producer_heat_plants}.}
+Default is \code{IEATools::main_act_plants$main_act_prod_heat_plants}.}
 
 \item{negzeropos}{The name of a temporary column created in \code{.tidy_iea_df}.
 Default is ".negzeropos".}

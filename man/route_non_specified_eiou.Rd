@@ -31,6 +31,10 @@ route_non_specified_eiou(
 \arguments{
 \item{.tidy_iea_df}{The \code{.tidy_iea_df} which flows need to be specified.}
 
+\item{route_non_specified_eiou}{A boolean indicating whether non-specified EIOU flows should be redirected to other existing industries.
+If FALSE, the function returns the input data frame.
+Default is TRUE.}
+
 \item{country}{The name of the country column in the \code{.tidy_iea_df}.
 Default is \code{IEATools::iea_cols$country}.}
 
@@ -87,10 +91,6 @@ Default is ".Share_eiou_per_industry_From_Func".}
 
 \item{destination_flow}{The name of a temporary column added to the data frame.
 Default is ".destination_flow".}
-
-\item{routing_non_specified_eiou}{A boolean indicating whether non-specified EIOU flows should be redirected to other existing industries.
-If FALSE, the function returns the input data frame.
-Default is TRUE.}
 }
 \value{
 A modified version of the \code{.tidy_iea_df} with the non-specified EIOU flow routed to existing industries.

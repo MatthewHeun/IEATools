@@ -357,6 +357,16 @@ transformation_processes <- list(main_activity_producer_electricity_plants = "Ma
 usethis::use_data(transformation_processes, overwrite = TRUE)
 
 
+
+main_act_plants <- list(main_act_prod_elect_plants = "Main activity producer electricity plants",
+                        main_act_prod_chp_plants = "Main activity producer CHP plants",
+                        main_act_prod_heat_plants = "Main activity producer heat plants",
+                        autoprod_elect_plants = "Autoproducer electricity plants",
+                        autoprod_heat_plants = "Autoproducer heat plants",
+                        autoprod_chp_plants = "Autoproducer CHP plants")
+usethis::use_data(main_act_plants, overwrite = TRUE)
+
+
 eiou_flows <- list(bkb_peat_briquette_plants = "BKB/peat briquette plants",
                    blast_furnaces = "Blast furnaces",
                    charcoal_plants = "Charcoal production plants",

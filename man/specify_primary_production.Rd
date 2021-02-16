@@ -70,7 +70,7 @@ E.g., the Crude oil resource will be called "Resources [of Crude oil]".
 Default is \code{IEATools::of_notation}.}
 }
 \value{
-\code{.tidy_iea_df} with adjusted production information for primary energy
+A \code{.tidy_iea_df} with adjusted production information for primary energy
 for both coal and coal products and oil and gas extraction
 }
 \description{

@@ -73,7 +73,7 @@ to add rownames, colnames, rowtypes, and coltypes columns to .tidy_iea_df." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.46</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.47</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ to add rownames, colnames, rowtypes, and coltypes columns to .tidy_iea_df." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -141,26 +141,26 @@ to add rownames, colnames, rowtypes, and coltypes columns to .tidy_iea_df." />
 to add <code>rownames</code>, <code>colnames</code>, <code>rowtypes</code>, and <code>coltypes</code> columns to <code>.tidy_iea_df</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_row_col_meta</span>(
-  <span class='kw'>.tidy_iea_df</span>,
-  product = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>product</span>,
-  flow = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow</span>,
-  matnames = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>matnames</span>,
-  U = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>U</span>,
-  U_EIOU = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>U_eiou</span>,
-  R = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>R</span>,
-  V = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>V</span>,
-  Y = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>Y</span>,
-  Epsilon = <span class='kw'>IEATools</span>::<span class='kw'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='kw'>epsilon</span>,
-  industry_type = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>industry</span>,
-  product_type = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>product</span>,
-  sector_type = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>sector</span>,
-  resource_type = <span class='kw'>IEATools</span>::<span class='kw'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='kw'>resource</span>,
-  rownames = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>rownames</span>,
-  colnames = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>colnames</span>,
-  rowtypes = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>rowtypes</span>,
-  coltypes = <span class='kw'>IEATools</span>::<span class='kw'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='kw'>coltypes</span>
-)</pre>
+    <pre class="usage"><span class='fu'>add_row_col_meta</span><span class='op'>(</span>
+  <span class='va'>.tidy_iea_df</span>,
+  product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>product</span>,
+  flow <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow</span>,
+  matnames <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>matnames</span>,
+  U <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>U</span>,
+  U_EIOU <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>U_eiou</span>,
+  R <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>R</span>,
+  V <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>V</span>,
+  Y <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>Y</span>,
+  Epsilon <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>epsilon</span>,
+  industry_type <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='va'>industry</span>,
+  product_type <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='va'>product</span>,
+  sector_type <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='va'>sector</span>,
+  resource_type <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='row_col_types.html'>row_col_types</a></span><span class='op'>$</span><span class='va'>resource</span>,
+  rownames <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>rownames</span>,
+  colnames <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>colnames</span>,
+  rowtypes <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>rowtypes</span>,
+  coltypes <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='mat_meta_cols.html'>mat_meta_cols</a></span><span class='op'>$</span><span class='va'>coltypes</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -205,10 +205,10 @@ If <code>.tidy_iea_df</code> contains some but not all of <code>rownames</code>,
 an error is returned.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
-<span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span>() <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='add_psut_matnames.html'>add_psut_matnames</a></span>() <span class='op'>%&gt;%</span>
-  <span class='fu'>add_row_col_meta</span>()
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
+<span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='add_psut_matnames.html'>add_psut_matnames</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>add_row_col_meta</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 402 x 16</span><span>
 #&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           

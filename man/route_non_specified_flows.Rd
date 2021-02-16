@@ -13,10 +13,10 @@ route_non_specified_flows(
 \arguments{
 \item{.tidy_iea_df}{The \code{.tidy_iea_df} which flows need to be specified.}
 
-\item{is_non_specified_eiou_routed}{A boolean that indicates whether non specified EIOU flows should be routed to existing
+\item{route_non_specified_eiou}{A boolean that indicates whether non specified EIOU flows should be routed to existing
 industries or kept as non specified.}
 
-\item{is_non_specified_tp_routed}{A boolean that indicates whether non specified transformation processes flows should be routed to existing
+\item{route_non_specified_tp}{A boolean that indicates whether non specified transformation processes flows should be routed to existing
 industries or kept as non specified.}
 }
 \value{

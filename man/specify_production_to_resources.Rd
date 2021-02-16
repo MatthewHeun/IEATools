@@ -6,29 +6,33 @@
 \usage{
 specify_production_to_resources(
   .tidy_iea_df,
-  flow = "Flow",
-  product = "Product",
-  production = "Production",
-  resources = "Resources",
+  flow = IEATools::iea_cols$flow,
+  product = IEATools::iea_cols$product,
+  production = IEATools::tpes_flows$production,
+  resources = IEATools::tpes_flows$resources,
   notation = IEATools::from_notation
 )
 }
 \arguments{
-\item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{rename_iea_df_cols()}}
+\item{.tidy_iea_df}{An IEA data frame whose columns have been renamed by \code{rename_iea_df_cols()}}
 
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}.  Default is "Flow".}
+\item{flow}{The name of the flow column in \code{.tidy_iea_df}.
+Default is \code{IEATools::iea_cols$flow}.}
 
-\item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "Product".}
+\item{product}{The name of the product column in \code{.tidy_iea_df}.
+Default is \code{IEATools::iea_cols$product}.}
 
-\item{production}{a string identifying production in the flow column. Default is "Production".}
+\item{production}{A string identifying production in the flow column.
+Default is \code{IEATools::tpes_flows$production}.}
 
-\item{resources}{a string identifying resource industries to be added to \code{.tidy_iea_df}.
-Default is "Resources".}
+\item{resources}{A string identifying resource industries to be added to \code{.tidy_iea_df}.
+Default is \code{IEATools::tpes_flows$resources}.}
 
-\item{notation}{a list of specification notations. Default is \code{IEATools::bracket_notation}.}
+\item{notation}{A list of specification notations.
+Default is \code{IEATools::bracket_notation}.}
 }
 \value{
-\code{.tidy_iea_df} with \code{Production} changed to \verb{resources .resources_open product .resources_close} in the \code{flow} column
+A \code{.tidy_iea_df} with \code{Production} changed to \verb{resources .resources_open product .resources_close} in the \code{flow} column
 }
 \description{
 The IEA gives resource extraction in rows where the \code{Flow} is "\code{Production}".

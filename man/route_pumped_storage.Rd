@@ -11,8 +11,7 @@ route_pumped_storage(
   e_dot = IEATools::iea_cols$e_dot,
   eiou = IEATools::aggregation_flows$energy_industry_own_use,
   pumped_storage = IEATools::eiou_flows$pumped_storage_plants,
- 
-    main_act_producer_elect = IEATools::transformation_processes$main_activity_producer_electricity_plants,
+  main_act_producer_elect = IEATools::main_act_plants$main_act_prod_elect_plants,
   negzeropos = ".negzeropos"
 )
 }
@@ -35,7 +34,7 @@ Default is \code{IEATools::aggregation_flows$energy_industry_own_use}.}
 Default is \code{IEATools::eiou_flows$pumped_storage_plants}.}
 
 \item{main_act_producer_elect}{A string identifying "Main activity producer electricity plants" in the \code{flow} column of the \code{.tidy_iea_df}.
-Default is \code{IEATools::transformation_processes$main_activity_producer_electricity_plants}.}
+Default is \code{IEATools::main_act_plants$main_act_prod_elect_plants}.}
 
 \item{negzeropos}{The name of a temporary column created in \code{.tidy_iea_df}.
 Default is ".negzeropos".}
