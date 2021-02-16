@@ -320,6 +320,17 @@
 "primary_oil_products"
 
 
+#' Primary gas products
+#'
+#' A string vector containing names of products classified by the IEA as primary gas products.
+#' 
+#' @format A string vector with `r length(primary_gas_products)` entries.
+#' 
+#' @examples 
+#' primary_gas_products
+"primary_gas_products"
+
+
 #' Secondary oil products
 #'
 #' A string vector containing names of products classified by the IEA as `oil_and_oil_products` that are not `primary_coal_products`.
@@ -550,6 +561,19 @@
 "non_energy_flows"
 
 
+
+#' Main activity producer plants
+#'
+#' A string vector containing names of Main activity producer plants.
+#' 
+#' @format A string vector with `r length(main_act_plants)` entries.
+#' 
+#' @examples
+#' main_act_plants
+"main_act_plants"
+
+
+
 #' Aggregation flows
 #'
 #' A string vector containing names of industries whose purpose in IEA extended energy balance `Flow`s is to provide aggregations.
@@ -773,3 +797,16 @@
 #' @examples
 #' non_specified_flows
 "non_specified_flows"
+
+
+#' Energy Industry Own Use flows
+#'
+#' A string list containing named names of EIOU flows in the IEA World Energy Extended Balances data.
+#' Items in the list provide default values for EIOU flows function arguments
+#' throughout the `IEATools` package.
+#' 
+#' @format A string list with `r length(eiou_flows)` entries.
+#' 
+#' @examples
+#' eiou_flows
+"eiou_flows"

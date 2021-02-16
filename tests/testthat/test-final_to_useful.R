@@ -286,7 +286,7 @@ test_that("extend_to_useful works as expected", {
     dplyr::filter(Country == "ZAF", Year == 2000) %>% 
     magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
-    magrittr::extract("Other bituminous coal [of Coal mines]", "Chemical and petrochemical")
+    magrittr::extract("Other bituminous coal", "Chemical and petrochemical")
   
   alloc_Y_ZA_2000 <- C_data %>% 
     dplyr::filter(Country == "ZAF", Year == 2000) %>% 
@@ -294,7 +294,7 @@ test_that("extend_to_useful works as expected", {
     magrittr::extract2(1)
   
   C_heaters <- alloc_Y_ZA_2000 %>% 
-    magrittr::extract("Other bituminous coal [of Coal mines] -> Chemical and petrochemical", "Electric heaters -> MTH.200.C")
+    magrittr::extract("Other bituminous coal -> Chemical and petrochemical", "Electric heaters -> MTH.200.C")
   
   expected_OBC_into_heaters_in_chem <- OBC_to_Chem * C_heaters
 
@@ -324,7 +324,7 @@ test_that("extend_to_useful works as expected", {
     magrittr::extract("Electricity", "Chemical and petrochemical")
   
   C_OBC_light <- alloc_Y_ZA_2000 %>% 
-    magrittr::extract("Other bituminous coal [of Coal mines] -> Chemical and petrochemical", "Electric lights -> Light")
+    magrittr::extract("Other bituminous coal -> Chemical and petrochemical", "Electric lights -> Light")
   C_Elect_light <- alloc_Y_ZA_2000 %>% 
     magrittr::extract("Electricity -> Chemical and petrochemical", "Electric lights -> Light")
 

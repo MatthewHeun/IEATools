@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.46</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.47</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -139,15 +139,15 @@
     <p>A string vector containing entries for a united flow aggregation point and flow column in IEA order.</p>
     </div>
 
-    <pre class="usage"><span class='kw'>fap_flows</span></pre>
+    <pre class="usage"><span class='va'>fap_flows</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string list with 81</p>
+    <p>A string list with 84</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>fap_flows</span>
+    <pre class="examples"><div class='input'><span class='va'>fap_flows</span>
 </div><div class='output co'>#&gt;  [1] "Total primary energy supply_Production"                             
 #&gt;  [2] "Total primary energy supply_Coal mines"                             
 #&gt;  [3] "Total primary energy supply_Oil and gas extraction"                 
@@ -160,75 +160,78 @@
 #&gt; [10] "TFC compare_Statistical differences"                                
 #&gt; [11] "Transformation processes_Coal mines"                                
 #&gt; [12] "Transformation processes_Oil and gas extraction"                    
-#&gt; [13] "Transformation processes_Main activity producer electricity plants" 
-#&gt; [14] "Transformation processes_Autoproducer electricity plants"           
-#&gt; [15] "Transformation processes_Main activity producer CHP plants"         
-#&gt; [16] "Transformation processes_Autoproducer CHP plants"                   
-#&gt; [17] "Transformation processes_Main activity producer heat plants"        
-#&gt; [18] "Transformation processes_Autoproducer heat plants"                  
-#&gt; [19] "Transformation processes_Heat pumps"                                
-#&gt; [20] "Transformation processes_Electric boilers"                          
-#&gt; [21] "Transformation processes_Chemical heat for electricity production"  
-#&gt; [22] "Transformation processes_Blast furnaces"                            
-#&gt; [23] "Transformation processes_Gas works"                                 
-#&gt; [24] "Transformation processes_Coke ovens"                                
-#&gt; [25] "Transformation processes_Patent fuel plants"                        
-#&gt; [26] "Transformation processes_BKB/peat briquette plants"                 
-#&gt; [27] "Transformation processes_Oil refineries"                            
-#&gt; [28] "Transformation processes_Petrochemical plants"                      
-#&gt; [29] "Transformation processes_Coal liquefaction plants"                  
-#&gt; [30] "Transformation processes_Gas-to-liquids (GTL) plants"               
-#&gt; [31] "Transformation processes_For blended natural gas"                   
-#&gt; [32] "Transformation processes_Charcoal production plants"                
-#&gt; [33] "Transformation processes_Non-specified"                             
-#&gt; [34] "Energy industry own use_Coal mines"                                 
-#&gt; [35] "Energy industry own use_Oil and gas extraction"                     
-#&gt; [36] "Energy industry own use_Blast furnaces"                             
-#&gt; [37] "Energy industry own use_Gas works"                                  
-#&gt; [38] "Energy industry own use_Gasification plants for biogases"           
-#&gt; [39] "Energy industry own use_Coke ovens"                                 
-#&gt; [40] "Energy industry own use_Patent fuel plants"                         
-#&gt; [41] "Energy industry own use_BKB/peat briquette plants"                  
-#&gt; [42] "Energy industry own use_Oil refineries"                             
-#&gt; [43] "Energy industry own use_Coal liquefaction plants"                   
-#&gt; [44] "Energy industry own use_Liquefaction (LNG) / regasification plants" 
-#&gt; [45] "Energy industry own use_Gas-to-liquids (GTL) plants"                
-#&gt; [46] "Energy industry own use_Own use in electricity, CHP and heat plants"
-#&gt; [47] "Energy industry own use_Pumped storage plants"                      
-#&gt; [48] "Energy industry own use_Nuclear industry"                           
-#&gt; [49] "Energy industry own use_Main activity producer electricity plants"  
-#&gt; [50] "Energy industry own use_Charcoal production plants"                 
-#&gt; [51] "Energy industry own use_Non-specified"                              
-#&gt; [52] "TFC compare_Losses"                                                 
-#&gt; [53] "Industry_Mining and quarrying"                                      
-#&gt; [54] "Industry_Construction"                                              
-#&gt; [55] "Industry_Iron and steel"                                            
-#&gt; [56] "Industry_Chemical and petrochemical"                                
-#&gt; [57] "Industry_Non-ferrous metals"                                        
-#&gt; [58] "Industry_Non-metallic minerals"                                     
-#&gt; [59] "Industry_Transport equipment"                                       
-#&gt; [60] "Industry_Machinery"                                                 
-#&gt; [61] "Industry_Food and tobacco"                                          
-#&gt; [62] "Industry_Paper, pulp and printing"                                  
-#&gt; [63] "Industry_Wood and wood products"                                    
-#&gt; [64] "Industry_Textile and leather"                                       
-#&gt; [65] "Industry_Industry not elsewhere specified"                          
-#&gt; [66] "Transport_World aviation bunkers"                                   
-#&gt; [67] "Transport_Domestic aviation"                                        
-#&gt; [68] "Transport_Road"                                                     
-#&gt; [69] "Transport_Rail"                                                     
-#&gt; [70] "Transport_Pipeline transport"                                       
-#&gt; [71] "Transport_World marine bunkers"                                     
-#&gt; [72] "Transport_Domestic navigation"                                      
-#&gt; [73] "Transport_Non-specified (transport)"                                
-#&gt; [74] "Other_Residential"                                                  
-#&gt; [75] "Other_Commercial and public services"                               
-#&gt; [76] "Other_Agriculture/forestry"                                         
-#&gt; [77] "Other_Fishing"                                                      
-#&gt; [78] "Other_Final consumption not elsewhere specified"                    
-#&gt; [79] "Non-energy use_Non-energy use industry/transformation/energy"       
-#&gt; [80] "Non-energy use_Non-energy use in transport"                         
-#&gt; [81] "Non-energy use_Non-energy use in other"                             </div></pre>
+#&gt; [13] "Transformation processes_Nuclear industry"                          
+#&gt; [14] "Transformation processes_Main activity producer electricity plants" 
+#&gt; [15] "Transformation processes_Autoproducer electricity plants"           
+#&gt; [16] "Transformation processes_Main activity producer CHP plants"         
+#&gt; [17] "Transformation processes_Autoproducer CHP plants"                   
+#&gt; [18] "Transformation processes_Main activity producer heat plants"        
+#&gt; [19] "Transformation processes_Autoproducer heat plants"                  
+#&gt; [20] "Transformation processes_Heat pumps"                                
+#&gt; [21] "Transformation processes_Electric boilers"                          
+#&gt; [22] "Transformation processes_Chemical heat for electricity production"  
+#&gt; [23] "Transformation processes_Blast furnaces"                            
+#&gt; [24] "Transformation processes_Gas works"                                 
+#&gt; [25] "Transformation processes_Coke ovens"                                
+#&gt; [26] "Transformation processes_Patent fuel plants"                        
+#&gt; [27] "Transformation processes_BKB/peat briquette plants"                 
+#&gt; [28] "Transformation processes_Oil refineries"                            
+#&gt; [29] "Transformation processes_Petrochemical plants"                      
+#&gt; [30] "Transformation processes_Coal liquefaction plants"                  
+#&gt; [31] "Transformation processes_Gas-to-liquids (GTL) plants"               
+#&gt; [32] "Transformation processes_For blended natural gas"                   
+#&gt; [33] "Transformation processes_Charcoal production plants"                
+#&gt; [34] "Transformation processes_Non-specified"                             
+#&gt; [35] "Energy industry own use_Coal mines"                                 
+#&gt; [36] "Energy industry own use_Oil and gas extraction"                     
+#&gt; [37] "Energy industry own use_Blast furnaces"                             
+#&gt; [38] "Energy industry own use_Gas works"                                  
+#&gt; [39] "Energy industry own use_Gasification plants for biogases"           
+#&gt; [40] "Energy industry own use_Coke ovens"                                 
+#&gt; [41] "Energy industry own use_Patent fuel plants"                         
+#&gt; [42] "Energy industry own use_BKB/peat briquette plants"                  
+#&gt; [43] "Energy industry own use_Oil refineries"                             
+#&gt; [44] "Energy industry own use_Coal liquefaction plants"                   
+#&gt; [45] "Energy industry own use_Liquefaction (LNG) / regasification plants" 
+#&gt; [46] "Energy industry own use_Gas-to-liquids (GTL) plants"                
+#&gt; [47] "Energy industry own use_Own use in electricity, CHP and heat plants"
+#&gt; [48] "Energy industry own use_Pumped storage plants"                      
+#&gt; [49] "Energy industry own use_Nuclear industry"                           
+#&gt; [50] "Energy industry own use_Main activity producer electricity plants"  
+#&gt; [51] "Energy industry own use_Main activity producer CHP plants"          
+#&gt; [52] "Energy industry own use_Main activity producer heat plants"         
+#&gt; [53] "Energy industry own use_Charcoal production plants"                 
+#&gt; [54] "Energy industry own use_Non-specified"                              
+#&gt; [55] "TFC compare_Losses"                                                 
+#&gt; [56] "Industry_Mining and quarrying"                                      
+#&gt; [57] "Industry_Construction"                                              
+#&gt; [58] "Industry_Iron and steel"                                            
+#&gt; [59] "Industry_Chemical and petrochemical"                                
+#&gt; [60] "Industry_Non-ferrous metals"                                        
+#&gt; [61] "Industry_Non-metallic minerals"                                     
+#&gt; [62] "Industry_Transport equipment"                                       
+#&gt; [63] "Industry_Machinery"                                                 
+#&gt; [64] "Industry_Food and tobacco"                                          
+#&gt; [65] "Industry_Paper, pulp and printing"                                  
+#&gt; [66] "Industry_Wood and wood products"                                    
+#&gt; [67] "Industry_Textile and leather"                                       
+#&gt; [68] "Industry_Industry not elsewhere specified"                          
+#&gt; [69] "Transport_World aviation bunkers"                                   
+#&gt; [70] "Transport_Domestic aviation"                                        
+#&gt; [71] "Transport_Road"                                                     
+#&gt; [72] "Transport_Rail"                                                     
+#&gt; [73] "Transport_Pipeline transport"                                       
+#&gt; [74] "Transport_World marine bunkers"                                     
+#&gt; [75] "Transport_Domestic navigation"                                      
+#&gt; [76] "Transport_Non-specified (transport)"                                
+#&gt; [77] "Other_Residential"                                                  
+#&gt; [78] "Other_Commercial and public services"                               
+#&gt; [79] "Other_Agriculture/forestry"                                         
+#&gt; [80] "Other_Fishing"                                                      
+#&gt; [81] "Other_Final consumption not elsewhere specified"                    
+#&gt; [82] "Non-energy use_Non-energy use industry/transformation/energy"       
+#&gt; [83] "Non-energy use_Non-energy use in transport"                         
+#&gt; [84] "Non-energy use_Non-energy use in other"                             </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

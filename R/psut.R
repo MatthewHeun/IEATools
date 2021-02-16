@@ -32,7 +32,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
                                       product = IEATools::iea_cols$product, 
                                       e_dot = IEATools::iea_cols$e_dot,
                                       unit = IEATools::iea_cols$unit,
-                                      matnames = IEATools::iea_cols$mat_meta_cols$matnames,
+                                      matnames = IEATools::mat_meta_cols$matnames,
                                       # Row and product types
                                       product_type = IEATools::row_col_types$product,
                                       unit_type = IEATools::row_col_types$unit, 
@@ -42,8 +42,10 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
                                       .val = ".val", 
                                       .rowtype = ".rowtype", 
                                       .coltype = ".coltype"){
+  
   grouping_vars <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, unit, matnames)
   matsindf::verify_cols_missing(.tidy_iea_df, c(s_units, .val, .rowtype, .coltype))
+  
   .tidy_iea_df %>% 
     dplyr::group_by(!!!grouping_vars) %>% 
     dplyr::select(!!!grouping_vars, .data[[product]], .data[[unit]]) %>%
@@ -269,6 +271,9 @@ add_row_col_meta <- function(.tidy_iea_df,
 #' 
 #' This function ensures that all energy flow numbers are positive
 #' before creating the matrices.
+#' 
+#' Note that the `.tidy_iea_df` is ungrouped using the function 
+#' `dplyr::ungroup()` prior to undergoing any modification.
 #'
 #' @param .tidy_iea_df a data frame containing `matnames` and several other columns
 #' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
@@ -303,7 +308,9 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
                                   # Name of output column of matrices
                                   matvals = IEATools::psut_cols$matvals){
   matsindf::verify_cols_missing(.tidy_iea_df, matvals)
+  
   .tidy_iea_df %>% 
+    dplyr::ungroup() %>% 
     dplyr::mutate(
       # All values in the matrices must be positive, but for Epsilon matrix terms.
       "{e_dot}" := dplyr::case_when(

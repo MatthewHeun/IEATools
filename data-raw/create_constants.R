@@ -260,6 +260,16 @@ secondary_oil_products <- setdiff(oil_and_oil_products, primary_oil_products) %>
 usethis::use_data(secondary_oil_products, overwrite = TRUE)
 
 
+#
+# Natural gas
+#
+
+primary_gas_products <- list(natural_gas = "Natural gas") %>% 
+  unlist() %>% 
+  as.list()
+usethis::use_data(primary_gas_products, overwrite = TRUE)
+
+
 # 
 # Renewables
 # 
@@ -345,6 +355,36 @@ transformation_processes <- list(main_activity_producer_electricity_plants = "Ma
                                  charcoal_production_plants = "Charcoal production plants",
                                  non_specified_transformation = "Non-specified (transformation)")
 usethis::use_data(transformation_processes, overwrite = TRUE)
+
+
+
+main_act_plants <- list(main_act_prod_elect_plants = "Main activity producer electricity plants",
+                        main_act_prod_chp_plants = "Main activity producer CHP plants",
+                        main_act_prod_heat_plants = "Main activity producer heat plants",
+                        autoprod_elect_plants = "Autoproducer electricity plants",
+                        autoprod_heat_plants = "Autoproducer heat plants",
+                        autoprod_chp_plants = "Autoproducer CHP plants")
+usethis::use_data(main_act_plants, overwrite = TRUE)
+
+
+eiou_flows <- list(bkb_peat_briquette_plants = "BKB/peat briquette plants",
+                   blast_furnaces = "Blast furnaces",
+                   charcoal_plants = "Charcoal production plants",
+                   coal_liquefaction_plants = "Coal liquefaction plants",
+                   coal_mines = "Coal mines",
+                   coke_ovens = "Coke ovens",
+                   gas_work = "Gas works",
+                   gas_to_liquids_plants = "Gas-to-liquids (GTL) plants",
+                   gasification_plants = "Gasification plants for biogases",
+                   liquefaction_regasification_plants = "Liquefaction (LNG) / regasification plants",
+                   non_specified_eiou = "Non-specified (energy)",
+                   nuclear_industry = "Nuclear industry",
+                   oil_and_gas_extraction = "Oil and gas extraction",
+                   oil_refineries = "Oil refineries",
+                   own_use_elect_chp_heat_plants = "Own use in electricity, CHP and heat plants",
+                   patent_fuel_plants = "Patent fuel plants",
+                   pumped_storage_plants = "Pumped storage plants")
+usethis::use_data(eiou_flows, overwrite = TRUE)
 
 
 tfc_flows <- list(industry = "Industry",
@@ -574,10 +614,16 @@ fap_flows <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   # Add entries for those, too.
   insert_after(after = "TFC compare_Statistical differences", 
                values = c("Transformation processes_Coal mines", "Transformation processes_Oil and gas extraction")) %>% 
+  # Inserting Nuclear industry as a transformation process
+  insert_after(after = "Transformation processes_Oil and gas extraction",
+               values = "Transformation processes_Nuclear industry") %>% 
   # Energy industry own use_Own use in electricity, CHP and heat plants, 
   # Pumped storage plants, and Nuclear industry is reassigned to Main activity producer electricity plants in specify_tp_eiou()
   insert_after(after = "Energy industry own use_Nuclear industry", 
-               values = "Energy industry own use_Main activity producer electricity plants")
+               values = "Energy industry own use_Main activity producer electricity plants") %>% 
+  # Inserting Main activity producer CHP plants and Main activity producer heat plants as EIOU flows
+  insert_after(after = "Energy industry own use_Main activity producer electricity plants",
+               values = c("Energy industry own use_Main activity producer CHP plants", "Energy industry own use_Main activity producer heat plants"))
 usethis::use_data(fap_flows, overwrite = TRUE)
 
 
