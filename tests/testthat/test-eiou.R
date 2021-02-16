@@ -88,7 +88,7 @@ test_that("gather_producer_autoproducer works", {
                    Country == "A",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -99,7 +99,7 @@ test_that("gather_producer_autoproducer works", {
                    Country == "A",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
-                   Product == "Hard coal (if no detail) [of Coal mines]"
+                   Product == "Hard coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -110,7 +110,7 @@ test_that("gather_producer_autoproducer works", {
                    Country == "A",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
-                   Product == "Hard coal (if no detail) [of Coal mines]"
+                   Product == "Hard coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -121,7 +121,7 @@ test_that("gather_producer_autoproducer works", {
                    Country == "B",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer heat plants",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -219,7 +219,7 @@ test_that("route_own_use_elect_chp_heat works", {
                    Country == "A",
                    Flow.aggregation.point == "Energy industry own use",
                    Flow == "Main activity producer CHP plants",
-                   Product == "Anthracite [of Coal mines]") %>%
+                   Product == "Anthracite") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -5.82,
@@ -252,7 +252,7 @@ test_that("route_own_use_elect_chp_heat works", {
                    Country == "A",
                    Flow.aggregation.point == "Energy industry own use",
                    Flow == "Main activity producer electricity plants",
-                   Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                   Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -947.1481,
@@ -263,7 +263,7 @@ test_that("route_own_use_elect_chp_heat works", {
                    Country == "A",
                    Flow.aggregation.point == "Energy industry own use",
                    Flow == "Main activity producer heat plants",
-                   Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                   Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -11.1111,
@@ -317,7 +317,7 @@ test_that("route_own_use_elect_chp_heat works", {
   
   fourth_test %>% 
     dplyr::filter(Country == "B",
-                  Product == "Natural gas [of Oil and gas extraction]",
+                  Product == "Natural gas",
                   Flow.aggregation.point == "Energy industry own use",
                   Flow == "Main activity producer heat plants") %>% 
     magrittr::extract2("E.dot") %>% 
@@ -592,7 +592,7 @@ test_that("route_non_specified_eiou works", {
                  dplyr::filter(Country == "A",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Blast furnaces",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -3.3299,
@@ -602,7 +602,7 @@ test_that("route_non_specified_eiou works", {
                  dplyr::filter(Country == "A",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Coal mines",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -4.7571,
@@ -612,7 +612,7 @@ test_that("route_non_specified_eiou works", {
                  dplyr::filter(Country == "A",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Main activity producer electricity plants",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                (-947.148148 - 104.2088),
@@ -622,7 +622,7 @@ test_that("route_non_specified_eiou works", {
                  dplyr::filter(Country == "A",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Main activity producer CHP plants",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                (-40.740741 - 4.7621),
@@ -632,7 +632,7 @@ test_that("route_non_specified_eiou works", {
                  dplyr::filter(Country == "A",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Oil refineries",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -28.54263,
@@ -646,7 +646,7 @@ test_that("route_non_specified_eiou works", {
                  dplyr::filter(Country == "B",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Blast furnaces",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -23.9795,
@@ -656,7 +656,7 @@ test_that("route_non_specified_eiou works", {
                  dplyr::filter(Country == "B",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Blast furnaces",
-                               Product == "Brown coal (if no detail) [of Coal mines]") %>%
+                               Product == "Brown coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -24.0816,
@@ -666,7 +666,7 @@ test_that("route_non_specified_eiou works", {
                  dplyr::filter(Country == "B",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Coke ovens",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -53.95407,
@@ -676,7 +676,7 @@ test_that("route_non_specified_eiou works", {
                  dplyr::filter(Country == "B",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Main activity producer electricity plants",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                (-50.4712 - 259.846827),
@@ -686,7 +686,7 @@ test_that("route_non_specified_eiou works", {
                  dplyr::filter(Country == "B",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Main activity producer heat plants",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                (-18.75406 - 96.553611),
@@ -751,7 +751,7 @@ test_that("route_non_specified_tp works", {
       Ledger.side = "Supply",
       Flow.aggregation.point = "Transformation processes",
       Flow = "Oil refineries",
-      Product = "Brown coal (if no detail) [of Coal mines]",
+      Product = "Brown coal (if no detail)",
       Unit = "ktoe",
       E.dot = 67
     ) %>%
@@ -764,7 +764,7 @@ test_that("route_non_specified_tp works", {
                    Country == "A",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
-                   Product == "Hard coal (if no detail) [of Coal mines]"
+                   Product == "Hard coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -776,7 +776,7 @@ test_that("route_non_specified_tp works", {
                    Country == "A",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
-                   Product == "Hard coal (if no detail) [of Coal mines]"
+                   Product == "Hard coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -788,7 +788,7 @@ test_that("route_non_specified_tp works", {
                    Country == "A",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer heat plants",
-                   Product == "Hard coal (if no detail) [of Coal mines]"
+                   Product == "Hard coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -801,7 +801,7 @@ test_that("route_non_specified_tp works", {
                    Country == "B",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer heat plants",
-                   Product == "Hard coal (if no detail) [of Coal mines]"
+                   Product == "Hard coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -813,7 +813,7 @@ test_that("route_non_specified_tp works", {
                    Country == "B",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
-                   Product == "Hard coal (if no detail) [of Coal mines]"
+                   Product == "Hard coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -827,7 +827,7 @@ test_that("route_non_specified_tp works", {
                    Country == "A",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -839,7 +839,7 @@ test_that("route_non_specified_tp works", {
                    Country == "A",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -851,7 +851,7 @@ test_that("route_non_specified_tp works", {
                    Country == "A",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer heat plants",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -865,7 +865,7 @@ test_that("route_non_specified_tp works", {
                    Country == "B",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -877,7 +877,7 @@ test_that("route_non_specified_tp works", {
                    Country == "B",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -889,7 +889,7 @@ test_that("route_non_specified_tp works", {
                    Country == "B",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer heat plants",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -901,7 +901,7 @@ test_that("route_non_specified_tp works", {
                    Country == "B",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Oil refineries",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -968,7 +968,7 @@ test_that("route_non_specified_flows works", {
       Ledger.side = "Supply",
       Flow.aggregation.point = "Transformation processes",
       Flow = "Oil refineries",
-      Product = "Brown coal (if no detail) [of Coal mines]",
+      Product = "Brown coal (if no detail)",
       Unit = "ktoe",
       E.dot = 67
     ) %>%
@@ -980,7 +980,7 @@ test_that("route_non_specified_flows works", {
                  dplyr::filter(Country == "A",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Blast furnaces",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -3.3299,
@@ -990,7 +990,7 @@ test_that("route_non_specified_flows works", {
                  dplyr::filter(Country == "A",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Coal mines",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -4.7571,
@@ -1000,7 +1000,7 @@ test_that("route_non_specified_flows works", {
                  dplyr::filter(Country == "A",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Main activity producer electricity plants",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                (-947.148148 - 104.2088),
@@ -1010,7 +1010,7 @@ test_that("route_non_specified_flows works", {
                  dplyr::filter(Country == "A",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Main activity producer CHP plants",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                (-40.740741 - 4.7621),
@@ -1020,7 +1020,7 @@ test_that("route_non_specified_flows works", {
                  dplyr::filter(Country == "A",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Oil refineries",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -28.54263,
@@ -1032,7 +1032,7 @@ test_that("route_non_specified_flows works", {
                  dplyr::filter(Country == "B",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Blast furnaces",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -23.9795,
@@ -1042,7 +1042,7 @@ test_that("route_non_specified_flows works", {
                  dplyr::filter(Country == "B",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Blast furnaces",
-                               Product == "Brown coal (if no detail) [of Coal mines]") %>%
+                               Product == "Brown coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -24.0816,
@@ -1052,7 +1052,7 @@ test_that("route_non_specified_flows works", {
                  dplyr::filter(Country == "B",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Coke ovens",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -53.95407,
@@ -1062,7 +1062,7 @@ test_that("route_non_specified_flows works", {
                  dplyr::filter(Country == "B",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Main activity producer electricity plants",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                (-50.4712 - 259.846827),
@@ -1072,7 +1072,7 @@ test_that("route_non_specified_flows works", {
                  dplyr::filter(Country == "B",
                                Flow.aggregation.point == "Energy industry own use",
                                Flow == "Main activity producer heat plants",
-                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                               Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                (-18.75406 - 96.553611),
@@ -1086,7 +1086,7 @@ test_that("route_non_specified_flows works", {
                    Country == "A",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
-                   Product == "Hard coal (if no detail) [of Coal mines]"
+                   Product == "Hard coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -1098,7 +1098,7 @@ test_that("route_non_specified_flows works", {
                    Country == "A",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
-                   Product == "Hard coal (if no detail) [of Coal mines]"
+                   Product == "Hard coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -1110,7 +1110,7 @@ test_that("route_non_specified_flows works", {
                    Country == "A",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer heat plants",
-                   Product == "Hard coal (if no detail) [of Coal mines]"
+                   Product == "Hard coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -1123,7 +1123,7 @@ test_that("route_non_specified_flows works", {
                    Country == "B",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer heat plants",
-                   Product == "Hard coal (if no detail) [of Coal mines]"
+                   Product == "Hard coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -1135,7 +1135,7 @@ test_that("route_non_specified_flows works", {
                    Country == "B",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
-                   Product == "Hard coal (if no detail) [of Coal mines]"
+                   Product == "Hard coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -1149,7 +1149,7 @@ test_that("route_non_specified_flows works", {
                    Country == "A",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -1161,7 +1161,7 @@ test_that("route_non_specified_flows works", {
                    Country == "A",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -1173,7 +1173,7 @@ test_that("route_non_specified_flows works", {
                    Country == "A",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer heat plants",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -1187,7 +1187,7 @@ test_that("route_non_specified_flows works", {
                    Country == "B",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -1199,7 +1199,7 @@ test_that("route_non_specified_flows works", {
                    Country == "B",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -1211,7 +1211,7 @@ test_that("route_non_specified_flows works", {
                    Country == "B",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Main activity producer heat plants",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -1223,7 +1223,7 @@ test_that("route_non_specified_flows works", {
                    Country == "B",
                    Flow.aggregation.point == "Transformation processes",
                    Flow == "Oil refineries",
-                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   Product == "Brown coal (if no detail)"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
