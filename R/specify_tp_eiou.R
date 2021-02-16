@@ -634,9 +634,9 @@ add_nuclear_industry <- function(.tidy_iea_df,
 #' See `route_non_specified_eiou` and `route_non_specified_tp` functions documentations for additional details.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
-#' @param is_non_specified_eiou_routed A boolean that indicates whether non specified EIOU flows should be routed to existing
+#' @param route_non_specified_eiou A boolean that indicates whether non specified EIOU flows should be routed to existing
 #'                                     industries or kept as non specified.
-#' @param is_non_specified_tp_routed A boolean that indicates whether non specified transformation processes flows should be routed to existing
+#' @param route_non_specified_tp A boolean that indicates whether non specified transformation processes flows should be routed to existing
 #'                                   industries or kept as non specified.
 #'
 #' @return A modified version of the `.tidy_iea_df` with non specified flows routed to existing industries.
@@ -670,7 +670,7 @@ route_non_specified_flows <- function(.tidy_iea_df,
 #' Note that the `routing_non_specified_eiou` parameter enables to switch on and off the routing of the non-specified EIOU flow.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
-#' @param routing_non_specified_eiou A boolean indicating whether non-specified EIOU flows should be redirected to other existing industries.
+#' @param route_non_specified_eiou A boolean indicating whether non-specified EIOU flows should be redirected to other existing industries.
 #'                                   If FALSE, the function returns the input data frame.
 #'                                   Default is TRUE.
 #' @param country The name of the country column in the `.tidy_iea_df`.
@@ -875,7 +875,7 @@ route_non_specified_eiou <- function(.tidy_iea_df,
 #' Note that the `routing_non_specified_eiou` parameter enables to switch on and off the routing of the non-specified EIOU flow.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
-#' @param routing_non_specified_tp A boolean indicating whether non-specified EIOU flows should be redirected to other existing industries.
+#' @param route_non_specified_tp A boolean indicating whether non-specified EIOU flows should be redirected to other existing industries.
 #'                                 If FALSE, the function returns the input data frame.
 #'                                 Default is TRUE.
 #' @param country The name of the country column in the `.tidy_iea_df`.

@@ -1,6 +1,4 @@
 
-
-
 #' Specify primary production industries
 #' 
 #' The IEA extended energy balances include 
@@ -65,7 +63,7 @@
 #'                                E.g., the Crude oil resource will be called "Resources \[of Crude oil\]".
 #'                                Default is `IEATools::of_notation`.
 #'
-#' @return `.tidy_iea_df` with adjusted production information for primary energy 
+#' @return A `.tidy_iea_df` with adjusted production information for primary energy 
 #'         for both coal and coal products and oil and gas extraction
 #' 
 #' @export
@@ -205,15 +203,19 @@ specify_primary_production <- function(.tidy_iea_df,
 #' If this function is called first, 
 #' EIOU will not be accounted correctly.
 #'
-#' @param .tidy_iea_df an IEA data frame whose columns have been renamed by `rename_iea_df_cols()`
-#' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "Flow".
-#' @param production a string identifying production in the flow column. Default is "Production".
-#' @param resources a string identifying resource industries to be added to `.tidy_iea_df`. 
-#'        Default is "Resources".
-#' @param product the name of the product column in `.tidy_iea_df`.  Default is "Product".
-#' @param notation a list of specification notations. Default is `IEATools::bracket_notation`.
+#' @param .tidy_iea_df An IEA data frame whose columns have been renamed by `rename_iea_df_cols()`
+#' @param flow The name of the flow column in `.tidy_iea_df`.  
+#'             Default is `IEATools::iea_cols$flow`.
+#' @param production A string identifying production in the flow column. 
+#'                   Default is `IEATools::tpes_flows$production`.
+#' @param resources A string identifying resource industries to be added to `.tidy_iea_df`. 
+#'                  Default is `IEATools::tpes_flows$resources`.
+#' @param product The name of the product column in `.tidy_iea_df`. 
+#'                Default is `IEATools::iea_cols$product`.
+#' @param notation A list of specification notations. 
+#'                 Default is `IEATools::bracket_notation`.
 #'
-#' @return `.tidy_iea_df` with `Production` changed to `resources .resources_open product .resources_close` in the `flow` column
+#' @return A `.tidy_iea_df` with `Production` changed to `resources .resources_open product .resources_close` in the `flow` column
 #' 
 #' @export
 #'
@@ -222,10 +224,10 @@ specify_primary_production <- function(.tidy_iea_df,
 #'   specify_primary_production() %>% 
 #'   specify_production_to_resources()
 specify_production_to_resources <- function(.tidy_iea_df, 
-                                            flow = "Flow",
-                                            product = "Product",
-                                            production = "Production",
-                                            resources = "Resources",
+                                            flow = IEATools::iea_cols$flow,
+                                            product = IEATools::iea_cols$product,
+                                            production = IEATools::tpes_flows$production,
+                                            resources = IEATools::tpes_flows$resources,
                                             notation = IEATools::from_notation){
   # Take any remaining "Production" rows and convert them to Resources (Product).
   .tidy_iea_df %>% 
@@ -434,7 +436,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #' @param product the name of the product column in `.tidy_iea_df`. Default is "`Product`".
 #' @param e_dot the name of the energy rate column in `.tidy_iea_df`. Default is "`E.dot`".
 #'
-#' @return the `grouping_vars` and the `flow` column, 
+#' @return The `grouping_vars` and the `flow` column, 
 #'         with one row for each industry that is a transformation sink or source.
 #'         Industries that are transformation sinks or sources are named in the `flow` column.
 #' 
@@ -617,8 +619,8 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #' @param route_non_specified_tp Boolean stating whether non-specified transformation processes flows should be routed to existing industries
 #'                               Default is TRUE.
 #'
-#' @return an enhanced and corrected version of `.tidy_iea_df` 
-#'         that is ready for physical supply-use table (PSUT) analysis.
+#' @return An enhanced and corrected version of `.tidy_iea_df` 
+#'         That is ready for physical supply-use table (PSUT) analysis.
 #' 
 #' @export
 #'
