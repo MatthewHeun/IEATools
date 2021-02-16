@@ -31,6 +31,10 @@ route_non_specified_tp(
 \arguments{
 \item{.tidy_iea_df}{The \code{.tidy_iea_df} which flows need to be specified.}
 
+\item{route_non_specified_tp}{A boolean indicating whether non-specified EIOU flows should be redirected to other existing industries.
+If FALSE, the function returns the input data frame.
+Default is TRUE.}
+
 \item{country}{The name of the country column in the \code{.tidy_iea_df}.
 Default is \code{IEATools::iea_cols$country}.}
 
@@ -87,10 +91,6 @@ Default is ".Share_input_output_by_prod_per_tp_From_Func".}
 
 \item{destination_flow}{The name of a temporary column added to the data frame.
 Default is ".destination_flow".}
-
-\item{routing_non_specified_tp}{A boolean indicating whether non-specified EIOU flows should be redirected to other existing industries.
-If FALSE, the function returns the input data frame.
-Default is TRUE.}
 }
 \value{
 A modified version of the \code{.tidy_iea_df} with non-specified transformation processes flows routes to existing industries.

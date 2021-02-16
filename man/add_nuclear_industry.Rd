@@ -20,12 +20,9 @@ add_nuclear_industry(
   eiou = IEATools::aggregation_flows$energy_industry_own_use,
   transformation_processes = IEATools::aggregation_flows$transformation_processes,
   nuclear_industry = IEATools::eiou_flows$nuclear_industry,
- 
-    main_act_producer_elect = IEATools::transformation_processes$main_activity_producer_electricity_plants,
- 
-    main_act_producer_chp = IEATools::transformation_processes$main_activity_producer_CHP_plants,
- 
-    autoproducer_elect = IEATools::transformation_processes$autoproducer_electricity_plants,
+  main_act_producer_elect = IEATools::main_act_plants$main_act_prod_elect_plants,
+  main_act_producer_chp = IEATools::main_act_plants$main_act_prod_chp_plants,
+  autoproducer_elect = IEATools::main_act_plants$autoprod_elect_plants,
   autoproducer_chp = IEATools::transformation_processes$autoproducer_CHP_plants,
   nuclear = "Nuclear",
   electricity = "Electricity",
@@ -83,13 +80,13 @@ Default is \code{IEATools::aggregation_flows$transformation_processes}.}
 Default is \code{IEATools::eiou_flows$nuclear_industry}.}
 
 \item{main_act_producer_elect}{A string identifying "Main activity producer electricity plants" in the \code{flow} column of the \code{.tidy_iea_df}.
-Default is \code{IEATools::transformation_processes$main_activity_producer_electricity_plants}.}
+Default is \code{IEATools::main_act_plants$main_act_prod_elect_plants}.}
 
 \item{main_act_producer_chp}{A string identifying "Main activity producer CHP plants" in the \code{flow} column of the \code{.tidy_iea_df}.
-Default is \code{IEATools::transformation_processes$main_activity_producer_CHP_plants}.}
+Default is \code{IEATools::main_act_plants$main_act_prod_chp_plants}.}
 
 \item{autoproducer_elect}{A string identifying "Autoproducer electricity plants" in the \code{flow} column of the \code{.tidy_iea_df}.
-Default is \code{IEATools::transformation_processes$autoproducer_electricity_plants}.}
+Default is \code{IEATools::main_act_plants$autoprod_elect_plants}.}
 
 \item{autoproducer_chp}{A string identifying "Autoproducer CHP plants" in the \code{flow} column of the \code{.tidy_iea_df}.
 Default is \code{IEATools::transformation_processes$autoproducer_CHP_plants}.}

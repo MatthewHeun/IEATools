@@ -26,8 +26,8 @@ Default is TRUE.}
 Default is TRUE.}
 }
 \value{
-an enhanced and corrected version of \code{.tidy_iea_df}
-that is ready for physical supply-use table (PSUT) analysis.
+An enhanced and corrected version of \code{.tidy_iea_df}
+That is ready for physical supply-use table (PSUT) analysis.
 }
 \description{
 This is a convenience function.
