@@ -75,7 +75,7 @@ emits helpful error messages that point the analyst to the location of the probl
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.46</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.47</span>
       </span>
     </div>
 
@@ -83,7 +83,7 @@ emits helpful error messages that point the analyst to the location of the probl
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -145,19 +145,19 @@ This function checks for typical errors and
 emits helpful error messages that point the analyst to the location of the problem.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>check_fu_allocation_data</span>(
-  <span class='kw'>.fu_allocation_table</span>,
-  country = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>country</span>,
-  year = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>year</span>,
-  flow_aggregation_point = <span class='kw'>IEATools</span>::<span class='kw'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='kw'>flow_aggregation_point</span>,
-  machine = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>machine</span>,
-  ef_product = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>ef_product</span>,
-  eu_product = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>eu_product</span>,
-  destination = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>destination</span>,
-  quantity = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>quantity</span>,
-  .values = <span class='kw'>IEATools</span>::<span class='kw'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='kw'>.values</span>,
-  non_energy_machine = <span class='st'>"Non-energy"</span>
-)</pre>
+    <pre class="usage"><span class='fu'>check_fu_allocation_data</span><span class='op'>(</span>
+  <span class='va'>.fu_allocation_table</span>,
+  country <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>country</span>,
+  year <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>year</span>,
+  flow_aggregation_point <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow_aggregation_point</span>,
+  machine <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>machine</span>,
+  ef_product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>ef_product</span>,
+  eu_product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eu_product</span>,
+  destination <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>destination</span>,
+  quantity <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>quantity</span>,
+  .values <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>.values</span>,
+  non_energy_machine <span class='op'>=</span> <span class='st'>"Non-energy"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -195,8 +195,8 @@ This check is performed on a tidy version of <code>.fu_allocation_table</code>.<
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span>() <span class='op'>%&gt;%</span> 
-  <span class='fu'>check_fu_allocation_data</span>()
+    <pre class="examples"><div class='input'><span class='fu'><a href='load_fu_allocation_data.html'>load_fu_allocation_data</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>check_fu_allocation_data</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
