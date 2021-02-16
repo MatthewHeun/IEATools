@@ -561,6 +561,19 @@
 "non_energy_flows"
 
 
+
+#' Main activity producer plants
+#'
+#' A string vector containing names of Main activity producer plants.
+#' 
+#' @format A string vector with `r length(main_act_plants)` entries.
+#' 
+#' @examples
+#' main_act_plants
+"main_act_plants"
+
+
+
 #' Aggregation flows
 #'
 #' A string vector containing names of industries whose purpose in IEA extended energy balance `Flow`s is to provide aggregations.
