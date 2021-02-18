@@ -1,3 +1,7 @@
+# IEATools 0.1.48 (2012-02-18)
+
+* Minor issue fixed regarding the `coal_and_coal_products` constant.
+
 # IEATools 0.1.47 (2012-02-16)
 
 * New `specify_all()` function coded, so that it now splits non-specified

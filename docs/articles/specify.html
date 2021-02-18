@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.47</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.48</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Specify EIOU Industries and Flows</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-02-16</h4>
+            <h4 class="date">2021-02-18</h4>
       
       
       <div class="hidden name"><code>specify.Rmd</code></div>
@@ -150,9 +150,17 @@
          <span class="va">Product</span> <span class="op">%in%</span> <span class="va">coal_and_coal_products</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Flow.aggregation.point</span>, <span class="va">Flow</span>, <span class="va">Product</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 0 x 4</span>
-<span class="co">#&gt; # … with 4 variables: Country &lt;chr&gt;, Flow.aggregation.point &lt;chr&gt;, Flow &lt;chr&gt;,</span>
-<span class="co">#&gt; #   Product &lt;chr&gt;</span></code></pre></div>
+<span class="co">#&gt; # A tibble: 8 x 4</span>
+<span class="co">#&gt;   Country Flow.aggregation.point      Flow          Product                 </span>
+<span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;                       &lt;chr&gt;         &lt;chr&gt;                   </span>
+<span class="co">#&gt; 1 ZAF     Total primary energy supply Production    Hard coal (if no detail)</span>
+<span class="co">#&gt; 2 ZAF     Total primary energy supply Exports       Hard coal (if no detail)</span>
+<span class="co">#&gt; 3 ZAF     Total primary energy supply Production    Coking coal             </span>
+<span class="co">#&gt; 4 ZAF     Total primary energy supply Production    Other bituminous coal   </span>
+<span class="co">#&gt; 5 ZAF     Total primary energy supply Imports       Coking coal             </span>
+<span class="co">#&gt; 6 ZAF     Total primary energy supply Exports       Coking coal             </span>
+<span class="co">#&gt; 7 ZAF     Total primary energy supply Exports       Other bituminous coal   </span>
+<span class="co">#&gt; 8 ZAF     Total primary energy supply Stock changes Other bituminous coal</span></code></pre></div>
 </div>
 <div id="problems-with-the-iea-approach-to-eiou" class="section level3">
 <h3 class="hasAnchor">
