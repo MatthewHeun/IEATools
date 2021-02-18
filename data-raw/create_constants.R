@@ -191,7 +191,9 @@ coal_and_coal_products <- list(primary_coal_products,
                                bas_works_gas = "Gas works gas",
                                coke_oven_gas = "Coke oven gas",
                                blast_furnace_gas = "Blast furnace gas",
-                               other_recovered_gases = "Other recovered gases")
+                               other_recovered_gases = "Other recovered gases") %>% 
+  unlist() %>% 
+  as.list()
 usethis::use_data(coal_and_coal_products, overwrite = TRUE)
 
 secondary_coal_products <- setdiff(coal_and_coal_products, primary_coal_products) %>% 
