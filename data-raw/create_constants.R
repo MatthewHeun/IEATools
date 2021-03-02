@@ -314,12 +314,15 @@ tpes_flows <- list(resources = "Resources",
 usethis::use_data(tpes_flows, overwrite = TRUE)
 
 
-# Zeke to document prim_agg_flows in data.R
+#
+# Primary energy flows used to calculate domestic primary energy consumption using 
+# Recca::primary_aggregates()
+# 
 prim_agg_flows <- tpes_flows
-prim_agg_flows$production <- NULL
-prim_agg_flows$exports <- NULL
-prim_agg_flows$international_marine_bunkers <- NULL
-prim_agg_flows$international_aviation_bunkers <- NULL
+prim_agg_flows <- prim_agg_flows[names(prim_agg_flows) %in% c("production",
+                                                              "exports",
+                                                              "international_marine_bunkers",
+                                                              "international_aviation_bunkers") == FALSE]
 usethis::use_data(prim_agg_flows, overwrite = TRUE)
 
 

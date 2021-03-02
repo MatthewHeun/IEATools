@@ -399,6 +399,23 @@
 #' tpes_flows
 "tpes_flows"
 
+#' Primary aggregates flows
+#'
+#' A string vector containing a limited set of names of `Total primary energy supply` `Flow`s in 
+#' the IEA extended energy balances database. Used for calculating domestic primary energy consumption
+#' using `Recca::primary_aggregates()`
+#' 
+#' @format A string vector with `r length(prim_agg_flows)` entries.
+#' \describe{
+#' \item{resources}{The string identifier for Resource flows.}
+#' \item{imports}{The string identifier for Import flows.}
+#' \item{stock_changes}{The string identifier for Stock changes flows.}
+#' }
+#' 
+#' @examples 
+#' prim_agg_flows
+"prim_agg_flows"
+
 
 #' Transformation processes
 #'
