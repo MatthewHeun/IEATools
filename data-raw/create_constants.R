@@ -314,6 +314,17 @@ tpes_flows <- list(resources = "Resources",
 usethis::use_data(tpes_flows, overwrite = TRUE)
 
 
+# Zeke to document prim_agg_flows in data.R
+prim_agg_flows <- tpes_flows
+prim_agg_flows$production <- NULL
+prim_agg_flows$exports <- NULL
+prim_agg_flows$international_marine_bunkers <- NULL
+prim_agg_flows$international_aviation_bunkers <- NULL
+usethis::use_data(prim_agg_flows, overwrite = TRUE)
+
+
+
+
 tfc_compare_flows <- list(total_primary_energy_supply = "Total primary energy supply",
                           transfers = "Transfers",
                           statistical_differences = "Statistical differences",
