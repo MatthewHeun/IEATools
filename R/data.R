@@ -707,6 +707,17 @@
 "energy_types"
 
 
+#' All energy stages
+#'
+#' A string list containing options for the all stages of energy conversion chain analysis.
+#' 
+#' @format A string list with `r length(all_stages)`
+#' 
+#' @examples
+#' all_stages
+"all_stages"
+
+
 #' Last stage order
 #'
 #' A string list containing options for the last stage of energy conversion chain analysis.

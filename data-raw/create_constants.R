@@ -599,9 +599,15 @@ energy_types <- list(e = "E", # Energy
 usethis::use_data(energy_types, overwrite = TRUE)
 
 
-last_stages <- list(final = "Final", 
-                    useful = "Useful", 
-                    services = "Services")
+all_stages <- list(primary = "Primary", 
+                   final = "Final", 
+                   useful = "Useful", 
+                   services = "Services")
+usethis::use_data(all_stages, overwrite = TRUE)
+
+
+last_stages <- all_stages
+last_stages$primary <- NULL
 usethis::use_data(last_stages, overwrite = TRUE)
 
 

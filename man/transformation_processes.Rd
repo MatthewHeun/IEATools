@@ -5,7 +5,7 @@
 \alias{transformation_processes}
 \title{Transformation processes}
 \format{
-A string vector with 21 entries.
+A string vector with 22 entries.
 \describe{
 \item{main_activity_producer_electricity_plants}{The string that identifies main activity producer electricity plants.}
 \item{autoproducer_electricity_plants}{The string that identifies autoproducer electricity plants.}
