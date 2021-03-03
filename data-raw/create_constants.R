@@ -423,28 +423,8 @@ industry_flows <- list(mining_and_quarrying = "Mining and quarrying",
 usethis::use_data(industry_flows, overwrite = TRUE)
 
 # A constant containing non-eiou industry flows
-industry_net_flows <- list(# manufacturing flows
-                           iron_and_steel = "Iron and steel",
-                           chemical_and_petrochemical = "Chemical and petrochemical",
-                           non_ferrous_metals = "Non-ferrous metals",
-                           non_metallic_minerals = "Non-metallic minerals",
-                           transport_equipment = "Transport equipment",
-                           machinery = "Machinery",
-                           food_and_tobacco = "Food and tobacco",
-                           # 2018
-                           paper_pulp_and_print = "Paper, pulp and print",
-                           # 2019
-                           paper_pulp_and_printing = "Paper, pulp and printing",
-                           wood_and_wood_products = "Wood and wood products",
-                           textile_and_leather = "Textile and leather",
-                           # Non-manufacturing flows
-                           mining_and_quarrying = "Mining and quarrying", 
-                           construction = "Construction",
-                           # Non-specified industry
-                           # 2018
-                           non_specified_industry = "Non-specified (industry)", 
-                           # 2019
-                           industry_not_elsewhere_specified = "Industry not elsewhere specified")
+industry_net_flows <- industry_flows[names(industry_flows) %in% c("coal_mines",
+                                                                  "oil_and_gas_extraction") == FALSE]
 usethis::use_data(industry_net_flows, overwrite = TRUE)
 
 
@@ -464,15 +444,8 @@ usethis::use_data(transport_flows, overwrite = TRUE)
 # A constant containing domestic transport flows. This constant is the same as 
 # transport flows except it does not contain "World marine bunkers" or
 # "World aviation bunkers"
-transport_domestic_flows <- list(domestic_aviation = "Domestic aviation",
-                                 road = "Road",
-                                 rail = "Rail",
-                                 pipeline_transport = "Pipeline transport",
-                                 domestic_navigation = "Domestic navigation",
-                                 # 2019
-                                 non_specified_transport = "Non-specified (transport)",
-                                 # 2020
-                                 transport_not_elsewhere_specified = "Transport not elsewhere specified")
+transport_domestic_flows <- transport_flows[names(transport_flows) %in% c("world_aviation_bunkers",
+                                                                          "world_marine_bunkers") == FALSE]
 usethis::use_data(transport_domestic_flows, overwrite = TRUE)
 
 
