@@ -357,6 +357,7 @@ transformation_processes <- list(main_activity_producer_electricity_plants = "Ma
                                  gas_to_liquid_gtl_plants = "Gas-to-liquids (GTL) plants",
                                  for_blended_natural_gas = "For blended natural gas",
                                  charcoal_production_plants = "Charcoal production plants",
+                                 nuclear_indsutry = "Nuclear industry",
                                  non_specified_transformation = "Non-specified (transformation)",
                                  # 2019
                                  non_specified_energy = "Non-specified (energy)")
@@ -661,3 +662,10 @@ non_specified_flows <- list(non_specified_transformation = transformation_proces
 usethis::use_data(non_specified_flows, overwrite = TRUE)
 
 
+#
+# Final demand sectors for use by Recca::finaldemand_aggregates()
+#
+fd_sectors <- c(eiou_flows,
+                industry_net_flows,
+                transport_domestic_flows,
+                other_flows)
