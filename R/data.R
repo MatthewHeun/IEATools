@@ -443,12 +443,29 @@
 #' \item{gas_to_liquid_gtl_plants}{The string that identifies gas to liquid (GTL) plants.}
 #' \item{for_blended_natural_gas}{The string that identifies for blended natural gas.}
 #' \item{charcoal_production_plants}{The string that identifies charcoal production plants.}
+#' \item{nuclear_industry}{The string that identifies the Nuclear industry}
 #' \item{non_specified_transformation}{The string that identifies non-specified transformation.}
+#' \item{non_specified_energy}{The string that identifies non-specified transformation, for the IEA's extended energy balances after 2019.}
 #' }
 #' 
 #' @examples 
 #' transformation_processes
 "transformation_processes"
+
+#' Energy industry own use (EIOU) flows
+#'
+#' A string vector containing names of `Energy industry own use` `Flow`s in the IEA extended energy balances database.
+#' 
+#' @format A string vector with `r length(eiou_flows)` entries.
+#' \describe{
+#' \item{transformation_processes}{The string vector `transformation_processes`.}
+#' \item{coal_mines}{The string that identifies Coal mines.}
+#' \item{oil_and_gas_extraction}{The string that identifies Oil and gas extraction.}
+#' }
+#' 
+#' @examples 
+#' eiou_flows
+"eiou_flows"
 
 
 #' Total final consumption comparison flows
@@ -509,6 +526,32 @@
 #' industry_flows
 "industry_flows"
 
+#' Industry net flows
+#'
+#' A string vector containing names of `Industry` `Flow`s in the IEA extended energy balances database, excluding energy industry own use flows.
+#' 
+#' @format A string vector with `r length(industry_flows)` entries.
+#' \describe{
+#' \item{construction}{The string identifier for the construction industry.}
+#' \item{iron_and_steel}{The string identifier for the iron and steel industry.}
+#' \item{chemical_and_petrochemical}{The string identifier for the chemical and petrochemical industry.}
+#' \item{non_ferrous_metals}{The string identifier for the non-ferrous metals industry.}
+#' \item{non_metallic_minerals}{The string identifier for the non-metallic minerals industry.}
+#' \item{transport_equipment}{The string identifier for the transport equipment industry.}
+#' \item{machinery}{The string identifier for the machinery industry.}
+#' \item{food_and_tobacco}{The string identifier for the food and tobacco industry.}
+#' \item{paper_pulp_and_print}{The string identifier for the paper, pulp and print industry. (For 2018 and earlier versions of the IEA extended energy balance database.)}
+#' \item{paper_pulp_and_printing}{The string identifier for the paper, pulp and printing industry. (For 2019 and later versions of the IEA extended energy balance database.)}
+#' \item{wood_and_wood_products}{The string identifier for the wood and wood products industry.}
+#' \item{textile_and_leather}{The string identifier for the textile and leather industry.}
+#' \item{non_specified_industry}{The string identifier for non-specified (industry).}
+#' \item{industry_not_elsewhere_specified}{The string identifier for industry not elsewhere specified.}
+#' }
+#' 
+#' @examples
+#' industry_net_flows
+"industry_net_flows"
+
 
 #' Manufacturing flows
 #'
@@ -539,10 +582,40 @@
 #' A string vector containing names of `Transport` `Flow`s in the IEA extended energy balances database.
 #' 
 #' @format A string vector with `r length(transport_flows)` entries.
+#' \describe{
+#' \item{world_aviation_bunkers}{The string identifying the World aviation bunkers transport sector}
+#' \item{world_marine_bunkers}{The string identifying the World marine bunkers transport sector}
+#' \item{domestic_aviation}{The string identifying Deomstic aviation}
+#' \item{road}{The string identifying the Road transport sector}
+#' \item{rail}{The string identifying the Rail transport sector}
+#' \item{pipeline_transport}{The string identifying the Pipeline transport sector}
+#' \item{domestic_navigation}{The string identifying the Domestic navigation sector}
+#' \item{non_specified_transport}{The string identifying the Non-specified transport sector}
+#' \item{transport_not_elsewhere_specified}{The string identifying the Transport not elsewhere specified sector. This string replaced `non_specified_transport` in the IEA's 2020 extended energy balances.}
+#' }
 #' 
 #' @examples
 #' transport_flows
 "transport_flows"
+
+#' Transport domestic flows
+#'
+#' A string vector containing names of `Transport` `Flow`s in the IEA extended energy balances database for territorial transport energy consumption.
+#' 
+#' @format A string vector with `r length(transport_domestic_flows)` entries.
+#' \describe{
+#' \item{domestic_aviation}{The string identifying Deomstic aviation}
+#' \item{road}{The string identifying the Road transport sector}
+#' \item{rail}{The string identifying the Rail transport sector}
+#' \item{pipeline_transport}{The string identifying the Pipeline transport sector}
+#' \item{domestic_navigation}{The string identifying the Domestic navigation sector}
+#' \item{non_specified_transport}{The string identifying the Non-specified transport sector}
+#' \item{transport_not_elsewhere_specified}{The string identifying the Transport not elsewhere specified sector. This string replaced `non_specified_transport` in the IEA's 2020 extended energy balances.}
+#' }
+#' 
+#' @examples
+#' transport_domestic_flows
+"transport_domestic_flows"
 
 
 #' Other flows
@@ -796,8 +869,26 @@
 #' \item{non_specified_industry}{The string identifying non-specified industry for 2018 and earlier versions of the IEA's extended energy balance data.}
 #' \item{industry_not_elsewhere_specified}{The string identifying non-specified industry flows for 2019 and later versions of the IEA's extended energy balance data.}
 #' \item{non_specified}{The string identifying generic non-specified flows.}
+#' \item{transport_not_elsewhere_specified}{The string identifying the Transport not elsewhere specified sector. This string replaced `non_specified_transport` in the IEA's 2020 extended energy balances.}
 #' }
 #' 
 #' @examples
 #' non_specified_flows
 "non_specified_flows"
+
+
+#' Final demand sectors
+#'
+#' A string vector containing final demand sectors used for calculating Total Final Consumption (TFC)
+#' 
+#' @format A string list with `r length(fd_sectors)`
+#' \describe{
+#' \item{eiou_flows}{The string vector identifying energy industry own use flows.}
+#' \item{industry_net_flows}{The string vector identifying non-eiou (net) Industry flows.}
+#' \item{transport_domestic_flows}{The string vector identifying domestic transport flows.}
+#' \item{other_flows}{The string vector identifying Other flows.}
+#' }
+#' 
+#' @examples
+#' fd_sectors
+"fd_sectors"

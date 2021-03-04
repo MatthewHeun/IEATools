@@ -658,14 +658,17 @@ non_specified_flows <- list(non_specified_transformation = transformation_proces
                             non_specified_industry = industry_flows$non_specified_industry, 
                             # 2019
                             industry_not_elsewhere_specified = industry_flows$industry_not_elsewhere_specified, 
-                            non_specified = "Non-specified")
+                            non_specified = "Non-specified",
+                            # 2020
+                            non_specified_transport = transport_flows$transport_not_elsewhere_specified)
 usethis::use_data(non_specified_flows, overwrite = TRUE)
 
 
 #
 # Final demand sectors for use by Recca::finaldemand_aggregates()
 #
-fd_sectors <- c(eiou_flows,
-                industry_net_flows,
-                transport_domestic_flows,
-                other_flows)
+fd_sectors <- list(eiou_flows,
+                   industry_net_flows,
+                   transport_domestic_flows,
+                   other_flows)
+usethis::use_data(fd_sectors, overwrite = TRUE)

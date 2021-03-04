@@ -5,7 +5,7 @@
 \alias{transformation_processes}
 \title{Transformation processes}
 \format{
-A string vector with 22 entries.
+A string vector with 23 entries.
 \describe{
 \item{main_activity_producer_electricity_plants}{The string that identifies main activity producer electricity plants.}
 \item{autoproducer_electricity_plants}{The string that identifies autoproducer electricity plants.}
@@ -27,7 +27,9 @@ A string vector with 22 entries.
 \item{gas_to_liquid_gtl_plants}{The string that identifies gas to liquid (GTL) plants.}
 \item{for_blended_natural_gas}{The string that identifies for blended natural gas.}
 \item{charcoal_production_plants}{The string that identifies charcoal production plants.}
+\item{nuclear_industry}{The string that identifies the Nuclear industry}
 \item{non_specified_transformation}{The string that identifies non-specified transformation.}
+\item{non_specified_energy}{The string that identifies non-specified transformation, for the IEA's extended energy balances after 2019.}
 }
 }
 \usage{
