@@ -667,8 +667,8 @@ usethis::use_data(non_specified_flows, overwrite = TRUE)
 #
 # Final demand sectors for use by Recca::finaldemand_aggregates()
 #
-fd_sectors <- list(eiou_flows,
-                   industry_net_flows,
-                   transport_domestic_flows,
-                   other_flows)
+fd_sectors <- c(eiou_flows,
+                industry_net_flows,
+                transport_domestic_flows,
+                other_flows)
 usethis::use_data(fd_sectors, overwrite = TRUE)
