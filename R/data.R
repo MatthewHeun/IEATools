@@ -585,7 +585,7 @@
 #' \describe{
 #' \item{world_aviation_bunkers}{The string identifying the World aviation bunkers transport sector}
 #' \item{world_marine_bunkers}{The string identifying the World marine bunkers transport sector}
-#' \item{domestic_aviation}{The string identifying Deomstic aviation}
+#' \item{domestic_aviation}{The string identifying Domestic aviation}
 #' \item{road}{The string identifying the Road transport sector}
 #' \item{rail}{The string identifying the Rail transport sector}
 #' \item{pipeline_transport}{The string identifying the Pipeline transport sector}
@@ -604,7 +604,7 @@
 #' 
 #' @format A string vector with `r length(transport_domestic_flows)` entries.
 #' \describe{
-#' \item{domestic_aviation}{The string identifying Deomstic aviation}
+#' \item{domestic_aviation}{The string identifying Domestic aviation}
 #' \item{road}{The string identifying the Road transport sector}
 #' \item{rail}{The string identifying the Rail transport sector}
 #' \item{pipeline_transport}{The string identifying the Pipeline transport sector}

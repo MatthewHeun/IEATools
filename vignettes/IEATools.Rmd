@@ -7,7 +7,7 @@ output:
     fig_caption: yes
 vignette: >
   %\VignetteIndexEntry{IEATools}
-  %\VignetteEngine{rmarkdown::render}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 

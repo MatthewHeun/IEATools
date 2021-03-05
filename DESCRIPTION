@@ -40,4 +40,4 @@ Suggests:
     testthat,
     rmarkdown,
     spelling
-VignetteBuilder: rmarkdown
+VignetteBuilder: knitr
