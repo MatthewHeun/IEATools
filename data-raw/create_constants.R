@@ -318,7 +318,7 @@ usethis::use_data(tpes_flows, overwrite = TRUE)
 # Primary energy flows used to calculate domestic primary energy consumption using 
 # Recca::primary_aggregates()
 # The code below retains only those flow that are aggregated as primary.
-# **** Zeke to add more explanation here. ****
+# **** Zeke to add more explanation om data.R ****
 # **** Zeke to change to be (shorter) including what we want instead of excluding what we don't. ****
 
 prim_agg_flows <- tpes_flows
@@ -366,8 +366,10 @@ transformation_processes <- list(main_activity_producer_electricity_plants = "Ma
                                  non_specified_energy = "Non-specified (energy)")
 usethis::use_data(transformation_processes, overwrite = TRUE)
 
+
 # A constant containing all EIOU flows, namely all transformation processes
 # along with "Oil and gas extraction" and "Coal mines"
+# **** Zeke to add more explanation in data.R. ****
 eiou_flows <- list(transformation_processes,
                    coal_mines = "Coal mines",
                    oil_and_gas_extraction = "Oil and gas extraction") %>% 
@@ -427,8 +429,9 @@ industry_flows <- list(mining_and_quarrying = "Mining and quarrying",
 usethis::use_data(industry_flows, overwrite = TRUE)
 
 # A constant containing non-eiou industry flows
-industry_net_flows <- industry_flows[names(industry_flows) %in% c("coal_mines",
-                                                                  "oil_and_gas_extraction") == FALSE]
+# 
+# ********************* Zeke: use this style ********************
+industry_net_flows <- industry_flows[! (industry_flows %in% c("Coal mines", "Oil and gas extraction"))]
 usethis::use_data(industry_net_flows, overwrite = TRUE)
 
 
@@ -670,6 +673,7 @@ usethis::use_data(non_specified_flows, overwrite = TRUE)
 #
 # Final demand sectors for use by Recca::finaldemand_aggregates()
 #
+
 fd_sectors <- c(eiou_flows,
                 industry_net_flows,
                 transport_domestic_flows,
