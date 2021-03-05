@@ -27,7 +27,6 @@
 * Still 661 tests, coverage remains at 100%.
 
 
->>>>>>> release-0.1.46
 # IEATools 0.1.44 (2020-12-08)
 
 * Moved `primary_aggregates_IEA()` and `finaldemand_aggregates_IEA()` 
