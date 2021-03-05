@@ -7,7 +7,7 @@
 \format{
 A string vector with 7 entries.
 \describe{
-\item{domestic_aviation}{The string identifying Deomstic aviation}
+\item{domestic_aviation}{The string identifying Domestic aviation}
 \item{road}{The string identifying the Road transport sector}
 \item{rail}{The string identifying the Rail transport sector}
 \item{pipeline_transport}{The string identifying the Pipeline transport sector}
