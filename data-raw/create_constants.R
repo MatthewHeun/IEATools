@@ -322,10 +322,10 @@ usethis::use_data(tpes_flows, overwrite = TRUE)
 # **** Zeke to change to be (shorter) including what we want instead of excluding what we don't. ****
 
 prim_agg_flows <- tpes_flows
-prim_agg_flows <- prim_agg_flows[names(prim_agg_flows) %in% c("production",
-                                                              "exports",
-                                                              "international_marine_bunkers",
-                                                              "international_aviation_bunkers") == FALSE]
+prim_agg_flows <- prim_agg_flows[!(prim_agg_flows %in% c("production",
+                                                         "exports",
+                                                         "international_marine_bunkers",
+                                                         "international_aviation_bunkers"))]
 usethis::use_data(prim_agg_flows, overwrite = TRUE)
 
 
@@ -429,9 +429,7 @@ industry_flows <- list(mining_and_quarrying = "Mining and quarrying",
 usethis::use_data(industry_flows, overwrite = TRUE)
 
 # A constant containing non-eiou industry flows
-# 
-# ********************* Zeke: use this style ********************
-industry_net_flows <- industry_flows[! (industry_flows %in% c("Coal mines", "Oil and gas extraction"))]
+industry_net_flows <- industry_flows[!(industry_flows %in% c("Coal mines", "Oil and gas extraction"))]
 usethis::use_data(industry_net_flows, overwrite = TRUE)
 
 
@@ -451,8 +449,8 @@ usethis::use_data(transport_flows, overwrite = TRUE)
 # A constant containing domestic transport flows. This constant is the same as 
 # transport flows except it does not contain "World marine bunkers" or
 # "World aviation bunkers"
-transport_domestic_flows <- transport_flows[names(transport_flows) %in% c("world_aviation_bunkers",
-                                                                          "world_marine_bunkers") == FALSE]
+transport_domestic_flows <- transport_flows[!(transport_flows %in% c("world_aviation_bunkers",
+                                                                     "world_marine_bunkers"))]
 usethis::use_data(transport_domestic_flows, overwrite = TRUE)
 
 
