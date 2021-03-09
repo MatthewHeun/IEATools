@@ -5,7 +5,7 @@
 \alias{prim_agg_flows}
 \title{Primary aggregates flows}
 \format{
-A string vector with 5 entries.
+A string vector with 3 entries.
 \describe{
 \item{resources}{The string identifier for Resource flows.}
 \item{imports}{The string identifier for Import flows.}
