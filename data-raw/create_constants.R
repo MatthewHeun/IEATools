@@ -322,10 +322,10 @@ usethis::use_data(tpes_flows, overwrite = TRUE)
 # **** Zeke to change to be (shorter) including what we want instead of excluding what we don't. ****
 
 prim_agg_flows <- tpes_flows
-prim_agg_flows <- prim_agg_flows[!(prim_agg_flows %in% c("production",
-                                                         "exports",
-                                                         "international_marine_bunkers",
-                                                         "international_aviation_bunkers"))]
+prim_agg_flows <- prim_agg_flows[!(prim_agg_flows %in% c("Production",
+                                                         "Exports",
+                                                         "International Marine Bunkers",
+                                                         "International Aviation Bunkers"))]
 usethis::use_data(prim_agg_flows, overwrite = TRUE)
 
 
@@ -449,8 +449,8 @@ usethis::use_data(transport_flows, overwrite = TRUE)
 # A constant containing domestic transport flows. This constant is the same as 
 # transport flows except it does not contain "World marine bunkers" or
 # "World aviation bunkers"
-transport_domestic_flows <- transport_flows[!(transport_flows %in% c("world_aviation_bunkers",
-                                                                     "world_marine_bunkers"))]
+transport_domestic_flows <- transport_flows[!(transport_flows %in% c("World Aviation Bunkers",
+                                                                     "World Marine Bunkers"))]
 usethis::use_data(transport_domestic_flows, overwrite = TRUE)
 
 
