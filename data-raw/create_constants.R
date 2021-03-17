@@ -317,9 +317,6 @@ usethis::use_data(tpes_flows, overwrite = TRUE)
 #
 # Primary energy flows used to calculate domestic primary energy consumption using 
 # Recca::primary_aggregates()
-# The code below retains only those flow that are aggregated as primary.
-# **** Zeke to add more explanation om data.R ****
-# **** Zeke to change to be (shorter) including what we want instead of excluding what we don't. ****
 
 prim_agg_flows <- tpes_flows
 prim_agg_flows <- prim_agg_flows[!(prim_agg_flows %in% c("Production",
@@ -369,7 +366,6 @@ usethis::use_data(transformation_processes, overwrite = TRUE)
 
 # A constant containing all EIOU flows, namely all transformation processes
 # along with "Oil and gas extraction" and "Coal mines"
-# **** Zeke to add more explanation in data.R. ****
 eiou_flows <- list(transformation_processes,
                    coal_mines = "Coal mines",
                    oil_and_gas_extraction = "Oil and gas extraction") %>% 
