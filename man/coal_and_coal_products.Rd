@@ -5,10 +5,7 @@
 \alias{coal_and_coal_products}
 \title{Coal and coal products}
 \format{
-<<<<<<< HEAD
 A string vector with 16 entries.
-=======
-A string vector with 10 entries.
 \describe{
 \item{primary_coal_products}{The string identifier for \code{primary_coal_products}.}
 \item{patent_fuel}{The string identifier for Patent fuel.}
@@ -21,7 +18,6 @@ A string vector with 10 entries.
 \item{blast_furnace_gas}{The string identifier for Blast furnace gas.}
 \item{other_recovered_gases}{The string identifier for Other recovered gases.}
 }
->>>>>>> new_constants
 }
 \usage{
 coal_and_coal_products

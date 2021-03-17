@@ -5,7 +5,7 @@
 \alias{secondary_coal_products}
 \title{Secondary coal products}
 \format{
-A string vector with 16 entries.
+A string vector with 9 entries.
 \describe{
 \item{patent_fuel}{The string identifier for Patent fuel.}
 \item{coke_oven_coke}{The string identifier for Coke oven coke.}
