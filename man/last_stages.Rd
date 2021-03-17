@@ -6,6 +6,11 @@
 \title{Last stage order}
 \format{
 A string list with 3
+\describe{
+\item{final}{The string identifier for the Final stage of the energy conversion chain.}
+\item{useful}{The string identifier for the Useful stage of the energy conversion chain.}
+\item{services}{The string identifier for the Services stage of the energy conversion chain.}
+}
 }
 \usage{
 last_stages

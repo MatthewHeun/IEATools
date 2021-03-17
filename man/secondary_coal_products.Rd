@@ -6,6 +6,17 @@
 \title{Secondary coal products}
 \format{
 A string vector with 16 entries.
+\describe{
+\item{patent_fuel}{The string identifier for Patent fuel.}
+\item{coke_oven_coke}{The string identifier for Coke oven coke.}
+\item{gas_coke}{The string identifier for Gas coke.}
+\item{coal_tar}{The string identifier for Coal tar.}
+\item{bkb}{The string identifier for BKB.}
+\item{gas_works_gas}{The string identifier for Gas works gas.}
+\item{coke_oven_gas}{The string identifier for Coke oven gas.}
+\item{blast_furnace_gas}{The string identifier for Blast furnace gas.}
+\item{other_recovered_gases}{The string identifier for Other recovered gases.}
+}
 }
 \usage{
 secondary_coal_products

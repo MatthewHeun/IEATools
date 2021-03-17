@@ -6,6 +6,10 @@
 \title{IEA release years supported by this package}
 \format{
 A numeric vector with 2 entries.
+\describe{
+\item{2018}{The year 2018}
+\item{2019}{The year 2019}
+}
 }
 \usage{
 valid_iea_release_years

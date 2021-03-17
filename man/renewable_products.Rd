@@ -6,6 +6,15 @@
 \title{Renewable products}
 \format{
 A string vector with 7 entries.
+\describe{
+\item{geothermal}{The string identifier for Geothermal.}
+\item{hydro}{The string identifier for Hydro.}
+\item{solar_photovoltaics}{The string identifier for Solar photovoltaics.}
+\item{solar_thermal}{The string identifier for Solar thermal.}
+\item{tide_wave_and_ocean}{The string identifier for Tide, wave and ocean.}
+\item{wind}{The string identifier for Wind.}
+\item{other_sources}{The string identifier for Other sources.}
+}
 }
 \usage{
 renewable_products

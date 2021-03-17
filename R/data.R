@@ -48,7 +48,10 @@
 #' supported by this package.
 #' 
 #' @format A numeric vector with `r length(valid_iea_release_years)` entries.
-#' 
+#' \describe{
+#' \item{2018}{The year 2018}
+#' \item{2019}{The year 2019}
+#' }
 #' @examples
 #' valid_iea_release_years
 "valid_iea_release_years"
@@ -238,7 +241,18 @@
 #' A string vector containing names of products classified by the IEA as coal and coal products.
 #' 
 #' @format A string vector with `r length(coal_and_coal_products)` entries.
-#' 
+#' \describe{
+#' \item{primary_coal_products}{The string identifier for `primary_coal_products`.}
+#' \item{patent_fuel}{The string identifier for Patent fuel.}
+#' \item{coke_oven_coke}{The string identifier for Coke oven coke.}
+#' \item{gas_coke}{The string identifier for Gas coke.}
+#' \item{coal_tar}{The string identifier for Coal tar.}
+#' \item{bkb}{The string identifier for BKB.}
+#' \item{gas_works_gas}{The string identifier for Gas works gas.}
+#' \item{coke_oven_gas}{The string identifier for Coke oven gas.}
+#' \item{blast_furnace_gas}{The string identifier for Blast furnace gas.}
+#' \item{other_recovered_gases}{The string identifier for Other recovered gases.}
+#' }
 #' @examples
 #' coal_and_coal_products
 "coal_and_coal_products"
@@ -249,6 +263,15 @@
 #' A string vector containing names of products classified by the IEA as primary coal products.
 #' 
 #' @format A string vector with `r length(primary_coal_products)` entries.
+#' \describe{
+#' \item{hard_coal_if_no_detail}{The string identifier for Hard coal (if no detail).}
+#' \item{brown_coal_if_no_detail}{The string identifier for Brown coal (if no detail).}
+#' \item{anthracite}{The string identifier for Anthracite.}
+#' \item{coking_coal}{The string identifier for Coking coal.}
+#' \item{other_bituminous_coal}{The string identifier for Other bituminous coal.}
+#' \item{sub_bituminous_coal}{The string identifier for Sub-bituminous coal.}
+#' \item{lignite}{The string identifier for Lignite.}
+#' }
 #' @examples
 #' primary_coal_products
 "primary_coal_products"
@@ -259,7 +282,17 @@
 #' A string vector containing names of products classified by the IEA as `coal_and_coal_products` that are not `primary_coal_products`.
 #' 
 #' @format A string vector with `r length(secondary_coal_products)` entries.
-#' 
+#' \describe{
+#' \item{patent_fuel}{The string identifier for Patent fuel.}
+#' \item{coke_oven_coke}{The string identifier for Coke oven coke.}
+#' \item{gas_coke}{The string identifier for Gas coke.}
+#' \item{coal_tar}{The string identifier for Coal tar.}
+#' \item{bkb}{The string identifier for BKB.}
+#' \item{gas_works_gas}{The string identifier for Gas works gas.}
+#' \item{coke_oven_gas}{The string identifier for Coke oven gas.}
+#' \item{blast_furnace_gas}{The string identifier for Blast furnace gas.}
+#' \item{other_recovered_gases}{The string identifier for Other recovered gases.}
+#' }
 #' @examples 
 #' secondary_coal_products
 "secondary_coal_products"
@@ -270,7 +303,10 @@
 #' A string vector containing names of products classified by the IEA as peat and peat products.
 #' 
 #' @format A string vector with `r length(peat_and_peat_products)` entries.
-#' 
+#' \describe{
+#' \item{primary_peat_products}{The string identifier for `primary_peat_products`.}
+#' \item{peat_products}{The string identifier for Peat products.}
+#' }
 #' @examples 
 #' peat_and_peat_products
 "peat_and_peat_products"
@@ -281,7 +317,9 @@
 #' A string vector containing names of products classified by the IEA as primary peat products.
 #' 
 #' @format A string vector with `r length(primary_peat_products)` entry
-#' 
+#' \describe{
+#' \item{peat}{The string identifier for Peat.}
+#' }
 #' @examples 
 #' primary_peat_products
 "primary_peat_products"
@@ -292,7 +330,9 @@
 #' A string vector containing names of products classified by the IEA as "Peat and peat products" that are not `primary_peat_products`.
 #' 
 #' @format A string vector with `r length(secondary_peat_products)` entries.
-#' 
+#' \describe{
+#' \item{peat_products}{The string identifier for Peat products.}
+#' }
 #' @examples 
 #' secondary_peat_products
 "secondary_peat_products"
@@ -303,7 +343,27 @@
 #' A string vector containing names of products classified by the IEA as oil and oil products.
 #' 
 #' @format A string vector with `r length(oil_and_oil_products)` entries.
-#' 
+#' \describe{
+#' \item{primary_oil_products}{The string identifier for `primary_oil_products`.}
+#' \item{refinery_feedstocks}{The string identifier for Refinery feedstocks.}
+#' \item{refinery_gas}{The string identifier for Refinery gas.}
+#' \item{ethane}{The string identifier for Ethane.}
+#' \item{liquefied_petroleum_gases_lpg}{The string identifier for Liquefied petroleum gases (LPG).}
+#' \item{motor_gasoline_excl_biofuels}{The string identifier for Motor gasoline excl. biofuels.}
+#' \item{aviation_gasoline}{The string identifier for Aviation gasoline.}
+#' \item{gasoline_type_jet_fuel}{The string identifier for Gasoline type jet fuel.}
+#' \item{kerosene_type_jet_fuel_excl_biofuels}{The string identifier for Kerosene type jet fuel excl. biofuels.}
+#' \item{other_kerosene}{The string identifier for Other kerosene.}
+#' \item{gas_diesel_oil_excl_biofuels}{The string identifier for Gas/diesel oil excl. biofuels.}
+#' \item{fuel_oil}{The string identifier for Fuel oil.}
+#' \item{naptha}{The string identifier for Naphtha.}
+#' \item{white_spirit_SBP}{The string identifier for White spirit & SBP.}
+#' \item{lubricants}{The string identifier for Lubricants.}
+#' \item{bitumen}{The string identifier for Bitumen.}
+#' \item{paraffin_waxes}{The string identifier for Paraffin waxes.}
+#' \item{petroleum_coke}{The string identifier for Petroleum coke.}
+#' \item{other_oil_products}{The string identifier for Other oil products.}
+#' }
 #' @examples 
 #' oil_and_oil_products
 "oil_and_oil_products"
@@ -314,7 +374,14 @@
 #' A string vector containing names of products classified by the IEA as primary oil products.
 #' 
 #' @format A string vector with `r length(primary_oil_products)` entries.
-#' 
+#' \describe{
+#' \item{crude_ngl_feedstocks_if_no_detail}{The string identifier for Crude/NGL/feedstocks (if no detail).}
+#' \item{crude_oil}{The string identifier for Crude oil.}
+#' \item{natural_gas_liquids}{The string identifier for Natural gas liquids.}
+#' \item{additives_blending_components}{The string identifier for Additives/blending components.}
+#' \item{other_hydrocarbons}{The string identifier for Other hydrocarbons.}
+#' \item{oil_shales_and_oil_sands}{The string identifier for Oil shale and oil sands.}
+#' }
 #' @examples 
 #' primary_oil_products
 "primary_oil_products"
@@ -325,7 +392,26 @@
 #' A string vector containing names of products classified by the IEA as `oil_and_oil_products` that are not `primary_coal_products`.
 #' 
 #' @format A string vector with `r length(secondary_oil_products)` entries.
-#' 
+#' \describe{
+#' \item{refinery_feedstocks}{The string identifier for Refinery feedstocks.}
+#' \item{refinery_gas}{The string identifier for Refinery gas.}
+#' \item{ethane}{The string identifier for Ethane.}
+#' \item{liquefied_petroleum_gases_lpg}{The string identifier for Liquefied petroleum gases (LPG).}
+#' \item{motor_gasoline_excl_biofuels}{The string identifier for Motor gasoline excl. biofuels.}
+#' \item{aviation_gasoline}{The string identifier for Aviation gasoline.}
+#' \item{gasoline_type_jet_fuel}{The string identifier for Gasoline type jet fuel.}
+#' \item{kerosene_type_jet_fuel_excl_biofuels}{The string identifier for Kerosene type jet fuel excl. biofuels.}
+#' \item{other_kerosene}{The string identifier for Other kerosene.}
+#' \item{gas_diesel_oil_excl_biofuels}{The string identifier for Gas/diesel oil excl. biofuels.}
+#' \item{fuel_oil}{The string identifier for Fuel oil.}
+#' \item{naptha}{The string identifier for Naphtha.}
+#' \item{white_spirit_SBP}{The string identifier for White spirit & SBP.}
+#' \item{lubricants}{The string identifier for Lubricants.}
+#' \item{bitumen}{The string identifier for Bitumen.}
+#' \item{paraffin_waxes}{The string identifier for Paraffin waxes.}
+#' \item{petroleum_coke}{The string identifier for Petroleum coke.}
+#' \item{other_oil_products}{The string identifier for Other oil products.}
+#' }
 #' @examples 
 #' secondary_oil_products
 "secondary_oil_products"
@@ -336,7 +422,15 @@
 #' A string vector containing names of products classified by the IEA as renewables.
 #' 
 #' @format A string vector with `r length(renewable_products)` entries.
-#' 
+#' \describe{
+#' \item{geothermal}{The string identifier for Geothermal.}
+#' \item{hydro}{The string identifier for Hydro.}
+#' \item{solar_photovoltaics}{The string identifier for Solar photovoltaics.}
+#' \item{solar_thermal}{The string identifier for Solar thermal.}
+#' \item{tide_wave_and_ocean}{The string identifier for Tide, wave and ocean.}
+#' \item{wind}{The string identifier for Wind.}
+#' \item{other_sources}{The string identifier for Other sources.}
+#' }
 #' @examples 
 #' renewable_products
 "renewable_products"
@@ -476,10 +570,10 @@
 #' \describe{
 #' \item{total_primary_energy_supply}{The string identifier for Total primary energy supply.}
 #' \item{transfers}{The string identifier for Transfers.}
-#' \item{statistical_differences}{The string identifier for statistical differences.}
-#' \item{transformation_processes}{The string identifier for transformation processes.}
-#' \item{energy_industry_own_use}{The string identifier for energy industry own use.}
-#' \item{losses}{The string identifier for losses.}
+#' \item{statistical_differences}{The string identifier for Statistical differences.}
+#' \item{transformation_processes}{The string identifier for Transformation processes.}
+#' \item{energy_industry_own_use}{The string identifier for Energy industry own use.}
+#' \item{losses}{The string identifier for Losses.}
 #' }
 #' 
 #' @examples 
@@ -492,7 +586,12 @@
 #' A string vector containing names of `Total final consumption` `Flow`s in the IEA extended energy balances database.
 #' 
 #' @format A string vector with `r length(tfc_flows)` entries.
-#' 
+#' \describe{
+#' \item{industry}{The string identifier for Industry.}
+#' \item{transport}{The string identifier for Transport.}
+#' \item{other}{The string identifier for Other.}
+#' \item{non_energy_use}{The string identifier for Non-energy use.}
+#' }
 #' @examples 
 #' tfc_flows
 "tfc_flows"
@@ -604,7 +703,7 @@
 #' 
 #' @format A string vector with `r length(transport_domestic_flows)` entries.
 #' \describe{
-#' \item{domestic_aviation}{The string identifying Domestic aviation}
+#' \item{domestic_aviation}{The string identifying the Domestic aviation sector.}
 #' \item{road}{The string identifying the Road transport sector}
 #' \item{rail}{The string identifying the Rail transport sector}
 #' \item{pipeline_transport}{The string identifying the Pipeline transport sector}
@@ -623,7 +722,14 @@
 #' A string vector containing names of `Other` `Flow`s in the IEA extended energy balances database.
 #' 
 #' @format A string vector with `r length(other_flows)` entries.
-#' 
+#' \describe{
+#' \item{residential}{The string identifier for the Residential sector.}
+#' \item{commercial_and_public_services}{The string identifier for the Commercial and public services sector.}
+#' \item{agriculture_forestry}{The string identifier for the Agriculture/forestry sector.}
+#' \item{fishing}{The string identifier for the Fishing sector.}
+#' \item{non_specified_other}{The string identifier for the Non-specified (other) sector.}
+#' \item{final_consumption_not_elsewhere_specified}{The string identifier for Final consumption not elsewhere specified sector.}
+#' }
 #' @examples
 #' other_flows
 "other_flows"
@@ -634,10 +740,29 @@
 #' A string vector containing names of `Non-energy` `Flow`s in the IEA extended energy balances database.
 #' 
 #' @format A string vector with `r length(non_energy_flows)` entries.
-#' 
+#' \describe{
+#' \item{non_energy_use_industry_transformation_energy}{The string identifier for the Non-energy use industry/transformation/energy sector.}
+#' \item{non_energy_use_in_transport}{The string identifier for the Non-energy use in transport sector.}
+#' \item{non_energy_use_in_other}{The string identifier for the Non energy use in other sector.}
+#' }
 #' @examples
 #' non_energy_flows
 "non_energy_flows"
+
+
+#' Aggregation columns
+#'
+#' A string vector containing names of aggregation columns.
+#' @format A string vector with `r length(aggregate_cols)` entries.
+#' \describe{
+#' \item{aggregate_primary}{The name of the column containing aggregated primary energy.}
+#' \item{net_aggregate_demand}{The name of the column containing aggregated net final demand energy.}
+#' \item{gross_aggregate_demand}{The name of the column containing aggregated gross final demand energy.}
+#' }
+#' 
+#' @examples
+#' aggregate_cols
+"aggregate_cols"
 
 
 #' Aggregation flows
@@ -646,22 +771,6 @@
 #' These items appear in `Flow.aggregation.point` columns.
 #' 
 #' @format A string vector with `r length(aggregation_flows)` entries.
-#' \describe{
-#' \item{aggregate_primary}{The name of the column containing aggregated primary energy.}
-#' \item{net_aggregate_demand}{The name of the column containing aggregated net final demand energy.}
-#' \item{gross_aggregate_demand}{The name of the column containing aggregated gross final demand energy.}
-#' }
-#' 
-#' @examples
-#' aggregation_flows
-"aggregation_flows"
-
-
-#' Aggregation columns
-#'
-#' A string vector containing names of aggregation columns.
-#' 
-#' @format A string vector with `r length(aggregate_cols)` entries.
 #' \describe{
 #' \item{total_primary_energy_supply}{Indicates a flow that aggregates to total primary energy supply.}
 #' \item{total_final_consumption}{Indicates a flow that aggregates to total final consumption.}
@@ -676,8 +785,8 @@
 #' }
 #' 
 #' @examples
-#' aggregate_cols
-"aggregate_cols"
+#' aggregation_flows
+"aggregation_flows"
 
 
 #' Aggregation regions
@@ -733,7 +842,11 @@
 #' A string vector containing names of `Flow`s that provide memos and aggregations.
 #' 
 #' @format A string vector with `r length(memo_aggregation_flow_prefixes)` entries.
-#' 
+#' \describe{
+#' \item{memo}{The string identifier for "Memo: ".}
+#' \item{electricity_output_GWh}{The string identifier for "Electricity output (GWh)".}
+#' \item{heat_output}{The string identifier for "Heat output".}
+#' }
 #' @examples
 #' memo_aggregation_flow_prefixes
 "memo_aggregation_flow_prefixes"
@@ -743,7 +856,10 @@
 #' A string vector containing names of `Product`s that provide memos and aggregations.
 #' 
 #' @format A string vector with `r length(memo_aggregation_product_prefixes)` entries.
-#' 
+#' \describe{
+#' \item{memo}{The string identifier for "Memo: ".}
+#' \item{total}{The string identifier for "Total".}
+#' }
 #' @examples
 #' memo_aggregation_product_prefixes
 "memo_aggregation_product_prefixes"
@@ -753,7 +869,13 @@
 #' A string vector containing names of `Flow`s that interface with the world outside of the economy.
 #' 
 #' @format A string vector with `r length(interface_industries)` entries.
-#' 
+#' \describe{
+#' \item{imports}{The string identifier for Imports.}
+#' \item{exports}{The string identifier for Exports.}
+#' \item{international_aviation_bunkers}{The string identifier for International aviation bunkers.}
+#' \item{international_marine_bunkers}{The string identifier for International marine bunkers.}
+#' \item{stock_changes}{The string identifier for Stock changes.}
+#' }
 #' @examples
 #' interface_industries
 "interface_industries"
@@ -764,7 +886,7 @@
 #' A string vector containing 3-letter ISO country codes in alphabetical order.
 #' 
 #' @format A string vector with `r length(countries)` entries.
-#' 
+#'
 #' @examples
 #' countries
 "countries"
@@ -791,7 +913,10 @@
 #' A string list containing the order for energy types.
 #' 
 #' @format A string list with `r length(energy_types)` entries.
-#' 
+#' \describe{
+#' \item{e}{The string identifier for energy "E".}
+#' \item{x}{The string identifier for exergy "X".}
+#' }
 #' @examples
 #' energy_types
 "energy_types"
@@ -802,7 +927,12 @@
 #' A string list containing options for the all stages of energy conversion chain analysis.
 #' 
 #' @format A string list with `r length(all_stages)`
-#' 
+#' \describe{
+#' \item{primary}{The string identifier for the Primary stage of the energy conversion chain.}
+#' \item{final}{The string identifier for the Final stage of the energy conversion chain.}
+#' \item{useful}{The string identifier for the Useful stage of the energy conversion chain.}
+#' \item{services}{The string identifier for the Services stage of the energy conversion chain.}
+#' }
 #' @examples
 #' all_stages
 "all_stages"
@@ -813,7 +943,11 @@
 #' A string list containing options for the last stage of energy conversion chain analysis.
 #' 
 #' @format A string list with `r length(last_stages)`
-#' 
+#' \describe{
+#' \item{final}{The string identifier for the Final stage of the energy conversion chain.}
+#' \item{useful}{The string identifier for the Useful stage of the energy conversion chain.}
+#' \item{services}{The string identifier for the Services stage of the energy conversion chain.}
+#' }
 #' @examples
 #' last_stages
 "last_stages"
@@ -840,7 +974,7 @@
 #' A string vector containing entries for a united flow aggregation point and flow column in IEA order.
 #' 
 #' @format A string list with `r length(fap_flows)`
-#' 
+#'
 #' @examples
 #' fap_flows
 "fap_flows"
@@ -851,7 +985,7 @@
 #' A string vector containing entries for the product column in IEA order.
 #' 
 #' @format A string list with `r length(products)`
-#' 
+#'
 #' @examples
 #' products
 "products"

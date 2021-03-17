@@ -6,6 +6,12 @@
 \title{All energy stages}
 \format{
 A string list with 4
+\describe{
+\item{primary}{The string identifier for the Primary stage of the energy conversion chain.}
+\item{final}{The string identifier for the Final stage of the energy conversion chain.}
+\item{useful}{The string identifier for the Useful stage of the energy conversion chain.}
+\item{services}{The string identifier for the Services stage of the energy conversion chain.}
+}
 }
 \usage{
 all_stages
