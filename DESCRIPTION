@@ -4,9 +4,10 @@ Title: Tools for Working with International Energy Agency Data
 Version: 0.1.46
 Date: 2020-12-08
 Authors@R: c(person(given = "Matthew", family = "Heun", role = c("aut", "cre"),
-                     email = "matthew.heun@me.com"),
-                     person(given = "Emmanuel", family = "Aramendia", role = "aut"))
-Author: Matthew Heun [aut, cre], Emmanuel Aramendia [aut]
+                    email = "matthew.heun@me.com"),
+             person(given = "Emmanuel", family = "Aramendia", role = "aut"),
+             person(given = "Zeke", family = "Marshall", role = "aut"))
+Author: Matthew Heun [aut, cre], Emmanuel Aramendia [aut], Zeke Marshall [aut]
 Maintainer: Matthew  Heun <matthew.heun@me.com>
 Description: Tools for munging and manipulating International Energy Agency extended energy balance data.
 License: MIT + file LICENSE
