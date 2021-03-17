@@ -1,3 +1,6 @@
+* New constants: `industry_net_flows`, `transport_domestic_flows`, `fd_sectors`, `eiou_flows`, `prim_agg_flows`
+* Improving documentation of constants.
+
 # IEATools 0.1.48 (2012-02-18)
 
 * Minor issue fixed regarding the `coal_and_coal_products` constant.
