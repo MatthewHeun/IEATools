@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.48</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.49</span>
       </span>
     </div>
 
@@ -144,7 +144,19 @@
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string vector with 8 entries.</p>
+    <p>A string vector with 9 entries.</p><dl>
+<dt>world_aviation_bunkers</dt><dd><p>The string identifying the World aviation bunkers transport sector</p></dd>
+<dt>world_marine_bunkers</dt><dd><p>The string identifying the World marine bunkers transport sector</p></dd>
+<dt>domestic_aviation</dt><dd><p>The string identifying Domestic aviation</p></dd>
+<dt>road</dt><dd><p>The string identifying the Road transport sector</p></dd>
+<dt>rail</dt><dd><p>The string identifying the Rail transport sector</p></dd>
+<dt>pipeline_transport</dt><dd><p>The string identifying the Pipeline transport sector</p></dd>
+<dt>domestic_navigation</dt><dd><p>The string identifying the Domestic navigation sector</p></dd>
+<dt>non_specified_transport</dt><dd><p>The string identifying the Non-specified transport sector</p></dd>
+<dt>transport_not_elsewhere_specified</dt><dd><p>The string identifying the Transport not elsewhere specified sector. This string replaced <code>non_specified_transport</code> in the IEA's 2020 extended energy balances.</p></dd>
+
+</dl>
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>transport_flows</span>
@@ -171,6 +183,9 @@
 #&gt; 
 #&gt; $non_specified_transport
 #&gt; [1] "Non-specified (transport)"
+#&gt; 
+#&gt; $transport_not_elsewhere_specified
+#&gt; [1] "Transport not elsewhere specified"
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -183,7 +198,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia, Zeke Marshall.</p>
 </div>
 
 <div class="pkgdown">

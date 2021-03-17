@@ -6,6 +6,9 @@
 \title{Secondary peat products}
 \format{
 A string vector with 1 entries.
+\describe{
+\item{peat_products}{The string identifier for Peat products.}
+}
 }
 \usage{
 secondary_peat_products

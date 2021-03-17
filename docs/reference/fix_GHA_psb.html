@@ -79,7 +79,7 @@ by reducing the per-capita consumption of PSB, starting in 1991." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.48</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.49</span>
       </span>
     </div>
 
@@ -203,19 +203,19 @@ for additional details.</p>
   <span class='op'>)</span> 
 <span class='va'>example_tidy_iea_df</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 10 x 11</span><span>
-#&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>991 Supply      Total primary e…
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>991 Supply      Transformation …
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>991 Consumption Industry        
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>991 Consumption Other           
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Supply      Total primary e…
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Supply      Transformation …
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Consumption Industry        
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Consumption Other           
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Consumption Other           
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Consumption Other           
-#&gt; </span><span style='color: #949494;'># … with 4 more variables: Flow </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Product </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Unit </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, E.dot </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='va'>fixed</span> <span class='op'>&lt;-</span> <span class='va'>example_tidy_iea_df</span> <span class='op'>%&gt;%</span> 
+#&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi~
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>991 Supply      Total primary energy~
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>991 Supply      Transformation proce~
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>991 Consumption Industry             
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>991 Consumption Other                
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Supply      Total primary energy~
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Supply      Transformation proce~
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Consumption Industry             
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Consumption Other                
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Consumption Other                
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>992 Consumption Other                
+#&gt; </span><span style='color: #949494;'># ... with 4 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;, Unit &lt;chr&gt;, E.dot &lt;dbl&gt;</span><span></div><div class='input'><span class='va'>fixed</span> <span class='op'>&lt;-</span> <span class='va'>example_tidy_iea_df</span> <span class='op'>%&gt;%</span> 
   <span class='fu'>fix_GHA_psb</span><span class='op'>(</span><span class='op'>)</span>
 <span class='co'># Compare production of Primary solid biofuels in 1991</span>
 <span class='va'>example_tidy_iea_df</span> <span class='op'>%&gt;%</span> 
@@ -242,7 +242,7 @@ for additional details.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia, Zeke Marshall.</p>
 </div>
 
 <div class="pkgdown">

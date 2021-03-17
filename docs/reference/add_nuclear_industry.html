@@ -78,7 +78,7 @@ The function is called within the specify_all() function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.48</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.49</span>
       </span>
     </div>
 
@@ -341,29 +341,29 @@ heat and electricity according to the shares of output of each of these two prod
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:testthat’:</span>
+#&gt; <span class='message'>Attaching package: 'dplyr'</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from 'package:testthat':</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    matches</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
+#&gt; <span class='message'>    matches</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from 'package:stats':</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
+#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from 'package:base':</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'>add_nuclear_industry</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 403 x 11</span><span>
-#&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Non-energy use  
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other           
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other           
-#&gt; </span><span style='color: #949494;'># … with 393 more rows, and 4 more variables: Flow </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Product </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,</span><span>
-#&gt; </span><span style='color: #949494;'>#   Unit </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, E.dot </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+#&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi~
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Non-energy use       
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other                
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other                
+#&gt; </span><span style='color: #949494;'># ... with 393 more rows, and 4 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;,</span><span>
+#&gt; </span><span style='color: #949494;'>#   Unit &lt;chr&gt;, E.dot &lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -375,7 +375,7 @@ heat and electricity according to the shares of output of each of these two prod
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia, Zeke Marshall.</p>
 </div>
 
 <div class="pkgdown">
