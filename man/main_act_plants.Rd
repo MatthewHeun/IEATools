@@ -6,6 +6,14 @@
 \title{Main activity producer plants}
 \format{
 A string vector with 6 entries.
+\describe{
+\item{main_act_prod_elect_plants}{The string identifier for Main activity producer electricity plants.}
+\item{main_act_prod_chp_plants}{The string identifier for Main activity producer CHP plants.}
+\item{main_act_prod_heat_plants}{The string identifier for Main activity producer heat plants.}
+\item{autoprod_elect_plants}{The string identifier for Autoproducer electricity plants.}
+\item{autoprod_heat_plants}{The string identifier for Autoproducer heat plants.}
+\item{autoprod_chp_plants}{The string identifier for Autoproducer CHP plants.}
+}
 }
 \usage{
 main_act_plants

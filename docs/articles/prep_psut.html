@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.48</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.49</span>
       </span>
     </div>
 
@@ -84,13 +84,13 @@
 
       
 
-      </header><script src="prep_psut_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><script src="prep_psut_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Prepare for PSUT analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-02-18</h4>
+            <h4 class="date">2021-03-17</h4>
       
       
       <div class="hidden name"><code>prep_psut.Rmd</code></div>
@@ -111,21 +111,21 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 402</span>
 <span class="co">#&gt; Columns: 12</span>
-<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
-<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span>
-<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span>
-<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span>
-<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971…</span>
-<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Suppl…</span>
-<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary …</span>
-<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Production", "Production", "Imports", "Import…</span>
-<span class="co">#&gt; $ Product                &lt;chr&gt; "Primary solid biofuels", "Hydro", "Crude oil"…</span>
-<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span>
-<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 2087.5131, 250.1290, 916.2081, 1.0700, 21.3051…</span>
-<span class="co">#&gt; $ matnames               &lt;chr&gt; "R", "R", "V", "V", "V", "V", "V", "Y", "Y", "…</span></code></pre></div>
+<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"~</span>
+<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"~</span>
+<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E~</span>
+<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F~</span>
+<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971,~</span>
+<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Supply~</span>
+<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary e~</span>
+<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Production", "Production", "Imports", "Imports~</span>
+<span class="co">#&gt; $ Product                &lt;chr&gt; "Primary solid biofuels", "Hydro", "Crude oil",~</span>
+<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",~</span>
+<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 2087.5131, 250.1290, 916.2081, 1.0700, 21.3051,~</span>
+<span class="co">#&gt; $ matnames               &lt;chr&gt; "R", "R", "V", "V", "V", "V", "V", "Y", "Y", "Y~</span></code></pre></div>
 <p>Note that when a <code>matnames</code> column already exists in <code>.tidy_iea_df</code>, <code><a href="../reference/add_psut_matnames.html">add_psut_matnames()</a></code> returns the input data frame without modification. This behavior allows other matrix naming conventions.</p>
 </div>
 <div id="add-matrix-metadata-add_row_col_meta" class="section level2">
@@ -136,25 +136,25 @@
 <code class="sourceCode R"><span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/add_row_col_meta.html">add_row_col_meta</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 402</span>
 <span class="co">#&gt; Columns: 16</span>
-<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
-<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span>
-<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span>
-<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span>
-<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971…</span>
-<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Suppl…</span>
-<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary …</span>
-<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Production", "Production", "Imports", "Import…</span>
-<span class="co">#&gt; $ Product                &lt;chr&gt; "Primary solid biofuels", "Hydro", "Crude oil"…</span>
-<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span>
-<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 2087.5131, 250.1290, 916.2081, 1.0700, 21.3051…</span>
-<span class="co">#&gt; $ matnames               &lt;chr&gt; "R", "R", "V", "V", "V", "V", "V", "Y", "Y", "…</span>
-<span class="co">#&gt; $ rownames               &lt;chr&gt; "Production", "Production", "Imports", "Import…</span>
-<span class="co">#&gt; $ colnames               &lt;chr&gt; "Primary solid biofuels", "Hydro", "Crude oil"…</span>
-<span class="co">#&gt; $ rowtypes               &lt;chr&gt; "Industry", "Industry", "Industry", "Industry"…</span>
-<span class="co">#&gt; $ coltypes               &lt;chr&gt; "Product", "Product", "Product", "Product", "P…</span></code></pre></div>
+<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"~</span>
+<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"~</span>
+<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E~</span>
+<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F~</span>
+<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971,~</span>
+<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Supply~</span>
+<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary e~</span>
+<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Production", "Production", "Imports", "Imports~</span>
+<span class="co">#&gt; $ Product                &lt;chr&gt; "Primary solid biofuels", "Hydro", "Crude oil",~</span>
+<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",~</span>
+<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 2087.5131, 250.1290, 916.2081, 1.0700, 21.3051,~</span>
+<span class="co">#&gt; $ matnames               &lt;chr&gt; "R", "R", "V", "V", "V", "V", "V", "Y", "Y", "Y~</span>
+<span class="co">#&gt; $ rownames               &lt;chr&gt; "Production", "Production", "Imports", "Imports~</span>
+<span class="co">#&gt; $ colnames               &lt;chr&gt; "Primary solid biofuels", "Hydro", "Crude oil",~</span>
+<span class="co">#&gt; $ rowtypes               &lt;chr&gt; "Industry", "Industry", "Industry", "Industry",~</span>
+<span class="co">#&gt; $ coltypes               &lt;chr&gt; "Product", "Product", "Product", "Product", "Pr~</span></code></pre></div>
 <p>Note that if all of <code>rowname</code>, <code>colname</code>, <code>rowtype</code>, or <code>coltype</code> columns are already present in <code>.tidy_iea_data</code>, <code><a href="../reference/add_row_col_meta.html">add_row_col_meta()</a></code> returns the input data frame without modification. This behavior allows other matrix row, column, rowtype, and coltype naming conventions.</p>
 <p>If some but not all of <code>rowname</code>, <code>colname</code>, <code>rowtype</code>, and <code>coltype</code> columns are present in in <code>.tidy_iea_data</code>, <code><a href="../reference/add_row_col_meta.html">add_row_col_meta()</a></code>returns an error.</p>
 </div>
@@ -170,16 +170,16 @@
   <span class="fu"><a href="../reference/add_row_col_meta.html">add_row_col_meta</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/collapse_to_tidy_psut.html">collapse_to_tidy_psut</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">Tidy_PSUT</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 20</span>
 <span class="co">#&gt; Columns: 7</span>
-<span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "…</span>
-<span class="co">#&gt; $ Method      &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "…</span>
-<span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
-<span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "Final", "Fi…</span>
-<span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 2000, 2000, 2000, 2000, 200…</span>
-<span class="co">#&gt; $ matnames    &lt;chr&gt; "R", "U_EIOU", "U_feed", "V", "Y", "R", "U_EIOU", "U_feed…</span>
-<span class="co">#&gt; $ matvals     &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[4 x 3]&gt;, &lt;mat…</span>
+<span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "G~</span>
+<span class="co">#&gt; $ Method      &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "P~</span>
+<span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E"~</span>
+<span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "Final", "Fin~</span>
+<span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 2000, 2000, 2000, 2000, 2000~</span>
+<span class="co">#&gt; $ matnames    &lt;chr&gt; "R", "U_EIOU", "U_feed", "V", "Y", "R", "U_EIOU", "U_feed"~</span>
+<span class="co">#&gt; $ matvals     &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[4 x 3]&gt;&gt;, ~</span>
 <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">Tidy_PSUT</span><span class="op">$</span><span class="va">matvals</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
 <span class="co">#&gt; [1] "matrix" "array"</span>
 <span class="va">Tidy_PSUT</span><span class="op">$</span><span class="va">matvals</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
@@ -200,7 +200,7 @@
   <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">S_units_df</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 4</span>
 <span class="co">#&gt; Columns: 6</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF"</span>
@@ -208,7 +208,7 @@
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E"</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[22 x 1]&gt;, &lt;…</span>
+<span class="co">#&gt; $ S_units     &lt;list&gt; &lt;&lt;matrix[14 x 1]&gt;&gt;, &lt;&lt;matrix[16 x 1]&gt;&gt;, &lt;&lt;matrix[22 x 1]&gt;&gt;~</span>
 <span class="va">S_units_df</span><span class="op">$</span><span class="va">S_units</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt;                                       ktoe</span>
 <span class="co">#&gt; Aviation gasoline                        1</span>
@@ -266,18 +266,18 @@
   <span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; [1] TRUE</span>
 <span class="va">Simple</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 24</span>
 <span class="co">#&gt; Columns: 9</span>
-<span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "…</span>
-<span class="co">#&gt; $ Method      &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "…</span>
-<span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
-<span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "Final", "Fi…</span>
-<span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 2000, 2000, 2000, 200…</span>
-<span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[6 x 3]&gt;, &lt;matrix[6 x 3]&gt;, &lt;matrix[6 x 3]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[6 x 3]&gt;, &lt;matrix[6 x 3]&gt;, &lt;matrix[6 x 3]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ matnames    &lt;chr&gt; "R", "U_EIOU", "U_feed", "V", "Y", "S_units", "R", "U_EIO…</span>
-<span class="co">#&gt; $ matvals     &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[4 x 3]&gt;, &lt;mat…</span>
+<span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "G~</span>
+<span class="co">#&gt; $ Method      &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "P~</span>
+<span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E"~</span>
+<span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "Final", "Fin~</span>
+<span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 2000, 2000, 2000, 2000~</span>
+<span class="co">#&gt; $ U           &lt;list&gt; &lt;&lt;matrix[6 x 3]&gt;&gt;, &lt;&lt;matrix[6 x 3]&gt;&gt;, &lt;&lt;matrix[6 x 3]&gt;&gt;, ~</span>
+<span class="co">#&gt; $ r_EIOU      &lt;list&gt; &lt;&lt;matrix[6 x 3]&gt;&gt;, &lt;&lt;matrix[6 x 3]&gt;&gt;, &lt;&lt;matrix[6 x 3]&gt;&gt;, ~</span>
+<span class="co">#&gt; $ matnames    &lt;chr&gt; "R", "U_EIOU", "U_feed", "V", "Y", "S_units", "R", "U_EIOU~</span>
+<span class="co">#&gt; $ matvals     &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[4 x 3]&gt;&gt;, ~</span>
 <span class="co"># U_EIOU for Ghana in 1971</span>
 <span class="va">Simple</span><span class="op">$</span><span class="va">matvals</span><span class="op">[[</span><span class="fl">5</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt;                                       Agriculture/forestry</span>
@@ -502,7 +502,7 @@
   <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/prep_psut.html">prep_psut</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">wide_PSUT_mats</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 4</span>
 <span class="co">#&gt; Columns: 13</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF"</span>
@@ -510,14 +510,14 @@
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E"</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
-<span class="co">#&gt; $ R           &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[3 x 3]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ U_EIOU      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 3]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ U_feed      &lt;list&gt; [&lt;matrix[4 x 3]&gt;, &lt;matrix[3 x 3]&gt;, &lt;matrix[7 x 9]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[6 x 3]&gt;, &lt;matrix[5 x 3]&gt;, &lt;matrix[9 x 9]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[6 x 3]&gt;, &lt;matrix[5 x 3]&gt;, &lt;matrix[9 x 9]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[10 x 12]&gt;, &lt;matrix[14 x 14]&gt;, &lt;matrix[12 x 19]&gt;…</span>
-<span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[12 x 21]&gt;, &lt;matrix[13 x 20]&gt;, &lt;matrix[18 x 26]&gt;…</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[22 x 1]&gt;, &lt;…</span></code></pre></div>
+<span class="co">#&gt; $ R           &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[3 x 3]&gt;&gt;, &lt;~</span>
+<span class="co">#&gt; $ U_EIOU      &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;~</span>
+<span class="co">#&gt; $ U_feed      &lt;list&gt; &lt;&lt;matrix[4 x 3]&gt;&gt;, &lt;&lt;matrix[3 x 3]&gt;&gt;, &lt;&lt;matrix[7 x 9]&gt;&gt;, &lt;~</span>
+<span class="co">#&gt; $ U           &lt;list&gt; &lt;&lt;matrix[6 x 3]&gt;&gt;, &lt;&lt;matrix[5 x 3]&gt;&gt;, &lt;&lt;matrix[9 x 9]&gt;&gt;, &lt;~</span>
+<span class="co">#&gt; $ r_EIOU      &lt;list&gt; &lt;&lt;matrix[6 x 3]&gt;&gt;, &lt;&lt;matrix[5 x 3]&gt;&gt;, &lt;&lt;matrix[9 x 9]&gt;&gt;, &lt;~</span>
+<span class="co">#&gt; $ V           &lt;list&gt; &lt;&lt;matrix[10 x 12]&gt;&gt;, &lt;&lt;matrix[14 x 14]&gt;&gt;, &lt;&lt;matrix[12 x 1~</span>
+<span class="co">#&gt; $ Y           &lt;list&gt; &lt;&lt;matrix[12 x 21]&gt;&gt;, &lt;&lt;matrix[13 x 20]&gt;&gt;, &lt;&lt;matrix[18 x 2~</span>
+<span class="co">#&gt; $ S_units     &lt;list&gt; &lt;&lt;matrix[14 x 1]&gt;&gt;, &lt;&lt;matrix[16 x 1]&gt;&gt;, &lt;&lt;matrix[22 x 1]&gt;~</span></code></pre></div>
 </div>
   </div>
 
@@ -532,7 +532,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia, Zeke Marshall.</p>
 </div>
 
 <div class="pkgdown">
