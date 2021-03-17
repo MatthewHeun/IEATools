@@ -1,4 +1,7 @@
 
+* New constants: `industry_net_flows`, `transport_domestic_flows`, `fd_sectors`, `eiou_flows`, `prim_agg_flows`
+* Improving documentation of constants.
+
 # IEATools 0.1.46 (2012-02-01)
 
 * `calc_tidy_iea_df_balances` function updated
