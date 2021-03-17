@@ -6,6 +6,10 @@
 \title{Energy type order}
 \format{
 A string list with 2 entries.
+\describe{
+\item{e}{The string identifier for energy "E".}
+\item{x}{The string identifier for exergy "X".}
+}
 }
 \usage{
 energy_types

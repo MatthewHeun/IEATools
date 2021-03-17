@@ -6,6 +6,12 @@
 \title{Total final consumption flows}
 \format{
 A string vector with 4 entries.
+\describe{
+\item{industry}{The string identifier for Industry.}
+\item{transport}{The string identifier for Transport.}
+\item{other}{The string identifier for Other.}
+\item{non_energy_use}{The string identifier for Non-energy use.}
+}
 }
 \usage{
 tfc_flows

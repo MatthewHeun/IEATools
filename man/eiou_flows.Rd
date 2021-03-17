@@ -3,17 +3,32 @@
 \docType{data}
 \name{eiou_flows}
 \alias{eiou_flows}
+<<<<<<< HEAD
 \title{Energy Industry Own Use flows}
 \format{
 A string list with 17 entries.
+=======
+\title{Energy industry own use (EIOU) flows}
+\format{
+A string vector with 25 entries.
+\describe{
+\item{transformation_processes}{The string vector \code{transformation_processes}.}
+\item{coal_mines}{The string that identifies Coal mines.}
+\item{oil_and_gas_extraction}{The string that identifies Oil and gas extraction.}
+}
+>>>>>>> new_constants
 }
 \usage{
 eiou_flows
 }
 \description{
+<<<<<<< HEAD
 A string list containing named names of EIOU flows in the IEA World Energy Extended Balances data.
 Items in the list provide default values for EIOU flows function arguments
 throughout the \code{IEATools} package.
+=======
+A string vector containing names of \verb{Energy industry own use} \code{Flow}s in the IEA extended energy balances database.
+>>>>>>> new_constants
 }
 \examples{
 eiou_flows

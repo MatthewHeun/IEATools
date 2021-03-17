@@ -6,6 +6,11 @@
 \title{Non-energy flows}
 \format{
 A string vector with 3 entries.
+\describe{
+\item{non_energy_use_industry_transformation_energy}{The string identifier for the Non-energy use industry/transformation/energy sector.}
+\item{non_energy_use_in_transport}{The string identifier for the Non-energy use in transport sector.}
+\item{non_energy_use_in_other}{The string identifier for the Non energy use in other sector.}
+}
 }
 \usage{
 non_energy_flows

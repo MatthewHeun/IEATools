@@ -6,6 +6,14 @@
 \title{Primary oil products}
 \format{
 A string vector with 6 entries.
+\describe{
+\item{crude_ngl_feedstocks_if_no_detail}{The string identifier for Crude/NGL/feedstocks (if no detail).}
+\item{crude_oil}{The string identifier for Crude oil.}
+\item{natural_gas_liquids}{The string identifier for Natural gas liquids.}
+\item{additives_blending_components}{The string identifier for Additives/blending components.}
+\item{other_hydrocarbons}{The string identifier for Other hydrocarbons.}
+\item{oil_shales_and_oil_sands}{The string identifier for Oil shale and oil sands.}
+}
 }
 \usage{
 primary_oil_products
