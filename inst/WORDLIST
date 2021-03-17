@@ -38,6 +38,7 @@ exergy
 Exiobase
 extdata
 fap
+feedstocks
 FFFFFF
 FixedHNFuels
 FLOWs
@@ -77,10 +78,12 @@ MatthewHeun
 MTH
 negzeropos
 newcommand
+NGL
 nonenergy
 PCM
 perc
 PFU
+photovoltaics
 pre
 PSB
 PSUT
@@ -96,6 +99,7 @@ rowsum
 rowsums
 rowtype
 rowvec
+SBP
 SEAPSUT
 TFC
 TJ
