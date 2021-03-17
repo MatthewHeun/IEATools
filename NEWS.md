@@ -1,11 +1,13 @@
+# IEATools 0.1.49 (2021-03-17)
+
 * New constants: `industry_net_flows`, `transport_domestic_flows`, `fd_sectors`, `eiou_flows`, `prim_agg_flows`
 * Improving documentation of constants.
 
-# IEATools 0.1.48 (2012-02-18)
+# IEATools 0.1.48 (2021-02-18)
 
 * Minor issue fixed regarding the `coal_and_coal_products` constant.
 
-# IEATools 0.1.47 (2012-02-16)
+# IEATools 0.1.47 (2021-02-16)
 
 * New `specify_all()` function coded, so that it now splits non-specified
   industries, splits the IEA "Own use in electricity, CHP and heat plants"
@@ -22,7 +24,7 @@
   it also works when the `.tidy_iea_df` data frame already
   has a `matnames` column.
 
-# IEATools 0.1.46 (2012-02-01)
+# IEATools 0.1.46 (2021-02-01)
 
 * `calc_tidy_iea_df_balances` function updated
   so that it also accounts for balancing flows 
@@ -44,7 +46,7 @@
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.45 (2012-12-28)
+# IEATools 0.1.45 (2020-12-28)
 
 * Bug in `aggregate_regions()` hotfixed.
 * Still 661 tests, coverage remains at 100%.
