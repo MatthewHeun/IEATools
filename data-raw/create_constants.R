@@ -188,7 +188,7 @@ coal_and_coal_products <- list(primary_coal_products,
                                gas_coke = "Gas coke",
                                coal_tar = "Coal tar",
                                bkb = "BKB",
-                               bas_works_gas = "Gas works gas",
+                               gas_works_gas = "Gas works gas",
                                coke_oven_gas = "Coke oven gas",
                                blast_furnace_gas = "Blast furnace gas",
                                other_recovered_gases = "Other recovered gases")
