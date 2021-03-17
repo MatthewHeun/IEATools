@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.48</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.49</span>
       </span>
     </div>
 
@@ -144,13 +144,14 @@
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string list with 6 entries.</p><dl>
+    <p>A string list with 7 entries.</p><dl>
 <dt>non_specified_transformation</dt><dd><p>The string identifying non-specified transformation process flows.</p></dd>
 <dt>non_specified_energy</dt><dd><p>The string identifying non-specified energy industry own use.</p></dd>
 <dt>non_specified_transport</dt><dd><p>The string identifying non-specified transport.</p></dd>
 <dt>non_specified_industry</dt><dd><p>The string identifying non-specified industry for 2018 and earlier versions of the IEA's extended energy balance data.</p></dd>
 <dt>industry_not_elsewhere_specified</dt><dd><p>The string identifying non-specified industry flows for 2019 and later versions of the IEA's extended energy balance data.</p></dd>
 <dt>non_specified</dt><dd><p>The string identifying generic non-specified flows.</p></dd>
+<dt>transport_not_elsewhere_specified</dt><dd><p>The string identifying the Transport not elsewhere specified sector. This string replaced <code>non_specified_transport</code> in the IEA's 2020 extended energy balances.</p></dd>
 
 </dl>
 
@@ -174,6 +175,9 @@
 #&gt; 
 #&gt; $non_specified
 #&gt; [1] "Non-specified"
+#&gt; 
+#&gt; $non_specified_transport
+#&gt; [1] "Transport not elsewhere specified"
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -186,7 +190,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia, Zeke Marshall.</p>
 </div>
 
 <div class="pkgdown">
