@@ -553,10 +553,9 @@ add_nuclear_industry <- function(.tidy_iea_df,
                                  # Constant
                                  ratio_output_to_nuclear_fuel = 0.33){
   
-  # An empty tibble with all three product names as columns
-  products_tibble = tibble::tibble(!!nuclear := NA,
-                                   !!electricity := NA,
-                                   !!heat := NA)
+  products_tibble <- tibble::tibble("{nuclear}" := NA,
+                                    "{electricity}" := NA,
+                                    "{heat}" := NA)
   
   # Here we keep only the flows that we are going to modify:
   modified_flows <- .tidy_iea_df %>%
