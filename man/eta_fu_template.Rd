@@ -27,6 +27,7 @@ eta_fu_template(
   product = IEATools::iea_cols$product,
   flow = IEATools::iea_cols$flow,
   e_dot = IEATools::iea_cols$e_dot,
+  unit = IEATools::iea_cols$unit,
   ef_product = IEATools::template_cols$ef_product,
   machine = IEATools::template_cols$machine,
   eu_product = IEATools::template_cols$eu_product,
@@ -89,7 +90,7 @@ Default is "useful_energy_type".}
 \item{non_energy_eff}{The efficiency for non-energy use, non-zero so we can swim upstream later.
 Default is 1e-6, or 0.0001\%.}
 
-\item{country, year, ledger_side, flow_aggregation_point, flow, product, e_dot}{See \code{IEATools::iea_cols}.}
+\item{country, year, ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
 
 \item{ef_product, machine, eu_product, eta_fu, phi_u, destination, quantity, maximum_values, e_dot_dest, e_dot_machine, e_dot_machine_max, e_dot_machine_tot, e_dot_machine_perc, e_dot_machine_max_perc}{See \code{IEATools::template_cols}.}
 

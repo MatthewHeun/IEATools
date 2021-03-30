@@ -7,6 +7,7 @@
 tidy_eta_fu_table(
   .eta_fu_table,
   year = IEATools::iea_cols$year,
+  unit = IEATools::iea_cols$unit,
   e_dot_machine = IEATools::template_cols$e_dot_machine,
   e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
   quantity = IEATools::template_cols$quantity,
@@ -17,7 +18,7 @@ tidy_eta_fu_table(
 \arguments{
 \item{.eta_fu_table}{The final-to-useful efficiency table to be tidied.}
 
-\item{year}{See \code{IEATools::iea_cols}.}
+\item{year, unit}{See \code{IEATools::iea_cols}.}
 
 \item{e_dot_machine, e_dot_machine_perc, quantity, maximum_values, .values}{See \code{IEATools::template_cols}.}
 }
