@@ -739,7 +739,7 @@ check_fu_allocation_data <- function(.fu_allocation_table,
 #' @param .row_order the name of a metadata column used internally for determining row order. Default is ".row_order".
 #' @param non_energy_eff The efficiency for non-energy use, non-zero so we can swim upstream later.
 #'                       Default is 1e-6, or 0.0001%.
-#' @param country,year,ledger_side,flow_aggregation_point,flow,product,e_dot See `IEATools::iea_cols`.
+#' @param country,year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
 #' @param ef_product,machine,eu_product,eta_fu,phi_u,destination,quantity,maximum_values,e_dot_dest,e_dot_machine,e_dot_machine_max,e_dot_machine_tot,e_dot_machine_perc,e_dot_machine_max_perc See `IEATools::template_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param eiou See `IEATools::tfc_compare_flows`.
@@ -774,6 +774,7 @@ eta_fu_template <- function(.fu_allocations,
                             product = IEATools::iea_cols$product,
                             flow = IEATools::iea_cols$flow,
                             e_dot = IEATools::iea_cols$e_dot,
+                            unit = IEATools::iea_cols$unit,
                             ef_product = IEATools::template_cols$ef_product,
                             machine = IEATools::template_cols$machine,
                             eu_product = IEATools::template_cols$eu_product, 
@@ -886,31 +887,31 @@ eta_fu_template <- function(.fu_allocations,
   # So, rename the column.
   c_info <- c_info %>%
     dplyr::rename(
-      !!as.name(c_ratio) := !!as.name(c_perc)
+      "{c_ratio}" := .data[[c_perc]]
     )
   
   # Now we join the E.dot and C values and calculate the energy flowing into each final-to-useful machine
   input_energy <- dplyr::full_join(c_info, e_dot_info, 
-                                   by = matsindf::everything_except(e_dot_info, e_dot_dest, .symbols = FALSE)) %>% 
+                                   by = matsindf::everything_except(unit, e_dot_info, e_dot_dest, .symbols = FALSE)) %>% 
     # There may be cases where the analyst has filled a C value, but there is no corresponding e_dot_dest value.
     # Get rid of those rows.
-    dplyr::filter(!is.na(!!as.name(e_dot_dest))) %>% 
+    dplyr::filter(!is.na(.data[[e_dot_dest]])) %>% 
     dplyr::mutate(
       # Calculate the energy flow into each f-->u machine
       # for each row of the table
       # (each combination of Ef.product and Machine.
-      !!as.name(e_dot_machine) := !!as.name(c_ratio) * !!as.name(e_dot_dest)
+      "{e_dot_machine}" := .data[[c_ratio]] * .data[[e_dot_dest]]
     ) %>% 
     # Group by the metadata columns, year, the Machine column, and the eu_product column, because we want to calculate the 
     # amount of energy going into each machine in each year for a given purpose.
     dplyr::group_by(!!!meta_columns, !!as.name(year), !!as.name(machine), !!as.name(eu_product)) %>% 
     # Summarise to aggregate the energy going into each machine.
     dplyr::summarise(
-      !!as.name(e_dot_machine) := sum(!!as.name(e_dot_machine))
+      "{e_dot_machine}" := sum(.data[[e_dot_machine]])
     ) %>% 
     dplyr::ungroup() %>% 
     dplyr::mutate(
-      !!as.name(year) := as.numeric(!!as.name(year))
+      "{year}" := as.numeric(.data[[year]])
     )
   # Calculate maximum input energy for each combination of metadata variables
   input_energy_max <- input_energy %>% 
@@ -928,7 +929,7 @@ eta_fu_template <- function(.fu_allocations,
     dplyr::filter(!is.na(!!as.name(e_dot_machine))) %>% 
     dplyr::group_by(!!!meta_columns, !!as.name(year)) %>% 
     dplyr::summarise(
-      !!as.name(e_dot_machine_tot) := sum(!!as.name(e_dot_machine))
+      "{e_dot_machine_tot}" := sum(.data[[e_dot_machine]])
     ) %>% 
     dplyr::ungroup()
   # Now calculate fractions of all input energy entering each fu machine in each year
@@ -937,34 +938,34 @@ eta_fu_template <- function(.fu_allocations,
     dplyr::mutate(
       # Note that this row is called e_dot_machine_perc, but its values are ratios, not percentages.
       # The intent is that these values will be formatted as percentages when the Excel sheet is written.
-      !!as.name(e_dot_machine_perc) := !!as.name(e_dot_machine) / !!as.name(e_dot_machine_tot), 
+      "{e_dot_machine_perc}" := .data[[e_dot_machine]] / .data[[e_dot_machine_tot]], 
       # Eliminate columns we no longer need.
-      !!as.name(e_dot_machine) := NULL,
-      !!as.name(e_dot_machine_tot) := NULL
+      "{e_dot_machine}" := NULL,
+      "{e_dot_machine_tot}" := NULL
     )
   # Calculate the maximum percentage of all input energy across all years for each machine and eu_product combination
   input_energy_max_percs <- input_energy_percs %>% 
     dplyr::group_by(!!!meta_columns, !!as.name(machine), !!as.name(eu_product)) %>% 
     dplyr::summarise(
-      !!as.name(e_dot_machine_max_perc) := max(!!as.name(e_dot_machine_perc))
+      "{e_dot_machine_max_perc}" := max(.data[[e_dot_machine_perc]])
     ) %>% 
     dplyr::ungroup()
    
   # Find the maxima across years for each combination of machine and eu_product
   Maxima <- dplyr::full_join(input_energy_max, input_energy_max_percs, by = matsindf::everything_except(input_energy, year, e_dot_machine, .symbols = FALSE)) %>% 
     dplyr::rename(
-      !!as.name(e_dot_machine) := !!as.name(e_dot_machine_max),
-      !!as.name(e_dot_machine_perc) := !!as.name(e_dot_machine_max_perc)
+      "{e_dot_machine}" := .data[[e_dot_machine_max]],
+      "{e_dot_machine_perc}" := .data[[e_dot_machine_max_perc]]
     ) %>% 
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(maximum_values), !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc))
-  
+
   # Calculate the row order of meta_cols, machine, and eu_product based on maxima across years.
   if (sort_by == "importance") {
     row_order <- Maxima %>% 
-      dplyr::filter(!!as.name(quantity) == e_dot_machine_perc) %>% 
+      dplyr::filter(.data[[quantity]] == e_dot_machine_perc) %>% 
       dplyr::arrange(!!!meta_columns, dplyr::desc(!!as.name(maximum_values))) %>% 
       dplyr::mutate(
-        !!as.name(.row_order) := paste(!!!meta_columns, !!as.name(machine), !!as.name(eu_product), sep = "+")
+        "{.row_order}" := paste(!!!meta_columns, !!as.name(machine), !!as.name(eu_product), sep = "+")
       ) %>% 
       magrittr::extract2(.row_order)
   } else if (sort_by == "useful_energy_type") {
@@ -984,13 +985,14 @@ eta_fu_template <- function(.fu_allocations,
     eu_product_sort_order <- c(md, ke, light, heat_prods_sorted, leftover_eu_prods)
     # Sort the Maxima data frame to get the order we want.
     row_order <- Maxima %>% 
-      dplyr::filter(!!as.name(quantity) == e_dot_machine_perc) %>% 
+      # dplyr::filter(!!as.name(quantity) == e_dot_machine_perc) %>% 
+      dplyr::filter(.data[[quantity]] == e_dot_machine_perc) %>% 
       dplyr::mutate(
-        !!as.name(eu_product) := factor(!!as.name(eu_product), levels = eu_product_sort_order)
+        "{eu_product}" := factor(.data[[eu_product]], levels = eu_product_sort_order)
       ) %>% 
       dplyr::arrange(!!!meta_columns, !!as.name(eu_product), dplyr::desc(!!as.name(maximum_values))) %>% 
       dplyr::mutate(
-        !!as.name(.row_order) := paste(!!!meta_columns, !!as.name(machine), !!as.name(eu_product), sep = "+")
+        "{.row_order}" := paste(!!!meta_columns, !!as.name(machine), !!as.name(eu_product), sep = "+")
       ) %>% 
       magrittr::extract2(.row_order)
   }
@@ -1011,14 +1013,15 @@ eta_fu_template <- function(.fu_allocations,
       # converts to a Carnot efficiency.
       # Some of the phi_u values will end up as NA, but that's OK.
       # We'll change them later.
-      !!as.name(phi_u) := carnot_efficiency(!!as.name(eu_product), T_0 = T_0),
+      "{phi_u}" := carnot_efficiency(.data[[eu_product]], T_0 = T_0),
       # All of the mechanical drive (md) rows will have NA for phi_u, but we know that it should be 1.
       !!as.name(phi_u) := dplyr::case_when(
         # We know that mechanical drive (md) has a phi_u value of 1.
         !!as.name(eu_product) == md ~ 1,
         # Give non-energy use phi = 1.
         startsWith(.data[[machine]], non_energy) ~ 1,
-        TRUE ~ !!as.name(phi_u)
+        # TRUE ~ !!as.name(phi_u)
+        TRUE ~ .data[[phi_u]]
       )
     ) %>% 
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(.value), 
@@ -1028,15 +1031,15 @@ eta_fu_template <- function(.fu_allocations,
   # Prepare the outgoing data frame.
   out <- dplyr::full_join(Maxima, Annual, by = matsindf::everything_except(Maxima, maximum_values, .symbols = FALSE)) %>% 
     dplyr::mutate(
-      !!as.name(quantity) := factor(!!as.name(quantity), levels = c(e_dot_machine, e_dot_machine_perc, eta_fu, phi_u)), 
-      !!as.name(.row_order) := paste(!!!meta_columns, !!as.name(machine), !!as.name(eu_product), sep = "+"), 
-      !!as.name(.row_order) := factor(!!as.name(.row_order), levels = row_order)
+      "{quantity}" := factor(.data[[quantity]], levels = c(e_dot_machine, e_dot_machine_perc, eta_fu, phi_u)), 
+      "{.row_order}" := paste(!!!meta_columns, !!as.name(machine), !!as.name(eu_product), sep = "+"), 
+      "{.row_order}" := factor(.data[[.row_order]], levels = row_order)
     ) %>% 
     dplyr::arrange(!!!meta_columns, !!as.name(.row_order), !!as.name(quantity), !!as.name(maximum_values)) %>% 
     dplyr::mutate(
-      !!as.name(.row_order) := NULL,
+      "{.row_order}" := NULL,
       # Remove the factorization of the quantity column
-      !!as.name(quantity) := as.character(!!as.name(quantity))
+      "{quantity}" := as.character(.data[[quantity]])
     )
   
   # At this point the year columns are of type character.
