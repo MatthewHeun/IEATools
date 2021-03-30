@@ -550,11 +550,15 @@ complete_eta_fu_table <- function(eta_fu_table,
                                   e_dot = IEATools::iea_cols$e_dot,
                                   unit = IEATools::iea_cols$unit,
                                   year = IEATools::iea_cols$year,
+                                  ledger_side = IEATools::iea_cols$ledger_side,
+                                  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                   machine = IEATools::template_cols$machine, 
                                   eu_product = IEATools::template_cols$eu_product, 
                                   e_dot_perc = IEATools::template_cols$e_dot_perc,
                                   e_dot_machine = IEATools::template_cols$e_dot_machine,
                                   e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
+                                  ef_product = IEATools::template_cols$ef_product,
+                                  destination = IEATools::template_cols$destination,
                                   eta_fu = IEATools::template_cols$eta_fu,
                                   phi_u = IEATools::template_cols$phi_u,
                                   quantity = IEATools::template_cols$quantity,
@@ -614,11 +618,33 @@ complete_eta_fu_table <- function(eta_fu_table,
     dplyr::mutate(
       "{c_source}" := NULL
     ) %>% 
-    tidy_fu_allocation_table()
+    tidy_fu_allocation_table(year = year, 
+                             e_dot = e_dot,
+                             e_dot_perc = e_dot_perc,
+                             quantity = quantity,
+                             maximum_values = maximum_values, 
+                             .values = .values)
   
   # Extract machines and products for this country from the fu_allocation_table
-  # This call should fail, but we're really after machines_that_need_etas
-  temp_false <- eta_fu_table_completed(fu_allocation_table = fu_allocation_table)
+  # This call should return FALSE, but we're really after machines_that_need_etas
+  temp_false <- eta_fu_table_completed(fu_allocation_table = fu_allocation_table, 
+                                       which_quantity = which_quantity, 
+                                       e_dot = e_dot,
+                                       year = year,
+                                       method = method,
+                                       ledger_side = ledger_side,
+                                       flow_aggregation_point = flow_aggregation_point,
+                                       unit = unit, 
+                                       ef_product = ef_product, 
+                                       quantity = quantity,
+                                       e_dot_perc = e_dot_perc,
+                                       e_dot_machine = e_dot_machine,
+                                       e_dot_machine_perc = e_dot_machine_perc,
+                                       maximum_values = maximum_values,
+                                       destination = destination,
+                                       eta_fu = eta_fu,
+                                       phi_u = phi_u,
+                                       .values = .values)
   assertthat::assert_that(!temp_false)
   machines_that_need_etas <- temp_false %>% 
     attr("unallocated_rows")
@@ -678,7 +704,23 @@ complete_eta_fu_table <- function(eta_fu_table,
     
     done <- eta_fu_table_completed(eta_fu_table = eta_fu_table, 
                                    fu_allocation_table = fu_allocation_table, 
-                                   which_quantity = which_quantity)
+                                   which_quantity = which_quantity, 
+                                   e_dot = e_dot,
+                                   year = year,
+                                   method = method,
+                                   ledger_side = ledger_side,
+                                   flow_aggregation_point = flow_aggregation_point,
+                                   unit = unit, 
+                                   ef_product = ef_product, 
+                                   quantity = quantity,
+                                   e_dot_perc = e_dot_perc,
+                                   e_dot_machine = e_dot_machine,
+                                   e_dot_machine_perc = e_dot_machine_perc,
+                                   maximum_values = maximum_values,
+                                   destination = destination,
+                                   eta_fu = eta_fu,
+                                   phi_u = phi_u,
+                                   .values = .values)
     
     if (done) {
       break
@@ -752,6 +794,7 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
                                    method = IEATools::iea_cols$method,
                                    ledger_side = IEATools::iea_cols$ledger_side,
                                    flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                   unit = IEATools::iea_cols$unit, 
                                    ef_product = IEATools::template_cols$ef_product,
                                    quantity = IEATools::template_cols$quantity,
                                    e_dot_perc = IEATools::template_cols$e_dot_perc,
@@ -763,11 +806,21 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
                                    phi_u = IEATools::template_cols$phi_u,
                                    .values = IEATools::template_cols$.values) {
   
-  fu_allocation_table <- tidy_fu_allocation_table(fu_allocation_table)
+  fu_allocation_table <- fu_allocation_table %>% 
+    tidy_fu_allocation_table(year = year, 
+                             e_dot = e_dot,
+                             e_dot_perc = e_dot_perc,
+                             quantity = quantity,
+                             maximum_values = maximum_values, 
+                             .values = .values)
 
   # Eliminate unneeded columns to find out which machines NEED efficiencies.
   machines_that_need_efficiencies <- fu_allocation_table %>% 
     dplyr::mutate(
+      # Prevents problems in a semi_join later.
+      # Efficiencies don't really care (or shouldn't really care) 
+      # about the units of the incoming final energy.
+      "{unit}" := NULL, 
       "{ledger_side}" := NULL,
       "{flow_aggregation_point}" := NULL,
       "{ef_product}" := NULL,
@@ -788,7 +841,13 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
   
   # Figure out the machines that HAVE efficiencies
   machines_that_have_efficiencies <- eta_fu_table
-  machines_that_have_efficiencies <- tidy_eta_fu_table(machines_that_have_efficiencies)
+  machines_that_have_efficiencies <- machines_that_have_efficiencies %>% 
+    tidy_eta_fu_table(year = year, 
+                      e_dot_machine = e_dot_machine,
+                      e_dot_machine_perc = e_dot_machine_perc,
+                      quantity = quantity,
+                      maximum_values = maximum_values, 
+                      .values = .values)
 
   # Add the quantities that are needed to the outgoing object.
   machines_that_need_efficiencies <- lapply(which_quantity, FUN = function(q) {
