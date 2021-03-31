@@ -79,7 +79,7 @@ by supplying allocations from any number of exemplar countries." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.49</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.50</span>
       </span>
     </div>
 
@@ -295,14 +295,14 @@ More than 1 country will throw an error.</p>
                   <span class='va'>Ef.product</span> <span class='op'>==</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='biofuels_and_waste_products.html'>biofuels_and_waste_products</a></span><span class='op'>$</span><span class='va'>primary_solid_biofuels</span> <span class='op'>&amp;</span> 
                   <span class='va'>Destination</span> <span class='op'>==</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='other_flows.html'>other_flows</a></span><span class='op'>$</span><span class='va'>residential</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>Method</span>, <span class='va'>Energy.type</span>, <span class='va'>Last.stage</span>, <span class='va'>Flow.aggregation.point</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 x 11</span><span>
-#&gt;   Country Ledger.side Unit  Ef.product   Machine Eu.product Destination Quantity
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> GHA     Consumption ktoe  Primary sol~ Wood c~ MTH.100.C  Residential C_1 [%] 
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span> GHA     Consumption ktoe  Primary sol~ Wood c~ MTH.100.C  Residential C_1 [%] 
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> GHA     Consumption ktoe  Primary sol~ Wood f~ LTH.20.C   Residential C_2 [%] 
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span> GHA     Consumption ktoe  Primary sol~ Wood f~ LTH.20.C   Residential C_2 [%] 
-#&gt; </span><span style='color: #949494;'># ... with 3 more variables: Year &lt;dbl&gt;, .values &lt;dbl&gt;, C.source &lt;chr&gt;</span><span></div></span></pre>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 x 10</span><span>
+#&gt;   Country Ledger.side Ef.product   Machine Eu.product Destination Quantity  Year
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> GHA     Consumption Primary sol… Wood c… MTH.100.C  Residential C_1 [%]   </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> GHA     Consumption Primary sol… Wood c… MTH.100.C  Residential C_1 [%]   </span><span style='text-decoration: underline;'>2</span><span>000
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span> GHA     Consumption Primary sol… Wood f… LTH.20.C   Residential C_2 [%]   </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span> GHA     Consumption Primary sol… Wood f… LTH.20.C   Residential C_2 [%]   </span><span style='text-decoration: underline;'>2</span><span>000
+#&gt; </span><span style='color: #949494;'># … with 2 more variables: .values &lt;dbl&gt;, C.source &lt;chr&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
