@@ -1,3 +1,11 @@
+# IEATools 0.1.50 (2021-03-31)
+
+* Now more robust support for tidy (instead of wide-by-year) format efficiency data.
+* Now more arguments are passed from top-level functions to lower-level functions,
+  thereby allowing external callers to use non-default column names.
+* Moving some code to new syntax for referring to column names passed as function arguments.
+
+
 # IEATools 0.1.49 (2021-03-17)
 
 * New constants: `industry_net_flows`, `transport_domestic_flows`, `fd_sectors`, `eiou_flows`, and `prim_agg_flows`
