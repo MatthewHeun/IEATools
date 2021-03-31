@@ -558,15 +558,20 @@ add_nuclear_industry <- function(.tidy_iea_df,
                                     "{heat}" := NA)
   
   # Here we keep only the flows that we are going to modify:
-  modified_flows <- .tidy_iea_df %>%
+  intermediary_modified_flows <- .tidy_iea_df %>%
     dplyr::filter(
       .data[[flow_aggregation_point]] == transformation_processes &
         ((.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(nuclear, electricity)) |
            (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(nuclear, electricity, heat)))
     ) %>%
     tidyr::pivot_wider(names_from = .data[[product]], values_from = .data[[e_dot]]) %>%
-    dplyr::select(-tidyselect::any_of({e_dot})) %>% 
-    tibble::add_column(!!products_tibble[! names(products_tibble) %in% names(.)]) %>%
+    dplyr::select(-tidyselect::any_of({e_dot})) 
+  
+  
+  names_intermediary_modified_flows <- names(intermediary_modified_flows)
+  
+  modified_flows <- intermediary_modified_flows %>% 
+    tibble::add_column(!!products_tibble[! names(products_tibble) %in% names_intermediary_modified_flows]) %>%
     dplyr::mutate(
       "{nuclear}" := tidyr::replace_na(.data[[nuclear]], 0),
       "{electricity}" := tidyr::replace_na(.data[[electricity]], 0),
