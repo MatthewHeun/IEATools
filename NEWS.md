@@ -4,6 +4,9 @@
 * Now more arguments are passed from top-level functions to lower-level functions,
   thereby allowing external callers to use non-default column names.
 * Moving some code to new syntax for referring to column names passed as function arguments.
+* New tests for new features.
+    * Now up to 766 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # IEATools 0.1.49 (2021-03-17)
@@ -23,7 +26,7 @@
   industries, splits the IEA "Own use in electricity, CHP and heat plants"
   flow in main activity producer electricity, heat, and CHP plants, and so that
   a nuclear industry is added when needed.
-* Sub-functions for the specify_all() function 
+* Sub-functions for the `specify_all()` function 
   are called within the `specify_tp_eiou()` function.
 * These include the `gather_producer_autoproducer()`,
   the `route_pumped_storage()`, the `route_own_use_elect_chp_heat()`,
@@ -52,7 +55,7 @@
   `add_row_col_meta()` now returns `.tidy_iea_df` unmodified.
   This new feature enables other functions for assigning row and column names
   and row and column types.
-* New tests for the new feature.
+* New tests for the new features.
     * Now up to 675 tests, all passing.
     * Test coverage remains at 100 %.
 
