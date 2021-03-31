@@ -1,6 +1,6 @@
 # IEATools 0.1.49 (2021-03-17)
 
-* New constants: `industry_net_flows`, `transport_domestic_flows`, `fd_sectors`, `eiou_flows`, `prim_agg_flows`
+* New constants: `industry_net_flows`, `transport_domestic_flows`, `fd_sectors`, `eiou_flows`, and `prim_agg_flows`
 * Improving documentation of constants.
 
 
