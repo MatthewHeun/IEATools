@@ -16,11 +16,15 @@ complete_eta_fu_table(
   e_dot = IEATools::iea_cols$e_dot,
   unit = IEATools::iea_cols$unit,
   year = IEATools::iea_cols$year,
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   machine = IEATools::template_cols$machine,
   eu_product = IEATools::template_cols$eu_product,
   e_dot_perc = IEATools::template_cols$e_dot_perc,
   e_dot_machine = IEATools::template_cols$e_dot_machine,
   e_dot_machine_perc = IEATools::template_cols$e_dot_machine_perc,
+  ef_product = IEATools::template_cols$ef_product,
+  destination = IEATools::template_cols$destination,
   eta_fu = IEATools::template_cols$eta_fu,
   phi_u = IEATools::template_cols$phi_u,
   quantity = IEATools::template_cols$quantity,
@@ -42,9 +46,9 @@ This data frame can be "tidy" or wide by year.}
 Default is \code{c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)}.
 Must be one or both of the default values.}
 
-\item{country, method, energy_type, last_stage, e_dot, unit, year}{See \code{IEATools::iea_cols}.}
+\item{country, method, energy_type, ledger_side, flow_aggregation_point, last_stage, e_dot, unit, year}{See \code{IEATools::iea_cols}.}
 
-\item{machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, c_source, eta_fu_phi_u_source, .values}{See \code{IEATools::template_cols}.}
+\item{machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, ef_product, destination, c_source, eta_fu_phi_u_source, .values}{See \code{IEATools::template_cols}.}
 }
 \value{
 A tidy version of \code{eta_fu_table} with missing values filled from \code{exemplar_eta_fu_tables}.

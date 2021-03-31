@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.49</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.50</span>
       </span>
     </div>
 
@@ -133,11 +133,26 @@
       
     </div>
 
+    <div id="ieatools-0150-2021-03-31" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.50">
+<a href="#ieatools-0150-2021-03-31" class="anchor"></a>IEATools 0.1.50 (2021-03-31)</h1>
+<ul>
+<li>Now more robust support for tidy (instead of wide-by-year) format efficiency data.</li>
+<li>Now more arguments are passed from top-level functions to lower-level functions, thereby allowing external callers to use non-default column names.</li>
+<li>Moving some code to new syntax for referring to column names passed as function arguments.</li>
+<li>New tests for new features.
+<ul>
+<li>Now up to 766 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
     <div id="ieatools-0149-2021-03-17" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.49">
 <a href="#ieatools-0149-2021-03-17" class="anchor"></a>IEATools 0.1.49 (2021-03-17)</h1>
 <ul>
-<li>New constants: <code>industry_net_flows</code>, <code>transport_domestic_flows</code>, <code>fd_sectors</code>, <code>eiou_flows</code>, <code>prim_agg_flows</code>
+<li>New constants: <code>industry_net_flows</code>, <code>transport_domestic_flows</code>, <code>fd_sectors</code>, <code>eiou_flows</code>, and <code>prim_agg_flows</code>
 </li>
 <li>Improving documentation of constants.</li>
 </ul>
@@ -154,7 +169,7 @@
 <a href="#ieatools-0147-2021-02-16" class="anchor"></a>IEATools 0.1.47 (2021-02-16)</h1>
 <ul>
 <li>New <code><a href="../reference/specify_all.html">specify_all()</a></code> function coded, so that it now splits non-specified industries, splits the IEA “Own use in electricity, CHP and heat plants” flow in main activity producer electricity, heat, and CHP plants, and so that a nuclear industry is added when needed.</li>
-<li>Sub-functions for the specify_all() function are called within the <code><a href="../reference/specify_tp_eiou.html">specify_tp_eiou()</a></code> function.</li>
+<li>Sub-functions for the <code><a href="../reference/specify_all.html">specify_all()</a></code> function are called within the <code><a href="../reference/specify_tp_eiou.html">specify_tp_eiou()</a></code> function.</li>
 <li>These include the <code><a href="../reference/gather_producer_autoproducer.html">gather_producer_autoproducer()</a></code>, the <code><a href="../reference/route_pumped_storage.html">route_pumped_storage()</a></code>, the <code><a href="../reference/route_own_use_elect_chp_heat.html">route_own_use_elect_chp_heat()</a></code>, the <code><a href="../reference/add_nuclear_industry.html">add_nuclear_industry()</a></code>, and the <code><a href="../reference/route_non_specified_flows.html">route_non_specified_flows()</a></code> functions. *<code><a href="../reference/specify_primary_production.html">specify_primary_production()</a></code> function changed, the product naming is now modified.</li>
 <li>
 <code><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy()</a></code> function hotfixed so that it also works when the <code>.tidy_iea_df</code> data frame already has a <code>matnames</code> column.</li>
@@ -170,7 +185,7 @@
 <li>New option for “Epsilon” matrices and PSUT columns enables removal of some <code>Flow</code>s for footprinting analyses (and maybe other work in the future).</li>
 <li>When <code>matnames</code> is present in <code>.tidy_iea_df</code>, <code><a href="../reference/add_psut_matnames.html">add_psut_matnames()</a></code> now returns <code>.tidy_iea_df</code> unmodified. This new feature enables other functions for assigning matrix names.</li>
 <li>When all of <code>rownames</code>, <code>colnames</code>, <code>rowtypes</code>, and <code>coltypes</code> are present in <code>.tidy_iea_df</code>, <code><a href="../reference/add_row_col_meta.html">add_row_col_meta()</a></code> now returns <code>.tidy_iea_df</code> unmodified. This new feature enables other functions for assigning row and column names and row and column types.</li>
-<li>New tests for the new feature.
+<li>New tests for the new features.
 <ul>
 <li>Now up to 675 tests, all passing.</li>
 <li>Test coverage remains at 100 %.</li>

@@ -13,6 +13,7 @@ eta_fu_table_completed(
   method = IEATools::iea_cols$method,
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  unit = IEATools::iea_cols$unit,
   ef_product = IEATools::template_cols$ef_product,
   quantity = IEATools::template_cols$quantity,
   e_dot_perc = IEATools::template_cols$e_dot_perc,
@@ -35,7 +36,7 @@ as the "unallocated_rows" attribute of \code{FALSE}.}
 \item{which_quantity}{A vector of quantities to be completed in the eta_FU table.
 Default is \code{c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)}.}
 
-\item{e_dot, year, method, ledger_side, flow_aggregation_point}{See \code{IEATools::iea_cols}.}
+\item{e_dot, year, method, ledger_side, flow_aggregation_point, unit}{See \code{IEATools::iea_cols}.}
 
 \item{ef_product, quantity, e_dot_perc, e_dot_machine, e_dot_machine_perc, maximum_values, destination, eta_fu, phi_u, .values}{See \code{IEATools::template_cols}.}
 }
