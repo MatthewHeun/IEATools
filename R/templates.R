@@ -13,39 +13,39 @@
 #' Non-energy use is removed from `.tidy_iea_df` before creating the template.
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
-#' @param energy_type the name of the energy type column. Default is "`Energy.type`".
+#' @param energy_type the name of the energy type column. Default is "Energy.type".
 #' @param energy the string identifier for energy (as opposed to exergy) in the `energy_type` column. Default is "`E`".
-#' @param last_stage the name of the last stage column. Default is "`Last.stage`".
-#' @param final the string identifier for final energy (as `Last.stage`). Default is "`Final`".
-#' @param year the name of the year column. Default is "`Year`".
-#' @param ledger_side the name of the ledger side column. Default is "`Ldeger.side`".
-#' @param consumption the string identifier for the consumption side of the ledger. Default is "`Consumption`".
-#' @param flow_aggregation_point the name of the flow aggregation point column. Default is "`Flow.aggregation.point`".
-#' @param eiou the string identifier for energy industry own use in `flow_aggregation_point`. Default is "`Energy industry own use`".
-#' @param non_energy_use string identifier for non-energy use in `flow_aggregation_point`. Default is "`Non-energy use`".
-#' @param tfc the string identifier for total final consumption. Default is "`Total final consumption`".
-#' @param tpes the string identifier for total primary energy supply. Default is "`Total primary energy supply`".
-#' @param flow the name of the flow column. Default is "`Flow`".
-#' @param product the name of the product column. Default is "`Product`".
-#' @param destination the name for the destination column. Default is "`Destination`".
-#' @param quantity the name of the quantity column. Default is "`Quantity`".
-#' @param e_dot the name of the energy flow rate column. Default is "`E.dot`".
-#' @param e_dot_total the string identifier for total energy. Default is "`E.dot.total`".
+#' @param last_stage the name of the last stage column. Default is "Last.stage".
+#' @param final the string identifier for final energy (as `Last.stage`). Default is "Final".
+#' @param year the name of the year column. Default is "Year".
+#' @param ledger_side the name of the ledger side column. Default is "Ledger.side".
+#' @param consumption the string identifier for the consumption side of the ledger. Default is "Consumption".
+#' @param flow_aggregation_point the name of the flow aggregation point column. Default is "Flow.aggregation.point".
+#' @param eiou the string identifier for energy industry own use in `flow_aggregation_point`. Default is "Energy industry own use".
+#' @param non_energy_use string identifier for non-energy use in `flow_aggregation_point`. Default is "Non-energy use".
+#' @param tfc the string identifier for total final consumption. Default is "Total final consumption".
+#' @param tpes the string identifier for total primary energy supply. Default is "Total primary energy supply".
+#' @param flow the name of the flow column. Default is "Flow".
+#' @param product the name of the product column. Default is "Product".
+#' @param destination the name for the destination column. Default is "Destination".
+#' @param quantity the name of the quantity column. Default is "Quantity".
+#' @param e_dot the name of the energy flow rate column. Default is "E.dot".
+#' @param e_dot_total the string identifier for total energy. Default is "E.dot.total".
 #' @param perc_unit_string the string used to indicate percentages. Default is "`[%]`".
-#' @param e_dot_perc the string identifier for energy percentage. Default is "`E.dot.perc`".
-#' @param maximum_values the name for the maximum energy values column. Default is "`Maximum values`".
+#' @param e_dot_perc the string identifier for energy percentage. Default is "E.dot.perc".
+#' @param maximum_values the name for the maximum energy values column. Default is "Maximum values".
 #' @param year_for_maximum_values an integer for the first year (in which maximum values will be stored before renaming the column to `maximum_values`). 
 #'        Default is `0`.
-#' @param ef_product the name of the final energy carrier column. Default is "`Ef product`".
-#' @param allocation_var the string identifier for the allocation percentage column. Default is "`C_`".
+#' @param ef_product the name of the final energy carrier column. Default is "Ef product".
+#' @param allocation_var the string identifier for the allocation percentage column. Default is "C_".
 #' @param n_allocation_rows an integer stating how many allocation rows are desired. Default is `3`.
-#' @param machine the name of the column of final-to-useful transformation process machines. Default is "`Machine`".
-#' @param eu_product the name of the useful energy carrier column. Default is "`Eu product`". 
+#' @param machine the name of the column of final-to-useful transformation process machines. Default is "Machine".
+#' @param eu_product the name of the useful energy carrier column. Default is "Eu product". 
 #' @param arrange a boolean telling whether to arranged the rows and columns 
 #'        (using `arrange_iea_fu_allocation_template()`) before returning. 
 #'        Default is `TRUE`.
 #' @param .value the name of a temporary value column added to `.tidy_iea_df`. 
-#'        A `.value` column must not be present in `.tidy_iea_df`. Default is "`.value`".
+#'        A `.value` column must not be present in `.tidy_iea_df`. Default is ".value".
 #'
 #' @return a data frame containing the EIOU template
 #' 

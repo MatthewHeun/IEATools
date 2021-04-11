@@ -1,3 +1,11 @@
+# IEATools 0.1.51 (2021-04-11)
+
+* Transition away from Travis to GitHub actions for continuous integration testing.
+* No new tests.
+    * Still at 766 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # IEATools 0.1.50 (2021-03-31)
 
 * Now more robust support for tidy (instead of wide-by-year) format efficiency data.

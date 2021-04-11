@@ -8,8 +8,8 @@ status](https://www.r-pkg.org/badges/version/IEATools)](https://cran.r-project.o
 has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![R-CMD-check](https://github.com/MatthewHeun/IEATools/workflows/R-CMD-check/badge.svg)](https://github.com/MatthewHeun/IEATools/actions)
-[![Coverage
-status](https://codecov.io/gh/MatthewHeun/IEATools/branch/master/graph/badge.svg)](https://codecov.io/github/MatthewHeun/IEATools?branch=master)
+[![Codecov test
+coverage](https://codecov.io/gh/MatthewHeun/IEATools/branch/master/graph/badge.svg)](https://codecov.io/gh/MatthewHeun/IEATools?branch=master)
 
 # IEATools
 
