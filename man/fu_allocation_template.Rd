@@ -40,67 +40,67 @@ fu_allocation_template(
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
 
-\item{energy_type}{the name of the energy type column. Default is "\code{Energy.type}".}
+\item{energy_type}{the name of the energy type column. Default is "Energy.type".}
 
 \item{energy}{the string identifier for energy (as opposed to exergy) in the \code{energy_type} column. Default is "\code{E}".}
 
-\item{last_stage}{the name of the last stage column. Default is "\code{Last.stage}".}
+\item{last_stage}{the name of the last stage column. Default is "Last.stage".}
 
-\item{final}{the string identifier for final energy (as \code{Last.stage}). Default is "\code{Final}".}
+\item{final}{the string identifier for final energy (as \code{Last.stage}). Default is "Final".}
 
-\item{year}{the name of the year column. Default is "\code{Year}".}
+\item{year}{the name of the year column. Default is "Year".}
 
-\item{ledger_side}{the name of the ledger side column. Default is "\code{Ldeger.side}".}
+\item{ledger_side}{the name of the ledger side column. Default is "Ledger.side".}
 
-\item{consumption}{the string identifier for the consumption side of the ledger. Default is "\code{Consumption}".}
+\item{consumption}{the string identifier for the consumption side of the ledger. Default is "Consumption".}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column. Default is "\code{Flow.aggregation.point}".}
+\item{flow_aggregation_point}{the name of the flow aggregation point column. Default is "Flow.aggregation.point".}
 
-\item{eiou}{the string identifier for energy industry own use in \code{flow_aggregation_point}. Default is "\verb{Energy industry own use}".}
+\item{eiou}{the string identifier for energy industry own use in \code{flow_aggregation_point}. Default is "Energy industry own use".}
 
-\item{non_energy_use}{string identifier for non-energy use in \code{flow_aggregation_point}. Default is "\verb{Non-energy use}".}
+\item{non_energy_use}{string identifier for non-energy use in \code{flow_aggregation_point}. Default is "Non-energy use".}
 
-\item{tfc}{the string identifier for total final consumption. Default is "\verb{Total final consumption}".}
+\item{tfc}{the string identifier for total final consumption. Default is "Total final consumption".}
 
-\item{tpes}{the string identifier for total primary energy supply. Default is "\verb{Total primary energy supply}".}
+\item{tpes}{the string identifier for total primary energy supply. Default is "Total primary energy supply".}
 
-\item{flow}{the name of the flow column. Default is "\code{Flow}".}
+\item{flow}{the name of the flow column. Default is "Flow".}
 
-\item{product}{the name of the product column. Default is "\code{Product}".}
+\item{product}{the name of the product column. Default is "Product".}
 
-\item{destination}{the name for the destination column. Default is "\code{Destination}".}
+\item{destination}{the name for the destination column. Default is "Destination".}
 
-\item{quantity}{the name of the quantity column. Default is "\code{Quantity}".}
+\item{quantity}{the name of the quantity column. Default is "Quantity".}
 
-\item{e_dot}{the name of the energy flow rate column. Default is "\code{E.dot}".}
+\item{e_dot}{the name of the energy flow rate column. Default is "E.dot".}
 
-\item{e_dot_total}{the string identifier for total energy. Default is "\code{E.dot.total}".}
+\item{e_dot_total}{the string identifier for total energy. Default is "E.dot.total".}
 
 \item{perc_unit_string}{the string used to indicate percentages. Default is "\verb{[\%]}".}
 
-\item{e_dot_perc}{the string identifier for energy percentage. Default is "\code{E.dot.perc}".}
+\item{e_dot_perc}{the string identifier for energy percentage. Default is "E.dot.perc".}
 
-\item{maximum_values}{the name for the maximum energy values column. Default is "\verb{Maximum values}".}
+\item{maximum_values}{the name for the maximum energy values column. Default is "Maximum values".}
 
 \item{year_for_maximum_values}{an integer for the first year (in which maximum values will be stored before renaming the column to \code{maximum_values}).
 Default is \code{0}.}
 
-\item{ef_product}{the name of the final energy carrier column. Default is "\verb{Ef product}".}
+\item{ef_product}{the name of the final energy carrier column. Default is "Ef product".}
 
-\item{allocation_var}{the string identifier for the allocation percentage column. Default is "\code{C_}".}
+\item{allocation_var}{the string identifier for the allocation percentage column. Default is "C_".}
 
 \item{n_allocation_rows}{an integer stating how many allocation rows are desired. Default is \code{3}.}
 
-\item{machine}{the name of the column of final-to-useful transformation process machines. Default is "\code{Machine}".}
+\item{machine}{the name of the column of final-to-useful transformation process machines. Default is "Machine".}
 
-\item{eu_product}{the name of the useful energy carrier column. Default is "\verb{Eu product}".}
+\item{eu_product}{the name of the useful energy carrier column. Default is "Eu product".}
 
 \item{arrange}{a boolean telling whether to arranged the rows and columns
 (using \code{arrange_iea_fu_allocation_template()}) before returning.
 Default is \code{TRUE}.}
 
 \item{.value}{the name of a temporary value column added to \code{.tidy_iea_df}.
-A \code{.value} column must not be present in \code{.tidy_iea_df}. Default is "\code{.value}".}
+A \code{.value} column must not be present in \code{.tidy_iea_df}. Default is ".value".}
 }
 \value{
 a data frame containing the EIOU template
