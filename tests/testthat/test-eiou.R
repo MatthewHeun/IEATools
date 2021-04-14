@@ -67,7 +67,7 @@ test_that("specify_tp_eiou works for sample data", {
 test_that("gather_producer_autoproducer works", {
   
   # First, with AB data
-  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
@@ -150,7 +150,7 @@ test_that("gather_producer_autoproducer works", {
 test_that("route_pumped_storage works", {
   
   # First with AB data
-  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
@@ -197,7 +197,7 @@ test_that("route_pumped_storage works", {
 # Testing the function that splits the "Own use in electricity, CHP and heat plants" EIOU flow into the three main producer activities (electricity, CHP and heat)
 test_that("route_own_use_elect_chp_heat works", {
   
-  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
@@ -390,7 +390,7 @@ test_that("route_own_use_elect_chp_heat works", {
 test_that("add_nuclear_industry works", {
   
   # First with AB data
-  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
@@ -571,7 +571,7 @@ test_that("add_nuclear_industry works", {
 test_that("route_non_specified_eiou works", {
   
   # First AB data
-  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
@@ -729,7 +729,7 @@ test_that("route_non_specified_eiou works", {
 
 test_that("route_non_specified_tp works", {
   
-  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
@@ -947,7 +947,7 @@ test_that("route_non_specified_tp works", {
 
 test_that("route_non_specified_flows works", {
   
-  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
@@ -1301,7 +1301,7 @@ test_that("specify_all() function keeps balance",{
   )
   
   # Now with A-B country example.
-  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
@@ -1319,7 +1319,7 @@ test_that("specify_all() function keeps balance",{
 
 test_that("specify_all can also not split the non-specified flows", {
   
-  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
