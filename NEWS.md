@@ -1,3 +1,8 @@
+* Deleted an efficiency for LPG stoves in Ghana in 1971
+  that should not have been in the GH-ZA-Efficiency-sample-2019.xlsx file.
+* Moved A_B_data_full_2018_format_testing.csv to `inst/extdata`.
+
+
 # IEATools 0.1.51 (2021-04-11)
 
 * Transition away from Travis to GitHub actions for continuous integration testing.
