@@ -101,27 +101,24 @@ specify_primary_production <- function(.tidy_iea_df,
                                        transformation_processes = IEATools::aggregation_flows$transformation_processes,
                                        resources = IEATools::tpes_flows$resources,
                                        resource_products_notation = IEATools::from_notation,
-                                       resources_flow_notation = IEATools::of_notation){
+                                       resources_flow_notation = IEATools::of_notation,
+                                       manufacture = "Manufacture",
+                                       manufacture_flow_notation = IEATools::of_notation){
   
   production_products <- c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)
   
   # First, we define resource flows, i.e. flows supplied by resources
   resource_outputs_flows <- .tidy_iea_df %>% 
     dplyr::filter(
-      .data[[flow]] == production & .data[[product]] %in% production_products
+      .data[[flow]] == production #& .data[[product]] %in% production_products
     ) %>% 
     dplyr::mutate(
-      "{flow}" := dplyr::case_when(
-        .data[[product]] %in% list_primary_coal_products ~ stringr::str_c(resources, 
-                                                                          resources_flow_notation[["suff_start"]], 
-                                                                          .data[[product]], 
-                                                                          resources_flow_notation[["suff_end"]], 
-                                                                          sep = ""),
-        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ stringr::str_c(resources, 
-                                                                                                       resources_flow_notation[["suff_start"]], 
-                                                                                                       .data[[product]], 
-                                                                                                       resources_flow_notation[["suff_end"]], 
-                                                                                                       sep = "")
+      "{flow}" := stringr::str_c(
+        resources, 
+        resources_flow_notation[["suff_start"]], 
+        .data[[product]], 
+        resources_flow_notation[["suff_end"]], 
+        sep = ""
       ),
       "{product}" := stringr::str_c(.data[[product]], 
                                     resource_products_notation[["suff_start"]], 
@@ -133,12 +130,19 @@ specify_primary_production <- function(.tidy_iea_df,
   # Second, we define extractive industries outputs
   extractive_industries_output_flows <- .tidy_iea_df %>% 
     dplyr::filter(
-      .data[[flow]] == production & .data[[product]] %in% production_products
+      .data[[flow]] == production #& .data[[product]] %in% production_products
     ) %>% 
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
         .data[[product]] %in% list_primary_coal_products ~ coal_mines,
-        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction
+        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction,
+        TRUE ~ stringr::str_c(
+          manufacture,
+          manufacture_flow_notation[["suff_start"]],
+          .data[[product]],
+          manufacture_flow_notation[["suff_end"]],
+          sep = ""
+        )
       ),
       "{flow_aggregation_point}" := transformation_processes
     )
@@ -146,12 +150,19 @@ specify_primary_production <- function(.tidy_iea_df,
   # Third, we define extractive industries inputs
   extractive_industries_input_flows <- .tidy_iea_df %>% 
     dplyr::filter(
-      .data[[flow]] == production & .data[[product]] %in% production_products
+      .data[[flow]] == production #& .data[[product]] %in% production_products
     ) %>% 
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
         .data[[product]] %in% list_primary_coal_products ~ coal_mines,
-        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction
+        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction,
+        TRUE ~ stringr::str_c(
+          manufacture,
+          manufacture_flow_notation[["suff_start"]],
+          .data[[product]],
+          manufacture_flow_notation[["suff_end"]],
+          sep = ""
+        )
       ),
       "{product}" := stringr::str_c(.data[[product]], 
                                     resource_products_notation[["suff_start"]], 
@@ -165,7 +176,7 @@ specify_primary_production <- function(.tidy_iea_df,
   # Fourth, we add all these flows to the input .tidy_iea_df
   .tidy_iea_df %>% 
     dplyr::filter(
-      ! (.data[[flow]] == production & .data[[product]] %in% production_products)
+      ! (.data[[flow]] == production)# & .data[[product]] %in% production_products)
     ) %>% 
     dplyr::bind_rows(
       resource_outputs_flows,
