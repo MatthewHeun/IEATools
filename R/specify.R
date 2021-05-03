@@ -62,6 +62,12 @@
 #' @param resources_flow_notation The notation to be used for defining the new resource industries.
 #'                                E.g., the Crude oil resource will be called "Resources \[of Crude oil\]".
 #'                                Default is `IEATools::of_notation`.
+#' @param manufacture The name of the industries that convert resource-products \(inputs\) into actual products \(outputs\), 
+#'                    when a corresponding a corresponding industry does not exist by default in IEA data.
+#'                    Default is "Manufacture".
+#' @param manufacture_flow_notation The notation to be used for the newly created manufacture industries 
+#'                                  \(each manufacturing industry is specified\) by the product it manufactures.
+#'                                  Default is `IEATools::of_notation`.
 #'
 #' @return A `.tidy_iea_df` with adjusted production information for primary energy 
 #'         for both coal and coal products and oil and gas extraction

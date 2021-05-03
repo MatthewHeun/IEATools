@@ -22,7 +22,9 @@ specify_primary_production(
   transformation_processes = IEATools::aggregation_flows$transformation_processes,
   resources = IEATools::tpes_flows$resources,
   resource_products_notation = IEATools::from_notation,
-  resources_flow_notation = IEATools::of_notation
+  resources_flow_notation = IEATools::of_notation,
+  manufacture = "Manufacture",
+  manufacture_flow_notation = IEATools::of_notation
 )
 }
 \arguments{
