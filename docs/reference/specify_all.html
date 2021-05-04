@@ -80,7 +80,7 @@ tp_sinks_to_nonenergy()
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.50</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.51</span>
       </span>
     </div>
 
@@ -201,42 +201,42 @@ See examples for two ways to achieve the same result.</p>
     <pre class="examples"><div class='input'><span class='co'># Simple</span>
 <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'>specify_all</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 409 x 11</span><span>
-#&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi…
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other                
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other                
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other                
-#&gt; </span><span style='color: #949494;'># … with 399 more rows, and 4 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   Unit &lt;chr&gt;, E.dot &lt;dbl&gt;</span><span></div><div class='input'><span class='co'># Complicated</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 427 x 11</span><span>
+#&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other           
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other           
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other           
+#&gt; </span><span style='color: #949494;'># … with 417 more rows, and 4 more variables: Flow </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Product </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,</span><span>
+#&gt; </span><span style='color: #949494;'>#   Unit </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, E.dot </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'><span class='co'># Complicated</span>
 <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='specify_primary_production.html'>specify_primary_production</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='specify_production_to_resources.html'>specify_production_to_resources</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='specify_tp_eiou.html'>specify_tp_eiou</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='specify_interface_industries.html'>specify_interface_industries</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='tp_sinks_to_nonenergy.html'>tp_sinks_to_nonenergy</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 409 x 11</span><span>
-#&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi…
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry             
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other                
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other                
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other                
-#&gt; </span><span style='color: #949494;'># … with 399 more rows, and 4 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   Unit &lt;chr&gt;, E.dot &lt;dbl&gt;</span><span></div></span></pre>
+</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 427 x 11</span><span>
+#&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio…
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Industry        
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other           
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other           
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Consumption Other           
+#&gt; </span><span style='color: #949494;'># … with 417 more rows, and 4 more variables: Flow </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, Product </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>,</span><span>
+#&gt; </span><span style='color: #949494;'>#   Unit </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span style='color: #949494;'>, E.dot </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

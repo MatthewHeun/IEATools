@@ -97,12 +97,12 @@ To solve these problems, the following fixed need to be implemented:
     `Coal mines`, not the generic `Production` industry. Likewise,
     `oil_and_gas_product`s should be produced by
     `Oil and gas extraction`. For all other products, the production
-    industry is named as `Manufacture \[of product\]`.
+    industry is named as `Manufacture [of product]`.
 -   Second, the resources matrix formulation needs to be implemented,
     meaning that `Production` `Flow`s need to come from resources
     industries, which supply resource-products, that are then used in
     each of the manufacturing industries (`Coal mines`,
-    `Oil and gas extraction`, and `Manufacture \[of product\]`) for
+    `Oil and gas extraction`, and `Manufacture [of product]`) for
     manufacturing the actual products.
 
 The `specify_primary_production()` function accomplishes these tasks.
@@ -115,18 +115,18 @@ following actions:
 -   First, `Production` `Flow`s for a given `Product` are duplicated.
 
 -   Second, the first duplicate of `Production` `Flow`s for a given
-    `Product` are replaced by a `Resource \[of Product\]` `Flow`, which
-    produces `Product \[from Resources\]`.
+    `Product` are replaced by a `Resource [of Product]` `Flow`, which
+    produces `Product [from Resources]`.
 
 -   Third, the second duplicate of `Production` `Flow`s for a given
     `Product` are replaced by a manufacturing industry flow, that takes
-    as input the `Product \[from Resources\]` supplied by the new
-    `Resource \[of Product\]` `Flow`, and that supplies as output the
+    as input the `Product [from Resources]` supplied by the new
+    `Resource [of Product]` `Flow`, and that supplies as output the
     actual `Product`. The manufacturing industry is named:
 
     -   `Coal mines` in the case of `coal_and_coal_products`;
     -   `Oil and gas extraction` in the case of `oil_and_oil_products`;
-    -   `Manufacture \[of Product\]` for all other products.
+    -   `Manufacture [of Product]` for all other products.
 
 The code below demonstrates `specify_primary_production()`. Note that
 the `Resources` `Flow`s are tagged as belonging to the Resources matrix

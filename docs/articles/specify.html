@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.50</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.51</span>
       </span>
     </div>
 
@@ -84,13 +84,13 @@
 
       
 
-      </header><script src="specify_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="specify_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Specify EIOU Industries and Flows</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-03-31</h4>
+            <h4 class="date">2021-05-04</h4>
       
       
       <div class="hidden name"><code>specify.Rmd</code></div>
@@ -174,30 +174,30 @@
 <div id="solving-the-problems-presented-by-the-ieas-approach-to-eiou" class="section level3">
 <h3 class="hasAnchor">
 <a href="#solving-the-problems-presented-by-the-ieas-approach-to-eiou" class="anchor"></a>Solving the problems presented by the IEA’s approach to EIOU</h3>
-<p>To solve these problems, generic <code>Production</code> <code>Flow</code>s need to be specified. In the example above, <code>coal_and_coal_product</code>s should be produced by <code>Coal mines</code>, not the generic <code>Production</code> industry. The <code><a href="../reference/specify_primary_production.html">specify_primary_production()</a></code> function accomplishes this task.</p>
+<p>To solve these problems, the following fixed need to be implemented:</p>
+<ul>
+<li>First, generic <code>Production</code> <code>Flow</code>s need to be specified. In the example above, <code>coal_and_coal_product</code>s should be produced by <code>Coal mines</code>, not the generic <code>Production</code> industry. Likewise, <code>oil_and_gas_product</code>s should be produced by <code>Oil and gas extraction</code>. For all other products, the production industry is named as <code>Manufacture \[of product\]</code>.</li>
+<li>Second, the resources matrix formulation needs to be implemented, meaning that <code>Production</code> <code>Flow</code>s need to come from resources industries, which supply resource-products, that are then used in each of the manufacturing industries (<code>Coal mines</code>, <code>Oil and gas extraction</code>, and <code>Manufacture \[of product\]</code>) for manufacturing the actual products.</li>
+</ul>
+<p>The <code><a href="../reference/specify_primary_production.html">specify_primary_production()</a></code> function accomplishes these tasks.</p>
 </div>
 </div>
-<div id="identify-primary-production-specify_primary_production" class="section level2">
+<div id="specify-primary-production-specify_primary_production" class="section level2">
 <h2 class="hasAnchor">
-<a href="#identify-primary-production-specify_primary_production" class="anchor"></a>Identify primary production (<code>specify_primary_production()</code>)</h2>
+<a href="#specify-primary-production-specify_primary_production" class="anchor"></a>Specify primary production (<code>specify_primary_production()</code>)</h2>
 <p>By default, the <code>specify_primary_produciton()</code> function performs the following actions:</p>
 <ul>
+<li><p>First, <code>Production</code> <code>Flow</code>s for a given <code>Product</code> are duplicated.</p></li>
+<li><p>Second, the first duplicate of <code>Production</code> <code>Flow</code>s for a given <code>Product</code> are replaced by a <code>Resource \[of Product\]</code> <code>Flow</code>, which produces <code>Product \[from Resources\]</code>.</p></li>
 <li>
-<p>Coal and coal products</p>
+<p>Third, the second duplicate of <code>Production</code> <code>Flow</code>s for a given <code>Product</code> are replaced by a manufacturing industry flow, that takes as input the <code>Product \[from Resources\]</code> supplied by the new <code>Resource \[of Product\]</code> <code>Flow</code>, and that supplies as output the actual <code>Product</code>. The manufacturing industry is named:</p>
 <ul>
-<li>The <code>Production</code> industry for <code>coal_and_coal_products</code> is replaced by <code>Coal mines</code>.</li>
-<li>A <code>Resources (Coal)</code> industry is created which becomes the source of all primary <code>coal_and_coal_products</code> in the energy conversion chain.</li>
-<li>Flows from <code>Resources (Coal)</code> to <code>Coal mines</code> are added, such that <code>Resources (Coal)</code> makes primary <code>coal_and_coal_products</code> but doesn’t use any energy.</li>
-<li>The <code>Coal mines (energy)</code> EIOU <code>Flow</code> is replaced by <code>Coal mines</code>.</li>
-</ul>
-</li>
 <li>
-<p>Oil and oil products and Natural gas</p>
-<ul>
-<li>The <code>Production</code> industry for <code>oil_and_oil_products</code> and <code>Natural gas</code> is replaced by <code>Oil and gas extraction</code>.</li>
-<li>A <code>Resources (Oil and natural gas)</code> industry is created which becomes the source of all primary <code>oil_and_oil_products</code> and <code>Natural gas</code> in the energy conversion chain.</li>
-<li>Flows from <code>Resources (Oil and natural gas)</code> to <code>Oil and gas extraction</code> are added, such that <code>Resources (Oil and natural gas)</code> makes primary <code>Oil_and_oil_products</code> and <code>Natural gas</code> but doesn’t use any energy.</li>
-<li>The <code>Oil and gas extraction (energy)</code> EIOU <code>Flow</code> is replaced by <code>Oil and gas extraction</code>.</li>
+<code>Coal mines</code> in the case of <code>coal_and_coal_products</code>;</li>
+<li>
+<code>Oil and gas extraction</code> in the case of <code>oil_and_oil_products</code>;</li>
+<li>
+<code>Manufacture \[of Product\]</code> for all other products.</li>
 </ul>
 </li>
 </ul>
@@ -313,20 +313,20 @@
   <span class="fu"><a href="../reference/specify_primary_production.html">specify_primary_production</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/specify_production_to_resources.html">specify_production_to_resources</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/startsWith.html">startsWith</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Resources"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 15</span>
 <span class="co">#&gt; Columns: 11</span>
-<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "ZAF", "ZAF", "ZAF"…</span>
-<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
-<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
-<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…</span>
-<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 2000, 2000, 1971, 1971, 1971, 2000,…</span>
-<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Supply…</span>
-<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary e…</span>
-<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Resources [from Hydro]", "Resources [from Prim…</span>
-<span class="co">#&gt; $ Product                &lt;chr&gt; "Hydro", "Primary solid biofuels", "Hydro", "Pr…</span>
-<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
-<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 250.1290, 2087.5131, 568.2717, 3891.0146, 9.630…</span></code></pre></div>
+<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "ZAF", "ZAF", "ZAF…</span>
+<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span>
+<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span>
+<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span>
+<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 2000, 2000, 1971, 1971, 1971, 2000…</span>
+<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Suppl…</span>
+<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary …</span>
+<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Resources [of Hydro]", "Resources [of Primary…</span>
+<span class="co">#&gt; $ Product                &lt;chr&gt; "Hydro [from Resources]", "Primary solid biofu…</span>
+<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span>
+<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 250.1290, 2087.5131, 568.2717, 3891.0146, 3306…</span></code></pre></div>
 </div>
 <div id="be-more-specific-about-interface-industries-specify_interface_industries" class="section level2">
 <h2 class="hasAnchor">
@@ -342,20 +342,20 @@
 <code class="sourceCode R"><span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/specify_interface_industries.html">specify_interface_industries</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="../reference/starts_with_any_of.html">starts_with_any_of</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="../reference/interface_industries.html">interface_industries</a></span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 68</span>
 <span class="co">#&gt; Columns: 11</span>
-<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"…</span>
-<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
-<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
-<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…</span>
-<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971,…</span>
-<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Supply…</span>
-<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary e…</span>
-<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Imports [of Crude oil]", "Imports [of Aviation…</span>
-<span class="co">#&gt; $ Product                &lt;chr&gt; "Crude oil", "Aviation gasoline", "Kerosene typ…</span>
-<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
-<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 916.2081, 1.0700, 21.3051, 1.0461, 18.0567, -4.…</span></code></pre></div>
+<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
+<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span>
+<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span>
+<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span>
+<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971…</span>
+<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Suppl…</span>
+<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary …</span>
+<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Imports [of Crude oil]", "Imports [of Aviatio…</span>
+<span class="co">#&gt; $ Product                &lt;chr&gt; "Crude oil", "Aviation gasoline", "Kerosene ty…</span>
+<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span>
+<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 916.2081, 1.0700, 21.3051, 1.0461, 18.0567, -4…</span></code></pre></div>
 </div>
 <div id="be-more-specific-about-transformation-process-energy-industry-own-use-specify_tp_eiou" class="section level2">
 <h2 class="hasAnchor">
@@ -387,20 +387,20 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/specify_tp_eiou.html">specify_tp_eiou</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 397</span>
 <span class="co">#&gt; Columns: 11</span>
-<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"…</span>
-<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
-<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
-<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…</span>
-<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971,…</span>
-<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumption", "C…</span>
-<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Industry",…</span>
-<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Industry not elsewhere specified", "Industry n…</span>
-<span class="co">#&gt; $ Product                &lt;chr&gt; "Electricity", "Fuel oil", "Gas/diesel oil excl…</span>
-<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
-<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 21.9261, 88.3348, 39.2997, 145.6960, 16.6810, 1…</span>
+<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
+<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span>
+<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span>
+<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span>
+<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971…</span>
+<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumption", "…</span>
+<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Industry"…</span>
+<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Industry not elsewhere specified", "Industry …</span>
+<span class="co">#&gt; $ Product                &lt;chr&gt; "Electricity", "Fuel oil", "Gas/diesel oil exc…</span>
+<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span>
+<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 21.9261, 88.3348, 39.2997, 145.6960, 16.6810, …</span>
 
 <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/gather_producer_autoproducer.html">gather_producer_autoproducer</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -409,20 +409,20 @@
   <span class="fu"><a href="../reference/add_nuclear_industry.html">add_nuclear_industry</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/route_non_specified_eiou.html">route_non_specified_eiou</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/route_non_specified_tp.html">route_non_specified_tp</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 397</span>
 <span class="co">#&gt; Columns: 11</span>
-<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"…</span>
-<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
-<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
-<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…</span>
-<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971,…</span>
-<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumption", "C…</span>
-<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Industry",…</span>
-<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Industry not elsewhere specified", "Industry n…</span>
-<span class="co">#&gt; $ Product                &lt;chr&gt; "Electricity", "Fuel oil", "Gas/diesel oil excl…</span>
-<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
-<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 21.9261, 88.3348, 39.2997, 145.6960, 16.6810, 1…</span></code></pre></div>
+<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
+<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span>
+<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span>
+<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span>
+<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971…</span>
+<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumption", "…</span>
+<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Industry"…</span>
+<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Industry not elsewhere specified", "Industry …</span>
+<span class="co">#&gt; $ Product                &lt;chr&gt; "Electricity", "Fuel oil", "Gas/diesel oil exc…</span>
+<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span>
+<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 21.9261, 88.3348, 39.2997, 145.6960, 16.6810, …</span></code></pre></div>
 </div>
 <div id="identify-transformation-process-sinks-and-sources-tp_sinks_sources" class="section level2">
 <h2 class="hasAnchor">
