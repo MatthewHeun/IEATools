@@ -90,15 +90,51 @@ use (EIOU).
 
 ### Solving the problems presented by the IEA's approach to EIOU
 
-To solve these problems, generic `Production` `Flow`s need to be
-specified. In the example above, `coal_and_coal_product`s should be
-produced by `Coal mines`, not the generic `Production` industry. The
-`specify_primary_production()` function accomplishes this task.
+To solve these problems, the following fixed need to be implemented:
 
-## Identify primary production (`specify_primary_production()`)
+-   First, generic `Production` `Flow`s need to be specified. In the
+    example above, `coal_and_coal_product`s should be produced by
+    `Coal mines`, not the generic `Production` industry. Likewise,
+    `oil_and_gas_product`s should be produced by
+    `Oil and gas extraction`. For all other products, the production
+    industry is named as `Manufacture \[of product\]`.
+-   Second, the resources matrix formulation needs to be implemented,
+    meaning that `Production` `Flow`s need to come from resources
+    industries, which supply resource-products, that are then used in
+    each of the manufacturing industries (`Coal mines`,
+    `Oil and gas extraction`, and `Manufacture \[of product\]`) for
+    manufacturing the actual products.
+
+The `specify_primary_production()` function accomplishes these tasks.
+
+## Specify primary production (`specify_primary_production()`)
 
 By default, the `specify_primary_produciton()` function performs the
 following actions:
+
+-   First, `Production` `Flow`s for a given `Product` are duplicated.
+
+-   Second, the first duplicate of `Production` `Flow`s for a given `Product`
+    are replaced by a `Resource \[of Product\]` `Flow`, which produces
+    `Product \[from Resources\]`.
+
+-   Third, the second duplicate of `Production` `Flow`s for a given `Product`
+    are replaced by a manufacturing industry flow, that takes as input
+    the `Product \[from Resources\]` supplied by the new `Resource \[of Product\]`
+    `Flow`, and that supplies as output the actual `Product`.
+    The manufacturing industry is named:
+    -   `Coal mines` in the case of `coal_and_coal_products`;
+    -   `Oil and gas extraction` in the case of `oil_and_oil_products`;
+    -   `Manufacture \[of Product\]` for all other products.
+
+-   Second, to implement the resources matrix, meaning that production
+    flows are also specified as resource extraction flows, i.e. for each
+    `Production` `Flow`s, a new flow is created with `Flow` becoming
+    Resources [of Product] and Product becoming Product [from Resources]
+
+-   Third, each of the manufacturing industries (Coal mines, Oil and gas
+    extraction, and Manufacture [of Product]) should take as input the
+    products produced from resources, i.e. Product [from Resources].
 
 -   Coal and coal products
 
