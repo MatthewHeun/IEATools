@@ -618,10 +618,9 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #' This is a convenience function.
 #' It bundles several others:
 #' 1. [specify_primary_production()]
-#' 2. [specify_production_to_resources()]
-#' 3. [specify_tp_eiou()]
-#' 4. [specify_interface_industries()]
-#' 5. [tp_sinks_to_nonenergy()]
+#' 2. [specify_tp_eiou()]
+#' 3. [specify_interface_industries()]
+#' 4. [tp_sinks_to_nonenergy()]
 #' 
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
@@ -648,7 +647,6 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #' # Complicated
 #' load_tidy_iea_df() %>% 
 #'   specify_primary_production() %>% 
-#'   specify_production_to_resources() %>% 
 #'   specify_tp_eiou() %>% 
 #'   specify_interface_industries() %>% 
 #'   tp_sinks_to_nonenergy()
@@ -661,7 +659,7 @@ specify_all <- function(.tidy_iea_df,
   
   .tidy_iea_df %>% 
     specify_primary_production() %>% 
-    specify_production_to_resources() %>% 
+    #specify_production_to_resources() %>% 
     specify_tp_eiou(
       split_own_use_elect_chp_heat_using_shares_of = split_own_use_elect_chp_heat_using_shares_of,
       route_non_specified_eiou = route_non_specified_eiou,

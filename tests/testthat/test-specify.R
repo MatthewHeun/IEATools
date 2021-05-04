@@ -13,6 +13,12 @@ test_that("production is converted to resources correctly", {
                  magrittr::extract2("Flow") %>% 
                  magrittr::equals("Production") %>% 
                  any())
+  
+  Specific_production %>% 
+    magrittr::extract2("Flow") %>% 
+    dplyr::first() %>% 
+    expect_equal("Resources [from Primary solid biofuels]")
+  
   # Now try with an EIOU flow of "Liquefaction (LNG) / regasification plants"
   # First, make a bogus data frame.
   DF <- tibble::tibble(
