@@ -114,27 +114,21 @@ following actions:
 
 -   First, `Production` `Flow`s for a given `Product` are duplicated.
 
--   Second, the first duplicate of `Production` `Flow`s for a given `Product`
-    are replaced by a `Resource \[of Product\]` `Flow`, which produces
-    `Product \[from Resources\]`.
+-   Second, the first duplicate of `Production` `Flow`s for a given
+    `Product` are replaced by a `Resource \[of Product\]` `Flow`, which
+    produces `Product \[from Resources\]`.
 
--   Third, the second duplicate of `Production` `Flow`s for a given `Product`
-    are replaced by a manufacturing industry flow, that takes as input
-    the `Product \[from Resources\]` supplied by the new `Resource \[of Product\]`
-    `Flow`, and that supplies as output the actual `Product`.
-    The manufacturing industry is named:
+-   Third, the second duplicate of `Production` `Flow`s for a given
+    `Product` are replaced by a manufacturing industry flow, that takes
+    as input the `Product \[from Resources\]` supplied by the new
+    `Resource \[of Product\]` `Flow`, and that supplies as output the
+    actual `Product`. The manufacturing industry is named:
+
     -   `Coal mines` in the case of `coal_and_coal_products`;
     -   `Oil and gas extraction` in the case of `oil_and_oil_products`;
     -   `Manufacture \[of Product\]` for all other products.
 
--   Second, to implement the resources matrix, meaning that production
-    flows are also specified as resource extraction flows, i.e. for each
-    `Production` `Flow`s, a new flow is created with `Flow` becoming
-    Resources [of Product] and Product becoming Product [from Resources]
-
--   Third, each of the manufacturing industries (Coal mines, Oil and gas
-    extraction, and Manufacture [of Product]) should take as input the
-    products produced from resources, i.e. Product [from Resources].
+-   
 
 -   Coal and coal products
 
