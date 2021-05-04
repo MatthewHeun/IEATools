@@ -128,36 +128,6 @@ following actions:
     -   `Oil and gas extraction` in the case of `oil_and_oil_products`;
     -   `Manufacture \[of Product\]` for all other products.
 
--   
-
--   Coal and coal products
-
-    -   The `Production` industry for `coal_and_coal_products` is
-        replaced by `Coal mines`.
-    -   A `Resources (Coal)` industry is created which becomes the
-        source of all primary `coal_and_coal_products` in the energy
-        conversion chain.
-    -   Flows from `Resources (Coal)` to `Coal mines` are added, such
-        that `Resources (Coal)` makes primary `coal_and_coal_products`
-        but doesn't use any energy.
-    -   The `Coal mines (energy)` EIOU `Flow` is replaced by
-        `Coal mines`.
-
--   Oil and oil products and Natural gas
-
-    -   The `Production` industry for `oil_and_oil_products` and
-        `Natural gas` is replaced by `Oil and gas extraction`.
-    -   A `Resources (Oil and natural gas)` industry is created which
-        becomes the source of all primary `oil_and_oil_products` and
-        `Natural gas` in the energy conversion chain.
-    -   Flows from `Resources (Oil and natural gas)` to
-        `Oil and gas extraction` are added, such that
-        `Resources (Oil and natural gas)` makes primary
-        `Oil_and_oil_products` and `Natural gas` but doesn't use any
-        energy.
-    -   The `Oil and gas extraction (energy)` EIOU `Flow` is replaced by
-        `Oil and gas extraction`.
-
 The code below demonstrates `specify_primary_production()`. Note that
 the `Resources` `Flow`s are tagged as belonging to the Resources matrix
 (`R`) by the `add_psut_matnames()` function.

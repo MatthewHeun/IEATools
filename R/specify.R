@@ -16,18 +16,13 @@
 #' 
 #' 1. Energy industry own use for `Liquefaction (LNG) / regasification plants` is 
 #'    reassigned to `Oil and gas extraction`.
-#' 2. The `Production` industry for `coal_and_coal_products` 
-#'    is replaced by `Coal mines`.
-#' 3. A `Resources [of Coal]` industry is created which becomes the 
-#'    source of all primary `coal_and_coal_products` in the energy conversion chain.
-#' 4. Flows from `Resources [of Coal]` to `Coal mines` are added.
-#' 5. The `Coal mines (energy)` EIOU `Flow` is replaced by `Coal mines`.
-#' 6. The `Production` industry for `oil_and_oil_products` and `Natural gas`
-#'    is replaced by `Oil and gas extraction`.
-#' 7. A `Resources [of Oil and natural gas]` industry is created which becomes the 
-#'    source of all primary `oil_and_oil_products` and `Natural gas` in the energy conversion chain.
-#' 8. Flows from `Resources [of Oil and natural gas]` to `Oil and gas extraction` are added.
-#' 9. The `Oil and gas extraction (energy)` EIOU `Flow` is replaced by `Oil and gas extraction`.
+#' 2. Each `Production` flow is replaced by a `Resources \[of Product\]` flow,
+#'    which produces `Product \[from Resources\]`.
+#' 3. For each `Production` flow, a manufacturing flow, that takes as input
+#'    the `Product \[from Resources\]` supplied by the new `Resources \[of Product\]`,
+#'    and that produces the given `Product`, is added. The name of the manufacturing industry
+#'    is `Coal mines` for `coal_and_coal_products`, `Oil and gas extraction` for `oil_and_gas_products`,
+#'    and `Manufacture \[of Product\]` for all other products.
 #' 
 #' Users can specify other changes by adjusting the default argument values.
 #' 
