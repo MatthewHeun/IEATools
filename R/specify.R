@@ -16,13 +16,13 @@
 #' 
 #' 1. Energy industry own use for `Liquefaction (LNG) / regasification plants` is 
 #'    reassigned to `Oil and gas extraction`.
-#' 2. Each `Production` flow is replaced by a `Resources \[of Product\]` flow,
-#'    which produces `Product \[from Resources\]`.
+#' 2. Each `Production` flow is replaced by a `Resources [of Product]` flow,
+#'    which produces `Product [from Resources]`.
 #' 3. For each `Production` flow, a manufacturing flow, that takes as input
-#'    the `Product \[from Resources\]` supplied by the new `Resources \[of Product\]`,
+#'    the `Product [from Resources]` supplied by the new `Resources [of Product]`,
 #'    and that produces the given `Product`, is added. The name of the manufacturing industry
 #'    is `Coal mines` for `coal_and_coal_products`, `Oil and gas extraction` for `oil_and_gas_products`,
-#'    and `Manufacture \[of Product\]` for all other products.
+#'    and `Manufacture [of Product]` for all other products.
 #' 
 #' Users can specify other changes by adjusting the default argument values.
 #' 
