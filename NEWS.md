@@ -1,4 +1,4 @@
-# IEATools 0.1.51 (2021-05-07)
+# IEATools 0.1.52 (2021-05-07)
 
 * Deleted an efficiency for LPG stoves in Ghana in 1971
   that should not have been in the GH-ZA-Efficiency-sample-2019.xlsx file.
