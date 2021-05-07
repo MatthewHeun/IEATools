@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.51</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.52</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Specify EIOU Industries and Flows</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-05-04</h4>
+            <h4 class="date">2021-05-07</h4>
       
       
       <div class="hidden name"><code>specify.Rmd</code></div>
@@ -176,8 +176,8 @@
 <a href="#solving-the-problems-presented-by-the-ieas-approach-to-eiou" class="anchor"></a>Solving the problems presented by the IEA’s approach to EIOU</h3>
 <p>To solve these problems, the following fixed need to be implemented:</p>
 <ul>
-<li>First, generic <code>Production</code> <code>Flow</code>s need to be specified. In the example above, <code>coal_and_coal_product</code>s should be produced by <code>Coal mines</code>, not the generic <code>Production</code> industry. Likewise, <code>oil_and_gas_product</code>s should be produced by <code>Oil and gas extraction</code>. For all other products, the production industry is named as <code>Manufacture \[of product\]</code>.</li>
-<li>Second, the resources matrix formulation needs to be implemented, meaning that <code>Production</code> <code>Flow</code>s need to come from resources industries, which supply resource-products, that are then used in each of the manufacturing industries (<code>Coal mines</code>, <code>Oil and gas extraction</code>, and <code>Manufacture \[of product\]</code>) for manufacturing the actual products.</li>
+<li>First, generic <code>Production</code> <code>Flow</code>s need to be specified. In the example above, <code>coal_and_coal_product</code>s should be produced by <code>Coal mines</code>, not the generic <code>Production</code> industry. Likewise, <code>oil_and_gas_product</code>s should be produced by <code>Oil and gas extraction</code>. For all other products, the production industry is named as <code>Manufacture [of product]</code>.</li>
+<li>Second, the resources matrix formulation needs to be implemented, meaning that <code>Production</code> <code>Flow</code>s need to come from resources industries, which supply resource-products, that are then used in each of the manufacturing industries (<code>Coal mines</code>, <code>Oil and gas extraction</code>, and <code>Manufacture [of product]</code>) for manufacturing the actual products.</li>
 </ul>
 <p>The <code><a href="../reference/specify_primary_production.html">specify_primary_production()</a></code> function accomplishes these tasks.</p>
 </div>
@@ -188,16 +188,16 @@
 <p>By default, the <code>specify_primary_produciton()</code> function performs the following actions:</p>
 <ul>
 <li><p>First, <code>Production</code> <code>Flow</code>s for a given <code>Product</code> are duplicated.</p></li>
-<li><p>Second, the first duplicate of <code>Production</code> <code>Flow</code>s for a given <code>Product</code> are replaced by a <code>Resource \[of Product\]</code> <code>Flow</code>, which produces <code>Product \[from Resources\]</code>.</p></li>
+<li><p>Second, the first duplicate of <code>Production</code> <code>Flow</code>s for a given <code>Product</code> are replaced by a <code>Resource [of Product]</code> <code>Flow</code>, which produces <code>Product [from Resources]</code>.</p></li>
 <li>
-<p>Third, the second duplicate of <code>Production</code> <code>Flow</code>s for a given <code>Product</code> are replaced by a manufacturing industry flow, that takes as input the <code>Product \[from Resources\]</code> supplied by the new <code>Resource \[of Product\]</code> <code>Flow</code>, and that supplies as output the actual <code>Product</code>. The manufacturing industry is named:</p>
+<p>Third, the second duplicate of <code>Production</code> <code>Flow</code>s for a given <code>Product</code> are replaced by a manufacturing industry flow, that takes as input the <code>Product [from Resources]</code> supplied by the new <code>Resource [of Product]</code> <code>Flow</code>, and that supplies as output the actual <code>Product</code>. The manufacturing industry is named:</p>
 <ul>
 <li>
 <code>Coal mines</code> in the case of <code>coal_and_coal_products</code>;</li>
 <li>
 <code>Oil and gas extraction</code> in the case of <code>oil_and_oil_products</code>;</li>
 <li>
-<code>Manufacture \[of Product\]</code> for all other products.</li>
+<code>Manufacture [of Product]</code> for all other products.</li>
 </ul>
 </li>
 </ul>
