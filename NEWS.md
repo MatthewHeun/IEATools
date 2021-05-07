@@ -1,6 +1,10 @@
 * Deleted an efficiency for LPG stoves in Ghana in 1971
   that should not have been in the GH-ZA-Efficiency-sample-2019.xlsx file.
 * Moved A_B_data_full_2018_format_testing.csv to `inst/extdata`.
+* `specify_primary_production()` updated so that all products coming from Resources
+  are now called Product [from Resources]. Then, for each product, 
+  a manufacturing industry takes these Product [from Resources] as inputs 
+  and transforms them into actual Products.
 
 
 # IEATools 0.1.51 (2021-04-11)

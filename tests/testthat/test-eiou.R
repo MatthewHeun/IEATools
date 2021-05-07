@@ -561,7 +561,7 @@ test_that("add_nuclear_industry works", {
   res %>% 
     dplyr::filter(stringr::str_detect(Flow, "Nuclear")) %>% 
     nrow() %>% 
-    expect_equal(3)
+    expect_equal(5)
 })
 
 

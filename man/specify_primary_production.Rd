@@ -22,7 +22,9 @@ specify_primary_production(
   transformation_processes = IEATools::aggregation_flows$transformation_processes,
   resources = IEATools::tpes_flows$resources,
   resource_products_notation = IEATools::from_notation,
-  resources_flow_notation = IEATools::of_notation
+  resources_flow_notation = IEATools::of_notation,
+  manufacture = "Manufacture",
+  manufacture_flow_notation = IEATools::of_notation
 )
 }
 \arguments{
@@ -68,6 +70,14 @@ Default is \code{IEATools::from_notation}.}
 \item{resources_flow_notation}{The notation to be used for defining the new resource industries.
 E.g., the Crude oil resource will be called "Resources [of Crude oil]".
 Default is \code{IEATools::of_notation}.}
+
+\item{manufacture}{The name of the industries that convert resource-products \(inputs\) into actual products \(outputs\),
+when a corresponding a corresponding industry does not exist by default in IEA data.
+Default is "Manufacture".}
+
+\item{manufacture_flow_notation}{The notation to be used for the newly created manufacture industries
+\(each manufacturing industry is specified\) by the product it manufactures.
+Default is \code{IEATools::of_notation}.}
 }
 \value{
 A \code{.tidy_iea_df} with adjusted production information for primary energy
@@ -90,18 +100,13 @@ By default, the following changes are made to \code{.tidy_iea_df}:
 \enumerate{
 \item Energy industry own use for \verb{Liquefaction (LNG) / regasification plants} is
 reassigned to \verb{Oil and gas extraction}.
-\item The \code{Production} industry for \code{coal_and_coal_products}
-is replaced by \verb{Coal mines}.
-\item A \verb{Resources [of Coal]} industry is created which becomes the
-source of all primary \code{coal_and_coal_products} in the energy conversion chain.
-\item Flows from \verb{Resources [of Coal]} to \verb{Coal mines} are added.
-\item The \verb{Coal mines (energy)} EIOU \code{Flow} is replaced by \verb{Coal mines}.
-\item The \code{Production} industry for \code{oil_and_oil_products} and \verb{Natural gas}
-is replaced by \verb{Oil and gas extraction}.
-\item A \verb{Resources [of Oil and natural gas]} industry is created which becomes the
-source of all primary \code{oil_and_oil_products} and \verb{Natural gas} in the energy conversion chain.
-\item Flows from \verb{Resources [of Oil and natural gas]} to \verb{Oil and gas extraction} are added.
-\item The \verb{Oil and gas extraction (energy)} EIOU \code{Flow} is replaced by \verb{Oil and gas extraction}.
+\item Each \code{Production} flow is replaced by a \verb{Resources [of Product]} flow,
+which produces \verb{Product [from Resources]}.
+\item For each \code{Production} flow, a manufacturing flow, that takes as input
+the \verb{Product [from Resources]} supplied by the new \verb{Resources [of Product]},
+and that produces the given \code{Product}, is added. The name of the manufacturing industry
+is \verb{Coal mines} for \code{coal_and_coal_products}, \verb{Oil and gas extraction} for \code{oil_and_gas_products},
+and \verb{Manufacture [of Product]} for all other products.
 }
 
 Users can specify other changes by adjusting the default argument values.

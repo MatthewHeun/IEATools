@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.50</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.51</span>
       </span>
     </div>
 
@@ -84,13 +84,13 @@
 
       
 
-      </header><script src="final_to_useful_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="final_to_useful_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Final to Useful Analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-03-31</h4>
+            <h4 class="date">2021-05-04</h4>
       
       
       <div class="hidden name"><code>final_to_useful.Rmd</code></div>
@@ -121,44 +121,44 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">IEATools</span><span class="op">)</span>
 <span class="va">Tidy_iea_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; Rows: 409</span>
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; Rows: 427</span>
 <span class="co">#&gt; Columns: 11</span>
-<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"…</span>
-<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
-<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
-<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…</span>
-<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971,…</span>
-<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumption", "C…</span>
-<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Industry",…</span>
-<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Industry not elsewhere specified", "Industry n…</span>
-<span class="co">#&gt; $ Product                &lt;chr&gt; "Electricity", "Fuel oil", "Gas/diesel oil excl…</span>
-<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
-<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 21.9261, 88.3348, 39.2997, 145.6960, 16.6810, 1…</span></code></pre></div>
+<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
+<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span>
+<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span>
+<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span>
+<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971…</span>
+<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumption", "…</span>
+<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Industry"…</span>
+<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Industry not elsewhere specified", "Industry …</span>
+<span class="co">#&gt; $ Product                &lt;chr&gt; "Electricity", "Fuel oil", "Gas/diesel oil exc…</span>
+<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span>
+<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 21.9261, 88.3348, 39.2997, 145.6960, 16.6810, …</span></code></pre></div>
 <p>The next step is to develop a blank template in which the analyst can provide final-to-useful allocation values (<code>C</code>) in percentages. <code><a href="../reference/fu_allocation_template.html">fu_allocation_template()</a></code> builds a final-to-useful allocation template.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">FU_allocation_template</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/fu_allocation_template.html">fu_allocation_template</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">FU_allocation_template</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 900</span>
 <span class="co">#&gt; Columns: 15</span>
-<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"…</span>
-<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
-<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
-<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…</span>
-<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Supply…</span>
-<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Energy industry own use", "Energy industry own…</span>
-<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
-<span class="co">#&gt; $ Ef.product             &lt;chr&gt; "Refinery gas", "Refinery gas", "Refinery gas",…</span>
-<span class="co">#&gt; $ Machine                &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…</span>
-<span class="co">#&gt; $ Eu.product             &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…</span>
-<span class="co">#&gt; $ Destination            &lt;chr&gt; "Oil refineries", "Oil refineries", "Oil refine…</span>
-<span class="co">#&gt; $ Quantity               &lt;chr&gt; "E.dot", "E.dot [%]", "C_1 [%]", "C_2 [%]", "C_…</span>
-<span class="co">#&gt; $ Maximum.values         &lt;dbl&gt; 2.642350e+01, 8.867781e-01, NA, NA, NA, NA, 3.7…</span>
-<span class="co">#&gt; $ `1971`                 &lt;dbl&gt; 1.953040e+01, 8.867781e-01, NA, NA, NA, NA, 2.4…</span>
-<span class="co">#&gt; $ `2000`                 &lt;dbl&gt; 26.4235000, 0.8747534, NA, NA, NA, NA, 3.783300…</span></code></pre></div>
+<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
+<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span>
+<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span>
+<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span>
+<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Suppl…</span>
+<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Energy industry own use", "Energy industry ow…</span>
+<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span>
+<span class="co">#&gt; $ Ef.product             &lt;chr&gt; "Refinery gas", "Refinery gas", "Refinery gas"…</span>
+<span class="co">#&gt; $ Machine                &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…</span>
+<span class="co">#&gt; $ Eu.product             &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…</span>
+<span class="co">#&gt; $ Destination            &lt;chr&gt; "Oil refineries", "Oil refineries", "Oil refin…</span>
+<span class="co">#&gt; $ Quantity               &lt;chr&gt; "E.dot", "E.dot [%]", "C_1 [%]", "C_2 [%]", "C…</span>
+<span class="co">#&gt; $ Maximum.values         &lt;dbl&gt; 2.642350e+01, 8.867781e-01, NA, NA, NA, NA, 3.…</span>
+<span class="co">#&gt; $ `1971`                 &lt;dbl&gt; 1.953040e+01, 8.867781e-01, NA, NA, NA, NA, 2.…</span>
+<span class="co">#&gt; $ `2000`                 &lt;dbl&gt; 26.4235000, 0.8747534, NA, NA, NA, NA, 3.78330…</span></code></pre></div>
 <p>To obtain a nicely-formatted Excel spreadsheet, use the <code><a href="../reference/write_fu_allocation_template.html">write_fu_allocation_template()</a></code> function.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># FU_allocation_template %&gt;%</span>
@@ -189,20 +189,20 @@
   <span class="fu"><a href="../reference/eta_fu_template.html">eta_fu_template</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Joining, by = c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit", "Ef.product", "Destination", "Year")</span>
 <span class="va">Eta_fu_template</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 304</span>
 <span class="co">#&gt; Columns: 11</span>
-<span class="co">#&gt; $ Country        &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA",…</span>
-<span class="co">#&gt; $ Method         &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM",…</span>
-<span class="co">#&gt; $ Energy.type    &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", …</span>
-<span class="co">#&gt; $ Last.stage     &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "Final", "…</span>
-<span class="co">#&gt; $ Unit           &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
-<span class="co">#&gt; $ Machine        &lt;chr&gt; "Automobiles", "Automobiles", "Automobiles", "Automobil…</span>
-<span class="co">#&gt; $ Eu.product     &lt;chr&gt; "MD", "MD", "MD", "MD", "MD", "MD", "MD", "MD", "MD", "…</span>
-<span class="co">#&gt; $ Quantity       &lt;chr&gt; "E.dot_machine", "E.dot_machine [%]", "eta.fu", "phi.u"…</span>
-<span class="co">#&gt; $ Maximum.values &lt;dbl&gt; 6.192510e+02, 1.141842e-01, NA, NA, 1.877078e+02, 3.461…</span>
-<span class="co">#&gt; $ `1971`         &lt;dbl&gt; 2.172315e+02, 8.333158e-02, NA, 1.000000e+00, 5.946665e…</span>
-<span class="co">#&gt; $ `2000`         &lt;dbl&gt; 6.192510e+02, 1.141842e-01, NA, 1.000000e+00, 1.877078e…</span></code></pre></div>
+<span class="co">#&gt; $ Country        &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"…</span>
+<span class="co">#&gt; $ Method         &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
+<span class="co">#&gt; $ Energy.type    &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E", "E",…</span>
+<span class="co">#&gt; $ Last.stage     &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "Final", …</span>
+<span class="co">#&gt; $ Unit           &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span>
+<span class="co">#&gt; $ Machine        &lt;chr&gt; "Automobiles", "Automobiles", "Automobiles", "Automobi…</span>
+<span class="co">#&gt; $ Eu.product     &lt;chr&gt; "MD", "MD", "MD", "MD", "MD", "MD", "MD", "MD", "MD", …</span>
+<span class="co">#&gt; $ Quantity       &lt;chr&gt; "E.dot_machine", "E.dot_machine [%]", "eta.fu", "phi.u…</span>
+<span class="co">#&gt; $ Maximum.values &lt;dbl&gt; 6.192510e+02, 1.141842e-01, NA, NA, 1.877078e+02, 3.46…</span>
+<span class="co">#&gt; $ `1971`         &lt;dbl&gt; 2.172315e+02, 8.333158e-02, NA, 1.000000e+00, 5.946665…</span>
+<span class="co">#&gt; $ `2000`         &lt;dbl&gt; 6.192510e+02, 1.141842e-01, NA, 1.000000e+00, 1.877078…</span></code></pre></div>
 <p>To obtain a nicely-formatted Excel spreadsheet, use the <code><a href="../reference/write_fu_allocation_template.html">write_fu_allocation_template()</a></code> function.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Eta_fu_template %&gt;%</span>
@@ -218,7 +218,7 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">C_mats</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_fu_allocation_data.html">load_fu_allocation_data</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/form_C_mats.html">form_C_mats</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">C_mats</span><span class="op">)</span>
+<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">C_mats</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 4</span>
 <span class="co">#&gt; Columns: 7</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF"</span>
@@ -226,8 +226,8 @@
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E"</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
-<span class="co">#&gt; $ C_EIOU      &lt;list&gt; &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[3 x 3]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ C_Y         &lt;list&gt; &lt;&lt;matrix[23 x 21]&gt;&gt;, &lt;&lt;matrix[24 x 22]&gt;&gt;, &lt;&lt;matrix[45 x 31…</span></code></pre></div>
+<span class="co">#&gt; $ C_EIOU      &lt;list&gt; [&lt;matrix[2 x 3]&gt;, &lt;matrix[2 x 3]&gt;, &lt;matrix[3 x 3]&gt;, &lt;mat…</span>
+<span class="co">#&gt; $ C_Y         &lt;list&gt; [&lt;matrix[23 x 21]&gt;, &lt;matrix[24 x 22]&gt;, &lt;matrix[45 x 31]&gt;…</span></code></pre></div>
 <p>Note that two types of <span class="math inline">\(\mathbf{C}\)</span> matrices are formed, <span class="math inline">\(\mathbf{C}_{EIOU}\)</span> and <span class="math inline">\(\mathbf{C}_Y\)</span>. Both are needed later.</p>
 </div>
 <div id="efficiency-and-exergy-to-energy-ratio-vectors" class="section level2">
@@ -237,7 +237,7 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">eta_fu_vecs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_eta_fu_data.html">load_eta_fu_data</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/form_eta_fu_phi_u_vecs.html">form_eta_fu_phi_u_vecs</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">eta_fu_vecs</span><span class="op">)</span>
+<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">eta_fu_vecs</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 4</span>
 <span class="co">#&gt; Columns: 7</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF"</span>
@@ -245,8 +245,8 @@
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E"</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
-<span class="co">#&gt; $ eta.fu      &lt;list&gt; &lt;&lt;matrix[22 x 1]&gt;&gt;, &lt;&lt;matrix[23 x 1]&gt;&gt;, &lt;&lt;matrix[33 x 1]&gt;&gt;…</span>
-<span class="co">#&gt; $ phi.u       &lt;list&gt; &lt;&lt;matrix[22 x 1]&gt;&gt;, &lt;&lt;matrix[23 x 1]&gt;&gt;, &lt;&lt;matrix[32 x 1]&gt;&gt;…</span></code></pre></div>
+<span class="co">#&gt; $ eta.fu      &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[32 x 1]&gt;, &lt;…</span>
+<span class="co">#&gt; $ phi.u       &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[32 x 1]&gt;, &lt;…</span></code></pre></div>
 </div>
 <div id="extend-to-useful" class="section level2">
 <h2 class="hasAnchor">
@@ -266,7 +266,7 @@
   <span class="fu"><a href="../reference/prep_psut.html">prep_psut</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span><span class="va">C_mats</span>, by <span class="op">=</span> <span class="va">m_cols</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">full_join</a></span><span class="op">(</span><span class="va">eta_fu_vecs</span>, by <span class="op">=</span> <span class="va">m_cols</span><span class="op">)</span>
-<span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">psut_mats_final</span><span class="op">)</span>
+<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">psut_mats_final</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 4</span>
 <span class="co">#&gt; Columns: 17</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF"</span>
@@ -274,38 +274,38 @@
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E"</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
-<span class="co">#&gt; $ R           &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[3 x 3]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ U_EIOU      &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ U_feed      &lt;list&gt; &lt;&lt;matrix[4 x 3]&gt;&gt;, &lt;&lt;matrix[3 x 3]&gt;&gt;, &lt;&lt;matrix[7 x 9]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ U           &lt;list&gt; &lt;&lt;matrix[6 x 3]&gt;&gt;, &lt;&lt;matrix[5 x 3]&gt;&gt;, &lt;&lt;matrix[9 x 9]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ r_EIOU      &lt;list&gt; &lt;&lt;matrix[6 x 3]&gt;&gt;, &lt;&lt;matrix[5 x 3]&gt;&gt;, &lt;&lt;matrix[9 x 9]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ V           &lt;list&gt; &lt;&lt;matrix[10 x 12]&gt;&gt;, &lt;&lt;matrix[14 x 14]&gt;&gt;, &lt;&lt;matrix[12 x 1…</span>
-<span class="co">#&gt; $ Y           &lt;list&gt; &lt;&lt;matrix[12 x 21]&gt;&gt;, &lt;&lt;matrix[13 x 20]&gt;&gt;, &lt;&lt;matrix[18 x 2…</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; &lt;&lt;matrix[14 x 1]&gt;&gt;, &lt;&lt;matrix[16 x 1]&gt;&gt;, &lt;&lt;matrix[22 x 1]&gt;…</span>
-<span class="co">#&gt; $ C_EIOU      &lt;list&gt; &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[3 x 3]&gt;&gt;, …</span>
-<span class="co">#&gt; $ C_Y         &lt;list&gt; &lt;&lt;matrix[23 x 21]&gt;&gt;, &lt;&lt;matrix[24 x 22]&gt;&gt;, &lt;&lt;matrix[45 x 3…</span>
-<span class="co">#&gt; $ eta.fu      &lt;list&gt; &lt;&lt;matrix[22 x 1]&gt;&gt;, &lt;&lt;matrix[23 x 1]&gt;&gt;, &lt;&lt;matrix[33 x 1]&gt;…</span>
-<span class="co">#&gt; $ phi.u       &lt;list&gt; &lt;&lt;matrix[22 x 1]&gt;&gt;, &lt;&lt;matrix[23 x 1]&gt;&gt;, &lt;&lt;matrix[32 x 1]&gt;…</span></code></pre></div>
+<span class="co">#&gt; $ R           &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[3 x 3]&gt;, &lt;mat…</span>
+<span class="co">#&gt; $ U_EIOU      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 3]&gt;, &lt;mat…</span>
+<span class="co">#&gt; $ U_feed      &lt;list&gt; [&lt;matrix[6 x 5]&gt;, &lt;matrix[5 x 5]&gt;, &lt;matrix[9 x 11]&gt;, &lt;ma…</span>
+<span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[8 x 5]&gt;, &lt;matrix[7 x 5]&gt;, &lt;matrix[11 x 11]&gt;, &lt;m…</span>
+<span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[8 x 5]&gt;, &lt;matrix[7 x 5]&gt;, &lt;matrix[11 x 11]&gt;, &lt;m…</span>
+<span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[12 x 14]&gt;, &lt;matrix[16 x 16]&gt;, &lt;matrix[14 x 21]&gt;…</span>
+<span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[12 x 21]&gt;, &lt;matrix[13 x 20]&gt;, &lt;matrix[18 x 26]&gt;…</span>
+<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[16 x 1]&gt;, &lt;matrix[18 x 1]&gt;, &lt;matrix[24 x 1]&gt;, &lt;…</span>
+<span class="co">#&gt; $ C_EIOU      &lt;list&gt; [&lt;matrix[2 x 3]&gt;, &lt;matrix[2 x 3]&gt;, &lt;matrix[3 x 3]&gt;, &lt;mat…</span>
+<span class="co">#&gt; $ C_Y         &lt;list&gt; [&lt;matrix[23 x 21]&gt;, &lt;matrix[24 x 22]&gt;, &lt;matrix[45 x 31]&gt;…</span>
+<span class="co">#&gt; $ eta.fu      &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[32 x 1]&gt;, &lt;…</span>
+<span class="co">#&gt; $ phi.u       &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[32 x 1]&gt;, &lt;…</span></code></pre></div>
 <p>Then use the allocation and efficiency matrices to extend to the useful stage with the <code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code> function.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">psut_mats_useful</span> <span class="op">&lt;-</span> <span class="va">psut_mats_final</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/extend_to_useful.html">extend_to_useful</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">psut_mats_useful</span><span class="op">)</span>
+<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">psut_mats_useful</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 8</span>
 <span class="co">#&gt; Columns: 13</span>
 <span class="co">#&gt; $ Country     &lt;chr&gt; "GHA", "GHA", "ZAF", "ZAF", "GHA", "GHA", "ZAF", "ZAF"</span>
 <span class="co">#&gt; $ Method      &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"</span>
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E"</span>
-<span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final", "Useful", "Useful", "U…</span>
+<span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final", "Useful", "Useful", "…</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000, 1971, 2000, 1971, 2000</span>
-<span class="co">#&gt; $ R           &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[3 x 3]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ U_EIOU      &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ U_feed      &lt;list&gt; &lt;&lt;matrix[4 x 3]&gt;&gt;, &lt;&lt;matrix[3 x 3]&gt;&gt;, &lt;&lt;matrix[7 x 9]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ U           &lt;list&gt; &lt;&lt;matrix[6 x 3]&gt;&gt;, &lt;&lt;matrix[5 x 3]&gt;&gt;, &lt;&lt;matrix[9 x 9]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ r_EIOU      &lt;list&gt; &lt;&lt;matrix[6 x 3]&gt;&gt;, &lt;&lt;matrix[5 x 3]&gt;&gt;, &lt;&lt;matrix[9 x 9]&gt;&gt;, …</span>
-<span class="co">#&gt; $ V           &lt;list&gt; &lt;&lt;matrix[10 x 12]&gt;&gt;, &lt;&lt;matrix[14 x 14]&gt;&gt;, &lt;&lt;matrix[12 x 1…</span>
-<span class="co">#&gt; $ Y           &lt;list&gt; &lt;&lt;matrix[12 x 21]&gt;&gt;, &lt;&lt;matrix[13 x 20]&gt;&gt;, &lt;&lt;matrix[18 x 2…</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; &lt;&lt;matrix[14 x 1]&gt;&gt;, &lt;&lt;matrix[16 x 1]&gt;&gt;, &lt;&lt;matrix[22 x 1]&gt;…</span></code></pre></div>
+<span class="co">#&gt; $ R           &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[3 x 3]&gt;, &lt;mat…</span>
+<span class="co">#&gt; $ U_EIOU      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 3]&gt;, &lt;mat…</span>
+<span class="co">#&gt; $ U_feed      &lt;list&gt; [&lt;matrix[6 x 5]&gt;, &lt;matrix[5 x 5]&gt;, &lt;matrix[9 x 11]&gt;, &lt;ma…</span>
+<span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[8 x 5]&gt;, &lt;matrix[7 x 5]&gt;, &lt;matrix[11 x 11]&gt;, &lt;m…</span>
+<span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[8 x 5]&gt;, &lt;matrix[7 x 5]&gt;, &lt;matrix[11 x 11]&gt;, &lt;m…</span>
+<span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[12 x 14]&gt;, &lt;matrix[16 x 16]&gt;, &lt;matrix[14 x 21]&gt;…</span>
+<span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[12 x 21]&gt;, &lt;matrix[13 x 20]&gt;, &lt;matrix[18 x 26]&gt;…</span>
+<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[16 x 1]&gt;, &lt;matrix[18 x 1]&gt;, &lt;matrix[24 x 1]&gt;, &lt;…</span></code></pre></div>
 <p>Notice that several additional rows have been created in the data frame. The additional rows contain versions of ECC matrices wherein the last stage of the ECC is useful energy. Extending to the useful stage means many additional energy products are included in the energy conversion chain. For example, the <span class="math inline">\(\mathbf{Y}\)</span> matrix includes additional rows for mechanical drive (MD), heat (MTH.100.C, e.g.), and light.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># A Y matrix where final energy is the last stage of the energy conversion chain</span>
