@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.48</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.52</span>
       </span>
     </div>
 
@@ -144,7 +144,7 @@
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string vector with 21 entries.</p><dl>
+    <p>A string vector with 23 entries.</p><dl>
 <dt>main_activity_producer_electricity_plants</dt><dd><p>The string that identifies main activity producer electricity plants.</p></dd>
 <dt>autoproducer_electricity_plants</dt><dd><p>The string that identifies autoproducer electricity plants.</p></dd>
 <dt>main_activity_producer_CHP_plants</dt><dd><p>The string that identifies main activity producer combined heat and power plants.</p></dd>
@@ -165,7 +165,9 @@
 <dt>gas_to_liquid_gtl_plants</dt><dd><p>The string that identifies gas to liquid (GTL) plants.</p></dd>
 <dt>for_blended_natural_gas</dt><dd><p>The string that identifies for blended natural gas.</p></dd>
 <dt>charcoal_production_plants</dt><dd><p>The string that identifies charcoal production plants.</p></dd>
+<dt>nuclear_industry</dt><dd><p>The string that identifies the Nuclear industry</p></dd>
 <dt>non_specified_transformation</dt><dd><p>The string that identifies non-specified transformation.</p></dd>
+<dt>non_specified_energy</dt><dd><p>The string that identifies non-specified transformation, for the IEA's extended energy balances after 2019.</p></dd>
 
 </dl>
 
@@ -232,8 +234,14 @@
 #&gt; $charcoal_production_plants
 #&gt; [1] "Charcoal production plants"
 #&gt; 
+#&gt; $nuclear_indsutry
+#&gt; [1] "Nuclear industry"
+#&gt; 
 #&gt; $non_specified_transformation
 #&gt; [1] "Non-specified (transformation)"
+#&gt; 
+#&gt; $non_specified_energy
+#&gt; [1] "Non-specified (energy)"
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -246,7 +254,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia, Zeke Marshall.</p>
 </div>
 
 <div class="pkgdown">

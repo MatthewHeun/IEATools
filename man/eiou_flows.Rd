@@ -3,17 +3,34 @@
 \docType{data}
 \name{eiou_flows}
 \alias{eiou_flows}
-\title{Energy Industry Own Use flows}
+\title{Energy industry own use (EIOU) flows}
 \format{
-A string list with 17 entries.
+A string vector with 17 entries.
+\describe{
+\item{bkb_peat_briquette_plants}{The string identifier for BKB/peat briquette plants.}
+\item{blast_furnaces}{The string identifier for Blast furnaces.}
+\item{charcoal_plants}{The string identifier for Charcoal production plants.}
+\item{coal_liquefaction_plants}{The string identifier for Coal liquefaction plants.}
+\item{coal_mines}{The string identifier for Coal mines.}
+\item{coke_ovens}{The string identifier for Coke ovens.}
+\item{gas_work}{The string identifier for Gas works.}
+\item{gas_to_liquids_plants}{The string identifier for Gas-to-liquids (GTL) plants.}
+\item{gasification_plants}{The string identifier for Gasification plants for biogases.}
+\item{liquefaction_regasification_plants}{The string identifier for Liquefaction (LNG) / regasification plants.}
+\item{non_specified_eiou}{The string identifier for Non-specified (energy).}
+\item{nuclear_industry}{The string identifier for Nuclear industry.}
+\item{oil_and_gas_extraction}{The string identifier for Oil and gas extraction.}
+\item{oil_refineries}{The string identifier for Oil refineries.}
+\item{own_use_elect_chp_heat_plants}{The string identifier for Own use in electricity, CHP and heat plants.}
+\item{patent_fuel_plants}{The string identifier for Patent fuel plants.}
+\item{pumped_storage_plants}{The string identifier for Pumped storage plants.}
+}
 }
 \usage{
 eiou_flows
 }
 \description{
-A string list containing named names of EIOU flows in the IEA World Energy Extended Balances data.
-Items in the list provide default values for EIOU flows function arguments
-throughout the \code{IEATools} package.
+A string vector containing names of \verb{Energy industry own use} \code{Flow}s in the IEA extended energy balances database.
 }
 \examples{
 eiou_flows

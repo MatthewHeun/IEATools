@@ -79,7 +79,7 @@ by supplying efficiencies and exergy-to-energy ratios from any number of exempla
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.48</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.52</span>
       </span>
     </div>
 
@@ -165,11 +165,15 @@ by supplying efficiencies and exergy-to-energy ratios from any number of exempla
   e_dot <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>e_dot</span>,
   unit <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>unit</span>,
   year <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>year</span>,
+  ledger_side <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>ledger_side</span>,
+  flow_aggregation_point <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow_aggregation_point</span>,
   machine <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>machine</span>,
   eu_product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eu_product</span>,
   e_dot_perc <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>e_dot_perc</span>,
   e_dot_machine <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>e_dot_machine</span>,
   e_dot_machine_perc <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>e_dot_machine_perc</span>,
+  ef_product <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>ef_product</span>,
+  destination <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>destination</span>,
   eta_fu <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu</span>,
   phi_u <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>phi_u</span>,
   quantity <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>quantity</span>,
@@ -202,11 +206,11 @@ Default is <code><a href='https://rdrr.io/r/base/c.html'>c(IEATools::template_co
 Must be one or both of the default values.</p></td>
     </tr>
     <tr>
-      <th>country, method, energy_type, last_stage, e_dot, unit, year</th>
+      <th>country, method, energy_type, ledger_side, flow_aggregation_point, last_stage, e_dot, unit, year</th>
       <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, c_source, eta_fu_phi_u_source, .values</th>
+      <th>machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, ef_product, destination, c_source, eta_fu_phi_u_source, .values</th>
       <td><p>See <code><a href='template_cols.html'>IEATools::template_cols</a></code>.</p></td>
     </tr>
     </table>
@@ -271,24 +275,24 @@ and a data frame is returned containing rows from <code>fu_allocation_table</cod
 <span class='va'>completed</span> <span class='op'>%&gt;%</span> 
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>.data</span><span class='op'>[[</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>machine</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>==</span> <span class='st'>"Automobiles"</span>, 
                 <span class='va'>.data</span><span class='op'>[[</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu_phi_u_source</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>==</span> <span class='st'>"ZAF"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 x 11</span><span>
-#&gt;   Country Method Energy.type Last.stage Unit  Machine Eu.product Quantity  Year
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> GHA     PCM    E           Final      ktoe  Automo… MD         eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span> GHA     PCM    E           Final      ktoe  Automo… MD         eta.fu    </span><span style='text-decoration: underline;'>2</span><span>000
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> GHA     PCM    E           Final      ktoe  Automo… MD         phi.u     </span><span style='text-decoration: underline;'>1</span><span>971
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span> GHA     PCM    E           Final      ktoe  Automo… MD         phi.u     </span><span style='text-decoration: underline;'>2</span><span>000
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 x 10</span><span>
+#&gt;   Country Method Energy.type Last.stage Machine Eu.product Quantity  Year
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> GHA     PCM    E           Final      Automo… MD         eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> GHA     PCM    E           Final      Automo… MD         eta.fu    </span><span style='text-decoration: underline;'>2</span><span>000
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span> GHA     PCM    E           Final      Automo… MD         phi.u     </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span> GHA     PCM    E           Final      Automo… MD         phi.u     </span><span style='text-decoration: underline;'>2</span><span>000
 #&gt; </span><span style='color: #949494;'># … with 2 more variables: .values </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, eta.fu.phi.u.source </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span></div><div class='input'><span class='co'># Check that we got Irons from World</span>
 <span class='va'>completed</span> <span class='op'>%&gt;%</span> 
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>.data</span><span class='op'>[[</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>machine</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>==</span> <span class='st'>"Irons"</span>, 
                 <span class='va'>.data</span><span class='op'>[[</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu_phi_u_source</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>==</span> <span class='st'>"World"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 4 x 11</span><span>
-#&gt;   Country Method Energy.type Last.stage Unit  Machine Eu.product Quantity  Year
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> GHA     PCM    E           Final      ktoe  Irons   MTH.200.C  eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span> GHA     PCM    E           Final      ktoe  Irons   MTH.200.C  eta.fu    </span><span style='text-decoration: underline;'>2</span><span>000
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> GHA     PCM    E           Final      ktoe  Irons   MTH.200.C  phi.u     </span><span style='text-decoration: underline;'>1</span><span>971
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span> GHA     PCM    E           Final      ktoe  Irons   MTH.200.C  phi.u     </span><span style='text-decoration: underline;'>2</span><span>000
+</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 4 x 10</span><span>
+#&gt;   Country Method Energy.type Last.stage Machine Eu.product Quantity  Year
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> GHA     PCM    E           Final      Irons   MTH.200.C  eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> GHA     PCM    E           Final      Irons   MTH.200.C  eta.fu    </span><span style='text-decoration: underline;'>2</span><span>000
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span> GHA     PCM    E           Final      Irons   MTH.200.C  phi.u     </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span> GHA     PCM    E           Final      Irons   MTH.200.C  phi.u     </span><span style='text-decoration: underline;'>2</span><span>000
 #&gt; </span><span style='color: #949494;'># … with 2 more variables: .values </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, eta.fu.phi.u.source </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -301,7 +305,7 @@ and a data frame is returned containing rows from <code>fu_allocation_table</cod
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia, Zeke Marshall.</p>
 </div>
 
 <div class="pkgdown">

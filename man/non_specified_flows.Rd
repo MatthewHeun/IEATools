@@ -5,7 +5,7 @@
 \alias{non_specified_flows}
 \title{IEA non-specified flows}
 \format{
-A string list with 6 entries.
+A string list with 7 entries.
 \describe{
 \item{non_specified_transformation}{The string identifying non-specified transformation process flows.}
 \item{non_specified_energy}{The string identifying non-specified energy industry own use.}
@@ -13,6 +13,7 @@ A string list with 6 entries.
 \item{non_specified_industry}{The string identifying non-specified industry for 2018 and earlier versions of the IEA's extended energy balance data.}
 \item{industry_not_elsewhere_specified}{The string identifying non-specified industry flows for 2019 and later versions of the IEA's extended energy balance data.}
 \item{non_specified}{The string identifying generic non-specified flows.}
+\item{transport_not_elsewhere_specified}{The string identifying the Transport not elsewhere specified sector. This string replaced \code{non_specified_transport} in the IEA's 2020 extended energy balances.}
 }
 }
 \usage{

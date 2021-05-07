@@ -1,14 +1,51 @@
-# IEATools 0.1.48 (2012-02-18)
+# IEATools 0.1.51 (2021-05-07)
+
+* Deleted an efficiency for LPG stoves in Ghana in 1971
+  that should not have been in the GH-ZA-Efficiency-sample-2019.xlsx file.
+* Moved A_B_data_full_2018_format_testing.csv to `inst/extdata`.
+* `specify_primary_production()` updated so that all products coming from Resources
+  are now called Product [from Resources]. Then, for each product, 
+  a manufacturing industry takes these Product [from Resources] as inputs 
+  and transforms them into actual Products.
+
+
+# IEATools 0.1.51 (2021-04-11)
+
+* Transition away from Travis to GitHub actions for continuous integration testing.
+* No new tests.
+    * Still at 766 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# IEATools 0.1.50 (2021-03-31)
+
+* Now more robust support for tidy (instead of wide-by-year) format efficiency data.
+* Now more arguments are passed from top-level functions to lower-level functions,
+  thereby allowing external callers to use non-default column names.
+* Moving some code to new syntax for referring to column names passed as function arguments.
+* New tests for new features.
+    * Now up to 766 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# IEATools 0.1.49 (2021-03-17)
+
+* New constants: `industry_net_flows`, `transport_domestic_flows`, `fd_sectors`, `eiou_flows`, and `prim_agg_flows`
+* Improving documentation of constants.
+
+
+# IEATools 0.1.48 (2021-02-18)
 
 * Minor issue fixed regarding the `coal_and_coal_products` constant.
 
-# IEATools 0.1.47 (2012-02-16)
+
+# IEATools 0.1.47 (2021-02-16)
 
 * New `specify_all()` function coded, so that it now splits non-specified
   industries, splits the IEA "Own use in electricity, CHP and heat plants"
   flow in main activity producer electricity, heat, and CHP plants, and so that
   a nuclear industry is added when needed.
-* Sub-functions for the specify_all() function 
+* Sub-functions for the `specify_all()` function 
   are called within the `specify_tp_eiou()` function.
 * These include the `gather_producer_autoproducer()`,
   the `route_pumped_storage()`, the `route_own_use_elect_chp_heat()`,
@@ -19,7 +56,8 @@
   it also works when the `.tidy_iea_df` data frame already
   has a `matnames` column.
 
-# IEATools 0.1.46 (2012-02-01)
+
+# IEATools 0.1.46 (2021-02-01)
 
 * `calc_tidy_iea_df_balances` function updated
   so that it also accounts for balancing flows 
@@ -36,12 +74,12 @@
   `add_row_col_meta()` now returns `.tidy_iea_df` unmodified.
   This new feature enables other functions for assigning row and column names
   and row and column types.
-* New tests for the new feature.
+* New tests for the new features.
     * Now up to 675 tests, all passing.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.45 (2012-12-28)
+# IEATools 0.1.45 (2020-12-28)
 
 * Bug in `aggregate_regions()` hotfixed.
 * Still 661 tests, coverage remains at 100%.

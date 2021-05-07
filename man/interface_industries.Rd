@@ -6,6 +6,13 @@
 \title{Interface industries}
 \format{
 A string vector with 5 entries.
+\describe{
+\item{imports}{The string identifier for Imports.}
+\item{exports}{The string identifier for Exports.}
+\item{international_aviation_bunkers}{The string identifier for International aviation bunkers.}
+\item{international_marine_bunkers}{The string identifier for International marine bunkers.}
+\item{stock_changes}{The string identifier for Stock changes.}
+}
 }
 \usage{
 interface_industries

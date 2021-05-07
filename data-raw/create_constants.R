@@ -188,7 +188,7 @@ coal_and_coal_products <- list(primary_coal_products,
                                gas_coke = "Gas coke",
                                coal_tar = "Coal tar",
                                bkb = "BKB",
-                               bas_works_gas = "Gas works gas",
+                               gas_works_gas = "Gas works gas",
                                coke_oven_gas = "Coke oven gas",
                                blast_furnace_gas = "Blast furnace gas",
                                other_recovered_gases = "Other recovered gases") %>% 
@@ -326,6 +326,20 @@ tpes_flows <- list(resources = "Resources",
 usethis::use_data(tpes_flows, overwrite = TRUE)
 
 
+#
+# Primary energy flows used to calculate domestic primary energy consumption using 
+# Recca::primary_aggregates()
+
+prim_agg_flows <- tpes_flows
+prim_agg_flows <- prim_agg_flows[!(prim_agg_flows %in% c("Production",
+                                                         "Exports",
+                                                         "International marine bunkers",
+                                                         "International aviation bunkers"))]
+usethis::use_data(prim_agg_flows, overwrite = TRUE)
+
+
+
+
 tfc_compare_flows <- list(total_primary_energy_supply = "Total primary energy supply",
                           transfers = "Transfers",
                           statistical_differences = "Statistical differences",
@@ -355,9 +369,11 @@ transformation_processes <- list(main_activity_producer_electricity_plants = "Ma
                                  gas_to_liquid_gtl_plants = "Gas-to-liquids (GTL) plants",
                                  for_blended_natural_gas = "For blended natural gas",
                                  charcoal_production_plants = "Charcoal production plants",
-                                 non_specified_transformation = "Non-specified (transformation)")
+                                 nuclear_indsutry = "Nuclear industry",
+                                 non_specified_transformation = "Non-specified (transformation)",
+                                 # 2019
+                                 non_specified_energy = "Non-specified (energy)")
 usethis::use_data(transformation_processes, overwrite = TRUE)
-
 
 
 main_act_plants <- list(main_act_prod_elect_plants = "Main activity producer electricity plants",
@@ -439,6 +455,10 @@ industry_flows <- list(mining_and_quarrying = "Mining and quarrying",
   as.list()
 usethis::use_data(industry_flows, overwrite = TRUE)
 
+# A constant containing non-eiou industry flows
+industry_net_flows <- industry_flows[!(industry_flows %in% c("Coal mines", "Oil and gas extraction"))]
+usethis::use_data(industry_net_flows, overwrite = TRUE)
+
 
 transport_flows <- list(world_aviation_bunkers = "World aviation bunkers",
                         domestic_aviation = "Domestic aviation",
@@ -447,8 +467,18 @@ transport_flows <- list(world_aviation_bunkers = "World aviation bunkers",
                         pipeline_transport = "Pipeline transport", 
                         world_marine_bunkers = "World marine bunkers",
                         domestic_navigation = "Domestic navigation",
-                        non_specified_transport = "Non-specified (transport)")
+                        # 2019
+                        non_specified_transport = "Non-specified (transport)",
+                        # 2020
+                        transport_not_elsewhere_specified = "Transport not elsewhere specified")
 usethis::use_data(transport_flows, overwrite = TRUE)
+
+# A constant containing domestic transport flows. This constant is the same as 
+# transport flows except it does not contain "World marine bunkers" or
+# "World aviation bunkers"
+transport_domestic_flows <- transport_flows[!(transport_flows %in% c("World aviation bunkers",
+                                                                     "World marine bunkers"))]
+usethis::use_data(transport_domestic_flows, overwrite = TRUE)
 
 
 other_flows <- list(residential = "Residential", 
@@ -588,9 +618,15 @@ energy_types <- list(e = "E", # Energy
 usethis::use_data(energy_types, overwrite = TRUE)
 
 
-last_stages <- list(final = "Final", 
-                    useful = "Useful", 
-                    services = "Services")
+all_stages <- list(primary = "Primary", 
+                   final = "Final", 
+                   useful = "Useful", 
+                   services = "Services")
+usethis::use_data(all_stages, overwrite = TRUE)
+
+
+last_stages <- all_stages
+last_stages$primary <- NULL
 usethis::use_data(last_stages, overwrite = TRUE)
 
 
@@ -659,7 +695,18 @@ non_specified_flows <- list(non_specified_transformation = transformation_proces
                             non_specified_industry = industry_flows$non_specified_industry, 
                             # 2019
                             industry_not_elsewhere_specified = industry_flows$industry_not_elsewhere_specified, 
-                            non_specified = "Non-specified")
+                            non_specified = "Non-specified",
+                            # 2020
+                            non_specified_transport = transport_flows$transport_not_elsewhere_specified)
 usethis::use_data(non_specified_flows, overwrite = TRUE)
 
 
+#
+# Final demand sectors for use by Recca::finaldemand_aggregates()
+#
+
+fd_sectors <- c(eiou_flows,
+                industry_net_flows,
+                transport_domestic_flows,
+                other_flows)
+usethis::use_data(fd_sectors, overwrite = TRUE)

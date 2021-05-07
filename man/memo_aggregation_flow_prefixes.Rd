@@ -6,6 +6,11 @@
 \title{Memo and aggregation flow prefixes}
 \format{
 A string vector with 3 entries.
+\describe{
+\item{memo}{The string identifier for "Memo: ".}
+\item{electricity_output_GWh}{The string identifier for "Electricity output (GWh)".}
+\item{heat_output}{The string identifier for "Heat output".}
+}
 }
 \usage{
 memo_aggregation_flow_prefixes

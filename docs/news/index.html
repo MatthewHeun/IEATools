@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.48</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.52</span>
       </span>
     </div>
 
@@ -133,27 +133,74 @@
       
     </div>
 
-    <div id="ieatools-0148-2012-02-18" class="section level1">
+    <div id="ieatools-0151-2021-05-07" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.51">
+<a href="#ieatools-0151-2021-05-07" class="anchor"></a>IEATools 0.1.51 (2021-05-07)</h1>
+<ul>
+<li>Deleted an efficiency for LPG stoves in Ghana in 1971 that should not have been in the GH-ZA-Efficiency-sample-2019.xlsx file.</li>
+<li>Moved A_B_data_full_2018_format_testing.csv to <code>inst/extdata</code>.</li>
+<li>
+<code><a href="../reference/specify_primary_production.html">specify_primary_production()</a></code> updated so that all products coming from Resources are now called Product [from Resources]. Then, for each product, a manufacturing industry takes these Product [from Resources] as inputs and transforms them into actual Products.</li>
+</ul>
+</div>
+    <div id="ieatools-0151-2021-04-11" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.51">
+<a href="#ieatools-0151-2021-04-11" class="anchor"></a>IEATools 0.1.51 (2021-04-11)</h1>
+<ul>
+<li>Transition away from Travis to GitHub actions for continuous integration testing.</li>
+<li>No new tests.
+<ul>
+<li>Still at 766 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="ieatools-0150-2021-03-31" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.50">
+<a href="#ieatools-0150-2021-03-31" class="anchor"></a>IEATools 0.1.50 (2021-03-31)</h1>
+<ul>
+<li>Now more robust support for tidy (instead of wide-by-year) format efficiency data.</li>
+<li>Now more arguments are passed from top-level functions to lower-level functions, thereby allowing external callers to use non-default column names.</li>
+<li>Moving some code to new syntax for referring to column names passed as function arguments.</li>
+<li>New tests for new features.
+<ul>
+<li>Now up to 766 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="ieatools-0149-2021-03-17" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.49">
+<a href="#ieatools-0149-2021-03-17" class="anchor"></a>IEATools 0.1.49 (2021-03-17)</h1>
+<ul>
+<li>New constants: <code>industry_net_flows</code>, <code>transport_domestic_flows</code>, <code>fd_sectors</code>, <code>eiou_flows</code>, and <code>prim_agg_flows</code>
+</li>
+<li>Improving documentation of constants.</li>
+</ul>
+</div>
+    <div id="ieatools-0148-2021-02-18" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.48">
-<a href="#ieatools-0148-2012-02-18" class="anchor"></a>IEATools 0.1.48 (2012-02-18)</h1>
+<a href="#ieatools-0148-2021-02-18" class="anchor"></a>IEATools 0.1.48 (2021-02-18)</h1>
 <ul>
 <li>Minor issue fixed regarding the <code>coal_and_coal_products</code> constant.</li>
 </ul>
 </div>
-    <div id="ieatools-0147-2012-02-16" class="section level1">
+    <div id="ieatools-0147-2021-02-16" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.47">
-<a href="#ieatools-0147-2012-02-16" class="anchor"></a>IEATools 0.1.47 (2012-02-16)</h1>
+<a href="#ieatools-0147-2021-02-16" class="anchor"></a>IEATools 0.1.47 (2021-02-16)</h1>
 <ul>
 <li>New <code><a href="../reference/specify_all.html">specify_all()</a></code> function coded, so that it now splits non-specified industries, splits the IEA “Own use in electricity, CHP and heat plants” flow in main activity producer electricity, heat, and CHP plants, and so that a nuclear industry is added when needed.</li>
-<li>Sub-functions for the specify_all() function are called within the <code><a href="../reference/specify_tp_eiou.html">specify_tp_eiou()</a></code> function.</li>
+<li>Sub-functions for the <code><a href="../reference/specify_all.html">specify_all()</a></code> function are called within the <code><a href="../reference/specify_tp_eiou.html">specify_tp_eiou()</a></code> function.</li>
 <li>These include the <code><a href="../reference/gather_producer_autoproducer.html">gather_producer_autoproducer()</a></code>, the <code><a href="../reference/route_pumped_storage.html">route_pumped_storage()</a></code>, the <code><a href="../reference/route_own_use_elect_chp_heat.html">route_own_use_elect_chp_heat()</a></code>, the <code><a href="../reference/add_nuclear_industry.html">add_nuclear_industry()</a></code>, and the <code><a href="../reference/route_non_specified_flows.html">route_non_specified_flows()</a></code> functions. *<code><a href="../reference/specify_primary_production.html">specify_primary_production()</a></code> function changed, the product naming is now modified.</li>
 <li>
 <code><a href="../reference/extract_S_units_from_tidy.html">extract_S_units_from_tidy()</a></code> function hotfixed so that it also works when the <code>.tidy_iea_df</code> data frame already has a <code>matnames</code> column.</li>
 </ul>
 </div>
-    <div id="ieatools-0146-2012-02-01" class="section level1">
+    <div id="ieatools-0146-2021-02-01" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.46">
-<a href="#ieatools-0146-2012-02-01" class="anchor"></a>IEATools 0.1.46 (2012-02-01)</h1>
+<a href="#ieatools-0146-2021-02-01" class="anchor"></a>IEATools 0.1.46 (2021-02-01)</h1>
 <ul>
 <li>
 <code>calc_tidy_iea_df_balances</code> function updated so that it also accounts for balancing flows when checking balances.</li>
@@ -161,7 +208,7 @@
 <li>New option for “Epsilon” matrices and PSUT columns enables removal of some <code>Flow</code>s for footprinting analyses (and maybe other work in the future).</li>
 <li>When <code>matnames</code> is present in <code>.tidy_iea_df</code>, <code><a href="../reference/add_psut_matnames.html">add_psut_matnames()</a></code> now returns <code>.tidy_iea_df</code> unmodified. This new feature enables other functions for assigning matrix names.</li>
 <li>When all of <code>rownames</code>, <code>colnames</code>, <code>rowtypes</code>, and <code>coltypes</code> are present in <code>.tidy_iea_df</code>, <code><a href="../reference/add_row_col_meta.html">add_row_col_meta()</a></code> now returns <code>.tidy_iea_df</code> unmodified. This new feature enables other functions for assigning row and column names and row and column types.</li>
-<li>New tests for the new feature.
+<li>New tests for the new features.
 <ul>
 <li>Now up to 675 tests, all passing.</li>
 <li>Test coverage remains at 100 %.</li>
@@ -169,9 +216,9 @@
 </li>
 </ul>
 </div>
-    <div id="ieatools-0145-2012-12-28" class="section level1">
+    <div id="ieatools-0145-2020-12-28" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.45">
-<a href="#ieatools-0145-2012-12-28" class="anchor"></a>IEATools 0.1.45 (2012-12-28)</h1>
+<a href="#ieatools-0145-2020-12-28" class="anchor"></a>IEATools 0.1.45 (2020-12-28)</h1>
 <ul>
 <li>Bug in <code><a href="../reference/aggregate_regions.html">aggregate_regions()</a></code> hotfixed.</li>
 <li>Still 661 tests, coverage remains at 100%.</li>
@@ -703,7 +750,7 @@ For example, “Hard coal (if no detail)” –&gt; “Hard coal (if no detail) 
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia, Zeke Marshall.</p>
 </div>
 
 <div class="pkgdown">

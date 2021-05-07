@@ -81,7 +81,7 @@ specific industries." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.48</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.52</span>
       </span>
     </div>
 
@@ -175,7 +175,9 @@ specific industries.</p>
   transformation_processes <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='aggregation_flows.html'>aggregation_flows</a></span><span class='op'>$</span><span class='va'>transformation_processes</span>,
   resources <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='va'>resources</span>,
   resource_products_notation <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='from_notation.html'>from_notation</a></span>,
-  resources_flow_notation <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='of_notation.html'>of_notation</a></span>
+  resources_flow_notation <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='of_notation.html'>of_notation</a></span>,
+  manufacture <span class='op'>=</span> <span class='st'>"Manufacture"</span>,
+  manufacture_flow_notation <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='of_notation.html'>of_notation</a></span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -254,6 +256,18 @@ Default is <code><a href='from_notation.html'>IEATools::from_notation</a></code>
 E.g., the Crude oil resource will be called "Resources [of Crude oil]".
 Default is <code><a href='of_notation.html'>IEATools::of_notation</a></code>.</p></td>
     </tr>
+    <tr>
+      <th>manufacture</th>
+      <td><p>The name of the industries that convert resource-products \(inputs\) into actual products \(outputs\),
+when a corresponding a corresponding industry does not exist by default in IEA data.
+Default is "Manufacture".</p></td>
+    </tr>
+    <tr>
+      <th>manufacture_flow_notation</th>
+      <td><p>The notation to be used for the newly created manufacture industries
+\(each manufacturing industry is specified\) by the product it manufactures.
+Default is <code><a href='of_notation.html'>IEATools::of_notation</a></code>.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -265,18 +279,13 @@ for both coal and coal products and oil and gas extraction</p>
     <p>By default, the following changes are made to <code>.tidy_iea_df</code>:</p><ol>
 <li><p>Energy industry own use for <code>Liquefaction (LNG) / regasification plants</code> is
 reassigned to <code>Oil and gas extraction</code>.</p></li>
-<li><p>The <code>Production</code> industry for <code>coal_and_coal_products</code>
-is replaced by <code>Coal mines</code>.</p></li>
-<li><p>A <code>Resources [of Coal]</code> industry is created which becomes the
-source of all primary <code>coal_and_coal_products</code> in the energy conversion chain.</p></li>
-<li><p>Flows from <code>Resources [of Coal]</code> to <code>Coal mines</code> are added.</p></li>
-<li><p>The <code>Coal mines (energy)</code> EIOU <code>Flow</code> is replaced by <code>Coal mines</code>.</p></li>
-<li><p>The <code>Production</code> industry for <code>oil_and_oil_products</code> and <code>Natural gas</code>
-is replaced by <code>Oil and gas extraction</code>.</p></li>
-<li><p>A <code>Resources [of Oil and natural gas]</code> industry is created which becomes the
-source of all primary <code>oil_and_oil_products</code> and <code>Natural gas</code> in the energy conversion chain.</p></li>
-<li><p>Flows from <code>Resources [of Oil and natural gas]</code> to <code>Oil and gas extraction</code> are added.</p></li>
-<li><p>The <code>Oil and gas extraction (energy)</code> EIOU <code>Flow</code> is replaced by <code>Oil and gas extraction</code>.</p></li>
+<li><p>Each <code>Production</code> flow is replaced by a <code>Resources [of Product]</code> flow,
+which produces <code>Product [from Resources]</code>.</p></li>
+<li><p>For each <code>Production</code> flow, a manufacturing flow, that takes as input
+the <code>Product [from Resources]</code> supplied by the new <code>Resources [of Product]</code>,
+and that produces the given <code>Product</code>, is added. The name of the manufacturing industry
+is <code>Coal mines</code> for <code>coal_and_coal_products</code>, <code>Oil and gas extraction</code> for <code>oil_and_gas_products</code>,
+and <code>Manufacture [of Product]</code> for all other products.</p></li>
 </ol>
 
 <p>Users can specify other changes by adjusting the default argument values.</p>
@@ -290,23 +299,20 @@ source of all primary <code>oil_and_oil_products</code> and <code>Natural gas</c
   <span class='fu'><a href='add_psut_matnames.html'>add_psut_matnames</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Flow</span> <span class='op'>==</span> <span class='st'>"Coal mines"</span> <span class='op'>|</span> <span class='fu'>stringr</span><span class='fu'>::</span><span class='fu'><a href='https://stringr.tidyverse.org/reference/str_detect.html'>str_detect</a></span><span class='op'>(</span><span class='va'>Flow</span>, <span class='st'>"Resources"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='op'>-</span><span class='va'>Method</span>, <span class='op'>-</span><span class='va'>Last.stage</span>, <span class='op'>-</span><span class='va'>Ledger.side</span>, <span class='op'>-</span><span class='va'>Unit</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 14 x 8</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 23 x 8</span><span>
 #&gt;    Country Energy.type  Year Flow.aggregation… Flow    Product    E.dot matnames
 #&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>             </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> ZAF     E            </span><span style='text-decoration: underline;'>1</span><span>971 Energy industry … Coal m… Electri… -</span><span style='color: #BB0000;'>5.24</span><span style='color: #949494;'>e</span><span>1 U_EIOU  
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> ZAF     E            </span><span style='text-decoration: underline;'>1</span><span>971 Total primary en… Resour… Hard co…  3.31</span><span style='color: #949494;'>e</span><span>4 R       
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> ZAF     E            </span><span style='text-decoration: underline;'>1</span><span>971 Transformation p… Coal m… Hard co…  3.31</span><span style='color: #949494;'>e</span><span>4 V       
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> ZAF     E            </span><span style='text-decoration: underline;'>1</span><span>971 Transformation p… Coal m… Hard co… -</span><span style='color: #BB0000;'>3.31</span><span style='color: #949494;'>e</span><span>4 U_feed  
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Energy industry … Coal m… Electri… -</span><span style='color: #BB0000;'>2.37</span><span style='color: #949494;'>e</span><span>2 U_EIOU  
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Total primary en… Resour… Coking …  2.37</span><span style='color: #949494;'>e</span><span>3 R       
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Total primary en… Resour… Crude o…  6.67</span><span style='color: #949494;'>e</span><span>2 R       
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Total primary en… Resour… Natural…  2.77</span><span style='color: #949494;'>e</span><span>2 R       
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Total primary en… Resour… Natural…  1.40</span><span style='color: #949494;'>e</span><span>3 R       
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Total primary en… Resour… Other b…  1.25</span><span style='color: #949494;'>e</span><span>5 R       
-#&gt; </span><span style='color: #BCBCBC;'>11</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Transformation p… Coal m… Coking …  2.37</span><span style='color: #949494;'>e</span><span>3 V       
-#&gt; </span><span style='color: #BCBCBC;'>12</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Transformation p… Coal m… Coking … -</span><span style='color: #BB0000;'>2.37</span><span style='color: #949494;'>e</span><span>3 U_feed  
-#&gt; </span><span style='color: #BCBCBC;'>13</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Transformation p… Coal m… Other b…  1.25</span><span style='color: #949494;'>e</span><span>5 V       
-#&gt; </span><span style='color: #BCBCBC;'>14</span><span> ZAF     E            </span><span style='text-decoration: underline;'>2</span><span>000 Transformation p… Coal m… Other b… -</span><span style='color: #BB0000;'>1.25</span><span style='color: #949494;'>e</span><span>5 U_feed  </div><div class='input'><span class='co'># EIOU by "Liquefaction (LNG) / regasification plants" is reassigned to "Oil and gas extraction"</span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     E            </span><span style='text-decoration: underline;'>1</span><span>971 Total primary en… Resour… Hydro […  2.50</span><span style='color: #949494;'>e</span><span>2 R       
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     E            </span><span style='text-decoration: underline;'>1</span><span>971 Total primary en… Resour… Primary…  2.09</span><span style='color: #949494;'>e</span><span>3 R       
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     E            </span><span style='text-decoration: underline;'>2</span><span>000 Total primary en… Resour… Hydro […  5.68</span><span style='color: #949494;'>e</span><span>2 R       
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     E            </span><span style='text-decoration: underline;'>2</span><span>000 Total primary en… Resour… Primary…  3.89</span><span style='color: #949494;'>e</span><span>3 R       
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> ZAF     E            </span><span style='text-decoration: underline;'>1</span><span>971 Energy industry … Coal m… Electri… -</span><span style='color: #BB0000;'>5.24</span><span style='color: #949494;'>e</span><span>1 U_EIOU  
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> ZAF     E            </span><span style='text-decoration: underline;'>1</span><span>971 Total primary en… Resour… Hard co…  3.31</span><span style='color: #949494;'>e</span><span>4 R       
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> ZAF     E            </span><span style='text-decoration: underline;'>1</span><span>971 Total primary en… Resour… Hydro […  9.63</span><span style='color: #949494;'>e</span><span>0 R       
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> ZAF     E            </span><span style='text-decoration: underline;'>1</span><span>971 Total primary en… Resour… Primary…  4.70</span><span style='color: #949494;'>e</span><span>3 R       
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> ZAF     E            </span><span style='text-decoration: underline;'>1</span><span>971 Transformation p… Coal m… Hard co…  3.31</span><span style='color: #949494;'>e</span><span>4 V       
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> ZAF     E            </span><span style='text-decoration: underline;'>1</span><span>971 Transformation p… Coal m… Hard co… -</span><span style='color: #BB0000;'>3.31</span><span style='color: #949494;'>e</span><span>4 U_feed  
+#&gt; </span><span style='color: #949494;'># … with 13 more rows</span><span></div><div class='input'><span class='co'># EIOU by "Liquefaction (LNG) / regasification plants" is reassigned to "Oil and gas extraction"</span>
 <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>
   Flow.aggregation.point <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Energy industry own use"</span><span class='op'>)</span>,
   Flow <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Liquefaction (LNG) / regasification plants"</span><span class='op'>)</span>, 
@@ -330,7 +336,7 @@ source of all primary <code>oil_and_oil_products</code> and <code>Natural gas</c
 
       <footer>
       <div class="copyright">
-  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia, Zeke Marshall.</p>
 </div>
 
 <div class="pkgdown">

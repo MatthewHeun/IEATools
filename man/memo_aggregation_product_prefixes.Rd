@@ -6,6 +6,10 @@
 \title{Memo and aggregation product prefixes}
 \format{
 A string vector with 2 entries.
+\describe{
+\item{memo}{The string identifier for "Memo: ".}
+\item{total}{The string identifier for "Total".}
+}
 }
 \usage{
 memo_aggregation_product_prefixes

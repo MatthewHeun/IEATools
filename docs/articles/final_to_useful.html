@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.48</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.52</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Final to Useful Analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-02-18</h4>
+            <h4 class="date">2021-05-07</h4>
       
       
       <div class="hidden name"><code>final_to_useful.Rmd</code></div>
@@ -122,7 +122,7 @@
 <span class="va">Tidy_iea_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; Rows: 409</span>
+<span class="co">#&gt; Rows: 427</span>
 <span class="co">#&gt; Columns: 11</span>
 <span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
 <span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span>
@@ -187,6 +187,7 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Eta_fu_template</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_fu_allocation_data.html">load_fu_allocation_data</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/eta_fu_template.html">eta_fu_template</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; Joining, by = c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit", "Ef.product", "Destination", "Year")</span>
 <span class="va">Eta_fu_template</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 304</span>
@@ -244,7 +245,7 @@
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E"</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
-<span class="co">#&gt; $ eta.fu      &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[33 x 1]&gt;, &lt;…</span>
+<span class="co">#&gt; $ eta.fu      &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[32 x 1]&gt;, &lt;…</span>
 <span class="co">#&gt; $ phi.u       &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[32 x 1]&gt;, &lt;…</span></code></pre></div>
 </div>
 <div id="extend-to-useful" class="section level2">
@@ -275,15 +276,15 @@
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
 <span class="co">#&gt; $ R           &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[3 x 3]&gt;, &lt;mat…</span>
 <span class="co">#&gt; $ U_EIOU      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 3]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ U_feed      &lt;list&gt; [&lt;matrix[4 x 3]&gt;, &lt;matrix[3 x 3]&gt;, &lt;matrix[7 x 9]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[6 x 3]&gt;, &lt;matrix[5 x 3]&gt;, &lt;matrix[9 x 9]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[6 x 3]&gt;, &lt;matrix[5 x 3]&gt;, &lt;matrix[9 x 9]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[10 x 12]&gt;, &lt;matrix[14 x 14]&gt;, &lt;matrix[12 x 19]&gt;…</span>
+<span class="co">#&gt; $ U_feed      &lt;list&gt; [&lt;matrix[6 x 5]&gt;, &lt;matrix[5 x 5]&gt;, &lt;matrix[9 x 11]&gt;, &lt;ma…</span>
+<span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[8 x 5]&gt;, &lt;matrix[7 x 5]&gt;, &lt;matrix[11 x 11]&gt;, &lt;m…</span>
+<span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[8 x 5]&gt;, &lt;matrix[7 x 5]&gt;, &lt;matrix[11 x 11]&gt;, &lt;m…</span>
+<span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[12 x 14]&gt;, &lt;matrix[16 x 16]&gt;, &lt;matrix[14 x 21]&gt;…</span>
 <span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[12 x 21]&gt;, &lt;matrix[13 x 20]&gt;, &lt;matrix[18 x 26]&gt;…</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[22 x 1]&gt;, &lt;…</span>
+<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[16 x 1]&gt;, &lt;matrix[18 x 1]&gt;, &lt;matrix[24 x 1]&gt;, &lt;…</span>
 <span class="co">#&gt; $ C_EIOU      &lt;list&gt; [&lt;matrix[2 x 3]&gt;, &lt;matrix[2 x 3]&gt;, &lt;matrix[3 x 3]&gt;, &lt;mat…</span>
 <span class="co">#&gt; $ C_Y         &lt;list&gt; [&lt;matrix[23 x 21]&gt;, &lt;matrix[24 x 22]&gt;, &lt;matrix[45 x 31]&gt;…</span>
-<span class="co">#&gt; $ eta.fu      &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[33 x 1]&gt;, &lt;…</span>
+<span class="co">#&gt; $ eta.fu      &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[32 x 1]&gt;, &lt;…</span>
 <span class="co">#&gt; $ phi.u       &lt;list&gt; [&lt;matrix[22 x 1]&gt;, &lt;matrix[23 x 1]&gt;, &lt;matrix[32 x 1]&gt;, &lt;…</span></code></pre></div>
 <p>Then use the allocation and efficiency matrices to extend to the useful stage with the <code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code> function.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -299,12 +300,12 @@
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000, 1971, 2000, 1971, 2000</span>
 <span class="co">#&gt; $ R           &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[3 x 3]&gt;, &lt;mat…</span>
 <span class="co">#&gt; $ U_EIOU      &lt;list&gt; [&lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 2]&gt;, &lt;matrix[2 x 3]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ U_feed      &lt;list&gt; [&lt;matrix[4 x 3]&gt;, &lt;matrix[3 x 3]&gt;, &lt;matrix[7 x 9]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[6 x 3]&gt;, &lt;matrix[5 x 3]&gt;, &lt;matrix[9 x 9]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[6 x 3]&gt;, &lt;matrix[5 x 3]&gt;, &lt;matrix[9 x 9]&gt;, &lt;mat…</span>
-<span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[10 x 12]&gt;, &lt;matrix[14 x 14]&gt;, &lt;matrix[12 x 19]&gt;…</span>
+<span class="co">#&gt; $ U_feed      &lt;list&gt; [&lt;matrix[6 x 5]&gt;, &lt;matrix[5 x 5]&gt;, &lt;matrix[9 x 11]&gt;, &lt;ma…</span>
+<span class="co">#&gt; $ U           &lt;list&gt; [&lt;matrix[8 x 5]&gt;, &lt;matrix[7 x 5]&gt;, &lt;matrix[11 x 11]&gt;, &lt;m…</span>
+<span class="co">#&gt; $ r_EIOU      &lt;list&gt; [&lt;matrix[8 x 5]&gt;, &lt;matrix[7 x 5]&gt;, &lt;matrix[11 x 11]&gt;, &lt;m…</span>
+<span class="co">#&gt; $ V           &lt;list&gt; [&lt;matrix[12 x 14]&gt;, &lt;matrix[16 x 16]&gt;, &lt;matrix[14 x 21]&gt;…</span>
 <span class="co">#&gt; $ Y           &lt;list&gt; [&lt;matrix[12 x 21]&gt;, &lt;matrix[13 x 20]&gt;, &lt;matrix[18 x 26]&gt;…</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[14 x 1]&gt;, &lt;matrix[16 x 1]&gt;, &lt;matrix[22 x 1]&gt;, &lt;…</span></code></pre></div>
+<span class="co">#&gt; $ S_units     &lt;list&gt; [&lt;matrix[16 x 1]&gt;, &lt;matrix[18 x 1]&gt;, &lt;matrix[24 x 1]&gt;, &lt;…</span></code></pre></div>
 <p>Notice that several additional rows have been created in the data frame. The additional rows contain versions of ECC matrices wherein the last stage of the ECC is useful energy. Extending to the useful stage means many additional energy products are included in the energy conversion chain. For example, the <span class="math inline">\(\mathbf{Y}\)</span> matrix includes additional rows for mechanical drive (MD), heat (MTH.100.C, e.g.), and light.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># A Y matrix where final energy is the last stage of the energy conversion chain</span>
@@ -391,7 +392,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Matthew Heun, Emmanuel Aramendia.</p>
+  <p>Developed by Matthew Heun, Emmanuel Aramendia, Zeke Marshall.</p>
 </div>
 
 <div class="pkgdown">

@@ -8,6 +8,7 @@ tidy_fu_allocation_table(
   .fu_allocation_table,
   year = IEATools::iea_cols$year,
   e_dot = IEATools::iea_cols$e_dot,
+  unit = IEATools::iea_cols$unit,
   e_dot_perc = IEATools::template_cols$e_dot_perc,
   quantity = IEATools::template_cols$quantity,
   maximum_values = IEATools::template_cols$maximum_values,
@@ -17,7 +18,7 @@ tidy_fu_allocation_table(
 \arguments{
 \item{.fu_allocation_table}{The final-to-useful allocation table to be tidied.}
 
-\item{year, e_dot}{See \code{IEATools::iea_cols}.}
+\item{year, e_dot, unit}{See \code{IEATools::iea_cols}.}
 
 \item{e_dot_perc, quantity, maximum_values, .values}{See \code{IEATools::template_cols}.}
 }
