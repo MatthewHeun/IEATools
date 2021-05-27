@@ -186,15 +186,16 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
   # Calculates shares of output for each of the Oil extraction and Natural gas extraction industries
   shares_oil_gas_output <- .tidy_iea_df %>% 
     dplyr::filter(
-      .data[[flow_aggregation_point]] == "" & 
+      .data[[flow_aggregation_point]] == eiou & 
       (.data[[flow]] == oil_extraction | .data[[flow]] == gas_extraction) 
       ) %>% 
     dplyr::group_by(
       .data[[country]], .data[[energy_type]], .data[[method]], .data[[last_stage]], .data[[ledger_side]]
     ) %>% 
     dplyr::mutate(
-      "{share}" = .data[[e_dot]] / sum(.data[[e_dot]])
-     )
+      "{share}" := .data[[e_dot]] / sum(.data[[e_dot]])
+     ) %>% 
+    dplyr::select(.data[[country]], .data[[energy_type]], .data[[method]], .data[[last_stage]], .data[[ledger_side]], .data[[share]])
     
   
   # Find out EIOU flows corresponding to Oil and gas extraction, and modify them using shares previously calculated
@@ -208,9 +209,9 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
       by = c({country}, {energy_type}, {method}, {last_stage}, {ledger_side})
     ) %>% 
     dplyr::mutate(
-      "{e_dot}" := .data[[e_dot]] * .data[["Share"]]
+      "{e_dot}" := .data[[e_dot]] * .data[[share]]
     ) %>% 
-    dplyr::select(-.data[["Share"]])
+    dplyr::select(-.data[[share]])
   
   
   # Filter out former EIOU flows from .tidy_iea_df, and bind the rows calculated above
