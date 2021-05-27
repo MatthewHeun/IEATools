@@ -168,6 +168,29 @@ route_pumped_storage <- function(.tidy_iea_df,
 
 
 
+#' Title
+#'
+#' @param .tidy_iea_df 
+#' @param eiou 
+#' @param country 
+#' @param energy_type 
+#' @param method 
+#' @param last_stage 
+#' @param ledger_side 
+#' @param year 
+#' @param flow 
+#' @param flow_aggregation_point 
+#' @param e_dot 
+#' @param oil_gas_extraction 
+#' @param transformation_processes 
+#' @param oil_extraction 
+#' @param gas_extraction 
+#' @param share 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
                                           eiou = IEATools::aggregation_flows$energy_industry_own_use,
                                           country = IEATools::iea_cols$country,
