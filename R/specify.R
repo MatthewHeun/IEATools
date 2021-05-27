@@ -96,7 +96,8 @@ specify_primary_production <- function(.tidy_iea_df,
                                        list_primary_gas_products = IEATools::primary_gas_products,
                                        production = IEATools::tpes_flows$production,
                                        coal_mines = IEATools::industry_flows$coal_mines,
-                                       oil_gas_extraction = IEATools::industry_flows$oil_and_gas_extraction,
+                                       oil_extraction = "Oil extraction",
+                                       gas_extraction = "Natural gas extraction",
                                        liquefaction_regas = "Liquefaction (LNG) / regasification plants",
                                        liquefaction_regas_reassign = IEATools::industry_flows$oil_and_gas_extraction,
                                        transformation_processes = IEATools::aggregation_flows$transformation_processes,
@@ -136,7 +137,8 @@ specify_primary_production <- function(.tidy_iea_df,
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
         .data[[product]] %in% list_primary_coal_products ~ coal_mines,
-        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction,
+        .data[[product]] %in% list_primary_oil_products ~ oil_extraction,
+        .data[[product]] %in% list_primary_gas_extraction ~ gas_extraction,
         TRUE ~ stringr::str_c(
           manufacture,
           manufacture_flow_notation[["suff_start"]],
@@ -156,7 +158,8 @@ specify_primary_production <- function(.tidy_iea_df,
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
         .data[[product]] %in% list_primary_coal_products ~ coal_mines,
-        .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ oil_gas_extraction,
+        .data[[product]] %in% list_primary_oil_products ~ oil_extraction,
+        .data[[product]] %in% list_primary_gas_extraction ~ gas_extraction,
         TRUE ~ stringr::str_c(
           manufacture,
           manufacture_flow_notation[["suff_start"]],
