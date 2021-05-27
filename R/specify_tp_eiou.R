@@ -179,6 +179,7 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
                                           flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                           e_dot = IEATools::iea_cols$e_dot,
                                           oil_gas_extraction = IEATools::eiou_flows$oil_and_gas_extraction,
+                                          transformation_processes = IEATools::aggregation_flows$transformation_processes,
                                           oil_extraction = "Oil extraction",
                                           gas_extraction = "Natural gas extraction",
                                           share = "Share"){
@@ -186,7 +187,7 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
   # Calculates shares of output for each of the Oil extraction and Natural gas extraction industries
   shares_oil_gas_output <- .tidy_iea_df %>% 
     dplyr::filter(
-      .data[[flow_aggregation_point]] == eiou & 
+      .data[[flow_aggregation_point]] == transformation_processes & 
       (.data[[flow]] == oil_extraction | .data[[flow]] == gas_extraction) 
       ) %>% 
     dplyr::group_by(

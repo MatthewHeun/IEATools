@@ -138,7 +138,7 @@ specify_primary_production <- function(.tidy_iea_df,
       "{flow}" := dplyr::case_when(
         .data[[product]] %in% list_primary_coal_products ~ coal_mines,
         .data[[product]] %in% list_primary_oil_products ~ oil_extraction,
-        .data[[product]] %in% list_primary_gas_extraction ~ gas_extraction,
+        .data[[product]] %in% list_primary_gas_products ~ gas_extraction,
         TRUE ~ stringr::str_c(
           manufacture,
           manufacture_flow_notation[["suff_start"]],
@@ -159,7 +159,7 @@ specify_primary_production <- function(.tidy_iea_df,
       "{flow}" := dplyr::case_when(
         .data[[product]] %in% list_primary_coal_products ~ coal_mines,
         .data[[product]] %in% list_primary_oil_products ~ oil_extraction,
-        .data[[product]] %in% list_primary_gas_extraction ~ gas_extraction,
+        .data[[product]] %in% list_primary_gas_products ~ gas_extraction,
         TRUE ~ stringr::str_c(
           manufacture,
           manufacture_flow_notation[["suff_start"]],
