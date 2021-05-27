@@ -661,7 +661,9 @@ fap_flows <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
                values = "Energy industry own use_Main activity producer electricity plants") %>% 
   # Inserting Main activity producer CHP plants and Main activity producer heat plants as EIOU flows
   insert_after(after = "Energy industry own use_Main activity producer electricity plants",
-               values = c("Energy industry own use_Main activity producer CHP plants", "Energy industry own use_Main activity producer heat plants"))
+               values = c("Energy industry own use_Main activity producer CHP plants", "Energy industry own use_Main activity producer heat plants")) %>% 
+  insert_after(after = "Energy industry own use_Main activity producer heat plants",
+               values = c("Energy industry own use_Oil extraction", "Energy industry own use_Natural gas extraction"))
 usethis::use_data(fap_flows, overwrite = TRUE)
 
 
