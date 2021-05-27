@@ -168,6 +168,42 @@ route_pumped_storage <- function(.tidy_iea_df,
 
 
 
+split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
+                                          eiou = ,
+                                          flow = IEATools::iea_cols$flow,
+                                          flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                          e_dot = IEATools::iea_cols$e_dot,
+                                          oil_extraction = "Oil extraction",
+                                          gas_extraction = "Natural gas extraction"){
+  
+  # Calculates shares of output for each of the Oil extraction and Natural gas extraction industries
+  shares_oil_gas_output <- .tidy_iea_df %>% 
+    dplyr::filter(
+      .data[[flow_aggregation_point]] == "" & 
+      (.data[[flow]] == oil_extraction | .data[[flow]] == gas_extraction) 
+      ) %>% 
+    dplyr::group_by(
+      .data[[country]], .data[[energy_type]], .data[[method]], .data[[last_stage]], .data[[ledger_side]]
+    ) %>% 
+    dplyr::mutate(
+      Share = .data[[e_dot]] / sum(.data[[e_dot]])
+     )
+    
+  
+  # Find out EIOU flows corresponding to Oil and gas extraction, and modify them using shares previously calculated
+  
+  
+  
+  # Filter out former EIOU flows from .tidy_iea_df, and bind the rows calculated above
+  
+  
+  # Return new data frame
+  return(split_oil_gas_df)
+}
+
+
+
+
 #' Routes own use in electricity, chp, and heat plants EIOU flow to main activity producer flows
 #' 
 #' This function routes the "Own use in electricity, CHP and heat plants" 
