@@ -175,6 +175,8 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
                                           method = IEATools::iea_cols$method,
                                           last_stage = IEATools::iea_cols$last_stage,
                                           ledger_side = IEATools::iea_cols$ledger_side,
+                                          year = IEATools::iea_cols$year,
+                                          #product = IEATools::iea_cols$product,
                                           flow = IEATools::iea_cols$flow,
                                           flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                           e_dot = IEATools::iea_cols$e_dot,
@@ -190,13 +192,17 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
       .data[[flow_aggregation_point]] == transformation_processes & 
       (.data[[flow]] == oil_extraction | .data[[flow]] == gas_extraction) 
       ) %>% 
+    dplyr::filter(.data[[e_dot]] > 0) %>% 
     dplyr::group_by(
-      .data[[country]], .data[[energy_type]], .data[[method]], .data[[last_stage]], .data[[ledger_side]]
+      .data[[country]], .data[[energy_type]], .data[[method]], .data[[last_stage]], .data[[ledger_side]], .data[[year]], .data[[flow]]
     ) %>% 
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+     ) %>% 
     dplyr::mutate(
       "{share}" := .data[[e_dot]] / sum(.data[[e_dot]])
-     ) %>% 
-    dplyr::select(.data[[country]], .data[[energy_type]], .data[[method]], .data[[last_stage]], .data[[ledger_side]], .data[[share]])
+    ) %>% 
+    dplyr::select(.data[[country]], .data[[energy_type]], .data[[method]], .data[[last_stage]], .data[[ledger_side]], .data[[year]], .data[[share]], .data[[flow]])
     
   
   # Find out EIOU flows corresponding to Oil and gas extraction, and modify them using shares previously calculated
@@ -207,12 +213,14 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
     ) %>% 
     dplyr::left_join(
       shares_oil_gas_output,
-      by = c({country}, {energy_type}, {method}, {last_stage}, {ledger_side})
+      by = c({country}, {energy_type}, {method}, {last_stage}, {ledger_side}, {year}),
+      suffix = c("", ".y")
     ) %>% 
     dplyr::mutate(
-      "{e_dot}" := .data[[e_dot]] * .data[[share]]
+      "{e_dot}" := .data[[e_dot]] * .data[[share]],
+      "{flow}" := .data[[paste0(flow, ".y")]]
     ) %>% 
-    dplyr::select(-.data[[share]])
+    dplyr::select(-.data[[share]], -.data[[paste0(flow, ".y")]])
   
   
   # Filter out former EIOU flows from .tidy_iea_df, and bind the rows calculated above
