@@ -168,12 +168,19 @@ route_pumped_storage <- function(.tidy_iea_df,
 
 
 
-#' Title
+#' Separates EIOU flows of oil and gas extraction
+#' 
+#' This function separates the EIOU flows of the Oil and gas extraction industry into EIOU flows 
+#' for the Oil extraction industry and EIOU flows for the Natural gas extraction industry.
+#' It uses the shares of production of each of these two industries to separate EIOU flows. 
+#' As such, each EIOU flow will be equivalent in the two industries, once reported to each industry's output.
 #'
-#' @param .tidy_iea_df 
-#' @param eiou 
+#' @param .tidy_iea_df The `.tidy_iea_df` on which oil and gas extraction EIOU flows need to be separated.
+#' @param eiou The name of the Energy industry own use flow aggregation point.
+#'             Default is `IEATools::aggregation_flows$energy_industry_own_use`.
 #' @param country,energy_type,method,last_stage,ledger_side,year,flow,flow_aggregation_point,e_dot See `IEATools::iea_cols`.
-#' @param oil_gas_extraction 
+#' @param oil_gas_extraction The name of the Oil and gas extraction EIOU flow.
+#'                           Default is `IEATools::eiou_flows$oil_and_gas_extraction`.
 #' @param transformation_processes The name of the flow aggregation point referring to transformation processes.
 #'                                 Default is `IEATools::aggregation_flows$transformation_processes`.
 #' @param oil_extraction The name of the Oil extraction industry.
@@ -187,6 +194,9 @@ route_pumped_storage <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' library(dplyr)
+#' load_tidy_iea_df() %>% 
+#'   split_oil_gas_extraction_eiou()
 split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
                                           eiou = IEATools::aggregation_flows$energy_industry_own_use,
                                           country = IEATools::iea_cols$country,
