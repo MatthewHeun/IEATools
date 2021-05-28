@@ -190,7 +190,8 @@ route_pumped_storage <- function(.tidy_iea_df,
 #' @param share The name of a temporary column that is added to the data frame.
 #'              Default is "Share". 
 #'
-#' @return
+#' @return A `.tidy_iea_df` with "Oil and gas extraction" EIOU flows split into 'Oil extraction"
+#'         and "Natural gas extraction" EIOU flows.
 #' @export
 #'
 #' @examples
