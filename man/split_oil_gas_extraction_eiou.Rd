@@ -18,8 +18,8 @@ split_oil_gas_extraction_eiou(
   e_dot = IEATools::iea_cols$e_dot,
   oil_gas_extraction = IEATools::eiou_flows$oil_and_gas_extraction,
   transformation_processes = IEATools::aggregation_flows$transformation_processes,
-  oil_extraction = "Oil extraction",
-  gas_extraction = "Natural gas extraction",
+  oil_extraction = IEATools::industry_flows$oil_extraction,
+  gas_extraction = IEATools::industry_flows$natural_gas_extraction,
   share = "Share"
 )
 }
@@ -38,10 +38,10 @@ Default is \code{IEATools::eiou_flows$oil_and_gas_extraction}.}
 Default is \code{IEATools::aggregation_flows$transformation_processes}.}
 
 \item{oil_extraction}{The name of the Oil extraction industry.
-Default is "Oil extraction".}
+Default is \code{IEATools::industry_flows$oil_extraction}.}
 
 \item{gas_extraction}{The name of the Natural gas extraction industry.
-Default is "Natural gas extraction".}
+Default is \code{IEATools::industry_flows$natural_gas_extraction}.}
 
 \item{share}{The name of a temporary column that is added to the data frame.
 Default is "Share".}

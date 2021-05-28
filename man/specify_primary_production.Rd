@@ -16,8 +16,8 @@ specify_primary_production(
   list_primary_gas_products = IEATools::primary_gas_products,
   production = IEATools::tpes_flows$production,
   coal_mines = IEATools::industry_flows$coal_mines,
-  oil_extraction = "Oil extraction",
-  gas_extraction = "Natural gas extraction",
+  oil_extraction = IEATools::industry_flows$oil_extraction,
+  gas_extraction = IEATools::industry_flows$natural_gas_extraction,
   liquefaction_regas = "Liquefaction (LNG) / regasification plants",
   liquefaction_regas_reassign = IEATools::industry_flows$oil_and_gas_extraction,
   transformation_processes = IEATools::aggregation_flows$transformation_processes,
@@ -49,6 +49,12 @@ Default is \code{IEATools::primary_gas_products}.}
 \item{coal_mines}{The name of the new industry that produces primary coal products.
 Default is \code{IEATools::industry_flows$coal_mines}.}
 
+\item{oil_extraction}{The name of the new industry that produces primary oil and gas products.
+Default is \code{IEATools::industry_flows$oil_extraction}.}
+
+\item{gas_extraction}{The name of the new industry that produces primary oil and gas products.
+Default is \code{IEATools::industry_flows$natural_gas_extraction}.}
+
 \item{liquefaction_regas}{A string identifying liquefaction and regasification plants.
 Default is "Liquefaction (LNG) / regasification plants".}
 
@@ -76,9 +82,6 @@ Default is "Manufacture".}
 \item{manufacture_flow_notation}{The notation to be used for the newly created manufacture industries
 \(each manufacturing industry is specified\) by the product it manufactures.
 Default is \code{IEATools::of_notation}.}
-
-\item{oil_gas_extraction}{The name of the new industry that produces primary oil and gas products.
-Default is \code{IEATools::industry_flows$oil_and_gas_extraction}.}
 }
 \value{
 A \code{.tidy_iea_df} with adjusted production information for primary energy
