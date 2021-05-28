@@ -227,6 +227,16 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
     ) %>% 
     dplyr::select(.data[[country]], .data[[energy_type]], .data[[method]], .data[[last_stage]], .data[[ledger_side]], .data[[year]], .data[[share]], .data[[flow]])
     
+  # Check that sum of shares is one
+  sum_shares <- shares_oil_gas_output %>% 
+    dplyr::group_by(
+      .data[[country]], .data[[energy_type]], .data[[method]], .data[[last_stage]], .data[[ledger_side]], .data[[year]],
+    ) %>% 
+    dplyr::summarise(
+      sum_shares = sum(.data[[share]])
+    )
+  
+  assertthat::assert_that(all(abs(sum_shares$sum_shares - 1) < 1e-4))
   
   # Find out EIOU flows corresponding to Oil and gas extraction, and modify them using shares previously calculated
   modified_eiou_flows <- .tidy_iea_df %>% 
