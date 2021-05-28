@@ -49,8 +49,10 @@
 #'                                  Default is `IEATools::primary_gas_products`.
 #' @param coal_mines The name of the new industry that produces primary coal products.
 #'                   Default is `IEATools::industry_flows$coal_mines`.
-#' @param oil_gas_extraction The name of the new industry that produces primary oil and gas products.
-#'                           Default is `IEATools::industry_flows$oil_and_gas_extraction`.
+#' @param oil_extraction The name of the new industry that produces primary oil and gas products.
+#'                       Default is `IEATools::industry_flows$oil_extraction`.
+#' @param gas_extraction The name of the new industry that produces primary oil and gas products.
+#'                       Default is `IEATools::industry_flows$natural_gas_extraction`.
 #' @param resource_products_notation The notation to be used for defining products coming from the new resource industries.
 #'                                   E.g., the Crude oil product will be called "Crude oil \[from Resources\]".
 #'                                   Default is `IEATools::from_notation`.
@@ -96,8 +98,8 @@ specify_primary_production <- function(.tidy_iea_df,
                                        list_primary_gas_products = IEATools::primary_gas_products,
                                        production = IEATools::tpes_flows$production,
                                        coal_mines = IEATools::industry_flows$coal_mines,
-                                       oil_extraction = "Oil extraction",
-                                       gas_extraction = "Natural gas extraction",
+                                       oil_extraction = IEATools::industry_flows$oil_extraction,
+                                       gas_extraction = IEATools::industry_flows$natural_gas_extraction,
                                        liquefaction_regas = "Liquefaction (LNG) / regasification plants",
                                        liquefaction_regas_reassign = IEATools::industry_flows$oil_and_gas_extraction,
                                        transformation_processes = IEATools::aggregation_flows$transformation_processes,

@@ -184,9 +184,9 @@ route_pumped_storage <- function(.tidy_iea_df,
 #' @param transformation_processes The name of the flow aggregation point referring to transformation processes.
 #'                                 Default is `IEATools::aggregation_flows$transformation_processes`.
 #' @param oil_extraction The name of the Oil extraction industry.
-#'                       Default is "Oil extraction".
+#'                       Default is `IEATools::industry_flows$oil_extraction`.
 #' @param gas_extraction The name of the Natural gas extraction industry.
-#'                       Default is "Natural gas extraction".
+#'                       Default is `IEATools::industry_flows$natural_gas_extraction`.
 #' @param share The name of a temporary column that is added to the data frame.
 #'              Default is "Share". 
 #'
@@ -211,8 +211,8 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
                                           e_dot = IEATools::iea_cols$e_dot,
                                           oil_gas_extraction = IEATools::eiou_flows$oil_and_gas_extraction,
                                           transformation_processes = IEATools::aggregation_flows$transformation_processes,
-                                          oil_extraction = "Oil extraction",
-                                          gas_extraction = "Natural gas extraction",
+                                          oil_extraction = IEATools::industry_flows$oil_extraction,
+                                          gas_extraction = IEATools::industry_flows$natural_gas_extraction,
                                           share = "Share"){
   
   # Calculates shares of output for each of the Oil extraction and Natural gas extraction industries
