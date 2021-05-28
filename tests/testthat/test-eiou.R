@@ -425,6 +425,49 @@ test_that("split_oil_gas_extraction_eiou() works", {
     -16
   )
   
+  
+  # Last, what happens if there IS an EIOU flow, but neither Oil production nor Nat gas production produce anything. 
+  # Test that by adding 2021 data.
+  relevant_flows <- AB_data_half_specified %>% 
+    dplyr::filter(Flow == "Oil and gas extraction")
+  
+  change_year_to_2021 <- relevant_flows %>% 
+    dplyr::mutate(
+      Year = 2021
+    )
+  
+  AB_data_added_2021 <- AB_data_half_specified %>% 
+    dplyr::bind_rows(change_year_to_2021)
+  
+  res <- AB_data_added_2021 %>% 
+    split_oil_gas_extraction_eiou()
+  
+  
+  # testing
+  expect_equal(
+    res %>% 
+      dplyr::filter(Year == 2021,
+                    Flow == "Oil and gas extraction",
+                    Product == "Electricity") %>% 
+      magrittr::extract2("E.dot"),
+    -200
+    )
+  expect_equal(
+    res %>% 
+      dplyr::filter(Year == 2021,
+                    Flow == "Oil and gas extraction",
+                    Product == "Heat") %>% 
+      magrittr::extract2("E.dot"),
+    -100
+  )
+  expect_equal(
+    res %>% 
+      dplyr::filter(Year == 2021,
+                    Flow == "Oil and gas extraction",
+                    Product == "Motor gasoline excl. biofuels") %>% 
+      magrittr::extract2("E.dot"),
+    -50
+  )
 })
 
 

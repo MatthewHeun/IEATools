@@ -172,20 +172,16 @@ route_pumped_storage <- function(.tidy_iea_df,
 #'
 #' @param .tidy_iea_df 
 #' @param eiou 
-#' @param country 
-#' @param energy_type 
-#' @param method 
-#' @param last_stage 
-#' @param ledger_side 
-#' @param year 
-#' @param flow 
-#' @param flow_aggregation_point 
-#' @param e_dot 
+#' @param country,energy_type,method,last_stage,ledger_side,year,flow,flow_aggregation_point,e_dot See `IEATools::iea_cols`.
 #' @param oil_gas_extraction 
-#' @param transformation_processes 
-#' @param oil_extraction 
-#' @param gas_extraction 
-#' @param share 
+#' @param transformation_processes The name of the flow aggregation point referring to transformation processes.
+#'                                 Default is `IEATools::aggregation_flows$transformation_processes`.
+#' @param oil_extraction The name of the Oil extraction industry.
+#'                       Default is "Oil extraction".
+#' @param gas_extraction The name of the Natural gas extraction industry.
+#'                       Default is "Natural gas extraction".
+#' @param share The name of a temporary column that is added to the data frame.
+#'              Default is "Share". 
 #'
 #' @return
 #' @export
@@ -250,8 +246,12 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
       suffix = c("", ".y")
     ) %>% 
     dplyr::mutate(
+      "{share}" := tidyr::replace_na(.data[[share]], 1)
+    ) %>% 
+    dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[share]],
-      "{flow}" := .data[[paste0(flow, ".y")]]
+      "{flow}" := .data[[paste0(flow, ".y")]],
+      "{flow}" := tidyr::replace_na(.data[[flow]], oil_gas_extraction)
     ) %>% 
     dplyr::select(-.data[[share]], -.data[[paste0(flow, ".y")]])
   
