@@ -20,7 +20,7 @@ split_oil_gas_extraction_eiou(
   transformation_processes = IEATools::aggregation_flows$transformation_processes,
   oil_extraction = IEATools::industry_flows$oil_extraction,
   gas_extraction = IEATools::industry_flows$natural_gas_extraction,
-  share = "Share"
+  .share = ".share"
 )
 }
 \arguments{
@@ -44,7 +44,7 @@ Default is \code{IEATools::industry_flows$oil_extraction}.}
 Default is \code{IEATools::industry_flows$natural_gas_extraction}.}
 
 \item{share}{The name of a temporary column that is added to the data frame.
-Default is "Share".}
+Default is ".share".}
 }
 \value{
 A \code{.tidy_iea_df} with "Oil and gas extraction" EIOU flows split into 'Oil extraction"
@@ -54,7 +54,8 @@ and "Natural gas extraction" EIOU flows.
 This function separates the EIOU flows of the Oil and gas extraction industry into EIOU flows
 for the Oil extraction industry and EIOU flows for the Natural gas extraction industry.
 It uses the shares of production of each of these two industries to separate EIOU flows.
-As such, each EIOU flow will be equivalent in the two industries, once reported to each industry's output.
+As such, the EIOU consumed per unit of output will be the same for
+the Oil extraction and Natural gas extraction industries.
 }
 \examples{
 library(dplyr)

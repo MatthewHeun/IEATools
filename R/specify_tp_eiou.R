@@ -189,7 +189,7 @@ route_pumped_storage <- function(.tidy_iea_df,
 #' @param gas_extraction The name of the Natural gas extraction industry.
 #'                       Default is `IEATools::industry_flows$natural_gas_extraction`.
 #' @param share The name of a temporary column that is added to the data frame.
-#'              Default is "Share". 
+#'              Default is ".share". 
 #'
 #' @return A `.tidy_iea_df` with "Oil and gas extraction" EIOU flows split into 'Oil extraction"
 #'         and "Natural gas extraction" EIOU flows.
@@ -214,7 +214,7 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
                                           transformation_processes = IEATools::aggregation_flows$transformation_processes,
                                           oil_extraction = IEATools::industry_flows$oil_extraction,
                                           gas_extraction = IEATools::industry_flows$natural_gas_extraction,
-                                          share = "Share"){
+                                          .share = ".share"){
   
   # Calculates shares of output for each of the Oil extraction and Natural gas extraction industries
   shares_oil_gas_output <- .tidy_iea_df %>% 
@@ -232,7 +232,7 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
     dplyr::mutate(
       "{share}" := .data[[e_dot]] / sum(.data[[e_dot]])
     ) %>% 
-    dplyr::select(.data[[country]], .data[[energy_type]], .data[[method]], .data[[last_stage]], .data[[ledger_side]], .data[[year]], .data[[share]], .data[[flow]])
+    dplyr::select(.data[[country]], .data[[energy_type]], .data[[method]], .data[[last_stage]], .data[[ledger_side]], .data[[year]], .data[[.share]], .data[[flow]])
     
   # Check that sum of shares is one
   sum_shares <- shares_oil_gas_output %>% 
@@ -240,7 +240,7 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
       .data[[country]], .data[[energy_type]], .data[[method]], .data[[last_stage]], .data[[ledger_side]], .data[[year]],
     ) %>% 
     dplyr::summarise(
-      sum_shares = sum(.data[[share]])
+      sum_shares = sum(.data[[.share]])
     )
   
   assertthat::assert_that(all(abs(sum_shares$sum_shares - 1) < 1e-4))
@@ -257,14 +257,14 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
       suffix = c("", ".y")
     ) %>% 
     dplyr::mutate(
-      "{share}" := tidyr::replace_na(.data[[share]], 1)
+      "{share}" := tidyr::replace_na(.data[[.share]], 1)
     ) %>% 
     dplyr::mutate(
-      "{e_dot}" := .data[[e_dot]] * .data[[share]],
+      "{e_dot}" := .data[[e_dot]] * .data[[.share]],
       "{flow}" := .data[[paste0(flow, ".y")]],
       "{flow}" := tidyr::replace_na(.data[[flow]], oil_gas_extraction)
     ) %>% 
-    dplyr::select(-.data[[share]], -.data[[paste0(flow, ".y")]])
+    dplyr::select(-.data[[.share]], -.data[[paste0(flow, ".y")]])
   
   
   # Filter out former EIOU flows from .tidy_iea_df, and bind the rows calculated above
