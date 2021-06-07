@@ -173,7 +173,8 @@ route_pumped_storage <- function(.tidy_iea_df,
 #' This function separates the EIOU flows of the Oil and gas extraction industry into EIOU flows 
 #' for the Oil extraction industry and EIOU flows for the Natural gas extraction industry.
 #' It uses the shares of production of each of these two industries to separate EIOU flows. 
-#' As such, each EIOU flow will be equivalent in the two industries, once reported to each industry's output.
+#' As such, the EIOU consumed per unit of output will be the same for 
+#' the Oil extraction and Natural gas extraction industries.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` on which oil and gas extraction EIOU flows need to be separated.
 #' @param eiou The name of the Energy industry own use flow aggregation point.

@@ -47,7 +47,8 @@ Default is \code{IEATools::industry_flows$natural_gas_extraction}.}
 Default is "Share".}
 }
 \value{
-
+A \code{.tidy_iea_df} with "Oil and gas extraction" EIOU flows split into 'Oil extraction"
+and "Natural gas extraction" EIOU flows.
 }
 \description{
 This function separates the EIOU flows of the Oil and gas extraction industry into EIOU flows
