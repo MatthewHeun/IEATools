@@ -188,7 +188,7 @@ route_pumped_storage <- function(.tidy_iea_df,
 #'                       Default is `IEATools::industry_flows$oil_extraction`.
 #' @param gas_extraction The name of the Natural gas extraction industry.
 #'                       Default is `IEATools::industry_flows$natural_gas_extraction`.
-#' @param share The name of a temporary column that is added to the data frame.
+#' @param .share The name of a temporary column that is added to the data frame.
 #'              Default is ".share". 
 #'
 #' @return A `.tidy_iea_df` with "Oil and gas extraction" EIOU flows split into 'Oil extraction"
@@ -230,7 +230,7 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
       "{e_dot}" := sum(.data[[e_dot]])
      ) %>% 
     dplyr::mutate(
-      "{share}" := .data[[e_dot]] / sum(.data[[e_dot]])
+      "{.share}" := .data[[e_dot]] / sum(.data[[e_dot]])
     ) %>% 
     dplyr::select(.data[[country]], .data[[energy_type]], .data[[method]], .data[[last_stage]], .data[[ledger_side]], .data[[year]], .data[[.share]], .data[[flow]])
     
@@ -257,7 +257,7 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
       suffix = c("", ".y")
     ) %>% 
     dplyr::mutate(
-      "{share}" := tidyr::replace_na(.data[[.share]], 1)
+      "{.share}" := tidyr::replace_na(.data[[.share]], 1)
     ) %>% 
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[.share]],

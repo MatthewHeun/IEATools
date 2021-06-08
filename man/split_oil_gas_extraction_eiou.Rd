@@ -43,7 +43,7 @@ Default is \code{IEATools::industry_flows$oil_extraction}.}
 \item{gas_extraction}{The name of the Natural gas extraction industry.
 Default is \code{IEATools::industry_flows$natural_gas_extraction}.}
 
-\item{share}{The name of a temporary column that is added to the data frame.
+\item{.share}{The name of a temporary column that is added to the data frame.
 Default is ".share".}
 }
 \value{
