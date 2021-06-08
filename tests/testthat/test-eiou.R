@@ -193,6 +193,283 @@ test_that("route_pumped_storage works", {
 })
 
 
+test_that("split_oil_gas_extraction_eiou() works", {
+  
+  # Test with GHA/ZAF data
+  tidy_GHA_ZAF_df <- load_tidy_iea_df() %>% 
+    specify_all()
+  
+  expect_equal(
+    tidy_GHA_ZAF_df %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use") %>% 
+      dplyr::filter(Flow == "Oil extraction") %>% 
+      magrittr::extract2("E.dot"),
+    -0.0347,
+    tolerance = 0.01
+  )
+  
+  expect_equal(
+    tidy_GHA_ZAF_df %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use") %>% 
+      dplyr::filter(Flow == "Natural gas extraction") %>% 
+      magrittr::extract2("E.dot"),
+    -0.0513,
+    tolerance = 0.01
+  )
+  
+  # Testing for AB data
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+  
+  test <- AB_data %>% 
+    specify_primary_production() %>% 
+    specify_production_to_resources() %>% 
+    gather_producer_autoproducer() %>% 
+    route_pumped_storage() %>% 
+    split_oil_gas_extraction_eiou()
+  
+  # Testing oil extraction
+  expect_equal(
+    test %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Flow == "Oil extraction",
+                    Product == "Electricity") %>% 
+      magrittr::extract2("E.dot"),
+    -136
+  )
+  expect_equal(
+    test %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Flow == "Oil extraction",
+                    Product == "Heat") %>% 
+      magrittr::extract2("E.dot"),
+    -68
+  )
+  expect_equal(
+    test %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Flow == "Oil extraction",
+                    Product == "Motor gasoline excl. biofuels") %>% 
+      magrittr::extract2("E.dot"),
+    -34
+  )
+  
+  # Testing nat gas extraction
+  expect_equal(
+    test %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Flow == "Natural gas extraction",
+                    Product == "Electricity") %>% 
+      magrittr::extract2("E.dot"),
+    -64
+  )
+  expect_equal(
+    test %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Flow == "Natural gas extraction",
+                    Product == "Heat") %>% 
+      magrittr::extract2("E.dot"),
+    -32
+  )
+  expect_equal(
+    test %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Flow == "Natural gas extraction",
+                    Product == "Motor gasoline excl. biofuels") %>% 
+      magrittr::extract2("E.dot"),
+    -16
+  )
+  
+  # Now, what happens if we add to the dataset values for 2001. Does the grouping work as it should?
+  AB_data_half_specified <- AB_data %>% 
+    specify_primary_production() %>% 
+    specify_production_to_resources() %>% 
+    gather_producer_autoproducer() %>% 
+    route_pumped_storage()
+  
+  relevant_flows <- AB_data_half_specified %>% 
+    dplyr::filter(Flow == "Oil extraction" | Flow == "Natural gas extraction" | Flow == "Oil and gas extraction")
+  
+  change_year_to_2019 <- relevant_flows %>% 
+    dplyr::mutate(
+      Year = 2019,
+      Flow = dplyr::case_when(
+        Flow == "Natural gas extraction" ~ "Oil extraction",
+        Flow == "Oil extraction" ~ "Natural gas extraction",
+        TRUE ~ Flow
+      )
+    )
+  
+  AB_data_added_2019 <- AB_data_half_specified %>% 
+    dplyr::bind_rows(change_year_to_2019)
+  
+  res <- AB_data_added_2019 %>% 
+    split_oil_gas_extraction_eiou()
+  
+  # Testing for 2018, same as before
+  # Testing oil extraction
+  expect_equal(
+    res %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Year == 2018,
+                    Flow == "Oil extraction",
+                    Product == "Electricity") %>% 
+      magrittr::extract2("E.dot"),
+    -136
+  )
+  expect_equal(
+    res %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Year == 2018,
+                    Flow == "Oil extraction",
+                    Product == "Heat") %>% 
+      magrittr::extract2("E.dot"),
+    -68
+  )
+  expect_equal(
+    res %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Year == 2018,
+                    Flow == "Oil extraction",
+                    Product == "Motor gasoline excl. biofuels") %>% 
+      magrittr::extract2("E.dot"),
+    -34
+  )
+  
+  # Testing nat gas extraction
+  expect_equal(
+    res %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Year == 2018,
+                    Flow == "Natural gas extraction",
+                    Product == "Electricity") %>% 
+      magrittr::extract2("E.dot"),
+    -64
+  )
+  expect_equal(
+    res %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Year == 2018,
+                    Flow == "Natural gas extraction",
+                    Product == "Heat") %>% 
+      magrittr::extract2("E.dot"),
+    -32
+  )
+  expect_equal(
+    res %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Year == 2018,
+                    Flow == "Natural gas extraction",
+                    Product == "Motor gasoline excl. biofuels") %>% 
+      magrittr::extract2("E.dot"),
+    -16
+  )
+
+  # Testing for 2019, inverted results
+  expect_equal(
+    res %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Year == 2019,
+                    Flow == "Natural gas extraction",
+                    Product == "Electricity") %>% 
+      magrittr::extract2("E.dot"),
+    -136
+  )
+  expect_equal(
+    res %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Year == 2019,
+                    Flow == "Natural gas extraction",
+                    Product == "Heat") %>% 
+      magrittr::extract2("E.dot"),
+    -68
+  )
+  expect_equal(
+    res %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Year == 2019,
+                    Flow == "Natural gas extraction",
+                    Product == "Motor gasoline excl. biofuels") %>% 
+      magrittr::extract2("E.dot"),
+    -34
+  )
+  
+  # Testing nat gas extraction
+  expect_equal(
+    res %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Year == 2019,
+                    Flow == "Oil extraction",
+                    Product == "Electricity") %>% 
+      magrittr::extract2("E.dot"),
+    -64
+  )
+  expect_equal(
+    res %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Year == 2019,
+                    Flow == "Oil extraction",
+                    Product == "Heat") %>% 
+      magrittr::extract2("E.dot"),
+    -32
+  )
+  expect_equal(
+    res %>% 
+      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+                    Year == 2019,
+                    Flow == "Oil extraction",
+                    Product == "Motor gasoline excl. biofuels") %>% 
+      magrittr::extract2("E.dot"),
+    -16
+  )
+  
+  
+  # Last, what happens if there IS an EIOU flow, but neither Oil production nor Nat gas production produce anything. 
+  # Test that by adding 2021 data.
+  relevant_flows <- AB_data_half_specified %>% 
+    dplyr::filter(Flow == "Oil and gas extraction")
+  
+  change_year_to_2021 <- relevant_flows %>% 
+    dplyr::mutate(
+      Year = 2021
+    )
+  
+  AB_data_added_2021 <- AB_data_half_specified %>% 
+    dplyr::bind_rows(change_year_to_2021)
+  
+  res <- AB_data_added_2021 %>% 
+    split_oil_gas_extraction_eiou()
+  
+  
+  # testing
+  expect_equal(
+    res %>% 
+      dplyr::filter(Year == 2021,
+                    Flow == "Oil and gas extraction",
+                    Product == "Electricity") %>% 
+      magrittr::extract2("E.dot"),
+    -200
+    )
+  expect_equal(
+    res %>% 
+      dplyr::filter(Year == 2021,
+                    Flow == "Oil and gas extraction",
+                    Product == "Heat") %>% 
+      magrittr::extract2("E.dot"),
+    -100
+  )
+  expect_equal(
+    res %>% 
+      dplyr::filter(Year == 2021,
+                    Flow == "Oil and gas extraction",
+                    Product == "Motor gasoline excl. biofuels") %>% 
+      magrittr::extract2("E.dot"),
+    -50
+  )
+})
+
 
 # Testing the function that splits the "Own use in electricity, CHP and heat plants" EIOU flow into the three main producer activities (electricity, CHP and heat)
 test_that("route_own_use_elect_chp_heat works", {

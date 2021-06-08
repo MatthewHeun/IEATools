@@ -5,7 +5,7 @@
 \alias{industry_flows}
 \title{Industry flows}
 \format{
-A string vector with 17 entries.
+A string vector with 19 entries.
 \describe{
 \item{construction}{The string identifier for the construction industry.}
 \item{iron_and_steel}{The string identifier for the iron and steel industry.}

@@ -95,9 +95,9 @@ To solve these problems, the following fixed need to be implemented:
 -   First, generic `Production` `Flow`s need to be specified. In the
     example above, `coal_and_coal_product`s should be produced by
     `Coal mines`, not the generic `Production` industry. Likewise,
-    `oil_and_gas_product`s should be produced by
-    `Oil and gas extraction`. For all other products, the production
-    industry is named as `Manufacture [of product]`.
+    `oil_product`s should be produced by `Oil extraction`, and
+    `gas_product`s by `Natural gas extraction`. For all other products,
+    the production industry is named as `Manufacture [of product]`.
 -   Second, the resources matrix formulation needs to be implemented,
     meaning that `Production` `Flow`s need to come from resources
     industries, which supply resource-products, that are then used in
@@ -125,7 +125,8 @@ following actions:
     actual `Product`. The manufacturing industry is named:
 
     -   `Coal mines` in the case of `coal_and_coal_products`;
-    -   `Oil and gas extraction` in the case of `oil_and_oil_products`;
+    -   `Oil extraction` in the case of `oil_products`;
+    -   `Natural gas extraction` in the case of `natural_gas_products`;
     -   `Manufacture [of Product]` for all other products.
 
 The code below demonstrates `specify_primary_production()`. Note that
@@ -222,10 +223,11 @@ together several other functions:
 
 1.  `gather_producer_autoproducer()`
 2.  `route_pumped_storage()`
-3.  `route_own_use_elect_chp_heat()`
-4.  `add_nuclear_industry()`
-5.  `route_non_specified_eiou()`
-6.  `route_non_specified_tp()`
+3.  `split_oil_gas_extraction_eiou()`
+4.  `route_own_use_elect_chp_heat()`
+5.  `add_nuclear_industry()`
+6.  `route_non_specified_eiou()`
+7.  `route_non_specified_tp()`
 
 Details can be found in the documentation of each function, but
 essentially they do the following:
@@ -242,15 +244,20 @@ essentially they do the following:
     and "Main activity producer heat plants." It does so according to
     either the input or output shares of each of the industries,
     depending on the arguments of the function.
-4.  The `add_nuclear_industry()` function adds a nuclear industry in
+4.  The `split_oil_gas_extraction_eiou()` function splits the EIOU of
+    "Oil and gas extraction" in EIOU of "Oil extraction" and EIOU of
+    "Natural gas extraction", by using the shares of production of each
+    of these industries, meaning that the ratio EIOU to output is the
+    same for "Oil extraction" and "Natural gas extraction".
+5.  The `add_nuclear_industry()` function adds a nuclear industry in
     transformation processes, and modifies each of the "Main activity
     producer electricity plants" and "Main activity producer CHP plants"
     according to their inputs of nuclear fuel as reported by the IEA.
-5.  The `route_non_specified_eiou()` function routes the "Non-specified"
+6.  The `route_non_specified_eiou()` function routes the "Non-specified"
     EIOU flow to the different EIOU industries. It performs the split
     according to the shares of use of EIOU of all EIOU industries
     (excluding the non-specified one).
-6.  The `route_non_specified_tp()` function routes the "Non-specified"
+7.  The `route_non_specified_tp()` function routes the "Non-specified"
     transformation processes flows to the different transformation
     processes industries. It performs the split according to the shares
     of use and supply of each product, by each transformation process
@@ -266,6 +273,7 @@ load_tidy_iea_df() %>%
 load_tidy_iea_df() %>% 
   gather_producer_autoproducer() %>% 
   route_pumped_storage() %>% 
+  split_oil_gas_extraction_eiou() %>% 
   route_own_use_elect_chp_heat() %>% 
   add_nuclear_industry() %>% 
   route_non_specified_eiou() %>% 

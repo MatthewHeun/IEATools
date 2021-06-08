@@ -78,7 +78,7 @@ Identifiers for the variables are in the quantity column." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.52</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.53</span>
       </span>
     </div>
 
@@ -190,19 +190,19 @@ Identifiers for the variables are in the <code>quantity</code> column.</p>
     <pre class="examples"><div class='input'><span class='fu'><a href='load_eta_fu_data.html'>load_eta_fu_data</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'>tidy_eta_fu_table</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 248 x 9</span><span>
-#&gt;    Country Method Energy.type Last.stage Machine Eu.product Quantity  Year
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final      Automo… MD         eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     PCM    E           Final      Automo… MD         eta.fu    </span><span style='text-decoration: underline;'>2</span><span>000
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     PCM    E           Final      Automo… MD         phi.u     </span><span style='text-decoration: underline;'>1</span><span>971
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     PCM    E           Final      Automo… MD         phi.u     </span><span style='text-decoration: underline;'>2</span><span>000
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> GHA     PCM    E           Final      Diesel… MD         eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> GHA     PCM    E           Final      Diesel… MD         eta.fu    </span><span style='text-decoration: underline;'>2</span><span>000
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> GHA     PCM    E           Final      Diesel… MD         phi.u     </span><span style='text-decoration: underline;'>1</span><span>971
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> GHA     PCM    E           Final      Diesel… MD         phi.u     </span><span style='text-decoration: underline;'>2</span><span>000
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final      Diesel… MD         eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final      Diesel… MD         eta.fu    </span><span style='text-decoration: underline;'>2</span><span>000
-#&gt; </span><span style='color: #949494;'># … with 238 more rows, and 1 more variable: .values </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+#&gt;    Country Method Energy.type Last.stage Machine       Eu.product Quantity  Year
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>         </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final      Automobiles   MD         eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     PCM    E           Final      Automobiles   MD         eta.fu    </span><span style='text-decoration: underline;'>2</span><span>000
+#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     PCM    E           Final      Automobiles   MD         phi.u     </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     PCM    E           Final      Automobiles   MD         phi.u     </span><span style='text-decoration: underline;'>2</span><span>000
+#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> GHA     PCM    E           Final      Diesel cars   MD         eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> GHA     PCM    E           Final      Diesel cars   MD         eta.fu    </span><span style='text-decoration: underline;'>2</span><span>000
+#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> GHA     PCM    E           Final      Diesel cars   MD         phi.u     </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> GHA     PCM    E           Final      Diesel cars   MD         phi.u     </span><span style='text-decoration: underline;'>2</span><span>000
+#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final      Diesel trucks MD         eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
+#&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final      Diesel trucks MD         eta.fu    </span><span style='text-decoration: underline;'>2</span><span>000
+#&gt; </span><span style='color: #949494;'># … with 238 more rows, and 1 more variable: .values &lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

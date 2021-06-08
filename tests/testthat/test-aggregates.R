@@ -50,7 +50,7 @@ test_that("Aggregating South Africa and Ghana works as intended", {
   default_aggregation_2019 <- tidy_GHA_ZAF_df %>% 
     aggregate_regions()
   
-  expect_equal(default_aggregation_2019 %>% nrow(), 427)
+  expect_equal(default_aggregation_2019 %>% nrow(), 428)
   
   ### 1. First, checking that it works well when net_trade flag is FALSE.
   
