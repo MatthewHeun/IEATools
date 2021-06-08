@@ -81,7 +81,7 @@ specific industries." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.52</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.53</span>
       </span>
     </div>
 
@@ -169,7 +169,8 @@ specific industries.</p>
   list_primary_gas_products <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='primary_gas_products.html'>primary_gas_products</a></span>,
   production <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='tpes_flows.html'>tpes_flows</a></span><span class='op'>$</span><span class='va'>production</span>,
   coal_mines <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='industry_flows.html'>industry_flows</a></span><span class='op'>$</span><span class='va'>coal_mines</span>,
-  oil_gas_extraction <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='industry_flows.html'>industry_flows</a></span><span class='op'>$</span><span class='va'>oil_and_gas_extraction</span>,
+  oil_extraction <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='industry_flows.html'>industry_flows</a></span><span class='op'>$</span><span class='va'>oil_extraction</span>,
+  gas_extraction <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='industry_flows.html'>industry_flows</a></span><span class='op'>$</span><span class='va'>natural_gas_extraction</span>,
   liquefaction_regas <span class='op'>=</span> <span class='st'>"Liquefaction (LNG) / regasification plants"</span>,
   liquefaction_regas_reassign <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='industry_flows.html'>industry_flows</a></span><span class='op'>$</span><span class='va'>oil_and_gas_extraction</span>,
   transformation_processes <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='aggregation_flows.html'>aggregation_flows</a></span><span class='op'>$</span><span class='va'>transformation_processes</span>,
@@ -220,9 +221,14 @@ Default is <code><a href='primary_gas_products.html'>IEATools::primary_gas_produ
 Default is <code>IEATools::industry_flows$coal_mines</code>.</p></td>
     </tr>
     <tr>
-      <th>oil_gas_extraction</th>
+      <th>oil_extraction</th>
       <td><p>The name of the new industry that produces primary oil and gas products.
-Default is <code>IEATools::industry_flows$oil_and_gas_extraction</code>.</p></td>
+Default is <code>IEATools::industry_flows$oil_extraction</code>.</p></td>
+    </tr>
+    <tr>
+      <th>gas_extraction</th>
+      <td><p>The name of the new industry that produces primary oil and gas products.
+Default is <code>IEATools::industry_flows$natural_gas_extraction</code>.</p></td>
     </tr>
     <tr>
       <th>liquefaction_regas</th>

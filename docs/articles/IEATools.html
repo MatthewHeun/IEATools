@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.52</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.53</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <h1 data-toc-skip>IEATools</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-05-07</h4>
+            <h4 class="date">2021-06-08</h4>
       
       
       <div class="hidden name"><code>IEATools.Rmd</code></div>
@@ -136,7 +136,7 @@ IEA extended energy balance data format.
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">IEA_path</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/iea_file_OK.html">iea_file_OK</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;  logi TRUE</span></code></pre></div>
 </div>
 <div id="convert-the-iea-data-into-an-r-data-frame-iea_df" class="section level3">
@@ -150,14 +150,14 @@ IEA extended energy balance data format.
 <code class="sourceCode R"><span class="va">IEA_data</span> <span class="op">&lt;-</span> <span class="va">IEA_path</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/iea_df.html">iea_df</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">IEA_data</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 14,688</span>
 <span class="co">#&gt; Columns: 5</span>
-<span class="co">#&gt; $ COUNTRY &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana"…</span>
-<span class="co">#&gt; $ FLOW    &lt;chr&gt; "Production", "Production", "Production", "Production", "Prod…</span>
-<span class="co">#&gt; $ PRODUCT &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…</span>
-<span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span>
-<span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></code></pre></div>
+<span class="co">#&gt; $ COUNTRY &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana",…</span>
+<span class="co">#&gt; $ FLOW    &lt;chr&gt; "Production", "Production", "Production", "Production", "Produ…</span>
+<span class="co">#&gt; $ PRODUCT &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Anth…</span>
+<span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span>
+<span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span></code></pre></div>
 </div>
 </div>
 <div id="next-steps" class="section level2">
@@ -179,26 +179,26 @@ IEA extended energy balance data format.
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">IEA_data</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 14,688</span>
 <span class="co">#&gt; Columns: 5</span>
-<span class="co">#&gt; $ Country &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana"…</span>
-<span class="co">#&gt; $ Flow    &lt;chr&gt; "Production", "Production", "Production", "Production", "Prod…</span>
-<span class="co">#&gt; $ Product &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…</span>
-<span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span>
-<span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></code></pre></div>
+<span class="co">#&gt; $ Country &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana",…</span>
+<span class="co">#&gt; $ Flow    &lt;chr&gt; "Production", "Production", "Production", "Production", "Produ…</span>
+<span class="co">#&gt; $ Product &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Anth…</span>
+<span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span>
+<span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span></code></pre></div>
 <p>Note that the example above uses the <code><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols()</a></code> function without arguments, because the default arguments are correct for the extended energy balance data as it arrives from the IEA. However, both the old and new names can be specified as arguments. If you despise both capitals letters and vowels, you could do the following.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">IEA_data</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span><span class="op">(</span>new_country <span class="op">=</span> <span class="st">"cntry"</span>, new_flow <span class="op">=</span> <span class="st">"flw"</span>, new_product <span class="op">=</span> <span class="st">"prdct"</span><span class="op">)</span>  <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 14,688</span>
 <span class="co">#&gt; Columns: 5</span>
-<span class="co">#&gt; $ cntry  &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana",…</span>
-<span class="co">#&gt; $ flw    &lt;chr&gt; "Production", "Production", "Production", "Production", "Produ…</span>
-<span class="co">#&gt; $ prdct  &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Anth…</span>
-<span class="co">#&gt; $ `1971` &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span>
-<span class="co">#&gt; $ `2000` &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span></code></pre></div>
+<span class="co">#&gt; $ cntry  &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", …</span>
+<span class="co">#&gt; $ flw    &lt;chr&gt; "Production", "Production", "Production", "Production", "Produc…</span>
+<span class="co">#&gt; $ prdct  &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Anthr…</span>
+<span class="co">#&gt; $ `1971` &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …</span>
+<span class="co">#&gt; $ `2000` &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …</span></code></pre></div>
 <p>The default arguments are consistent throughout the <code>IEATools</code> package. Thus, it is recommended that you use the default argument values, wherever possible.</p>
 </div>
 <div id="change-to-3-letter-iso-country-abbreviations-use_iso_countries" class="section level3">
@@ -209,14 +209,14 @@ IEA extended energy balance data format.
 <code class="sourceCode R"><span class="va">IEA_data</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/use_iso_countries.html">use_iso_countries</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 14,688</span>
 <span class="co">#&gt; Columns: 5</span>
-<span class="co">#&gt; $ Country &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"…</span>
-<span class="co">#&gt; $ Flow    &lt;chr&gt; "Production", "Production", "Production", "Production", "Prod…</span>
-<span class="co">#&gt; $ Product &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…</span>
-<span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span>
-<span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></code></pre></div>
+<span class="co">#&gt; $ Country &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA",…</span>
+<span class="co">#&gt; $ Flow    &lt;chr&gt; "Production", "Production", "Production", "Production", "Produ…</span>
+<span class="co">#&gt; $ Product &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Anth…</span>
+<span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span>
+<span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span></code></pre></div>
 </div>
 <div id="remove-aggregation-and-memo-data-remove_agg_memo_flows" class="section level3">
 <h3 class="hasAnchor">
@@ -226,14 +226,14 @@ IEA extended energy balance data format.
 <code class="sourceCode R"><span class="va">IEA_data</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Flow</span> <span class="op">==</span> <span class="st">"Total primary energy supply"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 136</span>
 <span class="co">#&gt; Columns: 5</span>
-<span class="co">#&gt; $ Country &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana"…</span>
-<span class="co">#&gt; $ Flow    &lt;chr&gt; "Total primary energy supply", "Total primary energy supply",…</span>
-<span class="co">#&gt; $ Product &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Ant…</span>
-<span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.000…</span>
-<span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000…</span>
+<span class="co">#&gt; $ Country &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "Ghana",…</span>
+<span class="co">#&gt; $ Flow    &lt;chr&gt; "Total primary energy supply", "Total primary energy supply", …</span>
+<span class="co">#&gt; $ Product &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no detail)", "Anth…</span>
+<span class="co">#&gt; $ `1971`  &lt;dbl&gt; 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000…</span>
+<span class="co">#&gt; $ `2000`  &lt;dbl&gt; 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000,…</span>
 <span class="co"># Total primary energy supply is an aggregation row,</span>
 <span class="co"># so its rows should be absent after calling remove_agg_memo_flows().</span>
 <span class="va">IEA_data</span> <span class="op">%&gt;%</span> 
@@ -257,20 +257,20 @@ IEA extended energy balance data format.
 <code class="sourceCode R"><span class="va">IEA_data</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/rename_iea_df_cols.html">rename_iea_df_cols</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/augment_iea_df.html">augment_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 14,688</span>
 <span class="co">#&gt; Columns: 11</span>
-<span class="co">#&gt; $ Country                &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "…</span>
-<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span>
-<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span>
-<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span>
-<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Suppl…</span>
-<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary …</span>
-<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Production", "Production", "Production", "Pro…</span>
-<span class="co">#&gt; $ Product                &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no…</span>
-<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span>
-<span class="co">#&gt; $ `1971`                 &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span>
-<span class="co">#&gt; $ `2000`                 &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></code></pre></div>
+<span class="co">#&gt; $ Country                &lt;chr&gt; "Ghana", "Ghana", "Ghana", "Ghana", "Ghana", "G…</span>
+<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
+<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
+<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…</span>
+<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Supply…</span>
+<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary e…</span>
+<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Production", "Production", "Production", "Prod…</span>
+<span class="co">#&gt; $ Product                &lt;chr&gt; "Hard coal (if no detail)", "Brown coal (if no …</span>
+<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
+<span class="co">#&gt; $ `1971`                 &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span>
+<span class="co">#&gt; $ `2000`                 &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span></code></pre></div>
 </div>
 <div id="convert-to-a-tidy-data-frame-tidy_iea_df" class="section level3">
 <h3 class="hasAnchor">
@@ -284,20 +284,20 @@ IEA extended energy balance data format.
   <span class="fu"><a href="../reference/augment_iea_df.html">augment_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/tidy_iea_df.html">tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">Tidy_IEA_df</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 402</span>
 <span class="co">#&gt; Columns: 11</span>
-<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA…</span>
-<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM…</span>
-<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "…</span>
-<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "…</span>
-<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971…</span>
-<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Suppl…</span>
-<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary …</span>
-<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Production", "Production", "Imports", "Import…</span>
-<span class="co">#&gt; $ Product                &lt;chr&gt; "Primary solid biofuels", "Hydro", "Crude oil"…</span>
-<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe"…</span>
-<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 2087.5131, 250.1290, 916.2081, 1.0700, 21.3051…</span></code></pre></div>
+<span class="co">#&gt; $ Country                &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA"…</span>
+<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
+<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
+<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…</span>
+<span class="co">#&gt; $ Year                   &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 1971,…</span>
+<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Supply…</span>
+<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary e…</span>
+<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Production", "Production", "Imports", "Imports…</span>
+<span class="co">#&gt; $ Product                &lt;chr&gt; "Primary solid biofuels", "Hydro", "Crude oil",…</span>
+<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
+<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 2087.5131, 250.1290, 916.2081, 1.0700, 21.3051,…</span></code></pre></div>
 </div>
 </div>
 <div id="the-load_tidy_iea_df-function" class="section level2">
@@ -337,21 +337,21 @@ IEA extended energy balance data format.
 <code class="sourceCode R"><span class="va">Balances</span> <span class="op">&lt;-</span> <span class="va">Tidy_IEA_df</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/calc_tidy_iea_df_balances.html">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">Balances</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 78</span>
 <span class="co">#&gt; Columns: 12</span>
-<span class="co">#&gt; $ Country                  &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "G…</span>
-<span class="co">#&gt; $ Method                   &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "P…</span>
-<span class="co">#&gt; $ Energy.type              &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E",…</span>
-<span class="co">#&gt; $ Last.stage               &lt;chr&gt; "Final", "Final", "Final", "Final", "Final",…</span>
-<span class="co">#&gt; $ Year                     &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 19…</span>
-<span class="co">#&gt; $ Product                  &lt;chr&gt; "Aviation gasoline", "Charcoal", "Crude oil"…</span>
-<span class="co">#&gt; $ Unit                     &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "kto…</span>
-<span class="co">#&gt; $ supply_sum               &lt;dbl&gt; 0.000000e+00, 1.191745e+02, -3.552714e-14, 2…</span>
-<span class="co">#&gt; $ consumption_sum          &lt;dbl&gt; NA, 119.1745, NA, 235.1678, 95.0559, 218.216…</span>
-<span class="co">#&gt; $ supply_minus_consumption &lt;dbl&gt; NA, 0.000000e+00, NA, -2.000000e-04, 0.00000…</span>
-<span class="co">#&gt; $ balance_OK               &lt;lgl&gt; TRUE, TRUE, TRUE, FALSE, TRUE, FALSE, TRUE, …</span>
-<span class="co">#&gt; $ err                      &lt;dbl&gt; 0.000000e+00, 0.000000e+00, -3.552714e-14, -…</span>
+<span class="co">#&gt; $ Country                  &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GH…</span>
+<span class="co">#&gt; $ Method                   &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PC…</span>
+<span class="co">#&gt; $ Energy.type              &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", …</span>
+<span class="co">#&gt; $ Last.stage               &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", …</span>
+<span class="co">#&gt; $ Year                     &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 197…</span>
+<span class="co">#&gt; $ Product                  &lt;chr&gt; "Aviation gasoline", "Charcoal", "Crude oil",…</span>
+<span class="co">#&gt; $ Unit                     &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe…</span>
+<span class="co">#&gt; $ supply_sum               &lt;dbl&gt; 0.000000e+00, 1.191745e+02, -3.552714e-14, 2.…</span>
+<span class="co">#&gt; $ consumption_sum          &lt;dbl&gt; NA, 119.1745, NA, 235.1678, 95.0559, 218.2167…</span>
+<span class="co">#&gt; $ supply_minus_consumption &lt;dbl&gt; NA, 0.000000e+00, NA, -2.000000e-04, 0.000000…</span>
+<span class="co">#&gt; $ balance_OK               &lt;lgl&gt; TRUE, TRUE, TRUE, FALSE, TRUE, FALSE, TRUE, T…</span>
+<span class="co">#&gt; $ err                      &lt;dbl&gt; 0.000000e+00, 0.000000e+00, -3.552714e-14, -2…</span>
 <span class="va">Balances</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/tidy_iea_df_balanced.html">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; [1] FALSE</span></code></pre></div>
@@ -361,21 +361,21 @@ IEA extended energy balance data format.
 <span class="va">Tidy_IEA_df</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/fix_tidy_iea_df_balances.html">fix_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/calc_tidy_iea_df_balances.html">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 78</span>
 <span class="co">#&gt; Columns: 12</span>
-<span class="co">#&gt; $ Country                  &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "G…</span>
-<span class="co">#&gt; $ Method                   &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "P…</span>
-<span class="co">#&gt; $ Energy.type              &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E",…</span>
-<span class="co">#&gt; $ Last.stage               &lt;chr&gt; "Final", "Final", "Final", "Final", "Final",…</span>
-<span class="co">#&gt; $ Year                     &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 19…</span>
-<span class="co">#&gt; $ Product                  &lt;chr&gt; "Aviation gasoline", "Charcoal", "Crude oil"…</span>
-<span class="co">#&gt; $ Unit                     &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "kto…</span>
-<span class="co">#&gt; $ supply_sum               &lt;dbl&gt; 0.0000, 119.1745, 0.0000, 235.1678, 95.0559,…</span>
-<span class="co">#&gt; $ consumption_sum          &lt;dbl&gt; NA, 119.1745, NA, 235.1678, 95.0559, 218.216…</span>
-<span class="co">#&gt; $ supply_minus_consumption &lt;dbl&gt; NA, 0, NA, 0, 0, 0, NA, NA, 0, 0, 0, 0, 0, N…</span>
-<span class="co">#&gt; $ balance_OK               &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TR…</span>
-<span class="co">#&gt; $ err                      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span></code></pre></div>
+<span class="co">#&gt; $ Country                  &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GH…</span>
+<span class="co">#&gt; $ Method                   &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PC…</span>
+<span class="co">#&gt; $ Energy.type              &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", …</span>
+<span class="co">#&gt; $ Last.stage               &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", …</span>
+<span class="co">#&gt; $ Year                     &lt;dbl&gt; 1971, 1971, 1971, 1971, 1971, 1971, 1971, 197…</span>
+<span class="co">#&gt; $ Product                  &lt;chr&gt; "Aviation gasoline", "Charcoal", "Crude oil",…</span>
+<span class="co">#&gt; $ Unit                     &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe…</span>
+<span class="co">#&gt; $ supply_sum               &lt;dbl&gt; 0.0000, 119.1745, 0.0000, 235.1678, 95.0559, …</span>
+<span class="co">#&gt; $ consumption_sum          &lt;dbl&gt; NA, 119.1745, NA, 235.1678, 95.0559, 218.2167…</span>
+<span class="co">#&gt; $ supply_minus_consumption &lt;dbl&gt; NA, 0, NA, 0, 0, 0, NA, NA, 0, 0, 0, 0, 0, NA…</span>
+<span class="co">#&gt; $ balance_OK               &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRU…</span>
+<span class="co">#&gt; $ err                      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …</span></code></pre></div>
 </div>
 <div id="sorting" class="section level2">
 <h2 class="hasAnchor">
