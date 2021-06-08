@@ -83,7 +83,7 @@ use the tidy_iea_df_balanced() function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.52</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.53</span>
       </span>
     </div>
 
@@ -274,15 +274,15 @@ If not, <code>balance_OK</code> will be <code>FALSE</code>.</p></li>
   <span class='fu'>calc_tidy_iea_df_balances</span><span class='op'>(</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>Ebal</span>, <span class='fl'>5</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 5 x 12</span><span>
-#&gt;   Country Method Energy.type Last.stage  Year Product Unit  supply_sum
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Aviati… ktoe    0.  </span><span style='color: #949494;'> </span><span>   
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Charco… ktoe    1.19</span><span style='color: #949494;'>e</span><span>+ 2
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Crude … ktoe   -</span><span style='color: #BB0000;'>3.55</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-14</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Electr… ktoe    2.35</span><span style='color: #949494;'>e</span><span>+ 2
-#&gt; </span><span style='color: #BCBCBC;'>5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Fuel o… ktoe    9.51</span><span style='color: #949494;'>e</span><span>+ 1
-#&gt; </span><span style='color: #949494;'># … with 4 more variables: consumption_sum </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>,</span><span>
-#&gt; </span><span style='color: #949494;'>#   supply_minus_consumption </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #949494;'>, balance_OK </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, err </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span></div></span></pre>
+#&gt;   Country Method Energy.type Last.stage  Year Product           Unit  supply_sum
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>             </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Aviation gasoline ktoe    0   </span><span style='color: #949494;'> </span><span>   
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Charcoal          ktoe    1.19</span><span style='color: #949494;'>e</span><span>+ 2
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Crude oil         ktoe   -</span><span style='color: #BB0000;'>3.55</span><span style='color: #949494;'>e</span><span style='color: #BB0000;'>-14</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Electricity       ktoe    2.35</span><span style='color: #949494;'>e</span><span>+ 2
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Fuel oil          ktoe    9.51</span><span style='color: #949494;'>e</span><span>+ 1
+#&gt; </span><span style='color: #949494;'># … with 4 more variables: consumption_sum &lt;dbl&gt;,</span><span>
+#&gt; </span><span style='color: #949494;'>#   supply_minus_consumption &lt;dbl&gt;, balance_OK &lt;lgl&gt;, err &lt;dbl&gt;</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
