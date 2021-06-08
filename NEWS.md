@@ -1,4 +1,4 @@
-# IEATools 0.1.52 (2021-06-08)
+# IEATools 0.1.53 (2021-06-08)
 
 * The "Oil and gas extraction" activity is split in "Oil extraction",
   which extracts oil products, and "Natural gas extraction", which extracts natural gas.
@@ -6,7 +6,7 @@
   the "Oil and gas extraction" industry into EIOU for the
   "Oil extraction" and for the "Natural gas extraction" activities.
 
-# IEATools 0.1.51 (2021-05-07)
+# IEATools 0.1.52 (2021-05-07)
 
 * Deleted an efficiency for LPG stoves in Ghana in 1971
   that should not have been in the GH-ZA-Efficiency-sample-2019.xlsx file.
