@@ -583,6 +583,7 @@ complete_eta_fu_table <- function(eta_fu_table,
 
   # The efficiency table is easier to deal with if it is tidy.
   eta_fu_table <- eta_fu_table %>% 
+    dplyr::filter(.data[[quantity]] %in% which_quantity) %>%
     tidy_eta_fu_table(year = year, e_dot_machine = e_dot_machine, e_dot_machine_perc = e_dot_machine_perc, 
                       quantity = quantity, maximum_values = maximum_values, .values = .values)
   
@@ -752,10 +753,11 @@ complete_eta_fu_table <- function(eta_fu_table,
     # Not all machines were assigned eta or phi values by the exemplars.
     # Make an error message.
     missing_rows <- attr(done, "unallocated_rows") %>% 
-      dplyr::select(country, year, machine, eu_product)
+      dplyr::select(country, year, machine, eu_product, quantity)
     missing_combos <- paste(missing_rows[[country]], 
                             missing_rows[[year]],
                             missing_rows[[machine]],
+                            missing_rows[[quantity]],
                             missing_rows[[eu_product]], sep = ", ", collapse = "; ")
     quantities <- paste(which_quantity, collapse = " and ")
     err_msg <- paste0("Didn't assign ", 
@@ -836,7 +838,6 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
       "{ledger_side}" := NULL,
       "{flow_aggregation_point}" := NULL,
       "{ef_product}" := NULL,
-      "{quantity}" := NULL, 
       "{destination}" := NULL, 
       "{.values}" := NULL
     ) %>% 
