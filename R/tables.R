@@ -638,9 +638,24 @@ complete_eta_fu_table <- function(eta_fu_table,
                              maximum_values = maximum_values, 
                              .values = .values)
   
+  # We need the next bit of code to ensure that
+  # fu_allocation_table has the correct quantities in the quantity column.
+  # fu_allocation_table comes in with C_1 [%] etc. in the quantity column.
+  # But it really needs eta.fu or phi.u, as required by the which_quantity argument.
+  # for each unique combination of columns from 
+  # Country, Year, Method, Energy.type, Last.stage, Flow.aggregation.point, Destination, Ef.product, Machine, Eu.product
+  machines_that_need_quantities <- lapply(X = which_quantity, FUN = function(q){
+    fu_allocation_table %>% 
+      unique() %>%
+      dplyr::mutate(
+        "{quantity}" := q
+      )
+  }) %>%
+    dplyr::bind_rows()
+  
   # Extract machines and products for this country from the fu_allocation_table
   # This call should return FALSE, but we're really after machines_that_need_etas
-  temp_false <- eta_fu_table_completed(fu_allocation_table = fu_allocation_table, 
+  temp_false <- eta_fu_table_completed(machines_that_need_quantities = machines_that_need_quantities, 
                                        which_quantity = which_quantity, 
                                        e_dot = e_dot,
                                        year = year,
@@ -716,7 +731,7 @@ complete_eta_fu_table <- function(eta_fu_table,
       dplyr::bind_rows(exemplar_rows_to_use)
     
     done <- eta_fu_table_completed(eta_fu_table = eta_fu_table, 
-                                   fu_allocation_table = fu_allocation_table, 
+                                   machines_that_need_quantities = machines_that_need_quantities, 
                                    which_quantity = which_quantity, 
                                    e_dot = e_dot,
                                    year = year,
@@ -739,6 +754,17 @@ complete_eta_fu_table <- function(eta_fu_table,
       break
     }
     
+    ##
+    ##
+    ##
+    ##
+    # Should this be called "machines_that_need_quantities"
+    ##
+    ##
+    ##
+    ##
+    ##
+    ##
     machines_that_need_etas <- done %>% 
       attr("unallocated_rows")
     
@@ -781,7 +807,7 @@ complete_eta_fu_table <- function(eta_fu_table,
 #' @param eta_fu_table The final-to-useful efficiency table whose completeness is to be determined.
 #'                     If `NULL` (the default), all rows in `fu_allocation_table` that need efficiencies are returned
 #'                     as the "unallocated_rows" attribute of `FALSE`.
-#' @param fu_allocation_table The final-to-useful allocation table whose final-to-useful machines must be assigned efficiencies.
+#' @param machines_that_need_quantities The final-to-useful allocation table whose final-to-useful machines must be assigned efficiencies or phi values.
 #' @param which_quantity A vector of quantities to be completed in the eta_FU table.
 #'                       Default is `c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)`.
 #' @param e_dot,year,method,ledger_side,flow_aggregation_point,unit See `IEATools::iea_cols`.
@@ -801,7 +827,7 @@ complete_eta_fu_table <- function(eta_fu_table,
 #' fu_efficiencies <- load_eta_fu_data()
 #' eta_fu_table_completed(fu_efficiencies, fu_allocations)
 eta_fu_table_completed <- function(eta_fu_table = NULL, 
-                                   fu_allocation_table, 
+                                   machines_that_need_quantities, 
                                    which_quantity = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u), 
                                    e_dot = IEATools::iea_cols$e_dot,
                                    year = IEATools::iea_cols$year,
@@ -820,7 +846,7 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
                                    phi_u = IEATools::template_cols$phi_u,
                                    .values = IEATools::template_cols$.values) {
   
-  fu_allocation_table <- fu_allocation_table %>% 
+  machines_that_need_quantities <- machines_that_need_quantities %>% 
     tidy_fu_allocation_table(year = year, 
                              e_dot = e_dot,
                              e_dot_perc = e_dot_perc,
@@ -829,7 +855,7 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
                              .values = .values)
 
   # Eliminate unneeded columns to find out which machines NEED efficiencies.
-  machines_that_need_efficiencies <- fu_allocation_table %>% 
+  machines_that_need_efficiencies <- machines_that_need_quantities %>% 
     dplyr::mutate(
       # Prevents problems in a semi_join later.
       # Efficiencies don't really care (or shouldn't really care) 

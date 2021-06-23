@@ -6,7 +6,7 @@
 \usage{
 eta_fu_table_completed(
   eta_fu_table = NULL,
-  fu_allocation_table,
+  machines_that_need_quantities,
   which_quantity = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u),
   e_dot = IEATools::iea_cols$e_dot,
   year = IEATools::iea_cols$year,
@@ -31,7 +31,7 @@ eta_fu_table_completed(
 If \code{NULL} (the default), all rows in \code{fu_allocation_table} that need efficiencies are returned
 as the "unallocated_rows" attribute of \code{FALSE}.}
 
-\item{fu_allocation_table}{The final-to-useful allocation table whose final-to-useful machines must be assigned efficiencies.}
+\item{machines_that_need_quantities}{The final-to-useful allocation table whose final-to-useful machines must be assigned efficiencies or phi values.}
 
 \item{which_quantity}{A vector of quantities to be completed in the eta_FU table.
 Default is \code{c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)}.}
