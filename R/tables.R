@@ -603,9 +603,13 @@ complete_eta_fu_table <- function(eta_fu_table,
   }
   
   # Also tidy the exemplar tables.
-  if (is.data.frame(exemplar_eta_fu_tables)) {
+  # We expect exemplar_eta_fu_tables to be a list. 
+  # If it is not a list but rather something that looks like a data frame, 
+  # wrap it in a list.
+  if (!inherits(exemplar_eta_fu_tables, "list") & inherits(exemplar_eta_fu_tables, "data.frame")) {
     exemplar_eta_fu_tables <- list(exemplar_eta_fu_tables)
   }
+  
   exemplar_eta_fu_tables <- lapply(X = exemplar_eta_fu_tables, FUN = function(exemplar_fu_table){
     exemplar_fu_table %>%
       dplyr::filter(.data[[quantity]] %in% which_quantity) %>%
@@ -709,13 +713,6 @@ complete_eta_fu_table <- function(eta_fu_table,
   assertthat::assert_that(!temp_false)
   machines_that_need_etas <- temp_false %>% 
     attr("unallocated_rows")
-  
-  # We expect exemplar_eta_fu_tables to be a list. 
-  # If it is not a list but rather something that looks like a data frame, 
-  # wrap it in a list.
-  if (!inherits(exemplar_eta_fu_tables, "list") & inherits(exemplar_eta_fu_tables, "data.frame")) {
-    exemplar_eta_fu_tables <- list(exemplar_eta_fu_tables)
-  }
   
   # Use a trick here.
   # Add the eta_fu_table to the front of the exemplar list
@@ -825,7 +822,7 @@ complete_eta_fu_table <- function(eta_fu_table,
 #'                                      exergy-to-energy ratio (phi_u) values.
 #' @param which_quantity A vector of quantities to be completed in the eta_FU table.
 #'                       Default is `c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)`.
-#' @param e_dot,year,method,ledger_side,flow_aggregation_point,unit See `IEATools::iea_cols`.
+#' @param e_dot,year,method,ledger_side,flow_aggregation_point,energy_type,last_stage,unit See `IEATools::iea_cols`.
 #' @param ef_product,quantity,e_dot_perc,e_dot_machine,e_dot_machine_perc,maximum_values,destination,eta_fu,phi_u,.values 
 #'        See `IEATools::template_cols`.
 #' 
