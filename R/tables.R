@@ -864,9 +864,10 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
                                    .values = IEATools::template_cols$.values) {
 
   year_columns <- year_cols(machines_that_need_quantities, return_names = TRUE, year = NULL)
-  if (length(year_columns) == 0) {
-    machines_that_need_quantities <- machines_that_need_quantities
-  } else {
+  
+  if (length(year_columns) > 0) {
+    # We have a wide-by-year data frame
+    # that probably has not been prepared correctly.
     machines_that_need_quantities <- machines_that_need_quantities %>% 
       tidy_fu_allocation_table(year = year, e_dot = e_dot, unit = unit, e_dot_perc = e_dot_perc, 
                                quantity = quantity, maximum_values = maximum_values, .values = .values)
