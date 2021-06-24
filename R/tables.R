@@ -490,8 +490,14 @@ tidy_eta_fu_table <- function(.eta_fu_table,
 #' and a data frame is returned containing rows from `fu_allocation_table` that were not found.
 #'
 #' @param eta_fu_table The efficiency table to be completed, possibly having missing incomplete rows.
+#'                     Note that efficiency tables can include energy efficiencies (`eta_fu`)
+#'                     and exergy-to-energy ratios (`phi.u`).
 #' @param exemplar_eta_fu_tables A list of efficiency tables, each queried in turn for information needed by `eta_fu_table`.
-#' @param fu_allocation_table An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
+#'                               Similar to `eta_fu_table`, exemplar tables can include energy efficiencies (`eta_fu`)
+#'                               and exergy-to-energy ratios (`phi.u`).
+
+#' @param fu_allocation_table An FU (final-to-useful) allocation table from which the needed combinations 
+#'                            of final-to-useful machines and useful products is determined.
 #'                            This data frame can be "tidy" or wide by year.
 #' @param which_quantity A vector of quantities to be completed in the eta_FU table.
 #'                       Default is `c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)`.
@@ -595,7 +601,18 @@ complete_eta_fu_table <- function(eta_fu_table,
     return(eta_fu_table %>% 
              magrittr::extract(c(), ))
   }
-    
+  
+  # Also tidy the exemplar tables.
+  if (is.data.frame(exemplar_eta_fu_tables)) {
+    exemplar_eta_fu_tables <- list(exemplar_eta_fu_tables)
+  }
+  exemplar_eta_fu_tables <- lapply(X = exemplar_eta_fu_tables, FUN = function(exemplar_fu_table){
+    exemplar_fu_table %>%
+      dplyr::filter(.data[[quantity]] %in% which_quantity) %>%
+        tidy_eta_fu_table(year = year, e_dot_machine = e_dot_machine, e_dot_machine_perc = e_dot_machine_perc, 
+                          quantity = quantity, maximum_values = maximum_values, .values = .values)
+    })
+
   # eta_fu_table should have only 1 country in it
   country_to_complete <- eta_fu_table %>% 
     magrittr::extract2(country) %>% 
@@ -640,12 +657,25 @@ complete_eta_fu_table <- function(eta_fu_table,
   
   # We need the next bit of code to ensure that
   # fu_allocation_table has the correct quantities in the quantity column.
-  # fu_allocation_table comes in with C_1 [%] etc. in the quantity column.
+  # fu_allocation_table may come in with C_1 [%] etc. in the quantity column.
   # But it really needs eta.fu or phi.u, as required by the which_quantity argument.
   # for each unique combination of columns from 
-  # Country, Year, Method, Energy.type, Last.stage, Flow.aggregation.point, Destination, Ef.product, Machine, Eu.product
+  # Country, Year, Method, Energy.type, Last.stage, Flow.aggregation.point, 
+  # Destination, Ef.product, Machine, and Eu.product.
+  # Note that "quantities" here refers to eta_fu or phi_u.
   machines_that_need_quantities <- lapply(X = which_quantity, FUN = function(q){
     fu_allocation_table %>% 
+      dplyr::mutate(
+        "{method}" := NULL,
+        "{energy_type}" := NULL,
+        "{last_stage}" := NULL,
+        "{ledger_side}" := NULL,
+        "{flow_aggregation_point}" := NULL,
+        "{ef_product}" := NULL,
+        "{destination}" := NULL,
+        "{quantity}" := NULL,
+        "{.values}" := NULL
+      ) %>%
       unique() %>%
       dplyr::mutate(
         "{quantity}" := q
@@ -660,6 +690,8 @@ complete_eta_fu_table <- function(eta_fu_table,
                                        e_dot = e_dot,
                                        year = year,
                                        method = method,
+                                       energy_type = energy_type,
+                                       last_stage = last_stage,
                                        ledger_side = ledger_side,
                                        flow_aggregation_point = flow_aggregation_point,
                                        unit = unit, 
@@ -673,18 +705,10 @@ complete_eta_fu_table <- function(eta_fu_table,
                                        eta_fu = eta_fu,
                                        phi_u = phi_u,
                                        .values = .values)
+  
   assertthat::assert_that(!temp_false)
   machines_that_need_etas <- temp_false %>% 
     attr("unallocated_rows")
-  
-  # Add the quantities that are needed.
-  machines_that_need_etas <- lapply(which_quantity, FUN = function(q) {
-    machines_that_need_etas %>% 
-      dplyr::mutate(
-        "{quantity}" := q
-      )
-  }) %>% 
-    dplyr::bind_rows()
   
   # We expect exemplar_eta_fu_tables to be a list. 
   # If it is not a list but rather something that looks like a data frame, 
@@ -699,9 +723,11 @@ complete_eta_fu_table <- function(eta_fu_table,
   exemplar_eta_fu_tables <- c(list(eta_fu_table), exemplar_eta_fu_tables)
   
   # Then eliminate all rows in the data frame to be filled from each exemplar.
+  # This becomes the blank data frame that we will fill
+  # with information from the exemplars.
+  # Note that the desired country IS the first examplar,
+  # so we pick up the country's information automatically.
   eta_fu_table <- eta_fu_table %>% 
-    # tidy_eta_fu_table(year = year, e_dot_machine = e_dot_machine, e_dot_machine_perc = e_dot_machine_perc, 
-    #                   quantity = quantity, maximum_values = maximum_values, .values = .values) %>% 
     dplyr::mutate(
       "{eta_fu_phi_u_source}" := country_to_complete, 
     ) %>% 
@@ -727,8 +753,7 @@ complete_eta_fu_table <- function(eta_fu_table,
                                              # We can't join by source, because the exemplar source is different.
                                              by = colnames(machines_that_need_etas) %>% setdiff(c(c_source, eta_fu_phi_u_source))) 
     # Join the exemplar_rows_to_use to eta_fu_table
-    eta_fu_table <- eta_fu_table %>% 
-      dplyr::bind_rows(exemplar_rows_to_use)
+    eta_fu_table <- dplyr::bind_rows(eta_fu_table, exemplar_rows_to_use)
     
     done <- eta_fu_table_completed(eta_fu_table = eta_fu_table, 
                                    machines_that_need_quantities = machines_that_need_quantities, 
@@ -736,6 +761,8 @@ complete_eta_fu_table <- function(eta_fu_table,
                                    e_dot = e_dot,
                                    year = year,
                                    method = method,
+                                   energy_type = energy_type,
+                                   last_stage = last_stage,
                                    ledger_side = ledger_side,
                                    flow_aggregation_point = flow_aggregation_point,
                                    unit = unit, 
@@ -749,33 +776,19 @@ complete_eta_fu_table <- function(eta_fu_table,
                                    eta_fu = eta_fu,
                                    phi_u = phi_u,
                                    .values = .values)
-    
+  
     if (done) {
       break
     }
     
-    ##
-    ##
-    ##
-    ##
-    # Should this be called "machines_that_need_quantities"
-    ##
-    ##
-    ##
-    ##
-    ##
-    ##
     machines_that_need_etas <- done %>% 
       attr("unallocated_rows")
     
   } # End of for loop.
 
   # Figure out if we completed everything.
-  # Emit a warning if all final energy was NOT allocated to FU machines.
+  # Emit an error if all final energy was NOT allocated to FU machines.
   if (!done) {
-    # warning("Didn't complete eta FU table for ", country_to_complete,
-    #         ". Returning a data frame of machines for which an efficiency wasn't available.")
-    # return(machines_that_need_etas)
     # Not all machines were assigned eta or phi values by the exemplars.
     # Make an error message.
     missing_rows <- attr(done, "unallocated_rows") %>% 
@@ -788,7 +801,7 @@ complete_eta_fu_table <- function(eta_fu_table,
     quantities <- paste(which_quantity, collapse = " and ")
     err_msg <- paste0("Didn't assign ", 
                       quantities, 
-                      " when completing the eta_fu table for the following combinations of country, year, machine, and E_u product: ", missing_combos, 
+                      " when completing the eta_fu table for the following combinations of country, year, machine, and eu_product: ", missing_combos, 
                       ". Please check the FU allocation table and eta FU table for typos or misspellings.")
     stop(err_msg)
   }
@@ -807,7 +820,9 @@ complete_eta_fu_table <- function(eta_fu_table,
 #' @param eta_fu_table The final-to-useful efficiency table whose completeness is to be determined.
 #'                     If `NULL` (the default), all rows in `fu_allocation_table` that need efficiencies are returned
 #'                     as the "unallocated_rows" attribute of `FALSE`.
-#' @param machines_that_need_quantities The final-to-useful allocation table whose final-to-useful machines must be assigned efficiencies or phi values.
+#' @param machines_that_need_quantities The final-to-useful allocation table 
+#'                                      whose final-to-useful machines must be assigned efficiencies (eta_fu) or
+#'                                      exergy-to-energy ratio (phi_u) values.
 #' @param which_quantity A vector of quantities to be completed in the eta_FU table.
 #'                       Default is `c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)`.
 #' @param e_dot,year,method,ledger_side,flow_aggregation_point,unit See `IEATools::iea_cols`.
@@ -832,6 +847,8 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
                                    e_dot = IEATools::iea_cols$e_dot,
                                    year = IEATools::iea_cols$year,
                                    method = IEATools::iea_cols$method,
+                                   energy_type = IEATools::iea_cols$energy_type,
+                                   last_stage = IEATools::iea_cols$last_stage,
                                    ledger_side = IEATools::iea_cols$ledger_side,
                                    flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                    unit = IEATools::iea_cols$unit, 
@@ -845,29 +862,38 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
                                    eta_fu = IEATools::template_cols$eta_fu,
                                    phi_u = IEATools::template_cols$phi_u,
                                    .values = IEATools::template_cols$.values) {
-  
-  machines_that_need_quantities <- machines_that_need_quantities %>% 
-    tidy_fu_allocation_table(year = year, 
-                             e_dot = e_dot,
-                             e_dot_perc = e_dot_perc,
-                             quantity = quantity,
-                             maximum_values = maximum_values, 
-                             .values = .values)
 
-  # Eliminate unneeded columns to find out which machines NEED efficiencies.
-  machines_that_need_efficiencies <- machines_that_need_quantities %>% 
-    dplyr::mutate(
-      # Prevents problems in a semi_join later.
-      # Efficiencies don't really care (or shouldn't really care) 
-      # about the units of the incoming final energy.
-      "{unit}" := NULL, 
-      "{ledger_side}" := NULL,
-      "{flow_aggregation_point}" := NULL,
-      "{ef_product}" := NULL,
-      "{destination}" := NULL, 
-      "{.values}" := NULL
-    ) %>% 
-    unique()
+  year_columns <- year_cols(machines_that_need_quantities, return_names = TRUE, year = NULL)
+  if (length(year_columns) == 0) {
+    machines_that_need_efficiencies <- machines_that_need_quantities
+  } else {
+    machines_that_need_efficiencies <- machines_that_need_quantities %>% 
+      tidy_fu_allocation_table(year = year, e_dot = e_dot, unit = unit, e_dot_perc = e_dot_perc, 
+                               quantity = quantity, maximum_values = maximum_values, .values = .values)
+    
+    machines_that_need_efficiencies <- lapply(X = which_quantity, FUN = function(q){
+      machines_that_need_efficiencies %>% 
+        # Eliminate columns (if they exist) that contain unnecessary metadata
+        # associated with unique Country-Year-machine-EU.product combinations.
+        # These columns will interfere with the anti_join below.
+        dplyr::mutate(
+          "{method}" := NULL,
+          "{energy_type}" := NULL,
+          "{last_stage}" := NULL,
+          "{ledger_side}" := NULL,
+          "{flow_aggregation_point}" := NULL,
+          "{ef_product}" := NULL,
+          "{destination}" := NULL,
+          "{quantity}" := NULL,
+          "{.values}" := NULL
+        ) %>%
+        unique() %>%
+        dplyr::mutate(
+          "{quantity}" := q
+        )
+    }) %>%
+      dplyr::bind_rows()
+  }
   
   if (is.null(eta_fu_table)) {
     # If eta_fu_table is NULL, 
@@ -888,14 +914,10 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
                       maximum_values = maximum_values, 
                       .values = .values)
 
-  # Add the quantities that are needed to the outgoing object.
-  machines_that_need_efficiencies <- lapply(which_quantity, FUN = function(q) {
-    # Subtract machines_that_have_efficiencies from machines_that_need_efficiencies via anti_join
-    dplyr::anti_join(machines_that_need_efficiencies, machines_that_have_efficiencies %>% dplyr::filter(.data[[quantity]] == q), 
-                     by = colnames(machines_that_need_efficiencies))
-  }) %>% 
-    dplyr::bind_rows()
-  
+  # Subtract machines_that_have_efficiencies from machines_that_need_efficiencies via anti_join
+  machines_that_need_efficiencies <- dplyr::anti_join(machines_that_need_efficiencies, machines_that_have_efficiencies, 
+                                                      by = colnames(machines_that_need_efficiencies))
+    
   if (nrow(machines_that_need_efficiencies) > 0) {
     out <- FALSE
     # Store the unallocated rows as an attribute on out so others can figure out what went wrong.
@@ -904,10 +926,3 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
   }
   return(TRUE)
 }
-                                          
-                                          
-                                          
-                                          
-                                          
-                                          
-                                          

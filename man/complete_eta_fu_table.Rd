@@ -35,11 +35,16 @@ complete_eta_fu_table(
 )
 }
 \arguments{
-\item{eta_fu_table}{The efficiency table to be completed, possibly having missing incomplete rows.}
+\item{eta_fu_table}{The efficiency table to be completed, possibly having missing incomplete rows.
+Note that efficiency tables can include energy efficiencies (\code{eta_fu})
+and exergy-to-energy ratios (\code{phi.u}).}
 
-\item{exemplar_eta_fu_tables}{A list of efficiency tables, each queried in turn for information needed by \code{eta_fu_table}.}
+\item{exemplar_eta_fu_tables}{A list of efficiency tables, each queried in turn for information needed by \code{eta_fu_table}.
+Similar to \code{eta_fu_table}, exemplar tables can include energy efficiencies (\code{eta_fu})
+and exergy-to-energy ratios (\code{phi.u}).}
 
-\item{fu_allocation_table}{An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
+\item{fu_allocation_table}{An FU (final-to-useful) allocation table from which the needed combinations
+of final-to-useful machines and useful products is determined.
 This data frame can be "tidy" or wide by year.}
 
 \item{which_quantity}{A vector of quantities to be completed in the eta_FU table.
