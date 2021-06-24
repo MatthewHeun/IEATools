@@ -865,14 +865,14 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
 
   year_columns <- year_cols(machines_that_need_quantities, return_names = TRUE, year = NULL)
   if (length(year_columns) == 0) {
-    machines_that_need_efficiencies <- machines_that_need_quantities
+    machines_that_need_quantities <- machines_that_need_quantities
   } else {
-    machines_that_need_efficiencies <- machines_that_need_quantities %>% 
+    machines_that_need_quantities <- machines_that_need_quantities %>% 
       tidy_fu_allocation_table(year = year, e_dot = e_dot, unit = unit, e_dot_perc = e_dot_perc, 
                                quantity = quantity, maximum_values = maximum_values, .values = .values)
     
-    machines_that_need_efficiencies <- lapply(X = which_quantity, FUN = function(q){
-      machines_that_need_efficiencies %>% 
+    machines_that_need_quantities <- lapply(X = which_quantity, FUN = function(q){
+      machines_that_need_quantities %>% 
         # Eliminate columns (if they exist) that contain unnecessary metadata
         # associated with unique Country-Year-machine-EU.product combinations.
         # These columns will interfere with the anti_join below.
@@ -898,15 +898,14 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
   if (is.null(eta_fu_table)) {
     # If eta_fu_table is NULL, 
     # the answer is that we have not assigned all efficiencies, and 
-    # all rows in fu_allocation_table need efficiencies, so return machines_that_need_efficiencies.
+    # all rows in fu_allocation_table need efficiencies, so return machines_that_need_quantities
     out <- FALSE
-    attr(out, "unallocated_rows") <- machines_that_need_efficiencies
+    attr(out, "unallocated_rows") <- machines_that_need_quantities
     return(out)
   }
   
   # Figure out the machines that HAVE efficiencies
-  machines_that_have_efficiencies <- eta_fu_table
-  machines_that_have_efficiencies <- machines_that_have_efficiencies %>% 
+  machines_that_have_quantities <- eta_fu_table %>% 
     tidy_eta_fu_table(year = year, 
                       e_dot_machine = e_dot_machine,
                       e_dot_machine_perc = e_dot_machine_perc,
@@ -914,14 +913,14 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
                       maximum_values = maximum_values, 
                       .values = .values)
 
-  # Subtract machines_that_have_efficiencies from machines_that_need_efficiencies via anti_join
-  machines_that_need_efficiencies <- dplyr::anti_join(machines_that_need_efficiencies, machines_that_have_efficiencies, 
-                                                      by = colnames(machines_that_need_efficiencies))
+  # Subtract machines_that_have_efficiencies from machines_that_need_quantities via anti_join
+  machines_that_need_quantities <- dplyr::anti_join(machines_that_need_quantities, machines_that_have_quantities, 
+                                                      by = colnames(machines_that_need_quantities))
     
-  if (nrow(machines_that_need_efficiencies) > 0) {
+  if (nrow(machines_that_need_quantities) > 0) {
     out <- FALSE
     # Store the unallocated rows as an attribute on out so others can figure out what went wrong.
-    attr(out, "unallocated_rows") <- machines_that_need_efficiencies
+    attr(out, "unallocated_rows") <- machines_that_need_quantities
     return(out)
   }
   return(TRUE)
