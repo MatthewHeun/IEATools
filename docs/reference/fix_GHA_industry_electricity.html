@@ -82,7 +82,7 @@ This function applies the fixes to years that are available in .tidy_iea_data." 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.53</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.54</span>
       </span>
     </div>
 
@@ -198,21 +198,21 @@ no fixing is performed, and <code>.tidy_iea_df</code> is returned unmodified.</p
 <span class='va'>example_tidy_iea_df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Country</span> <span class='op'>==</span> <span class='st'>"GHA"</span><span class='op'>)</span>
 <span class='va'>example_tidy_iea_df</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 122 x 11</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 122 x 11</span>
 #&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi…
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary energy…
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary energy…
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary energy…
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary energy…
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary energy…
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary energy…
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary energy…
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary energy…
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary energy…
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> GHA     PCM    E           Final       </span><span style='text-decoration: underline;'>1</span><span>971 Supply      Total primary energy…
-#&gt; </span><span style='color: #949494;'># … with 112 more rows, and 4 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;,</span><span>
-#&gt; </span><span style='color: #949494;'>#   Unit &lt;chr&gt;, E.dot &lt;dbl&gt;</span><span></div><div class='input'><span class='va'>fixed</span> <span class='op'>&lt;-</span> <span class='va'>example_tidy_iea_df</span> <span class='op'>%&gt;%</span> 
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                
+#&gt; <span style='color: #BCBCBC;'> 1</span> GHA     PCM    E           Final       <span style='text-decoration: underline;'>1</span>971 Supply      Total primary energy…
+#&gt; <span style='color: #BCBCBC;'> 2</span> GHA     PCM    E           Final       <span style='text-decoration: underline;'>1</span>971 Supply      Total primary energy…
+#&gt; <span style='color: #BCBCBC;'> 3</span> GHA     PCM    E           Final       <span style='text-decoration: underline;'>1</span>971 Supply      Total primary energy…
+#&gt; <span style='color: #BCBCBC;'> 4</span> GHA     PCM    E           Final       <span style='text-decoration: underline;'>1</span>971 Supply      Total primary energy…
+#&gt; <span style='color: #BCBCBC;'> 5</span> GHA     PCM    E           Final       <span style='text-decoration: underline;'>1</span>971 Supply      Total primary energy…
+#&gt; <span style='color: #BCBCBC;'> 6</span> GHA     PCM    E           Final       <span style='text-decoration: underline;'>1</span>971 Supply      Total primary energy…
+#&gt; <span style='color: #BCBCBC;'> 7</span> GHA     PCM    E           Final       <span style='text-decoration: underline;'>1</span>971 Supply      Total primary energy…
+#&gt; <span style='color: #BCBCBC;'> 8</span> GHA     PCM    E           Final       <span style='text-decoration: underline;'>1</span>971 Supply      Total primary energy…
+#&gt; <span style='color: #BCBCBC;'> 9</span> GHA     PCM    E           Final       <span style='text-decoration: underline;'>1</span>971 Supply      Total primary energy…
+#&gt; <span style='color: #BCBCBC;'>10</span> GHA     PCM    E           Final       <span style='text-decoration: underline;'>1</span>971 Supply      Total primary energy…
+#&gt; <span style='color: #949494;'># … with 112 more rows, and 4 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;,</span>
+#&gt; <span style='color: #949494;'>#   Unit &lt;chr&gt;, E.dot &lt;dbl&gt;</span></div><div class='input'><span class='va'>fixed</span> <span class='op'>&lt;-</span> <span class='va'>example_tidy_iea_df</span> <span class='op'>%&gt;%</span> 
   <span class='fu'>fix_GHA_industry_electricity</span><span class='op'>(</span><span class='op'>)</span>
 <span class='co'># Compare changed values</span>
 <span class='va'>example_tidy_iea_df</span> <span class='op'>%&gt;%</span> 
@@ -222,31 +222,31 @@ no fixing is performed, and <code>.tidy_iea_df</code> is returned unmodified.</p
                      <span class='st'>"Industry not elsewhere specified"</span><span class='op'>)</span>, 
          <span class='va'>Product</span> <span class='op'>==</span> <span class='st'>"Electricity"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='st'>"Year"</span>, <span class='st'>"Flow"</span>, <span class='st'>"E.dot"</span>, <span class='st'>"Unit"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 5 x 4</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 5 x 4</span>
 #&gt;    Year Flow                              E.dot Unit 
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                             </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span>  </span><span style='text-decoration: underline;'>1</span><span>971 Mining and quarrying              16.7  ktoe 
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span>  </span><span style='text-decoration: underline;'>1</span><span>971 Non-ferrous metals               170.   ktoe 
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span>  </span><span style='text-decoration: underline;'>1</span><span>971 Textile and leather                1.46 ktoe 
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span>  </span><span style='text-decoration: underline;'>1</span><span>971 Industry not elsewhere specified  21.9  ktoe 
-#&gt; </span><span style='color: #BCBCBC;'>5</span><span>  </span><span style='text-decoration: underline;'>2</span><span>000 Industry not elsewhere specified 370.   ktoe </div><div class='input'><span class='va'>fixed</span> <span class='op'>%&gt;%</span> 
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                             <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>1</span>  <span style='text-decoration: underline;'>1</span>971 Mining and quarrying              16.7  ktoe 
+#&gt; <span style='color: #BCBCBC;'>2</span>  <span style='text-decoration: underline;'>1</span>971 Non-ferrous metals               170.   ktoe 
+#&gt; <span style='color: #BCBCBC;'>3</span>  <span style='text-decoration: underline;'>1</span>971 Textile and leather                1.46 ktoe 
+#&gt; <span style='color: #BCBCBC;'>4</span>  <span style='text-decoration: underline;'>1</span>971 Industry not elsewhere specified  21.9  ktoe 
+#&gt; <span style='color: #BCBCBC;'>5</span>  <span style='text-decoration: underline;'>2</span>000 Industry not elsewhere specified 370.   ktoe </div><div class='input'><span class='va'>fixed</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Flow</span> <span class='op'>%in%</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Mining and quarrying"</span>,
                      <span class='st'>"Non-ferrous metals"</span>,
                      <span class='st'>"Textile and leather"</span>, 
                      <span class='st'>"Industry not elsewhere specified"</span><span class='op'>)</span>, 
          <span class='va'>Product</span> <span class='op'>==</span> <span class='st'>"Electricity"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='st'>"Year"</span>, <span class='st'>"Flow"</span>, <span class='st'>"E.dot"</span>, <span class='st'>"Unit"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 8 x 4</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 8 x 4</span>
 #&gt;    Year Flow                              E.dot Unit 
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                             </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span>  </span><span style='text-decoration: underline;'>1</span><span>971 Mining and quarrying              16.7  ktoe 
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span>  </span><span style='text-decoration: underline;'>1</span><span>971 Non-ferrous metals               170.   ktoe 
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span>  </span><span style='text-decoration: underline;'>1</span><span>971 Textile and leather                1.46 ktoe 
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span>  </span><span style='text-decoration: underline;'>1</span><span>971 Industry not elsewhere specified  21.9  ktoe 
-#&gt; </span><span style='color: #BCBCBC;'>5</span><span>  </span><span style='text-decoration: underline;'>2</span><span>000 Industry not elsewhere specified 104.   ktoe 
-#&gt; </span><span style='color: #BCBCBC;'>6</span><span>  </span><span style='text-decoration: underline;'>2</span><span>000 Mining and quarrying              45.4  ktoe 
-#&gt; </span><span style='color: #BCBCBC;'>7</span><span>  </span><span style='text-decoration: underline;'>2</span><span>000 Non-ferrous metals               219.   ktoe 
-#&gt; </span><span style='color: #BCBCBC;'>8</span><span>  </span><span style='text-decoration: underline;'>2</span><span>000 Textile and leather                2.27 ktoe </div><div class='input'><span class='co'># Show that new data are still in balance</span>
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                             <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>1</span>  <span style='text-decoration: underline;'>1</span>971 Mining and quarrying              16.7  ktoe 
+#&gt; <span style='color: #BCBCBC;'>2</span>  <span style='text-decoration: underline;'>1</span>971 Non-ferrous metals               170.   ktoe 
+#&gt; <span style='color: #BCBCBC;'>3</span>  <span style='text-decoration: underline;'>1</span>971 Textile and leather                1.46 ktoe 
+#&gt; <span style='color: #BCBCBC;'>4</span>  <span style='text-decoration: underline;'>1</span>971 Industry not elsewhere specified  21.9  ktoe 
+#&gt; <span style='color: #BCBCBC;'>5</span>  <span style='text-decoration: underline;'>2</span>000 Industry not elsewhere specified 104.   ktoe 
+#&gt; <span style='color: #BCBCBC;'>6</span>  <span style='text-decoration: underline;'>2</span>000 Mining and quarrying              45.4  ktoe 
+#&gt; <span style='color: #BCBCBC;'>7</span>  <span style='text-decoration: underline;'>2</span>000 Non-ferrous metals               219.   ktoe 
+#&gt; <span style='color: #BCBCBC;'>8</span>  <span style='text-decoration: underline;'>2</span>000 Textile and leather                2.27 ktoe </div><div class='input'><span class='co'># Show that new data are still in balance</span>
 <span class='va'>example_tidy_iea_df</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Year</span> <span class='op'>==</span> <span class='fl'>2000</span>, 
          <span class='va'>Product</span> <span class='op'>==</span> <span class='st'>"Electricity"</span>, 
@@ -262,7 +262,7 @@ no fixing is performed, and <code>.tidy_iea_df</code> is returned unmodified.</p
                      <span class='st'>"Industry not elsewhere specified"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>E.dot</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 370.2494</div></span></pre>
+</div><div class='output co'>#&gt; [1] 370.2494</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
