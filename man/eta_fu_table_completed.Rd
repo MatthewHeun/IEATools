@@ -6,11 +6,13 @@
 \usage{
 eta_fu_table_completed(
   eta_fu_table = NULL,
-  fu_allocation_table,
+  machines_that_need_quantities,
   which_quantity = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u),
   e_dot = IEATools::iea_cols$e_dot,
   year = IEATools::iea_cols$year,
   method = IEATools::iea_cols$method,
+  energy_type = IEATools::iea_cols$energy_type,
+  last_stage = IEATools::iea_cols$last_stage,
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   unit = IEATools::iea_cols$unit,
@@ -31,12 +33,14 @@ eta_fu_table_completed(
 If \code{NULL} (the default), all rows in \code{fu_allocation_table} that need efficiencies are returned
 as the "unallocated_rows" attribute of \code{FALSE}.}
 
-\item{fu_allocation_table}{The final-to-useful allocation table whose final-to-useful machines must be assigned efficiencies.}
+\item{machines_that_need_quantities}{The final-to-useful allocation table
+whose final-to-useful machines must be assigned efficiencies (eta_fu) or
+exergy-to-energy ratio (phi_u) values.}
 
 \item{which_quantity}{A vector of quantities to be completed in the eta_FU table.
 Default is \code{c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)}.}
 
-\item{e_dot, year, method, ledger_side, flow_aggregation_point, unit}{See \code{IEATools::iea_cols}.}
+\item{e_dot, year, method, ledger_side, flow_aggregation_point, energy_type, last_stage, unit}{See \code{IEATools::iea_cols}.}
 
 \item{ef_product, quantity, e_dot_perc, e_dot_machine, e_dot_machine_perc, maximum_values, destination, eta_fu, phi_u, .values}{See \code{IEATools::template_cols}.}
 }
