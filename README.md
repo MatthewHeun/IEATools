@@ -10,7 +10,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![R-CMD-check](https://github.com/MatthewHeun/IEATools/workflows/R-CMD-check/badge.svg)](https://github.com/MatthewHeun/IEATools/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/MatthewHeun/IEATools/branch/master/graph/badge.svg)](https://codecov.io/gh/MatthewHeun/IEATools?branch=master)
-[![DOI](https://zenodo.org/badge/%7Bgithub_id%7D.svg)](https://zenodo.org/badge/latestdoi/%7B176147859%7D)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5086371.svg)](https://doi.org/10.5281/zenodo.5086371)
 
 # IEATools
 

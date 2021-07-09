@@ -1,4 +1,4 @@
-# IEATools 0.1.54 (2021-07-09) 
+# IEATools 0.1.54 (2021-07-09) [![DOI](https://zenodo.org/badge/176147859.svg)](https://zenodo.org/badge/latestdoi/176147859)
 
 * Modifications to enable per-machine
   final-to-useful efficiency data.
