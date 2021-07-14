@@ -51,6 +51,7 @@ load_tidy_iea_df() \%>\%
 load_tidy_iea_df() \%>\% 
   specify_primary_production() \%>\% 
   specify_tp_eiou() \%>\% 
+  specify_bunkers() \%>\% 
   specify_interface_industries() \%>\% 
   tp_sinks_to_nonenergy()
 }

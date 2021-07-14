@@ -322,6 +322,13 @@ tpes_flows <- list(resources = "Resources",
                    exports = "Exports",
                    international_marine_bunkers = "International marine bunkers",
                    international_aviation_bunkers = "International aviation bunkers",
+                   # Added new "exports_to_" tpes flows on 15 July 2021 as part of treating
+                   # World bunkers correctly.
+                   # These new flows will ultimately replace 
+                   # international_marine_bunkers and international_aviation_bunkers
+                   # after all IEA data are specified.
+                   exports_to_world_marine_bunkers = "Exports to World marine bunkers",
+                   exports_to_world_aviation_bunkers = "Exports to World aviation bunkers",
                    stock_changes = "Stock changes")
 usethis::use_data(tpes_flows, overwrite = TRUE)
 
@@ -329,15 +336,17 @@ usethis::use_data(tpes_flows, overwrite = TRUE)
 #
 # Primary energy flows used to calculate domestic primary energy consumption using 
 # Recca::primary_aggregates()
+# 
 
 prim_agg_flows <- tpes_flows
-prim_agg_flows <- prim_agg_flows[!(prim_agg_flows %in% c("Production",
-                                                         "Exports",
-                                                         "International marine bunkers",
-                                                         "International aviation bunkers"))]
+prim_agg_flows <- prim_agg_flows[!(prim_agg_flows %in% c(tpes_flows$production, 
+                                                         tpes_flows$exports, 
+                                                         tpes_flows$international_marine_bunkers,
+                                                         tpes_flows$international_aviation_bunkers, 
+                                                         tpes_flows$exports_to_world_marine_bunkers,
+                                                         tpes_flows$exports_to_world_aviation_bunkers
+                                                         ))]
 usethis::use_data(prim_agg_flows, overwrite = TRUE)
-
-
 
 
 tfc_compare_flows <- list(total_primary_energy_supply = "Total primary energy supply",
@@ -478,8 +487,8 @@ usethis::use_data(transport_flows, overwrite = TRUE)
 # A constant containing domestic transport flows. This constant is the same as 
 # transport flows except it does not contain "World marine bunkers" or
 # "World aviation bunkers"
-transport_domestic_flows <- transport_flows[!(transport_flows %in% c("World aviation bunkers",
-                                                                     "World marine bunkers"))]
+transport_domestic_flows <- transport_flows[!(transport_flows %in% c(tpes_flows$world_aviation_bunkers,
+                                                                     tpes_flows$world_marine_bunkers))]
 usethis::use_data(transport_domestic_flows, overwrite = TRUE)
 
 
@@ -540,11 +549,13 @@ usethis::use_data(memo_aggregation_product_prefixes, overwrite = TRUE)
 # Interfaces
 # 
 
-interface_industries <- list(imports = "Imports",
-                             exports = "Exports", 
-                             international_aviation_bunkers = "International aviation bunkers",
-                             international_marine_bunkers = "International marine bunkers",
-                             stock_changes = "Stock changes")
+interface_industries <- list(imports = tpes_flows$imports,
+                             exports = tpes_flows$exports, 
+                             international_aviation_bunkers = tpes_flows$international_aviation_bunkers,
+                             international_marine_bunkers = tpes_flows$international_marine_bunkers,
+                             exports_to_world_aviation_bunkers = tpes_flows$exports_to_world_aviation_bunkers,
+                             exports_to_world_marine_bunkers = tpes_flows$exports_to_world_marine_bunkers,
+                             stock_changes = tpes_flows$stock_changes)
 usethis::use_data(interface_industries, overwrite = TRUE)
 
 
@@ -587,9 +598,13 @@ aggregation_regions <- list(world = "World",
                             memo_g7 = "Memo: G7",
                             memo_g8 = "Memo: G8",
                             memo_g20 = "Memo: G20",
-                            memo_china_pr_of_china_and_hong_kong_china = "China (P.R. of China and Hong Kong, China)",
-                            world_aviation_bunkers = "World aviation bunkers",
-                            world_marine_bunkers = "World marine bunkers")
+                            memo_china_pr_of_china_and_hong_kong_china = "China (P.R. of China and Hong Kong, China)"
+                            # As of 14 July 2021, we are treating 
+                            # these bunkers as their own country, 
+                            # so they should no longer be listed as an aggregation region.
+                            # world_aviation_bunkers = "World aviation bunkers",
+                            # world_marine_bunkers = "World marine bunkers"
+                            )
 usethis::use_data(aggregation_regions, overwrite = TRUE)
 
 

@@ -270,3 +270,30 @@ test_that("spreading by years works as expected at each step of specify_all()", 
   expect_true("2000" %in% names(Year_spread_5))
 })
 
+
+test_that("remove_suffix_specifications works as expected", {
+  cleaned <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    remove_suffix_specifications(col = "Flow", unsuffixed_col = "clean_Flow") %>% 
+    dplyr::select(Flow, Product, E.dot, clean_Flow) %>% 
+    dplyr::filter(endsWith(Flow, bracket_notation[["suff_end"]]))
+  
+  tested <- cleaned %>% 
+    dplyr::mutate(
+      ok = dplyr::case_when(
+        endsWith(Flow, bracket_notation[["suff_end"]]) & 
+          ! endsWith(clean_Flow, bracket_notation[["suff_end"]]) ~ TRUE, 
+      TRUE ~ FALSE
+      )
+    )
+  expect_true(all(tested$ok))
+  
+  # Try with column replacement
+  cleaned_2 <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    remove_suffix_specifications(col = "Flow", unsuffixed_col = "Flow") %>% 
+    dplyr::select(Flow, Product, E.dot) %>% 
+    dplyr::filter(endsWith(Flow, bracket_notation[["suff_end"]]))
+  expect_true(all(tested_2$ok))
+  
+})

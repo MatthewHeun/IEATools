@@ -280,14 +280,16 @@ aggregate_regions <- function(.tidy_iea_df,
   
   if (net_trade == TRUE){
     aggregated_net_trade <- aggregated_tidy_iea_df %>% 
-      dplyr::filter(stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports)) %>% 
-      dplyr::mutate(
-        "{flow}" := dplyr::case_when(
-          stringr::str_detect(.data[[flow]], imports) ~ imports,
-          stringr::str_detect(.data[[flow]], exports) ~ exports,
-          TRUE ~ .data[[flow]]
-        )
-      ) %>%
+      remove_suffix_specifications(col = flow, unsuffixed_col = flow) %>% 
+      # dplyr::filter(stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports)) %>% 
+      dplyr::filter(.data[[flow]] == imports | .data[[flow]] == exports) %>% 
+      # dplyr::mutate(
+      #   "{flow}" := dplyr::case_when(
+      #     stringr::str_detect(.data[[flow]], imports) ~ imports,
+      #     stringr::str_detect(.data[[flow]], exports) ~ exports,
+      #     TRUE ~ .data[[flow]]
+      #   )
+      # ) %>%
       tidyr::pivot_wider(names_from = .data[[flow]], values_from = .data[[e_dot]]) %>% 
       dplyr::mutate(
         "{imports}" := tidyr::replace_na(.data[[imports]], 0),
