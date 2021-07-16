@@ -43,8 +43,8 @@ test_that("interface industries are correctly specified after specifying bunkers
                                                                IEATools::interface_industries$international_marine_bunkers))
   
   specified <- load_tidy_iea_df() %>% 
-    specify_interface_industries() %>%
-    specify_bunkers()
+    specify_bunkers() %>%
+    specify_interface_industries()
   # We should have no more Imports, Exports, International aviation bunkers, International marine bunkers, or Stock changes.
   # Rather, everything should be specified as X (Product).
   for (i in int_inds_wout_int_bunkers) {
