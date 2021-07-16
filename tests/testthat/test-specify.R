@@ -297,8 +297,9 @@ test_that("remove_suffix_specifications works as expected", {
   cleaned_2 <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     remove_suffix_specifications(col = "Flow", unsuffixed_col = "Flow") %>% 
-    dplyr::select(Flow, Product, E.dot) %>% 
-    dplyr::filter(endsWith(Flow, bracket_notation[["suff_end"]]))
-  expect_true(all(tested_2$ok))
-  
+    dplyr::select(Flow, Product, E.dot) %>%
+    dplyr::filter(endsWith(Flow, bracket_notation[["suff_end"]])) %>%
+    nrow() %>%
+    # We should have no rows remaining that end with the bracket notation suffix.
+    expect_equal(0)
 })
