@@ -766,7 +766,8 @@ remove_suffix_specifications <- function(.df, col, unsuffixed_col,
       dplyr::mutate(
         "{unsuffixed_col}" := matsbyname::split_pref_suff(out[[unsuffixed_col]], notation = nota) %>%
           purrr::transpose() %>%
-          magrittr::extract2("pref")
+          magrittr::extract2("pref") %>% 
+          unlist()
       )
   }
   return(out)
