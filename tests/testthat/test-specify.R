@@ -58,7 +58,14 @@ test_that("renamed products are also consumed", {
 
 
 test_that("interface industries are correctly specified", {
-  specified <- load_tidy_iea_df() %>% 
+  
+  int_inds_wout_bunker_exports <- setdiff(interface_industries, c(IEATools::interface_industries$exports_to_world_aviation_bunkers, 
+                                                                  IEATools::interface_industries$exports_to_world_marine_bunkers))
+  
+  int_inds_wout_int_bunkers <- setdiff(interface_industries, c(IEATools::interface_industries$international_aviation_bunkers, 
+                                                               IEATools::interface_industries$international_marine_bunkers))
+
+    specified <- load_tidy_iea_df() %>% 
     specify_interface_industries()
   # We should have no more Imports, Exports, International aviation bunkers, International marine bunkers, or Stock changes.
   # Rather, everything should be specified as X (Product).
