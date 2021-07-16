@@ -35,6 +35,23 @@ test_that("bunker specification works", {
   expect_true(etwab_rows_specified == 8)
   
   
-  
-  
 })
+
+test_that("interface industries are correctly specified after specifying bunkers", {
+  
+  int_inds_wout_int_bunkers <- setdiff(interface_industries, c(IEATools::interface_industries$international_aviation_bunkers, 
+                                                               IEATools::interface_industries$international_marine_bunkers))
+  
+  specified <- load_tidy_iea_df() %>% 
+    specify_interface_industries() %>%
+    specify_bunkers()
+  # We should have no more Imports, Exports, International aviation bunkers, International marine bunkers, or Stock changes.
+  # Rather, everything should be specified as X (Product).
+  for (i in int_inds_wout_int_bunkers) {
+    # Ensure that there are no interface_industries remaining
+    expect_equal(nrow(specified %>% dplyr::filter(Flow == i)), 0)
+    # Ensure that every interface_industry ends with "]", indicating that it has been specified.
+    expect_true(specified %>% dplyr::filter(startsWith(Flow, i) & endsWith(Flow, of_notation[["suff_end"]])) %>% nrow() > 0)
+  }
+})
+

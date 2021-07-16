@@ -61,15 +61,12 @@ test_that("interface industries are correctly specified", {
   
   int_inds_wout_bunker_exports <- setdiff(interface_industries, c(IEATools::interface_industries$exports_to_world_aviation_bunkers, 
                                                                   IEATools::interface_industries$exports_to_world_marine_bunkers))
-  
-  int_inds_wout_int_bunkers <- setdiff(interface_industries, c(IEATools::interface_industries$international_aviation_bunkers, 
-                                                               IEATools::interface_industries$international_marine_bunkers))
 
     specified <- load_tidy_iea_df() %>% 
     specify_interface_industries()
   # We should have no more Imports, Exports, International aviation bunkers, International marine bunkers, or Stock changes.
   # Rather, everything should be specified as X (Product).
-  for (i in interface_industries) {
+  for (i in int_inds_wout_bunker_exports) {
     # Ensure that there are no interface_industries remaining
     expect_equal(nrow(specified %>% dplyr::filter(Flow == i)), 0)
     # Ensure that every interface_industry ends with "]", indicating that it has been specified.
@@ -111,6 +108,7 @@ test_that("specify_all works as expected", {
     specify_primary_production() %>% 
     specify_production_to_resources() %>% 
     specify_tp_eiou() %>% 
+    specify_bunkers() %>%
     specify_interface_industries() %>% 
     tp_sinks_to_nonenergy()
   expect_equal(Simple, Complicated)
