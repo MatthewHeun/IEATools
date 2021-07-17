@@ -720,10 +720,10 @@ despecify_col <- function(.df, col, despecified_col,
       )
     )
   # Now eliminate all suffixes from despecified_col in out
+  # and return the resulting data frame.
   out %>% 
     remove_suffix_specifications(col = despecified_col, unsuffixed_col = despecified_col, 
                                  notations = notations)
-  return(out)
 }
 
 
