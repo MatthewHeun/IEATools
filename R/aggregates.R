@@ -314,6 +314,7 @@ aggregate_regions <- function(.tidy_iea_df,
     
     aggregated_tidy_iea_df <- aggregated_tidy_iea_df %>% 
       dplyr::filter(! (stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports))) %>%
+      # dplyr::filter(! (.data[[flow]] == imports | .data[[flow]] == exports)) %>%
       dplyr::bind_rows(aggregated_net_trade) %>%
       dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
   }
