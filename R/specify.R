@@ -756,7 +756,8 @@ despecify_col <- function(.df, col, despecified_col,
 #'   filter(endsWith(Flow, bracket_notation[["suff_end"]]))
 remove_suffix_specifications <- function(.df, col, unsuffixed_col, 
                                          notations = list(IEATools::of_notation, IEATools::from_notation)){
-  # Eliminate all suffixes from despecified_col in the out data frame
+  # Eliminate all suffixes from col in the outgoing data frame.
+  # Save the result in unsuffixed_col.
   out <- .df %>% 
     dplyr::mutate(
       "{unsuffixed_col}" := .data[[col]]
