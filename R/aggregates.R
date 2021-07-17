@@ -278,7 +278,7 @@ aggregate_regions <- function(.tidy_iea_df,
     ) %>% 
     dplyr::select(-.data[[destination_regions]])
   
-  if (net_trade == TRUE){
+  if (net_trade){
     aggregated_net_trade <- aggregated_tidy_iea_df %>% 
       remove_suffix_specifications(col = flow, unsuffixed_col = flow) %>% 
       # dplyr::filter(stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports)) %>% 
