@@ -276,7 +276,8 @@ aggregate_regions <- function(.tidy_iea_df,
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) %>% 
-    dplyr::select(-.data[[destination_regions]])
+    dplyr::select(-.data[[destination_regions]]) %>% 
+    dplyr::ungroup()
   
   if (net_trade){
     aggregated_net_trade <- aggregated_tidy_iea_df %>% 
