@@ -282,15 +282,7 @@ aggregate_regions <- function(.tidy_iea_df,
   if (net_trade){
     aggregated_net_trade <- aggregated_tidy_iea_df %>% 
       remove_suffix_specifications(col = flow, unsuffixed_col = flow) %>% 
-      # dplyr::filter(stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports)) %>% 
       dplyr::filter(.data[[flow]] == imports | .data[[flow]] == exports) %>% 
-      # dplyr::mutate(
-      #   "{flow}" := dplyr::case_when(
-      #     stringr::str_detect(.data[[flow]], imports) ~ imports,
-      #     stringr::str_detect(.data[[flow]], exports) ~ exports,
-      #     TRUE ~ .data[[flow]]
-      #   )
-      # ) %>%
       tidyr::pivot_wider(names_from = .data[[flow]], values_from = .data[[e_dot]]) %>% 
       dplyr::mutate(
         "{imports}" := tidyr::replace_na(.data[[imports]], 0),
@@ -302,19 +294,14 @@ aggregate_regions <- function(.tidy_iea_df,
       dplyr::mutate(
         "{flow}" := dplyr::case_when(
           .data[[e_dot]] >= 0 ~ {imports},
-          .data[[e_dot]] < 0 ~ {exports}#,
-          #.data[[e_dot]] == 0 ~ {net_imports}
+          .data[[e_dot]] < 0 ~ {exports}
         )
       ) %>% 
       dplyr::filter(.data[[e_dot]] != 0) %>%
-      # dplyr::mutate(
-      #   "{flow}" := stringr::str_c(.data[[flow]], " [of ", .data[[product]], "]", sep = "")
-      # ) %>%
       specify_interface_industries() %>% 
       dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
     
     aggregated_tidy_iea_df <- aggregated_tidy_iea_df %>% 
-      # dplyr::filter(! (stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports))) %>%
       remove_suffix_specifications(col = flow, unsuffixed_col = flow) %>% 
       dplyr::filter(! (.data[[flow]] == imports | .data[[flow]] == exports)) %>%
       # Add suffixes back.
