@@ -649,6 +649,7 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #' load_tidy_iea_df() %>% 
 #'   specify_primary_production() %>% 
 #'   specify_tp_eiou() %>% 
+#'   specify_bunkers() %>% 
 #'   specify_interface_industries() %>% 
 #'   tp_sinks_to_nonenergy()
 specify_all <- function(.tidy_iea_df,
@@ -656,7 +657,7 @@ specify_all <- function(.tidy_iea_df,
                         route_non_specified_eiou = TRUE,
                         route_non_specified_tp = TRUE){
   
-  split_own_use_elect_chp_heat_using_shares_of = match.arg(split_own_use_elect_chp_heat_using_shares_of)
+  split_own_use_elect_chp_heat_using_shares_of <- match.arg(split_own_use_elect_chp_heat_using_shares_of)
   
   .tidy_iea_df %>% 
     specify_primary_production() %>% 
@@ -666,6 +667,7 @@ specify_all <- function(.tidy_iea_df,
       route_non_specified_eiou = route_non_specified_eiou,
       route_non_specified_tp = route_non_specified_tp
     ) %>% 
+    specify_bunkers() %>%
     specify_interface_industries() %>% 
     tp_sinks_to_nonenergy()
 }
@@ -683,18 +685,18 @@ specify_all <- function(.tidy_iea_df,
 #'     * Any "Resource" flows are replaced by "Production". E.g., "Resources \[of Coal\]" becomes "Production".
 #'     * All parenthetical decorations are removed.  E.g., "Other bituminous coal \[of Coal mines\]" becomes "Other bituminous coal".
 #'     
-#' Identification of parenthetical notation delimiters is determined by a notation object
-#' 
+#' Identification of parenthetical notation delimiters is determined by a notation object.
 #'
-#' @param .df the data frame in which `col` exists.
-#' @param col the string name of the column in `.df` to be de-specified.
-#' @param despecified_col the string name of the column in the output data frame to contain the de-specified version of `col`.
-#' @param notations the notations used for row and column names. See `matsbyname::notation_vec()`. 
-#'                 Default is `list(IEATools::of_notation, IEATools::from_notation)`, 
-#'                 because both `IEATools::of_notation` and `IEATools::from_notation` can be used in the `Flow` column.
+#' @param .df The data frame in which `col` exists.
+#' @param col The string name of the column in `.df` to be de-specified.
+#' @param despecified_col The string name of the column in the output data frame to contain the de-specified version of `col`.
+#' @param notations The notations used for row and column names. See `matsbyname::notation_vec()`. 
+#'                  Default is `list(IEATools::of_notation, IEATools::from_notation)`, 
+#'                  because both `IEATools::of_notation` and `IEATools::from_notation` can be used in the `Flow` column
+#'                  of an IEA data frame.
 #' @param production,resources See `IEATools::tpes_flows`.
 #'
-#' @return a de-specified version of `.df`
+#' @return A de-specified version of `.df` and the result placed in the `despecified_col` column.
 #' 
 #' @export
 #'
@@ -718,12 +720,52 @@ despecify_col <- function(.df, col, despecified_col,
       )
     )
   # Now eliminate all suffixes from despecified_col in out
+  # and return the resulting data frame.
+  out %>% 
+    remove_suffix_specifications(col = despecified_col, unsuffixed_col = despecified_col, 
+                                 notations = notations)
+}
+
+
+#' Remove specification suffixes from a column
+#' 
+#' `Flow` and `Product` columns of IEA data frames may have been "specified" 
+#' to contain a suffix of the form " \[of Natural gas\"], for example.
+#' This function strips away the suffix.
+#'     
+#' Identification of parenthetical notation delimiters is determined by the `notations` argument.
+#'
+#' @param .df The data frame in which `col` exists.
+#' @param col The string name of the column in `.df` to be de-specified.
+#' @param despecified_col The string name of the column in the output data frame to contain the de-specified version of `col`.
+#' @param notations The notations used for row and column names. See `matsbyname::notation_vec()`. 
+#'                  Default is `list(IEATools::of_notation, IEATools::from_notation)`, 
+#'                  because both `IEATools::of_notation` and `IEATools::from_notation` can be used in the `Flow` column
+#'                  of an IEA data frame.
+#'
+#' @return A version of `.df` with suffixes removed from the `col` column and the result placed in the `despecified_col` column.
+#' 
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' load_tidy_iea_df() %>% 
+#'   specify_all() %>% 
+#'   remove_suffix_specifications(col = "Flow", unsuffixed_col = "clean_Flow") %>% 
+#'   select(Flow, Product, E.dot, clean_Flow) %>% 
+#'   filter(endsWith(Flow, bracket_notation[["suff_end"]]))
+remove_suffix_specifications <- function(.df, col, unsuffixed_col, 
+                                         notations = list(IEATools::of_notation, IEATools::from_notation)){
+  # Eliminate all suffixes from col in the outgoing data frame.
+  # Save the result in unsuffixed_col.
+  out <- .df %>% 
+    dplyr::mutate(
+      "{unsuffixed_col}" := .data[[col]]
+    )
   for (nota in notations) {
     out <- out %>%
       dplyr::mutate(
-        "{despecified_col}" := matsbyname::split_pref_suff(out[[despecified_col]], notation = nota) %>%
-            purrr::transpose() %>%
-            magrittr::extract2("pref")
+        "{unsuffixed_col}" := matsbyname::keep_pref_suff(.data[[unsuffixed_col]], keep = "pref", notation = nota)
       )
   }
   return(out)
