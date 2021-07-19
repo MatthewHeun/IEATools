@@ -307,14 +307,18 @@ aggregate_regions <- function(.tidy_iea_df,
         )
       ) %>% 
       dplyr::filter(.data[[e_dot]] != 0) %>%
-      dplyr::mutate(
-        "{flow}" := stringr::str_c(.data[[flow]], " [of ", .data[[product]], "]", sep = "")
-      ) %>%
+      # dplyr::mutate(
+      #   "{flow}" := stringr::str_c(.data[[flow]], " [of ", .data[[product]], "]", sep = "")
+      # ) %>%
+      specify_interface_industries() %>% 
       dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
     
     aggregated_tidy_iea_df <- aggregated_tidy_iea_df %>% 
-      dplyr::filter(! (stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports))) %>%
-      # dplyr::filter(! (.data[[flow]] == imports | .data[[flow]] == exports)) %>%
+      # dplyr::filter(! (stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports))) %>%
+      remove_suffix_specifications(col = flow, unsuffixed_col = flow) %>% 
+      dplyr::filter(! (.data[[flow]] == imports | .data[[flow]] == exports)) %>%
+      # Add suffixes back.
+      specify_interface_industries() %>% 
       dplyr::bind_rows(aggregated_net_trade) %>%
       dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
   }

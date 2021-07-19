@@ -88,7 +88,11 @@ test_that("Aggregating South Africa and Ghana works as intended", {
                                           net_trade = TRUE)
   
   manual_aggregation_excl_ie <- tidy_GHA_ZAF_df %>%
-    dplyr::filter(! (stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports"))) %>%
+    # dplyr::filter(! (stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports"))) %>%
+    remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>% 
+    dplyr::filter(! (.data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$imports | 
+                       .data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$exports)) %>%
+    specify_interface_industries() %>% 
     dplyr::group_by(Method, Last.stage, Energy.type, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot)) %>% 
     dplyr::mutate(
@@ -97,14 +101,16 @@ test_that("Aggregating South Africa and Ghana works as intended", {
   
   # This here needs being modified.
   manual_aggregation_ie <- tidy_GHA_ZAF_df %>%
-    dplyr::filter(stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports")) %>%
-    dplyr::mutate(
-      Flow = dplyr::case_when(
-        stringr::str_detect(Flow, "Imports") ~ "Imports",
-        stringr::str_detect(Flow, "Exports") ~ "Exports",
-        TRUE ~ Flow
-      )
-    ) %>% 
+    remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>% 
+    dplyr::filter(.data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$imports | 
+                       .data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$exports) %>%
+    # dplyr::mutate(
+    #   Flow = dplyr::case_when(
+    #     stringr::str_detect(Flow, "Imports") ~ "Imports",
+    #     stringr::str_detect(Flow, "Exports") ~ "Exports",
+    #     TRUE ~ Flow
+    #   )
+    # ) %>% 
     dplyr::group_by(Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot)) %>%
     tidyr::pivot_wider(names_from = Flow, values_from = E.dot.aggregated) %>%
@@ -123,9 +129,10 @@ test_that("Aggregating South Africa and Ghana works as intended", {
       )
     ) %>%
     dplyr::filter(E.dot.aggregated != 0) %>% 
-    dplyr::mutate(
-      Flow = stringr::str_c(Flow, " [of ", Product, "]")
-    ) %>% 
+    # dplyr::mutate(
+    #   Flow = stringr::str_c(Flow, " [of ", Product, "]")
+    # ) %>% 
+    specify_interface_industries() %>% 
     dplyr::mutate(
       Country = "GHAZAF"
     )
