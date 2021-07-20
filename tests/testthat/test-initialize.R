@@ -21,6 +21,36 @@ test_that("use_iso_countries() works as expected", {
     magrittr::extract2("Country") %>% 
     unique() %>% 
     expect_equal(c("CHN", "ZAF"))
+  
+  # Make ZAF into Hong Kong to be sure that it is recoded to HKG.
+  IEAData %>% 
+    dplyr::mutate(
+      Country = dplyr::recode(Country, `South Africa` = "Hong Kong (China)")
+    ) %>% 
+    use_iso_countries() %>% 
+    magrittr::extract2("Country") %>% 
+    unique() %>% 
+    expect_equal(c("GHA", "HKG"))
+  
+  # Now make ZAF into World marine bunkers to be sure it is recoded to WMB.
+  IEAData %>% 
+    dplyr::mutate(
+      Country = dplyr::recode(Country, `South Africa` = "World marine bunkers")
+    ) %>% 
+    use_iso_countries() %>% 
+    magrittr::extract2("Country") %>% 
+    unique() %>% 
+    expect_equal(c("GHA", "WMB"))
+  
+  # Now make GHA into World aviation bunkers to be sure it is recoded to WAB.
+  IEAData %>% 
+    dplyr::mutate(
+      Country = dplyr::recode(Country, `Ghana` = "World aviation bunkers")
+    ) %>% 
+    use_iso_countries() %>% 
+    magrittr::extract2("Country") %>% 
+    unique() %>% 
+    expect_equal(c("WAB", "ZAF"))
 })
 
 

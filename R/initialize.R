@@ -450,6 +450,12 @@ clean_iea_whitespace <- function(.iea_df,
 #'                     Default is "China (P.R. of China and Hong Kong, China)".
 #' @param ieatools_china The 3-letter string that replaces `iea_china_HK`. 
 #'                       Default is "CHN".
+#' @param world_marine_bunkers A string specifying the full name for the "country" called World marine bunkers.
+#'                             Default is "World marine bunkers".
+#' @param wmb A 3-letter code for World marine bunkers. Default is "WMB".
+#' @param world_aviation_bunkers A string specifying the full name for the "country" called World aviation bunkers.
+#'                               Default is "World aviation bunkers".
+#' @param wab A 3-letter code for World aviation bunkers. Default is "WAB".
 #'
 #' @return `.iea_df` with 3-letter ISO country abbreviations in the `country` column.
 #' 
@@ -461,9 +467,15 @@ clean_iea_whitespace <- function(.iea_df,
 #'   rename_iea_df_cols() %>% 
 #'   use_iso_countries()
 use_iso_countries <- function(.iea_df, 
-                              country = "Country", 
-                              iea_china_HK = "People's Republic of China", 
-                              ieatools_china = "CHN"){
+                              country = "Country",
+                              iea_china = "People's Republic of China",
+                              ieatools_china = "CHN",
+                              iea_hk = "Hong Kong (China)",
+                              ieatools_hk = "HKG",
+                              iea_world_marine_bunkers = "World marine bunkers",
+                              ieatools_wmb = "WMB", 
+                              iea_world_aviation_bunkers = "World aviation bunkers", 
+                              ieatools_wab = "WAB"){
   # Eliminates warnings.
   country.name.en <- "country.name.en" 
   iso_type = "iso3c"
@@ -481,13 +493,20 @@ use_iso_countries <- function(.iea_df,
         # First, deal with some special cases.
         # 
         # The IEA extended energy balance data have the country
-        # "China (P.R. of China and Hong Kong, China)", but 
-        # the country name database in the countrycode package has separate entries 
-        # for China CHN and Hong Kong SAR China HKG.
-        # To resolve this issue, we recode
-        # `iea_china_HK` as `ieatools_china`.
-        .data[[country]] == iea_china_HK ~ ieatools_china,
-        #
+        # "People's Republic of China", which is not included in the countrycode 
+        # package.
+        # To resolve this issue, we recode `iea_china` as `ieatools_china`.
+        .data[[country]] == iea_china ~ ieatools_china,
+        
+        # Hong Kong
+        .data[[country]] == iea_hk ~ ieatools_hk,
+         
+        # World marine bunkers
+        .data[[country]] == iea_world_marine_bunkers ~ ieatools_wmb,
+        
+        # World aviation bunkers
+        .data[[country]] == iea_world_aviation_bunkers ~ ieatools_wab,
+        
         # Next, if we get an NA and we haven't dealt with a country as a special case, 
         # just set the iso_type column to the value of the country column.
         is.na(.data[[iso_type]]) ~ .data[[country]],

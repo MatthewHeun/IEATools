@@ -612,11 +612,15 @@ usethis::use_data(aggregation_regions, overwrite = TRUE)
 # Sort orders
 # 
 
+# We want to replace this code with other code to read a concordance table
+# for country names. 
+# ---MKH, 20 July 2021
 countries <- countrycode::codelist %>% 
   dplyr::select(iso3c) %>% 
   dplyr::filter(!is.na(iso3c)) %>% 
   unlist() %>% 
   unname()
+countries <- append(countries, c("WAB", "WMB"))
 usethis::use_data(countries, overwrite = TRUE)
 
 

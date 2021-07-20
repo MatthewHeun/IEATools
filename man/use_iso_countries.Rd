@@ -7,8 +7,14 @@
 use_iso_countries(
   .iea_df,
   country = "Country",
-  iea_china_HK = "People's Republic of China",
-  ieatools_china = "CHN"
+  iea_china = "People's Republic of China",
+  ieatools_china = "CHN",
+  iea_hk = "Hong Kong (China)",
+  ieatools_hk = "HKG",
+  iea_world_marine_bunkers = "World marine bunkers",
+  ieatools_wmb = "WMB",
+  iea_world_aviation_bunkers = "World aviation bunkers",
+  ieatools_wab = "WAB"
 )
 }
 \arguments{
@@ -16,11 +22,21 @@ use_iso_countries(
 
 \item{country}{The name of the country column in \code{.iea_df}. Default is "Country".}
 
+\item{ieatools_china}{The 3-letter string that replaces \code{iea_china_HK}.
+Default is "CHN".}
+
 \item{iea_china_HK}{The IEA string for China and Hong Kong.
 Default is "China (P.R. of China and Hong Kong, China)".}
 
-\item{ieatools_china}{The 3-letter string that replaces \code{iea_china_HK}.
-Default is "CHN".}
+\item{world_marine_bunkers}{A string specifying the full name for the "country" called World marine bunkers.
+Default is "World marine bunkers".}
+
+\item{wmb}{A 3-letter code for World marine bunkers. Default is "WMB".}
+
+\item{world_aviation_bunkers}{A string specifying the full name for the "country" called World aviation bunkers.
+Default is "World aviation bunkers".}
+
+\item{wab}{A 3-letter code for World aviation bunkers. Default is "WAB".}
 }
 \value{
 \code{.iea_df} with 3-letter ISO country abbreviations in the \code{country} column.

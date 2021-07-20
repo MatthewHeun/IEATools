@@ -5,7 +5,7 @@
 \alias{countries}
 \title{Country order}
 \format{
-A string vector with 249 entries.
+A string vector with 251 entries.
 }
 \usage{
 countries
