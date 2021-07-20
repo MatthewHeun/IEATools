@@ -497,6 +497,8 @@
 #' \item{exports}{The string identifier for  flows.}
 #' \item{international_marine_bunkers}{The string identifier for International marine bunkers flows.}
 #' \item{international_aviation_bunkers}{The string identifier for International aviation bunkers flows.}
+#' \item{exports_to_world_marine_bunkers}{The string identifier for Exports to World marine bunkers.}
+#' \item{exports_to_world_aviation_bunkers}{The string identifier for Exports to World aviation bunkers.}
 #' \item{stock_changes}{The string identifier for Stock changes flows.}
 #' }
 #' 

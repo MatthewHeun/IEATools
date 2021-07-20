@@ -13,31 +13,36 @@ specify_bunkers(
   iab = IEATools::tpes_flows$international_aviation_bunkers,
   etwmb = IEATools::tpes_flows$exports_to_world_marine_bunkers,
   etwab = IEATools::tpes_flows$exports_to_world_aviation_bunkers,
+  imports = IEATools::tpes_flows$imports,
   wmb_country = "WMB",
-  wab_country = "WAB",
-  imports = IEATools::tpes_flows$imports
+  wab_country = "WAB"
 )
 }
 \arguments{
 \item{.tidy_iea_df}{An IEA data frame whose columns have been renamed by \code{rename_iea_df_cols()}}
 
-\item{flow}{The name of the flow column in \code{.tidy_iea_df}.
-Default is \code{IEATools::iea_cols$flow}.}
+\item{country}{See \code{IEATools::iea_cols$country}.}
 
-\item{product}{The name of the product column in \code{.tidy_iea_df}.
-Default is \code{IEATools::iea_cols$product}.}
+\item{flow}{See \code{IEATools::iea_cols$flow}.}
 
-\item{production}{A string identifying production in the flow column.
-Default is \code{IEATools::tpes_flows$production}.}
+\item{product}{See \code{IEATools::iea_cols$product}.}
 
-\item{resources}{A string identifying resource industries to be added to \code{.tidy_iea_df}.
-Default is \code{IEATools::tpes_flows$resources}.}
+\item{imb}{\verb{See IEATools::tpes_flows$international_marine_bunkers}.}
 
-\item{notation}{A list of specification notations.
-Default is \code{IEATools::bracket_notation}.}
+\item{iab}{\verb{See IEATools::tpes_flows$international_aviation_bunkers}.}
+
+\item{etwmb}{\verb{See IEATools::tpes_flows$exports_to_world_marine_bunkers}.}
+
+\item{etwab}{\verb{See IEATools::tpes_flows$exports_to_world_aviation_bunkers}.}
+
+\item{imports}{See \code{IEATools::tpes_flows$imports}.}
+
+\item{wmb_country}{The 3-letter code for the world marine bunkers country. Default is "WMB".}
+
+\item{wab_country}{The 3-letter code for the world aviation bunkers country. Default is "WAB".}
 }
 \value{
-A \code{.tidy_iea_df} with bunker flows spefified.
+A \code{.tidy_iea_df} with bunker flows specified.
 }
 \description{
 The IEA extended energy balance data includes

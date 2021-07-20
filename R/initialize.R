@@ -440,22 +440,29 @@ clean_iea_whitespace <- function(.iea_df,
 #' differ from 
 #' `countrycode` package country names.
 #' 
-#' |IEA name|`countrycode` name (names)|`use_iso_countries()` decision|
+#' |IEA name|`countrycode` name|`use_iso_countries()` result|
 #' |---------|-------------------|------------------------------|
 #' |"People's Republic of China"|"China"|"CHN"|
+#' |"Hong Kong (China)"|"Hong Kong SAR China"|"HKG"|
+#' |"World marine bunkers"|NA|"WMB"|
+#' |"World aviation bunkers"|NA|"WAB"|
 #'
 #' @param .iea_df A data frame containing a `country` column
 #' @param country The name of the country column in `.iea_df`. Default is "Country".
-#' @param iea_china_HK The IEA string for China and Hong Kong. 
-#'                     Default is "China (P.R. of China and Hong Kong, China)".
-#' @param ieatools_china The 3-letter string that replaces `iea_china_HK`. 
+#' @param iea_china The IEA string for China.
+#'                  Default is "People's Republic of China".
+#' @param ieatools_china The 3-letter string that replaces `iea_china`. 
 #'                       Default is "CHN".
-#' @param world_marine_bunkers A string specifying the full name for the "country" called World marine bunkers.
-#'                             Default is "World marine bunkers".
-#' @param wmb A 3-letter code for World marine bunkers. Default is "WMB".
-#' @param world_aviation_bunkers A string specifying the full name for the "country" called World aviation bunkers.
-#'                               Default is "World aviation bunkers".
-#' @param wab A 3-letter code for World aviation bunkers. Default is "WAB".
+#' @param iea_hk The IEA string for Hong Kong.
+#'               Default is "Hong Kong (China)".
+#' @param ieatools_hk The 3-letter string that replaces `iea_hk`. 
+#'                    Default is "HKG".
+#' @param iea_world_marine_bunkers A string specifying the full name for the "country" called World marine bunkers.
+#'                                Default is "World marine bunkers".
+#' @param ieatools_wmb A 3-letter code for World marine bunkers. Default is "WMB".
+#' @param iea_world_aviation_bunkers A string specifying the full name for the "country" called World aviation bunkers.
+#'                                  Default is "World aviation bunkers".
+#' @param ieatools_wab A 3-letter code for World aviation bunkers. Default is "WAB".
 #'
 #' @return `.iea_df` with 3-letter ISO country abbreviations in the `country` column.
 #' 

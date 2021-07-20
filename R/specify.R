@@ -737,7 +737,7 @@ despecify_col <- function(.df, col, despecified_col,
 #'
 #' @param .df The data frame in which `col` exists.
 #' @param col The string name of the column in `.df` to be de-specified.
-#' @param despecified_col The string name of the column in the output data frame to contain the de-specified version of `col`.
+#' @param unsuffixed_col The string name of the column in the output data frame to contain the un-suffixed version of `col`.
 #' @param notations The notations used for row and column names. See `matsbyname::notation_vec()`. 
 #'                  Default is `list(IEATools::of_notation, IEATools::from_notation)`, 
 #'                  because both `IEATools::of_notation` and `IEATools::from_notation` can be used in the `Flow` column

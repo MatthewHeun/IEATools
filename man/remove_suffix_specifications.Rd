@@ -16,12 +16,12 @@ remove_suffix_specifications(
 
 \item{col}{The string name of the column in \code{.df} to be de-specified.}
 
+\item{unsuffixed_col}{The string name of the column in the output data frame to contain the un-suffixed version of \code{col}.}
+
 \item{notations}{The notations used for row and column names. See \code{matsbyname::notation_vec()}.
 Default is \code{list(IEATools::of_notation, IEATools::from_notation)},
 because both \code{IEATools::of_notation} and \code{IEATools::from_notation} can be used in the \code{Flow} column
 of an IEA data frame.}
-
-\item{despecified_col}{The string name of the column in the output data frame to contain the de-specified version of \code{col}.}
 }
 \value{
 A version of \code{.df} with suffixes removed from the \code{col} column and the result placed in the \code{despecified_col} column.
