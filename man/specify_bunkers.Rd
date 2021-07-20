@@ -6,12 +6,16 @@
 \usage{
 specify_bunkers(
   .tidy_iea_df,
+  country = IEATools::iea_cols$country,
   flow = IEATools::iea_cols$flow,
   product = IEATools::iea_cols$product,
   imb = IEATools::tpes_flows$international_marine_bunkers,
   iab = IEATools::tpes_flows$international_aviation_bunkers,
   etwmb = IEATools::tpes_flows$exports_to_world_marine_bunkers,
-  etwab = IEATools::tpes_flows$exports_to_world_aviation_bunkers
+  etwab = IEATools::tpes_flows$exports_to_world_aviation_bunkers,
+  wmb_country = "WMB",
+  wab_country = "WAB",
+  imports = IEATools::tpes_flows$imports
 )
 }
 \arguments{

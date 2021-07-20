@@ -31,16 +31,22 @@
 #'   specify_tp_eiou() %>% 
 #'  specify_bunkers()   
 specify_bunkers <- function(.tidy_iea_df, 
+                            country = IEATools::iea_cols$country,
                             flow = IEATools::iea_cols$flow,
                             product = IEATools::iea_cols$product,
                             imb = IEATools::tpes_flows$international_marine_bunkers, 
                             iab = IEATools::tpes_flows$international_aviation_bunkers,
                             etwmb = IEATools::tpes_flows$exports_to_world_marine_bunkers,
-                            etwab = IEATools::tpes_flows$exports_to_world_aviation_bunkers){
+                            etwab = IEATools::tpes_flows$exports_to_world_aviation_bunkers, 
+                            wmb_country = "WMB", 
+                            wab_country = "WAB",
+                            imports = IEATools::tpes_flows$imports){
   # Take any remaining "Production" rows and convert them to Resources (Product).
   .tidy_iea_df %>% 
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
+        .data[[country]] == wmb_country & .data[[flow]] == imb ~ imports,
+        .data[[country]] == wab_country & .data[[flow]] == iab ~ imports,
         .data[[flow]] == imb ~ etwmb, 
         .data[[flow]] == iab ~ etwab, 
         TRUE ~ .data[[flow]]
