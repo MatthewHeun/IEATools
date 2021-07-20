@@ -22,21 +22,27 @@ use_iso_countries(
 
 \item{country}{The name of the country column in \code{.iea_df}. Default is "Country".}
 
-\item{ieatools_china}{The 3-letter string that replaces \code{iea_china_HK}.
+\item{iea_china}{The IEA string for China.
+Default is "People's Republic of China".}
+
+\item{ieatools_china}{The 3-letter string that replaces \code{iea_china}.
 Default is "CHN".}
 
-\item{iea_china_HK}{The IEA string for China and Hong Kong.
-Default is "China (P.R. of China and Hong Kong, China)".}
+\item{iea_hk}{The IEA string for Hong Kong.
+Default is "Hong Kong (China)".}
 
-\item{world_marine_bunkers}{A string specifying the full name for the "country" called World marine bunkers.
+\item{ieatools_hk}{The 3-letter string that replaces \code{iea_hk}.
+Default is "HKG".}
+
+\item{iea_world_marine_bunkers}{A string specifying the full name for the "country" called World marine bunkers.
 Default is "World marine bunkers".}
 
-\item{wmb}{A 3-letter code for World marine bunkers. Default is "WMB".}
+\item{ieatools_wmb}{A 3-letter code for World marine bunkers. Default is "WMB".}
 
-\item{world_aviation_bunkers}{A string specifying the full name for the "country" called World aviation bunkers.
+\item{iea_world_aviation_bunkers}{A string specifying the full name for the "country" called World aviation bunkers.
 Default is "World aviation bunkers".}
 
-\item{wab}{A 3-letter code for World aviation bunkers. Default is "WAB".}
+\item{ieatools_wab}{A 3-letter code for World aviation bunkers. Default is "WAB".}
 }
 \value{
 \code{.iea_df} with 3-letter ISO country abbreviations in the \code{country} column.
@@ -50,8 +56,11 @@ Special cases are considered where
 IEA extended energy balance data country names
 differ from
 \code{countrycode} package country names.\tabular{lll}{
-   IEA name \tab \code{countrycode} name (names) \tab \code{use_iso_countries()} decision \cr
+   IEA name \tab \code{countrycode} name \tab \code{use_iso_countries()} result \cr
    "People's Republic of China" \tab "China" \tab "CHN" \cr
+   "Hong Kong (China)" \tab "Hong Kong SAR China" \tab "HKG" \cr
+   "World marine bunkers" \tab NA \tab "WMB" \cr
+   "World aviation bunkers" \tab NA \tab "WAB" \cr
 }
 }
 \examples{
