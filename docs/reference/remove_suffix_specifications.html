@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tell whether all rows of a tidy IEA data frame are balanced — tidy_iea_df_balanced • IEATools</title>
+<title>Remove specification suffixes from a column — remove_suffix_specifications • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,11 @@
 
 
 
-<meta property="og:title" content="Tell whether all rows of a tidy IEA data frame are balanced — tidy_iea_df_balanced" />
-<meta property="og:description" content="This function provides a handy way to tell if all rows of .tidy_iea_df_balance
-are in balance.
-Argument .tidy_iea_df_balances should be set to the value of a call to
-calc_tidy_iea_df_balances()." />
+<meta property="og:title" content="Remove specification suffixes from a column — remove_suffix_specifications" />
+<meta property="og:description" content="Flow and Product columns of IEA data frames may have been &quot;specified&quot;
+to contain a suffix of the form &quot; [of Natural gas\&quot;], for example.
+This function strips away the suffix.
+Identification of parenthetical notation delimiters is determined by the notations argument." />
 
 
 
@@ -133,45 +133,74 @@ calc_tidy_iea_df_balances()." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Tell whether <em>all</em> rows of a tidy IEA data frame are balanced</h1>
+    <h1>Remove specification suffixes from a column</h1>
     
-    <div class="hidden name"><code>tidy_iea_df_balanced.Rd</code></div>
+    <div class="hidden name"><code>remove_suffix_specifications.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function provides a handy way to tell if <em>all</em> rows of <code>.tidy_iea_df_balance</code>
-are in balance.
-Argument <code>.tidy_iea_df_balances</code> should be set to the value of a call to
-<code><a href='calc_tidy_iea_df_balances.html'>calc_tidy_iea_df_balances()</a></code>.</p>
+    <p><code>Flow</code> and <code>Product</code> columns of IEA data frames may have been "specified"
+to contain a suffix of the form " [of Natural gas\"], for example.
+This function strips away the suffix.</p>
+<p>Identification of parenthetical notation delimiters is determined by the <code>notations</code> argument.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tidy_iea_df_balanced</span><span class='op'>(</span><span class='va'>.tidy_iea_df_balances</span>, balance_OK <span class='op'>=</span> <span class='st'>"balance_OK"</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>remove_suffix_specifications</span><span class='op'>(</span>
+  <span class='va'>.df</span>,
+  <span class='va'>col</span>,
+  <span class='va'>unsuffixed_col</span>,
+  notations <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='of_notation.html'>of_notation</a></span>, <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='from_notation.html'>from_notation</a></span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>.tidy_iea_df_balances</th>
-      <td><p>an IEA-style data frame containing a column that indicates whether
-each row is in balance.</p></td>
+      <th>.df</th>
+      <td><p>The data frame in which <code>col</code> exists.</p></td>
     </tr>
     <tr>
-      <th>balance_OK</th>
-      <td><p>the name of a new logical column that tells whether a row's energy balance is OK.
-Default is "<code>balance_OK</code>".</p></td>
+      <th>col</th>
+      <td><p>The string name of the column in <code>.df</code> to be de-specified.</p></td>
+    </tr>
+    <tr>
+      <th>unsuffixed_col</th>
+      <td><p>The string name of the column in the output data frame to contain the un-suffixed version of <code>col</code>.</p></td>
+    </tr>
+    <tr>
+      <th>notations</th>
+      <td><p>The notations used for row and column names. See <code><a href='https://rdrr.io/pkg/matsbyname/man/row-col-notation.html'>matsbyname::notation_vec()</a></code>.
+Default is <code><a href='https://rdrr.io/r/base/list.html'>list(IEATools::of_notation, IEATools::from_notation)</a></code>,
+because both <code><a href='of_notation.html'>IEATools::of_notation</a></code> and <code><a href='from_notation.html'>IEATools::from_notation</a></code> can be used in the <code>Flow</code> column
+of an IEA data frame.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>TRUE</code> if all groups of <code>.tidy_iea_df_balances</code> are balanced, <code>FALSE</code> otherwise.</p>
+    <p>A version of <code>.df</code> with suffixes removed from the <code>col</code> column and the result placed in the <code>despecified_col</code> column.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'><a href='calc_tidy_iea_df_balances.html'>calc_tidy_iea_df_balances</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
-  <span class='fu'>tidy_iea_df_balanced</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] FALSE</div></pre>
+  <span class='fu'><a href='specify_all.html'>specify_all</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>remove_suffix_specifications</span><span class='op'>(</span>col <span class='op'>=</span> <span class='st'>"Flow"</span>, unsuffixed_col <span class='op'>=</span> <span class='st'>"clean_Flow"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>Flow</span>, <span class='va'>Product</span>, <span class='va'>E.dot</span>, <span class='va'>clean_Flow</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/startsWith.html'>endsWith</a></span><span class='op'>(</span><span class='va'>Flow</span>, <span class='va'>bracket_notation</span><span class='op'>[[</span><span class='st'>"suff_end"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 101 x 4</span>
+#&gt;    Flow                            Product              E.dot clean_Flow        
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                           <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>             
+#&gt; <span style='color: #BCBCBC;'> 1</span> Exports [of Fuel oil]           Fuel oil           -<span style='color: #BB0000;'>178.</span>   Exports           
+#&gt; <span style='color: #BCBCBC;'> 2</span> Exports [of Motor gasoline exc… Motor gasoline ex…   -<span style='color: #BB0000;'>4.28</span> Exports           
+#&gt; <span style='color: #BCBCBC;'> 3</span> Exports [of Other kerosene]     Other kerosene       -<span style='color: #BB0000;'>4.18</span> Exports           
+#&gt; <span style='color: #BCBCBC;'> 4</span> Imports [of Aviation gasoline]  Aviation gasoline     1.07 Imports           
+#&gt; <span style='color: #BCBCBC;'> 5</span> Imports [of Crude oil]          Crude oil           916.   Imports           
+#&gt; <span style='color: #BCBCBC;'> 6</span> Imports [of Kerosene type jet … Kerosene type jet…   21.3  Imports           
+#&gt; <span style='color: #BCBCBC;'> 7</span> Imports [of Lubricants]         Lubricants           18.1  Imports           
+#&gt; <span style='color: #BCBCBC;'> 8</span> Imports [of Other kerosene]     Other kerosene        1.05 Imports           
+#&gt; <span style='color: #BCBCBC;'> 9</span> Exports to World aviation bunk… Aviation gasoline    -<span style='color: #BB0000;'>1.07</span> Exports to World …
+#&gt; <span style='color: #BCBCBC;'>10</span> Exports to World aviation bunk… Kerosene type jet…  -<span style='color: #BB0000;'>43.7</span>  Exports to World …
+#&gt; <span style='color: #949494;'># … with 91 more rows</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

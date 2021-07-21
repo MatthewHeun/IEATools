@@ -73,7 +73,7 @@ This function replaces the full country names with ISO abbreviations where possi
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.54</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.55</span>
       </span>
     </div>
 
@@ -144,8 +144,14 @@ This function replaces the full country names with ISO abbreviations where possi
     <pre class="usage"><span class='fu'>use_iso_countries</span><span class='op'>(</span>
   <span class='va'>.iea_df</span>,
   country <span class='op'>=</span> <span class='st'>"Country"</span>,
-  iea_china_HK <span class='op'>=</span> <span class='st'>"People's Republic of China"</span>,
-  ieatools_china <span class='op'>=</span> <span class='st'>"CHN"</span>
+  iea_china <span class='op'>=</span> <span class='st'>"People's Republic of China"</span>,
+  ieatools_china <span class='op'>=</span> <span class='st'>"CHN"</span>,
+  iea_hk <span class='op'>=</span> <span class='st'>"Hong Kong (China)"</span>,
+  ieatools_hk <span class='op'>=</span> <span class='st'>"HKG"</span>,
+  iea_world_marine_bunkers <span class='op'>=</span> <span class='st'>"World marine bunkers"</span>,
+  ieatools_wmb <span class='op'>=</span> <span class='st'>"WMB"</span>,
+  iea_world_aviation_bunkers <span class='op'>=</span> <span class='st'>"World aviation bunkers"</span>,
+  ieatools_wab <span class='op'>=</span> <span class='st'>"WAB"</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -160,14 +166,42 @@ This function replaces the full country names with ISO abbreviations where possi
       <td><p>The name of the country column in <code>.iea_df</code>. Default is "Country".</p></td>
     </tr>
     <tr>
-      <th>iea_china_HK</th>
-      <td><p>The IEA string for China and Hong Kong.
-Default is "China (P.R. of China and Hong Kong, China)".</p></td>
+      <th>iea_china</th>
+      <td><p>The IEA string for China.
+Default is "People's Republic of China".</p></td>
     </tr>
     <tr>
       <th>ieatools_china</th>
-      <td><p>The 3-letter string that replaces <code>iea_china_HK</code>.
+      <td><p>The 3-letter string that replaces <code>iea_china</code>.
 Default is "CHN".</p></td>
+    </tr>
+    <tr>
+      <th>iea_hk</th>
+      <td><p>The IEA string for Hong Kong.
+Default is "Hong Kong (China)".</p></td>
+    </tr>
+    <tr>
+      <th>ieatools_hk</th>
+      <td><p>The 3-letter string that replaces <code>iea_hk</code>.
+Default is "HKG".</p></td>
+    </tr>
+    <tr>
+      <th>iea_world_marine_bunkers</th>
+      <td><p>A string specifying the full name for the "country" called World marine bunkers.
+Default is "World marine bunkers".</p></td>
+    </tr>
+    <tr>
+      <th>ieatools_wmb</th>
+      <td><p>A 3-letter code for World marine bunkers. Default is "WMB".</p></td>
+    </tr>
+    <tr>
+      <th>iea_world_aviation_bunkers</th>
+      <td><p>A string specifying the full name for the "country" called World aviation bunkers.
+Default is "World aviation bunkers".</p></td>
+    </tr>
+    <tr>
+      <th>ieatools_wab</th>
+      <td><p>A 3-letter code for World aviation bunkers. Default is "WAB".</p></td>
     </tr>
     </table>
 
@@ -180,8 +214,11 @@ Default is "CHN".</p></td>
 IEA extended energy balance data country names
 differ from
 <code>countrycode</code> package country names.</p><table class='table'>
-<tr><td>IEA name</td><td><code>countrycode</code> name (names)</td><td><code>use_iso_countries()</code> decision</td></tr>
+<tr><td>IEA name</td><td><code>countrycode</code> name</td><td><code>use_iso_countries()</code> result</td></tr>
 <tr><td>"People's Republic of China"</td><td>"China"</td><td>"CHN"</td></tr>
+<tr><td>"Hong Kong (China)"</td><td>"Hong Kong SAR China"</td><td>"HKG"</td></tr>
+<tr><td>"World marine bunkers"</td><td>NA</td><td>"WMB"</td></tr>
+<tr><td>"World aviation bunkers"</td><td>NA</td><td>"WAB"</td></tr>
 </table>
 
 
