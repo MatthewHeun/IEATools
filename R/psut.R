@@ -468,18 +468,31 @@ prep_psut <- function(.tidy_iea_df,
     append(r_eiou)
   # Spread to put each matrix into its own column
   CollapsedSpread <- Collapsed %>% 
-    tidyr::spread(key = matnames, value = matvals) %>% 
-    dplyr::mutate(
-      # Add the U matrix.
-      "{U}" := matsbyname::sum_byname(.data[[U_feed]], .data[[U_eiou]]), 
-      # Add r_EIOU matrices
-      # Create r_EIOU, a matrix that identifies the ratio of EIOU to total energy used.
-      "{r_eiou}" := matsbyname::quotient_byname(.data[[U_eiou]], U) %>% 
-        matsbyname::replaceNaN_byname(val = 0)
-    ) %>% 
-    # Rearrange columns to get more-natural locations for the U and r_EIOU matrices.
-    dplyr::relocate(.data[[U]], .after = .data[[U_feed]]) %>% 
-    dplyr::relocate(.data[[r_eiou]], .after = .data[[U]])
+    tidyr::spread(key = matnames, value = matvals)
+  # There may be cases where U_feed or U_eiou matrices are absent.
+  # For example, World marine bunkers where final energy is the last stage 
+  # will have imports of fuel (V matrix) and final demand (Y matrix),
+  # but no resources creating the fuel (R matrix) or use of fuel (U matrix).
+  # So we check for the presence of U_feed or U_EIOU before 
+  # creating the U or r_eiou matrices.
+  # It may be that later we want to check for U_feed only.
+  # But for now we check for both.
+  # ---Matthew Kuperus Heun, 20 July 2021
+  if (U_feed %in% names(CollapsedSpread) | U_eiou %in% names(CollapsedSpread)) {
+    # Add the U matrix to the data frame
+    CollapsedSpread <- CollapsedSpread %>% 
+      dplyr::mutate(
+        # Add the U matrix.
+        "{U}" := matsbyname::sum_byname(.data[[U_feed]], .data[[U_eiou]]), 
+        # Add r_EIOU matrices
+        # Create r_EIOU, a matrix that identifies the ratio of EIOU to total energy used.
+        "{r_eiou}" := matsbyname::quotient_byname(.data[[U_eiou]], U) %>% 
+          matsbyname::replaceNaN_byname(val = 0)
+      ) %>% 
+      # Rearrange columns to get more-natural locations for the U and r_EIOU matrices.
+      dplyr::relocate(.data[[U]], .after = .data[[U_feed]]) %>% 
+      dplyr::relocate(.data[[r_eiou]], .after = .data[[U]])
+  }
   
   CollapsedSpread %>% 
     # Add the S_units matrix and return

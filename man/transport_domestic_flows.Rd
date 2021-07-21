@@ -5,7 +5,7 @@
 \alias{transport_domestic_flows}
 \title{Transport domestic flows}
 \format{
-A string vector with 7 entries.
+A string vector with 9 entries.
 \describe{
 \item{domestic_aviation}{The string identifying the Domestic aviation sector.}
 \item{road}{The string identifying the Road transport sector}

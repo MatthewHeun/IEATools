@@ -59,6 +59,7 @@ github
 GridCo
 GTL
 GWh
+HKG
 HTH
 hatinv
 hotfixed
@@ -109,6 +110,7 @@ rowsum
 rowsums
 rowtype
 rowvec
+SAR
 SBP
 SEAPSUT
 situ
@@ -119,6 +121,7 @@ transf
 transposeinverse
 tsv
 TWh
+un
 unallocated
 ungrouped
 unmatching
@@ -129,6 +132,8 @@ vec
 vectorized
 Ver
 VRA
+WAB
+WMB
 whitespece
 widehat
 WIP

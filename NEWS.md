@@ -1,4 +1,13 @@
-# IEATools 0.1.54 (2021-07-09) 
+# IEATools 0.1.55 (2021-07-21) 
+
+* Modifications to code and tests
+  to accommodate World marine bunkers and World aviation bunkers being their own country.
+* New tests for new features.
+    * Up to 808 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# IEATools 0.1.54 (2021-07-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5086372.svg)](https://doi.org/10.5281/zenodo.5086372)
 
 * Modifications to enable per-machine
   final-to-useful efficiency data.
