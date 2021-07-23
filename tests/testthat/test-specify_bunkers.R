@@ -55,3 +55,36 @@ test_that("interface industries are correctly specified after specifying bunkers
   }
 })
 
+
+test_that("World_X_bunkers are specfied correctly", {
+  # Make a IEA-style fake data frame that contains World marine and aviation bunkers
+  empty <- sample_iea_data_path() %>% 
+    iea_df() %>%
+    rename_iea_df_cols() %>%
+    # Empty the data frame
+    dplyr::slice(0) %>%
+    dplyr::select(-`2000`)
+  # Now add some rows that contain WMB and WAB countries and flows.
+  to_add <- tibble::tribble(
+    ~Country, ~Flow, ~Product, ~`1971`, 
+    IEATools::transport_flows$world_marine_bunkers, 
+    IEATools::transport_flows$world_marine_bunkers, 
+    "Matt's cool product", 
+    42, 
+    #
+    IEATools::transport_flows$world_aviation_bunkers, 
+    IEATools::transport_flows$world_aviation_bunkers, 
+    "Zeke's cool product", 
+    43)
+  raw <- empty %>%
+    dplyr::bind_rows(to_add)
+  specified <- raw %>%
+    use_iso_countries() %>%
+    specify_bunkers()
+  
+  expect_equal(specified[[IEATools::iea_cols$country]][[1]], "WMB")
+  expect_equal(specified[[IEATools::iea_cols$country]][[2]], "WAB")
+  expect_equal(specified[[IEATools::iea_cols$flow]][[1]], "International navigation")
+  expect_equal(specified[[IEATools::iea_cols$flow]][[2]], "International aviation")
+})
+
