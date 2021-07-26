@@ -164,10 +164,10 @@ test_that("extend_to_useful_helper works as intended", {
   ## Step 1
   
   Y_f_vec <- matsbyname::vectorize_byname(Y_f, notation = arrow_notation)
-  Y_f_vec_hat <- matsbyname::hatize_byname(Y_f_vec)
+  Y_f_vec_hat <- matsbyname::hatize_byname(Y_f_vec, keep = "rownames")
   Y_f_vec_hat_C_Y <- matsbyname::matrixproduct_byname(Y_f_vec_hat, C_Y)
   
-  eta_fu_hat <- matsbyname::hatize_byname(eta_fu) %>% 
+  eta_fu_hat <- matsbyname::hatize_byname(eta_fu, keep = "rownames") %>% 
     arrow_to_from_byname(margin = 2)
   
   expect_equal(eta_fu_hat[["Engines -> MD", "MD [from Engines]"]], 
@@ -189,7 +189,7 @@ test_that("extend_to_useful_helper works as intended", {
   
   add_to_V_expected <- Y_f_vec_hat_C_Y %>% 
     matsbyname::colsums_byname() %>%
-    matsbyname::hatize_byname() %>%
+    matsbyname::hatize_byname(keep = "colnames") %>%
     matsbyname::matrixproduct_byname(eta_fu_hat) %>% 
     matsbyname::setrowtype(row_col_types$industry) %>% 
     matsbyname::setcoltype(row_col_types$product)
