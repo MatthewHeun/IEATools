@@ -341,6 +341,13 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
     dplyr::ungroup()
 }
 
+# 
+# replace_null_UR <- function(.sutmats, 
+#                             U_eiou = IEATools::psut_cols$U_eiou,
+#                             U_feed = IEATools::psut_cols$U_feed,
+# 
+#                             )
+
 
 #' Prepare for PSUT analysis
 #' 
@@ -486,7 +493,7 @@ prep_psut <- function(.tidy_iea_df,
         "{U}" := matsbyname::sum_byname(.data[[U_feed]], .data[[U_eiou]]), 
         # Add r_EIOU matrices
         # Create r_EIOU, a matrix that identifies the ratio of EIOU to total energy used.
-        "{r_eiou}" := matsbyname::quotient_byname(.data[[U_eiou]], U) %>% 
+        "{r_eiou}" := matsbyname::quotient_byname(.data[[U_eiou]], .data[[U]]) %>% 
           matsbyname::replaceNaN_byname(val = 0)
       ) %>% 
       # Rearrange columns to get more-natural locations for the U and r_EIOU matrices.
