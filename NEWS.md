@@ -1,3 +1,9 @@
+* In the specification process,
+  the `Flow` for countries `World_X_bunkers` are now
+  specified to be "International navigation" and "International aviation"
+  to correspond with their domestic equivalents.
+
+
 # IEATools 0.1.55 (2021-07-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5119070.svg)](https://doi.org/10.5281/zenodo.5119070)
 
 * Modifications to code and tests

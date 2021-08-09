@@ -10,7 +10,7 @@ A string vector with 9 entries.
 \item{resources}{The string identifier for Resource flows.}
 \item{production}{The string identifier for Production flows.}
 \item{imports}{The string identifier for Import flows.}
-\item{exports}{The string identifier for  flows.}
+\item{exports}{The string identifier for Export flows.}
 \item{international_marine_bunkers}{The string identifier for International marine bunkers flows.}
 \item{international_aviation_bunkers}{The string identifier for International aviation bunkers flows.}
 \item{exports_to_world_marine_bunkers}{The string identifier for Exports to World marine bunkers.}
