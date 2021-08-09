@@ -354,6 +354,12 @@ test_that("prep_psut() correctly makes columns of U and r_EIOU matrices", {
 })
 
 
+test_that("NULL in a data frame is replaced correctly", {
+  df <- data.frame(time = c(1, 1, 2), var = c("a", "b", "a"), val = c(8, 9, 10))
+  wide <- df %>% 
+    tidyr::pivot_wider(names_from = var, values_from = val)
+})
+
 test_that("replace_null_UR works correctly", {
   # Set up so that the psut data frame has NULL for
   # R, U_feed, and U_EIOU in 1971 for GHA.
