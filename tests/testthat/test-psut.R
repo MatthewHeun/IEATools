@@ -1,7 +1,3 @@
-###########################################################
-context("PSUT functions")
-###########################################################
-
 test_that("S_units_from_tidy works as expected", {
   S_units <- load_tidy_iea_df() %>% 
     extract_S_units_from_tidy()
@@ -355,6 +351,24 @@ test_that("prep_psut() correctly makes columns of U and r_EIOU matrices", {
     )
   expect_equal(psut_with_test_cols[["U_test"]], psut_with_test_cols[["U"]])
   expect_equal(psut_with_test_cols[["r_EIOU_test"]], psut_with_test_cols[["r_EIOU"]])
+})
+
+
+test_that("replace_null_UR works correctly", {
+  # Set up so that the psut data frame has NULL for
+  # R, U_feed, and U_EIOU in 1971 for GHA.
+  psut <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    prep_psut() %>% 
+    tidyr::pivot_longer(cols = c("R", "U_EIOU", "U_feed", "U", "r_EIOU", "V", "Y", "S_units"), names_to = "matnames", values_to = "matvals") %>% 
+    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "R")) %>% 
+    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_feed")) %>% 
+    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_EIOU")) %>% 
+    tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
+  # Check that replace_null_UR works as expected.
+  res <- psut %>% 
+    fill_null_UR()
+  
 })
 
 

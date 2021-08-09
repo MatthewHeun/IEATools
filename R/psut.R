@@ -341,12 +341,59 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
     dplyr::ungroup()
 }
 
-# 
-# replace_null_UR <- function(.sutmats, 
-#                             U_eiou = IEATools::psut_cols$U_eiou,
-#                             U_feed = IEATools::psut_cols$U_feed,
-# 
-#                             )
+
+#' Fill `NULL` `R` and `U` matrices
+#' 
+#' In some cases (bunkers where `Last.stage` is "final"),
+#' `R`, `U_feed`, and `U_EIOU` matrices can be missing, because
+#' imports which appear in the `V` matrix are consumed in final demand (`Y`) matrix, 
+#' without any intermediate processing.
+#' When a data frame is pivoted wider by matrices, 
+#' the `R`, `U_feed`, and `U_EIOU` columns will contain `NULL` entries.
+#' This function fills those `NULL` entries with reasonable defaults.
+#' 
+#' Reasonable defaults arise from the following thought processes.
+#' If all energy is supplied by imports (in the `V` matrix), 
+#' there are no resources. 
+#' Thus, we can replace the `NULL` `R` matrix with an `0` matrix with a generic
+#' "Natural resources" row and the same products as the rows of the `Y` matrix.
+#' 
+#' Similarly, `NULL` values for `U_feed` or `U_EIOU` can be replaced by a `0` matrix
+#' with row and column names same as a transposed `V` matrix.
+#'
+#' @param .sutmats A data frame of metadata columns and matrix name columns
+#' @param U_feed,U_eiou,R,V See IEATools::psutcols.
+#' @param natural_resources The name for a natural resources row in the `0` `R` matrix.
+#'                          Default is "Natural resources".
+#'
+#' @return A version of `.sutmats` with `R`, `U_feed`, and `U_EIOU` filled with `0` matrices if they were `NULL`.
+#' 
+#' @export
+#'
+#' @examples
+fill_null_UR <- function(.sutmats,
+                         U_feed = IEATools::psut_cols$U_feed, 
+                         U_eiou = IEATools::psut_cols$U_eiou,
+                         R = IEATools::psut_cols$R,
+                         V = IEATools::psut_cols$V, 
+                         natural_resources = "Natural resources") {
+  .sutmats %>% 
+    # dplyr::mutate(
+    #   "{U_feed}" := dplyr::case_when(
+    #     is.null(.data[[U_feed]]) ~ .data[[V]] %>% 
+    #                                  matsbyname::transpose_byname() %>% 
+    #                                  matsbyname::hadamardproduct_byname(0), 
+    #     TRUE ~ .data[[U_feed]]
+    #   )
+    # )
+    dplyr::mutate(
+      "{U_feed}" := dplyr::case_when(
+        is.null(.data[[U_feed]]) ~ list(42), 
+        TRUE ~ .data[[U_feed]]
+      )
+    )
+  
+}
 
 
 #' Prepare for PSUT analysis
