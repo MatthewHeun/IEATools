@@ -360,6 +360,7 @@ test_that("NULL in a data frame is replaced correctly", {
     tidyr::pivot_wider(names_from = var, values_from = val)
 })
 
+
 test_that("replace_null_UR works correctly", {
   # Set up so that the psut data frame has NULL for
   # R, U_feed, and U_EIOU in 1971 for GHA.
@@ -374,6 +375,13 @@ test_that("replace_null_UR works correctly", {
   # Check that replace_null_UR works as expected.
   res <- psut %>% 
     replace_null_UR()
+  
+  expected_U <- psut$V[[1]] %>% 
+    matsbyname::transpose_byname() %>% 
+    matsbyname::hadamardproduct_byname(0)
+  # Verify that U_EIOU is no longer NULL and is rather that transposed V matrix full of zeroes.
+  expect_equal(res$U_feed[[1]], expected_U)
+  
   
 })
 

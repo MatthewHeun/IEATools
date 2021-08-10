@@ -371,7 +371,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
-replace_null_UR <- function(.sutmats,
+replace_null_UR <- function(.sutmats = NULL,
                             R = IEATools::psut_cols$R,
                             U_feed = IEATools::psut_cols$U_feed, 
                             U_eiou = IEATools::psut_cols$U_eiou,
@@ -379,7 +379,17 @@ replace_null_UR <- function(.sutmats,
                             r_eiou = IEATools::psut_cols$r_eiou,
                             Y = IEATools::psut_cols$Y,
                             V = IEATools::psut_cols$V, 
-                            natural_resources = "Natural resources") {
+                            natural_resources = "Natural resources", 
+                            .R_temp = ".R_temp", 
+                            .U_feed_temp_name = ".U_feed_temp", 
+                            .U_eiou_temp_name = ".U_eiou_temp", 
+                            .U_temp_name = ".U_temp", 
+                            .r_eiou_temp_name = ".r_eiou_temp",
+                            .R_temp_name = ".R_temp", 
+                            U_feed_name = IEATools::psut_cols$U_feed, 
+                            U_eiou_name = IEATools::psut_cols$U_eiou, 
+                            U_name = IEATools::psut_cols$U, 
+                            r_eiou_name = IEATools::psut_cols$r_eiou) {
   
   # .sutmats %>%
   #   dplyr::mutate(
@@ -391,10 +401,36 @@ replace_null_UR <- function(.sutmats,
   #     )
   #   )
   fix_UR_func <- function(R_mat, U_feed_mat, U_eiou_mat, U_mat, r_eiou_mat, Y_mat, V_mat) {
+    # Strategy is to assign the matrices to a temporary name. 
+    # After using matsindf_apply, swap to the actual name.
+    new_U <- V_mat %>% 
+      matsbyname::transpose_byname() %>% 
+      matsbyname::hadamardproduct_byname(0)
+    .U_feed_temp_mat <- ifelse(is.null(U_feed_mat), new_U, U_feed_mat)
+    .U_eiou_temp_mat <- ifelse(is.null(U_eiou_mat), new_U, U_eiou_mat)
+    .U_temp_mat      <- ifelse(is.null(U_mat), new_U, U_mat)
+    .r_eiou_temp_mat <- ifelse(is.null(r_eiou_mat), new_U, r_eiou_mat)
+
     
+    list(.U_feed_temp_mat, .U_eiou_temp_mat, .U_temp_mat, .r_eiou_temp_mat) %>% 
+      magrittr::set_names(c(.U_feed_temp_name, .U_eiou_temp_name, .U_temp_mat_name, .r_eiou_temp_name))
   }
-  matsindf::matsindf_apply(.sutdata, FUN = fix_UR_func, R_mat = R, U_feed_mat = U_feed, U_eiou_mat = U_eiou, U_mat = U,
-                                                        Y_mat = Y, V_mat = V)
+  
+  out <- matsindf::matsindf_apply(.sutmats, FUN = fix_UR_func, R_mat = R, U_feed_mat = U_feed, U_eiou_mat = U_eiou, U_mat = U, r_eiou_mat = r_eiou,
+                                                               Y_mat = Y, V_mat = V)
+  # Delete the previous items in a way that will work for both lists and data frames
+  out[[U_feed_name]] <- NULL
+  out[[U_eiou_name]] <- NULL
+  out[[U_name]]      <- NULL
+  out[[r_eiou_name]] <- NULL
+  
+  # Rename the temporary item to the actual name
+  names(out)[names(out) == .U_feed_temp_name] <- U_feed_name
+  names(out)[names(out) == .U_eiou_temp_name] <- U_eiou_name
+  names(out)[names(out) == .U_temp_name]      <- U_name
+  names(out)[names(out) == .r_eiou_temp_name] <- r_eiou_name
+  
+  return(out)
   
 }
 
