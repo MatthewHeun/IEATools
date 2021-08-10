@@ -373,7 +373,7 @@ test_that("replace_null_UR works correctly", {
     tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
   # Check that replace_null_UR works as expected.
   res <- psut %>% 
-    fill_null_UR()
+    replace_null_UR()
   
 })
 

@@ -371,27 +371,30 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
-fill_null_UR <- function(.sutmats,
-                         U_feed = IEATools::psut_cols$U_feed, 
-                         U_eiou = IEATools::psut_cols$U_eiou,
-                         R = IEATools::psut_cols$R,
-                         V = IEATools::psut_cols$V, 
-                         natural_resources = "Natural resources") {
-  .sutmats %>% 
-    # dplyr::mutate(
-    #   "{U_feed}" := dplyr::case_when(
-    #     is.null(.data[[U_feed]]) ~ .data[[V]] %>% 
-    #                                  matsbyname::transpose_byname() %>% 
-    #                                  matsbyname::hadamardproduct_byname(0), 
-    #     TRUE ~ .data[[U_feed]]
-    #   )
-    # )
-    dplyr::mutate(
-      "{U_feed}" := dplyr::case_when(
-        is.null(.data[[U_feed]]) ~ list(42), 
-        TRUE ~ .data[[U_feed]]
-      )
-    )
+replace_null_UR <- function(.sutmats,
+                            R = IEATools::psut_cols$R,
+                            U_feed = IEATools::psut_cols$U_feed, 
+                            U_eiou = IEATools::psut_cols$U_eiou,
+                            U = IEATools::psut_cols$U,
+                            r_eiou = IEATools::psut_cols$r_eiou,
+                            Y = IEATools::psut_cols$Y,
+                            V = IEATools::psut_cols$V, 
+                            natural_resources = "Natural resources") {
+  
+  # .sutmats %>%
+  #   dplyr::mutate(
+  #     "{U_feed}" := dplyr::case_when(
+  #       is.null(.data[[U_feed]]) ~ .data[[V]] %>%
+  #                                    matsbyname::transpose_byname() %>%
+  #                                    matsbyname::hadamardproduct_byname(0),
+  #       TRUE ~ .data[[U_feed]]
+  #     )
+  #   )
+  fix_UR_func <- function(R_mat, U_feed_mat, U_eiou_mat, U_mat, r_eiou_mat, Y_mat, V_mat) {
+    
+  }
+  matsindf::matsindf_apply(.sutdata, FUN = fix_UR_func, R_mat = R, U_feed_mat = U_feed, U_eiou_mat = U_eiou, U_mat = U,
+                                                        Y_mat = Y, V_mat = V)
   
 }
 
