@@ -376,13 +376,28 @@ test_that("replace_null_UR works correctly", {
   res <- psut %>% 
     replace_null_UR()
   
+  expected_R <- psut$Y[[1]] %>% 
+    matsbyname::transpose_byname() %>% 
+    matsbyname::colsums_byname() %>% 
+    matsbyname::hadamardproduct_byname(0) %>% 
+    matsbyname::setrownames_byname("Natural resources")
   expected_U <- psut$V[[1]] %>% 
     matsbyname::transpose_byname() %>% 
     matsbyname::hadamardproduct_byname(0)
-  # Verify that U_EIOU is no longer NULL and is rather that transposed V matrix full of zeroes.
+  # Verify that the NULL R matrix has been replaced with the correct 0 matrix.
+  expect_equal(res$R[[1]], expected_R)
+  # Verify that U_feed and U_EIOU are no longer NULL and is rather that transposed V matrix full of zeroes.
   expect_equal(res$U_feed[[1]], expected_U)
+  expect_equal(res$U_EIOU[[1]], expected_U)
+  # We haven't removed the U or r_EIOU matrices. So those should be same as before
+  expect_equal(res$U[[1]], psut$U[[1]])
+  expect_equal(res$r_EIOU[[1]], psut$r_EIOU[[1]])
+  
+  # Test that everything works correctly with individual matrices
   
   
+  # Test that everything works correctly with a list. 
+
 })
 
 
