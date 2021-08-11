@@ -406,14 +406,33 @@ replace_null_UR <- function(.sutmats = NULL,
     new_U <- V_mat %>% 
       matsbyname::transpose_byname() %>% 
       matsbyname::hadamardproduct_byname(0)
-    .U_feed_temp_mat <- ifelse(is.null(U_feed_mat), new_U, U_feed_mat)
-    .U_eiou_temp_mat <- ifelse(is.null(U_eiou_mat), new_U, U_eiou_mat)
-    .U_temp_mat      <- ifelse(is.null(U_mat), new_U, U_mat)
-    .r_eiou_temp_mat <- ifelse(is.null(r_eiou_mat), new_U, r_eiou_mat)
-
+    
+    if (is.null(U_feed_mat)) {
+      .U_feed_temp_mat <- new_U
+    } else {
+      .U_feed_temp_mat <- U_feed_mat
+    }
+    
+    if (is.null(U_eiou_mat)) {
+      .U_eiou_temp_mat <- new_U
+    } else {
+      .U_eiou_temp_mat <- U_eiou_mat
+    }
+    
+    if (is.null(U_mat)) {
+      .U_temp_mat <- new_U
+    } else {
+      .U_temp_mat <- U_mat
+    }
+    
+    if (is.null(r_eiou_mat)) {
+      .r_eiou_temp_mat <- new_U
+    } else {
+      .r_eiou_temp_mat <- r_eiou_mat
+    }
     
     list(.U_feed_temp_mat, .U_eiou_temp_mat, .U_temp_mat, .r_eiou_temp_mat) %>% 
-      magrittr::set_names(c(.U_feed_temp_name, .U_eiou_temp_name, .U_temp_mat_name, .r_eiou_temp_name))
+      magrittr::set_names(c(.U_feed_temp_name, .U_eiou_temp_name, .U_temp_name, .r_eiou_temp_name))
   }
   
   out <- matsindf::matsindf_apply(.sutmats, FUN = fix_UR_func, R_mat = R, U_feed_mat = U_feed, U_eiou_mat = U_eiou, U_mat = U, r_eiou_mat = r_eiou,
