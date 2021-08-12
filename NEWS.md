@@ -1,3 +1,15 @@
+* New function `replace_null_UR()` replaces missing or `NULL` 
+  `R`, `U_feed`, `U_EIOU`, `U`, and `r_EIOU`
+  with **0** matrices with appropriate row and column names.
+  The replacements are built from **Y** and **V** matrices.
+  The need for this functionality arises when
+  the last stage is final energy 
+  and imports (**V** matrix) 
+  are the only source of an energy carrier that 
+  is consumed in final demand (**Y** matrix).
+  In that situation, the **R** and **U** matrices 
+  will be missing, 
+  and they can be replaced by **0** matrices with the right dimensions.
 * In the specification process,
   the `Flow` for countries `World_X_bunkers` are now
   specified to be "International navigation" and "International aviation"
