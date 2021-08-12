@@ -505,12 +505,13 @@ replace_null_UR <- function(.sutmats = NULL,
 #' Prepare for PSUT analysis
 #' 
 #' Converts a tidy IEA data frame into a PSUT data frame
-#' by collapsing the IEA data into PSUT matrices (R, U, V, and Y).
+#' by collapsing the IEA data into PSUT matrices (`R`, `U`, `V`, `Y`, and `S_units`).
 #' 
 #' This function bundles several others:
 #' 1. `add_psut_matnames()`
 #' 2. `add_row_col_meta()`
 #' 3. `collapse_to_tidy_psut()`
+#' 4. `replace_null_UR()`
 #' 
 #' Furthermore, it extracts `S_units` matrices using `extract_S_units_from_tidy()`
 #' and adds those matrices to the data frame.
@@ -546,6 +547,7 @@ replace_null_UR <- function(.sutmats = NULL,
 #'   add_row_col_meta() %>% 
 #'   collapse_to_tidy_psut() %>% 
 #'   spread(key = matnames, value = matvals) %>% 
+#'   replace_null_UR() %>% 
 #'   full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
 #'                             "Country", "Year")) %>% 
 #'   gather(key = matnames, value = matvals, R, U_EIOU, U_feed, 
@@ -605,26 +607,25 @@ prep_psut <- function(.tidy_iea_df,
     # Join to out
     return(dplyr::bind_cols(out, zero_length_mats_cols))
   } 
-
+  
   # We actually have some rows in .tidy_iea_df, so work with them
   S_units <- extract_S_units_from_tidy(.tidy_iea_df, 
                                        product = product, 
                                        unit = unit)
   # Bundle functions together
-  Temp <- .tidy_iea_df %>% 
+  Collapsed <- .tidy_iea_df %>% 
     # Add matrix names
     add_psut_matnames(ledger_side = ledger_side, supply = supply, consumption = consumption) %>% 
     # Add additional metadata
-    add_row_col_meta(flow = flow, product = product, matnames = matnames)
-  Collapsed <- Temp %>% 
+    add_row_col_meta(flow = flow, product = product, matnames = matnames) %>% 
     # Now collapse to matrices
     collapse_to_tidy_psut(e_dot = e_dot, matnames = matnames, matvals = matvals, rownames = rownames, colnames = colnames,
                           rowtypes = rowtypes, coltypes = coltypes) 
   # Get a list of matrix names for future use
-  matrix_names <- Collapsed[[matnames]] %>% 
-    unique() %>% 
+  matrix_names <- Collapsed[[matnames]] %>%
+    unique() %>%
     # We add U and r_eiou later, so append them here.
-    append(U) %>% 
+    append(U) %>%
     append(r_eiou)
   # Spread to put each matrix into its own column
   CollapsedSpread <- Collapsed %>% 
@@ -656,5 +657,8 @@ prep_psut <- function(.tidy_iea_df,
   
   CollapsedSpread %>% 
     # Add the S_units matrix and return
-    dplyr::full_join(S_units, by = matsindf::everything_except(CollapsedSpread, matrix_names, .symbols = FALSE))
+    dplyr::full_join(S_units, by = matsindf::everything_except(CollapsedSpread, matrix_names, .symbols = FALSE)) %>% 
+    # Add R and U matrices (0 matrices) if R or any of the U matrices are missing
+    # in a row of the data frame.
+    replace_null_UR(R = R, U_feed = U_feed, U_eiou = U_eiou, r_eiou = r_eiou, U = U, V = V, Y = Y)
 }

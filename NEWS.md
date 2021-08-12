@@ -1,3 +1,4 @@
+* Added `replace_null_UR()` function to the workflow in the `prep_psut()` function.
 * New function `replace_null_UR()` replaces missing or `NULL` 
   `R`, `U_feed`, `U_EIOU`, `U`, and `r_EIOU`
   with **0** matrices with appropriate row and column names.
