@@ -354,13 +354,6 @@ test_that("prep_psut() correctly makes columns of U and r_EIOU matrices", {
 })
 
 
-test_that("NULL in a data frame is replaced correctly", {
-  df <- data.frame(time = c(1, 1, 2), var = c("a", "b", "a"), val = c(8, 9, 10))
-  wide <- df %>% 
-    tidyr::pivot_wider(names_from = var, values_from = val)
-})
-
-
 test_that("replace_null_UR works correctly", {
   # Set up so that the psut data frame has NULL for
   # R, U_feed, and U_EIOU in 1971 for GHA.
@@ -393,11 +386,26 @@ test_that("replace_null_UR works correctly", {
   expect_equal(res$U[[1]], psut$U[[1]])
   expect_equal(res$r_EIOU[[1]], psut$r_EIOU[[1]])
   
-  # Test that everything works correctly with individual matrices
-  
-  
   # Test that everything works correctly with a list. 
+  mats_list <- list(U = NULL, r_EIOU = NULL, V = psut$V[[1]], 
+                    Y = psut$Y[[1]], S_units = psut$S_units[[1]], 
+                    R = NULL, U_EIOU = NULL, U_feed = NULL)
+  res_list <- replace_null_UR(mats_list)
+  expect_equal(res_list$R, expected_R)
+  expect_equal(res_list$U_feed, expected_U)
+  expect_equal(res_list$U_EIOU, expected_U)
+  expect_equal(res_list$U, expected_U)
+  expect_equal(res_list$r_EIOU, expected_U)
 
+  # Test that everything works correctly with individual matrices passed in the ... argument
+  res_indiv <- replace_null_UR(U = mats_list$U, r_eiou = mats_list$r_EIOU, V = mats_list$V,
+                               Y = mats_list$Y, 
+                               R = mats_list$R, U_eiou = mats_list$U_EIOU, U_feed = mats_list$U_feed)
+  expect_equal(res_indiv$R, expected_R)
+  expect_equal(res_indiv$U_feed, expected_U)
+  expect_equal(res_indiv$U_EIOU, expected_U)
+  expect_equal(res_indiv$U, expected_U)
+  expect_equal(res_indiv$r_EIOU, expected_U)
 })
 
 

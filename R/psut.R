@@ -391,15 +391,6 @@ replace_null_UR <- function(.sutmats = NULL,
                             U_name = IEATools::psut_cols$U, 
                             r_eiou_name = IEATools::psut_cols$r_eiou) {
   
-  # .sutmats %>%
-  #   dplyr::mutate(
-  #     "{U_feed}" := dplyr::case_when(
-  #       is.null(.data[[U_feed]]) ~ .data[[V]] %>%
-  #                                    matsbyname::transpose_byname() %>%
-  #                                    matsbyname::hadamardproduct_byname(0),
-  #       TRUE ~ .data[[U_feed]]
-  #     )
-  #   )
   fix_UR_func <- function(R_mat, U_feed_mat, U_eiou_mat, U_mat, r_eiou_mat, Y_mat, V_mat) {
     # Strategy is to assign the matrices to a temporary name. 
     # After using matsindf_apply, swap to the actual name.
@@ -416,6 +407,27 @@ replace_null_UR <- function(.sutmats = NULL,
       matsbyname::transpose_byname() %>% 
       matsbyname::hadamardproduct_byname(0)
     
+    # If any of the important arguments are missing, treat as NULL.
+    # An originally NULL matrix (passed in a list or in the ... argument)
+    # will show up as missing here,
+    # due to the way matsindf::matsindf_apply() works.
+    if (missing(R_mat)) {
+      R_mat <- NULL
+    }
+    if (missing(U_feed_mat)) {
+      U_feed_mat <- NULL
+    }
+    if (missing(U_eiou_mat)) {
+      U_eiou_mat <- NULL
+    }
+    if (missing(U_mat)) {
+      U_mat <- NULL
+    }
+    if (missing(r_eiou_mat)) {
+      r_eiou_mat <- NULL
+    }
+    
+    # Whichever matrix is NULL, set to the new value.
     if (is.null(R_mat)) {
       .R_temp_mat <- new_R
     } else {
