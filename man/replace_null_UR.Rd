@@ -13,12 +13,12 @@ replace_null_UR(
   r_eiou = IEATools::psut_cols$r_eiou,
   Y = IEATools::psut_cols$Y,
   V = IEATools::psut_cols$V,
-  natural_resources = "Natural resources",
+  resources = IEATools::tpes_flows$resources,
   .R_temp_name = ".R_temp",
   .U_feed_temp_name = ".U_feed_temp",
-  .U_eiou_temp_name = ".U_eiou_temp",
+  .U_eiou_temp_name = ".U_eEIOU_temp",
   .U_temp_name = ".U_temp",
-  .r_eiou_temp_name = ".r_eiou_temp",
+  .r_eiou_temp_name = ".r_EIOU_temp",
   R_name = IEATools::psut_cols$R,
   U_feed_name = IEATools::psut_cols$U_feed,
   U_eiou_name = IEATools::psut_cols$U_eiou,
@@ -29,10 +29,13 @@ replace_null_UR(
 \arguments{
 \item{.sutmats}{A data frame of metadata columns and matrix name columns}
 
-\item{U_feed, U_eiou, R, V}{See IEATools::psutcols.}
+\item{R, U_feed, U_eiou, U, r_eiou, Y, V}{See \code{IEATools::psutcols}. Default values are names for variables incoming with \code{.sutmats}. Can be overridden with actual matrices.}
 
-\item{natural_resources}{The name for a natural resources row in the \code{0} \code{R} matrix.
-Default is "Natural resources".}
+\item{resources}{See \code{IEATools::tpes_flows}. The name of the only row of the output \code{0} \code{R} matrix.}
+
+\item{.R_temp_name, .U_feed_temp_name, .U_eiou_temp_name, .U_temp_name, .r_eiou_temp_name}{Names of temporary variables unused internally to the function.}
+
+\item{R_name, U_feed_name, U_eiou_name, U_name, r_eiou_name}{See \code{IEATools::psutcols}. The final names for matrices in the output.}
 }
 \value{
 A version of \code{.sutmats} with \code{R}, \code{U_feed}, and \code{U_EIOU} filled with \code{0} matrices if they were \code{NULL}.
@@ -55,4 +58,23 @@ Thus, we can replace the \code{NULL} \code{R} matrix with an \code{0} matrix wit
 
 Similarly, \code{NULL} values for \code{U_feed} or \code{U_EIOU} can be replaced by a \code{0} matrix
 with row and column names same as a transposed \code{V} matrix.
+}
+\examples{
+# Set up a PSUT data frame with NULL for
+# R, U_feed, and U_EIOU in 1971 for GHA.
+psut <- load_tidy_iea_df() \%>\% 
+  specify_all() \%>\% 
+  prep_psut() \%>\% 
+  tidyr::pivot_longer(cols = c("R", "U_EIOU", "U_feed", "U", "r_EIOU", "V", "Y", "S_units"),
+                      names_to = "matnames", values_to = "matvals") \%>\% 
+  dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "R")) \%>\% 
+  dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_feed")) \%>\% 
+  dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_EIOU")) \%>\% 
+  tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
+# Replace the `NULL` matrices in the first row.
+res <- psut \%>\% 
+  replace_null_UR()
+res$R[[1]]
+res$U_feed[[1]]
+res$U_EIOU[[1]]
 }

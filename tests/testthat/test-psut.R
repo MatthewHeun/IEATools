@@ -373,7 +373,7 @@ test_that("replace_null_UR works correctly", {
     matsbyname::transpose_byname() %>% 
     matsbyname::colsums_byname() %>% 
     matsbyname::hadamardproduct_byname(0) %>% 
-    matsbyname::setrownames_byname("Natural resources")
+    matsbyname::setrownames_byname(IEATools::tpes_flows$resources)
   expected_U <- psut$V[[1]] %>% 
     matsbyname::transpose_byname() %>% 
     matsbyname::hadamardproduct_byname(0)

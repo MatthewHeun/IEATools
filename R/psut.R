@@ -362,15 +362,33 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' with row and column names same as a transposed `V` matrix.
 #'
 #' @param .sutmats A data frame of metadata columns and matrix name columns
-#' @param U_feed,U_eiou,R,V See IEATools::psutcols.
-#' @param natural_resources The name for a natural resources row in the `0` `R` matrix.
-#'                          Default is "Natural resources".
+#' @param R,U_feed,U_eiou,U,r_eiou,Y,V See `IEATools::psutcols`. Default values are names for variables incoming with `.sutmats`. Can be overridden with actual matrices.
+#' @param resources See `IEATools::tpes_flows`. The name of the only row of the output `0` `R` matrix.
+#' @param .R_temp_name,.U_feed_temp_name,.U_eiou_temp_name,.U_temp_name,.r_eiou_temp_name Names of temporary variables unused internally to the function.
+#' @param R_name,U_feed_name,U_eiou_name,U_name,r_eiou_name See `IEATools::psutcols`. The final names for matrices in the output.
 #'
 #' @return A version of `.sutmats` with `R`, `U_feed`, and `U_EIOU` filled with `0` matrices if they were `NULL`.
 #' 
 #' @export
 #'
 #' @examples
+#' # Set up a PSUT data frame with NULL for
+#' # R, U_feed, and U_EIOU in 1971 for GHA.
+#' psut <- load_tidy_iea_df() %>% 
+#'   specify_all() %>% 
+#'   prep_psut() %>% 
+#'   tidyr::pivot_longer(cols = c("R", "U_EIOU", "U_feed", "U", "r_EIOU", "V", "Y", "S_units"),
+#'                       names_to = "matnames", values_to = "matvals") %>% 
+#'   dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "R")) %>% 
+#'   dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_feed")) %>% 
+#'   dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_EIOU")) %>% 
+#'   tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
+#' # Replace the `NULL` matrices in the first row.
+#' res <- psut %>% 
+#'   replace_null_UR()
+#' res$R[[1]]
+#' res$U_feed[[1]]
+#' res$U_EIOU[[1]]
 replace_null_UR <- function(.sutmats = NULL,
                             R = IEATools::psut_cols$R,
                             U_feed = IEATools::psut_cols$U_feed, 
@@ -379,12 +397,12 @@ replace_null_UR <- function(.sutmats = NULL,
                             r_eiou = IEATools::psut_cols$r_eiou,
                             Y = IEATools::psut_cols$Y,
                             V = IEATools::psut_cols$V, 
-                            natural_resources = "Natural resources", 
+                            resources = IEATools::tpes_flows$resources, 
                             .R_temp_name = ".R_temp", 
                             .U_feed_temp_name = ".U_feed_temp", 
-                            .U_eiou_temp_name = ".U_eiou_temp", 
+                            .U_eiou_temp_name = ".U_eEIOU_temp", 
                             .U_temp_name = ".U_temp", 
-                            .r_eiou_temp_name = ".r_eiou_temp",
+                            .r_eiou_temp_name = ".r_EIOU_temp",
                             R_name = IEATools::psut_cols$R, 
                             U_feed_name = IEATools::psut_cols$U_feed, 
                             U_eiou_name = IEATools::psut_cols$U_eiou, 
@@ -395,13 +413,13 @@ replace_null_UR <- function(.sutmats = NULL,
     # Strategy is to assign the matrices to a temporary name. 
     # After using matsindf_apply, swap to the actual name.
     # This step is necessary, because matsindf_apply() does not allow renaming columns 
-    # (for good reason!)
+    # (for good reason!),
     
     new_R <- Y_mat %>% 
       matsbyname::transpose_byname() %>% 
       matsbyname::colsums_byname() %>% 
       matsbyname::hadamardproduct_byname(0) %>% 
-      matsbyname::setrownames_byname(natural_resources)
+      matsbyname::setrownames_byname(resources)
       
     new_U <- V_mat %>% 
       matsbyname::transpose_byname() %>% 
