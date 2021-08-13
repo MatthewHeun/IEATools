@@ -455,7 +455,7 @@ extend_to_useful <- function(.sutdata,
     dplyr::mutate(
       # Calculate .eta_fu_hat, which is needed twice below.
       # Doing the calculation here makes it available for other downstream calculations.
-      "{.eta_fu_hat}" := matsbyname::hatize_byname(.data[[eta_fu]]) %>% 
+      "{.eta_fu_hat}" := matsbyname::hatize_byname(.data[[eta_fu]], keep = "rownames") %>% 
         # Swap column names from arrow notation to from notation
         arrow_to_from_byname(margin = 2)
     )
@@ -634,11 +634,13 @@ extend_to_useful_helper <- function(.sutdata = NULL,
     # Calculate dest_mat_vec_hat_C, the matrix product of dest_mat_vec_hat and C
     # This matrix is useful in several calculations below. We calculate it once here.
     dest_mat_vec_hat_C <- dest_mat_vec %>%
-      matsbyname::clean_byname() %>%
-      matsbyname::hatize_byname() %>%
+      # No longer cleaning here, because we may have 0 matrices for bunkers.
+      # ---MKH 13 Aug 2021
+      # matsbyname::clean_byname() %>%
+      matsbyname::hatize_byname(keep = "rownames") %>%
       matsbyname::matrixproduct_byname(C_m)
     
-    eta_fu_hat <- matsbyname::hatize_byname(eta_fu_v) %>% 
+    eta_fu_hat <- matsbyname::hatize_byname(eta_fu_v, keep = "rownames") %>% 
       # Swap column names from arrow notation to paren notation
       matsbyname::switch_notation_byname(margin = 2, from = arr_note, to = from_note, flip = TRUE)
     
@@ -656,7 +658,7 @@ extend_to_useful_helper <- function(.sutdata = NULL,
     # Calculate the matrix that should be added to the V_f matrix.
     add_to_V_f_mat <- dest_mat_vec_hat_C %>% 
       matsbyname::colsums_byname(rowname = NULL) %>%
-      matsbyname::hatize_byname() %>%
+      matsbyname::hatize_byname(keep = "colnames") %>%
       matsbyname::matrixproduct_byname(eta_fu_hat) %>% 
       # Set row and column type to match other make matrices.
       matsbyname::setrowtype(industry_type) %>% 

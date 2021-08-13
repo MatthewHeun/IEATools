@@ -1,7 +1,3 @@
-###########################################################
-context("PSUT functions")
-###########################################################
-
 test_that("S_units_from_tidy works as expected", {
   S_units <- load_tidy_iea_df() %>% 
     extract_S_units_from_tidy()
@@ -355,6 +351,61 @@ test_that("prep_psut() correctly makes columns of U and r_EIOU matrices", {
     )
   expect_equal(psut_with_test_cols[["U_test"]], psut_with_test_cols[["U"]])
   expect_equal(psut_with_test_cols[["r_EIOU_test"]], psut_with_test_cols[["r_EIOU"]])
+})
+
+
+test_that("replace_null_UR works correctly", {
+  # Set up so that the psut data frame has NULL for
+  # R, U_feed, and U_EIOU in 1971 for GHA.
+  psut <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    prep_psut() %>% 
+    tidyr::pivot_longer(cols = c("R", "U_EIOU", "U_feed", "U", "r_EIOU", "V", "Y", "S_units"), names_to = "matnames", values_to = "matvals") %>% 
+    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "R")) %>% 
+    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_feed")) %>% 
+    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_EIOU")) %>% 
+    tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
+  # Check that replace_null_UR works as expected.
+  res <- psut %>% 
+    replace_null_UR()
+  
+  expected_R <- psut$Y[[1]] %>% 
+    matsbyname::transpose_byname() %>% 
+    matsbyname::colsums_byname() %>% 
+    matsbyname::hadamardproduct_byname(0) %>% 
+    matsbyname::setrownames_byname(IEATools::tpes_flows$resources)
+  expected_U <- psut$V[[1]] %>% 
+    matsbyname::transpose_byname() %>% 
+    matsbyname::hadamardproduct_byname(0)
+  # Verify that the NULL R matrix has been replaced with the correct 0 matrix.
+  expect_equal(res$R[[1]], expected_R)
+  # Verify that U_feed and U_EIOU are no longer NULL and is rather that transposed V matrix full of zeroes.
+  expect_equal(res$U_feed[[1]], expected_U)
+  expect_equal(res$U_EIOU[[1]], expected_U)
+  # We haven't removed the U or r_EIOU matrices. So those should be same as before
+  expect_equal(res$U[[1]], psut$U[[1]])
+  expect_equal(res$r_EIOU[[1]], psut$r_EIOU[[1]])
+  
+  # Test that everything works correctly with a list. 
+  mats_list <- list(U = NULL, r_EIOU = NULL, V = psut$V[[1]], 
+                    Y = psut$Y[[1]], S_units = psut$S_units[[1]], 
+                    R = NULL, U_EIOU = NULL, U_feed = NULL)
+  res_list <- replace_null_UR(mats_list)
+  expect_equal(res_list$R, expected_R)
+  expect_equal(res_list$U_feed, expected_U)
+  expect_equal(res_list$U_EIOU, expected_U)
+  expect_equal(res_list$U, expected_U)
+  expect_equal(res_list$r_EIOU, expected_U)
+
+  # Test that everything works correctly with individual matrices passed in the ... argument
+  res_indiv <- replace_null_UR(U = mats_list$U, r_eiou = mats_list$r_EIOU, V = mats_list$V,
+                               Y = mats_list$Y, 
+                               R = mats_list$R, U_eiou = mats_list$U_EIOU, U_feed = mats_list$U_feed)
+  expect_equal(res_indiv$R, expected_R)
+  expect_equal(res_indiv$U_feed, expected_U)
+  expect_equal(res_indiv$U_EIOU, expected_U)
+  expect_equal(res_indiv$U, expected_U)
+  expect_equal(res_indiv$r_EIOU, expected_U)
 })
 
 

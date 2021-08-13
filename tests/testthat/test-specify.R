@@ -58,11 +58,15 @@ test_that("renamed products are also consumed", {
 
 
 test_that("interface industries are correctly specified", {
-  specified <- load_tidy_iea_df() %>% 
+  
+  int_inds_wout_bunker_exports <- setdiff(interface_industries, c(IEATools::interface_industries$exports_to_world_aviation_bunkers, 
+                                                                  IEATools::interface_industries$exports_to_world_marine_bunkers))
+
+    specified <- load_tidy_iea_df() %>% 
     specify_interface_industries()
   # We should have no more Imports, Exports, International aviation bunkers, International marine bunkers, or Stock changes.
   # Rather, everything should be specified as X (Product).
-  for (i in interface_industries) {
+  for (i in int_inds_wout_bunker_exports) {
     # Ensure that there are no interface_industries remaining
     expect_equal(nrow(specified %>% dplyr::filter(Flow == i)), 0)
     # Ensure that every interface_industry ends with "]", indicating that it has been specified.
@@ -104,6 +108,7 @@ test_that("specify_all works as expected", {
     specify_primary_production() %>% 
     specify_production_to_resources() %>% 
     specify_tp_eiou() %>% 
+    specify_bunkers() %>%
     specify_interface_industries() %>% 
     tp_sinks_to_nonenergy()
   expect_equal(Simple, Complicated)
@@ -270,3 +275,31 @@ test_that("spreading by years works as expected at each step of specify_all()", 
   expect_true("2000" %in% names(Year_spread_5))
 })
 
+
+test_that("remove_suffix_specifications() works as expected", {
+  cleaned <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    remove_suffix_specifications(col = "Flow", unsuffixed_col = "clean_Flow") %>% 
+    dplyr::select(Flow, Product, E.dot, clean_Flow) %>% 
+    dplyr::filter(endsWith(Flow, bracket_notation[["suff_end"]]))
+  
+  tested <- cleaned %>% 
+    dplyr::mutate(
+      ok = dplyr::case_when(
+        endsWith(Flow, bracket_notation[["suff_end"]]) & 
+          ! endsWith(clean_Flow, bracket_notation[["suff_end"]]) ~ TRUE, 
+      TRUE ~ FALSE
+      )
+    )
+  expect_true(all(tested$ok))
+  
+  # Try with column replacement
+  cleaned_2 <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    remove_suffix_specifications(col = "Flow", unsuffixed_col = "Flow") %>% 
+    dplyr::select(Flow, Product, E.dot) %>%
+    dplyr::filter(endsWith(Flow, bracket_notation[["suff_end"]])) %>%
+    nrow() %>%
+    # We should have no rows remaining that end with the bracket notation suffix.
+    expect_equal(0)
+})

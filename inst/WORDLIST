@@ -59,6 +59,7 @@ github
 GridCo
 GTL
 GWh
+HKG
 HTH
 hatinv
 hotfixed
@@ -97,6 +98,7 @@ photovoltaics
 pre
 PSB
 PSUT
+psutcols
 rankine
 readme
 regasification
@@ -109,16 +111,19 @@ rowsum
 rowsums
 rowtype
 rowvec
+SAR
 SBP
 SEAPSUT
 situ
 TFC
 TJ
 tp
+tpes
 transf
 transposeinverse
 tsv
 TWh
+un
 unallocated
 ungrouped
 unmatching
@@ -129,6 +134,8 @@ vec
 vectorized
 Ver
 VRA
+WAB
+WMB
 whitespece
 widehat
 WIP

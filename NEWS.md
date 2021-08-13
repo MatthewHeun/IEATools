@@ -1,3 +1,33 @@
+* No longer cleaning matrices in `extend_to_useful_helper()`, 
+  because some vectors may be the `0` vector and be eliminated.
+* Added `replace_null_UR()` function to the workflow in the `prep_psut()` function.
+* New function `replace_null_UR()` replaces missing or `NULL` 
+  `R`, `U_feed`, `U_EIOU`, `U`, and `r_EIOU`
+  with **0** matrices with appropriate row and column names.
+  The replacements are built from **Y** and **V** matrices.
+  The need for this functionality arises when
+  the last stage is final energy 
+  and imports (**V** matrix) 
+  are the only source of an energy carrier that 
+  is consumed in final demand (**Y** matrix).
+  In that situation, the **R** and **U** matrices 
+  will be missing, 
+  and they can be replaced by **0** matrices with the right dimensions.
+* In the specification process,
+  the `Flow` for countries `World_X_bunkers` are now
+  specified to be "International navigation" and "International aviation"
+  to correspond with their domestic equivalents.
+
+
+# IEATools 0.1.55 (2021-07-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5119070.svg)](https://doi.org/10.5281/zenodo.5119070)
+
+* Modifications to code and tests
+  to accommodate World marine bunkers and World aviation bunkers being their own country.
+* New tests for new features.
+    * Up to 808 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # IEATools 0.1.54 (2021-07-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5086372.svg)](https://doi.org/10.5281/zenodo.5086372)
 
 * Modifications to enable per-machine

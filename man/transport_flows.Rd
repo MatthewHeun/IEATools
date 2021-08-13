@@ -5,15 +5,17 @@
 \alias{transport_flows}
 \title{Transport flows}
 \format{
-A string vector with 9 entries.
+A string vector with 11 entries.
 \describe{
-\item{world_aviation_bunkers}{The string identifying the World aviation bunkers transport sector}
+\item{domestic_navigation}{The string identifying the Domestic navigation sector}
 \item{world_marine_bunkers}{The string identifying the World marine bunkers transport sector}
+\item{international_navigation}{The string identifying final demand for the World marine bunkers country \emph{after} specifying IEA data.}
 \item{domestic_aviation}{The string identifying Domestic aviation}
+\item{world_aviation_bunkers}{The string identifying the World aviation bunkers transport sector}
+\item{international_aviation}{The string identifying final demand for the World aviation bunkers country \emph{after} specifying IEA data.}
 \item{road}{The string identifying the Road transport sector}
 \item{rail}{The string identifying the Rail transport sector}
 \item{pipeline_transport}{The string identifying the Pipeline transport sector}
-\item{domestic_navigation}{The string identifying the Domestic navigation sector}
 \item{non_specified_transport}{The string identifying the Non-specified transport sector}
 \item{transport_not_elsewhere_specified}{The string identifying the Transport not elsewhere specified sector. This string replaced \code{non_specified_transport} in the IEA's 2020 extended energy balances.}
 }

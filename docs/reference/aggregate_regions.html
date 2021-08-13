@@ -75,7 +75,7 @@ and/or net exports or by keeping gross imports and exports." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.54</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.55</span>
       </span>
     </div>
 
@@ -257,8 +257,6 @@ country aggregation table provided.</p>
 <span class='co'># returned by the `load_tidy_iea_df()` function when run without argument.</span>
 <span class='fu'>aggregate_regions</span><span class='op'>(</span>.tidy_iea_df <span class='op'>=</span> <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 402 x 11</span>
-#&gt; <span style='color: #949494;'># Groups:   Country, Method, Energy.type, Last.stage, Year, Ledger.side,
-#&gt; #   Flow.aggregation.point, Flow, Product, Unit [402]</span>
 #&gt;    Country   Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.p…
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>              
 #&gt; <span style='color: #BCBCBC;'> 1</span> RoW Afri… PCM    E           Final       <span style='text-decoration: underline;'>1</span>971 Consumption Industry           
@@ -279,8 +277,6 @@ country aggregation table provided.</p>
                   aggregation_table <span class='op'>=</span> <span class='fu'><a href='read_aggregation_region_table.html'>read_aggregation_region_table</a></span><span class='op'>(</span>
                     <span class='fu'><a href='default_aggregation_region_table_path.html'>default_aggregation_region_table_path</a></span><span class='op'>(</span><span class='fl'>2020</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 402 x 11</span>
-#&gt; <span style='color: #949494;'># Groups:   Country, Method, Energy.type, Last.stage, Year, Ledger.side,
-#&gt; #   Flow.aggregation.point, Flow, Product, Unit [402]</span>
 #&gt;    Country   Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.p…
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>              
 #&gt; <span style='color: #BCBCBC;'> 1</span> RoW Afri… PCM    E           Final       <span style='text-decoration: underline;'>1</span>971 Consumption Industry           

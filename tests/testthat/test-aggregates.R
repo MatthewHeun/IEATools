@@ -88,7 +88,10 @@ test_that("Aggregating South Africa and Ghana works as intended", {
                                           net_trade = TRUE)
   
   manual_aggregation_excl_ie <- tidy_GHA_ZAF_df %>%
-    dplyr::filter(! (stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports"))) %>%
+    remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>% 
+    dplyr::filter(! (.data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$imports | 
+                       .data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$exports)) %>%
+    specify_interface_industries() %>% 
     dplyr::group_by(Method, Last.stage, Energy.type, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot)) %>% 
     dplyr::mutate(
@@ -97,14 +100,9 @@ test_that("Aggregating South Africa and Ghana works as intended", {
   
   # This here needs being modified.
   manual_aggregation_ie <- tidy_GHA_ZAF_df %>%
-    dplyr::filter(stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports")) %>%
-    dplyr::mutate(
-      Flow = dplyr::case_when(
-        stringr::str_detect(Flow, "Imports") ~ "Imports",
-        stringr::str_detect(Flow, "Exports") ~ "Exports",
-        TRUE ~ Flow
-      )
-    ) %>% 
+    remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>% 
+    dplyr::filter(.data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$imports | 
+                       .data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$exports) %>%
     dplyr::group_by(Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot)) %>%
     tidyr::pivot_wider(names_from = Flow, values_from = E.dot.aggregated) %>%
@@ -123,9 +121,7 @@ test_that("Aggregating South Africa and Ghana works as intended", {
       )
     ) %>%
     dplyr::filter(E.dot.aggregated != 0) %>% 
-    dplyr::mutate(
-      Flow = stringr::str_c(Flow, " [of ", Product, "]")
-    ) %>% 
+    specify_interface_industries() %>% 
     dplyr::mutate(
       Country = "GHAZAF"
     )
@@ -215,7 +211,10 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
                                           net_trade = TRUE)
   
   manual_aggregation_excl_ie <- tidy_GHA_ZAF_EGC_MGC_df %>%
-    dplyr::filter(! (stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports"))) %>%
+    remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>% 
+    dplyr::filter(!(.data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$imports | 
+                    .data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$exports)) %>%
+    specify_interface_industries() %>% 
     dplyr::mutate(
       Country = dplyr::case_when(
         Country == "ZAF" ~ "ZAF_MGC",
@@ -228,7 +227,9 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
     dplyr::summarise(E.dot.aggregated = sum(E.dot))
   
   manual_aggregation_ie <- tidy_GHA_ZAF_EGC_MGC_df %>%
-    dplyr::filter((stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports"))) %>%
+    remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>% 
+    dplyr::filter(.data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$imports | 
+                    .data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$exports) %>%
     dplyr::mutate(
       Country = dplyr::case_when(
         Country == "ZAF" ~ "ZAF_MGC",
@@ -262,10 +263,8 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
       )
     ) %>%
     dplyr::filter(E.dot.aggregated != 0) %>% 
-    dplyr::mutate(
-      Flow = stringr::str_c(Flow, " [of ", Product, "]")
-    )
-  
+    specify_interface_industries()
+    
   manual_aggregation <- dplyr::bind_rows(manual_aggregation_excl_ie, manual_aggregation_ie)
   
   comparing <- aggregated_regions %>%
