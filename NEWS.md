@@ -1,3 +1,5 @@
+* No longer cleaning matrices in `extend_to_useful_helper()`, 
+  because some vectors may be the `0` vector and be eliminated.
 * Added `replace_null_UR()` function to the workflow in the `prep_psut()` function.
 * New function `replace_null_UR()` replaces missing or `NULL` 
   `R`, `U_feed`, `U_EIOU`, `U`, and `r_EIOU`
