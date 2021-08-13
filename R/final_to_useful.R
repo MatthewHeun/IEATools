@@ -634,6 +634,8 @@ extend_to_useful_helper <- function(.sutdata = NULL,
     # Calculate dest_mat_vec_hat_C, the matrix product of dest_mat_vec_hat and C
     # This matrix is useful in several calculations below. We calculate it once here.
     dest_mat_vec_hat_C <- dest_mat_vec %>%
+      # No longer cleaning here, because we may have 0 matrices for bunkers.
+      # ---MKH 13 Aug 2021
       # matsbyname::clean_byname() %>%
       matsbyname::hatize_byname(keep = "rownames") %>%
       matsbyname::matrixproduct_byname(C_m)
