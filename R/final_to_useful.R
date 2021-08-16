@@ -348,6 +348,29 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' This function uses a matrix method to move 
 #' from final energy/exergy 
 #' to useful energy/exergy as the last stage of an energy conversion chain.
+#' 
+#' `.sutdata` or individual matrices are always assumed to have final energy as its last stage.
+#' 
+#' Internally, this function uses `matsindf::matsindf_apply()` to perform its calculations.
+#' If `.sutdata` is `NULL`, and `R`, `U_eiou`, `U_feed`, `U`, `r_eiou`, `V`, and `Y` are individual matrices,
+#' the output is a named list of matrices containing new values for 
+#' **U_eiou**, **U_feed**, **U**, **r_eiou**, **V**, and **Y** matrices, 
+#' named with `.sep` plus `useful` appended to the variable names.
+#' 
+#' If `.sutdata` is a named list of matrices, the names of the incoming 
+#' **U_eiou**, **U_feed**, **U**, **r_eiou**, **V**, and **Y** matrices 
+#' are changed to append `.sep` and `final`. 
+#' Output is a list of matrices with names appended to include `.sep` and `final` or `.sep` and `useful`.
+#' 
+#' If `.sutadat` is a data frame, output is determined by argument `gather`. 
+#' When `gather = TRUE`, output will contain a `last_stage` column with either `final` or `useful` indicated.
+#' When `gather = FALSE`, output will not contain a `last_stage` column, 
+#' and `final` or `useful` last stage will be indicated in the column names.
+#' Default is `gather = TRUE`.
+#' 
+#' An energy balance check is performed. 
+#' If the energy balance check fails, a warning is emitted and 
+#' additional diagnostic information will appear in the output: `.err` and `.e_bal_ok`.
 #'
 #' @param .sutdata A wide-by-matrices data frame of PSUT matrices that represent an energy conversion chain.
 #'                 Each row of `.sutdata` should contain the matrices that represent the energy conversion chain.
@@ -357,6 +380,9 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                 `load_tidy_iea_df()`, `specify_all()`, and `prep_psut()`.
 #'                 `.sutdata` should also include columns of matrices `C_Y`, `C_eiou`, and `eta_fu`,
 #'                 probably created by functions `form_C_mats()` and `form_eta_fu_phi_u_vecs()`.
+#' @param gather When `.sutdata` is a data frame, tells whether to `tidyr::pivot_longer()` the result
+#'               to create a `last_stage` column and remove `last_stage` from variable names.
+#'               Default is `TRUE`.
 #' @param last_stage See `IEATools::iea_cols$last_stage`. 
 #'                        Each of these should be a column in `.sutdata`, `C_data`, and `eta_fu_data`.
 #' @param final,useful See `IEATools::last_stages`.
@@ -382,14 +408,25 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param .add_to_dest an internal matrix name for a matrix that replaces a previous energy destination. Default is ".repl_dest".
 #' @param .err an internal matrix name for calculating energy balance errors. Default is ".err".
 #' @param .e_bal_ok an internal column name for assessing whether energy balance is within acceptable tolerances set by the `tol` argument. Default is ".e_bal_OK".
-#' @param .useful A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".
+#' @param .sep A separator between matrix names and `final` or `useful` indicators. Default is "_".
 #' @param .keep_in_Y A suffix applied to versions of the `Y` matrix that contain only industries retained in the move from final to useful last stage, 
 #'                   including strings from the arguments `interface_ind`, `non_energy_ind`, `losses`, and `stat_diffs`. 
 #'                   Default is "_keep_in_Y".
 #'
-#' @return A version of `.sutdata` that contains additional rows with useful final stage ECC matrices.
-#'         If the energy balance check fails, a warning is emitted and 
-#'         additional diagnostic matrices will appear in the output: `.err` and `.e_bal_ok`.
+#' @return Output depends on input, roughly according to 
+#'         conventions in `matsindf::apply()`. 
+#'         If `.sutdata` is `NULL` and individual matrices are supplied in 
+#'         `U_eiou`, `U_feed`, `U`, `r_eiou`, `V`, and `Y` arguments, 
+#'         output is a named list of individual matrices with `.sep` and `useful` appended.
+#'         If `.sutdata` is a named list of individual matrices, 
+#'         the output is a list of matrices with `.sep` and `final` or `.sep` and `useful` appended
+#'         to the names.
+#'         If `.sutdata` is a data frame, output will be a data frame of matrices
+#'         with column names with with `.sep` and `final` or `.sep` and `useful` appended
+#'         to the names (when `gather = FALSE`).
+#'         If `.sutdata` is a data frame, output will be a data frame of matrices
+#'         with a `last.stage` column containing `final` or `useful` and 
+#'         columns named for matrices (when `gather = TRUE`, the default).
 #' 
 #' @export
 #'
@@ -411,6 +448,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' psut_mats %>% 
 #'   extend_to_useful()
 extend_to_useful <- function(.sutdata, 
+                             gather = TRUE, 
                              
                              last_stage = IEATools::iea_cols$last_stage,
 
@@ -448,10 +486,26 @@ extend_to_useful <- function(.sutdata,
                              .add_to_dest = ".repl_dest",
                              .err = ".err", 
                              .e_bal_ok = ".e_bal_ok",
-                             .useful = "_useful", 
+                             .sep = "_", 
                              .keep_in_Y = "_keep_in_Y") {
   
-  wide_psut_data <- .sutdata %>% 
+  # extend_func <- function(eta_fu_vec) {
+  #   
+  # }
+  # 
+  # out <- matsindf::matsindf_apply()
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    wide_psut_data <- .sutdata %>% 
     dplyr::mutate(
       # Calculate .eta_fu_hat, which is needed twice below.
       # Doing the calculation here makes it available for other downstream calculations.
@@ -461,13 +515,13 @@ extend_to_useful <- function(.sutdata,
     )
   
   # New column names
-  U_feed_useful <- paste0(U_feed, .useful)
-  U_eiou_useful <- paste0(U_eiou, .useful)
-  U_useful <- paste0(U, .useful)
-  r_eiou_useful <- paste0(r_eiou, .useful)
-  V_useful <- paste0(V, .useful)
-  Y_useful <- paste0(Y, .useful)
-  Y_keep <- paste0(Y, .keep_in_Y)
+  U_feed_useful_name <- paste0(U_feed, .sep, useful)
+  U_eiou_useful_name <- paste0(U_eiou, .sep, useful)
+  U_useful_name <- paste0(U, .sep, useful)
+  r_eiou_useful_name <- paste0(r_eiou, .sep, useful)
+  V_useful_name <- paste0(V, .sep, useful)
+  Y_useful_name <- paste0(Y, .sep, useful)
+  Y_keep_name <- paste0(Y, .keep_in_Y)
   
   # Industries to retain from Y_f to Y_u. 
   # These industries are not allocated to f-u machines, nor are they tracked for useful energy.
@@ -480,35 +534,35 @@ extend_to_useful <- function(.sutdata,
     extend_to_useful_helper(dest_mat = Y, C_mat = C_Y, eta_fu_vec = eta_fu, 
                             add_to_U = .add_to_U_f, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>% 
     dplyr::mutate(
-      "{U_feed_useful}" := matsbyname::sum_byname(.data[[U_feed]], .data[[.add_to_U_f]]), 
-      "{V_useful}" := matsbyname::sum_byname(.data[[V]], .data[[.add_to_V_f]]),
+      "{U_feed_useful_name}" := matsbyname::sum_byname(.data[[U_feed]], .data[[.add_to_U_f]]), 
+      "{V_useful_name}" := matsbyname::sum_byname(.data[[V]], .data[[.add_to_V_f]]),
       # We need to keep industries in Y that are interface industries 
       # (exports, stock changes, international marine and aviation bunkers, and 
       # imports, though there won't be any imports in the Y matrix, because imports are in the V matrix).
       # Also keep non-energy flows.
       # None of the interface industries nor the non-energy flows are in the allocation matrix (C), 
       # so we must retain them in the Y matrix.
-      "{Y_keep}" := matsbyname::select_cols_byname(.data[[Y]], 
+      "{Y_keep_name}" := matsbyname::select_cols_byname(.data[[Y]], 
                                                    retain_pattern = matsbyname::make_pattern(Y_keep_inds, 
                                                                                              pattern_type = "leading")), 
-      "{Y_useful}" := matsbyname::sum_byname(.data[[Y_keep]], .data[[.add_to_dest]]), 
+      "{Y_useful_name}" := matsbyname::sum_byname(.data[[Y_keep_name]], .data[[.add_to_dest]]), 
       # Eliminate columns that are no longer needed
       "{.add_to_U_f}" := NULL,
       "{.add_to_V_f}" := NULL,
       "{.add_to_dest}" := NULL,
-      "{Y_keep}" := NULL
+      "{Y_keep_name}" := NULL
     )
   
   wide_useful_EIOU <- wide_useful_Y %>% 
     extend_to_useful_helper(dest_mat = U_eiou, C_mat = C_eiou, eta_fu_vec = eta_fu, 
                             add_to_U = .add_to_U_eiou, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>% 
     dplyr::mutate(
-      "{U_feed_useful}" := matsbyname::sum_byname(.data[[U_feed_useful]], .data[[.add_to_U_eiou]]), 
-      "{U_eiou_useful}" := .data[[.add_to_dest]], 
-      "{U_useful}" := matsbyname::sum_byname(.data[[U_feed_useful]], .data[[U_eiou_useful]]),
-      "{r_eiou_useful}" := matsbyname::quotient_byname(.data[[U_eiou_useful]], .data[[U_useful]]) %>% 
+      "{U_feed_useful_name}" := matsbyname::sum_byname(.data[[U_feed_useful_name]], .data[[.add_to_U_eiou]]), 
+      "{U_eiou_useful_name}" := .data[[.add_to_dest]], 
+      "{U_useful_name}" := matsbyname::sum_byname(.data[[U_feed_useful_name]], .data[[U_eiou_useful_name]]),
+      "{r_eiou_useful_name}" := matsbyname::quotient_byname(.data[[U_eiou_useful_name]], .data[[U_useful_name]]) %>% 
         matsbyname::replaceNaN_byname(val = 0),
-      "{V_useful}" := matsbyname::sum_byname(.data[[V_useful]], .data[[.add_to_V_f]]), 
+      "{V_useful_name}" := matsbyname::sum_byname(.data[[V_useful_name]], .data[[.add_to_V_f]]), 
       # Show that these all now have useful last stage
       "{last_stage}" := useful,
       # Eliminate columns that are no longer needed
@@ -526,12 +580,12 @@ extend_to_useful <- function(.sutdata,
     ) %>% 
     dplyr::rename(
       # Rename the useful columns to be regular names so we can rbind later
-      "{U_feed}" := .data[[U_feed_useful]],
-      "{U_eiou}" := .data[[U_eiou_useful]],
-      "{U}" := .data[[U_useful]],
-      "{r_eiou}" := .data[[r_eiou_useful]],
-      "{V}" := .data[[V_useful]], 
-      "{Y}" := .data[[Y_useful]]
+      "{U_feed}" := .data[[U_feed_useful_name]],
+      "{U_eiou}" := .data[[U_eiou_useful_name]],
+      "{U}" := .data[[U_useful_name]],
+      "{r_eiou}" := .data[[r_eiou_useful_name]],
+      "{V}" := .data[[V_useful_name]], 
+      "{Y}" := .data[[Y_useful_name]]
     )
   
   # Prepare the outgoing data frame

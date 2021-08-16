@@ -6,6 +6,7 @@
 \usage{
 extend_to_useful(
   .sutdata,
+  gather = TRUE,
   last_stage = IEATools::iea_cols$last_stage,
   final = IEATools::last_stages$final,
   useful = IEATools::last_stages$useful,
@@ -34,7 +35,7 @@ extend_to_useful(
   .add_to_dest = ".repl_dest",
   .err = ".err",
   .e_bal_ok = ".e_bal_ok",
-  .useful = "_useful",
+  .sep = "_",
   .keep_in_Y = "_keep_in_Y"
 )
 }
@@ -47,6 +48,10 @@ The last stage of these ECCs should be final (not useful).
 \code{load_tidy_iea_df()}, \code{specify_all()}, and \code{prep_psut()}.
 \code{.sutdata} should also include columns of matrices \code{C_Y}, \code{C_eiou}, and \code{eta_fu},
 probably created by functions \code{form_C_mats()} and \code{form_eta_fu_phi_u_vecs()}.}
+
+\item{gather}{When \code{.sutdata} is a data frame, tells whether to \code{tidyr::pivot_longer()} the result
+to create a \code{last_stage} column and remove \code{last_stage} from variable names.
+Default is \code{TRUE}.}
 
 \item{last_stage}{See \code{IEATools::iea_cols$last_stage}.
 Each of these should be a column in \code{.sutdata}, \code{C_data}, and \code{eta_fu_data}.}
@@ -90,21 +95,56 @@ to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".}
 
 \item{.e_bal_ok}{an internal column name for assessing whether energy balance is within acceptable tolerances set by the \code{tol} argument. Default is ".e_bal_OK".}
 
-\item{.useful}{A suffix applied to versions of PSUT matrices where useful is the last stage. Default is "_useful".}
+\item{.sep}{A separator between matrix names and \code{final} or \code{useful} indicators. Default is "_".}
 
 \item{.keep_in_Y}{A suffix applied to versions of the \code{Y} matrix that contain only industries retained in the move from final to useful last stage,
 including strings from the arguments \code{interface_ind}, \code{non_energy_ind}, \code{losses}, and \code{stat_diffs}.
 Default is "_keep_in_Y".}
 }
 \value{
-A version of \code{.sutdata} that contains additional rows with useful final stage ECC matrices.
-If the energy balance check fails, a warning is emitted and
-additional diagnostic matrices will appear in the output: \code{.err} and \code{.e_bal_ok}.
+Output depends on input, roughly according to
+conventions in \code{matsindf::apply()}.
+If \code{.sutdata} is \code{NULL} and individual matrices are supplied in
+\code{U_eiou}, \code{U_feed}, \code{U}, \code{r_eiou}, \code{V}, and \code{Y} arguments,
+output is a named list of individual matrices with \code{.sep} and \code{useful} appended.
+If \code{.sutdata} is a named list of individual matrices,
+the output is a list of matrices with \code{.sep} and \code{final} or \code{.sep} and \code{useful} appended
+to the names.
+If \code{.sutdata} is a data frame, output will be a data frame of matrices
+with column names with with \code{.sep} and \code{final} or \code{.sep} and \code{useful} appended
+to the names (when \code{gather = FALSE}).
+If \code{.sutdata} is a data frame, output will be a data frame of matrices
+with a \code{last.stage} column containing \code{final} or \code{useful} and
+columns named for matrices (when \code{gather = TRUE}, the default).
 }
 \description{
 This function uses a matrix method to move
 from final energy/exergy
 to useful energy/exergy as the last stage of an energy conversion chain.
+}
+\details{
+\code{.sutdata} or individual matrices are always assumed to have final energy as its last stage.
+
+Internally, this function uses \code{matsindf::matsindf_apply()} to perform its calculations.
+If \code{.sutdata} is \code{NULL}, and \code{R}, \code{U_eiou}, \code{U_feed}, \code{U}, \code{r_eiou}, \code{V}, and \code{Y} are individual matrices,
+the output is a named list of matrices containing new values for
+\strong{U_eiou}, \strong{U_feed}, \strong{U}, \strong{r_eiou}, \strong{V}, and \strong{Y} matrices,
+named with \code{.sep} plus \code{useful} appended to the variable names.
+
+If \code{.sutdata} is a named list of matrices, the names of the incoming
+\strong{U_eiou}, \strong{U_feed}, \strong{U}, \strong{r_eiou}, \strong{V}, and \strong{Y} matrices
+are changed to append \code{.sep} and \code{final}.
+Output is a list of matrices with names appended to include \code{.sep} and \code{final} or \code{.sep} and \code{useful}.
+
+If \code{.sutadat} is a data frame, output is determined by argument \code{gather}.
+When \code{gather = TRUE}, output will contain a \code{last_stage} column with either \code{final} or \code{useful} indicated.
+When \code{gather = FALSE}, output will not contain a \code{last_stage} column,
+and \code{final} or \code{useful} last stage will be indicated in the column names.
+Default is \code{gather = TRUE}.
+
+An energy balance check is performed.
+If the energy balance check fails, a warning is emitted and
+additional diagnostic information will appear in the output: \code{.err} and \code{.e_bal_ok}.
 }
 \examples{
 C_data <- load_fu_allocation_data() \%>\% 
