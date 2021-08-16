@@ -13,8 +13,8 @@ extend_to_useful(
   industry_type = IEATools::row_col_types$industry,
   product_type = IEATools::row_col_types$product,
   R = IEATools::psut_cols$R,
-  U_eiou = IEATools::psut_cols$U_eiou,
   U_feed = IEATools::psut_cols$U_feed,
+  U_eiou = IEATools::psut_cols$U_eiou,
   U = IEATools::psut_cols$U,
   r_eiou = IEATools::psut_cols$r_eiou,
   V = IEATools::psut_cols$V,
@@ -36,7 +36,13 @@ extend_to_useful(
   .err = ".err",
   .e_bal_ok = ".e_bal_ok",
   .sep = "_",
-  .keep_in_Y = "_keep_in_Y"
+  .keep_in_Y = "_keep_in_Y",
+  U_feed_name = IEATools::psut_cols$U_feed,
+  U_eiou_name = IEATools::psut_cols$U_eiou,
+  U_name = IEATools::psut_cols$U,
+  r_eiou_name = IEATools::psut_cols$r_eiou,
+  V_name = IEATools::psut_cols$V,
+  Y_name = IEATools::psut_cols$Y
 )
 }
 \arguments{
@@ -73,8 +79,8 @@ These columns should be present in the \code{.sutdata} data frame.}
 
 \item{stat_diffs}{See \code{IEATools::tfc_compare_flows}. Statistical differences are kept same from \code{Y_final} to \code{Y_useful}.}
 
-\item{notation}{The row and column notation for this template.
-See \code{matsbyname::notation_vec()}. Default is \code{arrow_notation}.}
+\item{notation}{The row and column notation in the \code{eta_fu} vectors.
+See \code{matsbyname::notation_vec()}. Default is \code{IEATools::arrow_notation}.}
 
 \item{tol}{the allowable error in energy balances for both the incoming matrices (last stage final)
 and the outgoing matrices (last stage useful). Default is \code{1e-3}.}
