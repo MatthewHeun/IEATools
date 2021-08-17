@@ -6,12 +6,7 @@
 \usage{
 extend_to_useful(
   .sutdata,
-  tidy_output = TRUE,
-  last_stage = IEATools::iea_cols$last_stage,
-  final = IEATools::last_stages$final,
-  useful = IEATools::last_stages$useful,
-  industry_type = IEATools::row_col_types$industry,
-  product_type = IEATools::row_col_types$product,
+  clean_up_df = TRUE,
   R = IEATools::psut_cols$R,
   U_feed = IEATools::psut_cols$U_feed,
   U_eiou = IEATools::psut_cols$U_eiou,
@@ -23,6 +18,11 @@ extend_to_useful(
   C_Y = IEATools::template_cols$C_Y,
   eta_fu = IEATools::template_cols$eta_fu,
   phi_u = IEATools::template_cols$phi_u,
+  last_stage = IEATools::iea_cols$last_stage,
+  final = IEATools::last_stages$final,
+  useful = IEATools::last_stages$useful,
+  industry_type = IEATools::row_col_types$industry,
+  product_type = IEATools::row_col_types$product,
   interface_ind = IEATools::interface_industries,
   losses = IEATools::tfc_compare_flows$losses,
   stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
@@ -55,16 +55,9 @@ The last stage of these ECCs should be final (not useful).
 \code{.sutdata} should also include columns of matrices \code{C_Y}, \code{C_eiou}, and \code{eta_fu},
 probably created by functions \code{form_C_mats()} and \code{form_eta_fu_phi_u_vecs()}.}
 
-\item{tidy_output}{When \code{.sutdata} is a data frame, tells whether to \code{tidyr::pivot_longer()} the result
-to create a \code{last_stage} column and remove \code{last_stage} from variable names.
+\item{clean_up_df}{When \code{.sutdata} is a data frame, tells whether to \code{tidyr::pivot_longer()} the result
+and remove no-longer-needed input columns \code{C_eiou}, \code{C_Y}, \code{eta_fu}, and \code{phi_u}.
 Default is \code{TRUE}.}
-
-\item{last_stage}{See \code{IEATools::iea_cols$last_stage}.
-Each of these should be a column in \code{.sutdata}, \code{C_data}, and \code{eta_fu_data}.}
-
-\item{final, useful}{See \code{IEATools::last_stages}.}
-
-\item{industry_type, product_type}{See \code{IEATools::row_col_types}}
 
 \item{R, U_eiou, U_feed, U, r_eiou, V, Y}{See \code{IEATools::psut_cols}.
 These columns should be present in the \code{.sutdata} data frame.}
@@ -72,6 +65,13 @@ These columns should be present in the \code{.sutdata} data frame.}
 \item{C_eiou, C_Y, eta_fu, phi_u}{See \code{IEATools::template_cols}.
 \code{C_eiou} and \code{C_Y} matrices should be found in columns of the \code{wide_C_data} data frame.
 \code{eta_fu} and \code{phi_u} should be found in columns of the \code{wide_eta_fu_data} data frame.}
+
+\item{last_stage}{See \code{IEATools::iea_cols$last_stage}.
+Each of these should be a column in \code{.sutdata}, \code{C_data}, and \code{eta_fu_data}.}
+
+\item{final, useful}{See \code{IEATools::last_stages}.}
+
+\item{industry_type, product_type}{See \code{IEATools::row_col_types}}
 
 \item{interface_ind}{See \code{IEATools::interface_industries}. Interface industries are kept same from \code{Y_final} to \code{Y_useful}.}
 
