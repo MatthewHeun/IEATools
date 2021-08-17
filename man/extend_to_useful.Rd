@@ -5,8 +5,9 @@
 \title{Move an ECC from final to useful as its last stage}
 \usage{
 extend_to_useful(
-  .sutdata,
+  .sutdata = NULL,
   clean_up_df = TRUE,
+  tol = 0.001,
   R = IEATools::psut_cols$R,
   U_feed = IEATools::psut_cols$U_feed,
   U_eiou = IEATools::psut_cols$U_eiou,
@@ -27,8 +28,6 @@ extend_to_useful(
   losses = IEATools::tfc_compare_flows$losses,
   stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
   notation = IEATools::arrow_notation,
-  tol = 0.001,
-  .eta_fu_hat = ".eta_fu_hat",
   .add_to_U_f = ".add_to_U_f",
   .add_to_U_eiou = ".add_to_U_eiou",
   .add_to_V_f = ".add_to_V_f",
@@ -36,7 +35,6 @@ extend_to_useful(
   .err = ".err",
   .e_bal_ok = ".e_bal_ok",
   .sep = "_",
-  .keep_in_Y = "_keep_in_Y",
   U_feed_name = IEATools::psut_cols$U_feed,
   U_eiou_name = IEATools::psut_cols$U_eiou,
   U_name = IEATools::psut_cols$U,
@@ -47,27 +45,32 @@ extend_to_useful(
 }
 \arguments{
 \item{.sutdata}{A wide-by-matrices data frame of PSUT matrices that represent an energy conversion chain.
-Each row of \code{.sutdata} should contain the matrices that represent the energy conversion chain.
+Each row of \code{.sutdata} should contain the matrices that represent one energy conversion chain.
 Matrices should be in columns identified by their names.
 The last stage of these ECCs should be final (not useful).
 \code{.sutdata} is likely the result of calling (in sequence)
 \code{load_tidy_iea_df()}, \code{specify_all()}, and \code{prep_psut()}.
 \code{.sutdata} should also include columns of matrices \code{C_Y}, \code{C_eiou}, and \code{eta_fu},
-probably created by functions \code{form_C_mats()} and \code{form_eta_fu_phi_u_vecs()}.}
+probably created by functions \code{form_C_mats()} and \code{form_eta_fu_phi_u_vecs()}.
+\code{.sutdata} can also be a named list of matrices that forms a store of variables.
+Default is \code{NULL} to enable use of single matrices, too.}
 
 \item{clean_up_df}{When \code{.sutdata} is a data frame, tells whether to \code{tidyr::pivot_longer()} the result
 and remove no-longer-needed input columns \code{C_eiou}, \code{C_Y}, \code{eta_fu}, and \code{phi_u}.
 Default is \code{TRUE}.}
 
+\item{tol}{The allowable error in energy balances for the outgoing matrices (last stage useful).
+Default is \code{1e-3}.}
+
 \item{R, U_eiou, U_feed, U, r_eiou, V, Y}{See \code{IEATools::psut_cols}.
-These columns should be present in the \code{.sutdata} data frame.}
+These should be strings (if \code{.sutdata} is a data frame or a list)
+or individual matrices (if \code{.sutdata} is \code{NULL}).}
 
 \item{C_eiou, C_Y, eta_fu, phi_u}{See \code{IEATools::template_cols}.
-\code{C_eiou} and \code{C_Y} matrices should be found in columns of the \code{wide_C_data} data frame.
-\code{eta_fu} and \code{phi_u} should be found in columns of the \code{wide_eta_fu_data} data frame.}
+These should be strings (if \code{.sutdata} is a data frame or a list)
+or individual matrices (if \code{.sutdata} is \code{NULL}).}
 
-\item{last_stage}{See \code{IEATools::iea_cols$last_stage}.
-Each of these should be a column in \code{.sutdata}, \code{C_data}, and \code{eta_fu_data}.}
+\item{last_stage}{See \code{IEATools::iea_cols$last_stage}.}
 
 \item{final, useful}{See \code{IEATools::last_stages}.}
 
@@ -82,30 +85,28 @@ Each of these should be a column in \code{.sutdata}, \code{C_data}, and \code{et
 \item{notation}{The row and column notation in the \code{eta_fu} vectors.
 See \code{matsbyname::notation_vec()}. Default is \code{IEATools::arrow_notation}.}
 
-\item{tol}{the allowable error in energy balances for both the incoming matrices (last stage final)
-and the outgoing matrices (last stage useful). Default is \code{1e-3}.}
-
-\item{.eta_fu_hat}{an internal matrix name. Default is ".eta_fu_hat".}
-
-\item{.add_to_U_f}{an internal matrix name for the a matrix to be added to the U_feed_f matrix
+\item{.add_to_U_f}{An internal matrix name for the a matrix to be added to the U_feed_f matrix
 to form the useful form of the U_feed matrix. Default is ".add_to_U_f".}
 
-\item{.add_to_U_eiou}{an internal matrix name for the a matrix to be added to the U_eiou_f matrix
+\item{.add_to_U_eiou}{An internal matrix name for the a matrix to be added to the U_eiou_f matrix
 to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".}
 
-\item{.add_to_V_f}{an internal matrix name for a matrix to add to the Y_f matrix. Default is ".add_to_V_f".}
+\item{.add_to_V_f}{An internal matrix name for a matrix to add to the Y_f matrix. Default is ".add_to_V_f".}
 
-\item{.add_to_dest}{an internal matrix name for a matrix that replaces a previous energy destination. Default is ".repl_dest".}
+\item{.add_to_dest}{An internal matrix name for a matrix that replaces a previous energy destination. Default is ".repl_dest".}
 
-\item{.err}{an internal matrix name for calculating energy balance errors. Default is ".err".}
+\item{.err}{An internal matrix name for calculating energy balance errors. Default is ".err".}
 
-\item{.e_bal_ok}{an internal column name for assessing whether energy balance is within acceptable tolerances set by the \code{tol} argument. Default is ".e_bal_OK".}
+\item{.e_bal_ok}{An internal column name for assessing whether energy balance is within acceptable tolerances set by the \code{tol} argument. Default is ".e_bal_OK".}
 
 \item{.sep}{A separator between matrix names and \code{final} or \code{useful} indicators. Default is "_".}
 
-\item{.keep_in_Y}{A suffix applied to versions of the \code{Y} matrix that contain only industries retained in the move from final to useful last stage,
-including strings from the arguments \code{interface_ind}, \code{non_energy_ind}, \code{losses}, and \code{stat_diffs}.
-Default is "_keep_in_Y".}
+\item{U_eiou_name, U_feed_name, U_name, r_eiou_name, V_name, Y_name}{See \code{IEATools::psut_cols}.
+Distinct from \code{U_feed},\code{U_eiou}, \code{U}, \code{r_eiou}, \code{V}, and \code{Y} (which can be matrices or strings),
+these variables determine the names of these matrices on output.
+Default values are taken from \code{IEATools::psut_cols}.
+Note that \code{.sep} and \code{useful} are appended to the values of \code{U_eiou_name} ... \code{Y_name}
+to form the output names.}
 }
 \value{
 Output depends on input, roughly according to
@@ -137,18 +138,25 @@ the output is a named list of matrices containing new values for
 \strong{U_eiou}, \strong{U_feed}, \strong{U}, \strong{r_eiou}, \strong{V}, and \strong{Y} matrices,
 named with \code{.sep} plus \code{useful} appended to the variable names.
 
-If \code{.sutdata} is a named list of matrices, the names of the incoming
-\strong{U_eiou}, \strong{U_feed}, \strong{U}, \strong{r_eiou}, \strong{V}, and \strong{Y} matrices
-are changed to append \code{.sep} and \code{final}.
-Output is a list of matrices with names appended to include \code{.sep} and \code{final} or \code{.sep} and \code{useful}.
+If \code{.sutdata} is a named list of matrices,
+output is a list of matrices with names appended to include \code{.sep} and \code{useful},
+where appropriate.
+Note that output matrices are appended to the original list supplied to \code{.sutdata}.
 
-If \code{.sutadat} is a data frame, output is determined by argument \code{gather}.
-When \code{gather = TRUE}, output will contain a \code{last_stage} column with either \code{final} or \code{useful} indicated.
-When \code{gather = FALSE}, output will not contain a \code{last_stage} column,
-and \code{final} or \code{useful} last stage will be indicated in the column names.
-Default is \code{gather = TRUE}.
+If \code{.sutdata} is a data frame, arguments
+\code{R}, \code{U_feed}, \code{U_eiou}, \code{U}, \code{r_eiou}, \code{V}, \code{Y}, \code{C_eiou}, \code{C_Y}, \code{eta_fu}, and \code{phi_u}
+should all be strings (as the default)
+identifying which columns in \code{.sutdata} should be used for each matrix.
+Output is determined by argument \code{clean_up_df}.
+When \code{clean_up_df = TRUE} (the default), output will contain a \code{last_stage} column with either \code{final} or \code{useful} indicated.
+When \code{clean_up_df = FALSE}, output will contain an unmodified \code{last_stage} column,
+probably containing "Final" in all rows.
+Columns containing versions of matrices where last stage is "Useful" will have \code{sep} and \code{useful}
+appended to the column name.
+\code{clean_up_df = FALSE} is probably not what is desired and can lead to confusion.
+\code{clean_up_df = TRUE} (the default) is recommended.
 
-An energy balance check is performed.
+An energy balance check is performed on the useful matrices.
 If the energy balance check fails, a warning is emitted and
 additional diagnostic information will appear in the output: \code{.err} and \code{.e_bal_ok}.
 }
