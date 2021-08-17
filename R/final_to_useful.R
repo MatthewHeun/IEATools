@@ -380,9 +380,9 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                 `load_tidy_iea_df()`, `specify_all()`, and `prep_psut()`.
 #'                 `.sutdata` should also include columns of matrices `C_Y`, `C_eiou`, and `eta_fu`,
 #'                 probably created by functions `form_C_mats()` and `form_eta_fu_phi_u_vecs()`.
-#' @param gather When `.sutdata` is a data frame, tells whether to `tidyr::pivot_longer()` the result
-#'               to create a `last_stage` column and remove `last_stage` from variable names.
-#'               Default is `TRUE`.
+#' @param tidy_output When `.sutdata` is a data frame, tells whether to `tidyr::pivot_longer()` the result
+#'                    to create a `last_stage` column and remove `last_stage` from variable names.
+#'                    Default is `TRUE`.
 #' @param last_stage See `IEATools::iea_cols$last_stage`. 
 #'                        Each of these should be a column in `.sutdata`, `C_data`, and `eta_fu_data`.
 #' @param final,useful See `IEATools::last_stages`.
@@ -448,7 +448,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' psut_mats %>% 
 #'   extend_to_useful()
 extend_to_useful <- function(.sutdata, 
-                             gather = TRUE, 
+                             tidy_output = TRUE, 
                              
                              last_stage = IEATools::iea_cols$last_stage,
                              final = IEATools::last_stages$final,
@@ -495,7 +495,7 @@ extend_to_useful <- function(.sutdata,
                              V_name = IEATools::psut_cols$V, 
                              Y_name = IEATools::psut_cols$Y) {
   
-  extend_func <- function(eta_fu_vector, Y_mat, C_Y_mat, U_feed_mat, V_mat, C_eiou_mat, U_eiou_mat) {
+  extend_func <- function(eta_fu_vector, Y_mat, C_Y_mat, U_feed_mat, V_mat, C_eiou_mat, U_eiou_mat, R_mat) {
     
     # Industries to retain from Y_f to Y_u. 
     # These industries are not allocated to f-u machines, nor are they tracked for useful energy.
@@ -556,20 +556,51 @@ extend_to_useful <- function(.sutdata,
     r_eiou_useful_name <- paste0(r_eiou_name, .sep, useful)
     V_useful_name <- paste0(V_name, .sep, useful)
     Y_useful_name <- paste0(Y_name, .sep, useful)
+    
+    # Check Product energy balances.
+    # It would be nice to use Recca::verify_SUT_energy_balance() for this purpose.
+    # However, IEATools is (by design) independent of Recca.
+    # So we need to do our own energy balance here.
+    # Fortunately, energy balance calculations for products are relatively simple.
+    # The energy balance for products is given by row sums of (R + V)^T - U - Y, which should all equal 0
+    # within acceptable error.
+    .err_vec <- matsbyname::sum_byname(R_mat, V_useful_mat) %>%   # R + V
+      matsbyname::transpose_byname() %>%                          # (R + V)^T
+      matsbyname::difference_byname(U_useful_mat) %>%             # (R + V)^T - U
+      matsbyname::difference_byname(Y_useful_mat) %>%             # (R + V)^T - U - Y
+      matsbyname::rowsums_byname()
+      
+    .ebal_ok <- .err_vec %>%
+      matsbyname::iszero_byname(tol = tol) %>% 
+      as.logical()
 
     # Return a named list, as required by matsindf_apply()
-    list(U_feed_useful_mat, 
-         U_eiou_useful_mat, 
-         U_useful_mat,
-         r_eiou_useful_mat, 
-         V_useful_mat, 
-         Y_useful_mat) %>% 
+    out <- list(U_feed_useful_mat, 
+                U_eiou_useful_mat, 
+                U_useful_mat,
+                r_eiou_useful_mat, 
+                V_useful_mat, 
+                Y_useful_mat, 
+                .err_vec, 
+                .ebal_ok) %>% 
       magrittr::set_names(c(U_feed_useful_name, 
                             U_eiou_useful_name, 
                             U_useful_name, 
                             r_eiou_useful_name, 
                             V_useful_name, 
-                            Y_useful_name))
+                            Y_useful_name, 
+                            .err, 
+                            .e_bal_ok))
+    if (.ebal_ok) {
+      # Remove the error and .e_bal_ok items
+      out[[.err]] <- NULL
+      out[[.e_bal_ok]] <- NULL
+    } else {
+      # Emit a warning if there is a problem and return the wrong thing.
+      warning(paste0("Energy is not balanced to within ", tol, " in IEATools::extend_to_useful(). See columns ", 
+                     .err, " and ", .e_bal_ok, " for problems."))
+    }
+    return(out)
   }
 
   out <- matsindf::matsindf_apply(.sutdata, FUN = extend_func,
@@ -579,27 +610,31 @@ extend_to_useful <- function(.sutdata,
                                   U_feed_mat = U_feed, 
                                   V_mat = V, 
                                   C_eiou_mat = C_eiou, 
-                                  U_eiou_mat = U_eiou)
+                                  U_eiou_mat = U_eiou, 
+                                  R_mat = R)
   
-
-  
-  
-  
-  
-  
-  
+  # Gather (tidyr::pivot_longer) the outgoing data frame, if requested.
+  if (is.data.frame(out) & tidy_output) {
+    
+  }
   
   
   
-    wide_psut_data <- .sutdata %>% 
+  
+  
+  
+  
+  
+  
+    wide_psut_data <- .sutdata %>%
     dplyr::mutate(
       # Calculate .eta_fu_hat, which is needed twice below.
       # Doing the calculation here makes it available for other downstream calculations.
-      "{.eta_fu_hat}" := matsbyname::hatize_byname(.data[[eta_fu]], keep = "rownames") %>% 
+      "{.eta_fu_hat}" := matsbyname::hatize_byname(.data[[eta_fu]], keep = "rownames") %>%
         # Swap column names from arrow notation to from notation
         arrow_to_from_byname(margin = 2)
     )
-  
+
   # New column names
   U_feed_useful_name <- paste0(U_feed, .sep, useful)
   U_eiou_useful_name <- paste0(U_eiou, .sep, useful)
@@ -608,47 +643,47 @@ extend_to_useful <- function(.sutdata,
   V_useful_name <- paste0(V, .sep, useful)
   Y_useful_name <- paste0(Y, .sep, useful)
   Y_keep_name <- paste0(Y, .keep_in_Y)
-  
-  # Industries to retain from Y_f to Y_u. 
+
+  # Industries to retain from Y_f to Y_u.
   # These industries are not allocated to f-u machines, nor are they tracked for useful energy.
   Y_keep_inds <- c(interface_ind, losses, stat_diffs)
-  
+
   # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
-  # We take each of these in turn, adjusting the energy conversion chain to account for the fact that 
+  # We take each of these in turn, adjusting the energy conversion chain to account for the fact that
   # useful energy is now the final stage.
-  wide_useful_Y <- wide_psut_data %>% 
-    extend_to_useful_helper(dest_mat = Y, C_mat = C_Y, eta_fu_vec = eta_fu, 
-                            add_to_U = .add_to_U_f, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>% 
+  wide_useful_Y <- wide_psut_data %>%
+    extend_to_useful_helper(dest_mat = Y, C_mat = C_Y, eta_fu_vec = eta_fu,
+                            add_to_U = .add_to_U_f, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>%
     dplyr::mutate(
-      "{U_feed_useful_name}" := matsbyname::sum_byname(.data[[U_feed]], .data[[.add_to_U_f]]), 
+      "{U_feed_useful_name}" := matsbyname::sum_byname(.data[[U_feed]], .data[[.add_to_U_f]]),
       "{V_useful_name}" := matsbyname::sum_byname(.data[[V]], .data[[.add_to_V_f]]),
-      # We need to keep industries in Y that are interface industries 
-      # (exports, stock changes, international marine and aviation bunkers, and 
+      # We need to keep industries in Y that are interface industries
+      # (exports, stock changes, international marine and aviation bunkers, and
       # imports, though there won't be any imports in the Y matrix, because imports are in the V matrix).
       # Also keep non-energy flows.
-      # None of the interface industries nor the non-energy flows are in the allocation matrix (C), 
+      # None of the interface industries nor the non-energy flows are in the allocation matrix (C),
       # so we must retain them in the Y matrix.
-      "{Y_keep_name}" := matsbyname::select_cols_byname(.data[[Y]], 
-                                                   retain_pattern = matsbyname::make_pattern(Y_keep_inds, 
-                                                                                             pattern_type = "leading")), 
-      "{Y_useful_name}" := matsbyname::sum_byname(.data[[Y_keep_name]], .data[[.add_to_dest]]), 
+      "{Y_keep_name}" := matsbyname::select_cols_byname(.data[[Y]],
+                                                   retain_pattern = matsbyname::make_pattern(Y_keep_inds,
+                                                                                             pattern_type = "leading")),
+      "{Y_useful_name}" := matsbyname::sum_byname(.data[[Y_keep_name]], .data[[.add_to_dest]]),
       # Eliminate columns that are no longer needed
       "{.add_to_U_f}" := NULL,
       "{.add_to_V_f}" := NULL,
       "{.add_to_dest}" := NULL,
       "{Y_keep_name}" := NULL
     )
-  
-  wide_useful_EIOU <- wide_useful_Y %>% 
-    extend_to_useful_helper(dest_mat = U_eiou, C_mat = C_eiou, eta_fu_vec = eta_fu, 
-                            add_to_U = .add_to_U_eiou, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>% 
+
+  wide_useful_EIOU <- wide_useful_Y %>%
+    extend_to_useful_helper(dest_mat = U_eiou, C_mat = C_eiou, eta_fu_vec = eta_fu,
+                            add_to_U = .add_to_U_eiou, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>%
     dplyr::mutate(
-      "{U_feed_useful_name}" := matsbyname::sum_byname(.data[[U_feed_useful_name]], .data[[.add_to_U_eiou]]), 
-      "{U_eiou_useful_name}" := .data[[.add_to_dest]], 
+      "{U_feed_useful_name}" := matsbyname::sum_byname(.data[[U_feed_useful_name]], .data[[.add_to_U_eiou]]),
+      "{U_eiou_useful_name}" := .data[[.add_to_dest]],
       "{U_useful_name}" := matsbyname::sum_byname(.data[[U_feed_useful_name]], .data[[U_eiou_useful_name]]),
-      "{r_eiou_useful_name}" := matsbyname::quotient_byname(.data[[U_eiou_useful_name]], .data[[U_useful_name]]) %>% 
+      "{r_eiou_useful_name}" := matsbyname::quotient_byname(.data[[U_eiou_useful_name]], .data[[U_useful_name]]) %>%
         matsbyname::replaceNaN_byname(val = 0),
-      "{V_useful_name}" := matsbyname::sum_byname(.data[[V_useful_name]], .data[[.add_to_V_f]]), 
+      "{V_useful_name}" := matsbyname::sum_byname(.data[[V_useful_name]], .data[[.add_to_V_f]]),
       # Show that these all now have useful last stage
       "{last_stage}" := useful,
       # Eliminate columns that are no longer needed
@@ -663,19 +698,19 @@ extend_to_useful <- function(.sutdata,
       "{r_eiou}" := NULL,
       "{V}" := NULL,
       "{Y}" := NULL
-    ) %>% 
+    ) %>%
     dplyr::rename(
       # Rename the useful columns to be regular names so we can rbind later
       "{U_feed}" := .data[[U_feed_useful_name]],
       "{U_eiou}" := .data[[U_eiou_useful_name]],
       "{U}" := .data[[U_useful_name]],
       "{r_eiou}" := .data[[r_eiou_useful_name]],
-      "{V}" := .data[[V_useful_name]], 
+      "{V}" := .data[[V_useful_name]],
       "{Y}" := .data[[Y_useful_name]]
     )
-  
+
   # Prepare the outgoing data frame
-  out <- dplyr::bind_rows(.sutdata, wide_useful_EIOU) %>% 
+  out <- dplyr::bind_rows(.sutdata, wide_useful_EIOU) %>%
     dplyr::mutate(
       # Eliminate temporary columns that were used in the calculations
       "{C_eiou}" := NULL,
@@ -693,7 +728,7 @@ extend_to_useful <- function(.sutdata,
   # within acceptable error.
   verify_ebal <- out %>%
     dplyr::mutate(
-      # (R + V)^T - U - Y  
+      # (R + V)^T - U - Y
       "{.err}" := matsbyname::sum_byname(.data[[R]], .data[[V]]) %>% # R + V
         matsbyname::transpose_byname() %>%                           # (R + V)^T
         matsbyname::difference_byname(.data[[U_feed]]) %>%           # - U_feed
@@ -701,13 +736,13 @@ extend_to_useful <- function(.sutdata,
         matsbyname::difference_byname(.data[[Y]]) %>%                # - Y
         matsbyname::rowsums_byname(),
       "{.e_bal_ok}" := .data[[.err]] %>%
-        matsbyname::iszero_byname(tol = tol) %>% 
+        matsbyname::iszero_byname(tol = tol) %>%
         as.logical()
     )
   all_OK <- all(verify_ebal[[.e_bal_ok]])
   if (!all_OK) {
     # Emit a warning if there is a problem and return the wrong thing.
-    warning(paste0("Energy is not balanced to within ", tol, " in IEATools::extend_to_useful(). See columns ", 
+    warning(paste0("Energy is not balanced to within ", tol, " in IEATools::extend_to_useful(). See columns ",
                    .err, " and ", .e_bal_ok, " for problems."))
     return(verify_ebal)
   }

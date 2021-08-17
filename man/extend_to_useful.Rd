@@ -6,7 +6,7 @@
 \usage{
 extend_to_useful(
   .sutdata,
-  gather = TRUE,
+  tidy_output = TRUE,
   last_stage = IEATools::iea_cols$last_stage,
   final = IEATools::last_stages$final,
   useful = IEATools::last_stages$useful,
@@ -55,7 +55,7 @@ The last stage of these ECCs should be final (not useful).
 \code{.sutdata} should also include columns of matrices \code{C_Y}, \code{C_eiou}, and \code{eta_fu},
 probably created by functions \code{form_C_mats()} and \code{form_eta_fu_phi_u_vecs()}.}
 
-\item{gather}{When \code{.sutdata} is a data frame, tells whether to \code{tidyr::pivot_longer()} the result
+\item{tidy_output}{When \code{.sutdata} is a data frame, tells whether to \code{tidyr::pivot_longer()} the result
 to create a \code{last_stage} column and remove \code{last_stage} from variable names.
 Default is \code{TRUE}.}
 
