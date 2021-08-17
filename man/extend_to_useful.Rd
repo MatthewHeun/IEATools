@@ -105,7 +105,7 @@ to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".}
 Distinct from \code{U_feed},\code{U_eiou}, \code{U}, \code{r_eiou}, \code{V}, and \code{Y} (which can be matrices or strings),
 these variables determine the names of these matrices on output.
 Default values are taken from \code{IEATools::psut_cols}.
-Note that \code{.sep} and \code{useful} are appended to the values of \code{U_eiou_name} ... \code{Y_name}
+Note that \code{.sep} and \code{useful} are appended to the strings in \code{U_eiou_name} ... \code{Y_name}
 to form the output names.}
 }
 \value{
