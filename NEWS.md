@@ -1,3 +1,9 @@
+* `extend_to_useful()` now robust to cases where there is no EIOU,
+  thanks to now using `matsindf::matsindf_apply()`.
+* Now using `matsindf::matsindf_apply()` for `extend_to_useful()`.
+  This change will enable better handling of cases where
+  a country has no EIOU.
+  The first use case will be bunkers.
 * No longer cleaning matrices in `extend_to_useful_helper()`, 
   because some vectors may be the `0` vector and be eliminated.
 * Added `replace_null_UR()` function to the workflow in the `prep_psut()` function.

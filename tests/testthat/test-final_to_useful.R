@@ -413,3 +413,93 @@ test_that("extend_to_useful works as expected", {
 })
 
 
+test_that("extend_to_useful() works with individual matrices", {
+  C_data <- load_fu_allocation_data() %>% 
+    form_C_mats()
+  eta_fu_data <- load_eta_fu_data() %>% 
+    form_eta_fu_phi_u_vecs()
+  m_cols <- eta_fu_data %>% 
+    IEATools::meta_cols(return_names = TRUE,
+                        years_to_keep = IEATools::iea_cols$year,
+                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
+  psut_mats <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    prep_psut() %>% 
+    dplyr::full_join(C_data, by = m_cols) %>% 
+    dplyr::full_join(eta_fu_data, by = m_cols)
+  
+  useful_mats <- extend_to_useful(R = psut_mats$R[[1]], 
+                                  U_feed = psut_mats$U_feed[[1]], 
+                                  U_eiou = psut_mats$U_EIOU[[1]], 
+                                  U = psut_mats$U[[1]], 
+                                  r_eiou = psut_mats$r_eiou[[1]], 
+                                  V = psut_mats$V[[1]], 
+                                  Y = psut_mats$Y[[1]], 
+                                  C_eiou = psut_mats$C_EIOU[[1]], 
+                                  C_Y = psut_mats$C_Y[[1]], 
+                                  eta_fu = psut_mats$eta.fu[[1]], 
+                                  phi_u = psut_mats$phi.u[[1]])
+  # Ensure that expected matrices are included.
+  # There should be no more matrices than these.
+  expect_equal(names(useful_mats), 
+               c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+})
+
+
+test_that("extend_to_useful() works with list of matrices", {
+  C_data <- load_fu_allocation_data() %>% 
+    form_C_mats()
+  eta_fu_data <- load_eta_fu_data() %>% 
+    form_eta_fu_phi_u_vecs()
+  m_cols <- eta_fu_data %>% 
+    IEATools::meta_cols(return_names = TRUE,
+                        years_to_keep = IEATools::iea_cols$year,
+                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
+  psut_mats <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    prep_psut() %>% 
+    dplyr::full_join(C_data, by = m_cols) %>% 
+    dplyr::full_join(eta_fu_data, by = m_cols)
+  
+  # Make a list out of the first row of matrices
+  var_store <- as.list(psut_mats[1, ])
+  
+  useful_list <- extend_to_useful(var_store)
+  
+  # When a list is used as the data store, we should get all variables returned.
+  expect_equal(names(useful_list), 
+               c("Country", "Method", "Energy.type", "Last.stage", "Year",
+                 "V", "Y", "S_units", "R", "U_feed",
+                 "U_EIOU", "U", "r_EIOU", "C_EIOU", "C_Y",
+                 "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+})
+
+
+test_that("extend_to_useful() works as expected when clean_up_df = FALSE", {
+  C_data <- load_fu_allocation_data() %>% 
+    form_C_mats()
+  eta_fu_data <- load_eta_fu_data() %>% 
+    form_eta_fu_phi_u_vecs()
+  m_cols <- eta_fu_data %>% 
+    IEATools::meta_cols(return_names = TRUE,
+                        years_to_keep = IEATools::iea_cols$year,
+                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
+  psut_mats <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    prep_psut() %>% 
+    dplyr::full_join(C_data, by = m_cols) %>% 
+    dplyr::full_join(eta_fu_data, by = m_cols)
+  
+  with_useful <- psut_mats %>% 
+    extend_to_useful(clean_up_df = FALSE)
+  
+  # Check column names. We should get a lot of "_Useful"s here.
+  expect_equal(names(with_useful), 
+               c("Country", "Method", "Energy.type", "Last.stage", "Year",
+                 "V", "Y", "S_units", "R", "U_feed",
+                 "U_EIOU", "U", "r_EIOU", "C_EIOU", "C_Y",
+                 "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+})
