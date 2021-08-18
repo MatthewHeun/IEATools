@@ -6,11 +6,11 @@ citEntry(entry = "Manual",
                             as.person("Emmanuel Aramendia"),
                             as.person("Zeke Marshall")),
   year         = "2021",
-  note         = "R package version 0.1.55",
+  note         = "R package version 0.1.56",
   url          = "https://github.com/MatthewHeun/IEATools",
 
   textVersion  =
   paste("Matthew Kuperus Heun , Emmanuel Aramendia, Zeke Marshall (2021).",
         "IEATools: Tools for munging and manipulating IEA extended energy balance data.",
-        "R package version 0.1.55.")
+        "R package version 0.1.56.")
 )

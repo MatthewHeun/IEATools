@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.55</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.56</span>
       </span>
     </div>
 
@@ -133,9 +133,29 @@
       
     </div>
 
-    <div id="ieatools-0155-2021-07-21" class="section level1">
+    <div id="ieatools-0156-2021-08-18" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.56">
+<a href="#ieatools-0156-2021-08-18" class="anchor"></a>IEATools 0.1.56 (2021-08-18)</h1>
+<ul>
+<li>
+<code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code> now robust to cases where there is no EIOU, thanks to now using <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html">matsindf::matsindf_apply()</a></code>.</li>
+<li>Now using <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html">matsindf::matsindf_apply()</a></code> for <code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code>. This change will enable better handling of cases where a country has no EIOU. The first use case will be bunkers.</li>
+<li>No longer cleaning matrices in <code><a href="../reference/extend_to_useful_helper.html">extend_to_useful_helper()</a></code>, because some vectors may be the <code>0</code> vector and be eliminated.</li>
+<li>Added <code><a href="../reference/replace_null_UR.html">replace_null_UR()</a></code> function to the workflow in the <code><a href="../reference/prep_psut.html">prep_psut()</a></code> function.</li>
+<li>New function <code><a href="../reference/replace_null_UR.html">replace_null_UR()</a></code> replaces missing or <code>NULL</code> <code>R</code>, <code>U_feed</code>, <code>U_EIOU</code>, <code>U</code>, and <code>r_EIOU</code> with <strong>0</strong> matrices with appropriate row and column names. The replacements are built from <strong>Y</strong> and <strong>V</strong> matrices. The need for this functionality arises when the last stage is final energy and imports (<strong>V</strong> matrix) are the only source of an energy carrier that is consumed in final demand (<strong>Y</strong> matrix). In that situation, the <strong>R</strong> and <strong>U</strong> matrices will be missing, and they can be replaced by <strong>0</strong> matrices with the right dimensions.</li>
+<li>In the specification process, the <code>Flow</code> for countries <code>World_X_bunkers</code> are now specified to be “International navigation” and “International aviation” to correspond with their domestic equivalents.</li>
+<li>New tests for new code.
+<ul>
+<li>Up to 833 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="ieatools-0155-2021-07-21-doi" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.55">
-<a href="#ieatools-0155-2021-07-21" class="anchor"></a>IEATools 0.1.55 (2021-07-21)</h1>
+<a href="#ieatools-0155-2021-07-21-doi" class="anchor"></a>IEATools 0.1.55 (2021-07-21) <a href="https://doi.org/10.5281/zenodo.5119070"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5119070.svg" alt="DOI"></a>
+</h1>
 <ul>
 <li>Modifications to code and tests to accommodate World marine bunkers and World aviation bunkers being their own country.</li>
 <li>New tests for new features.

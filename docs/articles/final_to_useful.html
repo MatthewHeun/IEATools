@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.55</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.56</span>
       </span>
     </div>
 
@@ -84,13 +84,13 @@
 
       
 
-      </header><script src="final_to_useful_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><script src="final_to_useful_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Final to Useful Analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-07-21</h4>
+            <h4 class="date">2021-08-18</h4>
       
       
       <div class="hidden name"><code>final_to_useful.Rmd</code></div>
@@ -274,14 +274,14 @@
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E"</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
+<span class="co">#&gt; $ V           &lt;list&gt; &lt;&lt;matrix[12 x 14]&gt;&gt;, &lt;&lt;matrix[16 x 16]&gt;&gt;, &lt;&lt;matrix[14 x 21…</span>
+<span class="co">#&gt; $ Y           &lt;list&gt; &lt;&lt;matrix[12 x 21]&gt;&gt;, &lt;&lt;matrix[13 x 20]&gt;&gt;, &lt;&lt;matrix[18 x 26…</span>
+<span class="co">#&gt; $ S_units     &lt;list&gt; &lt;&lt;matrix[16 x 1]&gt;&gt;, &lt;&lt;matrix[18 x 1]&gt;&gt;, &lt;&lt;matrix[24 x 1]&gt;&gt;…</span>
 <span class="co">#&gt; $ R           &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[3 x 3]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ U_EIOU      &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;…</span>
 <span class="co">#&gt; $ U_feed      &lt;list&gt; &lt;&lt;matrix[6 x 5]&gt;&gt;, &lt;&lt;matrix[5 x 5]&gt;&gt;, &lt;&lt;matrix[9 x 11]&gt;&gt;, …</span>
-<span class="co">#&gt; $ U           &lt;list&gt; &lt;&lt;matrix[8 x 5]&gt;&gt;, &lt;&lt;matrix[7 x 5]&gt;&gt;, &lt;&lt;matrix[11 x 11]&gt;&gt;,…</span>
-<span class="co">#&gt; $ r_EIOU      &lt;list&gt; &lt;&lt;matrix[8 x 5]&gt;&gt;, &lt;&lt;matrix[7 x 5]&gt;&gt;, &lt;&lt;matrix[11 x 11]&gt;&gt;,…</span>
-<span class="co">#&gt; $ V           &lt;list&gt; &lt;&lt;matrix[12 x 14]&gt;&gt;, &lt;&lt;matrix[16 x 16]&gt;&gt;, &lt;&lt;matrix[14 x 2…</span>
-<span class="co">#&gt; $ Y           &lt;list&gt; &lt;&lt;matrix[12 x 21]&gt;&gt;, &lt;&lt;matrix[13 x 20]&gt;&gt;, &lt;&lt;matrix[18 x 2…</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; &lt;&lt;matrix[16 x 1]&gt;&gt;, &lt;&lt;matrix[18 x 1]&gt;&gt;, &lt;&lt;matrix[24 x 1]&gt;…</span>
+<span class="co">#&gt; $ U_EIOU      &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, …</span>
+<span class="co">#&gt; $ U           &lt;list&gt; &lt;&lt;matrix[8 x 5]&gt;&gt;, &lt;&lt;matrix[7 x 5]&gt;&gt;, &lt;&lt;matrix[11 x 11]&gt;&gt;…</span>
+<span class="co">#&gt; $ r_EIOU      &lt;list&gt; &lt;&lt;matrix[8 x 5]&gt;&gt;, &lt;&lt;matrix[7 x 5]&gt;&gt;, &lt;&lt;matrix[11 x 11]&gt;&gt;…</span>
 <span class="co">#&gt; $ C_EIOU      &lt;list&gt; &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[3 x 3]&gt;&gt;, …</span>
 <span class="co">#&gt; $ C_Y         &lt;list&gt; &lt;&lt;matrix[23 x 21]&gt;&gt;, &lt;&lt;matrix[24 x 22]&gt;&gt;, &lt;&lt;matrix[45 x 3…</span>
 <span class="co">#&gt; $ eta.fu      &lt;list&gt; &lt;&lt;matrix[22 x 1]&gt;&gt;, &lt;&lt;matrix[23 x 1]&gt;&gt;, &lt;&lt;matrix[32 x 1]&gt;…</span>
@@ -298,14 +298,14 @@
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E"</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final", "Useful", "Useful", "U…</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000, 1971, 2000, 1971, 2000</span>
+<span class="co">#&gt; $ V           &lt;list&gt; &lt;&lt;matrix[12 x 14]&gt;&gt;, &lt;&lt;matrix[16 x 16]&gt;&gt;, &lt;&lt;matrix[14 x 21…</span>
+<span class="co">#&gt; $ Y           &lt;list&gt; &lt;&lt;matrix[12 x 21]&gt;&gt;, &lt;&lt;matrix[13 x 20]&gt;&gt;, &lt;&lt;matrix[18 x 26…</span>
+<span class="co">#&gt; $ S_units     &lt;list&gt; &lt;&lt;matrix[16 x 1]&gt;&gt;, &lt;&lt;matrix[18 x 1]&gt;&gt;, &lt;&lt;matrix[24 x 1]&gt;&gt;…</span>
 <span class="co">#&gt; $ R           &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[3 x 3]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ U_EIOU      &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ U_feed      &lt;list&gt; &lt;&lt;matrix[6 x 5]&gt;&gt;, &lt;&lt;matrix[5 x 5]&gt;&gt;, &lt;&lt;matrix[9 x 11]&gt;&gt;, …</span>
-<span class="co">#&gt; $ U           &lt;list&gt; &lt;&lt;matrix[8 x 5]&gt;&gt;, &lt;&lt;matrix[7 x 5]&gt;&gt;, &lt;&lt;matrix[11 x 11]&gt;&gt;,…</span>
-<span class="co">#&gt; $ r_EIOU      &lt;list&gt; &lt;&lt;matrix[8 x 5]&gt;&gt;, &lt;&lt;matrix[7 x 5]&gt;&gt;, &lt;&lt;matrix[11 x 11]&gt;&gt;…</span>
-<span class="co">#&gt; $ V           &lt;list&gt; &lt;&lt;matrix[12 x 14]&gt;&gt;, &lt;&lt;matrix[16 x 16]&gt;&gt;, &lt;&lt;matrix[14 x 2…</span>
-<span class="co">#&gt; $ Y           &lt;list&gt; &lt;&lt;matrix[12 x 21]&gt;&gt;, &lt;&lt;matrix[13 x 20]&gt;&gt;, &lt;&lt;matrix[18 x 2…</span>
-<span class="co">#&gt; $ S_units     &lt;list&gt; &lt;&lt;matrix[16 x 1]&gt;&gt;, &lt;&lt;matrix[18 x 1]&gt;&gt;, &lt;&lt;matrix[24 x 1]&gt;…</span></code></pre></div>
+<span class="co">#&gt; $ U_feed      &lt;list&gt; &lt;&lt;matrix[6 x 5]&gt;&gt;, &lt;&lt;matrix[5 x 5]&gt;&gt;, &lt;&lt;matrix[9 x 11]&gt;&gt;,…</span>
+<span class="co">#&gt; $ U_EIOU      &lt;list&gt; &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, …</span>
+<span class="co">#&gt; $ U           &lt;list&gt; &lt;&lt;matrix[8 x 5]&gt;&gt;, &lt;&lt;matrix[7 x 5]&gt;&gt;, &lt;&lt;matrix[11 x 11]&gt;&gt;…</span>
+<span class="co">#&gt; $ r_EIOU      &lt;list&gt; &lt;&lt;matrix[8 x 5]&gt;&gt;, &lt;&lt;matrix[7 x 5]&gt;&gt;, &lt;&lt;matrix[11 x 11]&gt;&gt;…</span></code></pre></div>
 <p>Notice that several additional rows have been created in the data frame. The additional rows contain versions of ECC matrices wherein the last stage of the ECC is useful energy. Extending to the useful stage means many additional energy products are included in the energy conversion chain. For example, the <span class="math inline">\(\mathbf{Y}\)</span> matrix includes additional rows for mechanical drive (MD), heat (MTH.100.C, e.g.), and light.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># A Y matrix where final energy is the last stage of the energy conversion chain</span>
