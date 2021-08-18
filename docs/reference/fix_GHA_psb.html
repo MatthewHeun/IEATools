@@ -79,7 +79,7 @@ by reducing the per-capita consumption of PSB, starting in 1991." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.55</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.56</span>
       </span>
     </div>
 
@@ -202,7 +202,7 @@ for additional details.</p>
     <span class='op'>)</span>
   <span class='op'>)</span> 
 <span class='va'>example_tidy_iea_df</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 10 x 11</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 10 × 11</span>
 #&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi…
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                
 #&gt; <span style='color: #BCBCBC;'> 1</span> GHA     PCM    E           Final       <span style='text-decoration: underline;'>1</span>991 Supply      Total primary energy…
@@ -221,13 +221,13 @@ for additional details.</p>
 <span class='va'>example_tidy_iea_df</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Year</span> <span class='op'>==</span> <span class='fl'>1991</span>, <span class='va'>Flow</span> <span class='op'>==</span> <span class='st'>"Production"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='st'>"E.dot"</span>, <span class='st'>"Unit"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 x 2</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 × 2</span>
 #&gt;   E.dot Unit 
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>
 #&gt; <span style='color: #BCBCBC;'>1</span> <span style='text-decoration: underline;'>2</span>088. ktoe </div><div class='input'><span class='va'>fixed</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Year</span> <span class='op'>==</span> <span class='fl'>1991</span>, <span class='va'>Flow</span> <span class='op'>==</span> <span class='st'>"Production"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='st'>"E.dot"</span>, <span class='st'>"Unit"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 x 2</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 × 2</span>
 #&gt;   E.dot Unit 
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>
 #&gt; <span style='color: #BCBCBC;'>1</span>  <span style='text-decoration: underline;'>4</span>025 ktoe </div></pre>

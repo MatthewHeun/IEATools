@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.55</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.56</span>
       </span>
     </div>
 
@@ -84,13 +84,13 @@
 
       
 
-      </header><script src="fix_iea_data_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><script src="fix_iea_data_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Fixes for IEA Data</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-07-21</h4>
+            <h4 class="date">2021-08-18</h4>
       
       
       <div class="hidden name"><code>fix_iea_data.Rmd</code></div>
@@ -130,19 +130,19 @@ Our approach to this problem is to smooth out the large peak in PSB consumption 
 <span class="va">example_tidy_iea_df</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Product</span> <span class="op">==</span> <span class="st">"Primary solid biofuels"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Year</span>, <span class="va">Flow.aggregation.point</span>, <span class="va">Flow</span>, <span class="va">E.dot</span>, <span class="va">Unit</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 10 x 5</span>
-<span class="co">#&gt;     Year Flow.aggregation.point     Flow                             E.dot Unit </span>
-<span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;                      &lt;chr&gt;                            &lt;dbl&gt; &lt;chr&gt;</span>
-<span class="co">#&gt;  1  1991 Total primary energy supp… Production                      2.09e3 ktoe </span>
-<span class="co">#&gt;  2  1991 Transformation processes   Charcoal production plants     -4.78e2 ktoe </span>
-<span class="co">#&gt;  3  1991 Industry                   Industry not elsewhere specif…  1.46e2 ktoe </span>
-<span class="co">#&gt;  4  1991 Other                      Residential                     1.46e3 ktoe </span>
-<span class="co">#&gt;  5  1992 Total primary energy supp… Production                      3.89e3 ktoe </span>
-<span class="co">#&gt;  6  1992 Transformation processes   Charcoal production plants     -1.09e3 ktoe </span>
-<span class="co">#&gt;  7  1992 Industry                   Industry not elsewhere specif…  6.85e2 ktoe </span>
-<span class="co">#&gt;  8  1992 Other                      Residential                     2.02e3 ktoe </span>
-<span class="co">#&gt;  9  1992 Other                      Commercial and public services  8.67e1 ktoe </span>
-<span class="co">#&gt; 10  1992 Other                      Agriculture/forestry            2.79e0 ktoe</span>
+<span class="co">#&gt; # A tibble: 10 × 5</span>
+<span class="co">#&gt;     Year Flow.aggregation.point      Flow                            E.dot Unit </span>
+<span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;                       &lt;chr&gt;                           &lt;dbl&gt; &lt;chr&gt;</span>
+<span class="co">#&gt;  1  1991 Total primary energy supply Production                     2.09e3 ktoe </span>
+<span class="co">#&gt;  2  1991 Transformation processes    Charcoal production plants    -4.78e2 ktoe </span>
+<span class="co">#&gt;  3  1991 Industry                    Industry not elsewhere speci…  1.46e2 ktoe </span>
+<span class="co">#&gt;  4  1991 Other                       Residential                    1.46e3 ktoe </span>
+<span class="co">#&gt;  5  1992 Total primary energy supply Production                     3.89e3 ktoe </span>
+<span class="co">#&gt;  6  1992 Transformation processes    Charcoal production plants    -1.09e3 ktoe </span>
+<span class="co">#&gt;  7  1992 Industry                    Industry not elsewhere speci…  6.85e2 ktoe </span>
+<span class="co">#&gt;  8  1992 Other                       Residential                    2.02e3 ktoe </span>
+<span class="co">#&gt;  9  1992 Other                       Commercial and public servic…  8.67e1 ktoe </span>
+<span class="co">#&gt; 10  1992 Other                       Agriculture/forestry           2.79e0 ktoe</span>
 <span class="va">fixed</span> <span class="op">&lt;-</span> <span class="va">example_tidy_iea_df</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/fix_GHA_psb.html">fix_GHA_psb</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>Comparing production of Primary solid biofuels in 1991 shows that production rates have changed.</p>
@@ -150,14 +150,14 @@ Our approach to this problem is to smooth out the large peak in PSB consumption 
 <code class="sourceCode R"><span class="va">example_tidy_iea_df</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Year</span> <span class="op">==</span> <span class="fl">1991</span>, <span class="va">Flow</span> <span class="op">==</span> <span class="st">"Production"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="st">"E.dot"</span>, <span class="st">"Unit"</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 x 2</span>
+<span class="co">#&gt; # A tibble: 1 × 2</span>
 <span class="co">#&gt;   E.dot Unit </span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;</span>
 <span class="co">#&gt; 1 2088. ktoe</span>
 <span class="va">fixed</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Year</span> <span class="op">==</span> <span class="fl">1991</span>, <span class="va">Flow</span> <span class="op">==</span> <span class="st">"Production"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="st">"E.dot"</span>, <span class="st">"Unit"</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 x 2</span>
+<span class="co">#&gt; # A tibble: 1 × 2</span>
 <span class="co">#&gt;   E.dot Unit </span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;</span>
 <span class="co">#&gt; 1  4025 ktoe</span></code></pre></div>
@@ -189,7 +189,7 @@ Our approach to this problem is to smooth out the large peak in PSB consumption 
                      <span class="st">"Industry not elsewhere specified"</span><span class="op">)</span>, 
          <span class="va">Product</span> <span class="op">==</span> <span class="st">"Electricity"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="st">"Year"</span>, <span class="st">"Flow"</span>, <span class="st">"E.dot"</span>, <span class="st">"Unit"</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 5 x 4</span>
+<span class="co">#&gt; # A tibble: 5 × 4</span>
 <span class="co">#&gt;    Year Flow                              E.dot Unit </span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;                             &lt;dbl&gt; &lt;chr&gt;</span>
 <span class="co">#&gt; 1  1971 Mining and quarrying              16.7  ktoe </span>
@@ -206,7 +206,7 @@ Our approach to this problem is to smooth out the large peak in PSB consumption 
                      <span class="st">"Industry not elsewhere specified"</span><span class="op">)</span>, 
          <span class="va">Product</span> <span class="op">==</span> <span class="st">"Electricity"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="st">"Year"</span>, <span class="st">"Flow"</span>, <span class="st">"E.dot"</span>, <span class="st">"Unit"</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 8 x 4</span>
+<span class="co">#&gt; # A tibble: 8 × 4</span>
 <span class="co">#&gt;    Year Flow                              E.dot Unit </span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;                             &lt;dbl&gt; &lt;chr&gt;</span>
 <span class="co">#&gt; 1  1971 Mining and quarrying              16.7  ktoe </span>

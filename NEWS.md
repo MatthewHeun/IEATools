@@ -1,4 +1,36 @@
-# IEATools 0.1.55 (2021-07-21) 
+# IEATools 0.1.56 (2021-08-18)
+
+* `extend_to_useful()` now robust to cases where there is no EIOU,
+  thanks to now using `matsindf::matsindf_apply()`.
+* Now using `matsindf::matsindf_apply()` for `extend_to_useful()`.
+  This change will enable better handling of cases where
+  a country has no EIOU.
+  The first use case will be bunkers.
+* No longer cleaning matrices in `extend_to_useful_helper()`, 
+  because some vectors may be the `0` vector and be eliminated.
+* Added `replace_null_UR()` function to the workflow in the `prep_psut()` function.
+* New function `replace_null_UR()` replaces missing or `NULL` 
+  `R`, `U_feed`, `U_EIOU`, `U`, and `r_EIOU`
+  with **0** matrices with appropriate row and column names.
+  The replacements are built from **Y** and **V** matrices.
+  The need for this functionality arises when
+  the last stage is final energy 
+  and imports (**V** matrix) 
+  are the only source of an energy carrier that 
+  is consumed in final demand (**Y** matrix).
+  In that situation, the **R** and **U** matrices 
+  will be missing, 
+  and they can be replaced by **0** matrices with the right dimensions.
+* In the specification process,
+  the `Flow` for countries `World_X_bunkers` are now
+  specified to be "International navigation" and "International aviation"
+  to correspond with their domestic equivalents.
+* New tests for new code.
+    * Up to 833 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# IEATools 0.1.55 (2021-07-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5119070.svg)](https://doi.org/10.5281/zenodo.5119070)
 
 * Modifications to code and tests
   to accommodate World marine bunkers and World aviation bunkers being their own country.

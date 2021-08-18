@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.55</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.56</span>
       </span>
     </div>
 
@@ -84,13 +84,13 @@
 
       
 
-      </header><script src="IEATools_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><script src="IEATools_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>IEATools</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-07-21</h4>
+            <h4 class="date">2021-08-18</h4>
       
       
       <div class="hidden name"><code>IEATools.Rmd</code></div>
@@ -384,7 +384,7 @@ IEA extended energy balance data format.
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R">  <span class="va">Tidy_IEA_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span>
   <span class="va">Tidy_IEA_df</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Year</span>, <span class="va">Flow</span>, <span class="va">Product</span>, <span class="va">E.dot</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 402 x 4</span>
+<span class="co">#&gt; # A tibble: 402 × 4</span>
 <span class="co">#&gt;     Year Flow       Product                                 E.dot</span>
 <span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;                                   &lt;dbl&gt;</span>
 <span class="co">#&gt;  1  1971 Production Primary solid biofuels                2088.  </span>
@@ -401,24 +401,24 @@ IEA extended energy balance data format.
   <span class="co"># Move the first row to the bottom to put everything out of order</span>
   <span class="va">Unsorted</span> <span class="op">&lt;-</span> <span class="va">Tidy_IEA_df</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="op">]</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="va">Tidy_IEA_df</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span>
   <span class="va">Unsorted</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Year</span>, <span class="va">Flow</span>, <span class="va">Product</span>, <span class="va">E.dot</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 402 x 4</span>
-<span class="co">#&gt;     Year Flow                        Product                               E.dot</span>
-<span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;                       &lt;chr&gt;                                 &lt;dbl&gt;</span>
-<span class="co">#&gt;  1  1971 Production                  Hydro                                250.  </span>
-<span class="co">#&gt;  2  1971 Imports                     Crude oil                            916.  </span>
-<span class="co">#&gt;  3  1971 Imports                     Aviation gasoline                      1.07</span>
-<span class="co">#&gt;  4  1971 Imports                     Kerosene type jet fuel excl. biofu…   21.3 </span>
-<span class="co">#&gt;  5  1971 Imports                     Other kerosene                         1.05</span>
-<span class="co">#&gt;  6  1971 Imports                     Lubricants                            18.1 </span>
-<span class="co">#&gt;  7  1971 Exports                     Motor gasoline excl. biofuels         -4.28</span>
-<span class="co">#&gt;  8  1971 Exports                     Other kerosene                        -4.18</span>
-<span class="co">#&gt;  9  1971 Exports                     Fuel oil                            -178.  </span>
-<span class="co">#&gt; 10  1971 International marine bunke… Gas/diesel oil excl. biofuels        -29.0 </span>
+<span class="co">#&gt; # A tibble: 402 × 4</span>
+<span class="co">#&gt;     Year Flow                         Product                              E.dot</span>
+<span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;                        &lt;chr&gt;                                &lt;dbl&gt;</span>
+<span class="co">#&gt;  1  1971 Production                   Hydro                               250.  </span>
+<span class="co">#&gt;  2  1971 Imports                      Crude oil                           916.  </span>
+<span class="co">#&gt;  3  1971 Imports                      Aviation gasoline                     1.07</span>
+<span class="co">#&gt;  4  1971 Imports                      Kerosene type jet fuel excl. biof…   21.3 </span>
+<span class="co">#&gt;  5  1971 Imports                      Other kerosene                        1.05</span>
+<span class="co">#&gt;  6  1971 Imports                      Lubricants                           18.1 </span>
+<span class="co">#&gt;  7  1971 Exports                      Motor gasoline excl. biofuels        -4.28</span>
+<span class="co">#&gt;  8  1971 Exports                      Other kerosene                       -4.18</span>
+<span class="co">#&gt;  9  1971 Exports                      Fuel oil                           -178.  </span>
+<span class="co">#&gt; 10  1971 International marine bunkers Gas/diesel oil excl. biofuels       -29.0 </span>
 <span class="co">#&gt; # … with 392 more rows</span>
   <span class="co"># Now sort it to put everything right again</span>
   <span class="va">Sorted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sort_iea_df.html">sort_iea_df</a></span><span class="op">(</span><span class="va">Unsorted</span><span class="op">)</span>
   <span class="va">Sorted</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Year</span>, <span class="va">Flow</span>, <span class="va">Product</span>, <span class="va">E.dot</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 402 x 4</span>
+<span class="co">#&gt; # A tibble: 402 × 4</span>
 <span class="co">#&gt;     Year Flow       Product                                 E.dot</span>
 <span class="co">#&gt;    &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;                                   &lt;dbl&gt;</span>
 <span class="co">#&gt;  1  1971 Production Primary solid biofuels                2088.  </span>
@@ -437,7 +437,7 @@ IEA extended energy balance data format.
 <code class="sourceCode R">  <span class="co"># Pivoting the data results in unconventional ordering</span>
   <span class="va">Unsorted_wide</span> <span class="op">&lt;-</span> <span class="va">Tidy_IEA_df</span> <span class="op">%&gt;%</span> <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">Year</span>, values_from <span class="op">=</span> <span class="va">E.dot</span><span class="op">)</span>
   <span class="va">Unsorted_wide</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="va">Product</span>, <span class="va">`1971`</span>, <span class="va">`2000`</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 293 x 4</span>
+<span class="co">#&gt; # A tibble: 293 × 4</span>
 <span class="co">#&gt;    Flow       Product                                `1971`  `2000`</span>
 <span class="co">#&gt;    &lt;chr&gt;      &lt;chr&gt;                                   &lt;dbl&gt;   &lt;dbl&gt;</span>
 <span class="co">#&gt;  1 Production Primary solid biofuels                2088.   3891.  </span>
@@ -454,7 +454,7 @@ IEA extended energy balance data format.
   <span class="co"># The wide data frame is not sorted correctly. Sort it.</span>
   <span class="va">Sorted_wide</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sort_iea_df.html">sort_iea_df</a></span><span class="op">(</span><span class="va">Unsorted_wide</span><span class="op">)</span>
   <span class="va">Sorted_wide</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="va">Product</span>, <span class="va">`1971`</span>, <span class="va">`2000`</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 293 x 4</span>
+<span class="co">#&gt; # A tibble: 293 × 4</span>
 <span class="co">#&gt;    Flow       Product                                `1971`  `2000`</span>
 <span class="co">#&gt;    &lt;chr&gt;      &lt;chr&gt;                                   &lt;dbl&gt;   &lt;dbl&gt;</span>
 <span class="co">#&gt;  1 Production Primary solid biofuels                2088.   3891.  </span>

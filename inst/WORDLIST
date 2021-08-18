@@ -98,6 +98,7 @@ photovoltaics
 pre
 PSB
 PSUT
+psutcols
 rankine
 readme
 regasification
@@ -117,6 +118,7 @@ situ
 TFC
 TJ
 tp
+tpes
 transf
 transposeinverse
 tsv

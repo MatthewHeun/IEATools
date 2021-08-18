@@ -28,9 +28,9 @@ An object of same length as \code{m} with switched notation.
 \description{
 IEA data can be "specified" by adding additional information.
 Three notations are useful: arrow and bracket.
-Arrow notation is "from -> to", and
+Arrow notation is from -> to, and
 bracket notation is
-"destination [source]".
+destination [source].
 These functions change matrix row/column names
 between the two notations.
 \itemize{

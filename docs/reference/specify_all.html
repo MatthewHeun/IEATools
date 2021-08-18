@@ -79,7 +79,7 @@ tp_sinks_to_nonenergy()
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.55</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.56</span>
       </span>
     </div>
 
@@ -199,7 +199,7 @@ See examples for two ways to achieve the same result.</p>
     <pre class="examples"><div class='input'><span class='co'># Simple</span>
 <span class='fu'><a href='load_tidy_iea_df.html'>load_tidy_iea_df</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'>specify_all</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 428 x 11</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 428 × 11</span>
 #&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi…
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                
 #&gt; <span style='color: #BCBCBC;'> 1</span> GHA     PCM    E           Final       <span style='text-decoration: underline;'>1</span>971 Consumption Industry             
@@ -220,7 +220,7 @@ See examples for two ways to achieve the same result.</p>
   <span class='fu'><a href='specify_bunkers.html'>specify_bunkers</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='specify_interface_industries.html'>specify_interface_industries</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='tp_sinks_to_nonenergy.html'>tp_sinks_to_nonenergy</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 428 x 11</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 428 × 11</span>
 #&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi…
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                
 #&gt; <span style='color: #BCBCBC;'> 1</span> GHA     PCM    E           Final       <span style='text-decoration: underline;'>1</span>971 Consumption Industry             

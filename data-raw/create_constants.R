@@ -471,13 +471,15 @@ industry_net_flows <- industry_flows[!(industry_flows %in% c("Coal mines", "Oil 
 usethis::use_data(industry_net_flows, overwrite = TRUE)
 
 
-transport_flows <- list(world_aviation_bunkers = "World aviation bunkers",
+transport_flows <- list(domestic_navigation = "Domestic navigation",
+                        world_marine_bunkers = "World marine bunkers",
+                        international_navigation = "International navigation",
                         domestic_aviation = "Domestic aviation",
+                        world_aviation_bunkers = "World aviation bunkers",
+                        international_aviation = "International aviation",
                         road = "Road",
                         rail = "Rail", 
                         pipeline_transport = "Pipeline transport", 
-                        world_marine_bunkers = "World marine bunkers",
-                        domestic_navigation = "Domestic navigation",
                         # 2019
                         non_specified_transport = "Non-specified (transport)",
                         # 2020
