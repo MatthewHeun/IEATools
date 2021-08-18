@@ -530,12 +530,12 @@ extend_to_useful <- function(.sutdata = NULL,
 
     # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
     # We take each of these in turn, adjusting the energy conversion chain to account for the fact that 
-    # useful energy is now the final stage.
+    # useful energy is now the last stage.
     res_Y <- extend_to_useful_helper(dest_mat = Y_mat, C_mat = C_Y_mat, eta_fu_vec = eta_fu_vector, 
                                      add_to_U = .add_to_U_f, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest)
     U_feed_useful_mat <- matsbyname::sum_byname(U_feed_mat, res_Y[[.add_to_U_f]])
-    # At this point, we have no EIOU, so just set U_useful equal to U_feed.
-    U_useful_mat <- U_feed_mat
+    # At this point, we have no EIOU, so just set U_useful equal to U_feed_useful.
+    U_useful_mat <- U_feed_useful_mat
     # Set EIOU-related matrices to the 0 matrix, keeping the correct row and column names.
     U_eiou_useful_mat <- matsbyname::hadamardproduct_byname(U_useful_mat, 0)
     r_eiou_useful_mat <- U_eiou_useful_mat
