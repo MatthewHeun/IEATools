@@ -75,7 +75,7 @@ Identification of parenthetical notation delimiters is determined by the notatio
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.55</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.56</span>
       </span>
     </div>
 
@@ -187,7 +187,7 @@ of an IEA data frame.</p></td>
   <span class='fu'>remove_suffix_specifications</span><span class='op'>(</span>col <span class='op'>=</span> <span class='st'>"Flow"</span>, unsuffixed_col <span class='op'>=</span> <span class='st'>"clean_Flow"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>Flow</span>, <span class='va'>Product</span>, <span class='va'>E.dot</span>, <span class='va'>clean_Flow</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/startsWith.html'>endsWith</a></span><span class='op'>(</span><span class='va'>Flow</span>, <span class='va'>bracket_notation</span><span class='op'>[[</span><span class='st'>"suff_end"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 101 x 4</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 101 × 4</span>
 #&gt;    Flow                            Product              E.dot clean_Flow        
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                           <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>             
 #&gt; <span style='color: #BCBCBC;'> 1</span> Exports [of Fuel oil]           Fuel oil           -<span style='color: #BB0000;'>178.</span>   Exports           
