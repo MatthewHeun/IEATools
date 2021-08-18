@@ -1,4 +1,4 @@
-# IEATools 0.1.56 (2021-08-18)
+# IEATools 0.1.56 (2021-08-18) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5217278.svg)](https://doi.org/10.5281/zenodo.5217278)
 
 * `extend_to_useful()` now robust to cases where there is no EIOU,
   thanks to now using `matsindf::matsindf_apply()`.
