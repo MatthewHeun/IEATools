@@ -1,6 +1,6 @@
-# IEATools 0.1.57 (2021-08-19)
+# IEATools 0.1.57 (2021-08-19) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5222003.svg)](https://doi.org/10.5281/zenodo.5222003)
 
-* Fixed a but where missing EIOU was not properly detected.
+* Fixed a bug where missing EIOU was not properly detected.
   It could be missing or `NULL`, but `NULL` was not detected.
 * No new tests.
     * Still at 833 tests, all passing.
