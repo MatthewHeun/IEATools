@@ -555,7 +555,10 @@ extend_to_useful <- function(.sutdata = NULL,
     # If so, make further adjustments to the matrices.
     # If not, no big deal. 
     # We can live with the matrices calculated above.
-    if (!missing(C_eiou_mat)) {
+    if (missing(C_eiou_mat)) {
+      C_eiou_mat <- NULL
+    }
+    if (!is.null(C_eiou_mat)) {
       # We have some EIOU. Calculate modifications to matrices accounting for the EIOU portion of the ECC.
       res_eiou <- extend_to_useful_helper(dest_mat = U_eiou_mat, C_mat = C_eiou_mat, eta_fu_vec = eta_fu_vector, 
                                           add_to_U = .add_to_U_eiou, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest)
