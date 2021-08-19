@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.56</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.57</span>
       </span>
     </div>
 
@@ -133,9 +133,23 @@
       
     </div>
 
-    <div id="ieatools-0156-2021-08-18" class="section level1">
+    <div id="ieatools-0157-2021-08-19" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.57">
+<a href="#ieatools-0157-2021-08-19" class="anchor"></a>IEATools 0.1.57 (2021-08-19)</h1>
+<ul>
+<li>Fixed a but where missing EIOU was not properly detected. It could be missing or <code>NULL</code>, but <code>NULL</code> was not detected.</li>
+<li>No new tests.
+<ul>
+<li>Still at 833 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="ieatools-0156-2021-08-18-doi" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.56">
-<a href="#ieatools-0156-2021-08-18" class="anchor"></a>IEATools 0.1.56 (2021-08-18)</h1>
+<a href="#ieatools-0156-2021-08-18-doi" class="anchor"></a>IEATools 0.1.56 (2021-08-18) <a href="https://doi.org/10.5281/zenodo.5217278"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5217278.svg" alt="DOI"></a>
+</h1>
 <ul>
 <li>
 <code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code> now robust to cases where there is no EIOU, thanks to now using <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html">matsindf::matsindf_apply()</a></code>.</li>
