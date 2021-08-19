@@ -1,3 +1,8 @@
+* New feature for `use_iso_countries()`: 
+  can supply a data frame of ISO 3-letter codes
+  in argument `override_df`.
+
+
 # IEATools 0.1.57 (2021-08-19) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5222003.svg)](https://doi.org/10.5281/zenodo.5222003)
 
 * Fixed a bug where missing EIOU was not properly detected.
