@@ -1,3 +1,5 @@
+# IEATools 0.1.57 (2021-08-19)
+
 * Fixed a but where missing EIOU was not properly detected.
   It could be missing or `NULL`, but `NULL` was not detected.
 * No new tests.
