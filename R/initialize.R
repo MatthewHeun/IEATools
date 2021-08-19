@@ -435,34 +435,21 @@ clean_iea_whitespace <- function(.iea_df,
 #' The IEA uses full country names, but it is more concise to use the 3-letter ISO abbreviations.
 #' This function replaces the full country names with ISO abbreviations where possible.
 #' 
-#' Special cases are considered where 
-#' IEA extended energy balance data country names 
-#' differ from 
-#' `countrycode` package country names.
+#' Internally, the `countrycode` package is used for ISO codes where possible.
+#' Optionally, an `override_df` can be specified.
+#' `override_df` should contain columns `pfu_code` (for 3-letter ISO codes) and `iea_name` for country names.
 #' 
-#' |IEA name|`countrycode` name|`use_iso_countries()` result|
-#' |---------|-------------------|------------------------------|
-#' |"People's Republic of China"|"China"|"CHN"|
-#' |"Hong Kong (China)"|"Hong Kong SAR China"|"HKG"|
-#' |"World marine bunkers"|NA|"WMB"|
-#' |"World aviation bunkers"|NA|"WAB"|
+#' If neither the `countrycode` package nor `override_df` contain a matching `country` name, 
+#' the `country` column is left untouched.
+#' 
+#' By default, special cases are considered via the `override_df` argument.
+#' The default value of `override_df` sets codes for China and Hong Kong,
+#' as well as World X bunkers.
 #'
-#' @param .iea_df A data frame containing a `country` column
+#' @param .iea_df A data frame containing a `country` column.
+#' @param override_df A data frame containing columns named `pfu_code` and `iea_name`.
 #' @param country The name of the country column in `.iea_df`. Default is "Country".
-#' @param iea_china The IEA string for China.
-#'                  Default is "People's Republic of China".
-#' @param ieatools_china The 3-letter string that replaces `iea_china`. 
-#'                       Default is "CHN".
-#' @param iea_hk The IEA string for Hong Kong.
-#'               Default is "Hong Kong (China)".
-#' @param ieatools_hk The 3-letter string that replaces `iea_hk`. 
-#'                    Default is "HKG".
-#' @param iea_world_marine_bunkers A string specifying the full name for the "country" called World marine bunkers.
-#'                                Default is "World marine bunkers".
-#' @param ieatools_wmb A 3-letter code for World marine bunkers. Default is "WMB".
-#' @param iea_world_aviation_bunkers A string specifying the full name for the "country" called World aviation bunkers.
-#'                                  Default is "World aviation bunkers".
-#' @param ieatools_wab A 3-letter code for World aviation bunkers. Default is "WAB".
+#' @param pfu_code,iea_name See `IEATools::countryconcordance_cols`.
 #'
 #' @return `.iea_df` with 3-letter ISO country abbreviations in the `country` column.
 #' 
@@ -474,62 +461,55 @@ clean_iea_whitespace <- function(.iea_df,
 #'   rename_iea_df_cols() %>% 
 #'   use_iso_countries()
 use_iso_countries <- function(.iea_df, 
-                              country = "Country",
-                              iea_china = "People's Republic of China",
-                              ieatools_china = "CHN",
-                              iea_hk = "Hong Kong (China)",
-                              ieatools_hk = "HKG",
-                              iea_world_marine_bunkers = "World marine bunkers",
-                              ieatools_wmb = "WMB", 
-                              iea_world_aviation_bunkers = "World aviation bunkers", 
-                              ieatools_wab = "WAB"){
-  # Eliminates warnings.
+                              override_df = data.frame(a = c("CHN", "HKG", "WMB", "WAB"),
+                                                       b = c("People's Republic of China", 
+                                                             "Hong Kong (China)", 
+                                                             "World marine bunkers", 
+                                                             "World aviation bunkers")) %>% 
+                                magrittr::set_names(c(pfu_code, iea_name)),
+                              country = IEATools::iea_cols$country,
+                              pfu_code = IEATools::country_concordance_cols$pfu_code, 
+                              iea_name = IEATools::country_concordance_cols$iea_name){
+  # Eliminates warnings on column names in the countrycode::codelist data frame.
   country.name.en <- "country.name.en" 
-  iso_type = "iso3c"
-  # Load country code information
-  CountryInfo <- countrycode::codelist %>%
-    dplyr::select(!!as.name(country.name.en), !!as.name(iso_type)) %>% 
+  iso_type <- "iso3c"
+  # Load country code information from the countrycode package
+  CountryCodeInfo <- countrycode::codelist %>%
+    dplyr::select(.data[[country.name.en]], .data[[iso_type]]) %>% 
     dplyr::rename(
-      "{country}" := country.name.en
+      "{country}" := country.name.en, 
+      "{pfu_code}" := dplyr::all_of(iso_type)
     )
-  .iea_df %>%
-    dplyr::left_join(CountryInfo, by = country) %>% # left_join preserves all rows of IEA data
+  # Strategy is to do two left_joins.
+  # The first left_join is with the countrycode information.
+  # That will fail for the case of China and World X bunkers, because
+  # the coutrycode data does not have "People's Republic of China" or "World X bunkers".
+  # The second left_join will be with the override_df and create a column named pfu_code...override.
+  # Then, we discriminate among the options, 
+  # lastly, leaving the Country column unchanged, if no code has been found.
+  override_col_name <- paste0(pfu_code, "...override")
+  
+  dplyr::left_join(.iea_df, CountryCodeInfo, by = country) %>% 
+    dplyr::left_join(override_df %>% dplyr::rename("{country}" := iea_name), by = country, suffix = c("", "...override")) %>% 
     dplyr::mutate(
-      "{iso_type}" := dplyr::case_when(
-        #
-        # First, deal with some special cases.
-        # 
-        # The IEA extended energy balance data have the country
-        # "People's Republic of China", which is not included in the countrycode 
-        # package.
-        # To resolve this issue, we recode `iea_china` as `ieatools_china`.
-        .data[[country]] == iea_china ~ ieatools_china,
-        
-        # Hong Kong
-        .data[[country]] == iea_hk ~ ieatools_hk,
-         
-        # World marine bunkers
-        .data[[country]] == iea_world_marine_bunkers ~ ieatools_wmb,
-        
-        # World aviation bunkers
-        .data[[country]] == iea_world_aviation_bunkers ~ ieatools_wab,
-        
-        # Next, if we get an NA and we haven't dealt with a country as a special case, 
-        # just set the iso_type column to the value of the country column.
-        is.na(.data[[iso_type]]) ~ .data[[country]],
-
-        # As a default, keep the iso_type value in place.
-        TRUE ~ .data[[iso_type]]
+      "{pfu_code}" := dplyr::case_when(
+        # First priority, if we got a match in override_df, use it.
+        !is.na(.data[[override_col_name]]) ~ .data[[override_col_name]], 
+        # If we got a match from countrycode, use it.
+        !is.na(.data[[pfu_code]]) ~ .data[[pfu_code]], 
+        # If neither the countrycode information nor the override_df information matches, 
+        # leave the existing Country name.
+        TRUE ~ .data[[country]],
       )
     ) %>% 
-    # Now we can get rid of the country column.
-    dplyr::select(-!!as.name(country)) %>% 
+    # Now we can get rid of the override column and the country column.
+    dplyr::select(-.data[[override_col_name]], -.data[[country]]) %>% 
     # And rename the iso_type column to be country
     dplyr::rename(
-      "{country}" := iso_type
+      "{country}" := pfu_code
     ) %>% 
     # And put the country column first.
-    dplyr::select(!!as.name(country), dplyr::everything())
+    dplyr::select(.data[[country]], dplyr::everything())
 }
 
 

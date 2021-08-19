@@ -2,6 +2,22 @@
 context("Initialize IEA data")
 ###########################################################
 
+
+test_that("use_iso_countries() works with override", {
+  iea_df <- tibble::tribble(~Country, 
+                            "People's Republic of China", 
+                            "Hong Kong (China)", 
+                            "World marine bunkers",
+                            "World aviation bunkers", 
+                            "Ghana", 
+                            "South Africa", 
+                            "World")
+  res <- iea_df %>% 
+    use_iso_countries()
+  expect_equal(res$Country, c("CHN", "HKG", "WMB", "WAB", "GHA", "ZAF", "World"))
+})
+
+
 test_that("use_iso_countries() works as expected", {
   IEAData <- sample_iea_data_path() %>% 
     iea_df() %>%

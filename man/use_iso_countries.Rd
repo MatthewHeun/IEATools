@@ -6,43 +6,22 @@
 \usage{
 use_iso_countries(
   .iea_df,
-  country = "Country",
-  iea_china = "People's Republic of China",
-  ieatools_china = "CHN",
-  iea_hk = "Hong Kong (China)",
-  ieatools_hk = "HKG",
-  iea_world_marine_bunkers = "World marine bunkers",
-  ieatools_wmb = "WMB",
-  iea_world_aviation_bunkers = "World aviation bunkers",
-  ieatools_wab = "WAB"
+  override_df = data.frame(a = c("CHN", "HKG", "WMB", "WAB"), b =
+    c("People's Republic of China", "Hong Kong (China)", "World marine bunkers",
+    "World aviation bunkers")) \%>\% magrittr::set_names(c(pfu_code, iea_name)),
+  country = IEATools::iea_cols$country,
+  pfu_code = IEATools::country_concordance_cols$pfu_code,
+  iea_name = IEATools::country_concordance_cols$iea_name
 )
 }
 \arguments{
-\item{.iea_df}{A data frame containing a \code{country} column}
+\item{.iea_df}{A data frame containing a \code{country} column.}
+
+\item{override_df}{A data frame containing columns named \code{pfu_code} and \code{iea_name}.}
 
 \item{country}{The name of the country column in \code{.iea_df}. Default is "Country".}
 
-\item{iea_china}{The IEA string for China.
-Default is "People's Republic of China".}
-
-\item{ieatools_china}{The 3-letter string that replaces \code{iea_china}.
-Default is "CHN".}
-
-\item{iea_hk}{The IEA string for Hong Kong.
-Default is "Hong Kong (China)".}
-
-\item{ieatools_hk}{The 3-letter string that replaces \code{iea_hk}.
-Default is "HKG".}
-
-\item{iea_world_marine_bunkers}{A string specifying the full name for the "country" called World marine bunkers.
-Default is "World marine bunkers".}
-
-\item{ieatools_wmb}{A 3-letter code for World marine bunkers. Default is "WMB".}
-
-\item{iea_world_aviation_bunkers}{A string specifying the full name for the "country" called World aviation bunkers.
-Default is "World aviation bunkers".}
-
-\item{ieatools_wab}{A 3-letter code for World aviation bunkers. Default is "WAB".}
+\item{pfu_code, iea_name}{See \code{IEATools::countryconcordance_cols}.}
 }
 \value{
 \code{.iea_df} with 3-letter ISO country abbreviations in the \code{country} column.
@@ -52,16 +31,16 @@ The IEA uses full country names, but it is more concise to use the 3-letter ISO 
 This function replaces the full country names with ISO abbreviations where possible.
 }
 \details{
-Special cases are considered where
-IEA extended energy balance data country names
-differ from
-\code{countrycode} package country names.\tabular{lll}{
-   IEA name \tab \code{countrycode} name \tab \code{use_iso_countries()} result \cr
-   "People's Republic of China" \tab "China" \tab "CHN" \cr
-   "Hong Kong (China)" \tab "Hong Kong SAR China" \tab "HKG" \cr
-   "World marine bunkers" \tab NA \tab "WMB" \cr
-   "World aviation bunkers" \tab NA \tab "WAB" \cr
-}
+Internally, the \code{countrycode} package is used for ISO codes where possible.
+Optionally, an \code{override_df} can be specified.
+\code{override_df} should contain columns \code{pfu_code} (for 3-letter ISO codes) and \code{iea_name} for country names.
+
+If neither the \code{countrycode} package nor \code{override_df} contain a matching \code{country} name,
+the \code{country} column is left untouched.
+
+By default, special cases are considered via the \code{override_df} argument.
+The default value of \code{override_df} sets codes for China and Hong Kong,
+as well as World X bunkers.
 }
 \examples{
 sample_iea_data_path() \%>\% 

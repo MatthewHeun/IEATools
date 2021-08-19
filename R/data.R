@@ -87,6 +87,22 @@
 
 
 
+#' Country concordance table column names
+#'
+#' A string list containing named names of columns in country concordance tables.
+#' 
+#' @format A string list with `r length(country_concordance_cols)` entries.
+#' \describe{
+#' \item{pfu_code}{The name of a column containing 3-letter Primary-Final-Useful country codes. Normally, these codes should match the ISO 3-letter codes for each country.}
+#' \item{iea_name}{The name of a column containing 3-letter Primary-Final-Useful country names. These names should be the same as the IEA's country names.}
+#' }
+#' 
+#' @examples
+#' country_concordance_cols
+"country_concordance_cols"
+
+
+
 #' Physical Supply-Use Table (PSUT) data frame column names
 #'
 #' A string list containing named names of columns in PSUT data frames.

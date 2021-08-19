@@ -73,6 +73,14 @@ iea_cols <- list(country = "Country",
 usethis::use_data(iea_cols, overwrite = TRUE)
 
 
+#
+# Country concordance table columns
+# 
+
+country_concordance_cols <- list(pfu_code = "PFU.code", 
+                                 iea_name = "IEA.name")
+usethis::use_data(country_concordance_cols, overwrite = TRUE)
+
 # 
 # Give names for matrix meta information columns
 # 
