@@ -486,7 +486,11 @@ use_iso_countries <- function(.iea_df,
   override_col_name <- paste0(pfu_code, "...override")
   
   dplyr::left_join(.iea_df, CountryCodeInfo, by = country) %>% 
-    dplyr::left_join(override_df %>% dplyr::rename("{country}" := iea_name), by = country, suffix = c("", "...override")) %>% 
+    # Make sure that the override_df has only two columns:
+    # iea_name and pfu_code.
+    dplyr::left_join(override_df %>% 
+                       dplyr::rename("{country}" := iea_name) %>% 
+                       dplyr::select(.data[[country]], .data[[pfu_code]]), by = country, suffix = c("", "...override")) %>% 
     dplyr::mutate(
       "{pfu_code}" := dplyr::case_when(
         # First priority, if we got a match in override_df, use it.

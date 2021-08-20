@@ -18,6 +18,20 @@ test_that("use_iso_countries() works with override", {
 })
 
 
+test_that("use_iso_countries() works with more columns in override", {
+  iea_df <- tibble::tribble(~Country, ~`2000`, ~`2001`,
+                            "People's Republic of China", 42, 43,
+                            "Hong Kong (China)", 44, 45)
+  override <- IEATools::override_iso_codes_df %>% 
+    dplyr::mutate(bogus_col = "bogus information")
+  res <- iea_df %>% 
+    use_iso_countries(override_df = override) %>% 
+    tidyr::pivot_longer(cols = c("2000", "2001"), names_to = "Year", values_to = "E.dot")
+  
+  expect_equal(names(res), c("Country", "Year", "E.dot"))
+})
+
+
 test_that("use_iso_countries() works as expected", {
   IEAData <- sample_iea_data_path() %>% 
     iea_df() %>%
