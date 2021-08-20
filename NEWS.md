@@ -64,7 +64,10 @@
 
 
 # IEATools 0.1.53 (2021-06-08)
+<<<<<<< HEAD
 >>>>>>> hotfix-0.1.58
+=======
+>>>>>>> d01281a20b484f30008dd70da8e56fc71063d8ab
 
 * The "Oil and gas extraction" activity is split in "Oil extraction",
   which extracts oil products, and "Natural gas extraction", which extracts natural gas.
