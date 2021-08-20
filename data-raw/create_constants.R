@@ -81,6 +81,22 @@ country_concordance_cols <- list(pfu_code = "PFU.code",
                                  iea_name = "IEA.name")
 usethis::use_data(country_concordance_cols, overwrite = TRUE)
 
+
+# 
+# Default override data frame for 3-letter country codes.
+# This constant is used in the use_iso_countries() function.
+# 
+
+override_iso_codes_df <- data.frame(a = c("CHN", "HKG", "WMB", "WAB"),
+                                    b = c("People's Republic of China", 
+                                          "Hong Kong (China)", 
+                                          "World marine bunkers", 
+                                          "World aviation bunkers")) %>% 
+  magrittr::set_names(c(country_concordance_cols$pfu_code, 
+                        country_concordance_cols$iea_name))
+usethis::use_data(override_iso_codes_df, overwrite = TRUE)
+
+
 # 
 # Give names for matrix meta information columns
 # 

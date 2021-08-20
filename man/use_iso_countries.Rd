@@ -6,9 +6,7 @@
 \usage{
 use_iso_countries(
   .iea_df,
-  override_df = data.frame(a = c("CHN", "HKG", "WMB", "WAB"), b =
-    c("People's Republic of China", "Hong Kong (China)", "World marine bunkers",
-    "World aviation bunkers")) \%>\% magrittr::set_names(c(pfu_code, iea_name)),
+  override_df = IEATools::override_iso_codes_df,
   country = IEATools::iea_cols$country,
   pfu_code = IEATools::country_concordance_cols$pfu_code,
   iea_name = IEATools::country_concordance_cols$iea_name
@@ -17,7 +15,8 @@ use_iso_countries(
 \arguments{
 \item{.iea_df}{A data frame containing a \code{country} column.}
 
-\item{override_df}{A data frame containing columns named \code{pfu_code} and \code{iea_name}.}
+\item{override_df}{A data frame containing columns named \code{pfu_code} and \code{iea_name}.
+Default is \code{IEATools::overide_iso_codes_df}.}
 
 \item{country}{The name of the country column in \code{.iea_df}. Default is "Country".}
 

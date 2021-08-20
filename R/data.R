@@ -102,6 +102,22 @@
 "country_concordance_cols"
 
 
+#' Country code overrides
+#'
+#' A data frame containing 3-letter country codes and IEA country names.
+#' These code-country pairs are used as a default set of overrides (relative to `countrycode::codelist`)
+#' in the function `use_iso_countries()`.
+#' 
+#' @format A data frame with four rows and two columns.
+#' \describe{
+#' \item{pfu_code}{The column of 3-letter country codes that to override those found in `countrycode::codelist`.}
+#' \item{iea_name}{The column containing IEA country names..}
+#' }
+#' 
+#' @examples
+#' override_iso_codes_df
+"override_iso_codes_df"
+
 
 #' Physical Supply-Use Table (PSUT) data frame column names
 #'
