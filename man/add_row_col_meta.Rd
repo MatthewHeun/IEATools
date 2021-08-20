@@ -14,7 +14,7 @@ add_row_col_meta(
   R = IEATools::psut_cols$R,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y,
-  Epsilon = IEATools::psut_cols$epsilon,
+  B = IEATools::psut_cols$B,
   industry_type = IEATools::row_col_types$industry,
   product_type = IEATools::row_col_types$product,
   sector_type = IEATools::row_col_types$sector,
@@ -33,7 +33,7 @@ add_row_col_meta(
 \item{matnames}{the name of the column in \code{.tidy_iea_df} that contains names of matrices
 (a string).  Default is "matnames".}
 
-\item{R, U, U_EIOU, V, Y, Epsilon}{See \code{IEATools::psut_cols}.}
+\item{R, U, U_EIOU, V, Y, B}{See \code{IEATools::psut_cols}.}
 
 \item{industry_type, product_type, sector_type, resource_type}{See \code{IEATools::row_col_types}.}
 

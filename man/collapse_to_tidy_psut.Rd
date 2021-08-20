@@ -12,7 +12,7 @@ collapse_to_tidy_psut(
   product = IEATools::iea_cols$product,
   e_dot = IEATools::iea_cols$e_dot,
   unit = IEATools::iea_cols$unit,
-  Epsilon = IEATools::psut_cols$epsilon,
+  B = IEATools::psut_cols$B,
   matnames = IEATools::mat_meta_cols$matnames,
   rownames = IEATools::mat_meta_cols$rownames,
   colnames = IEATools::mat_meta_cols$colnames,
@@ -26,7 +26,7 @@ collapse_to_tidy_psut(
 
 \item{ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
 
-\item{Epsilon}{Name of the Epsilon matrix. See \code{IEATools::psut_cols}.}
+\item{B}{Name of the Balancing matrix. See \code{IEATools::psut_cols}.}
 
 \item{matnames, rownames, colnames, rowtypes, coltypes}{See \code{IEATools::mat_meta_cols}.}
 
