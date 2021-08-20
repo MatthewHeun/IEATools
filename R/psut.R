@@ -179,7 +179,7 @@ add_psut_matnames <- function(.tidy_iea_df,
 #' @param flow,product See `IEATools::iea_cols`.
 #' @param matnames the name of the column in `.tidy_iea_df` that contains names of matrices
 #'        (a string).  Default is "matnames".
-#' @param R,U,U_EIOU,V,Y,Epsilon See `IEATools::psut_cols`.
+#' @param R,U,U_EIOU,V,Y,B See `IEATools::psut_cols`.
 #' @param industry_type,product_type,sector_type,resource_type See `IEATools::row_col_types`.
 #' @param rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #'
@@ -206,7 +206,7 @@ add_row_col_meta <- function(.tidy_iea_df,
                              R = IEATools::psut_cols$R, 
                              V = IEATools::psut_cols$V,
                              Y = IEATools::psut_cols$Y,
-                             Epsilon = IEATools::psut_cols$epsilon,
+                             B = IEATools::psut_cols$B,
                              # Row and column Type identifiers
                              industry_type = IEATools::row_col_types$industry,
                              product_type = IEATools::row_col_types$product, 
@@ -233,7 +233,7 @@ add_row_col_meta <- function(.tidy_iea_df,
         .data[[matnames]] == R ~ .data[[flow]],
         .data[[matnames]] == V ~ .data[[flow]],
         .data[[matnames]] == Y ~ .data[[product]],
-        .data[[matnames]] == Epsilon ~ .data[[product]],
+        .data[[matnames]] == B ~ .data[[product]],
         TRUE ~ NA_character_
       ),
       "{colnames}" := dplyr::case_when(
@@ -241,7 +241,7 @@ add_row_col_meta <- function(.tidy_iea_df,
         .data[[matnames]] == V ~ .data[[product]],
         .data[[matnames]] == R ~ .data[[product]],
         .data[[matnames]] == Y ~ .data[[flow]],
-        .data[[matnames]] == Epsilon ~ .data[[flow]],
+        .data[[matnames]] == B ~ .data[[flow]],
         TRUE ~ NA_character_
       ),
       "{rowtypes}" := dplyr::case_when(
@@ -249,7 +249,7 @@ add_row_col_meta <- function(.tidy_iea_df,
         .data[[matnames]] == R ~ resource_type,
         .data[[matnames]] == V ~ industry_type,
         .data[[matnames]] == Y ~ product_type,
-        .data[[matnames]] == Epsilon ~ product_type,
+        .data[[matnames]] == B ~ product_type,
         TRUE ~ NA_character_
       ),
       "{coltypes}" := dplyr::case_when(
@@ -257,7 +257,7 @@ add_row_col_meta <- function(.tidy_iea_df,
         .data[[matnames]] == R ~ product_type,
         .data[[matnames]] == V ~ product_type,
         .data[[matnames]] == Y ~ sector_type,
-        .data[[matnames]] == Epsilon ~ sector_type,
+        .data[[matnames]] == B ~ sector_type,
         TRUE ~ NA_character_
       )
     )
@@ -279,7 +279,7 @@ add_row_col_meta <- function(.tidy_iea_df,
 #' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
 #' @param matnames,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #' @param matvals See `IEATools::psut_cols`.
-#' @param Epsilon Name of the Epsilon matrix. See `IEATools::psut_cols`.
+#' @param B Name of the Balancing matrix. See `IEATools::psut_cols`.
 #'
 #' @return `.tidy_iea_df` with all values converted to matrices in the `matvals` column
 #' 
@@ -299,7 +299,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
                                   product = IEATools::iea_cols$product,
                                   e_dot = IEATools::iea_cols$e_dot,
                                   unit = IEATools::iea_cols$unit, 
-                                  Epsilon = IEATools::psut_cols$epsilon,
+                                  B = IEATools::psut_cols$B,
                                   matnames = IEATools::mat_meta_cols$matnames,
                                   rownames = IEATools::mat_meta_cols$rownames,
                                   colnames = IEATools::mat_meta_cols$colnames,
@@ -312,9 +312,9 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
   .tidy_iea_df %>% 
     dplyr::ungroup() %>% 
     dplyr::mutate(
-      # All values in the matrices must be positive, but for Epsilon matrix terms.
+      # All values in the matrices must be positive, but for Balancing matrix terms.
       "{e_dot}" := dplyr::case_when(
-        .data[[matnames]] == Epsilon ~ .data[[e_dot]],
+        .data[[matnames]] == B ~ .data[[e_dot]],
         TRUE ~ abs(.data[[e_dot]])
       )
     ) %>%
@@ -523,7 +523,7 @@ replace_null_UR <- function(.sutmats = NULL,
 #' @param year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param matnames,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
-#' @param matvals,R,U_eiou,U_feed,U,r_eiou,V,Y,s_units,Epsilon See `IEATools::psut_cols`.
+#' @param matvals,R,U_eiou,U_feed,U,r_eiou,V,Y,s_units,B See `IEATools::psut_cols`.
 #'
 #' @return A wide-by-matrix data frame with metadata columns and columns named for each type of matrix.
 #' 
@@ -586,7 +586,7 @@ prep_psut <- function(.tidy_iea_df,
                       U = IEATools::psut_cols$U,
                       V = IEATools::psut_cols$V,
                       Y = IEATools::psut_cols$Y,
-                      Epsilon = IEATools::psut_cols$epsilon,
+                      B = IEATools::psut_cols$B,
                       s_units = IEATools::psut_cols$s_units){
   if (nrow(.tidy_iea_df) == 0) {
     # We can get a no-row data frame for .tidy_iea_df. 
@@ -600,7 +600,7 @@ prep_psut <- function(.tidy_iea_df,
     # R, U_eiou, U_feed, V, Y, S_units (6 in total)
     # Use 1.1 for the value so that columns are created as double type columns.
     mats_cols <- as.list(rep(1.1, 7)) %>% 
-      magrittr::set_names(c(R, U_eiou, U_feed, V, Y, s_units, Epsilon)) %>% 
+      magrittr::set_names(c(R, U_eiou, U_feed, V, Y, s_units, B)) %>% 
       as.data.frame()
     # Eliminate the row in the data frame
     zero_length_mats_cols <- mats_cols[0, ]

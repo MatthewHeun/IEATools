@@ -7,9 +7,15 @@
   There was no case where C_eiou_mat was missing 
   when testing `extend_to_useful()`.
 * A few new tests for new features. 
-    * Up to 835 tests, all passing.
+    * Up to 836 tests, all passing.
     * Test coverage remains at 100 %.
 
+
+# IEATools 0.1.58 (2021-08-20)
+
+* Changed "Epsilon"" matrix name to "Balancing".
+  The old name was causing issues in `ECCTools`.
+  
 
 # IEATools 0.1.57 (2021-08-19) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5222003.svg)](https://doi.org/10.5281/zenodo.5222003)
 
