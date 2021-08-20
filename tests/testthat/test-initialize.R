@@ -14,7 +14,7 @@ test_that("use_iso_countries() works with override", {
                             "World")
   res <- iea_df %>% 
     use_iso_countries()
-  expect_equal(res$Country, c("CHN", "HKG", "WMB", "WAB", "GHA", "ZAF", "World"))
+  expect_equal(res$Country, c("CHN", "HKG", "WMB", "WAB", "GHA", "ZAF", "WLD"))
 })
 
 
@@ -478,7 +478,7 @@ test_that("use_iso_countries works as expected", {
     use_iso_countries()
   # Ensure that a "World" country is present.
   n_world_rows <- world %>% 
-    dplyr::filter(Country == "World") %>% 
+    dplyr::filter(Country == "WLD") %>% 
     nrow()
   expect_equal(n_world_rows, 8)
 })
