@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Prepare for PSUT analysis — prep_psut" />
 <meta property="og:description" content="Converts a tidy IEA data frame into a PSUT data frame
-by collapsing the IEA data into PSUT matrices (R, U, V, and Y)." />
+by collapsing the IEA data into PSUT matrices (R, U, V, Y, and S_units)." />
 
 
 
@@ -73,7 +73,7 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.53</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.57</span>
       </span>
     </div>
 
@@ -138,7 +138,7 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y)." />
 
     <div class="ref-description">
     <p>Converts a tidy IEA data frame into a PSUT data frame
-by collapsing the IEA data into PSUT matrices (R, U, V, and Y).</p>
+by collapsing the IEA data into PSUT matrices (<code>R</code>, <code>U</code>, <code>V</code>, <code>Y</code>, and <code>S_units</code>).</p>
     </div>
 
     <pre class="usage"><span class='fu'>prep_psut</span><span class='op'>(</span>
@@ -165,7 +165,7 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y).</p>
   U <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>U</span>,
   V <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>V</span>,
   Y <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>Y</span>,
-  Epsilon <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>epsilon</span>,
+  B <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>B</span>,
   s_units <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='psut_cols.html'>psut_cols</a></span><span class='op'>$</span><span class='va'>s_units</span>
 <span class='op'>)</span></pre>
 
@@ -189,7 +189,7 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y).</p>
       <td><p>See <code><a href='mat_meta_cols.html'>IEATools::mat_meta_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>matvals, R, U_eiou, U_feed, U, r_eiou, V, Y, s_units, Epsilon</th>
+      <th>matvals, R, U_eiou, U_feed, U, r_eiou, V, Y, s_units, B</th>
       <td><p>See <code><a href='psut_cols.html'>IEATools::psut_cols</a></code>.</p></td>
     </tr>
     </table>
@@ -203,6 +203,7 @@ by collapsing the IEA data into PSUT matrices (R, U, V, and Y).</p>
 <li><p><code><a href='add_psut_matnames.html'>add_psut_matnames()</a></code></p></li>
 <li><p><code><a href='add_row_col_meta.html'>add_row_col_meta()</a></code></p></li>
 <li><p><code><a href='collapse_to_tidy_psut.html'>collapse_to_tidy_psut()</a></code></p></li>
+<li><p><code><a href='replace_null_UR.html'>replace_null_UR()</a></code></p></li>
 </ol>
 
 <p>Furthermore, it extracts <code>S_units</code> matrices using <code><a href='extract_S_units_from_tidy.html'>extract_S_units_from_tidy()</a></code>
@@ -233,6 +234,7 @@ the return value is a zero-row data frame with expected columns.</p>
   <span class='fu'><a href='add_row_col_meta.html'>add_row_col_meta</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='collapse_to_tidy_psut.html'>collapse_to_tidy_psut</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://tidyr.tidyverse.org/reference/spread.html'>spread</a></span><span class='op'>(</span>key <span class='op'>=</span> <span class='va'>matnames</span>, value <span class='op'>=</span> <span class='va'>matvals</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'><a href='replace_null_UR.html'>replace_null_UR</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>full_join</a></span><span class='op'>(</span><span class='va'>S_units</span>, by <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Method"</span>, <span class='st'>"Energy.type"</span>, <span class='st'>"Last.stage"</span>, 
                             <span class='st'>"Country"</span>, <span class='st'>"Year"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
   <span class='fu'><a href='https://tidyr.tidyverse.org/reference/gather.html'>gather</a></span><span class='op'>(</span>key <span class='op'>=</span> <span class='va'>matnames</span>, value <span class='op'>=</span> <span class='va'>matvals</span>, <span class='va'>R</span>, <span class='va'>U_EIOU</span>, <span class='va'>U_feed</span>, 

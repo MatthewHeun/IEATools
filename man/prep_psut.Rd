@@ -28,7 +28,7 @@ prep_psut(
   U = IEATools::psut_cols$U,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y,
-  Epsilon = IEATools::psut_cols$epsilon,
+  B = IEATools::psut_cols$B,
   s_units = IEATools::psut_cols$s_units
 )
 }
@@ -41,14 +41,14 @@ prep_psut(
 
 \item{matnames, rownames, colnames, rowtypes, coltypes}{See \code{IEATools::mat_meta_cols}.}
 
-\item{matvals, R, U_eiou, U_feed, U, r_eiou, V, Y, s_units, Epsilon}{See \code{IEATools::psut_cols}.}
+\item{matvals, R, U_eiou, U_feed, U, r_eiou, V, Y, s_units, B}{See \code{IEATools::psut_cols}.}
 }
 \value{
 A wide-by-matrix data frame with metadata columns and columns named for each type of matrix.
 }
 \description{
 Converts a tidy IEA data frame into a PSUT data frame
-by collapsing the IEA data into PSUT matrices (R, U, V, and Y).
+by collapsing the IEA data into PSUT matrices (\code{R}, \code{U}, \code{V}, \code{Y}, and \code{S_units}).
 }
 \details{
 This function bundles several others:
@@ -56,6 +56,7 @@ This function bundles several others:
 \item \code{add_psut_matnames()}
 \item \code{add_row_col_meta()}
 \item \code{collapse_to_tidy_psut()}
+\item \code{replace_null_UR()}
 }
 
 Furthermore, it extracts \code{S_units} matrices using \code{extract_S_units_from_tidy()}
@@ -82,6 +83,7 @@ Complicated <- load_tidy_iea_df() \%>\%
   add_row_col_meta() \%>\% 
   collapse_to_tidy_psut() \%>\% 
   spread(key = matnames, value = matvals) \%>\% 
+  replace_null_UR() \%>\% 
   full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
                             "Country", "Year")) \%>\% 
   gather(key = matnames, value = matvals, R, U_EIOU, U_feed, 

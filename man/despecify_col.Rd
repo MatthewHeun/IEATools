@@ -14,20 +14,21 @@ despecify_col(
 )
 }
 \arguments{
-\item{.df}{the data frame in which \code{col} exists.}
+\item{.df}{The data frame in which \code{col} exists.}
 
-\item{col}{the string name of the column in \code{.df} to be de-specified.}
+\item{col}{The string name of the column in \code{.df} to be de-specified.}
 
-\item{despecified_col}{the string name of the column in the output data frame to contain the de-specified version of \code{col}.}
+\item{despecified_col}{The string name of the column in the output data frame to contain the de-specified version of \code{col}.}
 
-\item{notations}{the notations used for row and column names. See \code{matsbyname::notation_vec()}.
+\item{notations}{The notations used for row and column names. See \code{matsbyname::notation_vec()}.
 Default is \code{list(IEATools::of_notation, IEATools::from_notation)},
-because both \code{IEATools::of_notation} and \code{IEATools::from_notation} can be used in the \code{Flow} column.}
+because both \code{IEATools::of_notation} and \code{IEATools::from_notation} can be used in the \code{Flow} column
+of an IEA data frame.}
 
 \item{production, resources}{See \code{IEATools::tpes_flows}.}
 }
 \value{
-a de-specified version of \code{.df}
+A de-specified version of \code{.df} and the result placed in the \code{despecified_col} column.
 }
 \description{
 \code{Flow} and \code{Product} columns of IEA data frames may have been "specified"
@@ -41,7 +42,7 @@ De-specifying includes the following changes:
 * Any "Resource" flows are replaced by "Production". E.g., "Resources [of Coal]" becomes "Production".
 * All parenthetical decorations are removed.  E.g., "Other bituminous coal [of Coal mines]" becomes "Other bituminous coal".
 
-Identification of parenthetical notation delimiters is determined by a notation object
+Identification of parenthetical notation delimiters is determined by a notation object.
 }
 \examples{
 library(dplyr)

@@ -73,7 +73,7 @@ have been assigned efficiencies in each year for each country." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.53</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.57</span>
       </span>
     </div>
 
@@ -143,11 +143,13 @@ have been assigned efficiencies in each year for each country.</p>
 
     <pre class="usage"><span class='fu'>eta_fu_table_completed</span><span class='op'>(</span>
   eta_fu_table <span class='op'>=</span> <span class='cn'>NULL</span>,
-  <span class='va'>fu_allocation_table</span>,
+  <span class='va'>machines_that_need_quantities</span>,
   which_quantity <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu</span>, <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>phi_u</span><span class='op'>)</span>,
   e_dot <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>e_dot</span>,
   year <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>year</span>,
   method <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>method</span>,
+  energy_type <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>energy_type</span>,
+  last_stage <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>last_stage</span>,
   ledger_side <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>ledger_side</span>,
   flow_aggregation_point <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow_aggregation_point</span>,
   unit <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>unit</span>,
@@ -173,8 +175,10 @@ If <code>NULL</code> (the default), all rows in <code>fu_allocation_table</code>
 as the "unallocated_rows" attribute of <code>FALSE</code>.</p></td>
     </tr>
     <tr>
-      <th>fu_allocation_table</th>
-      <td><p>The final-to-useful allocation table whose final-to-useful machines must be assigned efficiencies.</p></td>
+      <th>machines_that_need_quantities</th>
+      <td><p>The final-to-useful allocation table
+whose final-to-useful machines must be assigned efficiencies (eta_fu) or
+exergy-to-energy ratio (phi_u) values.</p></td>
     </tr>
     <tr>
       <th>which_quantity</th>
@@ -182,7 +186,7 @@ as the "unallocated_rows" attribute of <code>FALSE</code>.</p></td>
 Default is <code><a href='https://rdrr.io/r/base/c.html'>c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u)</a></code>.</p></td>
     </tr>
     <tr>
-      <th>e_dot, year, method, ledger_side, flow_aggregation_point, unit</th>
+      <th>e_dot, year, method, ledger_side, flow_aggregation_point, energy_type, last_stage, unit</th>
       <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>

@@ -1,7 +1,3 @@
-###########################################################
-context("Template functions")
-###########################################################
-
 # This function tests final-to-useful allocation templates
 # created from the default data set, filled or not.
 check_fu_allocation_template <- function(.DF){
@@ -23,7 +19,7 @@ test_that("openxlsx works as expected", {
     specify_all() %>% 
     sort_iea_df()
   # Get a temporary file in which to write two data frames on different tabs.
-  f <- tempfile(fileext = ".xslx")
+  f <- tempfile(fileext = ".xlsx")
   # Write the data from both years, each on its own tab.
   openxlsx::write.xlsx(list(y1971 = Tidy_iea_df %>% 
                               dplyr::filter(Year == 1971), 

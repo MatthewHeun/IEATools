@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.53</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.57</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Specify EIOU Industries and Flows</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-06-08</h4>
+            <h4 class="date">2021-08-20</h4>
       
       
       <div class="hidden name"><code>specify.Rmd</code></div>
@@ -116,7 +116,7 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Flow.aggregation.point</span> <span class="op">==</span> <span class="st">"Energy industry own use"</span><span class="op">)</span>
 <span class="va">EIOU_flows</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Year</span>, <span class="va">Flow</span>, <span class="va">Product</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 15 x 4</span>
+<span class="co">#&gt; # A tibble: 15 × 4</span>
 <span class="co">#&gt;    Country  Year Flow                                        Product      </span>
 <span class="co">#&gt;    &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;                                       &lt;chr&gt;        </span>
 <span class="co">#&gt;  1 GHA      1971 Oil refineries                              Refinery gas </span>
@@ -150,7 +150,7 @@
          <span class="va">Product</span> <span class="op">%in%</span> <span class="va">coal_and_coal_products</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Flow.aggregation.point</span>, <span class="va">Flow</span>, <span class="va">Product</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 8 x 4</span>
+<span class="co">#&gt; # A tibble: 8 × 4</span>
 <span class="co">#&gt;   Country Flow.aggregation.point      Flow          Product                 </span>
 <span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;                       &lt;chr&gt;         &lt;chr&gt;                   </span>
 <span class="co">#&gt; 1 ZAF     Total primary energy supply Production    Hard coal (if no detail)</span>
@@ -442,7 +442,7 @@
   <span class="co"># However, Furnaces make Product without consuming any energy,</span>
   <span class="co"># and are, therefore, a transformation source.</span>
   <span class="fu"><a href="../reference/tp_sinks_sources.html">tp_sinks_sources</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"sources"</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 x 2</span>
+<span class="co">#&gt; # A tibble: 1 × 2</span>
 <span class="co">#&gt;   Country   Flow    </span>
 <span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;   </span>
 <span class="co">#&gt; 1 A country Furnaces</span></code></pre></div>
@@ -531,7 +531,7 @@
   <span class="fu"><a href="../reference/specify_interface_industries.html">specify_interface_industries</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/tp_sinks_to_nonenergy.html">tp_sinks_to_nonenergy</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/all.html">all</a></span><span class="op">(</span><span class="va">Simple</span> <span class="op">==</span> <span class="va">Complicated</span><span class="op">)</span>
-<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+<span class="co">#&gt; [1] FALSE</span></code></pre></div>
 </div>
 <div id="conclusion" class="section level2">
 <h2 class="hasAnchor">

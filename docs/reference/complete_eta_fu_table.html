@@ -79,7 +79,7 @@ by supplying efficiencies and exergy-to-energy ratios from any number of exempla
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.53</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.57</span>
       </span>
     </div>
 
@@ -188,15 +188,20 @@ by supplying efficiencies and exergy-to-energy ratios from any number of exempla
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>eta_fu_table</th>
-      <td><p>The efficiency table to be completed, possibly having missing incomplete rows.</p></td>
+      <td><p>The efficiency table to be completed, possibly having missing incomplete rows.
+Note that efficiency tables can include energy efficiencies (<code>eta_fu</code>)
+and exergy-to-energy ratios (<code>phi.u</code>).</p></td>
     </tr>
     <tr>
       <th>exemplar_eta_fu_tables</th>
-      <td><p>A list of efficiency tables, each queried in turn for information needed by <code>eta_fu_table</code>.</p></td>
+      <td><p>A list of efficiency tables, each queried in turn for information needed by <code>eta_fu_table</code>.
+Similar to <code>eta_fu_table</code>, exemplar tables can include energy efficiencies (<code>eta_fu</code>)
+and exergy-to-energy ratios (<code>phi.u</code>).</p></td>
     </tr>
     <tr>
       <th>fu_allocation_table</th>
-      <td><p>An FU (final-to-useful) allocation table from which the needed combinations of final-to-useful machines and useful products is determined.
+      <td><p>An FU (final-to-useful) allocation table from which the needed combinations
+of final-to-useful machines and useful products is determined.
 This data frame can be "tidy" or wide by year.</p></td>
     </tr>
     <tr>
@@ -275,25 +280,25 @@ and a data frame is returned containing rows from <code>fu_allocation_table</cod
 <span class='va'>completed</span> <span class='op'>%&gt;%</span> 
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>.data</span><span class='op'>[[</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>machine</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>==</span> <span class='st'>"Automobiles"</span>, 
                 <span class='va'>.data</span><span class='op'>[[</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu_phi_u_source</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>==</span> <span class='st'>"ZAF"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 x 10</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 × 10</span>
 #&gt;   Country Method Energy.type Last.stage Machine     Eu.product Quantity  Year
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> GHA     PCM    E           Final      Automobiles MD         eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span> GHA     PCM    E           Final      Automobiles MD         eta.fu    </span><span style='text-decoration: underline;'>2</span><span>000
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> GHA     PCM    E           Final      Automobiles MD         phi.u     </span><span style='text-decoration: underline;'>1</span><span>971
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span> GHA     PCM    E           Final      Automobiles MD         phi.u     </span><span style='text-decoration: underline;'>2</span><span>000
-#&gt; </span><span style='color: #949494;'># … with 2 more variables: .values &lt;dbl&gt;, eta.fu.phi.u.source &lt;chr&gt;</span><span></div><div class='input'><span class='co'># Check that we got Irons from World</span>
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>1</span> GHA     PCM    E           Final      Automobiles MD         eta.fu    <span style='text-decoration: underline;'>1</span>971
+#&gt; <span style='color: #BCBCBC;'>2</span> GHA     PCM    E           Final      Automobiles MD         eta.fu    <span style='text-decoration: underline;'>2</span>000
+#&gt; <span style='color: #BCBCBC;'>3</span> GHA     PCM    E           Final      Automobiles MD         phi.u     <span style='text-decoration: underline;'>1</span>971
+#&gt; <span style='color: #BCBCBC;'>4</span> GHA     PCM    E           Final      Automobiles MD         phi.u     <span style='text-decoration: underline;'>2</span>000
+#&gt; <span style='color: #949494;'># … with 2 more variables: .values &lt;dbl&gt;, eta.fu.phi.u.source &lt;chr&gt;</span></div><div class='input'><span class='co'># Check that we got Irons from World</span>
 <span class='va'>completed</span> <span class='op'>%&gt;%</span> 
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>.data</span><span class='op'>[[</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>machine</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>==</span> <span class='st'>"Irons"</span>, 
                 <span class='va'>.data</span><span class='op'>[[</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu_phi_u_source</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>==</span> <span class='st'>"World"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 4 x 10</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 × 10</span>
 #&gt;   Country Method Energy.type Last.stage Machine Eu.product Quantity  Year
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> GHA     PCM    E           Final      Irons   MTH.200.C  eta.fu    </span><span style='text-decoration: underline;'>1</span><span>971
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span> GHA     PCM    E           Final      Irons   MTH.200.C  eta.fu    </span><span style='text-decoration: underline;'>2</span><span>000
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> GHA     PCM    E           Final      Irons   MTH.200.C  phi.u     </span><span style='text-decoration: underline;'>1</span><span>971
-#&gt; </span><span style='color: #BCBCBC;'>4</span><span> GHA     PCM    E           Final      Irons   MTH.200.C  phi.u     </span><span style='text-decoration: underline;'>2</span><span>000
-#&gt; </span><span style='color: #949494;'># … with 2 more variables: .values &lt;dbl&gt;, eta.fu.phi.u.source &lt;chr&gt;</span><span></div></span></pre>
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>1</span> GHA     PCM    E           Final      Irons   MTH.200.C  eta.fu    <span style='text-decoration: underline;'>1</span>971
+#&gt; <span style='color: #BCBCBC;'>2</span> GHA     PCM    E           Final      Irons   MTH.200.C  eta.fu    <span style='text-decoration: underline;'>2</span>000
+#&gt; <span style='color: #BCBCBC;'>3</span> GHA     PCM    E           Final      Irons   MTH.200.C  phi.u     <span style='text-decoration: underline;'>1</span>971
+#&gt; <span style='color: #BCBCBC;'>4</span> GHA     PCM    E           Final      Irons   MTH.200.C  phi.u     <span style='text-decoration: underline;'>2</span>000
+#&gt; <span style='color: #949494;'># … with 2 more variables: .values &lt;dbl&gt;, eta.fu.phi.u.source &lt;chr&gt;</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

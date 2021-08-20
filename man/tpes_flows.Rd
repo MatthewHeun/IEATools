@@ -5,14 +5,16 @@
 \alias{tpes_flows}
 \title{Total primary energy supply flows}
 \format{
-A string vector with 7 entries.
+A string vector with 9 entries.
 \describe{
 \item{resources}{The string identifier for Resource flows.}
 \item{production}{The string identifier for Production flows.}
 \item{imports}{The string identifier for Import flows.}
-\item{exports}{The string identifier for  flows.}
+\item{exports}{The string identifier for Export flows.}
 \item{international_marine_bunkers}{The string identifier for International marine bunkers flows.}
 \item{international_aviation_bunkers}{The string identifier for International aviation bunkers flows.}
+\item{exports_to_world_marine_bunkers}{The string identifier for Exports to World marine bunkers.}
+\item{exports_to_world_aviation_bunkers}{The string identifier for Exports to World aviation bunkers.}
 \item{stock_changes}{The string identifier for Stock changes flows.}
 }
 }

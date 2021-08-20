@@ -493,11 +493,9 @@ test_that("eta_fu_table_completed() works as expected", {
   # Remove a couple rows to get a FALSE return value.
   expect_false(eta_fu_table_completed(fu_efficiencies[-3, ], fu_allocations))
   
-  # Try with a tall allocations data frame
-  expect_true(eta_fu_table_completed(fu_efficiencies, 
-                                     fu_allocations %>% tidyr::pivot_longer(cols = year_cols(fu_allocations), 
-                                                                            names_to = IEATools::iea_cols$year, 
-                                                                            values_to = IEATools::template_cols$.values)))
+  # Try with a regular allocations data frame
+  expect_true(eta_fu_table_completed(fu_efficiencies, fu_allocations))
+  
   # Try with a tall efficiencies data frame
   expect_true(eta_fu_table_completed(fu_efficiencies %>% tidyr::pivot_longer(cols = year_cols(fu_efficiencies), 
                                                                              names_to = IEATools::iea_cols$year, 
@@ -505,8 +503,8 @@ test_that("eta_fu_table_completed() works as expected", {
                                      fu_allocations))
   
   # Try with a NULL fu_efficiencies
-  expect_false(eta_fu_table_completed(fu_allocation_table = fu_allocations))
-  expect_true(!is.null(eta_fu_table_completed(fu_allocation_table = fu_allocations) %>% 
+  expect_false(eta_fu_table_completed(machines_that_need_quantities = fu_allocations))
+  expect_true(!is.null(eta_fu_table_completed(machines_that_need_quantities = fu_allocations) %>% 
                          attr("unallocated_rows")))
 })
 

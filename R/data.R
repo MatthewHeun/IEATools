@@ -494,9 +494,11 @@
 #' \item{resources}{The string identifier for Resource flows.}
 #' \item{production}{The string identifier for Production flows.}
 #' \item{imports}{The string identifier for Import flows.}
-#' \item{exports}{The string identifier for  flows.}
+#' \item{exports}{The string identifier for Export flows.}
 #' \item{international_marine_bunkers}{The string identifier for International marine bunkers flows.}
 #' \item{international_aviation_bunkers}{The string identifier for International aviation bunkers flows.}
+#' \item{exports_to_world_marine_bunkers}{The string identifier for Exports to World marine bunkers.}
+#' \item{exports_to_world_aviation_bunkers}{The string identifier for Exports to World aviation bunkers.}
 #' \item{stock_changes}{The string identifier for Stock changes flows.}
 #' }
 #' 
@@ -706,13 +708,15 @@
 #' 
 #' @format A string vector with `r length(transport_flows)` entries.
 #' \describe{
-#' \item{world_aviation_bunkers}{The string identifying the World aviation bunkers transport sector}
+#' \item{domestic_navigation}{The string identifying the Domestic navigation sector}
 #' \item{world_marine_bunkers}{The string identifying the World marine bunkers transport sector}
+#' \item{international_navigation}{The string identifying final demand for the World marine bunkers country _after_ specifying IEA data.}
 #' \item{domestic_aviation}{The string identifying Domestic aviation}
+#' \item{world_aviation_bunkers}{The string identifying the World aviation bunkers transport sector}
+#' \item{international_aviation}{The string identifying final demand for the World aviation bunkers country _after_ specifying IEA data.}
 #' \item{road}{The string identifying the Road transport sector}
 #' \item{rail}{The string identifying the Rail transport sector}
 #' \item{pipeline_transport}{The string identifying the Pipeline transport sector}
-#' \item{domestic_navigation}{The string identifying the Domestic navigation sector}
 #' \item{non_specified_transport}{The string identifying the Non-specified transport sector}
 #' \item{transport_not_elsewhere_specified}{The string identifying the Transport not elsewhere specified sector. This string replaced `non_specified_transport` in the IEA's 2020 extended energy balances.}
 #' }

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.53</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.57</span>
       </span>
     </div>
 
@@ -144,13 +144,15 @@
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string vector with 7 entries.</p><dl>
+    <p>A string vector with 9 entries.</p><dl>
 <dt>resources</dt><dd><p>The string identifier for Resource flows.</p></dd>
 <dt>production</dt><dd><p>The string identifier for Production flows.</p></dd>
 <dt>imports</dt><dd><p>The string identifier for Import flows.</p></dd>
-<dt>exports</dt><dd><p>The string identifier for  flows.</p></dd>
+<dt>exports</dt><dd><p>The string identifier for Export flows.</p></dd>
 <dt>international_marine_bunkers</dt><dd><p>The string identifier for International marine bunkers flows.</p></dd>
 <dt>international_aviation_bunkers</dt><dd><p>The string identifier for International aviation bunkers flows.</p></dd>
+<dt>exports_to_world_marine_bunkers</dt><dd><p>The string identifier for Exports to World marine bunkers.</p></dd>
+<dt>exports_to_world_aviation_bunkers</dt><dd><p>The string identifier for Exports to World aviation bunkers.</p></dd>
 <dt>stock_changes</dt><dd><p>The string identifier for Stock changes flows.</p></dd>
 
 </dl>
@@ -175,6 +177,12 @@
 #&gt; 
 #&gt; $international_aviation_bunkers
 #&gt; [1] "International aviation bunkers"
+#&gt; 
+#&gt; $exports_to_world_marine_bunkers
+#&gt; [1] "Exports to World marine bunkers"
+#&gt; 
+#&gt; $exports_to_world_aviation_bunkers
+#&gt; [1] "Exports to World aviation bunkers"
 #&gt; 
 #&gt; $stock_changes
 #&gt; [1] "Stock changes"

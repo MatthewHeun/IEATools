@@ -5,7 +5,7 @@
 \alias{interface_industries}
 \title{Interface industries}
 \format{
-A string vector with 5 entries.
+A string vector with 7 entries.
 \describe{
 \item{imports}{The string identifier for Imports.}
 \item{exports}{The string identifier for Exports.}

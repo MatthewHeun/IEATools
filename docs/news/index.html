@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.53</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.57</span>
       </span>
     </div>
 
@@ -133,17 +133,79 @@
       
     </div>
 
-    <div id="ieatools-0152-2021-06-08" class="section level1">
-<h1 class="page-header" data-toc-text="0.1.52">
-<a href="#ieatools-0152-2021-06-08" class="anchor"></a>IEATools 0.1.52 (2021-06-08)</h1>
+    <div id="ieatools-0157-2021-08-19-doi" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.57">
+<a href="#ieatools-0157-2021-08-19-doi" class="anchor"></a>IEATools 0.1.57 (2021-08-19) <a href="https://doi.org/10.5281/zenodo.5222003"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5222003.svg" alt="DOI"></a>
+</h1>
+<ul>
+<li>Fixed a bug where missing EIOU was not properly detected. It could be missing or <code>NULL</code>, but <code>NULL</code> was not detected.</li>
+<li>No new tests.
+<ul>
+<li>Still at 833 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="ieatools-0156-2021-08-18-doi" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.56">
+<a href="#ieatools-0156-2021-08-18-doi" class="anchor"></a>IEATools 0.1.56 (2021-08-18) <a href="https://doi.org/10.5281/zenodo.5217278"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5217278.svg" alt="DOI"></a>
+</h1>
+<ul>
+<li>
+<code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code> now robust to cases where there is no EIOU, thanks to now using <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html">matsindf::matsindf_apply()</a></code>.</li>
+<li>Now using <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html">matsindf::matsindf_apply()</a></code> for <code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code>. This change will enable better handling of cases where a country has no EIOU. The first use case will be bunkers.</li>
+<li>No longer cleaning matrices in <code><a href="../reference/extend_to_useful_helper.html">extend_to_useful_helper()</a></code>, because some vectors may be the <code>0</code> vector and be eliminated.</li>
+<li>Added <code><a href="../reference/replace_null_UR.html">replace_null_UR()</a></code> function to the workflow in the <code><a href="../reference/prep_psut.html">prep_psut()</a></code> function.</li>
+<li>New function <code><a href="../reference/replace_null_UR.html">replace_null_UR()</a></code> replaces missing or <code>NULL</code> <code>R</code>, <code>U_feed</code>, <code>U_EIOU</code>, <code>U</code>, and <code>r_EIOU</code> with <strong>0</strong> matrices with appropriate row and column names. The replacements are built from <strong>Y</strong> and <strong>V</strong> matrices. The need for this functionality arises when the last stage is final energy and imports (<strong>V</strong> matrix) are the only source of an energy carrier that is consumed in final demand (<strong>Y</strong> matrix). In that situation, the <strong>R</strong> and <strong>U</strong> matrices will be missing, and they can be replaced by <strong>0</strong> matrices with the right dimensions.</li>
+<li>In the specification process, the <code>Flow</code> for countries <code>World_X_bunkers</code> are now specified to be “International navigation” and “International aviation” to correspond with their domestic equivalents.</li>
+<li>New tests for new code.
+<ul>
+<li>Up to 833 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="ieatools-0155-2021-07-21-doi" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.55">
+<a href="#ieatools-0155-2021-07-21-doi" class="anchor"></a>IEATools 0.1.55 (2021-07-21) <a href="https://doi.org/10.5281/zenodo.5119070"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5119070.svg" alt="DOI"></a>
+</h1>
+<ul>
+<li>Modifications to code and tests to accommodate World marine bunkers and World aviation bunkers being their own country.</li>
+<li>New tests for new features.
+<ul>
+<li>Up to 808 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="ieatools-0154-2021-07-09-doi" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.54">
+<a href="#ieatools-0154-2021-07-09-doi" class="anchor"></a>IEATools 0.1.54 (2021-07-09) <a href="https://doi.org/10.5281/zenodo.5086372"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5086372.svg" alt="DOI"></a>
+</h1>
+<ul>
+<li>Modifications to enable per-machine final-to-useful efficiency data.</li>
+<li>New tests for new features.
+<ul>
+<li>Up to 790 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="ieatools-0153-2021-06-08" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.53">
+<a href="#ieatools-0153-2021-06-08" class="anchor"></a>IEATools 0.1.53 (2021-06-08)</h1>
 <ul>
 <li>The “Oil and gas extraction” activity is split in “Oil extraction”, which extracts oil products, and “Natural gas extraction”, which extracts natural gas.</li>
 <li>New <code><a href="../reference/split_oil_gas_extraction_eiou.html">split_oil_gas_extraction_eiou()</a></code> function splits the EIOU of the “Oil and gas extraction” industry into EIOU for the “Oil extraction” and for the “Natural gas extraction” activities.</li>
 </ul>
 </div>
-    <div id="ieatools-0151-2021-05-07" class="section level1">
-<h1 class="page-header" data-toc-text="0.1.51">
-<a href="#ieatools-0151-2021-05-07" class="anchor"></a>IEATools 0.1.51 (2021-05-07)</h1>
+    <div id="ieatools-0152-2021-05-07" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.52">
+<a href="#ieatools-0152-2021-05-07" class="anchor"></a>IEATools 0.1.52 (2021-05-07)</h1>
 <ul>
 <li>Deleted an efficiency for LPG stoves in Ghana in 1971 that should not have been in the GH-ZA-Efficiency-sample-2019.xlsx file.</li>
 <li>Moved A_B_data_full_2018_format_testing.csv to <code>inst/extdata</code>.</li>
