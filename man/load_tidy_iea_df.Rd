@@ -16,6 +16,9 @@ load_tidy_iea_df(
 \arguments{
 \item{.iea_file}{The path of the file to be loaded. Default loads example data bundled with the package via \code{\link[=sample_iea_data_path]{sample_iea_data_path()}}.}
 
+\item{override_df}{A data frame containing columns \code{pfu_code} and \code{iea_name} that provides 3-letter country codes. See \code{IEATools::use_iso_countries()}.
+Default is \code{IEATools::override_iso_codes_df}.}
+
 \item{country}{The name of the country column in the data frames. See \code{IEATools::iea_cols$country}.}
 
 \item{pfu_code, iea_name}{Names of columns in the override data frame for 3-letter country codes.

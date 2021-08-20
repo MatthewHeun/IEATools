@@ -5,10 +5,10 @@
 \alias{override_iso_codes_df}
 \title{Country code overrides}
 \format{
-A data frame with four rows and two columns.
+A data frame with five rows and two columns.
 \describe{
-\item{pfu_code}{The column of 3-letter country codes that to override those found in \code{countrycode::codelist}.}
-\item{iea_name}{The column containing IEA country names..}
+\item{PFU.code}{The column of 3-letter country codes that to override those found in \code{countrycode::codelist}.}
+\item{IEA.name}{The column containing IEA country names..}
 }
 }
 \usage{

@@ -922,6 +922,8 @@ tidy_iea_df <- function(.iea_df,
 #' See examples for two ways to achieve the same result.
 #' 
 #' @param .iea_file The path of the file to be loaded. Default loads example data bundled with the package via [sample_iea_data_path()].
+#' @param override_df A data frame containing columns `pfu_code` and `iea_name` that provides 3-letter country codes. See `IEATools::use_iso_countries()`.
+#'                    Default is `IEATools::override_iso_codes_df`.
 #' @param country The name of the country column in the data frames. See `IEATools::iea_cols$country`.
 #' @param pfu_code,iea_name Names of columns in the override data frame for 3-letter country codes. 
 #'                          These arguments are passed to `use_iso_countries()`.

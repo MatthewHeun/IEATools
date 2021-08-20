@@ -108,10 +108,10 @@
 #' These code-country pairs are used as a default set of overrides (relative to `countrycode::codelist`)
 #' in the function `use_iso_countries()`.
 #' 
-#' @format A data frame with four rows and two columns.
+#' @format A data frame with five rows and two columns.
 #' \describe{
-#' \item{pfu_code}{The column of 3-letter country codes that to override those found in `countrycode::codelist`.}
-#' \item{iea_name}{The column containing IEA country names..}
+#' \item{PFU.code}{The column of 3-letter country codes that to override those found in `countrycode::codelist`.}
+#' \item{IEA.name}{The column containing IEA country names..}
 #' }
 #' 
 #' @examples
