@@ -1,3 +1,5 @@
+* `load_tidy_iea_df()` has new arguments which are passed to `use_iso_coutries()`, 
+  thereby exposing the new functionality of `use_iso_coutries()` to `load_tidy_iea_df()`.
 * New feature for `use_iso_countries()`: 
   can supply a data frame of ISO 3-letter codes
   in argument `override_df`.
@@ -20,20 +22,20 @@
   This change will enable better handling of cases where
   a country has no EIOU.
   The first use case will be bunkers.
-* No longer cleaning matrices in `extend_to_useful_helper()`, 
+* No longer cleaning matrices in `extend_to_useful_helper()`,
   because some vectors may be the `0` vector and be eliminated.
 * Added `replace_null_UR()` function to the workflow in the `prep_psut()` function.
-* New function `replace_null_UR()` replaces missing or `NULL` 
+* New function `replace_null_UR()` replaces missing or `NULL`
   `R`, `U_feed`, `U_EIOU`, `U`, and `r_EIOU`
   with **0** matrices with appropriate row and column names.
   The replacements are built from **Y** and **V** matrices.
   The need for this functionality arises when
-  the last stage is final energy 
-  and imports (**V** matrix) 
-  are the only source of an energy carrier that 
+  the last stage is final energy
+  and imports (**V** matrix)
+  are the only source of an energy carrier that
   is consumed in final demand (**Y** matrix).
-  In that situation, the **R** and **U** matrices 
-  will be missing, 
+  In that situation, the **R** and **U** matrices
+  will be missing,
   and they can be replaced by **0** matrices with the right dimensions.
 * In the specification process,
   the `Flow` for countries `World_X_bunkers` are now

@@ -4,12 +4,27 @@
 \alias{load_tidy_iea_df}
 \title{Load IEA extended energy balance data into tidy format}
 \usage{
-load_tidy_iea_df(.iea_file = sample_iea_data_path(), remove_zeroes = TRUE)
+load_tidy_iea_df(
+  .iea_file = sample_iea_data_path(),
+  override_df = IEATools::override_iso_codes_df,
+  country = IEATools::iea_cols$country,
+  pfu_code = IEATools::country_concordance_cols$pfu_code,
+  iea_name = IEATools::country_concordance_cols$iea_name,
+  remove_zeroes = TRUE
+)
 }
 \arguments{
-\item{.iea_file}{the path of the file to be loaded. Default loads example data bundled with the package via \code{\link[=sample_iea_data_path]{sample_iea_data_path()}}.}
+\item{.iea_file}{The path of the file to be loaded. Default loads example data bundled with the package via \code{\link[=sample_iea_data_path]{sample_iea_data_path()}}.}
 
-\item{remove_zeroes}{a logical indicating whether data points with the value \code{0} are to be removed from the output. (Default is \code{TRUE}.)}
+\item{country}{The name of the country column in the data frames. See \code{IEATools::iea_cols$country}.}
+
+\item{pfu_code, iea_name}{Names of columns in the override data frame for 3-letter country codes.
+These arguments are passed to \code{use_iso_countries()}.
+Defaults are taken from \code{IEATools::country_concordance_cols}.}
+
+\item{remove_zeroes}{A logical indicating whether data points with the value \code{0} are to be removed from the output.
+This argument is passed to \code{tidy_iea_df()}.
+Default is \code{TRUE}.}
 }
 \value{
 a tidy, augmented data frame of IEA extended energy balance data.

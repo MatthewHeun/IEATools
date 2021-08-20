@@ -917,8 +917,14 @@ tidy_iea_df <- function(.iea_df,
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
 #' 
-#' @param .iea_file the path of the file to be loaded. Default loads example data bundled with the package via [sample_iea_data_path()].
-#' @param remove_zeroes a logical indicating whether data points with the value `0` are to be removed from the output. (Default is `TRUE`.)
+#' @param .iea_file The path of the file to be loaded. Default loads example data bundled with the package via [sample_iea_data_path()].
+#' @param country The name of the country column in the data frames. See `IEATools::iea_cols$country`.
+#' @param pfu_code,iea_name Names of columns in the override data frame for 3-letter country codes. 
+#'                          These arguments are passed to `use_iso_countries()`.
+#'                          Defaults are taken from `IEATools::country_concordance_cols`.
+#' @param remove_zeroes A logical indicating whether data points with the value `0` are to be removed from the output. 
+#'                      This argument is passed to `tidy_iea_df()`. 
+#'                      Default is `TRUE`.
 #'
 #' @return a tidy, augmented data frame of IEA extended energy balance data.
 #' 
@@ -941,13 +947,17 @@ tidy_iea_df <- function(.iea_df,
 #' # simple and complicated should be exactly the same
 #' all(simple == complicated)
 load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(), 
+                             override_df = IEATools::override_iso_codes_df,
+                             country = IEATools::iea_cols$country, 
+                             pfu_code = IEATools::country_concordance_cols$pfu_code,
+                             iea_name = IEATools::country_concordance_cols$iea_name,
                              remove_zeroes = TRUE){
   .iea_file %>% 
     iea_df() %>%
     rename_iea_df_cols() %>% 
     clean_iea_whitespace() %>% 
     remove_agg_memo_flows() %>% 
-    use_iso_countries() %>% 
+    use_iso_countries(override_df = override_df, country = country, pfu_code = pfu_code, iea_name = iea_name) %>% 
     augment_iea_df() %>% 
     tidy_iea_df(remove_zeroes = remove_zeroes)
 }
