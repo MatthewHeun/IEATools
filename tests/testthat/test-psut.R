@@ -57,11 +57,11 @@ test_that("add_psut_matnames works as expected", {
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
       E.dot = c(100, -100),
-      matnames = psut_cols$epsilon
+      matnames = psut_cols$B
     ) %>% 
     add_psut_matnames()
   
-  expect_equal(With_matnames %>% dplyr::filter(matnames == "Epsilon") %>% nrow(), 2)
+  expect_equal(With_matnames %>% dplyr::filter(matnames == "B") %>% nrow(), 2)
   
   With_matnames_2 <- load_tidy_iea_df() %>% 
     specify_all() %>% 
@@ -78,7 +78,7 @@ test_that("add_psut_matnames works as expected", {
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
       E.dot = c(100, -100),
-      matnames = psut_cols$epsilon)
+      matnames = psut_cols$B)
   
   expect_true(all(With_matnames == With_matnames_2))
 })
@@ -100,7 +100,7 @@ test_that("add_row_col_meta works as expected", {
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
       E.dot = c(100, -100),
-      matnames = psut_cols$epsilon
+      matnames = psut_cols$B
     ) %>% 
     add_row_col_meta()
   # Ensure that every row is filled in the new columns.
@@ -113,8 +113,8 @@ test_that("add_row_col_meta works as expected", {
   expect_true(With_meta %>% dplyr::filter(matnames == "R" | matnames == "V") %>% magrittr::extract2("coltypes") %>% magrittr::equals("Product") %>% all())
   expect_true(With_meta %>% dplyr::filter(startsWith(matnames, "U") | matnames == "Y") %>% magrittr::extract2("rowtypes") %>% magrittr::equals("Product") %>% all())
   expect_true(With_meta %>% dplyr::filter(startsWith(matnames, "U") | matnames == "Y") %>% magrittr::extract2("coltypes") %>% magrittr::equals("Industry") %>% all())
-  expect_true(With_meta %>% dplyr::filter(startsWith(matnames, "Epsilon")) %>% magrittr::extract2("rowtypes") %>% magrittr::equals("Product") %>% all())
-  expect_true(With_meta %>% dplyr::filter(startsWith(matnames, "Epsilon")) %>% magrittr::extract2("coltypes") %>% magrittr::equals("Industry") %>% all())
+  expect_true(With_meta %>% dplyr::filter(startsWith(matnames, "B")) %>% magrittr::extract2("rowtypes") %>% magrittr::equals("Product") %>% all())
+  expect_true(With_meta %>% dplyr::filter(startsWith(matnames, "B")) %>% magrittr::extract2("coltypes") %>% magrittr::equals("Industry") %>% all())
   # Ensure that row and column identifiers are correct
   # Rows of R and V are the Flow names
   magrittr::equals(With_meta %>% dplyr::filter(matnames == "R" | matnames == "V") %>% magrittr::extract2("rownames"), 
@@ -131,9 +131,9 @@ test_that("add_row_col_meta works as expected", {
                    With_meta %>% dplyr::filter(matnames == "U" | matnames == "Y") %>% magrittr::extract2("Product")) %>% 
     all() %>% 
     expect_true()
-  # Rows of Epsilon are the Product names
-  magrittr::equals(With_meta %>% dplyr::filter(matnames == "Epsilon") %>% magrittr::extract2("rownames"), 
-                   With_meta %>% dplyr::filter(matnames == "Epsilon") %>% magrittr::extract2("Product")) %>% 
+  # Rows of B are the Product names
+  magrittr::equals(With_meta %>% dplyr::filter(matnames == "B") %>% magrittr::extract2("rownames"), 
+                   With_meta %>% dplyr::filter(matnames == "B") %>% magrittr::extract2("Product")) %>% 
     all() %>% 
     expect_true()
   
@@ -143,8 +143,8 @@ test_that("add_row_col_meta works as expected", {
     all() %>% 
     expect_true()
   
-  magrittr::equals(With_meta %>% dplyr::filter(matnames == "Epsilon") %>% magrittr::extract2("colnames"), 
-                   With_meta %>% dplyr::filter(matnames == "Epsilon") %>% magrittr::extract2("Flow")) %>% 
+  magrittr::equals(With_meta %>% dplyr::filter(matnames == "B") %>% magrittr::extract2("colnames"), 
+                   With_meta %>% dplyr::filter(matnames == "B") %>% magrittr::extract2("Flow")) %>% 
     all() %>% 
     expect_true()
   
@@ -164,7 +164,7 @@ test_that("add_row_col_meta works as expected", {
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
       E.dot = c(100, -100),
-      matnames = psut_cols$epsilon
+      matnames = psut_cols$B
     ) %>% 
     tibble::add_column(
       rownames = "a very odd name",
@@ -188,7 +188,7 @@ test_that("add_row_col_meta works as expected", {
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
       E.dot = c(100, -100),
-      matnames = psut_cols$epsilon
+      matnames = psut_cols$B
     ) %>% 
     tibble::add_column(
       rownames = "a very odd name",
@@ -262,14 +262,14 @@ test_that("collapse_to_psut works expected", {
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
       E.dot = c(100, -100),
-      matnames = psut_cols$epsilon
+      matnames = psut_cols$B
     ) %>% 
     add_row_col_meta() %>% 
     collapse_to_tidy_psut()
   expect_equal(nrow(With_mats), 21)
-  # Ensure that all values in the matrices (excluding Epsilon) are positive.
+  # Ensure that all values in the matrices (excluding B) are positive.
   With_mats %>%
-    dplyr::filter(matnames != "Epsilon") %>% 
+    dplyr::filter(matnames != "B") %>% 
     dplyr::mutate(
       gezero = matsbyname::compare_byname(matvals, ">=", 0) %>% matsbyname::all_byname()
     ) %>% 
@@ -331,7 +331,7 @@ test_that("prep_psut() works as expected with empty .tidy_iea_df", {
                      IEATools::iea_cols$energy_type,
                      IEATools::iea_cols$last_stage,
                      IEATools::iea_cols$year,
-                     "R", "U_EIOU", "U_feed", "V", "Y", "S_units", "Epsilon")) {
+                     "R", "U_EIOU", "U_feed", "V", "Y", "S_units", "B")) {
     expect_true(col_name %in% cn)
   }
   expect_equal(nrow(zero_psut), 0)
@@ -409,9 +409,9 @@ test_that("replace_null_UR works correctly", {
 })
 
 
-test_that("prep_psut() correctly works with Epsilon flows", {
+test_that("prep_psut() correctly works with Balancing flows", {
   
-  PSUT_flows_with_Epsilon <- load_tidy_iea_df() %>% 
+  PSUT_flows_with_Balancing <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     add_psut_matnames() %>% 
     tibble::add_row(
@@ -426,20 +426,20 @@ test_that("prep_psut() correctly works with Epsilon flows", {
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
       E.dot = c(100, -100),
-      matnames = c(psut_cols$epsilon, psut_cols$epsilon)
+      matnames = c(psut_cols$B, psut_cols$B)
     ) %>%
     prep_psut()
 
   expect_true(
-    all(c("R", "V", "U_feed", "U_EIOU", "Y", "S_units", "Epsilon") %in% colnames(PSUT_flows_with_Epsilon))
+    all(c("R", "V", "U_feed", "U_EIOU", "Y", "S_units", "B") %in% colnames(PSUT_flows_with_Epsilon))
   )
   
-  epsilon_expected_value = matrix(nrow = 2, ncol = 2,
+  balancing_expected_value = matrix(nrow = 2, ncol = 2,
                                   c(0, 100, -100, 0))
   
   expect_true(
-    all(epsilon_expected_value == (PSUT_flows_with_Epsilon %>%
-                                     dplyr::select(Epsilon) %>% 
+    all(balancing_expected_value == (PSUT_flows_with_Epsilon %>%
+                                     dplyr::select(B) %>% 
                                      dplyr::pull() %>% 
                                      dplyr::first())
   ))
