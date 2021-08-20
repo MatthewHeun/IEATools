@@ -40,7 +40,7 @@
 * In the specification process,
   the `Flow` for countries `World_X_bunkers` are now
   specified to be "International navigation" and "International aviation"
-  to correspond with their domestic equivalents.
+  to correspond with their "Domestic" equivalents.
 * New tests for new code.
     * Up to 833 tests, all passing.
     * Test coverage remains at 100 %.
