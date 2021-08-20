@@ -2,6 +2,36 @@
 context("Initialize IEA data")
 ###########################################################
 
+
+test_that("use_iso_countries() works with override", {
+  iea_df <- tibble::tribble(~Country, 
+                            "People's Republic of China", 
+                            "Hong Kong (China)", 
+                            "World marine bunkers",
+                            "World aviation bunkers", 
+                            "Ghana", 
+                            "South Africa", 
+                            "World")
+  res <- iea_df %>% 
+    use_iso_countries()
+  expect_equal(res$Country, c("CHN", "HKG", "WMB", "WAB", "GHA", "ZAF", "WLD"))
+})
+
+
+test_that("use_iso_countries() works with more columns in override", {
+  iea_df <- tibble::tribble(~Country, ~`2000`, ~`2001`,
+                            "People's Republic of China", 42, 43,
+                            "Hong Kong (China)", 44, 45)
+  override <- IEATools::override_iso_codes_df %>% 
+    dplyr::mutate(bogus_col = "bogus information")
+  res <- iea_df %>% 
+    use_iso_countries(override_df = override) %>% 
+    tidyr::pivot_longer(cols = c("2000", "2001"), names_to = "Year", values_to = "E.dot")
+  
+  expect_equal(names(res), c("Country", "Year", "E.dot"))
+})
+
+
 test_that("use_iso_countries() works as expected", {
   IEAData <- sample_iea_data_path() %>% 
     iea_df() %>%
@@ -448,7 +478,7 @@ test_that("use_iso_countries works as expected", {
     use_iso_countries()
   # Ensure that a "World" country is present.
   n_world_rows <- world %>% 
-    dplyr::filter(Country == "World") %>% 
+    dplyr::filter(Country == "WLD") %>% 
     nrow()
   expect_equal(n_world_rows, 8)
 })

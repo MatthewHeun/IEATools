@@ -87,6 +87,38 @@
 
 
 
+#' Country concordance table column names
+#'
+#' A string list containing named names of columns in country concordance tables.
+#' 
+#' @format A string list with `r length(country_concordance_cols)` entries.
+#' \describe{
+#' \item{pfu_code}{The name of a column containing 3-letter Primary-Final-Useful country codes. Normally, these codes should match the ISO 3-letter codes for each country.}
+#' \item{iea_name}{The name of a column containing 3-letter Primary-Final-Useful country names. These names should be the same as the IEA's country names.}
+#' }
+#' 
+#' @examples
+#' country_concordance_cols
+"country_concordance_cols"
+
+
+#' Country code overrides
+#'
+#' A data frame containing 3-letter country codes and IEA country names.
+#' These code-country pairs are used as a default set of overrides (relative to `countrycode::codelist`)
+#' in the function `use_iso_countries()`.
+#' 
+#' @format A data frame with five rows and two columns.
+#' \describe{
+#' \item{PFU.code}{The column of 3-letter country codes that to override those found in `countrycode::codelist`.}
+#' \item{IEA.name}{The column containing IEA country names..}
+#' }
+#' 
+#' @examples
+#' override_iso_codes_df
+"override_iso_codes_df"
+
+
 #' Physical Supply-Use Table (PSUT) data frame column names
 #'
 #' A string list containing named names of columns in PSUT data frames.
