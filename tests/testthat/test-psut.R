@@ -431,14 +431,14 @@ test_that("prep_psut() correctly works with Balancing flows", {
     prep_psut()
 
   expect_true(
-    all(c("R", "V", "U_feed", "U_EIOU", "Y", "S_units", "B") %in% colnames(PSUT_flows_with_Epsilon))
+    all(c("R", "V", "U_feed", "U_EIOU", "Y", "S_units", "B") %in% colnames(PSUT_flows_with_Balancing))
   )
   
   balancing_expected_value = matrix(nrow = 2, ncol = 2,
                                   c(0, 100, -100, 0))
   
   expect_true(
-    all(balancing_expected_value == (PSUT_flows_with_Epsilon %>%
+    all(balancing_expected_value == (PSUT_flows_with_Balancing %>%
                                      dplyr::select(B) %>% 
                                      dplyr::pull() %>% 
                                      dplyr::first())
