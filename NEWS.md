@@ -1,8 +1,23 @@
+# IEATools 0.1.59 (2021-08-20)
 
-# IEATools 0.1.58 (2021-08-20)
+* `load_tidy_iea_df()` has new arguments which are passed to `use_iso_coutries()`, 
+  thereby exposing the new functionality of `use_iso_coutries()` to `load_tidy_iea_df()`.
+* New feature for `use_iso_countries()`: 
+  can supply a data frame of ISO 3-letter codes
+  in argument `override_df`.
+* Fixed a test coverage failure: 
+  There was no case where C_eiou_mat was missing.
+  when testing `extend_to_useful()`.
+* A few new tests for new features. 
+    * Up to 836 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# IEATools 0.1.58 (2021-08-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226527.svg)](https://doi.org/10.5281/zenodo.5226527)
 
 * Changed "Epsilon"" matrix name to "Balancing".
-  The old name was causing issues in ECCTools.
+  The old name was causing issues in `ECCTools`.
+  
 
 # IEATools 0.1.57 (2021-08-19) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5222003.svg)](https://doi.org/10.5281/zenodo.5222003)
 
@@ -21,25 +36,25 @@
   This change will enable better handling of cases where
   a country has no EIOU.
   The first use case will be bunkers.
-* No longer cleaning matrices in `extend_to_useful_helper()`, 
+* No longer cleaning matrices in `extend_to_useful_helper()`,
   because some vectors may be the `0` vector and be eliminated.
 * Added `replace_null_UR()` function to the workflow in the `prep_psut()` function.
-* New function `replace_null_UR()` replaces missing or `NULL` 
+* New function `replace_null_UR()` replaces missing or `NULL`
   `R`, `U_feed`, `U_EIOU`, `U`, and `r_EIOU`
   with **0** matrices with appropriate row and column names.
   The replacements are built from **Y** and **V** matrices.
   The need for this functionality arises when
-  the last stage is final energy 
-  and imports (**V** matrix) 
-  are the only source of an energy carrier that 
+  the last stage is final energy
+  and imports (**V** matrix)
+  are the only source of an energy carrier that
   is consumed in final demand (**Y** matrix).
-  In that situation, the **R** and **U** matrices 
-  will be missing, 
+  In that situation, the **R** and **U** matrices
+  will be missing,
   and they can be replaced by **0** matrices with the right dimensions.
 * In the specification process,
   the `Flow` for countries `World_X_bunkers` are now
   specified to be "International navigation" and "International aviation"
-  to correspond with their domestic equivalents.
+  to correspond with their "Domestic" equivalents.
 * New tests for new code.
     * Up to 833 tests, all passing.
     * Test coverage remains at 100 %.
@@ -64,10 +79,6 @@
 
 
 # IEATools 0.1.53 (2021-06-08)
-<<<<<<< HEAD
->>>>>>> hotfix-0.1.58
-=======
->>>>>>> d01281a20b484f30008dd70da8e56fc71063d8ab
 
 * The "Oil and gas extraction" activity is split in "Oil extraction",
   which extracts oil products, and "Natural gas extraction", which extracts natural gas.

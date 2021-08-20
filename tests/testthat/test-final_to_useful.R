@@ -444,6 +444,23 @@ test_that("extend_to_useful() works with individual matrices", {
   expect_equal(names(useful_mats), 
                c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                  "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+  
+  # Try with C_eiou missing, thereby ignoring any EIOU.
+  # Do the same calculation as above, but don't include 
+  # the C_eiou argument.
+  # This approach is expected to trip the imbalance warning, 
+  # because we're removing EIOU energy from the ECC.
+  extend_to_useful(R = psut_mats$R[[1]], 
+                   U_feed = psut_mats$U_feed[[1]], 
+                   U_eiou = psut_mats$U_EIOU[[1]], 
+                   U = psut_mats$U[[1]], 
+                   r_eiou = psut_mats$r_eiou[[1]], 
+                   V = psut_mats$V[[1]], 
+                   Y = psut_mats$Y[[1]], 
+                   C_Y = psut_mats$C_Y[[1]], 
+                   eta_fu = psut_mats$eta.fu[[1]], 
+                   phi_u = psut_mats$phi.u[[1]]) %>% 
+    expect_warning(regexp = "Energy is not balanced to within")
 })
 
 
