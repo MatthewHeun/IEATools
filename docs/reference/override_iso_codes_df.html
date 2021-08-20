@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Method order — methods • IEATools</title>
+<title>Country code overrides — override_iso_codes_df • IEATools</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="Method order — methods" />
-<meta property="og:description" content="A string list containing types of methods for quantifying the primary equivalent of renewable electricity." />
+<meta property="og:title" content="Country code overrides — override_iso_codes_df" />
+<meta property="og:description" content="A data frame containing 3-letter country codes and IEA country names.
+These code-country pairs are used as a default set of overrides (relative to countrycode::codelist)
+in the function use_iso_countries()." />
 
 
 
@@ -130,39 +132,37 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Method order</h1>
+    <h1>Country code overrides</h1>
     
-    <div class="hidden name"><code>methods.Rd</code></div>
+    <div class="hidden name"><code>override_iso_codes_df.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A string list containing types of methods for quantifying the primary equivalent of renewable electricity.</p>
+    <p>A data frame containing 3-letter country codes and IEA country names.
+These code-country pairs are used as a default set of overrides (relative to <code><a href='https://vincentarelbundock.github.io/countrycode/reference/codelist.html'>countrycode::codelist</a></code>)
+in the function <code><a href='use_iso_countries.html'>use_iso_countries()</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='va'>methods</span></pre>
+    <pre class="usage"><span class='va'>override_iso_codes_df</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string list with 3 entries.</p><dl>
-<dt>PCM</dt><dd><p>Physical content method (used by the IEA).</p></dd>
-<dt>RCM</dt><dd><p>Resource content method.</p></dd>
-<dt>PSM</dt><dd><p>Partial substitution method (used by EIA and BP)..</p></dd>
+    <p>A data frame with five rows and two columns.</p><dl>
+<dt>PFU.code</dt><dd><p>The column of 3-letter country codes that to override those found in <code><a href='https://vincentarelbundock.github.io/countrycode/reference/codelist.html'>countrycode::codelist</a></code>.</p></dd>
+<dt>IEA.name</dt><dd><p>The column containing IEA country names..</p></dd>
 
 </dl>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>methods</span>
-</div><div class='output co'>#&gt; $pcm
-#&gt; [1] "PCM"
-#&gt; 
-#&gt; $rcm
-#&gt; [1] "RCM"
-#&gt; 
-#&gt; $psm
-#&gt; [1] "PSM"
-#&gt; </div></pre>
+    <pre class="examples"><div class='input'><span class='va'>override_iso_codes_df</span>
+</div><div class='output co'>#&gt;   PFU.code                   IEA.name
+#&gt; 1      CHN People's Republic of China
+#&gt; 2      HKG          Hong Kong (China)
+#&gt; 3      WMB       World marine bunkers
+#&gt; 4      WAB     World aviation bunkers
+#&gt; 5      WLD                      World</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

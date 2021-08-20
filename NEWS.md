@@ -1,17 +1,19 @@
+# IEATools 0.1.59 (2021-08-20)
+
 * `load_tidy_iea_df()` has new arguments which are passed to `use_iso_coutries()`, 
   thereby exposing the new functionality of `use_iso_coutries()` to `load_tidy_iea_df()`.
 * New feature for `use_iso_countries()`: 
   can supply a data frame of ISO 3-letter codes
   in argument `override_df`.
 * Fixed a test coverage failure: 
-  There was no case where C_eiou_mat was missing 
+  There was no case where C_eiou_mat was missing.
   when testing `extend_to_useful()`.
 * A few new tests for new features. 
     * Up to 836 tests, all passing.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.58 (2021-08-20)
+# IEATools 0.1.58 (2021-08-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226527.svg)](https://doi.org/10.5281/zenodo.5226527)
 
 * Changed "Epsilon"" matrix name to "Balancing".
   The old name was causing issues in `ECCTools`.

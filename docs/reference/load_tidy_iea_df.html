@@ -81,7 +81,7 @@ tidy_iea_df().
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.57</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.59</span>
       </span>
     </div>
 
@@ -157,18 +157,42 @@ This function bundles several others:</p><ol>
 
     </div>
 
-    <pre class="usage"><span class='fu'>load_tidy_iea_df</span><span class='op'>(</span>.iea_file <span class='op'>=</span> <span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span><span class='op'>(</span><span class='op'>)</span>, remove_zeroes <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>load_tidy_iea_df</span><span class='op'>(</span>
+  .iea_file <span class='op'>=</span> <span class='fu'><a href='sample_iea_data_path.html'>sample_iea_data_path</a></span><span class='op'>(</span><span class='op'>)</span>,
+  override_df <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='override_iso_codes_df.html'>override_iso_codes_df</a></span>,
+  country <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>country</span>,
+  pfu_code <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='country_concordance_cols.html'>country_concordance_cols</a></span><span class='op'>$</span><span class='va'>pfu_code</span>,
+  iea_name <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='country_concordance_cols.html'>country_concordance_cols</a></span><span class='op'>$</span><span class='va'>iea_name</span>,
+  remove_zeroes <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>.iea_file</th>
-      <td><p>the path of the file to be loaded. Default loads example data bundled with the package via <code><a href='sample_iea_data_path.html'>sample_iea_data_path()</a></code>.</p></td>
+      <td><p>The path of the file to be loaded. Default loads example data bundled with the package via <code><a href='sample_iea_data_path.html'>sample_iea_data_path()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>override_df</th>
+      <td><p>A data frame containing columns <code>pfu_code</code> and <code>iea_name</code> that provides 3-letter country codes. See <code><a href='use_iso_countries.html'>IEATools::use_iso_countries()</a></code>.
+Default is <code><a href='override_iso_codes_df.html'>IEATools::override_iso_codes_df</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>country</th>
+      <td><p>The name of the country column in the data frames. See <code>IEATools::iea_cols$country</code>.</p></td>
+    </tr>
+    <tr>
+      <th>pfu_code, iea_name</th>
+      <td><p>Names of columns in the override data frame for 3-letter country codes.
+These arguments are passed to <code><a href='use_iso_countries.html'>use_iso_countries()</a></code>.
+Defaults are taken from <code><a href='country_concordance_cols.html'>IEATools::country_concordance_cols</a></code>.</p></td>
     </tr>
     <tr>
       <th>remove_zeroes</th>
-      <td><p>a logical indicating whether data points with the value <code>0</code> are to be removed from the output. (Default is <code>TRUE</code>.)</p></td>
+      <td><p>A logical indicating whether data points with the value <code>0</code> are to be removed from the output.
+This argument is passed to <code><a href='tidy_iea_df.html'>tidy_iea_df()</a></code>.
+Default is <code>TRUE</code>.</p></td>
     </tr>
     </table>
 
