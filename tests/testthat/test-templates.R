@@ -433,7 +433,7 @@ test_that("write_eta_fu_template works as expected for 2021 data", {
   p <- Eta_fu_template_2021_2 %>% 
     write_eta_fu_template(f, overwrite_file = TRUE, overwrite_fu_eta_tab = TRUE)
   # Read the tab back in.
-  Template_2019.reread2 <- openxlsx::read.xlsx(f, sheet = IEATools::fu_analysis_file_info$eta_fu_tab_name)
+  Template_2021.reread2 <- openxlsx::read.xlsx(f, sheet = IEATools::fu_analysis_file_info$eta_fu_tab_name)
   # Check that it was read back correctly.
   # Use expect_equivalent instead of expect_equal to ignore attributes 
   # (in this case levels) that are different after reading back in.
