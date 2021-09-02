@@ -714,7 +714,13 @@ fap_flows <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   insert_after(after = "Energy industry own use_Main activity producer electricity plants",
                values = c("Energy industry own use_Main activity producer CHP plants", "Energy industry own use_Main activity producer heat plants")) %>% 
   insert_after(after = "Energy industry own use_Main activity producer heat plants",
-               values = c("Energy industry own use_Oil extraction", "Energy industry own use_Natural gas extraction"))
+               values = c("Energy industry own use_Oil extraction", "Energy industry own use_Natural gas extraction")) %>% 
+  # Pick up several "not elsewhere specified" flows.
+  # These enable sorting for years besides the latest year.
+  insert_after(after = "Transport_Transport not elsewhere specified", 
+               values = "Transport_Non-specified (transport)") %>% 
+  insert_after(after = "Industry_Industry not elsewhere specified", 
+               values = "Industry_Non-specified (industry)")
 usethis::use_data(fap_flows, overwrite = TRUE)
 
 
