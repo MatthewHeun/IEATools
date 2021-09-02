@@ -1,3 +1,6 @@
+* Now able to read IEA Extended Energy Balance from 2020 and 2021 releases.
+
+
 # IEATools 0.1.59 (2021-08-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5228303.svg)](https://doi.org/10.5281/zenodo.5228303)
 
 * `load_tidy_iea_df()` has new arguments which are passed to `use_iso_coutries()`, 
