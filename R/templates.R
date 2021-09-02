@@ -892,8 +892,6 @@ eta_fu_template <- function(.fu_allocations,
   
   # Now we join the E.dot and C values and calculate the energy flowing into each final-to-useful machine
   input_energy <- dplyr::full_join(c_info, e_dot_info, 
-                                   # by = matsindf::everything_except(unit, e_dot_info, e_dot_dest, .symbols = FALSE)) %>% 
-                                   # by = matsindf::everything_except(e_dot_info, e_dot_dest, .symbols = FALSE)) %>% 
                                    by = matsindf::everything_except(c_info, machine, eu_product, c_ratio, .symbols = FALSE)) %>% 
     # There may be cases where the analyst has filled a C value, but there is no corresponding e_dot_dest value.
     # Get rid of those rows.
