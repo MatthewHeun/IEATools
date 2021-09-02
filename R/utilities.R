@@ -427,6 +427,7 @@ prod_tp_eiou_energy_carriers <- function(file_path = sample_iea_data_path(),
 #' sample_iea_data_path()     # Assumes 2021
 #' sample_iea_data_path(2021) # Same
 #' # Retrieves path for sample IEA extended energy balances data for previous years
+#' sample_iea_data_path(2020) 
 #' sample_iea_data_path(2019) 
 #' sample_iea_data_path(2018) 
 sample_iea_data_path <- function(version = 2021) {
@@ -436,11 +437,14 @@ sample_iea_data_path <- function(version = 2021) {
   } else if (version == 2019) {
     return(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2019.csv") %>%
              system.file(package = "IEATools"))
+  } else if (version == 2020) {
+    return(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2020.csv") %>%
+             system.file(package = "IEATools"))
   } else if (version == 2021) {
     return(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2021.csv") %>%
              system.file(package = "IEATools"))
   }
-  stop("Only 2018, 2019, and 2021 are supported in sample_iea_data_path()")
+  stop("Only 2018, 2019, 2020, and 2021 are supported in sample_iea_data_path()")
 }
 
 
@@ -448,7 +452,7 @@ sample_iea_data_path <- function(version = 2021) {
 #' 
 #' @param version the desired version (expressed as the year of IEA data release) of 
 #'                the sample final-to-useful allocation table. 
-#'                Options are 2021 (default), 2019, and 2018. 
+#'                Options are 2021 (default), 2020, 2019, and 2018. 
 #'
 #' @return the path to a final-to-useful allocation table
 #' 
@@ -458,6 +462,7 @@ sample_iea_data_path <- function(version = 2021) {
 #' sample_fu_allocation_table_path()     # Assumes 2021
 #' sample_fu_allocation_table_path(2021) # Same
 #' # Returns path for sample allocation table appropriate for other IEA data releases
+#' sample_fu_allocation_table_path(2020) 
 #' sample_fu_allocation_table_path(2019) 
 #' sample_fu_allocation_table_path(2018) 
 sample_fu_allocation_table_path <- function(version = 2021) {
@@ -467,11 +472,14 @@ sample_fu_allocation_table_path <- function(version = 2021) {
   } else if (version == 2019) {
     return(file.path("extdata", "GH-ZA-Allocation-sample-2019.xlsx") %>% 
              system.file(package = "IEATools"))
+  } else if (version == 2020) {
+    return(file.path("extdata", "GH-ZA-Allocation-sample-2020.xlsx") %>% 
+             system.file(package = "IEATools"))
   } else if (version == 2021) {
     return(file.path("extdata", "GH-ZA-Allocation-sample-2021.xlsx") %>% 
              system.file(package = "IEATools"))
   }
-  stop("Only 2018, 2019, and 2021 are supported in sample_fu_allocation_table_path()")
+  stop("Only 2018, 2019, 2020, and 2021 are supported in sample_fu_allocation_table_path()")
 }
 
 
@@ -479,7 +487,7 @@ sample_fu_allocation_table_path <- function(version = 2021) {
 #'
 #' @param version the desired version (expressed as the year of IEA data release) of 
 #'                the sample final-to-useful efficiencies table. 
-#'                Options are 2021 (default), 2019, and 2018.
+#'                Options are 2021 (default), 2020, 2019, and 2018.
 #'
 #' @return The path to a final-to-useful efficiencies table.
 #' 
@@ -489,6 +497,7 @@ sample_fu_allocation_table_path <- function(version = 2021) {
 #' sample_eta_fu_table_path()     # Assumes 2021
 #' sample_eta_fu_table_path(2021) # Same
 #' # Returns path for sample efficiency table appropriate for other IEA releases
+#' sample_eta_fu_table_path(2020)
 #' sample_eta_fu_table_path(2019)
 #' sample_eta_fu_table_path(2018) 
 sample_eta_fu_table_path <- function(version = 2021) {
@@ -498,11 +507,14 @@ sample_eta_fu_table_path <- function(version = 2021) {
   } else if (version == 2019) {
     return(file.path("extdata", "GH-ZA-Efficiency-sample-2019.xlsx") %>% 
              system.file(package = "IEATools"))
+  } else if (version == 2020) {
+    return(file.path("extdata", "GH-ZA-Efficiency-sample-2020.xlsx") %>% 
+             system.file(package = "IEATools"))
   } else if (version == 2021) {
   return(file.path("extdata", "GH-ZA-Efficiency-sample-2021.xlsx") %>% 
            system.file(package = "IEATools"))
   }
-  stop("Only 2018, 2019, and 2021 are supported in sample_eta_fu_table_path()")
+  stop("Only 2018, 2019, 2020, and 2021 are supported in sample_eta_fu_table_path()")
 }
 
 
