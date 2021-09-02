@@ -375,6 +375,7 @@ usethis::use_data(prim_agg_flows, overwrite = TRUE)
 
 
 tfc_compare_flows <- list(total_primary_energy_supply = "Total primary energy supply",
+                          total_energy_supply = "Total energy supply",
                           transfers = "Transfers",
                           statistical_differences = "Statistical differences",
                           transformation_processes = "Transformation processes", 
