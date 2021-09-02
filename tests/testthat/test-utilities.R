@@ -181,23 +181,26 @@ test_that("tp_products() works as expected", {
 
 
 test_that("sample_iea_file_path works correctly", {
-  expect_true(sample_iea_data_path() %>% endsWith("GH-ZA-ktoe-Extended-Energy-Balances-sample-2019.csv"))
+  expect_true(sample_iea_data_path() %>% endsWith("GH-ZA-ktoe-Extended-Energy-Balances-sample-2021.csv"))
+  expect_true(endsWith(sample_iea_data_path(2019), "GH-ZA-ktoe-Extended-Energy-Balances-sample-2019.csv"))
   expect_true(endsWith(sample_iea_data_path(2018), "GH-ZA-ktoe-Extended-Energy-Balances-sample-2018.csv"))
-  expect_error(sample_iea_data_path(2017), "Only 2018 and 2019 are supported in sample_iea_data_path()")
+  expect_error(sample_iea_data_path(2017), "Only 2018, 2019, and 2021 are supported in sample_iea_data_path()")
 })
 
 
 test_that("sample_fu_allocation_table_path works correctly", {
-  expect_true(sample_fu_allocation_table_path() %>% endsWith("GH-ZA-Allocation-sample-2019.xlsx"))
+  expect_true(sample_fu_allocation_table_path() %>% endsWith("GH-ZA-Allocation-sample-2021.xlsx"))
+  expect_true(endsWith(sample_fu_allocation_table_path(2019), "GH-ZA-Allocation-sample-2019.xlsx"))
   expect_true(endsWith(sample_fu_allocation_table_path(2018), "GH-ZA-Allocation-sample-2018.xlsx"))
-  expect_error(sample_fu_allocation_table_path(2017), "Only 2018 and 2019 are supported in sample_fu_allocation_table_path")
+  expect_error(sample_fu_allocation_table_path(2017), "Only 2018, 2019, and 2021 are supported in sample_fu_allocation_table_path")
 })
 
 
 test_that("sample_eta_fu_table_path works correctly", {
-  expect_true(sample_eta_fu_table_path() %>% endsWith("GH-ZA-Efficiency-sample-2019.xlsx"))
+  expect_true(sample_eta_fu_table_path() %>% endsWith("GH-ZA-Efficiency-sample-2021.xlsx"))
+  expect_true(endsWith(sample_eta_fu_table_path(2019), "GH-ZA-Efficiency-sample-2019.xlsx"))
   expect_true(endsWith(sample_eta_fu_table_path(2018), "GH-ZA-Efficiency-sample-2018.xlsx"))
-  expect_error(sample_eta_fu_table_path(2017), "Only 2018 and 2019 are supported in sample_eta_fu_table_path")
+  expect_error(sample_eta_fu_table_path(2017), "Only 2018, 2019, and 2021 are supported in sample_eta_fu_table_path")
 })
 
 

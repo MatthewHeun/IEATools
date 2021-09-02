@@ -373,6 +373,7 @@ test_that("remove_agg_memo_flows works as expected", {
   # Verify that none of the aggregation flows are present
   n_agg_rows <- Cleaned %>% 
     dplyr::filter(Flow == "Total primary energy supply" |
+                    Flow == "Total energy supply" |
                     Flow == "Total final consumption" | 
                     Flow == "Transformation processes" |
                     Flow == "Energy industry own use" | 
@@ -400,7 +401,7 @@ test_that("remove_agg_memo_flows works as expected", {
     rename_iea_df_cols() %>% 
     augment_iea_df()
   # Verify that aggregation flows exist
-  agg_flows <- c("Total primary energy supply", "Total final consumption", "Transformation processes", "Energy industry own use", "Industry", "Transport", "Non-energy use")
+  agg_flows <- c("Total energy supply", "Total final consumption", "Transformation processes", "Energy industry own use", "Industry", "Transport", "Non-energy use")
   expect_true(lapply(agg_flows, 
                      FUN = function(s){
                        expect_true(IEA_data %>% dplyr::filter(Flow == s) %>% nrow() > 0)

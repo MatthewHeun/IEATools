@@ -4,7 +4,7 @@
 \alias{sample_iea_data_path}
 \title{The path to a sample IEA extended energy balances data file in .csv format}
 \usage{
-sample_iea_data_path(version = 2019)
+sample_iea_data_path(version = 2021)
 }
 \arguments{
 \item{version}{The desired version (expressed as the year of release) of sample data.
@@ -23,8 +23,9 @@ Nick Johnstone (IEA Chief Statistician) and Matthew Kuperus Heun (IEATools devel
 on Monday, 3 June 2019.
 }
 \examples{
-sample_iea_data_path()     # Assumes 2019
-sample_iea_data_path(2019) # Same
-# Retrieves path for sample IEA extended energy balances data from 2018 release
+sample_iea_data_path()     # Assumes 2021
+sample_iea_data_path(2021) # Same
+# Retrieves path for sample IEA extended energy balances data for previous years
+sample_iea_data_path(2019) 
 sample_iea_data_path(2018) 
 }
