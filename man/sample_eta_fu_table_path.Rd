@@ -9,7 +9,7 @@ sample_eta_fu_table_path(version = 2021)
 \arguments{
 \item{version}{the desired version (expressed as the year of IEA data release) of
 the sample final-to-useful efficiencies table.
-Options are 2021 (default), 2019, and 2018.}
+Options are 2021 (default), 2020, 2019, and 2018.}
 }
 \value{
 The path to a final-to-useful efficiencies table.
@@ -21,6 +21,7 @@ The path to a filled final-to-useful efficiency table
 sample_eta_fu_table_path()     # Assumes 2021
 sample_eta_fu_table_path(2021) # Same
 # Returns path for sample efficiency table appropriate for other IEA releases
+sample_eta_fu_table_path(2020)
 sample_eta_fu_table_path(2019)
 sample_eta_fu_table_path(2018) 
 }

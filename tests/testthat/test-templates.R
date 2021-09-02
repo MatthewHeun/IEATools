@@ -201,12 +201,14 @@ test_that("eta_fu_template works as expected for 2019 data", {
 
 
 test_that("eta_fu_template() works with tidy fu allocation data", {
-  tidy_specified_iea_data <- load_tidy_iea_df() %>% 
+  tidy_specified_iea_data <- load_tidy_iea_df(system.file(file.path("extdata", 
+                                                                    "GH-ZA-ktoe-Extended-Energy-Balances-sample-2019.csv"),
+                                                          package = "IEATools")) %>% 
     specify_all()
   Eta_fu_template_2019 <- load_fu_allocation_data(sample_fu_allocation_table_path(2019)) %>% 
     tidy_fu_allocation_table() %>% 
     eta_fu_template(tidy_specified_iea_data = tidy_specified_iea_data)
-  
+
   # Now try a couple tests.
   # These tests are same as the tests in the previous test function.
   expect_equal(Eta_fu_template_2019$Machine[[1]], "Automobiles")
