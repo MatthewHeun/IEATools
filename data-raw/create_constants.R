@@ -10,7 +10,7 @@ library(IEATools)
 # Define the valid IEA release years for which this package will work
 # 
 
-valid_iea_release_years <- c(2018, 2019)
+valid_iea_release_years <- c(2018, 2019, 2021)
 usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 
 
