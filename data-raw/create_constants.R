@@ -541,7 +541,9 @@ usethis::use_data(non_energy_flows, overwrite = TRUE)
 # Aggregations
 # 
 
-aggregation_flows <- list(total_primary_energy_supply = "Total primary energy supply",
+aggregation_flows <- list(total_primary_energy_supply = tfc_compare_flows$total_primary_energy_supply,
+                          # In 2020, IEA changed the name of TPES to TES.
+                          total_energy_supply = tfc_compare_flows$total_energy_supply,
                           total_final_consumption = "Total final consumption", 
                           transformation_processes = "Transformation processes", 
                           energy_industry_own_use = "Energy industry own use",

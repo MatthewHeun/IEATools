@@ -28,6 +28,13 @@ test_that("calc_tidy_iea_df_balance works correctly for 2019 data", {
 })
 
 
+test_that("calc_tidy_iea_df_balance works correctly for 2021 data", {
+  Ebal_2021 <- load_tidy_iea_df(sample_iea_data_path(2021)) %>%
+    calc_tidy_iea_df_balances(tol = 4e-4)
+  expect_true(all(Ebal_2021$balance_OK))
+})
+
+
 test_that("fix_tidy_iea_df_balance works correctly for no-row data frame", {
   Ebal_2019 <- load_tidy_iea_df(sample_iea_data_path(2019))
   Ebal_2019 <- Ebal_2019[0, ]
