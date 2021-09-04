@@ -1,4 +1,9 @@
+* Expanded many tests to verify initialization functions work for 
+  all valid years of IEA sample data.
 * Now able to read IEA Extended Energy Balance from 2020 and 2021 releases.
+* Many new tests to cover all valid years of IEA data.
+    * Up to 1073 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # IEATools 0.1.59 (2021-08-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5228303.svg)](https://doi.org/10.5281/zenodo.5228303)
@@ -11,7 +16,7 @@
 * Fixed a test coverage failure: 
   There was no case where C_eiou_mat was missing.
   when testing `extend_to_useful()`.
-* A few new tests for new features. 
+* A few new tests for new features.
     * Up to 836 tests, all passing.
     * Test coverage remains at 100 %.
 

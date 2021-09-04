@@ -1,7 +1,3 @@
-###########################################################
-context("Initialize IEA data")
-###########################################################
-
 
 test_that("use_iso_countries() works with override", {
   iea_df <- tibble::tribble(~Country, 
@@ -33,94 +29,97 @@ test_that("use_iso_countries() works with more columns in override", {
 
 
 test_that("use_iso_countries() works as expected", {
-  IEAData <- sample_iea_data_path() %>% 
-    iea_df() %>%
-    rename_iea_df_cols() 
-  IEAData %>% 
-    use_iso_countries() %>% 
-    magrittr::extract2("Country") %>% 
-    unique() %>% 
-    expect_equal(c("GHA", "ZAF"))
-  
-  # Now try with the China exception that has been hard-coded.
-  IEAData %>% 
-    dplyr::mutate(
-      Country = dplyr::recode(Country, Ghana = "People's Republic of China")
-    ) %>% 
-    use_iso_countries() %>% 
-    magrittr::extract2("Country") %>% 
-    unique() %>% 
-    expect_equal(c("CHN", "ZAF"))
-  
-  # Make ZAF into Hong Kong to be sure that it is recoded to HKG.
-  IEAData %>% 
-    dplyr::mutate(
-      Country = dplyr::recode(Country, `South Africa` = "Hong Kong (China)")
-    ) %>% 
-    use_iso_countries() %>% 
-    magrittr::extract2("Country") %>% 
-    unique() %>% 
-    expect_equal(c("GHA", "HKG"))
-  
-  # Now make ZAF into World marine bunkers to be sure it is recoded to WMB.
-  IEAData %>% 
-    dplyr::mutate(
-      Country = dplyr::recode(Country, `South Africa` = "World marine bunkers")
-    ) %>% 
-    use_iso_countries() %>% 
-    magrittr::extract2("Country") %>% 
-    unique() %>% 
-    expect_equal(c("GHA", "WMB"))
-  
-  # Now make GHA into World aviation bunkers to be sure it is recoded to WAB.
-  IEAData %>% 
-    dplyr::mutate(
-      Country = dplyr::recode(Country, `Ghana` = "World aviation bunkers")
-    ) %>% 
-    use_iso_countries() %>% 
-    magrittr::extract2("Country") %>% 
-    unique() %>% 
-    expect_equal(c("WAB", "ZAF"))
+  for (yr in IEATools::valid_iea_release_years) {
+    IEAData <- sample_iea_data_path(yr) %>% 
+      iea_df() %>%
+      rename_iea_df_cols() 
+    IEAData %>% 
+      use_iso_countries() %>% 
+      magrittr::extract2("Country") %>% 
+      unique() %>% 
+      expect_equal(c("GHA", "ZAF"))
+    
+    # Now try with the China exception that has been hard-coded.
+    IEAData %>% 
+      dplyr::mutate(
+        Country = dplyr::recode(Country, Ghana = "People's Republic of China")
+      ) %>% 
+      use_iso_countries() %>% 
+      magrittr::extract2("Country") %>% 
+      unique() %>% 
+      expect_equal(c("CHN", "ZAF"))
+    
+    # Make ZAF into Hong Kong to be sure that it is recoded to HKG.
+    IEAData %>% 
+      dplyr::mutate(
+        Country = dplyr::recode(Country, `South Africa` = "Hong Kong (China)")
+      ) %>% 
+      use_iso_countries() %>% 
+      magrittr::extract2("Country") %>% 
+      unique() %>% 
+      expect_equal(c("GHA", "HKG"))
+    
+    # Now make ZAF into World marine bunkers to be sure it is recoded to WMB.
+    IEAData %>% 
+      dplyr::mutate(
+        Country = dplyr::recode(Country, `South Africa` = "World marine bunkers")
+      ) %>% 
+      use_iso_countries() %>% 
+      magrittr::extract2("Country") %>% 
+      unique() %>% 
+      expect_equal(c("GHA", "WMB"))
+    
+    # Now make GHA into World aviation bunkers to be sure it is recoded to WAB.
+    IEAData %>% 
+      dplyr::mutate(
+        Country = dplyr::recode(Country, `Ghana` = "World aviation bunkers")
+      ) %>% 
+      use_iso_countries() %>% 
+      magrittr::extract2("Country") %>% 
+      unique() %>% 
+      expect_equal(c("WAB", "ZAF"))
+  }
 })
 
 
 test_that("iea_file_OK() works", {
   
   for (yr in IEATools::valid_iea_release_years) {
+    # Try from a file
+    f <- sample_iea_data_path(yr)
+    expect_true(iea_file_OK(f))
+    # Try after slurping
+    df <- slurp_iea_to_raw_df(f)
+    expect_true(iea_file_OK(.slurped_iea_df = df))
     
+    # Read the file as text and use the text argument.
+    conn <- file(f, open = "rt") # open file connection
+    f_text <- conn %>% readLines()
+    expect_true(iea_file_OK(text = f_text))
+    close(conn)
     
-    
-    
-  }
-  
-  # Try from a file
-  f <- sample_iea_data_path()
-  expect_true(iea_file_OK(f))
-  # Try after slurping
-  df <- slurp_iea_to_raw_df(f)
-  expect_true(iea_file_OK(.slurped_iea_df = df))
-  
-  # Read the file as text and use the text argument.
-  conn <- file(f, open = "rt") # open file connection
-  f_text <- conn %>% readLines()
-  expect_true(iea_file_OK(text = f_text))
-  close(conn)
-
-  # Mess with the file and expect an error, because rows are no longer identical from one country to another.
-  # f1 <- data.table::fread(file = f, header = TRUE, strip.white = FALSE, sep = ",")
-  f1 <- read.csv(file = f, header = TRUE, strip.white = FALSE, sep = ",")
-  f2 <- f1
-  # Switch Hard coal and Brown coal in the PRODUCT column.
-  f2[[1, 3]] <- f1[[2, 3]]
-  f2[[2, 3]] <- f1[[1, 3]]
-  # Write the messed-up data to a temporary file as a .csv file
-  tf <- tempfile(pattern = "iea_file_OK_test", fileext = ".csv")
-  write.csv(f2, file = tf, row.names = FALSE)
-  # Read it back to confirm that it is messed up
-  expect_false(iea_file_OK(tf))
-  # Delete file if it exists
-  if (file.exists(tf)) {
-    file.remove(tf)
+    # Mess with the file and expect an error, because rows are no longer identical from one country to another.
+    # f1 <- data.table::fread(file = f, header = TRUE, strip.white = FALSE, sep = ",")
+    f1 <- read.csv(file = f, header = TRUE, strip.white = FALSE, sep = ",")
+    f2 <- f1
+    # Switch Hard coal and Brown coal in the PRODUCT column.
+    f2[[1, 3]] <- f1[[2, 3]]
+    f2[[2, 3]] <- f1[[1, 3]]
+    # Write the messed-up data to a temporary file as a .csv file
+    tf <- tempfile(pattern = "iea_file_OK_test", fileext = ".csv")
+    write.csv(f2, file = tf, row.names = FALSE)
+    # Read it back to confirm that it is messed up
+    if (yr == 2018) {
+      # Because the headers on the 2018 example file are messy, 
+      # an outright failure is obtained.
+      expect_error(iea_file_OK(tf))
+    } else {
+      expect_false(iea_file_OK(tf))
+    }
+    # Delete file if it exists
+    if (file.exists(tf)) {
+      file.remove(tf)
+    }
   }
 })
 
