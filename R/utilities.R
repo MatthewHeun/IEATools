@@ -417,7 +417,7 @@ prod_tp_eiou_energy_carriers <- function(file_path = sample_iea_data_path(),
 #' on Monday, 3 June 2019.
 #'
 #' @param version The desired version (expressed as the year of release) of sample data. 
-#'                Options are 2019 (default) and 2018. 
+#'                Options are `2018--2021`. `2021` is the default. 
 #'
 #' @return the path to a sample data file.
 #' 
@@ -431,20 +431,11 @@ prod_tp_eiou_energy_carriers <- function(file_path = sample_iea_data_path(),
 #' sample_iea_data_path(2019) 
 #' sample_iea_data_path(2018) 
 sample_iea_data_path <- function(version = 2021) {
-  if (version == 2018) {
-    return(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2018.csv") %>%
-             system.file(package = "IEATools"))  
-  } else if (version == 2019) {
-    return(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2019.csv") %>%
-             system.file(package = "IEATools"))
-  } else if (version == 2020) {
-    return(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2020.csv") %>%
-             system.file(package = "IEATools"))
-  } else if (version == 2021) {
-    return(file.path("extdata", "GH-ZA-ktoe-Extended-Energy-Balances-sample-2021.csv") %>%
-             system.file(package = "IEATools"))
+  if (version >= 2018 & version <= 2021) {
+      return(file.path("extdata", paste0("GH-ZA-ktoe-Extended-Energy-Balances-sample-", version, ".csv")) %>%
+               system.file(package = "IEATools"))
   }
-  stop("Only 2018, 2019, 2020, and 2021 are supported in sample_iea_data_path()")
+  stop("Only release years 2018 through 2021 are supported in sample_iea_data_path()")
 }
 
 

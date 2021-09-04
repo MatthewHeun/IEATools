@@ -8,7 +8,7 @@ sample_iea_data_path(version = 2021)
 }
 \arguments{
 \item{version}{The desired version (expressed as the year of release) of sample data.
-Options are 2019 (default) and 2018.}
+Options are \code{2018--2021}. \code{2021} is the default.}
 }
 \value{
 the path to a sample data file.

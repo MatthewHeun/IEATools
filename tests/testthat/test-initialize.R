@@ -84,14 +84,6 @@ test_that("use_iso_countries() works as expected", {
 })
 
 
-test_that("reading IEA files from all valid release years works", {
-  lapply(IEATools::valid_iea_release_years, FUN = function(yr) {
-    f <- sample_iea_data_path(yr)
-    expect_true(iea_file_OK(f))
-  })
-})
-
-
 test_that("iea_file_OK works", {
   # Try from a file
   f <- sample_iea_data_path()
@@ -125,7 +117,15 @@ test_that("iea_file_OK works", {
 })
 
 
-test_that("iea_df works", {
+test_that("reading IEA files from all valid release years works", {
+  lapply(IEATools::valid_iea_release_years, FUN = function(yr) {
+    f <- sample_iea_data_path(yr)
+    expect_true(iea_file_OK(f))
+  })
+})
+
+
+test_that("iea_df() works", {
   # Test with only 1 line
   expect_error(iea_df(text = "abc"), "couldn't read 2 lines in iea_df")
   # Test with 2 lines but of wrong style.
@@ -167,7 +167,7 @@ test_that("iea_df works", {
 })
 
 
-test_that("iea_df works after first checking the file with iea_file_OK", {
+test_that("iea_df() works after first checking the file with iea_file_OK", {
   f <- sample_iea_data_path()
   isOK <- iea_file_OK(f)
   DF2 <- iea_df(f)
@@ -180,7 +180,7 @@ test_that("iea_df works after first checking the file with iea_file_OK", {
 })
 
 
-test_that("iea_df works with a plain first row", {
+test_that("iea_df() works with a plain first row", {
   # This is an alternative format that is sometimes obtained from the IEA.
   # (Extra commas are present on the 2nd line.)
   # This is the format of the original .csv files.
@@ -191,7 +191,7 @@ test_that("iea_df works with a plain first row", {
 })
 
 
-test_that("iea_df strips white space from FLOW columns", {
+test_that("iea_df() strips white space from FLOW columns", {
   # In the IEA's 2019 data, some data are quoted to avoid creating too many columns. 
   # For example, Paper, pulp and printing is quoted in the raw .csv file: "      Paper, pulp and printing".
   # There are leading spaces, but data.table::fread
@@ -219,17 +219,27 @@ test_that("iea_df strips white space from FLOW columns", {
 })
 
 
-test_that("iea_df works with .. and x", {
+test_that("iea_df() works with .. and x", {
   expectedDF <- data.frame(COUNTRY = "World", FLOW = "Production", PRODUCT = "Hard coal (if no detail)", `1960` = 0, `1961` = 0, 
                            check.names = FALSE, stringsAsFactors = FALSE) 
   expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),..,x"), expectedDF)
 })
 
 
-test_that("iea_df works with estimated columns sufffixed by 'E'", {
+test_that("iea_df() works with estimated columns sufffixed by 'E'", {
   expectedDF <- data.frame(COUNTRY = "World", FLOW = "Production", PRODUCT = "Hard coal (if no detail)", `1960` = 0, 
                            check.names = FALSE, stringsAsFactors = FALSE) 
   expect_equal(iea_df(text = ",,TIME,1960,1961E\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),..,x"), expectedDF)
+})
+
+
+test_that("iea_df() works with all valid release years", {
+  lapply(IEATools::valid_iea_release_years, function(yr) {
+    df <- iea_df(sample_iea_data_path(yr))
+    # Make sure we got something in the read. 
+    # This is a minimal test to make sure the sample data are included with the package.
+    expect_true(nrow(df) > 0)
+  })
 })
 
 
