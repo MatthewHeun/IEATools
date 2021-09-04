@@ -85,6 +85,14 @@ test_that("use_iso_countries() works as expected", {
 
 
 test_that("iea_file_OK() works", {
+  
+  for (yr in IEATools::valid_iea_release_years) {
+    
+    
+    
+    
+  }
+  
   # Try from a file
   f <- sample_iea_data_path()
   expect_true(iea_file_OK(f))
@@ -118,10 +126,10 @@ test_that("iea_file_OK() works", {
 
 
 test_that("reading IEA files from all valid release years works", {
-  lapply(IEATools::valid_iea_release_years, FUN = function(yr) {
+  for (yr in IEATools::valid_iea_release_years) {
     f <- sample_iea_data_path(yr)
     expect_true(iea_file_OK(f))
-  })
+  }
 })
 
 
@@ -138,45 +146,51 @@ test_that("iea_df() works", {
   # This is in a format that would arise IF someone opened the .csv file and resaved it.
   # (Extra commas are present on the 2nd line.)
   expect_equal(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT,,\nWorld,Production,Hard coal (if no detail),42,43"), expectedDF)
-  # Test with a full IEA data file in the correct format
-  IEAfile <- sample_iea_data_path()
-  IEAtext <- readChar(IEAfile, file.info(IEAfile)$size)
-  # Eliminate all series of commas at ends of lines
-  # The pattern ,*$ means "match any number (*) of commas (,) at the end of a line ($)".
-  IEAtext <- IEAtext %>% gsub(pattern = ",*$", replacement = "", IEAtext)
-  # Ensure that commas have been removed from the end of a line.
-  # The pattern ",$" means "match any commas (,) at the end of a line ($)
-  expect_false(grepl(pattern = ",$", x = IEAtext))
-  IEADF <- iea_df(text = IEAtext)
-  expect_equal(nrow(IEADF), 14688)
-  expect_equal(ncol(IEADF), 5)
-  expect_equal(colnames(IEADF)[[5]], "2000")
-  # Test with an IEA data file with extra commas on the 2nd line.
-  IEADF2 <- sample_iea_data_path() %>% 
-    iea_df()
-  expect_equal(nrow(IEADF2), 14688)
-  expect_equal(ncol(IEADF2), 5)
-  expect_equal(colnames(IEADF2)[[5]], "2000")
-  # Test that it works with a slurped df
-  slurped <- sample_iea_data_path() %>% 
-    slurp_iea_to_raw_df()
-  IEADF3 <- iea_df(.slurped_iea_df = slurped)
-  expect_equal(nrow(IEADF3), 14688)
-  expect_equal(ncol(IEADF3), 5)
-  expect_equal(colnames(IEADF3)[[5]], "2000")
+  
+  
+  for (yr in IEATools::valid_iea_release_years) {
+    # Test with a full IEA data file in the correct format
+    IEAfile <- sample_iea_data_path(yr)
+    IEAtext <- readChar(IEAfile, file.info(IEAfile)$size)
+    # Eliminate all series of commas at ends of lines
+    # The pattern ,*$ means "match any number (*) of commas (,) at the end of a line ($)".
+    IEAtext <- IEAtext %>% gsub(pattern = ",*$", replacement = "", IEAtext)
+    # Ensure that commas have been removed from the end of a line.
+    # The pattern ",$" means "match any commas (,) at the end of a line ($)
+    expect_false(grepl(pattern = ",$", x = IEAtext))
+    IEADF <- iea_df(text = IEAtext)
+    expect_equal(nrow(IEADF), 14688)
+    expect_equal(ncol(IEADF), 5)
+    expect_equal(colnames(IEADF)[[5]], "2000")
+    # Test with an IEA data file with extra commas on the 2nd line.
+    IEADF2 <- sample_iea_data_path(yr) %>% 
+      iea_df()
+    expect_equal(nrow(IEADF2), 14688)
+    expect_equal(ncol(IEADF2), 5)
+    expect_equal(colnames(IEADF2)[[5]], "2000")
+    # Test that it works with a slurped df
+    slurped <- sample_iea_data_path(yr) %>% 
+      slurp_iea_to_raw_df()
+    IEADF3 <- iea_df(.slurped_iea_df = slurped)
+    expect_equal(nrow(IEADF3), 14688)
+    expect_equal(ncol(IEADF3), 5)
+    expect_equal(colnames(IEADF3)[[5]], "2000")
+  }
 })
 
 
 test_that("iea_df() works after first checking the file with iea_file_OK", {
-  f <- sample_iea_data_path()
-  isOK <- iea_file_OK(f)
-  DF2 <- iea_df(f)
-  # Verify that we got the right types of columns
-  expect_true(is.character(DF2$COUNTRY))
-  expect_true(is.character(DF2$FLOW))
-  expect_true(is.character(DF2$PRODUCT))
-  expect_true(is.numeric(DF2$`1971`))
-  expect_true(is.numeric(DF2$`2000`))
+  for (yr in IEATools::valid_iea_release_years) {
+    f <- sample_iea_data_path(yr)
+    isOK <- iea_file_OK(f)
+    DF2 <- iea_df(f)
+    # Verify that we got the right types of columns
+    expect_true(is.character(DF2$COUNTRY))
+    expect_true(is.character(DF2$FLOW))
+    expect_true(is.character(DF2$PRODUCT))
+    expect_true(is.numeric(DF2$`1971`))
+    expect_true(is.numeric(DF2$`2000`))
+  }
 })
 
 
@@ -205,17 +219,29 @@ test_that("iea_df() strips white space from FLOW columns", {
   # Expect that the leading spaces have been stripped
   expect_equal(df[[1, 2]], "Paper, pulp and printing")
   
-  # Try with the sample data
-  # Load the data without processing it to verify that there are leading spaces in the FLOW column
-  # The example file has 272 rows in which FLOW begins with white space, even after using strip.white = TRUE.
-  expect_true(data.table::fread(file = sample_iea_data_path(), strip.white = TRUE, header = TRUE, sep = ",") %>% 
-                dplyr::filter(startsWith(.data$FLOW, " ")) %>% 
-                nrow() == 272)
-  # Now run the iea_df function over the same file. 
-  # iea_df ought to strip all of that white space, leaving none left.
-  expect_true(iea_df(sample_iea_data_path()) %>% 
-                dplyr::filter(startsWith(.data$FLOW, " ")) %>% 
-                nrow() == 0)
+  
+  for (yr in IEATools::valid_iea_release_years) {
+    # Read the raw data
+    raw <- data.table::fread(file = sample_iea_data_path(yr), strip.white = TRUE, header = TRUE, sep = ",")
+    # Account for 2018 which has a weird top row.
+    if (raw[[1, 2]] == "FLOW") {
+      # Set names to the first row. 
+      names(raw) <- c("COUNTRY", "FLOW", "PRODUCT", "1971", "2000")
+    }
+    # How many rows have leading spaces in the FLOW column?
+    num_rows_with_spaces <- raw %>% 
+      dplyr::filter(startsWith(.data[["FLOW"]], " ")) %>% 
+      nrow()
+    if (num_rows_with_spaces > 0) {
+      # Strip the spaces off
+      supposedly_no_spaces <- iea_df(sample_iea_data_path(yr))
+      # Make sure no rows left.
+      num_rows_with_spaces <- supposedly_no_spaces %>% 
+        dplyr::filter(startsWith(.data$FLOW, " ")) %>% 
+        nrow()
+      expect_true(num_rows_with_spaces == 0)
+    }
+  }
 })
 
 
