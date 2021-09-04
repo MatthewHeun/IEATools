@@ -84,6 +84,14 @@ test_that("use_iso_countries() works as expected", {
 })
 
 
+test_that("reading IEA files from all valid release years works", {
+  lapply(IEATools::valid_iea_release_years, FUN = function(yr) {
+    f <- sample_iea_data_path(yr)
+    expect_true(iea_file_OK(f))
+  })
+})
+
+
 test_that("iea_file_OK works", {
   # Try from a file
   f <- sample_iea_data_path()
