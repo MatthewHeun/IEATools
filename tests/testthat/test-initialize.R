@@ -84,7 +84,7 @@ test_that("use_iso_countries() works as expected", {
 })
 
 
-test_that("iea_file_OK works", {
+test_that("iea_file_OK() works", {
   # Try from a file
   f <- sample_iea_data_path()
   expect_true(iea_file_OK(f))
@@ -243,7 +243,7 @@ test_that("iea_df() works with all valid release years", {
 })
 
 
-test_that("rename_iea_df_cols works", {
+test_that("rename_iea_df_cols() works", {
   renamed <- iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43") %>% 
     rename_iea_df_cols()
   expect_equal(names(renamed), c("Country", "Flow", "Product", "1960", "1961"))
@@ -384,75 +384,84 @@ context("Testing munge_to_tidy")
 ###########################################################
 
 test_that("remove_agg_memo_flows() works as expected", {
-  Cleaned <- sample_iea_data_path() %>% 
-    iea_df() %>% 
-    rename_iea_df_cols() %>% 
-    remove_agg_memo_flows()
-  # Verify that none of the aggregation flows are present
-  n_agg_rows <- Cleaned %>% 
-    dplyr::filter(Flow == "Total primary energy supply" |
-                    Flow == "Total energy supply" |
-                    Flow == "Total final consumption" | 
-                    Flow == "Transformation processes" |
-                    Flow == "Energy industry own use" | 
-                    Flow == "Industry" |
-                    Flow == "Transport" |
-                    Flow == "Other" |
-                    Flow == "Non-energy use") %>% 
-    nrow()
-  expect_equal(n_agg_rows, 0)
-  # Verify that none of the memo flows are present
-  n_memo_flows <- Cleaned %>% 
-    dplyr::filter(startsWith(Flow, "Memo:")) %>% 
-    nrow()
-  expect_equal(n_memo_flows, 0)
-  # Verify that none of the memo products are present
-  n_memo_products <- Cleaned %>% 
-    dplyr::filter(startsWith(Product, "Memo:")) %>% 
-    nrow()
-  expect_equal(n_memo_products, 0)
-
-  # Try again with a different approach. 
-  # This time, ensure that rows we want to clean are present first.
-  IEA_data <- sample_iea_data_path() %>% 
-    iea_df() %>%
-    rename_iea_df_cols() %>% 
-    augment_iea_df()
-  # Verify that aggregation flows exist
-  agg_flows <- c("Total energy supply", "Total final consumption", "Transformation processes", "Energy industry own use", "Industry", "Transport", "Non-energy use")
-  expect_true(lapply(agg_flows, 
-                     FUN = function(s){
-                       expect_true(IEA_data %>% dplyr::filter(Flow == s) %>% nrow() > 0)
-                     }) %>% as.logical() %>% all())
-  # Verify that flow memos exist
-  memo_flow_prefixes <- c("Memo: ", "Electricity output (GWh)", "Heat output")
-  expect_true(lapply(memo_flow_prefixes, 
-                     FUN = function(s){
-                       expect_true(IEA_data %>% dplyr::filter(startsWith(Flow, s)) %>% nrow() > 0)
-                     }) %>% as.logical() %>% all())
-  # Verify that product memos exist
-  memo_product_prefix <- "Memo: "
-  expect_true(IEA_data %>% dplyr::filter(startsWith(Product, memo_product_prefix)) %>% nrow() > 0)
+  for (yr in IEATools::valid_iea_release_years) {
+    Cleaned <- sample_iea_data_path(yr) %>% 
+      iea_df() %>% 
+      rename_iea_df_cols() %>% 
+      remove_agg_memo_flows()
+    # Verify that none of the aggregation flows are present
+    n_agg_rows <- Cleaned %>% 
+      dplyr::filter(Flow == "Total primary energy supply" |
+                      Flow == "Total energy supply" |
+                      Flow == "Total final consumption" | 
+                      Flow == "Transformation processes" |
+                      Flow == "Energy industry own use" | 
+                      Flow == "Industry" |
+                      Flow == "Transport" |
+                      Flow == "Other" |
+                      Flow == "Non-energy use") %>% 
+      nrow()
+    expect_equal(n_agg_rows, 0)
+    # Verify that none of the memo flows are present
+    n_memo_flows <- Cleaned %>% 
+      dplyr::filter(startsWith(Flow, "Memo:")) %>% 
+      nrow()
+    expect_equal(n_memo_flows, 0)
+    # Verify that none of the memo products are present
+    n_memo_products <- Cleaned %>% 
+      dplyr::filter(startsWith(Product, "Memo:")) %>% 
+      nrow()
+    expect_equal(n_memo_products, 0)
+  }
   
-  # Now clean the aggregation flows and see if they're gone.
-  Cleaned <- IEA_data %>% 
-    remove_agg_memo_flows()
-  # Ensure that aggregation flows were removed.
-  expect_true(lapply(agg_flows, 
-                     FUN = function(s){
-                       expect_true(Cleaned %>% dplyr::filter(Flow == s) %>% nrow() == 0)
-                     }) %>% as.logical() %>% all())
-  # Ensure that flow memos were removed
-  expect_true(lapply(memo_flow_prefixes, 
-                     FUN = function(s){
-                       expect_true(Cleaned %>% dplyr::filter(startsWith(Flow, s)) %>% nrow() == 0)
-                     }) %>% as.logical() %>% all())
-  # Ensure that product memos were removed
-  expect_true(IEA_data %>% dplyr::filter(startsWith(Product, memo_product_prefix)) %>% nrow() > 0)
+  for (yr in IEATools::valid_iea_release_years) {
+    # Try again with a different approach. 
+    # This time, ensure that rows we want to clean are present first.
+    IEA_data <- sample_iea_data_path(yr) %>% 
+      iea_df() %>%
+      rename_iea_df_cols() %>% 
+      augment_iea_df()
+    
+    # Verify that aggregation flows exist
+    if (yr <= 2019) {
+      agg_flows <- c("Total primary energy supply", "Total final consumption", "Transformation processes", "Energy industry own use", "Industry", "Transport", "Non-energy use")
+    } else {
+      agg_flows <- c("Total energy supply", "Total final consumption", "Transformation processes", "Energy industry own use", "Industry", "Transport", "Non-energy use")
+    }
+    expect_true(lapply(agg_flows, 
+                       FUN = function(s){
+                         expect_true(IEA_data %>% dplyr::filter(Flow == s) %>% nrow() > 0)
+                       }) %>% as.logical() %>% all())
+    # Verify that flow memos exist
+    memo_flow_prefixes <- c("Memo: ", "Electricity output (GWh)", "Heat output")
+    expect_true(lapply(memo_flow_prefixes, 
+                       FUN = function(s){
+                         expect_true(IEA_data %>% dplyr::filter(startsWith(Flow, s)) %>% nrow() > 0)
+                       }) %>% as.logical() %>% all())
+    # Verify that product memos exist
+    memo_product_prefix <- "Memo: "
+    expect_true(IEA_data %>% dplyr::filter(startsWith(Product, memo_product_prefix)) %>% nrow() > 0)
+    
+    # Now clean the aggregation flows and see if they're gone.
+    Cleaned <- IEA_data %>% 
+      remove_agg_memo_flows()
+    # Ensure that aggregation flows were removed.
+    expect_true(lapply(agg_flows, 
+                       FUN = function(s){
+                         expect_true(Cleaned %>% dplyr::filter(Flow == s) %>% nrow() == 0)
+                       }) %>% as.logical() %>% all())
+    # Ensure that flow memos were removed
+    expect_true(lapply(memo_flow_prefixes, 
+                       FUN = function(s){
+                         expect_true(Cleaned %>% dplyr::filter(startsWith(Flow, s)) %>% nrow() == 0)
+                       }) %>% as.logical() %>% all())
+    # Ensure that product memos were removed
+    expect_true(IEA_data %>% dplyr::filter(startsWith(Product, memo_product_prefix)) %>% nrow() > 0)
+  }
 })
 
 
-test_that("remove_agg_regions works as expected", {
+test_that("remove_agg_regions() works as expected", {
   tibble::tibble(Year = c(1967, 1995), Country = c("World", "Spain")) %>%
     remove_agg_regions() %>%
     expect_equal(tibble::tibble(Year = 1995, Country = "Spain"))
@@ -471,15 +480,17 @@ test_that("remove_agg_regions works as expected", {
 })
 
 
-test_that("use_iso_countries works as expected", {
-  iso3 <- sample_iea_data_path() %>% 
-    iea_df() %>% 
-    rename_iea_df_cols() %>% 
-    use_iso_countries()
-  expect_false(any(iso3$Country == "South Africa"))
-  expect_true(any(iso3$Country == "ZAF"))
-  expect_false(any(iso3$Country == "Ghana"))
-  expect_true(any(iso3$Country == "GHA"))
+test_that("use_iso_countries() works as expected", {
+  for (yr in IEATools::valid_iea_release_years) {
+    iso3 <- sample_iea_data_path(yr) %>% 
+      iea_df() %>% 
+      rename_iea_df_cols() %>% 
+      use_iso_countries()
+    expect_false(any(iso3$Country == "South Africa"))
+    expect_true(any(iso3$Country == "ZAF"))
+    expect_false(any(iso3$Country == "Ghana"))
+    expect_true(any(iso3$Country == "GHA"))
+  }
 
   # Try with a data frame that contains a World country.
   world <- iea_df(text = paste0(",,TIME,1960,1961\n",
@@ -503,23 +514,29 @@ test_that("use_iso_countries works as expected", {
 })
 
 
-test_that("load_tidy_iea_df works as expected", {
-  iea_tidy_df <- load_tidy_iea_df()
-  # Verify column names and order
-  expect_equal(names(iea_tidy_df), c("Country", "Method", "Energy.type", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", 
-                                     "Flow", "Product", "Unit", "E.dot"))
-  # This is a energy exclusive data frame
-  expect_true(all(iea_tidy_df$Energy.type == "E"))
-  # This is a completely ktoe data frame
-  expect_true(all(iea_tidy_df$Unit == "ktoe"))
-  # Ledger.side can be only Supply or Consumption
-  expect_true(all(iea_tidy_df$Ledger.side %in% c("Supply", "Consumption")))
+test_that("load_tidy_iea_df() works as expected", {
+  for (yr in IEATools::valid_iea_release_years) {
+    iea_tidy_df <- sample_iea_data_path(yr) %>% 
+      load_tidy_iea_df()
+    # Verify column names and order
+    expect_equal(names(iea_tidy_df), c("Country", "Method", "Energy.type", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", 
+                                       "Flow", "Product", "Unit", "E.dot"))
+    # This is a energy exclusive data frame
+    expect_true(all(iea_tidy_df$Energy.type == "E"))
+    # This is a completely ktoe data frame
+    expect_true(all(iea_tidy_df$Unit == "ktoe"))
+    # Ledger.side can be only Supply or Consumption
+    expect_true(all(iea_tidy_df$Ledger.side %in% c("Supply", "Consumption")))
+  }
 })
 
 
 test_that("converting year to numeric works as expected", {
-  iea_tidy_df <- load_tidy_iea_df()
-  expect_true(is.numeric(iea_tidy_df$Year))
+  for (yr in IEATools::valid_iea_release_years) {
+    iea_tidy_df <- sample_iea_data_path(yr) %>% 
+      load_tidy_iea_df()
+    expect_true(is.numeric(iea_tidy_df$Year))
+  }  
 })
 
 
@@ -531,24 +548,28 @@ test_that("trimming white space works", {
 })
 
 
-test_that("load_tidy_iea_df works as expected", {
-  simple <- load_tidy_iea_df()
-  complicated <- sample_iea_data_path() %>% 
-    iea_df() %>%
-    rename_iea_df_cols() %>% 
-    clean_iea_whitespace() %>% 
-    remove_agg_memo_flows() %>% 
-    use_iso_countries() %>% 
-    augment_iea_df() %>% 
-    tidy_iea_df()
-  expect_equal(simple, complicated)
+test_that("load_tidy_iea_df() works as expected", {
+  # Try for all valid years.
+  for (yr in IEATools::valid_iea_release_years) {
+    simple <- sample_iea_data_path(yr) %>% 
+      load_tidy_iea_df()
+    complicated <- sample_iea_data_path(yr) %>% 
+      iea_df() %>%
+      rename_iea_df_cols() %>% 
+      clean_iea_whitespace() %>% 
+      remove_agg_memo_flows() %>% 
+      use_iso_countries() %>% 
+      augment_iea_df() %>% 
+      tidy_iea_df()
+    expect_equal(simple, complicated)
+  }
 })
 
 
 test_that("Ledger.side is added by augmentation", {
   # Every row in the Ledger.side column should be filled with a non-NA entry.
   # Verify that's indeed the case.
-  for (year in valid_iea_release_years) {
+  for (year in IEATools::valid_iea_release_years) {
     DF <- load_tidy_iea_df(sample_iea_data_path(year))
     expect_false(DF %>% 
                    magrittr::extract2("Ledger.side") %>% 
@@ -561,7 +582,7 @@ test_that("Ledger.side is added by augmentation", {
 test_that("every Flow.aggregation.point is filled by augmentation", {
   # Every row in the Flow.aggregation.point column should be filled with a non-NA entry.
   # Verify that's indeed the case.
-  for (year in valid_iea_release_years) {
+  for (year in IEATools::valid_iea_release_years) {
     expect_false(load_tidy_iea_df(sample_iea_data_path(year)) %>% 
                    magrittr::extract2("Flow.aggregation.point") %>% 
                    is.na() %>% 
@@ -573,7 +594,7 @@ test_that("every Flow.aggregation.point is filled by augmentation", {
 test_that("spreading by years works as expected after load_tidy_iea_df()", {
   # This test will fail if things are not specified correctly.
   # Without correct specification, keys will not be unique.
-  for (year in valid_iea_release_years) {
+  for (year in IEATools::valid_iea_release_years) {
     year_spread <- load_tidy_iea_df(sample_iea_data_path(year)) %>% 
       tidyr::spread(key = Year, value = E.dot)
     expect_true("1971" %in% names(year_spread))
