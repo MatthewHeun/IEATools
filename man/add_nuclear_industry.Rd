@@ -125,7 +125,7 @@ but there is no "Nuclear industry" in transformation processes flows,
 which prevents from defining a nuclear industry in the PSUT.
 However, using the World Energy Extended Balances documentation, one can deduce from the amount of nuclear fuel used
 by "Main activity producer electricity plants" and "Main activity producer CHP plants"
-the energy transformation due to the nuclear industry. This is what this function does.
+the energy transformation due to the nuclear industry. This function performs that task.
 The function is called within the \code{specify_all()} function.
 }
 \details{

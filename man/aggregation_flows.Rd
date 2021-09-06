@@ -5,7 +5,7 @@
 \alias{aggregation_flows}
 \title{Aggregation flows}
 \format{
-A string vector with 10 entries.
+A string vector with 11 entries.
 \describe{
 \item{total_primary_energy_supply}{Indicates a flow that aggregates to total primary energy supply.}
 \item{total_final_consumption}{Indicates a flow that aggregates to total final consumption.}

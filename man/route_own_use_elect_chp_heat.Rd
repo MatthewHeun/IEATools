@@ -25,7 +25,6 @@ route_own_use_elect_chp_heat(
   main_act_producer_elect = IEATools::main_act_plants$main_act_prod_elect_plants,
   main_act_producer_chp = IEATools::main_act_plants$main_act_prod_chp_plants,
   main_act_producer_heat = IEATools::main_act_plants$main_act_prod_heat_plants,
-  negzeropos = ".negzeropos",
   n_counting = ".n_counting",
   destination_flow = ".destination_flow",
   Total_main_activity_From_Func = ".Total_main_activity_From_Func",
@@ -92,9 +91,6 @@ Default is \code{IEATools::main_act_plants$main_act_prod_heat_plants}.}
 
 \item{main_act_producer_heat}{A string identifying "Main activity producer electricity plants" in the \code{flow} column of the \code{.tidy_iea_df}.
 Default is \code{IEATools::main_act_plants$main_act_prod_heat_plants}.}
-
-\item{negzeropos}{The name of a temporary column created in \code{.tidy_iea_df}.
-Default is ".negzeropos".}
 
 \item{n_counting}{The name of a temporary column created in \code{.tidy_iea_df}.
 Default is ".n_counting".}
