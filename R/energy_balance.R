@@ -175,7 +175,7 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
 #' @param max_fix the maximum energy balance that will be fixed without giving an error. Default is 5.
 #' @param remove_zeroes a logical telling whether to remove `0`s after balancing. Default is `TRUE`.
-#' @param ledger_side,flow_aggregation_point,flow,product,e_dot See `IEATools::iea_cols`.
+#' @param ledger_side,flow_aggregation_point,country,year,flow,product,e_dot See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param tfc_compare See `IEATools::aggregation_flows`.
 #' @param statistical_differences See `IEATools::tfc_compare_flows`.
@@ -213,9 +213,11 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' balanced %>% 
 #'   tidy_iea_df_balanced()
 fix_tidy_iea_df_balances <- function(.tidy_iea_df,
-                                     max_fix = 5,
+                                     max_fix = 6,
                                      remove_zeroes = TRUE,
                                      # Input columns and values
+                                     country = IEATools::iea_cols$country,
+                                     year = IEATools::iea_cols$year,
                                      ledger_side = IEATools::iea_cols$ledger_side,
                                      flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                      flow = IEATools::iea_cols$flow,
@@ -244,9 +246,21 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
   # Check the maximum error. If greater than the max allowable error before fixing,
   # throw an error.
   max_err <- max(abs(e_bal_errors[[.err]]))
-  assertthat::assert_that(max_err < max_fix, 
-                          msg = paste0("Maximum energy balance error is ", max_err, 
-                                       ". Maximum fixable error is ", max_fix, ", so we're stopping in fix_tidy_iea_df_balances()"))
+  if (max_err > max_fix) {
+    # There is a problem. 
+    # Find which products exceed the threshold.
+    err_too_big <- e_bal_errors %>% 
+      dplyr::filter(.data[[.err]] > max_fix) %>% 
+      dplyr::select(country, year, product, .err)
+    err_too_big_combos <- paste(err_too_big[[country]], 
+                                err_too_big[[year]], 
+                                err_too_big[[product]], 
+                                err_too_big[[.err]], sep = ", ", collapse = "; ")
+    # Give as much good debugging information as possible.
+    stop(paste0("In fix_tidy_iea_df_balances(), maximum energy balance error is ", max_err, 
+                ". Maximum fixable error is ", max_fix, ". The following combinations of Country, Year, and Product have errors that exceed the maximum allowable error: ", 
+                err_too_big_combos))
+  }
 
   out <- .tidy_iea_df %>% 
     dplyr::full_join(e_bal_errors, by = matsindf::everything_except(.tidy_iea_df, e_dot, .symbols = FALSE)) %>% 

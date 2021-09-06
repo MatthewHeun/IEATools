@@ -27,10 +27,10 @@ Furthermore, \code{expected_simple_start} could be the format of the file when s
 the raw data from the IEA.}
 }
 \value{
-a raw data frame of IEA extended energy balance data with appropriate column titles
+A raw data frame of IEA extended energy balance data with appropriate column titles.
 }
 \description{
-This is an internal helper function.
+This is the internal helper function that reads IEA data files.
 This function reads an IEA extended energy balances .csv file and
 converts it to a data frame with appropriately-labeled columns.
 One of \code{iea_file} or \code{text} must be specified, but not both.
@@ -45,10 +45,22 @@ an error message is provided.
 Files should have a return character at the end of their final line.
 }
 \details{
-This function is designed to work even as more years are added
-in columns at the right of \code{.iea_file},
+This function is designed to work as more years are added
+in columns at the right of the \code{.iea_file},
 because column names in the output are constructed from the header line(s) of \code{.iea_file}
 (which contain years and country, flow, product information).
+
+Extended energy balance data can be obtained from the IEA
+as a *.ivt file.
+To export the data for use with the IEATools package,
+perform the following actions:
+\enumerate{
+\item Open the *.ivt file in the Beyond 20/20 browser on a relatively high-powered computer
+with lots of memory, because the file is very large.
+\item Arrange the columns in the following order: "COUNTRY", "FLOW", "PRODUCT", followed by years.
+\item Change to the unit (ktoe or TJ) desired.
+\item Save the results in .csv format. (Saving may take a while.)
+}
 }
 \examples{
 # 2018 and earlier file format

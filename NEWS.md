@@ -1,4 +1,21 @@
-# IEATools 0.1.59 (2021-08-20)
+# IEATools 0.1.60 (2021-09-06)
+
+* No longer discriminating by sign when summing EIOU after 
+  routing Pumped storage plants and 
+  Own use in electricity, CHP, and heat plants.
+  This change avoids a situation where positive electricity EIOU by 
+  Pumped storage plants in Japan caused a problem
+  when writing the allocation template.
+* Better error messages when energy imbalance is too large to fix.
+* Expanded many tests to verify initialization functions work for 
+  all valid years of IEA sample data.
+* Now able to read IEA Extended Energy Balance from 2020 and 2021 releases.
+* Many new tests to cover all valid years of IEA data.
+    * Up to 1073 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# IEATools 0.1.59 (2021-08-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5228303.svg)](https://doi.org/10.5281/zenodo.5228303)
 
 * `load_tidy_iea_df()` has new arguments which are passed to `use_iso_coutries()`, 
   thereby exposing the new functionality of `use_iso_coutries()` to `load_tidy_iea_df()`.
@@ -8,14 +25,14 @@
 * Fixed a test coverage failure: 
   There was no case where C_eiou_mat was missing.
   when testing `extend_to_useful()`.
-* A few new tests for new features. 
+* A few new tests for new features.
     * Up to 836 tests, all passing.
     * Test coverage remains at 100 %.
 
 
 # IEATools 0.1.58 (2021-08-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226527.svg)](https://doi.org/10.5281/zenodo.5226527)
 
-* Changed "Epsilon"" matrix name to "Balancing".
+* Changed "Epsilon" matrix name to "Balancing".
   The old name was causing issues in `ECCTools`.
   
 

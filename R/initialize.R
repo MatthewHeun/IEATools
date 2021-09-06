@@ -1,6 +1,6 @@
 #' Slurp an IEA extended energy balance data file
 #' 
-#' This is an internal helper function. 
+#' This is the internal helper function that reads IEA data files. 
 #' This function reads an IEA extended energy balances .csv file and
 #' converts it to a data frame with appropriately-labeled columns.
 #' One of `iea_file` or `text` must be specified, but not both.
@@ -14,10 +14,21 @@
 #' an error message is provided.
 #' Files should have a return character at the end of their final line.
 #' 
-#' This function is designed to work even as more years are added
-#' in columns at the right of `.iea_file`, 
+#' This function is designed to work as more years are added
+#' in columns at the right of the `.iea_file`, 
 #' because column names in the output are constructed from the header line(s) of `.iea_file` 
 #' (which contain years and country, flow, product information).
+#' 
+#' Extended energy balance data can be obtained from the IEA 
+#' as a *.ivt file.
+#' To export the data for use with the IEATools package, 
+#' perform the following actions:
+#' 
+#' 1. Open the *.ivt file in the Beyond 20/20 browser on a relatively high-powered computer
+#'    with lots of memory, because the file is very large.
+#' 2. Arrange the columns in the following order: "COUNTRY", "FLOW", "PRODUCT", followed by years.
+#' 3. Change to the unit (ktoe or TJ) desired.
+#' 4. Save the results in .csv format. (Saving may take a while.)
 #'
 #' @param .iea_file the path to the raw IEA data file for which quality assurance is desired
 #' @param text a string containing text to be parsed as an IEA file.
@@ -28,7 +39,7 @@
 #'        Furthermore, `expected_simple_start` could be the format of the file when somebody "helpfully" fiddles with 
 #'        the raw data from the IEA.
 #'
-#' @return a raw data frame of IEA extended energy balance data with appropriate column titles
+#' @return A raw data frame of IEA extended energy balance data with appropriate column titles.
 #' 
 #' @export
 #'
@@ -705,17 +716,17 @@ augment_iea_df <- function(.iea_df,
                            unit = "Unit", unit_val = "ktoe",
                            supply = "Supply", 
                            consumption = "Consumption",
-                           tpes = "Total primary energy supply", 
+                           tpes = IEATools::tfc_compare_flows$total_primary_energy_supply, 
                            tpes_flows = IEATools::tpes_flows,
                            tfc_compare = "TFC compare",
                            tfc_compare_flows = IEATools::tfc_compare_flows,
                            transfers = "Transfers",
-                           statistical_differences = "Statistical differences",
-                           losses = "Losses", 
-                           transformation_processes = "Transformation processes",
+                           statistical_differences = IEATools::tfc_compare_flows$statistical_differences,
+                           losses = IEATools::tfc_compare_flows$losses, 
+                           transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
                            tp_flows_suffix = "(transf.)",
                            nstp_flows_suffix = "(transformation)",
-                           mapep = "Main activity producer electricity plants",
+                           mapep = IEATools::transformation_processes$main_activity_producer_electricity_plants,
                            eiou = "Energy industry own use",
                            eiou_flows_suffix = "(energy)",
                            coal_mines = "Coal mines",
@@ -796,7 +807,7 @@ augment_iea_df <- function(.iea_df,
             !!as.name(.rownum) >= supply_consumption_split[[2]] ~ consumption,
             TRUE ~ NA_character_), 
           # Add the Flow.aggregation.point column
-          !!as.name(flow_aggregation_point) := dplyr::case_when(
+          "{flow_aggregation_point}" := dplyr::case_when(
             # Supply side flows
             !!as.name(ledger_side) == supply & !!as.name(flow) %in% tpes_flows ~ tpes,
             !!as.name(ledger_side) == supply & !!as.name(flow) %in% tfc_compare_flows ~ tfc_compare,

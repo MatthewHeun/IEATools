@@ -5,7 +5,7 @@ library(magrittr)
 context("Specify EIOU")
 ###########################################################
 
-test_that("specify_tp_eiou works as expected for Own use in electricity, CHP and heat plants", {
+test_that("specify_tp_eiou() works as expected for Own use in electricity, CHP and heat plants", {
   # Make a bogus data frame
   EIOU <- data.frame(Country = c("US", "US"), 
                      Method = c("PCM", "PCM"),
@@ -27,7 +27,8 @@ test_that("specify_tp_eiou works as expected for Own use in electricity, CHP and
   expect_equal(EIOU_fixed$Flow[[2]], "Own use in electricity, CHP and heat plants")
 })
 
-test_that("specify_tp_eiou works as expected for pumped storage plants", {
+
+test_that("specify_tp_eiou() works as expected for pumped storage plants", {
   # Make a bogus data frame
   EIOU <- data.frame(Country = c("US", "US"), 
                      Method = c("PCM", "PCM"),
@@ -49,7 +50,38 @@ test_that("specify_tp_eiou works as expected for pumped storage plants", {
 })
 
 
-test_that("specify_tp_eiou works for sample data", {
+test_that("route_pumped_storage() no longer discriminates +/-", {
+  # EIOU by Pumped storage plants should always be negative.
+  # Weirdly, Japan has a few years where EIOU by Pumped storage plants is negative.
+  # In the absence of better information, we convert all positive values to negative values.
+  # Verify that negating happens.
+  # Make a bogus data frame.
+  EIOU <- data.frame(Country = c("JPN", "JPN", "JPN", "JPN"), 
+                     Method = c("PCM", "PCM", "PCM", "PCM"),
+                     Energy.type = c("E", "E", "E", "E"),
+                     Last.stage = c("Final", "Final", "Final", "Final"),
+                     Year = c(2000, 2000, 2001, 2001),
+                     Flow.aggregation.point = c("Energy industry own use",  
+                                                "Energy industry own use",  
+                                                "Energy industry own use", 
+                                                "Energy industry own use"),
+                     Flow = c("Main activity producer electricity plants", "Pumped storage plants",
+                              "Main activity producer electricity plants", "Pumped storage plants"), 
+                     Ledger.side = c("Supply", "Supply", "Supply", "Supply"),
+                     Product = c("Electricity", "Electricity", "Electricity", "Electricity"),
+                     Unit = c("ktoe", "ktoe"),
+                     E.dot = c(-20, -2, -21, 3),
+                     stringsAsFactors = FALSE)
+  # Call the function that should negate the energy flows.
+  routed <- route_pumped_storage(EIOU)
+  expect_equal(nrow(routed), 2)
+  expect_equal(routed$Flow.aggregation.point, c("Energy industry own use", "Energy industry own use"))
+  expect_equal(routed$Flow, c("Main activity producer electricity plants", "Main activity producer electricity plants"))
+  expect_equal(routed$E.dot, c(-22, -18))
+})
+
+
+test_that("specify_tp_eiou() works for sample data", {
   # This test is failing, because the (energy) suffix is still present in the Flow for Own use in electricity, CHP and heat plants
   # and the function assumes it has been stripped away. 
   # Solution: strip away "(energy)" and "(transf.)" during processing of these data.
@@ -62,9 +94,8 @@ test_that("specify_tp_eiou works for sample data", {
 })
 
 
-
 # Testing the function that gathers "Main activity producer" and "Autoproducer" flows/industries.
-test_that("gather_producer_autoproducer works", {
+test_that("gather_producer_autoproducer() works", {
   
   # First, with AB data
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
@@ -147,7 +178,7 @@ test_that("gather_producer_autoproducer works", {
 
 
 # Testing the function that routes the "Pumped storage" EIOU flow to "Main activity producer electricity plants."
-test_that("route_pumped_storage works", {
+test_that("route_pumped_storage() works", {
   
   # First with AB data
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
@@ -472,7 +503,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
 
 
 # Testing the function that splits the "Own use in electricity, CHP and heat plants" EIOU flow into the three main producer activities (electricity, CHP and heat)
-test_that("route_own_use_elect_chp_heat works", {
+test_that("route_own_use_elect_chp_heat() works", {
   
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
@@ -664,7 +695,7 @@ test_that("route_own_use_elect_chp_heat works", {
 
 # Testing the function that adds a nuclear industry to the PSUT by adding some Transformation processes flows,
 # and modifying the Main activity producer electricity and CHP plants
-test_that("add_nuclear_industry works", {
+test_that("add_nuclear_industry() works", {
   
   # First with AB data
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
@@ -842,10 +873,7 @@ test_that("add_nuclear_industry works", {
 })
 
 
-
-
-
-test_that("route_non_specified_eiou works", {
+test_that("route_non_specified_eiou() works", {
   
   # First AB data
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
@@ -1004,7 +1032,7 @@ test_that("route_non_specified_eiou works", {
 })
 
 
-test_that("route_non_specified_tp works", {
+test_that("route_non_specified_tp() works", {
   
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
@@ -1222,7 +1250,7 @@ test_that("route_non_specified_tp works", {
 
 
 
-test_that("route_non_specified_flows works", {
+test_that("route_non_specified_flows() works", {
   
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
@@ -1594,7 +1622,7 @@ test_that("specify_all() function keeps balance",{
 })
 
 
-test_that("specify_all can also not split the non-specified flows", {
+test_that("specify_all() can also not split the non-specified flows", {
   
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   

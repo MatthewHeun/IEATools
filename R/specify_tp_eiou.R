@@ -94,12 +94,25 @@ gather_producer_autoproducer <- function(.tidy_iea_df,
 }
 
 
-
-
 #' Route pumped storage to Main activity electricity producer plant
 #' 
-#' The function routes the Energy industry own use "Pumped storage plant" flow
-#' to the "Main activity producer electricity plant" EIOU flow.
+#' The function routes Energy industry own use by Pumped storage plants 
+#' to Energy industry own use by Main activity producer electricity plants
+#' when the value is negative, as it should be.
+#' However, for Japan, there are a few years where
+#' Energy industry own use by Pumped storage plants is positive.
+#' In those instances, the Flow is changed from 
+#' Energy industry own use to
+#' Main activity producer electricity plants *and* 
+#' the Flow.aggregation.point is changed to "Transformation processes"
+#' the positive value is retained.
+#' This approach preserves the overall energy balance.
+#' This approach implicitly assumes that Japan's reported
+#' Energy industry own use for Pumped storage plants 
+#' is a net value, not a total value.
+#' All other countries seemingly report total values for 
+#' Energy industry own use by Pumped Storage plants, 
+#' as those values are all negative.
 #' This function is called within the `specify_all()` function.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
@@ -145,27 +158,14 @@ route_pumped_storage <- function(.tidy_iea_df,
         TRUE ~ .data[[flow]]
       )
     ) %>%
-    # Aggregating. We need to add a pos/neg/null column to add up differently positive and negative values, otherwise we'd only get NET flows.
-    dplyr::mutate(
-      "{negzeropos}" := dplyr::case_when(
-        .data[[e_dot]] < 0 ~ "neg",
-        .data[[e_dot]] == 0 ~ "zero",
-        .data[[e_dot]] > 0 ~ "pos"
-      )
-    ) %>%
     # Now sum similar rows using summarise.
     # Group by everything except the energy flow rate column, "E.dot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) %>%
-    dplyr::mutate(
-      # Eliminate the column we added.
-      "{negzeropos}" := NULL
-    ) %>%
     dplyr::ungroup()
 }
-
 
 
 #' Separates EIOU flows of oil and gas extraction
@@ -304,7 +304,7 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
 #' @param split_using_shares_of A string that identifies which method is to be used for splitting the `own_use_elect_chp_heat` flow.
 #'                              Default is "input". The other valid value is "output". See details for more information.
 #' @param country The name of the country column in the `.tidy_iea_df`.
-#'              Default is `IEATools::iea_cols$country`.
+#'                Default is `IEATools::iea_cols$country`.
 #' @param flow_aggregation_point The name of the flow aggregation point column in the `.tidy_iea_df`.
 #'                               Default is `IEATools::iea_cols$flow_aggregation_point`.
 #' @param flow The name of the flow column in the `.tidy_iea_df`.
@@ -339,8 +339,6 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
 #'                              Default is `IEATools::main_act_plants$main_act_prod_heat_plants`.
 #' @param main_act_producer_heat A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
 #'                               Default is `IEATools::main_act_plants$main_act_prod_heat_plants`.
-#' @param negzeropos The name of a temporary column created in `.tidy_iea_df`. 
-#'                   Default is ".negzeropos".
 #' @param n_counting The name of a temporary column created in `.tidy_iea_df`. 
 #'                   Default is ".n_counting".
 #' @param destination_flow The name of a temporary column created in `.tidy_iea_df`. 
@@ -382,7 +380,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
                                          main_act_producer_chp = IEATools::main_act_plants$main_act_prod_chp_plants,
                                          main_act_producer_heat = IEATools::main_act_plants$main_act_prod_heat_plants,
                                          # Temporary column names
-                                         negzeropos = ".negzeropos",
+                                         # negzeropos = ".negzeropos",
                                          n_counting = ".n_counting",
                                          destination_flow = ".destination_flow",
                                          Total_main_activity_From_Func = ".Total_main_activity_From_Func",
@@ -521,31 +519,48 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
       )
     )
   
-  # Bindng rows.
+  # Binding rows.
   routed_own_use <- dplyr::bind_rows(routed_own_use_with_main_activity, routed_own_use_without_main_activity)
   
   # Adding up and returning data frame.
   tidy_iea_df_routed_own_use <- .tidy_iea_df %>%
     dplyr::filter(.data[[flow]] != own_use_elect_chp_heat) %>%
     dplyr::bind_rows(routed_own_use) %>%
-    #Aggregating. We need to add a pos/neg/null column to add up differently positive and negative values, otherwise we'd only get NET flows.
-    dplyr::mutate(
-      "{negzeropos}" := dplyr::case_when(
-        .data[[e_dot]] < 0 ~ "neg",
-        .data[[e_dot]] == 0 ~ "zero",
-        .data[[e_dot]] > 0 ~ "pos"
-      )
-    ) %>%
+    
+    
+    # We no longer want to discriminate between positive and negative values.
+    # That's because Japan has some EIOU for Pumped storage plants that is positive.
+    # We want to pull the positive values into Main activity producer electricity plants.
+    # ---MKH, 6 Sept 2021
+    # 
+    # Aggregating. We need to add a pos/neg/null column to add up differently positive and negative values, otherwise we'd only get NET flows.
+    # dplyr::mutate(
+    #   "{negzeropos}" := dplyr::case_when(
+    #     .data[[e_dot]] < 0 ~ "neg",
+    #     .data[[e_dot]] == 0 ~ "zero",
+    #     .data[[e_dot]] > 0 ~ "pos"
+    #   )
+    # ) %>%
+    
+    
+    
+    
     # Now sum similar rows using summarise.
     # Group by everything except the energy flow rate column, "E.dot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) %>%
-    dplyr::mutate(
-      #Eliminate the column we added.
-      "{negzeropos}" := NULL
-    ) %>%
+    
+    
+    
+    # dplyr::mutate(
+    #   #Eliminate the column we added.
+    #   "{negzeropos}" := NULL
+    # ) %>%
+    
+    
+    
     dplyr::ungroup()
   
   return(tidy_iea_df_routed_own_use)
@@ -560,7 +575,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
 #' which prevents from defining a nuclear industry in the PSUT.
 #' However, using the World Energy Extended Balances documentation, one can deduce from the amount of nuclear fuel used
 #' by "Main activity producer electricity plants" and "Main activity producer CHP plants" 
-#' the energy transformation due to the nuclear industry. This is what this function does.
+#' the energy transformation due to the nuclear industry. This function performs that task.
 #' The function is called within the `specify_all()` function.
 #' 
 #' The World Energy Extended Balances documentation states that "The primary energy equivalent of nuclear electricity is
@@ -720,6 +735,9 @@ add_nuclear_industry <- function(.tidy_iea_df,
     dplyr::bind_rows(
       modified_flows
     ) %>%
+    
+    
+    
     dplyr::mutate(
       "{negzeropos}" := dplyr::case_when(
         .data[[e_dot]] < 0 ~ "neg",
@@ -727,16 +745,26 @@ add_nuclear_industry <- function(.tidy_iea_df,
         .data[[e_dot]] > 0 ~ "pos"
       )
     ) %>%
+    
+    
+    
+    
     # Now sum similar rows using summarise.
     # Group by everything except the energy flow rate column, "E.dot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) %>%
+    
+    
+    
     dplyr::mutate(
       #Eliminate the column we added.
       "{negzeropos}" := NULL
     ) %>%
+    
+    
+    
     dplyr::ungroup()
   
   return(to_return)
@@ -959,6 +987,10 @@ route_non_specified_eiou <- function(.tidy_iea_df,
             %in% list_not_included_total_eiou))
     ) %>%
     dplyr::bind_rows(routed_nonspec_energy) %>%
+    
+    
+    
+    
     #Aggregating. We need to add a pos/neg/null column to add up differently positive and negative values, otherwise we'd only get NET flows.
     dplyr::mutate(
       "{negzeropos}" := dplyr::case_when(
@@ -967,16 +999,25 @@ route_non_specified_eiou <- function(.tidy_iea_df,
         .data[[e_dot]] > 0 ~ "pos"
       )
     ) %>%
+    
+    
+    
     # Now sum similar rows using summarise.
     # Group by everything except the energy flow rate column, "E.dot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) %>%
+    
+    
+    
     dplyr::mutate(
       #Eliminate the column we added.
       "{negzeropos}" := NULL
     ) %>%
+    
+    
+    
     dplyr::ungroup()
   
   return(tidy_iea_df_routed_nonspec_energy)

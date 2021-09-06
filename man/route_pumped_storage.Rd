@@ -44,8 +44,23 @@ A modified \code{.tidy_iea_df} with "Pumped storage plants" industry routed
 to the "Main activity producer electricity plant" industry.
 }
 \description{
-The function routes the Energy industry own use "Pumped storage plant" flow
-to the "Main activity producer electricity plant" EIOU flow.
+The function routes Energy industry own use by Pumped storage plants
+to Energy industry own use by Main activity producer electricity plants
+when the value is negative, as it should be.
+However, for Japan, there are a few years where
+Energy industry own use by Pumped storage plants is positive.
+In those instances, the Flow is changed from
+Energy industry own use to
+Main activity producer electricity plants \emph{and}
+the Flow.aggregation.point is changed to "Transformation processes"
+the positive value is retained.
+This approach preserves the overall energy balance.
+This approach implicitly assumes that Japan's reported
+Energy industry own use for Pumped storage plants
+is a net value, not a total value.
+All other countries seemingly report total values for
+Energy industry own use by Pumped Storage plants,
+as those values are all negative.
 This function is called within the \code{specify_all()} function.
 }
 \examples{
