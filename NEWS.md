@@ -1,3 +1,4 @@
+* Better error messages when energy imbalance is too large to fix.
 * Expanded many tests to verify initialization functions work for 
   all valid years of IEA sample data.
 * Now able to read IEA Extended Energy Balance from 2020 and 2021 releases.
