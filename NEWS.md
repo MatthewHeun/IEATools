@@ -1,3 +1,9 @@
+* No longer discriminating by sign when summing EIOU after 
+  routing Pumped storage plants and 
+  Own use in electricity, CHP, and heat plants.
+  This change avoids a situation where positive electricity EIOU by 
+  Pumped storage plants in Japan caused a problem
+  when writing the allocation template.
 * Better error messages when energy imbalance is too large to fix.
 * Expanded many tests to verify initialization functions work for 
   all valid years of IEA sample data.
