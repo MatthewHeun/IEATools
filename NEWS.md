@@ -24,7 +24,7 @@
 
 # IEATools 0.1.58 (2021-08-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226527.svg)](https://doi.org/10.5281/zenodo.5226527)
 
-* Changed "Epsilon"" matrix name to "Balancing".
+* Changed "Epsilon" matrix name to "Balancing".
   The old name was causing issues in `ECCTools`.
   
 
