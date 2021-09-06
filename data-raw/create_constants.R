@@ -715,6 +715,11 @@ fap_flows <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
                values = c("Energy industry own use_Main activity producer CHP plants", "Energy industry own use_Main activity producer heat plants")) %>% 
   insert_after(after = "Energy industry own use_Main activity producer heat plants",
                values = c("Energy industry own use_Oil extraction", "Energy industry own use_Natural gas extraction")) %>% 
+  # Add combinations for international bunkers.
+  insert_after(after = "Transport_Domestic navigation", 
+               values = "Transport_International navigation") %>% 
+  insert_after(after = "Transport_Domestic aviation", 
+               values = "Transport_International aviation") %>% 
   # Pick up several "not elsewhere specified" flows.
   # These enable sorting for years besides the latest year.
   insert_after(after = "Transport_Transport not elsewhere specified", 

@@ -250,7 +250,7 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
     # There is a problem. 
     # Find which products exceed the threshold.
     err_too_big <- e_bal_errors %>% 
-      dplyr::filter(.data[[.err]] > max_fix) %>% 
+      dplyr::filter(abs(.data[[.err]]) > max_fix) %>% 
       dplyr::select(country, year, product, .err)
     err_too_big_combos <- paste(err_too_big[[country]], 
                                 err_too_big[[year]], 

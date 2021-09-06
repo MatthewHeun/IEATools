@@ -41,7 +41,7 @@ test_that("openxlsx works as expected", {
 })
 
 
-test_that("fu_allocation_template works as expected", {
+test_that("fu_allocation_template() works as expected", {
   Allocation_template <- load_tidy_iea_df() %>% 
     specify_all() %>%
     fu_allocation_template() %>% 
@@ -59,7 +59,33 @@ test_that("fu_allocation_template works as expected", {
 })
 
 
-test_that("write_fu_allocation_template works as expected", {
+test_that("fu_allocation_tempate() gives expected error message for unknown flow aggregation point", {
+  # Load the data frame and change the Flow to something unrecognizable.
+  # That will generate the error.
+  df <- load_tidy_iea_df() %>% 
+    specify_all()
+  df[[IEATools::iea_cols$flow_aggregation_point]][[1]] <- "bad_aggregation_point"
+  
+  expect_error(df %>% 
+    fu_allocation_template() %>% 
+    arrange_iea_fu_allocation_template(), "and can't be sorted: bad_aggregation_point, Industry not elsewhere specified")
+})
+
+
+test_that("fu_allocation_tempate() gives expected error message for unknown product", {
+  # Load the data frame and change the Product to something unrecognizable.
+  # That will generate the error.
+  df <- load_tidy_iea_df() %>% 
+    specify_all()
+  df[[IEATools::iea_cols$product]][[1]] <- "bad_product"
+  
+  expect_error(df %>% 
+                 fu_allocation_template() %>% 
+                 arrange_iea_fu_allocation_template(), "and can't be sorted: bad_product")
+})
+
+
+test_that("write_fu_allocation_template() works as expected", {
   FU_allocation_template <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     fu_allocation_template()
@@ -115,14 +141,14 @@ test_that("write_fu_allocation_template works as expected", {
 })
 
 
-test_that("load_fu_allocation_data works as expected", {
+test_that("load_fu_allocation_data() works as expected", {
   # Load default data and check the filled table.
   load_fu_allocation_data() %>% 
     check_fu_allocation_template()
 })
 
 
-test_that("eta_fu_template works as expected for 2018 data", {
+test_that("eta_fu_template() works as expected for 2018 data", {
   # Try for 2018 data
   # Use the default sorting (by Eu.product)
   Eta_fu_template_2018 <- load_fu_allocation_data(sample_fu_allocation_table_path(2018)) %>% 
@@ -156,7 +182,7 @@ test_that("eta_fu_template works as expected for 2018 data", {
 })
 
 
-test_that("eta_fu_template works as expected for 2019 data", {
+test_that("eta_fu_template() works as expected for 2019 data", {
   # Try for 2019 data
   # Use the default sorting (by Eu.product)
   Eta_fu_template_2019 <- load_fu_allocation_data(sample_fu_allocation_table_path(2019)) %>% 
@@ -257,7 +283,7 @@ test_that("eta_fu_template() works with fidy data from the default year", {
 })
 
 
-test_that("write_eta_fu_template works as expected for 2018 data", {
+test_that("write_eta_fu_template() works as expected for 2018 data", {
   # Try with default sort order
   Eta_fu_template_2018 <- load_fu_allocation_data(sample_fu_allocation_table_path(2018)) %>% 
     eta_fu_template()
@@ -352,7 +378,7 @@ test_that("write_eta_fu_template works as expected for 2018 data", {
 })
 
 
-test_that("write_eta_fu_template works as expected for 2019 data", {
+test_that("write_eta_fu_template() works as expected for 2019 data", {
   # Try with default sort order
   Eta_fu_template_2019 <- load_fu_allocation_data(sample_fu_allocation_table_path(2019)) %>% 
     eta_fu_template()
@@ -401,7 +427,7 @@ test_that("write_eta_fu_template works as expected for 2019 data", {
 })
 
 
-test_that("write_eta_fu_template works as expected for 2021 data", {
+test_that("write_eta_fu_template() works as expected for 2021 data", {
   # Try with default sort order
   Eta_fu_template_2021 <- load_fu_allocation_data(sample_fu_allocation_table_path(2021)) %>% 
     eta_fu_template()
