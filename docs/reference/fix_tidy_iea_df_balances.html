@@ -77,7 +77,7 @@ on a per-product basis." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.59</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.60</span>
       </span>
     </div>
 
@@ -151,8 +151,10 @@ on a per-product basis.</p>
 
     <pre class="usage"><span class='fu'>fix_tidy_iea_df_balances</span><span class='op'>(</span>
   <span class='va'>.tidy_iea_df</span>,
-  max_fix <span class='op'>=</span> <span class='fl'>5</span>,
+  max_fix <span class='op'>=</span> <span class='fl'>6</span>,
   remove_zeroes <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  country <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>country</span>,
+  year <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>year</span>,
   ledger_side <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>ledger_side</span>,
   flow_aggregation_point <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow_aggregation_point</span>,
   flow <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='iea_cols.html'>iea_cols</a></span><span class='op'>$</span><span class='va'>flow</span>,
@@ -181,7 +183,7 @@ on a per-product basis.</p>
       <td><p>a logical telling whether to remove <code>0</code>s after balancing. Default is <code>TRUE</code>.</p></td>
     </tr>
     <tr>
-      <th>ledger_side, flow_aggregation_point, flow, product, e_dot</th>
+      <th>ledger_side, flow_aggregation_point, country, year, flow, product, e_dot</th>
       <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>

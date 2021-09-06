@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Slurp an IEA extended energy balance data file — slurp_iea_to_raw_df" />
-<meta property="og:description" content="This is an internal helper function.
+<meta property="og:description" content="This is the internal helper function that reads IEA data files.
 This function reads an IEA extended energy balances .csv file and
 converts it to a data frame with appropriately-labeled columns.
 One of iea_file or text must be specified, but not both.
@@ -84,7 +84,7 @@ Files should have a return character at the end of their final line." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.59</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.60</span>
       </span>
     </div>
 
@@ -148,7 +148,7 @@ Files should have a return character at the end of their final line." />
     </div>
 
     <div class="ref-description">
-    <p>This is an internal helper function.
+    <p>This is the internal helper function that reads IEA data files.
 This function reads an IEA extended energy balances .csv file and
 converts it to a data frame with appropriately-labeled columns.
 One of <code>iea_file</code> or <code>text</code> must be specified, but not both.
@@ -201,13 +201,24 @@ the raw data from the IEA.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a raw data frame of IEA extended energy balance data with appropriate column titles</p>
+    <p>A raw data frame of IEA extended energy balance data with appropriate column titles.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function is designed to work even as more years are added
-in columns at the right of <code>.iea_file</code>,
+    <p>This function is designed to work as more years are added
+in columns at the right of the <code>.iea_file</code>,
 because column names in the output are constructed from the header line(s) of <code>.iea_file</code>
 (which contain years and country, flow, product information).</p>
+<p>Extended energy balance data can be obtained from the IEA
+as a *.ivt file.
+To export the data for use with the IEATools package,
+perform the following actions:</p><ol>
+<li><p>Open the *.ivt file in the Beyond 20/20 browser on a relatively high-powered computer
+with lots of memory, because the file is very large.</p></li>
+<li><p>Arrange the columns in the following order: "COUNTRY", "FLOW", "PRODUCT", followed by years.</p></li>
+<li><p>Change to the unit (ktoe or TJ) desired.</p></li>
+<li><p>Save the results in .csv format. (Saving may take a while.)</p></li>
+</ol>
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># 2018 and earlier file format</span>
