@@ -1,3 +1,5 @@
+# IEATools 0.1.61 (2021-09-06)
+
 * Added descriptive error messages when unknown `Flow.aggregation.point`, 
   `Flow`, or `Product` are encountered in `arrange_iea_fu_allocation_template()`.
 * Added new entries to the `fap_flows` constant.
