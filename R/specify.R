@@ -337,14 +337,14 @@ specify_interface_industries <- function(.tidy_iea_df,
 #'                               Default is TRUE.
 #' @param flow_aggregation_point The name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
 #' @param eiou A string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".
-#' @param transformation_processes a string identifying transformation processes in the flow aggregation point column. Default is "Transformation processes".
-#' @param flow the name of the flow column in `.tidy_iea_df`. Default is "Flow".
-#' @param own_use_elect_chp_heat a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "Own use in electricity, CHP and heat plants".
-#' @param pumped_storage a string identifying pumped storage plants in the flow column. Default is "Pumped storage plants".
-#' @param nuclear_industry a string identifying nuclear plants in the flow column. Default is "Nuclear industry".
-#' @param e_dot the name of the energy flow column in `.tidy_iea_df`. Default is "E.dot".
-#' @param negzeropos the name of a temporary column created in `.tidy_iea_df`. Default is ".negzeropos".
-#' @param main_act_producer_elect a string identifying main activity producer electricity plants. Default is "Main activity producer electricity plants".
+#' @param transformation_processes A string identifying transformation processes in the flow aggregation point column. Default is "Transformation processes".
+#' @param flow The name of the flow column in `.tidy_iea_df`. Default is "Flow".
+#' @param own_use_elect_chp_heat A string identifying own use in electricity, CHP and heat plants in the flow column. Default is "Own use in electricity, CHP and heat plants".
+#' @param pumped_storage A string identifying pumped storage plants in the flow column. Default is "Pumped storage plants".
+#' @param nuclear_industry A string identifying nuclear plants in the flow column. Default is "Nuclear industry".
+#' @param e_dot The name of the energy flow column in `.tidy_iea_df`. Default is "E.dot".
+#' @param negzeropos The name of a temporary column created in `.tidy_iea_df`. Default is ".negzeropos".
+#' @param main_act_producer_elect A string identifying main activity producer electricity plants. Default is "Main activity producer electricity plants".
 #'
 #' @return a modified version of `.tidy_iea_df`
 #' 
