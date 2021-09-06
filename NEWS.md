@@ -1,4 +1,4 @@
-# IEATools 0.1.60 (2021-09-06)
+# IEATools 0.1.60 (2021-09-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5476175.svg)](https://doi.org/10.5281/zenodo.5476175)
 
 * No longer discriminating by sign when summing EIOU after 
   routing Pumped storage plants and 
