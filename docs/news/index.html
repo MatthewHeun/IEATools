@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.60</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.61</span>
       </span>
     </div>
 
@@ -133,9 +133,24 @@
       
     </div>
 
-    <div id="ieatools-0160-2021-09-06" class="section level1">
+    <div id="ieatools-0161-2021-09-06" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.61">
+<a href="#ieatools-0161-2021-09-06" class="anchor"></a>IEATools 0.1.61 (2021-09-06)</h1>
+<ul>
+<li>Added descriptive error messages when unknown <code>Flow.aggregation.point</code>, <code>Flow</code>, or <code>Product</code> are encountered in <code><a href="../reference/arrange_iea_fu_allocation_template.html">arrange_iea_fu_allocation_template()</a></code>.</li>
+<li>Added new entries to the <code>fap_flows</code> constant. These entries enable generation of templates for “World marine bunkers” and “World aviation bunkers”.</li>
+<li>Many new tests for new features.
+<ul>
+<li>Now up to 1083 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
+    <div id="ieatools-0160-2021-09-06-doi" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.60">
-<a href="#ieatools-0160-2021-09-06" class="anchor"></a>IEATools 0.1.60 (2021-09-06)</h1>
+<a href="#ieatools-0160-2021-09-06-doi" class="anchor"></a>IEATools 0.1.60 (2021-09-06) <a href="https://doi.org/10.5281/zenodo.5476175"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5476175.svg" alt="DOI"></a>
+</h1>
 <ul>
 <li>No longer discriminating by sign when summing EIOU after routing Pumped storage plants and Own use in electricity, CHP, and heat plants. This change avoids a situation where positive electricity EIOU by Pumped storage plants in Japan caused a problem when writing the allocation template.</li>
 <li>Better error messages when energy imbalance is too large to fix.</li>
