@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.59</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.61</span>
       </span>
     </div>
 
@@ -144,8 +144,9 @@
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string vector with 6 entries.</p><dl>
+    <p>A string vector with 7 entries.</p><dl>
 <dt>total_primary_energy_supply</dt><dd><p>The string identifier for Total primary energy supply.</p></dd>
+<dt>total_energy_supply</dt><dd><p>The string identifier for Total energy supply. "Total energy supply" is a re-naming of "Total primary energy supply" beginning with the the 2020 release.</p></dd>
 <dt>transfers</dt><dd><p>The string identifier for Transfers.</p></dd>
 <dt>statistical_differences</dt><dd><p>The string identifier for Statistical differences.</p></dd>
 <dt>transformation_processes</dt><dd><p>The string identifier for Transformation processes.</p></dd>
@@ -159,6 +160,9 @@
     <pre class="examples"><div class='input'><span class='va'>tfc_compare_flows</span>
 </div><div class='output co'>#&gt; $total_primary_energy_supply
 #&gt; [1] "Total primary energy supply"
+#&gt; 
+#&gt; $total_energy_supply
+#&gt; [1] "Total energy supply"
 #&gt; 
 #&gt; $transfers
 #&gt; [1] "Transfers"

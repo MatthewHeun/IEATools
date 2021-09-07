@@ -40,8 +40,23 @@
 
 
 <meta property="og:title" content="Route pumped storage to Main activity electricity producer plant — route_pumped_storage" />
-<meta property="og:description" content="The function routes the Energy industry own use &quot;Pumped storage plant&quot; flow
-to the &quot;Main activity producer electricity plant&quot; EIOU flow.
+<meta property="og:description" content="The function routes Energy industry own use by Pumped storage plants
+to Energy industry own use by Main activity producer electricity plants
+when the value is negative, as it should be.
+However, for Japan, there are a few years where
+Energy industry own use by Pumped storage plants is positive.
+In those instances, the Flow is changed from
+Energy industry own use to
+Main activity producer electricity plants and
+the Flow.aggregation.point is changed to &quot;Transformation processes&quot;
+the positive value is retained.
+This approach preserves the overall energy balance.
+This approach implicitly assumes that Japan's reported
+Energy industry own use for Pumped storage plants
+is a net value, not a total value.
+All other countries seemingly report total values for
+Energy industry own use by Pumped Storage plants,
+as those values are all negative.
 This function is called within the specify_all() function." />
 
 
@@ -74,7 +89,7 @@ This function is called within the specify_all() function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.59</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.61</span>
       </span>
     </div>
 
@@ -138,8 +153,23 @@ This function is called within the specify_all() function." />
     </div>
 
     <div class="ref-description">
-    <p>The function routes the Energy industry own use "Pumped storage plant" flow
-to the "Main activity producer electricity plant" EIOU flow.
+    <p>The function routes Energy industry own use by Pumped storage plants
+to Energy industry own use by Main activity producer electricity plants
+when the value is negative, as it should be.
+However, for Japan, there are a few years where
+Energy industry own use by Pumped storage plants is positive.
+In those instances, the Flow is changed from
+Energy industry own use to
+Main activity producer electricity plants <em>and</em>
+the Flow.aggregation.point is changed to "Transformation processes"
+the positive value is retained.
+This approach preserves the overall energy balance.
+This approach implicitly assumes that Japan's reported
+Energy industry own use for Pumped storage plants
+is a net value, not a total value.
+All other countries seemingly report total values for
+Energy industry own use by Pumped Storage plants,
+as those values are all negative.
 This function is called within the <code><a href='specify_all.html'>specify_all()</a></code> function.</p>
     </div>
 

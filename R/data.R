@@ -627,6 +627,7 @@
 #' @format A string vector with `r length(tfc_compare_flows)` entries.
 #' \describe{
 #' \item{total_primary_energy_supply}{The string identifier for Total primary energy supply.}
+#' \item{total_energy_supply}{The string identifier for Total energy supply. "Total energy supply" is a re-naming of "Total primary energy supply" beginning with the the 2020 release.}
 #' \item{transfers}{The string identifier for Transfers.}
 #' \item{statistical_differences}{The string identifier for Statistical differences.}
 #' \item{transformation_processes}{The string identifier for Transformation processes.}

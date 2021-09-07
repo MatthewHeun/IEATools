@@ -75,7 +75,7 @@ The function is called within the specify_all() function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.59</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.61</span>
       </span>
     </div>
 
@@ -166,7 +166,6 @@ The function is called within the <code><a href='specify_all.html'>specify_all()
   main_act_producer_elect <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='main_act_plants.html'>main_act_plants</a></span><span class='op'>$</span><span class='va'>main_act_prod_elect_plants</span>,
   main_act_producer_chp <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='main_act_plants.html'>main_act_plants</a></span><span class='op'>$</span><span class='va'>main_act_prod_chp_plants</span>,
   main_act_producer_heat <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='main_act_plants.html'>main_act_plants</a></span><span class='op'>$</span><span class='va'>main_act_prod_heat_plants</span>,
-  negzeropos <span class='op'>=</span> <span class='st'>".negzeropos"</span>,
   n_counting <span class='op'>=</span> <span class='st'>".n_counting"</span>,
   destination_flow <span class='op'>=</span> <span class='st'>".destination_flow"</span>,
   Total_main_activity_From_Func <span class='op'>=</span> <span class='st'>".Total_main_activity_From_Func"</span>,
@@ -275,11 +274,6 @@ Default is <code>IEATools::main_act_plants$main_act_prod_heat_plants</code>.</p>
       <th>main_act_producer_heat</th>
       <td><p>A string identifying "Main activity producer electricity plants" in the <code>flow</code> column of the <code>.tidy_iea_df</code>.
 Default is <code>IEATools::main_act_plants$main_act_prod_heat_plants</code>.</p></td>
-    </tr>
-    <tr>
-      <th>negzeropos</th>
-      <td><p>The name of a temporary column created in <code>.tidy_iea_df</code>.
-Default is ".negzeropos".</p></td>
     </tr>
     <tr>
       <th>n_counting</th>

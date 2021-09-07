@@ -39,21 +39,21 @@ Default is TRUE.}
 
 \item{eiou}{A string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".}
 
-\item{transformation_processes}{a string identifying transformation processes in the flow aggregation point column. Default is "Transformation processes".}
+\item{transformation_processes}{A string identifying transformation processes in the flow aggregation point column. Default is "Transformation processes".}
 
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "Flow".}
+\item{flow}{The name of the flow column in \code{.tidy_iea_df}. Default is "Flow".}
 
-\item{own_use_elect_chp_heat}{a string identifying own use in electricity, CHP and heat plants in the flow column. Default is "Own use in electricity, CHP and heat plants".}
+\item{own_use_elect_chp_heat}{A string identifying own use in electricity, CHP and heat plants in the flow column. Default is "Own use in electricity, CHP and heat plants".}
 
-\item{pumped_storage}{a string identifying pumped storage plants in the flow column. Default is "Pumped storage plants".}
+\item{pumped_storage}{A string identifying pumped storage plants in the flow column. Default is "Pumped storage plants".}
 
-\item{nuclear_industry}{a string identifying nuclear plants in the flow column. Default is "Nuclear industry".}
+\item{nuclear_industry}{A string identifying nuclear plants in the flow column. Default is "Nuclear industry".}
 
-\item{e_dot}{the name of the energy flow column in \code{.tidy_iea_df}. Default is "E.dot".}
+\item{e_dot}{The name of the energy flow column in \code{.tidy_iea_df}. Default is "E.dot".}
 
-\item{negzeropos}{the name of a temporary column created in \code{.tidy_iea_df}. Default is ".negzeropos".}
+\item{negzeropos}{The name of a temporary column created in \code{.tidy_iea_df}. Default is ".negzeropos".}
 
-\item{main_act_producer_elect}{a string identifying main activity producer electricity plants. Default is "Main activity producer electricity plants".}
+\item{main_act_producer_elect}{A string identifying main activity producer electricity plants. Default is "Main activity producer electricity plants".}
 }
 \value{
 a modified version of \code{.tidy_iea_df}

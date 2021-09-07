@@ -6,8 +6,10 @@
 \usage{
 fix_tidy_iea_df_balances(
   .tidy_iea_df,
-  max_fix = 5,
+  max_fix = 6,
   remove_zeroes = TRUE,
+  country = IEATools::iea_cols$country,
+  year = IEATools::iea_cols$year,
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   flow = IEATools::iea_cols$flow,
@@ -27,7 +29,7 @@ fix_tidy_iea_df_balances(
 
 \item{remove_zeroes}{a logical telling whether to remove \code{0}s after balancing. Default is \code{TRUE}.}
 
-\item{ledger_side, flow_aggregation_point, flow, product, e_dot}{See \code{IEATools::iea_cols}.}
+\item{ledger_side, flow_aggregation_point, country, year, flow, product, e_dot}{See \code{IEATools::iea_cols}.}
 
 \item{supply, consumption}{See \code{IEATools::ledger_sides}.}
 

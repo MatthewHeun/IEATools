@@ -290,7 +290,32 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
       dplyr::filter(is.na(!!as.name(.temp_sort)))
     na_ef_product <- out %>% 
       dplyr::filter(is.na(!!as.name(.clean_ef_product)))
-    assertthat::assert_that(nrow(na_temp_sort) == 0)
+    # assertthat::assert_that(nrow(na_temp_sort) == 0)
+    if (nrow(na_temp_sort) != 0) {
+      # Create a helpful error message.
+      problem_rows <- na_temp_sort %>% 
+        dplyr::select(.data[[flow_aggregation_point]], .data[[destination]]) %>% 
+        unique()
+      problem_combos <- paste(problem_rows[[flow_aggregation_point]], 
+                              problem_rows[[destination]], sep = ", ", collapse = "; ")
+      
+      stop(paste("In arrange_iea_fu_allocation_template(),", 
+                 "the following combinations of Flow and Destination are unknown and can't be sorted:",
+                 problem_combos))
+    }
+    
+    if (nrow(na_ef_product != 0)) {
+      # Create a helpful error message.
+      problem_rows <- na_ef_product %>% 
+        dplyr::select(.data[[ef_product]]) %>% 
+        unique()
+      problem_products <- paste(problem_rows[[ef_product]], sep = ", ", collapse = "; ")
+      
+      stop(paste("In arrange_iea_fu_allocation_template(),", 
+                 "the following final energy products are unknown and can't be sorted:",
+                 problem_products))
+    }
+
     assertthat::assert_that(nrow(na_ef_product) == 0)
     out <- out %>% 
       dplyr::group_by(!!!meta_cols) %>% 
@@ -892,7 +917,7 @@ eta_fu_template <- function(.fu_allocations,
   
   # Now we join the E.dot and C values and calculate the energy flowing into each final-to-useful machine
   input_energy <- dplyr::full_join(c_info, e_dot_info, 
-                                   by = matsindf::everything_except(unit, e_dot_info, e_dot_dest, .symbols = FALSE)) %>% 
+                                   by = matsindf::everything_except(c_info, machine, eu_product, c_ratio, .symbols = FALSE)) %>% 
     # There may be cases where the analyst has filled a C value, but there is no corresponding e_dot_dest value.
     # Get rid of those rows.
     dplyr::filter(!is.na(.data[[e_dot_dest]])) %>% 

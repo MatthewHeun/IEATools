@@ -111,7 +111,7 @@ test_that("extract_TK() works as expected", {
   expect_equal(extract_TK("HTC.-110.C"), -110 + 273.15)
 })
 
-test_that("carnot_efficiency works as expected", {
+test_that("carnot_efficiency() works as expected", {
   expect_equal(carnot_efficiency("HTH.298.15.K"), 0)
 
   heats1 <- c("HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C", "LTH.-20.C")
@@ -180,28 +180,34 @@ test_that("tp_products() works as expected", {
 })
 
 
-test_that("sample_iea_file_path works correctly", {
-  expect_true(sample_iea_data_path() %>% endsWith("GH-ZA-ktoe-Extended-Energy-Balances-sample-2019.csv"))
+test_that("sample_iea_file_path() works correctly", {
+  expect_true(endsWith(sample_iea_data_path(), "GH-ZA-ktoe-Extended-Energy-Balances-sample-2021.csv"))
+  expect_true(endsWith(sample_iea_data_path(2020), "GH-ZA-ktoe-Extended-Energy-Balances-sample-2020.csv"))
+  expect_true(endsWith(sample_iea_data_path(2019), "GH-ZA-ktoe-Extended-Energy-Balances-sample-2019.csv"))
   expect_true(endsWith(sample_iea_data_path(2018), "GH-ZA-ktoe-Extended-Energy-Balances-sample-2018.csv"))
-  expect_error(sample_iea_data_path(2017), "Only 2018 and 2019 are supported in sample_iea_data_path()")
+  expect_error(sample_iea_data_path(2017), "Only release years 2018 through 2021 are supported in sample_iea_data_path()")
 })
 
 
-test_that("sample_fu_allocation_table_path works correctly", {
-  expect_true(sample_fu_allocation_table_path() %>% endsWith("GH-ZA-Allocation-sample-2019.xlsx"))
+test_that("sample_fu_allocation_table_path() works correctly", {
+  expect_true(sample_fu_allocation_table_path() %>% endsWith("GH-ZA-Allocation-sample-2021.xlsx"))
+  expect_true(endsWith(sample_fu_allocation_table_path(2020), "GH-ZA-Allocation-sample-2020.xlsx"))
+  expect_true(endsWith(sample_fu_allocation_table_path(2019), "GH-ZA-Allocation-sample-2019.xlsx"))
   expect_true(endsWith(sample_fu_allocation_table_path(2018), "GH-ZA-Allocation-sample-2018.xlsx"))
-  expect_error(sample_fu_allocation_table_path(2017), "Only 2018 and 2019 are supported in sample_fu_allocation_table_path")
+  expect_error(sample_fu_allocation_table_path(2017), "Only 2018, 2019, 2020, and 2021 are supported in sample_fu_allocation_table_path")
 })
 
 
-test_that("sample_eta_fu_table_path works correctly", {
-  expect_true(sample_eta_fu_table_path() %>% endsWith("GH-ZA-Efficiency-sample-2019.xlsx"))
+test_that("sample_eta_fu_table_path() works correctly", {
+  expect_true(sample_eta_fu_table_path() %>% endsWith("GH-ZA-Efficiency-sample-2021.xlsx"))
+  expect_true(endsWith(sample_eta_fu_table_path(2020), "GH-ZA-Efficiency-sample-2020.xlsx"))
+  expect_true(endsWith(sample_eta_fu_table_path(2019), "GH-ZA-Efficiency-sample-2019.xlsx"))
   expect_true(endsWith(sample_eta_fu_table_path(2018), "GH-ZA-Efficiency-sample-2018.xlsx"))
-  expect_error(sample_eta_fu_table_path(2017), "Only 2018 and 2019 are supported in sample_eta_fu_table_path")
+  expect_error(sample_eta_fu_table_path(2017), "Only 2018, 2019, 2020, and 2021 are supported in sample_eta_fu_table_path")
 })
 
 
-test_that("adjacent_rownums works as expected", {
+test_that("adjacent_rownums() works as expected", {
   DF <- data.frame(C1 = c("A", "B", "C"), stringsAsFactors = FALSE)
   expect_equal(adjacent_rownums(DF, col_name = "C1", entries = c("A", "B")), c(1, 2))
   expect_equal(adjacent_rownums(DF, col_name = "C1", entries = c("B", "C")), c(2, 3))
@@ -293,7 +299,7 @@ test_that("sorting works on a specified IEA data frame", {
 })
 
 
-test_that("replace_join works as expected", {
+test_that("replace_join() works as expected", {
   DFA <- tibble::tribble(~x, ~y, 
                          1, "A", 
                          2, "B")
@@ -399,7 +405,7 @@ test_that("replace_join works as expected", {
 
 
 # Testing default_aggregation_region_table_path() function
-test_that("default_aggregation_region_table_path works correctly", {
+test_that("default_aggregation_region_table_path() works correctly", {
   expect_true(default_aggregation_region_table_path() %>% endsWith("aggregation_table_iea_exiobase_2019.xlsx"))
   expect_true(default_aggregation_region_table_path(2020) %>% endsWith("aggregation_table_iea_exiobase_2020.xlsx"))
   expect_error(default_aggregation_region_table_path(2018), "Only 2019, and 2020 are supported in default_aggregation_region_table_path()")
