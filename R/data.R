@@ -1106,3 +1106,23 @@
 #' fd_sectors
 "fd_sectors"
 
+
+#' Constant phi table names
+#'
+#' A string list containing named names of columns and tabs for constant phi (exergy-to-energy ratio) tables.
+#' Items in the list provide default values for column name arguments
+#' throughout the `IEATools` package.
+#'
+#' @format A string list with `r length(phi_constants_names)` entries.
+#' \describe{
+#' \item{phi_constants_names}{The string name of the tab in the Excel file containing the constant phi values table.}
+#' \item{product_colname}{The string name of the energy product column in the constant phi values table.}
+#' \item{phi_colname}{The string name of the constant phi value column in the constant phi values table.}
+#' }
+#'
+#' @examples
+#' phi_constants_names
+"phi_constants_names"
+
+
+
