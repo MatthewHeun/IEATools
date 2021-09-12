@@ -15,7 +15,7 @@ load_phi_constants_table(
 \item{phi_constants_table_path}{The path to the Excel file containing a table of constant phi values.
 Default is the value of \code{sample_phi_constants_path()}.}
 
-\item{phi_constants_tab_name}{The}
+\item{phi_constants_tab_name, product_colname, phi_colname}{See \code{IEATools::phi_constants_names}.}
 }
 \value{
 

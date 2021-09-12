@@ -16,7 +16,7 @@ sample_phi_constants_path <- function() {
 #'
 #' @param phi_constants_table_path The path to the Excel file containing a table of constant phi values.
 #'                                 Default is the value of `sample_phi_constants_path()`.
-#' @param phi_constants_tab_name The
+#' @param phi_constants_tab_name,product_colname,phi_colname See `IEATools::phi_constants_names`.
 #'
 #' @return
 #' @export
