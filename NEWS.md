@@ -1,3 +1,9 @@
+---
+title: "Release notes for `IEATools`"
+output: html_document
+---
+
+
 # IEATools 0.1.61 (2021-09-06)
 
 * Added descriptive error messages when unknown `Flow.aggregation.point`, 
