@@ -1,3 +1,9 @@
+---
+title: "Release notes for `IEATools`"
+output: html_document
+---
+
+
 * Added functions to assist converting energy to exergy
   when data are in PSUT matrix format.
   New functions include:
