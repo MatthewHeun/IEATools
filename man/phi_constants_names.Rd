@@ -5,11 +5,13 @@
 \alias{phi_constants_names}
 \title{Constant phi table names}
 \format{
-A string list with 3 entries.
+A string list with 5 entries.
 \describe{
 \item{phi_constants_names}{The string name of the tab in the Excel file containing the constant phi values table.}
 \item{product_colname}{The string name of the energy product column in the constant phi values table.}
 \item{phi_colname}{The string name of the constant phi value column in the constant phi values table.}
+\item{is_useful_colname}{The string name of the is.useful column in the constant phi values table.}
+\item{phi_source_colname}{The string name of the phi.source column in the completed phi values table.}
 }
 }
 \usage{

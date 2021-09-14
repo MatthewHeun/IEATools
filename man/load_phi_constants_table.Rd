@@ -8,14 +8,15 @@ load_phi_constants_table(
   phi_constants_table_path = sample_phi_constants_path(),
   phi_constants_tab_name = IEATools::phi_constants_names$phi_constants_tab_name,
   product_colname = IEATools::phi_constants_names$product_colname,
-  phi_colname = IEATools::phi_constants_names$phi_colname
+  phi_colname = IEATools::phi_constants_names$phi_colname,
+  is_useful_colname = IEATools::phi_constants_names$is_useful_colname
 )
 }
 \arguments{
 \item{phi_constants_table_path}{The path to the Excel file containing a table of constant phi values.
 Default is the value of \code{sample_phi_constants_path()}.}
 
-\item{phi_constants_tab_name, product_colname, phi_colname}{See \code{IEATools::phi_constants_names}.}
+\item{phi_constants_tab_name, product_colname, phi_colname, is_useful_colname}{See \code{IEATools::phi_constants_names}.}
 }
 \value{
 

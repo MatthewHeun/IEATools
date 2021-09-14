@@ -1,3 +1,10 @@
+* Added functions to assist converting energy to exergy
+  when data are in PSUT matrix format.
+  New functions include:
+    * `load_phi_constants_table()`
+    * `sample_phi_constants_path()`
+
+
 # IEATools 0.1.61 (2021-09-06)
 
 * Added descriptive error messages when unknown `Flow.aggregation.point`, 
