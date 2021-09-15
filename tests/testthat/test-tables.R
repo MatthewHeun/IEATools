@@ -537,5 +537,5 @@ test_that("complete_eta_fu_table() works when we have more allocation data than 
                                   fu_allocation_table = fu_allocation_table_GHA)
   # Verify that we successfully received a result
   expect_true(! is.null(result))
-  expect_equal(nrow(result), 54)
+  expect_equal(nrow(result), 58)
 })
