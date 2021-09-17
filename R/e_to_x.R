@@ -18,7 +18,8 @@ sample_phi_constants_path <- function() {
 #'                                 Default is the value of `sample_phi_constants_path()`.
 #' @param phi_constants_tab_name,product_colname,phi_colname,is_useful_colname See `IEATools::phi_constants_names`.
 #'
-#' @return
+#' @return A data frame of phi (exergy-to-energy ratio) values.
+#' 
 #' @export
 #'
 #' @examples

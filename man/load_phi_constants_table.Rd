@@ -19,7 +19,7 @@ Default is the value of \code{sample_phi_constants_path()}.}
 \item{phi_constants_tab_name, product_colname, phi_colname, is_useful_colname}{See \code{IEATools::phi_constants_names}.}
 }
 \value{
-
+A data frame of phi (exergy-to-energy ratio) values.
 }
 \description{
 Read a table of constant phi (exergy-to-energy ratio) values from a file.
