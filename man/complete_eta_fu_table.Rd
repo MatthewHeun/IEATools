@@ -53,7 +53,7 @@ Must be one or both of the default values.}
 
 \item{country, method, energy_type, ledger_side, flow_aggregation_point, last_stage, e_dot, unit, year}{See \code{IEATools::iea_cols}.}
 
-\item{machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, ef_product, destination, c_source, eta_fu_phi_u_source, .values}{See \code{IEATools::template_cols}.}
+\item{machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, ef_product, destination, c_source, eta_fu_source, .values}{See \code{IEATools::template_cols}.}
 }
 \value{
 A tidy version of \code{eta_fu_table} with missing values filled from \code{exemplar_eta_fu_tables}.
