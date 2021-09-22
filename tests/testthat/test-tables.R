@@ -1,6 +1,3 @@
-###########################################################
-context("Completion functions")
-###########################################################
 
 test_that("tidy_fu_allocation_table() works", {
   fu_table <- load_fu_allocation_data()
@@ -391,7 +388,7 @@ test_that("complete_eta_fu_table works as expected", {
   # Check that we got Automobiles from ZAF
   completed %>% 
     dplyr::filter(.data[[IEATools::template_cols$machine]] == "Automobiles", 
-                  .data[[IEATools::template_cols$eta_fu_phi_u_source]] == "ZAF") %>% 
+                  .data[[IEATools::template_cols$eta_fu_source]] == "ZAF") %>% 
     nrow() %>% 
     expect_equal(4)
   completed %>% 
@@ -422,7 +419,7 @@ test_that("complete_eta_fu_table works as expected", {
   # Check that we got Irons from World
   completed %>% 
     dplyr::filter(.data[[IEATools::template_cols$machine]] == "Irons", 
-                  .data[[IEATools::template_cols$eta_fu_phi_u_source]] == "World") %>% 
+                  .data[[IEATools::template_cols$eta_fu_source]] == "World") %>% 
     nrow() %>% 
     expect_equal(4)
   completed %>% 
@@ -458,12 +455,12 @@ test_that("complete_eta_fu_table works as expected", {
                                       which_quantity = "eta.fu")
   # Check that completed2 has obtained both Automobiles and Irons from ZAF.
   completed2 %>% 
-    dplyr::filter(.data[[IEATools::template_cols$eta_fu_phi_u_source]] == "ZAF", 
+    dplyr::filter(.data[[IEATools::template_cols$eta_fu_source]] == "ZAF", 
                   .data[[IEATools::template_cols$quantity]] == IEATools::template_cols$eta_fu) %>% 
     nrow() %>% 
     expect_equal(4)
   completed2 %>% 
-    dplyr::filter(.data[[IEATools::template_cols$eta_fu_phi_u_source]] == "ZAF", 
+    dplyr::filter(.data[[IEATools::template_cols$eta_fu_source]] == "ZAF", 
                   .data[[IEATools::template_cols$quantity]] == IEATools::template_cols$eta_fu) %>% 
     magrittr::extract2(IEATools::template_cols$machine) %>% 
     expect_equal(c("Automobiles", "Automobiles", "Irons", "Irons"))

@@ -552,11 +552,11 @@ tidy_eta_fu_table <- function(.eta_fu_table,
 #' # Check that we got Automobiles from ZAF
 #' completed %>% 
 #'   dplyr::filter(.data[[IEATools::template_cols$machine]] == "Automobiles", 
-#'                 .data[[IEATools::template_cols$eta_fu_phi_u_source]] == "ZAF")
+#'                 .data[[IEATools::template_cols$eta_fu_source]] == "ZAF")
 #' # Check that we got Irons from World
 #' completed %>% 
 #'   dplyr::filter(.data[[IEATools::template_cols$machine]] == "Irons", 
-#'                 .data[[IEATools::template_cols$eta_fu_phi_u_source]] == "World")
+#'                 .data[[IEATools::template_cols$eta_fu_source]] == "World")
 complete_eta_fu_table <- function(eta_fu_table, 
                                   exemplar_eta_fu_tables, 
                                   fu_allocation_table, 
@@ -582,7 +582,7 @@ complete_eta_fu_table <- function(eta_fu_table,
                                   quantity = IEATools::template_cols$quantity,
                                   maximum_values = IEATools::template_cols$maximum_values,
                                   c_source = IEATools::template_cols$c_source,
-                                  eta_fu_phi_u_source = IEATools::template_cols$eta_fu_phi_u_source,
+                                  eta_fu_source = IEATools::template_cols$eta_fu_source,
                                   .values = IEATools::template_cols$.values) {
   
   which_quantity <- match.arg(which_quantity, several.ok = TRUE)
@@ -726,7 +726,7 @@ complete_eta_fu_table <- function(eta_fu_table,
   # so we pick up the country's information automatically.
   eta_fu_table <- eta_fu_table %>% 
     dplyr::mutate(
-      "{eta_fu_phi_u_source}" := country_to_complete, 
+      "{eta_fu_source}" := country_to_complete, 
     ) %>% 
     # Eliminate all rows
     magrittr::extract(c(), )
@@ -741,14 +741,14 @@ complete_eta_fu_table <- function(eta_fu_table,
                         quantity = quantity, maximum_values = maximum_values, .values = .values) %>% 
       dplyr::filter(.data[[quantity]] %in% which_quantity) %>%
       dplyr::mutate(
-        "{eta_fu_phi_u_source}" := .data[[country]],
+        "{eta_fu_source}" := .data[[country]],
         "{country}" := country_to_complete # Pretend that the exemplar is the country we're analyzing.
       )
 
     exemplar_rows_to_use <- dplyr::semi_join(exemplar_info_available, 
                                              machines_that_need_etas, 
                                              # We can't join by source, because the exemplar source is different.
-                                             by = colnames(machines_that_need_etas) %>% setdiff(c(c_source, eta_fu_phi_u_source))) 
+                                             by = colnames(machines_that_need_etas) %>% setdiff(c(c_source, eta_fu_source))) 
     # Join the exemplar_rows_to_use to eta_fu_table
     eta_fu_table <- dplyr::bind_rows(eta_fu_table, exemplar_rows_to_use)
     

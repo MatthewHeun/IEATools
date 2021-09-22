@@ -30,7 +30,7 @@ complete_eta_fu_table(
   quantity = IEATools::template_cols$quantity,
   maximum_values = IEATools::template_cols$maximum_values,
   c_source = IEATools::template_cols$c_source,
-  eta_fu_phi_u_source = IEATools::template_cols$eta_fu_phi_u_source,
+  eta_fu_source = IEATools::template_cols$eta_fu_source,
   .values = IEATools::template_cols$.values
 )
 }
@@ -125,9 +125,9 @@ completed <- complete_eta_fu_table(
 # Check that we got Automobiles from ZAF
 completed \%>\% 
   dplyr::filter(.data[[IEATools::template_cols$machine]] == "Automobiles", 
-                .data[[IEATools::template_cols$eta_fu_phi_u_source]] == "ZAF")
+                .data[[IEATools::template_cols$eta_fu_source]] == "ZAF")
 # Check that we got Irons from World
 completed \%>\% 
   dplyr::filter(.data[[IEATools::template_cols$machine]] == "Irons", 
-                .data[[IEATools::template_cols$eta_fu_phi_u_source]] == "World")
+                .data[[IEATools::template_cols$eta_fu_source]] == "World")
 }
