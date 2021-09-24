@@ -6,7 +6,7 @@ output: html_document
 * `form_eta_fu_phi_u_vecs()` now changes the name of the single column 
   of the exergy-to-energy ratio vector (`phi_u`) from "phi.u" to simply "phi", 
   to become compatible with the `phi_pf` vector, whose single column is named "phi".
-  This change fixes a downstream bug in the `SEAPSUTWorkflow` pacakge.
+  This change fixes a downstream bug in the `SEAPSUTWorkflow` package.
 * Added functions to assist converting energy to exergy
   when data are in PSUT matrix format.
   New functions include:
