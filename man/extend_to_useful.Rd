@@ -169,7 +169,7 @@ eta_fu_data <- load_eta_fu_data() \%>\%
     IEATools::meta_cols(return_names = TRUE,
                         years_to_keep = IEATools::iea_cols$year,
                         not_meta = c(IEATools::template_cols$eta_fu,
-                                     IEATools::template_cols$phi_u))
+                                     IEATools::template_cols$phi))
 psut_mats <- load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 
   prep_psut() \%>\% 
