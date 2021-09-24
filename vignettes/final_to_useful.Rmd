@@ -205,7 +205,7 @@ to the data frame of PSUT matrices.
 m_cols <- eta_fu_vecs %>% 
   meta_cols(return_names = TRUE,
             years_to_keep = IEATools::iea_cols$year,
-            not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi))
+            not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
 m_cols
 psut_mats_final <- load_tidy_iea_df() %>% 
   specify_all() %>% 

@@ -169,12 +169,13 @@ eta_fu_data <- load_eta_fu_data() \%>\%
     IEATools::meta_cols(return_names = TRUE,
                         years_to_keep = IEATools::iea_cols$year,
                         not_meta = c(IEATools::template_cols$eta_fu,
-                                     IEATools::template_cols$phi))
+                                     IEATools::template_cols$phi_u))
 psut_mats <- load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 
   prep_psut() \%>\% 
   dplyr::full_join(C_data, by = m_cols) \%>\% 
   dplyr::full_join(eta_fu_data, by = m_cols)
 psut_mats \%>\% 
-  extend_to_useful()
+  extend_to_useful() \%>\% 
+  head()
 }
