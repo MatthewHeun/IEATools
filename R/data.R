@@ -180,7 +180,7 @@
 #' \item{phi_u}{The name of the useful exergy-to-energy ratio column in final-to-useful templates.}
 #' \item{phi}{The name of the exergy-to-energy ratio column for primary, final, and useful stages.}
 #' \item{c_source}{The name of a column containing the source of final-to-useful allocation information.}
-#' \item{eta_fu__source}{The name of a column containing the source of final-to-useful efficiency data.}
+#' \item{eta_fu_source}{The name of a column containing the source of final-to-useful efficiency data.}
 #' \item{phi_source}{The name of a column containing the source of exergy-to-energy ratios.}
 #' \item{.values}{The name of a temporary column that holds values.}
 #' }
