@@ -69,7 +69,7 @@ test_that("form_eta_fu_phi_vecs works as expected", {
   expect_equal(eta_GHA_1971[["Fans -> MD", 1]], 0.10)
   expect_equal(eta_GHA_1971[["Boat engines -> MD", 1]], 0.30)
 
-  phi_ZAR_2000 <- eta_fu_phi_u_df$phi.u[[4]]  
+  phi_ZAR_2000 <- eta_fu_phi_u_df$phi[[4]]  
   expect_equal(phi_ZAR_2000[["MD [from Generators]", 1]], 1)
   expect_equal(phi_ZAR_2000[["LTH.20.C [from LPG stoves]", 1]], 0.01677008)
   expect_equal(phi_ZAR_2000[["HTH.600.C [from Industrial furnaces]", 1]], 0.65853519)
@@ -81,8 +81,8 @@ test_that("form_eta_fu_phi_vecs works as expected", {
     expect_null(matsbyname::coltype(eta_fu_phi_u_df$eta.fu[[i]]))
   }
   for (i in 1:nrow(eta_fu_phi_u_df)) {
-    expect_equal(matsbyname::rowtype(eta_fu_phi_u_df$phi.u[[i]]), "Product [from Industry]")
-    expect_null(matsbyname::coltype(eta_fu_phi_u_df$phi.u[[i]]))
+    expect_equal(matsbyname::rowtype(eta_fu_phi_u_df$phi[[i]]), "Product [from Industry]")
+    expect_null(matsbyname::coltype(eta_fu_phi_u_df$phi[[i]]))
   }
 })
 
@@ -218,7 +218,7 @@ test_that("extend_to_useful works as expected", {
   m_cols <- eta_fu_data %>% 
     IEATools::meta_cols(return_names = TRUE,
                         years_to_keep = IEATools::iea_cols$year,
-                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
+                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi))
   psut_mats <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     prep_psut() %>% 
@@ -421,7 +421,7 @@ test_that("extend_to_useful() works with individual matrices", {
   m_cols <- eta_fu_data %>% 
     IEATools::meta_cols(return_names = TRUE,
                         years_to_keep = IEATools::iea_cols$year,
-                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
+                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi))
   psut_mats <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     prep_psut() %>% 
@@ -472,7 +472,7 @@ test_that("extend_to_useful() works with list of matrices", {
   m_cols <- eta_fu_data %>% 
     IEATools::meta_cols(return_names = TRUE,
                         years_to_keep = IEATools::iea_cols$year,
-                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
+                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi))
   psut_mats <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     prep_psut() %>% 
@@ -489,7 +489,7 @@ test_that("extend_to_useful() works with list of matrices", {
                c("Country", "Method", "Energy.type", "Last.stage", "Year",
                  "V", "Y", "S_units", "R", "U_feed",
                  "U_EIOU", "U", "r_EIOU", "C_EIOU", "C_Y",
-                 "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                 "eta.fu", "phi", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                  "r_EIOU_Useful", "V_Useful", "Y_Useful"))
 })
 
@@ -502,7 +502,7 @@ test_that("extend_to_useful() works as expected when clean_up_df = FALSE", {
   m_cols <- eta_fu_data %>% 
     IEATools::meta_cols(return_names = TRUE,
                         years_to_keep = IEATools::iea_cols$year,
-                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
+                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi))
   psut_mats <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     prep_psut() %>% 
@@ -517,6 +517,6 @@ test_that("extend_to_useful() works as expected when clean_up_df = FALSE", {
                c("Country", "Method", "Energy.type", "Last.stage", "Year",
                  "V", "Y", "S_units", "R", "U_feed",
                  "U_EIOU", "U", "r_EIOU", "C_EIOU", "C_Y",
-                 "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                 "eta.fu", "phi", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                  "r_EIOU_Useful", "V_Useful", "Y_Useful"))
 })

@@ -232,7 +232,7 @@ form_C_mats <- function(.fu_allocation_table,
 #'                      A template for this table should have been created by `eta_fu_table()` and 
 #'                      `write_eta_fu_table()`.
 #' @param unit,year See `IEATools::iea_cols`.
-#' @param quantity,machine,eu_product,e_dot_machine,e_dot_machine_perc,maximum_values,eta_fu,phi_u See `IEATools::template_cols`.
+#' @param quantity,machine,eu_product,e_dot_machine,e_dot_machine_perc,maximum_values,eta_fu,phi_u,phi See `IEATools::template_cols`.
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #' @param product,industry See `IEATools::row_col_types`.
 #' @param arrow_note,from_note Notation vectors used for creating the eta_fu and phi vectors. 
@@ -260,6 +260,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    maximum_values = IEATools::template_cols$maximum_values,
                                    eta_fu = IEATools::template_cols$eta_fu,
                                    phi_u = IEATools::template_cols$phi_u,
+                                   phi = IEATools::template_cols$phi,
                                    
                                    matnames = IEATools::mat_meta_cols$matnames,
                                    matvals  = IEATools::mat_meta_cols$matvals,
@@ -283,10 +284,20 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       # Eliminate the maximum_values column. It was only a helper for the analyst.
       "{maximum_values}" := NULL
     ) %>% 
+    dplyr::mutate(
+      "{quantity}" := dplyr::case_when(
+        # Downstream, we add phi_pf and phi_u together.
+        # Both need to have the same column name.
+        # So change to phi here.
+        .data[[quantity]] == phi_u ~ phi,
+        TRUE ~ .data[[quantity]]
+      )
+    ) %>%
     dplyr::rename(
       # The quantity column gives us the matrix names
       "{matnames}" := quantity
     )
+    
   # Gather years into a tidy data frame.
   year_names <- year_cols(cleaned, return_names = TRUE)
   # It could be that the incoming .eta_fu_table is already gathered (pivoted longer).
@@ -311,7 +322,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       # Create rownames from the machine and eu_product rows.
       "{rownames}" := dplyr::case_when(
         .data[[matnames]] == eta_fu ~ matsbyname::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = arrow_note),
-        .data[[matnames]] == phi_u ~ matsbyname::paste_pref_suff(pref = .data[[eu_product]], suff = .data[[machine]], notation = from_note),
+        .data[[matnames]] == phi ~ matsbyname::paste_pref_suff(pref = .data[[eu_product]], suff = .data[[machine]], notation = from_note),
         TRUE ~ NA_character_
       ), 
       # Eliminate machine and eu_product columns, because we no longer need them.
@@ -321,7 +332,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       "{colnames}" := .data[[matnames]],
       "{rowtypes}" := dplyr::case_when(
         .data[[matnames]] == eta_fu ~ matsbyname::paste_pref_suff(pref = industry, suff = product, notation = arrow_note),
-        .data[[matnames]] == phi_u ~ matsbyname::paste_pref_suff(pref = product, suff = industry, notation = from_note), 
+        .data[[matnames]] == phi ~ matsbyname::paste_pref_suff(pref = product, suff = industry, notation = from_note), 
         TRUE ~ NA_character_
       ), 
       "{coltypes}" := NA_character_ # Will change to NULL later.
