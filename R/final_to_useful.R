@@ -878,7 +878,7 @@ extend_to_useful_helper <- function(.sutdata = NULL,
       # Swap column names from arrow notation to paren notation
       matsbyname::switch_notation_byname(margin = 2, from = arr_note, to = from_note, flip = TRUE)
     
-    #### Step 2 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
+    #### Step 2 on the "Pushing Y to useful" tab in file "Matrix f->u example calcs.xlsx"
     
     # Calculate the matrix that should be added to the U_f matrix.
     add_to_U_f_mat <- dest_mat_vec_hat_C %>% 
