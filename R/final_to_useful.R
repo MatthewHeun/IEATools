@@ -345,17 +345,17 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
                                    rownames = rownames, colnames = colnames, 
                                    rowtypes = rowtypes, coltypes = coltypes) %>% 
+    # pivot wider to the sutmats format
+    tidyr::pivot_wider(names_from = matnames, values_from = matvals) %>%
+    dplyr::rename(
+      # Change name of phi vectors to phi_u for clarity relative to phi_pf later.
+      "{phi_u}" := .data[[phi]]
+    ) %>%
     dplyr::mutate(
-      # Change name of phi column to phi_u for clarity relative to phi_pf later.
-      "{matnames}" := dplyr::case_when(
-        .data[[matnames]] == phi ~ phi_u,
-        TRUE ~ .data[[matnames]]
-      ), 
-      "{matvals}" := .data[[matvals]] %>% matsbyname::setcoltype(NULL)
+      "{phi_u}" := .data[[phi_u]] %>% 
+        matsbyname::setrowtype(product) %>%
+        matsbyname::setcoltype(phi)
     )
-  # pivot wider to the sutmats format
-  out %>% 
-    tidyr::pivot_wider(names_from = matnames, values_from = matvals)
 }
 
 
