@@ -335,7 +335,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
         .data[[matnames]] == phi ~ matsbyname::paste_pref_suff(pref = product, suff = industry, notation = from_note), 
         TRUE ~ NA_character_
       ), 
-      "{coltypes}" := NA_character_ # Will change to NULL later.
+      "{coltypes}" := NA_character_ # Will change later.
     )
 
   # Collapse to matrices (actually, column vectors) and return  
@@ -353,8 +353,11 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     ) %>%
     dplyr::mutate(
       "{phi_u}" := .data[[phi_u]] %>% 
-        matsbyname::setrowtype(product) %>%
-        matsbyname::setcoltype(phi)
+        matsbyname::setrowtype(paste0(product, " [from ", industry, "]")) %>%
+        matsbyname::setcoltype(phi), 
+      "{eta_fu}" := .data[[eta_fu]] %>% 
+        matsbyname::setrowtype(paste(industry, "->", product)) %>% 
+        matsbyname::setcoltype(eta_fu)
     )
 }
 

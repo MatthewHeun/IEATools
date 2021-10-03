@@ -77,12 +77,12 @@ test_that("form_eta_fu_phi_u_vecs() works as expected", {
   
   # Check row and column types
   for (i in 1:nrow(eta_fu_phi_u_df)) {
-    expect_equal(matsbyname::rowtype(eta_fu_phi_u_df$eta.fu[[i]]), "Industry -> Product")
-    expect_null(matsbyname::coltype(eta_fu_phi_u_df$eta.fu[[i]]))
+    expect_equal(matsbyname::rowtype(eta_fu_phi_u_df$eta.fu[[i]]), "Industry")
+    expect_equal(matsbyname::coltype(eta_fu_phi_u_df$eta.fu[[i]]), "eta.fu")
   }
   for (i in 1:nrow(eta_fu_phi_u_df)) {
-    expect_equal(matsbyname::rowtype(eta_fu_phi_u_df$phi.u[[i]]), "Product [from Industry]")
-    expect_null(matsbyname::coltype(eta_fu_phi_u_df$phi.u[[i]]))
+    expect_equal(matsbyname::rowtype(eta_fu_phi_u_df$phi.u[[i]]), "Product")
+    expect_equal(matsbyname::coltype(eta_fu_phi_u_df$phi.u[[i]]), "phi")
   }
 })
 
