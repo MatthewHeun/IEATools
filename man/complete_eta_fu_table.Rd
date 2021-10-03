@@ -30,7 +30,7 @@ complete_eta_fu_table(
   quantity = IEATools::template_cols$quantity,
   maximum_values = IEATools::template_cols$maximum_values,
   c_source = IEATools::template_cols$c_source,
-  eta_fu_phi_u_source = IEATools::template_cols$eta_fu_phi_u_source,
+  eta_fu_source = IEATools::template_cols$eta_fu_source,
   .values = IEATools::template_cols$.values
 )
 }
@@ -53,7 +53,7 @@ Must be one or both of the default values.}
 
 \item{country, method, energy_type, ledger_side, flow_aggregation_point, last_stage, e_dot, unit, year}{See \code{IEATools::iea_cols}.}
 
-\item{machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, ef_product, destination, c_source, eta_fu_phi_u_source, .values}{See \code{IEATools::template_cols}.}
+\item{machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, ef_product, destination, c_source, eta_fu_source, .values}{See \code{IEATools::template_cols}.}
 }
 \value{
 A tidy version of \code{eta_fu_table} with missing values filled from \code{exemplar_eta_fu_tables}.
@@ -125,9 +125,9 @@ completed <- complete_eta_fu_table(
 # Check that we got Automobiles from ZAF
 completed \%>\% 
   dplyr::filter(.data[[IEATools::template_cols$machine]] == "Automobiles", 
-                .data[[IEATools::template_cols$eta_fu_phi_u_source]] == "ZAF")
+                .data[[IEATools::template_cols$eta_fu_source]] == "ZAF")
 # Check that we got Irons from World
 completed \%>\% 
   dplyr::filter(.data[[IEATools::template_cols$machine]] == "Irons", 
-                .data[[IEATools::template_cols$eta_fu_phi_u_source]] == "World")
+                .data[[IEATools::template_cols$eta_fu_source]] == "World")
 }

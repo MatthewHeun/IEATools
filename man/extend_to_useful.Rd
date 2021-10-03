@@ -176,5 +176,6 @@ psut_mats <- load_tidy_iea_df() \%>\%
   dplyr::full_join(C_data, by = m_cols) \%>\% 
   dplyr::full_join(eta_fu_data, by = m_cols)
 psut_mats \%>\% 
-  extend_to_useful()
+  extend_to_useful() \%>\% 
+  head()
 }

@@ -165,9 +165,12 @@ template_cols <- list(ef_product = "Ef.product",
                       e_dot_machine_perc = "E.dot_machine [%]", 
                       e_dot_machine_max_perc = "E.dot_machine_max [%]",
                       eta_fu = "eta.fu",
+                      phi_pf = "phi.pf",
                       phi_u = "phi.u", 
+                      phi = "phi",
                       c_source = "C.source", 
-                      eta_fu_phi_u_source = "eta.fu.phi.u.source",
+                      eta_fu_source = "eta.fu.source",
+                      phi_source = "phi.source",
                       .values = ".values")
 usethis::use_data(template_cols, overwrite = TRUE)
 
@@ -782,7 +785,9 @@ usethis::use_data(fd_sectors, overwrite = TRUE)
 
 phi_constants_names <- list(phi_constants_tab_name = "phi_constants",
                             product_colname = "Product",
-                            phi_colname = "phi")
+                            phi_colname = "phi", 
+                            phi_source_colname = "phi.source",
+                            is_useful_colname = "is.useful")
 usethis::use_data(phi_constants_names, overwrite = TRUE)
 
 

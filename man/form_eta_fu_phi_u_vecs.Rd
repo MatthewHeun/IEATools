@@ -16,6 +16,7 @@ form_eta_fu_phi_u_vecs(
   maximum_values = IEATools::template_cols$maximum_values,
   eta_fu = IEATools::template_cols$eta_fu,
   phi_u = IEATools::template_cols$phi_u,
+  phi = IEATools::template_cols$phi,
   matnames = IEATools::mat_meta_cols$matnames,
   matvals = IEATools::mat_meta_cols$matvals,
   rownames = IEATools::mat_meta_cols$rownames,
@@ -35,7 +36,7 @@ A template for this table should have been created by \code{eta_fu_table()} and
 
 \item{unit, year}{See \code{IEATools::iea_cols}.}
 
-\item{quantity, machine, eu_product, e_dot_machine, e_dot_machine_perc, maximum_values, eta_fu, phi_u}{See \code{IEATools::template_cols}.}
+\item{quantity, machine, eu_product, e_dot_machine, e_dot_machine_perc, maximum_values, eta_fu, phi_u, phi}{See \code{IEATools::template_cols}.}
 
 \item{matnames, matvals, rownames, colnames, rowtypes, coltypes}{See \code{IEATools::mat_meta_cols}.}
 

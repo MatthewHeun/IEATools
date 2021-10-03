@@ -5,7 +5,7 @@
 \alias{template_cols}
 \title{Final-to-useful template column names}
 \format{
-A string list with 21 entries
+A string list with 24 entries
 \describe{
 \item{ef_product}{The name of the final energy product column in final-to-useful templates.}
 \item{machine}{The name of the machine column in final-to-useful templates.}
@@ -24,9 +24,12 @@ A string list with 21 entries
 \item{e_dot_machine_perc}{The name of the machine energy flow percentage column in final-to-useful templates.}
 \item{e_dot_machine_max_perc}{The name of the machine energy flow maximum percentage column in final-to-useful templates.}
 \item{eta_fu}{The name of the final-to-useful machine efficiency column in final-to-useful templates.}
-\item{phi_u}{The name of the exergy-to-energy ratio column in final-to-useful templates.}
-\item{c_source}{The name of a column containing country identifiers for the source of final-to-useful allocation information.}
-\item{eta_fu_phi_u_source}{The name of a column containing country identifiers for the source of final-to-useful efficiency data and useful exergy-to-energy ratios.}
+\item{phi_pf}{The name of the exergy-to-energy ratio column various data frames templates.}
+\item{phi_u}{The name of the useful exergy-to-energy ratio column in final-to-useful templates.}
+\item{phi}{The name of the exergy-to-energy ratio column for primary, final, and useful stages.}
+\item{c_source}{The name of a column containing the source of final-to-useful allocation information.}
+\item{eta_fu_source}{The name of a column containing the source of final-to-useful efficiency data.}
+\item{phi_source}{The name of a column containing the source of exergy-to-energy ratios.}
 \item{.values}{The name of a temporary column that holds values.}
 }
 }

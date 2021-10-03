@@ -30,6 +30,7 @@ Imports:
     matsindf,
     openxlsx,
     purrr,
+    readxl,
     rlang,
     tibble,
     tidyr,

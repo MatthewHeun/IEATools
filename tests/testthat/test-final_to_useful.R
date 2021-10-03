@@ -54,7 +54,7 @@ test_that("form_C_mats works as expected", {
 })
 
 
-test_that("form_eta_fu_phi_vecs works as expected", {
+test_that("form_eta_fu_phi_u_vecs() works as expected", {
   efficiency_table <- load_eta_fu_data()
   eta_fu_phi_u_df <- form_eta_fu_phi_u_vecs(efficiency_table)
   # Check type of year column
