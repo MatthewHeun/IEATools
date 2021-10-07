@@ -3,6 +3,18 @@ title: "Release notes for `IEATools`"
 output: html_document
 ---
 
+* `form_eta_fu_phi_u_vecs()` now gives only the product name 
+  as the row name of the phi vectors, but
+  it does so only after checking that all phi values are the same.
+  If different phi values are detected for 
+  the same combination of metadata parameters and year,
+  an error is emitted.
+  This change solves a downstream issue where 
+  phi values from the `phi_constants.xlsx` file 
+  have only products as row names, leading to incompatibility
+  when summing phi vectors from the two sources and 
+  when multiplying the phi vectors into matrices
+  where names of a dimension are product names only.
 * `form_eta_fu_phi_u_vecs()` now changes the name of the single column 
   of the exergy-to-energy ratio vector (`phi_u`) from "phi.u" to simply "phi", 
   to become compatible with the `phi_pf` vector, whose single column is named "phi".
