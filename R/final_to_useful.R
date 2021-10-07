@@ -245,6 +245,7 @@ form_C_mats <- function(.fu_allocation_table,
 #' @param arrow_note,from_note Notation vectors used for creating the eta_fu and phi vectors. 
 #'                             See `matsbyname::notation_vec()`. 
 #'                             Defaults are `arrow_notation` and ``from_notation`, respectively.
+#' @param .id The name of an identification column used internally. Default is ".id".
 #'
 #' @return a wide-by-matrices data frame with metadata columns (and year) 
 #'         along with columns for `eta_fu` and `phi_u` vectors.
@@ -280,7 +281,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    industry = IEATools::row_col_types$industry,
                                    
                                    arrow_note = IEATools::arrow_notation, 
-                                   from_note = IEATools::from_notation) {
+                                   from_note = IEATools::from_notation, 
+                                   .id = ".id") {
   
   cleaned <- .eta_fu_table %>% 
     # Eliminate rows titled e_dot_machine or e_dot_machine_perc. These are just helper rows for the analyst.
@@ -379,12 +381,15 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     # Craft an error message and throw an error.
     # Add an identifier row number to unique_without_phi_values
     with_id <- unique_without_phi_vals %>% 
-      tibble::rowid_to_column(".id")
-    err_rows <- dplyr::left_join(unique_with_phi_vals, with_id) %>% 
-      dplyr::group_by(.data[[".id"]]) %>%
+      tibble::rowid_to_column(.id)
+    err_rows <- dplyr::left_join(unique_with_phi_vals, with_id,
+                                 # join by everything but matvals
+                                 by = names(unique_with_phi_vals)[-which(names(unique_with_phi_vals) == "matvals")]) %>% 
+      dplyr::group_by(.data[[.id]]) %>%
       dplyr:: filter(dplyr::n() > 1)
-    
-    stop(matsindf::df_to_msg(err_rows))
+    err_msg <- paste("Found useful products with different phi values in form_eta_fu_phi_u_vecs(). All phi values should be same for all combinations of metadata. Error(s) in:",
+                     matsindf::df_to_msg(err_rows))
+    stop(err_msg)
   }
   
   # If we get here, everything is OK.
@@ -414,12 +419,6 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    rowtypes = rowtypes, coltypes = coltypes) %>% 
     # pivot wider to the sutmats format
     tidyr::pivot_wider(names_from = matnames, values_from = matvals)
-  # dplyr::mutate(
-  #   "{eta_fu}" := .data[[eta_fu]] %>% 
-  #     matsbyname::setrowtype(matsbyname::paste_pref_suff(industry, product, arrow_note)),
-  #   "{phi_u}" := .data[[phi_u]] %>% 
-  #     matsbyname::setrowtype(matsbyname::paste_pref_suff(product, industry, from_note))
-  # )
 }
 
 

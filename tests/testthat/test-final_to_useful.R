@@ -88,6 +88,17 @@ test_that("form_eta_fu_phi_u_vecs() works as expected", {
 })
 
 
+test_that("form_eta_fu_phi_u_vecs() errors when phi values are different", {
+  efficiency_table <- load_eta_fu_data()
+  # Change a value to be different. Change a MD phi value from 1 to 0.99.
+  expect_equal(efficiency_table[32, "1971"], 1.0)
+  efficiency_table[32, "1971"] <- 0.9999
+  expect_equal(efficiency_table[32, "1971"], 0.9999)
+  expect_error(form_eta_fu_phi_u_vecs(efficiency_table), "Found useful products with different phi values in form_eta_fu_phi_u_vecs")
+  
+})
+
+
 test_that("extend_to_useful_helper works as intended", {
   # These tests come from the "Pushing Y to Useful" tab in file "Matrix f->u example calcs.xlsx"
   

@@ -26,7 +26,8 @@ form_eta_fu_phi_u_vecs(
   product = IEATools::row_col_types$product,
   industry = IEATools::row_col_types$industry,
   arrow_note = IEATools::arrow_notation,
-  from_note = IEATools::from_notation
+  from_note = IEATools::from_notation,
+  .id = ".id"
 )
 }
 \arguments{
@@ -45,6 +46,8 @@ A template for this table should have been created by \code{eta_fu_table()} and
 \item{arrow_note, from_note}{Notation vectors used for creating the eta_fu and phi vectors.
 See \code{matsbyname::notation_vec()}.
 Defaults are \code{arrow_notation} and ``from_notation`, respectively.}
+
+\item{.id}{The name of an identification column used internally. Default is ".id".}
 }
 \value{
 a wide-by-matrices data frame with metadata columns (and year)
