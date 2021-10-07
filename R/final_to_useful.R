@@ -219,14 +219,17 @@ form_C_mats <- function(.fu_allocation_table,
 #' 
 #' The vectors `eta_fu` and `phi_u` have special rownames that indicate 
 #' sources and types of useful energy flows.
-#' Row names have the pattern 
-#' "machine`r arrow_notation[["pref_end"]]`useful energy form" to indicate 
-#' the energy efficiency of "machine" for making "useful energy form"
-#' or the exergy-to-energy ratio of the useful energy form created by machine.
+#' Row names in the `eta_fu` vector have the pattern 
+#' "industry`r arrow_notation[["pref_end"]]`product" to indicate 
+#' the energy efficiency of "industry" for making "product"
+#' or the exergy-to-energy ratio of the useful energy form created by a final-to-useful machine.
+#' Row names in the `phi_u` vector have the pattern
+#' "product \[from industry\]"
+#' to indicate a machine that is making a useful energy product.
 #' 
 #' Columns are named by the variable in the vector: 
-#' "eta_fu" for final-to-useful efficiencies and
-#' "phi_u" for useful exergy-to-useful energy ratios.
+#' `eta_fu` for final-to-useful efficiencies and
+#' `phi_u` for useful exergy-to-useful energy ratios.
 #' 
 #' @param .eta_fu_table a final-to-useful efficiency table read by `load_eta_fu_allocation_data()`.
 #'                      A template for this table should have been created by `eta_fu_table()` and 
@@ -284,15 +287,6 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       # Eliminate the maximum_values column. It was only a helper for the analyst.
       "{maximum_values}" := NULL
     ) %>% 
-    dplyr::mutate(
-      "{quantity}" := dplyr::case_when(
-        # Downstream, we add phi_pf and phi_u together.
-        # Both need to have the same column name.
-        # So change to phi here.
-        .data[[quantity]] == phi_u ~ phi,
-        TRUE ~ .data[[quantity]]
-      )
-    ) %>%
     dplyr::rename(
       # The quantity column gives us the matrix names
       "{matnames}" := quantity
@@ -322,7 +316,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       # Create rownames from the machine and eu_product rows.
       "{rownames}" := dplyr::case_when(
         .data[[matnames]] == eta_fu ~ matsbyname::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = arrow_note),
-        .data[[matnames]] == phi ~ matsbyname::paste_pref_suff(pref = .data[[eu_product]], suff = .data[[machine]], notation = from_note),
+        .data[[matnames]] == phi_u ~ matsbyname::paste_pref_suff(pref = .data[[eu_product]], suff = .data[[machine]], notation = from_note),
         TRUE ~ NA_character_
       ), 
       # Eliminate machine and eu_product columns, because we no longer need them.
@@ -332,7 +326,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       "{colnames}" := .data[[matnames]],
       "{rowtypes}" := dplyr::case_when(
         .data[[matnames]] == eta_fu ~ matsbyname::paste_pref_suff(pref = industry, suff = product, notation = arrow_note),
-        .data[[matnames]] == phi ~ matsbyname::paste_pref_suff(pref = product, suff = industry, notation = from_note), 
+        .data[[matnames]] == phi_u ~ matsbyname::paste_pref_suff(pref = product, suff = industry, notation = from_note), 
         TRUE ~ NA_character_
       ), 
       "{coltypes}" := NA_character_ # Will change later.
@@ -347,17 +341,13 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    rowtypes = rowtypes, coltypes = coltypes) %>% 
     # pivot wider to the sutmats format
     tidyr::pivot_wider(names_from = matnames, values_from = matvals) %>%
-    dplyr::rename(
-      # Change name of phi vectors to phi_u for clarity relative to phi_pf later.
-      "{phi_u}" := .data[[phi]]
-    ) %>%
     dplyr::mutate(
-      "{phi_u}" := .data[[phi_u]] %>% 
-        matsbyname::setrowtype(paste0(product, " [from ", industry, "]")) %>%
-        matsbyname::setcoltype(phi), 
       "{eta_fu}" := .data[[eta_fu]] %>% 
         matsbyname::setrowtype(paste(industry, "->", product)) %>% 
-        matsbyname::setcoltype(eta_fu)
+        matsbyname::setcoltype(eta_fu),
+      "{phi_u}" := .data[[phi_u]] %>% 
+        matsbyname::setrowtype(paste0(product, " [from ", industry, "]")) %>%
+        matsbyname::setcoltype(phi)
     )
 }
 
