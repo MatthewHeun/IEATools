@@ -356,7 +356,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     dplyr::filter(.data[[colnames]] == phi_u) %>% 
     dplyr::mutate(
       "{product}" := .data[[rownames]] %>% 
-        matsbyname::keep_pref_suff(keep = "pref", notation = from_notation)
+        matsbyname::keep_pref_suff(keep = "pref", notation = from_note)
     ) %>% 
     dplyr::select(meta_cols, product, year) %>% 
     unique()
@@ -366,7 +366,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     dplyr::filter(.data[[colnames]] == phi_u) %>% 
     dplyr::mutate(
       "{product}" := .data[[rownames]] %>% 
-        matsbyname::keep_pref_suff(keep = "pref", notation = from_notation)
+        matsbyname::keep_pref_suff(keep = "pref", notation = from_note)
     ) %>% 
     dplyr::select(meta_cols, product, year, -matvals) %>% 
     unique()
@@ -485,8 +485,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param interface_ind See `IEATools::interface_industries`. Interface industries are kept same from `Y_final` to `Y_useful`.
 #' @param losses See `IEATools::tfc_compare_flows`. Losses are kept same from `Y_final` to `Y_useful`.
 #' @param stat_diffs See `IEATools::tfc_compare_flows`. Statistical differences are kept same from `Y_final` to `Y_useful`.
-#' @param notation The row and column notation in the `eta_fu` vectors.
-#'                 See `matsbyname::notation_vec()`. Default is `IEATools::arrow_notation`.
+#' @param arrow_note,from_note The row and column notation in the `eta_fu` vectors.
+#'                             See `matsbyname::notation_vec()`. Defaults is `IEATools::arrow_notation` and `IEATools::from_notation`.
 #' @param .add_to_U_f An internal matrix name for the a matrix to be added to the U_feed_f matrix 
 #'                    to form the useful form of the U_feed matrix. Default is ".add_to_U_f".
 #' @param .add_to_U_eiou An internal matrix name for the a matrix to be added to the U_eiou_f matrix 
@@ -566,7 +566,8 @@ extend_to_useful <- function(.sutdata = NULL,
                              losses = IEATools::tfc_compare_flows$losses,
                              stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
                              
-                             notation = IEATools::arrow_notation,
+                             arrow_note = IEATools::arrow_notation,
+                             from_note = IEATools::from_notation,
 
                              .add_to_U_f = ".add_to_U_f",
                              .add_to_U_eiou = ".add_to_U_eiou",
@@ -604,8 +605,8 @@ extend_to_useful <- function(.sutdata = NULL,
       # Swap column names from notation (default is arrow notation) to "from" notation.
       # Internally, we use the "from" notation.
       matsbyname::switch_notation_byname(margin = 2, 
-                                         from = list(notation), 
-                                         to = list(IEATools::from_notation), 
+                                         from = list(arrow_note), 
+                                         to = list(from_note), 
                                          flip = list(TRUE))
 
     # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
