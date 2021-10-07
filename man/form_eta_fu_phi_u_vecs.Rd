@@ -66,11 +66,15 @@ Row names in the \code{eta_fu} vector have the pattern
 "industry -> product" to indicate
 the energy efficiency of "industry" for making "product"
 or the exergy-to-energy ratio of the useful energy form created by a final-to-useful machine.
-Row names in the \code{phi_u} vector have the pattern
-"product [from industry]"
-to indicate a machine that is making a useful energy product.
+Row names in the \code{phi_u} vector are named by energy product only.
 
-Columns are named by the variable in the vector:
+Each energy product should have the same phi, regardless of machine that produced it.
+So this function checks whether each combination of metadata
+produces the same phi values.
+If any different phi values are found,
+an error is produced.
+
+Columns in the outgoing data frame are named by the variable in the vector:
 \code{eta_fu} for final-to-useful efficiencies and
 \code{phi_u} for useful exergy-to-useful energy ratios.
 }

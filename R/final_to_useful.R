@@ -223,11 +223,15 @@ form_C_mats <- function(.fu_allocation_table,
 #' "industry`r arrow_notation[["pref_end"]]`product" to indicate 
 #' the energy efficiency of "industry" for making "product"
 #' or the exergy-to-energy ratio of the useful energy form created by a final-to-useful machine.
-#' Row names in the `phi_u` vector have the pattern
-#' "product \[from industry\]"
-#' to indicate a machine that is making a useful energy product.
+#' Row names in the `phi_u` vector are named by energy product only.
 #' 
-#' Columns are named by the variable in the vector: 
+#' Each energy product should have the same phi, regardless of machine that produced it.
+#' So this function checks whether each combination of metadata
+#' produces the same phi values. 
+#' If any different phi values are found, 
+#' an error is produced. 
+#' 
+#' Columns in the outgoing data frame are named by the variable in the vector: 
 #' `eta_fu` for final-to-useful efficiencies and
 #' `phi_u` for useful exergy-to-useful energy ratios.
 #' 
@@ -329,26 +333,93 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
         .data[[matnames]] == phi_u ~ matsbyname::paste_pref_suff(pref = product, suff = industry, notation = from_note), 
         TRUE ~ NA_character_
       ), 
-      "{coltypes}" := NA_character_ # Will change later.
+      "{coltypes}" := dplyr::case_when(
+        .data[[matnames]] == eta_fu ~ eta_fu,
+        .data[[matnames]] == phi_u ~ phi,
+        TRUE ~ NA_character_
+      )
     )
-
-  # Collapse to matrices (actually, column vectors) and return  
+  
+  # Check for inconsistencies in the phi values. 
+  # For every combination of metadata (country, year, etc.),
+  # we expect only one phi value per product, 
+  # regardless of the machine that produced it. 
+  # Do that check here.
+  meta_cols <- prepped %>% 
+    IEATools::meta_cols(return_names = TRUE, 
+                        not_meta = c(matnames, rownames, colnames, rowtypes, coltypes))
+  
+  # Find the number of unique row of metadata, product, year, and phi values (matvals)
+  unique_with_phi_vals <- prepped %>% 
+    dplyr::filter(.data[[colnames]] == phi_u) %>% 
+    dplyr::mutate(
+      "{product}" := .data[[rownames]] %>% 
+        matsbyname::keep_pref_suff(keep = "pref", notation = from_notation)
+    ) %>% 
+    dplyr::select(meta_cols, product, year) %>% 
+    unique()
+  
+  # Find the number of unique row of metadata, product, and year
+  unique_without_phi_vals <- prepped %>% 
+    dplyr::filter(.data[[colnames]] == phi_u) %>% 
+    dplyr::mutate(
+      "{product}" := .data[[rownames]] %>% 
+        matsbyname::keep_pref_suff(keep = "pref", notation = from_notation)
+    ) %>% 
+    dplyr::select(meta_cols, product, year, -matvals) %>% 
+    unique()
+  
+  # We should have the exact same number of rows in each data frame.
+  # If not, there is a problem.
+  nrow_diff <- nrow(unique_with_phi_vals) - nrow(unique_without_phi_vals)
+  
+  if (nrow_diff != 0) {
+    # There are different phi values for some combinations of 
+    # metadata plus year.
+    # Craft an error message and throw an error.
+    # Add an identifier row number to unique_without_phi_values
+    with_id <- unique_without_phi_vals %>% 
+      tibble::rowid_to_column(".id")
+    err_rows <- dplyr::left_join(unique_with_phi_vals, with_id) %>% 
+      dplyr::group_by(.data[[".id"]]) %>%
+      dplyr:: filter(dplyr::n() > 1)
+    
+    stop(matsindf::df_to_msg(err_rows))
+  }
+  
+  # If we get here, everything is OK.
+  # Set the grouping columns for later.
   group_cols <- matsindf::everything_except(prepped, matvals, rownames, colnames, rowtypes, coltypes)
-  out <- prepped %>% 
+  
+  prepped %>% 
+    dplyr::mutate(
+      "{rownames}" := dplyr::case_when(
+        # For the phi_u rows, we want to keep only the product in the name.
+        .data[[matnames]] == phi_u ~ .data[[rownames]] %>%
+          matsbyname::keep_pref_suff("pref", notation = from_note), 
+        TRUE ~ .data[[rownames]], 
+      ), 
+      "{rowtypes}" := dplyr::case_when(
+        .data[[matnames]] == phi_u ~ product, 
+        TRUE ~ .data[[rowtypes]]
+      )
+      
+    ) %>% 
+    # Eliminate-duplicate phi.u rows
+    unique() %>% 
+    # Collapse to matrices (actually, column vectors) and return  
     dplyr::group_by(!!!group_cols) %>% 
     matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
                                    rownames = rownames, colnames = colnames, 
                                    rowtypes = rowtypes, coltypes = coltypes) %>% 
     # pivot wider to the sutmats format
-    tidyr::pivot_wider(names_from = matnames, values_from = matvals) %>%
-    dplyr::mutate(
-      "{eta_fu}" := .data[[eta_fu]] %>% 
-        matsbyname::setrowtype(paste(industry, "->", product)) %>% 
-        matsbyname::setcoltype(eta_fu),
-      "{phi_u}" := .data[[phi_u]] %>% 
-        matsbyname::setrowtype(paste0(product, " [from ", industry, "]")) %>%
-        matsbyname::setcoltype(phi)
-    )
+    tidyr::pivot_wider(names_from = matnames, values_from = matvals)
+  # dplyr::mutate(
+  #   "{eta_fu}" := .data[[eta_fu]] %>% 
+  #     matsbyname::setrowtype(matsbyname::paste_pref_suff(industry, product, arrow_note)),
+  #   "{phi_u}" := .data[[phi_u]] %>% 
+  #     matsbyname::setrowtype(matsbyname::paste_pref_suff(product, industry, from_note))
+  # )
 }
 
 
