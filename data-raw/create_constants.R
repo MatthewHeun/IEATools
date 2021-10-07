@@ -48,10 +48,10 @@ usethis::use_data(arrow_notation, overwrite = TRUE)
 bracket_notation <- matsbyname::bracket_notation()
 usethis::use_data(bracket_notation, overwrite = TRUE)
 
-from_notation <- matsbyname::bracket_notation(suff_start = " [from ")
+from_notation <- matsbyname::from_notation()
 usethis::use_data(from_notation, overwrite = TRUE)
 
-of_notation <- matsbyname::bracket_notation(suff_start = " [of ")
+of_notation <- matsbyname::of_notation()
 usethis::use_data(of_notation, overwrite = TRUE)
 
 
