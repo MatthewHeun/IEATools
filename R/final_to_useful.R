@@ -404,6 +404,10 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
           matsbyname::keep_pref_suff("pref", notation = from_note), 
         TRUE ~ .data[[rownames]], 
       ), 
+      "{colnames}" := dplyr::case_when(
+        .data[[matnames]] == phi_u ~ phi, 
+        TRUE ~ .data[[colnames]]
+      ),
       "{rowtypes}" := dplyr::case_when(
         .data[[matnames]] == phi_u ~ product, 
         TRUE ~ .data[[rowtypes]]
