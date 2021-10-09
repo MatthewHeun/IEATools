@@ -27,12 +27,12 @@ An object of same length as \code{m} with switched notation.
 }
 \description{
 IEA data can be "specified" by adding additional information.
-Three notations are useful: arrow and bracket.
+Three notations are useful: arrow, bracket, and from.
 Arrow notation is from -> to, and
 bracket notation is
 destination [source].
 These functions change matrix row/column names
-between the two notations.
+among the notations.
 \itemize{
 \item \code{arrow_to_from_byname()} switches from arrow notation to from notation.
 \item \code{from_to_arrow_byname()} switches from from notation to arrow notation.

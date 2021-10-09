@@ -68,22 +68,34 @@ test_that("form_eta_fu_phi_u_vecs() works as expected", {
   expect_equal(eta_GHA_1971[["Trucks -> MD", 1]], 0.30)
   expect_equal(eta_GHA_1971[["Fans -> MD", 1]], 0.10)
   expect_equal(eta_GHA_1971[["Boat engines -> MD", 1]], 0.30)
-
-  phi_ZAR_2000 <- eta_fu_phi_u_df$phi.u[[4]]  
-  expect_equal(phi_ZAR_2000[["MD [from Generators]", 1]], 1)
-  expect_equal(phi_ZAR_2000[["LTH.20.C [from LPG stoves]", 1]], 0.01677008)
-  expect_equal(phi_ZAR_2000[["HTH.600.C [from Industrial furnaces]", 1]], 0.65853519)
-  expect_equal(phi_ZAR_2000[["Light [from Electric lights]", 1]], 0.18301611)
   
+  
+  phi_ZAR_2000 <- eta_fu_phi_u_df$phi.u[[4]]  
+  expect_equal(phi_ZAR_2000[["MD", 1]], 1)
+  expect_equal(phi_ZAR_2000[["LTH.20.C", 1]], 0.01677008)
+  expect_equal(phi_ZAR_2000[["HTH.600.C", 1]], 0.65853519)
+  expect_equal(phi_ZAR_2000[["Light", 1]], 0.18301611)
+
   # Check row and column types
   for (i in 1:nrow(eta_fu_phi_u_df)) {
     expect_equal(matsbyname::rowtype(eta_fu_phi_u_df$eta.fu[[i]]), "Industry -> Product")
-    expect_null(matsbyname::coltype(eta_fu_phi_u_df$eta.fu[[i]]))
+    expect_equal(matsbyname::coltype(eta_fu_phi_u_df$eta.fu[[i]]), "eta.fu")
   }
   for (i in 1:nrow(eta_fu_phi_u_df)) {
-    expect_equal(matsbyname::rowtype(eta_fu_phi_u_df$phi.u[[i]]), "Product [from Industry]")
-    expect_null(matsbyname::coltype(eta_fu_phi_u_df$phi.u[[i]]))
+    expect_equal(matsbyname::rowtype(eta_fu_phi_u_df$phi.u[[i]]), "Product")
+    expect_equal(matsbyname::coltype(eta_fu_phi_u_df$phi.u[[i]]), "phi")
   }
+})
+
+
+test_that("form_eta_fu_phi_u_vecs() errors when phi values are different", {
+  efficiency_table <- load_eta_fu_data()
+  # Change a value to be different. Change a MD phi value from 1 to 0.99.
+  expect_equal(efficiency_table[32, "1971"], 1.0)
+  efficiency_table[32, "1971"] <- 0.9999
+  expect_equal(efficiency_table[32, "1971"], 0.9999)
+  expect_error(form_eta_fu_phi_u_vecs(efficiency_table), "Found useful products with different phi values in form_eta_fu_phi_u_vecs")
+  
 })
 
 

@@ -27,7 +27,8 @@ extend_to_useful(
   interface_ind = IEATools::interface_industries,
   losses = IEATools::tfc_compare_flows$losses,
   stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
-  notation = IEATools::arrow_notation,
+  arrow_note = IEATools::arrow_notation,
+  from_note = IEATools::from_notation,
   .add_to_U_f = ".add_to_U_f",
   .add_to_U_eiou = ".add_to_U_eiou",
   .add_to_V_f = ".add_to_V_f",
@@ -82,8 +83,8 @@ or individual matrices (if \code{.sutdata} is \code{NULL}).}
 
 \item{stat_diffs}{See \code{IEATools::tfc_compare_flows}. Statistical differences are kept same from \code{Y_final} to \code{Y_useful}.}
 
-\item{notation}{The row and column notation in the \code{eta_fu} vectors.
-See \code{matsbyname::notation_vec()}. Default is \code{IEATools::arrow_notation}.}
+\item{arrow_note, from_note}{The row and column notation in the \code{eta_fu} vectors.
+See \code{matsbyname::notation_vec()}. Defaults is \code{IEATools::arrow_notation} and \code{IEATools::from_notation}.}
 
 \item{.add_to_U_f}{An internal matrix name for the a matrix to be added to the U_feed_f matrix
 to form the useful form of the U_feed matrix. Default is ".add_to_U_f".}

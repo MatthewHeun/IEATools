@@ -219,14 +219,21 @@ form_C_mats <- function(.fu_allocation_table,
 #' 
 #' The vectors `eta_fu` and `phi_u` have special rownames that indicate 
 #' sources and types of useful energy flows.
-#' Row names have the pattern 
-#' "machine`r arrow_notation[["pref_end"]]`useful energy form" to indicate 
-#' the energy efficiency of "machine" for making "useful energy form"
-#' or the exergy-to-energy ratio of the useful energy form created by machine.
+#' Row names in the `eta_fu` vector have the pattern 
+#' "industry`r arrow_notation[["pref_end"]]`product" to indicate 
+#' the energy efficiency of "industry" for making "product"
+#' or the exergy-to-energy ratio of the useful energy form created by a final-to-useful machine.
+#' Row names in the `phi_u` vector are named by energy product only.
 #' 
-#' Columns are named by the variable in the vector: 
-#' "eta_fu" for final-to-useful efficiencies and
-#' "phi_u" for useful exergy-to-useful energy ratios.
+#' Each energy product should have the same phi, regardless of machine that produced it.
+#' So this function checks whether each combination of metadata
+#' produces the same phi values. 
+#' If any different phi values are found, 
+#' an error is produced. 
+#' 
+#' Columns in the outgoing data frame are named by the variable in the vector: 
+#' `eta_fu` for final-to-useful efficiencies and
+#' `phi_u` for useful exergy-to-useful energy ratios.
 #' 
 #' @param .eta_fu_table a final-to-useful efficiency table read by `load_eta_fu_allocation_data()`.
 #'                      A template for this table should have been created by `eta_fu_table()` and 
@@ -238,6 +245,7 @@ form_C_mats <- function(.fu_allocation_table,
 #' @param arrow_note,from_note Notation vectors used for creating the eta_fu and phi vectors. 
 #'                             See `matsbyname::notation_vec()`. 
 #'                             Defaults are `arrow_notation` and ``from_notation`, respectively.
+#' @param .id The name of an identification column used internally. Default is ".id".
 #'
 #' @return a wide-by-matrices data frame with metadata columns (and year) 
 #'         along with columns for `eta_fu` and `phi_u` vectors.
@@ -273,7 +281,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    industry = IEATools::row_col_types$industry,
                                    
                                    arrow_note = IEATools::arrow_notation, 
-                                   from_note = IEATools::from_notation) {
+                                   from_note = IEATools::from_notation, 
+                                   .id = ".id") {
   
   cleaned <- .eta_fu_table %>% 
     # Eliminate rows titled e_dot_machine or e_dot_machine_perc. These are just helper rows for the analyst.
@@ -284,15 +293,6 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       # Eliminate the maximum_values column. It was only a helper for the analyst.
       "{maximum_values}" := NULL
     ) %>% 
-    dplyr::mutate(
-      "{quantity}" := dplyr::case_when(
-        # Downstream, we add phi_pf and phi_u together.
-        # Both need to have the same column name.
-        # So change to phi here.
-        .data[[quantity]] == phi_u ~ phi,
-        TRUE ~ .data[[quantity]]
-      )
-    ) %>%
     dplyr::rename(
       # The quantity column gives us the matrix names
       "{matnames}" := quantity
@@ -322,7 +322,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       # Create rownames from the machine and eu_product rows.
       "{rownames}" := dplyr::case_when(
         .data[[matnames]] == eta_fu ~ matsbyname::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = arrow_note),
-        .data[[matnames]] == phi ~ matsbyname::paste_pref_suff(pref = .data[[eu_product]], suff = .data[[machine]], notation = from_note),
+        .data[[matnames]] == phi_u ~ matsbyname::paste_pref_suff(pref = .data[[eu_product]], suff = .data[[machine]], notation = from_note),
         TRUE ~ NA_character_
       ), 
       # Eliminate machine and eu_product columns, because we no longer need them.
@@ -332,30 +332,97 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       "{colnames}" := .data[[matnames]],
       "{rowtypes}" := dplyr::case_when(
         .data[[matnames]] == eta_fu ~ matsbyname::paste_pref_suff(pref = industry, suff = product, notation = arrow_note),
-        .data[[matnames]] == phi ~ matsbyname::paste_pref_suff(pref = product, suff = industry, notation = from_note), 
+        .data[[matnames]] == phi_u ~ matsbyname::paste_pref_suff(pref = product, suff = industry, notation = from_note), 
         TRUE ~ NA_character_
       ), 
-      "{coltypes}" := NA_character_ # Will change to NULL later.
+      "{coltypes}" := dplyr::case_when(
+        .data[[matnames]] == eta_fu ~ eta_fu,
+        .data[[matnames]] == phi_u ~ phi,
+        TRUE ~ NA_character_
+      )
     )
-
-  # Collapse to matrices (actually, column vectors) and return  
+  
+  # Check for inconsistencies in the phi values. 
+  # For every combination of metadata (country, year, etc.),
+  # we expect only one phi value per product, 
+  # regardless of the machine that produced it. 
+  # Do that check here.
+  meta_cols <- prepped %>% 
+    IEATools::meta_cols(return_names = TRUE, 
+                        not_meta = c(matnames, rownames, colnames, rowtypes, coltypes))
+  
+  # Find the number of unique row of metadata, product, year, and phi values (matvals)
+  unique_with_phi_vals <- prepped %>% 
+    dplyr::filter(.data[[colnames]] == phi_u) %>% 
+    dplyr::mutate(
+      "{product}" := .data[[rownames]] %>% 
+        matsbyname::keep_pref_suff(keep = "pref", notation = from_note)
+    ) %>% 
+    dplyr::select(meta_cols, product, year) %>% 
+    unique()
+  
+  # Find the number of unique row of metadata, product, and year
+  unique_without_phi_vals <- prepped %>% 
+    dplyr::filter(.data[[colnames]] == phi_u) %>% 
+    dplyr::mutate(
+      "{product}" := .data[[rownames]] %>% 
+        matsbyname::keep_pref_suff(keep = "pref", notation = from_note)
+    ) %>% 
+    dplyr::select(meta_cols, product, year, -matvals) %>% 
+    unique()
+  
+  # We should have the exact same number of rows in each data frame.
+  # If not, there is a problem.
+  nrow_diff <- nrow(unique_with_phi_vals) - nrow(unique_without_phi_vals)
+  
+  if (nrow_diff != 0) {
+    # There are different phi values for some combinations of 
+    # metadata plus year.
+    # Craft an error message and throw an error.
+    # Add an identifier row number to unique_without_phi_values
+    with_id <- unique_without_phi_vals %>% 
+      tibble::rowid_to_column(.id)
+    err_rows <- dplyr::left_join(unique_with_phi_vals, with_id,
+                                 # join by everything but matvals
+                                 by = names(unique_with_phi_vals)[-which(names(unique_with_phi_vals) == "matvals")]) %>% 
+      dplyr::group_by(.data[[.id]]) %>%
+      dplyr:: filter(dplyr::n() > 1)
+    err_msg <- paste("Found useful products with different phi values in form_eta_fu_phi_u_vecs(). All phi values should be same for all combinations of metadata. Error(s) in:",
+                     matsindf::df_to_msg(err_rows))
+    stop(err_msg)
+  }
+  
+  # If we get here, everything is OK.
+  # Set the grouping columns for later.
   group_cols <- matsindf::everything_except(prepped, matvals, rownames, colnames, rowtypes, coltypes)
-  out <- prepped %>% 
+  
+  prepped %>% 
+    dplyr::mutate(
+      "{rownames}" := dplyr::case_when(
+        # For the phi_u rows, we want to keep only the product in the name.
+        .data[[matnames]] == phi_u ~ .data[[rownames]] %>%
+          matsbyname::keep_pref_suff("pref", notation = from_note), 
+        TRUE ~ .data[[rownames]], 
+      ), 
+      "{colnames}" := dplyr::case_when(
+        .data[[matnames]] == phi_u ~ phi, 
+        TRUE ~ .data[[colnames]]
+      ),
+      "{rowtypes}" := dplyr::case_when(
+        .data[[matnames]] == phi_u ~ product, 
+        TRUE ~ .data[[rowtypes]]
+      )
+      
+    ) %>% 
+    # Eliminate-duplicate phi.u rows
+    unique() %>% 
+    # Collapse to matrices (actually, column vectors) and return  
     dplyr::group_by(!!!group_cols) %>% 
     matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
                                    rownames = rownames, colnames = colnames, 
                                    rowtypes = rowtypes, coltypes = coltypes) %>% 
     # pivot wider to the sutmats format
-    tidyr::pivot_wider(names_from = matnames, values_from = matvals) %>%
-    dplyr::rename(
-      # Change name of phi vectors to phi_u for clarity relative to phi_pf later.
-      "{phi_u}" := .data[[phi]]
-    ) %>%
-    dplyr::mutate(
-      "{phi_u}" := .data[[phi_u]] %>% 
-        matsbyname::setrowtype(product) %>%
-        matsbyname::setcoltype(phi)
-    )
+    tidyr::pivot_wider(names_from = matnames, values_from = matvals)
 }
 
 
@@ -422,8 +489,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param interface_ind See `IEATools::interface_industries`. Interface industries are kept same from `Y_final` to `Y_useful`.
 #' @param losses See `IEATools::tfc_compare_flows`. Losses are kept same from `Y_final` to `Y_useful`.
 #' @param stat_diffs See `IEATools::tfc_compare_flows`. Statistical differences are kept same from `Y_final` to `Y_useful`.
-#' @param notation The row and column notation in the `eta_fu` vectors.
-#'                 See `matsbyname::notation_vec()`. Default is `IEATools::arrow_notation`.
+#' @param arrow_note,from_note The row and column notation in the `eta_fu` vectors.
+#'                             See `matsbyname::notation_vec()`. Defaults is `IEATools::arrow_notation` and `IEATools::from_notation`.
 #' @param .add_to_U_f An internal matrix name for the a matrix to be added to the U_feed_f matrix 
 #'                    to form the useful form of the U_feed matrix. Default is ".add_to_U_f".
 #' @param .add_to_U_eiou An internal matrix name for the a matrix to be added to the U_eiou_f matrix 
@@ -503,7 +570,8 @@ extend_to_useful <- function(.sutdata = NULL,
                              losses = IEATools::tfc_compare_flows$losses,
                              stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
                              
-                             notation = IEATools::arrow_notation,
+                             arrow_note = IEATools::arrow_notation,
+                             from_note = IEATools::from_notation,
 
                              .add_to_U_f = ".add_to_U_f",
                              .add_to_U_eiou = ".add_to_U_eiou",
@@ -541,8 +609,8 @@ extend_to_useful <- function(.sutdata = NULL,
       # Swap column names from notation (default is arrow notation) to "from" notation.
       # Internally, we use the "from" notation.
       matsbyname::switch_notation_byname(margin = 2, 
-                                         from = list(notation), 
-                                         to = list(IEATools::from_notation), 
+                                         from = list(arrow_note), 
+                                         to = list(from_note), 
                                          flip = list(TRUE))
 
     # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
