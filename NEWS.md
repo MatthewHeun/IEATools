@@ -4,7 +4,7 @@ output: html_document
 ---
 
 
-# IEATools 0.1.62 (2021-10-12)
+# IEATools 0.1.62 (2021-10-12) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5565349.svg)](https://doi.org/10.5281/zenodo.5565349)
 
 * `form_eta_fu_phi_u_vecs()` now gives only the product name 
   as the row name of the phi vectors, but
