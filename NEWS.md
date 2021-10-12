@@ -1,3 +1,37 @@
+---
+title: "Release notes for `IEATools`"
+output: html_document
+---
+
+
+# IEATools 0.1.62 (2021-10-12)
+
+* `form_eta_fu_phi_u_vecs()` now gives only the product name 
+  as the row name of the phi vectors, but
+  it does so only after checking that all phi values are the same.
+  If different phi values are detected for 
+  the same combination of metadata parameters and year,
+  an error is emitted.
+  This change solves a downstream issue where 
+  phi values from the `phi_constants.xlsx` file 
+  have only products as row names, leading to incompatibility
+  when summing phi vectors from the two sources and 
+  when multiplying the phi vectors into matrices
+  where names of a dimension are product names only.
+* `form_eta_fu_phi_u_vecs()` now changes the name of the single column 
+  of the exergy-to-energy ratio vector (`phi_u`) from "phi.u" to simply "phi", 
+  to become compatible with the `phi_pf` vector, whose single column is named "phi".
+  This change fixes a downstream bug in the `SEAPSUTWorkflow` package.
+* Added functions to assist converting energy to exergy
+  when data are in PSUT matrix format.
+  New functions include:
+    * `load_phi_constants_table()`
+    * `sample_phi_constants_path()`
+* Many new tests for new features.
+    * Now up to 1087 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # IEATools 0.1.61 (2021-09-06)
 
 * Added descriptive error messages when unknown `Flow.aggregation.point`, 

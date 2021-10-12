@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.61</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.62</span>
       </span>
     </div>
 
@@ -133,6 +133,28 @@
       
     </div>
 
+    <div id="ieatools-0162-2021-10-12" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.62">
+<a href="#ieatools-0162-2021-10-12" class="anchor"></a>IEATools 0.1.62 (2021-10-12)</h1>
+<ul>
+<li>
+<code><a href="../reference/form_eta_fu_phi_u_vecs.html">form_eta_fu_phi_u_vecs()</a></code> now gives only the product name as the row name of the phi vectors, but it does so only after checking that all phi values are the same. If different phi values are detected for the same combination of metadata parameters and year, an error is emitted. This change solves a downstream issue where phi values from the <code>phi_constants.xlsx</code> file have only products as row names, leading to incompatibility when summing phi vectors from the two sources and when multiplying the phi vectors into matrices where names of a dimension are product names only.</li>
+<li>
+<code><a href="../reference/form_eta_fu_phi_u_vecs.html">form_eta_fu_phi_u_vecs()</a></code> now changes the name of the single column of the exergy-to-energy ratio vector (<code>phi_u</code>) from “phi.u” to simply “phi”, to become compatible with the <code>phi_pf</code> vector, whose single column is named “phi”. This change fixes a downstream bug in the <code>SEAPSUTWorkflow</code> package.</li>
+<li>Added functions to assist converting energy to exergy when data are in PSUT matrix format. New functions include:
+<ul>
+<li><code><a href="../reference/load_phi_constants_table.html">load_phi_constants_table()</a></code></li>
+<li><code><a href="../reference/sample_phi_constants_path.html">sample_phi_constants_path()</a></code></li>
+</ul>
+</li>
+<li>Many new tests for new features.
+<ul>
+<li>Now up to 1087 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul>
+</li>
+</ul>
+</div>
     <div id="ieatools-0161-2021-09-06" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.61">
 <a href="#ieatools-0161-2021-09-06" class="anchor"></a>IEATools 0.1.61 (2021-09-06)</h1>

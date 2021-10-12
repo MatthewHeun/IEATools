@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.61</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.62</span>
       </span>
     </div>
 
@@ -84,13 +84,13 @@
 
       
 
-      </header><script src="final_to_useful_files/header-attrs-2.10/header-attrs.js"></script><div class="row">
+      </header><script src="final_to_useful_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Final to Useful Analysis</h1>
                         <h4 class="author">Matthew Kuperus Heun</h4>
             
-            <h4 class="date">2021-09-06</h4>
+            <h4 class="date">2021-10-12</h4>
       
       
       <div class="hidden name"><code>final_to_useful.Rmd</code></div>
@@ -189,7 +189,7 @@
   <span class="fu"><a href="../reference/eta_fu_template.html">eta_fu_template</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">Eta_fu_template</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; Rows: 304</span>
+<span class="co">#&gt; Rows: 276</span>
 <span class="co">#&gt; Columns: 11</span>
 <span class="co">#&gt; $ Country        &lt;chr&gt; "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA", "GHA",…</span>
 <span class="co">#&gt; $ Method         &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM",…</span>
@@ -226,7 +226,7 @@
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
 <span class="co">#&gt; $ C_EIOU      &lt;list&gt; &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[3 x 3]&gt;&gt;, &lt;…</span>
-<span class="co">#&gt; $ C_Y         &lt;list&gt; &lt;&lt;matrix[23 x 21]&gt;&gt;, &lt;&lt;matrix[24 x 22]&gt;&gt;, &lt;&lt;matrix[45 x 31…</span></code></pre></div>
+<span class="co">#&gt; $ C_Y         &lt;list&gt; &lt;&lt;matrix[23 x 21]&gt;&gt;, &lt;&lt;matrix[24 x 20]&gt;&gt;, &lt;&lt;matrix[45 x 30…</span></code></pre></div>
 <p>Note that two types of <span class="math inline">\(\mathbf{C}\)</span> matrices are formed, <span class="math inline">\(\mathbf{C}_{EIOU}\)</span> and <span class="math inline">\(\mathbf{C}_Y\)</span>. Both are needed later.</p>
 </div>
 <div id="efficiency-and-exergy-to-energy-ratio-vectors" class="section level2">
@@ -244,8 +244,8 @@
 <span class="co">#&gt; $ Energy.type &lt;chr&gt; "E", "E", "E", "E"</span>
 <span class="co">#&gt; $ Last.stage  &lt;chr&gt; "Final", "Final", "Final", "Final"</span>
 <span class="co">#&gt; $ Year        &lt;dbl&gt; 1971, 2000, 1971, 2000</span>
-<span class="co">#&gt; $ eta.fu      &lt;list&gt; &lt;&lt;matrix[22 x 1]&gt;&gt;, &lt;&lt;matrix[23 x 1]&gt;&gt;, &lt;&lt;matrix[32 x 1]&gt;&gt;…</span>
-<span class="co">#&gt; $ phi.u       &lt;list&gt; &lt;&lt;matrix[22 x 1]&gt;&gt;, &lt;&lt;matrix[23 x 1]&gt;&gt;, &lt;&lt;matrix[32 x 1]&gt;&gt;…</span></code></pre></div>
+<span class="co">#&gt; $ eta.fu      &lt;list&gt; &lt;&lt;matrix[22 x 1]&gt;&gt;, &lt;&lt;matrix[21 x 1]&gt;&gt;, &lt;&lt;matrix[31 x 1]&gt;&gt;…</span>
+<span class="co">#&gt; $ phi.u       &lt;list&gt; &lt;&lt;matrix[6 x 1]&gt;&gt;, &lt;&lt;matrix[6 x 1]&gt;&gt;, &lt;&lt;matrix[7 x 1]&gt;&gt;, &lt;…</span></code></pre></div>
 </div>
 <div id="extend-to-useful" class="section level2">
 <h2 class="hasAnchor">
@@ -282,9 +282,9 @@
 <span class="co">#&gt; $ U           &lt;list&gt; &lt;&lt;matrix[8 x 5]&gt;&gt;, &lt;&lt;matrix[7 x 5]&gt;&gt;, &lt;&lt;matrix[11 x 11]&gt;&gt;…</span>
 <span class="co">#&gt; $ r_EIOU      &lt;list&gt; &lt;&lt;matrix[8 x 5]&gt;&gt;, &lt;&lt;matrix[7 x 5]&gt;&gt;, &lt;&lt;matrix[11 x 11]&gt;&gt;…</span>
 <span class="co">#&gt; $ C_EIOU      &lt;list&gt; &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, &lt;&lt;matrix[3 x 3]&gt;&gt;, …</span>
-<span class="co">#&gt; $ C_Y         &lt;list&gt; &lt;&lt;matrix[23 x 21]&gt;&gt;, &lt;&lt;matrix[24 x 22]&gt;&gt;, &lt;&lt;matrix[45 x 3…</span>
-<span class="co">#&gt; $ eta.fu      &lt;list&gt; &lt;&lt;matrix[22 x 1]&gt;&gt;, &lt;&lt;matrix[23 x 1]&gt;&gt;, &lt;&lt;matrix[32 x 1]&gt;…</span>
-<span class="co">#&gt; $ phi.u       &lt;list&gt; &lt;&lt;matrix[22 x 1]&gt;&gt;, &lt;&lt;matrix[23 x 1]&gt;&gt;, &lt;&lt;matrix[32 x 1]&gt;…</span></code></pre></div>
+<span class="co">#&gt; $ C_Y         &lt;list&gt; &lt;&lt;matrix[23 x 21]&gt;&gt;, &lt;&lt;matrix[24 x 20]&gt;&gt;, &lt;&lt;matrix[45 x 3…</span>
+<span class="co">#&gt; $ eta.fu      &lt;list&gt; &lt;&lt;matrix[22 x 1]&gt;&gt;, &lt;&lt;matrix[21 x 1]&gt;&gt;, &lt;&lt;matrix[31 x 1]&gt;…</span>
+<span class="co">#&gt; $ phi.u       &lt;list&gt; &lt;&lt;matrix[6 x 1]&gt;&gt;, &lt;&lt;matrix[6 x 1]&gt;&gt;, &lt;&lt;matrix[7 x 1]&gt;&gt;, …</span></code></pre></div>
 <p>Then use the allocation and efficiency matrices to extend to the useful stage with the <code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code> function.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">psut_mats_useful</span> <span class="op">&lt;-</span> <span class="va">psut_mats_final</span> <span class="op">%&gt;%</span> 
@@ -335,26 +335,26 @@
 <span class="co">#&gt;  [9] "Light [from Electric lights]"         </span>
 <span class="co">#&gt; [10] "Liquefied petroleum gases (LPG)"      </span>
 <span class="co">#&gt; [11] "Lubricants"                           </span>
-<span class="co">#&gt; [12] "Lubricants [from Non-energy]"         </span>
-<span class="co">#&gt; [13] "MD [from Automobiles]"                </span>
-<span class="co">#&gt; [14] "MD [from Boat engines]"               </span>
-<span class="co">#&gt; [15] "MD [from Diesel cars]"                </span>
-<span class="co">#&gt; [16] "MD [from Diesel trains]"              </span>
-<span class="co">#&gt; [17] "MD [from Diesel trucks]"              </span>
-<span class="co">#&gt; [18] "MD [from Electric motors]"            </span>
-<span class="co">#&gt; [19] "MD [from Fans]"                       </span>
-<span class="co">#&gt; [20] "MD [from Trucks]"                     </span>
-<span class="co">#&gt; [21] "Motor gasoline excl. biofuels"        </span>
-<span class="co">#&gt; [22] "MTH.100.C [from Charcoal stoves]"     </span>
-<span class="co">#&gt; [23] "MTH.100.C [from Electric stoves]"     </span>
-<span class="co">#&gt; [24] "MTH.100.C [from Kerosene stoves]"     </span>
-<span class="co">#&gt; [25] "MTH.100.C [from LPG stoves]"          </span>
-<span class="co">#&gt; [26] "MTH.100.C [from Wood cookstoves]"     </span>
-<span class="co">#&gt; [27] "MTH.200.C [from Electric heaters]"    </span>
-<span class="co">#&gt; [28] "MTH.200.C [from Electric stoves]"     </span>
-<span class="co">#&gt; [29] "MTH.200.C [from Industrial furnaces]" </span>
-<span class="co">#&gt; [30] "MTH.200.C [from Irons]"               </span>
-<span class="co">#&gt; [31] "MTH.200.C [from Wood stoves]"         </span>
+<span class="co">#&gt; [12] "MD [from Automobiles]"                </span>
+<span class="co">#&gt; [13] "MD [from Boat engines]"               </span>
+<span class="co">#&gt; [14] "MD [from Diesel cars]"                </span>
+<span class="co">#&gt; [15] "MD [from Diesel trains]"              </span>
+<span class="co">#&gt; [16] "MD [from Diesel trucks]"              </span>
+<span class="co">#&gt; [17] "MD [from Electric motors]"            </span>
+<span class="co">#&gt; [18] "MD [from Fans]"                       </span>
+<span class="co">#&gt; [19] "MD [from Trucks]"                     </span>
+<span class="co">#&gt; [20] "Motor gasoline excl. biofuels"        </span>
+<span class="co">#&gt; [21] "MTH.100.C [from Charcoal stoves]"     </span>
+<span class="co">#&gt; [22] "MTH.100.C [from Electric stoves]"     </span>
+<span class="co">#&gt; [23] "MTH.100.C [from Kerosene stoves]"     </span>
+<span class="co">#&gt; [24] "MTH.100.C [from LPG stoves]"          </span>
+<span class="co">#&gt; [25] "MTH.100.C [from Wood cookstoves]"     </span>
+<span class="co">#&gt; [26] "MTH.200.C [from Electric heaters]"    </span>
+<span class="co">#&gt; [27] "MTH.200.C [from Electric stoves]"     </span>
+<span class="co">#&gt; [28] "MTH.200.C [from Industrial furnaces]" </span>
+<span class="co">#&gt; [29] "MTH.200.C [from Irons]"               </span>
+<span class="co">#&gt; [30] "MTH.200.C [from Wood stoves]"         </span>
+<span class="co">#&gt; [31] "NEU [from Non-energy consumption]"    </span>
 <span class="co">#&gt; [32] "Other kerosene"                       </span>
 <span class="co">#&gt; [33] "Primary solid biofuels"</span></code></pre></div>
 <!-- It would be nice to calculate the energy balance of all rows of the data frame here,

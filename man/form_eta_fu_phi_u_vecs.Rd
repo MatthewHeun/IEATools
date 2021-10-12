@@ -16,6 +16,7 @@ form_eta_fu_phi_u_vecs(
   maximum_values = IEATools::template_cols$maximum_values,
   eta_fu = IEATools::template_cols$eta_fu,
   phi_u = IEATools::template_cols$phi_u,
+  phi = IEATools::template_cols$phi,
   matnames = IEATools::mat_meta_cols$matnames,
   matvals = IEATools::mat_meta_cols$matvals,
   rownames = IEATools::mat_meta_cols$rownames,
@@ -25,7 +26,8 @@ form_eta_fu_phi_u_vecs(
   product = IEATools::row_col_types$product,
   industry = IEATools::row_col_types$industry,
   arrow_note = IEATools::arrow_notation,
-  from_note = IEATools::from_notation
+  from_note = IEATools::from_notation,
+  .id = ".id"
 )
 }
 \arguments{
@@ -35,7 +37,7 @@ A template for this table should have been created by \code{eta_fu_table()} and
 
 \item{unit, year}{See \code{IEATools::iea_cols}.}
 
-\item{quantity, machine, eu_product, e_dot_machine, e_dot_machine_perc, maximum_values, eta_fu, phi_u}{See \code{IEATools::template_cols}.}
+\item{quantity, machine, eu_product, e_dot_machine, e_dot_machine_perc, maximum_values, eta_fu, phi_u, phi}{See \code{IEATools::template_cols}.}
 
 \item{matnames, matvals, rownames, colnames, rowtypes, coltypes}{See \code{IEATools::mat_meta_cols}.}
 
@@ -44,6 +46,8 @@ A template for this table should have been created by \code{eta_fu_table()} and
 \item{arrow_note, from_note}{Notation vectors used for creating the eta_fu and phi vectors.
 See \code{matsbyname::notation_vec()}.
 Defaults are \code{arrow_notation} and ``from_notation`, respectively.}
+
+\item{.id}{The name of an identification column used internally. Default is ".id".}
 }
 \value{
 a wide-by-matrices data frame with metadata columns (and year)
@@ -61,14 +65,21 @@ The two vectors are:
 \details{
 The vectors \code{eta_fu} and \code{phi_u} have special rownames that indicate
 sources and types of useful energy flows.
-Row names have the pattern
-"machine -> useful energy form" to indicate
-the energy efficiency of "machine" for making "useful energy form"
-or the exergy-to-energy ratio of the useful energy form created by machine.
+Row names in the \code{eta_fu} vector have the pattern
+"industry -> product" to indicate
+the energy efficiency of "industry" for making "product"
+or the exergy-to-energy ratio of the useful energy form created by a final-to-useful machine.
+Row names in the \code{phi_u} vector are named by energy product only.
 
-Columns are named by the variable in the vector:
-"eta_fu" for final-to-useful efficiencies and
-"phi_u" for useful exergy-to-useful energy ratios.
+Each energy product should have the same phi, regardless of machine that produced it.
+So this function checks whether each combination of metadata
+produces the same phi values.
+If any different phi values are found,
+an error is produced.
+
+Columns in the outgoing data frame are named by the variable in the vector:
+\code{eta_fu} for final-to-useful efficiencies and
+\code{phi_u} for useful exergy-to-useful energy ratios.
 }
 \examples{
 load_eta_fu_data() \%>\% 

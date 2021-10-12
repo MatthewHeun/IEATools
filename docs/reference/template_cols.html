@@ -76,7 +76,7 @@ throughout the IEATools package." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.61</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.62</span>
       </span>
     </div>
 
@@ -152,7 +152,7 @@ throughout the <code>IEATools</code> package.</p>
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A string list with 21 entries</p><dl>
+    <p>A string list with 24 entries</p><dl>
 <dt>ef_product</dt><dd><p>The name of the final energy product column in final-to-useful templates.</p></dd>
 <dt>machine</dt><dd><p>The name of the machine column in final-to-useful templates.</p></dd>
 <dt>eu_product</dt><dd><p>The name of the useful energy product column in final-to-useful templates.</p></dd>
@@ -170,9 +170,12 @@ throughout the <code>IEATools</code> package.</p>
 <dt>e_dot_machine_perc</dt><dd><p>The name of the machine energy flow percentage column in final-to-useful templates.</p></dd>
 <dt>e_dot_machine_max_perc</dt><dd><p>The name of the machine energy flow maximum percentage column in final-to-useful templates.</p></dd>
 <dt>eta_fu</dt><dd><p>The name of the final-to-useful machine efficiency column in final-to-useful templates.</p></dd>
-<dt>phi_u</dt><dd><p>The name of the exergy-to-energy ratio column in final-to-useful templates.</p></dd>
-<dt>c_source</dt><dd><p>The name of a column containing country identifiers for the source of final-to-useful allocation information.</p></dd>
-<dt>eta_fu_phi_u_source</dt><dd><p>The name of a column containing country identifiers for the source of final-to-useful efficiency data and useful exergy-to-energy ratios.</p></dd>
+<dt>phi_pf</dt><dd><p>The name of the exergy-to-energy ratio column various data frames templates.</p></dd>
+<dt>phi_u</dt><dd><p>The name of the useful exergy-to-energy ratio column in final-to-useful templates.</p></dd>
+<dt>phi</dt><dd><p>The name of the exergy-to-energy ratio column for primary, final, and useful stages.</p></dd>
+<dt>c_source</dt><dd><p>The name of a column containing the source of final-to-useful allocation information.</p></dd>
+<dt>eta_fu_source</dt><dd><p>The name of a column containing the source of final-to-useful efficiency data.</p></dd>
+<dt>phi_source</dt><dd><p>The name of a column containing the source of exergy-to-energy ratios.</p></dd>
 <dt>.values</dt><dd><p>The name of a temporary column that holds values.</p></dd>
 
 </dl>
@@ -234,14 +237,23 @@ throughout the <code>IEATools</code> package.</p>
 #&gt; $eta_fu
 #&gt; [1] "eta.fu"
 #&gt; 
+#&gt; $phi_pf
+#&gt; [1] "phi.pf"
+#&gt; 
 #&gt; $phi_u
 #&gt; [1] "phi.u"
+#&gt; 
+#&gt; $phi
+#&gt; [1] "phi"
 #&gt; 
 #&gt; $c_source
 #&gt; [1] "C.source"
 #&gt; 
-#&gt; $eta_fu_phi_u_source
-#&gt; [1] "eta.fu.phi.u.source"
+#&gt; $eta_fu_source
+#&gt; [1] "eta.fu.source"
+#&gt; 
+#&gt; $phi_source
+#&gt; [1] "phi.source"
 #&gt; 
 #&gt; $.values
 #&gt; [1] ".values"

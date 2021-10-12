@@ -48,10 +48,10 @@ usethis::use_data(arrow_notation, overwrite = TRUE)
 bracket_notation <- matsbyname::bracket_notation()
 usethis::use_data(bracket_notation, overwrite = TRUE)
 
-from_notation <- matsbyname::bracket_notation(suff_start = " [from ")
+from_notation <- matsbyname::from_notation()
 usethis::use_data(from_notation, overwrite = TRUE)
 
-of_notation <- matsbyname::bracket_notation(suff_start = " [of ")
+of_notation <- matsbyname::of_notation()
 usethis::use_data(of_notation, overwrite = TRUE)
 
 
@@ -165,9 +165,12 @@ template_cols <- list(ef_product = "Ef.product",
                       e_dot_machine_perc = "E.dot_machine [%]", 
                       e_dot_machine_max_perc = "E.dot_machine_max [%]",
                       eta_fu = "eta.fu",
+                      phi_pf = "phi.pf",
                       phi_u = "phi.u", 
+                      phi = "phi",
                       c_source = "C.source", 
-                      eta_fu_phi_u_source = "eta.fu.phi.u.source",
+                      eta_fu_source = "eta.fu.source",
+                      phi_source = "phi.source",
                       .values = ".values")
 usethis::use_data(template_cols, overwrite = TRUE)
 
@@ -774,3 +777,17 @@ fd_sectors <- c(eiou_flows,
                 transport_domestic_flows,
                 other_flows)
 usethis::use_data(fd_sectors, overwrite = TRUE)
+
+
+#
+# Names and constants associated with constant phi value tables.
+#
+
+phi_constants_names <- list(phi_constants_tab_name = "phi_constants",
+                            product_colname = "Product",
+                            phi_colname = "phi", 
+                            phi_source_colname = "phi.source",
+                            is_useful_colname = "is.useful")
+usethis::use_data(phi_constants_names, overwrite = TRUE)
+
+

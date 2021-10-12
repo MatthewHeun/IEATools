@@ -2,12 +2,12 @@
 #' 
 #' @description
 #' IEA data can be "specified" by adding additional information.
-#' Three notations are useful: arrow and bracket.
+#' Three notations are useful: arrow, bracket, and from.
 #' Arrow notation is `r matsbyname::paste_pref_suff(pref = "from", suff = "to", notation = arrow_notation)`, and
 #' bracket notation is
 #' `r matsbyname::paste_pref_suff(pref = "destination", suff = "source", notation = bracket_notation) %>% gsub(pattern = "[", replacement = paste0("\\", "["), x = ., fixed = TRUE) %>% gsub(pattern = "]", replacement = paste0("\\", "]"), x = ., fixed = TRUE)`.
 #' These functions change matrix row/column names 
-#' between the two notations.
+#' among the notations.
 #' 
 #' * `arrow_to_from_byname()` switches from arrow notation to from notation.
 #' * `from_to_arrow_byname()` switches from from notation to arrow notation.

@@ -79,7 +79,7 @@ by supplying efficiencies and exergy-to-energy ratios from any number of exempla
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">IEATools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.61</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.62</span>
       </span>
     </div>
 
@@ -179,7 +179,7 @@ by supplying efficiencies and exergy-to-energy ratios from any number of exempla
   quantity <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>quantity</span>,
   maximum_values <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>maximum_values</span>,
   c_source <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>c_source</span>,
-  eta_fu_phi_u_source <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu_phi_u_source</span>,
+  eta_fu_source <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu_source</span>,
   .values <span class='op'>=</span> <span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>.values</span>
 <span class='op'>)</span></pre>
 
@@ -215,7 +215,7 @@ Must be one or both of the default values.</p></td>
       <td><p>See <code><a href='iea_cols.html'>IEATools::iea_cols</a></code>.</p></td>
     </tr>
     <tr>
-      <th>machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, ef_product, destination, c_source, eta_fu_phi_u_source, .values</th>
+      <th>machine, eu_product, e_dot_perc, e_dot_machine, e_dot_machine_perc, eta_fu, phi_u, quantity, maximum_values, ef_product, destination, c_source, eta_fu_source, .values</th>
       <td><p>See <code><a href='template_cols.html'>IEATools::template_cols</a></code>.</p></td>
     </tr>
     </table>
@@ -279,7 +279,7 @@ and a data frame is returned containing rows from <code>fu_allocation_table</cod
 <span class='co'># Check that we got Automobiles from ZAF</span>
 <span class='va'>completed</span> <span class='op'>%&gt;%</span> 
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>.data</span><span class='op'>[[</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>machine</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>==</span> <span class='st'>"Automobiles"</span>, 
-                <span class='va'>.data</span><span class='op'>[[</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu_phi_u_source</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>==</span> <span class='st'>"ZAF"</span><span class='op'>)</span>
+                <span class='va'>.data</span><span class='op'>[[</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu_source</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>==</span> <span class='st'>"ZAF"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 × 10</span>
 #&gt;   Country Method Energy.type Last.stage Machine     Eu.product Quantity  Year
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
@@ -287,10 +287,10 @@ and a data frame is returned containing rows from <code>fu_allocation_table</cod
 #&gt; <span style='color: #BCBCBC;'>2</span> GHA     PCM    E           Final      Automobiles MD         eta.fu    <span style='text-decoration: underline;'>2</span>000
 #&gt; <span style='color: #BCBCBC;'>3</span> GHA     PCM    E           Final      Automobiles MD         phi.u     <span style='text-decoration: underline;'>1</span>971
 #&gt; <span style='color: #BCBCBC;'>4</span> GHA     PCM    E           Final      Automobiles MD         phi.u     <span style='text-decoration: underline;'>2</span>000
-#&gt; <span style='color: #949494;'># … with 2 more variables: .values &lt;dbl&gt;, eta.fu.phi.u.source &lt;chr&gt;</span></div><div class='input'><span class='co'># Check that we got Irons from World</span>
+#&gt; <span style='color: #949494;'># … with 2 more variables: .values &lt;dbl&gt;, eta.fu.source &lt;chr&gt;</span></div><div class='input'><span class='co'># Check that we got Irons from World</span>
 <span class='va'>completed</span> <span class='op'>%&gt;%</span> 
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>.data</span><span class='op'>[[</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>machine</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>==</span> <span class='st'>"Irons"</span>, 
-                <span class='va'>.data</span><span class='op'>[[</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu_phi_u_source</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>==</span> <span class='st'>"World"</span><span class='op'>)</span>
+                <span class='va'>.data</span><span class='op'>[[</span><span class='fu'>IEATools</span><span class='fu'>::</span><span class='va'><a href='template_cols.html'>template_cols</a></span><span class='op'>$</span><span class='va'>eta_fu_source</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>==</span> <span class='st'>"World"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 4 × 10</span>
 #&gt;   Country Method Energy.type Last.stage Machine Eu.product Quantity  Year
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
@@ -298,7 +298,7 @@ and a data frame is returned containing rows from <code>fu_allocation_table</cod
 #&gt; <span style='color: #BCBCBC;'>2</span> GHA     PCM    E           Final      Irons   MTH.200.C  eta.fu    <span style='text-decoration: underline;'>2</span>000
 #&gt; <span style='color: #BCBCBC;'>3</span> GHA     PCM    E           Final      Irons   MTH.200.C  phi.u     <span style='text-decoration: underline;'>1</span>971
 #&gt; <span style='color: #BCBCBC;'>4</span> GHA     PCM    E           Final      Irons   MTH.200.C  phi.u     <span style='text-decoration: underline;'>2</span>000
-#&gt; <span style='color: #949494;'># … with 2 more variables: .values &lt;dbl&gt;, eta.fu.phi.u.source &lt;chr&gt;</span></div></pre>
+#&gt; <span style='color: #949494;'># … with 2 more variables: .values &lt;dbl&gt;, eta.fu.source &lt;chr&gt;</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
