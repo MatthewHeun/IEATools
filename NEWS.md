@@ -3,6 +3,9 @@ title: "Release notes for `IEATools`"
 output: html_document
 ---
 
+
+# IEATools 0.1.62 (2021-10-12)
+
 * `form_eta_fu_phi_u_vecs()` now gives only the product name 
   as the row name of the phi vectors, but
   it does so only after checking that all phi values are the same.
@@ -24,6 +27,9 @@ output: html_document
   New functions include:
     * `load_phi_constants_table()`
     * `sample_phi_constants_path()`
+* Many new tests for new features.
+    * Now up to 1087 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # IEATools 0.1.61 (2021-09-06)
