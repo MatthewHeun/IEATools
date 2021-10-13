@@ -32,7 +32,7 @@ output: html_document
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.61 (2021-09-06)
+# IEATools 0.1.61 (2021-09-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5566416.svg)](https://doi.org/10.5281/zenodo.5566416)
 
 * Added descriptive error messages when unknown `Flow.aggregation.point`, 
   `Flow`, or `Product` are encountered in `arrange_iea_fu_allocation_template()`.
