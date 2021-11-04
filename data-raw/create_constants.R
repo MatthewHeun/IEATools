@@ -280,7 +280,7 @@ oil_and_oil_products <- list(primary_oil_products,
                              paraffin_waxes = "Paraffin waxes",
                              petroleum_coke = "Petroleum coke",
                              other_oil_products = "Other oil products") %>% 
-  unlist() %>% 
+  unlist(recursive = TRUE) %>% 
   as.list()
 usethis::use_data(oil_and_oil_products, overwrite = TRUE)
 
