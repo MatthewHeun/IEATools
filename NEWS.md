@@ -4,6 +4,10 @@ output: html_document
 ---
 
 
+* Fix a bug where countries with no Energy industry own use
+  would fail in the workflow.
+
+
 # IEATools 0.1.62 (2021-10-12) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5565349.svg)](https://doi.org/10.5281/zenodo.5565349)
 
 * `form_eta_fu_phi_u_vecs()` now gives only the product name 
