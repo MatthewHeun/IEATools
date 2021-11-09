@@ -102,11 +102,17 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
     dplyr::mutate(
       "{supply_minus_consumption}" := .data[[supply_sum]] - .data[[consumption_sum]], 
       "{balance_OK}" := dplyr::case_when(
+        # When supply_sum or consumption_sum are NA, 
+        # take care with determining whether this row is OK.
         is.na(.data[[consumption_sum]]) ~ abs(.data[[supply_sum]]) <= tol,
+        is.na(.data[[supply_sum]]) ~ abs(.data[[consumption_sum]]) <= tol,
         TRUE ~ abs(.data[[supply_sum]] - .data[[consumption_sum]]) <= tol
       ),
       "{err}" := dplyr::case_when(
+        # When supply_sum or consumption_sum are NA, 
+        # take care with error calculation.
         is.na(.data[[consumption_sum]]) ~ .data[[supply_sum]],
+        is.na(.data[[supply_sum]]) ~ - .data[[consumption_sum]],
         TRUE ~ .data[[supply_minus_consumption]]
       )
     ) %>% 
