@@ -4,7 +4,9 @@ output: html_document
 ---
 
 
-* Fix a bug where countries with no Energy industry own use
+* Fixed a bug where Products with no supply would create an `NA`
+  and lead to a "Missing value where TRUE/FALSE needed" error.
+* Fixed a bug where countries with no Energy industry own use
   would fail in the workflow.
 
 
