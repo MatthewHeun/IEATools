@@ -634,12 +634,23 @@ prep_psut <- function(.tidy_iea_df,
   # For example, World marine bunkers where final energy is the last stage 
   # will have imports of fuel (V matrix) and final demand (Y matrix),
   # but no resources creating the fuel (R matrix) or use of fuel (U matrix).
-  # So we check for the presence of U_feed or U_EIOU before 
-  # creating the U or r_eiou matrices.
-  # It may be that later we want to check for U_feed only.
-  # But for now we check for both.
-  # ---Matthew Kuperus Heun, 20 July 2021
-  if (U_feed %in% names(CollapsedSpread) | U_eiou %in% names(CollapsedSpread)) {
+  # In other cases (BEN, GIB, MUS, NAM), the U_feed is present, but
+  # U_EIOU matrices are missing.
+  # So we check for the presence of U_feed or U_EIOU, as appropriate,
+  #  before creating the U or r_eiou matrices.
+  # ---Matthew Kuperus Heun, 9 Nov 2021
+  if (U_feed %in% names(CollapsedSpread) & !(U_eiou %in% names(CollapsedSpread))) {
+    # With no U_eiou matrix, we simply set U equal to U_feed
+    CollapsedSpread <- CollapsedSpread %>% 
+      dplyr::mutate(
+        # Add the U matrices.
+        "{U}" := .data[[U_feed]], 
+        # Add r_EIOU matrices
+        # Create r_EIOU, a matrix that identifies the ratio of EIOU to total energy used.
+        "{r_eiou}" := matsbyname::quotient_byname(.data[[U]], .data[[U]]) %>% 
+          matsbyname::replaceNaN_byname(val = 0)
+      )
+  } else if (U_feed %in% names(CollapsedSpread) & U_eiou %in% names(CollapsedSpread)) {
     # Add the U matrix to the data frame
     CollapsedSpread <- CollapsedSpread %>% 
       dplyr::mutate(

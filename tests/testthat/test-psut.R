@@ -446,6 +446,21 @@ test_that("prep_psut() correctly works with Balancing flows", {
 })
 
 
+test_that("prep_psut() works when there is no energy industry own use", {
+  # Set up so that the psut data frame has NULL for
+  # R, U_feed, and U_EIOU in 1971 for GHA.
+  psut <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    # Eliminate energy industry own use, so we do not get a U_EIOU matrix.
+    dplyr::filter(.data[[IEATools::iea_cols$flow_aggregation_point]] != IEATools::tfc_compare_flows$energy_industry_own_use) %>% 
+    prep_psut()
+  # In this case, the U_EIOU matrix should be 0.
+  for (i in 1:nrow(psut)) {
+    expect_true(psut$U_EIOU[[i]] %>% matsbyname::iszero_byname())
+  }
+})
+
+
 
 
 
