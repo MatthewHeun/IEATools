@@ -4,8 +4,6 @@ output: html_document
 ---
 
 
-* Removed several ISO code overrides. 
-  They were no longer needed, because we fixed spelling errors.
 * Fixed a bug where Products with no supply would create an `NA`
   and lead to a "Missing value where TRUE/FALSE needed" error.
 * Fixed a bug where countries with no Energy industry own use
