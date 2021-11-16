@@ -186,8 +186,13 @@ Like the **U** matrix, the **Y** matrix has products (energy carriers) in rows.
 
 1. Primary and final products: "`product`", where `product` is the 
    unmodified name of the energy carrier in the IEA extended energy balances.
+   Example: "Naptha".
+  `r colorize("blue", 'With country: "Naptha [in ESP]".')`
 2. Useful products: "`product` [from `fu_machine`]", where `product` is a useful
    energy carrier and `fu_machine` is a final-to-useful machine.
+   Example: "RoP [from Electric cars]".
+  `r colorize("blue", 'With country: "RoP [from Electric cars in USA]".')`
+  
 
 #### Columns
 
@@ -195,11 +200,19 @@ Like the **U** matrix, the **Y** matrix has industries (final demand sectors) in
 
 1. Sectors: "`sector`", where `sector` is the name of a final demand sector, 
    unmodified from the IEA extended energy balances. 
+   Example: "Construction".
+  `r colorize("blue", 'With country: "Construction [in USA]".')`
 2. Exports: "Exports [of `product`]", where `product` is a primary or final
    energy product.
+   Example: "Exports [of Coking coal]".
+  `r colorize("blue", 'With country: "Exports [of Coking coal from USA]".')`
 3. Exports to World marine/aviation bunkers: 
    "Exports to World `bunker_type` bunkers [of `product`]", where
    `bunker_type` is either "marine" or "aviation" and `product` is a 
    (typically) final energy product.
+   Example: "Exports to World marine bunkers [of Biodiesels]".
+  `r colorize("blue", 'With country: "Exports to World marine bunkers 
+  [of Biodiesels from USA]".')`
+   
 
  
