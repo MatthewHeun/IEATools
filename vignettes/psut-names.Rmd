@@ -1,0 +1,152 @@
+---
+title: "PSUT Names"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{PSUT Names}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(IEATools)
+```
+
+## Introduction
+
+The `prep_psut()` function creates `matsindf`-style data frames of matrices.
+Each matrix has character strings for row and column names.
+The row and column names follow strict conventions.
+This vignette documents those conventions.
+
+
+## Rules
+
+The rules for the row and column names are given below:
+
+1. All row and column names consists of a base part (the noun)
+   and metadata (usually in the form of prepositional phrases) 
+2. The base (noun) always matches the type of thing on that margin.
+   E.g., if "Stock changes [of Crude oil]" is a row name in the make (**V**) matrix,
+   the base part ("Stock changes") is an industry, as all row names in **V** denote.
+3. The metadata are separated from the base by the strings "[" and "]".
+3. The metadata can include any number of prepositional phrases.
+   In the example above, "of Crude oil" is metadata that modifies
+   the base name ("Stock changes")
+4. Each prepositional phrase consists of a single-word preposition and 
+   its (possibly multi-word) object.
+5. Prepositions can be one of "of", "in", "from", "to", and "->". 
+   (Note that "->" indicates a destination product, 
+   a concept for which there is no good preposition in the English language.)
+
+
+## **R** matrix
+
+
+### Rows
+
+The **R** matrix has industries (resources) in rows. 
+All row names in the **R** matrix have the same form:
+
+1. Resources: "Resources [of `primary_product`]", 
+   where `primary_product` is a primary energy carrier.
+
+
+### Columns
+
+The **R** matrix has products (energy carriers) in columns.
+All column names in the **R** matrix have the same form:
+
+1. Primary products: "`primary_product` [from Resources]",
+   where `primary_product` is a primary energy carrier.
+
+
+## **V** matrix
+
+
+### Rows
+
+Like the **R** matrix, the **V** matrix has
+industries (processing stages) in rows.
+There are several options for names of rows in the **V** matrix.
+
+1. Imports: "Imports [of `product`]", where `product` is a primary or final
+   energy product.
+2. Stock changes: "Stock changes [of `product`]", where `product` is a primary or 
+   final energy carrier.
+3. Transformation processes: "`pf_machine`", where `pf_machine` is 
+   a machine that converts primary energy to final energy. 
+   These data come from the IEA's extended energy balances.
+   An example is "Oil refineries".
+4. Statistical differences: "Statistical differences" which originate from the IEA's
+   extended energy balances.
+5. Manufacture processes: "Manufacture [of `product`]", where `product` is any 
+   energy carrier. These processes are inserted to convert
+   Resources into primary products.
+6. Final-to-useful machines: "`fu_machine` -> `useful_product`", 
+   where `fu_machine` is the name of a machine that converts final energy 
+   into useful energy and `useful_product` is the name of a useful energy product.
+
+
+### Columns
+
+Like the **R** matrix, the **V** matrix has
+products (energy carriers) in columns. 
+There are two options for names of columns in the **V** matrix.
+
+1. Primary and final energy carriers: "`product`" where `product` is the 
+   unmodified name of the energy carrier in the IEA extended energy balances.
+2. Useful products: "`useful_product` [from `fu_machine`]", 
+   where `useful_product` is a useful energy carrier and `fu_machine` is a 
+   final-to-useful machine.
+
+
+## **U** matrix
+
+The **U** matrix has products (energy carriers) in rows and 
+industries (processing stages) in columns.
+
+
+### Rows
+
+The **U** matrix has products (energy carriers) in rows.
+
+1. Resource flows: "`primary_product` [from Resources]", where
+   `primary_product` is a primary energy carrier.
+2. Primary and final energy flows: "`product`", where product is a primary
+   or final energy carrier.
+3. Useful products: "`useful_product` [from `fu_machine`]"], where
+   `useful_product` is a useful energy carrier and 
+   `fu_machine` is a final-to-useful machine.
+
+
+### Columns
+
+The **U** matrix has industries (processing stages) in columns.
+
+1. Final-to-useful machines: "`fu_machine` -> `useful_product`", where
+   `fu_machine` is a final-to-useful machine and 
+   `useful_product` is a useful energy carrier.
+2. 
+
+
+## **Y** matrix
+
+### Rows
+
+Like the **U** matrix, the **Y** matrix has products (energy carriers) in rows.
+
+1. 
+
+
+### Columns
+
+Like the **U** matrix, the **Y** matrix has industries (final demand sectors) in columns.
+
+1. 
