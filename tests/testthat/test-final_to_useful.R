@@ -135,10 +135,10 @@ test_that("extend_to_useful_helper works as intended", {
   
   C_Y <- Allocation_Table %>% 
     dplyr::mutate(
-      rownames = matsbyname::paste_pref_suff(pref = Ef.product, suff = Destination, notation = arrow_notation), 
-      colnames = matsbyname::paste_pref_suff(pref = Machine, suff = Eu.product, notation = arrow_notation), 
-      rowtypes = matsbyname::paste_pref_suff(pref = row_col_types$product, suff = row_col_types$industry, notation = arrow_notation),
-      coltypes = matsbyname::paste_pref_suff(pref = row_col_types$industry, suff = row_col_types$product, notation = arrow_notation),
+      rownames = RCLabels::paste_pref_suff(pref = Ef.product, suff = Destination, notation = arrow_notation), 
+      colnames = RCLabels::paste_pref_suff(pref = Machine, suff = Eu.product, notation = arrow_notation), 
+      rowtypes = RCLabels::paste_pref_suff(pref = row_col_types$product, suff = row_col_types$industry, notation = arrow_notation),
+      coltypes = RCLabels::paste_pref_suff(pref = row_col_types$industry, suff = row_col_types$product, notation = arrow_notation),
       matnames = "C_Y", 
       Destination = NULL, 
       Ef.product = NULL, 
@@ -155,14 +155,14 @@ test_that("extend_to_useful_helper works as intended", {
   
   eta.fu_rownames <- Efficiency_Table %>% 
     dplyr::mutate(
-      rownames = matsbyname::paste_pref_suff(pref = Machine, suff = Eu.product, notation = arrow_notation)
+      rownames = RCLabels::paste_pref_suff(pref = Machine, suff = Eu.product, notation = arrow_notation)
     ) %>% 
     magrittr::extract2("rownames")
   
   eta_fu <- Efficiency_Table %>% 
     magrittr::extract2("eta.fu") %>% 
     matrix(ncol = 1, dimnames = list(eta.fu_rownames, "eta.fu")) %>% 
-    matsbyname::setrowtype(matsbyname::paste_pref_suff(pref = row_col_types$industry, 
+    matsbyname::setrowtype(RCLabels::paste_pref_suff(pref = row_col_types$industry, 
                                                        suff = row_col_types$product, 
                                                        notation = arrow_notation))
   

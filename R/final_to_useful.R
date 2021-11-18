@@ -7,9 +7,9 @@
 #' to create allocation matrices (`C`). 
 #' 
 #' rownames of the `C` matrices are taken from the `Ef.product` and `Destination` columns of `.fu_allocation_table`
-#' and have the form "`Ef.product` `r arrow_notation[["pref_end"]]` `Destination`".
+#' and have the form "`Ef.product` `r RCLabels::arrow_notation[["pref_end"]]` `Destination`".
 #' colnames of the `C` matrices are taken from the `Machine` and `Eu.product` columns of `.fu_allocation_table`
-#' and have the form "machine `r arrow_notation[["pref_end"]]` useful energy form".
+#' and have the form "machine `r RCLabels::arrow_notation[["pref_end"]]` useful energy form".
 #' 
 #' `C` matrices are created for both energy industry own use
 #' and final demand (`C_eiou` and `C_Y`, respectively).
@@ -27,7 +27,7 @@
 #' @param quantity,machine,ef_product,eu_product,destination,e_dot_perc,maximum_values,C_eiou,C_Y See `IEATools::template_cols`.
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #' @param product,industry See `IEATools::row_col_types`.
-#' @param notation the notation used for this template. See `matsbyname::notation_vec()`. Default is `IEATools::arrow_notation`.
+#' @param notation the notation used for this template. See `RCLabels::notation_vec()`. Default is `RCLabels::arrow_notation`.
 #' @param tol the allowable amount by which a row sum in a `C` matrix can be different from 1. Default is 1e-6.
 #' @param .should_be_1_vector a temporary column created internally for error checking (and not returned unless there is an error). 
 #'                            This column should contain 1 vectors (i.e., vectors filled with 1's).
@@ -76,7 +76,7 @@ form_C_mats <- function(.fu_allocation_table,
                         product = IEATools::row_col_types$product,
                         industry = IEATools::row_col_types$industry,
                         
-                        notation = IEATools::arrow_notation,
+                        notation = RCLabels::arrow_notation,
 
                         tol = 1e-6,
                         
@@ -143,15 +143,15 @@ form_C_mats <- function(.fu_allocation_table,
     # Create row and column names.
     dplyr::mutate(
       # Row names come from Ef.product -> Destination for both C_Y and C_EIOU.
-      "{rownames}" := matsbyname::paste_pref_suff(pref = .data[[ef_product]], suff = .data[[destination]], notation = notation),
+      "{rownames}" := RCLabels::paste_pref_suff(pref = .data[[ef_product]], suff = .data[[destination]], notation = notation),
       # Column names come from Machine -> Eu.product for both C_Y and C_EIOU.
-      "{colnames}" := matsbyname::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = notation),
+      "{colnames}" := RCLabels::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = notation),
       # Row types are Product -> Industry
       # "{rowtypes}" := product,
-      "{rowtypes}" := matsbyname::paste_pref_suff(pref = product, suff = industry, notation = notation),
+      "{rowtypes}" := RCLabels::paste_pref_suff(pref = product, suff = industry, notation = notation),
       # Column types are Industry -> Product
       # "{coltypes}" := industry,
-      "{coltypes}" := matsbyname::paste_pref_suff(pref = industry, suff = product, notation = notation),
+      "{coltypes}" := RCLabels::paste_pref_suff(pref = industry, suff = product, notation = notation),
       # Eliminate columns we no longer need
       "{ef_product}" := NULL,
       "{machine}" := NULL,
@@ -220,7 +220,7 @@ form_C_mats <- function(.fu_allocation_table,
 #' The vectors `eta_fu` and `phi_u` have special rownames that indicate 
 #' sources and types of useful energy flows.
 #' Row names in the `eta_fu` vector have the pattern 
-#' "industry`r arrow_notation[["pref_end"]]`product" to indicate 
+#' "industry`r RCLabels::arrow_notation[["pref_end"]]`product" to indicate 
 #' the energy efficiency of "industry" for making "product"
 #' or the exergy-to-energy ratio of the useful energy form created by a final-to-useful machine.
 #' Row names in the `phi_u` vector are named by energy product only.
@@ -244,7 +244,7 @@ form_C_mats <- function(.fu_allocation_table,
 #' @param product,industry See `IEATools::row_col_types`.
 #' @param arrow_note,from_note Notation vectors used for creating the eta_fu and phi vectors. 
 #'                             See `matsbyname::notation_vec()`. 
-#'                             Defaults are `arrow_notation` and ``from_notation`, respectively.
+#'                             Defaults are `RCLabels::arrow_notation` and ``RCLabels::from_notation`, respectively.
 #' @param .id The name of an identification column used internally. Default is ".id".
 #'
 #' @return a wide-by-matrices data frame with metadata columns (and year) 
@@ -280,8 +280,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    product = IEATools::row_col_types$product,
                                    industry = IEATools::row_col_types$industry,
                                    
-                                   arrow_note = IEATools::arrow_notation, 
-                                   from_note = IEATools::from_notation, 
+                                   arrow_note = RCLabels::arrow_notation, 
+                                   from_note = RCLabels::from_notation, 
                                    .id = ".id") {
   
   cleaned <- .eta_fu_table %>% 
@@ -321,8 +321,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     dplyr::mutate(
       # Create rownames from the machine and eu_product rows.
       "{rownames}" := dplyr::case_when(
-        .data[[matnames]] == eta_fu ~ matsbyname::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = arrow_note),
-        .data[[matnames]] == phi_u ~ matsbyname::paste_pref_suff(pref = .data[[eu_product]], suff = .data[[machine]], notation = from_note),
+        .data[[matnames]] == eta_fu ~ RCLabels::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = arrow_note),
+        .data[[matnames]] == phi_u ~ RCLabels::paste_pref_suff(pref = .data[[eu_product]], suff = .data[[machine]], notation = from_note),
         TRUE ~ NA_character_
       ), 
       # Eliminate machine and eu_product columns, because we no longer need them.
@@ -331,8 +331,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       # Create colnames according to the name of the matrix to be created
       "{colnames}" := .data[[matnames]],
       "{rowtypes}" := dplyr::case_when(
-        .data[[matnames]] == eta_fu ~ matsbyname::paste_pref_suff(pref = industry, suff = product, notation = arrow_note),
-        .data[[matnames]] == phi_u ~ matsbyname::paste_pref_suff(pref = product, suff = industry, notation = from_note), 
+        .data[[matnames]] == eta_fu ~ RCLabels::paste_pref_suff(pref = industry, suff = product, notation = arrow_note),
+        .data[[matnames]] == phi_u ~ RCLabels::paste_pref_suff(pref = product, suff = industry, notation = from_note), 
         TRUE ~ NA_character_
       ), 
       "{coltypes}" := dplyr::case_when(
@@ -490,7 +490,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param losses See `IEATools::tfc_compare_flows`. Losses are kept same from `Y_final` to `Y_useful`.
 #' @param stat_diffs See `IEATools::tfc_compare_flows`. Statistical differences are kept same from `Y_final` to `Y_useful`.
 #' @param arrow_note,from_note The row and column notation in the `eta_fu` vectors.
-#'                             See `matsbyname::notation_vec()`. Defaults is `IEATools::arrow_notation` and `IEATools::from_notation`.
+#'                             See `RCLabels::notation_vec()`. Defaults is `RCLabels::arrow_notation` and `RCLabels::from_notation`.
 #' @param .add_to_U_f An internal matrix name for the a matrix to be added to the U_feed_f matrix 
 #'                    to form the useful form of the U_feed matrix. Default is ".add_to_U_f".
 #' @param .add_to_U_eiou An internal matrix name for the a matrix to be added to the U_eiou_f matrix 
@@ -570,8 +570,8 @@ extend_to_useful <- function(.sutdata = NULL,
                              losses = IEATools::tfc_compare_flows$losses,
                              stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
                              
-                             arrow_note = IEATools::arrow_notation,
-                             from_note = IEATools::from_notation,
+                             arrow_note = RCLabels::arrow_notation,
+                             from_note = RCLabels::from_notation,
 
                              .add_to_U_f = ".add_to_U_f",
                              .add_to_U_eiou = ".add_to_U_eiou",
@@ -902,7 +902,7 @@ extend_to_useful <- function(.sutdata = NULL,
 #' @param arr_note a row and column name notation vector that indicates a `source -> destination` relationship. 
 #'                 `arr_note` is used for the `eta_fu` matrix, among others.
 #'                 See `matsbyname::notation_vec()`.
-#'                 Default is `IEATools::arrow_notation`.
+#'                 Default is `RCLabels::arrow_notation`.
 #' @param from_note a row and column name notation vector that indicates a `destination [from source]` relationship. 
 #'                  `from_note` is used for the columns of some intermediate matrices.
 #'                  See `matsbyname::notation_vec()`.
@@ -921,8 +921,8 @@ extend_to_useful_helper <- function(.sutdata = NULL,
                                     # Input parameters
                                     product_type = IEATools::row_col_types$product, 
                                     industry_type = IEATools::row_col_types$industry,
-                                    arr_note = IEATools::arrow_notation, 
-                                    from_note = IEATools::from_notation, 
+                                    arr_note = RCLabels::arrow_notation, 
+                                    from_note = RCLabels::from_notation, 
                                     # Output names
                                     add_to_U = "add_to_U", 
                                     add_to_V = "add_to_V", 

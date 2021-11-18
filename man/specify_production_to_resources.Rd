@@ -10,7 +10,7 @@ specify_production_to_resources(
   product = IEATools::iea_cols$product,
   production = IEATools::tpes_flows$production,
   resources = IEATools::tpes_flows$resources,
-  notation = IEATools::from_notation
+  notation = RCLabels::from_notation
 )
 }
 \arguments{

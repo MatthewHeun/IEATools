@@ -11,8 +11,8 @@ extend_to_useful_helper(
   eta_fu_vec,
   product_type = IEATools::row_col_types$product,
   industry_type = IEATools::row_col_types$industry,
-  arr_note = IEATools::arrow_notation,
-  from_note = IEATools::from_notation,
+  arr_note = RCLabels::arrow_notation,
+  from_note = RCLabels::from_notation,
   add_to_U = "add_to_U",
   add_to_V = "add_to_V",
   add_to_dest = "add_to_dest"
@@ -43,7 +43,7 @@ This argument could also be the string name of such matrices in \code{.sutdata}.
 \item{arr_note}{a row and column name notation vector that indicates a \code{source -> destination} relationship.
 \code{arr_note} is used for the \code{eta_fu} matrix, among others.
 See \code{matsbyname::notation_vec()}.
-Default is \code{IEATools::arrow_notation}.}
+Default is \code{RCLabels::arrow_notation}.}
 
 \item{from_note}{a row and column name notation vector that indicates a \verb{destination [from source]} relationship.
 \code{from_note} is used for the columns of some intermediate matrices.

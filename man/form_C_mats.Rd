@@ -28,7 +28,7 @@ form_C_mats(
   coltypes = IEATools::mat_meta_cols$coltypes,
   product = IEATools::row_col_types$product,
   industry = IEATools::row_col_types$industry,
-  notation = IEATools::arrow_notation,
+  notation = RCLabels::arrow_notation,
   tol = 1e-06,
   C_eiou = IEATools::template_cols$C_eiou,
   C_Y = IEATools::template_cols$C_Y,
@@ -53,7 +53,7 @@ This object can also be a tidy data frame with year data gathered into a Year co
 
 \item{product, industry}{See \code{IEATools::row_col_types}.}
 
-\item{notation}{the notation used for this template. See \code{matsbyname::notation_vec()}. Default is \code{IEATools::arrow_notation}.}
+\item{notation}{the notation used for this template. See \code{RCLabels::notation_vec()}. Default is \code{RCLabels::arrow_notation}.}
 
 \item{tol}{the allowable amount by which a row sum in a \code{C} matrix can be different from 1. Default is 1e-6.}
 

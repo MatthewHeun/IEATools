@@ -245,12 +245,12 @@ specify_production_to_resources <- function(.tidy_iea_df,
                                             product = IEATools::iea_cols$product,
                                             production = IEATools::tpes_flows$production,
                                             resources = IEATools::tpes_flows$resources,
-                                            notation = IEATools::from_notation){
+                                            notation = RCLabels::from_notation){
   # Take any remaining "Production" rows and convert them to Resources (Product).
   .tidy_iea_df %>% 
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
-        .data[[flow]] == production ~ matsbyname::paste_pref_suff(pref = resources, suff = .data[[product]], notation = notation), 
+        .data[[flow]] == production ~ RCLabels::paste_pref_suff(pref = resources, suff = .data[[product]], notation = notation), 
         TRUE ~ .data[[flow]]
       )
     )
@@ -293,7 +293,7 @@ specify_interface_industries <- function(.tidy_iea_df,
     dplyr::mutate(
       !!as.name(flow) := dplyr::case_when(
         # !!as.name(flow) %in% int_industries ~ paste0(!!as.name(flow), .interface_ind_open, !!as.name(product), .interface_ind_close),
-        .data[[flow]] %in% int_industries ~ matsbyname::paste_pref_suff(pref = .data[[flow]], suff = .data[[product]], notation = notation),
+        .data[[flow]] %in% int_industries ~ RCLabels::paste_pref_suff(pref = .data[[flow]], suff = .data[[product]], notation = notation),
         TRUE ~ .data[[flow]]
       )
     )
