@@ -173,9 +173,9 @@ The **U** matrix has industries (processing stages) in columns.
   `r colorize("blue", 'With country: "Blast furnaces [in USA]".')`
 2. Final-to-useful machines: "`fu_machine` -> `useful_product`", where
    `fu_machine` is a final-to-useful machine and 
-   `useful_product` is a useful energy carrier.
+   `useful_product` is a useful energy carrier. 
    `r colorize("red", 'fu_machine [-> useful_product]')`
-  `r colorize("blue", 'With country: "Ammonia synthesizers [-> HTH.400.C in POL]".')`
+   `r colorize("blue", 'With country: "Ammonia synthesizers [-> HTH.400.C in POL]".')`
 
 
 ### **Y** matrix
