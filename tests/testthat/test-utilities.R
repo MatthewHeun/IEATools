@@ -292,10 +292,10 @@ test_that("sorting works on a specified IEA data frame", {
     sort_iea_df()
   
   expect_equal(sorted_specified$Flow[[1]], 
-               RCLabels::paste_pref_suff(pref = "Resources", suff = biofuels_and_waste_products$primary_solid_biofuels, notation = of_notation))
+               RCLabels::paste_pref_suff(pref = "Resources", suff = biofuels_and_waste_products$primary_solid_biofuels, notation = RCLabels::of_notation))
   
   expect_equal(sorted_specified$Flow[[1]], 
-               RCLabels::paste_pref_suff(pref = "Resources", suff = biofuels_and_waste_products$primary_solid_biofuels, notation = of_notation))
+               RCLabels::paste_pref_suff(pref = "Resources", suff = biofuels_and_waste_products$primary_solid_biofuels, notation = RCLabels::of_notation))
 })
 
 

@@ -8,7 +8,7 @@ remove_suffix_specifications(
   .df,
   col,
   unsuffixed_col,
-  notations = list(IEATools::of_notation, IEATools::from_notation)
+  notations = list(RCLabels::of_notation, RCLabels::from_notation)
 )
 }
 \arguments{
@@ -19,8 +19,8 @@ remove_suffix_specifications(
 \item{unsuffixed_col}{The string name of the column in the output data frame to contain the un-suffixed version of \code{col}.}
 
 \item{notations}{The notations used for row and column names. See \code{matsbyname::notation_vec()}.
-Default is \code{list(IEATools::of_notation, IEATools::from_notation)},
-because both \code{IEATools::of_notation} and \code{IEATools::from_notation} can be used in the \code{Flow} column
+Default is \code{list(RCLabels::of_notation, RCLabels::from_notation)},
+because both \code{RCLabels::of_notation} and \code{RCLabels::from_notation} can be used in the \code{Flow} column
 of an IEA data frame.}
 }
 \value{

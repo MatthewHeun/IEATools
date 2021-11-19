@@ -356,7 +356,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     dplyr::filter(.data[[colnames]] == phi_u) %>% 
     dplyr::mutate(
       "{product}" := .data[[rownames]] %>% 
-        matsbyname::keep_pref_suff(keep = "pref", notation = from_note)
+        RCLabels::keep_pref_suff(keep = "pref", notation = from_note)
     ) %>% 
     dplyr::select(meta_cols, product, year) %>% 
     unique()
@@ -366,7 +366,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     dplyr::filter(.data[[colnames]] == phi_u) %>% 
     dplyr::mutate(
       "{product}" := .data[[rownames]] %>% 
-        matsbyname::keep_pref_suff(keep = "pref", notation = from_note)
+        RCLabels::keep_pref_suff(keep = "pref", notation = from_note)
     ) %>% 
     dplyr::select(meta_cols, product, year, -matvals) %>% 
     unique()
@@ -401,7 +401,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       "{rownames}" := dplyr::case_when(
         # For the phi_u rows, we want to keep only the product in the name.
         .data[[matnames]] == phi_u ~ .data[[rownames]] %>%
-          matsbyname::keep_pref_suff("pref", notation = from_note), 
+          RCLabels::keep_pref_suff("pref", notation = from_note), 
         TRUE ~ .data[[rownames]], 
       ), 
       "{colnames}" := dplyr::case_when(
@@ -906,7 +906,7 @@ extend_to_useful <- function(.sutdata = NULL,
 #' @param from_note a row and column name notation vector that indicates a `destination [from source]` relationship. 
 #'                  `from_note` is used for the columns of some intermediate matrices.
 #'                  See `matsbyname::notation_vec()`.
-#'                  Default is `IEATools::from_notation`.
+#'                  Default is `RCLabels::from_notation`.
 #' @param add_to_U a string name for the matrix to be added to a use matrix. Default is "add_to_U".
 #' @param add_to_V a string name for the matrix to be added to a make matrix. Default is "add_to_V".
 #' @param add_to_dest a string name for the matrix to replace some entries previous destination matrix. Default is "repl_dest".

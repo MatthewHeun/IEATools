@@ -42,7 +42,7 @@ test_that("renamed products are also consumed", {
     specify_primary_production()
   
   expect_equal(Renamed_primary %>% 
-                 dplyr::filter(Flow == RCLabels::paste_pref_suff(pref = "Resources", suff = "Hard coal (if no detail)", notation = of_notation)) %>% 
+                 dplyr::filter(Flow == RCLabels::paste_pref_suff(pref = "Resources", suff = "Hard coal (if no detail)", notation = RCLabels::of_notation)) %>% 
                  nrow(),
                1)
   
@@ -50,7 +50,7 @@ test_that("renamed products are also consumed", {
   
   expect_equal(Renamed_primary %>% 
                  dplyr::filter(
-                   Product == RCLabels::paste_pref_suff(pref = "Hard coal (if no detail)", suff = "Resources", notation = from_notation)
+                   Product == RCLabels::paste_pref_suff(pref = "Hard coal (if no detail)", suff = "Resources", notation = RCLabels::from_notation)
                    ) %>% 
                  nrow(), 
                2)
@@ -70,7 +70,7 @@ test_that("interface industries are correctly specified", {
     # Ensure that there are no interface_industries remaining
     expect_equal(nrow(specified %>% dplyr::filter(Flow == i)), 0)
     # Ensure that every interface_industry ends with "]", indicating that it has been specified.
-    expect_true(specified %>% dplyr::filter(startsWith(Flow, i) & endsWith(Flow, of_notation[["suff_end"]])) %>% nrow() > 0)
+    expect_true(specified %>% dplyr::filter(startsWith(Flow, i) & endsWith(Flow, RCLabels::of_notation[["suff_end"]])) %>% nrow() > 0)
   }
 })
 
@@ -123,7 +123,7 @@ test_that("despecify_col work as expected", {
   despecified %>% 
     dplyr::select(clean_Flow) %>% 
     unlist() %>% 
-    endsWith(of_notation[["suff_end"]]) %>% 
+    endsWith(RCLabels::of_notation[["suff_end"]]) %>% 
     any() %>% 
     expect_false()
   despecified %>% 
@@ -281,13 +281,13 @@ test_that("remove_suffix_specifications() works as expected", {
     specify_all() %>% 
     remove_suffix_specifications(col = "Flow", unsuffixed_col = "clean_Flow") %>% 
     dplyr::select(Flow, Product, E.dot, clean_Flow) %>% 
-    dplyr::filter(endsWith(Flow, bracket_notation[["suff_end"]]))
+    dplyr::filter(endsWith(Flow, RCLabels::bracket_notation[["suff_end"]]))
   
   tested <- cleaned %>% 
     dplyr::mutate(
       ok = dplyr::case_when(
-        endsWith(Flow, bracket_notation[["suff_end"]]) & 
-          ! endsWith(clean_Flow, bracket_notation[["suff_end"]]) ~ TRUE, 
+        endsWith(Flow, RCLabels::bracket_notation[["suff_end"]]) & 
+          ! endsWith(clean_Flow, RCLabels::bracket_notation[["suff_end"]]) ~ TRUE, 
       TRUE ~ FALSE
       )
     )
@@ -298,7 +298,7 @@ test_that("remove_suffix_specifications() works as expected", {
     specify_all() %>% 
     remove_suffix_specifications(col = "Flow", unsuffixed_col = "Flow") %>% 
     dplyr::select(Flow, Product, E.dot) %>%
-    dplyr::filter(endsWith(Flow, bracket_notation[["suff_end"]])) %>%
+    dplyr::filter(endsWith(Flow, RCLabels::bracket_notation[["suff_end"]])) %>%
     nrow() %>%
     # We should have no rows remaining that end with the bracket notation suffix.
     expect_equal(0)

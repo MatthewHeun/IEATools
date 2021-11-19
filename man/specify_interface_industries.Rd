@@ -9,7 +9,7 @@ specify_interface_industries(
   flow = "Flow",
   int_industries = IEATools::interface_industries,
   product = "Product",
-  notation = IEATools::of_notation
+  notation = RCLabels::of_notation
 )
 }
 \arguments{
@@ -22,7 +22,7 @@ bunkers, or stock changes. Default is \code{IEATools::interface_industries}.}
 
 \item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
 
-\item{notation}{a list of specification notations. Default is \code{IEATools::of_notation}.}
+\item{notation}{a list of specification notations. Default is \code{RCLabels::of_notation}.}
 }
 \value{
 a modified version of \code{.tidy_iea_df} with specified interface industries

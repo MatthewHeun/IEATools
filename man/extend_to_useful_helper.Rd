@@ -48,7 +48,7 @@ Default is \code{RCLabels::arrow_notation}.}
 \item{from_note}{a row and column name notation vector that indicates a \verb{destination [from source]} relationship.
 \code{from_note} is used for the columns of some intermediate matrices.
 See \code{matsbyname::notation_vec()}.
-Default is \code{IEATools::from_notation}.}
+Default is \code{RCLabels::from_notation}.}
 
 \item{add_to_U}{a string name for the matrix to be added to a use matrix. Default is "add_to_U".}
 
