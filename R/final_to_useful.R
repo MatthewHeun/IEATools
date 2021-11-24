@@ -632,8 +632,8 @@ extend_to_useful <- function(.sutdata = NULL,
     # None of the interface industries nor the non-energy flows are in the allocation matrix (C), 
     # so we must retain them in the Y matrix.
     Y_keep_mat <- matsbyname::select_cols_byname(Y_mat, 
-                                                 retain_pattern = matsbyname::make_pattern(Y_keep_inds, 
-                                                                                           pattern_type = "leading"))
+                                                 retain_pattern = RCLabels::make_or_pattern(Y_keep_inds, 
+                                                                                         pattern_type = "leading"))
     Y_useful_mat <- matsbyname::sum_byname(Y_keep_mat, res_Y[[.add_to_dest]])
     
     # Now check to see if we have any EIOU. 
@@ -742,139 +742,6 @@ extend_to_useful <- function(.sutdata = NULL,
   }
   
   return(out)
-  
-
-  
-  
-  
-  
-  # The following code is superceded by
-  # code above that uses matsindf::matsindf_apply().
-  # Everything below can be deleted after 30 Sept 2021
-  # ---MKH, 17 Aug 2021
-  
-  # wide_psut_data <- .sutdata %>%
-  #   dplyr::mutate(
-  #     # Calculate .eta_fu_hat, which is needed twice below.
-  #     # Doing the calculation here makes it available for other downstream calculations.
-  #     "{.eta_fu_hat}" := matsbyname::hatize_byname(.data[[eta_fu]], keep = "rownames") %>%
-  #       # Swap column names from arrow notation to from notation
-  #       arrow_to_from_byname(margin = 2)
-  #   )
-  # 
-  # # New column names
-  # U_feed_useful_name <- paste0(U_feed, .sep, useful)
-  # U_eiou_useful_name <- paste0(U_eiou, .sep, useful)
-  # U_useful_name <- paste0(U, .sep, useful)
-  # r_eiou_useful_name <- paste0(r_eiou, .sep, useful)
-  # V_useful_name <- paste0(V, .sep, useful)
-  # Y_useful_name <- paste0(Y, .sep, useful)
-  # Y_keep_name <- paste0(Y, .keep_in_Y)
-  # 
-  # # Industries to retain from Y_f to Y_u.
-  # # These industries are not allocated to f-u machines, nor are they tracked for useful energy.
-  # Y_keep_inds <- c(interface_ind, losses, stat_diffs)
-  # 
-  # # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
-  # # We take each of these in turn, adjusting the energy conversion chain to account for the fact that
-  # # useful energy is now the final stage.
-  # wide_useful_Y <- wide_psut_data %>%
-  #   extend_to_useful_helper(dest_mat = Y, C_mat = C_Y, eta_fu_vec = eta_fu,
-  #                           add_to_U = .add_to_U_f, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>%
-  #   dplyr::mutate(
-  #     "{U_feed_useful_name}" := matsbyname::sum_byname(.data[[U_feed]], .data[[.add_to_U_f]]),
-  #     "{V_useful_name}" := matsbyname::sum_byname(.data[[V]], .data[[.add_to_V_f]]),
-  #     # We need to keep industries in Y that are interface industries
-  #     # (exports, stock changes, international marine and aviation bunkers, and
-  #     # imports, though there won't be any imports in the Y matrix, because imports are in the V matrix).
-  #     # Also keep non-energy flows.
-  #     # None of the interface industries nor the non-energy flows are in the allocation matrix (C),
-  #     # so we must retain them in the Y matrix.
-  #     "{Y_keep_name}" := matsbyname::select_cols_byname(.data[[Y]],
-  #                                                  retain_pattern = matsbyname::make_pattern(Y_keep_inds,
-  #                                                                                            pattern_type = "leading")),
-  #     "{Y_useful_name}" := matsbyname::sum_byname(.data[[Y_keep_name]], .data[[.add_to_dest]]),
-  #     # Eliminate columns that are no longer needed
-  #     "{.add_to_U_f}" := NULL,
-  #     "{.add_to_V_f}" := NULL,
-  #     "{.add_to_dest}" := NULL,
-  #     "{Y_keep_name}" := NULL
-  #   )
-  # 
-  # wide_useful_EIOU <- wide_useful_Y %>%
-  #   extend_to_useful_helper(dest_mat = U_eiou, C_mat = C_eiou, eta_fu_vec = eta_fu,
-  #                           add_to_U = .add_to_U_eiou, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>%
-  #   dplyr::mutate(
-  #     "{U_feed_useful_name}" := matsbyname::sum_byname(.data[[U_feed_useful_name]], .data[[.add_to_U_eiou]]),
-  #     "{U_eiou_useful_name}" := .data[[.add_to_dest]],
-  #     "{U_useful_name}" := matsbyname::sum_byname(.data[[U_feed_useful_name]], .data[[U_eiou_useful_name]]),
-  #     "{r_eiou_useful_name}" := matsbyname::quotient_byname(.data[[U_eiou_useful_name]], .data[[U_useful_name]]) %>%
-  #       matsbyname::replaceNaN_byname(val = 0),
-  #     "{V_useful_name}" := matsbyname::sum_byname(.data[[V_useful_name]], .data[[.add_to_V_f]]),
-  #     # Show that these all now have useful last stage
-  #     "{last_stage}" := useful,
-  #     # Eliminate columns that are no longer needed
-  #     "{.eta_fu_hat}" := NULL,
-  #     "{.add_to_U_eiou}" := NULL,
-  #     "{.add_to_V_f}" := NULL,
-  #     "{.add_to_dest}" := NULL,
-  #     # Eliminate last-stage-is-final versions of matrices
-  #     "{U_eiou}" := NULL,
-  #     "{U_feed}" := NULL,
-  #     "{U}" := NULL,
-  #     "{r_eiou}" := NULL,
-  #     "{V}" := NULL,
-  #     "{Y}" := NULL
-  #   ) %>%
-  #   dplyr::rename(
-  #     # Rename the useful columns to be regular names so we can rbind later
-  #     "{U_feed}" := .data[[U_feed_useful_name]],
-  #     "{U_eiou}" := .data[[U_eiou_useful_name]],
-  #     "{U}" := .data[[U_useful_name]],
-  #     "{r_eiou}" := .data[[r_eiou_useful_name]],
-  #     "{V}" := .data[[V_useful_name]],
-  #     "{Y}" := .data[[Y_useful_name]]
-  #   )
-  # 
-  # # Prepare the outgoing data frame
-  # out <- dplyr::bind_rows(.sutdata, wide_useful_EIOU) %>%
-  #   dplyr::mutate(
-  #     # Eliminate temporary columns that were used in the calculations
-  #     "{C_eiou}" := NULL,
-  #     "{C_Y}" := NULL,
-  #     "{eta_fu}" := NULL,
-  #     "{phi_u}" := NULL
-  #   )
-  # 
-  # # Check Product energy balances.
-  # # It would be nice to use the Recca function verify_SUT_energy_balance() for this purpose.
-  # # However, IEATools is designed to be independent of Recca.
-  # # So we need to do our own energy balance here.
-  # # Fortunately, energy balance calculations for products are relatively simple.
-  # # The energy balance for products is given by rowsums of (R + V)^T - U - Y, which should all equal 0
-  # # within acceptable error.
-  # verify_ebal <- out %>%
-  #   dplyr::mutate(
-  #     # (R + V)^T - U - Y
-  #     "{.err}" := matsbyname::sum_byname(.data[[R]], .data[[V]]) %>% # R + V
-  #       matsbyname::transpose_byname() %>%                           # (R + V)^T
-  #       matsbyname::difference_byname(.data[[U_feed]]) %>%           # - U_feed
-  #       matsbyname::difference_byname(.data[[U_eiou]]) %>%           # - U_eiou
-  #       matsbyname::difference_byname(.data[[Y]]) %>%                # - Y
-  #       matsbyname::rowsums_byname(),
-  #     "{.e_bal_ok}" := .data[[.err]] %>%
-  #       matsbyname::iszero_byname(tol = tol) %>%
-  #       as.logical()
-  #   )
-  # all_OK <- all(verify_ebal[[.e_bal_ok]])
-  # if (!all_OK) {
-  #   # Emit a warning if there is a problem and return the wrong thing.
-  #   warning(paste0("Energy is not balanced to within ", tol, " in IEATools::extend_to_useful(). See columns ",
-  #                  .err, " and ", .e_bal_ok, " for problems."))
-  #   return(verify_ebal)
-  # }
-  # 
-  # return(out)
 }
 
 
