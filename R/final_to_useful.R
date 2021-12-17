@@ -356,7 +356,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     dplyr::filter(.data[[colnames]] == phi_u) %>% 
     dplyr::mutate(
       "{product}" := .data[[rownames]] %>% 
-        RCLabels::keep_pref_suff(keep = "pref", notation = from_note)
+        RCLabels::get_pref_suff(which = "pref", notation = from_note)
     ) %>% 
     dplyr::select(meta_cols, product, year) %>% 
     unique()
@@ -366,7 +366,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     dplyr::filter(.data[[colnames]] == phi_u) %>% 
     dplyr::mutate(
       "{product}" := .data[[rownames]] %>% 
-        RCLabels::keep_pref_suff(keep = "pref", notation = from_note)
+        RCLabels::get_pref_suff(which = "pref", notation = from_note)
     ) %>% 
     dplyr::select(meta_cols, product, year, -matvals) %>% 
     unique()
@@ -401,7 +401,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       "{rownames}" := dplyr::case_when(
         # For the phi_u rows, we want to keep only the product in the name.
         .data[[matnames]] == phi_u ~ .data[[rownames]] %>%
-          RCLabels::keep_pref_suff("pref", notation = from_note), 
+          RCLabels::get_pref_suff(which = "pref", notation = from_note), 
         TRUE ~ .data[[rownames]], 
       ), 
       "{colnames}" := dplyr::case_when(

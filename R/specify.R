@@ -765,7 +765,7 @@ remove_suffix_specifications <- function(.df, col, unsuffixed_col,
   for (nota in notations) {
     out <- out %>%
       dplyr::mutate(
-        "{unsuffixed_col}" := RCLabels::keep_pref_suff(.data[[unsuffixed_col]], keep = "pref", notation = nota)
+        "{unsuffixed_col}" := RCLabels::get_pref_suff(.data[[unsuffixed_col]], which = "pref", notation = nota)
       )
   }
   return(out)

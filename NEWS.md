@@ -3,7 +3,8 @@ title: "Release notes for `IEATools`"
 output: html_document
 ---
 
-
+* Adapt to changes in `RCLabels`: 
+  `keep_pref_suff()` --> `get_pref_suff()`.
 * Fixed a bug where Products with no supply would create an `NA`
   and lead to a "Missing value where TRUE/FALSE needed" error.
 * Fixed a bug where countries with no Energy industry own use
