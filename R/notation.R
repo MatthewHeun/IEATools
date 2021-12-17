@@ -39,6 +39,7 @@ NULL
 
 
 #' @export
+#' @rdname switch-notation
 arrow_to_from_byname <- function(m, margin = c(1, 2)) {
   matsbyname::switch_notation_byname(m, margin = margin, 
                                      from = list(RCLabels::arrow_notation), 
