@@ -706,7 +706,7 @@ specify_all <- function(.tidy_iea_df,
 #'   specify_all() %>% 
 #'   despecify_col(col = "Flow", despecified_col = "clean_Flow") %>% 
 #'   select(Flow, Product, E.dot, clean_Flow) %>% 
-#'   filter(endsWith(Flow, bracket_notation[["suff_end"]]))
+#'   filter(endsWith(Flow, RCLabels::bracket_notation[["suff_end"]]))
 despecify_col <- function(.df, col, despecified_col, 
                           notations = list(RCLabels::of_notation, RCLabels::from_notation),
                           production = IEATools::tpes_flows$production,
