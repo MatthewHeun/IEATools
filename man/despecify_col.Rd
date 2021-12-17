@@ -50,5 +50,5 @@ load_tidy_iea_df() \%>\%
   specify_all() \%>\% 
   despecify_col(col = "Flow", despecified_col = "clean_Flow") \%>\% 
   select(Flow, Product, E.dot, clean_Flow) \%>\% 
-  filter(endsWith(Flow, bracket_notation[["suff_end"]]))
+  filter(endsWith(Flow, RCLabels::bracket_notation[["suff_end"]]))
 }

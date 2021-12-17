@@ -753,7 +753,7 @@ despecify_col <- function(.df, col, despecified_col,
 #'   specify_all() %>% 
 #'   remove_suffix_specifications(col = "Flow", unsuffixed_col = "clean_Flow") %>% 
 #'   select(Flow, Product, E.dot, clean_Flow) %>% 
-#'   filter(endsWith(Flow, bracket_notation[["suff_end"]]))
+#'   filter(endsWith(Flow, RCLabels::bracket_notation[["suff_end"]]))
 remove_suffix_specifications <- function(.df, col, unsuffixed_col, 
                                          notations = list(RCLabels::of_notation, RCLabels::from_notation)){
   # Eliminate all suffixes from col in the outgoing data frame.

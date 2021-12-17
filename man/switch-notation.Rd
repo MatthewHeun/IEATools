@@ -2,11 +2,14 @@
 % Please edit documentation in R/notation.R
 \name{switch-notation}
 \alias{switch-notation}
+\alias{arrow_to_from_byname}
 \alias{from_to_arrow_byname}
 \alias{arrow_to_bracket_byname}
 \alias{bracket_to_arrow_byname}
 \title{Change specification notation}
 \usage{
+arrow_to_from_byname(m, margin = c(1, 2))
+
 from_to_arrow_byname(m, margin = c(1, 2))
 
 arrow_to_bracket_byname(m, margin = c(1, 2))
