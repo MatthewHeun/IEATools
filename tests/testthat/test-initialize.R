@@ -6,11 +6,13 @@ test_that("use_iso_countries() works with override", {
                             "World marine bunkers",
                             "World aviation bunkers", 
                             "Ghana", 
+                            "Former Soviet Union (if no detail)",
                             "South Africa", 
-                            "World")
+                            "World", 
+                            "Former Yugoslavia (if no detail)")
   res <- iea_df %>% 
     use_iso_countries()
-  expect_equal(res$Country, c("CHN", "HKG", "WMB", "WAB", "GHA", "ZAF", "WLD"))
+  expect_equal(res$Country, c("CHN", "HKG", "WMB", "WAB", "GHA", "SUN", "ZAF", "WLD", "YUG"))
 })
 
 

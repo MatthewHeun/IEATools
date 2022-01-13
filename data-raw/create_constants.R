@@ -90,13 +90,17 @@ usethis::use_data(country_concordance_cols, overwrite = TRUE)
 override_iso_codes_df <- data.frame(a = c("WLD", 
                                           "CHN", 
                                           "HKG", 
+                                          "SUN",
                                           "WMB", 
-                                          "WAB"),
+                                          "WAB", 
+                                          "YUG"),
                                     b = c("World", 
                                           "People's Republic of China", 
                                           "Hong Kong (China)", 
+                                          "Former Soviet Union (if no detail)",
                                           "World marine bunkers", 
-                                          "World aviation bunkers")) %>% 
+                                          "World aviation bunkers", 
+                                          "Former Yugoslavia (if no detail)")) %>% 
   magrittr::set_names(c(country_concordance_cols$pfu_code, 
                         country_concordance_cols$iea_name))
 usethis::use_data(override_iso_codes_df, overwrite = TRUE)
@@ -745,13 +749,13 @@ products <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   # In specify_primary_production(), some Products are renamed to account for the fact that they come from a different industry.
   insert_after(after = primary_coal_products[length(primary_coal_products)], 
                # values = paste0(primary_coal_products, from_notation[["suff_start"]], "Coal mines", from_notation[["suff_end"]])) %>% 
-               values = RCLabels::paste_pref_suff(pref = primary_coal_products, suff = "Coal mines", notation = bracket_notation)) %>% 
+               values = RCLabels::paste_pref_suff(pref = primary_coal_products, suff = "Coal mines", notation = RCLabels::bracket_notation)) %>% 
   insert_after(after = primary_oil_products[length(primary_oil_products)], 
                # values = paste0(primary_oil_products, from_notation[["suff_start"]], "Oil and gas extraction", from_notation[["suff_end"]])) %>% 
-               values = RCLabels::paste_pref_suff(pref = primary_oil_products, suff = "Oil and gas extraction", notation = bracket_notation)) %>% 
+               values = RCLabels::paste_pref_suff(pref = primary_oil_products, suff = "Oil and gas extraction", notation = RCLabels::bracket_notation)) %>% 
   insert_after(after = "Natural gas", 
                # values = paste0("Natural gas", from_notation[["suff_start"]], "Oil and gas extraction", from_notation[["suff_end"]]))
-               values = RCLabels::paste_pref_suff(pref = "Natural gas", suff = "Oil and gas extraction", notation = bracket_notation))
+               values = RCLabels::paste_pref_suff(pref = "Natural gas", suff = "Oil and gas extraction", notation = RCLabels::bracket_notation))
 usethis::use_data(products, overwrite = TRUE)
 
 
