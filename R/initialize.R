@@ -33,6 +33,8 @@
 #' @param .iea_file The path to the raw IEA data file for which quality assurance is desired
 #' @param text A string containing text to be parsed as an IEA file.
 #' @param expected_1st_line_start The expected start of the first line of `iea_file`. Default is ",,TIME".
+#' @param country The name of the country column. 
+#'                Default is "COUNTRY".
 #' @param expected_2nd_line_start The expected start of the second line of `iea_file`. Default is "COUNTRY,FLOW,PRODUCT".
 #' @param expected_simple_start The expected starting of the first line of `iea_file`. 
 #'                              Default is the value of `expected_2nd_line_start`.
@@ -62,7 +64,8 @@
 slurp_iea_to_raw_df <- function(.iea_file = NULL, 
                                 text = NULL, 
                                 expected_1st_line_start = ",,TIME", 
-                                expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
+                                country = "COUNTRY",
+                                expected_2nd_line_start = paste0(country, ",FLOW,PRODUCT"), 
                                 expected_simple_start = expected_2nd_line_start, 
                                 ensure_ascii_countries = TRUE) {
   assertthat::assert_that(xor(!is.null(.iea_file), !is.null(text)), 
@@ -138,7 +141,13 @@ slurp_iea_to_raw_df <- function(.iea_file = NULL,
       dplyr::mutate(
         # This hint is from
         # https://stackoverflow.com/questions/39148759/remove-accents-from-a-dataframe-column-in-r
-        COUNTRY = stringi::stri_trans_general(COUNTRY, id = "Latin-ASCII")
+        # COUNTRY = stringi::stri_trans_general(COUNTRY,id = "Latin-ASCII")
+        # iconv is much faster than stringi.
+        # First, convert from latin1 to ascii. 
+        "{country}" := iconv(.data[[country]], from = "latin1", to = "ASCII//TRANSLIT"), 
+        # However, this results in "^o" for o with circumflex as in Côte d'Ivoire.
+        # So replace those strings with simple "o"
+        "{country}" := gsub(.data[[country]], pattern = "\\^o", replacement = "o")
       )
   }
   return(IEAData_withheader)

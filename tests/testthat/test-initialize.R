@@ -13,7 +13,9 @@ test_that("encoding works OK", {
     dplyr::mutate(
       # This hint is from
       # https://stackoverflow.com/questions/39148759/remove-accents-from-a-dataframe-column-in-r
-      COUNTRY = stringi::stri_trans_general(COUNTRY,id = "Latin-ASCII")
+      # COUNTRY = stringi::stri_trans_general(COUNTRY,id = "Latin-ASCII")
+      COUNTRY = iconv(COUNTRY, from = "latin1", to = "ASCII//TRANSLIT"), 
+      COUNTRY = gsub(COUNTRY, pattern = "\\^o", replacement = "o")
     )
   expect_equal(res$COUNTRY[[2]], "Cote d'Ivoire")
   expect_equal(res$COUNTRY[[3]], "Curacao/Netherlands Antilles")

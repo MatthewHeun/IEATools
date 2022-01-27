@@ -8,7 +8,8 @@ slurp_iea_to_raw_df(
   .iea_file = NULL,
   text = NULL,
   expected_1st_line_start = ",,TIME",
-  expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT",
+  country = "COUNTRY",
+  expected_2nd_line_start = paste0(country, ",FLOW,PRODUCT"),
   expected_simple_start = expected_2nd_line_start,
   ensure_ascii_countries = TRUE
 )
@@ -19,6 +20,9 @@ slurp_iea_to_raw_df(
 \item{text}{A string containing text to be parsed as an IEA file.}
 
 \item{expected_1st_line_start}{The expected start of the first line of \code{iea_file}. Default is ",,TIME".}
+
+\item{country}{The name of the country column.
+Default is "COUNTRY".}
 
 \item{expected_2nd_line_start}{The expected start of the second line of \code{iea_file}. Default is "COUNTRY,FLOW,PRODUCT".}
 
