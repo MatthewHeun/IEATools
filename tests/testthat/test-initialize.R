@@ -429,10 +429,6 @@ test_that("augment_iea_df() works", {
 })
 
 
-###########################################################
-context("Testing munge_to_tidy")
-###########################################################
-
 test_that("remove_agg_memo_flows() works as expected", {
   for (yr in IEATools::valid_iea_release_years) {
     Cleaned <- sample_iea_data_path(yr) %>% 
