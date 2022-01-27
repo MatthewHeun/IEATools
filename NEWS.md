@@ -3,6 +3,10 @@ title: "Release notes for `IEATools`"
 output: html_document
 ---
 
+* Strange Mac encodings for Cote d'Ivoire and 
+  Curacao/Netherlands Antilles 
+  now handled correctly by the `override_df`
+  mechanism in `use_iso_countries()`.
 * Adapt to changes in `RCLabels`: 
   `keep_pref_suff()` --> `get_pref_suff()`, 
   among others.
