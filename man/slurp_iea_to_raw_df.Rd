@@ -9,22 +9,28 @@ slurp_iea_to_raw_df(
   text = NULL,
   expected_1st_line_start = ",,TIME",
   expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT",
-  expected_simple_start = expected_2nd_line_start
+  expected_simple_start = expected_2nd_line_start,
+  ensure_ascii_countries = TRUE
 )
 }
 \arguments{
-\item{.iea_file}{the path to the raw IEA data file for which quality assurance is desired}
+\item{.iea_file}{The path to the raw IEA data file for which quality assurance is desired}
 
-\item{text}{a string containing text to be parsed as an IEA file.}
+\item{text}{A string containing text to be parsed as an IEA file.}
 
-\item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is ",,TIME".}
+\item{expected_1st_line_start}{The expected start of the first line of \code{iea_file}. Default is ",,TIME".}
 
-\item{expected_2nd_line_start}{the expected start of the second line of \code{iea_file}. Default is "COUNTRY,FLOW,PRODUCT".}
+\item{expected_2nd_line_start}{The expected start of the second line of \code{iea_file}. Default is "COUNTRY,FLOW,PRODUCT".}
 
-\item{expected_simple_start}{the expected starting of the first line of \code{iea_file}. Default is the value of \code{expected_2nd_line_start}.
+\item{expected_simple_start}{The expected starting of the first line of \code{iea_file}.
+Default is the value of \code{expected_2nd_line_start}.
 Note that \code{expected_simple_start} is sometimes encountered in data supplied by the IEA.
 Furthermore, \code{expected_simple_start} could be the format of the file when somebody "helpfully" fiddles with
 the raw data from the IEA.}
+
+\item{ensure_ascii_countries}{A boolean that tells whether to convert country names
+to pure ASCII, removing diacritical marks and accents.
+Default is \code{TRUE}.}
 }
 \value{
 A raw data frame of IEA extended energy balance data with appropriate column titles.

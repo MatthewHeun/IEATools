@@ -1,4 +1,25 @@
 
+test_that("encoding works OK", {
+  # The country names Cote d'Ivoire and Curacao have diacritical marks in their country names.
+  # The "test_country_name_encoding.csv" file is a sample of an IEA data file
+  # which 3 rows, one for World, one for Cote d'Ivoire, and one for Curacao.
+  # This test reads the example file and ensures that the names are convertible to straight 
+  # ASCII as we do in the code itself.
+  res <- data.table::fread(file = system.file("testdata", "test_country_name_encoding.csv", 
+                                              package = "IEATools"), 
+                           header = TRUE, 
+                           encoding = "Latin-1") %>%
+  # Now change it to ascii characters everywhere.
+    dplyr::mutate(
+      # This hint is from
+      # https://stackoverflow.com/questions/39148759/remove-accents-from-a-dataframe-column-in-r
+      COUNTRY = stringi::stri_trans_general(COUNTRY,id = "Latin-ASCII")
+    )
+  expect_equal(res$COUNTRY[[2]], "Cote d'Ivoire")
+  expect_equal(res$COUNTRY[[3]], "Curacao/Netherlands Antilles")
+})
+
+
 test_that("use_iso_countries() works with override", {
   iea_df <- tibble::tribble(~Country, 
                             "People's Republic of China", 
@@ -9,13 +30,10 @@ test_that("use_iso_countries() works with override", {
                             "Former Soviet Union (if no detail)",
                             "South Africa", 
                             "World", 
-                            "Former Yugoslavia (if no detail)", 
-                            "CÙte d'Ivoire",
-                            "CuraÁao/Netherlands Antilles")
+                            "Former Yugoslavia (if no detail)")
   res <- iea_df %>% 
     use_iso_countries()
-  expect_equal(res$Country, c("CHN", "HKG", "WMB", "WAB", "GHA", "SUN", "ZAF", "WLD", "YUG", 
-                              "CIV", "CUW"))
+  expect_equal(res$Country, c("CHN", "HKG", "WMB", "WAB", "GHA", "SUN", "ZAF", "WLD", "YUG"))
 })
 
 
@@ -83,26 +101,6 @@ test_that("use_iso_countries() works as expected", {
       magrittr::extract2("Country") %>% 
       unique() %>% 
       expect_equal(c("WAB", "ZAF"))
-    
-    # Now make GHA into Cote d'Ivoire to be sure it is recoded to CIV.
-    IEAData %>% 
-      dplyr::mutate(
-        Country = dplyr::recode(Country, `Ghana` = "CÙte d'Ivoire")
-      ) %>% 
-      use_iso_countries() %>% 
-      magrittr::extract2("Country") %>% 
-      unique() %>% 
-      expect_equal(c("CIV", "ZAF"))
-    
-    # Now make GHA into Curacao to be sure it is recoded to CUW.
-    IEAData %>% 
-      dplyr::mutate(
-        Country = dplyr::recode(Country, `Ghana` = "CuraÁao/Netherlands Antilles")
-      ) %>% 
-      use_iso_countries() %>% 
-      magrittr::extract2("Country") %>% 
-      unique() %>% 
-      expect_equal(c("CUW", "ZAF"))
   }
 })
 

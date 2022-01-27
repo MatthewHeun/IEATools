@@ -46,8 +46,8 @@ usethis::use_data(country_concordance_cols, overwrite = TRUE)
 # This constant is used in the use_iso_countries() function.
 # The second column is the name in the IEA extended energy balance database.
 # The first column is the 3-letter code we will use in the PFU database.
-# This data frame is how we handle strange spellings or encodings 
-# of country names as well as IEA-only countries and aggregations.
+# This data frame is how we handle non-standard country names
+# as well as IEA-only countries and aggregations.
 # 
 
 override_iso_codes_df <- tibble::tribble(
@@ -58,9 +58,7 @@ override_iso_codes_df <- tibble::tribble(
   "SUN", "Former Soviet Union (if no detail)",
   "WMB", "World marine bunkers", 
   "WAB", "World aviation bunkers", 
-  "YUG", "Former Yugoslavia (if no detail)", 
-  "CIV", "CÙte d'Ivoire",
-  "CUW", "CuraÁao/Netherlands Antilles") %>% 
+  "YUG", "Former Yugoslavia (if no detail)") %>% 
   magrittr::set_names(c(country_concordance_cols$pfu_code, 
                         country_concordance_cols$iea_name))
 usethis::use_data(override_iso_codes_df, overwrite = TRUE)
