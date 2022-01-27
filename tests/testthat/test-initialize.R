@@ -83,6 +83,26 @@ test_that("use_iso_countries() works as expected", {
       magrittr::extract2("Country") %>% 
       unique() %>% 
       expect_equal(c("WAB", "ZAF"))
+    
+    # Now make GHA into Cote d'Ivoire to be sure it is recoded to CIV.
+    IEAData %>% 
+      dplyr::mutate(
+        Country = dplyr::recode(Country, `Ghana` = "CÙte d'Ivoire")
+      ) %>% 
+      use_iso_countries() %>% 
+      magrittr::extract2("Country") %>% 
+      unique() %>% 
+      expect_equal(c("CIV", "ZAF"))
+    
+    # Now make GHA into Curacao to be sure it is recoded to CUW.
+    IEAData %>% 
+      dplyr::mutate(
+        Country = dplyr::recode(Country, `Ghana` = "CuraÁao/Netherlands Antilles")
+      ) %>% 
+      use_iso_countries() %>% 
+      magrittr::extract2("Country") %>% 
+      unique() %>% 
+      expect_equal(c("CUW", "ZAF"))
   }
 })
 

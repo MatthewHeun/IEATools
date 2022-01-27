@@ -44,26 +44,23 @@ usethis::use_data(country_concordance_cols, overwrite = TRUE)
 # 
 # Default override data frame for 3-letter country codes.
 # This constant is used in the use_iso_countries() function.
+# The second column is the name in the IEA extended energy balance database.
+# The first column is the 3-letter code we will use in the PFU database.
+# This data frame is how we handle strange spellings or encodings 
+# of country names as well as IEA-only countries and aggregations.
 # 
 
-override_iso_codes_df <- data.frame(a = c("WLD", 
-                                          "CHN", 
-                                          "HKG", 
-                                          "SUN",
-                                          "WMB", 
-                                          "WAB", 
-                                          "YUG", 
-                                          "CIV",
-                                          "CUW"),
-                                    b = c("World", 
-                                          "People's Republic of China", 
-                                          "Hong Kong (China)", 
-                                          "Former Soviet Union (if no detail)",
-                                          "World marine bunkers", 
-                                          "World aviation bunkers", 
-                                          "Former Yugoslavia (if no detail)", 
-                                          "CÙte d'Ivoire",
-                                          "CuraÁao/Netherlands Antilles")) %>% 
+override_iso_codes_df <- tibble::tribble(
+  ~a, ~b, 
+  "WLD", "World", 
+  "CHN", "People's Republic of China", 
+  "HKG", "Hong Kong (China)", 
+  "SUN", "Former Soviet Union (if no detail)",
+  "WMB", "World marine bunkers", 
+  "WAB", "World aviation bunkers", 
+  "YUG", "Former Yugoslavia (if no detail)", 
+  "CIV", "CÙte d'Ivoire",
+  "CUW", "CuraÁao/Netherlands Antilles") %>% 
   magrittr::set_names(c(country_concordance_cols$pfu_code, 
                         country_concordance_cols$iea_name))
 usethis::use_data(override_iso_codes_df, overwrite = TRUE)
