@@ -14,47 +14,6 @@ valid_iea_release_years <- c(2018, 2019, 2020, 2021)
 usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 
 
-# 
-# Notation
-# 
-
-# Note that open and close are escaped if they contain any of [, ], (, or ). 
-# Otherwise, open and close should not contain any regex special characters.
-# specify_notation <- list(open = " [", 
-#                          close = "]", 
-#                          arrow = " -> ",
-#                          resources_preposition = "of ",
-#                          eiou_preposition = "to ", 
-#                          interface_ind_preposition = "of ",
-#                          final_demand_preposition = "to ")
-# specify_notation$resources_open <- paste0(specify_notation$open, specify_notation$resources_preposition)
-# specify_notation$resources_close <- specify_notation$close
-# specify_notation$eiou_open <- paste0(specify_notation$open, specify_notation$eiou_preposition)
-# specify_notation$eiou_close <- specify_notation$close
-# specify_notation$interface_ind_open <- paste0(specify_notation$open, specify_notation$interface_ind_preposition)
-# specify_notation$interface_ind_close <- specify_notation$close
-# specify_notation$final_demand_open <- paste0(specify_notation$open, specify_notation$final_demand_preposition)
-# specify_notation$final_demand_close <- specify_notation$close
-# usethis::use_data(specify_notation, overwrite = TRUE)
-
-
-# 
-# Notation
-# 
-
-# arrow_notation <- RCLabels::arrow_notation
-# usethis::use_data(arrow_notation, overwrite = TRUE)
-# 
-# bracket_notation <- RCLabels::bracket_notation
-# usethis::use_data(bracket_notation, overwrite = TRUE)
-# 
-# from_notation <- RCLabels::from_notation
-# usethis::use_data(from_notation, overwrite = TRUE)
-# 
-# of_notation <- RCLabels::of_notation
-# usethis::use_data(of_notation, overwrite = TRUE)
-
-
 #
 # Give the column names of IEA data frames in typical left-to-right order.
 # 
