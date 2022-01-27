@@ -9,7 +9,8 @@ use_iso_countries(
   override_df = IEATools::override_iso_codes_df,
   country = IEATools::iea_cols$country,
   pfu_code = IEATools::country_concordance_cols$pfu_code,
-  iea_name = IEATools::country_concordance_cols$iea_name
+  iea_name = IEATools::country_concordance_cols$iea_name,
+  override_suffix = "...override"
 )
 }
 \arguments{
@@ -21,6 +22,9 @@ Default is \code{IEATools::overide_iso_codes_df}.}
 \item{country}{The name of the country column in \code{.iea_df}. Default is "Country".}
 
 \item{pfu_code, iea_name}{See \code{IEATools::countryconcordance_cols}.}
+
+\item{override_suffix}{A suffix added to override columns.
+Default is "...override".}
 }
 \value{
 \code{.iea_df} with 3-letter ISO country abbreviations in the \code{country} column.

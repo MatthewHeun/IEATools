@@ -93,14 +93,18 @@ override_iso_codes_df <- data.frame(a = c("WLD",
                                           "SUN",
                                           "WMB", 
                                           "WAB", 
-                                          "YUG"),
+                                          "YUG", 
+                                          "CIV",
+                                          "CUW"),
                                     b = c("World", 
                                           "People's Republic of China", 
                                           "Hong Kong (China)", 
                                           "Former Soviet Union (if no detail)",
                                           "World marine bunkers", 
                                           "World aviation bunkers", 
-                                          "Former Yugoslavia (if no detail)")) %>% 
+                                          "Former Yugoslavia (if no detail)", 
+                                          "CÙte d'Ivoire",
+                                          "CuraÁao/Netherlands Antilles")) %>% 
   magrittr::set_names(c(country_concordance_cols$pfu_code, 
                         country_concordance_cols$iea_name))
 usethis::use_data(override_iso_codes_df, overwrite = TRUE)

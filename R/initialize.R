@@ -462,6 +462,8 @@ clean_iea_whitespace <- function(.iea_df,
 #'                    Default is `IEATools::overide_iso_codes_df`.
 #' @param country The name of the country column in `.iea_df`. Default is "Country".
 #' @param pfu_code,iea_name See `IEATools::countryconcordance_cols`.
+#' @param override_suffix A suffix added to override columns. 
+#'                        Default is "...override".
 #'
 #' @return `.iea_df` with 3-letter ISO country abbreviations in the `country` column.
 #' 
@@ -476,7 +478,8 @@ use_iso_countries <- function(.iea_df,
                               override_df = IEATools::override_iso_codes_df,
                               country = IEATools::iea_cols$country,
                               pfu_code = IEATools::country_concordance_cols$pfu_code, 
-                              iea_name = IEATools::country_concordance_cols$iea_name){
+                              iea_name = IEATools::country_concordance_cols$iea_name, 
+                              override_suffix = "...override"){
   # Eliminates warnings on column names in the countrycode::codelist data frame.
   country.name.en <- "country.name.en" 
   iso_type <- "iso3c"
@@ -494,14 +497,17 @@ use_iso_countries <- function(.iea_df,
   # The second left_join will be with the override_df and create a column named pfu_code...override.
   # Then, we discriminate among the options, 
   # lastly, leaving the Country column unchanged, if no code has been found.
-  override_col_name <- paste0(pfu_code, "...override")
+  override_col_name <- paste0(pfu_code, override_suffix)
   
   dplyr::left_join(.iea_df, CountryCodeInfo, by = country) %>% 
     # Make sure that the override_df has only two columns:
     # iea_name and pfu_code.
     dplyr::left_join(override_df %>% 
                        dplyr::rename("{country}" := iea_name) %>% 
-                       dplyr::select(.data[[country]], .data[[pfu_code]]), by = country, suffix = c("", "...override")) %>% 
+                       dplyr::select(.data[[country]], 
+                                     .data[[pfu_code]]), 
+                     by = country, 
+                     suffix = c("", override_suffix)) %>% 
     dplyr::mutate(
       "{pfu_code}" := dplyr::case_when(
         # First priority, if we got a match in override_df, use it.
