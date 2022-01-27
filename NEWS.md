@@ -3,10 +3,17 @@ title: "Release notes for `IEATools`"
 output: html_document
 ---
 
-* Strange Mac encodings for Cote d'Ivoire and 
-  Curacao/Netherlands Antilles 
-  now handled correctly by the `override_df`
-  mechanism in `use_iso_countries()`.
+* New argument on `slurp_iea_to_raw_df()`, 
+  `ensure_ascii_countries`, 
+  which converts characters with diacritic marks to 
+  straight ascii.
+* Latin-1 encoding for IEA data files
+  now handled correctly in `slurp_iea_to_raw_df()`.
+  This change enables country names like 
+  "Cote d'Ivoire" 
+  and 
+  "Curacao/Netherlands Antilles" 
+  to be read correctly from the data file.
 * Adapt to changes in `RCLabels`: 
   `keep_pref_suff()` --> `get_pref_suff()`, 
   among others.
