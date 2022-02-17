@@ -817,7 +817,9 @@ extend_to_useful_helper <- function(.sutdata = NULL,
     
     # Calculate the matrix that should be added to the U_f matrix.
     add_to_U_f_mat <- dest_mat_vec_hat_C %>% 
-      matsbyname::aggregate_to_pref_suff_byname(keep = "pref", margin = 1, notation = arr_note) %>%
+      # aggregate_to_pref_suff_byname() is superseded.
+      # matsbyname::aggregate_to_pref_suff_byname(keep = "pref", margin = 1, notation = arr_note) %>%
+      matsbyname::aggregate_pieces_byname(piece = "pref", margin = 1, notation = arr_note) %>%
       matsbyname::clean_byname(margin = 1) %>% 
       # Set column type to industry to match other use matrices.
       matsbyname::setcoltype(industry_type)
@@ -838,7 +840,9 @@ extend_to_useful_helper <- function(.sutdata = NULL,
     # Calculate replacement for the destination matrix (Y_useful instead of Y_f or U_eiou_useful instead of U_eiou)
     add_to_dest_mat <- matsbyname::matrixproduct_byname(dest_mat_vec_hat_C, eta_fu_hat) %>%
       matsbyname::transpose_byname() %>%
-      matsbyname::aggregate_to_pref_suff_byname(keep = "suff", margin = 2, notation = arr_note) %>%
+      # aggregate_to_pref_suff_byname() is superseded.
+      # matsbyname::aggregate_to_pref_suff_byname(keep = "suff", margin = 2, notation = arr_note) %>%
+      matsbyname::aggregate_pieces_byname(piece = "suff", margin = 2, notation = arr_note) %>%
       matsbyname::clean_byname() %>% 
       # Set row and column types to match other destination matrices.
       matsbyname::setrowtype(product_type) %>% 
