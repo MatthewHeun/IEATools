@@ -3,10 +3,14 @@ title: "Release notes for `IEATools`"
 output: html_document
 ---
 
+* Responded to changes in `RCLabels`.
+  Now using "pref" and "suff" instead of "prefix" and "suffix"
+  in several places.
 * New argument on `slurp_iea_to_raw_df()`, 
   `ensure_ascii_countries`, 
   which converts characters with diacritic marks to 
   straight ascii.
+  The default value is `TRUE`.
 * Latin-1 encoding for IEA data files
   now handled correctly in `slurp_iea_to_raw_df()`.
   This change enables country names like 
