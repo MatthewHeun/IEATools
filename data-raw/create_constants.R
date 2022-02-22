@@ -305,6 +305,27 @@ usethis::use_data(biofuels_and_waste_products, overwrite = TRUE)
 electricity_products <- list(electricity = "Electricity")
 usethis::use_data(electricity_products, overwrite = TRUE)
 
+#
+# Non-energy
+# 
+
+nonenergy_products <- list(additives_blending_components = "Additives/blending components",
+                           bitumen = "Bitumen",
+                           coal_tar = "Coal tar",
+                           crude_ngl_feedstocks_if_no_detail = "Crude/NGL/feedstocks (if no detail)",
+                           crude_oil = "Crude oil",
+                           lubricants = "Lubricants",
+                           naphtha = "Naphtha",
+                           natural_gas_liquids = "Natural gas liquids",
+                           oil_shale_and_oil_sands = "Oil shale and oil sands",
+                           other_hydrocarbons = "Other hydrocarbons",
+                           other_oil_products = "Other oil products",
+                           paraffin_waxes = "Paraffin waxes",
+                           refinery_feedstocks = "Refinery feedstocks",
+                           white_spirit_and_sbp = "White spirit & SBP"
+                           )
+usethis::use_data(nonenergy_products, overwrite = TRUE)
+
 
 #
 # Flow types

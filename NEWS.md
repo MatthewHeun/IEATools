@@ -3,6 +3,9 @@ title: "Release notes for `IEATools`"
 output: html_document
 ---
 
+* Adding constant "nonenergy_products" which includes final energy products 
+  such as "Lubricants" which should only occur in the non-energy use sectors, 
+  but also occur in the total final consumption sectors.
 * Responded to changes in `RCLabels`.
   Now using "pref" and "suff" instead of "prefix" and "suffix"
   in several places.
