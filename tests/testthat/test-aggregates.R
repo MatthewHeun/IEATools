@@ -319,7 +319,7 @@ test_that("finaldemand_aggregates() works as expected", {
                     .data[[IEATools::iea_cols$year]]) %>% 
     dplyr::summarise(
       # Net energy
-      EX.d_net = sum(E.dot), 
+      EX.fd_net = sum(E.dot), 
       .groups = "drop"
     )
   
@@ -343,7 +343,7 @@ test_that("finaldemand_aggregates() works as expected", {
                                       IEATools::iea_cols$last_stage, 
                                       IEATools::iea_cols$year)) %>% 
     dplyr::mutate(
-      EX.d_gross = EX.d_net + eiou, 
+      "{IEATools::aggregate_cols$gross_aggregate_demand}" := .data[[IEATools::aggregate_cols$net_aggregate_demand]] + eiou, 
       eiou = NULL
     )
     
