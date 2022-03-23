@@ -168,38 +168,40 @@ form_C_mats <- function(.fu_allocation_table,
                                    rownames = rownames, colnames = colnames, 
                                    rowtypes = rowtypes, coltypes = coltypes)
   
-  # Verify that all rows sum to 1. If not, there has been a problem somewhere.
-  verify <- out %>% 
-    dplyr::mutate(
-      "{.should_be_1_vector}" := matsbyname::rowsums_byname(.data[[matvals]]),
-      "{.is_1}" := matsbyname::difference_byname(.data[[.should_be_1_vector]], 1) %>% 
-        matsbyname::abs_byname() %>% 
-        matsbyname::compare_byname("<=", tol),
-      "{.all_1}" := .data[[.is_1]] %>% matsbyname::all_byname()
-    )
-  # Check that all rows sum to 1.
-  if (!all(verify[[.all_1]] %>% as.logical())) {
-    # Not all rows summed to 1. Emit a warning and return debugging information.
-    warning("Not all rows in the C matrices sum to 1. Returning a diagnostic data frame from form_C_mats().")
-    # Create a problems data frame that we will return instead of out.
-    probs <- verify %>% 
+  # Check that all rows sum to 1, but only if we had some rows to begin with!
+  if (nrow(.fu_allocation_table) > 0) {
+    # Verify that all rows sum to 1. If not, there has been a problem somewhere.
+    verify <- out %>% 
       dplyr::mutate(
-        # Get rid of some columns
-        "{matvals}" := NULL,
-        "{.is_1}" := NULL,
-        "{.all_1}" := NULL
-      ) %>% 
-      matsindf::expand_to_tidy(matvals = .should_be_1_vector) %>% 
-      # Eliminate some unneeded columns
-      dplyr::mutate(
-        "{colnames}" := NULL,
-        "{rowtypes}" := NULL,
-        "{coltypes}" := NULL
-      ) %>%
-      dplyr::filter(
-        abs(.data[[.should_be_1_vector]] - 1) > 1e-6
+        "{.should_be_1_vector}" := matsbyname::rowsums_byname(.data[[matvals]]),
+        "{.is_1}" := matsbyname::difference_byname(.data[[.should_be_1_vector]], 1) %>% 
+          matsbyname::abs_byname() %>% 
+          matsbyname::compare_byname("<=", tol),
+        "{.all_1}" := .data[[.is_1]] %>% matsbyname::all_byname()
       )
-    return(probs)
+    if (!all(verify[[.all_1]] %>% as.logical())) {
+      # Not all rows summed to 1. Emit a warning and return debugging information.
+      warning("Not all rows in the C matrices sum to 1. Returning a diagnostic data frame from form_C_mats().")
+      # Create a problems data frame that we will return instead of out.
+      probs <- verify %>% 
+        dplyr::mutate(
+          # Get rid of some columns
+          "{matvals}" := NULL,
+          "{.is_1}" := NULL,
+          "{.all_1}" := NULL
+        ) %>% 
+        matsindf::expand_to_tidy(matvals = .should_be_1_vector) %>% 
+        # Eliminate some unneeded columns
+        dplyr::mutate(
+          "{colnames}" := NULL,
+          "{rowtypes}" := NULL,
+          "{coltypes}" := NULL
+        ) %>%
+        dplyr::filter(
+          abs(.data[[.should_be_1_vector]] - 1) > 1e-6
+        )
+      return(probs)
+    }
   }
 
   # If we passed the test, we can return the out data frame without the verification columns, 
