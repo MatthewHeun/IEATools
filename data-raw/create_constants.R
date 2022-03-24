@@ -762,7 +762,8 @@ usethis::use_data(non_specified_flows, overwrite = TRUE)
 fd_sectors <- c(eiou_flows,
                 industry_net_flows,
                 transport_domestic_flows,
-                other_flows)
+                other_flows, 
+                non_energy_flows)
 usethis::use_data(fd_sectors, overwrite = TRUE)
 
 
