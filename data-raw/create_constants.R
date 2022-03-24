@@ -52,7 +52,7 @@ usethis::use_data(country_concordance_cols, overwrite = TRUE)
 
 override_iso_codes_df <- tibble::tribble(
   ~a, ~b, 
-  "WLD", "World", 
+  "WRLD", "World", 
   "CHN", "People's Republic of China", 
   "HKG", "Hong Kong (China)", 
   "SUN", "Former Soviet Union (if no detail)",
