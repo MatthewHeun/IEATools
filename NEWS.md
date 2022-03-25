@@ -3,6 +3,8 @@ title: "Release notes for `IEATools`"
 output: html_document
 ---
 
+* Added `non_energy_flows` to `fd_sectors` 
+  to conform to IEA approach to calculating final energy.
 * Adding constant "nonenergy_products" which includes final energy products 
   such as "Lubricants" which should only occur in the non-energy use sectors, 
   but also occur in the total final consumption sectors.
