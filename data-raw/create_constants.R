@@ -523,7 +523,7 @@ usethis::use_data(other_flows, overwrite = TRUE)
 
 non_energy_flows <- list(non_energy_use_industry_transformation_energy = "Non-energy use industry/transformation/energy", 
                          non_energy_use_in_transport = "Non-energy use in transport", 
-                         non_energy_use_in_other = "Non energy use in other")
+                         non_energy_use_in_other = "Non-energy use in other")
 usethis::use_data(non_energy_flows, overwrite = TRUE)
 
 
