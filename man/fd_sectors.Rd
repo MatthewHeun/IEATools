@@ -5,7 +5,7 @@
 \alias{fd_sectors}
 \title{Final demand sectors}
 \format{
-A string list with 51
+A string list with 54
 \describe{
 \item{eiou_flows}{The string vector identifying energy industry own use flows.}
 \item{industry_net_flows}{The string vector identifying non-eiou (net) Industry flows.}

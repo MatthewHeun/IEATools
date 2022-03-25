@@ -35,7 +35,7 @@ test_that("use_iso_countries() works with override", {
                             "Former Yugoslavia (if no detail)")
   res <- iea_df %>% 
     use_iso_countries()
-  expect_equal(res$Country, c("CHN", "HKG", "WMB", "WAB", "GHA", "SUN", "ZAF", "WLD", "YUG"))
+  expect_equal(res$Country, c("CHN", "HKG", "WMB", "WAB", "GHA", "SUN", "ZAF", "WRLD", "YUG"))
 })
 
 
@@ -554,7 +554,7 @@ test_that("use_iso_countries() works as expected", {
     use_iso_countries()
   # Ensure that a "World" country is present.
   n_world_rows <- world %>% 
-    dplyr::filter(Country == "WLD") %>% 
+    dplyr::filter(Country == "WRLD") %>% 
     nrow()
   expect_equal(n_world_rows, 8)
 })
