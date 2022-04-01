@@ -4,7 +4,38 @@ output: html_document
 ---
 
 
-# IEATools 0.1.62 (2021-10-12)
+# IEATools 0.1.63 (2022-04-01)
+
+* Added `non_energy_flows` to `fd_sectors` 
+  to conform to IEA approach to calculating final energy.
+* Adding constant "nonenergy_products" which includes final energy products 
+  such as "Lubricants" which should only occur in the non-energy use sectors, 
+  but also occur in the total final consumption sectors.
+* Responded to changes in `RCLabels`.
+  Now using "pref" and "suff" instead of "prefix" and "suffix"
+  in several places.
+* New argument on `slurp_iea_to_raw_df()`, 
+  `ensure_ascii_countries`, 
+  which converts characters with diacritic marks to 
+  straight ascii.
+  The default value is `TRUE`.
+* Latin-1 encoding for IEA data files
+  now handled correctly in `slurp_iea_to_raw_df()`.
+  This change enables country names like 
+  "Cote d'Ivoire" 
+  and 
+  "Curacao/Netherlands Antilles" 
+  to be read correctly from the data file.
+* Adapt to changes in `RCLabels`: 
+  `keep_pref_suff()` --> `get_pref_suff()`, 
+  among others.
+* Fixed a bug where Products with no supply would create an `NA`
+  and lead to a "Missing value where TRUE/FALSE needed" error.
+* Fixed a bug where countries with no Energy industry own use
+  would fail in the workflow.
+
+
+# IEATools 0.1.62 (2021-10-12) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5565349.svg)](https://doi.org/10.5281/zenodo.5565349)
 
 * `form_eta_fu_phi_u_vecs()` now gives only the product name 
   as the row name of the phi vectors, but
@@ -32,7 +63,7 @@ output: html_document
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.61 (2021-09-06)
+# IEATools 0.1.61 (2021-09-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5566416.svg)](https://doi.org/10.5281/zenodo.5566416)
 
 * Added descriptive error messages when unknown `Flow.aggregation.point`, 
   `Flow`, or `Product` are encountered in `arrange_iea_fu_allocation_template()`.

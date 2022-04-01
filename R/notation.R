@@ -3,9 +3,9 @@
 #' @description
 #' IEA data can be "specified" by adding additional information.
 #' Three notations are useful: arrow, bracket, and from.
-#' Arrow notation is `r matsbyname::paste_pref_suff(pref = "from", suff = "to", notation = arrow_notation)`, and
+#' Arrow notation is `r RCLabels::paste_pref_suff(pref = "from", suff = "to", notation = RCLabels::arrow_notation)`, and
 #' bracket notation is
-#' `r matsbyname::paste_pref_suff(pref = "destination", suff = "source", notation = bracket_notation) %>% gsub(pattern = "[", replacement = paste0("\\", "["), x = ., fixed = TRUE) %>% gsub(pattern = "]", replacement = paste0("\\", "]"), x = ., fixed = TRUE)`.
+#' `r RCLabels::paste_pref_suff(pref = "destination", suff = "source", notation = RCLabels::bracket_notation) %>% gsub(pattern = "[", replacement = paste0("\\", "["), x = ., fixed = TRUE) %>% gsub(pattern = "]", replacement = paste0("\\", "]"), x = ., fixed = TRUE)`.
 #' These functions change matrix row/column names 
 #' among the notations.
 #' 
@@ -42,8 +42,8 @@ NULL
 #' @rdname switch-notation
 arrow_to_from_byname <- function(m, margin = c(1, 2)) {
   matsbyname::switch_notation_byname(m, margin = margin, 
-                                     from = list(IEATools::arrow_notation), 
-                                     to = list(IEATools::from_notation), 
+                                     from = list(RCLabels::arrow_notation), 
+                                     to = list(RCLabels::from_notation), 
                                      flip = list(TRUE))
 }
 
@@ -52,8 +52,8 @@ arrow_to_from_byname <- function(m, margin = c(1, 2)) {
 #' @rdname switch-notation
 from_to_arrow_byname <- function(m, margin = c(1, 2)) {
   matsbyname::switch_notation_byname(m, margin = margin, 
-                                     from = list(IEATools::from_notation), 
-                                     to = list(IEATools::arrow_notation),
+                                     from = list(RCLabels::from_notation), 
+                                     to = list(RCLabels::arrow_notation),
                                      flip = list(TRUE))
 }
 
@@ -62,8 +62,8 @@ from_to_arrow_byname <- function(m, margin = c(1, 2)) {
 #' @rdname switch-notation
 arrow_to_bracket_byname <- function(m, margin = c(1, 2)) {
   matsbyname::switch_notation_byname(m, margin = margin, 
-                                     from = list(IEATools::arrow_notation), 
-                                     to = list(IEATools::bracket_notation), 
+                                     from = list(RCLabels::arrow_notation), 
+                                     to = list(RCLabels::bracket_notation), 
                                      flip = list(TRUE))
 }
 
@@ -72,8 +72,8 @@ arrow_to_bracket_byname <- function(m, margin = c(1, 2)) {
 #' @rdname switch-notation
 bracket_to_arrow_byname <- function(m, margin = c(1, 2)) {
   matsbyname::switch_notation_byname(m, margin = margin, 
-                                     from = list(IEATools::bracket_notation), 
-                                     to = list(IEATools::arrow_notation), 
+                                     from = list(RCLabels::bracket_notation), 
+                                     to = list(RCLabels::arrow_notation), 
                                      flip = list(TRUE))
 }
 

@@ -135,10 +135,10 @@ test_that("extend_to_useful_helper works as intended", {
   
   C_Y <- Allocation_Table %>% 
     dplyr::mutate(
-      rownames = matsbyname::paste_pref_suff(pref = Ef.product, suff = Destination, notation = arrow_notation), 
-      colnames = matsbyname::paste_pref_suff(pref = Machine, suff = Eu.product, notation = arrow_notation), 
-      rowtypes = matsbyname::paste_pref_suff(pref = row_col_types$product, suff = row_col_types$industry, notation = arrow_notation),
-      coltypes = matsbyname::paste_pref_suff(pref = row_col_types$industry, suff = row_col_types$product, notation = arrow_notation),
+      rownames = RCLabels::paste_pref_suff(pref = Ef.product, suff = Destination, notation = RCLabels::arrow_notation), 
+      colnames = RCLabels::paste_pref_suff(pref = Machine, suff = Eu.product, notation = RCLabels::arrow_notation), 
+      rowtypes = RCLabels::paste_pref_suff(pref = row_col_types$product, suff = row_col_types$industry, notation = RCLabels::arrow_notation),
+      coltypes = RCLabels::paste_pref_suff(pref = row_col_types$industry, suff = row_col_types$product, notation = RCLabels::arrow_notation),
       matnames = "C_Y", 
       Destination = NULL, 
       Ef.product = NULL, 
@@ -155,16 +155,16 @@ test_that("extend_to_useful_helper works as intended", {
   
   eta.fu_rownames <- Efficiency_Table %>% 
     dplyr::mutate(
-      rownames = matsbyname::paste_pref_suff(pref = Machine, suff = Eu.product, notation = arrow_notation)
+      rownames = RCLabels::paste_pref_suff(pref = Machine, suff = Eu.product, notation = RCLabels::arrow_notation)
     ) %>% 
     magrittr::extract2("rownames")
   
   eta_fu <- Efficiency_Table %>% 
     magrittr::extract2("eta.fu") %>% 
     matrix(ncol = 1, dimnames = list(eta.fu_rownames, "eta.fu")) %>% 
-    matsbyname::setrowtype(matsbyname::paste_pref_suff(pref = row_col_types$industry, 
+    matsbyname::setrowtype(RCLabels::paste_pref_suff(pref = row_col_types$industry, 
                                                        suff = row_col_types$product, 
-                                                       notation = arrow_notation))
+                                                       notation = RCLabels::arrow_notation))
   
   # Calculate actual results
   
@@ -175,7 +175,7 @@ test_that("extend_to_useful_helper works as intended", {
   
   ## Step 1
   
-  Y_f_vec <- matsbyname::vectorize_byname(Y_f, notation = arrow_notation)
+  Y_f_vec <- matsbyname::vectorize_byname(Y_f, notation = RCLabels::arrow_notation)
   Y_f_vec_hat <- matsbyname::hatize_byname(Y_f_vec, keep = "rownames")
   Y_f_vec_hat_C_Y <- matsbyname::matrixproduct_byname(Y_f_vec_hat, C_Y)
   
@@ -190,7 +190,7 @@ test_that("extend_to_useful_helper works as intended", {
   ## Step 2
   
   add_to_U_feed_expected <- Y_f_vec_hat_C_Y %>% 
-    matsbyname::aggregate_to_pref_suff_byname(keep = "prefix", margin = 1, notation = arrow_notation) %>%
+    matsbyname::aggregate_to_pref_suff_byname(keep = "pref", margin = 1, notation = RCLabels::arrow_notation) %>%
     matsbyname::clean_byname(margin = 1) %>% 
     matsbyname::setcoltype(row_col_types$industry)
   
@@ -213,7 +213,7 @@ test_that("extend_to_useful_helper works as intended", {
   
   add_to_Y_expected <- matsbyname::matrixproduct_byname(Y_f_vec_hat_C_Y, eta_fu_hat) %>%
     matsbyname::transpose_byname() %>%
-    matsbyname::aggregate_to_pref_suff_byname(keep = "suffix", margin = 2, notation = arrow_notation) %>%
+    matsbyname::aggregate_to_pref_suff_byname(keep = "suff", margin = 2, notation = RCLabels::arrow_notation) %>%
     matsbyname::clean_byname() %>% 
     matsbyname::setrowtype(row_col_types$product) %>% 
     matsbyname::setcoltype(row_col_types$industry)

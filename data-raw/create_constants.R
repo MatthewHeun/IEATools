@@ -14,47 +14,6 @@ valid_iea_release_years <- c(2018, 2019, 2020, 2021)
 usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 
 
-# 
-# Notation
-# 
-
-# Note that open and close are escaped if they contain any of [, ], (, or ). 
-# Otherwise, open and close should not contain any regex special characters.
-# specify_notation <- list(open = " [", 
-#                          close = "]", 
-#                          arrow = " -> ",
-#                          resources_preposition = "of ",
-#                          eiou_preposition = "to ", 
-#                          interface_ind_preposition = "of ",
-#                          final_demand_preposition = "to ")
-# specify_notation$resources_open <- paste0(specify_notation$open, specify_notation$resources_preposition)
-# specify_notation$resources_close <- specify_notation$close
-# specify_notation$eiou_open <- paste0(specify_notation$open, specify_notation$eiou_preposition)
-# specify_notation$eiou_close <- specify_notation$close
-# specify_notation$interface_ind_open <- paste0(specify_notation$open, specify_notation$interface_ind_preposition)
-# specify_notation$interface_ind_close <- specify_notation$close
-# specify_notation$final_demand_open <- paste0(specify_notation$open, specify_notation$final_demand_preposition)
-# specify_notation$final_demand_close <- specify_notation$close
-# usethis::use_data(specify_notation, overwrite = TRUE)
-
-
-# 
-# Notation
-# 
-
-arrow_notation <- matsbyname::arrow_notation()
-usethis::use_data(arrow_notation, overwrite = TRUE)
-
-bracket_notation <- matsbyname::bracket_notation()
-usethis::use_data(bracket_notation, overwrite = TRUE)
-
-from_notation <- matsbyname::from_notation()
-usethis::use_data(from_notation, overwrite = TRUE)
-
-of_notation <- matsbyname::of_notation()
-usethis::use_data(of_notation, overwrite = TRUE)
-
-
 #
 # Give the column names of IEA data frames in typical left-to-right order.
 # 
@@ -85,14 +44,21 @@ usethis::use_data(country_concordance_cols, overwrite = TRUE)
 # 
 # Default override data frame for 3-letter country codes.
 # This constant is used in the use_iso_countries() function.
+# The second column is the name in the IEA extended energy balance database.
+# The first column is the 3-letter code we will use in the PFU database.
+# This data frame is how we handle non-standard country names
+# as well as IEA-only countries and aggregations.
 # 
 
-override_iso_codes_df <- data.frame(a = c("CHN", "HKG", "WMB", "WAB", "WLD"),
-                                    b = c("People's Republic of China", 
-                                          "Hong Kong (China)", 
-                                          "World marine bunkers", 
-                                          "World aviation bunkers", 
-                                          "World")) %>% 
+override_iso_codes_df <- tibble::tribble(
+  ~a, ~b, 
+  "WRLD", "World", 
+  "CHN", "People's Republic of China", 
+  "HKG", "Hong Kong (China)", 
+  "SUN", "Former Soviet Union (if no detail)",
+  "WMB", "World marine bunkers", 
+  "WAB", "World aviation bunkers", 
+  "YUG", "Former Yugoslavia (if no detail)") %>% 
   magrittr::set_names(c(country_concordance_cols$pfu_code, 
                         country_concordance_cols$iea_name))
 usethis::use_data(override_iso_codes_df, overwrite = TRUE)
@@ -280,7 +246,7 @@ oil_and_oil_products <- list(primary_oil_products,
                              paraffin_waxes = "Paraffin waxes",
                              petroleum_coke = "Petroleum coke",
                              other_oil_products = "Other oil products") %>% 
-  unlist() %>% 
+  unlist(recursive = TRUE) %>% 
   as.list()
 usethis::use_data(oil_and_oil_products, overwrite = TRUE)
 
@@ -338,6 +304,27 @@ usethis::use_data(biofuels_and_waste_products, overwrite = TRUE)
 
 electricity_products <- list(electricity = "Electricity")
 usethis::use_data(electricity_products, overwrite = TRUE)
+
+#
+# Non-energy
+# 
+
+nonenergy_products <- list(additives_blending_components = "Additives/blending components",
+                           bitumen = "Bitumen",
+                           coal_tar = "Coal tar",
+                           crude_ngl_feedstocks_if_no_detail = "Crude/NGL/feedstocks (if no detail)",
+                           crude_oil = "Crude oil",
+                           lubricants = "Lubricants",
+                           naphtha = "Naphtha",
+                           natural_gas_liquids = "Natural gas liquids",
+                           oil_shale_and_oil_sands = "Oil shale and oil sands",
+                           other_hydrocarbons = "Other hydrocarbons",
+                           other_oil_products = "Other oil products",
+                           paraffin_waxes = "Paraffin waxes",
+                           refinery_feedstocks = "Refinery feedstocks",
+                           white_spirit_and_sbp = "White spirit & SBP"
+                           )
+usethis::use_data(nonenergy_products, overwrite = TRUE)
 
 
 #
@@ -536,7 +523,7 @@ usethis::use_data(other_flows, overwrite = TRUE)
 
 non_energy_flows <- list(non_energy_use_industry_transformation_energy = "Non-energy use industry/transformation/energy", 
                          non_energy_use_in_transport = "Non-energy use in transport", 
-                         non_energy_use_in_other = "Non energy use in other")
+                         non_energy_use_in_other = "Non-energy use in other")
 usethis::use_data(non_energy_flows, overwrite = TRUE)
 
 
@@ -563,8 +550,8 @@ usethis::use_data(aggregation_flows, overwrite = TRUE)
 # Default names for columns in aggregate data frames
 #
 aggregate_cols <- list(aggregate_primary = "EX.p",
-                       net_aggregate_demand = "EX.d_net",
-                       gross_aggregate_demand = "EX.d_gross")
+                       net_aggregate_demand = "EX.fd_net",
+                       gross_aggregate_demand = "EX.fd_gross")
 usethis::use_data(aggregate_cols, overwrite = TRUE)
 
 
@@ -741,13 +728,13 @@ products <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   # In specify_primary_production(), some Products are renamed to account for the fact that they come from a different industry.
   insert_after(after = primary_coal_products[length(primary_coal_products)], 
                # values = paste0(primary_coal_products, from_notation[["suff_start"]], "Coal mines", from_notation[["suff_end"]])) %>% 
-               values = matsbyname::paste_pref_suff(pref = primary_coal_products, suff = "Coal mines", notation = bracket_notation)) %>% 
+               values = RCLabels::paste_pref_suff(pref = primary_coal_products, suff = "Coal mines", notation = RCLabels::bracket_notation)) %>% 
   insert_after(after = primary_oil_products[length(primary_oil_products)], 
                # values = paste0(primary_oil_products, from_notation[["suff_start"]], "Oil and gas extraction", from_notation[["suff_end"]])) %>% 
-               values = matsbyname::paste_pref_suff(pref = primary_oil_products, suff = "Oil and gas extraction", notation = bracket_notation)) %>% 
+               values = RCLabels::paste_pref_suff(pref = primary_oil_products, suff = "Oil and gas extraction", notation = RCLabels::bracket_notation)) %>% 
   insert_after(after = "Natural gas", 
                # values = paste0("Natural gas", from_notation[["suff_start"]], "Oil and gas extraction", from_notation[["suff_end"]]))
-               values = matsbyname::paste_pref_suff(pref = "Natural gas", suff = "Oil and gas extraction", notation = bracket_notation))
+               values = RCLabels::paste_pref_suff(pref = "Natural gas", suff = "Oil and gas extraction", notation = RCLabels::bracket_notation))
 usethis::use_data(products, overwrite = TRUE)
 
 
@@ -775,7 +762,8 @@ usethis::use_data(non_specified_flows, overwrite = TRUE)
 fd_sectors <- c(eiou_flows,
                 industry_net_flows,
                 transport_domestic_flows,
-                other_flows)
+                other_flows, 
+                non_energy_flows)
 usethis::use_data(fd_sectors, overwrite = TRUE)
 
 

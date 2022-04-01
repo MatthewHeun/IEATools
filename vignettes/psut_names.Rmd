@@ -1,0 +1,218 @@
+---
+title: "PSUT Names"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{PSUT Names}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(IEATools)
+```
+
+```{r functions, include = FALSE}
+colorize <- function(color, x) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{%s}", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'>%s</span>", color,
+      x)
+  } else x
+}
+```
+
+## Introduction
+
+The `prep_psut()` function creates `matsindf`-style data frames of matrices.
+Each matrix has character strings for row and column names.
+The row and column names follow strict conventions.
+This vignette documents those conventions.
+
+
+## Rules
+
+The rules for the row and column names are given below:
+
+1. All row and column names consists of a base part (the noun)
+   and metadata (usually in the form of prepositional phrases) 
+2. The base (noun) always matches the type of thing on that margin.
+   E.g., if "Stock changes [of Crude oil]" is a row name in the make (**V**) matrix,
+   the base part ("Stock changes") is an industry, as all row names in **V** denote.
+3. The metadata are separated from the base by the strings "[" and "]".
+3. The metadata can include any number of prepositional phrases.
+   In the example above, "of Crude oil" is metadata that modifies
+   the base name ("Stock changes")
+4. Each prepositional phrase consists of a single-word preposition and 
+   its (possibly multi-word) object.
+5. Prepositions can be one of "of", "in", "into", "from", "to", and "->". 
+   (Note that "->" indicates the outflowing product, 
+   a concept for which there is no good preposition in the English language.)
+
+
+## Matrices
+
+### **R** matrix
+
+
+#### Rows
+
+The **R** matrix has industries (resources) in rows. 
+All row names in the **R** matrix have the same form:
+
+1. Resources: "Resources [of `primary_product`]", 
+   where `primary_product` is a primary energy carrier.
+   Example: "Resources [of Crude oil]".
+   `r colorize("blue", 'With country: "Resources [of Crude oil in SAU]".')`
+
+
+#### Columns
+
+The **R** matrix has products (energy carriers) in columns.
+All column names in the **R** matrix have the same form:
+
+1. Primary products: "`primary_product` [from Resources]",
+   where `primary_product` is a primary energy carrier.
+   Example: "Crude oil [from Resources]".
+   `r colorize("blue", 'With country: "Crude oil [from Resources in SAU]".')`
+
+
+### **V** matrix
+
+
+#### Rows
+
+Like the **R** matrix, the **V** matrix has
+industries (processing stages) in rows.
+There are several options for names of rows in the **V** matrix.
+
+1. Imports: "Imports [of `product`]", where `product` is a primary or final
+   energy product.
+   Example: "Imports [of Crude oil]".
+  `r colorize("blue", 'With country: "Imports [of Crude oil into USA]".')`
+2. Stock changes: "Stock changes [of `product`]", where `product` is a primary or 
+   final energy carrier.
+   Example: "Stock changes [of Crude oil]".
+  `r colorize("blue", 'With country: "Stock changes [of Crude oil in SAU]".')`
+3. Transformation processes: "`pf_machine`", where `pf_machine` is 
+   a machine that converts primary energy to final energy. 
+   These data come from the IEA's extended energy balances.
+   Example: "Oil refineries".
+  `r colorize("blue", 'With country: "Oil refineries [in SAU]".')`
+4. Statistical differences: "Statistical differences" which originate from the IEA's
+   extended energy balances.
+   Example: "Statistical differences". 
+   `r colorize("blue", 'With country: "Statistical differences [in SAU]".')`
+5. Manufacture processes: "Manufacture [of `product`]", where `product` is any 
+   energy carrier. These processes are inserted to convert
+   Resources into primary products.
+   Example: "Manufacture [of Hydro]".
+  `r colorize("blue", 'With country: "Manufacture [of Hydro in ISL]".')`
+6. Final-to-useful machines: "`fu_machine` -> `useful_product`", 
+   where `fu_machine` is the name of a machine that converts final energy 
+   into useful energy and `useful_product` is the name of a useful energy product.
+   Example: "LPG stoves -> MTH.200.C".
+   `r colorize("red", 'fu_machine [-> useful_product]')`
+  `r colorize("blue", 'With country: "LPG stoves [-> MTH.200.C in GHA]".')`
+
+
+#### Columns
+
+Like the **R** matrix, the **V** matrix has
+products (energy carriers) in columns. 
+There are two options for names of columns in the **V** matrix.
+
+1. Primary and final energy carriers: "`product`" where `product` is the 
+   unmodified name of the energy carrier in the IEA extended energy balances.
+   Example: "Anthracite".
+  `r colorize("blue", 'With country: "Anthracite [in AUS]".')`
+2. Useful products: "`useful_product` [from `fu_machine`]", 
+   where `useful_product` is a useful energy carrier and `fu_machine` is a 
+   final-to-useful machine.
+   Example: "HPA [from Air compressors]"
+   `r colorize("blue", 'With country: "HPA [from Air compressors in USA]".')`
+
+
+
+### **U** matrix
+
+
+#### Rows
+
+The **U** matrix has products (energy carriers) in rows.
+
+1. Resource flows: "`primary_product` [from Resources]", where
+   `primary_product` is a primary energy carrier.
+   Example: "Biogasoline [from Resources]".
+  `r colorize("blue", 'With country: "Biogasoline [from Resources in USA]".')`
+2. Primary and final energy flows: "`product`", where product is a primary
+   or final energy carrier.
+   Example: "Electricity".
+  `r colorize("blue", 'With country: "Electricity [in GBR]".')`
+3. Useful products: "`useful_product` [from `fu_machine`]"], where
+   `useful_product` is a useful energy carrier and 
+   `fu_machine` is a final-to-useful machine.
+   Example: "HPL [from Electric pumps]".
+  `r colorize("blue", 'With country: "HPL [from Electric pumps in ESP]".')`
+
+
+#### Columns
+
+The **U** matrix has industries (processing stages) in columns.
+
+1. Primary-to-final machines: "`pf_machine`" where `pf_machine` is the name
+   of a primary-to-final machine.
+   Example: "Blast furnaces"
+  `r colorize("blue", 'With country: "Blast furnaces [in USA]".')`
+2. Final-to-useful machines: "`fu_machine` -> `useful_product`", where
+   `fu_machine` is a final-to-useful machine and 
+   `useful_product` is a useful energy carrier. 
+   `r colorize("red", 'fu_machine [-> useful_product]')`
+   `r colorize("blue", 'With country: "Ammonia synthesizers [-> HTH.400.C in POL]".')`
+
+
+### **Y** matrix
+
+#### Rows
+
+Like the **U** matrix, the **Y** matrix has products (energy carriers) in rows.
+
+1. Primary and final products: "`product`", where `product` is the 
+   unmodified name of the energy carrier in the IEA extended energy balances.
+   Example: "Naptha".
+  `r colorize("blue", 'With country: "Naptha [in ESP]".')`
+2. Useful products: "`product` [from `fu_machine`]", where `product` is a useful
+   energy carrier and `fu_machine` is a final-to-useful machine.
+   Example: "RoP [from Electric cars]".
+  `r colorize("blue", 'With country: "RoP [from Electric cars in USA]".')`
+  
+
+#### Columns
+
+Like the **U** matrix, the **Y** matrix has industries (final demand sectors) in columns.
+
+1. Sectors: "`sector`", where `sector` is the name of a final demand sector, 
+   unmodified from the IEA extended energy balances. 
+   Example: "Construction".
+  `r colorize("blue", 'With country: "Construction [in USA]".')`
+2. Exports: "Exports [of `product`]", where `product` is a primary or final
+   energy product.
+   Example: "Exports [of Coking coal]".
+  `r colorize("blue", 'With country: "Exports [of Coking coal from USA]".')`
+3. Exports to World marine/aviation bunkers: 
+   "Exports to World `bunker_type` bunkers [of `product`]", where
+   `bunker_type` is either "marine" or "aviation" and `product` is a 
+   (typically) final energy product.
+   Example: "Exports to World marine bunkers [of Biodiesels]".
+  `r colorize("blue", 'With country: "Exports to World marine bunkers 
+  [of Biodiesels from USA]".')`
+   
+
+ 

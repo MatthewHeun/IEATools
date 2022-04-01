@@ -22,10 +22,10 @@ specify_primary_production(
   liquefaction_regas_reassign = IEATools::industry_flows$oil_and_gas_extraction,
   transformation_processes = IEATools::aggregation_flows$transformation_processes,
   resources = IEATools::tpes_flows$resources,
-  resource_products_notation = IEATools::from_notation,
-  resources_flow_notation = IEATools::of_notation,
+  resource_products_notation = RCLabels::from_notation,
+  resources_flow_notation = RCLabels::of_notation,
   manufacture = "Manufacture",
-  manufacture_flow_notation = IEATools::of_notation
+  manufacture_flow_notation = RCLabels::of_notation
 )
 }
 \arguments{
@@ -69,11 +69,11 @@ Default is "\code{Resources}".}
 
 \item{resource_products_notation}{The notation to be used for defining products coming from the new resource industries.
 E.g., the Crude oil product will be called "Crude oil [from Resources]".
-Default is \code{IEATools::from_notation}.}
+Default is \code{RCLabels::from_notation}.}
 
 \item{resources_flow_notation}{The notation to be used for defining the new resource industries.
 E.g., the Crude oil resource will be called "Resources [of Crude oil]".
-Default is \code{IEATools::of_notation}.}
+Default is \code{RCLabels::of_notation}.}
 
 \item{manufacture}{The name of the industries that convert resource-products \(inputs\) into actual products \(outputs\),
 when a corresponding a corresponding industry does not exist by default in IEA data.
@@ -81,7 +81,7 @@ Default is "Manufacture".}
 
 \item{manufacture_flow_notation}{The notation to be used for the newly created manufacture industries
 \(each manufacturing industry is specified\) by the product it manufactures.
-Default is \code{IEATools::of_notation}.}
+Default is \code{RCLabels::of_notation}.}
 }
 \value{
 A \code{.tidy_iea_df} with adjusted production information for primary energy

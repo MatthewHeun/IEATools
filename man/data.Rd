@@ -7,6 +7,6 @@
 .data
 }
 \description{
-See \link[rlang:tidyeval-data]{rlang::.data} for details.
+See \link[rlang:dot-data]{rlang::.data} for details.
 }
 \keyword{internal}

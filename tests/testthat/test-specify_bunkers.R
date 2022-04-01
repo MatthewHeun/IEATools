@@ -51,7 +51,7 @@ test_that("interface industries are correctly specified after specifying bunkers
     # Ensure that there are no interface_industries remaining
     expect_equal(nrow(specified %>% dplyr::filter(Flow == i)), 0)
     # Ensure that every interface_industry ends with "]", indicating that it has been specified.
-    expect_true(specified %>% dplyr::filter(startsWith(Flow, i) & endsWith(Flow, of_notation[["suff_end"]])) %>% nrow() > 0)
+    expect_true(specified %>% dplyr::filter(startsWith(Flow, i) & endsWith(Flow, RCLabels::of_notation[["suff_end"]])) %>% nrow() > 0)
   }
 })
 

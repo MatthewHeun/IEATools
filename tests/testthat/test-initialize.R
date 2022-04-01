@@ -1,4 +1,27 @@
 
+test_that("encoding works OK", {
+  # The country names Cote d'Ivoire and Curacao have diacritical marks in their country names.
+  # The "test_country_name_encoding.csv" file is a sample of an IEA data file
+  # which 3 rows, one for World, one for Cote d'Ivoire, and one for Curacao.
+  # This test reads the example file and ensures that the names are convertible to straight 
+  # ASCII as we do in the code itself.
+  res <- data.table::fread(file = system.file("testdata", "test_country_name_encoding.csv", 
+                                              package = "IEATools"), 
+                           header = TRUE, 
+                           encoding = "Latin-1") %>%
+  # Now change it to ascii characters everywhere.
+    dplyr::mutate(
+      # This hint is from
+      # https://stackoverflow.com/questions/39148759/remove-accents-from-a-dataframe-column-in-r
+      # COUNTRY = stringi::stri_trans_general(COUNTRY,id = "Latin-ASCII")
+      COUNTRY = iconv(COUNTRY, from = "latin1", to = "ASCII//TRANSLIT"), 
+      COUNTRY = gsub(COUNTRY, pattern = "\\^o", replacement = "o")
+    )
+  expect_equal(res$COUNTRY[[2]], "Cote d'Ivoire")
+  expect_equal(res$COUNTRY[[3]], "Curacao/Netherlands Antilles")
+})
+
+
 test_that("use_iso_countries() works with override", {
   iea_df <- tibble::tribble(~Country, 
                             "People's Republic of China", 
@@ -6,11 +29,13 @@ test_that("use_iso_countries() works with override", {
                             "World marine bunkers",
                             "World aviation bunkers", 
                             "Ghana", 
+                            "Former Soviet Union (if no detail)",
                             "South Africa", 
-                            "World")
+                            "World", 
+                            "Former Yugoslavia (if no detail)")
   res <- iea_df %>% 
     use_iso_countries()
-  expect_equal(res$Country, c("CHN", "HKG", "WMB", "WAB", "GHA", "ZAF", "WLD"))
+  expect_equal(res$Country, c("CHN", "HKG", "WMB", "WAB", "GHA", "SUN", "ZAF", "WRLD", "YUG"))
 })
 
 
@@ -404,10 +429,6 @@ test_that("augment_iea_df() works", {
 })
 
 
-###########################################################
-context("Testing munge_to_tidy")
-###########################################################
-
 test_that("remove_agg_memo_flows() works as expected", {
   for (yr in IEATools::valid_iea_release_years) {
     Cleaned <- sample_iea_data_path(yr) %>% 
@@ -533,7 +554,7 @@ test_that("use_iso_countries() works as expected", {
     use_iso_countries()
   # Ensure that a "World" country is present.
   n_world_rows <- world %>% 
-    dplyr::filter(Country == "WLD") %>% 
+    dplyr::filter(Country == "WRLD") %>% 
     nrow()
   expect_equal(n_world_rows, 8)
 })

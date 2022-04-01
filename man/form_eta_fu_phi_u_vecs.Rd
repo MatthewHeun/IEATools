@@ -25,8 +25,8 @@ form_eta_fu_phi_u_vecs(
   coltypes = IEATools::mat_meta_cols$coltypes,
   product = IEATools::row_col_types$product,
   industry = IEATools::row_col_types$industry,
-  arrow_note = IEATools::arrow_notation,
-  from_note = IEATools::from_notation,
+  arrow_note = RCLabels::arrow_notation,
+  from_note = RCLabels::from_notation,
   .id = ".id"
 )
 }
@@ -45,7 +45,7 @@ A template for this table should have been created by \code{eta_fu_table()} and
 
 \item{arrow_note, from_note}{Notation vectors used for creating the eta_fu and phi vectors.
 See \code{matsbyname::notation_vec()}.
-Defaults are \code{arrow_notation} and ``from_notation`, respectively.}
+Defaults are \code{RCLabels::arrow_notation} and ``RCLabels::from_notation`, respectively.}
 
 \item{.id}{The name of an identification column used internally. Default is ".id".}
 }

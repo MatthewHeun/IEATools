@@ -7,9 +7,9 @@
 #' to create allocation matrices (`C`). 
 #' 
 #' rownames of the `C` matrices are taken from the `Ef.product` and `Destination` columns of `.fu_allocation_table`
-#' and have the form "`Ef.product` `r arrow_notation[["pref_end"]]` `Destination`".
+#' and have the form "`Ef.product` `r RCLabels::arrow_notation[["pref_end"]]` `Destination`".
 #' colnames of the `C` matrices are taken from the `Machine` and `Eu.product` columns of `.fu_allocation_table`
-#' and have the form "machine `r arrow_notation[["pref_end"]]` useful energy form".
+#' and have the form "machine `r RCLabels::arrow_notation[["pref_end"]]` useful energy form".
 #' 
 #' `C` matrices are created for both energy industry own use
 #' and final demand (`C_eiou` and `C_Y`, respectively).
@@ -27,7 +27,7 @@
 #' @param quantity,machine,ef_product,eu_product,destination,e_dot_perc,maximum_values,C_eiou,C_Y See `IEATools::template_cols`.
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #' @param product,industry See `IEATools::row_col_types`.
-#' @param notation the notation used for this template. See `matsbyname::notation_vec()`. Default is `IEATools::arrow_notation`.
+#' @param notation the notation used for this template. See `RCLabels::notation_vec()`. Default is `RCLabels::arrow_notation`.
 #' @param tol the allowable amount by which a row sum in a `C` matrix can be different from 1. Default is 1e-6.
 #' @param .should_be_1_vector a temporary column created internally for error checking (and not returned unless there is an error). 
 #'                            This column should contain 1 vectors (i.e., vectors filled with 1's).
@@ -76,7 +76,7 @@ form_C_mats <- function(.fu_allocation_table,
                         product = IEATools::row_col_types$product,
                         industry = IEATools::row_col_types$industry,
                         
-                        notation = IEATools::arrow_notation,
+                        notation = RCLabels::arrow_notation,
 
                         tol = 1e-6,
                         
@@ -143,15 +143,15 @@ form_C_mats <- function(.fu_allocation_table,
     # Create row and column names.
     dplyr::mutate(
       # Row names come from Ef.product -> Destination for both C_Y and C_EIOU.
-      "{rownames}" := matsbyname::paste_pref_suff(pref = .data[[ef_product]], suff = .data[[destination]], notation = notation),
+      "{rownames}" := RCLabels::paste_pref_suff(pref = .data[[ef_product]], suff = .data[[destination]], notation = notation),
       # Column names come from Machine -> Eu.product for both C_Y and C_EIOU.
-      "{colnames}" := matsbyname::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = notation),
+      "{colnames}" := RCLabels::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = notation),
       # Row types are Product -> Industry
       # "{rowtypes}" := product,
-      "{rowtypes}" := matsbyname::paste_pref_suff(pref = product, suff = industry, notation = notation),
+      "{rowtypes}" := RCLabels::paste_pref_suff(pref = product, suff = industry, notation = notation),
       # Column types are Industry -> Product
       # "{coltypes}" := industry,
-      "{coltypes}" := matsbyname::paste_pref_suff(pref = industry, suff = product, notation = notation),
+      "{coltypes}" := RCLabels::paste_pref_suff(pref = industry, suff = product, notation = notation),
       # Eliminate columns we no longer need
       "{ef_product}" := NULL,
       "{machine}" := NULL,
@@ -168,38 +168,40 @@ form_C_mats <- function(.fu_allocation_table,
                                    rownames = rownames, colnames = colnames, 
                                    rowtypes = rowtypes, coltypes = coltypes)
   
-  # Verify that all rows sum to 1. If not, there has been a problem somewhere.
-  verify <- out %>% 
-    dplyr::mutate(
-      "{.should_be_1_vector}" := matsbyname::rowsums_byname(.data[[matvals]]),
-      "{.is_1}" := matsbyname::difference_byname(.data[[.should_be_1_vector]], 1) %>% 
-        matsbyname::abs_byname() %>% 
-        matsbyname::compare_byname("<=", tol),
-      "{.all_1}" := .data[[.is_1]] %>% matsbyname::all_byname()
-    )
-  # Check that all rows sum to 1.
-  if (!all(verify[[.all_1]] %>% as.logical())) {
-    # Not all rows summed to 1. Emit a warning and return debugging information.
-    warning("Not all rows in the C matrices sum to 1. Returning a diagnostic data frame from form_C_mats().")
-    # Create a problems data frame that we will return instead of out.
-    probs <- verify %>% 
+  # Check that all rows sum to 1, but only if we had some rows to begin with!
+  if (nrow(.fu_allocation_table) > 0) {
+    # Verify that all rows sum to 1. If not, there has been a problem somewhere.
+    verify <- out %>% 
       dplyr::mutate(
-        # Get rid of some columns
-        "{matvals}" := NULL,
-        "{.is_1}" := NULL,
-        "{.all_1}" := NULL
-      ) %>% 
-      matsindf::expand_to_tidy(matvals = .should_be_1_vector) %>% 
-      # Eliminate some unneeded columns
-      dplyr::mutate(
-        "{colnames}" := NULL,
-        "{rowtypes}" := NULL,
-        "{coltypes}" := NULL
-      ) %>%
-      dplyr::filter(
-        abs(.data[[.should_be_1_vector]] - 1) > 1e-6
+        "{.should_be_1_vector}" := matsbyname::rowsums_byname(.data[[matvals]]),
+        "{.is_1}" := matsbyname::difference_byname(.data[[.should_be_1_vector]], 1) %>% 
+          matsbyname::abs_byname() %>% 
+          matsbyname::compare_byname("<=", tol),
+        "{.all_1}" := .data[[.is_1]] %>% matsbyname::all_byname()
       )
-    return(probs)
+    if (!all(verify[[.all_1]] %>% as.logical())) {
+      # Not all rows summed to 1. Emit a warning and return debugging information.
+      warning("Not all rows in the C matrices sum to 1. Returning a diagnostic data frame from form_C_mats().")
+      # Create a problems data frame that we will return instead of out.
+      probs <- verify %>% 
+        dplyr::mutate(
+          # Get rid of some columns
+          "{matvals}" := NULL,
+          "{.is_1}" := NULL,
+          "{.all_1}" := NULL
+        ) %>% 
+        matsindf::expand_to_tidy(matvals = .should_be_1_vector) %>% 
+        # Eliminate some unneeded columns
+        dplyr::mutate(
+          "{colnames}" := NULL,
+          "{rowtypes}" := NULL,
+          "{coltypes}" := NULL
+        ) %>%
+        dplyr::filter(
+          abs(.data[[.should_be_1_vector]] - 1) > 1e-6
+        )
+      return(probs)
+    }
   }
 
   # If we passed the test, we can return the out data frame without the verification columns, 
@@ -220,7 +222,7 @@ form_C_mats <- function(.fu_allocation_table,
 #' The vectors `eta_fu` and `phi_u` have special rownames that indicate 
 #' sources and types of useful energy flows.
 #' Row names in the `eta_fu` vector have the pattern 
-#' "industry`r arrow_notation[["pref_end"]]`product" to indicate 
+#' "industry`r RCLabels::arrow_notation[["pref_end"]]`product" to indicate 
 #' the energy efficiency of "industry" for making "product"
 #' or the exergy-to-energy ratio of the useful energy form created by a final-to-useful machine.
 #' Row names in the `phi_u` vector are named by energy product only.
@@ -244,7 +246,7 @@ form_C_mats <- function(.fu_allocation_table,
 #' @param product,industry See `IEATools::row_col_types`.
 #' @param arrow_note,from_note Notation vectors used for creating the eta_fu and phi vectors. 
 #'                             See `matsbyname::notation_vec()`. 
-#'                             Defaults are `arrow_notation` and ``from_notation`, respectively.
+#'                             Defaults are `RCLabels::arrow_notation` and ``RCLabels::from_notation`, respectively.
 #' @param .id The name of an identification column used internally. Default is ".id".
 #'
 #' @return a wide-by-matrices data frame with metadata columns (and year) 
@@ -280,8 +282,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    product = IEATools::row_col_types$product,
                                    industry = IEATools::row_col_types$industry,
                                    
-                                   arrow_note = IEATools::arrow_notation, 
-                                   from_note = IEATools::from_notation, 
+                                   arrow_note = RCLabels::arrow_notation, 
+                                   from_note = RCLabels::from_notation, 
                                    .id = ".id") {
   
   cleaned <- .eta_fu_table %>% 
@@ -321,8 +323,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     dplyr::mutate(
       # Create rownames from the machine and eu_product rows.
       "{rownames}" := dplyr::case_when(
-        .data[[matnames]] == eta_fu ~ matsbyname::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = arrow_note),
-        .data[[matnames]] == phi_u ~ matsbyname::paste_pref_suff(pref = .data[[eu_product]], suff = .data[[machine]], notation = from_note),
+        .data[[matnames]] == eta_fu ~ RCLabels::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = arrow_note),
+        .data[[matnames]] == phi_u ~ RCLabels::paste_pref_suff(pref = .data[[eu_product]], suff = .data[[machine]], notation = from_note),
         TRUE ~ NA_character_
       ), 
       # Eliminate machine and eu_product columns, because we no longer need them.
@@ -331,8 +333,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       # Create colnames according to the name of the matrix to be created
       "{colnames}" := .data[[matnames]],
       "{rowtypes}" := dplyr::case_when(
-        .data[[matnames]] == eta_fu ~ matsbyname::paste_pref_suff(pref = industry, suff = product, notation = arrow_note),
-        .data[[matnames]] == phi_u ~ matsbyname::paste_pref_suff(pref = product, suff = industry, notation = from_note), 
+        .data[[matnames]] == eta_fu ~ RCLabels::paste_pref_suff(pref = industry, suff = product, notation = arrow_note),
+        .data[[matnames]] == phi_u ~ RCLabels::paste_pref_suff(pref = product, suff = industry, notation = from_note), 
         TRUE ~ NA_character_
       ), 
       "{coltypes}" := dplyr::case_when(
@@ -356,7 +358,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     dplyr::filter(.data[[colnames]] == phi_u) %>% 
     dplyr::mutate(
       "{product}" := .data[[rownames]] %>% 
-        matsbyname::keep_pref_suff(keep = "pref", notation = from_note)
+        RCLabels::get_pref_suff(which = "pref", notation = from_note)
     ) %>% 
     dplyr::select(meta_cols, product, year) %>% 
     unique()
@@ -366,7 +368,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     dplyr::filter(.data[[colnames]] == phi_u) %>% 
     dplyr::mutate(
       "{product}" := .data[[rownames]] %>% 
-        matsbyname::keep_pref_suff(keep = "pref", notation = from_note)
+        RCLabels::get_pref_suff(which = "pref", notation = from_note)
     ) %>% 
     dplyr::select(meta_cols, product, year, -matvals) %>% 
     unique()
@@ -401,7 +403,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       "{rownames}" := dplyr::case_when(
         # For the phi_u rows, we want to keep only the product in the name.
         .data[[matnames]] == phi_u ~ .data[[rownames]] %>%
-          matsbyname::keep_pref_suff("pref", notation = from_note), 
+          RCLabels::get_pref_suff(which = "pref", notation = from_note), 
         TRUE ~ .data[[rownames]], 
       ), 
       "{colnames}" := dplyr::case_when(
@@ -490,7 +492,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param losses See `IEATools::tfc_compare_flows`. Losses are kept same from `Y_final` to `Y_useful`.
 #' @param stat_diffs See `IEATools::tfc_compare_flows`. Statistical differences are kept same from `Y_final` to `Y_useful`.
 #' @param arrow_note,from_note The row and column notation in the `eta_fu` vectors.
-#'                             See `matsbyname::notation_vec()`. Defaults is `IEATools::arrow_notation` and `IEATools::from_notation`.
+#'                             See `RCLabels::notation_vec()`. Defaults is `RCLabels::arrow_notation` and `RCLabels::from_notation`.
 #' @param .add_to_U_f An internal matrix name for the a matrix to be added to the U_feed_f matrix 
 #'                    to form the useful form of the U_feed matrix. Default is ".add_to_U_f".
 #' @param .add_to_U_eiou An internal matrix name for the a matrix to be added to the U_eiou_f matrix 
@@ -570,8 +572,8 @@ extend_to_useful <- function(.sutdata = NULL,
                              losses = IEATools::tfc_compare_flows$losses,
                              stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
                              
-                             arrow_note = IEATools::arrow_notation,
-                             from_note = IEATools::from_notation,
+                             arrow_note = RCLabels::arrow_notation,
+                             from_note = RCLabels::from_notation,
 
                              .add_to_U_f = ".add_to_U_f",
                              .add_to_U_eiou = ".add_to_U_eiou",
@@ -632,8 +634,8 @@ extend_to_useful <- function(.sutdata = NULL,
     # None of the interface industries nor the non-energy flows are in the allocation matrix (C), 
     # so we must retain them in the Y matrix.
     Y_keep_mat <- matsbyname::select_cols_byname(Y_mat, 
-                                                 retain_pattern = matsbyname::make_pattern(Y_keep_inds, 
-                                                                                           pattern_type = "leading"))
+                                                 retain_pattern = RCLabels::make_or_pattern(Y_keep_inds, 
+                                                                                         pattern_type = "leading"))
     Y_useful_mat <- matsbyname::sum_byname(Y_keep_mat, res_Y[[.add_to_dest]])
     
     # Now check to see if we have any EIOU. 
@@ -742,139 +744,6 @@ extend_to_useful <- function(.sutdata = NULL,
   }
   
   return(out)
-  
-
-  
-  
-  
-  
-  # The following code is superceded by
-  # code above that uses matsindf::matsindf_apply().
-  # Everything below can be deleted after 30 Sept 2021
-  # ---MKH, 17 Aug 2021
-  
-  # wide_psut_data <- .sutdata %>%
-  #   dplyr::mutate(
-  #     # Calculate .eta_fu_hat, which is needed twice below.
-  #     # Doing the calculation here makes it available for other downstream calculations.
-  #     "{.eta_fu_hat}" := matsbyname::hatize_byname(.data[[eta_fu]], keep = "rownames") %>%
-  #       # Swap column names from arrow notation to from notation
-  #       arrow_to_from_byname(margin = 2)
-  #   )
-  # 
-  # # New column names
-  # U_feed_useful_name <- paste0(U_feed, .sep, useful)
-  # U_eiou_useful_name <- paste0(U_eiou, .sep, useful)
-  # U_useful_name <- paste0(U, .sep, useful)
-  # r_eiou_useful_name <- paste0(r_eiou, .sep, useful)
-  # V_useful_name <- paste0(V, .sep, useful)
-  # Y_useful_name <- paste0(Y, .sep, useful)
-  # Y_keep_name <- paste0(Y, .keep_in_Y)
-  # 
-  # # Industries to retain from Y_f to Y_u.
-  # # These industries are not allocated to f-u machines, nor are they tracked for useful energy.
-  # Y_keep_inds <- c(interface_ind, losses, stat_diffs)
-  # 
-  # # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
-  # # We take each of these in turn, adjusting the energy conversion chain to account for the fact that
-  # # useful energy is now the final stage.
-  # wide_useful_Y <- wide_psut_data %>%
-  #   extend_to_useful_helper(dest_mat = Y, C_mat = C_Y, eta_fu_vec = eta_fu,
-  #                           add_to_U = .add_to_U_f, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>%
-  #   dplyr::mutate(
-  #     "{U_feed_useful_name}" := matsbyname::sum_byname(.data[[U_feed]], .data[[.add_to_U_f]]),
-  #     "{V_useful_name}" := matsbyname::sum_byname(.data[[V]], .data[[.add_to_V_f]]),
-  #     # We need to keep industries in Y that are interface industries
-  #     # (exports, stock changes, international marine and aviation bunkers, and
-  #     # imports, though there won't be any imports in the Y matrix, because imports are in the V matrix).
-  #     # Also keep non-energy flows.
-  #     # None of the interface industries nor the non-energy flows are in the allocation matrix (C),
-  #     # so we must retain them in the Y matrix.
-  #     "{Y_keep_name}" := matsbyname::select_cols_byname(.data[[Y]],
-  #                                                  retain_pattern = matsbyname::make_pattern(Y_keep_inds,
-  #                                                                                            pattern_type = "leading")),
-  #     "{Y_useful_name}" := matsbyname::sum_byname(.data[[Y_keep_name]], .data[[.add_to_dest]]),
-  #     # Eliminate columns that are no longer needed
-  #     "{.add_to_U_f}" := NULL,
-  #     "{.add_to_V_f}" := NULL,
-  #     "{.add_to_dest}" := NULL,
-  #     "{Y_keep_name}" := NULL
-  #   )
-  # 
-  # wide_useful_EIOU <- wide_useful_Y %>%
-  #   extend_to_useful_helper(dest_mat = U_eiou, C_mat = C_eiou, eta_fu_vec = eta_fu,
-  #                           add_to_U = .add_to_U_eiou, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest) %>%
-  #   dplyr::mutate(
-  #     "{U_feed_useful_name}" := matsbyname::sum_byname(.data[[U_feed_useful_name]], .data[[.add_to_U_eiou]]),
-  #     "{U_eiou_useful_name}" := .data[[.add_to_dest]],
-  #     "{U_useful_name}" := matsbyname::sum_byname(.data[[U_feed_useful_name]], .data[[U_eiou_useful_name]]),
-  #     "{r_eiou_useful_name}" := matsbyname::quotient_byname(.data[[U_eiou_useful_name]], .data[[U_useful_name]]) %>%
-  #       matsbyname::replaceNaN_byname(val = 0),
-  #     "{V_useful_name}" := matsbyname::sum_byname(.data[[V_useful_name]], .data[[.add_to_V_f]]),
-  #     # Show that these all now have useful last stage
-  #     "{last_stage}" := useful,
-  #     # Eliminate columns that are no longer needed
-  #     "{.eta_fu_hat}" := NULL,
-  #     "{.add_to_U_eiou}" := NULL,
-  #     "{.add_to_V_f}" := NULL,
-  #     "{.add_to_dest}" := NULL,
-  #     # Eliminate last-stage-is-final versions of matrices
-  #     "{U_eiou}" := NULL,
-  #     "{U_feed}" := NULL,
-  #     "{U}" := NULL,
-  #     "{r_eiou}" := NULL,
-  #     "{V}" := NULL,
-  #     "{Y}" := NULL
-  #   ) %>%
-  #   dplyr::rename(
-  #     # Rename the useful columns to be regular names so we can rbind later
-  #     "{U_feed}" := .data[[U_feed_useful_name]],
-  #     "{U_eiou}" := .data[[U_eiou_useful_name]],
-  #     "{U}" := .data[[U_useful_name]],
-  #     "{r_eiou}" := .data[[r_eiou_useful_name]],
-  #     "{V}" := .data[[V_useful_name]],
-  #     "{Y}" := .data[[Y_useful_name]]
-  #   )
-  # 
-  # # Prepare the outgoing data frame
-  # out <- dplyr::bind_rows(.sutdata, wide_useful_EIOU) %>%
-  #   dplyr::mutate(
-  #     # Eliminate temporary columns that were used in the calculations
-  #     "{C_eiou}" := NULL,
-  #     "{C_Y}" := NULL,
-  #     "{eta_fu}" := NULL,
-  #     "{phi_u}" := NULL
-  #   )
-  # 
-  # # Check Product energy balances.
-  # # It would be nice to use the Recca function verify_SUT_energy_balance() for this purpose.
-  # # However, IEATools is designed to be independent of Recca.
-  # # So we need to do our own energy balance here.
-  # # Fortunately, energy balance calculations for products are relatively simple.
-  # # The energy balance for products is given by rowsums of (R + V)^T - U - Y, which should all equal 0
-  # # within acceptable error.
-  # verify_ebal <- out %>%
-  #   dplyr::mutate(
-  #     # (R + V)^T - U - Y
-  #     "{.err}" := matsbyname::sum_byname(.data[[R]], .data[[V]]) %>% # R + V
-  #       matsbyname::transpose_byname() %>%                           # (R + V)^T
-  #       matsbyname::difference_byname(.data[[U_feed]]) %>%           # - U_feed
-  #       matsbyname::difference_byname(.data[[U_eiou]]) %>%           # - U_eiou
-  #       matsbyname::difference_byname(.data[[Y]]) %>%                # - Y
-  #       matsbyname::rowsums_byname(),
-  #     "{.e_bal_ok}" := .data[[.err]] %>%
-  #       matsbyname::iszero_byname(tol = tol) %>%
-  #       as.logical()
-  #   )
-  # all_OK <- all(verify_ebal[[.e_bal_ok]])
-  # if (!all_OK) {
-  #   # Emit a warning if there is a problem and return the wrong thing.
-  #   warning(paste0("Energy is not balanced to within ", tol, " in IEATools::extend_to_useful(). See columns ",
-  #                  .err, " and ", .e_bal_ok, " for problems."))
-  #   return(verify_ebal)
-  # }
-  # 
-  # return(out)
 }
 
 
@@ -902,11 +771,11 @@ extend_to_useful <- function(.sutdata = NULL,
 #' @param arr_note a row and column name notation vector that indicates a `source -> destination` relationship. 
 #'                 `arr_note` is used for the `eta_fu` matrix, among others.
 #'                 See `matsbyname::notation_vec()`.
-#'                 Default is `IEATools::arrow_notation`.
+#'                 Default is `RCLabels::arrow_notation`.
 #' @param from_note a row and column name notation vector that indicates a `destination [from source]` relationship. 
 #'                  `from_note` is used for the columns of some intermediate matrices.
 #'                  See `matsbyname::notation_vec()`.
-#'                  Default is `IEATools::from_notation`.
+#'                  Default is `RCLabels::from_notation`.
 #' @param add_to_U a string name for the matrix to be added to a use matrix. Default is "add_to_U".
 #' @param add_to_V a string name for the matrix to be added to a make matrix. Default is "add_to_V".
 #' @param add_to_dest a string name for the matrix to replace some entries previous destination matrix. Default is "repl_dest".
@@ -921,8 +790,8 @@ extend_to_useful_helper <- function(.sutdata = NULL,
                                     # Input parameters
                                     product_type = IEATools::row_col_types$product, 
                                     industry_type = IEATools::row_col_types$industry,
-                                    arr_note = IEATools::arrow_notation, 
-                                    from_note = IEATools::from_notation, 
+                                    arr_note = RCLabels::arrow_notation, 
+                                    from_note = RCLabels::from_notation, 
                                     # Output names
                                     add_to_U = "add_to_U", 
                                     add_to_V = "add_to_V", 
@@ -950,7 +819,9 @@ extend_to_useful_helper <- function(.sutdata = NULL,
     
     # Calculate the matrix that should be added to the U_f matrix.
     add_to_U_f_mat <- dest_mat_vec_hat_C %>% 
-      matsbyname::aggregate_to_pref_suff_byname(keep = "prefix", margin = 1, notation = arr_note) %>%
+      # aggregate_to_pref_suff_byname() is superseded.
+      # matsbyname::aggregate_to_pref_suff_byname(keep = "pref", margin = 1, notation = arr_note) %>%
+      matsbyname::aggregate_pieces_byname(piece = "pref", margin = 1, notation = arr_note) %>%
       matsbyname::clean_byname(margin = 1) %>% 
       # Set column type to industry to match other use matrices.
       matsbyname::setcoltype(industry_type)
@@ -971,7 +842,9 @@ extend_to_useful_helper <- function(.sutdata = NULL,
     # Calculate replacement for the destination matrix (Y_useful instead of Y_f or U_eiou_useful instead of U_eiou)
     add_to_dest_mat <- matsbyname::matrixproduct_byname(dest_mat_vec_hat_C, eta_fu_hat) %>%
       matsbyname::transpose_byname() %>%
-      matsbyname::aggregate_to_pref_suff_byname(keep = "suffix", margin = 2, notation = arr_note) %>%
+      # aggregate_to_pref_suff_byname() is superseded.
+      # matsbyname::aggregate_to_pref_suff_byname(keep = "suff", margin = 2, notation = arr_note) %>%
+      matsbyname::aggregate_pieces_byname(piece = "suff", margin = 2, notation = arr_note) %>%
       matsbyname::clean_byname() %>% 
       # Set row and column types to match other destination matrices.
       matsbyname::setrowtype(product_type) %>% 

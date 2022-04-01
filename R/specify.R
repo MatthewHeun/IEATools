@@ -55,16 +55,16 @@
 #'                       Default is `IEATools::industry_flows$natural_gas_extraction`.
 #' @param resource_products_notation The notation to be used for defining products coming from the new resource industries.
 #'                                   E.g., the Crude oil product will be called "Crude oil \[from Resources\]".
-#'                                   Default is `IEATools::from_notation`.
+#'                                   Default is `RCLabels::from_notation`.
 #' @param resources_flow_notation The notation to be used for defining the new resource industries.
 #'                                E.g., the Crude oil resource will be called "Resources \[of Crude oil\]".
-#'                                Default is `IEATools::of_notation`.
+#'                                Default is `RCLabels::of_notation`.
 #' @param manufacture The name of the industries that convert resource-products \(inputs\) into actual products \(outputs\), 
 #'                    when a corresponding a corresponding industry does not exist by default in IEA data.
 #'                    Default is "Manufacture".
 #' @param manufacture_flow_notation The notation to be used for the newly created manufacture industries 
 #'                                  \(each manufacturing industry is specified\) by the product it manufactures.
-#'                                  Default is `IEATools::of_notation`.
+#'                                  Default is `RCLabels::of_notation`.
 #'
 #' @return A `.tidy_iea_df` with adjusted production information for primary energy 
 #'         for both coal and coal products and oil and gas extraction
@@ -104,10 +104,10 @@ specify_primary_production <- function(.tidy_iea_df,
                                        liquefaction_regas_reassign = IEATools::industry_flows$oil_and_gas_extraction,
                                        transformation_processes = IEATools::aggregation_flows$transformation_processes,
                                        resources = IEATools::tpes_flows$resources,
-                                       resource_products_notation = IEATools::from_notation,
-                                       resources_flow_notation = IEATools::of_notation,
+                                       resource_products_notation = RCLabels::from_notation,
+                                       resources_flow_notation = RCLabels::of_notation,
                                        manufacture = "Manufacture",
-                                       manufacture_flow_notation = IEATools::of_notation){
+                                       manufacture_flow_notation = RCLabels::of_notation){
   
   production_products <- c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)
   
@@ -245,12 +245,12 @@ specify_production_to_resources <- function(.tidy_iea_df,
                                             product = IEATools::iea_cols$product,
                                             production = IEATools::tpes_flows$production,
                                             resources = IEATools::tpes_flows$resources,
-                                            notation = IEATools::from_notation){
+                                            notation = RCLabels::from_notation){
   # Take any remaining "Production" rows and convert them to Resources (Product).
   .tidy_iea_df %>% 
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
-        .data[[flow]] == production ~ matsbyname::paste_pref_suff(pref = resources, suff = .data[[product]], notation = notation), 
+        .data[[flow]] == production ~ RCLabels::paste_pref_suff(pref = resources, suff = .data[[product]], notation = notation), 
         TRUE ~ .data[[flow]]
       )
     )
@@ -275,7 +275,7 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' @param int_industries a string vector of industries involved in exchanges with other countries,
 #'        bunkers, or stock changes. Default is `IEATools::interface_industries`.
 #' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
-#' @param notation a list of specification notations. Default is `IEATools::of_notation`.
+#' @param notation a list of specification notations. Default is `RCLabels::of_notation`.
 #'
 #' @return a modified version of `.tidy_iea_df` with specified interface industries
 #' 
@@ -288,12 +288,12 @@ specify_interface_industries <- function(.tidy_iea_df,
                                          flow = "Flow", 
                                          int_industries = IEATools::interface_industries,
                                          product = "Product", 
-                                         notation = IEATools::of_notation){
+                                         notation = RCLabels::of_notation){
   .tidy_iea_df %>% 
     dplyr::mutate(
       !!as.name(flow) := dplyr::case_when(
         # !!as.name(flow) %in% int_industries ~ paste0(!!as.name(flow), .interface_ind_open, !!as.name(product), .interface_ind_close),
-        .data[[flow]] %in% int_industries ~ matsbyname::paste_pref_suff(pref = .data[[flow]], suff = .data[[product]], notation = notation),
+        .data[[flow]] %in% int_industries ~ RCLabels::paste_pref_suff(pref = .data[[flow]], suff = .data[[product]], notation = notation),
         TRUE ~ .data[[flow]]
       )
     )
@@ -691,8 +691,8 @@ specify_all <- function(.tidy_iea_df,
 #' @param col The string name of the column in `.df` to be de-specified.
 #' @param despecified_col The string name of the column in the output data frame to contain the de-specified version of `col`.
 #' @param notations The notations used for row and column names. See `matsbyname::notation_vec()`. 
-#'                  Default is `list(IEATools::of_notation, IEATools::from_notation)`, 
-#'                  because both `IEATools::of_notation` and `IEATools::from_notation` can be used in the `Flow` column
+#'                  Default is `list(RCLabels::of_notation, RCLabels::from_notation)`, 
+#'                  because both `RCLabels::of_notation` and `RCLabels::from_notation` can be used in the `Flow` column
 #'                  of an IEA data frame.
 #' @param production,resources See `IEATools::tpes_flows`.
 #'
@@ -706,9 +706,9 @@ specify_all <- function(.tidy_iea_df,
 #'   specify_all() %>% 
 #'   despecify_col(col = "Flow", despecified_col = "clean_Flow") %>% 
 #'   select(Flow, Product, E.dot, clean_Flow) %>% 
-#'   filter(endsWith(Flow, bracket_notation[["suff_end"]]))
+#'   filter(endsWith(Flow, RCLabels::bracket_notation[["suff_end"]]))
 despecify_col <- function(.df, col, despecified_col, 
-                          notations = list(IEATools::of_notation, IEATools::from_notation),
+                          notations = list(RCLabels::of_notation, RCLabels::from_notation),
                           production = IEATools::tpes_flows$production,
                           resources = IEATools::tpes_flows$resources) {
   out <- .df %>% 
@@ -739,8 +739,8 @@ despecify_col <- function(.df, col, despecified_col,
 #' @param col The string name of the column in `.df` to be de-specified.
 #' @param unsuffixed_col The string name of the column in the output data frame to contain the un-suffixed version of `col`.
 #' @param notations The notations used for row and column names. See `matsbyname::notation_vec()`. 
-#'                  Default is `list(IEATools::of_notation, IEATools::from_notation)`, 
-#'                  because both `IEATools::of_notation` and `IEATools::from_notation` can be used in the `Flow` column
+#'                  Default is `list(RCLabels::of_notation, RCLabels::from_notation)`, 
+#'                  because both `RCLabels::of_notation` and `RCLabels::from_notation` can be used in the `Flow` column
 #'                  of an IEA data frame.
 #'
 #' @return A version of `.df` with suffixes removed from the `col` column and the result placed in the `despecified_col` column.
@@ -753,9 +753,9 @@ despecify_col <- function(.df, col, despecified_col,
 #'   specify_all() %>% 
 #'   remove_suffix_specifications(col = "Flow", unsuffixed_col = "clean_Flow") %>% 
 #'   select(Flow, Product, E.dot, clean_Flow) %>% 
-#'   filter(endsWith(Flow, bracket_notation[["suff_end"]]))
+#'   filter(endsWith(Flow, RCLabels::bracket_notation[["suff_end"]]))
 remove_suffix_specifications <- function(.df, col, unsuffixed_col, 
-                                         notations = list(IEATools::of_notation, IEATools::from_notation)){
+                                         notations = list(RCLabels::of_notation, RCLabels::from_notation)){
   # Eliminate all suffixes from col in the outgoing data frame.
   # Save the result in unsuffixed_col.
   out <- .df %>% 
@@ -765,7 +765,7 @@ remove_suffix_specifications <- function(.df, col, unsuffixed_col,
   for (nota in notations) {
     out <- out %>%
       dplyr::mutate(
-        "{unsuffixed_col}" := matsbyname::keep_pref_suff(.data[[unsuffixed_col]], keep = "pref", notation = nota)
+        "{unsuffixed_col}" := RCLabels::get_pref_suff(.data[[unsuffixed_col]], which = "pref", notation = nota)
       )
   }
   return(out)

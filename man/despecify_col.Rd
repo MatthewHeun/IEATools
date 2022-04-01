@@ -8,7 +8,7 @@ despecify_col(
   .df,
   col,
   despecified_col,
-  notations = list(IEATools::of_notation, IEATools::from_notation),
+  notations = list(RCLabels::of_notation, RCLabels::from_notation),
   production = IEATools::tpes_flows$production,
   resources = IEATools::tpes_flows$resources
 )
@@ -21,8 +21,8 @@ despecify_col(
 \item{despecified_col}{The string name of the column in the output data frame to contain the de-specified version of \code{col}.}
 
 \item{notations}{The notations used for row and column names. See \code{matsbyname::notation_vec()}.
-Default is \code{list(IEATools::of_notation, IEATools::from_notation)},
-because both \code{IEATools::of_notation} and \code{IEATools::from_notation} can be used in the \code{Flow} column
+Default is \code{list(RCLabels::of_notation, RCLabels::from_notation)},
+because both \code{RCLabels::of_notation} and \code{RCLabels::from_notation} can be used in the \code{Flow} column
 of an IEA data frame.}
 
 \item{production, resources}{See \code{IEATools::tpes_flows}.}
@@ -50,5 +50,5 @@ load_tidy_iea_df() \%>\%
   specify_all() \%>\% 
   despecify_col(col = "Flow", despecified_col = "clean_Flow") \%>\% 
   select(Flow, Product, E.dot, clean_Flow) \%>\% 
-  filter(endsWith(Flow, bracket_notation[["suff_end"]]))
+  filter(endsWith(Flow, RCLabels::bracket_notation[["suff_end"]]))
 }

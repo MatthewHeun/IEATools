@@ -1,45 +1,3 @@
-#' Arrow notation
-#'
-#' A character vector containing the arrow notation used in the IEATools package.
-#' 
-#' @format A character vector with `r length(arrow_notation)` entries.
-#' 
-#' @examples
-#' arrow_notation
-"arrow_notation"
-
-
-#' Bracket notation
-#'
-#' A character vector containing the "from" notation used in the IEATools package.
-#' 
-#' @format A character vector with `r length(bracket_notation)` entries.
-#' 
-#' @examples
-#' bracket_notation
-"bracket_notation"
-
-
-#' From notation
-#'
-#' A character vector containing the "from" notation used in the IEATools package.
-#' 
-#' @format A character vector with `r length(from_notation)` entries.
-#' 
-#' @examples
-#' from_notation
-"from_notation"
-
-
-#' From notation
-#'
-#' A character vector containing the "of" notation used in the IEATools package.
-#' 
-#' @format A character vector with `r length(of_notation)` entries.
-#' 
-#' @examples
-#' of_notation
-"of_notation"
 
 
 #' IEA release years supported by this package
@@ -518,6 +476,39 @@
 #' @examples
 #' electricity_products
 "electricity_products"
+
+#' Non-energy products
+#'
+#' A string vector containing names of products classified as "Non-energy" by
+#' the package development team. This list include hydrocarbon-derived 
+#' materials such as "Lubricants". 
+#' This list also includes products classified as "Crude, NGL, refinery 
+#' feedstocks" in the IEA World Extended Energy Balances 2021 documentation such 
+#' as "Additives/blending components". These non-energy products occur in 
+#' the "Non-energy use..." sectors of the IEA's extended energy balances 
+#' correctly, and also TFC sectors such as "Residential" incorrectly.
+#' 
+#' @format A string vector with `r length(nonenergy_products)` entries.
+#' \describe{
+#' \item{additives_blending_components}{The string identifier for Additives/blending components.}
+#' \item{bitumen}{The string identifier for Bitumen.}
+#' \item{coal_tar}{The string identifier for Coal tar.}
+#' \item{crude_ngl_feedstocks_if_no_detail}{The string identifier for Crude/NGL/feedstocks (if no detail).}
+#' \item{crude_oil}{The string identifier for Crude oil.}
+#' \item{lubricants}{The string identifier for Lubricants.}
+#' \item{naphtha}{The string identifier for Naphtha.}
+#' \item{natural_gas_liquids}{The string identifier for Natural gas liquids.}
+#' \item{oil_shale_and_oil_sands}{The string identifier for Oil shale and oil sands.}
+#' \item{other_hydrocarbons}{The string identifier for Other hydrocarbons.}
+#' \item{other_oil_products}{The string identifier for Other oil products.}
+#' \item{paraffin_waxes}{The string identifier for Paraffin waxes.}
+#' \item{refinery_feedstocks}{The string identifier for Refinery feedstocks.}
+#' \item{white_spirit_and_sbp}{The string identifier for White spirit & SBP.}
+#' }
+#' 
+#' @examples
+#' nonenergy_products
+"nonenergy_products"
 
 
 #' Total primary energy supply flows

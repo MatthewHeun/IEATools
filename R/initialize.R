@@ -30,14 +30,20 @@
 #' 3. Change to the unit (ktoe or TJ) desired.
 #' 4. Save the results in .csv format. (Saving may take a while.)
 #'
-#' @param .iea_file the path to the raw IEA data file for which quality assurance is desired
-#' @param text a string containing text to be parsed as an IEA file.
-#' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is ",,TIME".
-#' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "COUNTRY,FLOW,PRODUCT".
-#' @param expected_simple_start the expected starting of the first line of `iea_file`. Default is the value of `expected_2nd_line_start`.
-#'        Note that `expected_simple_start` is sometimes encountered in data supplied by the IEA.
-#'        Furthermore, `expected_simple_start` could be the format of the file when somebody "helpfully" fiddles with 
-#'        the raw data from the IEA.
+#' @param .iea_file The path to the raw IEA data file for which quality assurance is desired
+#' @param text A string containing text to be parsed as an IEA file.
+#' @param expected_1st_line_start The expected start of the first line of `iea_file`. Default is ",,TIME".
+#' @param country The name of the country column. 
+#'                Default is "COUNTRY".
+#' @param expected_2nd_line_start The expected start of the second line of `iea_file`. Default is "COUNTRY,FLOW,PRODUCT".
+#' @param expected_simple_start The expected starting of the first line of `iea_file`. 
+#'                              Default is the value of `expected_2nd_line_start`.
+#'                              Note that `expected_simple_start` is sometimes encountered in data supplied by the IEA.
+#'                              Furthermore, `expected_simple_start` could be the format of the file when somebody "helpfully" fiddles with 
+#'                              the raw data from the IEA.
+#' @param ensure_ascii_countries A boolean that tells whether to convert country names
+#'                               to pure ASCII, removing diacritical marks and accents.
+#'                               Default is `TRUE`.
 #'
 #' @return A raw data frame of IEA extended energy balance data with appropriate column titles.
 #' 
@@ -58,8 +64,10 @@
 slurp_iea_to_raw_df <- function(.iea_file = NULL, 
                                 text = NULL, 
                                 expected_1st_line_start = ",,TIME", 
-                                expected_2nd_line_start = "COUNTRY,FLOW,PRODUCT", 
-                                expected_simple_start = expected_2nd_line_start) {
+                                country = "COUNTRY",
+                                expected_2nd_line_start = paste0(country, ",FLOW,PRODUCT"), 
+                                expected_simple_start = expected_2nd_line_start, 
+                                ensure_ascii_countries = TRUE) {
   assertthat::assert_that(xor(!is.null(.iea_file), !is.null(text)), 
                           msg = "need to supply only one of .iea_file or text arguments to iea_df")
   if (!is.null(.iea_file)) {
@@ -112,9 +120,9 @@ slurp_iea_to_raw_df <- function(.iea_file = NULL,
       # Note that I'm using data.table::fread at the recommendation of
       # https://statcompute.wordpress.com/2014/02/11/efficiency-of-importing-large-csv-files-in-r/
       # which indicates this function is significantly faster than other options.
-      IEAData_noheader <- data.table::fread(file = .iea_file, header = FALSE, sep = ",", skip = 2)
+      IEAData_noheader <- data.table::fread(file = .iea_file, header = FALSE, sep = ",", skip = 2, encoding = "Latin-1")
     } else {
-      IEAData_noheader <- data.table::fread(text = text, header = FALSE, sep = ",", skip = 2)
+      IEAData_noheader <- data.table::fread(text = text, header = FALSE, sep = ",", skip = 2, encoding = "Latin-1")
     }
     # At this point, the IEAData_noheader data frame has default (meaningless) column names, V1, V2, V3, ...
     # Create column names from the header lines that we read previously.
@@ -126,6 +134,21 @@ slurp_iea_to_raw_df <- function(.iea_file = NULL,
       unlist()
     IEAData_withheader <- IEAData_noheader %>%
       magrittr::set_names(cnames)
+  }
+  # Convert the country column to pure ASCII, if desired.
+  if (ensure_ascii_countries) {
+    IEAData_withheader <- IEAData_withheader %>%
+      dplyr::mutate(
+        # This hint is from
+        # https://stackoverflow.com/questions/39148759/remove-accents-from-a-dataframe-column-in-r
+        # COUNTRY = stringi::stri_trans_general(COUNTRY,id = "Latin-ASCII")
+        # iconv is much faster than stringi.
+        # First, convert from latin1 to ascii. 
+        "{country}" := iconv(.data[[country]], from = "latin1", to = "ASCII//TRANSLIT"), 
+        # However, this results in "^o" for o with circumflex as in Côte d'Ivoire.
+        # So replace those strings with simple "o"
+        "{country}" := gsub(.data[[country]], pattern = "\\^o", replacement = "o")
+      )
   }
   return(IEAData_withheader)
 }
@@ -462,6 +485,8 @@ clean_iea_whitespace <- function(.iea_df,
 #'                    Default is `IEATools::overide_iso_codes_df`.
 #' @param country The name of the country column in `.iea_df`. Default is "Country".
 #' @param pfu_code,iea_name See `IEATools::countryconcordance_cols`.
+#' @param override_suffix A suffix added to override columns. 
+#'                        Default is "...override".
 #'
 #' @return `.iea_df` with 3-letter ISO country abbreviations in the `country` column.
 #' 
@@ -476,7 +501,8 @@ use_iso_countries <- function(.iea_df,
                               override_df = IEATools::override_iso_codes_df,
                               country = IEATools::iea_cols$country,
                               pfu_code = IEATools::country_concordance_cols$pfu_code, 
-                              iea_name = IEATools::country_concordance_cols$iea_name){
+                              iea_name = IEATools::country_concordance_cols$iea_name, 
+                              override_suffix = "...override"){
   # Eliminates warnings on column names in the countrycode::codelist data frame.
   country.name.en <- "country.name.en" 
   iso_type <- "iso3c"
@@ -494,14 +520,17 @@ use_iso_countries <- function(.iea_df,
   # The second left_join will be with the override_df and create a column named pfu_code...override.
   # Then, we discriminate among the options, 
   # lastly, leaving the Country column unchanged, if no code has been found.
-  override_col_name <- paste0(pfu_code, "...override")
+  override_col_name <- paste0(pfu_code, override_suffix)
   
   dplyr::left_join(.iea_df, CountryCodeInfo, by = country) %>% 
     # Make sure that the override_df has only two columns:
     # iea_name and pfu_code.
     dplyr::left_join(override_df %>% 
                        dplyr::rename("{country}" := iea_name) %>% 
-                       dplyr::select(.data[[country]], .data[[pfu_code]]), by = country, suffix = c("", "...override")) %>% 
+                       dplyr::select(.data[[country]], 
+                                     .data[[pfu_code]]), 
+                     by = country, 
+                     suffix = c("", override_suffix)) %>% 
     dplyr::mutate(
       "{pfu_code}" := dplyr::case_when(
         # First priority, if we got a match in override_df, use it.
