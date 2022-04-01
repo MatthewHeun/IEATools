@@ -3,6 +3,9 @@ title: "Release notes for `IEATools`"
 output: html_document
 ---
 
+
+# IEATools 0.1.63 (2022-04-01)
+
 * Added `non_energy_flows` to `fd_sectors` 
   to conform to IEA approach to calculating final energy.
 * Adding constant "nonenergy_products" which includes final energy products 
