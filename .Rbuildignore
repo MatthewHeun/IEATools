@@ -7,3 +7,5 @@
 ^vignettes/fix_iea_data\.Rmd$
 ^cran-comments\.md$
 ^\.github$
+^_pkgdown\.yml$
+^pkgdown$

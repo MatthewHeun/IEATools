@@ -18,8 +18,8 @@ specify_bunkers(
   wab_sector_long = IEATools::transport_flows$world_aviation_bunkers,
   international_navigation = IEATools::transport_flows$international_navigation,
   international_aviation = IEATools::transport_flows$international_aviation,
-  wmb_3_letter = "WMB",
-  wab_3_letter = "WAB"
+  wmbk_3_letter = "WMBK",
+  wabk_3_letter = "WABK"
 )
 }
 \arguments{
@@ -31,9 +31,9 @@ specify_bunkers(
 
 \item{wmb_sector_long, wab_sector_long, international_navigation, international_aviation}{See \code{IEATools::transport_flows}.}
 
-\item{wmb_3_letter}{The 3-letter code for the world marine bunkers country. Default is "WMB".}
+\item{wmbk_3_letter}{The 3-letter code for the world marine bunkers country. Default is "WMB".}
 
-\item{wab_3_letter}{The 3-letter code for the world aviation bunkers country. Default is "WAB".}
+\item{wabk_3_letter}{The 3-letter code for the world aviation bunkers country. Default is "WAB".}
 }
 \value{
 A \code{.tidy_iea_df} with bunker flows specified.

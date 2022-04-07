@@ -53,12 +53,12 @@ usethis::use_data(country_concordance_cols, overwrite = TRUE)
 override_iso_codes_df <- tibble::tribble(
   ~a, ~b, 
   "WRLD", "World", 
-  "CHN", "People's Republic of China", 
+  "CHNM", "People's Republic of China", 
   "HKG", "Hong Kong (China)", 
-  "SUN", "Former Soviet Union (if no detail)",
-  "WMB", "World marine bunkers", 
-  "WAB", "World aviation bunkers", 
-  "YUG", "Former Yugoslavia (if no detail)") %>% 
+  "FSOV", "Former Soviet Union (if no detail)",
+  "WMBK", "World marine bunkers", 
+  "WABK", "World aviation bunkers", 
+  "FYUG", "Former Yugoslavia (if no detail)") %>% 
   magrittr::set_names(c(country_concordance_cols$pfu_code, 
                         country_concordance_cols$iea_name))
 usethis::use_data(override_iso_codes_df, overwrite = TRUE)
