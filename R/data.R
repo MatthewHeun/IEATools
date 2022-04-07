@@ -51,8 +51,8 @@
 #' 
 #' @format A string list with `r length(country_concordance_cols)` entries.
 #' \describe{
-#' \item{pfu_code}{The name of a column containing 3-letter Primary-Final-Useful country codes. Normally, these codes should match the ISO 3-letter codes for each country.}
-#' \item{iea_name}{The name of a column containing 3-letter Primary-Final-Useful country names. These names should be the same as the IEA's country names.}
+#' \item{pfu_code}{The name of a column containing 3- or 4-letter Primary-Final-Useful country codes. Normally, these codes should match the ISO 3-letter codes for each country.}
+#' \item{iea_name}{The name of a column containing 3- or 4-letter Primary-Final-Useful country names. These names should be the same as the IEA's country names.}
 #' }
 #' 
 #' @examples
