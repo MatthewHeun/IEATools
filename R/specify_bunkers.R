@@ -13,8 +13,8 @@
 #' @param country,flow,product See `IEATools::iea_cols$country`.
 #' @param imb,iab,etwmb,etwab,imports See `IEATools::tpes_flows`.
 #' @param wmb_sector_long,wab_sector_long,international_navigation,international_aviation See `IEATools::transport_flows`.
-#' @param wmb_3_letter The 3-letter code for the world marine bunkers country. Default is "WMB".
-#' @param wab_3_letter The 3-letter code for the world aviation bunkers country. Default is "WAB".
+#' @param wmbk_3_letter The 3-letter code for the world marine bunkers country. Default is "WMB".
+#' @param wabk_3_letter The 3-letter code for the world aviation bunkers country. Default is "WAB".
 #'
 #' @return A `.tidy_iea_df` with bunker flows specified.
 #' 
