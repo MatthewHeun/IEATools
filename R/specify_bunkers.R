@@ -38,15 +38,15 @@ specify_bunkers <- function(.tidy_iea_df,
                             wab_sector_long = IEATools::transport_flows$world_aviation_bunkers,
                             international_navigation = IEATools::transport_flows$international_navigation,
                             international_aviation = IEATools::transport_flows$international_aviation,
-                            wmb_3_letter = "WMB", 
-                            wab_3_letter = "WAB"){
+                            wmbk_3_letter = "WMBK", 
+                            wabk_3_letter = "WABK"){
   # Take any remaining "Production" rows and convert them to Resources (Product).
   .tidy_iea_df %>% 
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
         # Set Flow to imports when the country is a bunker.
-        .data[[country]] == wmb_3_letter & .data[[flow]] == imb ~ imports,
-        .data[[country]] == wab_3_letter & .data[[flow]] == iab ~ imports,
+        .data[[country]] == wmbk_3_letter & .data[[flow]] == imb ~ imports,
+        .data[[country]] == wabk_3_letter & .data[[flow]] == iab ~ imports,
         # Set Flow to an export to World_X_bunkers when the Flow is 
         # International_X_bunkers.
         .data[[flow]] == imb ~ etwmb, 
@@ -57,8 +57,8 @@ specify_bunkers <- function(.tidy_iea_df,
         # International navigation (in WMB) or 
         # International aviation (in WAB)
         # to correspond to their domestic equivalents.
-        .data[[country]] == wmb_3_letter & .data[[flow]] == wmb_sector_long ~ international_navigation,
-        .data[[country]] == wab_3_letter & .data[[flow]] == wab_sector_long ~ international_aviation,
+        .data[[country]] == wmbk_3_letter & .data[[flow]] == wmb_sector_long ~ international_navigation,
+        .data[[country]] == wabk_3_letter & .data[[flow]] == wab_sector_long ~ international_aviation,
         TRUE ~ .data[[flow]]
       )
     )

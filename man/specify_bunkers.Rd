@@ -18,8 +18,8 @@ specify_bunkers(
   wab_sector_long = IEATools::transport_flows$world_aviation_bunkers,
   international_navigation = IEATools::transport_flows$international_navigation,
   international_aviation = IEATools::transport_flows$international_aviation,
-  wmb_3_letter = "WMB",
-  wab_3_letter = "WAB"
+  wmb_3_letter = "WMBK",
+  wab_3_letter = "WABK"
 )
 }
 \arguments{

@@ -35,7 +35,7 @@ test_that("use_iso_countries() works with override", {
                             "Former Yugoslavia (if no detail)")
   res <- iea_df %>% 
     use_iso_countries()
-  expect_equal(res$Country, c("CHN", "HKG", "WMB", "WAB", "GHA", "SUN", "ZAF", "WRLD", "YUG"))
+  expect_equal(res$Country, c("CHNM", "HKG", "WMBK", "WABK", "GHA", "FSOV", "ZAF", "WRLD", "FYUG"))
 })
 
 
@@ -72,7 +72,7 @@ test_that("use_iso_countries() works as expected", {
       use_iso_countries() %>% 
       magrittr::extract2("Country") %>% 
       unique() %>% 
-      expect_equal(c("CHN", "ZAF"))
+      expect_equal(c("CHNM", "ZAF"))
     
     # Make ZAF into Hong Kong to be sure that it is recoded to HKG.
     IEAData %>% 
@@ -92,7 +92,7 @@ test_that("use_iso_countries() works as expected", {
       use_iso_countries() %>% 
       magrittr::extract2("Country") %>% 
       unique() %>% 
-      expect_equal(c("GHA", "WMB"))
+      expect_equal(c("GHA", "WMBK"))
     
     # Now make GHA into World aviation bunkers to be sure it is recoded to WAB.
     IEAData %>% 
@@ -102,7 +102,7 @@ test_that("use_iso_countries() works as expected", {
       use_iso_countries() %>% 
       magrittr::extract2("Country") %>% 
       unique() %>% 
-      expect_equal(c("WAB", "ZAF"))
+      expect_equal(c("WABK", "ZAF"))
   }
 })
 
