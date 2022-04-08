@@ -19,7 +19,7 @@ specify_primary_production(
   oil_extraction = IEATools::industry_flows$oil_extraction,
   gas_extraction = IEATools::industry_flows$natural_gas_extraction,
   liquefaction_regas = "Liquefaction (LNG) / regasification plants",
-  liquefaction_regas_reassign = IEATools::industry_flows$oil_and_gas_extraction,
+  liquefaction_regas_reassign = IEATools::industry_flows$natural_gas_extraction,
   transformation_processes = IEATools::aggregation_flows$transformation_processes,
   resources = IEATools::tpes_flows$resources,
   resource_products_notation = RCLabels::from_notation,
@@ -59,7 +59,7 @@ Default is \code{IEATools::industry_flows$natural_gas_extraction}.}
 Default is "Liquefaction (LNG) / regasification plants".}
 
 \item{liquefaction_regas_reassign}{A string identifying the industry to which EIOU into \code{liquefaction_regas} will be reassigned.
-Default is "Oil and gas extraction".}
+Default is "Natural gas extraction".}
 
 \item{transformation_processes}{A string identifying transformation processes in the flow column of \code{.tidy_iea_df}.
 Default is "Transformation processes".}
