@@ -29,7 +29,7 @@ test_that("production is converted to resources correctly", {
   ) %>% 
     specify_primary_production()
   # Expect that Flow has been reassigned.
-  expect_equal(DF$Flow[[1]], "Oil and gas extraction")
+  expect_equal(DF$Flow[[1]], "Natural gas extraction")
 })
 
 

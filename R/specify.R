@@ -33,7 +33,7 @@
 #' @param liquefaction_regas A string identifying liquefaction and regasification plants. 
 #'                           Default is "Liquefaction (LNG) / regasification plants".
 #' @param liquefaction_regas_reassign A string identifying the industry to which EIOU into `liquefaction_regas` will be reassigned.
-#'                                    Default is "Oil and gas extraction".
+#'                                    Default is "Natural gas extraction".
 #' @param transformation_processes A string identifying transformation processes in the flow column of `.tidy_iea_df`. 
 #'                                 Default is "Transformation processes".
 #' @param ledger_side,flow,product,flow_aggregation_point See `IEATools::iea_cols`.
@@ -101,7 +101,7 @@ specify_primary_production <- function(.tidy_iea_df,
                                        oil_extraction = IEATools::industry_flows$oil_extraction,
                                        gas_extraction = IEATools::industry_flows$natural_gas_extraction,
                                        liquefaction_regas = "Liquefaction (LNG) / regasification plants",
-                                       liquefaction_regas_reassign = IEATools::industry_flows$oil_and_gas_extraction,
+                                       liquefaction_regas_reassign = IEATools::industry_flows$natural_gas_extraction,
                                        transformation_processes = IEATools::aggregation_flows$transformation_processes,
                                        resources = IEATools::tpes_flows$resources,
                                        resource_products_notation = RCLabels::from_notation,

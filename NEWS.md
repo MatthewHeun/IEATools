@@ -5,7 +5,8 @@ output: html_document
 
 
 
-
+* "Liquefaction (LNG) / regasification plants" EIOU flow now directed to
+  the "Natural gas extraction" industry.
 * New 4-letter abbreviations for non-standard ISO country codes.
 
 
