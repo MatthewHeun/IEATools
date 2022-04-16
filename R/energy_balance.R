@@ -11,7 +11,7 @@
 #' `Country`, `Method`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
 #' Grouping should _not_ be done on the `Ledger.side` column or the `Flow` column.
 #' To test whether all balances are OK, 
-#' use the [tidy_iea_df_balanced()] function.
+#' use the `tidy_iea_df_balanced()` function.
 #' 
 #' Supply side and consumption side energy flows are aggregated to a 
 #' `supply_sum` and a `consumption_sum` column.
