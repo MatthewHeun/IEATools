@@ -70,7 +70,7 @@ Typically, grouping is also done on
 \code{Country}, \code{Method}, \code{Year}, \code{Energy.type}, \code{Last.stage}, etc. columns.
 Grouping should \emph{not} be done on the \code{Ledger.side} column or the \code{Flow} column.
 To test whether all balances are OK,
-use the \code{\link[=tidy_iea_df_balanced]{tidy_iea_df_balanced()}} function.
+use the \code{tidy_iea_df_balanced()} function.
 }
 \details{
 Supply side and consumption side energy flows are aggregated to a
