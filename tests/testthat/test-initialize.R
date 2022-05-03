@@ -35,7 +35,7 @@ test_that("use_iso_countries() works with override", {
                             "Former Yugoslavia (if no detail)")
   res <- iea_df %>% 
     use_iso_countries()
-  expect_equal(res$Country, c("CHNM", "HKG", "WMBK", "WABK", "GHA", "FSOV", "ZAF", "WRLD", "FYUG"))
+  expect_equal(res$Country, c("CHNM", "HKG", "WMBK", "WABK", "GHA", "SUN", "ZAF", "WRLD", "YUG"))
 })
 
 
