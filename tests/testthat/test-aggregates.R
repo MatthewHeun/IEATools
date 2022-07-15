@@ -67,12 +67,12 @@ test_that("Aggregating South Africa and Ghana works as intended", {
                                           net_trade = FALSE)
   
   manual_aggregation <- tidy_GHA_ZAF_df %>%
-    dplyr::group_by(Year, Ledger.side, Flow.aggregation.point, Flow, Product) %>%
+    dplyr::group_by(Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>% 
     dplyr::summarise(E.dot.aggregated = sum(E.dot))
   
   # Testing that all rows are perfectly equal and that there are the same number of rows
   comparing <- aggregated_regions %>%
-    dplyr::full_join(manual_aggregation) %>%
+    dplyr::full_join(manual_aggregation) %>% 
     dplyr::mutate(
       is_equal = E.dot.aggregated == E.dot
     )
@@ -87,11 +87,13 @@ test_that("Aggregating South Africa and Ghana works as intended", {
                                           aggregation_table = aggregation_table_GHA_ZAF,
                                           net_trade = TRUE)
   
-  manual_aggregation_excl_ie <- tidy_GHA_ZAF_df %>%
-    remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>% 
-    dplyr::filter(! (.data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$imports | 
-                       .data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$exports)) %>%
-    specify_interface_industries() %>% 
+  
+  manual_aggregation_excl_ie <- tidy_GHA_ZAF_df %>% 
+    #remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>% 
+    dplyr::filter(! (stringr::str_detect(Flow, IEATools::interface_industries$imports) | stringr::str_detect(Flow, IEATools::interface_industries$exports)) |
+                    stringr::str_detect(Flow, IEATools::tpes_flows$exports_to_world_aviation_bunkers) |
+                    stringr::str_detect(Flow, IEATools::tpes_flows$exports_to_world_marine_bunkers)) %>%
+    #specify_interface_industries() %>% 
     dplyr::group_by(Method, Last.stage, Energy.type, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot)) %>% 
     dplyr::mutate(
@@ -100,12 +102,13 @@ test_that("Aggregating South Africa and Ghana works as intended", {
   
   # This here needs being modified.
   manual_aggregation_ie <- tidy_GHA_ZAF_df %>%
-    remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>% 
-    dplyr::filter(.data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$imports | 
-                       .data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$exports) %>%
+    dplyr::filter(stringr::str_detect(Flow, IEATools::interface_industries$imports) | stringr::str_detect(Flow, IEATools::interface_industries$exports)) %>%
+    dplyr::filter(! (stringr::str_detect(Flow, IEATools::tpes_flows$exports_to_world_marine_bunkers) |
+                       stringr::str_detect(Flow, IEATools::tpes_flows$exports_to_world_aviation_bunkers))) %>%
     dplyr::group_by(Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot)) %>%
-    tidyr::pivot_wider(names_from = Flow, values_from = E.dot.aggregated) %>%
+    remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>%
+    tidyr::pivot_wider(names_from = Flow, values_from = E.dot.aggregated) %>% 
     dplyr::mutate(
       Imports = tidyr::replace_na(Imports, 0),
       Exports = tidyr::replace_na(Exports, 0),
@@ -125,7 +128,7 @@ test_that("Aggregating South Africa and Ghana works as intended", {
     dplyr::mutate(
       Country = "GHAZAF"
     )
-  
+    
   manual_aggregation <- dplyr::bind_rows(manual_aggregation_excl_ie, manual_aggregation_ie)
   
   comparing <- aggregated_regions %>%
@@ -211,10 +214,9 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
                                           net_trade = TRUE)
   
   manual_aggregation_excl_ie <- tidy_GHA_ZAF_EGC_MGC_df %>%
-    remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>% 
-    dplyr::filter(!(.data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$imports | 
-                    .data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$exports)) %>%
-    specify_interface_industries() %>% 
+    dplyr::filter(! (stringr::str_detect(Flow, IEATools::interface_industries$imports) | stringr::str_detect(Flow, IEATools::interface_industries$exports)) |
+                    stringr::str_detect(Flow, IEATools::tpes_flows$exports_to_world_aviation_bunkers) |
+                    stringr::str_detect(Flow, IEATools::tpes_flows$exports_to_world_marine_bunkers)) %>%
     dplyr::mutate(
       Country = dplyr::case_when(
         Country == "ZAF" ~ "ZAF_MGC",
@@ -227,9 +229,9 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
     dplyr::summarise(E.dot.aggregated = sum(E.dot))
   
   manual_aggregation_ie <- tidy_GHA_ZAF_EGC_MGC_df %>%
-    remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>% 
-    dplyr::filter(.data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$imports | 
-                    .data[[IEATools::iea_cols$flow]] == IEATools::interface_industries$exports) %>%
+    dplyr::filter(stringr::str_detect(Flow, IEATools::interface_industries$imports) | stringr::str_detect(Flow, IEATools::interface_industries$exports)) %>%
+    dplyr::filter(! (stringr::str_detect(Flow, IEATools::tpes_flows$exports_to_world_marine_bunkers) |
+                       stringr::str_detect(Flow, IEATools::tpes_flows$exports_to_world_aviation_bunkers))) %>%
     dplyr::mutate(
       Country = dplyr::case_when(
         Country == "ZAF" ~ "ZAF_MGC",

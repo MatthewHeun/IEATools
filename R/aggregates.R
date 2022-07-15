@@ -279,36 +279,39 @@ aggregate_regions <- function(.tidy_iea_df,
     dplyr::select(-.data[[destination_regions]]) %>% 
     dplyr::ungroup()
   
+  # Below same code as the ECCTools::convert_to_net_trade function with difference that we use remove_suffix_specifications() and specify_interface_industries() functions
   if (net_trade){
-    aggregated_net_trade <- aggregated_tidy_iea_df %>% 
-      remove_suffix_specifications(col = flow, unsuffixed_col = flow) %>% 
-      dplyr::filter(.data[[flow]] == imports | .data[[flow]] == exports) %>% 
-      tidyr::pivot_wider(names_from = .data[[flow]], values_from = .data[[e_dot]]) %>% 
+    
+    net_trade_flows <- aggregated_tidy_iea_df %>%
+      dplyr::filter(stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports)) %>%
+      dplyr::filter(! (stringr::str_detect(.data[[flow]], IEATools::tpes_flows$exports_to_world_marine_bunkers) |
+                         stringr::str_detect(.data[[flow]], IEATools::tpes_flows$exports_to_world_aviation_bunkers))) %>%
+      remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>%
+      tidyr::pivot_wider(names_from = .data[[flow]], values_from = .data[[e_dot]]) %>%
       dplyr::mutate(
         "{imports}" := tidyr::replace_na(.data[[imports]], 0),
         "{exports}" := tidyr::replace_na(.data[[exports]], 0),
         "{.net_imports}" := .data[[imports]] + .data[[exports]]
-      ) %>% 
+      ) %>%
       tidyr::pivot_longer(cols = c({imports}, {exports}, {.net_imports}), names_to = flow, values_to = e_dot) %>%
-      dplyr::filter(.data[[flow]] == {.net_imports}) %>% 
+      dplyr::filter(.data[[flow]] == {.net_imports}) %>%
       dplyr::mutate(
         "{flow}" := dplyr::case_when(
           .data[[e_dot]] >= 0 ~ {imports},
           .data[[e_dot]] < 0 ~ {exports}
         )
-      ) %>% 
+      ) %>%
       dplyr::filter(.data[[e_dot]] != 0) %>%
       specify_interface_industries() %>% 
       dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
     
-    aggregated_tidy_iea_df <- aggregated_tidy_iea_df %>% 
-      remove_suffix_specifications(col = flow, unsuffixed_col = flow) %>% 
-      dplyr::filter(! (.data[[flow]] == imports | .data[[flow]] == exports)) %>%
-      # Add suffixes back.
-      specify_interface_industries() %>% 
-      dplyr::bind_rows(aggregated_net_trade) %>%
+    aggregated_tidy_iea_df <- aggregated_tidy_iea_df %>%
+      dplyr::filter(! (stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports)) |
+                      stringr::str_detect(.data[[flow]], IEATools::tpes_flows$exports_to_world_aviation_bunkers) |
+                      stringr::str_detect(.data[[flow]], IEATools::tpes_flows$exports_to_world_marine_bunkers)) %>%
+      dplyr::bind_rows(net_trade_flows) %>%
       dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
-  }
+    }
   
   return(aggregated_tidy_iea_df)
 }
