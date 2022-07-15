@@ -303,3 +303,55 @@ test_that("remove_suffix_specifications() works as expected", {
     # We should have no rows remaining that end with the bracket notation suffix.
     expect_equal(0)
 })
+
+
+test_that("new tests for specify_interface_industries",{
+  
+  # First, check that specification specifies Resources and Manufacture flows
+  tidy_GHA_ZAF_df <- load_tidy_iea_df() %>%
+    specify_all()
+  
+  res <- tidy_GHA_ZAF_df %>%
+    remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>%
+    specify_interface_industries()
+  
+  res %>% 
+    dplyr::filter(Flow == "Manufacture") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  
+  res %>% 
+    dplyr::filter(Flow == "Manufacture [of Hydro]") %>% 
+    nrow() %>% 
+    expect_equal(2)
+  
+  res %>% 
+    dplyr::filter(Flow == "Resources") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  
+  res %>% 
+    dplyr::filter(Flow == "Resources [of Hydro]") %>% 
+    nrow() %>% 
+    expect_equal(1)
+  
+  # Second, check that Industry not elsewhere specified does not 1) get specified, and 2) end up as part of the supply
+  
+  # Checking it does not get specified
+  res %>% 
+    dplyr::filter(stringr::str_detect(Flow, "Industry not elsewhere specified")) %>% 
+    dplyr::filter(Flow != "Industry not elsewhere specified") %>% 
+    nrow() %>% 
+    expect_equal(0)
+  
+  # Checking it does not end up as part of the supply
+  res %>% 
+    dplyr::filter(Ledger.side == "Supply" & stringr::str_detect(Flow, "Industry not elsewhere specified")) %>% 
+    nrow() %>% 
+    expect_equal(0)
+  
+  res %>% 
+    dplyr::filter(Flow.aggregation.point == "Total primary energy supply" & stringr::str_detect(Flow, "Industry not elsewhere specified")) %>% 
+    nrow() %>% 
+    expect_equal(0)
+})

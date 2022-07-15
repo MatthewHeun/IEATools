@@ -286,7 +286,7 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #'   specify_interface_industries()
 specify_interface_industries <- function(.tidy_iea_df,
                                          flow = "Flow", 
-                                         int_industries = IEATools::interface_industries,
+                                         int_industries = list(IEATools::interface_industries, list(resources = "Resources", manufacture = "Manufacture")),
                                          product = "Product", 
                                          notation = RCLabels::of_notation){
   .tidy_iea_df %>% 

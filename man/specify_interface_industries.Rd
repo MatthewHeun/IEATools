@@ -7,7 +7,7 @@
 specify_interface_industries(
   .tidy_iea_df,
   flow = "Flow",
-  int_industries = IEATools::interface_industries,
+  int_industries = list(IEATools::interface_industries, "Resources", "Manufacture"),
   product = "Product",
   notation = RCLabels::of_notation
 )
