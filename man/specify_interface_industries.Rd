@@ -6,26 +6,29 @@
 \usage{
 specify_interface_industries(
   .tidy_iea_df,
-  flow = "Flow",
-  int_industries = list(IEATools::interface_industries, "Resources", "Manufacture"),
-  product = "Product",
+  flow = IEATools::iea_cols$flow,
+  int_industries = c(IEATools::interface_industries, IEATools::tpes_flows["resources"],
+    manufacture = "Manufacture"),
+  product = IEATools::iea_cols$product,
   notation = RCLabels::of_notation
 )
 }
 \arguments{
-\item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
+\item{.tidy_iea_df}{A tidy data frame containing IEA extended energy balance data.}
 
-\item{flow}{the name of the flow column in \code{.tidy_iea_df}.  Default is "\code{Flow}".}
+\item{flow}{The name of the flow column in \code{.tidy_iea_df}.  Default is "\code{Flow}".}
 
-\item{int_industries}{a string vector of industries involved in exchanges with other countries,
-bunkers, or stock changes. Default is \code{IEATools::interface_industries}.}
+\item{int_industries}{A string vector of industries involved in exchanges with other countries,
+bunkers, or stock changes.
+Default is c(\code{IEATools::interface_industries}, IEATools::tpes_flows\link{"resources"},
+manufacture = "Manufacture").}
 
-\item{product}{the name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
+\item{product}{The name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
 
-\item{notation}{a list of specification notations. Default is \code{RCLabels::of_notation}.}
+\item{notation}{A list of specification notations. Default is \code{RCLabels::of_notation}.}
 }
 \value{
-a modified version of \code{.tidy_iea_df} with specified interface industries
+A modified version of \code{.tidy_iea_df} with specified interface industries.
 }
 \description{
 An interface industry is one that moves energy carriers into or out of a country.
@@ -36,9 +39,12 @@ embodied energy calculations (many types of energy are embodied, even if only on
 This function adds a suffix \verb{[of Product]} to each of these interface industries.
 }
 \details{
-Note that "\code{Production}" also needs to be specified,
+Note that "Production" also needs to be specified,
 but that is accomplished in the \code{specify_primary_production()} and
 \code{specify_production_to_resources()} functions.
+
+Resource flows and manufacture flows are included by default,
+because they need a place where they are specified, too.
 }
 \examples{
 load_tidy_iea_df() \%>\% 

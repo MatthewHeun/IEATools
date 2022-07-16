@@ -305,7 +305,7 @@ test_that("remove_suffix_specifications() works as expected", {
 })
 
 
-test_that("new tests for specify_interface_industries",{
+test_that("new tests for specify_interface_industries()",{
   
   # First, check that specification specifies Resources and Manufacture flows
   tidy_GHA_ZAF_df <- load_tidy_iea_df() %>%

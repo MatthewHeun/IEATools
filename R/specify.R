@@ -266,18 +266,23 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' embodied energy calculations (many types of energy are embodied, even if only one should be).
 #' This function adds a suffix `[of Product]` to each of these interface industries.
 #' 
-#' Note that "`Production`" also needs to be specified, 
+#' Note that "Production" also needs to be specified, 
 #' but that is accomplished in the `specify_primary_production()` and
 #' `specify_production_to_resources()` functions.
+#' 
+#' Resource flows and manufacture flows are included by default, 
+#' because they need a place where they are specified, too.
 #'
-#' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
-#' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
-#' @param int_industries a string vector of industries involved in exchanges with other countries,
-#'        bunkers, or stock changes. Default is `IEATools::interface_industries`.
-#' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
-#' @param notation a list of specification notations. Default is `RCLabels::of_notation`.
+#' @param .tidy_iea_df A tidy data frame containing IEA extended energy balance data.
+#' @param flow The name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
+#' @param int_industries A string vector of industries involved in exchanges with other countries,
+#'        bunkers, or stock changes. 
+#'        Default is c(`IEATools::interface_industries`, IEATools::tpes_flows["resources"],
+#'        manufacture = "Manufacture").
+#' @param product The name of the product column in `.tidy_iea_df`.  Default is "`Product`".
+#' @param notation A list of specification notations. Default is `RCLabels::of_notation`.
 #'
-#' @return a modified version of `.tidy_iea_df` with specified interface industries
+#' @return A modified version of `.tidy_iea_df` with specified interface industries.
 #' 
 #' @export
 #'
@@ -285,9 +290,11 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' load_tidy_iea_df() %>% 
 #'   specify_interface_industries()
 specify_interface_industries <- function(.tidy_iea_df,
-                                         flow = "Flow", 
-                                         int_industries = list(IEATools::interface_industries, resources = "Resources", manufacture = "Manufacture"),
-                                         product = "Product", 
+                                         flow = IEATools::iea_cols$flow, 
+                                         int_industries = c(IEATools::interface_industries,
+                                                            IEATools::tpes_flows["resources"],
+                                                            manufacture = "Manufacture"),
+                                         product = IEATools::iea_cols$product, 
                                          notation = RCLabels::of_notation){
   .tidy_iea_df %>% 
     dplyr::mutate(
