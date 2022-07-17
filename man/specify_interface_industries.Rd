@@ -20,7 +20,7 @@ specify_interface_industries(
 
 \item{int_industries}{A string vector of industries involved in exchanges with other countries,
 bunkers, or stock changes.
-Default is c(\code{IEATools::interface_industries}, IEATools::tpes_flows\link{"resources"},
+Default is c(\code{IEATools::interface_industries}, IEATools::tpes_flows["resources"],
 manufacture = "Manufacture").}
 
 \item{product}{The name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}

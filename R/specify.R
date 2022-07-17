@@ -277,7 +277,7 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' @param flow The name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
 #' @param int_industries A string vector of industries involved in exchanges with other countries,
 #'        bunkers, or stock changes. 
-#'        Default is c(`IEATools::interface_industries`, IEATools::tpes_flows["resources"],
+#'        Default is c(`IEATools::interface_industries`, IEATools::tpes_flows\["resources"\],
 #'        manufacture = "Manufacture").
 #' @param product The name of the product column in `.tidy_iea_df`.  Default is "`Product`".
 #' @param notation A list of specification notations. Default is `RCLabels::of_notation`.
@@ -366,7 +366,7 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' @param negzeropos The name of a temporary column created in `.tidy_iea_df`. Default is ".negzeropos".
 #' @param main_act_producer_elect A string identifying main activity producer electricity plants. Default is "Main activity producer electricity plants".
 #'
-#' @return a modified version of `.tidy_iea_df`
+#' @return A modified version of `.tidy_iea_df`.
 #' 
 #' @export
 #'
