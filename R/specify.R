@@ -296,7 +296,7 @@ specify_interface_industries <- function(.tidy_iea_df,
                                                             manufacture = "Manufacture"),
                                          product = IEATools::iea_cols$product, 
                                          notation = RCLabels::of_notation){
-  # .tidy_iea_df %>% 
+  # .tidy_iea_df %>%
   #   dplyr::mutate(
   #     "{flow}" := dplyr::case_when(
   #       .data[[flow]] %in% int_industries ~ RCLabels::paste_pref_suff(pref = .data[[flow]], suff = .data[[product]], notation = notation),
@@ -310,7 +310,6 @@ specify_interface_industries <- function(.tidy_iea_df,
   # Specify those rows
   int_ind_rows_specified <- int_ind_rows %>% 
     dplyr::mutate(
-      # "{flow}" := RCLabels::paste_pref_suff(pref = .data[[flow]], suff = .data[[product]], notation = notation)
       "{flow}" := RCLabels::paste_pref_suff(pref = .data[[flow]], suff = RCLabels::get_pref_suff(.data[[product]], which = "pref") , notation = notation)
     )
   out <- .tidy_iea_df %>% 
