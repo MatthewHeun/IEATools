@@ -323,7 +323,7 @@ test_that("new tests for specify_interface_industries()",{
   res %>% 
     dplyr::filter(Flow == "Manufacture [of Hydro]") %>% 
     nrow() %>% 
-    expect_equal(2)
+    expect_equal(8)
   
   res %>% 
     dplyr::filter(Flow == "Resources") %>% 
@@ -333,7 +333,7 @@ test_that("new tests for specify_interface_industries()",{
   res %>% 
     dplyr::filter(Flow == "Resources [of Hydro]") %>% 
     nrow() %>% 
-    expect_equal(1)
+    expect_equal(4)
   
   # Second, check that Industry not elsewhere specified does not 1) get specified, and 2) end up as part of the supply
   

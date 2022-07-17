@@ -296,14 +296,28 @@ specify_interface_industries <- function(.tidy_iea_df,
                                                             manufacture = "Manufacture"),
                                          product = IEATools::iea_cols$product, 
                                          notation = RCLabels::of_notation){
-  .tidy_iea_df %>% 
+  # .tidy_iea_df %>% 
+  #   dplyr::mutate(
+  #     "{flow}" := dplyr::case_when(
+  #       .data[[flow]] %in% int_industries ~ RCLabels::paste_pref_suff(pref = .data[[flow]], suff = .data[[product]], notation = notation),
+  #       TRUE ~ .data[[flow]]
+  #     )
+  #   )
+    
+  # Find the rows where flow is an interface industry.
+  int_ind_rows <- .tidy_iea_df %>% 
+    dplyr::filter(.data[[flow]] %in% int_industries)
+  # Specify those rows
+  int_ind_rows_specified <- int_ind_rows %>% 
     dplyr::mutate(
-      !!as.name(flow) := dplyr::case_when(
-        # !!as.name(flow) %in% int_industries ~ paste0(!!as.name(flow), .interface_ind_open, !!as.name(product), .interface_ind_close),
-        .data[[flow]] %in% int_industries ~ RCLabels::paste_pref_suff(pref = .data[[flow]], suff = .data[[product]], notation = notation),
-        TRUE ~ .data[[flow]]
-      )
+      # "{flow}" := RCLabels::paste_pref_suff(pref = .data[[flow]], suff = .data[[product]], notation = notation)
+      "{flow}" := RCLabels::paste_pref_suff(pref = .data[[flow]], suff = RCLabels::get_pref_suff(.data[[product]], which = "pref") , notation = notation)
     )
+  out <- .tidy_iea_df %>% 
+    # Subtract the interface industry rows from the incoming data frame
+    dplyr::filter(!(.data[[flow]] %in% int_industries)) %>% 
+    # Add back the specified rows
+    dplyr::bind_rows(int_ind_rows_specified)
 }
 
 
