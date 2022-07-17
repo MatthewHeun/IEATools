@@ -266,18 +266,23 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' embodied energy calculations (many types of energy are embodied, even if only one should be).
 #' This function adds a suffix `[of Product]` to each of these interface industries.
 #' 
-#' Note that "`Production`" also needs to be specified, 
+#' Note that "Production" also needs to be specified, 
 #' but that is accomplished in the `specify_primary_production()` and
 #' `specify_production_to_resources()` functions.
+#' 
+#' Resource flows and manufacture flows are included by default, 
+#' because they need a place where they are specified, too.
 #'
-#' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
-#' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
-#' @param int_industries a string vector of industries involved in exchanges with other countries,
-#'        bunkers, or stock changes. Default is `IEATools::interface_industries`.
-#' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
-#' @param notation a list of specification notations. Default is `RCLabels::of_notation`.
+#' @param .tidy_iea_df A tidy data frame containing IEA extended energy balance data.
+#' @param flow The name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
+#' @param int_industries A string vector of industries involved in exchanges with other countries,
+#'        bunkers, or stock changes. 
+#'        Default is c(`IEATools::interface_industries`, IEATools::tpes_flows["resources"],
+#'        manufacture = "Manufacture").
+#' @param product The name of the product column in `.tidy_iea_df`.  Default is "`Product`".
+#' @param notation A list of specification notations. Default is `RCLabels::of_notation`.
 #'
-#' @return a modified version of `.tidy_iea_df` with specified interface industries
+#' @return A modified version of `.tidy_iea_df` with specified interface industries.
 #' 
 #' @export
 #'
@@ -285,18 +290,33 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' load_tidy_iea_df() %>% 
 #'   specify_interface_industries()
 specify_interface_industries <- function(.tidy_iea_df,
-                                         flow = "Flow", 
-                                         int_industries = IEATools::interface_industries,
-                                         product = "Product", 
+                                         flow = IEATools::iea_cols$flow, 
+                                         int_industries = c(IEATools::interface_industries,
+                                                            IEATools::tpes_flows["resources"],
+                                                            manufacture = "Manufacture"),
+                                         product = IEATools::iea_cols$product, 
                                          notation = RCLabels::of_notation){
-  .tidy_iea_df %>% 
+  # .tidy_iea_df %>%
+  #   dplyr::mutate(
+  #     "{flow}" := dplyr::case_when(
+  #       .data[[flow]] %in% int_industries ~ RCLabels::paste_pref_suff(pref = .data[[flow]], suff = .data[[product]], notation = notation),
+  #       TRUE ~ .data[[flow]]
+  #     )
+  #   )
+    
+  # Find the rows where flow is an interface industry.
+  int_ind_rows <- .tidy_iea_df %>% 
+    dplyr::filter(.data[[flow]] %in% int_industries)
+  # Specify those rows
+  int_ind_rows_specified <- int_ind_rows %>% 
     dplyr::mutate(
-      !!as.name(flow) := dplyr::case_when(
-        # !!as.name(flow) %in% int_industries ~ paste0(!!as.name(flow), .interface_ind_open, !!as.name(product), .interface_ind_close),
-        .data[[flow]] %in% int_industries ~ RCLabels::paste_pref_suff(pref = .data[[flow]], suff = .data[[product]], notation = notation),
-        TRUE ~ .data[[flow]]
-      )
+      "{flow}" := RCLabels::paste_pref_suff(pref = .data[[flow]], suff = RCLabels::get_pref_suff(.data[[product]], which = "pref") , notation = notation)
     )
+  out <- .tidy_iea_df %>% 
+    # Subtract the interface industry rows from the incoming data frame
+    dplyr::filter(!(.data[[flow]] %in% int_industries)) %>% 
+    # Add back the specified rows
+    dplyr::bind_rows(int_ind_rows_specified)
 }
 
 
