@@ -420,15 +420,22 @@ eiou_flows <- list(bkb_peat_briquette_plants = "BKB/peat briquette plants",
                    gas_to_liquids_plants = "Gas-to-liquids (GTL) plants",
                    gasification_plants = "Gasification plants for biogases",
                    liquefaction_regasification_plants = "Liquefaction (LNG) / regasification plants",
-                   natural_gas_extraction = "Natural gas extraction",
                    non_specified_eiou = "Non-specified (energy)",
                    nuclear_industry = "Nuclear industry",
                    oil_and_gas_extraction = "Oil and gas extraction",
+                   # "Oil and gas extraction" is split in the specification process.
+                   # So we need "Oil extraction" and "Natural gas extraction".
+                   oil_extraction = "Oil extraction",
+                   natural_gas_extraction = "Natural gas extraction",
                    oil_refineries = "Oil refineries",
                    own_use_elect_chp_heat_plants = "Own use in electricity, CHP and heat plants",
-                   # In several places, we route "Own use in electricity, CHP and heat plants" to "Main activity producer electricity plants",
-                   # so need to include those plants here.
+                   # In the specification process, 
+                   # we route "Own use in electricity, CHP and heat plants" to 
+                   # main activity plants for electricity, CHP, and heat. 
+                   # So we need to include those plants here.
                    main_activity_producer_electricity_plants = "Main activity producer electricity plants",
+                   main_activity_producer_chp_plants = "Main activity producer CHP plants",
+                   main_activity_producer_heat_plants = "Main activity producer heat plants",
                    patent_fuel_plants = "Patent fuel plants",
                    pumped_storage_plants = "Pumped storage plants")
 usethis::use_data(eiou_flows, overwrite = TRUE)

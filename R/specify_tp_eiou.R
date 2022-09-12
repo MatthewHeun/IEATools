@@ -189,7 +189,7 @@ route_pumped_storage <- function(.tidy_iea_df,
 #' @param gas_extraction The name of the Natural gas extraction industry.
 #'                       Default is `IEATools::industry_flows$natural_gas_extraction`.
 #' @param .share The name of a temporary column that is added to the data frame.
-#'              Default is ".share". 
+#'               Default is ".share". 
 #'
 #' @return A `.tidy_iea_df` with "Oil and gas extraction" EIOU flows split into 'Oil extraction"
 #'         and "Natural gas extraction" EIOU flows.
@@ -336,7 +336,7 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
 #' @param main_act_producer_elect A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
 #'                                Default is `IEATools::main_act_plants$main_act_prod_elect_plants`.
 #' @param main_act_producer_chp A string identifying "Main activity producer CHP plants" in the `flow` column of the `.tidy_iea_df`.
-#'                              Default is `IEATools::main_act_plants$main_act_prod_heat_plants`.
+#'                              Default is `IEATools::main_act_plants$main_act_prod_chp_plants`.
 #' @param main_act_producer_heat A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
 #'                               Default is `IEATools::main_act_plants$main_act_prod_heat_plants`.
 #' @param n_counting The name of a temporary column created in `.tidy_iea_df`. 

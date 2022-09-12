@@ -44,7 +44,6 @@
 "iea_cols"
 
 
-
 #' Country concordance table column names
 #'
 #' A string list containing named names of columns in country concordance tables.
@@ -166,7 +165,6 @@
 #' @examples
 #' fu_analysis_file_info
 "fu_analysis_file_info"
-
 
 
 #' PSUT matrix row and column types
@@ -478,6 +476,7 @@
 #' electricity_products
 "electricity_products"
 
+
 #' Non-energy products
 #'
 #' A string vector containing names of products classified as "Non-energy" by
@@ -533,6 +532,7 @@
 #' tpes_flows
 "tpes_flows"
 
+
 #' Primary aggregates flows
 #'
 #' A string vector containing a limited set of names of `Total primary energy supply` `Flow`s in 
@@ -586,6 +586,7 @@
 #' transformation_processes
 "transformation_processes"
 
+
 #' Energy industry own use (EIOU) flows
 #'
 #' A string vector containing names of `Energy industry own use` `Flow`s in the IEA extended energy balances database.
@@ -602,13 +603,16 @@
 #' \item{gas_to_liquids_plants}{The string identifier for Gas-to-liquids (GTL) plants.}
 #' \item{gasification_plants}{The string identifier for Gasification plants for biogases.}
 #' \item{liquefaction_regasification_plants}{The string identifier for Liquefaction (LNG) / regasification plants.}
-#' \item{natural_gas_extraction}{The string identifier for natural gas extraction.}
-#' \item{non_specified_eiou}{The string identifier for Non-specified (energy).}
-#' \item{nuclear_industry}{The string identifier for Nuclear industry.}
+#' \item{non_specified_eiou}{The string identifier for "Non-specified (energy)".}
+#' \item{nuclear_industry}{The string identifier for the nuclear industry.}
 #' \item{oil_and_gas_extraction}{The string identifier for Oil and gas extraction.}
+#' \item{oil_extraction}{The string identifier for Oil extraction.}
+#' \item{natural_gas_extraction}{The string identifier for natural gas extraction.}
 #' \item{oil_refineries}{The string identifier for Oil refineries.}
 #' \item{own_use_elect_chp_heat_plants}{The string identifier for Own use in electricity, CHP and heat plants.}
 #' \item{main_activity_producer_electricy_plants}{The string identifier for electricity plants.}
+#' \item{main_activity_producer_chp_plants}{The string identifier for Main activity producer CHP plants.}
+#' \item{main_activity_producer_heat_plants}{The string identifier for Main activity producer heat plants.}
 #' \item{patent_fuel_plants}{The string identifier for Patent fuel plants.}
 #' \item{pumped_storage_plants}{The string identifier for Pumped storage plants.}
 #' }
@@ -680,6 +684,7 @@
 #' @examples
 #' industry_flows
 "industry_flows"
+
 
 #' Industry net flows
 #'
@@ -754,6 +759,7 @@
 #' @examples
 #' transport_flows
 "transport_flows"
+
 
 #' Transport domestic flows
 #'
@@ -929,6 +935,7 @@
 #' memo_aggregation_flow_prefixes
 "memo_aggregation_flow_prefixes"
 
+
 #' Memo and aggregation product prefixes
 #'
 #' A string vector containing names of `Product`s that provide memos and aggregations.
@@ -941,6 +948,7 @@
 #' @examples
 #' memo_aggregation_product_prefixes
 "memo_aggregation_product_prefixes"
+
 
 #' Interface industries
 #'

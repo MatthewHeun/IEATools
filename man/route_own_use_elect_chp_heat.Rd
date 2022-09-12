@@ -87,7 +87,7 @@ Default is \code{IEATools::eiou_flows$own_use_elect_chp_heat_plants}.}
 Default is \code{IEATools::main_act_plants$main_act_prod_elect_plants}.}
 
 \item{main_act_producer_chp}{A string identifying "Main activity producer CHP plants" in the \code{flow} column of the \code{.tidy_iea_df}.
-Default is \code{IEATools::main_act_plants$main_act_prod_heat_plants}.}
+Default is \code{IEATools::main_act_plants$main_act_prod_chp_plants}.}
 
 \item{main_act_producer_heat}{A string identifying "Main activity producer electricity plants" in the \code{flow} column of the \code{.tidy_iea_df}.
 Default is \code{IEATools::main_act_plants$main_act_prod_heat_plants}.}
