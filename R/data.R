@@ -602,11 +602,13 @@
 #' \item{gas_to_liquids_plants}{The string identifier for Gas-to-liquids (GTL) plants.}
 #' \item{gasification_plants}{The string identifier for Gasification plants for biogases.}
 #' \item{liquefaction_regasification_plants}{The string identifier for Liquefaction (LNG) / regasification plants.}
+#' \item{natural_gas_extraction}{The string identifier for natural gas extraction.}
 #' \item{non_specified_eiou}{The string identifier for Non-specified (energy).}
 #' \item{nuclear_industry}{The string identifier for Nuclear industry.}
 #' \item{oil_and_gas_extraction}{The string identifier for Oil and gas extraction.}
 #' \item{oil_refineries}{The string identifier for Oil refineries.}
 #' \item{own_use_elect_chp_heat_plants}{The string identifier for Own use in electricity, CHP and heat plants.}
+#' \item{main_activity_producer_electricy_plants}{The string identifier for electricity plants.}
 #' \item{patent_fuel_plants}{The string identifier for Patent fuel plants.}
 #' \item{pumped_storage_plants}{The string identifier for Pumped storage plants.}
 #' }
@@ -830,6 +832,8 @@
 #' @format A string vector with `r length(aggregate_cols)` entries.
 #' \describe{
 #' \item{aggregate_primary}{The name of the column containing aggregated primary energy.}
+#' \item{aggregate_final}{The name of the column containing aggregated final energy, regardless of net or gross status.}
+#' \item{aggregate_useful}{The name of the column containing aggregated useful energy, regardless of net or gross status.}
 #' \item{net_aggregate_demand}{The name of the column containing aggregated net final demand energy.}
 #' \item{gross_aggregate_demand}{The name of the column containing aggregated gross final demand energy.}
 #' }

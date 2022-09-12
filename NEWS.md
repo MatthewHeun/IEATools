@@ -5,6 +5,11 @@ output: html_document
 
 
 
+* Added "Main activity producer electricity plants" to the list of `eiou_flows`.
+  We route "Own use in electricity, CHP and heat plants" to 
+  "Main activity producer electricity plants", 
+  so we need to include "Main activity producer electricity plants" in the EIOU flows.
+  Same for "Natural gas extraction".
 * "Liquefaction (LNG) / regasification plants" EIOU flow now directed to
   the "Natural gas extraction" industry.
 * New 4-letter abbreviations for non-standard ISO country codes.

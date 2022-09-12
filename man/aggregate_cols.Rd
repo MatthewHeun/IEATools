@@ -5,9 +5,11 @@
 \alias{aggregate_cols}
 \title{Aggregation columns}
 \format{
-A string vector with 3 entries.
+A string vector with 5 entries.
 \describe{
 \item{aggregate_primary}{The name of the column containing aggregated primary energy.}
+\item{aggregate_final}{The name of the column containing aggregated final energy, regardless of net or gross status.}
+\item{aggregate_useful}{The name of the column containing aggregated useful energy, regardless of net or gross status.}
 \item{net_aggregate_demand}{The name of the column containing aggregated net final demand energy.}
 \item{gross_aggregate_demand}{The name of the column containing aggregated gross final demand energy.}
 }
