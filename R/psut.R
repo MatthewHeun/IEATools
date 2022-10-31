@@ -134,6 +134,8 @@ add_psut_matnames <- function(.tidy_iea_df,
                               pos_supply_in_R = c(IEATools::tpes_flows$production, 
                                                   IEATools::tpes_flows$resources, 
                                                   IEATools::tpes_flows$imports, 
+                                                  IEATools::tpes_flows$international_aviation_bunkers,
+                                                  IEATools::tpes_flows$international_marine_bunkers,
                                                   IEATools::tfc_compare_flows$statistical_differences,
                                                   IEATools::tpes_flows$stock_changes),
                               neg_supply_in_fd = c(IEATools::tpes_flows$exports,
@@ -162,29 +164,13 @@ add_psut_matnames <- function(.tidy_iea_df,
     return(.tidy_iea_df)
   }
   
-  if (! R_includes_all_exogenous_flows) {
-    # Case where R includes only resource and production flows
-    R_assigned <- .tidy_iea_df %>% 
-      dplyr::mutate(
-        "{matnames}" := dplyr::case_when(
-          # All production items belong in the resources (R) matrix.
-          starts_with_any_of(.data[[flow]], c(production, resources)) ~ R
-        )
-      )
-  } else {
-    # Case where R includes all exogenous flows
-    R_assigned <- .tidy_iea_df %>% 
-      dplyr::mutate(
-        "{matnames}" := dplyr::case_when(
-          # All production items belong in the resources (R) matrix.
-          starts_with_any_of(.data[[flow]], pos_supply_in_R) & .data[[e_dot]] > 0 ~ R
-        )
-      )
-  }
-  
-  R_assigned %>%
+  .tidy_iea_df %>%
     dplyr::mutate(
       "{matnames}" := dplyr::case_when(
+        # Positive production items belong in the resources (R) matrix.
+        (! R_includes_all_exogenous_flows) & starts_with_any_of(.data[[flow]], c(production, resources)) & .data[[e_dot]] > 0 ~ R,
+        # All positive exogenous flows belong in the resources (R) matrix.
+        R_includes_all_exogenous_flows & starts_with_any_of(.data[[flow]], pos_supply_in_R) & .data[[e_dot]] > 0 ~ R, 
         # All other positive values on the Supply side of the ledger belong in the make (V) matrix.
         .data[[ledger_side]] == supply & .data[[e_dot]] > 0 ~ V,
         # All Consumption items belong in the final demand (Y) matrix.

@@ -9,10 +9,10 @@ test_that("S_units_from_tidy works as expected", {
 })
 
 
-test_that("add_psut_matnames works as expected", {
+test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_flows = FALSE", {
   With_matnames <- load_tidy_iea_df() %>% 
     specify_all() %>% 
-    add_psut_matnames()
+    add_psut_matnames(R_includes_all_exogenous_flows = FALSE)
   # Ensure that none of the matnames are NA
   expect_false(any(is.na(With_matnames$matnames)))
   # Specific checks
@@ -84,7 +84,42 @@ test_that("add_psut_matnames works as expected", {
 })
 
 
-test_that("add_row_col_meta works as expected", {
+test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_flows = TRUE", {
+  With_matnames <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    add_psut_matnames()
+  # Ensure that none of the matnames are NA
+  expect_false(any(is.na(With_matnames$matnames)))
+  # Specific checks
+  # Resources
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Resources")) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
+  # Imports
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Imports")) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
+  # Exports
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Exports")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  # International marine bunkers
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
+  # International aviation bunkers
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
+  # Stock changes
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
+  # Transformation processes
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow.aggregation.point, "Transformation processes") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow.aggregation.point, "Transformation processes") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  # EIOU
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow.aggregation.point, "Energy industry own use") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_EIOU") %>% all())
+  # Consumption
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Ledger.side, "Consumption")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  # Transfers
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+})
+
+
+test_that("add_row_col_meta() works as expected", {
   With_meta <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     add_psut_matnames() %>% 
@@ -246,7 +281,7 @@ test_that("add_row_col_meta works as expected", {
 })
 
 
-test_that("collapse_to_psut works expected", {
+test_that("collapse_to_psut() works expected", {
   With_mats <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     add_psut_matnames() %>% 
@@ -273,7 +308,7 @@ test_that("collapse_to_psut works expected", {
     dplyr::mutate(
       gezero = matsbyname::compare_byname(matvals, ">=", 0) %>% matsbyname::all_byname()
     ) %>% 
-    extract2("gezero") %>% 
+    magrittr::extract2("gezero") %>% 
     as.logical() %>% 
     all() %>% 
     expect_true()

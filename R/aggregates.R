@@ -184,6 +184,7 @@ read_aggregation_region_table <- function(file_path = default_aggregation_region
 }
 # --- EAR, 01/10/2020
 
+
 #' Aggregates IEA regions based on a user-defined aggregation table.
 #' 
 #' Takes as input a tidy dataframe, an aggregation table routing IEA regions to destination regions (as a data frame), 
