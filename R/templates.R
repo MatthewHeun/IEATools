@@ -294,7 +294,8 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
     if (nrow(na_temp_sort) != 0) {
       # Create a helpful error message.
       problem_rows <- na_temp_sort %>% 
-        dplyr::select(.data[[flow_aggregation_point]], .data[[destination]]) %>% 
+        # dplyr::select(.data[[flow_aggregation_point]], .data[[destination]]) %>% 
+        dplyr::select(dplyr::all_of(c(flow_aggregation_point, destination))) %>% 
         unique()
       problem_combos <- paste(problem_rows[[flow_aggregation_point]], 
                               problem_rows[[destination]], sep = ", ", collapse = "; ")
@@ -307,7 +308,8 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
     if (nrow(na_ef_product != 0)) {
       # Create a helpful error message.
       problem_rows <- na_ef_product %>% 
-        dplyr::select(.data[[ef_product]]) %>% 
+        # dplyr::select(.data[[ef_product]]) %>% 
+        dplyr::select(dplyr::all_of(ef_product)) %>% 
         unique()
       problem_products <- paste(problem_rows[[ef_product]], sep = ", ", collapse = "; ")
       

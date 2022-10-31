@@ -508,7 +508,7 @@ use_iso_countries <- function(.iea_df,
   iso_type <- "iso3c"
   # Load country code information from the countrycode package
   CountryCodeInfo <- countrycode::codelist %>%
-    dplyr::select(.data[[country.name.en]], .data[[iso_type]]) %>% 
+    dplyr::select(dplyr::all_of(c(country.name.en, iso_type))) %>% 
     dplyr::rename(
       "{country}" := country.name.en, 
       "{pfu_code}" := dplyr::all_of(iso_type)
@@ -516,7 +516,7 @@ use_iso_countries <- function(.iea_df,
   # Strategy is to do two left_joins.
   # The first left_join is with the countrycode information.
   # That will fail for the case of China and World X bunkers, because
-  # the coutrycode data does not have "People's Republic of China" or "World X bunkers".
+  # the countrycode data does not have "People's Republic of China" or "World X bunkers".
   # The second left_join will be with the override_df and create a column named pfu_code...override.
   # Then, we discriminate among the options, 
   # lastly, leaving the Country column unchanged, if no code has been found.
@@ -526,9 +526,8 @@ use_iso_countries <- function(.iea_df,
     # Make sure that the override_df has only two columns:
     # iea_name and pfu_code.
     dplyr::left_join(override_df %>% 
-                       dplyr::rename("{country}" := iea_name) %>% 
-                       dplyr::select(.data[[country]], 
-                                     .data[[pfu_code]]), 
+                       dplyr::rename("{country}" := dplyr::all_of(iea_name)) %>% 
+                       dplyr::select(dplyr::all_of(c(country, pfu_code))), 
                      by = country, 
                      suffix = c("", override_suffix)) %>% 
     dplyr::mutate(
@@ -543,13 +542,13 @@ use_iso_countries <- function(.iea_df,
       )
     ) %>% 
     # Now we can get rid of the override column and the country column.
-    dplyr::select(-.data[[override_col_name]], -.data[[country]]) %>% 
+    dplyr::select(-dplyr::all_of(c(override_col_name, country))) %>% 
     # And rename the iso_type column to be country
     dplyr::rename(
-      "{country}" := pfu_code
+      "{country}" := dplyr::all_of(pfu_code)
     ) %>% 
     # And put the country column first.
-    dplyr::select(.data[[country]], dplyr::everything())
+    dplyr::select(dplyr::all_of(country), dplyr::everything())
 }
 
 
