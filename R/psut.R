@@ -83,13 +83,27 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #' assuming that the caller has already supplied a destination
 #' matrix name for each row of `.tidy_iea_df`.
 #' 
+#' The argument `R_includes_all_exogenous_flows` controls how the **R** matrix is formed.
+#' When `TRUE`, all exogenous flows 
+#' (including Resources, Production, Bunkers,
+#' Imports, Statistical differences, and Stock changes)
+#' are placed in the **R** matrix.
+#' When `FALSE`, only Resources and Production are placed in the **R** matrix.
+#' Default is `TRUE`.
+#' `FALSE` retains previous behavior.
+#' 
 #' @param .tidy_iea_df a data frame with `ledger_side`, `flow_aggregation_point`, `flow`, and `e_dot` columns.
+#' @param R_includes_all_exogenous_flows Tells how to construct the **R** matrix.
+#'                                       Default is `TRUE`. 
+#'                                       See details.
 #' @param ledger_side,flow_aggregation_point,flow,product,e_dot See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param production,resources See `IEATools::tpes_flows`.
 #' @param eiou See `IEATools::tfc_compare_flows`.
 #' @param neg_supply_in_fd For "Exports", "International aviation bunkers", "International marine bunkers", and "Stock changes", see `IEATools::tpes_flows`.
 #'                         For "Losses" and "Statistical differences", see `IEATools::tfc_compare_flows`.
+#' @param pos_supply_in_R For "Resources", "Imports", "Statistical differences", "X Bunkers", and "Stock changes", positive flows 
+#'                        should be placed in the **R** matrix. See `IEATools::tfc_compare_flows`.
 #' @param matnames See `IEATools::mat_meta_cols`.
 #' @param R,U_feed,U_EIOU,V,Y See `IEATools::psut_matnames`.
 #'
@@ -103,6 +117,8 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #'   add_psut_matnames() %>%
 #'   glimpse()
 add_psut_matnames <- function(.tidy_iea_df,
+                              # Controls how the R matrix is constructed.
+                              R_includes_all_exogenous_flows = TRUE,
                               # Input columns
                               ledger_side = IEATools::iea_cols$ledger_side,
                               flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -115,6 +131,12 @@ add_psut_matnames <- function(.tidy_iea_df,
                               resources = IEATools::tpes_flows$resources,
                               # Input identifiers for supply, consumption, and EIOU
                               eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+                              pos_supply_in_R = c(IEATools::tpes_flows$resources, 
+                                                  IEATools::tpes_flows$imports, 
+                                                  IEATools::tpes_flows$international_aviation_bunkers,
+                                                  IEATools::tpes_flows$international_marine_bunkers,
+                                                  IEATools::tfc_compare_flows$statistical_differences,
+                                                  IEATools::tpes_flows$stock_changes),
                               neg_supply_in_fd = c(IEATools::tpes_flows$exports,
                                                    IEATools::tpes_flows$international_aviation_bunkers,
                                                    IEATools::tpes_flows$international_marine_bunkers,
@@ -144,12 +166,14 @@ add_psut_matnames <- function(.tidy_iea_df,
   .tidy_iea_df %>%
     dplyr::mutate(
       "{matnames}" := dplyr::case_when(
-        # All Consumption items belong in the final demand (Y) matrix.
-        .data[[ledger_side]] == consumption ~ Y,
-        # All production items belong in the resources (R) matrix.
-        .data[[flow]] %>% starts_with_any_of(c(production, resources)) ~ R,
+        # Positive production items belong in the resources (R) matrix.
+        (! R_includes_all_exogenous_flows) & starts_with_any_of(.data[[flow]], resources) & .data[[e_dot]] > 0 ~ R,
+        # All positive exogenous flows belong in the resources (R) matrix.
+        R_includes_all_exogenous_flows & starts_with_any_of(.data[[flow]], pos_supply_in_R) & .data[[e_dot]] > 0 ~ R, 
         # All other positive values on the Supply side of the ledger belong in the make (V) matrix.
         .data[[ledger_side]] == supply & .data[[e_dot]] > 0 ~ V,
+        # All Consumption items belong in the final demand (Y) matrix.
+        .data[[ledger_side]] == consumption ~ Y,
         # Negative values on the supply side of the ledger with Flow == "Energy industry own use"
         # are put into the U_EIOU matrix
         .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 & .data[[flow_aggregation_point]] == eiou ~ U_EIOU,

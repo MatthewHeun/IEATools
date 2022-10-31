@@ -4,7 +4,13 @@ output: html_document
 ---
 
 
-
+* New argument on `add_psut_matnames()` switches between 
+  (a) including all exogenous flows 
+  ("Resources", "Imports", "Statistical differences", and
+  "Stock changes") in the **R**
+  matrix (`TRUE`) and 
+  (b) placing only Resource flows
+  in the **R** matrix (`FALSE`).
 * Added "Main activity producer electricity plants" to the list of `eiou_flows`.
   We route "Own use in electricity, CHP and heat plants" to 
   "Main activity producer electricity plants", 
