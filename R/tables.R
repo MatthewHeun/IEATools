@@ -33,7 +33,8 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
   year_columns <- year_cols(.fu_allocation_table, return_names = TRUE, year = NULL)
   if (length(year_columns) > 0) {
     .fu_allocation_table <- .fu_allocation_table %>% 
-      tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values)
+      # tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values)
+      tidyr::pivot_longer(cols = dplyr::all_of(year_columns), names_to = year, values_to = .values)
   }
   .fu_allocation_table %>% 
     # Eliminate rows we don't want.

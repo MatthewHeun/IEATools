@@ -363,7 +363,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       "{product}" := .data[[rownames]] %>% 
         RCLabels::get_pref_suff(which = "pref", notation = from_note)
     ) %>% 
-    dplyr::select(meta_cols, product, year) %>% 
+    # dplyr::select(meta_cols, product, year) %>% 
+    dplyr::select(dplyr::all_of(c(meta_cols, product, year))) %>% 
     unique()
   
   # Find the number of unique row of metadata, product, and year
@@ -373,7 +374,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
       "{product}" := .data[[rownames]] %>% 
         RCLabels::get_pref_suff(which = "pref", notation = from_note)
     ) %>% 
-    dplyr::select(meta_cols, product, year, -matvals) %>% 
+    # dplyr::select(meta_cols, product, year, -matvals) %>% 
+    dplyr::select(dplyr::all_of(c(meta_cols, product, year)), -dplyr::all_of(matvals)) %>% 
     unique()
   
   # We should have the exact same number of rows in each data frame.
