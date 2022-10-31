@@ -85,7 +85,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #' 
 #' The argument `R_includes_all_exogenous_flows` controls how the **R** matrix is formed.
 #' When `TRUE`, all exogenous flows 
-#' (including Resources, Production, 
+#' (including Resources, Production, Bunkers,
 #' Imports, Statistical differences, and Stock changes)
 #' are placed in the **R** matrix.
 #' When `FALSE`, only Resources and Production are placed in the **R** matrix.
@@ -102,7 +102,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 #' @param eiou See `IEATools::tfc_compare_flows`.
 #' @param neg_supply_in_fd For "Exports", "International aviation bunkers", "International marine bunkers", and "Stock changes", see `IEATools::tpes_flows`.
 #'                         For "Losses" and "Statistical differences", see `IEATools::tfc_compare_flows`.
-#' @param pos_supply_in_R For "Imports", "Statistical differences", and "Stock changes", positive flows 
+#' @param pos_supply_in_R For "Resources", "Imports", "Statistical differences", "X Bunkers", and "Stock changes", positive flows 
 #'                        should be placed in the **R** matrix. See `IEATools::tfc_compare_flows`.
 #' @param matnames See `IEATools::mat_meta_cols`.
 #' @param R,U_feed,U_EIOU,V,Y See `IEATools::psut_matnames`.
@@ -131,8 +131,7 @@ add_psut_matnames <- function(.tidy_iea_df,
                               resources = IEATools::tpes_flows$resources,
                               # Input identifiers for supply, consumption, and EIOU
                               eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
-                              pos_supply_in_R = c(IEATools::tpes_flows$production, 
-                                                  IEATools::tpes_flows$resources, 
+                              pos_supply_in_R = c(IEATools::tpes_flows$resources, 
                                                   IEATools::tpes_flows$imports, 
                                                   IEATools::tpes_flows$international_aviation_bunkers,
                                                   IEATools::tpes_flows$international_marine_bunkers,
@@ -168,7 +167,7 @@ add_psut_matnames <- function(.tidy_iea_df,
     dplyr::mutate(
       "{matnames}" := dplyr::case_when(
         # Positive production items belong in the resources (R) matrix.
-        (! R_includes_all_exogenous_flows) & starts_with_any_of(.data[[flow]], c(production, resources)) & .data[[e_dot]] > 0 ~ R,
+        (! R_includes_all_exogenous_flows) & starts_with_any_of(.data[[flow]], resources) & .data[[e_dot]] > 0 ~ R,
         # All positive exogenous flows belong in the resources (R) matrix.
         R_includes_all_exogenous_flows & starts_with_any_of(.data[[flow]], pos_supply_in_R) & .data[[e_dot]] > 0 ~ R, 
         # All other positive values on the Supply side of the ledger belong in the make (V) matrix.
