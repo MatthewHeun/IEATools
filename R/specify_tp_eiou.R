@@ -967,7 +967,8 @@ route_non_specified_eiou <- function(.tidy_iea_df,
     dplyr::mutate(
       "{flow}" := .data[[destination_flow]]
     ) %>%
-    dplyr::select(-destination_flow) %>%
+    # dplyr::select(-destination_flow) %>%
+    dplyr::select(-dplyr::all_of(destination_flow)) %>%
     dplyr::inner_join(
       share_eiou_per_industry, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow}, {unit}, {ledger_side})
     ) %>%
@@ -1218,7 +1219,8 @@ route_non_specified_tp <- function(.tidy_iea_df,
     dplyr::mutate(
       "{flow}" := .data[[destination_flow]]
     ) %>%
-    dplyr::select(-destination_flow) %>%
+    # dplyr::select(-destination_flow) %>%
+    dplyr::select(-dplyr::all_of(destination_flow)) %>%
     dplyr::inner_join(
       share_input_output_by_prod_per_tp,
       by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow_aggregation_point}, {flow}, {unit}, {ledger_side}, {product}, {negzeropos})

@@ -128,7 +128,8 @@ form_C_mats <- function(.fu_allocation_table,
   if (!(year %in% colnames(cleaned))) {
     cleaned <- cleaned %>% 
       # Gather to put years in a column
-      tidyr::pivot_longer(cols = year_names, names_to = year, values_to = matvals)  
+      # tidyr::pivot_longer(cols = year_names, names_to = year, values_to = matvals)  
+      tidyr::pivot_longer(cols = dplyr::all_of(year_names), names_to = year, values_to = matvals)  
   }
   gathered <- cleaned %>% 
     # Eliminate rows where C is NA. They came from places where data are not available.
@@ -297,7 +298,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     ) %>% 
     dplyr::rename(
       # The quantity column gives us the matrix names
-      "{matnames}" := quantity
+      # "{matnames}" := quantity
+      "{matnames}" := dplyr::all_of(quantity)
     )
     
   # Gather years into a tidy data frame.
@@ -309,7 +311,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
   if (!(year %in% colnames(cleaned))) {
     cleaned <- cleaned %>% 
       # Gather to put years in a column
-      tidyr::pivot_longer(cols = year_names, names_to = year, values_to = matvals)  
+      # tidyr::pivot_longer(cols = year_names, names_to = year, values_to = matvals)  
+      tidyr::pivot_longer(cols = dplyr::all_of(year_names), names_to = year, values_to = matvals)  
   }
   gathered <- cleaned %>% 
     # Eliminate rows where C is NA. They came from places where data are not available.
@@ -724,7 +727,8 @@ extend_to_useful <- function(.sutdata = NULL,
     # We'll need to strip suffixes off column names.
     suff_to_remove <- paste0(.sep, useful)
     useful_df <- out %>% 
-      dplyr::select(cols_to_keep) %>% 
+      # dplyr::select(cols_to_keep) %>% 
+      dplyr::select(dplyr::all_of(cols_to_keep)) %>% 
       # Change the Last.stage column to Useful
       dplyr::mutate(
         "{last_stage}" := useful
