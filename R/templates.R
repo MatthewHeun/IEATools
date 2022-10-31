@@ -308,7 +308,6 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
     if (nrow(na_ef_product != 0)) {
       # Create a helpful error message.
       problem_rows <- na_ef_product %>% 
-        # dplyr::select(.data[[ef_product]]) %>% 
         dplyr::select(dplyr::all_of(ef_product)) %>% 
         unique()
       problem_products <- paste(problem_rows[[ef_product]], sep = ", ", collapse = "; ")

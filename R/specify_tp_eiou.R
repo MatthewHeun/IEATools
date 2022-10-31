@@ -232,7 +232,6 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
     dplyr::mutate(
       "{.share}" := .data[[e_dot]] / sum(.data[[e_dot]])
     ) %>% 
-    # dplyr::select(.data[[country]], .data[[energy_type]], .data[[method]], .data[[last_stage]], .data[[ledger_side]], .data[[year]], .data[[.share]], .data[[flow]])
     dplyr::select(dplyr::all_of(c(country, energy_type, method, last_stage, ledger_side, year, .share, flow)))
   
   # Check that sum of shares is one
