@@ -234,7 +234,7 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     # Not all final energy was allocated to FU machines by the exemplars.
     # Make an error message.
     missing_rows <- attr(done, "unallocated_rows") %>% 
-      dplyr::select(country, year, flow_aggregation_point, destination, ef_product)
+      dplyr::select(dplyr::all_of(c(country, year, flow_aggregation_point, destination, ef_product)))
     missing_combos <- paste(missing_rows[[country]], 
                             missing_rows[[year]],
                             missing_rows[[flow_aggregation_point]],
