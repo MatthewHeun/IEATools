@@ -212,13 +212,6 @@ complete_fu_allocation_table <- function(fu_allocation_table,
         "{country}" := country_to_complete # Pretend that the exemplar is the country we're analyzing.
       )
 
-    # iea_rows_already_allocated contains the rows of final energy consumption (from the IEA data) that have already been allocated.
-    # We don't need to pull data from an exemplar for these rows.
-    iea_rows_already_allocated <- fu_allocation_table %>% 
-      # Now keep only the columns of interest to us.
-      dplyr::select(!c(quantity, machine, eu_product, .values)) %>% 
-      unique()
-    
     exemplar_rows_to_use <- dplyr::semi_join(exemplar_info_available, 
                                              iea_rows_yet_to_be_allocated, 
                                              # We can't join by source, because the exemplar source is different.
@@ -373,7 +366,8 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
   # We should get all 1's.
   # If not, throw an error.
   allocation_sums <- fu_allocation_table %>% 
-    dplyr::select(!c(quantity, machine, e_u_product)) %>%
+    # dplyr::select(!c(quantity, machine, e_u_product)) %>%
+    dplyr::select(-dplyr::all_of(c(quantity, machine, e_u_product))) %>%
     matsindf::group_by_everything_except(.values) %>% 
     dplyr::summarise(
       "{.values}" := sum(.data[[.values]])
