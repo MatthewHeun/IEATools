@@ -318,7 +318,7 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
   if (length(iea_year_columns) > 0) {
     # specified_iea_data is not tidy. Make it so.
     specified_iea_data <- specified_iea_data %>% 
-      tidyr::pivot_longer(cols = iea_year_columns, names_to = year, values_to = e_dot) %>% 
+      tidyr::pivot_longer(cols = dplyr::all_of(iea_year_columns), names_to = year, values_to = e_dot) %>% 
       dplyr::filter(!is.na(.data[[e_dot]])) %>% 
       dplyr::mutate(
         "{year}" := as.numeric(.data[[year]])
@@ -444,7 +444,7 @@ tidy_eta_fu_table <- function(.eta_fu_table,
   if (length(year_columns) > 0) {
     # We have a non-tidy data frame. Tidy it.
     .eta_fu_table <- .eta_fu_table %>% 
-      tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values)
+      tidyr::pivot_longer(cols = dplyr::all_of(year_columns), names_to = year, values_to = .values)
   }
   .eta_fu_table %>%
     # Eliminate rows we don't want.
