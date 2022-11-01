@@ -277,7 +277,8 @@ aggregate_regions <- function(.tidy_iea_df,
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) %>% 
-    dplyr::select(-.data[[destination_regions]]) %>% 
+    # dplyr::select(-.data[[destination_regions]]) %>% 
+    dplyr::select(-dplyr::all_of(destination_regions)) %>% 
     dplyr::ungroup()
   
   # Below same code as the ECCTools::convert_to_net_trade function with difference that we use remove_suffix_specifications() and specify_interface_industries() functions

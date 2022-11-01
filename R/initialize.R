@@ -228,7 +228,8 @@ iea_file_OK <- function(.iea_file = NULL,
     ) %>% 
     dplyr::ungroup() %>% 
     # Keep only rowid, flow, and product. This removes COUNTRY and years from the data frame
-    dplyr::select(rowid, flow, product) %>% 
+    # dplyr::select(rowid, flow, product) %>% 
+    dplyr::select(dplyr::all_of(c(rowid, flow, product))) %>% 
     # In this context, unique() gives unique combinations of per-country row number, flow, product triples.
     # If all countries have the same order of things, 
     # all countries should have the same row number, flow, product triples, and
@@ -241,7 +242,8 @@ iea_file_OK <- function(.iea_file = NULL,
   # there will be no duplicated row numbers.
   flow_product %>% 
     # Look at the rowid column only
-    dplyr::select(rowid) %>% 
+    # dplyr::select(rowid) %>% 
+    dplyr::select(dplyr::all_of(rowid)) %>% 
     # duplicated() returns TRUE for any duplicated values
     duplicated() %>% 
     # Any tells us if there are any duplicated values (TRUEs).
@@ -869,9 +871,11 @@ augment_iea_df <- function(.iea_df,
       !!as.name(unit) := unit_val
     ) %>%
     # Remove the rownum column
-    dplyr::select(-.rownum) %>%
+    # dplyr::select(-.rownum) %>%
+    dplyr::select(-dplyr::any_of(.rownum)) %>%
     # Reorder the columns
-    dplyr::select(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product, unit, dplyr::everything()) %>%
+    # dplyr::select(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product, unit, dplyr::everything()) %>%
+    dplyr::select(dplyr::all_of(c(country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, flow, product, unit)), dplyr::everything()) %>%
     # Remove the per-country grouping that we created.
     dplyr::ungroup()
 }
@@ -933,7 +937,8 @@ tidy_iea_df <- function(.iea_df,
     tidyr::gather(key = !!as.name(year), value = !!as.name(e_dot), -c(method, country, last_stage, ledger_side, 
                                                                       flow_aggregation_point, flow, product, energy_type, unit)) %>% 
     # Set the column order to something rational
-    dplyr::select(country, method, energy_type, last_stage, year, ledger_side, flow_aggregation_point, flow, product, unit, e_dot) %>% 
+    # dplyr::select(country, method, energy_type, last_stage, year, ledger_side, flow_aggregation_point, flow, product, unit, e_dot) %>% 
+    dplyr::select(dplyr::all_of(c(country, method, energy_type, last_stage, year, ledger_side, flow_aggregation_point, flow, product, unit, e_dot))) %>% 
     # Set the year column to be numeric
     dplyr::mutate(
       !!as.name(year) := as.numeric(!!as.name(year))

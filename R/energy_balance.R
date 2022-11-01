@@ -238,11 +238,12 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
   if (nrow(.tidy_iea_df) == 0) {
     return(.tidy_iea_df)
   }
-  grouping_names <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot)
+  # grouping_names <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot)
   grouping_strings <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot, .symbols = FALSE)
   e_bal_errors <- .tidy_iea_df %>% 
     calc_tidy_iea_df_balances(err = .err) %>% 
-    dplyr::select(!!!grouping_names, .err) %>% 
+    # dplyr::select(!!!grouping_names, .err) %>% 
+    dplyr::select(dplyr::all_of(c(grouping_strings, .err))) %>% 
     dplyr::mutate(
       "{flow}" := statistical_differences, 
       "{ledger_side}" := supply,
@@ -257,7 +258,8 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
     # Find which products exceed the threshold.
     err_too_big <- e_bal_errors %>% 
       dplyr::filter(abs(.data[[.err]]) > max_fix) %>% 
-      dplyr::select(country, year, product, .err)
+      # dplyr::select(country, year, product, .err)
+      dplyr::select(dplyr::all_of(c(country, year, product, .err)))
     err_too_big_combos <- paste(err_too_big[[country]], 
                                 err_too_big[[year]], 
                                 err_too_big[[product]], 
