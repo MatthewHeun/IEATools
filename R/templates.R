@@ -659,7 +659,7 @@ check_fu_allocation_data <- function(.fu_allocation_table,
   if (nrow(errs) > 0) {
     # Make an error message and fail.
     erroneous_rows <- errs %>%
-      dplyr::select(country, flow_aggregation_point, ef_product, machine, eu_product, destination)
+      dplyr::select(dplyr::all_of(c(country, flow_aggregation_point, ef_product, machine, eu_product, destination)))
     erroneous_combos <- paste(erroneous_rows[[country]],
                               erroneous_rows[[flow_aggregation_point]],
                               erroneous_rows[[ef_product]],
@@ -684,7 +684,7 @@ check_fu_allocation_data <- function(.fu_allocation_table,
   if (nrow(errs) > 0) {
     # Make an error message and fail.
     erroneous_rows <- errs %>%
-      dplyr::select(country, year, flow_aggregation_point, ef_product, machine, eu_product, destination, quantity)
+      dplyr::select(dplyr::all_of(c(country, year, flow_aggregation_point, ef_product, machine, eu_product, destination, quantity)))
     erroneous_combos <- paste(erroneous_rows[[country]],
                               erroneous_rows[[year]],
                               erroneous_rows[[flow_aggregation_point]],
@@ -887,8 +887,9 @@ eta_fu_template <- function(.fu_allocations,
     # The first step is to isolate the E.dot rows
     e_dot_info <- .fu_allocations %>%
       dplyr::filter(!!as.name(quantity) == e_dot) %>%
-      dplyr::select(-maximum_values, -machine, -eu_product, -quantity) %>%
-      tidyr::gather(key = !!year, value = !!as.name(e_dot_dest), year_colnames) %>% 
+      # dplyr::select(-maximum_values, -machine, -eu_product, -quantity) %>%
+      dplyr::select(-dplyr::any_of(c(maximum_values, machine, eu_product, quantity))) %>%
+      tidyr::gather(key = !!year, value = !!as.name(e_dot_dest), dplyr::all_of(year_colnames)) %>% 
       dplyr::filter(!is.na(!!as.name(e_dot_dest)))
     # We also isolate the allocation (C) rows
     c_info <- .fu_allocations %>%
@@ -900,8 +901,9 @@ eta_fu_template <- function(.fu_allocations,
           TRUE ~ !!as.name(quantity)
         )
       ) %>%
-      dplyr::select(-maximum_values, -quantity) %>%
-      tidyr::gather(key = !!year, value = !!as.name(c_perc), year_colnames) %>%
+      # dplyr::select(-maximum_values, -quantity) %>%
+      dplyr::select(-dplyr::any_of(c(maximum_values, quantity))) %>%
+      tidyr::gather(key = !!year, value = !!as.name(c_perc), dplyr::all_of(year_colnames)) %>%
       dplyr::filter(!is.na(!!as.name(c_perc)))
   }
   

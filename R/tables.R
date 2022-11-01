@@ -784,7 +784,8 @@ complete_eta_fu_table <- function(eta_fu_table,
     # Not all machines were assigned eta or phi values by the exemplars.
     # Make an error message.
     missing_rows <- attr(done, "unallocated_rows") %>% 
-      dplyr::select(country, year, machine, eu_product, quantity)
+      # dplyr::select(country, year, machine, eu_product, quantity)
+      dplyr::select(dplyr::all_of(c(country, year, machine, eu_product, quantity)))
     missing_combos <- paste(missing_rows[[country]], 
                             missing_rows[[year]],
                             missing_rows[[machine]],
