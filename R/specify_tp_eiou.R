@@ -495,10 +495,16 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
     tidyr::crossing(
       destination_flow := c(main_act_producer_elect, main_act_producer_chp, main_act_producer_heat)
     ) %>%
+    
+    # Emmanuel: when you look at this this issue, please check below for another potential problem.
     dplyr::mutate(
       "{flow}" := .data[["destination_flow"]]
     ) %>%
+    # I think the next line should be changed, too.
     dplyr::select(-destination_flow) %>%
+    # The above line should rather be this:
+    # dplyr::select(-dplyr::any_of(destination_flow)) %>% 
+    # But when I change it, I get an error in the tests.
     dplyr::inner_join(
       share_total_per_main_activity, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow}, {unit}, {ledger_side})
     ) %>%
@@ -506,7 +512,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
       "{e_dot}" := .data[[e_dot]] * Share_per_main_activity_From_Func
     ) %>%
     dplyr::select(-Share_per_main_activity_From_Func, -Total_per_main_activity_From_Func, -Total_main_activity_From_Func)
-  
+
   
   # Routes the "Own use in electricity, CHP and heat plants" to "Main activity producer electricity plants"
   # When no Main activity producer plants are in transformation processes.
@@ -717,7 +723,8 @@ add_nuclear_industry <- function(.tidy_iea_df,
       "{Electricity_Nuclear}" := - .data[[nuclear]] * ratio_output_to_nuclear_fuel * .data[[share_elect_output_From_Func]],
       "{Heat_Nuclear}" := - .data[[nuclear]] * ratio_output_to_nuclear_fuel * (1 - .data[[share_elect_output_From_Func]])
     ) %>%
-    dplyr::select(-.data[[share_elect_output_From_Func]]) %>%
+    # dplyr::select(-.data[[share_elect_output_From_Func]]) %>%
+    dplyr::select(-dplyr::any_of(share_elect_output_From_Func)) %>%
     tidyr::pivot_longer(cols = c({electricity}, {heat}, {nuclear}, {Electricity_Nuclear}, {Heat_Nuclear}), values_to = {e_dot}, names_to = {product}) %>%
     dplyr::filter(.data[[e_dot]] != 0) %>%
     dplyr::mutate(
