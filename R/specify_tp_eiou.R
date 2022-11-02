@@ -400,9 +400,9 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
   df_observations_included_tidy_iea_df <- .tidy_iea_df %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
     dplyr::summarise(
-      n_counting = dplyr::n()
+      "{n_counting}" := dplyr::n()
     ) %>%
-    dplyr::select(-n_counting)
+    dplyr::select(-dplyr::any_of(n_counting))
   
   
   # Calculates total input or output per main activity producer, according to the value passed to the split_using_shares_of argument
