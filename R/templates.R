@@ -841,7 +841,8 @@ eta_fu_template <- function(.fu_allocations,
                                     destination, quantity, maximum_values, year, .value))
     
     countries <- .fu_allocations %>% 
-      dplyr::select(country) %>% 
+      # dplyr::select(country) %>% 
+      dplyr::select(dplyr::all_of(country)) %>% 
       unlist() %>% 
       unique()
     
@@ -1199,7 +1200,8 @@ write_eta_fu_template <- function(.eta_fu_template,
       !!as.name(.rownum) := as.numeric(!!as.name(.rownum)),
       !!as.name(.rownum) := !!as.name(.rownum) + 1
     ) %>% 
-    dplyr::select(!!as.name(.rownum)) %>% 
+    # dplyr::select(!!as.name(.rownum)) %>% 
+    dplyr::select(dplyr::all_of(.rownum)) %>% 
     unlist() %>% 
     unname()
   # Identify the e_dot_machine_perc rows
