@@ -1241,9 +1241,12 @@ route_non_specified_tp <- function(.tidy_iea_df,
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[Share_input_output_by_prod_per_tp]]
     ) %>%
-    dplyr::select(-.data[[Share_input_output_by_prod_per_tp]],
-                  -.data[[Input_output_by_prod_per_tp]],
-                  -.data[[Total_input_output_by_prod_excl_nonspec]])
+    # dplyr::select(-.data[[Share_input_output_by_prod_per_tp]],
+    #               -.data[[Input_output_by_prod_per_tp]],
+    #               -.data[[Total_input_output_by_prod_excl_nonspec]])
+    dplyr::select(-dplyr::any_of(c(Share_input_output_by_prod_per_tp,
+                                   Input_output_by_prod_per_tp,
+                                   Total_input_output_by_prod_excl_nonspec)))
   
   
   # When tps with the given product and sign are NOT available in the data frame, then we keep the flow as it is
