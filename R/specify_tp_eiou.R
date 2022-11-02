@@ -417,7 +417,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[ledger_side]], .data[[flow_aggregation_point]]) %>%
       dplyr::summarise(
-        Total_main_activity_From_Func = sum(.data[[e_dot]])
+        "{Total_main_activity_From_Func}" := sum(.data[[e_dot]])
       )
   } else if (split_using_shares_of == "output"){
     total_main_activity <- .tidy_iea_df %>%
@@ -429,7 +429,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[ledger_side]], .data[[flow_aggregation_point]]) %>%
       dplyr::summarise(
-        Total_main_activity_From_Func = sum(.data[[e_dot]])
+        "{Total_main_activity_From_Func}" := sum(.data[[e_dot]])
       )
   }
   
@@ -453,7 +453,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
         .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[flow]], .data[[unit]], .data[[ledger_side]], .data[[flow_aggregation_point]]
       ) %>%
       dplyr::summarise(
-        Total_per_main_activity_From_Func = sum(.data[[e_dot]])
+        "{Total_per_main_activity_From_Func}" := sum(.data[[e_dot]])
       )
   } else if (split_using_shares_of == "output"){
     total_per_main_activity <- .tidy_iea_df %>%
@@ -467,7 +467,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
         .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[flow]], .data[[unit]], .data[[ledger_side]], .data[[flow_aggregation_point]]
       ) %>%
       dplyr::summarise(
-        Total_per_main_activity_From_Func = sum(.data[[e_dot]])
+        "{Total_per_main_activity_From_Func}" := sum(.data[[e_dot]])
       )
   }
 
@@ -477,7 +477,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
       total_main_activity, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {ledger_side}, {flow_aggregation_point})
     ) %>%
     dplyr::mutate(
-      Share_per_main_activity_From_Func = Total_per_main_activity_From_Func / Total_main_activity_From_Func
+      "{Share_per_main_activity_From_Func}" := .data[[Total_per_main_activity_From_Func]] / .data[[Total_main_activity_From_Func]]
     ) %>%
     # dplyr::select(-.data[[flow_aggregation_point]])
     dplyr::select(-dplyr::any_of(flow_aggregation_point))
@@ -493,15 +493,13 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
       .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[flow_aggregation_point]], .data[[ledger_side]]
     ) %>%
     tidyr::crossing(
-      destination_flow := c(main_act_producer_elect, main_act_producer_chp, main_act_producer_heat)
+      "{destination_flow}" := c(main_act_producer_elect, main_act_producer_chp, main_act_producer_heat)
     ) %>%
-    
-    # Emmanuel: when you look at this this issue, please check below for another potential problem.
     dplyr::mutate(
-      "{flow}" := .data[["destination_flow"]]
+      "{flow}" := .data[[destination_flow]]
     ) %>%
     # I think the next line should be changed, too.
-    dplyr::select(-destination_flow) %>%
+    dplyr::select(-.data[[destination_flow]]) %>%
     # The above line should rather be this:
     # dplyr::select(-dplyr::any_of(destination_flow)) %>% 
     # But when I change it, I get an error in the tests.
@@ -509,9 +507,9 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
       share_total_per_main_activity, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow}, {unit}, {ledger_side})
     ) %>%
     dplyr::mutate(
-      "{e_dot}" := .data[[e_dot]] * Share_per_main_activity_From_Func
+      "{e_dot}" := .data[[e_dot]] * .data[[Share_per_main_activity_From_Func]]
     ) %>%
-    dplyr::select(-Share_per_main_activity_From_Func, -Total_per_main_activity_From_Func, -Total_main_activity_From_Func)
+    dplyr::select(-.data[[Share_per_main_activity_From_Func]], -.data[[Total_per_main_activity_From_Func]], -.data[[Total_main_activity_From_Func]])
 
   
   # Routes the "Own use in electricity, CHP and heat plants" to "Main activity producer electricity plants"
