@@ -382,7 +382,8 @@ prod_tp_eiou_energy_carriers <- function(file_path = sample_iea_data_path(),
   # Third step is to keep only the flow and product columns and
   # group by the flow variable which contains the names of the transformation process machines.
   grouped <- out %>% 
-    dplyr::select(!!as.name(flow), !!as.name(product)) %>% 
+    # dplyr::select(!!as.name(flow), !!as.name(product)) %>% 
+    dplyr::select(dplyr::all_of(c(flow, product))) %>% 
     unique() %>% 
     dplyr::group_by(!!as.name(flow))
   # Fourth step is to isolate the machines, which are the groups.
