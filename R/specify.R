@@ -505,13 +505,15 @@ tp_sinks_sources <- function(.tidy_iea_df,
   use_rows <- .tidy_iea_df %>% 
     dplyr::group_by(!!!grouping_vars) %>% 
     dplyr::filter((!!as.name(flow_aggregation_point) == transformation_processes | !!as.name(flow_aggregation_point) == eiou) & !!as.name(e_dot) < 0) %>% 
-    dplyr::select(dplyr::group_cols(), flow) %>% 
+    # dplyr::select(dplyr::group_cols(), flow) %>% 
+    dplyr::select(dplyr::group_cols(), dplyr::all_of(flow)) %>% 
     unique() %>% 
     dplyr::ungroup()
   make_rows <- .tidy_iea_df %>% 
     dplyr::group_by(!!!grouping_vars) %>% 
     dplyr::filter(!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_dot) > 0) %>% 
-    dplyr::select(dplyr::group_cols(), flow) %>% 
+    # dplyr::select(dplyr::group_cols(), flow) %>% 
+    dplyr::select(dplyr::group_cols(), dplyr::all_of(flow)) %>% 
     unique() %>% 
     dplyr::ungroup()
   # setdiff gives the rows that are IN use_rows but NOT in make_rows.

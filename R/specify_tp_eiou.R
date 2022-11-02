@@ -264,7 +264,8 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
       "{flow}" := .data[[paste0(flow, ".y")]],
       "{flow}" := tidyr::replace_na(.data[[flow]], oil_gas_extraction)
     ) %>% 
-    dplyr::select(-.data[[.share]], -.data[[paste0(flow, ".y")]])
+    # dplyr::select(-.data[[.share]], -.data[[paste0(flow, ".y")]])
+    dplyr::select(-dplyr::any_of(c(.share, paste0(flow, ".y"))))
   
   
   # Filter out former EIOU flows from .tidy_iea_df, and bind the rows calculated above
@@ -478,7 +479,8 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
     dplyr::mutate(
       Share_per_main_activity_From_Func = Total_per_main_activity_From_Func / Total_main_activity_From_Func
     ) %>%
-    dplyr::select(-.data[[flow_aggregation_point]])
+    # dplyr::select(-.data[[flow_aggregation_point]])
+    dplyr::select(-dplyr::any_of(flow_aggregation_point))
   
   
   # Then, routes the "Own use in electricity, CHP and heat plants" EIOU flow to the different main activity producer plants,
@@ -695,7 +697,8 @@ add_nuclear_industry <- function(.tidy_iea_df,
            (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(nuclear, electricity, heat)))
     ) %>%
     tidyr::pivot_wider(names_from = .data[[product]], values_from = .data[[e_dot]]) %>%
-    dplyr::select(-tidyselect::any_of({e_dot})) 
+    # dplyr::select(-tidyselect::any_of({e_dot})) 
+    dplyr::select(-tidyselect::any_of(e_dot)) 
   
   
   names_intermediary_modified_flows <- names(intermediary_modified_flows)
