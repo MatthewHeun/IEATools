@@ -987,7 +987,10 @@ route_non_specified_eiou <- function(.tidy_iea_df,
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[Share_eiou_per_industry_From_Func]]
     ) %>%
-    dplyr::select(-.data[[Share_eiou_per_industry_From_Func]], -.data[[EIOU_per_industry_From_Func]], -.data[[Total_eiou_excl_nonspec_From_Func]])
+    # dplyr::select(-.data[[Share_eiou_per_industry_From_Func]], -.data[[EIOU_per_industry_From_Func]], -.data[[Total_eiou_excl_nonspec_From_Func]])
+    dplyr::select(-dplyr::any_of(c(Share_eiou_per_industry_From_Func,
+                                   EIOU_per_industry_From_Func, 
+                                   Total_eiou_excl_nonspec_From_Func)))
   
   
   # Second, when EIOU flows other than non-specified are not available, then keep non-specified
