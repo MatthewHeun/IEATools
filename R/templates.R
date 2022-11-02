@@ -337,12 +337,15 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
     machine_and_product_columns <- c(ef_product, machine, eu_product, destination, quantity, maximum_values)
     # Figure out the metadata columns.
     # Columns that are not years and are not machine_and_product_columns are metadata columns.
+    # meta_cols <- out %>% 
+    #   matsindf::everything_except(c(year_colnames, machine_and_product_columns))
     meta_cols <- out %>% 
-      matsindf::everything_except(c(year_colnames, machine_and_product_columns))
+      matsindf::everything_except(c(year_colnames, machine_and_product_columns), .symbols = FALSE)
     # Now put the column names together in the desired order
     col_order <- c(meta_cols, machine_and_product_columns, year_colnames)
     out <- out %>% 
-      dplyr::select(!!!col_order)
+      # dplyr::select(!!!col_order)
+      dplyr::select(dplyr::all_of(col_order))
   }
   return(out)
 }
