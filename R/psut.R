@@ -43,12 +43,17 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
                                       .rowtype = ".rowtype", 
                                       .coltype = ".coltype"){
   
-  grouping_vars <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, unit, matnames)
+  # grouping_vars <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, unit, matnames)
+  grouping_symbols <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, unit, matnames)
+  grouping_vars <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, 
+                                               flow, product, e_dot, unit, matnames, .symbols = FALSE)
   matsindf::verify_cols_missing(.tidy_iea_df, c(s_units, .val, .rowtype, .coltype))
   
   .tidy_iea_df %>% 
-    dplyr::group_by(!!!grouping_vars) %>% 
-    dplyr::select(!!!grouping_vars, .data[[product]], .data[[unit]]) %>%
+    # dplyr::group_by(!!!grouping_vars) %>% 
+    dplyr::group_by(!!!grouping_symbols) %>%
+    # dplyr::select(!!!grouping_vars, .data[[product]], .data[[unit]]) %>%
+    dplyr::select(dplyr::all_of(c(grouping_vars, product, unit))) %>%
     dplyr::do(unique(.data)) %>%
     dplyr::mutate(
       "{.val}" := 1,
@@ -619,7 +624,8 @@ prep_psut <- function(.tidy_iea_df,
                               return_names = TRUE, 
                               not_meta = c(ledger_side, flow_aggregation_point, flow, product, e_dot, unit))
     out <- .tidy_iea_df %>% 
-      dplyr::select(!!!meta_columns, !!year)
+      # dplyr::select(!!!meta_columns, !!year)
+      dplyr::select(dplyr::all_of(c(meta_columns, year)))
     # Make a tibble with no rows for the remainder of the columns, 
     # R, U_eiou, U_feed, V, Y, S_units (6 in total)
     # Use 1.1 for the value so that columns are created as double type columns.
