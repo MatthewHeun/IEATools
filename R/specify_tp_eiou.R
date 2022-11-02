@@ -912,8 +912,9 @@ route_non_specified_eiou <- function(.tidy_iea_df,
     dplyr::summarise(
       "{n_counting}" := dplyr::n()
     ) %>%
-    dplyr::select(-.data[[n_counting]])
-
+    # dplyr::select(-.data[[n_counting]])
+    dplyr::select(-dplyr::any_of(n_counting))
+  
   # Calculating total EIOU flows excluding non-specified flows.  
   total_eiou_excl_nonspec <- .tidy_iea_df %>%
     dplyr::filter(
@@ -952,7 +953,8 @@ route_non_specified_eiou <- function(.tidy_iea_df,
     dplyr::mutate(
       "{Share_eiou_per_industry_From_Func}" := .data[[EIOU_per_industry_From_Func]] / .data[[Total_eiou_excl_nonspec_From_Func]]
     ) %>%
-    dplyr::select(-.data[[flow_aggregation_point]])
+    # dplyr::select(-.data[[flow_aggregation_point]])
+    dplyr::select(-dplyr::any_of(flow_aggregation_point))
   
   
   # Pulling the list of EIOU flows excluding the non-specified one
@@ -1138,7 +1140,8 @@ route_non_specified_tp <- function(.tidy_iea_df,
     dplyr::summarise(
       "{n_counting}" := dplyr::n()
     ) %>%
-    dplyr::select(-.data[[n_counting]])
+    # dplyr::select(-.data[[n_counting]])
+    dplyr::select(-dplyr::any_of(n_counting))
   
   # Figuring out total input and output by product in transformation processes, excluding non-specified flows
   total_input_output_by_prod_tps <- .tidy_iea_df %>%
