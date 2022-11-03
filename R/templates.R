@@ -860,9 +860,9 @@ eta_fu_template <- function(.fu_allocations,
       dplyr::filter(.data[[ledger_side]] == consumption |
                       (.data[[ledger_side]] == supply & .data[[flow_aggregation_point]] == eiou)) %>% 
       dplyr::rename(
-        "{e_dot_dest}" := e_dot,
-        "{ef_product}" := product, 
-        "{destination}" := flow
+        "{e_dot_dest}" := dplyr::all_of(e_dot),
+        "{ef_product}" := dplyr::all_of(product), 
+        "{destination}" := dplyr::all_of(flow)
       )
     
     # Now work on c_info.
