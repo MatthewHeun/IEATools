@@ -289,7 +289,8 @@ aggregate_regions <- function(.tidy_iea_df,
       dplyr::filter(! (stringr::str_detect(.data[[flow]], IEATools::tpes_flows$exports_to_world_marine_bunkers) |
                          stringr::str_detect(.data[[flow]], IEATools::tpes_flows$exports_to_world_aviation_bunkers))) %>%
       remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>%
-      tidyr::pivot_wider(names_from = .data[[flow]], values_from = .data[[e_dot]]) %>%
+      # tidyr::pivot_wider(names_from = .data[[flow]], values_from = .data[[e_dot]]) %>%
+      tidyr::pivot_wider(names_from = dplyr::all_of(flow), values_from = dplyr::all_of(e_dot)) %>%
       dplyr::mutate(
         "{imports}" := tidyr::replace_na(.data[[imports]], 0),
         "{exports}" := tidyr::replace_na(.data[[exports]], 0),

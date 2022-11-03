@@ -872,7 +872,8 @@ eta_fu_template <- function(.fu_allocations,
     # we need to delete the Quantity column.
     c_info <- .fu_allocations %>% 
       dplyr::rename(
-        "{c_perc}" := .data[[.value]]
+        # "{c_perc}" := .data[[.value]]
+        "{c_perc}" := dplyr::all_of(.value)
       ) %>% 
       dplyr::mutate(
         "{quantity}" := NULL
@@ -919,7 +920,8 @@ eta_fu_template <- function(.fu_allocations,
   # So, rename the column.
   c_info <- c_info %>%
     dplyr::rename(
-      "{c_ratio}" := .data[[c_perc]]
+      # "{c_ratio}" := .data[[c_perc]]
+      "{c_ratio}" := dplyr::all_of(c_perc)
     )
   
   # Now we join the E.dot and C values and calculate the energy flowing into each final-to-useful machine
@@ -986,8 +988,10 @@ eta_fu_template <- function(.fu_allocations,
   # Find the maxima across years for each combination of machine and eu_product
   Maxima <- dplyr::full_join(input_energy_max, input_energy_max_percs, by = matsindf::everything_except(input_energy, year, e_dot_machine, .symbols = FALSE)) %>% 
     dplyr::rename(
-      "{e_dot_machine}" := .data[[e_dot_machine_max]],
-      "{e_dot_machine_perc}" := .data[[e_dot_machine_max_perc]]
+      # "{e_dot_machine}" := .data[[e_dot_machine_max]],
+      # "{e_dot_machine_perc}" := .data[[e_dot_machine_max_perc]]
+      "{e_dot_machine}" := dplyr::all_of(e_dot_machine_max),
+      "{e_dot_machine_perc}" := dplyr::all_of(e_dot_machine_max_perc)
     ) %>% 
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(maximum_values), !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc))
 

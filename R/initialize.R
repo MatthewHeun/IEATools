@@ -517,7 +517,7 @@ use_iso_countries <- function(.iea_df,
   CountryCodeInfo <- countrycode::codelist %>%
     dplyr::select(dplyr::all_of(c(country.name.en, iso_type))) %>% 
     dplyr::rename(
-      "{country}" := country.name.en, 
+      "{country}" := dplyr::all_of(country.name.en), 
       "{pfu_code}" := dplyr::all_of(iso_type)
     )
   # Strategy is to do two left_joins.

@@ -65,7 +65,8 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
                                    rownames = product, colnames = unit,
                                    rowtypes = .rowtype, coltypes = .coltype) %>%
     dplyr::rename(
-      "{s_units}" := .data[[.val]]
+      # "{s_units}" := .data[[.val]]
+      "{s_units}" := dplyr::all_of(.val)
     ) %>% 
     dplyr::ungroup()
 }
@@ -365,7 +366,8 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
                                    rownames = rownames, colnames = colnames,
                                    rowtypes = rowtypes, coltypes = coltypes) %>%
     dplyr::rename(
-      "{matvals}" := .data[[e_dot]]
+      # "{matvals}" := .data[[e_dot]]
+      "{matvals}" := dplyr::all_of(e_dot)
     ) %>% 
     dplyr::ungroup()
 }
@@ -692,8 +694,10 @@ prep_psut <- function(.tidy_iea_df,
           matsbyname::replaceNaN_byname(val = 0)
       ) %>% 
       # Rearrange columns to get more-natural locations for the U and r_EIOU matrices.
-      dplyr::relocate(.data[[U]], .after = .data[[U_feed]]) %>% 
-      dplyr::relocate(.data[[r_eiou]], .after = .data[[U]])
+      # dplyr::relocate(.data[[U]], .after = .data[[U_feed]]) %>% 
+      # dplyr::relocate(.data[[r_eiou]], .after = .data[[U]])
+      dplyr::relocate(dplyr::all_of(U), .after = dplyr::all_of(U_feed)) %>% 
+      dplyr::relocate(dplyr::all_of(r_eiou), .after = dplyr::all_of(U))
   }
   
   CollapsedSpread %>% 

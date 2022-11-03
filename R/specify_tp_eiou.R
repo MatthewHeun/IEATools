@@ -436,7 +436,8 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
   # Find out which observations (Country, Method, Energy.type, Last.stage, Year) are NOT in the total computed
   list_not_included_total_main_activity <- df_observations_included_tidy_iea_df %>%
     dplyr::anti_join(total_main_activity, by = c({country}, {method}, {energy_type}, {last_stage}, {year})) %>%
-    tidyr::unite(col = "ID", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
+    # tidyr::unite(col = "ID", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
+    tidyr::unite(col = "ID", dplyr::all_of(c(country, method, energy_type, last_stage, year))) %>%
     dplyr::pull()
   
   # Now, finds input or output per main activity, according to the value passed to the split_using_shares_of argument
@@ -702,7 +703,8 @@ add_nuclear_industry <- function(.tidy_iea_df,
         ((.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(nuclear, electricity)) |
            (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(nuclear, electricity, heat)))
     ) %>%
-    tidyr::pivot_wider(names_from = .data[[product]], values_from = .data[[e_dot]]) %>%
+    # tidyr::pivot_wider(names_from = .data[[product]], values_from = .data[[e_dot]]) %>%
+    tidyr::pivot_wider(names_from = dplyr::all_of(product), values_from = dplyr::all_of(e_dot)) %>%
     # dplyr::select(-tidyselect::any_of({e_dot})) 
     dplyr::select(-tidyselect::any_of(e_dot)) 
   
@@ -930,7 +932,8 @@ route_non_specified_eiou <- function(.tidy_iea_df,
   # Figuring out which observations (Country, Method, Energy_type, Last_stage, Year) do not have an EIOU flow other than non-specified
   list_not_included_total_eiou <- df_observations_included_tidy_iea_df %>%
     dplyr::anti_join(total_eiou_excl_nonspec, by = c({country}, {method}, {energy_type}, {last_stage}, {year})) %>%
-    tidyr::unite(col = "ID", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
+    # tidyr::unite(col = "ID", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
+    tidyr::unite(col = "ID", dplyr::all_of(c(country, method, energy_type, last_stage, year))) %>%
     dplyr::pull()
   
   # Figuring out the total EIOU per industry
@@ -1169,7 +1172,8 @@ route_non_specified_tp <- function(.tidy_iea_df,
   # Figuring out the list of products and signs not available in the transformation processes elsewhere than in non-specified
   list_not_included_total_input_output_by_prod_tps <- df_observations_included_tidy_iea_df %>%
     dplyr::anti_join(total_input_output_by_prod_tps, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product}, {negzeropos})) %>%
-    tidyr::unite(col = "ID", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[negzeropos]]) %>%
+    # tidyr::unite(col = "ID", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[negzeropos]]) %>%
+    tidyr::unite(col = "ID", dplyr::all_of(c(country, method, energy_type, last_stage, year, product, negzeropos))) %>%
     dplyr::pull()
   
   # Figuring out input and output by product for each transformation process

@@ -338,14 +338,16 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
   if (product %in% colnames(rows_to_be_allocated)) {
     rows_to_be_allocated <- rows_to_be_allocated %>% 
       dplyr::rename(
-        "{ef_product}" := .data[[product]]
+        # "{ef_product}" := .data[[product]]
+        "{ef_product}" := dplyr::all_of(product)
       )
   }
 
   if (flow %in% colnames(rows_to_be_allocated)) {
     rows_to_be_allocated <- rows_to_be_allocated %>% 
       dplyr::rename(
-        "{destination}" := .data[[flow]]
+        # "{destination}" := .data[[flow]]
+        "{destination}" := dplyr::all_of(flow)
       )
   }
   if (is.null(fu_allocation_table)) {
