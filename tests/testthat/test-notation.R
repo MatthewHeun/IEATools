@@ -1,6 +1,3 @@
-###########################################################
-context("Notation")
-###########################################################
 
 test_that("arrow_to_bracket_byname works as expected", {
   # Make a single matrix with row names that can be switched

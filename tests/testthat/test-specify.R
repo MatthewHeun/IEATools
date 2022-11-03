@@ -1,9 +1,3 @@
-library(dplyr)
-library(magrittr)
-
-###########################################################
-context("Specify flows")
-###########################################################
 
 test_that("production is converted to resources correctly", {
   Specific_production <- load_tidy_iea_df() %>% 
@@ -134,10 +128,6 @@ test_that("despecify_col work as expected", {
     expect_false()
 })
 
-
-###########################################################
-context("Transformation sinks and sources")
-###########################################################
 
 test_that("tp_sinks_sources() works as expected", {
   # Check when type is neither "sinks" nor "sources"

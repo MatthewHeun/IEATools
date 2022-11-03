@@ -1,9 +1,3 @@
-library(dplyr)
-library(magrittr)
-
-###########################################################
-context("IEA energy balance")
-###########################################################
 
 test_that("calc_tidy_iea_df_balance() works correctly for 2018 data", {
   Ebal_2018 <- load_tidy_iea_df(sample_iea_data_path(2018)) %>%
