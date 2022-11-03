@@ -94,7 +94,7 @@ form_C_mats <- function(.fu_allocation_table,
     dplyr::filter(! (.data[[quantity]] %in% c(e_dot, e_dot_perc)) ) %>% 
     dplyr::rename(
       # We will eventually put matrix names in the ledger_side column.
-      "{matnames}" := ledger_side
+      "{matnames}" := dplyr::all_of(ledger_side)
     ) %>% 
     dplyr::mutate(
       # Change the values in the matnames column to reflect which C matrix will be constructed.
