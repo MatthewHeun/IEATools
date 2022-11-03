@@ -172,7 +172,7 @@ add_psut_matnames <- function(.tidy_iea_df,
   .tidy_iea_df %>%
     dplyr::mutate(
       "{matnames}" := dplyr::case_when(
-        # Positive production items belong in the resources (R) matrix.
+        # Positive resources items only belong in the resources (R) matrix.
         (! R_includes_all_exogenous_flows) & starts_with_any_of(.data[[flow]], resources) & .data[[e_dot]] > 0 ~ R,
         # All positive exogenous flows belong in the resources (R) matrix.
         R_includes_all_exogenous_flows & starts_with_any_of(.data[[flow]], pos_supply_in_R) & .data[[e_dot]] > 0 ~ R, 
@@ -181,7 +181,7 @@ add_psut_matnames <- function(.tidy_iea_df,
         # All Consumption items belong in the final demand (Y) matrix.
         .data[[ledger_side]] == consumption ~ Y,
         # Negative values on the supply side of the ledger with Flow == "Energy industry own use"
-        # are put into the U_EIOU matrix
+        # are placed in the U_EIOU matrix
         .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 & .data[[flow_aggregation_point]] == eiou ~ U_EIOU,
         # Negative values on the supply side that have Flow %in% neg_supply_in_fd go in the final demand matrix
         .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 & starts_with_any_of(.data[[flow]], neg_supply_in_fd) ~ Y,
