@@ -1,6 +1,3 @@
-###########################################################
-context("Testing utilities")
-###########################################################
 
 test_that("starts_with_any_of() works properly", {
   expect_true(starts_with_any_of(x = "prefix - suffix", target = c("a", "b", "prefix")))
