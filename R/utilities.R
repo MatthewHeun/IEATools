@@ -331,7 +331,7 @@ carnot_efficiency <- function(heat_types, T_0 = 298.15){
 #' 
 #' @param file_path The path to the IEA data file (optional).
 #' @param iea_df A data frame containing IEA data. Default is `IEATools::load_tidy_iea_df(file_path)`.
-#' @param side Refers to the "Consumptiion" or "Supply" side of Production, Transformation processes, or Energy industry own use. 
+#' @param side Refers to the "Consumption" or "Supply" side of Production, Transformation processes, or Energy industry own use. 
 #'             One of "Consumption" or "Supply". Default is "Consumption".
 #' @param flow_aggregation_point The flow aggregation point column in `iea_df`. Default is "Flow.aggregation.point".
 #' @param production The string indicating the production flow. Default is "Production".

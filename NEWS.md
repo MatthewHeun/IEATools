@@ -22,6 +22,9 @@ output: html_document
 * "Liquefaction (LNG) / regasification plants" EIOU flow now directed to
   the "Natural gas extraction" industry.
 * New 4-letter abbreviations for non-standard ISO country codes.
+* A few new tests for new features.
+    * Now up to 1119 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # IEATools 0.1.63 (2022-04-01) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6407190.svg)](https://doi.org/10.5281/zenodo.6407190)
