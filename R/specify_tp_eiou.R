@@ -499,19 +499,17 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
     dplyr::mutate(
       "{flow}" := .data[[destination_flow]]
     ) %>%
-    # I think the next line should be changed, too.
-    dplyr::select(-.data[[destination_flow]]) %>%
-    # The above line should rather be this:
-    # dplyr::select(-dplyr::any_of(destination_flow)) %>% 
-    # But when I change it, I get an error in the tests.
+    # dplyr::select(-.data[[destination_flow]]) %>%
+    dplyr::select(-dplyr::any_of(destination_flow)) %>%
     dplyr::inner_join(
       share_total_per_main_activity, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow}, {unit}, {ledger_side})
     ) %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[Share_per_main_activity_From_Func]]
     ) %>%
-    dplyr::select(-.data[[Share_per_main_activity_From_Func]], -.data[[Total_per_main_activity_From_Func]], -.data[[Total_main_activity_From_Func]])
-
+    # dplyr::select(-.data[[Share_per_main_activity_From_Func]], -.data[[Total_per_main_activity_From_Func]], -.data[[Total_main_activity_From_Func]])
+    dplyr::select(-dplyr::any_of(c(Share_per_main_activity_From_Func, Total_per_main_activity_From_Func, Total_main_activity_From_Func)))
+  
   
   # Routes the "Own use in electricity, CHP and heat plants" to "Main activity producer electricity plants"
   # When no Main activity producer plants are in transformation processes.
