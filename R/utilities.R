@@ -278,7 +278,7 @@ extract_TK <- function(heat_types, sep = "."){
 #' 
 #' In societal exergy analysis, converting heat to exergy requires knowledge 
 #' of the temperature of that heat and application of the Carnot efficiency.
-#' This function first converts heat types (e.g., "`HTH.600.C`")
+#' This function first converts heat types (e.g., "HTH.600.C")
 #' to temperatures by extracting the temperature from the middle of the string,
 #' in a unit-aware manner.
 #' Then, the Carnot efficiency is calculated from the temperature of the heat
@@ -291,7 +291,7 @@ extract_TK <- function(heat_types, sep = "."){
 #' `T_0` can be supplied as a numeric vector of ambient temperatures of
 #' same length as `heat_types`.
 #'
-#' @param heat_types a string vector of heat types of the form "`HTH.600.C`"
+#' @param heat_types a string vector of heat types of the form "HTH.600.C"
 #' @param T_0 dead state temperature in kelvin. Default is `298.15` kelvin (25 C).
 #' 
 #' @seealso [extract_TK()]
@@ -329,19 +329,19 @@ carnot_efficiency <- function(heat_types, T_0 = 298.15){
 #' The names in the returned list are the Production, Transformation processes, or Energy industry own use industries in `iea_df`.
 #' The items in the returned list are vectors of energy types produced or consumed by the corresponding industries.
 #' 
-#' @param file_path the path to the IEA data file (optional)
-#' @param iea_df a data frame containing IEA data. Default is `IEATools::load_tidy_iea_df(file_path)`.
-#' @param side refers to the "`Consumptiion`" or "`Supply`" side of Production, Transformation processes, or Energy industry own use. 
-#'        One of "`Consumption`" or "`Supply`". Default is "`Consumption`".
-#' @param flow_aggregation_point the flow aggregation point column in `iea_df`. Default is "`Flow.aggregation.point`".
-#' @param production the string indicating the production flow. Default is "`Production`".
-#' @param transformation_processes the string indicating the transformation process stage. Default is "`Transformation processes`".
-#' @param eiou the string indicating the energy industry own use flow. Default is "`Energy industry own use`".
-#' @param stage the string indicating the stage for the analysis. One of `production`, `transformation_processes`, or `eiou`. 
-#'        Default is `production`.
-#' @param e_dot the energy flow rate column in `iea_df`.  Default is "`E.dot`".
-#' @param flow the flow column in `iea_df`. Default is "`Flow`".
-#' @param product the product column in `iea_df`.  Default is "`Product`".
+#' @param file_path The path to the IEA data file (optional).
+#' @param iea_df A data frame containing IEA data. Default is `IEATools::load_tidy_iea_df(file_path)`.
+#' @param side Refers to the "Consumptiion" or "Supply" side of Production, Transformation processes, or Energy industry own use. 
+#'             One of "Consumption" or "Supply". Default is "Consumption".
+#' @param flow_aggregation_point The flow aggregation point column in `iea_df`. Default is "Flow.aggregation.point".
+#' @param production The string indicating the production flow. Default is "Production".
+#' @param transformation_processes The string indicating the transformation process stage. Default is "Transformation processes".
+#' @param eiou The string indicating the energy industry own use flow. Default is "Energy industry own use".
+#' @param stage The string indicating the stage for the analysis. One of `production`, `transformation_processes`, or `eiou`. 
+#'              Default is `production`.
+#' @param e_dot The energy flow rate column in `iea_df`.  Default is "E.dot".
+#' @param flow The flow column in `iea_df`. Default is "Flow".
+#' @param product The product column in `iea_df`.  Default is "Product".
 #'
 #' @return a list of string vectors
 #' 

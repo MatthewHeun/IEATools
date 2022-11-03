@@ -428,9 +428,14 @@ rename_iea_df_cols <- function(.iea_df,
                                flow = "FLOW", new_flow = "Flow", 
                                product = "PRODUCT", new_product = "Product"){
   .iea_df %>% 
-    dplyr::rename(!!new_country := !!country,
-                  !!new_flow := flow,
-                  !!new_product := product)
+    # dplyr::rename(!!new_country := !!country,
+    #               !!new_flow := flow,
+    #               !!new_product := product)
+    dplyr::rename(
+      "{new_country}" := dplyr::all_of(country),
+      "{new_flow}" := dplyr::all_of(flow),
+      "{new_product}" := dplyr::all_of(product)
+    )
 }
 
 
@@ -934,11 +939,13 @@ tidy_iea_df <- function(.iea_df,
                         remove_zeroes = TRUE){
   out <- .iea_df %>% 
     # Gather into a tidy data frame.
-    tidyr::gather(key = !!as.name(year), value = !!as.name(e_dot), -c(method, country, last_stage, ledger_side, 
-                                                                      flow_aggregation_point, flow, product, energy_type, unit)) %>% 
+    # tidyr::gather(key = !!as.name(year), value = !!as.name(e_dot), -c(method, country, last_stage, ledger_side,
+    #                                                                   flow_aggregation_point, flow, product, energy_type, unit)) %>%
+    tidyr::pivot_longer(names_to = year, values_to = e_dot, cols = -dplyr::any_of(c(method, country, energy_type, last_stage, ledger_side,
+                                                                                    flow_aggregation_point, flow, product, unit))) %>%
     # Set the column order to something rational
     # dplyr::select(country, method, energy_type, last_stage, year, ledger_side, flow_aggregation_point, flow, product, unit, e_dot) %>% 
-    dplyr::select(dplyr::all_of(c(country, method, energy_type, last_stage, year, ledger_side, flow_aggregation_point, flow, product, unit, e_dot))) %>% 
+    dplyr::select(dplyr::all_of(c(country, method, energy_type, last_stage, year, ledger_side, flow_aggregation_point, flow, product, unit, e_dot))) %>%
     # Set the year column to be numeric
     dplyr::mutate(
       !!as.name(year) := as.numeric(!!as.name(year))

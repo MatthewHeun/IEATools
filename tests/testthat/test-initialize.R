@@ -612,6 +612,29 @@ test_that("load_tidy_iea_df() works as expected", {
 })
 
 
+test_that("load_tidy_iea_df() gives expected values", {
+  iea_df <- sample_iea_data_path(version = 2021) %>% 
+    load_tidy_iea_df()
+  # Try some values
+  expect_equal(iea_df %>% 
+                 dplyr::filter(Country == "ZAF", Year == 1971, Product == "Fuel oil", 
+                               Flow == "Oil refineries", Flow.aggregation.point == "Transformation processes") %>% 
+                 magrittr::extract2("E.dot"), 
+               4515.6349)
+  
+  expect_equal(iea_df %>% 
+                 dplyr::filter(Country == "GHA", Year == 1971, Product == "Crude oil", 
+                               Flow == "Imports") %>% 
+                 magrittr::extract2("E.dot"), 
+               916.2081)
+
+  expect_equal(iea_df %>% 
+                 dplyr::filter(Country == "ZAF", Year == 1971, Product == "Bitumen", Flow == "Transfers") %>% 
+                 magrittr::extract2("E.dot"), 
+               2.7945)
+})
+
+
 test_that("Ledger.side is added by augmentation", {
   # Every row in the Ledger.side column should be filled with a non-NA entry.
   # Verify that's indeed the case.

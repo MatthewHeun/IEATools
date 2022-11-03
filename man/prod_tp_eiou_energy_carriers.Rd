@@ -19,29 +19,29 @@ prod_tp_eiou_energy_carriers(
 )
 }
 \arguments{
-\item{file_path}{the path to the IEA data file (optional)}
+\item{file_path}{The path to the IEA data file (optional).}
 
-\item{iea_df}{a data frame containing IEA data. Default is \code{IEATools::load_tidy_iea_df(file_path)}.}
+\item{iea_df}{A data frame containing IEA data. Default is \code{IEATools::load_tidy_iea_df(file_path)}.}
 
-\item{side}{refers to the "\code{Consumptiion}" or "\code{Supply}" side of Production, Transformation processes, or Energy industry own use.
-One of "\code{Consumption}" or "\code{Supply}". Default is "\code{Consumption}".}
+\item{side}{Refers to the "Consumptiion" or "Supply" side of Production, Transformation processes, or Energy industry own use.
+One of "Consumption" or "Supply". Default is "Consumption".}
 
-\item{flow_aggregation_point}{the flow aggregation point column in \code{iea_df}. Default is "\code{Flow.aggregation.point}".}
+\item{flow_aggregation_point}{The flow aggregation point column in \code{iea_df}. Default is "Flow.aggregation.point".}
 
-\item{production}{the string indicating the production flow. Default is "\code{Production}".}
+\item{production}{The string indicating the production flow. Default is "Production".}
 
-\item{transformation_processes}{the string indicating the transformation process stage. Default is "\verb{Transformation processes}".}
+\item{transformation_processes}{The string indicating the transformation process stage. Default is "Transformation processes".}
 
-\item{eiou}{the string indicating the energy industry own use flow. Default is "\verb{Energy industry own use}".}
+\item{eiou}{The string indicating the energy industry own use flow. Default is "Energy industry own use".}
 
-\item{stage}{the string indicating the stage for the analysis. One of \code{production}, \code{transformation_processes}, or \code{eiou}.
+\item{stage}{The string indicating the stage for the analysis. One of \code{production}, \code{transformation_processes}, or \code{eiou}.
 Default is \code{production}.}
 
-\item{e_dot}{the energy flow rate column in \code{iea_df}.  Default is "\code{E.dot}".}
+\item{e_dot}{The energy flow rate column in \code{iea_df}.  Default is "E.dot".}
 
-\item{flow}{the flow column in \code{iea_df}. Default is "\code{Flow}".}
+\item{flow}{The flow column in \code{iea_df}. Default is "Flow".}
 
-\item{product}{the product column in \code{iea_df}.  Default is "\code{Product}".}
+\item{product}{The product column in \code{iea_df}.  Default is "Product".}
 }
 \value{
 a list of string vectors

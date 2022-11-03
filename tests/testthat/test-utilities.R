@@ -123,6 +123,7 @@ test_that("carnot_efficiency() works as expected", {
   expect_true(is.na(carnot_efficiency("$$H.50.C")))
 })
 
+
 test_that("tp_products() works as expected", {
   # Try with an invalid value for type
   expect_error(IEATools::tp_products(type = "bogus"))
@@ -141,13 +142,16 @@ test_that("tp_products() works as expected", {
   expect_equal(consumption_tp[["Gas-to-liquids (GTL) plants"]], "Natural gas")
   expect_equal(consumption_tp[["Coke ovens"]], c("Hard coal (if no detail)", "Coking coal"))
   expect_equal(consumption_tp[["Oil refineries"]], c("Crude oil", "Natural gas liquids"))
+  # expect_equal(consumption_tp[["Main activity producer electricity plants"]], 
+  #              c("Gas/diesel oil excl. biofuels", "Hydro", "Hard coal (if no detail)", "Crude oil", "Other bituminous coal", "Nuclear"))
   expect_equal(consumption_tp[["Main activity producer electricity plants"]], 
-               c("Gas/diesel oil excl. biofuels", "Hydro", "Hard coal (if no detail)", "Crude oil", "Other bituminous coal", "Nuclear"))
+               c("Crude oil", "Gas/diesel oil excl. biofuels", "Hydro", "Hard coal (if no detail)", "Other bituminous coal", "Nuclear"))
   
   # Use the default value of "type" (Consumption) and EIOU.
   consumption_eiou <- IEATools::prod_tp_eiou_energy_carriers(stage = "Energy industry own use")
   expect_equal(consumption_eiou[["Coal mines"]], "Electricity")
-  expect_equal(consumption_eiou[["Oil refineries"]], c("Refinery gas", "Fuel oil", "Gas works gas", "Electricity"))
+  # expect_equal(consumption_eiou[["Oil refineries"]], c("Refinery gas", "Fuel oil", "Gas works gas", "Electricity"))
+  expect_equal(consumption_eiou[["Oil refineries"]], c("Refinery gas", "Gas works gas", "Fuel oil", "Electricity"))
   expect_equal(consumption_eiou[["Own use in electricity, CHP and heat plants"]], "Electricity")
   expect_equal(consumption_eiou[["Pumped storage plants"]], "Electricity")
   
@@ -166,11 +170,16 @@ test_that("tp_products() works as expected", {
   expect_equal(supply_tp[["Coke ovens"]], c("Coke oven coke", "Coke oven gas"))
   expect_equal(supply_tp[["Gas works"]], "Gas works gas")
   expect_equal(supply_tp[["Gas-to-liquids (GTL) plants"]], "Other hydrocarbons")
+  # expect_equal(supply_tp[["Oil refineries"]], 
+  #              c("Refinery gas", "Liquefied petroleum gases (LPG)", "Motor gasoline excl. biofuels",
+  #                "Kerosene type jet fuel excl. biofuels", "Other kerosene", "Gas/diesel oil excl. biofuels", 
+  #                "Fuel oil", "Aviation gasoline", "Naphtha", "Bitumen", "Other oil products", 
+  #                "White spirit & SBP", "Lubricants", "Paraffin waxes"))
   expect_equal(supply_tp[["Oil refineries"]], 
                c("Refinery gas", "Liquefied petroleum gases (LPG)", "Motor gasoline excl. biofuels",
                  "Kerosene type jet fuel excl. biofuels", "Other kerosene", "Gas/diesel oil excl. biofuels", 
-                 "Fuel oil", "Aviation gasoline", "Naphtha", "Bitumen", "Other oil products", 
-                 "White spirit & SBP", "Lubricants", "Paraffin waxes"))
+                 "Fuel oil", "Aviation gasoline", "Naphtha", "White spirit & SBP", "Lubricants", 
+                 "Bitumen", "Paraffin waxes", "Other oil products"))
   
   # Now try with the "type" equal to "Supply" at the EIOU stage.
   # We should get nothing, because EIOU, by definition, does not produce any energy.
@@ -220,8 +229,12 @@ test_that("adjacent_rownums() works as expected", {
 
 
 test_that("sorting a tidy IEA data frame works as expected", {
-  tidy <- load_tidy_iea_df()
-  # Should get the same thing back if we sort now, because the IEA data are already sorted in IEA order!
+  tidy <- load_tidy_iea_df() %>% 
+    # load_tidy_iea_df() no longer preserves original order, 
+    # due to the switch from tidyr::gather() to tidyr::pivot_longer().
+    # So sort the data frame here, before testing.
+    sort_iea_df()
+  # Should get the same thing back if we sort now, because tidy is already sorted!
   expect_equal(sort_iea_df(tidy), tidy)
   num_rows <- nrow(tidy)
   # Look at the first row
@@ -267,7 +280,8 @@ test_that("sorting a tidy IEA data frame works as expected", {
 
 
 test_that("sorting an IEA DF does the right thing with Non-energy flows", {
-  tidy <- load_tidy_iea_df() # Unsorted
+  tidy <- load_tidy_iea_df() %>%  # Unsorted
+    sort_iea_df()
   tidy1971 <- tidy %>% 
     dplyr::filter(Year == 1971)
   expect_equal(sort_iea_df(tidy1971), tidy1971)
