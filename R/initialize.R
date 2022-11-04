@@ -889,29 +889,42 @@ augment_iea_df <- function(.iea_df,
 #' Creates a tidy IEA data frame
 #' 
 #' Data from the IEA have years in columns, 
-#' but the [tidy data format](https://doi.org/10.18637/jss.v059.i10)
+#' but the [tidy data format](\doi{10.18637/jss.v059.i10})
 #' requires one row for each datum.
-#' This function uses `tidyr::gather()` to 
+#' This function uses `tidyr::pivot_longer()` to 
 #' make an IEA data frame tidy.
 #' 
 #' Default argument values assume that `rename_iea_df_cols()` has been called on `.iea_df`.
 #'
-#' @param .iea_df a IEA data frame whose columns have been renamed by `rename_iea_df_cols()`
-#' @param col_names a list of column names in IEA data frames. Default is `IEATools::iea_cols`.
-#' @param year the name of the year column created in `.iea_df` by this function. (Default is "Year".)
-#' @param method the name of the method column created in `.iea_df` by this function. (Default is "Method".)
-#' @param last_stage the name of the last stage column created in `.iea_df` by this function. (Default is "Last.stage".)
-#' @param e_dot the name of the energy/exergy value column created in `.iea_df` by this function. (Default is "E.dot".)
-#' @param country the name of the country column in `.iea_df`. (Default is "Country".)
-#' @param ledger_side the name of the ledger side in `.iea_df`. (Default is "Ledger.side".)
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.iea_df`. (Default is "Flow.aggregation.point".)
-#' @param energy_type the name of the energy type column in `.iea_df`. (Default is "Energy.type".)
-#' @param unit the name of the unit column in `.iea_df`. (Default is "Units".)
-#' @param flow the name of the flow column in `.iea_df`. (Default is "Flow".)
-#' @param product the name of the product column in `.iea_df`. (Default is "Product".)
-#' @param remove_zeroes a logical indicating whether data points with the value `0` are to be removed from the output. (Default is `TRUE`.)
+#' @param .iea_df A IEA data frame whose columns have been renamed by `rename_iea_df_cols()`.
+#' @param col_names A list of column names in IEA data frames. 
+#'                  Default is `IEATools::iea_cols`.
+#' @param year The name of the year column created in `.iea_df` by this function. 
+#'             Default is `col_names$year`.
+#' @param method The name of the method column created in `.iea_df` by this function. 
+#'               Default is `col_names$method`.
+#' @param last_stage The name of the last stage column created in `.iea_df` by this function. 
+#'                   Default is `col_names$last_stage`.
+#' @param e_dot The name of the energy/exergy value column created in `.iea_df` by this function. 
+#'              Default is `col_names$e_dot`.
+#' @param country The name of the country column in `.iea_df`. 
+#'                Default is `col_names$country`.
+#' @param ledger_side The name of the ledger side in `.iea_df`. 
+#'                    Default is `col_names$ledger_side`.
+#' @param flow_aggregation_point The name of the flow aggregation point column in `.iea_df`. 
+#'                               Default is `col_names$flow_aggregation_point`.
+#' @param energy_type The name of the energy type column in `.iea_df`. 
+#'                    Default is `col_names$energy_type`.
+#' @param unit The name of the unit column in `.iea_df`. 
+#'             Default is `col_names$unit`.
+#' @param flow The name of the flow column in `.iea_df`. 
+#'             Default is `col_names$flow`.
+#' @param product The name of the product column in `.iea_df`. 
+#'                Default is `col_names$product`.
+#' @param remove_zeroes A logical indicating whether data points with the value `0` are to be removed from the output. 
+#'                      Default is `TRUE`.
 #'
-#' @return a tidy version of `.iea_df` containing new columns `year` and `e_dot` and, optionally, `0` values removed
+#' @return A tidy version of `.iea_df` containing new columns `year` and `e_dot` and, optionally, `0` values removed.
 #' 
 #' @export
 #'

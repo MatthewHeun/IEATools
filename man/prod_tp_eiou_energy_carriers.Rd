@@ -23,7 +23,7 @@ prod_tp_eiou_energy_carriers(
 
 \item{iea_df}{A data frame containing IEA data. Default is \code{IEATools::load_tidy_iea_df(file_path)}.}
 
-\item{side}{Refers to the "Consumptiion" or "Supply" side of Production, Transformation processes, or Energy industry own use.
+\item{side}{Refers to the "Consumption" or "Supply" side of Production, Transformation processes, or Energy industry own use.
 One of "Consumption" or "Supply". Default is "Consumption".}
 
 \item{flow_aggregation_point}{The flow aggregation point column in \code{iea_df}. Default is "Flow.aggregation.point".}
