@@ -4,7 +4,7 @@
 \alias{sample_eta_fu_table_path}
 \title{The path to a filled final-to-useful efficiency table}
 \usage{
-sample_eta_fu_table_path(version = 2021)
+sample_eta_fu_table_path(version = 2022)
 }
 \arguments{
 \item{version}{the desired version (expressed as the year of IEA data release) of

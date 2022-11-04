@@ -418,7 +418,7 @@ prod_tp_eiou_energy_carriers <- function(file_path = sample_iea_data_path(),
 #' on Monday, 3 June 2019.
 #'
 #' @param version The desired version (expressed as the year of release) of sample data. 
-#'                Options are `2018--2021`. `2021` is the default. 
+#'                Options are `2018--2022`. `2022` is the default. 
 #'
 #' @return the path to a sample data file.
 #' 
@@ -431,12 +431,12 @@ prod_tp_eiou_energy_carriers <- function(file_path = sample_iea_data_path(),
 #' sample_iea_data_path(2020) 
 #' sample_iea_data_path(2019) 
 #' sample_iea_data_path(2018) 
-sample_iea_data_path <- function(version = 2021) {
-  if (version >= 2018 & version <= 2021) {
+sample_iea_data_path <- function(version = 2022) {
+  if (version >= 2018 & version <= 2022) {
       return(file.path("extdata", paste0("GH-ZA-ktoe-Extended-Energy-Balances-sample-", version, ".csv")) %>%
                system.file(package = "IEATools"))
   }
-  stop("Only release years 2018 through 2021 are supported in sample_iea_data_path()")
+  stop("Only release years 2018 through 2022 are supported in sample_iea_data_path()")
 }
 
 
@@ -457,7 +457,7 @@ sample_iea_data_path <- function(version = 2021) {
 #' sample_fu_allocation_table_path(2020) 
 #' sample_fu_allocation_table_path(2019) 
 #' sample_fu_allocation_table_path(2018) 
-sample_fu_allocation_table_path <- function(version = 2021) {
+sample_fu_allocation_table_path <- function(version = 2022) {
   if (version == 2018) {
     return(file.path("extdata", "GH-ZA-Allocation-sample-2018.xlsx") %>% 
              system.file(package = "IEATools"))
@@ -470,8 +470,11 @@ sample_fu_allocation_table_path <- function(version = 2021) {
   } else if (version == 2021) {
     return(file.path("extdata", "GH-ZA-Allocation-sample-2021.xlsx") %>% 
              system.file(package = "IEATools"))
+  } else if (version == 2022) {
+    return(file.path("extdata", "GH-ZA-Allocation-sample-2022.xlsx") %>% 
+             system.file(package = "IEATools"))
   }
-  stop("Only 2018, 2019, 2020, and 2021 are supported in sample_fu_allocation_table_path()")
+  stop("Only 2018, 2019, 2020, 2021, and 2022 are supported in sample_fu_allocation_table_path()")
 }
 
 
@@ -492,7 +495,7 @@ sample_fu_allocation_table_path <- function(version = 2021) {
 #' sample_eta_fu_table_path(2020)
 #' sample_eta_fu_table_path(2019)
 #' sample_eta_fu_table_path(2018) 
-sample_eta_fu_table_path <- function(version = 2021) {
+sample_eta_fu_table_path <- function(version = 2022) {
   if (version == 2018) {
     return(file.path("extdata", "GH-ZA-Efficiency-sample-2018.xlsx") %>% 
              system.file(package = "IEATools"))
@@ -505,8 +508,11 @@ sample_eta_fu_table_path <- function(version = 2021) {
   } else if (version == 2021) {
   return(file.path("extdata", "GH-ZA-Efficiency-sample-2021.xlsx") %>% 
            system.file(package = "IEATools"))
+  } else if (version == 2021) {
+    return(file.path("extdata", "GH-ZA-Efficiency-sample-2022.xlsx") %>% 
+             system.file(package = "IEATools"))
   }
-  stop("Only 2018, 2019, 2020, and 2021 are supported in sample_eta_fu_table_path()")
+  stop("Only 2018, 2019, 2020, 2021, and 2022 are supported in sample_eta_fu_table_path()")
 }
 
 
