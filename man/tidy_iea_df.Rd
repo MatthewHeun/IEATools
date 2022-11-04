@@ -55,7 +55,7 @@ Default is \code{col_names$energy_type}.}
 Default is \code{col_names$unit}.}
 
 \item{flow}{The name of the flow column in \code{.iea_df}.
-Default is "Flow".}
+Default is \code{col_names$flow}.}
 
 \item{product}{The name of the product column in \code{.iea_df}.
 Default is \code{col_names$product}.}
