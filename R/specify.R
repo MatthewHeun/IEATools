@@ -310,9 +310,10 @@ specify_interface_industries <- function(.tidy_iea_df,
   # Specify those rows
   int_ind_rows_specified <- int_ind_rows %>% 
     dplyr::mutate(
-      "{flow}" := RCLabels::paste_pref_suff(pref = .data[[flow]], suff = RCLabels::get_pref_suff(.data[[product]], which = "pref") , notation = notation)
+      "{flow}" := RCLabels::paste_pref_suff(pref = .data[[flow]], suff = RCLabels::get_pref_suff(.data[[product]], which = "pref") , notation = notation), 
+      "{flow}" := as.character(.data[[flow]])
     )
-  out <- .tidy_iea_df %>% 
+  .tidy_iea_df %>% 
     # Subtract the interface industry rows from the incoming data frame
     dplyr::filter(!(.data[[flow]] %in% int_industries)) %>% 
     # Add back the specified rows
