@@ -389,7 +389,7 @@ test_that("prep_psut() correctly makes columns of U and r_EIOU matrices", {
 })
 
 
-test_that("replace_null_UR works correctly", {
+test_that("replace_null_UR() works correctly", {
   # Set up so that the psut data frame has NULL for
   # R, U_feed, and U_EIOU in 1971 for GHA.
   psut <- load_tidy_iea_df() %>% 
