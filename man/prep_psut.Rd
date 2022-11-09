@@ -56,7 +56,7 @@ This function bundles several others:
 \item \code{add_psut_matnames()}
 \item \code{add_row_col_meta()}
 \item \code{collapse_to_tidy_psut()}
-\item \code{replace_null_UR()}
+\item \code{replace_null_RUV()}
 }
 
 Furthermore, it extracts \code{S_units} matrices using \code{extract_S_units_from_tidy()}
@@ -83,7 +83,7 @@ Complicated <- load_tidy_iea_df() \%>\%
   add_row_col_meta() \%>\% 
   collapse_to_tidy_psut() \%>\% 
   spread(key = matnames, value = matvals) \%>\% 
-  replace_null_UR() \%>\% 
+  replace_null_RUV() \%>\% 
   full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
                             "Country", "Year")) \%>\% 
   gather(key = matnames, value = matvals, R, U_EIOU, U_feed, 

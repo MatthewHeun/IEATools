@@ -389,7 +389,7 @@ test_that("prep_psut() correctly makes columns of U and r_EIOU matrices", {
 })
 
 
-test_that("replace_null_UR() works correctly", {
+test_that("replace_null_RUV() works correctly with NULL R and U", {
   # Set up so that the psut data frame has NULL for
   # R, U_feed, and U_EIOU in 1971 for GHA.
   psut <- load_tidy_iea_df() %>% 
@@ -400,9 +400,9 @@ test_that("replace_null_UR() works correctly", {
     dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_feed")) %>% 
     dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_EIOU")) %>% 
     tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
-  # Check that replace_null_UR works as expected.
+  # Check that replace_null_RUV works as expected.
   res <- psut %>% 
-    replace_null_UR()
+    replace_null_RUV()
   
   expected_R <- psut$Y[[1]] %>% 
     matsbyname::transpose_byname() %>% 
@@ -425,7 +425,7 @@ test_that("replace_null_UR() works correctly", {
   mats_list <- list(U = NULL, r_EIOU = NULL, V = psut$V[[1]], 
                     Y = psut$Y[[1]], S_units = psut$S_units[[1]], 
                     R = NULL, U_EIOU = NULL, U_feed = NULL)
-  res_list <- replace_null_UR(mats_list)
+  res_list <- replace_null_RUV(mats_list)
   expect_equal(res_list$R, expected_R)
   expect_equal(res_list$U_feed, expected_U)
   expect_equal(res_list$U_EIOU, expected_U)
@@ -433,9 +433,9 @@ test_that("replace_null_UR() works correctly", {
   expect_equal(res_list$r_EIOU, expected_U)
 
   # Test that everything works correctly with individual matrices passed in the ... argument
-  res_indiv <- replace_null_UR(U = mats_list$U, r_eiou = mats_list$r_EIOU, V = mats_list$V,
-                               Y = mats_list$Y, 
-                               R = mats_list$R, U_eiou = mats_list$U_EIOU, U_feed = mats_list$U_feed)
+  res_indiv <- replace_null_RUV(U = mats_list$U, r_eiou = mats_list$r_EIOU, V = mats_list$V,
+                                Y = mats_list$Y, 
+                                R = mats_list$R, U_eiou = mats_list$U_EIOU, U_feed = mats_list$U_feed)
   expect_equal(res_indiv$R, expected_R)
   expect_equal(res_indiv$U_feed, expected_U)
   expect_equal(res_indiv$U_EIOU, expected_U)
