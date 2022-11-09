@@ -400,7 +400,7 @@ test_that("replace_null_RUV() works correctly with NULL R and U", {
     dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_feed")) %>% 
     dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_EIOU")) %>% 
     tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
-  # Check that replace_null_RUV works as expected.
+  # Check that replace_null_RUV() works as expected.
   res <- psut %>% 
     replace_null_RUV()
   
