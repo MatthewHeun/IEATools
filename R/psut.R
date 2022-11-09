@@ -443,7 +443,10 @@ replace_null_RUV <- function(.sutmats = NULL,
                              r_eiou_name = IEATools::psut_cols$r_eiou, 
                              V_name = IEATools::psut_cols$V) {
   
-  fix_RUV_func <- function(R_mat, U_mat, U_feed_mat, U_eiou_mat, r_eiou_mat, V_mat, Y_mat) {
+  # Set default argument values to NULL so that missing and NULL look the same.
+  fix_RUV_func <- function(R_mat = NULL,
+                           U_mat = NULL, U_feed_mat = NULL, U_eiou_mat = NULL, r_eiou_mat = NULL, 
+                           V_mat = NULL, Y_mat = NULL) {
     # Strategy is to assign the matrices to a temporary name. 
     # After using matsindf_apply, swap to the actual name.
     # This step is necessary, because matsindf_apply() does not allow renaming columns 
@@ -455,20 +458,20 @@ replace_null_RUV <- function(.sutmats = NULL,
       matsbyname::hadamardproduct_byname(0) %>% 
       matsbyname::setrownames_byname(resources)
       
-    if (!missing(V_mat)) {
+    if (!is.null(V_mat)) {
       temp_U <- V_mat %>% 
         matsbyname::transpose_byname() %>% 
         matsbyname::hadamardproduct_byname(0)
-      if (missing(U_mat)) {
+      if (is.null(U_mat)) {
         new_U <- temp_U
       }
-      if (missing(U_feed_mat)) {
+      if (is.null(U_feed_mat)) {
         new_U_feed <- temp_U
       }
-      if (missing(U_eiou_mat)) {
+      if (is.null(U_eiou_mat)) {
         new_U_eiou <- temp_U
       }
-      if (missing(r_eiou_mat)) {
+      if (is.null(r_eiou_mat)) {
         new_r_eiou <- temp_U
       }
     } else {
@@ -477,38 +480,18 @@ replace_null_RUV <- function(.sutmats = NULL,
         matsbyname::hadamardproduct_byname(0)
       temp_U <- new_V %>% 
         matsbyname::transpose_byname()
-      if (missing(U_mat)) {
+      if (is.null(U_mat)) {
         new_U <- temp_U
       }
-      if (missing(U_feed_mat)) {
+      if (is.null(U_feed_mat)) {
         new_U_feed <- temp_U
       }
-      if (missing(U_eiou_mat)) {
+      if (is.null(U_eiou_mat)) {
         new_U_eiou <- temp_U
       }
-      if (missing(r_eiou_mat)) {
+      if (is.null(r_eiou_mat)) {
         new_r_eiou <- temp_U
       }
-    }
-    
-    # If any of the important arguments are missing, treat as NULL.
-    # An originally NULL matrix (passed in a list or in the ... argument)
-    # will show up as missing here,
-    # due to the way matsindf::matsindf_apply() works.
-    if (missing(R_mat)) {
-      R_mat <- NULL
-    }
-    if (missing(U_mat)) {
-      U_mat <- NULL
-    }
-    if (missing(U_feed_mat)) {
-      U_feed_mat <- NULL
-    }
-    if (missing(U_eiou_mat)) {
-      U_eiou_mat <- NULL
-    }
-    if (missing(r_eiou_mat)) {
-      r_eiou_mat <- NULL
     }
     
     # Whichever matrix is NULL, set to the new value.
