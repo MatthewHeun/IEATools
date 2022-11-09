@@ -389,14 +389,15 @@ test_that("prep_psut() correctly makes columns of U and r_EIOU matrices", {
 })
 
 
-test_that("replace_null_RUV() works correctly with NULL R and U", {
-  # Set up so that the psut data frame has NULL for
-  # R, U_feed, and U_EIOU in 1971 for GHA.
+test_that("replace_null_RUV() works correctly with missing R and U", {
+  # Set up so that the psut data frame has missing for
+  # R, U, U_feed, and U_EIOU in 1971 for GHA.
   psut <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     prep_psut() %>% 
     tidyr::pivot_longer(cols = c("R", "U_EIOU", "U_feed", "U", "r_EIOU", "V", "Y", "S_units"), names_to = "matnames", values_to = "matvals") %>% 
     dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "R")) %>% 
+    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U")) %>% 
     dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_feed")) %>% 
     dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_EIOU")) %>% 
     tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
@@ -415,10 +416,10 @@ test_that("replace_null_RUV() works correctly with NULL R and U", {
   # Verify that the NULL R matrix has been replaced with the correct 0 matrix.
   expect_equal(res$R[[1]], expected_R)
   # Verify that U_feed and U_EIOU are no longer NULL and is rather that transposed V matrix full of zeroes.
+  expect_equal(res$U[[1]], expected_U)
   expect_equal(res$U_feed[[1]], expected_U)
   expect_equal(res$U_EIOU[[1]], expected_U)
-  # We haven't removed the U or r_EIOU matrices. So those should be same as before
-  expect_equal(res$U[[1]], psut$U[[1]])
+  # We haven't removed the r_EIOU matrices. So those should be same as before
   expect_equal(res$r_EIOU[[1]], psut$r_EIOU[[1]])
   
   # Test that everything works correctly with a list. 
@@ -427,9 +428,9 @@ test_that("replace_null_RUV() works correctly with NULL R and U", {
                     R = NULL, U_EIOU = NULL, U_feed = NULL)
   res_list <- replace_null_RUV(mats_list)
   expect_equal(res_list$R, expected_R)
+  expect_equal(res_list$U, expected_U)
   expect_equal(res_list$U_feed, expected_U)
   expect_equal(res_list$U_EIOU, expected_U)
-  expect_equal(res_list$U, expected_U)
   expect_equal(res_list$r_EIOU, expected_U)
 
   # Test that everything works correctly with individual matrices passed in the ... argument
@@ -441,6 +442,30 @@ test_that("replace_null_RUV() works correctly with NULL R and U", {
   expect_equal(res_indiv$U_EIOU, expected_U)
   expect_equal(res_indiv$U, expected_U)
   expect_equal(res_indiv$r_EIOU, expected_U)
+})
+
+
+test_that("replace_null_RUV() works correctly with missing U and V", {
+  # Set up so that the psut data frame has missing for
+  # U and V in 1971 for GHA.
+  psut <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    prep_psut() %>% 
+    tidyr::pivot_longer(cols = c("R", "U_EIOU", "U_feed", "U", "r_EIOU", "V", "Y", "S_units"), names_to = "matnames", values_to = "matvals") %>% 
+    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U")) %>% 
+    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "V")) %>% 
+    tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
+  # Check that replace_null_RUV() works as expected.
+  res <- psut %>% 
+    replace_null_RUV()
+  expected_V <- psut$R[[1]] %>% 
+    matsbyname::hadamardproduct_byname(0)
+  expected_U <- expected_V %>% 
+    matsbyname::transpose_byname()
+  # Verify that the missing V matrix has been replaced with the correct 0 matrix.
+  expect_equal(res$V[[1]], expected_V)
+  # Verify that the missing U matrix has been replaced with the correct 0 matrix.
+  expect_equal(res$U[[1]], expected_U)
 })
 
 

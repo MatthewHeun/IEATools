@@ -455,9 +455,41 @@ replace_null_RUV <- function(.sutmats = NULL,
       matsbyname::hadamardproduct_byname(0) %>% 
       matsbyname::setrownames_byname(resources)
       
-    new_U <- V_mat %>% 
-      matsbyname::transpose_byname() %>% 
-      matsbyname::hadamardproduct_byname(0)
+    if (!missing(V_mat)) {
+      temp_U <- V_mat %>% 
+        matsbyname::transpose_byname() %>% 
+        matsbyname::hadamardproduct_byname(0)
+      if (missing(U_mat)) {
+        new_U <- temp_U
+      }
+      if (missing(U_feed_mat)) {
+        new_U_feed <- temp_U
+      }
+      if (missing(U_eiou_mat)) {
+        new_U_eiou <- temp_U
+      }
+      if (missing(r_eiou_mat)) {
+        new_r_eiou <- temp_U
+      }
+    } else {
+      # V_mat is not missing.
+      new_V <- R_mat %>% 
+        matsbyname::hadamardproduct_byname(0)
+      temp_U <- new_V %>% 
+        matsbyname::transpose_byname()
+      if (missing(U_mat)) {
+        new_U <- temp_U
+      }
+      if (missing(U_feed_mat)) {
+        new_U_feed <- temp_U
+      }
+      if (missing(U_eiou_mat)) {
+        new_U_eiou <- temp_U
+      }
+      if (missing(r_eiou_mat)) {
+        new_r_eiou <- temp_U
+      }
+    }
     
     # If any of the important arguments are missing, treat as NULL.
     # An originally NULL matrix (passed in a list or in the ... argument)
@@ -466,14 +498,14 @@ replace_null_RUV <- function(.sutmats = NULL,
     if (missing(R_mat)) {
       R_mat <- NULL
     }
+    if (missing(U_mat)) {
+      U_mat <- NULL
+    }
     if (missing(U_feed_mat)) {
       U_feed_mat <- NULL
     }
     if (missing(U_eiou_mat)) {
       U_eiou_mat <- NULL
-    }
-    if (missing(U_mat)) {
-      U_mat <- NULL
     }
     if (missing(r_eiou_mat)) {
       r_eiou_mat <- NULL
@@ -486,26 +518,26 @@ replace_null_RUV <- function(.sutmats = NULL,
       .R_temp_mat <- R_mat
     }
     
-    if (is.null(U_feed_mat)) {
-      .U_feed_temp_mat <- new_U
-    } else {
-      .U_feed_temp_mat <- U_feed_mat
-    }
-    
-    if (is.null(U_eiou_mat)) {
-      .U_eiou_temp_mat <- new_U
-    } else {
-      .U_eiou_temp_mat <- U_eiou_mat
-    }
-    
     if (is.null(U_mat)) {
       .U_temp_mat <- new_U
     } else {
       .U_temp_mat <- U_mat
     }
     
+    if (is.null(U_feed_mat)) {
+      .U_feed_temp_mat <- new_U_feed
+    } else {
+      .U_feed_temp_mat <- U_feed_mat
+    }
+    
+    if (is.null(U_eiou_mat)) {
+      .U_eiou_temp_mat <- new_U_eiou
+    } else {
+      .U_eiou_temp_mat <- U_eiou_mat
+    }
+    
     if (is.null(r_eiou_mat)) {
-      .r_eiou_temp_mat <- new_U
+      .r_eiou_temp_mat <- new_r_eiou
     } else {
       .r_eiou_temp_mat <- r_eiou_mat
     }
