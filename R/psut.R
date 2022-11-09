@@ -452,48 +452,28 @@ replace_null_RUV <- function(.sutmats = NULL,
     # This step is necessary, because matsindf_apply() does not allow renaming columns 
     # (for good reason!),
     
-    new_R <- Y_mat %>% 
-      matsbyname::transpose_byname() %>% 
-      matsbyname::colsums_byname() %>% 
-      matsbyname::hadamardproduct_byname(0) %>% 
-      matsbyname::setrownames_byname(resources)
       
     if (!is.null(V_mat)) {
-      temp_U <- V_mat %>% 
+      # We probably have V and Y matrices.
+      # Need to define new R, U, U_feed, U_EIOU, and r_EIOU matrices.
+      new_R <- Y_mat %>% 
+        matsbyname::transpose_byname() %>% 
+        matsbyname::colsums_byname() %>% 
+        matsbyname::hadamardproduct_byname(0) %>% 
+        matsbyname::setrownames_byname(resources)
+      new_U <- V_mat %>% 
         matsbyname::transpose_byname() %>% 
         matsbyname::hadamardproduct_byname(0)
-      if (is.null(U_mat)) {
-        new_U <- temp_U
-      }
-      if (is.null(U_feed_mat)) {
-        new_U_feed <- temp_U
-      }
-      if (is.null(U_eiou_mat)) {
-        new_U_eiou <- temp_U
-      }
-      if (is.null(r_eiou_mat)) {
-        new_r_eiou <- temp_U
-      }
     } else {
-      # V_mat is not missing.
+      # V_mat is NULL. 
+      # We probably have only R and Y matrices.
+      # Need to define new U, U_feed, U_EIOU, r_EIOU, and V matrices.
       new_V <- R_mat %>% 
         matsbyname::hadamardproduct_byname(0)
-      temp_U <- new_V %>% 
+      new_U <- new_V %>% 
         matsbyname::transpose_byname()
-      if (is.null(U_mat)) {
-        new_U <- temp_U
-      }
-      if (is.null(U_feed_mat)) {
-        new_U_feed <- temp_U
-      }
-      if (is.null(U_eiou_mat)) {
-        new_U_eiou <- temp_U
-      }
-      if (is.null(r_eiou_mat)) {
-        new_r_eiou <- temp_U
-      }
     }
-    
+
     # Whichever matrix is NULL, set to the new value.
     if (is.null(R_mat)) {
       .R_temp_mat <- new_R
@@ -508,43 +488,51 @@ replace_null_RUV <- function(.sutmats = NULL,
     }
     
     if (is.null(U_feed_mat)) {
-      .U_feed_temp_mat <- new_U_feed
+      .U_feed_temp_mat <- new_U
     } else {
       .U_feed_temp_mat <- U_feed_mat
     }
     
     if (is.null(U_eiou_mat)) {
-      .U_eiou_temp_mat <- new_U_eiou
+      .U_eiou_temp_mat <- new_U
     } else {
       .U_eiou_temp_mat <- U_eiou_mat
     }
     
     if (is.null(r_eiou_mat)) {
-      .r_eiou_temp_mat <- new_r_eiou
+      .r_eiou_temp_mat <- new_U
     } else {
       .r_eiou_temp_mat <- r_eiou_mat
     }
     
-    list(.R_temp_mat, .U_feed_temp_mat, .U_eiou_temp_mat, .U_temp_mat, .r_eiou_temp_mat) %>% 
-      magrittr::set_names(c(.R_temp_name, .U_feed_temp_name, .U_eiou_temp_name, .U_temp_name, .r_eiou_temp_name))
+    if (is.null(V_mat)) {
+      .V_temp_mat <- new_V
+    } else {
+      .V_temp_mat <- V_mat
+    }
+    
+    list(.R_temp_mat, .U_temp_mat, .U_feed_temp_mat, .U_eiou_temp_mat, .r_eiou_temp_mat, .V_temp_mat) %>% 
+      magrittr::set_names(c(.R_temp_name, .U_temp_name, .U_feed_temp_name, .U_eiou_temp_name, .r_eiou_temp_name, .V_temp_name))
   }
   
   out <- matsindf::matsindf_apply(.sutmats, FUN = fix_RUV_func, R_mat = R, U_mat = U, U_feed_mat = U_feed, U_eiou_mat = U_eiou, r_eiou_mat = r_eiou,
                                                                 V_mat = V, Y_mat = Y)
   
   # Delete the previous items in a way that will work for both lists and data frames
-  out[[R_name]] <- NULL
+  out[[R_name]]      <- NULL
+  out[[U_name]]      <- NULL
   out[[U_feed_name]] <- NULL
   out[[U_eiou_name]] <- NULL
-  out[[U_name]]      <- NULL
   out[[r_eiou_name]] <- NULL
+  out[[V_name]]      <- NULL
   
   # Rename the temporary item to the actual name
   names(out)[names(out) == .R_temp_name]      <- R_name
+  names(out)[names(out) == .U_temp_name]      <- U_name
   names(out)[names(out) == .U_feed_temp_name] <- U_feed_name
   names(out)[names(out) == .U_eiou_temp_name] <- U_eiou_name
-  names(out)[names(out) == .U_temp_name]      <- U_name
   names(out)[names(out) == .r_eiou_temp_name] <- r_eiou_name
+  names(out)[names(out) == .V_temp_name]      <- V_name
   
   return(out)
   

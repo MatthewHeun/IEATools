@@ -499,8 +499,8 @@ test_that("extend_to_useful() works with list of matrices", {
   # When a list is used as the data store, we should get all variables returned.
   expect_equal(names(useful_list), 
                c("Country", "Method", "Energy.type", "Last.stage", "Year",
-                 "V", "Y", "S_units", "R", "U_feed",
-                 "U_EIOU", "U", "r_EIOU", "C_EIOU", "C_Y",
+                 "Y", "S_units", "R", "U", "U_feed",
+                 "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                  "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                  "r_EIOU_Useful", "V_Useful", "Y_Useful"))
 })
@@ -527,8 +527,8 @@ test_that("extend_to_useful() works as expected when clean_up_df = FALSE", {
   # Check column names. We should get a lot of "_Useful"s here.
   expect_equal(names(with_useful), 
                c("Country", "Method", "Energy.type", "Last.stage", "Year",
-                 "V", "Y", "S_units", "R", "U_feed",
-                 "U_EIOU", "U", "r_EIOU", "C_EIOU", "C_Y",
+                 "Y", "S_units", "R", "U", "U_feed",
+                 "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                  "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                  "r_EIOU_Useful", "V_Useful", "Y_Useful"))
 })

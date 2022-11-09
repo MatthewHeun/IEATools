@@ -451,7 +451,7 @@ test_that("replace_null_RUV() works correctly with missing U and V", {
   psut <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     prep_psut() %>% 
-    tidyr::pivot_longer(cols = c("R", "U_EIOU", "U_feed", "U", "r_EIOU", "V", "Y", "S_units"), names_to = "matnames", values_to = "matvals") %>% 
+    tidyr::pivot_longer(cols = dplyr::any_of(c("R", "U_EIOU", "U_feed", "U", "r_EIOU", "V", "Y", "S_units")), names_to = "matnames", values_to = "matvals") %>% 
     dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U")) %>% 
     dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "V")) %>% 
     tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
