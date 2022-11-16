@@ -7,7 +7,8 @@ output: html_document
 * Eliminated all warnings from `tidyselect` about 
   deprecated functionality. 
   The package builds and tests cleanly again!
-* New argument on `add_psut_matnames()` switches between 
+* New argument on `add_psut_matnames()` (`R_includes_all_exogenous_flows`)
+  switches between 
   (a) including all exogenous flows 
   ("Resources", "Imports", "Statistical differences", and
   "Stock changes") in the **R**
