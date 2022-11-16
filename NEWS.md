@@ -6,7 +6,7 @@ output: html_document
 
 * Eliminated all warnings from `tidyselect` about 
   deprecated functionality. 
-  The package builds cleanly again!
+  The package builds and tests cleanly again!
 * New argument on `add_psut_matnames()` switches between 
   (a) including all exogenous flows 
   ("Resources", "Imports", "Statistical differences", and
