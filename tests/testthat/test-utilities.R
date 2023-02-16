@@ -286,7 +286,7 @@ test_that("sorting an IEA DF does the right thing with Non-energy flows", {
 })
 
 
-test_that("sorting works on a specified IEA data frame", {
+test_that("sort_iea_df() works on a specified IEA data frame", {
   # Make sure that the initially-loaded data frame has sorting as expected.
   loaded <- load_tidy_iea_df()
   expect_equal(loaded$Flow[[1]], IEATools::tpes_flows$production)
@@ -358,7 +358,7 @@ test_that("replace_join() works as expected", {
   DFD <- tibble::tribble(~x, ~y,
                          2, "M", 
                          2, "N")
-  expect_equal(replace_join(DFA, DFD, replace_col = "y"), 
+  expect_equal(replace_join(DFA, DFD, replace_col = "y", multiple = "all"), 
                tibble::tribble(~x, ~y, 
                                1, "A", 
                                2, "M", 
