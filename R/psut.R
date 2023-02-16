@@ -9,6 +9,8 @@
 #' `.tidy_iea_df` is typically obtained from `tidy_iea_df()`.
 #'
 #' @param .tidy_iea_df the tidy data frame from which a unit summation `S_units` matrix is to be formed.
+#' @param class The type of matrix to be created, one of "matrix" or "Matrix".
+#'              Default is "matrix".
 #' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit,matnames See `IEATools::iea_cols`.
 #' @param s_units See `IEATools::psut_cols`.
 #' @param product_type,unit_type See `IEATools::row_col_types`.
@@ -25,6 +27,7 @@
 #' load_tidy_iea_df() %>% 
 #'   extract_S_units_from_tidy()
 extract_S_units_from_tidy <- function(.tidy_iea_df, 
+                                      class = c("matrix", "Matrix"),
                                       # Column names in .tidy_iea_df
                                       ledger_side = IEATools::iea_cols$ledger_side, 
                                       flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point, 
@@ -42,6 +45,8 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
                                       .val = ".val", 
                                       .rowtype = ".rowtype", 
                                       .coltype = ".coltype"){
+  
+  class <- match.arg(class)
   
   # grouping_vars <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, unit, matnames)
   grouping_symbols <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, product, e_dot, unit, matnames)
@@ -63,7 +68,8 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
     ) %>%
     matsindf::collapse_to_matrices(matnames = s_units, matvals = .val,
                                    rownames = product, colnames = unit,
-                                   rowtypes = .rowtype, coltypes = .coltype) %>%
+                                   rowtypes = .rowtype, coltypes = .coltype, 
+                                   class = class) %>%
     dplyr::rename(
       # "{s_units}" := .data[[.val]]
       "{s_units}" := dplyr::all_of(.val)
@@ -306,6 +312,8 @@ add_row_col_meta <- function(.tidy_iea_df,
 #' `dplyr::ungroup()` prior to undergoing any modification.
 #'
 #' @param .tidy_iea_df a data frame containing `matnames` and several other columns
+#' @param class The type of matrix to be created, one of "matrix" or "Matrix".
+#'              Default is "matrix".
 #' @param ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
 #' @param matnames,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #' @param matvals See `IEATools::psut_cols`.
@@ -322,6 +330,7 @@ add_row_col_meta <- function(.tidy_iea_df,
 #'   add_row_col_meta() %>% 
 #'   collapse_to_tidy_psut()
 collapse_to_tidy_psut <- function(.tidy_iea_df,
+                                  class = c("matrix", "Matrix"),
                                   # Names of input columns
                                   ledger_side = IEATools::iea_cols$ledger_side,
                                   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point, 
@@ -337,6 +346,9 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
                                   coltypes = IEATools::mat_meta_cols$coltypes, 
                                   # Name of output column of matrices
                                   matvals = IEATools::psut_cols$matvals){
+  
+  class <- match.arg(class)
+  
   matsindf::verify_cols_missing(.tidy_iea_df, matvals)
   
   .tidy_iea_df %>% 
@@ -364,7 +376,8 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
     # Now we can collapse!
     matsindf::collapse_to_matrices(matnames = matnames, matvals = e_dot,
                                    rownames = rownames, colnames = colnames,
-                                   rowtypes = rowtypes, coltypes = coltypes) %>%
+                                   rowtypes = rowtypes, coltypes = coltypes, 
+                                   class = class) %>%
     dplyr::rename(
       # "{matvals}" := .data[[e_dot]]
       "{matvals}" := dplyr::all_of(e_dot)

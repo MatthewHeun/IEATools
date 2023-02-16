@@ -149,7 +149,7 @@ test_that("extend_to_useful_helper works as intended", {
       matvals = C
     ) %>% 
     dplyr::group_by(matnames) %>% 
-    matsindf::collapse_to_matrices() %>% 
+    matsindf::collapse_to_matrices(class = "Matrix") %>% 
     magrittr::extract2("matvals") %>% 
     magrittr::extract2(1)
   
