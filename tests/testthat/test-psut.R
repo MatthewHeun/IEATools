@@ -1,7 +1,18 @@
-test_that("S_units_from_tidy works as expected", {
+test_that("extract_S_units_from_tidy() works as expected", {
   S_units <- load_tidy_iea_df() %>% 
     extract_S_units_from_tidy()
 
+  for (i in nrow(S_units)) {
+    su <- S_units$S_units[[i]]
+    expect_true(all(su[ , "ktoe"] == 1))
+  }
+})
+
+
+test_that("extract_S_units_from_tidy() works with Matrix objects", {
+  S_units <- load_tidy_iea_df() %>% 
+    extract_S_units_from_tidy(class = "Matrix")
+  
   for (i in nrow(S_units)) {
     su <- S_units$S_units[[i]]
     expect_true(all(su[ , "ktoe"] == 1))

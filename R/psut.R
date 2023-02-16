@@ -570,6 +570,8 @@ replace_null_RUV <- function(.sutmats = NULL,
 #' the return value is a zero-row data frame with expected columns.
 #'
 #' @param .tidy_iea_df a tidy data frame that has been specified with `specify_all()`.
+#' @param class The type of matrix to be created, one of "matrix" or "Matrix".
+#'              Default is "matrix".
 #' @param year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param matnames,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
@@ -614,6 +616,7 @@ replace_null_RUV <- function(.sutmats = NULL,
 #'   as.logical() %>% 
 #'   all()
 prep_psut <- function(.tidy_iea_df, 
+                      class = c("matrix", "Matrix"),
                       year = IEATools::iea_cols$year,
                       ledger_side = IEATools::iea_cols$ledger_side, 
                       flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -638,6 +641,9 @@ prep_psut <- function(.tidy_iea_df,
                       Y = IEATools::psut_cols$Y,
                       B = IEATools::psut_cols$B,
                       s_units = IEATools::psut_cols$s_units){
+  
+  class <- match.arg(class)
+  
   if (nrow(.tidy_iea_df) == 0) {
     # We can get a no-row data frame for .tidy_iea_df. 
     # If so, we should return a no-row data frame with empty columns added.
@@ -661,6 +667,7 @@ prep_psut <- function(.tidy_iea_df,
   
   # We actually have some rows in .tidy_iea_df, so work with them
   S_units <- extract_S_units_from_tidy(.tidy_iea_df, 
+                                       class = class,
                                        product = product, 
                                        unit = unit)
   # Bundle functions together
@@ -670,7 +677,8 @@ prep_psut <- function(.tidy_iea_df,
     # Add additional metadata
     add_row_col_meta(flow = flow, product = product, matnames = matnames) %>% 
     # Now collapse to matrices
-    collapse_to_tidy_psut(e_dot = e_dot, matnames = matnames, matvals = matvals, rownames = rownames, colnames = colnames,
+    collapse_to_tidy_psut(class = class, e_dot = e_dot, matnames = matnames, matvals = matvals, 
+                          rownames = rownames, colnames = colnames,
                           rowtypes = rowtypes, coltypes = coltypes) 
   # Get a list of matrix names for future use
   matrix_names <- Collapsed[[matnames]] %>%

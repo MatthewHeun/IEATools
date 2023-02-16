@@ -54,6 +54,69 @@ test_that("form_C_mats works as expected", {
 })
 
 
+test_that("form_C_mats works with Matrix objects", {
+  allocation_table <- load_fu_allocation_data()
+  C_df <- form_C_mats(allocation_table, class = "Matrix")
+  # Check that we made Matrix objects.
+  expect_true(all(sapply(C_df$C_EIOU, matsbyname::is.Matrix)))
+  expect_true(all(sapply(C_df$C_Y, matsbyname::is.Matrix)))
+  # Check type of year column
+  expect_true(is.numeric(C_df$Year))
+  # Check that the Unit column is missing.  It has no meaning for allocations.
+  expect_true(is.null(C_df[[IEATools::iea_cols$unit]]))
+  # Check some values.
+  C_EIOU_GHA_1971 <- C_df %>% 
+    dplyr::filter(Country == "GHA", Year == 1971) %>% 
+    magrittr::extract2(IEATools::template_cols$C_eiou) %>% 
+    magrittr::extract2(1)
+  r1 <- "Electricity -> Main activity producer electricity plants"
+  r2 <- "Refinery gas -> Oil refineries"
+  c1 <- "Electric lights -> Light"
+  c2 <- "Electric motors -> MD"
+  c3 <- "Industrial furnaces -> HTH.600.C"
+  expect_equal(C_EIOU_GHA_1971[r1, c1], 0.5)
+  expect_equal(C_EIOU_GHA_1971[r1, c2], 0.5)
+  expect_equal(C_EIOU_GHA_1971[r1, c3], 0)
+  expect_equal(C_EIOU_GHA_1971[r2, c1], 0)
+  expect_equal(C_EIOU_GHA_1971[r2, c2], 0)
+  expect_equal(C_EIOU_GHA_1971[r2, c3], 1)
+  
+  C_Y_ZAF_2000 <- C_df %>% 
+    dplyr::filter(Country == "ZAF", Year == 2000) %>% 
+    magrittr::extract2(IEATools::template_cols$C_Y) %>% 
+    magrittr::extract2(1)
+  r1 <- "Blast furnace gas -> Iron and steel"
+  c1 <- "Airplanes -> MD"
+  r_kerosene <- "Kerosene type jet fuel excl. biofuels -> Domestic aviation"
+  c_stoves <- "Industrial furnaces -> HTH.600.C"
+  expect_equal(C_Y_ZAF_2000[r1, c_stoves], 1)
+  expect_equal(C_Y_ZAF_2000[r_kerosene, c1], 1)
+  
+  # Set a wrong value and expect a warning.
+  allocation_table_wrong <- allocation_table
+  allocation_table_wrong[[3, "1971"]] <- 0.9 # Was 1.0. This change should trigger an error on this row.
+  expect_warning(diagnostic_df <- form_C_mats(allocation_table_wrong, class = "Matrix"), "Not all rows in the C matrices sum to 1.")
+  # Check that the diagnostic data frame is correct
+  expect_equal(diagnostic_df[[1, IEATools::mat_meta_cols$rownames]], "Refinery gas -> Oil refineries")
+  expect_equal(diagnostic_df[[1, ".should_be_1_vector"]], 0.9)
+  
+  # Check the row and column types
+  for (i in 1:nrow(C_df)) {
+    expect_equal(matsbyname::rowtype(C_df$C_EIOU[[i]]), "Product -> Industry")
+    expect_equal(matsbyname::coltype(C_df$C_EIOU[[i]]), "Industry -> Product")
+    expect_equal(matsbyname::rowtype(C_df$C_Y[[i]]), "Product -> Industry")
+    expect_equal(matsbyname::coltype(C_df$C_Y[[i]]), "Industry -> Product")
+  }
+})
+
+
+
+
+
+
+
+
+
 test_that("form_eta_fu_phi_u_vecs() works as expected", {
   efficiency_table <- load_eta_fu_data()
   eta_fu_phi_u_df <- form_eta_fu_phi_u_vecs(efficiency_table)
@@ -95,11 +158,10 @@ test_that("form_eta_fu_phi_u_vecs() errors when phi values are different", {
   efficiency_table[32, "1971"] <- 0.9999
   expect_equal(efficiency_table[32, "1971"], 0.9999)
   expect_error(form_eta_fu_phi_u_vecs(efficiency_table), "Found useful products with different phi values in form_eta_fu_phi_u_vecs")
-  
 })
 
 
-test_that("extend_to_useful_helper works as intended", {
+test_that("extend_to_useful_helper() works as intended", {
   # These tests come from the "Pushing Y to Useful" tab in file "Matrix f->u example calcs.xlsx"
   
   # Set up some matrices and data frames
@@ -224,16 +286,16 @@ test_that("extend_to_useful_helper works as intended", {
 
 test_that("extend_to_useful works as expected", {
   C_data <- load_fu_allocation_data() %>% 
-    form_C_mats()
+    form_C_mats(class = "Matrix")
   eta_fu_data <- load_eta_fu_data() %>% 
-    form_eta_fu_phi_u_vecs()
+    form_eta_fu_phi_u_vecs(class = "Matrix")
   m_cols <- eta_fu_data %>% 
     IEATools::meta_cols(return_names = TRUE,
                         years_to_keep = IEATools::iea_cols$year,
                         not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
   psut_mats <- load_tidy_iea_df() %>% 
     specify_all() %>% 
-    prep_psut() %>% 
+    prep_psut(class = "Matrix") %>% 
     dplyr::full_join(C_data, by = m_cols) %>% 
     dplyr::full_join(eta_fu_data, by = m_cols)
   
@@ -421,7 +483,6 @@ test_that("extend_to_useful works as expected", {
       is_zero = matsbyname::iszero_byname(should_be_zero)
     )
   expect_true(all(unlist(r_EIOU_check$is_zero)))
-  
 })
 
 
