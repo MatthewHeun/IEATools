@@ -358,7 +358,7 @@ test_that("replace_join() works as expected", {
   DFD <- tibble::tribble(~x, ~y,
                          2, "M", 
                          2, "N")
-  expect_equal(replace_join(DFA, DFD, replace_col = "y"), 
+  expect_equal(replace_join(DFA, DFD, replace_col = "y", multiple = "all"), 
                tibble::tribble(~x, ~y, 
                                1, "A", 
                                2, "M", 
