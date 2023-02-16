@@ -286,7 +286,7 @@ test_that("sorting an IEA DF does the right thing with Non-energy flows", {
 })
 
 
-test_that("sorting works on a specified IEA data frame", {
+test_that("sort_iea_df() works on a specified IEA data frame", {
   # Make sure that the initially-loaded data frame has sorting as expected.
   loaded <- load_tidy_iea_df()
   expect_equal(loaded$Flow[[1]], IEATools::tpes_flows$production)
