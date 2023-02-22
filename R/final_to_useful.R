@@ -22,21 +22,23 @@
 #'                             A template for this table should have been created by `fu_allocation_table()` and 
 #'                             `write_fu_allocation_table()`.
 #'                             This object can also be a tidy data frame with year data gathered into a Year column.
+#' @param class The type of matrix to be created, one of "matrix" or "Matrix".
+#'              Default is "matrix".
 #' @param ledger_side,flow_aggregation_point,e_dot,unit,year See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param quantity,machine,ef_product,eu_product,destination,e_dot_perc,maximum_values,C_eiou,C_Y See `IEATools::template_cols`.
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #' @param product,industry See `IEATools::row_col_types`.
-#' @param notation the notation used for this template. See `RCLabels::notation_vec()`. Default is `RCLabels::arrow_notation`.
-#' @param tol the allowable amount by which a row sum in a `C` matrix can be different from 1. Default is 1e-6.
-#' @param .should_be_1_vector a temporary column created internally for error checking (and not returned unless there is an error). 
+#' @param notation The notation used for this template. See `RCLabels::notation_vec()`. Default is `RCLabels::arrow_notation`.
+#' @param tol The allowable amount by which a row sum in a `C` matrix can be different from 1. Default is 1e-6.
+#' @param .should_be_1_vector A temporary column created internally for error checking (and not returned unless there is an error). 
 #'                            This column should contain 1 vectors (i.e., vectors filled with 1's).
-#' @param .is_1 a temporary column created internally (and not returned unless there is an error)
+#' @param .is_1 A temporary column created internally (and not returned unless there is an error)
 #'              that contains `TRUE` or `FALSE` depending on whether a rowsum was 1.
-#' @param .all_1 a temporary column created internally (and not returned unless there is an error)
+#' @param .all_1 A temporary column created internally (and not returned unless there is an error)
 #'               that tells whether a 1-vector was created by rowsums.
 #'
-#' @return a wide-by-matrices data frame with metadata columns (and year) along with columns for 
+#' @return A wide-by-matrices data frame with metadata columns (and year) along with columns for 
 #'         `C_eiou` and `C_Y` matrices.
 #'         If not all rows of a C matrix sum to 1, 
 #'         a warning is emitted, and
@@ -48,6 +50,9 @@
 #' load_fu_allocation_data() %>% 
 #'   form_C_mats()
 form_C_mats <- function(.fu_allocation_table, 
+                        
+                        # Class of output matrices
+                        class = c("matrix", "Matrix"),
                         
                         ledger_side = IEATools::iea_cols$ledger_side,
                         flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -88,6 +93,8 @@ form_C_mats <- function(.fu_allocation_table,
                         .should_be_1_vector = ".should_be_1_vector", 
                         .is_1 = ".is_1", 
                         .all_1 = ".all_1") {
+  
+  class <- match.arg(class)
   
   cleaned <- .fu_allocation_table %>% 
     # Eliminate rows titled e_dot or e_dot_perc. These are just helper rows for the analyst.
@@ -167,7 +174,8 @@ form_C_mats <- function(.fu_allocation_table,
     dplyr::group_by(!!!group_cols) %>% 
     matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
                                    rownames = rownames, colnames = colnames, 
-                                   rowtypes = rowtypes, coltypes = coltypes)
+                                   rowtypes = rowtypes, coltypes = coltypes, 
+                                   class = class)
   
   # Check that all rows sum to 1, but only if we had some rows to begin with!
   if (nrow(.fu_allocation_table) > 0) {
@@ -241,6 +249,8 @@ form_C_mats <- function(.fu_allocation_table,
 #' @param .eta_fu_table a final-to-useful efficiency table read by `load_eta_fu_allocation_data()`.
 #'                      A template for this table should have been created by `eta_fu_table()` and 
 #'                      `write_eta_fu_table()`.
+#' @param class The type of matrix to be created, one of "matrix" or "Matrix".
+#'              Default is "matrix".
 #' @param unit,year See `IEATools::iea_cols`.
 #' @param quantity,machine,eu_product,e_dot_machine,e_dot_machine_perc,maximum_values,eta_fu,phi_u,phi See `IEATools::template_cols`.
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
@@ -259,6 +269,8 @@ form_C_mats <- function(.fu_allocation_table,
 #' load_eta_fu_data() %>% 
 #'   form_eta_fu_phi_u_vecs()
 form_eta_fu_phi_u_vecs <- function(.eta_fu_table, 
+                                   
+                                   class = c("matrix", "Matrix"),
                                    
                                    unit = IEATools::iea_cols$unit,
                                    year = IEATools::iea_cols$year,
@@ -286,6 +298,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    arrow_note = RCLabels::arrow_notation, 
                                    from_note = RCLabels::from_notation, 
                                    .id = ".id") {
+  
+  class <- match.arg(class)
   
   cleaned <- .eta_fu_table %>% 
     # Eliminate rows titled e_dot_machine or e_dot_machine_perc. These are just helper rows for the analyst.
@@ -427,7 +441,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     dplyr::group_by(!!!group_cols) %>% 
     matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
                                    rownames = rownames, colnames = colnames, 
-                                   rowtypes = rowtypes, coltypes = coltypes) %>% 
+                                   rowtypes = rowtypes, coltypes = coltypes, 
+                                   class = class) %>% 
     # pivot wider to the sutmats format
     tidyr::pivot_wider(names_from = matnames, values_from = matvals)
 }

@@ -6,6 +6,7 @@
 \usage{
 form_eta_fu_phi_u_vecs(
   .eta_fu_table,
+  class = c("matrix", "Matrix"),
   unit = IEATools::iea_cols$unit,
   year = IEATools::iea_cols$year,
   quantity = IEATools::template_cols$quantity,
@@ -34,6 +35,9 @@ form_eta_fu_phi_u_vecs(
 \item{.eta_fu_table}{a final-to-useful efficiency table read by \code{load_eta_fu_allocation_data()}.
 A template for this table should have been created by \code{eta_fu_table()} and
 \code{write_eta_fu_table()}.}
+
+\item{class}{The type of matrix to be created, one of "matrix" or "Matrix".
+Default is "matrix".}
 
 \item{unit, year}{See \code{IEATools::iea_cols}.}
 

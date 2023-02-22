@@ -4,6 +4,9 @@ output: html_document
 ---
 
 
+* Added capability to use `Matrix` objects with 
+  `prep_psut()`, `form_C_mats()`, `form_eta_fu_phi_u_vecs()`,
+  `extract_S_units_from_tidy()`, and `collapse_to_tidy_psut()`.
 * Eliminated all warnings from `tidyselect` about 
   deprecated functionality. 
   The package builds and tests cleanly again!
@@ -23,8 +26,8 @@ output: html_document
 * "Liquefaction (LNG) / regasification plants" EIOU flow now directed to
   the "Natural gas extraction" industry.
 * New 4-letter abbreviations for non-standard ISO country codes.
-* A few new tests for new features.
-    * Now up to 1119 tests, all passing.
+* New tests for new features.
+    * Now up to 1320 tests, all passing.
     * Test coverage remains at 100 %.
 
 
