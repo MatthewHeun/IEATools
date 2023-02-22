@@ -23,7 +23,7 @@ test_that("Loading regional aggregation table works as intended", {
                                                                              "aggregation_table_iea_exiobase_2020.xlsx",
                                                                              package = "IEATools"))
   
-  # Testing empty celles are gotten rid of
+  # Testing empty cells are gotten rid of
   expect_equal(nrow(aggregation_table %>% dplyr::filter(IEA_regions == "OECD Americas")), 0)
   expect_equal(nrow(aggregation_table %>% dplyr::filter(IEA_regions == "Memo: Mali")), 0) 
   

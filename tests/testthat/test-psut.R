@@ -654,6 +654,30 @@ test_that("replace_null_RUV() works correctly with missing U and V", {
 })
 
 
+test_that("replace_null_RUV() works correctly with missing U and V with Matrix objects", {
+  # Set up so that the psut data frame has missing for
+  # U and V in 1971 for GHA.
+  psut <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    prep_psut(class = "Matrix") %>% 
+    tidyr::pivot_longer(cols = dplyr::any_of(c("R", "U_EIOU", "U_feed", "U", "r_EIOU", "V", "Y", "S_units")), names_to = "matnames", values_to = "matvals") %>% 
+    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U")) %>% 
+    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "V")) %>% 
+    tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
+  # Check that replace_null_RUV() works as expected.
+  res <- psut %>% 
+    replace_null_RUV()
+  expected_V <- psut$R[[1]] %>% 
+    matsbyname::hadamardproduct_byname(0)
+  expected_U <- expected_V %>% 
+    matsbyname::transpose_byname()
+  # Verify that the missing V matrix has been replaced with the correct 0 matrix.
+  expect_equal(res$V[[1]], expected_V)
+  # Verify that the missing U matrix has been replaced with the correct 0 matrix.
+  expect_equal(res$U[[1]], expected_U)
+})
+
+
 test_that("prep_psut() correctly works with Balancing flows", {
   
   PSUT_flows_with_Balancing <- load_tidy_iea_df() %>% 
@@ -691,6 +715,43 @@ test_that("prep_psut() correctly works with Balancing flows", {
 })
 
 
+test_that("prep_psut() correctly works with Balancing flows and Matrix objects", {
+  
+  PSUT_flows_with_Balancing <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    add_psut_matnames() %>% 
+    tibble::add_row(
+      Country = c("GHA", "GHA"),
+      Method = c("PCM", "PCM"),
+      Energy.type = c("E", "E"),
+      Last.stage = c("Final", "Final"),
+      Year = c(1971, 1971),
+      Ledger.side = c("Consumption", "Supply"),
+      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
+      Product = c("Electricity", "Crude oil"),
+      Unit = c("ktoe", "ktoe"),
+      E.dot = c(100, -100),
+      matnames = c(psut_cols$B, psut_cols$B)
+    ) %>%
+    prep_psut(class = "Matrix")
+  
+  expect_true(
+    all(c("R", "V", "U_feed", "U_EIOU", "Y", "S_units", "B") %in% colnames(PSUT_flows_with_Balancing))
+  )
+  
+  balancing_expected_value <- matrix(nrow = 2, ncol = 2,
+                                     c(0, 100, -100, 0))
+  
+  expect_true(
+    all(balancing_expected_value == (PSUT_flows_with_Balancing %>%
+                                       dplyr::select(B) %>% 
+                                       dplyr::pull() %>% 
+                                       dplyr::first())
+    ))
+})
+
+
 test_that("prep_psut() works when there is no energy industry own use", {
   # Set up so that the psut data frame has NULL for
   # R, U_feed, and U_EIOU in 1971 for GHA.
@@ -699,6 +760,21 @@ test_that("prep_psut() works when there is no energy industry own use", {
     # Eliminate energy industry own use, so we do not get a U_EIOU matrix.
     dplyr::filter(.data[[IEATools::iea_cols$flow_aggregation_point]] != IEATools::tfc_compare_flows$energy_industry_own_use) %>% 
     prep_psut()
+  # In this case, the U_EIOU matrix should be 0.
+  for (i in 1:nrow(psut)) {
+    expect_true(psut$U_EIOU[[i]] %>% matsbyname::iszero_byname())
+  }
+})
+
+
+test_that("prep_psut() works when there is no energy industry own use with Matrix objects", {
+  # Set up so that the psut data frame has NULL for
+  # R, U_feed, and U_EIOU in 1971 for GHA.
+  psut <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    # Eliminate energy industry own use, so we do not get a U_EIOU matrix.
+    dplyr::filter(.data[[IEATools::iea_cols$flow_aggregation_point]] != IEATools::tfc_compare_flows$energy_industry_own_use) %>% 
+    prep_psut(class = "Matrix")
   # In this case, the U_EIOU matrix should be 0.
   for (i in 1:nrow(psut)) {
     expect_true(psut$U_EIOU[[i]] %>% matsbyname::iszero_byname())
