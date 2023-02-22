@@ -6,7 +6,7 @@
 \usage{
 prep_psut(
   .tidy_iea_df,
-  class = c("matrix", "Matrix"),
+  matrix.class = c("matrix", "Matrix"),
   year = IEATools::iea_cols$year,
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -36,7 +36,7 @@ prep_psut(
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame that has been specified with \code{specify_all()}.}
 
-\item{class}{The type of matrix to be created, one of "matrix" or "Matrix".
+\item{matrix.class}{The type of matrix to be created, one of "matrix" or "Matrix".
 Default is "matrix".}
 
 \item{year, ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}

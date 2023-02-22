@@ -56,7 +56,7 @@ test_that("form_C_mats works as expected", {
 
 test_that("form_C_mats works with Matrix objects", {
   allocation_table <- load_fu_allocation_data()
-  C_df <- form_C_mats(allocation_table, class = "Matrix")
+  C_df <- form_C_mats(allocation_table, matrix.class = "Matrix")
   # Check that we made Matrix objects.
   expect_true(all(sapply(C_df$C_EIOU, matsbyname::is.Matrix)))
   expect_true(all(sapply(C_df$C_Y, matsbyname::is.Matrix)))
@@ -95,7 +95,7 @@ test_that("form_C_mats works with Matrix objects", {
   # Set a wrong value and expect a warning.
   allocation_table_wrong <- allocation_table
   allocation_table_wrong[[3, "1971"]] <- 0.9 # Was 1.0. This change should trigger an error on this row.
-  expect_warning(diagnostic_df <- form_C_mats(allocation_table_wrong, class = "Matrix"), "Not all rows in the C matrices sum to 1.")
+  expect_warning(diagnostic_df <- form_C_mats(allocation_table_wrong, matrix.class = "Matrix"), "Not all rows in the C matrices sum to 1.")
   # Check that the diagnostic data frame is correct
   expect_equal(diagnostic_df[[1, IEATools::mat_meta_cols$rownames]], "Refinery gas -> Oil refineries")
   expect_equal(diagnostic_df[[1, ".should_be_1_vector"]], 0.9)
@@ -211,7 +211,7 @@ test_that("extend_to_useful_helper() works as intended", {
       matvals = C
     ) %>% 
     dplyr::group_by(matnames) %>% 
-    matsindf::collapse_to_matrices(class = "Matrix") %>% 
+    matsindf::collapse_to_matrices(matrix.class = "Matrix") %>% 
     magrittr::extract2("matvals") %>% 
     magrittr::extract2(1)
   
@@ -488,16 +488,16 @@ test_that("extend_to_useful() works as expected", {
 
 test_that("extend_to_useful() works with Matrix objects", {
   C_data <- load_fu_allocation_data() %>% 
-    form_C_mats(class = "Matrix")
+    form_C_mats(matrix.class = "Matrix")
   eta_fu_data <- load_eta_fu_data() %>% 
-    form_eta_fu_phi_u_vecs(class = "Matrix")
+    form_eta_fu_phi_u_vecs(matrix.class = "Matrix")
   m_cols <- eta_fu_data %>% 
     IEATools::meta_cols(return_names = TRUE,
                         years_to_keep = IEATools::iea_cols$year,
                         not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
   psut_mats <- load_tidy_iea_df() %>% 
     specify_all() %>% 
-    prep_psut(class = "Matrix") %>% 
+    prep_psut(matrix.class = "Matrix") %>% 
     dplyr::full_join(C_data, by = m_cols) %>% 
     dplyr::full_join(eta_fu_data, by = m_cols)
   
@@ -741,16 +741,16 @@ test_that("extend_to_useful() works with individual matrices", {
 
 test_that("extend_to_useful() works with individual Matrix objects", {
   C_data <- load_fu_allocation_data() %>% 
-    form_C_mats(class = "Matrix")
+    form_C_mats(matrix.class = "Matrix")
   eta_fu_data <- load_eta_fu_data() %>% 
-    form_eta_fu_phi_u_vecs(class = "Matrix")
+    form_eta_fu_phi_u_vecs(matrix.class = "Matrix")
   m_cols <- eta_fu_data %>% 
     IEATools::meta_cols(return_names = TRUE,
                         years_to_keep = IEATools::iea_cols$year,
                         not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
   psut_mats <- load_tidy_iea_df() %>% 
     specify_all() %>% 
-    prep_psut(class = "Matrix") %>% 
+    prep_psut(matrix.class = "Matrix") %>% 
     dplyr::full_join(C_data, by = m_cols) %>% 
     dplyr::full_join(eta_fu_data, by = m_cols)
   
@@ -822,16 +822,16 @@ test_that("extend_to_useful() works with list of matrices", {
 
 test_that("extend_to_useful() works with list of Matrix objects", {
   C_data <- load_fu_allocation_data() %>% 
-    form_C_mats(class = "Matrix")
+    form_C_mats(matrix.class = "Matrix")
   eta_fu_data <- load_eta_fu_data() %>% 
-    form_eta_fu_phi_u_vecs(class = "Matrix")
+    form_eta_fu_phi_u_vecs(matrix.class = "Matrix")
   m_cols <- eta_fu_data %>% 
     IEATools::meta_cols(return_names = TRUE,
                         years_to_keep = IEATools::iea_cols$year,
                         not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
   psut_mats <- load_tidy_iea_df() %>% 
     specify_all() %>% 
-    prep_psut(class = "Matrix") %>% 
+    prep_psut(matrix.class = "Matrix") %>% 
     dplyr::full_join(C_data, by = m_cols) %>% 
     dplyr::full_join(eta_fu_data, by = m_cols)
   
@@ -884,16 +884,16 @@ test_that("extend_to_useful() works as expected when clean_up_df = FALSE", {
 
 test_that("extend_to_useful() works as expected when clean_up_df = FALSE with Matrix objects", {
   C_data <- load_fu_allocation_data() %>% 
-    form_C_mats(class = "Matrix")
+    form_C_mats(matrix.class = "Matrix")
   eta_fu_data <- load_eta_fu_data() %>% 
-    form_eta_fu_phi_u_vecs(class = "Matrix")
+    form_eta_fu_phi_u_vecs(matrix.class = "Matrix")
   m_cols <- eta_fu_data %>% 
     IEATools::meta_cols(return_names = TRUE,
                         years_to_keep = IEATools::iea_cols$year,
                         not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
   psut_mats <- load_tidy_iea_df() %>% 
     specify_all() %>% 
-    prep_psut(class = "Matrix") %>% 
+    prep_psut(matrix.class = "Matrix") %>% 
     dplyr::full_join(C_data, by = m_cols) %>% 
     dplyr::full_join(eta_fu_data, by = m_cols)
   

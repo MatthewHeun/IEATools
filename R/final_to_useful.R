@@ -52,7 +52,7 @@
 form_C_mats <- function(.fu_allocation_table, 
                         
                         # Class of output matrices
-                        class = c("matrix", "Matrix"),
+                        matrix.class = c("matrix", "Matrix"),
                         
                         ledger_side = IEATools::iea_cols$ledger_side,
                         flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -94,7 +94,7 @@ form_C_mats <- function(.fu_allocation_table,
                         .is_1 = ".is_1", 
                         .all_1 = ".all_1") {
   
-  class <- match.arg(class)
+  matrix.class <- match.arg(matrix.class)
   
   cleaned <- .fu_allocation_table %>% 
     # Eliminate rows titled e_dot or e_dot_perc. These are just helper rows for the analyst.
@@ -175,7 +175,7 @@ form_C_mats <- function(.fu_allocation_table,
     matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
                                    rownames = rownames, colnames = colnames, 
                                    rowtypes = rowtypes, coltypes = coltypes, 
-                                   class = class)
+                                   matrix.class = matrix.class)
   
   # Check that all rows sum to 1, but only if we had some rows to begin with!
   if (nrow(.fu_allocation_table) > 0) {
@@ -270,7 +270,7 @@ form_C_mats <- function(.fu_allocation_table,
 #'   form_eta_fu_phi_u_vecs()
 form_eta_fu_phi_u_vecs <- function(.eta_fu_table, 
                                    
-                                   class = c("matrix", "Matrix"),
+                                   matrix.class = c("matrix", "Matrix"),
                                    
                                    unit = IEATools::iea_cols$unit,
                                    year = IEATools::iea_cols$year,
@@ -299,7 +299,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    from_note = RCLabels::from_notation, 
                                    .id = ".id") {
   
-  class <- match.arg(class)
+  matrix.class <- match.arg(matrix.class)
   
   cleaned <- .eta_fu_table %>% 
     # Eliminate rows titled e_dot_machine or e_dot_machine_perc. These are just helper rows for the analyst.
@@ -442,7 +442,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
                                    rownames = rownames, colnames = colnames, 
                                    rowtypes = rowtypes, coltypes = coltypes, 
-                                   class = class) %>% 
+                                   matrix.class = matrix.class) %>% 
     # pivot wider to the sutmats format
     tidyr::pivot_wider(names_from = matnames, values_from = matvals)
 }
