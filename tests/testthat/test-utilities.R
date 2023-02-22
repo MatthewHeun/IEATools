@@ -108,6 +108,7 @@ test_that("extract_TK() works as expected", {
   expect_equal(extract_TK("HTC.-110.C"), -110 + 273.15)
 })
 
+
 test_that("carnot_efficiency() works as expected", {
   expect_equal(carnot_efficiency("HTH.298.15.K"), 0)
 
