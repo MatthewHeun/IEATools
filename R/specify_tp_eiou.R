@@ -254,7 +254,11 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
     dplyr::left_join(
       shares_oil_gas_output,
       by = c({country}, {energy_type}, {method}, {last_stage}, {ledger_side}, {year}),
-      suffix = c("", ".y")
+      suffix = c("", ".y"), 
+      # The new policy in dplyr is to warn about multiple rows being created.
+      # Creating multiple rows is the desired behavior here.
+      # Setting multiple = "all" eliminates the warning.
+      multiple = "all"
     ) %>% 
     dplyr::mutate(
       "{.share}" := tidyr::replace_na(.data[[.share]], 1)
