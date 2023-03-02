@@ -158,7 +158,7 @@ The \code{.rownum} column is deleted before returning.}
 \code{.iea_df} with additional columns named \code{ledger_side}, \code{flow_aggregation_point}, \code{energy_type}, and \code{unit}.
 }
 \description{
-This function prepares an IEA data frame created by \code{\link[=iea_df]{iea_df()}} for use in R.
+This function prepares an IEA data frame created by \code{iea_df()} for use in R.
 It works on IEA data from the 2018 and 2019 releases
 of the IEA's extended energy balances.
 }
@@ -168,20 +168,20 @@ The first problem is that metadata in the \code{COUNTRY}, \code{FLOW}, and \code
 columns of an IEA data table are not unique.
 A second problem is that the \code{FLOW} column contains both industries to which energy is flowing \emph{and}
 the type of flow that is involved.
-(E.g., the suffix "\code{(energy)}" means that the flow is an own use by the energy industry.
-The "\code{(transf.)}" suffix means that a flow is involved in a transformation process
+(E.g., the suffix "(energy)" means that the flow is an own use by the energy industry.
+The "(transf.)" suffix means that a flow is involved in a transformation process
 between primary and final energy.
 
 To solve these problems, two additional columns are added: \code{Ledger.side} and \code{Flow.aggregation.point}.
-\code{Ledger.side} can be one of "\code{Supply}" or "\code{Consumption}", corresponding to the top or bottom of the IEA's tables, respectively.
+\code{Ledger.side} can be one of "Supply" or "Consumption", corresponding to the top or bottom of the IEA's tables, respectively.
 \code{Flow.aggregation.point} indicates the next level of aggregation for these data.
 \code{Flow.aggregation.point} can be one of
-"\verb{Total primary energy supply}", "\verb{Transformation processes}", "\verb{Energy industry own use}", or "\verb{TFC compare}"
+"Total primary energy supply", "Transformation processes", "Energy industry own use", or "TFC compare"
 on the \code{Supply} side of the ledger.
 On the \code{Consumption} side of the ledger, \code{Flow.aggregation.point} can be one of
-"\code{Industry}", "\code{Transport}", "\code{Other}", or "\verb{Non-energy use}".
+"Industry", "Transport", "Other", or "Non-energy use".
 When the \code{Flow.aggregation.point} column is present,
-the need for the "\code{(energy)}" and "\code{(transf.)}" suffixes is eliminated,
+the need for the "(energy)" and "(transf.)" suffixes is eliminated,
 so they are deleted.
 
 The third problem this function solves is that energy type and units are not specified in IEA data.
@@ -191,11 +191,11 @@ A \code{Unit} column is added with the value of \code{unit_val}.
 (Default is \code{ktoe}, although any string can be specified in \code{unit_val}.)
 
 Note that this function decides where to divide \code{Supply} from \code{Consumption}.
-To do so, it first looks for rows in which \code{Flow} is "\code{Losses}".
-The last "\code{Losses}" row is the last row of the \code{Supply} side of the ledger.
-If "\code{Losses}" rows are not found, the function looks for rows in which \code{Flow} is "\verb{Total final consumption}".
-The first "\verb{Total final consumption}" row is the first row of the \code{Consumption} side of the ledger.
-If neither "\code{Losses}" nor "\verb{Total final consumption}" \code{Flow}s are present,
+To do so, it first looks for rows in which \code{Flow} is "Losses".
+The last "Losses" row is the last row of the "Supply" side of the ledger.
+If "Losses" rows are not found, the function looks for rows in which \code{Flow} is "Total final consumption".
+The first "Total final consumption" row is the first row of the \code{Consumption} side of the ledger.
+If neither "Losses" nor "Total final consumption" \code{Flow}s are present,
 an error is generated.
 }
 \examples{

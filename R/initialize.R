@@ -631,7 +631,7 @@ remove_agg_regions <- function(.iea_df,
 
 #' Augment an IEA data frame
 #' 
-#' This function prepares an IEA data frame created by [iea_df()] for use in R.
+#' This function prepares an IEA data frame created by `iea_df()` for use in R.
 #' It works on IEA data from the 2018 and 2019 releases
 #' of the IEA's extended energy balances.
 #' 
@@ -640,20 +640,20 @@ remove_agg_regions <- function(.iea_df,
 #' columns of an IEA data table are not unique.
 #' A second problem is that the `FLOW` column contains both industries to which energy is flowing _and_ 
 #' the type of flow that is involved.  
-#' (E.g., the suffix "`(energy)`" means that the flow is an own use by the energy industry.
-#' The "`(transf.)`" suffix means that a flow is involved in a transformation process
+#' (E.g., the suffix "(energy)" means that the flow is an own use by the energy industry.
+#' The "(transf.)" suffix means that a flow is involved in a transformation process
 #' between primary and final energy. 
 #'
 #' To solve these problems, two additional columns are added: `Ledger.side` and `Flow.aggregation.point`.
-#' `Ledger.side` can be one of "`Supply`" or "`Consumption`", corresponding to the top or bottom of the IEA's tables, respectively.
+#' `Ledger.side` can be one of "Supply" or "Consumption", corresponding to the top or bottom of the IEA's tables, respectively.
 #' `Flow.aggregation.point` indicates the next level of aggregation for these data. 
 #' `Flow.aggregation.point` can be one of 
-#' "`Total primary energy supply`", "`Transformation processes`", "`Energy industry own use`", or "`TFC compare`"
+#' "Total primary energy supply", "Transformation processes", "Energy industry own use", or "TFC compare"
 #' on the `Supply` side of the ledger.
 #' On the `Consumption` side of the ledger, `Flow.aggregation.point` can be one of 
-#' "`Industry`", "`Transport`", "`Other`", or "`Non-energy use`".
+#' "Industry", "Transport", "Other", or "Non-energy use".
 #' When the `Flow.aggregation.point` column is present, 
-#' the need for the "`(energy)`" and "`(transf.)`" suffixes is eliminated,
+#' the need for the "(energy)" and "(transf.)" suffixes is eliminated,
 #' so they are deleted.
 #' 
 #' The third problem this function solves is that energy type and units are not specified in IEA data.
@@ -663,11 +663,11 @@ remove_agg_regions <- function(.iea_df,
 #' (Default is `ktoe`, although any string can be specified in `unit_val`.)
 #' 
 #' Note that this function decides where to divide `Supply` from `Consumption`. 
-#' To do so, it first looks for rows in which `Flow` is "`Losses`".
-#' The last "`Losses`" row is the last row of the `Supply` side of the ledger. 
-#' If "`Losses`" rows are not found, the function looks for rows in which `Flow` is "`Total final consumption`".
-#' The first "`Total final consumption`" row is the first row of the `Consumption` side of the ledger.
-#' If neither "`Losses`" nor "`Total final consumption`" `Flow`s are present, 
+#' To do so, it first looks for rows in which `Flow` is "Losses".
+#' The last "Losses" row is the last row of the "Supply" side of the ledger. 
+#' If "Losses" rows are not found, the function looks for rows in which `Flow` is "Total final consumption".
+#' The first "Total final consumption" row is the first row of the `Consumption` side of the ledger.
+#' If neither "Losses" nor "Total final consumption" `Flow`s are present, 
 #' an error is generated.
 #'
 #' @param .iea_df a data frame produced by the [iea_df()] function
