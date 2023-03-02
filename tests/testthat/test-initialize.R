@@ -300,6 +300,14 @@ test_that("rename_iea_df_cols() works", {
 })
 
 
+test_that("check_neu_balance() works as expected", {
+  sample_iea_data_path() %>% 
+    iea_df() %>%
+    rename_iea_df_cols() %>% 
+    check_neu_balance()
+})
+
+
 test_that("augment_iea_df() works", {
   # Try with a bogus set of data without a Losses row or a Total final consumption row.
   expect_error(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43") %>% 

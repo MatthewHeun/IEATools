@@ -602,6 +602,71 @@ remove_agg_memo_flows <- function(.iea_df,
 }
 
 
+#' Check Non-energy use memo balance
+#' 
+#' For some countries and years, Non-energy use details are supplied 
+#' by "Memo:" fields. 
+#' We use those details, but only if they are balanced.
+#' This function assess the energy balance of the
+#' Memo: Non-energy use
+#' fields.
+#'
+#' @param .iea_df A data frame of IEA data, 
+#'                created by `rename_iea_df_cols()`.
+#'
+#' @return
+#' 
+#' @export
+#'
+#' @examples
+#' sample_iea_data_path() %>% 
+#'   iea_df() %>%
+#'   rename_iea_df_cols() %>% 
+#'   check_neu_balance()
+check_neu_balance <- function(.iea_df, 
+                              country = IEATools::iea_cols$country,
+                              year = IEATools::iea_cols$year,
+                              flow = IEATools::iea_cols$flow, 
+                              product = IEATools::iea_cols$product,
+                              non_energy_flows_industry_transformation_energy = IEATools::non_energy_flows$non_energy_use_industry_transformation_energy,
+                              memo_non_energy_flows_industry = "Memo: Non-energy use in industry",
+                              memo_non_energy_use_in = "Memo: Non-energy use in ",
+                              total = IEATools::memo_aggregation_product_prefixes$total,
+                              .values = IEATools::template_cols$.values, 
+                              .values_summarised = paste0(.values, "_summarised")) {
+  year_columns <- .iea_df %>% 
+    year_cols()
+  
+  # Gather the NEU in industry flows
+  neu_industry_flows <- .iea_df %>% 
+    dplyr::filter(.data[[flow]] %in% non_energy_flows_industry_transformation_energy, 
+                  .data[[product]] != total) %>% 
+    tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
+    dplyr::filter(.data[[.values]] != 0) %>% 
+    dplyr::group_by(.data[[country]], .data[[product]], .data[[year]])
+    
+  # Gather the Memo: Non-industry use flows
+  neu_memo_flows <- .iea_df %>% 
+    dplyr::filter(startsWith(.data[[flow]], memo_non_energy_use_in), 
+                  !(.data[[flow]] == memo_non_energy_flows_industry), 
+                  .data[[product]] != total) %>% 
+    tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
+    dplyr::filter(.data[[.values]] != 0) %>% 
+    matsindf::group_by_everything_except(flow, .values) %>% 
+    dplyr::summarise(
+      "{.values_summarised}" := sum(.data[[.values]])
+    )
+  
+  # Check for situation where specific Memo: flows account for all NEU.
+  all_accounted <- dplyr::left_join(neu_industry_flows, neu_memo_flows, by = c(country, product, year)) %>% 
+    dplyr::mutate(
+      unaccounted = .data[[.values]] - .data[[.values_summarised]]
+    ) %>% 
+    dplyr::filter(unaccounted == 0)
+
+}
+
+
 #' Remove aggregation regions from an IEA data frame
 #' 
 #' The IEA extended energy balances contain several aggregation regions
