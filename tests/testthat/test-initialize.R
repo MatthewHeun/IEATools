@@ -729,10 +729,11 @@ test_that("every Flow.aggregation.point is filled by augmentation", {
   # Every row in the Flow.aggregation.point column should be filled with a non-NA entry.
   # Verify that's indeed the case.
   for (year in IEATools::valid_iea_release_years) {
-    expect_false(load_tidy_iea_df(sample_iea_data_path(year)) %>% 
-                   magrittr::extract2("Flow.aggregation.point") %>% 
-                   is.na() %>% 
-                   any())
+    load_tidy_iea_df(sample_iea_data_path(year)) %>% 
+      magrittr::extract2("Flow.aggregation.point") %>% 
+      is.na() %>% 
+      any() |> 
+      expect_false()
   }
 })
 
