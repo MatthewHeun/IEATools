@@ -22,8 +22,8 @@
 #'                             A template for this table should have been created by `fu_allocation_table()` and 
 #'                             `write_fu_allocation_table()`.
 #'                             This object can also be a tidy data frame with year data gathered into a Year column.
-#' @param class The type of matrix to be created, one of "matrix" or "Matrix".
-#'              Default is "matrix".
+#' @param matrix.class The type of matrix to be created, one of "matrix" or "Matrix".
+#'                     Default is "matrix".
 #' @param ledger_side,flow_aggregation_point,e_dot,unit,year See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param quantity,machine,ef_product,eu_product,destination,e_dot_perc,maximum_values,C_eiou,C_Y See `IEATools::template_cols`.
@@ -249,8 +249,8 @@ form_C_mats <- function(.fu_allocation_table,
 #' @param .eta_fu_table a final-to-useful efficiency table read by `load_eta_fu_allocation_data()`.
 #'                      A template for this table should have been created by `eta_fu_table()` and 
 #'                      `write_eta_fu_table()`.
-#' @param class The type of matrix to be created, one of "matrix" or "Matrix".
-#'              Default is "matrix".
+#' @param matrix.class The type of matrix to be created, one of "matrix" or "Matrix".
+#'                     Default is "matrix".
 #' @param unit,year See `IEATools::iea_cols`.
 #' @param quantity,machine,eu_product,e_dot_machine,e_dot_machine_perc,maximum_values,eta_fu,phi_u,phi See `IEATools::template_cols`.
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.

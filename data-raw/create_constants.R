@@ -577,13 +577,13 @@ aggregate_cols <- list(aggregate_primary = "EX.p",
 usethis::use_data(aggregate_cols, overwrite = TRUE)
 
 
-memo_aggregation_flow_prefixes = list(memo = "Memo: ", 
-                                      electricity_output_GWh = "Electricity output (GWh)", 
-                                      heat_output = "Heat output")
+memo_aggregation_flow_prefixes <- list(memo = "Memo: ", 
+                                       electricity_output_GWh = "Electricity output (GWh)", 
+                                       heat_output = "Heat output")
 usethis::use_data(memo_aggregation_flow_prefixes, overwrite = TRUE)
 
-memo_aggregation_product_prefixes = list(memo = "Memo: ", 
-                                         total = "Total")
+memo_aggregation_product_prefixes <- list(memo = "Memo: ", 
+                                          total = "Total")
 usethis::use_data(memo_aggregation_product_prefixes, overwrite = TRUE)
 
 
