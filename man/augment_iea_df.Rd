@@ -47,7 +47,8 @@ augment_iea_df(
   other = "Other",
   other_flows = IEATools::other_flows,
   non_energy = "Non-energy use",
-  non_energy_prefix = "Non-energy use",
+  non_energy_flows = IEATools::non_energy_flows,
+  memo_non_energy_flows = IEATools::memo_non_energy_flows,
   electricity_output = "Electricity output (GWh)",
   electricity_output_flows_prefix = "Electricity output (GWh)-",
   heat_output = "Heat output",
@@ -140,8 +141,6 @@ augment_iea_df(
 
 \item{non_energy}{a string that names the non-energy \code{Flow.aggregation.point}. Default is "Non-energy use".}
 
-\item{non_energy_prefix}{a string prefix for \code{Flow}s to be aggregated in the \verb{Non-energy use} \code{Flow.aggregation.point}.}
-
 \item{electricity_output}{a string that names the electricity output \code{Flow}. Default is "Electricity output (GWh)".}
 
 \item{electricity_output_flows_prefix}{a string prefix for \code{Flow}s to be aggregated in electricity output. Default is "Electricity output (GWh)-".}
@@ -153,6 +152,8 @@ augment_iea_df(
 \item{.rownum}{the name of a column created (and destroyed) internally by this function.
 The \code{.rownum} column temporarily holds row numbers for internal calculations.
 The \code{.rownum} column is deleted before returning.}
+
+\item{non_energy_prefix}{a string prefix for \code{Flow}s to be aggregated in the \verb{Non-energy use} \code{Flow.aggregation.point}.}
 }
 \value{
 \code{.iea_df} with additional columns named \code{ledger_side}, \code{flow_aggregation_point}, \code{energy_type}, and \code{unit}.
@@ -179,7 +180,7 @@ To solve these problems, two additional columns are added: \code{Ledger.side} an
 "Total primary energy supply", "Transformation processes", "Energy industry own use", or "TFC compare"
 on the \code{Supply} side of the ledger.
 On the \code{Consumption} side of the ledger, \code{Flow.aggregation.point} can be one of
-"Industry", "Transport", "Other", or "Non-energy use".
+"Industry", "Transport", "Other", "Non-energy use", or "Memo: Non-energy use in industry".
 When the \code{Flow.aggregation.point} column is present,
 the need for the "(energy)" and "(transf.)" suffixes is eliminated,
 so they are deleted.

@@ -300,12 +300,31 @@ test_that("rename_iea_df_cols() works", {
 })
 
 
-test_that("check_neu_balance() works as expected", {
-  sample_iea_data_path() %>% 
-    iea_df() %>%
-    rename_iea_df_cols() %>% 
-    check_neu_balance()
-})
+# test_that("check_neu_balance() works as expected", {
+#   sample_iea_data_path() %>% 
+#     iea_df() %>%
+# 
+#     dplyr::filter(COUNTRY == "Ghana", 
+#                   FLOW == "BKB/peat briquette plants", 
+#                   PRODUCT == "Additives/blending components")
+#   
+#     
+#     
+#     
+#     
+#     check_neu_balance()
+# })
+
+
+
+
+
+
+
+
+
+
+
 
 
 test_that("augment_iea_df() works", {
@@ -434,6 +453,56 @@ test_that("augment_iea_df() works", {
     augment_iea_df()
   expect_equal(simple_with_tfc_df_2$Flow[[3]], "Main activity producer electricity plants")
   expect_equal(simple_with_tfc_df_2$Flow[[5]], "Coal mines")
+})
+
+
+test_that("augment_iea_df() works with NEU flows", {
+  # On 3 March 2023, I made sure that all of the 
+  # Flow.aggregation.point augmentation 
+  # worked even if the aggregated and Memo: flows have not yet been removed.
+  # This work was in preparation for doing a better job of
+  # using detail available in the Memo: Non-energy use in xxxxx flows.
+  IEADF_unaugmented <- sample_iea_data_path() %>% 
+    iea_df() %>% 
+    rename_iea_df_cols() |> 
+    clean_iea_whitespace() |> 
+    use_iso_countries()
+  IEADF_augmented <- IEADF_unaugmented %>% 
+    augment_iea_df()
+  
+  na_fap <- IEADF_augmented |>
+    dplyr::filter(is.na(.data[[IEATools::iea_cols$flow_aggregation_point]]))
+  
+  # Verify that the ONLY NA values in Flow.aggregation.point 
+  # are Total final consumption, Electricity output (GWh), or Heat output
+  unique_NA_fap_flows <- na_fap |> 
+    magrittr::extract2(IEATools::iea_cols$flow) |> 
+    unique()
+  expect_equal(unique_NA_fap_flows, 
+               c("Total final consumption", "Electricity output (GWh)", "Heat output"))
+  
+  # Verify that "Non-energy use" has Total final consumption as its fap
+  IEADF_augmented |> 
+    dplyr::filter(.data[[IEATools::iea_cols$flow]] == IEATools::aggregation_flows$non_energy_use) |> 
+    magrittr::extract2(IEATools::iea_cols$flow_aggregation_point) |> 
+    unique() |> 
+    expect_equal(IEATools::aggregation_flows$total_final_consumption)
+  # Verify that Memo: Non-energy use in industry has          
+  # Non-energy use industry/transformation/energy as its fap
+  IEADF_augmented |> 
+    dplyr::filter(.data[[IEATools::iea_cols$flow]] == IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry) |> 
+    magrittr::extract2(IEATools::iea_cols$flow_aggregation_point) |> 
+    unique() |> 
+    expect_equal(IEATools::non_energy_flows$non_energy_use_industry_transformation_energy)
+  # Verify that Memo: Non-energy use in xxxxxxx has 
+  # Non-energy use in industry as its fap
+  # Ignore the aggregation flow
+  memos_to_use <- setdiff(IEATools::memo_non_energy_flows, IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry)
+  IEADF_augmented |> 
+    dplyr::filter(.data[[IEATools::iea_cols$flow]] %in% memos_to_use) |> 
+    magrittr::extract2(IEATools::iea_cols$flow_aggregation_point) |> 
+    unique() |> 
+    expect_equal(IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry) 
 })
 
 

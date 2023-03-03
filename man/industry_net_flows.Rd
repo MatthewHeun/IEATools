@@ -5,9 +5,10 @@
 \alias{industry_net_flows}
 \title{Industry net flows}
 \format{
-A string vector with 19 entries.
+A string vector with 20 entries.
 \describe{
 \item{construction}{The string identifier for the construction industry.}
+\item{manufacturing}{The string identifier for the aggregation category of manufacturing industries industry.}
 \item{iron_and_steel}{The string identifier for the iron and steel industry.}
 \item{chemical_and_petrochemical}{The string identifier for the chemical and petrochemical industry.}
 \item{non_ferrous_metals}{The string identifier for the non-ferrous metals industry.}

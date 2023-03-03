@@ -633,11 +633,13 @@ check_neu_balance <- function(.iea_df,
                               memo_non_energy_use_in = "Memo: Non-energy use in ",
                               total = IEATools::memo_aggregation_product_prefixes$total,
                               .values = IEATools::template_cols$.values, 
-                              .values_summarised = paste0(.values, "_summarised")) {
+                              .values_summarised = paste0(.values, "_summarised"), 
+                              .diff = ".diff",
+                              tol = 1e-6) {
   year_columns <- .iea_df %>% 
     year_cols()
   
-  # Gather the rows for Non-energy use industry/transformation/energy rows
+  # Gather the rows for "Non-energy use industry/transformation/energy"
   neu_industry_flows <- .iea_df %>% 
     dplyr::filter(.data[[flow]] %in% non_energy_flows_industry_transformation_energy, 
                   .data[[product]] != total) %>% 
@@ -645,25 +647,52 @@ check_neu_balance <- function(.iea_df,
     dplyr::filter(.data[[.values]] != 0) %>% 
     dplyr::group_by(.data[[country]], .data[[product]], .data[[year]])
     
-  # Gather the Memo: Non-industry use in <<specific industry>> rows
+  # Gather the "Memo: Non-industry use in <<specific industry>>" rows
   neu_memo_flows <- .iea_df %>% 
     dplyr::filter(startsWith(.data[[flow]], memo_non_energy_use_in), 
                   !(.data[[flow]] == memo_non_energy_flows_industry), 
                   .data[[product]] != total) %>% 
     tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
-    dplyr::filter(.data[[.values]] != 0) %>% 
+    dplyr::filter(.data[[.values]] != 0) 
+  neu_memo_flows_summarised <- neu_memo_flows %>% 
     matsindf::group_by_everything_except(flow, .values) %>% 
+    # Summarize the rows so that we we get totals.
     dplyr::summarise(
       "{.values_summarised}" := sum(.data[[.values]])
     )
   
-  # Check for situation where Memo: non-energy flows account for all NEU.
-  all_accounted <- dplyr::left_join(neu_industry_flows, neu_memo_flows, by = c(country, product, year)) %>% 
+  # Check for situations (Combination of Country, Year, and Product) where
+  # Memo: Non-energy use in <<specific industry>> 
+  # flows account for all general NEU.
+  # These are the general NEU rows that can be removed and replaced by specific NEU rows.
+  to_remove <- dplyr::left_join(neu_industry_flows, neu_memo_flows_summarised, 
+                                by = c(country, product, year)) %>% 
     dplyr::mutate(
-      unaccounted = .data[[.values]] - .data[[.values_summarised]]
+      "{.diff}" := .data[[.values]] - .data[[.values_summarised]]
     ) %>% 
-    dplyr::filter(unaccounted == 0)
+    dplyr::filter(abs(.data[[.diff]]) < tol) |> 
+    # Set up to later do an anti_join.
+    dplyr::mutate(
+      "{.values}" := NULL, 
+      "{.values_summarised}" := NULL, 
+      "{.diff}" := NULL, 
+    )
 
+  # Figure out the rows that should replace the to_remove rows
+  to_add <- neu_memo_flows |> 
+    dplyr::mutate(
+      # Eliminate the "Memo: " prefix.
+      "{flow}" := sub(paste0("^", memo_aggregation_product_prefixes$memo), "", .data[[flow]])
+    )
+  
+  # Now return the fixed data frame
+  .iea_df |> 
+    tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) |> 
+    # Remove the unneeded rows (to_remove)
+    dplyr::anti_join(to_remove, by = c(country, year, product, flow)) |> 
+    # Add the replacement rows (to_add)
+    dplyr::bind_rows(to_add) |> 
+    tidyr::pivot_wider(values_from = .values, names_from = year)
 }
 
 
@@ -716,7 +745,7 @@ remove_agg_regions <- function(.iea_df,
 #' "Total primary energy supply", "Transformation processes", "Energy industry own use", or "TFC compare"
 #' on the `Supply` side of the ledger.
 #' On the `Consumption` side of the ledger, `Flow.aggregation.point` can be one of 
-#' "Industry", "Transport", "Other", or "Non-energy use".
+#' "Industry", "Transport", "Other", "Non-energy use", or "Memo: Non-energy use in industry".
 #' When the `Flow.aggregation.point` column is present, 
 #' the need for the "(energy)" and "(transf.)" suffixes is eliminated,
 #' so they are deleted.
@@ -842,7 +871,8 @@ augment_iea_df <- function(.iea_df,
                            other = "Other",
                            other_flows = IEATools::other_flows,
                            non_energy = "Non-energy use",
-                           non_energy_prefix = "Non-energy use",
+                           non_energy_flows = IEATools::non_energy_flows,
+                           memo_non_energy_flows = IEATools::memo_non_energy_flows,
                            electricity_output = "Electricity output (GWh)",
                            electricity_output_flows_prefix = "Electricity output (GWh)-",
                            heat_output = "Heat output",
@@ -902,7 +932,7 @@ augment_iea_df <- function(.iea_df,
         ) %>% 
         dplyr::mutate(
           # Add the Ledger.side column
-          !!as.name(ledger_side) := dplyr::case_when(
+          "{ledger_side}" := dplyr::case_when(
             !!as.name(.rownum) <= supply_consumption_split[[1]] ~ supply,
             !!as.name(.rownum) >= supply_consumption_split[[2]] ~ consumption,
             TRUE ~ NA_character_), 
@@ -919,10 +949,20 @@ augment_iea_df <- function(.iea_df,
             !!as.name(ledger_side) == consumption & !!as.name(flow) %in% industry_flows ~ industry,
             !!as.name(ledger_side) == consumption & !!as.name(flow) %in% transport_flows ~ transport,
             !!as.name(ledger_side) == consumption & !!as.name(flow) %in% other_flows ~ other,
-            !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), non_energy_prefix) ~ non_energy,
+            !!as.name(ledger_side) == consumption & starts_with_any_of(.data[[flow]], non_energy_flows) ~ non_energy,
+            # This first Memo: Non-energy use in industry has Non-energy use in industry/transformation/energy as its aggregation point.
+            !!as.name(ledger_side) == consumption & !!as.name(flow) == memo_non_energy_flows$memo_non_energy_use_in_industry ~ non_energy_flows$non_energy_use_industry_transformation_energy,
+            # All other Memo: Non-energy use in xxxxxx flows have Memo: Non-energy use in industry as their aggregation point.
+            .data[[ledger_side]] == consumption & .data[[flow]] %in% memo_non_energy_flows ~ memo_non_energy_flows$memo_non_energy_use_in_industry,
+            # Electricity output itself does not aggregate to anything.
+            .data[[ledger_side]] == consumption & .data[[flow]] == electricity_output ~ NA_character_,
+            # But Electricity output (GWh)- aggregates to Electricity output (GWh)
             !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), electricity_output_flows_prefix) ~ electricity_output,
+            # Heat output itself does not aggregate to anything.
+            .data[[ledger_side]] == consumption & .data[[flow]] == heat_output ~ NA_character_,
+            # But Heat output- aggregates to Heat output.
             !!as.name(ledger_side) == consumption & startsWith(!!as.name(flow), heat_output_flows_prefix) ~ heat_output,
-            
+
             
             TRUE ~ NA_character_
           )
@@ -1091,9 +1131,10 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
     iea_df() %>%
     rename_iea_df_cols() %>% 
     clean_iea_whitespace() %>% 
-    remove_agg_memo_flows() %>% 
+    # remove_agg_memo_flows() %>% 
     use_iso_countries(override_df = override_df, country = country, pfu_code = pfu_code, iea_name = iea_name) %>% 
     augment_iea_df() %>% 
+    remove_agg_memo_flows() %>% 
     tidy_iea_df(remove_zeroes = remove_zeroes)
 }
 

@@ -16,7 +16,9 @@ check_neu_balance(
   memo_non_energy_use_in = "Memo: Non-energy use in ",
   total = IEATools::memo_aggregation_product_prefixes$total,
   .values = IEATools::template_cols$.values,
-  .values_summarised = paste0(.values, "_summarised")
+  .values_summarised = paste0(.values, "_summarised"),
+  .diff = ".diff",
+  tol = 1e-06
 )
 }
 \arguments{
