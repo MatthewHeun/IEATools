@@ -8,7 +8,7 @@ test_that("encoding works OK", {
   res <- data.table::fread(file = system.file("testdata", "test_country_name_encoding.csv", 
                                               package = "IEATools"), 
                            header = TRUE, 
-                           encoding = "Latin-1") %>%
+                           encoding = "Latin-1") |>
   # Now change it to ascii characters everywhere.
     dplyr::mutate(
       # This hint is from
@@ -33,7 +33,7 @@ test_that("use_iso_countries() works with override", {
                             "South Africa", 
                             "World", 
                             "Former Yugoslavia (if no detail)")
-  res <- iea_df %>% 
+  res <- iea_df |> 
     use_iso_countries()
   expect_equal(res$Country, c("CHNM", "HKG", "WMBK", "WABK", "GHA", "SUN", "ZAF", "WRLD", "YUG"))
 })
@@ -43,10 +43,10 @@ test_that("use_iso_countries() works with more columns in override", {
   iea_df <- tibble::tribble(~Country, ~`2000`, ~`2001`,
                             "People's Republic of China", 42, 43,
                             "Hong Kong (China)", 44, 45)
-  override <- IEATools::override_iso_codes_df %>% 
+  override <- IEATools::override_iso_codes_df |> 
     dplyr::mutate(bogus_col = "bogus information")
-  res <- iea_df %>% 
-    use_iso_countries(override_df = override) %>% 
+  res <- iea_df |> 
+    use_iso_countries(override_df = override) |> 
     tidyr::pivot_longer(cols = c("2000", "2001"), names_to = "Year", values_to = "E.dot")
   
   expect_equal(names(res), c("Country", "Year", "E.dot"))
@@ -55,53 +55,53 @@ test_that("use_iso_countries() works with more columns in override", {
 
 test_that("use_iso_countries() works as expected", {
   for (yr in IEATools::valid_iea_release_years) {
-    IEAData <- sample_iea_data_path(yr) %>% 
-      iea_df() %>%
+    IEAData <- sample_iea_data_path(yr) |> 
+      iea_df() |>
       rename_iea_df_cols() 
-    IEAData %>% 
-      use_iso_countries() %>% 
-      magrittr::extract2("Country") %>% 
-      unique() %>% 
+    IEAData |> 
+      use_iso_countries() |> 
+      magrittr::extract2("Country") |> 
+      unique() |> 
       expect_equal(c("GHA", "ZAF"))
     
     # Now try with the China exception that has been hard-coded.
-    IEAData %>% 
+    IEAData |> 
       dplyr::mutate(
         Country = dplyr::recode(Country, Ghana = "People's Republic of China")
-      ) %>% 
-      use_iso_countries() %>% 
-      magrittr::extract2("Country") %>% 
-      unique() %>% 
+      ) |> 
+      use_iso_countries() |> 
+      magrittr::extract2("Country") |> 
+      unique() |> 
       expect_equal(c("CHNM", "ZAF"))
     
     # Make ZAF into Hong Kong to be sure that it is recoded to HKG.
-    IEAData %>% 
+    IEAData |> 
       dplyr::mutate(
         Country = dplyr::recode(Country, `South Africa` = "Hong Kong (China)")
-      ) %>% 
-      use_iso_countries() %>% 
-      magrittr::extract2("Country") %>% 
-      unique() %>% 
+      ) |> 
+      use_iso_countries() |> 
+      magrittr::extract2("Country") |> 
+      unique() |> 
       expect_equal(c("GHA", "HKG"))
     
     # Now make ZAF into World marine bunkers to be sure it is recoded to WMB.
-    IEAData %>% 
+    IEAData |> 
       dplyr::mutate(
         Country = dplyr::recode(Country, `South Africa` = "World marine bunkers")
-      ) %>% 
-      use_iso_countries() %>% 
-      magrittr::extract2("Country") %>% 
-      unique() %>% 
+      ) |> 
+      use_iso_countries() |> 
+      magrittr::extract2("Country") |> 
+      unique() |> 
       expect_equal(c("GHA", "WMBK"))
     
     # Now make GHA into World aviation bunkers to be sure it is recoded to WAB.
-    IEAData %>% 
+    IEAData |> 
       dplyr::mutate(
         Country = dplyr::recode(Country, `Ghana` = "World aviation bunkers")
-      ) %>% 
-      use_iso_countries() %>% 
-      magrittr::extract2("Country") %>% 
-      unique() %>% 
+      ) |> 
+      use_iso_countries() |> 
+      magrittr::extract2("Country") |> 
+      unique() |> 
       expect_equal(c("WABK", "ZAF"))
   }
 })
@@ -119,7 +119,7 @@ test_that("iea_file_OK() works", {
     
     # Read the file as text and use the text argument.
     conn <- file(f, open = "rt") # open file connection
-    f_text <- conn %>% readLines()
+    f_text <- conn |> readLines()
     expect_true(iea_file_OK(text = f_text))
     close(conn)
     
@@ -178,7 +178,7 @@ test_that("iea_df() works", {
     IEAtext <- readChar(IEAfile, file.info(IEAfile)$size)
     # Eliminate all series of commas at ends of lines
     # The pattern ,*$ means "match any number (*) of commas (,) at the end of a line ($)".
-    IEAtext <- IEAtext %>% gsub(pattern = ",*$", replacement = "", IEAtext)
+    IEAtext <- IEAtext |> gsub(pattern = ",*$", replacement = "", IEAtext)
     # Ensure that commas have been removed from the end of a line.
     # The pattern ",$" means "match any commas (,) at the end of a line ($)
     expect_false(grepl(pattern = ",$", x = IEAtext))
@@ -187,13 +187,13 @@ test_that("iea_df() works", {
     expect_equal(ncol(IEADF), 5)
     expect_equal(colnames(IEADF)[[5]], "2000")
     # Test with an IEA data file with extra commas on the 2nd line.
-    IEADF2 <- sample_iea_data_path(yr) %>% 
+    IEADF2 <- sample_iea_data_path(yr) |> 
       iea_df()
     expect_equal(nrow(IEADF2), 14688)
     expect_equal(ncol(IEADF2), 5)
     expect_equal(colnames(IEADF2)[[5]], "2000")
     # Test that it works with a slurped df
-    slurped <- sample_iea_data_path(yr) %>% 
+    slurped <- sample_iea_data_path(yr) |> 
       slurp_iea_to_raw_df()
     IEADF3 <- iea_df(.slurped_iea_df = slurped)
     expect_equal(nrow(IEADF3), 14688)
@@ -253,15 +253,15 @@ test_that("iea_df() strips white space from FLOW columns", {
       names(raw) <- c("COUNTRY", "FLOW", "PRODUCT", "1971", "2000")
     }
     # How many rows have leading spaces in the FLOW column?
-    num_rows_with_spaces <- raw %>% 
-      dplyr::filter(startsWith(.data[["FLOW"]], " ")) %>% 
+    num_rows_with_spaces <- raw |> 
+      dplyr::filter(startsWith(.data[["FLOW"]], " ")) |> 
       nrow()
     if (num_rows_with_spaces > 0) {
       # Strip the spaces off
       supposedly_no_spaces <- iea_df(sample_iea_data_path(yr))
       # Make sure no rows left.
-      num_rows_with_spaces <- supposedly_no_spaces %>% 
-        dplyr::filter(startsWith(.data$FLOW, " ")) %>% 
+      num_rows_with_spaces <- supposedly_no_spaces |> 
+        dplyr::filter(startsWith(.data$FLOW, " ")) |> 
         nrow()
       expect_true(num_rows_with_spaces == 0)
     }
@@ -294,15 +294,15 @@ test_that("iea_df() works with all valid release years", {
 
 
 test_that("rename_iea_df_cols() works", {
-  renamed <- iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43") %>% 
+  renamed <- iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43") |> 
     rename_iea_df_cols()
   expect_equal(names(renamed), c("Country", "Flow", "Product", "1960", "1961"))
 })
 
 
 # test_that("check_neu_balance() works as expected", {
-#   sample_iea_data_path() %>% 
-#     iea_df() %>%
+#   sample_iea_data_path() |> 
+#     iea_df() |>
 # 
 #     dplyr::filter(COUNTRY == "Ghana", 
 #                   FLOW == "BKB/peat briquette plants", 
@@ -329,8 +329,8 @@ test_that("rename_iea_df_cols() works", {
 
 test_that("augment_iea_df() works", {
   # Try with a bogus set of data without a Losses row or a Total final consumption row.
-  expect_error(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43") %>% 
-                 rename_iea_df_cols() %>% 
+  expect_error(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43") |> 
+                 rename_iea_df_cols() |> 
                  augment_iea_df(), 
                "Could not find the rows that separate the Supply and Consumption sides of the ledger in find_supply_consumption_split")
   # Try with bogus data WITH a Losses and an Iron and steel row.
@@ -339,8 +339,8 @@ test_that("augment_iea_df() works", {
                                     "COUNTRY,FLOW,PRODUCT\n",
                                     "World,Production,Hard coal (if no detail),42,43\n",
                                     "World,Losses,Hard coal (if no detail),1,2\n",
-                                    "World,Iron and steel,Hard coal (if no detail),5,6")) %>% 
-                 rename_iea_df_cols() %>% 
+                                    "World,Iron and steel,Hard coal (if no detail),5,6")) |> 
+                 rename_iea_df_cols() |> 
                  augment_iea_df(), 
                "Could not find the rows that identify the beginning of transformation processes in find_transformation_start")
   # Try with bogus data WITH a Losses and an Iron and steel row and WITH a Statistical differences and a Main activity producer electricity plants row.
@@ -351,8 +351,8 @@ test_that("augment_iea_df() works", {
                                     "World,Losses,Hard coal (if no detail),1,2\n",
                                     "World,Iron and steel,Hard coal (if no detail),5,6\n",
                                     "World,Statistical differences,Hard coal (if no detail),7,8\n",
-                                    "World,Main activity producer electricity plants,Hard coal (if no detail),9,10")) %>% 
-                 rename_iea_df_cols() %>% 
+                                    "World,Main activity producer electricity plants,Hard coal (if no detail),9,10")) |> 
+                 rename_iea_df_cols() |> 
                  augment_iea_df(), 
                "Could not find the rows that identify the end of Transformation Process rows and the beginning of Energy industry own use in find_transformation_end")
   
@@ -365,8 +365,8 @@ test_that("augment_iea_df() works", {
                                     "World,Statistical differences,Hard coal (if no detail),7,8\n",
                                     "World,Main activity producer electricity plants,Hard coal (if no detail),9,10\n",
                                     "World,Non-specified,Hard coal (if no detail),11,12\n",
-                                    "World,Coal mines,Hard coal (if no detail),13,14")) %>% 
-                 rename_iea_df_cols() %>% 
+                                    "World,Coal mines,Hard coal (if no detail),13,14")) |> 
+                 rename_iea_df_cols() |> 
                  augment_iea_df(), 
                "Could not find the rows that separate Non-specified from Losses in find_eiou_end")
   # This one should work!
@@ -379,10 +379,10 @@ test_that("augment_iea_df() works", {
                                              "World,Coal mines,Hard coal (if no detail),13,14\n",
                                              "World,Non-specified,Hard coal (if no detail),11,12\n",
                                              "World,Losses,Hard coal (if no detail),1,2\n",
-                                             "World,Iron and steel,Hard coal (if no detail),5,6\n")) %>% 
-    rename_iea_df_cols() %>% 
+                                             "World,Iron and steel,Hard coal (if no detail),5,6\n")) |> 
+    rename_iea_df_cols() |> 
     augment_iea_df()
-  expect_equal(simple_with_tfc_df$Ledger.side %>% unique(), c("Supply", "Consumption"))
+  expect_equal(simple_with_tfc_df$Ledger.side |> unique(), c("Supply", "Consumption"))
   expect_equal(simple_with_tfc_df$Flow.aggregation.point, c("Total primary energy supply",
                                                             "TFC compare", 
                                                             "Transformation processes", 
@@ -391,10 +391,10 @@ test_that("augment_iea_df() works", {
                                                             "Energy industry own use",
                                                             "TFC compare",
                                                             "Industry"))
-  IEADF_unaugmented <- sample_iea_data_path() %>% 
-    iea_df() %>% 
+  IEADF_unaugmented <- sample_iea_data_path() |> 
+    iea_df() |> 
     rename_iea_df_cols()
-  IEADF_augmented <- IEADF_unaugmented %>% 
+  IEADF_augmented <- IEADF_unaugmented |> 
     augment_iea_df()
   # Check column types
   clses <- lapply(IEADF_augmented, class)
@@ -413,30 +413,30 @@ test_that("augment_iea_df() works", {
   # This test fails if there are any NA items.
   # We know that NA items appear in the Flow.aggregation.point column.
   # So delete that column first.
-  expect_false(any(IEADF_augmented %>% dplyr::select(-Flow.aggregation.point) == ".."))
-  expect_false(any(IEADF_augmented %>% dplyr::select(-Flow.aggregation.point) == "x"))
+  expect_false(any(IEADF_augmented |> dplyr::select(-Flow.aggregation.point) == ".."))
+  expect_false(any(IEADF_augmented |> dplyr::select(-Flow.aggregation.point) == "x"))
   
   # As of 2019, the IEA no longer tags flows with "(transf.)", "(transformation)", or "(energy)".  
   # So these tests must be applied only to 2018 data.
-  IEADF_unaugmented_2018 <- sample_iea_data_path(2018) %>% 
-    iea_df() %>% 
+  IEADF_unaugmented_2018 <- sample_iea_data_path(2018) |> 
+    iea_df() |> 
     rename_iea_df_cols()
-  IEADF_augmented_2018 <- IEADF_unaugmented_2018 %>% 
+  IEADF_augmented_2018 <- IEADF_unaugmented_2018 |> 
     augment_iea_df()
   
   # Check that the original has flows that end in "(transf.)"
-  expect_true(nrow(IEADF_unaugmented_2018 %>% dplyr::filter(endsWith(Flow, "(transf.)"))) > 0)
+  expect_true(nrow(IEADF_unaugmented_2018 |> dplyr::filter(endsWith(Flow, "(transf.)"))) > 0)
   # Check that the original has flows that end in "(transformation)"
-  expect_true(nrow(IEADF_unaugmented_2018 %>% dplyr::filter(endsWith(Flow, "(transformation)"))) > 0)
+  expect_true(nrow(IEADF_unaugmented_2018 |> dplyr::filter(endsWith(Flow, "(transformation)"))) > 0)
   # Check that the original has flows that end in "(energy)"
-  expect_true(nrow(IEADF_unaugmented_2018 %>% dplyr::filter(endsWith(Flow, "(energy)"))) > 0)
+  expect_true(nrow(IEADF_unaugmented_2018 |> dplyr::filter(endsWith(Flow, "(energy)"))) > 0)
 
   # Check that all "(transf.)" have been removed from the Flow column
-  expect_equal(nrow(IEADF_augmented_2018 %>% dplyr::filter(endsWith(Flow, "(transf.)"))), 0)
+  expect_equal(nrow(IEADF_augmented_2018 |> dplyr::filter(endsWith(Flow, "(transf.)"))), 0)
   # Check that all "(transformation)" have been removed from the Flow column
-  expect_equal(nrow(IEADF_augmented_2018 %>% dplyr::filter(endsWith(Flow, "(transformation)"))), 0)
+  expect_equal(nrow(IEADF_augmented_2018 |> dplyr::filter(endsWith(Flow, "(transformation)"))), 0)
   # Check that all "(energy)" have been removed from the Flow column
-  expect_equal(nrow(IEADF_augmented_2018 %>% dplyr::filter(endsWith(Flow, "(energy)"))), 0)
+  expect_equal(nrow(IEADF_augmented_2018 |> dplyr::filter(endsWith(Flow, "(energy)"))), 0)
   
   # Try a bogus data frame with extra spaces before the suffix.
   simple_with_tfc_df_2 <- iea_df(text = paste0(",,TIME,1960,1961\n",
@@ -448,8 +448,8 @@ test_that("augment_iea_df() works", {
                                              "World,Coal mines      (energy),Hard coal (if no detail),13,14\n",
                                              "World,Non-specified,Hard coal (if no detail),11,12\n",
                                              "World,Losses,Hard coal (if no detail),1,2\n",
-                                             "World,Iron and steel,Hard coal (if no detail),5,6\n")) %>% 
-    rename_iea_df_cols() %>% 
+                                             "World,Iron and steel,Hard coal (if no detail),5,6\n")) |> 
+    rename_iea_df_cols() |> 
     augment_iea_df()
   expect_equal(simple_with_tfc_df_2$Flow[[3]], "Main activity producer electricity plants")
   expect_equal(simple_with_tfc_df_2$Flow[[5]], "Coal mines")
@@ -462,12 +462,12 @@ test_that("augment_iea_df() works with NEU flows", {
   # worked even if the aggregated and Memo: flows have not yet been removed.
   # This work was in preparation for doing a better job of
   # using detail available in the Memo: Non-energy use in xxxxx flows.
-  IEADF_unaugmented <- sample_iea_data_path() %>% 
-    iea_df() %>% 
+  IEADF_unaugmented <- sample_iea_data_path() |> 
+    iea_df() |> 
     rename_iea_df_cols() |> 
     clean_iea_whitespace() |> 
     use_iso_countries()
-  IEADF_augmented <- IEADF_unaugmented %>% 
+  IEADF_augmented <- IEADF_unaugmented |> 
     augment_iea_df()
   
   na_fap <- IEADF_augmented |>
@@ -508,12 +508,12 @@ test_that("augment_iea_df() works with NEU flows", {
 
 test_that("remove_agg_memo_flows() works as expected", {
   for (yr in IEATools::valid_iea_release_years) {
-    Cleaned <- sample_iea_data_path(yr) %>% 
-      iea_df() %>% 
-      rename_iea_df_cols() %>% 
+    Cleaned <- sample_iea_data_path(yr) |> 
+      iea_df() |> 
+      rename_iea_df_cols() |> 
       remove_agg_memo_flows()
     # Verify that none of the aggregation flows are present
-    n_agg_rows <- Cleaned %>% 
+    n_agg_rows <- Cleaned |> 
       dplyr::filter(Flow == "Total primary energy supply" |
                       Flow == "Total energy supply" |
                       Flow == "Total final consumption" | 
@@ -522,17 +522,17 @@ test_that("remove_agg_memo_flows() works as expected", {
                       Flow == "Industry" |
                       Flow == "Transport" |
                       Flow == "Other" |
-                      Flow == "Non-energy use") %>% 
+                      Flow == "Non-energy use") |> 
       nrow()
     expect_equal(n_agg_rows, 0)
     # Verify that none of the memo flows are present
-    n_memo_flows <- Cleaned %>% 
-      dplyr::filter(startsWith(Flow, "Memo:")) %>% 
+    n_memo_flows <- Cleaned |> 
+      dplyr::filter(startsWith(Flow, "Memo:")) |> 
       nrow()
     expect_equal(n_memo_flows, 0)
     # Verify that none of the memo products are present
-    n_memo_products <- Cleaned %>% 
-      dplyr::filter(startsWith(Product, "Memo:")) %>% 
+    n_memo_products <- Cleaned |> 
+      dplyr::filter(startsWith(Product, "Memo:")) |> 
       nrow()
     expect_equal(n_memo_products, 0)
   }
@@ -540,9 +540,9 @@ test_that("remove_agg_memo_flows() works as expected", {
   for (yr in IEATools::valid_iea_release_years) {
     # Try again with a different approach. 
     # This time, ensure that rows we want to clean are present first.
-    IEA_data <- sample_iea_data_path(yr) %>% 
-      iea_df() %>%
-      rename_iea_df_cols() %>% 
+    IEA_data <- sample_iea_data_path(yr) |> 
+      iea_df() |>
+      rename_iea_df_cols() |> 
       augment_iea_df()
     
     # Verify that aggregation flows exist
@@ -553,61 +553,61 @@ test_that("remove_agg_memo_flows() works as expected", {
     }
     expect_true(lapply(agg_flows, 
                        FUN = function(s){
-                         expect_true(IEA_data %>% dplyr::filter(Flow == s) %>% nrow() > 0)
-                       }) %>% as.logical() %>% all())
+                         expect_true(IEA_data |> dplyr::filter(Flow == s) |> nrow() > 0)
+                       }) |> as.logical() |> all())
     # Verify that flow memos exist
     memo_flow_prefixes <- c("Memo: ", "Electricity output (GWh)", "Heat output")
     expect_true(lapply(memo_flow_prefixes, 
                        FUN = function(s){
-                         expect_true(IEA_data %>% dplyr::filter(startsWith(Flow, s)) %>% nrow() > 0)
-                       }) %>% as.logical() %>% all())
+                         expect_true(IEA_data |> dplyr::filter(startsWith(Flow, s)) |> nrow() > 0)
+                       }) |> as.logical() |> all())
     # Verify that product memos exist
     memo_product_prefix <- "Memo: "
-    expect_true(IEA_data %>% dplyr::filter(startsWith(Product, memo_product_prefix)) %>% nrow() > 0)
+    expect_true(IEA_data |> dplyr::filter(startsWith(Product, memo_product_prefix)) |> nrow() > 0)
     
     # Now clean the aggregation flows and see if they're gone.
-    Cleaned <- IEA_data %>% 
+    Cleaned <- IEA_data |> 
       remove_agg_memo_flows()
     # Ensure that aggregation flows were removed.
     expect_true(lapply(agg_flows, 
                        FUN = function(s){
-                         expect_true(Cleaned %>% dplyr::filter(Flow == s) %>% nrow() == 0)
-                       }) %>% as.logical() %>% all())
+                         expect_true(Cleaned |> dplyr::filter(Flow == s) |> nrow() == 0)
+                       }) |> as.logical() |> all())
     # Ensure that flow memos were removed
     expect_true(lapply(memo_flow_prefixes, 
                        FUN = function(s){
-                         expect_true(Cleaned %>% dplyr::filter(startsWith(Flow, s)) %>% nrow() == 0)
-                       }) %>% as.logical() %>% all())
+                         expect_true(Cleaned |> dplyr::filter(startsWith(Flow, s)) |> nrow() == 0)
+                       }) |> as.logical() |> all())
     # Ensure that product memos were removed
-    expect_true(IEA_data %>% dplyr::filter(startsWith(Product, memo_product_prefix)) %>% nrow() > 0)
+    expect_true(IEA_data |> dplyr::filter(startsWith(Product, memo_product_prefix)) |> nrow() > 0)
   }
 })
 
 
 test_that("remove_agg_regions() works as expected", {
-  tibble::tibble(Year = c(1967, 1995), Country = c("World", "Spain")) %>%
-    remove_agg_regions() %>%
+  tibble::tibble(Year = c(1967, 1995), Country = c("World", "Spain")) |>
+    remove_agg_regions() |>
     expect_equal(tibble::tibble(Year = 1995, Country = "Spain"))
   
   n_regions <- length(IEATools::aggregation_regions)
-  result <- tibble::tibble(Year = 1900 + 1:(n_regions+1), Country = unlist(c("Spain", IEATools::aggregation_regions))) %>%
+  result <- tibble::tibble(Year = 1900 + 1:(n_regions+1), Country = unlist(c("Spain", IEATools::aggregation_regions))) |>
     remove_agg_regions()
   expect_equal(result$Year, 1901)
   expect_equivalent(result[["Country"]], "Spain")
   
   # Ensure that Greenland and Palestinian Authority are retained.
-  tibble::tibble(Year = c(1967, 1990, 2020), Country = c("Memo: Greenland", "Memo: Palestinian Authority", "World")) %>% 
-    remove_agg_regions() %>% 
-    magrittr::extract2("Year") %>% 
+  tibble::tibble(Year = c(1967, 1990, 2020), Country = c("Memo: Greenland", "Memo: Palestinian Authority", "World")) |> 
+    remove_agg_regions() |> 
+    magrittr::extract2("Year") |> 
     expect_equal(c(1967, 1990))
 })
 
 
 test_that("use_iso_countries() works as expected", {
   for (yr in IEATools::valid_iea_release_years) {
-    iso3 <- sample_iea_data_path(yr) %>% 
-      iea_df() %>% 
-      rename_iea_df_cols() %>% 
+    iso3 <- sample_iea_data_path(yr) |> 
+      iea_df() |> 
+      rename_iea_df_cols() |> 
       use_iso_countries()
     expect_false(any(iso3$Country == "South Africa"))
     expect_true(any(iso3$Country == "ZAF"))
@@ -625,13 +625,13 @@ test_that("use_iso_countries() works as expected", {
                                 "World,Coal mines,Hard coal (if no detail),13,14\n",
                                 "World,Non-specified,Hard coal (if no detail),11,12\n",
                                 "World,Losses,Hard coal (if no detail),1,2\n",
-                                "World,Iron and steel,Hard coal (if no detail),5,6\n")) %>% 
-    rename_iea_df_cols() %>% 
-    augment_iea_df() %>% 
+                                "World,Iron and steel,Hard coal (if no detail),5,6\n")) |> 
+    rename_iea_df_cols() |> 
+    augment_iea_df() |> 
     use_iso_countries()
   # Ensure that a "World" country is present.
-  n_world_rows <- world %>% 
-    dplyr::filter(Country == "WRLD") %>% 
+  n_world_rows <- world |> 
+    dplyr::filter(Country == "WRLD") |> 
     nrow()
   expect_equal(n_world_rows, 8)
 })
@@ -639,7 +639,7 @@ test_that("use_iso_countries() works as expected", {
 
 test_that("load_tidy_iea_df() works as expected", {
   for (yr in IEATools::valid_iea_release_years) {
-    iea_tidy_df <- sample_iea_data_path(yr) %>% 
+    iea_tidy_df <- sample_iea_data_path(yr) |> 
       load_tidy_iea_df()
     # Verify column names and order
     expect_equal(names(iea_tidy_df), c("Country", "Method", "Energy.type", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", 
@@ -656,7 +656,7 @@ test_that("load_tidy_iea_df() works as expected", {
 
 test_that("converting year to numeric works as expected", {
   for (yr in IEATools::valid_iea_release_years) {
-    iea_tidy_df <- sample_iea_data_path(yr) %>% 
+    iea_tidy_df <- sample_iea_data_path(yr) |> 
       load_tidy_iea_df()
     expect_true(is.numeric(iea_tidy_df$Year))
   }  
@@ -664,7 +664,7 @@ test_that("converting year to numeric works as expected", {
 
 
 test_that("trimming white space works", {
-  cleaned <- data.frame(Flow = "  a flow   ", Product = "   a product   ", stringsAsFactors = FALSE) %>% 
+  cleaned <- data.frame(Flow = "  a flow   ", Product = "   a product   ", stringsAsFactors = FALSE) |> 
     clean_iea_whitespace()
   expect_equal(cleaned$Flow[[1]], "a flow")
   expect_equal(cleaned$Product[[1]], "a product")
@@ -674,15 +674,15 @@ test_that("trimming white space works", {
 test_that("load_tidy_iea_df() works as expected", {
   # Try for all valid years.
   for (yr in IEATools::valid_iea_release_years) {
-    simple <- sample_iea_data_path(yr) %>% 
+    simple <- sample_iea_data_path(yr) |> 
       load_tidy_iea_df()
-    complicated <- sample_iea_data_path(yr) %>% 
-      iea_df() %>%
-      rename_iea_df_cols() %>% 
-      clean_iea_whitespace() %>% 
-      remove_agg_memo_flows() %>% 
-      use_iso_countries() %>% 
-      augment_iea_df() %>% 
+    complicated <- sample_iea_data_path(yr) |> 
+      iea_df() |>
+      rename_iea_df_cols() |> 
+      clean_iea_whitespace() |> 
+      remove_agg_memo_flows() |> 
+      use_iso_countries() |> 
+      augment_iea_df() |> 
       tidy_iea_df()
     expect_equal(simple, complicated)
   }
@@ -690,23 +690,23 @@ test_that("load_tidy_iea_df() works as expected", {
 
 
 test_that("load_tidy_iea_df() gives expected values", {
-  iea_df <- sample_iea_data_path(version = 2021) %>% 
+  iea_df <- sample_iea_data_path(version = 2021) |> 
     load_tidy_iea_df()
   # Try some values
-  expect_equal(iea_df %>% 
+  expect_equal(iea_df |> 
                  dplyr::filter(Country == "ZAF", Year == 1971, Product == "Fuel oil", 
-                               Flow == "Oil refineries", Flow.aggregation.point == "Transformation processes") %>% 
+                               Flow == "Oil refineries", Flow.aggregation.point == "Transformation processes") |> 
                  magrittr::extract2("E.dot"), 
                4515.6349)
   
-  expect_equal(iea_df %>% 
+  expect_equal(iea_df |> 
                  dplyr::filter(Country == "GHA", Year == 1971, Product == "Crude oil", 
-                               Flow == "Imports") %>% 
+                               Flow == "Imports") |> 
                  magrittr::extract2("E.dot"), 
                916.2081)
 
-  expect_equal(iea_df %>% 
-                 dplyr::filter(Country == "ZAF", Year == 1971, Product == "Bitumen", Flow == "Transfers") %>% 
+  expect_equal(iea_df |> 
+                 dplyr::filter(Country == "ZAF", Year == 1971, Product == "Bitumen", Flow == "Transfers") |> 
                  magrittr::extract2("E.dot"), 
                2.7945)
 })
@@ -717,32 +717,32 @@ test_that("Ledger.side is added by augmentation", {
   # Verify that's indeed the case.
   for (year in IEATools::valid_iea_release_years) {
     DF <- load_tidy_iea_df(sample_iea_data_path(year))
-    expect_false(DF %>% 
-                   magrittr::extract2("Ledger.side") %>% 
-                   is.na() %>% 
+    expect_false(DF |> 
+                   magrittr::extract2("Ledger.side") |> 
+                   is.na() |> 
                    any())
   }
 })
 
 
-test_that("every Flow.aggregation.point is filled by augmentation", {
+test_that("load_tidy_iea_df() fills every Flow.aggregation.point", {
   # Every row in the Flow.aggregation.point column should be filled with a non-NA entry.
   # Verify that's indeed the case.
   for (year in IEATools::valid_iea_release_years) {
-    load_tidy_iea_df(sample_iea_data_path(year)) %>% 
-      magrittr::extract2("Flow.aggregation.point") %>% 
-      is.na() %>% 
+    load_tidy_iea_df(sample_iea_data_path(year)) |> 
+      magrittr::extract2("Flow.aggregation.point") |> 
+      is.na() |> 
       any() |> 
       expect_false()
   }
 })
 
 
-test_that("spreading by years works as expected after load_tidy_iea_df()", {
+test_that("load_tidy_iea_df() OK when spreading by years after ", {
   # This test will fail if things are not specified correctly.
   # Without correct specification, keys will not be unique.
   for (year in IEATools::valid_iea_release_years) {
-    year_spread <- load_tidy_iea_df(sample_iea_data_path(year)) %>% 
+    year_spread <- load_tidy_iea_df(sample_iea_data_path(year)) |> 
       tidyr::spread(key = Year, value = E.dot)
     expect_true("1971" %in% names(year_spread))
     expect_true("2000" %in% names(year_spread))
