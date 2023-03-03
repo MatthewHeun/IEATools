@@ -637,7 +637,7 @@ check_neu_balance <- function(.iea_df,
   year_columns <- .iea_df %>% 
     year_cols()
   
-  # Gather the NEU in industry flows
+  # Gather the rows for Non-energy use industry/transformation/energy rows
   neu_industry_flows <- .iea_df %>% 
     dplyr::filter(.data[[flow]] %in% non_energy_flows_industry_transformation_energy, 
                   .data[[product]] != total) %>% 
@@ -645,7 +645,7 @@ check_neu_balance <- function(.iea_df,
     dplyr::filter(.data[[.values]] != 0) %>% 
     dplyr::group_by(.data[[country]], .data[[product]], .data[[year]])
     
-  # Gather the Memo: Non-industry use flows
+  # Gather the Memo: Non-industry use in <<specific industry>> rows
   neu_memo_flows <- .iea_df %>% 
     dplyr::filter(startsWith(.data[[flow]], memo_non_energy_use_in), 
                   !(.data[[flow]] == memo_non_energy_flows_industry), 
@@ -657,7 +657,7 @@ check_neu_balance <- function(.iea_df,
       "{.values_summarised}" := sum(.data[[.values]])
     )
   
-  # Check for situation where specific Memo: flows account for all NEU.
+  # Check for situation where Memo: non-energy flows account for all NEU.
   all_accounted <- dplyr::left_join(neu_industry_flows, neu_memo_flows, by = c(country, product, year)) %>% 
     dplyr::mutate(
       unaccounted = .data[[.values]] - .data[[.values_summarised]]
