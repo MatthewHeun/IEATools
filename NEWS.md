@@ -4,10 +4,10 @@ output: html_document
 ---
 
 
-* Added sample data for 2022 release of IEA WEEB.
 * Added capability to use `Matrix` objects with 
   `prep_psut()`, `form_C_mats()`, `form_eta_fu_phi_u_vecs()`,
   `extract_S_units_from_tidy()`, and `collapse_to_tidy_psut()`.
+  This change enables sparse matrices to save memory and disk space.
 * Eliminated all warnings from `tidyselect` about 
   deprecated functionality. 
   The package builds and tests cleanly again!
