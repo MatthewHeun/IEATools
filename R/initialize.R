@@ -910,8 +910,9 @@ remove_agg_memo_flows <- function(.iea_df,
 #' with the details in the "Memo:" entries when possible.
 #'
 #' @param .iea_df A data frame of IEA data, 
-#'                created by `rename_iea_df_cols()`.
-#' @param country,year,flow,product See `IEATools::iea_cols`.
+#'                created by `augment_iea_df()`.
+#' @param country,year,method,energy_type,unit,ledger_side,last_stage,flow_aggregation_point,flow,product See `IEATools::iea_cols`.
+#' @param non_energy_use See `IEATools::aggregation_flows`.
 #' @param non_energy_flows_industry_transformation_energy See `IEATools::non_energy_flows`.
 #' @param memo A string prefix for memo flows. 
 #'             Default is `IEATools::memo_aggregation_flow_prefixes$memo`.
@@ -942,8 +943,15 @@ remove_agg_memo_flows <- function(.iea_df,
 specify_non_energy_use <- function(.iea_df, 
                                    country = IEATools::iea_cols$country,
                                    year = IEATools::iea_cols$year,
+                                   method = IEATools::iea_cols$method,
+                                   energy_type = IEATools::iea_cols$energy_type,
+                                   unit = IEATools::iea_cols$unit,
+                                   ledger_side = IEATools::iea_cols$ledger_side, 
+                                   last_stage = IEATools::iea_cols$last_stage,
+                                   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                    flow = IEATools::iea_cols$flow, 
                                    product = IEATools::iea_cols$product,
+                                   non_energy_use = IEATools::aggregation_flows$non_energy_use,
                                    non_energy_flows_industry_transformation_energy = IEATools::non_energy_flows$non_energy_use_industry_transformation_energy,
                                    memo = IEATools::memo_aggregation_flow_prefixes$memo,
                                    memo_non_energy_flows_industry = IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry,
@@ -976,38 +984,47 @@ specify_non_energy_use <- function(.iea_df,
     # Summarize the rows so that we we get totals.
     dplyr::summarise(
       "{.values_summarised}" := sum(.data[[.values]])
+    ) |> 
+    dplyr::ungroup() |> 
+    dplyr::mutate(
+      # Set the Flow.aggregation.point and Flow columns
+      # appropriate for later subtracting the summarised energy
+      # from the .iea_df.
+      "{flow_aggregation_point}" := non_energy_use, 
+      "{flow}" := non_energy_flows_industry_transformation_energy
     )
   
-  # Check for situations (Combination of Country, Year, and Product) where
-  # Memo: Non-energy use in <<specific industry>> 
-  # flows account for all general NEU.
-  # These are the general NEU rows that can be removed and replaced by specific NEU rows.
-  to_remove <- dplyr::left_join(neu_industry_flows, neu_memo_flows_summarised, 
-                                by = c(country, product, year)) %>% 
+  # Figure out how much energy needs to be subtracted
+  # from the larger category due to the upcoming specification.
+  subtracted <- .iea_df |> 
+    tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) |>
+    dplyr::left_join(neu_memo_flows_summarised, 
+                     by = c(country, method, energy_type, unit, ledger_side, last_stage, flow_aggregation_point, flow, product, year)) %>%
+    # When the above join happens, 
+    # missing rows will give NA. 
+    # Replace NA with 0.
     dplyr::mutate(
-      "{.diff}" := .data[[.values]] - .data[[.values_summarised]]
-    ) %>% 
-    dplyr::filter(abs(.data[[.diff]]) < tol) |> 
-    # Set up to later do an anti_join.
-    dplyr::mutate(
-      "{.values}" := NULL, 
-      "{.values_summarised}" := NULL, 
-      "{.diff}" := NULL, 
+      "{.values_summarised}" := dplyr::case_when(
+        is.na(.data[[.values_summarised]]) ~ 0, 
+        TRUE ~ .data[[.values_summarised]]
+      ), 
+      # Now do the subtraction
+      "{.values}" := .data[[.values]] - .data[[.values_summarised]], 
+      # And remove the summarized column
+      "{.values_summarised}" := NULL
     )
-  
+
   # Figure out the rows that should replace the to_remove rows
   to_add <- neu_memo_flows |> 
     dplyr::mutate(
-      # Eliminate the "Memo: " prefix.
-      "{flow}" := sub(paste0("^", memo), "", .data[[flow]])
+      # Eliminate the "Memo: " prefix from the Flow column.
+      "{flow}" := sub(paste0("^", memo), "", .data[[flow]]), 
+      # Set the Flow.aggregation.point correctly
+      "{flow_aggregation_point}" := non_energy_use
     )
   
   # Now return the fixed data frame
-  .iea_df |> 
-    tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) |> 
-    # Remove the unneeded rows (to_remove)
-    dplyr::anti_join(to_remove, by = c(country, year, product, flow)) |> 
-    # Add the replacement rows (to_add)
+  subtracted |> 
     dplyr::bind_rows(to_add) |> 
     tidyr::pivot_wider(values_from = .values, names_from = year)
 }

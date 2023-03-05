@@ -8,8 +8,15 @@ specify_non_energy_use(
   .iea_df,
   country = IEATools::iea_cols$country,
   year = IEATools::iea_cols$year,
+  method = IEATools::iea_cols$method,
+  energy_type = IEATools::iea_cols$energy_type,
+  unit = IEATools::iea_cols$unit,
+  ledger_side = IEATools::iea_cols$ledger_side,
+  last_stage = IEATools::iea_cols$last_stage,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   flow = IEATools::iea_cols$flow,
   product = IEATools::iea_cols$product,
+  non_energy_use = IEATools::aggregation_flows$non_energy_use,
   non_energy_flows_industry_transformation_energy =
     IEATools::non_energy_flows$non_energy_use_industry_transformation_energy,
   memo = IEATools::memo_aggregation_flow_prefixes$memo,
@@ -25,9 +32,11 @@ specify_non_energy_use(
 }
 \arguments{
 \item{.iea_df}{A data frame of IEA data,
-created by \code{rename_iea_df_cols()}.}
+created by \code{augment_iea_df()}.}
 
-\item{country, year, flow, product}{See \code{IEATools::iea_cols}.}
+\item{country, year, method, energy_type, unit, ledger_side, last_stage, flow_aggregation_point, flow, product}{See \code{IEATools::iea_cols}.}
+
+\item{non_energy_use}{See \code{IEATools::aggregation_flows}.}
 
 \item{non_energy_flows_industry_transformation_energy}{See \code{IEATools::non_energy_flows}.}
 

@@ -300,33 +300,6 @@ test_that("rename_iea_df_cols() works", {
 })
 
 
-# test_that("check_neu_balance() works as expected", {
-#   sample_iea_data_path() |> 
-#     iea_df() |>
-# 
-#     dplyr::filter(COUNTRY == "Ghana", 
-#                   FLOW == "BKB/peat briquette plants", 
-#                   PRODUCT == "Additives/blending components")
-#   
-#     
-#     
-#     
-#     
-#     check_neu_balance()
-# })
-
-
-
-
-
-
-
-
-
-
-
-
-
 test_that("augment_iea_df() works", {
   # Try with a bogus set of data without a Losses row or a Total final consumption row.
   expect_error(iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal (if no detail),42,43") |> 
@@ -504,6 +477,62 @@ test_that("augment_iea_df() works with NEU flows", {
     unique() |> 
     expect_equal(IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry) 
 })
+
+
+test_that("specify_non_energy_use() works as expected", {
+  df <- sample_iea_data_path() |>
+    iea_df() |> 
+    rename_iea_df_cols() |> 
+    clean_iea_whitespace() |> 
+    augment_iea_df()
+  # Check that the original data frame has NEU for South Africa
+  neu_rows <- df |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "South Africa", 
+                  .data[[IEATools::iea_cols$flow]] == "Non-energy use industry/transformation/energy", 
+                  .data[[IEATools::iea_cols$product]] %in% c("Hard coal (if no detail)", "Other bituminous coal"))
+  
+  expect_equal(neu_rows$`1971`[[1]], 747.9545)
+  expect_equal(neu_rows$`1971`[[2]], 0)
+  expect_equal(neu_rows$`2000`[[1]], 0)
+  expect_equal(neu_rows$`2000`[[2]], 5284.6856)
+  
+  # Specify the data and see that it has moved.
+  specified <- df |> 
+    specify_non_energy_use()
+
+  # Check that the original rows are now 0.
+  expect_equal(specified$`1971`[[1]], 0)
+  expect_equal(specified$`1971`[[2]], 0)
+  expect_equal(specified$`2000`[[1]], 0)
+  expect_equal(specified$`2000`[[2]], 0)
+
+  # Check that the same energy is now found elsewhere.
+  specified_neu_rows <- specified |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "South Africa", 
+                  .data[[IEATools::iea_cols$flow]] == "Non-energy use in chemical/petrochemical",
+                  .data[[IEATools::iea_cols$product]] %in% c("Hard coal (if no detail)", "Other bituminous coal"))
+  expect_equal(specified_neu_rows$`1971`[[1]], 747.9545)  
+  expect_equal(specified_neu_rows$`1971`[[2]], 0)  
+  expect_equal(specified_neu_rows$`2000`[[1]], 0)  
+  expect_equal(specified_neu_rows$`2000`[[2]], 5284.6856)  
+  
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 test_that("remove_agg_memo_flows() works as expected", {
