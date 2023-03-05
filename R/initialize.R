@@ -969,7 +969,7 @@ specify_non_energy_use <- function(.iea_df,
     dplyr::filter(startsWith(.data[[flow]], memo_non_energy_use_in), 
                   !(.data[[flow]] == memo_non_energy_flows_industry), 
                   .data[[product]] != total) %>% 
-    tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
+    tidyr::pivot_longer(cols = dplyr::all_of(year_columns), names_to = year, values_to = .values) %>% 
     dplyr::filter(.data[[.values]] != 0) 
   neu_memo_flows_summarised <- neu_memo_flows %>% 
     matsindf::group_by_everything_except(flow, .values) %>% 
@@ -989,7 +989,7 @@ specify_non_energy_use <- function(.iea_df,
   # Figure out how much energy needs to be subtracted
   # from the larger category due to the upcoming specification.
   subtracted <- .iea_df |> 
-    tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) |>
+    tidyr::pivot_longer(cols = dplyr::all_of(year_columns), names_to = year, values_to = .values) |>
     dplyr::left_join(neu_memo_flows_summarised, 
                      by = c(country, method, energy_type, unit, ledger_side, last_stage, flow_aggregation_point, flow, product, year)) %>%
     # When the above join happens, 
