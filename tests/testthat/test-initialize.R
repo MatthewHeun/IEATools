@@ -514,8 +514,21 @@ test_that("specify_non_energy_use() works as expected", {
   expect_equal(specified_neu_rows$`1971`[[1]], 747.9545)  
   expect_equal(specified_neu_rows$`1971`[[2]], 0)  
   expect_equal(specified_neu_rows$`2000`[[1]], 0)  
-  expect_equal(specified_neu_rows$`2000`[[2]], 5284.6856)  
+  expect_equal(specified_neu_rows$`2000`[[2]], 5284.6856) 
   
+  # Check that both the original and the specified data frames are balanced.
+  df |> 
+    remove_agg_memo_flows() |> 
+    tidy_iea_df() |> 
+    calc_tidy_iea_df_balances(tol = 1e-3) |> 
+    tidy_iea_df_balanced() |> 
+    expect_true()
+  specified |> 
+    remove_agg_memo_flows() |> 
+    tidy_iea_df() |> 
+    calc_tidy_iea_df_balances(tol = 1e-3) |> 
+    tidy_iea_df_balanced() |> 
+    expect_true()
 })
 
 
