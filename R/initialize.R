@@ -1018,7 +1018,7 @@ specify_non_energy_use <- function(.iea_df,
   # Now return the fixed data frame
   subtracted |> 
     dplyr::bind_rows(to_add) |> 
-    tidyr::pivot_wider(values_from = .values, names_from = year, values_fill = 0)
+    tidyr::pivot_wider(values_from = .values, names_from = dplyr::all_of(year), values_fill = 0)
 }
 
 
