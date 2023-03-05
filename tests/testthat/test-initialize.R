@@ -485,50 +485,96 @@ test_that("specify_non_energy_use() works as expected", {
     rename_iea_df_cols() |> 
     clean_iea_whitespace() |> 
     augment_iea_df()
-  # Check that the original data frame has NEU for South Africa
-  neu_rows <- df |> 
-    dplyr::filter(.data[[IEATools::iea_cols$country]] == "South Africa", 
-                  .data[[IEATools::iea_cols$flow]] == "Non-energy use industry/transformation/energy", 
-                  .data[[IEATools::iea_cols$product]] %in% c("Hard coal (if no detail)", "Other bituminous coal"))
   
-  expect_equal(neu_rows$`1971`[[1]], 747.9545)
-  expect_equal(neu_rows$`1971`[[2]], 0)
-  expect_equal(neu_rows$`2000`[[1]], 0)
-  expect_equal(neu_rows$`2000`[[2]], 5284.6856)
-  
-  # Specify the data and see that it has moved.
-  specified <- df |> 
-    specify_non_energy_use()
-
-  # Check that the original rows are now 0.
-  expect_equal(specified$`1971`[[1]], 0)
-  expect_equal(specified$`1971`[[2]], 0)
-  expect_equal(specified$`2000`[[1]], 0)
-  expect_equal(specified$`2000`[[2]], 0)
-
-  # Check that the same energy is now found elsewhere.
-  specified_neu_rows <- specified |> 
-    dplyr::filter(.data[[IEATools::iea_cols$country]] == "South Africa", 
-                  .data[[IEATools::iea_cols$flow]] == "Non-energy use in chemical/petrochemical",
-                  .data[[IEATools::iea_cols$product]] %in% c("Hard coal (if no detail)", "Other bituminous coal"))
-  expect_equal(specified_neu_rows$`1971`[[1]], 747.9545)  
-  expect_equal(specified_neu_rows$`1971`[[2]], 0)  
-  expect_equal(specified_neu_rows$`2000`[[1]], 0)  
-  expect_equal(specified_neu_rows$`2000`[[2]], 5284.6856) 
-  
-  # Check that both the original and the specified data frames are balanced.
+  # Check that the original data are balanced.
   df |> 
     remove_agg_memo_flows() |> 
     tidy_iea_df() |> 
     calc_tidy_iea_df_balances(tol = 1e-3) |> 
     tidy_iea_df_balanced() |> 
     expect_true()
+  
+  # Check that the original data frame has NEU for South Africa
+  neu_rows <- df |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "South Africa", 
+                  .data[[IEATools::iea_cols$flow]] == "Non-energy use industry/transformation/energy", 
+                  .data[[IEATools::iea_cols$product]] %in% c("Hard coal (if no detail)", "Other bituminous coal"))
+  
+  neu_rows |> 
+    dplyr::filter(.data[[IEATools::iea_cols$product]] == "Hard coal (if no detail)") |> 
+    magrittr::extract2("1971") |> 
+    expect_equal(747.9545)
+  neu_rows |> 
+    dplyr::filter(.data[[IEATools::iea_cols$product]] == "Other bituminous coal") |> 
+    magrittr::extract2("1971") |> 
+    expect_equal(0)
+  neu_rows |> 
+    dplyr::filter(.data[[IEATools::iea_cols$product]] == "Hard coal (if no detail)") |> 
+    magrittr::extract2("2000") |> 
+    expect_equal(0)
+  neu_rows |> 
+    dplyr::filter(.data[[IEATools::iea_cols$product]] == "Other bituminous coal") |> 
+    magrittr::extract2("2000") |> 
+    expect_equal(5284.6856)
+  
+  # Specify the data and see that it has moved.
+  specified <- df |> 
+    specify_non_energy_use()
+
+  # Check that the specified data frame is balanced.
   specified |> 
     remove_agg_memo_flows() |> 
     tidy_iea_df() |> 
     calc_tidy_iea_df_balances(tol = 1e-3) |> 
     tidy_iea_df_balanced() |> 
     expect_true()
+  
+  # Check that the original rows are now 0.
+  # These data have been subtracted.
+  original_neu_rows_in_specified <- specified |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "South Africa", 
+                  .data[[IEATools::iea_cols$flow]] == "Non-energy use industry/transformation/energy", 
+                  .data[[IEATools::iea_cols$product]] %in% c("Hard coal (if no detail)", "Other bituminous coal"))
+  
+  original_neu_rows_in_specified |> 
+    dplyr::filter(.data[[IEATools::iea_cols$product]] == "Hard coal (if no detail)") |> 
+    magrittr::extract2("1971") |> 
+    expect_equal(0)
+  original_neu_rows_in_specified |> 
+    dplyr::filter(.data[[IEATools::iea_cols$product]] == "Other bituminous coal") |> 
+    magrittr::extract2("1971") |> 
+    expect_equal(0)
+  original_neu_rows_in_specified |> 
+    dplyr::filter(.data[[IEATools::iea_cols$product]] == "Hard coal (if no detail)") |> 
+    magrittr::extract2("2000") |> 
+    expect_equal(0)
+  original_neu_rows_in_specified |> 
+    dplyr::filter(.data[[IEATools::iea_cols$product]] == "Other bituminous coal") |> 
+    magrittr::extract2("2000") |> 
+    expect_equal(0)
+  
+  # Check that the same energy is now found in Non-energy use in chemical/petrochemical.
+  specified_neu_rows <- specified |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "South Africa", 
+                  .data[[IEATools::iea_cols$flow]] == "Non-energy use in chemical/petrochemical",
+                  .data[[IEATools::iea_cols$product]] %in% c("Hard coal (if no detail)", "Other bituminous coal"))
+  
+  specified_neu_rows |> 
+    dplyr::filter(.data[[IEATools::iea_cols$product]] == "Hard coal (if no detail)") |> 
+    magrittr::extract2("1971") |> 
+    expect_equal(747.9545)
+  specified_neu_rows |> 
+    dplyr::filter(.data[[IEATools::iea_cols$product]] == "Other bituminous coal") |> 
+    magrittr::extract2("1971") |> 
+    expect_equal(0)
+  specified_neu_rows |> 
+    dplyr::filter(.data[[IEATools::iea_cols$product]] == "Hard coal (if no detail)") |> 
+    magrittr::extract2("2000") |> 
+    expect_equal(0)
+  specified_neu_rows |> 
+    dplyr::filter(.data[[IEATools::iea_cols$product]] == "Other bituminous coal") |> 
+    magrittr::extract2("2000") |> 
+    expect_equal(5284.6856)
 })
 
 
