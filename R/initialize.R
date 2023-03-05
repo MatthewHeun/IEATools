@@ -964,14 +964,6 @@ specify_non_energy_use <- function(.iea_df,
   year_columns <- .iea_df %>% 
     year_cols()
   
-  # Gather the rows for "Non-energy use industry/transformation/energy"
-  neu_industry_flows <- .iea_df %>% 
-    dplyr::filter(.data[[flow]] %in% non_energy_flows_industry_transformation_energy, 
-                  .data[[product]] != total) %>% 
-    tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values) %>% 
-    dplyr::filter(.data[[.values]] != 0) %>% 
-    dplyr::group_by(.data[[country]], .data[[product]], .data[[year]])
-  
   # Gather the "Memo: Non-industry use in <<specific industry>>" rows
   neu_memo_flows <- .iea_df %>% 
     dplyr::filter(startsWith(.data[[flow]], memo_non_energy_use_in), 
@@ -1026,7 +1018,7 @@ specify_non_energy_use <- function(.iea_df,
   # Now return the fixed data frame
   subtracted |> 
     dplyr::bind_rows(to_add) |> 
-    tidyr::pivot_wider(values_from = .values, names_from = year)
+    tidyr::pivot_wider(values_from = .values, names_from = year, values_fill = 0)
 }
 
 

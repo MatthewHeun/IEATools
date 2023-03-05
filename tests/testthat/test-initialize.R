@@ -519,22 +519,6 @@ test_that("specify_non_energy_use() works as expected", {
 })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 test_that("remove_agg_memo_flows() works as expected", {
   for (yr in IEATools::valid_iea_release_years) {
     Cleaned <- sample_iea_data_path(yr) |> 
