@@ -800,7 +800,7 @@ test_that("use_iso_countries() works as expected", {
 test_that("load_tidy_iea_df() works as expected", {
   for (yr in IEATools::valid_iea_release_years) {
     iea_tidy_df <- sample_iea_data_path(yr) |> 
-      load_tidy_iea_df()
+      load_tidy_iea_df(specify_non_energy_flows = TRUE)
     # Verify column names and order
     expect_equal(names(iea_tidy_df), c("Country", "Method", "Energy.type", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", 
                                        "Flow", "Product", "Unit", "E.dot"))
@@ -835,7 +835,20 @@ test_that("load_tidy_iea_df() works as expected", {
   # Try for all valid years.
   for (yr in IEATools::valid_iea_release_years) {
     simple <- sample_iea_data_path(yr) |> 
-      load_tidy_iea_df()
+      load_tidy_iea_df(specify_non_energy_flows = FALSE)
+    complicated <- sample_iea_data_path(yr) |> 
+      iea_df() |>
+      rename_iea_df_cols() |> 
+      clean_iea_whitespace() |> 
+      remove_agg_memo_flows() |> 
+      use_iso_countries() |> 
+      augment_iea_df() |> 
+      tidy_iea_df()
+    expect_equal(simple, complicated)
+  }
+  for (yr in IEATools::valid_iea_release_years) {
+    simple <- sample_iea_data_path(yr) |> 
+      load_tidy_iea_df(specify_non_energy_flows = TRUE)
     complicated <- sample_iea_data_path(yr) |> 
       iea_df() |>
       rename_iea_df_cols() |> 
@@ -852,7 +865,7 @@ test_that("load_tidy_iea_df() works as expected", {
 
 test_that("load_tidy_iea_df() gives expected values", {
   iea_df <- sample_iea_data_path(version = 2021) |> 
-    load_tidy_iea_df()
+    load_tidy_iea_df(specify_non_energy_flows = TRUE)
   # Try some values
   expect_equal(iea_df |> 
                  dplyr::filter(Country == "ZAF", Year == 1971, Product == "Fuel oil", 

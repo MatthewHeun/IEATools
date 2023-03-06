@@ -1136,7 +1136,7 @@ tidy_iea_df <- function(.iea_df,
 #'                          These arguments are passed to `use_iso_countries()`.
 #'                          Defaults are taken from `IEATools::country_concordance_cols`.
 #'
-#' @return a tidy, augmented data frame of IEA extended energy balance data.
+#' @return A tidy, augmented data frame of IEA extended energy balance data.
 #' 
 #' @export
 #'
@@ -1159,7 +1159,7 @@ tidy_iea_df <- function(.iea_df,
 #' all(simple == complicated)
 load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(), 
                              remove_zeroes = TRUE, 
-                             specify_non_energy_flows = TRUE,
+                             specify_non_energy_flows = FALSE,
                              override_df = IEATools::override_iso_codes_df,
                              country = IEATools::iea_cols$country, 
                              pfu_code = IEATools::country_concordance_cols$pfu_code,

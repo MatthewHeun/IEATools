@@ -7,7 +7,7 @@
 load_tidy_iea_df(
   .iea_file = sample_iea_data_path(),
   remove_zeroes = TRUE,
-  specify_non_energy_flows = TRUE,
+  specify_non_energy_flows = FALSE,
   override_df = IEATools::override_iso_codes_df,
   country = IEATools::iea_cols$country,
   pfu_code = IEATools::country_concordance_cols$pfu_code,
@@ -36,7 +36,7 @@ These arguments are passed to \code{use_iso_countries()}.
 Defaults are taken from \code{IEATools::country_concordance_cols}.}
 }
 \value{
-a tidy, augmented data frame of IEA extended energy balance data.
+A tidy, augmented data frame of IEA extended energy balance data.
 }
 \description{
 Loads an IEA extended energy balance data file in \code{.csv} format from disk and converts to a tidy format.
@@ -60,13 +60,14 @@ iea_file_OK(sample_iea_data_path())
 # Take a simple approach
 simple <- load_tidy_iea_df()
 # Take the complicated approach
-complicated <- sample_iea_data_path() \%>\% 
-  iea_df() \%>\%
-  rename_iea_df_cols() \%>\% 
-  clean_iea_whitespace() \%>\% 
-  remove_agg_memo_flows() \%>\% 
-  use_iso_countries() \%>\% 
-  augment_iea_df() \%>\% 
+complicated <- sample_iea_data_path() |> 
+  iea_df() |> 
+  rename_iea_df_cols() |> 
+  clean_iea_whitespace() |> 
+  remove_agg_memo_flows() |>  
+  use_iso_countries() |> 
+  augment_iea_df() |> 
+  specify_non_energy_use() |> 
   tidy_iea_df()
 # simple and complicated should be exactly the same
 all(simple == complicated)
