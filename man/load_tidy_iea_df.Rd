@@ -42,12 +42,14 @@ A tidy, augmented data frame of IEA extended energy balance data.
 Loads an IEA extended energy balance data file in \code{.csv} format from disk and converts to a tidy format.
 This function bundles several others:
 \enumerate{
-\item \code{\link[=iea_df]{iea_df()}},
-\item \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}},
-\item \code{\link[=use_iso_countries]{use_iso_countries()}},
-\item \code{\link[=remove_agg_memo_flows]{remove_agg_memo_flows()}},
-\item \code{\link[=augment_iea_df]{augment_iea_df()}}, and
-\item \code{\link[=tidy_iea_df]{tidy_iea_df()}}.
+\item \code{iea_df()},
+\item \code{rename_iea_df_cols()},
+\item \code{clean_iea_whitespace()},
+\item \code{use_iso_countries()},
+\item \code{augment_iea_df()},
+\item \code{specify_non_energy_use()} (optionally),
+\item \code{remove_agg_memo_flows()}, and
+\item \code{tidy_iea_df()}.
 }
 }
 \details{
@@ -58,7 +60,7 @@ See examples for two ways to achieve the same result.
 # Check the file first
 iea_file_OK(sample_iea_data_path())
 # Take a simple approach
-simple <- load_tidy_iea_df()
+simple <- load_tidy_iea_df(specify_non_energy_flows = TRUE)
 # Take the complicated approach
 complicated <- sample_iea_data_path() |> 
   iea_df() |> 

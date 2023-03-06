@@ -1111,12 +1111,14 @@ tidy_iea_df <- function(.iea_df,
 #' 
 #' Loads an IEA extended energy balance data file in `.csv` format from disk and converts to a tidy format.
 #' This function bundles several others:
-#' 1. [iea_df()], 
-#' 2. [rename_iea_df_cols()],  
-#' 3. [use_iso_countries()],
-#' 4. [remove_agg_memo_flows()],
-#' 5. [augment_iea_df()], and 
-#' 6. [tidy_iea_df()].
+#' 1. `iea_df()`, 
+#' 2. `rename_iea_df_cols()`,  
+#' 3. `clean_iea_whitespace()`,
+#' 4. `use_iso_countries()`,
+#' 5. `augment_iea_df()`,
+#' 6. `specify_non_energy_use()` (optionally), 
+#' 7. `remove_agg_memo_flows()`, and 
+#' 8. `tidy_iea_df()`.
 #' 
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
@@ -1144,7 +1146,7 @@ tidy_iea_df <- function(.iea_df,
 #' # Check the file first
 #' iea_file_OK(sample_iea_data_path())
 #' # Take a simple approach
-#' simple <- load_tidy_iea_df()
+#' simple <- load_tidy_iea_df(specify_non_energy_flows = TRUE)
 #' # Take the complicated approach
 #' complicated <- sample_iea_data_path() |> 
 #'   iea_df() |> 
@@ -1169,13 +1171,13 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
     rename_iea_df_cols() |> 
     clean_iea_whitespace() |> 
     use_iso_countries(override_df = override_df, country = country, pfu_code = pfu_code, iea_name = iea_name) |> 
-    augment_iea_df() |> 
-    remove_agg_memo_flows()
+    augment_iea_df()
   if (specify_non_energy_flows) {
     out <- out |> 
       specify_non_energy_use()
   }
   out |>  
+    remove_agg_memo_flows() |> 
     tidy_iea_df(remove_zeroes = remove_zeroes)
 }
 

@@ -853,10 +853,10 @@ test_that("load_tidy_iea_df() works as expected", {
       iea_df() |>
       rename_iea_df_cols() |> 
       clean_iea_whitespace() |> 
-      remove_agg_memo_flows() |> 
       use_iso_countries() |> 
       augment_iea_df() |> 
       specify_non_energy_use() |> 
+      remove_agg_memo_flows() |> 
       tidy_iea_df()
     expect_equal(simple, complicated)
   }
