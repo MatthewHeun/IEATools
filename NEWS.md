@@ -4,11 +4,16 @@ output: html_document
 ---
 
 
+* `augment_iea_df()` now adds `Flow.aggregation.point`s
+  for all aggregation flows that will (eventually) be removed.
+  This change will enable future specification 
+  of "Non-energy use in xxxxx" flows
+  with "Memo: Non-energy use in xxxxx" where possible.
 * Added capability to use `Matrix` objects with 
   `prep_psut()`, `form_C_mats()`, `form_eta_fu_phi_u_vecs()`,
   `extract_S_units_from_tidy()`, and `collapse_to_tidy_psut()`.
   This change enables sparse matrices to save memory and disk space.
-* Eliminated all warnings from `tidyselect` about 
+* Eliminated all warnings from the `tidyselect` package about 
   deprecated functionality. 
   The package builds and tests cleanly again!
 * New argument on `add_psut_matnames()` (`R_includes_all_exogenous_flows`)
