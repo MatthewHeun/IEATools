@@ -1122,15 +1122,19 @@ tidy_iea_df <- function(.iea_df,
 #' See examples for two ways to achieve the same result.
 #' 
 #' @param .iea_file The path of the file to be loaded. Default loads example data bundled with the package via [sample_iea_data_path()].
+#' @param remove_zeroes A logical indicating whether data points with the value `0` are to be removed from the output. 
+#'                      This argument is passed to `tidy_iea_df()`. 
+#'                      Default is `TRUE`.
+#' @param specify_non_energy_flows A logical indicating whether "Non-energy use in xxxxx" Flows
+#'                                 should be specified by "Memo: Non-energy use in <<specific industry>>"
+#'                                 entries in the IEA data. 
+#'                                 Default is `TRUE`.
 #' @param override_df A data frame containing columns `pfu_code` and `iea_name` that provides 3-letter country codes. See `IEATools::use_iso_countries()`.
 #'                    Default is `IEATools::override_iso_codes_df`.
 #' @param country The name of the country column in the data frames. See `IEATools::iea_cols$country`.
 #' @param pfu_code,iea_name Names of columns in the override data frame for 3-letter country codes. 
 #'                          These arguments are passed to `use_iso_countries()`.
 #'                          Defaults are taken from `IEATools::country_concordance_cols`.
-#' @param remove_zeroes A logical indicating whether data points with the value `0` are to be removed from the output. 
-#'                      This argument is passed to `tidy_iea_df()`. 
-#'                      Default is `TRUE`.
 #'
 #' @return a tidy, augmented data frame of IEA extended energy balance data.
 #' 
@@ -1142,30 +1146,36 @@ tidy_iea_df <- function(.iea_df,
 #' # Take a simple approach
 #' simple <- load_tidy_iea_df()
 #' # Take the complicated approach
-#' complicated <- sample_iea_data_path() %>% 
-#'   iea_df() %>%
-#'   rename_iea_df_cols() %>% 
-#'   clean_iea_whitespace() %>% 
-#'   remove_agg_memo_flows() %>% 
-#'   use_iso_countries() %>% 
-#'   augment_iea_df() %>% 
+#' complicated <- sample_iea_data_path() |> 
+#'   iea_df() |> 
+#'   rename_iea_df_cols() |> 
+#'   clean_iea_whitespace() |> 
+#'   remove_agg_memo_flows() |>  
+#'   use_iso_countries() |> 
+#'   augment_iea_df() |> 
+#'   specify_non_energy_use() |> 
 #'   tidy_iea_df()
 #' # simple and complicated should be exactly the same
 #' all(simple == complicated)
 load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(), 
+                             remove_zeroes = TRUE, 
+                             specify_non_energy_flows = TRUE,
                              override_df = IEATools::override_iso_codes_df,
                              country = IEATools::iea_cols$country, 
                              pfu_code = IEATools::country_concordance_cols$pfu_code,
-                             iea_name = IEATools::country_concordance_cols$iea_name,
-                             remove_zeroes = TRUE){
-  .iea_file %>% 
-    iea_df() %>%
-    rename_iea_df_cols() %>% 
-    clean_iea_whitespace() %>% 
-    # remove_agg_memo_flows() %>% 
-    use_iso_countries(override_df = override_df, country = country, pfu_code = pfu_code, iea_name = iea_name) %>% 
-    augment_iea_df() %>% 
-    remove_agg_memo_flows() %>% 
+                             iea_name = IEATools::country_concordance_cols$iea_name){
+  out <- .iea_file |> 
+    iea_df() |> 
+    rename_iea_df_cols() |> 
+    clean_iea_whitespace() |> 
+    use_iso_countries(override_df = override_df, country = country, pfu_code = pfu_code, iea_name = iea_name) |> 
+    augment_iea_df() |> 
+    remove_agg_memo_flows()
+  if (specify_non_energy_flows) {
+    out <- out |> 
+      specify_non_energy_use()
+  }
+  out |>  
     tidy_iea_df(remove_zeroes = remove_zeroes)
 }
 

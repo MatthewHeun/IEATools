@@ -578,6 +578,94 @@ test_that("specify_non_energy_use() works as expected", {
 })
 
 
+test_that("specify_non_energy_use() gives matrices we expect", {
+  # After specifying Non-energy use flows, we expect those flows
+  # to appear in the Y matrix.
+  # These tests make sure that happens.
+  res <- sample_iea_data_path() |>
+    iea_df() |> 
+    rename_iea_df_cols() |> 
+    clean_iea_whitespace() |> 
+    use_iso_countries() |> 
+    augment_iea_df() |> 
+    specify_non_energy_use() |> 
+    remove_agg_memo_flows() %>% 
+    tidy_iea_df() |> 
+    prep_psut()
+  
+  # Check that the Hard coal from 1971 goes where it belongs.
+  res |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF", 
+                  .data[[IEATools::iea_cols$year]] == 1971) |> 
+    magrittr::extract2("Y") |> 
+    magrittr::extract2(1) |> 
+    magrittr::extract("Hard coal (if no detail)", "Non-energy use in chemical/petrochemical") |> 
+    expect_equal(747.9545)
+
+  # Check that the Other bituminous coal from 2000 goes where it belongs.
+  res |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF", 
+                  .data[[IEATools::iea_cols$year]] == 2000) |> 
+    magrittr::extract2("Y") |> 
+    magrittr::extract2(1) |> 
+    magrittr::extract("Other bituminous coal", "Non-energy use in chemical/petrochemical") |> 
+    expect_equal(5284.6856)
+
+  # Check that Non-energy use industry/transformation/energy is NOT present
+  res |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF", 
+                  .data[[IEATools::iea_cols$year]] == 1971) |> 
+    magrittr::extract2("Y") |> 
+    magrittr::extract2(1) |> 
+    magrittr::extract("Hard coal (if no detail)", "Non-energy use in industry/transformation/energy") |> 
+    expect_error("subscript out of bounds")
+  res |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF", 
+                  .data[[IEATools::iea_cols$year]] == 2000) |> 
+    magrittr::extract2("Y") |> 
+    magrittr::extract2(1) |> 
+    magrittr::extract("Other bituminous coal", "Non-energy use in industry/transformation/energy") |> 
+    expect_error("subscript out of bounds")
+  
+  # Check that we have other Non-energy use industry/transformation/energy
+  res |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF", 
+                  .data[[IEATools::iea_cols$year]] == 1971) |> 
+    magrittr::extract2("Y") |> 
+    magrittr::extract2(1) |>
+    magrittr::extract("Bitumen", "Non-energy use industry/transformation/energy") |> 
+    expect_equal(184.4368)
+  res |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF", 
+                  .data[[IEATools::iea_cols$year]] == 2000) |> 
+    magrittr::extract2("Y") |> 
+    magrittr::extract2(1) |> 
+    magrittr::extract("Bitumen", "Non-energy use industry/transformation/energy") |> 
+    expect_equal(214.2448)
+  res |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF", 
+                  .data[[IEATools::iea_cols$year]] == 2000) |> 
+    magrittr::extract2("Y") |> 
+    magrittr::extract2(1) |> 
+    magrittr::extract("Lubricants", "Non-energy use industry/transformation/energy") |> 
+    expect_equal(79.2491)
+  res |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF", 
+                  .data[[IEATools::iea_cols$year]] == 2000) |> 
+    magrittr::extract2("Y") |> 
+    magrittr::extract2(1) |> 
+    magrittr::extract("Paraffin waxes", "Non-energy use industry/transformation/energy") |> 
+    expect_equal(6.6877)
+  res |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF", 
+                  .data[[IEATools::iea_cols$year]] == 2000) |> 
+    magrittr::extract2("Y") |> 
+    magrittr::extract2(1) |> 
+    magrittr::extract("White spirit & SBP", "Non-energy use industry/transformation/energy") |> 
+    expect_equal(70.0350)
+})
+
+
 test_that("remove_agg_memo_flows() works as expected", {
   for (yr in IEATools::valid_iea_release_years) {
     Cleaned <- sample_iea_data_path(yr) |> 
@@ -755,6 +843,7 @@ test_that("load_tidy_iea_df() works as expected", {
       remove_agg_memo_flows() |> 
       use_iso_countries() |> 
       augment_iea_df() |> 
+      specify_non_energy_use() |> 
       tidy_iea_df()
     expect_equal(simple, complicated)
   }
@@ -810,7 +899,7 @@ test_that("load_tidy_iea_df() fills every Flow.aggregation.point", {
 })
 
 
-test_that("load_tidy_iea_df() OK when spreading by years after ", {
+test_that("load_tidy_iea_df() OK when spreading by years after", {
   # This test will fail if things are not specified correctly.
   # Without correct specification, keys will not be unique.
   for (year in IEATools::valid_iea_release_years) {

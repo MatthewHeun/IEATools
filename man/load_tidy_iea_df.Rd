@@ -6,15 +6,25 @@
 \usage{
 load_tidy_iea_df(
   .iea_file = sample_iea_data_path(),
+  remove_zeroes = TRUE,
+  specify_non_energy_flows = TRUE,
   override_df = IEATools::override_iso_codes_df,
   country = IEATools::iea_cols$country,
   pfu_code = IEATools::country_concordance_cols$pfu_code,
-  iea_name = IEATools::country_concordance_cols$iea_name,
-  remove_zeroes = TRUE
+  iea_name = IEATools::country_concordance_cols$iea_name
 )
 }
 \arguments{
 \item{.iea_file}{The path of the file to be loaded. Default loads example data bundled with the package via \code{\link[=sample_iea_data_path]{sample_iea_data_path()}}.}
+
+\item{remove_zeroes}{A logical indicating whether data points with the value \code{0} are to be removed from the output.
+This argument is passed to \code{tidy_iea_df()}.
+Default is \code{TRUE}.}
+
+\item{specify_non_energy_flows}{A logical indicating whether "Non-energy use in xxxxx" Flows
+should be specified by "Memo: Non-energy use in <\if{html}{\out{<specific industry>}}>"
+entries in the IEA data.
+Default is \code{TRUE}.}
 
 \item{override_df}{A data frame containing columns \code{pfu_code} and \code{iea_name} that provides 3-letter country codes. See \code{IEATools::use_iso_countries()}.
 Default is \code{IEATools::override_iso_codes_df}.}
@@ -24,10 +34,6 @@ Default is \code{IEATools::override_iso_codes_df}.}
 \item{pfu_code, iea_name}{Names of columns in the override data frame for 3-letter country codes.
 These arguments are passed to \code{use_iso_countries()}.
 Defaults are taken from \code{IEATools::country_concordance_cols}.}
-
-\item{remove_zeroes}{A logical indicating whether data points with the value \code{0} are to be removed from the output.
-This argument is passed to \code{tidy_iea_df()}.
-Default is \code{TRUE}.}
 }
 \value{
 a tidy, augmented data frame of IEA extended energy balance data.
