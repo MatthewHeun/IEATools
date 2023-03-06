@@ -241,7 +241,7 @@ complete_fu_allocation_table <- function(fu_allocation_table,
                             missing_rows[[destination]],
                             missing_rows[[ef_product]], sep = ", ", collapse = ";\n")
     err_msg <- paste0("Didn't complete FU Allocation table for the following final energy flows:\n", missing_combos, 
-                     ". Please check the FU allocation table for typos or misspellings.")
+                     ".\nPlease check the FU allocation table for typos or misspellings.")
     stop(err_msg)
   }
   
