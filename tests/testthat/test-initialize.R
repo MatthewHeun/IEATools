@@ -666,6 +666,36 @@ test_that("specify_non_energy_use() gives matrices we expect", {
 })
 
 
+test_that("specify_non_energy_use() re-balances data when there is a problem", {
+  # Create an unbalanced data frame with Memo: Non-energy use fields
+  
+  
+  # Call specify_non_energy_use() 
+  
+  
+  # Verify that things are now balanced.
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 test_that("remove_agg_memo_flows() works as expected", {
   for (yr in IEATools::valid_iea_release_years) {
     Cleaned <- sample_iea_data_path(yr) |> 
