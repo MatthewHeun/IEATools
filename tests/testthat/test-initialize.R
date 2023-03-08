@@ -693,16 +693,14 @@ test_that("specify_non_energy_use() re-balances data when there is a problem", {
     "{IEATools::iea_cols$product}" := "Other oil products",
     "1993" := c(5193, -14, -5893, 15333, -211, 14407, 13437, 971))
     
-    unbalanced_df |> 
+  # Call specify_non_energy_use() 
+  
+  unbalanced_df |> 
       specify_non_energy_use() |> 
       remove_agg_memo_flows() %>% 
       tidy_iea_df() |> 
       prep_psut()
     
-    
-
-  # Call specify_non_energy_use() 
-  
   
   # Verify that things are now balanced.
 })
