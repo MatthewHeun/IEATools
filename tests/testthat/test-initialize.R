@@ -692,17 +692,43 @@ test_that("specify_non_energy_use() re-balances data when there is a problem", {
         "Memo: Non-energy use in industry not elsewhere specified"), 
     "{IEATools::iea_cols$product}" := "Other oil products",
     "1993" := c(5193, -14, -5893, 15333, -211, 14407, 13437, 971))
-    
+
+  energy_imbalance <- unbalanced_df |> 
+    remove_agg_memo_flows() |> 
+    tidy_iea_df() |> 
+    calc_tidy_iea_df_balances()
+  expect_equal(energy_imbalance$err[[1]], 1)
+  expect_equal(energy_imbalance$Product, "Other oil products")
+  
+  # Fix the overall energy imbalance  
+  stat_diffs_row <- unbalanced_df |> 
+    dplyr::slice(1) |> 
+    dplyr::mutate(
+      "{IEATools::iea_cols$flow_aggregation_point}" := IEATools::aggregation_flows$tfc_compare, 
+      "{IEATools::iea_cols$flow}" := IEATools::tfc_compare_flows$statistical_differences, 
+      "1993" := -1
+    )
+  balanced_df <- unbalanced_df |> 
+    dplyr::bind_rows(stat_diffs_row)
+  # Verify that things are balanced now.  
+  balanced_df |> 
+    remove_agg_memo_flows() |> 
+    tidy_iea_df() |> 
+    calc_tidy_iea_df_balances() |> 
+    tidy_iea_df_balanced() |> 
+    expect_true()
+
   # Call specify_non_energy_use() 
+  neu_specified_df <- balanced_df |> 
+      specify_non_energy_use()
   
-  unbalanced_df |> 
-      specify_non_energy_use() |> 
-      remove_agg_memo_flows() %>% 
-      tidy_iea_df() |> 
-      prep_psut()
-    
-  
-  # Verify that things are now balanced.
+  # Make sure this is balanced.
+  neu_specified_df |> 
+    remove_agg_memo_flows() %>% 
+    tidy_iea_df() |> 
+    calc_tidy_iea_df_balances() |> 
+    tidy_iea_df_balanced() |> 
+    expect_true()
 })
 
 

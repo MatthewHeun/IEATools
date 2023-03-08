@@ -25,6 +25,8 @@ specify_non_energy_use(
   memo_non_energy_flows_industry =
     IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry,
   memo_non_energy_use_in = "Memo: Non-energy use in ",
+  non_energy_use_in = sub(pattern = paste0("^", memo), replacement = "", x =
+    memo_non_energy_use_in),
   total = IEATools::memo_aggregation_product_prefixes$total,
   .values = IEATools::template_cols$.values,
   .values_summarised = paste0(.values, "_summarised"),

@@ -963,6 +963,9 @@ specify_non_energy_use <- function(.iea_df,
                                    memo = IEATools::memo_aggregation_flow_prefixes$memo,
                                    memo_non_energy_flows_industry = IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry,
                                    memo_non_energy_use_in = "Memo: Non-energy use in ",
+                                   non_energy_use_in = sub(pattern = paste0("^", memo),
+                                                           replacement = "", 
+                                                           x = memo_non_energy_use_in), 
                                    total = IEATools::memo_aggregation_product_prefixes$total,
                                    .values = IEATools::template_cols$.values, 
                                    .values_summarised = paste0(.values, "_summarised"), 
@@ -1028,33 +1031,101 @@ specify_non_energy_use <- function(.iea_df,
   # and subtracting from any existing "Memo: Non-energy use in industry not elsewhere specified".
   if (nrow(leftover) > 0) {
     adjustment <- leftover |> 
+      # For the adjustment, we want to create a set of rows that 
+      # (when bound to the .iea_df and summarised)
+      # will give the specified data frame.
+      # There are two tasks to make this work.
+      # First, add the negative of the Non-energy use industry/transformation/energy row.
       dplyr::mutate(
-        # Change the name
-        "{flow}" := memo_non_energy_use_in_industry_not_elsewhere_specified, 
-        # We really want to subtract. 
-        # But it is easier to change sign and add (via summarise) later.
-        # So here we change sign in preparation for adding to any other 
-        # "Non-energy use in industry not elsewhere specified"
-        "{.values}" := - .data[[.values]]
+        "{.values}" := -.data[[.values]]
+      ) |> 
+      dplyr::bind_rows(
+        leftover |> 
+          # Second, add a row that re-balances energy.
+          # That row is the same as the leftover 
+          # Non-energy use industry/transformation/energy row, except with
+          # (a) the Flow changed to Memo: Non-energy use in industry not elsewhere specified and 
+          # (b) changed sign.
+          dplyr::mutate(
+            # Change the name
+            "{flow}" := memo_non_energy_use_in_industry_not_elsewhere_specified, 
+            # We really want to subtract. 
+            # But it is easier to change sign and add (via summarise) later.
+            # So here we change sign in preparation for adding to any other 
+            # "Non-energy use in industry not elsewhere specified"
+            "{.values}" := -.data[[.values]]
+          )
       )
+  } else {
+    # Eliminate all rows but keep same structure
+    adjustment <- leftover[0, ]
   }
   
-  # Figure out the rows that should replace the to_remove rows
-  to_add <- neu_memo_flows |> 
+  # Now prepare the outgoing data frame.
+  subtracted |> 
+    dplyr::bind_rows(adjustment) |> 
+    matsindf::group_by_everything_except(.values) |> 
+    dplyr::summarise(
+      # This summarise step adds like rows, and
+      # because we have constructed the adjustment 
+      # data frame correctly, we do two things:
+      # (a) zero out the Non-energy use industry/transformation/energy row
+      # (b) fix any energy imbalance by adjusting the 
+      #     Memo: Non-energy use in industry not elsewhere specified row.
+      "{.values}" := sum(.data[[.values]])
+    ) |> 
+    # Here, we eliminate any rows that have been zeroed out.
+    dplyr::filter(abs(.data[[.values]]) > tol) |> 
+    # Second-last step is to remove the "Memo: " part of "Memo: Non-energy use"
     dplyr::mutate(
-      # Eliminate the "Memo: " prefix from the Flow column.
-      "{flow}" := sub(paste0("^", memo), "", .data[[flow]]), 
-      # Set the Flow.aggregation.point correctly
-      "{flow_aggregation_point}" := non_energy_use
-    )
-  
-  
-  # Compile the fixed data frame
-  out <- subtracted |> 
-    dplyr::bind_rows(to_add) |> 
+      "{flow}" := sub(pattern = memo_non_energy_use_in, replacement = non_energy_use_in, .data[[flow]]), 
+    ) |> 
+    # Finally, pivot wider to return.
     tidyr::pivot_wider(values_from = .values, names_from = dplyr::all_of(year), values_fill = 0)
   
-  return(out)  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  # # Figure out the rows that should replace the to_remove rows
+  # to_add <- neu_memo_flows |> 
+  #   # Add the adjustment rows. 
+  #   # If there are any rows in adjustment, 
+  #   # they will have Non-energy use in industry not elsewhere specified.
+  #   # The rows of Non-energy use in industry not elsewhere specified
+  #   # in adjustment later need to be summed together with any 
+  #   # existing rows of Non-energy use in industry not elsewhere specified
+  #   # in neu_memo_flows.
+  #   dplyr::bind_rows(adjustment) |> 
+  #   dplyr::mutate(
+  #     # Eliminate the "Memo: " prefix from the Flow column.
+  #     "{flow}" := sub(paste0("^", memo), "", .data[[flow]]), 
+  #     # Set the Flow.aggregation.point correctly
+  #     "{flow_aggregation_point}" := non_energy_use
+  #   ) |> 
+  #   # Group by correct columns before summarising
+  #   dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], 
+  #                   .data[[last_stage]], .data[[flow_aggregation_point]], 
+  #                   .data[[flow]], .data[[product]]) |> 
+  #   # Now sum the common rows of Non-energy use in industry not elsewhere specified.
+  #   dplyr::summarise(
+  #     "{.values}" := sum(.data[[.values]])
+  #   )
+  #   
+  # 
+  # # Compile the fixed data frame
+  # out <- subtracted |> 
+  #   dplyr::bind_rows(to_add) |> 
+  #   tidyr::pivot_wider(values_from = .values, names_from = dplyr::all_of(year), values_fill = 0)
+  # 
+  # return(out)  
 }
 
 
