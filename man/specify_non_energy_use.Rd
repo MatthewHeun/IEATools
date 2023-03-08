@@ -19,6 +19,8 @@ specify_non_energy_use(
   non_energy_use = IEATools::aggregation_flows$non_energy_use,
   non_energy_flows_industry_transformation_energy =
     IEATools::non_energy_flows$non_energy_use_industry_transformation_energy,
+  memo_non_energy_use_in_industry_not_elsewhere_specified =
+    IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry_not_elsewhere_specified,
   memo = IEATools::memo_aggregation_flow_prefixes$memo,
   memo_non_energy_flows_industry =
     IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry,
@@ -74,6 +76,13 @@ This function assess the energy balance of the
 fields and replaces
 "Non-energy use in industry"
 with the details in the "Memo:" entries when possible.
+}
+\details{
+Note that energy balance checks are \emph{not} performed on the incoming \code{.iea_df},
+but that the specification process itself
+is checked for energy balance.
+In other words, specifying Non-energy use flows
+will not change the energy balance of the incoming \code{.iea_df} data frame.
 }
 \examples{
 sample_iea_data_path() \%>\% 
