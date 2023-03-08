@@ -1023,37 +1023,29 @@ specify_non_energy_use <- function(.iea_df,
                   abs(.data[[.values]]) > tol)
 
   # If we have any non-zero leftovers, create 
-  # an adjustment data frame to be added 
-  # to Non-energy use in industry not elsewhere specified.
-  # The adjustment consists of changing the name
-  # from "Non-energy use industry/transformation/energy"
-  # to "Memo: Non-energy use in industry not elsewhere specified"
-  # and subtracting from any existing "Memo: Non-energy use in industry not elsewhere specified".
+  # an adjustment data frame the corrects the imbalance
+  # and that eliminates the Non-energy use in industry/transformation/energy rows.
   if (nrow(leftover) > 0) {
     adjustment <- leftover |> 
       # For the adjustment, we want to create a set of rows that 
-      # (when bound to the .iea_df and summarised)
+      # (when bound to .iea_df and summarised)
       # will give the specified data frame.
-      # There are two tasks to make this work.
+      # There are two tasks.
       # First, add the negative of the Non-energy use industry/transformation/energy row.
+      # Doing so will zero out this row when we summarise later.
       dplyr::mutate(
         "{.values}" := -.data[[.values]]
       ) |> 
       dplyr::bind_rows(
         leftover |> 
-          # Second, add a row that re-balances energy.
-          # That row is the same as the leftover 
+          # Second, add a row that re-balances energy, if the Memo: Non-energy use in xxxxx rows are not balanced.
+          # That row is the same as the leftover row of 
           # Non-energy use industry/transformation/energy row, except with
-          # (a) the Flow changed to Memo: Non-energy use in industry not elsewhere specified and 
-          # (b) changed sign.
+          # the Flow column changed to
+          # Memo: Non-energy use in industry not elsewhere specified.
           dplyr::mutate(
             # Change the name
-            "{flow}" := memo_non_energy_use_in_industry_not_elsewhere_specified, 
-            # We really want to subtract. 
-            # But it is easier to change sign and add (via summarise) later.
-            # So here we change sign in preparation for adding to any other 
-            # "Non-energy use in industry not elsewhere specified"
-            "{.values}" := -.data[[.values]]
+            "{flow}" := memo_non_energy_use_in_industry_not_elsewhere_specified
           )
       )
   } else {
@@ -1082,50 +1074,6 @@ specify_non_energy_use <- function(.iea_df,
     ) |> 
     # Finally, pivot wider to return.
     tidyr::pivot_wider(values_from = .values, names_from = dplyr::all_of(year), values_fill = 0)
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  # # Figure out the rows that should replace the to_remove rows
-  # to_add <- neu_memo_flows |> 
-  #   # Add the adjustment rows. 
-  #   # If there are any rows in adjustment, 
-  #   # they will have Non-energy use in industry not elsewhere specified.
-  #   # The rows of Non-energy use in industry not elsewhere specified
-  #   # in adjustment later need to be summed together with any 
-  #   # existing rows of Non-energy use in industry not elsewhere specified
-  #   # in neu_memo_flows.
-  #   dplyr::bind_rows(adjustment) |> 
-  #   dplyr::mutate(
-  #     # Eliminate the "Memo: " prefix from the Flow column.
-  #     "{flow}" := sub(paste0("^", memo), "", .data[[flow]]), 
-  #     # Set the Flow.aggregation.point correctly
-  #     "{flow_aggregation_point}" := non_energy_use
-  #   ) |> 
-  #   # Group by correct columns before summarising
-  #   dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], 
-  #                   .data[[last_stage]], .data[[flow_aggregation_point]], 
-  #                   .data[[flow]], .data[[product]]) |> 
-  #   # Now sum the common rows of Non-energy use in industry not elsewhere specified.
-  #   dplyr::summarise(
-  #     "{.values}" := sum(.data[[.values]])
-  #   )
-  #   
-  # 
-  # # Compile the fixed data frame
-  # out <- subtracted |> 
-  #   dplyr::bind_rows(to_add) |> 
-  #   tidyr::pivot_wider(values_from = .values, names_from = dplyr::all_of(year), values_fill = 0)
-  # 
-  # return(out)  
 }
 
 
