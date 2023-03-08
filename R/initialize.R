@@ -908,6 +908,12 @@ remove_agg_memo_flows <- function(.iea_df,
 #' fields and replaces 
 #' "Non-energy use in industry"
 #' with the details in the "Memo:" entries when possible.
+#' 
+#' Note that energy balance checks are _not_ performed on the incoming `.iea_df`,
+#' but that the specification process itself
+#' is checked for energy balance.
+#' In other words, specifying Non-energy use flows 
+#' will not change the energy balance of the incoming `.iea_df` data frame.
 #'
 #' @param .iea_df A data frame of IEA data, 
 #'                created by `augment_iea_df()`.
@@ -953,6 +959,7 @@ specify_non_energy_use <- function(.iea_df,
                                    product = IEATools::iea_cols$product,
                                    non_energy_use = IEATools::aggregation_flows$non_energy_use,
                                    non_energy_flows_industry_transformation_energy = IEATools::non_energy_flows$non_energy_use_industry_transformation_energy,
+                                   memo_non_energy_use_in_industry_not_elsewhere_specified = IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry_not_elsewhere_specified,
                                    memo = IEATools::memo_aggregation_flow_prefixes$memo,
                                    memo_non_energy_flows_industry = IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry,
                                    memo_non_energy_use_in = "Memo: Non-energy use in ",
@@ -1006,6 +1013,32 @@ specify_non_energy_use <- function(.iea_df,
       "{.values_summarised}" := NULL
     )
 
+  # See if there is any leftover Non-energy use industry/transformation/energy.
+  # If so, this should be converted to Non-energy use in industry not elsewhere specified.
+  leftover <- subtracted |> 
+    dplyr::filter(.data[[flow]] == non_energy_flows_industry_transformation_energy, 
+                  abs(.data[[.values]]) > tol)
+
+  # If we have any non-zero leftovers, create 
+  # an adjustment data frame to be added 
+  # to Non-energy use in industry not elsewhere specified.
+  # The adjustment consists of changing the name
+  # from "Non-energy use industry/transformation/energy"
+  # to "Memo: Non-energy use in industry not elsewhere specified"
+  # and subtracting from any existing "Memo: Non-energy use in industry not elsewhere specified".
+  if (nrow(leftover) > 0) {
+    adjustment <- leftover |> 
+      dplyr::mutate(
+        # Change the name
+        "{flow}" := memo_non_energy_use_in_industry_not_elsewhere_specified, 
+        # We really want to subtract. 
+        # But it is easier to change sign and add (via summarise) later.
+        # So here we change sign in preparation for adding to any other 
+        # "Non-energy use in industry not elsewhere specified"
+        "{.values}" := - .data[[.values]]
+      )
+  }
+  
   # Figure out the rows that should replace the to_remove rows
   to_add <- neu_memo_flows |> 
     dplyr::mutate(
@@ -1015,10 +1048,13 @@ specify_non_energy_use <- function(.iea_df,
       "{flow_aggregation_point}" := non_energy_use
     )
   
-  # Now return the fixed data frame
-  subtracted |> 
+  
+  # Compile the fixed data frame
+  out <- subtracted |> 
     dplyr::bind_rows(to_add) |> 
     tidyr::pivot_wider(values_from = .values, names_from = dplyr::all_of(year), values_fill = 0)
+  
+  return(out)  
 }
 
 

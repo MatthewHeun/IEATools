@@ -666,6 +666,65 @@ test_that("specify_non_energy_use() gives matrices we expect", {
 })
 
 
+test_that("specify_non_energy_use() re-balances data when there is a problem", {
+  # Create an unbalanced data frame with Memo: Non-energy use fields
+  # This example comes from the actual USA data from the IEA for 1993.
+  unbalanced_df <- tibble::tibble(
+    "{IEATools::iea_cols$country}" := "USA", 
+    "{IEATools::iea_cols$method}" := "PCM", 
+    "{IEATools::iea_cols$energy_type}" := "E", 
+    "{IEATools::iea_cols$last_stage}" := "Final", 
+    "{IEATools::iea_cols$unit}" := "ktoe", 
+    "{IEATools::iea_cols$ledger_side}" := c(rep("Supply", times = 5), rep("Consumption", 3)),
+    "{IEATools::iea_cols$flow_aggregation_point}" :=
+      c("Total primary energy supply", 
+        "Total primary energy supply",
+        "TFC compare",
+        "Transformation processes",
+        "Energy industry own use", 
+        "Non-energy use",
+        "Non-energy use",
+        "Non-energy use"), 
+    "{IEATools::iea_cols$flow}" := 
+      c("Imports", "Exports", "Transfers", "Oil refineries", "Oil refineries",
+        "Non-energy use industry/transformation/energy", 
+        "Memo: Non-energy use in chemical/petrochemical", 
+        "Memo: Non-energy use in industry not elsewhere specified"), 
+    "{IEATools::iea_cols$product}" := "Other oil products",
+    "1993" := c(5193, -14, -5893, 15333, -211, 14407, 13437, 971))
+    
+  # Call specify_non_energy_use() 
+  
+  unbalanced_df |> 
+      specify_non_energy_use() |> 
+      remove_agg_memo_flows() %>% 
+      tidy_iea_df() |> 
+      prep_psut()
+    
+  
+  # Verify that things are now balanced.
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 test_that("remove_agg_memo_flows() works as expected", {
   for (yr in IEATools::valid_iea_release_years) {
     Cleaned <- sample_iea_data_path(yr) |> 
