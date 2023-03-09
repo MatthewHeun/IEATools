@@ -1066,6 +1066,20 @@ specify_non_energy_use <- function(.iea_df,
       dplyr::summarise(
         "{.values}" := sum(.data[[.values]])
       )
+    # Check if we have a negative number.
+    assertthat::assert_that(all(to_add[[.values]] >= 0), 
+                            msg = paste("Found a negative value in the correction row", 
+                                        "when specifying Non-energy use in IEATools::specify_non_energy_use().",
+                                        "This means that we subtracted_too_much", 
+                                        "'Non-energy use in industry not elsewhere specified'",
+                                        "from 'Non-energy use industry/transformation/energy'.",
+                                        "Which in turn means that it was likely that there was BOTH",
+                                        "too much 'Memo: Non-energy use in <<specific industry>>' flows AND",
+                                        "little or no 'Non-energy use in industry not elsewhere specified' in the original IEA data.",
+                                        "You put this off, hoping it would not be a problem,",
+                                        "but it looks like you need to solve it now!", 
+                                        "The 'to_add' data frame looks like this:\n", 
+                                        to_add))
     subtracted <- subtracted |> 
       # Now eliminate the subtracted too much rows.
       dplyr::anti_join(subtracted_too_much, by = names(subtracted))
