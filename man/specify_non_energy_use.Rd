@@ -21,6 +21,8 @@ specify_non_energy_use(
     IEATools::non_energy_flows$non_energy_use_industry_transformation_energy,
   memo_non_energy_use_in_industry_not_elsewhere_specified =
     IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry_not_elsewhere_specified,
+  non_energy_use_in_industry_not_elsewhere_specified = sub(pattern = paste0("^", memo),
+    replacement = "", memo_non_energy_use_in_industry_not_elsewhere_specified),
   memo = IEATools::memo_aggregation_flow_prefixes$memo,
   memo_non_energy_flows_industry =
     IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry,
@@ -72,17 +74,17 @@ Default is \code{1e-6}.}
 \description{
 For some countries and years, Non-energy use details are supplied
 by "Memo:" fields.
-We use those details, but only if they are balanced.
-This function assess the energy balance of the
-"Memo: Non-energy use in xxxxx"
-fields and replaces
-"Non-energy use in industry"
-with the details in the "Memo:" entries when possible.
+We use those details if they exist.
+This function assess the energy balance of
+replacing "Non-energy use industry/transformation/energy" by
+"Non-energy use in <\if{html}{\out{<specific industry>}}>"
+rows.
+If there is an imbalance, an attempt is made to adjust the imbalance.
 }
 \details{
 Note that energy balance checks are \emph{not} performed on the incoming \code{.iea_df},
 but that the specification process itself
-is checked for energy balance.
+ensures that the modifications, themselves, are balanced.
 In other words, specifying Non-energy use flows
 will not change the energy balance of the incoming \code{.iea_df} data frame.
 }

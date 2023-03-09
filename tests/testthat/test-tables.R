@@ -271,7 +271,7 @@ test_that("complete_fu_allocation_table() works with 2 exemplars", {
                                             country_to_complete = "GHA",
                                             exemplar_fu_allocation_tables = fu_table_ZAF, 
                                             tidy_specified_iea_data = tidy_specified_iea_data), 
-               "Didn't complete FU Allocation table for the following final energy flows:\nGHA, 1971, Other, Residential, Primary solid biofuels;\nGHA, 2000, Other, Residential, Primary solid biofuels. Please check the FU allocation table for typos or misspellings.")
+               "Didn't complete FU Allocation table for the following final energy flows:\nGHA, 1971, Other, Residential, Primary solid biofuels;\nGHA, 2000, Other, Residential, Primary solid biofuels.\nPlease check the FU allocation table for typos or misspellings.")
 })
 
 
