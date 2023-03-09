@@ -914,6 +914,19 @@ remove_agg_memo_flows <- function(.iea_df,
 #' ensures that the modifications, themselves, are balanced.
 #' In other words, specifying Non-energy use flows 
 #' will not change the energy balance of the incoming `.iea_df` data frame.
+#' 
+#' This function does _not_ promise the resulting data frame
+#' is internally consistent. 
+#' Rather, this function should be considered a step along the path to 
+#' creating a coherent data frame of IEA data.
+#' Specifically, 
+#' this function does not specify aggregation or Memo: flows, so
+#' coherence will be achieved again only after
+#' `remove_agg_memo_flows()`
+#' is called.
+#' Note that `load_tidy_iea_df(specify_non_energy_flows = TRUE)` 
+#' correctly calls `remove_agg_memo_flows()` internally, so 
+#' using `load_tidy_iea_df()` is preferred to calling `specify_non_energy_use()` directly.
 #'
 #' @param .iea_df A data frame of IEA data, 
 #'                created by `augment_iea_df()`.

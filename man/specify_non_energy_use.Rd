@@ -87,6 +87,19 @@ but that the specification process itself
 ensures that the modifications, themselves, are balanced.
 In other words, specifying Non-energy use flows
 will not change the energy balance of the incoming \code{.iea_df} data frame.
+
+This function does \emph{not} promise the resulting data frame
+is internally consistent.
+Rather, this function should be considered a step along the path to
+creating a coherent data frame of IEA data.
+Specifically,
+this function does not specify aggregation or Memo: flows, so
+coherence will be achieved again only after
+\code{remove_agg_memo_flows()}
+is called.
+Note that \code{load_tidy_iea_df(specify_non_energy_flows = TRUE)}
+correctly calls \code{remove_agg_memo_flows()} internally, so
+using \code{load_tidy_iea_df()} is preferred to calling \code{specify_non_energy_use()} directly.
 }
 \examples{
 sample_iea_data_path() \%>\% 

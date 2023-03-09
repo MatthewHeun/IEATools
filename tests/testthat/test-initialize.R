@@ -693,7 +693,7 @@ test_that("specify_non_energy_use() gives matrices we expect", {
     use_iso_countries() |> 
     augment_iea_df() |> 
     specify_non_energy_use() |> 
-    remove_agg_memo_flows() %>% 
+    remove_agg_memo_flows() |> 
     tidy_iea_df() |> 
     prep_psut()
   
@@ -771,6 +771,7 @@ test_that("specify_non_energy_use() gives matrices we expect", {
 
 
 test_that("specify_non_energy_use() works for South African Hard coal in 1971", {
+  # This is an extract of the ZAF coal data for 1971.
   df <- tibble::tibble(
     "{IEATools::iea_cols$country}" := "ZAF", 
     "{IEATools::iea_cols$method}" := "PCM", 
