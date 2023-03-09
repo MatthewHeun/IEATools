@@ -479,18 +479,14 @@ test_that("augment_iea_df() works with NEU flows", {
 })
 
 
-test_that("specify_non_energy_use() works for Ghana 1971", {
+test_that("specify_non_energy_use() works for Ghana 1971 and 2000", {
   df <- sample_iea_data_path() |>
     iea_df() |> 
     rename_iea_df_cols() |> 
     clean_iea_whitespace() |> 
     augment_iea_df() |> 
-    dplyr::filter(.data[[IEATools::iea_cols$country]] == "Ghana") # |> 
-    # dplyr::mutate(
-    #   # Keep only 1971 data
-    #   `2000` = NULL
-    # )
-  
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "Ghana")
+
   # Verify that original NEU rows are "Non-energy use industry/transformation/energy"
   df |> 
     dplyr::filter(
@@ -526,6 +522,67 @@ test_that("specify_non_energy_use() works for Ghana 1971", {
     tidy_iea_df_balanced() |> 
     expect_true()
 })
+
+
+test_that("specify_non_energy_use() works for South Africa 1971 and 2000", {
+  df <- sample_iea_data_path() |>
+    iea_df() |> 
+    rename_iea_df_cols() |> 
+    clean_iea_whitespace() |> 
+    augment_iea_df() |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "South Africa") |> 
+    dplyr::mutate(
+      # Keep only 1971 data
+      `2000` = NULL
+    )
+  
+  # Verify that original NEU rows are "Non-energy use industry/transformation/energy"
+  df |> 
+    dplyr::filter(
+      .data[[IEATools::iea_cols$flow]] == IEATools::non_energy_flows$non_energy_use_industry_transformation_energy
+    ) |> 
+    nrow() |> 
+    expect_equal(68)
+  
+  # Check that the original data are balanced.
+  df |> 
+    remove_agg_memo_flows() |> 
+    tidy_iea_df() |> 
+    calc_tidy_iea_df_balances(tol = 1e-3) |> 
+    tidy_iea_df_balanced() |> 
+    expect_true()
+  
+  specified <- df |> 
+    specify_non_energy_use()
+  
+  # Check that the specified data frame has rows that are Non-energy use in industry
+  specified |> 
+    dplyr::filter(
+      .data[[IEATools::iea_cols$flow]] == "Non-energy use in industry not elsewhere specified"
+    ) |>
+    nrow() |> 
+    expect_equal(2)
+  
+  # Check that the specified data are balanced.
+  specified |> 
+    remove_agg_memo_flows() |> 
+    tidy_iea_df() |> 
+    calc_tidy_iea_df_balances(tol = 1e-3) |> 
+    tidy_iea_df_balanced() |> 
+    expect_true()
+})
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -718,6 +775,121 @@ test_that("specify_non_energy_use() gives matrices we expect", {
     magrittr::extract("White spirit & SBP", "Non-energy use industry/transformation/energy") |> 
     expect_equal(70.0350)
 })
+
+
+test_that("specify_non_energy_use() works for South African Hard coal in 1971", {
+  df <- tibble::tibble(
+    "{IEATools::iea_cols$country}" := "ZAF", 
+    "{IEATools::iea_cols$method}" := "PCM", 
+    "{IEATools::iea_cols$energy_type}" := "E", 
+    "{IEATools::iea_cols$last_stage}" := "Final", 
+    "{IEATools::iea_cols$unit}" := "ktoe", 
+    "{IEATools::iea_cols$ledger_side}" := c(rep("Supply", times = 11), rep("Consumption", 18)),
+    "{IEATools::iea_cols$flow_aggregation_point}" :=
+      c(rep("Total primary energy supply", 2), 
+        rep("TFC compare", 3), 
+        rep("Transformation processes", 5), 
+        NA_character_,
+        "Total final consumption", 
+        rep("Industry", 6), 
+        "Total final consumption", 
+        "Transport", 
+        rep("Other", 3), 
+        "Total final consumption", 
+        "Non-energy use", 
+        "Memo: Non-energy use in industry", 
+        NA_character_,
+        rep("Electricity output (GWh)", 2)
+      ), 
+    "{IEATools::iea_cols$flow}" := 
+      c("Production", "Exports", "Total energy supply", "Statistical differences", 
+        "Transformation processes", "Main activity producer electricity plants", 
+        "Autoproducer electricity plants", "Gas works", "Coke ovens", "Coal liquefaction plants", 
+        "Total final consumption", 
+        "Industry", "Mining and quarrying", "Manufacturing", "Iron and steel", "Non-ferrous metals",
+        "Non-metallic minerals", "Industry not elsewhere specified", "Transport", "Rail",
+        "Residential", "Commercial and public services", "Agriculture/forestry", 
+        "Non-energy use", "Non-energy use industry/transformation/energy", 
+        "Memo: Non-energy use in chemical/petrochemical", "Electricity output (GWh)", 
+        "Electricity output (GWh)-main activity producer electricity plants", 
+        "Electricity output (GWh)-autoproducer electricity plants"), 
+    "{IEATools::iea_cols$product}" := "Hard coal (if no detail)",
+    "1971" := c(33064.4311, -965.4603, 32098.9708, 4016.2396, -22361.8742, -15567.0427, -908.5068, 
+                -1203.1751, -4045.7551, -637.3944, 13753.3362, 
+                6493.0190, 876.2674, 5294.3573, 2412.1533, 1712.5579, 1169.6461, 322.3942, 
+                3295.5134, 3295.5134, 2430.8522, 709.2672, 76.7298, 747.9545, 747.9545, 747.9545, 
+                54535.0000, 52628.0000, 1907.0000))
+  
+  # Check energy balance
+  df |> 
+    remove_agg_memo_flows() |> 
+    tidy_iea_df() |> 
+    calc_tidy_iea_df_balances(tol = 1e-3) |> 
+    tidy_iea_df_balanced() |> 
+    expect_true()
+  
+  # Call specify_non_energy_use() 
+  neu_specified_df <- df |> 
+    specify_non_energy_use()
+  
+  # Full join to see differences
+  res <- dplyr::full_join(df, neu_specified_df, by = c("Country", "Method", "Energy.type", "Last.stage", "Unit", "Ledger.side", 
+                                                "Flow", "Flow.aggregation.point", "Product")) |>
+    dplyr::filter(.data[[IEATools::iea_cols$flow_aggregation_point]] %in% c("Non-energy use", "Memo: Non-energy use in industry"))
+  # Check that the right flows are present in res
+  res |> 
+    dplyr::filter(.data[[IEATools::iea_cols$flow]] == IEATools::non_energy_flows$non_energy_use_industry_transformation_energy) |> 
+    magrittr::extract2("1971.x") |> 
+    expect_equal(747.9545)
+  res |> 
+    dplyr::filter(.data[[IEATools::iea_cols$flow]] == IEATools::non_energy_flows$non_energy_use_industry_transformation_energy) |> 
+    magrittr::extract2("1971.y") |> 
+    is.na() |> 
+    expect_true()
+  res |> 
+    dplyr::filter(startsWith(.data[[IEATools::iea_cols$flow]], "Memo: ")) |> 
+    magrittr::extract2("1971.x") |> 
+    expect_equal(747.9545)
+  res |> 
+    dplyr::filter(startsWith(.data[[IEATools::iea_cols$flow]], "Memo: ")) |> 
+    magrittr::extract2("1971.y") |> 
+    is.na() |> 
+    expect_true()
+  res |> 
+    dplyr::filter(.data[[IEATools::iea_cols$flow]] == "Non-energy use in chemical/petrochemical") |> 
+    magrittr::extract2("1971.x") |> 
+    is.na() |> 
+    expect_true()
+  res |> 
+    dplyr::filter(.data[[IEATools::iea_cols$flow]] == "Non-energy use in chemical/petrochemical") |> 
+    magrittr::extract2("1971.y") |> 
+    expect_equal(747.9545)
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 test_that("specify_non_energy_use() re-balances data when there is an imbalance in the NEU data", {

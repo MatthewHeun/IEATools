@@ -1044,6 +1044,8 @@ specify_non_energy_use <- function(.iea_df,
           # the Flow column changed to
           # Memo: Non-energy use in industry not elsewhere specified.
           dplyr::mutate(
+            # Set the Flow.aggregation.point
+            "{flow_aggregation_point}" := non_energy_use,
             # Change the name
             "{flow}" := memo_non_energy_use_in_industry_not_elsewhere_specified
           )
@@ -1068,9 +1070,13 @@ specify_non_energy_use <- function(.iea_df,
     ) |> 
     # Here, we eliminate any rows that have been zeroed out.
     dplyr::filter(abs(.data[[.values]]) > tol) |> 
-    # Second-last step is to remove the "Memo: " part of "Memo: Non-energy use"
+    # Second-last step is to remove the "Memo: " part of "Memo: Non-energy use" in the Flow.aggregation.point and Flow columns.
     dplyr::mutate(
       "{flow}" := sub(pattern = memo_non_energy_use_in, replacement = non_energy_use_in, .data[[flow]]), 
+      "{flow_aggregation_point}" := dplyr::case_when(
+        startsWith(.data[[flow_aggregation_point]], memo) & startsWith(.data[[flow]], non_energy_use_in) ~ non_energy_use, 
+        TRUE ~ .data[[flow_aggregation_point]]
+      )
     ) |> 
     # Finally, pivot wider to return.
     tidyr::pivot_wider(values_from = .values, names_from = dplyr::all_of(year), values_fill = 0)
@@ -1145,8 +1151,9 @@ tidy_iea_df <- function(.iea_df,
     # Gather into a tidy data frame.
     # tidyr::gather(key = !!as.name(year), value = !!as.name(e_dot), -c(method, country, last_stage, ledger_side,
     #                                                                   flow_aggregation_point, flow, product, energy_type, unit)) %>%
-    tidyr::pivot_longer(names_to = year, values_to = e_dot, cols = -dplyr::any_of(c(method, country, energy_type, last_stage, ledger_side,
-                                                                                    flow_aggregation_point, flow, product, unit))) %>%
+    # tidyr::pivot_longer(names_to = year, values_to = e_dot, cols = -dplyr::any_of(c(method, country, energy_type, last_stage, ledger_side,
+    #                                                                                 flow_aggregation_point, flow, product, unit))) %>%
+    tidyr::pivot_longer(names_to = year, values_to = e_dot, cols = year_cols(.iea_df)) %>%
     # Set the column order to something rational
     # dplyr::select(country, method, energy_type, last_stage, year, ledger_side, flow_aggregation_point, flow, product, unit, e_dot) %>% 
     dplyr::select(dplyr::all_of(c(country, method, energy_type, last_stage, year, ledger_side, flow_aggregation_point, flow, product, unit, e_dot))) %>%
