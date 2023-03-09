@@ -479,6 +479,60 @@ test_that("augment_iea_df() works with NEU flows", {
 })
 
 
+test_that("specify_non_energy_use() works for Ghana 1971", {
+  df <- sample_iea_data_path() |>
+    iea_df() |> 
+    rename_iea_df_cols() |> 
+    clean_iea_whitespace() |> 
+    augment_iea_df() |> 
+    dplyr::filter(.data[[IEATools::iea_cols$country]] == "Ghana") # |> 
+    # dplyr::mutate(
+    #   # Keep only 1971 data
+    #   `2000` = NULL
+    # )
+  
+  # Verify that original NEU rows are "Non-energy use industry/transformation/energy"
+  df |> 
+    dplyr::filter(
+      .data[[IEATools::iea_cols$flow]] == IEATools::non_energy_flows$non_energy_use_industry_transformation_energy
+    ) |> 
+    nrow() |> 
+    expect_equal(68)
+  
+  # Check that the original data are balanced.
+  df |> 
+    remove_agg_memo_flows() |> 
+    tidy_iea_df() |> 
+    calc_tidy_iea_df_balances(tol = 1e-3) |> 
+    tidy_iea_df_balanced() |> 
+    expect_true()
+  
+  specified <- df |> 
+    specify_non_energy_use()
+  
+  # Check that the specified data frame has rows that are Non-energy use in industry
+  specified |> 
+    dplyr::filter(
+      .data[[IEATools::iea_cols$flow]] == "Non-energy use in industry not elsewhere specified"
+    ) |>
+    nrow() |> 
+    expect_equal(4)
+  
+  # Check that the specified data are balanced.
+  specified |> 
+    remove_agg_memo_flows() |> 
+    tidy_iea_df() |> 
+    calc_tidy_iea_df_balances(tol = 1e-3) |> 
+    tidy_iea_df_balanced() |> 
+    expect_true()
+})
+
+
+
+
+
+
+
 test_that("specify_non_energy_use() works as expected", {
   df <- sample_iea_data_path() |>
     iea_df() |> 
@@ -666,7 +720,7 @@ test_that("specify_non_energy_use() gives matrices we expect", {
 })
 
 
-test_that("specify_non_energy_use() re-balances data when there is a problem", {
+test_that("specify_non_energy_use() re-balances data when there is an imbalance in the NEU data", {
   # Create an unbalanced data frame with Memo: Non-energy use fields
   # This example comes from the actual USA data from the IEA for 1993.
   unbalanced_df <- tibble::tibble(
