@@ -933,11 +933,14 @@ remove_agg_memo_flows <- function(.iea_df,
 #' @param country,year,method,energy_type,unit,ledger_side,last_stage,flow_aggregation_point,flow,product See `IEATools::iea_cols`.
 #' @param non_energy_use See `IEATools::aggregation_flows`.
 #' @param non_energy_flows_industry_transformation_energy See `IEATools::non_energy_flows`.
+#' @param memo_non_energy_use_in_industry_not_elsewhere_specified See `IEATools::memo_non_energy_flows`.
 #' @param memo A string prefix for memo flows. 
 #'             Default is `IEATools::memo_aggregation_flow_prefixes$memo`.
 #' @param memo_non_energy_flows_industry See `IEATools::memo_non_energy_flows`.
+#' @param non_energy_use_in_industry_not_elsewhere_specified Same as `memo_non_energy_use_in_industry_not_elsewhere_specified` without the `memo` prefix.
 #' @param memo_non_energy_use_in A prefix for specific Non-energy use flows.
 #'                               Default is "Memo: Non-energy use in ".
+#' @param non_energy_use_in Same as `memo_non_energy_use_in` without the `memo` prefix.
 #' @param total See `IEATools::memo_aggregation_product_prefixes`.
 #' @param .values An internal column name.
 #'                Default is `IEATools::template_cols$.values`.
@@ -972,7 +975,8 @@ specify_non_energy_use <- function(.iea_df,
                                    product = IEATools::iea_cols$product,
                                    non_energy_use = IEATools::aggregation_flows$non_energy_use,
                                    non_energy_flows_industry_transformation_energy = IEATools::non_energy_flows$non_energy_use_industry_transformation_energy,
-                                   memo_non_energy_use_in_industry_not_elsewhere_specified = IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry_not_elsewhere_specified,
+                                   memo_non_energy_use_in_industry_not_elsewhere_specified = 
+                                     IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry_not_elsewhere_specified,
                                    non_energy_use_in_industry_not_elsewhere_specified = sub(pattern = paste0("^", memo), replacement = "", memo_non_energy_use_in_industry_not_elsewhere_specified),
                                    memo = IEATools::memo_aggregation_flow_prefixes$memo,
                                    memo_non_energy_flows_industry = IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry,

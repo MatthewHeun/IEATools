@@ -24,6 +24,7 @@ output: html_document
   matrix (`TRUE`) and 
   (b) placing only Resource flows
   in the **R** matrix (`FALSE`).
+  Default is `TRUE`.
 * Added "Main activity producer electricity plants" to the list of `eiou_flows`.
   We route "Own use in electricity, CHP and heat plants" to 
   "Main activity producer electricity plants", 

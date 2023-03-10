@@ -46,6 +46,10 @@ created by \code{augment_iea_df()}.}
 
 \item{non_energy_flows_industry_transformation_energy}{See \code{IEATools::non_energy_flows}.}
 
+\item{memo_non_energy_use_in_industry_not_elsewhere_specified}{See \code{IEATools::memo_non_energy_flows}.}
+
+\item{non_energy_use_in_industry_not_elsewhere_specified}{Same as \code{memo_non_energy_use_in_industry_not_elsewhere_specified} without the \code{memo} prefix.}
+
 \item{memo}{A string prefix for memo flows.
 Default is \code{IEATools::memo_aggregation_flow_prefixes$memo}.}
 
@@ -53,6 +57,8 @@ Default is \code{IEATools::memo_aggregation_flow_prefixes$memo}.}
 
 \item{memo_non_energy_use_in}{A prefix for specific Non-energy use flows.
 Default is "Memo: Non-energy use in ".}
+
+\item{non_energy_use_in}{Same as \code{memo_non_energy_use_in} without the \code{memo} prefix.}
 
 \item{total}{See \code{IEATools::memo_aggregation_product_prefixes}.}
 
