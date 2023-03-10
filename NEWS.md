@@ -4,7 +4,7 @@ output: html_document
 ---
 
 
-# IEATools 0.1.64 (2023-03-09)
+# IEATools 0.1.64 (2023-03-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7714342.svg)](https://doi.org/10.5281/zenodo.7714342)
 
 * New boolean argument `specify_non_energy_flows` 
   on `load_tidy_iea_df()` enables specifying Non-energy use flows 
