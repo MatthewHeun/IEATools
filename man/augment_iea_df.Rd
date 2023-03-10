@@ -47,7 +47,8 @@ augment_iea_df(
   other = "Other",
   other_flows = IEATools::other_flows,
   non_energy = "Non-energy use",
-  non_energy_prefix = "Non-energy use",
+  non_energy_flows = IEATools::non_energy_flows,
+  memo_non_energy_flows = IEATools::memo_non_energy_flows,
   electricity_output = "Electricity output (GWh)",
   electricity_output_flows_prefix = "Electricity output (GWh)-",
   heat_output = "Heat output",
@@ -56,101 +57,104 @@ augment_iea_df(
 )
 }
 \arguments{
-\item{.iea_df}{a data frame produced by the \code{\link[=iea_df]{iea_df()}} function}
+\item{.iea_df}{A data frame produced by the \code{iea_df()} function.}
 
-\item{country}{the name of the country column in \code{.iea_df}. Default is "Country".}
+\item{country}{The name of the country column in \code{.iea_df}. Default is "Country".}
 
-\item{ledger_side}{the name of the ledger side column to be added to \code{.iea_df}. Default is "Ledger.side".}
+\item{ledger_side}{The name of the ledger side column to be added to \code{.iea_df}. Default is "Ledger.side".}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column to be added to \code{.iea_df}. Default is "Flow.aggregation.point".}
+\item{flow_aggregation_point}{The name of the flow aggregation point column to be added to \code{.iea_df}. Default is "Flow.aggregation.point".}
 
-\item{flow}{the name of the flow column in \code{.iea_df}.  Default is "Flow".}
+\item{flow}{The name of the flow column in \code{.iea_df}.  Default is "Flow".}
 
-\item{product}{the name of the product column in \code{.iea_df}.  Default is "Product".}
+\item{product}{The name of the product column in \code{.iea_df}.  Default is "Product".}
 
-\item{energy_type}{the name of the energy type column to be added to \code{.iea_df}. Default is "Energy.type.}
+\item{energy_type}{The name of the energy type column to be added to \code{.iea_df}. Default is "Energy.type.}
 
-\item{energy_type_val}{the value to put in the \code{energy_type} column. Default is "E".}
+\item{energy_type_val}{The value to put in the \code{energy_type} column. Default is "E".}
 
-\item{method}{the name of the method column to be added to \code{.iea_df}. Default is "Method".}
+\item{method}{The name of the method column to be added to \code{.iea_df}. Default is "Method".}
 
-\item{method_val}{the value to put in the \code{method} column. Default is "PCM" (Physical Content Method, which is used by the IEA).}
+\item{method_val}{The value to put in the \code{method} column. Default is "PCM" (Physical Content Method, which is used by the IEA).}
 
-\item{last_stage}{the name of the last stage column to be added to \code{.iea_df}. Default is "Last.stage".}
+\item{last_stage}{The name of the last stage column to be added to \code{.iea_df}. Default is "Last.stage".}
 
-\item{last_stage_val}{the value to put in the \code{last_stage} column. Default is "Final" (which is the last stage supplied by the IEA).}
+\item{last_stage_val}{The value to put in the \code{last_stage} column. Default is "Final" (which is the last stage supplied by the IEA).}
 
-\item{unit}{the name of the unit column to be added to \code{.iea_df}. Default is "Unit".}
+\item{unit}{The name of the unit column to be added to \code{.iea_df}. Default is "Unit".}
 
-\item{unit_val}{the value to put in the \code{unit} column. Default is "\code{ktoe}" for kilotons of oil equivalent.}
+\item{unit_val}{The value to put in the \code{unit} column. Default is "\code{ktoe}" for kilotons of oil equivalent.}
 
-\item{supply}{the string that identifies supply \code{Ledger.side}. Default is "Supply".}
+\item{supply}{The string that identifies supply \code{Ledger.side}. Default is "Supply".}
 
-\item{consumption}{the string that identifies consumption \code{Ledger.side}. Default is "Consumption".}
+\item{consumption}{The string that identifies consumption \code{Ledger.side}. Default is "Consumption".}
 
-\item{tpes}{the string that identifies total primary energy supply \code{Flow.aggregation.point}. Default is "Total primary energy supply".}
+\item{tpes}{The string that identifies total primary energy supply \code{Flow.aggregation.point}. Default is "Total primary energy supply".}
 
-\item{tpes_flows}{a vector of strings that give flows that are aggregated to \verb{Total primary energy supply}.}
+\item{tpes_flows}{A vector of strings that give flows that are aggregated to \verb{Total primary energy supply}.}
 
-\item{tfc_compare}{a string that identifies the \verb{TFC compare} flow aggregation point. Default is "TFC compare".}
+\item{tfc_compare}{A string that identifies the \verb{TFC compare} flow aggregation point. Default is "TFC compare".}
 
-\item{tfc_compare_flows}{a vector of strings that give \code{Flow}s that are aggregated to \verb{TFC compare}.}
+\item{tfc_compare_flows}{A vector of strings that give \code{Flow}s that are aggregated to \verb{TFC compare}.}
 
-\item{transfers}{= a string that identifies transfers in the flow column. Default is "Transfers".}
+\item{transfers}{= A string that identifies transfers in the flow column. Default is "Transfers".}
 
-\item{statistical_differences}{a string that identifies statistical differences in flow column. Default is "Statistical differences".}
+\item{statistical_differences}{A string that identifies statistical differences in flow column. Default is "Statistical differences".}
 
-\item{losses}{the string that indicates losses in the \code{Flow} column. Default is "Losses".}
+\item{losses}{The string that indicates losses in the \code{Flow} column. Default is "Losses".}
 
-\item{transformation_processes}{the string that indicates transformation processes in the \code{Flow} column. Default is "Transformation processes".}
+\item{transformation_processes}{The string that indicates transformation processes in the \code{Flow} column. Default is "Transformation processes".}
 
-\item{tp_flows_suffix}{the suffix for transformation processes in the \code{Flow} column. Default is "(transf.)".}
+\item{tp_flows_suffix}{The suffix for transformation processes in the \code{Flow} column. Default is "(transf.)".}
 
-\item{nstp_flows_suffix}{the suffix for non-specified transformation processes in the \code{Flow} column. Default is "(transformation)".}
+\item{nstp_flows_suffix}{The suffix for non-specified transformation processes in the \code{Flow} column. Default is "(transformation)".}
 
-\item{mapep}{the string that identifies main activity producer electricity plants in the \code{Flow} column. Default is "Main activity producer electricity plants".}
+\item{mapep}{The string that identifies main activity producer electricity plants in the \code{Flow} column. Default is "Main activity producer electricity plants".}
 
-\item{eiou}{the string that identifies energy industry own use in the \code{Flow} column. Default is "Energy industry own use".}
+\item{eiou}{The string that identifies energy industry own use in the \code{Flow} column. Default is "Energy industry own use".}
 
-\item{eiou_flows_suffix}{the suffix for energy industry own use in the \code{Flow} column. Default is "(energy)".}
+\item{eiou_flows_suffix}{The suffix for energy industry own use in the \code{Flow} column. Default is "(energy)".}
 
-\item{coal_mines}{the string that identifies coal mines in the \code{Flow} column. Default is "Coal mines".}
+\item{coal_mines}{The string that identifies coal mines in the \code{Flow} column. Default is "Coal mines".}
 
-\item{non_specified}{the string that identifies non-specified flows in the \code{Flow} column. Default is "Non-specified".}
+\item{non_specified}{The string that identifies non-specified flows in the \code{Flow} column. Default is "Non-specified".}
 
-\item{tfc}{the string that identifies total final consumption in the \code{Flow} column. Default is "Total final consumption".}
+\item{tfc}{The string that identifies total final consumption in the \code{Flow} column. Default is "Total final consumption".}
 
-\item{tfc_flows}{a vector of strings that give total final consumption in the \code{Flow} column.}
+\item{tfc_flows}{A vector of strings that give total final consumption in the \code{Flow} column.}
 
-\item{industry}{a string that names the industry \code{Flow.aggregation.point}. Default is "Industry".}
+\item{industry}{A string that names the industry \code{Flow.aggregation.point}. Default is "Industry".}
 
-\item{industry_flows}{a vector of strings representing \code{Flow}s to be aggregated in the \code{Industry} \code{Flow.aggregation.point}.}
+\item{industry_flows}{A vector of strings representing \code{Flow}s to be aggregated in the \code{Industry} \code{Flow.aggregation.point}.}
 
-\item{iron_and_steel}{a string that identifies the iron and steel industry. Default is "Iron and steel".}
+\item{iron_and_steel}{A string that identifies the iron and steel industry. Default is "Iron and steel".}
 
-\item{mining_and_quarrying}{a string that identifies the mining and quarrying industry. Default is "Mining and quarrying".}
+\item{mining_and_quarrying}{A string that identifies the mining and quarrying industry. Default is "Mining and quarrying".}
 
-\item{transport}{a string that names the transport \code{Flow.aggregation.point}. Default is "Transport".}
+\item{transport}{A string that names the transport \code{Flow.aggregation.point}. Default is "Transport".}
 
-\item{transport_flows}{a vector of strings representing \code{Flow}s to be aggregated in the \code{Transport} \code{Flow.aggregation.point}.}
+\item{transport_flows}{A vector of strings representing \code{Flow}s to be aggregated in the \code{Transport} \code{Flow.aggregation.point}.}
 
-\item{other}{a string that names the other \code{Flow.aggregation.point}. Default is "Other".}
+\item{other}{A string that names the other \code{Flow.aggregation.point}. Default is "Other".}
 
-\item{other_flows}{a vector of strings representing \code{Flow}s to be aggregated in the \code{Other} \code{Flow.aggregation.point}.}
+\item{other_flows}{A vector of strings representing \code{Flow}s to be aggregated in the \code{Other} \code{Flow.aggregation.point}.}
 
-\item{non_energy}{a string that names the non-energy \code{Flow.aggregation.point}. Default is "Non-energy use".}
+\item{non_energy}{A string that names the non-energy \code{Flow.aggregation.point}. Default is "Non-energy use".}
 
-\item{non_energy_prefix}{a string prefix for \code{Flow}s to be aggregated in the \verb{Non-energy use} \code{Flow.aggregation.point}.}
+\item{non_energy_flows}{A list of \code{Flow}s to be aggregated to the \verb{Non-energy use} \code{Flow.aggregation.point}.}
 
-\item{electricity_output}{a string that names the electricity output \code{Flow}. Default is "Electricity output (GWh)".}
+\item{memo_non_energy_flows}{A list of \code{Flow}s to be aggregated to "Memo: Non-energy use in industry".
+Default is \code{IEATools::memo_non_energy_flows}.}
 
-\item{electricity_output_flows_prefix}{a string prefix for \code{Flow}s to be aggregated in electricity output. Default is "Electricity output (GWh)-".}
+\item{electricity_output}{A string that names the electricity output \code{Flow}. Default is "Electricity output (GWh)".}
 
-\item{heat_output}{a string that names the heat output \code{Flow}. Default is "Heat output".}
+\item{electricity_output_flows_prefix}{A string prefix for \code{Flow}s to be aggregated in electricity output. Default is "Electricity output (GWh)-".}
 
-\item{heat_output_flows_prefix}{a string prefix for \code{Flow}s to be aggregated in heat output. Default is "Heat output-".}
+\item{heat_output}{A string that names the heat output \code{Flow}. Default is "Heat output".}
 
-\item{.rownum}{the name of a column created (and destroyed) internally by this function.
+\item{heat_output_flows_prefix}{A string prefix for \code{Flow}s to be aggregated in heat output. Default is "Heat output-".}
+
+\item{.rownum}{The name of a column created (and destroyed) internally by this function.
 The \code{.rownum} column temporarily holds row numbers for internal calculations.
 The \code{.rownum} column is deleted before returning.}
 }
@@ -158,7 +162,7 @@ The \code{.rownum} column is deleted before returning.}
 \code{.iea_df} with additional columns named \code{ledger_side}, \code{flow_aggregation_point}, \code{energy_type}, and \code{unit}.
 }
 \description{
-This function prepares an IEA data frame created by \code{\link[=iea_df]{iea_df()}} for use in R.
+This function prepares an IEA data frame created by \code{iea_df()} for use in R.
 It works on IEA data from the 2018 and 2019 releases
 of the IEA's extended energy balances.
 }
@@ -168,20 +172,20 @@ The first problem is that metadata in the \code{COUNTRY}, \code{FLOW}, and \code
 columns of an IEA data table are not unique.
 A second problem is that the \code{FLOW} column contains both industries to which energy is flowing \emph{and}
 the type of flow that is involved.
-(E.g., the suffix "\code{(energy)}" means that the flow is an own use by the energy industry.
-The "\code{(transf.)}" suffix means that a flow is involved in a transformation process
+(E.g., the suffix "(energy)" means that the flow is an own use by the energy industry.
+The "(transf.)" suffix means that a flow is involved in a transformation process
 between primary and final energy.
 
 To solve these problems, two additional columns are added: \code{Ledger.side} and \code{Flow.aggregation.point}.
-\code{Ledger.side} can be one of "\code{Supply}" or "\code{Consumption}", corresponding to the top or bottom of the IEA's tables, respectively.
+\code{Ledger.side} can be one of "Supply" or "Consumption", corresponding to the top or bottom of the IEA's tables, respectively.
 \code{Flow.aggregation.point} indicates the next level of aggregation for these data.
 \code{Flow.aggregation.point} can be one of
-"\verb{Total primary energy supply}", "\verb{Transformation processes}", "\verb{Energy industry own use}", or "\verb{TFC compare}"
+"Total primary energy supply", "Transformation processes", "Energy industry own use", or "TFC compare"
 on the \code{Supply} side of the ledger.
 On the \code{Consumption} side of the ledger, \code{Flow.aggregation.point} can be one of
-"\code{Industry}", "\code{Transport}", "\code{Other}", or "\verb{Non-energy use}".
+"Industry", "Transport", "Other", "Non-energy use", or "Memo: Non-energy use in industry".
 When the \code{Flow.aggregation.point} column is present,
-the need for the "\code{(energy)}" and "\code{(transf.)}" suffixes is eliminated,
+the need for the "(energy)" and "(transf.)" suffixes is eliminated,
 so they are deleted.
 
 The third problem this function solves is that energy type and units are not specified in IEA data.
@@ -191,11 +195,11 @@ A \code{Unit} column is added with the value of \code{unit_val}.
 (Default is \code{ktoe}, although any string can be specified in \code{unit_val}.)
 
 Note that this function decides where to divide \code{Supply} from \code{Consumption}.
-To do so, it first looks for rows in which \code{Flow} is "\code{Losses}".
-The last "\code{Losses}" row is the last row of the \code{Supply} side of the ledger.
-If "\code{Losses}" rows are not found, the function looks for rows in which \code{Flow} is "\verb{Total final consumption}".
-The first "\verb{Total final consumption}" row is the first row of the \code{Consumption} side of the ledger.
-If neither "\code{Losses}" nor "\verb{Total final consumption}" \code{Flow}s are present,
+To do so, it first looks for rows in which \code{Flow} is "Losses".
+The last "Losses" row is the last row of the "Supply" side of the ledger.
+If "Losses" rows are not found, the function looks for rows in which \code{Flow} is "Total final consumption".
+The first "Total final consumption" row is the first row of the \code{Consumption} side of the ledger.
+If neither "Losses" nor "Total final consumption" \code{Flow}s are present,
 an error is generated.
 }
 \examples{

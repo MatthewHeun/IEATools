@@ -11,7 +11,7 @@
 #' `Country`, `Method`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
 #' Grouping should _not_ be done on the `Ledger.side` column or the `Flow` column.
 #' To test whether all balances are OK, 
-#' use the [tidy_iea_df_balanced()] function.
+#' use the `tidy_iea_df_balanced()` function.
 #' 
 #' Supply side and consumption side energy flows are aggregated to a 
 #' `supply_sum` and a `consumption_sum` column.
@@ -92,11 +92,15 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
     dplyr::group_by(!!!grouping_names)
   SupplySum <- Tidy %>%
     dplyr::filter(.data[[ledger_side]] == supply) %>%
-    dplyr::summarise("{supply_sum}" := sum(.data[[e_dot]]))
+    dplyr::summarise(
+      "{supply_sum}" := sum(.data[[e_dot]])
+    )
   # Calculate the consumption sum on a per-group basis
   ConsumptionSum <- Tidy %>%
     dplyr::filter(.data[[ledger_side]] == consumption | .data[[ledger_side]] == balancing) %>%
-    dplyr::summarise("{consumption_sum}" := sum(.data[[e_dot]]))
+    dplyr::summarise(
+      "{consumption_sum}" := sum(.data[[e_dot]])
+    )
   # Return the difference between supply and consumption
   dplyr::full_join(SupplySum, ConsumptionSum, by = grouping_strings) %>% 
     dplyr::mutate(
@@ -238,11 +242,12 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
   if (nrow(.tidy_iea_df) == 0) {
     return(.tidy_iea_df)
   }
-  grouping_names <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot)
+  # grouping_names <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot)
   grouping_strings <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot, .symbols = FALSE)
   e_bal_errors <- .tidy_iea_df %>% 
     calc_tidy_iea_df_balances(err = .err) %>% 
-    dplyr::select(!!!grouping_names, .err) %>% 
+    # dplyr::select(!!!grouping_names, .err) %>% 
+    dplyr::select(dplyr::all_of(c(grouping_strings, .err))) %>% 
     dplyr::mutate(
       "{flow}" := statistical_differences, 
       "{ledger_side}" := supply,
@@ -257,7 +262,8 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
     # Find which products exceed the threshold.
     err_too_big <- e_bal_errors %>% 
       dplyr::filter(abs(.data[[.err]]) > max_fix) %>% 
-      dplyr::select(country, year, product, .err)
+      # dplyr::select(country, year, product, .err)
+      dplyr::select(dplyr::all_of(c(country, year, product, .err)))
     err_too_big_combos <- paste(err_too_big[[country]], 
                                 err_too_big[[year]], 
                                 err_too_big[[product]], 

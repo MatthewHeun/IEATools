@@ -6,6 +6,7 @@
 \usage{
 add_psut_matnames(
   .tidy_iea_df,
+  R_includes_all_exogenous_flows = TRUE,
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   flow = IEATools::iea_cols$flow,
@@ -16,6 +17,11 @@ add_psut_matnames(
   production = IEATools::tpes_flows$production,
   resources = IEATools::tpes_flows$resources,
   eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+  pos_supply_in_R = c(IEATools::tpes_flows$resources, IEATools::tpes_flows$imports,
+    IEATools::tpes_flows$international_aviation_bunkers,
+    IEATools::tpes_flows$international_marine_bunkers,
+    IEATools::tfc_compare_flows$statistical_differences,
+    IEATools::tpes_flows$stock_changes),
   neg_supply_in_fd = c(IEATools::tpes_flows$exports,
     IEATools::tpes_flows$international_aviation_bunkers,
     IEATools::tpes_flows$international_marine_bunkers,
@@ -32,6 +38,10 @@ add_psut_matnames(
 \arguments{
 \item{.tidy_iea_df}{a data frame with \code{ledger_side}, \code{flow_aggregation_point}, \code{flow}, and \code{e_dot} columns.}
 
+\item{R_includes_all_exogenous_flows}{Tells how to construct the \strong{R} matrix.
+Default is \code{TRUE}.
+See details.}
+
 \item{ledger_side, flow_aggregation_point, flow, product, e_dot}{See \code{IEATools::iea_cols}.}
 
 \item{supply, consumption}{See \code{IEATools::ledger_sides}.}
@@ -39,6 +49,9 @@ add_psut_matnames(
 \item{production, resources}{See \code{IEATools::tpes_flows}.}
 
 \item{eiou}{See \code{IEATools::tfc_compare_flows}.}
+
+\item{pos_supply_in_R}{For "Resources", "Imports", "Statistical differences", "X Bunkers", and "Stock changes", positive flows
+should be placed in the \strong{R} matrix. See \code{IEATools::tfc_compare_flows}.}
 
 \item{neg_supply_in_fd}{For "Exports", "International aviation bunkers", "International marine bunkers", and "Stock changes", see \code{IEATools::tpes_flows}.
 For "Losses" and "Statistical differences", see \code{IEATools::tfc_compare_flows}.}
@@ -66,6 +79,15 @@ If \code{.tidy_iea_df} already has a \code{matnames} column,
 this function returns the \code{.tidy_iea_df} without modification,
 assuming that the caller has already supplied a destination
 matrix name for each row of \code{.tidy_iea_df}.
+
+The argument \code{R_includes_all_exogenous_flows} controls how the \strong{R} matrix is formed.
+When \code{TRUE}, all exogenous flows
+(including Resources, Production, Bunkers,
+Imports, Statistical differences, and Stock changes)
+are placed in the \strong{R} matrix.
+When \code{FALSE}, only Resources and Production are placed in the \strong{R} matrix.
+Default is \code{TRUE}.
+\code{FALSE} retains previous behavior.
 }
 \examples{
 library(dplyr)

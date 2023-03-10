@@ -4,7 +4,50 @@ output: html_document
 ---
 
 
-# IEATools 0.1.63 (2022-04-01)
+# IEATools 0.1.64 (2023-03-09)
+
+* New boolean argument `specify_non_energy_flows` 
+  on `load_tidy_iea_df()` enables specifying Non-energy use flows 
+  via the new `specify_non_energy_use()` function where possible.
+  For now, the default is `FALSE` to maintain backward compatibility
+  (i.e., not specifying Non-energy use flows).
+* New function `specify_non_energy_use()` uses "Memo: Non-energy use in <<specific industry>>"
+  where possible.
+* `augment_iea_df()` now adds `Flow.aggregation.point`s
+  for all aggregation flows that will (eventually) be removed.
+  This change will enable future specification 
+  of "Non-energy use in xxxxx" flows
+  with "Memo: Non-energy use in xxxxx" where possible.
+* Added capability to use `Matrix` objects with 
+  `prep_psut()`, `form_C_mats()`, `form_eta_fu_phi_u_vecs()`,
+  `extract_S_units_from_tidy()`, and `collapse_to_tidy_psut()`.
+  This change enables sparse matrices to save memory and disk space.
+* Eliminated all warnings from the `tidyselect` package about 
+  deprecated functionality. 
+  The package builds and tests cleanly again!
+* New argument on `add_psut_matnames()` (`R_includes_all_exogenous_flows`)
+  switches between 
+  (a) including all exogenous flows 
+  ("Resources", "Imports", "Statistical differences", and
+  "Stock changes") in the **R**
+  matrix (`TRUE`) and 
+  (b) placing only Resource flows
+  in the **R** matrix (`FALSE`).
+  Default is `TRUE`.
+* Added "Main activity producer electricity plants" to the list of `eiou_flows`.
+  We route "Own use in electricity, CHP and heat plants" to 
+  "Main activity producer electricity plants", 
+  so we need to include "Main activity producer electricity plants" in the EIOU flows.
+  Same for "Natural gas extraction".
+* "Liquefaction (LNG) / regasification plants" EIOU flow now directed to
+  the "Natural gas extraction" industry.
+* New 4-letter abbreviations for non-standard ISO country codes.
+* New tests for new features.
+    * Now up to 1371 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# IEATools 0.1.63 (2022-04-01) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6407190.svg)](https://doi.org/10.5281/zenodo.6407190)
 
 * Added `non_energy_flows` to `fd_sectors` 
   to conform to IEA approach to calculating final energy.

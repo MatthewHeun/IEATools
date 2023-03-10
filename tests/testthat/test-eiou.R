@@ -1,9 +1,3 @@
-library(dplyr)
-library(magrittr)
-
-###########################################################
-context("Specify EIOU")
-###########################################################
 
 test_that("specify_tp_eiou() works as expected for Own use in electricity, CHP and heat plants", {
   # Make a bogus data frame
@@ -88,8 +82,7 @@ test_that("specify_tp_eiou() works for sample data", {
   # Also, Flow.aggregation.point is not found. Need to do more to the data frame before calling specify_tp_eiou().
   specified <- load_tidy_iea_df() %>% 
     specify_tp_eiou() %>% 
-    filter(Flow.aggregation.point == "Energy industry own use" & 
-             Flow == "Main activity producer electricity plants")
+    dplyr::filter(Flow.aggregation.point == "Energy industry own use", Flow == "Main activity producer electricity plants")
   expect_equal(nrow(specified), 4)
 })
 

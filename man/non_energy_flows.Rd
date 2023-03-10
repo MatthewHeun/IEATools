@@ -8,6 +8,7 @@
 A string vector with 3 entries.
 \describe{
 \item{non_energy_use_industry_transformation_energy}{The string identifier for the Non-energy use industry/transformation/energy sector.}
+\item{memo_non_energy_use_industry}{The string identifier for the Non-energy use industry/transformation/energy sector. This is an aggregation for other "Memo: Non-energy use in ..." flows.}
 \item{non_energy_use_in_transport}{The string identifier for the Non-energy use in transport sector.}
 \item{non_energy_use_in_other}{The string identifier for the Non energy use in other sector.}
 }

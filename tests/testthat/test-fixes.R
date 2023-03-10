@@ -1,6 +1,3 @@
-###########################################################
-context("Fixing functions")
-###########################################################
 
 test_that("Fixing GHA PSB works as expected", {
   # Load some example IEA data

@@ -56,7 +56,7 @@ Default is TRUE.}
 \item{main_act_producer_elect}{A string identifying main activity producer electricity plants. Default is "Main activity producer electricity plants".}
 }
 \value{
-a modified version of \code{.tidy_iea_df}
+A modified version of \code{.tidy_iea_df}.
 }
 \description{
 The extended energy balance data from the IEA includes

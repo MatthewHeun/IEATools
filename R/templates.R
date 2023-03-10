@@ -294,7 +294,8 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
     if (nrow(na_temp_sort) != 0) {
       # Create a helpful error message.
       problem_rows <- na_temp_sort %>% 
-        dplyr::select(.data[[flow_aggregation_point]], .data[[destination]]) %>% 
+        # dplyr::select(.data[[flow_aggregation_point]], .data[[destination]]) %>% 
+        dplyr::select(dplyr::all_of(c(flow_aggregation_point, destination))) %>% 
         unique()
       problem_combos <- paste(problem_rows[[flow_aggregation_point]], 
                               problem_rows[[destination]], sep = ", ", collapse = "; ")
@@ -307,7 +308,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
     if (nrow(na_ef_product != 0)) {
       # Create a helpful error message.
       problem_rows <- na_ef_product %>% 
-        dplyr::select(.data[[ef_product]]) %>% 
+        dplyr::select(dplyr::all_of(ef_product)) %>% 
         unique()
       problem_products <- paste(problem_rows[[ef_product]], sep = ", ", collapse = "; ")
       
@@ -336,12 +337,15 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
     machine_and_product_columns <- c(ef_product, machine, eu_product, destination, quantity, maximum_values)
     # Figure out the metadata columns.
     # Columns that are not years and are not machine_and_product_columns are metadata columns.
+    # meta_cols <- out %>% 
+    #   matsindf::everything_except(c(year_colnames, machine_and_product_columns))
     meta_cols <- out %>% 
-      matsindf::everything_except(c(year_colnames, machine_and_product_columns))
+      matsindf::everything_except(c(year_colnames, machine_and_product_columns), .symbols = FALSE)
     # Now put the column names together in the desired order
     col_order <- c(meta_cols, machine_and_product_columns, year_colnames)
     out <- out %>% 
-      dplyr::select(!!!col_order)
+      # dplyr::select(!!!col_order)
+      dplyr::select(dplyr::all_of(col_order))
   }
   return(out)
 }
@@ -658,7 +662,7 @@ check_fu_allocation_data <- function(.fu_allocation_table,
   if (nrow(errs) > 0) {
     # Make an error message and fail.
     erroneous_rows <- errs %>%
-      dplyr::select(country, flow_aggregation_point, ef_product, machine, eu_product, destination)
+      dplyr::select(dplyr::all_of(c(country, flow_aggregation_point, ef_product, machine, eu_product, destination)))
     erroneous_combos <- paste(erroneous_rows[[country]],
                               erroneous_rows[[flow_aggregation_point]],
                               erroneous_rows[[ef_product]],
@@ -683,7 +687,7 @@ check_fu_allocation_data <- function(.fu_allocation_table,
   if (nrow(errs) > 0) {
     # Make an error message and fail.
     erroneous_rows <- errs %>%
-      dplyr::select(country, year, flow_aggregation_point, ef_product, machine, eu_product, destination, quantity)
+      dplyr::select(dplyr::all_of(c(country, year, flow_aggregation_point, ef_product, machine, eu_product, destination, quantity)))
     erroneous_combos <- paste(erroneous_rows[[country]],
                               erroneous_rows[[year]],
                               erroneous_rows[[flow_aggregation_point]],
@@ -837,7 +841,8 @@ eta_fu_template <- function(.fu_allocations,
                                     destination, quantity, maximum_values, year, .value))
     
     countries <- .fu_allocations %>% 
-      dplyr::select(country) %>% 
+      # dplyr::select(country) %>% 
+      dplyr::select(dplyr::all_of(country)) %>% 
       unlist() %>% 
       unique()
     
@@ -855,9 +860,9 @@ eta_fu_template <- function(.fu_allocations,
       dplyr::filter(.data[[ledger_side]] == consumption |
                       (.data[[ledger_side]] == supply & .data[[flow_aggregation_point]] == eiou)) %>% 
       dplyr::rename(
-        "{e_dot_dest}" := e_dot,
-        "{ef_product}" := product, 
-        "{destination}" := flow
+        "{e_dot_dest}" := dplyr::all_of(e_dot),
+        "{ef_product}" := dplyr::all_of(product), 
+        "{destination}" := dplyr::all_of(flow)
       )
     
     # Now work on c_info.
@@ -867,7 +872,8 @@ eta_fu_template <- function(.fu_allocations,
     # we need to delete the Quantity column.
     c_info <- .fu_allocations %>% 
       dplyr::rename(
-        "{c_perc}" := .data[[.value]]
+        # "{c_perc}" := .data[[.value]]
+        "{c_perc}" := dplyr::all_of(.value)
       ) %>% 
       dplyr::mutate(
         "{quantity}" := NULL
@@ -886,8 +892,9 @@ eta_fu_template <- function(.fu_allocations,
     # The first step is to isolate the E.dot rows
     e_dot_info <- .fu_allocations %>%
       dplyr::filter(!!as.name(quantity) == e_dot) %>%
-      dplyr::select(-maximum_values, -machine, -eu_product, -quantity) %>%
-      tidyr::gather(key = !!year, value = !!as.name(e_dot_dest), year_colnames) %>% 
+      # dplyr::select(-maximum_values, -machine, -eu_product, -quantity) %>%
+      dplyr::select(-dplyr::any_of(c(maximum_values, machine, eu_product, quantity))) %>%
+      tidyr::gather(key = !!year, value = !!as.name(e_dot_dest), dplyr::all_of(year_colnames)) %>% 
       dplyr::filter(!is.na(!!as.name(e_dot_dest)))
     # We also isolate the allocation (C) rows
     c_info <- .fu_allocations %>%
@@ -899,8 +906,9 @@ eta_fu_template <- function(.fu_allocations,
           TRUE ~ !!as.name(quantity)
         )
       ) %>%
-      dplyr::select(-maximum_values, -quantity) %>%
-      tidyr::gather(key = !!year, value = !!as.name(c_perc), year_colnames) %>%
+      # dplyr::select(-maximum_values, -quantity) %>%
+      dplyr::select(-dplyr::any_of(c(maximum_values, quantity))) %>%
+      tidyr::gather(key = !!year, value = !!as.name(c_perc), dplyr::all_of(year_colnames)) %>%
       dplyr::filter(!is.na(!!as.name(c_perc)))
   }
   
@@ -912,7 +920,8 @@ eta_fu_template <- function(.fu_allocations,
   # So, rename the column.
   c_info <- c_info %>%
     dplyr::rename(
-      "{c_ratio}" := .data[[c_perc]]
+      # "{c_ratio}" := .data[[c_perc]]
+      "{c_ratio}" := dplyr::all_of(c_perc)
     )
   
   # Now we join the E.dot and C values and calculate the energy flowing into each final-to-useful machine
@@ -979,8 +988,10 @@ eta_fu_template <- function(.fu_allocations,
   # Find the maxima across years for each combination of machine and eu_product
   Maxima <- dplyr::full_join(input_energy_max, input_energy_max_percs, by = matsindf::everything_except(input_energy, year, e_dot_machine, .symbols = FALSE)) %>% 
     dplyr::rename(
-      "{e_dot_machine}" := .data[[e_dot_machine_max]],
-      "{e_dot_machine_perc}" := .data[[e_dot_machine_max_perc]]
+      # "{e_dot_machine}" := .data[[e_dot_machine_max]],
+      # "{e_dot_machine_perc}" := .data[[e_dot_machine_max_perc]]
+      "{e_dot_machine}" := dplyr::all_of(e_dot_machine_max),
+      "{e_dot_machine_perc}" := dplyr::all_of(e_dot_machine_max_perc)
     ) %>% 
     tidyr::gather(key = !!as.name(quantity), value = !!as.name(maximum_values), !!as.name(e_dot_machine), !!as.name(e_dot_machine_perc))
 
@@ -1193,7 +1204,8 @@ write_eta_fu_template <- function(.eta_fu_template,
       !!as.name(.rownum) := as.numeric(!!as.name(.rownum)),
       !!as.name(.rownum) := !!as.name(.rownum) + 1
     ) %>% 
-    dplyr::select(!!as.name(.rownum)) %>% 
+    # dplyr::select(!!as.name(.rownum)) %>% 
+    dplyr::select(dplyr::all_of(.rownum)) %>% 
     unlist() %>% 
     unname()
   # Identify the e_dot_machine_perc rows

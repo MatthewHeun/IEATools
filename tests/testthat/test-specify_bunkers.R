@@ -82,8 +82,8 @@ test_that("World_X_bunkers are specfied correctly", {
     use_iso_countries() %>%
     specify_bunkers()
   
-  expect_equal(specified[[IEATools::iea_cols$country]][[1]], "WMB")
-  expect_equal(specified[[IEATools::iea_cols$country]][[2]], "WAB")
+  expect_equal(specified[[IEATools::iea_cols$country]][[1]], "WMBK")
+  expect_equal(specified[[IEATools::iea_cols$country]][[2]], "WABK")
   expect_equal(specified[[IEATools::iea_cols$flow]][[1]], "International navigation")
   expect_equal(specified[[IEATools::iea_cols$flow]][[2]], "International aviation")
 })

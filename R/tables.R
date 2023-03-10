@@ -33,7 +33,8 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
   year_columns <- year_cols(.fu_allocation_table, return_names = TRUE, year = NULL)
   if (length(year_columns) > 0) {
     .fu_allocation_table <- .fu_allocation_table %>% 
-      tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values)
+      # tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values)
+      tidyr::pivot_longer(cols = dplyr::all_of(year_columns), names_to = year, values_to = .values)
   }
   .fu_allocation_table %>% 
     # Eliminate rows we don't want.
@@ -211,13 +212,6 @@ complete_fu_allocation_table <- function(fu_allocation_table,
         "{country}" := country_to_complete # Pretend that the exemplar is the country we're analyzing.
       )
 
-    # iea_rows_already_allocated contains the rows of final energy consumption (from the IEA data) that have already been allocated.
-    # We don't need to pull data from an exemplar for these rows.
-    iea_rows_already_allocated <- fu_allocation_table %>% 
-      # Now keep only the columns of interest to us.
-      dplyr::select(!c(quantity, machine, eu_product, .values)) %>% 
-      unique()
-    
     exemplar_rows_to_use <- dplyr::semi_join(exemplar_info_available, 
                                              iea_rows_yet_to_be_allocated, 
                                              # We can't join by source, because the exemplar source is different.
@@ -240,14 +234,14 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     # Not all final energy was allocated to FU machines by the exemplars.
     # Make an error message.
     missing_rows <- attr(done, "unallocated_rows") %>% 
-      dplyr::select(country, year, flow_aggregation_point, destination, ef_product)
+      dplyr::select(dplyr::all_of(c(country, year, flow_aggregation_point, destination, ef_product)))
     missing_combos <- paste(missing_rows[[country]], 
                             missing_rows[[year]],
                             missing_rows[[flow_aggregation_point]],
                             missing_rows[[destination]],
-                            missing_rows[[ef_product]], sep = ", ", collapse = "; ")
-    err_msg <- paste0("Didn't complete FU Allocation table for the following final energy flows: ", missing_combos, 
-                     ". Please check the FU allocation table for typos or misspellings.")
+                            missing_rows[[ef_product]], sep = ", ", collapse = ";\n")
+    err_msg <- paste0("Didn't complete FU Allocation table for the following final energy flows:\n", missing_combos, 
+                     ".\nPlease check the FU allocation table for typos or misspellings.")
     stop(err_msg)
   }
   
@@ -324,7 +318,7 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
   if (length(iea_year_columns) > 0) {
     # specified_iea_data is not tidy. Make it so.
     specified_iea_data <- specified_iea_data %>% 
-      tidyr::pivot_longer(cols = iea_year_columns, names_to = year, values_to = e_dot) %>% 
+      tidyr::pivot_longer(cols = dplyr::all_of(iea_year_columns), names_to = year, values_to = e_dot) %>% 
       dplyr::filter(!is.na(.data[[e_dot]])) %>% 
       dplyr::mutate(
         "{year}" := as.numeric(.data[[year]])
@@ -344,14 +338,16 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
   if (product %in% colnames(rows_to_be_allocated)) {
     rows_to_be_allocated <- rows_to_be_allocated %>% 
       dplyr::rename(
-        "{ef_product}" := .data[[product]]
+        # "{ef_product}" := .data[[product]]
+        "{ef_product}" := dplyr::all_of(product)
       )
   }
 
   if (flow %in% colnames(rows_to_be_allocated)) {
     rows_to_be_allocated <- rows_to_be_allocated %>% 
       dplyr::rename(
-        "{destination}" := .data[[flow]]
+        # "{destination}" := .data[[flow]]
+        "{destination}" := dplyr::all_of(flow)
       )
   }
   if (is.null(fu_allocation_table)) {
@@ -372,7 +368,8 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
   # We should get all 1's.
   # If not, throw an error.
   allocation_sums <- fu_allocation_table %>% 
-    dplyr::select(!c(quantity, machine, e_u_product)) %>%
+    # dplyr::select(!c(quantity, machine, e_u_product)) %>%
+    dplyr::select(-dplyr::all_of(c(quantity, machine, e_u_product))) %>%
     matsindf::group_by_everything_except(.values) %>% 
     dplyr::summarise(
       "{.values}" := sum(.data[[.values]])
@@ -449,7 +446,7 @@ tidy_eta_fu_table <- function(.eta_fu_table,
   if (length(year_columns) > 0) {
     # We have a non-tidy data frame. Tidy it.
     .eta_fu_table <- .eta_fu_table %>% 
-      tidyr::pivot_longer(cols = year_columns, names_to = year, values_to = .values)
+      tidyr::pivot_longer(cols = dplyr::all_of(year_columns), names_to = year, values_to = .values)
   }
   .eta_fu_table %>%
     # Eliminate rows we don't want.
@@ -789,7 +786,8 @@ complete_eta_fu_table <- function(eta_fu_table,
     # Not all machines were assigned eta or phi values by the exemplars.
     # Make an error message.
     missing_rows <- attr(done, "unallocated_rows") %>% 
-      dplyr::select(country, year, machine, eu_product, quantity)
+      # dplyr::select(country, year, machine, eu_product, quantity)
+      dplyr::select(dplyr::all_of(c(country, year, machine, eu_product, quantity)))
     missing_combos <- paste(missing_rows[[country]], 
                             missing_rows[[year]],
                             missing_rows[[machine]],

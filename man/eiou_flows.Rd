@@ -5,7 +5,7 @@
 \alias{eiou_flows}
 \title{Energy industry own use (EIOU) flows}
 \format{
-A string vector with 17 entries.
+A string vector with 22 entries.
 \describe{
 \item{bkb_peat_briquette_plants}{The string identifier for BKB/peat briquette plants.}
 \item{blast_furnaces}{The string identifier for Blast furnaces.}
@@ -17,11 +17,16 @@ A string vector with 17 entries.
 \item{gas_to_liquids_plants}{The string identifier for Gas-to-liquids (GTL) plants.}
 \item{gasification_plants}{The string identifier for Gasification plants for biogases.}
 \item{liquefaction_regasification_plants}{The string identifier for Liquefaction (LNG) / regasification plants.}
-\item{non_specified_eiou}{The string identifier for Non-specified (energy).}
-\item{nuclear_industry}{The string identifier for Nuclear industry.}
+\item{non_specified_eiou}{The string identifier for "Non-specified (energy)".}
+\item{nuclear_industry}{The string identifier for the nuclear industry.}
 \item{oil_and_gas_extraction}{The string identifier for Oil and gas extraction.}
+\item{oil_extraction}{The string identifier for Oil extraction.}
+\item{natural_gas_extraction}{The string identifier for natural gas extraction.}
 \item{oil_refineries}{The string identifier for Oil refineries.}
 \item{own_use_elect_chp_heat_plants}{The string identifier for Own use in electricity, CHP and heat plants.}
+\item{main_activity_producer_electricy_plants}{The string identifier for electricity plants.}
+\item{main_activity_producer_chp_plants}{The string identifier for Main activity producer CHP plants.}
+\item{main_activity_producer_heat_plants}{The string identifier for Main activity producer heat plants.}
 \item{patent_fuel_plants}{The string identifier for Patent fuel plants.}
 \item{pumped_storage_plants}{The string identifier for Pumped storage plants.}
 }

@@ -22,42 +22,55 @@ tidy_iea_df(
 )
 }
 \arguments{
-\item{.iea_df}{a IEA data frame whose columns have been renamed by \code{rename_iea_df_cols()}}
+\item{.iea_df}{A IEA data frame whose columns have been renamed by \code{rename_iea_df_cols()}.}
 
-\item{col_names}{a list of column names in IEA data frames. Default is \code{IEATools::iea_cols}.}
+\item{col_names}{A list of column names in IEA data frames.
+Default is \code{IEATools::iea_cols}.}
 
-\item{year}{the name of the year column created in \code{.iea_df} by this function. (Default is "Year".)}
+\item{year}{The name of the year column created in \code{.iea_df} by this function.
+Default is \code{col_names$year}.}
 
-\item{e_dot}{the name of the energy/exergy value column created in \code{.iea_df} by this function. (Default is "E.dot".)}
+\item{e_dot}{The name of the energy/exergy value column created in \code{.iea_df} by this function.
+Default is \code{col_names$e_dot}.}
 
-\item{method}{the name of the method column created in \code{.iea_df} by this function. (Default is "Method".)}
+\item{method}{The name of the method column created in \code{.iea_df} by this function.
+Default is \code{col_names$method}.}
 
-\item{last_stage}{the name of the last stage column created in \code{.iea_df} by this function. (Default is "Last.stage".)}
+\item{last_stage}{The name of the last stage column created in \code{.iea_df} by this function.
+Default is \code{col_names$last_stage}.}
 
-\item{country}{the name of the country column in \code{.iea_df}. (Default is "Country".)}
+\item{country}{The name of the country column in \code{.iea_df}.
+Default is \code{col_names$country}.}
 
-\item{ledger_side}{the name of the ledger side in \code{.iea_df}. (Default is "Ledger.side".)}
+\item{ledger_side}{The name of the ledger side in \code{.iea_df}.
+Default is \code{col_names$ledger_side}.}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.iea_df}. (Default is "Flow.aggregation.point".)}
+\item{flow_aggregation_point}{The name of the flow aggregation point column in \code{.iea_df}.
+Default is \code{col_names$flow_aggregation_point}.}
 
-\item{energy_type}{the name of the energy type column in \code{.iea_df}. (Default is "Energy.type".)}
+\item{energy_type}{The name of the energy type column in \code{.iea_df}.
+Default is \code{col_names$energy_type}.}
 
-\item{unit}{the name of the unit column in \code{.iea_df}. (Default is "Units".)}
+\item{unit}{The name of the unit column in \code{.iea_df}.
+Default is \code{col_names$unit}.}
 
-\item{flow}{the name of the flow column in \code{.iea_df}. (Default is "Flow".)}
+\item{flow}{The name of the flow column in \code{.iea_df}.
+Default is \code{col_names$flow}.}
 
-\item{product}{the name of the product column in \code{.iea_df}. (Default is "Product".)}
+\item{product}{The name of the product column in \code{.iea_df}.
+Default is \code{col_names$product}.}
 
-\item{remove_zeroes}{a logical indicating whether data points with the value \code{0} are to be removed from the output. (Default is \code{TRUE}.)}
+\item{remove_zeroes}{A logical indicating whether data points with the value \code{0} are to be removed from the output.
+Default is \code{TRUE}.}
 }
 \value{
-a tidy version of \code{.iea_df} containing new columns \code{year} and \code{e_dot} and, optionally, \code{0} values removed
+A tidy version of \code{.iea_df} containing new columns \code{year} and \code{e_dot} and, optionally, \code{0} values removed.
 }
 \description{
 Data from the IEA have years in columns,
-but the \href{https://doi.org/10.18637/jss.v059.i10}{tidy data format}
+but the \href{\doi{10.18637/jss.v059.i10}}{tidy data format}
 requires one row for each datum.
-This function uses \code{tidyr::gather()} to
+This function uses \code{tidyr::pivot_longer()} to
 make an IEA data frame tidy.
 }
 \details{

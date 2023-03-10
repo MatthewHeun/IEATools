@@ -53,11 +53,11 @@ usethis::use_data(country_concordance_cols, overwrite = TRUE)
 override_iso_codes_df <- tibble::tribble(
   ~a, ~b, 
   "WRLD", "World", 
-  "CHN", "People's Republic of China", 
+  "CHNM", "People's Republic of China", 
   "HKG", "Hong Kong (China)", 
   "SUN", "Former Soviet Union (if no detail)",
-  "WMB", "World marine bunkers", 
-  "WAB", "World aviation bunkers", 
+  "WMBK", "World marine bunkers", 
+  "WABK", "World aviation bunkers", 
   "YUG", "Former Yugoslavia (if no detail)") %>% 
   magrittr::set_names(c(country_concordance_cols$pfu_code, 
                         country_concordance_cols$iea_name))
@@ -416,15 +416,26 @@ eiou_flows <- list(bkb_peat_briquette_plants = "BKB/peat briquette plants",
                    coal_liquefaction_plants = "Coal liquefaction plants",
                    coal_mines = "Coal mines",
                    coke_ovens = "Coke ovens",
-                   gas_work = "Gas works",
+                   gas_works = "Gas works",
                    gas_to_liquids_plants = "Gas-to-liquids (GTL) plants",
                    gasification_plants = "Gasification plants for biogases",
                    liquefaction_regasification_plants = "Liquefaction (LNG) / regasification plants",
                    non_specified_eiou = "Non-specified (energy)",
                    nuclear_industry = "Nuclear industry",
                    oil_and_gas_extraction = "Oil and gas extraction",
+                   # "Oil and gas extraction" is split in the specification process.
+                   # So we need "Oil extraction" and "Natural gas extraction".
+                   oil_extraction = "Oil extraction",
+                   natural_gas_extraction = "Natural gas extraction",
                    oil_refineries = "Oil refineries",
                    own_use_elect_chp_heat_plants = "Own use in electricity, CHP and heat plants",
+                   # In the specification process, 
+                   # we route "Own use in electricity, CHP and heat plants" to 
+                   # main activity plants for electricity, CHP, and heat. 
+                   # So we need to include those plants here.
+                   main_activity_producer_electricity_plants = "Main activity producer electricity plants",
+                   main_activity_producer_chp_plants = "Main activity producer CHP plants",
+                   main_activity_producer_heat_plants = "Main activity producer heat plants",
                    patent_fuel_plants = "Patent fuel plants",
                    pumped_storage_plants = "Pumped storage plants")
 usethis::use_data(eiou_flows, overwrite = TRUE)
@@ -455,19 +466,7 @@ usethis::use_data(manufacturing_flows, overwrite = TRUE)
 
 industry_flows <- list(mining_and_quarrying = "Mining and quarrying", 
                        construction = "Construction", 
-                       # "Iron and steel",
-                       # "Chemical and petrochemical", 
-                       # "Non-ferrous metals",
-                       # "Non-metallic minerals",
-                       # "Transport equipment", 
-                       # "Machinery", 
-                       # "Food and tobacco",
-                       # # 2018
-                       # "Paper, pulp and print",
-                       # #2019
-                       # "Paper, pulp and printing",
-                       # "Wood and wood products",
-                       # "Textile and leather",
+                       manufacturing = "Manufacturing",
                        manufacturing_flows,
                        # 2018
                        non_specified_industry = "Non-specified (industry)", 
@@ -527,6 +526,27 @@ non_energy_flows <- list(non_energy_use_industry_transformation_energy = "Non-en
 usethis::use_data(non_energy_flows, overwrite = TRUE)
 
 
+#
+# Memo: Non-energy use in xxxxxx flows
+# 
+
+memo_non_energy_flows <- list(memo_non_energy_use_in_industry = "Memo: Non-energy use in industry", 
+                              memo_non_energy_use_in_construction = "Memo: Non-energy use in construction", 
+                              memo_non_energy_use_in_mining_quarrying = "Memo: Non-energy use in mining and quarrying",
+                              memo_non_energy_use_in_iron_steel = "Memo: Non-energy use in iron and steel",
+                              memo_non_energy_use_in_chemical_petrochemical = "Memo: Non-energy use in chemical/petrochemical",
+                              memo_non_energy_use_in_non_ferrous_metals = "Memo: Non-energy use in non-ferrous metals",
+                              memo_non_energy_use_in_non_metallic_minerals = "Memo: Non-energy use in non-metallic minerals",
+                              memo_non_energy_use_in_transport_equipment = "Memo: Non-energy use in transport equipment",
+                              memo_non_energy_use_in_machinery = "Memo: Non-energy use in machinery",
+                              memo_non_energy_use_in_food_beverages_tobacco = "Memo: Non-energy use in food/beverages/tobacco",
+                              memo_non_energy_use_in_paper_pulp_printing = "Memo: Non-energy use in paper/pulp and printing",
+                              memo_non_energy_use_in_wood_and_wood_products = "Memo: Non-energy use in wood and wood products",
+                              memo_non_energy_use_in_textiles_leather = "Memo: Non-energy use in textiles and leather",
+                              memo_non_energy_use_in_industry_not_elsewhere_specified = "Memo: Non-energy use in industry not elsewhere specified")
+usethis::use_data(memo_non_energy_flows, overwrite = TRUE)
+
+
 # 
 # Aggregations
 # 
@@ -550,18 +570,20 @@ usethis::use_data(aggregation_flows, overwrite = TRUE)
 # Default names for columns in aggregate data frames
 #
 aggregate_cols <- list(aggregate_primary = "EX.p",
+                       aggregate_final = "EX.f",
+                       aggregate_useful = "EX.u",
                        net_aggregate_demand = "EX.fd_net",
                        gross_aggregate_demand = "EX.fd_gross")
 usethis::use_data(aggregate_cols, overwrite = TRUE)
 
 
-memo_aggregation_flow_prefixes = list(memo = "Memo: ", 
-                                      electricity_output_GWh = "Electricity output (GWh)", 
-                                      heat_output = "Heat output")
+memo_aggregation_flow_prefixes <- list(memo = "Memo: ", 
+                                       electricity_output_GWh = "Electricity output (GWh)", 
+                                       heat_output = "Heat output")
 usethis::use_data(memo_aggregation_flow_prefixes, overwrite = TRUE)
 
-memo_aggregation_product_prefixes = list(memo = "Memo: ", 
-                                         total = "Total")
+memo_aggregation_product_prefixes <- list(memo = "Memo: ", 
+                                          total = "Total")
 usethis::use_data(memo_aggregation_product_prefixes, overwrite = TRUE)
 
 

@@ -44,15 +44,14 @@
 "iea_cols"
 
 
-
 #' Country concordance table column names
 #'
 #' A string list containing named names of columns in country concordance tables.
 #' 
 #' @format A string list with `r length(country_concordance_cols)` entries.
 #' \describe{
-#' \item{pfu_code}{The name of a column containing 3-letter Primary-Final-Useful country codes. Normally, these codes should match the ISO 3-letter codes for each country.}
-#' \item{iea_name}{The name of a column containing 3-letter Primary-Final-Useful country names. These names should be the same as the IEA's country names.}
+#' \item{pfu_code}{The name of a column containing 3- or 4-letter Primary-Final-Useful country codes. Normally, these codes should match the ISO 3-letter codes for each country.}
+#' \item{iea_name}{The name of a column containing 3- or 4-letter Primary-Final-Useful country names. These names should be the same as the IEA's country names.}
 #' }
 #' 
 #' @examples
@@ -62,14 +61,15 @@
 
 #' Country code overrides
 #'
-#' A data frame containing 3-letter country codes and IEA country names.
-#' These code-country pairs are used as a default set of overrides (relative to `countrycode::codelist`)
-#' in the function `use_iso_countries()`.
+#' A data frame containing 3-letter (and 4-letter) country codes and IEA country names.
+#' These code-country pairs are used as a default set of overrides
+#' (relative to `countrycode::codelist`) in the function `use_iso_countries()`.
+#' We use 4-letter codes when we override 3-letter ISO codes.
 #' 
 #' @format A data frame with five rows and two columns.
 #' \describe{
 #' \item{PFU.code}{The column of 3-letter country codes that to override those found in `countrycode::codelist`.}
-#' \item{IEA.name}{The column containing IEA country names..}
+#' \item{IEA.name}{The column containing IEA country names.}
 #' }
 #' 
 #' @examples
@@ -165,7 +165,6 @@
 #' @examples
 #' fu_analysis_file_info
 "fu_analysis_file_info"
-
 
 
 #' PSUT matrix row and column types
@@ -477,6 +476,7 @@
 #' electricity_products
 "electricity_products"
 
+
 #' Non-energy products
 #'
 #' A string vector containing names of products classified as "Non-energy" by
@@ -532,6 +532,7 @@
 #' tpes_flows
 "tpes_flows"
 
+
 #' Primary aggregates flows
 #'
 #' A string vector containing a limited set of names of `Total primary energy supply` `Flow`s in 
@@ -585,6 +586,7 @@
 #' transformation_processes
 "transformation_processes"
 
+
 #' Energy industry own use (EIOU) flows
 #'
 #' A string vector containing names of `Energy industry own use` `Flow`s in the IEA extended energy balances database.
@@ -601,11 +603,16 @@
 #' \item{gas_to_liquids_plants}{The string identifier for Gas-to-liquids (GTL) plants.}
 #' \item{gasification_plants}{The string identifier for Gasification plants for biogases.}
 #' \item{liquefaction_regasification_plants}{The string identifier for Liquefaction (LNG) / regasification plants.}
-#' \item{non_specified_eiou}{The string identifier for Non-specified (energy).}
-#' \item{nuclear_industry}{The string identifier for Nuclear industry.}
+#' \item{non_specified_eiou}{The string identifier for "Non-specified (energy)".}
+#' \item{nuclear_industry}{The string identifier for the nuclear industry.}
 #' \item{oil_and_gas_extraction}{The string identifier for Oil and gas extraction.}
+#' \item{oil_extraction}{The string identifier for Oil extraction.}
+#' \item{natural_gas_extraction}{The string identifier for natural gas extraction.}
 #' \item{oil_refineries}{The string identifier for Oil refineries.}
 #' \item{own_use_elect_chp_heat_plants}{The string identifier for Own use in electricity, CHP and heat plants.}
+#' \item{main_activity_producer_electricy_plants}{The string identifier for electricity plants.}
+#' \item{main_activity_producer_chp_plants}{The string identifier for Main activity producer CHP plants.}
+#' \item{main_activity_producer_heat_plants}{The string identifier for Main activity producer heat plants.}
 #' \item{patent_fuel_plants}{The string identifier for Patent fuel plants.}
 #' \item{pumped_storage_plants}{The string identifier for Pumped storage plants.}
 #' }
@@ -678,6 +685,7 @@
 #' industry_flows
 "industry_flows"
 
+
 #' Industry net flows
 #'
 #' A string vector containing names of `Industry` `Flow`s in the IEA extended energy balances database, excluding energy industry own use flows.
@@ -685,6 +693,7 @@
 #' @format A string vector with `r length(industry_flows)` entries.
 #' \describe{
 #' \item{construction}{The string identifier for the construction industry.}
+#' \item{manufacturing}{The string identifier for the aggregation category of manufacturing industries industry.}
 #' \item{iron_and_steel}{The string identifier for the iron and steel industry.}
 #' \item{chemical_and_petrochemical}{The string identifier for the chemical and petrochemical industry.}
 #' \item{non_ferrous_metals}{The string identifier for the non-ferrous metals industry.}
@@ -752,6 +761,7 @@
 #' transport_flows
 "transport_flows"
 
+
 #' Transport domestic flows
 #'
 #' A string vector containing names of `Transport` `Flow`s in the IEA extended energy balances database for territorial transport energy consumption.
@@ -797,12 +807,41 @@
 #' @format A string vector with `r length(non_energy_flows)` entries.
 #' \describe{
 #' \item{non_energy_use_industry_transformation_energy}{The string identifier for the Non-energy use industry/transformation/energy sector.}
+#' \item{memo_non_energy_use_industry}{The string identifier for the Non-energy use industry/transformation/energy sector. This is an aggregation for other "Memo: Non-energy use in ..." flows.}
 #' \item{non_energy_use_in_transport}{The string identifier for the Non-energy use in transport sector.}
 #' \item{non_energy_use_in_other}{The string identifier for the Non energy use in other sector.}
 #' }
 #' @examples
 #' non_energy_flows
 "non_energy_flows"
+
+
+#' Memo Non-energy flows
+#'
+#' A string vector containing names of `Memo: Non-energy use in ...` `Flow`s 
+#' in the IEA extended energy balances database.
+#' These flows are not always specified for a given country.
+#' 
+#' @format A string vector with `r length(memo_non_energy_flows)` entries.
+#' \describe{
+#' \item{memo_non_energy_use_in_industry}{The string identifier for the "Memo: Non-energy use in industry" sector.}
+#' \item{memo_non_energy_use_in_constructon}{The string identifier for the "Memo: Non-energy use in construction" sector.}
+#' \item{memo_non_energy_use_in_mining_quarrying}{The string identifier for the "Memo: Non-energy use in mining and quarrying" sector.}
+#' \item{memo_non_energy_use_in_iron_steel}{The string identifier for the "Memo: Non-energy use in iron and steel" sector.}
+#' \item{memo_non_energy_use_in_chemical_petrochemical}{The string identifier for the "Memo: Non-energy use in chemical/petrochemical" sector.}
+#' \item{memo_non_energy_use_in_non_ferrous_metals}{The string identifier for the "Memo: Non-energy use in non-ferrous metals" sector.}
+#' \item{memo_non_energy_use_in_non_metallic_minerals}{The string identifier for the "Memo: Non-energy use in non-metallic minerals" sector.}
+#' \item{memo_non_energy_use_in_transport_equipment}{The string identifier for the "Memo: Non-energy use in transport equipment" sector.}
+#' \item{memo_non_energy_use_in_machinery}{The string identifier for the "Memo: Non-energy use in machinery" sector.}
+#' \item{memo_non_energy_use_in_food_beverages_tobacco}{The string identifier for the "Memo: Non-energy use in food/beverages/tobacco" sector.}
+#' \item{memo_non_energy_use_in_paper_pulp_printing}{The string identifier for the "Memo: Non-energy use in paper/pulp and printing" sector.}
+#' \item{memo_non_energy_use_in_wood_and_wood_products}{The string identifier for the "Memo: Non-energy use in wood and wood products" sector.}
+#' \item{memo_non_energy_use_in_textiles_leather}{The string identifier for the "Memo: Non-energy use in textiles and leather" sector.}
+#' \item{memo_non_energy_use_in_industry_not_elsewhere_specified}{The string identifier for the "Memo: Non-energy use in industry not elsewhere specified" sector.}
+#' }
+#' @examples
+#' non_energy_flows
+"memo_non_energy_flows"
 
 
 #' Main activity producer plants
@@ -829,6 +868,8 @@
 #' @format A string vector with `r length(aggregate_cols)` entries.
 #' \describe{
 #' \item{aggregate_primary}{The name of the column containing aggregated primary energy.}
+#' \item{aggregate_final}{The name of the column containing aggregated final energy, regardless of net or gross status.}
+#' \item{aggregate_useful}{The name of the column containing aggregated useful energy, regardless of net or gross status.}
 #' \item{net_aggregate_demand}{The name of the column containing aggregated net final demand energy.}
 #' \item{gross_aggregate_demand}{The name of the column containing aggregated gross final demand energy.}
 #' }
@@ -924,6 +965,7 @@
 #' memo_aggregation_flow_prefixes
 "memo_aggregation_flow_prefixes"
 
+
 #' Memo and aggregation product prefixes
 #'
 #' A string vector containing names of `Product`s that provide memos and aggregations.
@@ -936,6 +978,7 @@
 #' @examples
 #' memo_aggregation_product_prefixes
 "memo_aggregation_product_prefixes"
+
 
 #' Interface industries
 #'

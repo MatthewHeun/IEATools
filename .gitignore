@@ -29,3 +29,4 @@ rsconnect/
 .DS_Store
 # Drake testing directory
 .drake/
+docs

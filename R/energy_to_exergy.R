@@ -30,7 +30,7 @@ load_phi_constants_table <- function(phi_constants_table_path = sample_phi_const
                                      phi_colname = IEATools::phi_constants_names$phi_colname,
                                      is_useful_colname = IEATools::phi_constants_names$is_useful_colname) {
   readxl::read_excel(path = phi_constants_table_path, sheet = phi_constants_tab_name) %>%
-    dplyr::select(product_colname, phi_colname, is_useful_colname)
+    dplyr::select(dplyr::all_of(c(product_colname, phi_colname, is_useful_colname)))
 }
 
 

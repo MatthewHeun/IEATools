@@ -6,6 +6,7 @@
 \usage{
 form_C_mats(
   .fu_allocation_table,
+  matrix.class = c("matrix", "Matrix"),
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   e_dot = IEATools::iea_cols$e_dot,
@@ -43,6 +44,9 @@ A template for this table should have been created by \code{fu_allocation_table(
 \code{write_fu_allocation_table()}.
 This object can also be a tidy data frame with year data gathered into a Year column.}
 
+\item{matrix.class}{The type of matrix to be created, one of "matrix" or "Matrix".
+Default is "matrix".}
+
 \item{ledger_side, flow_aggregation_point, e_dot, unit, year}{See \code{IEATools::iea_cols}.}
 
 \item{supply, consumption}{See \code{IEATools::ledger_sides}.}
@@ -53,21 +57,21 @@ This object can also be a tidy data frame with year data gathered into a Year co
 
 \item{product, industry}{See \code{IEATools::row_col_types}.}
 
-\item{notation}{the notation used for this template. See \code{RCLabels::notation_vec()}. Default is \code{RCLabels::arrow_notation}.}
+\item{notation}{The notation used for this template. See \code{RCLabels::notation_vec()}. Default is \code{RCLabels::arrow_notation}.}
 
-\item{tol}{the allowable amount by which a row sum in a \code{C} matrix can be different from 1. Default is 1e-6.}
+\item{tol}{The allowable amount by which a row sum in a \code{C} matrix can be different from 1. Default is 1e-6.}
 
-\item{.should_be_1_vector}{a temporary column created internally for error checking (and not returned unless there is an error).
+\item{.should_be_1_vector}{A temporary column created internally for error checking (and not returned unless there is an error).
 This column should contain 1 vectors (i.e., vectors filled with 1's).}
 
-\item{.is_1}{a temporary column created internally (and not returned unless there is an error)
+\item{.is_1}{A temporary column created internally (and not returned unless there is an error)
 that contains \code{TRUE} or \code{FALSE} depending on whether a rowsum was 1.}
 
-\item{.all_1}{a temporary column created internally (and not returned unless there is an error)
+\item{.all_1}{A temporary column created internally (and not returned unless there is an error)
 that tells whether a 1-vector was created by rowsums.}
 }
 \value{
-a wide-by-matrices data frame with metadata columns (and year) along with columns for
+A wide-by-matrices data frame with metadata columns (and year) along with columns for
 \code{C_eiou} and \code{C_Y} matrices.
 If not all rows of a C matrix sum to 1,
 a warning is emitted, and

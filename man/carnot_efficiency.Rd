@@ -7,7 +7,7 @@
 carnot_efficiency(heat_types, T_0 = 298.15)
 }
 \arguments{
-\item{heat_types}{a string vector of heat types of the form "\code{HTH.600.C}"}
+\item{heat_types}{a string vector of heat types of the form "HTH.600.C"}
 
 \item{T_0}{dead state temperature in kelvin. Default is \code{298.15} kelvin (25 C).}
 }
@@ -17,7 +17,7 @@ a numeric vector of Carnot efficiencies of same length as \code{heat_types}
 \description{
 In societal exergy analysis, converting heat to exergy requires knowledge
 of the temperature of that heat and application of the Carnot efficiency.
-This function first converts heat types (e.g., "\code{HTH.600.C}")
+This function first converts heat types (e.g., "HTH.600.C")
 to temperatures by extracting the temperature from the middle of the string,
 in a unit-aware manner.
 Then, the Carnot efficiency is calculated from the temperature of the heat

@@ -14,17 +14,17 @@ remove_agg_memo_flows(
 )
 }
 \arguments{
-\item{.iea_df}{a data frame of IEA data}
+\item{.iea_df}{A data frame of IEA data.}
 
-\item{flow}{the name of the flow column in \code{iea_df}. Default is "\code{Flow}".}
+\item{flow}{The name of the flow column in \code{iea_df}. Default is "\code{Flow}".}
 
-\item{product}{the name of the product columns in \code{iea_df}. Default is "\code{Product}".}
+\item{product}{The name of the product columns in \code{iea_df}. Default is "\code{Product}".}
 
-\item{agg_flows}{a vector of strings identifying \code{Flow}s that are aggregations.}
+\item{agg_flows}{A vector of strings identifying \code{Flow}s that are aggregations.}
 
-\item{memo_flow_prefixes}{a vector of string prefixes for flow memo rows in \code{.iea_df}}
+\item{memo_flow_prefixes}{A vector of string prefixes for flow memo rows in \code{.iea_df}.}
 
-\item{memo_product_prefixes}{a string prefix for product memo rows in \code{.iea_df}.}
+\item{memo_product_prefixes}{A string prefix for product memo rows in \code{.iea_df}.}
 }
 \value{
 \code{.iea_df} without its aggregation rows

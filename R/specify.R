@@ -33,7 +33,7 @@
 #' @param liquefaction_regas A string identifying liquefaction and regasification plants. 
 #'                           Default is "Liquefaction (LNG) / regasification plants".
 #' @param liquefaction_regas_reassign A string identifying the industry to which EIOU into `liquefaction_regas` will be reassigned.
-#'                                    Default is "Oil and gas extraction".
+#'                                    Default is "Natural gas extraction".
 #' @param transformation_processes A string identifying transformation processes in the flow column of `.tidy_iea_df`. 
 #'                                 Default is "Transformation processes".
 #' @param ledger_side,flow,product,flow_aggregation_point See `IEATools::iea_cols`.
@@ -101,7 +101,7 @@ specify_primary_production <- function(.tidy_iea_df,
                                        oil_extraction = IEATools::industry_flows$oil_extraction,
                                        gas_extraction = IEATools::industry_flows$natural_gas_extraction,
                                        liquefaction_regas = "Liquefaction (LNG) / regasification plants",
-                                       liquefaction_regas_reassign = IEATools::industry_flows$oil_and_gas_extraction,
+                                       liquefaction_regas_reassign = IEATools::industry_flows$natural_gas_extraction,
                                        transformation_processes = IEATools::aggregation_flows$transformation_processes,
                                        resources = IEATools::tpes_flows$resources,
                                        resource_products_notation = RCLabels::from_notation,
@@ -266,18 +266,23 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' embodied energy calculations (many types of energy are embodied, even if only one should be).
 #' This function adds a suffix `[of Product]` to each of these interface industries.
 #' 
-#' Note that "`Production`" also needs to be specified, 
+#' Note that "Production" also needs to be specified, 
 #' but that is accomplished in the `specify_primary_production()` and
 #' `specify_production_to_resources()` functions.
+#' 
+#' Resource flows and manufacture flows are included by default, 
+#' because they need a place where they are specified, too.
 #'
-#' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
-#' @param flow the name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
-#' @param int_industries a string vector of industries involved in exchanges with other countries,
-#'        bunkers, or stock changes. Default is `IEATools::interface_industries`.
-#' @param product the name of the product column in `.tidy_iea_df`.  Default is "`Product`".
-#' @param notation a list of specification notations. Default is `RCLabels::of_notation`.
+#' @param .tidy_iea_df A tidy data frame containing IEA extended energy balance data.
+#' @param flow The name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
+#' @param int_industries A string vector of industries involved in exchanges with other countries,
+#'        bunkers, or stock changes. 
+#'        Default is c(`IEATools::interface_industries`, IEATools::tpes_flows\["resources"\],
+#'        manufacture = "Manufacture").
+#' @param product The name of the product column in `.tidy_iea_df`.  Default is "`Product`".
+#' @param notation A list of specification notations. Default is `RCLabels::of_notation`.
 #'
-#' @return a modified version of `.tidy_iea_df` with specified interface industries
+#' @return A modified version of `.tidy_iea_df` with specified interface industries.
 #' 
 #' @export
 #'
@@ -285,18 +290,34 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' load_tidy_iea_df() %>% 
 #'   specify_interface_industries()
 specify_interface_industries <- function(.tidy_iea_df,
-                                         flow = "Flow", 
-                                         int_industries = IEATools::interface_industries,
-                                         product = "Product", 
+                                         flow = IEATools::iea_cols$flow, 
+                                         int_industries = c(IEATools::interface_industries,
+                                                            IEATools::tpes_flows["resources"],
+                                                            manufacture = "Manufacture"),
+                                         product = IEATools::iea_cols$product, 
                                          notation = RCLabels::of_notation){
-  .tidy_iea_df %>% 
+  # .tidy_iea_df %>%
+  #   dplyr::mutate(
+  #     "{flow}" := dplyr::case_when(
+  #       .data[[flow]] %in% int_industries ~ RCLabels::paste_pref_suff(pref = .data[[flow]], suff = .data[[product]], notation = notation),
+  #       TRUE ~ .data[[flow]]
+  #     )
+  #   )
+    
+  # Find the rows where flow is an interface industry.
+  int_ind_rows <- .tidy_iea_df %>% 
+    dplyr::filter(.data[[flow]] %in% int_industries)
+  # Specify those rows
+  int_ind_rows_specified <- int_ind_rows %>% 
     dplyr::mutate(
-      !!as.name(flow) := dplyr::case_when(
-        # !!as.name(flow) %in% int_industries ~ paste0(!!as.name(flow), .interface_ind_open, !!as.name(product), .interface_ind_close),
-        .data[[flow]] %in% int_industries ~ RCLabels::paste_pref_suff(pref = .data[[flow]], suff = .data[[product]], notation = notation),
-        TRUE ~ .data[[flow]]
-      )
+      "{flow}" := RCLabels::paste_pref_suff(pref = .data[[flow]], suff = RCLabels::get_pref_suff(.data[[product]], which = "pref") , notation = notation), 
+      "{flow}" := as.character(.data[[flow]])
     )
+  .tidy_iea_df %>% 
+    # Subtract the interface industry rows from the incoming data frame
+    dplyr::filter(!(.data[[flow]] %in% int_industries)) %>% 
+    # Add back the specified rows
+    dplyr::bind_rows(int_ind_rows_specified)
 }
 
 
@@ -346,7 +367,7 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' @param negzeropos The name of a temporary column created in `.tidy_iea_df`. Default is ".negzeropos".
 #' @param main_act_producer_elect A string identifying main activity producer electricity plants. Default is "Main activity producer electricity plants".
 #'
-#' @return a modified version of `.tidy_iea_df`
+#' @return A modified version of `.tidy_iea_df`.
 #' 
 #' @export
 #'
@@ -485,13 +506,15 @@ tp_sinks_sources <- function(.tidy_iea_df,
   use_rows <- .tidy_iea_df %>% 
     dplyr::group_by(!!!grouping_vars) %>% 
     dplyr::filter((!!as.name(flow_aggregation_point) == transformation_processes | !!as.name(flow_aggregation_point) == eiou) & !!as.name(e_dot) < 0) %>% 
-    dplyr::select(dplyr::group_cols(), flow) %>% 
+    # dplyr::select(dplyr::group_cols(), flow) %>% 
+    dplyr::select(dplyr::group_cols(), dplyr::all_of(flow)) %>% 
     unique() %>% 
     dplyr::ungroup()
   make_rows <- .tidy_iea_df %>% 
     dplyr::group_by(!!!grouping_vars) %>% 
     dplyr::filter(!!as.name(flow_aggregation_point) == transformation_processes & !!as.name(e_dot) > 0) %>% 
-    dplyr::select(dplyr::group_cols(), flow) %>% 
+    # dplyr::select(dplyr::group_cols(), flow) %>% 
+    dplyr::select(dplyr::group_cols(), dplyr::all_of(flow)) %>% 
     unique() %>% 
     dplyr::ungroup()
   # setdiff gives the rows that are IN use_rows but NOT in make_rows.
