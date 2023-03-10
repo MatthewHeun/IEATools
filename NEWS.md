@@ -43,7 +43,7 @@ output: html_document
   the "Natural gas extraction" industry.
 * New 4-letter abbreviations for non-standard ISO country codes.
 * New tests for new features.
-    * Now up to 1320 tests, all passing.
+    * Now up to 1371 tests, all passing.
     * Test coverage remains at 100 %.
 
 
