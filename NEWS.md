@@ -4,6 +4,15 @@ output: html_document
 ---
 
 
+# IEATools 0.1.64 (2023-03-09)
+
+* New boolean argument `specify_non_energy_flows` 
+  on `load_tidy_iea_df()` enables specifying Non-energy use flows 
+  via the new `specify_non_energy_use()` function where possible.
+  For now, the default is `FALSE` to maintain backward compatibility
+  (i.e., not specifying Non-energy use flows).
+* New function `specify_non_energy_use()` uses "Memo: Non-energy use in <<specific industry>>"
+  where possible.
 * `augment_iea_df()` now adds `Flow.aggregation.point`s
   for all aggregation flows that will (eventually) be removed.
   This change will enable future specification 
@@ -34,7 +43,7 @@ output: html_document
   the "Natural gas extraction" industry.
 * New 4-letter abbreviations for non-standard ISO country codes.
 * New tests for new features.
-    * Now up to 1320 tests, all passing.
+    * Now up to 1371 tests, all passing.
     * Test coverage remains at 100 %.
 
 
