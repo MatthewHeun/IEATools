@@ -36,6 +36,9 @@ form_eta_fu_phi_u_vecs(
 A template for this table should have been created by \code{eta_fu_table()} and
 \code{write_eta_fu_table()}.}
 
+\item{matrix.class}{The type of matrix to be created, one of "matrix" or "Matrix".
+Default is "matrix".}
+
 \item{unit, year}{See \code{IEATools::iea_cols}.}
 
 \item{quantity, machine, eu_product, e_dot_machine, e_dot_machine_perc, maximum_values, eta_fu, phi_u, phi}{See \code{IEATools::template_cols}.}
@@ -49,9 +52,6 @@ See \code{matsbyname::notation_vec()}.
 Defaults are \code{RCLabels::arrow_notation} and ``RCLabels::from_notation`, respectively.}
 
 \item{.id}{The name of an identification column used internally. Default is ".id".}
-
-\item{class}{The type of matrix to be created, one of "matrix" or "Matrix".
-Default is "matrix".}
 }
 \value{
 a wide-by-matrices data frame with metadata columns (and year)

@@ -6,15 +6,25 @@
 \usage{
 load_tidy_iea_df(
   .iea_file = sample_iea_data_path(),
+  remove_zeroes = TRUE,
+  specify_non_energy_flows = FALSE,
   override_df = IEATools::override_iso_codes_df,
   country = IEATools::iea_cols$country,
   pfu_code = IEATools::country_concordance_cols$pfu_code,
-  iea_name = IEATools::country_concordance_cols$iea_name,
-  remove_zeroes = TRUE
+  iea_name = IEATools::country_concordance_cols$iea_name
 )
 }
 \arguments{
 \item{.iea_file}{The path of the file to be loaded. Default loads example data bundled with the package via \code{\link[=sample_iea_data_path]{sample_iea_data_path()}}.}
+
+\item{remove_zeroes}{A logical indicating whether data points with the value \code{0} are to be removed from the output.
+This argument is passed to \code{tidy_iea_df()}.
+Default is \code{TRUE}.}
+
+\item{specify_non_energy_flows}{A logical indicating whether "Non-energy use in xxxxx" Flows
+should be specified by "Memo: Non-energy use in <\if{html}{\out{<specific industry>}}>"
+entries in the IEA data.
+Default is \code{TRUE}.}
 
 \item{override_df}{A data frame containing columns \code{pfu_code} and \code{iea_name} that provides 3-letter country codes. See \code{IEATools::use_iso_countries()}.
 Default is \code{IEATools::override_iso_codes_df}.}
@@ -24,24 +34,22 @@ Default is \code{IEATools::override_iso_codes_df}.}
 \item{pfu_code, iea_name}{Names of columns in the override data frame for 3-letter country codes.
 These arguments are passed to \code{use_iso_countries()}.
 Defaults are taken from \code{IEATools::country_concordance_cols}.}
-
-\item{remove_zeroes}{A logical indicating whether data points with the value \code{0} are to be removed from the output.
-This argument is passed to \code{tidy_iea_df()}.
-Default is \code{TRUE}.}
 }
 \value{
-a tidy, augmented data frame of IEA extended energy balance data.
+A tidy, augmented data frame of IEA extended energy balance data.
 }
 \description{
 Loads an IEA extended energy balance data file in \code{.csv} format from disk and converts to a tidy format.
 This function bundles several others:
 \enumerate{
-\item \code{\link[=iea_df]{iea_df()}},
-\item \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}},
-\item \code{\link[=use_iso_countries]{use_iso_countries()}},
-\item \code{\link[=remove_agg_memo_flows]{remove_agg_memo_flows()}},
-\item \code{\link[=augment_iea_df]{augment_iea_df()}}, and
-\item \code{\link[=tidy_iea_df]{tidy_iea_df()}}.
+\item \code{iea_df()},
+\item \code{rename_iea_df_cols()},
+\item \code{clean_iea_whitespace()},
+\item \code{use_iso_countries()},
+\item \code{augment_iea_df()},
+\item \code{specify_non_energy_use()} (optionally),
+\item \code{remove_agg_memo_flows()}, and
+\item \code{tidy_iea_df()}.
 }
 }
 \details{
@@ -52,15 +60,16 @@ See examples for two ways to achieve the same result.
 # Check the file first
 iea_file_OK(sample_iea_data_path())
 # Take a simple approach
-simple <- load_tidy_iea_df()
+simple <- load_tidy_iea_df(specify_non_energy_flows = TRUE)
 # Take the complicated approach
-complicated <- sample_iea_data_path() \%>\% 
-  iea_df() \%>\%
-  rename_iea_df_cols() \%>\% 
-  clean_iea_whitespace() \%>\% 
-  remove_agg_memo_flows() \%>\% 
-  use_iso_countries() \%>\% 
-  augment_iea_df() \%>\% 
+complicated <- sample_iea_data_path() |> 
+  iea_df() |> 
+  rename_iea_df_cols() |> 
+  clean_iea_whitespace() |> 
+  remove_agg_memo_flows() |>  
+  use_iso_countries() |> 
+  augment_iea_df() |> 
+  specify_non_energy_use() |> 
   tidy_iea_df()
 # simple and complicated should be exactly the same
 all(simple == complicated)

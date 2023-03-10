@@ -92,11 +92,15 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
     dplyr::group_by(!!!grouping_names)
   SupplySum <- Tidy %>%
     dplyr::filter(.data[[ledger_side]] == supply) %>%
-    dplyr::summarise("{supply_sum}" := sum(.data[[e_dot]]))
+    dplyr::summarise(
+      "{supply_sum}" := sum(.data[[e_dot]])
+    )
   # Calculate the consumption sum on a per-group basis
   ConsumptionSum <- Tidy %>%
     dplyr::filter(.data[[ledger_side]] == consumption | .data[[ledger_side]] == balancing) %>%
-    dplyr::summarise("{consumption_sum}" := sum(.data[[e_dot]]))
+    dplyr::summarise(
+      "{consumption_sum}" := sum(.data[[e_dot]])
+    )
   # Return the difference between supply and consumption
   dplyr::full_join(SupplySum, ConsumptionSum, by = grouping_strings) %>% 
     dplyr::mutate(

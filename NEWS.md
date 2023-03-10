@@ -4,11 +4,16 @@ output: html_document
 ---
 
 
-* Added sample data for 2022 release of IEA WEEB.
+* `augment_iea_df()` now adds `Flow.aggregation.point`s
+  for all aggregation flows that will (eventually) be removed.
+  This change will enable future specification 
+  of "Non-energy use in xxxxx" flows
+  with "Memo: Non-energy use in xxxxx" where possible.
 * Added capability to use `Matrix` objects with 
   `prep_psut()`, `form_C_mats()`, `form_eta_fu_phi_u_vecs()`,
   `extract_S_units_from_tidy()`, and `collapse_to_tidy_psut()`.
-* Eliminated all warnings from `tidyselect` about 
+  This change enables sparse matrices to save memory and disk space.
+* Eliminated all warnings from the `tidyselect` package about 
   deprecated functionality. 
   The package builds and tests cleanly again!
 * New argument on `add_psut_matnames()` (`R_includes_all_exogenous_flows`)
@@ -19,6 +24,7 @@ output: html_document
   matrix (`TRUE`) and 
   (b) placing only Resource flows
   in the **R** matrix (`FALSE`).
+  Default is `TRUE`.
 * Added "Main activity producer electricity plants" to the list of `eiou_flows`.
   We route "Own use in electricity, CHP and heat plants" to 
   "Main activity producer electricity plants", 

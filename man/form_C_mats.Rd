@@ -44,6 +44,9 @@ A template for this table should have been created by \code{fu_allocation_table(
 \code{write_fu_allocation_table()}.
 This object can also be a tidy data frame with year data gathered into a Year column.}
 
+\item{matrix.class}{The type of matrix to be created, one of "matrix" or "Matrix".
+Default is "matrix".}
+
 \item{ledger_side, flow_aggregation_point, e_dot, unit, year}{See \code{IEATools::iea_cols}.}
 
 \item{supply, consumption}{See \code{IEATools::ledger_sides}.}
@@ -66,9 +69,6 @@ that contains \code{TRUE} or \code{FALSE} depending on whether a rowsum was 1.}
 
 \item{.all_1}{A temporary column created internally (and not returned unless there is an error)
 that tells whether a 1-vector was created by rowsums.}
-
-\item{class}{The type of matrix to be created, one of "matrix" or "Matrix".
-Default is "matrix".}
 }
 \value{
 A wide-by-matrices data frame with metadata columns (and year) along with columns for
