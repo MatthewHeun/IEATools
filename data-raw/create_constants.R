@@ -785,7 +785,8 @@ fd_sectors <- c(eiou_flows,
                 industry_net_flows,
                 transport_domestic_flows,
                 other_flows, 
-                non_energy_flows)
+                non_energy_flows, 
+                gsub(memo_aggregation_flow_prefixes$memo, "", memo_non_energy_flows))
 usethis::use_data(fd_sectors, overwrite = TRUE)
 
 

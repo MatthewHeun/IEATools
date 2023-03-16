@@ -21,10 +21,10 @@ specify_interface_industries(
 
 \item{int_industries}{A string vector of industries involved in exchanges with other countries,
 bunkers, or stock changes.
-Default is c(\code{IEATools::interface_industries}, IEATools::tpes_flows["resources"],
-manufacture = "Manufacture").}
+Default is \code{c(IEATools::interface_industries, IEATools::tpes_flows$resources, manufacture = "Manufacture")}.}
 
-\item{product}{The name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
+\item{product}{The name of the product column in \code{.tidy_iea_df}.
+Default is "\code{Product}".}
 
 \item{flow_notation}{The notation for the \code{flow} column.
 Default is \code{RCLabels::of_notation}.}
@@ -39,11 +39,11 @@ A modified version of \code{.tidy_iea_df} with specified interface industries.
 }
 \description{
 An interface industry is one that moves energy carriers into or out of a country.
-When \code{Flow} is any of the interface industries, we need to be more specific.
-If we don't separate these \code{Flow}s by \code{Product}, we run into trouble with
-upstream swims (e.g., all \code{Product}s are produced even if only one is needed) and
+When \code{flow} is any of the interface industries, we need to be more specific.
+If we don't separate these \code{flow}s by \code{product}, we run into trouble with
+upstream swims (e.g., all \code{product}s are produced even if only one is needed) and
 embodied energy calculations (many types of energy are embodied, even if only one should be).
-This function adds a suffix \verb{[of Product]} to each of these interface industries.
+This function adds a suffix "[of Product]" to each of these interface industries.
 }
 \details{
 Note that "Production" also needs to be specified,

@@ -4,6 +4,10 @@ output: html_document
 ---
 
 
+* `IEATools::fd_sectors` now contains specific
+  "Non-energy use in <<industry>>" strings
+  to support the option to specify Non-energy use flows
+  when possible.
 * Fixed a bug where 
   "Stock changes [of Gas/diesel oil excl. biofuels]"
   became
