@@ -10,8 +10,8 @@ specify_interface_industries(
   int_industries = c(IEATools::interface_industries, IEATools::tpes_flows$resources,
     manufacture = "Manufacture"),
   product = IEATools::iea_cols$product,
-  of_notation = RCLabels::of_notation,
-  from_notation = RCLabels::from_notation
+  flow_notation = RCLabels::of_notation,
+  product_notation = RCLabels::bracket_notation
 )
 }
 \arguments{
@@ -26,7 +26,13 @@ manufacture = "Manufacture").}
 
 \item{product}{The name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
 
-\item{notation}{A list of specification notations. Default is \code{RCLabels::of_notation}.}
+\item{flow_notation}{The notation for the \code{flow} column.
+Default is \code{RCLabels::of_notation}.}
+
+\item{product_notation}{The notation for the \code{product} column.
+Default is \code{RCLabels::bracket_notation}, meaning that
+any type of "X [from Resources]" or "X [to Y]"
+will be parsed correctly for its prefix.}
 }
 \value{
 A modified version of \code{.tidy_iea_df} with specified interface industries.
