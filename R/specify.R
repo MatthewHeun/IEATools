@@ -292,27 +292,25 @@ specify_production_to_resources <- function(.tidy_iea_df,
 specify_interface_industries <- function(.tidy_iea_df,
                                          flow = IEATools::iea_cols$flow, 
                                          int_industries = c(IEATools::interface_industries,
-                                                            IEATools::tpes_flows["resources"],
+                                                            IEATools::tpes_flows$resources,
                                                             manufacture = "Manufacture"),
                                          product = IEATools::iea_cols$product, 
-                                         notation = RCLabels::of_notation){
-  # .tidy_iea_df %>%
-  #   dplyr::mutate(
-  #     "{flow}" := dplyr::case_when(
-  #       .data[[flow]] %in% int_industries ~ RCLabels::paste_pref_suff(pref = .data[[flow]], suff = .data[[product]], notation = notation),
-  #       TRUE ~ .data[[flow]]
-  #     )
-  #   )
-    
+                                         of_notation = RCLabels::of_notation, 
+                                         from_notation = RCLabels::from_notation){
   # Find the rows where flow is an interface industry.
   int_ind_rows <- .tidy_iea_df %>% 
     dplyr::filter(.data[[flow]] %in% int_industries)
   # Specify those rows
   int_ind_rows_specified <- int_ind_rows %>% 
     dplyr::mutate(
-      "{flow}" := RCLabels::paste_pref_suff(pref = .data[[flow]], suff = RCLabels::get_pref_suff(.data[[product]], which = "pref") , notation = notation), 
+      "{flow}" := RCLabels::paste_pref_suff(pref = .data[[flow]], 
+                                            suff = RCLabels::get_pref_suff(.data[[product]],
+                                                                           which = "pref",
+                                                                           notation = list(of_notation, from_notation)),
+                                            notation = of_notation), 
       "{flow}" := as.character(.data[[flow]])
     )
+  
   .tidy_iea_df %>% 
     # Subtract the interface industry rows from the incoming data frame
     dplyr::filter(!(.data[[flow]] %in% int_industries)) %>% 

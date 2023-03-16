@@ -7,10 +7,11 @@
 specify_interface_industries(
   .tidy_iea_df,
   flow = IEATools::iea_cols$flow,
-  int_industries = c(IEATools::interface_industries, IEATools::tpes_flows["resources"],
+  int_industries = c(IEATools::interface_industries, IEATools::tpes_flows$resources,
     manufacture = "Manufacture"),
   product = IEATools::iea_cols$product,
-  notation = RCLabels::of_notation
+  of_notation = RCLabels::of_notation,
+  from_notation = RCLabels::from_notation
 )
 }
 \arguments{
