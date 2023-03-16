@@ -8,8 +8,9 @@ output: html_document
   "Stock changes [of Gas/diesel oil excl. biofuels]"
   became
   "Stock changes [of Gas/diesel oil excl]", because
-  the `notation` argument was not being set
-  in a call to `RCLabels::get_pref_suff()`.
+  the `notation` argument was not being set properly
+  in a call to `RCLabels::get_pref_suff()`
+  when extracting prefixes.
 
 
 # IEATools 0.1.64 (2023-03-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7714342.svg)](https://doi.org/10.5281/zenodo.7714342)
