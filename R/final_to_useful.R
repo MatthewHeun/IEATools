@@ -620,6 +620,7 @@ extend_to_useful <- function(.sutdata = NULL,
         return(NULL)
       }
     }
+    # Check for the case where .sutdata list has no entries.
     if (is.list(.sutdata) & !is.data.frame(.sutdata)) {
       if (length(.sutdata) == 0) {
         return(NULL)
