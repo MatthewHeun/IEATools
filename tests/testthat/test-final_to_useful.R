@@ -908,3 +908,53 @@ test_that("extend_to_useful() works as expected when clean_up_df = FALSE with Ma
                  "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                  "r_EIOU_Useful", "V_Useful", "Y_Useful"))
 })
+
+
+test_that("extend_to_useful() works with empty lists", {
+  C_data <- load_fu_allocation_data() %>% 
+    form_C_mats(matrix.class = "Matrix")
+  eta_fu_data <- load_eta_fu_data() %>% 
+    form_eta_fu_phi_u_vecs(matrix.class = "Matrix")
+  m_cols <- eta_fu_data %>% 
+    IEATools::meta_cols(return_names = TRUE,
+                        years_to_keep = IEATools::iea_cols$year,
+                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
+  psut_mats <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    prep_psut(matrix.class = "Matrix") %>% 
+    dplyr::full_join(C_data, by = m_cols) %>% 
+    dplyr::full_join(eta_fu_data, by = m_cols)
+  
+  # Make a list out of the first row of matrices
+  var_store <- as.list(psut_mats[1, ])
+  var_store <- var_store[0]
+  
+  useful_list <- extend_to_useful(var_store)
+  
+  expect_null(useful_list)
+})
+
+
+test_that("extend_to_useful() returns NULL with empty data frames", {
+  C_data <- load_fu_allocation_data() %>% 
+    form_C_mats(matrix.class = "Matrix")
+  eta_fu_data <- load_eta_fu_data() %>% 
+    form_eta_fu_phi_u_vecs(matrix.class = "Matrix")
+  m_cols <- eta_fu_data %>% 
+    IEATools::meta_cols(return_names = TRUE,
+                        years_to_keep = IEATools::iea_cols$year,
+                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
+  psut_mats <- load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    prep_psut(matrix.class = "Matrix") %>% 
+    dplyr::full_join(C_data, by = m_cols) %>% 
+    dplyr::full_join(eta_fu_data, by = m_cols)
+  
+  # Make a no-row data frame.
+  psut_mats <- psut_mats[0, ]
+  
+  with_useful <- psut_mats %>% 
+    extend_to_useful()
+  
+  expect_null(with_useful)
+})

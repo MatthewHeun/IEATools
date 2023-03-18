@@ -484,6 +484,9 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' If the energy balance check fails, a warning is emitted and 
 #' additional diagnostic information will appear in the output: `.err` and `.e_bal_ok`.
 #' 
+#' If `.sutdata` is a data frame with no rows or a list of length `0`, 
+#' `NULL` is returned.
+#' 
 #' @param .sutdata A wide-by-matrices data frame of PSUT matrices that represent an energy conversion chain.
 #'                 Each row of `.sutdata` should contain the matrices that represent one energy conversion chain.
 #'                 Matrices should be in columns identified by their names.
@@ -609,6 +612,20 @@ extend_to_useful <- function(.sutdata = NULL,
                              r_eiou_name = IEATools::psut_cols$r_eiou,
                              V_name = IEATools::psut_cols$V, 
                              Y_name = IEATools::psut_cols$Y) {
+  
+  # Check for the case where .sutdata has no rows.
+  if (!is.null(.sutdata)) {
+    if (is.data.frame(.sutdata)) {
+      if (nrow(.sutdata) == 0) {
+        return(NULL)
+      }
+    }
+    if (is.list(.sutdata) & !is.data.frame(.sutdata)) {
+      if (length(.sutdata) == 0) {
+        return(NULL)
+      }
+    }
+  }
   
   # New names
   U_feed_useful_name <- paste0(U_feed_name, .sep, useful)
