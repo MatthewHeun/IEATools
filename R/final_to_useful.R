@@ -417,7 +417,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
   # Set the grouping columns for later.
   group_cols <- matsindf::everything_except(prepped, matvals, rownames, colnames, rowtypes, coltypes)
   
-  prepped %>% 
+  out <- prepped %>% 
     dplyr::mutate(
       "{rownames}" := dplyr::case_when(
         # For the phi_u rows, we want to keep only the product in the name.
@@ -445,6 +445,18 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    matrix.class = matrix.class) %>% 
     # pivot wider to the sutmats format
     tidyr::pivot_wider(names_from = matnames, values_from = matvals)
+  
+  # If the outgoing data frame has no rows, 
+  # we will not have columns generated from matnames,
+  # so generate them here.
+  if (nrow(out) == 0) {
+    out <- out |> 
+      dplyr::mutate(
+        "{eta_fu}" := double(),
+        "{phi_u}" := double()
+      )
+  }
+  return(out)
 }
 
 

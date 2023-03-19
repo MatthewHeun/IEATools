@@ -595,8 +595,14 @@ complete_eta_fu_table <- function(eta_fu_table,
     # we're being asked to complete an efficiency table 
     # for a combination of country and year for which no IEA data exists.
     # In this event, just return an empty eta_fu_table.
-    return(eta_fu_table %>% 
-             magrittr::extract(c(), ))
+    out <- eta_fu_table |> 
+      magrittr::extract(c(), ) |> 
+      dplyr::mutate(
+        # Add an empty column that is typically added
+        # when we have an fu_allocation_table with more than 0 rows.
+        "{eta_fu_source}" := character()
+      )
+    return(out)
   }
   
   # Also tidy the exemplar tables.

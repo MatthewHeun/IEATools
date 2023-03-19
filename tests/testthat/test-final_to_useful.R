@@ -110,13 +110,6 @@ test_that("form_C_mats works with Matrix objects", {
 })
 
 
-
-
-
-
-
-
-
 test_that("form_eta_fu_phi_u_vecs() works as expected", {
   efficiency_table <- load_eta_fu_data()
   eta_fu_phi_u_df <- form_eta_fu_phi_u_vecs(efficiency_table)
@@ -158,6 +151,16 @@ test_that("form_eta_fu_phi_u_vecs() errors when phi values are different", {
   efficiency_table[32, "1971"] <- 0.9999
   expect_equal(efficiency_table[32, "1971"], 0.9999)
   expect_error(form_eta_fu_phi_u_vecs(efficiency_table), "Found useful products with different phi values in form_eta_fu_phi_u_vecs")
+})
+
+
+test_that("form_eta_fu_phi_u_vecs() works when the incoming data frame has no rows", {
+  efficiency_table <- load_eta_fu_data()
+  efficiency_table <- efficiency_table[0, ]
+  eta_fu_phi_u_df <- form_eta_fu_phi_u_vecs(efficiency_table)
+  
+  expect_true(IEATools::template_cols$eta_fu %in% names(eta_fu_phi_u_df))
+  expect_true(IEATools::template_cols$phi_u %in% names(eta_fu_phi_u_df))
 })
 
 

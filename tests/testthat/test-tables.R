@@ -477,8 +477,11 @@ test_that("complete_eta_fu_table() returns an empty data frame when the fu_alloc
   fu_allocation_table <- load_fu_allocation_data() %>% 
     tidy_fu_allocation_table()
   fu_allocation_table_GHA <- fu_allocation_table[c(), ]
-  result <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA, exemplar_eta_fu_tables = eta_fu_table_ZAF, fu_allocation_table = fu_allocation_table_GHA)
+  result <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA, 
+                                  exemplar_eta_fu_tables = eta_fu_table_ZAF, 
+                                  fu_allocation_table = fu_allocation_table_GHA)
   expect_equal(nrow(result), 0)
+  expect_true(IEATools::template_cols$eta_fu_source %in% names(result))
 })
 
 
