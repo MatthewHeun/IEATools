@@ -656,8 +656,8 @@ prep_psut <- function(.tidy_iea_df,
     # Make a tibble with no rows for the remainder of the columns, 
     # R, U_eiou, U_feed, V, Y, S_units (6 in total)
     # Use 1.1 for the value so that columns are created as double type columns.
-    mats_cols <- as.list(rep(1.1, 7)) %>% 
-      magrittr::set_names(c(R, U_eiou, U_feed, V, Y, s_units, B)) %>% 
+    mats_cols <- as.list(rep(1.1, 8)) %>% 
+      magrittr::set_names(c(R, U, U_eiou, U_feed, r_eiou, V, Y, s_units)) %>% 
       as.data.frame()
     # Eliminate the row in the data frame
     zero_length_mats_cols <- mats_cols[0, ]

@@ -472,7 +472,7 @@ test_that("prep_psut() works as expected with empty .tidy_iea_df", {
                      IEATools::iea_cols$energy_type,
                      IEATools::iea_cols$last_stage,
                      IEATools::iea_cols$year,
-                     "R", "U_EIOU", "U_feed", "V", "Y", "S_units", "B")) {
+                     "R", "U", "U_EIOU", "U_feed", "V", "Y", "S_units")) {
     expect_true(col_name %in% cn)
   }
   expect_equal(nrow(zero_psut), 0)

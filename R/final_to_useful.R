@@ -215,8 +215,20 @@ form_C_mats <- function(.fu_allocation_table,
 
   # If we passed the test, we can return the out data frame without the verification columns, 
   # after we pivot wider.
-  out %>% 
+  out <- out %>% 
     tidyr::pivot_wider(names_from = matnames, values_from = matvals)
+  
+  # If the outgoing data frame has no rows, 
+  # we will not have columns generated from matnames,
+  # so generate them here.
+  if (nrow(out) == 0) {
+    out <- out |> 
+      dplyr::mutate(
+        "{C_eiou}" := double(),
+        "{C_Y}" := double()
+      )
+  }
+  return(out)
 }
 
 
