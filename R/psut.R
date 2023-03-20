@@ -651,7 +651,6 @@ prep_psut <- function(.tidy_iea_df,
                               return_names = TRUE, 
                               not_meta = c(ledger_side, flow_aggregation_point, flow, product, e_dot, unit))
     out <- .tidy_iea_df %>% 
-      # dplyr::select(!!!meta_columns, !!year)
       dplyr::select(dplyr::all_of(c(meta_columns, year)))
     # Make a tibble with no rows for the remainder of the columns, 
     # R, U_eiou, U_feed, V, Y, S_units (6 in total)
