@@ -224,8 +224,8 @@ form_C_mats <- function(.fu_allocation_table,
   if (nrow(out) == 0) {
     out <- out |> 
       dplyr::mutate(
-        "{C_eiou}" := double(),
-        "{C_Y}" := double()
+        "{C_eiou}" := list(),
+        "{C_Y}" := list()
       )
   }
   return(out)
@@ -464,8 +464,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
   if (nrow(out) == 0) {
     out <- out |> 
       dplyr::mutate(
-        "{eta_fu}" := double(),
-        "{phi_u}" := double()
+        "{eta_fu}" := list(),
+        "{phi_u}" := list()
       )
   }
   return(out)
@@ -637,21 +637,6 @@ extend_to_useful <- function(.sutdata = NULL,
                              V_name = IEATools::psut_cols$V, 
                              Y_name = IEATools::psut_cols$Y) {
   
-  # Check for the case where .sutdata has no rows.
-  if (!is.null(.sutdata)) {
-    if (is.data.frame(.sutdata)) {
-      if (nrow(.sutdata) == 0) {
-        return(NULL)
-      }
-    }
-    # Check for the case where .sutdata list has no entries.
-    if (is.list(.sutdata) & !is.data.frame(.sutdata)) {
-      if (length(.sutdata) == 0) {
-        return(NULL)
-      }
-    }
-  }
-  
   # New names
   U_feed_useful_name <- paste0(U_feed_name, .sep, useful)
   U_eiou_useful_name <- paste0(U_eiou_name, .sep, useful)
@@ -661,6 +646,30 @@ extend_to_useful <- function(.sutdata = NULL,
   Y_useful_name <- paste0(Y_name, .sep, useful)
   
   extend_func <- function(eta_fu_vector, Y_mat, C_Y_mat, U_feed_mat, V_mat, C_eiou_mat, U_eiou_mat, R_mat) {
+    
+    # Check for the case when all of the incoming values are of length 0.
+    # This can occur when the incoming data frame has no rows.
+    # In that event, return a list with numeric()s and the correct names.
+    if (length(eta_fu_vector) == 0 & length(Y_mat) == 0 & length(C_Y_mat) == 0 & length(U_feed_mat) == 0 & 
+        length(V_mat) == 0 & length(C_eiou_mat) == 0 & length(U_eiou_mat) == 0 & length(R_mat) == 0) {
+      out <- list(numeric(), 
+                  numeric(), 
+                  numeric(),
+                  numeric(), 
+                  numeric(), 
+                  numeric(), 
+                  numeric(), 
+                  logical()) |> 
+        magrittr::set_names(c(U_feed_useful_name, 
+                              U_eiou_useful_name, 
+                              U_useful_name, 
+                              r_eiou_useful_name, 
+                              V_useful_name, 
+                              Y_useful_name, 
+                              .err, 
+                              .e_bal_ok))
+      return(out)
+    }
     
     # Industries to retain from Y_f to Y_u. 
     # These industries are not allocated to f-u machines, nor are they tracked for useful energy.
@@ -676,7 +685,7 @@ extend_to_useful <- function(.sutdata = NULL,
                                          from = list(arrow_note), 
                                          to = list(from_note), 
                                          flip = list(TRUE))
-
+    
     # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
     # We take each of these in turn, adjusting the energy conversion chain to account for the fact that 
     # useful energy is now the last stage.
@@ -697,7 +706,7 @@ extend_to_useful <- function(.sutdata = NULL,
     # so we must retain them in the Y matrix.
     Y_keep_mat <- matsbyname::select_cols_byname(Y_mat, 
                                                  retain_pattern = RCLabels::make_or_pattern(Y_keep_inds, 
-                                                                                         pattern_type = "leading"))
+                                                                                            pattern_type = "leading"))
     Y_useful_mat <- matsbyname::sum_byname(Y_keep_mat, res_Y[[.add_to_dest]])
     
     # Now check to see if we have any EIOU. 
@@ -732,11 +741,11 @@ extend_to_useful <- function(.sutdata = NULL,
       matsbyname::difference_byname(U_useful_mat) %>%             # (R + V)^T - U
       matsbyname::difference_byname(Y_useful_mat) %>%             # (R + V)^T - U - Y
       matsbyname::rowsums_byname()
-      
+    
     .ebal_ok <- .err_vec %>%
       matsbyname::iszero_byname(tol = tol) %>% 
       as.logical()
-
+    
     # Return a named list, as required by matsindf_apply()
     out <- list(U_feed_useful_mat, 
                 U_eiou_useful_mat, 
@@ -765,7 +774,7 @@ extend_to_useful <- function(.sutdata = NULL,
     }
     return(out)
   }
-
+  
   out <- matsindf::matsindf_apply(.sutdata, FUN = extend_func,
                                   eta_fu_vector = eta_fu, 
                                   Y_mat = Y, 
