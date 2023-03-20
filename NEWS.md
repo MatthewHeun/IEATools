@@ -4,6 +4,10 @@ output: html_document
 ---
 
 
+* Most functions now treat a zero-row incoming data frame
+  much better, returning a zero-row data frame 
+  with columns of same type as would have been produced 
+  if the incoming data frame had at least one row.
 * `IEATools::fd_sectors` now contains specific
   "Non-energy use in <<industry>>" strings
   to support the option to specify Non-energy use flows
