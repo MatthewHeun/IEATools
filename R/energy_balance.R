@@ -156,7 +156,7 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' Fix IEA energy balances
 #' 
 #' IEA extended energy balance data are sometimes not quite balanced.  
-#' In fact, supply and consumption are often wrong by a few ktoe
+#' In fact, supply and consumption are often wrong by a few ktoe or TJ
 #' for any given Product in a Country in a Year.
 #' This function ensures that the balance is perfect
 #' by adjusting the `Statistical differences` flow
@@ -269,7 +269,7 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
                                 err_too_big[[product]], 
                                 err_too_big[[.err]], sep = ", ", collapse = "; ")
     # Give as much good debugging information as possible.
-    stop(paste0("In fix_tidy_iea_df_balances(), maximum energy balance error is ", max_err, 
+    stop(paste0("In fix_tidy_iea_df_balances(), largest energy balance error is ", max_err, 
                 ". Maximum fixable error is ", max_fix, ". The following combinations of Country, Year, and Product have errors that exceed the maximum allowable error: ", 
                 err_too_big_combos))
   }
