@@ -694,7 +694,7 @@ prep_psut <- function(.tidy_iea_df,
   # In other cases (BEN, GIB, MUS, NAM), the U_feed is present, but
   # U_EIOU matrices are missing.
   # So we check for the presence of U_feed or U_EIOU, as appropriate,
-  #  before creating the U or r_eiou matrices.
+  # before creating the U or r_eiou matrices.
   # ---Matthew Kuperus Heun, 9 Nov 2021
   if (U_feed %in% names(CollapsedSpread) & !(U_eiou %in% names(CollapsedSpread))) {
     # With no U_eiou matrix, we simply set U equal to U_feed
