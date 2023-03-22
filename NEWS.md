@@ -4,7 +4,7 @@ output: html_document
 ---
 
 
-* Most functions now treat a zero-row incoming data frame
+* Functions now treat a zero-row incoming data frame
   much better, returning a zero-row data frame 
   with columns of same type as would have been produced 
   if the incoming data frame had at least one row.
