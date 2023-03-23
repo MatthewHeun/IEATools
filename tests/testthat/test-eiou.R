@@ -1491,17 +1491,16 @@ test_that("route_non_specified_flows() works", {
                -400,
                tolerance = 0.001)
   
-  expect_equal(test %>%
-                 dplyr::filter(
-                   Country == "B",
-                   Flow.aggregation.point == "Transformation processes",
-                   Flow == "Main activity producer electricity plants",
-                   Product == "Brown coal (if no detail)"
-                 ) %>%
-                 dplyr::select(E.dot) %>%
-                 dplyr::pull(),
-               620.6897,
-               tolerance = 0.001)
+  test %>%
+    dplyr::filter(
+      Country == "B",
+      Flow.aggregation.point == "Transformation processes",
+      Flow == "Main activity producer electricity plants",
+      Product == "Brown coal (if no detail)"
+    ) %>%
+    dplyr::select(E.dot) %>%
+    dplyr::pull() |> 
+    expect_equal(623, tolerance = 0.001)
   
   expect_equal(test %>%
                  dplyr::filter(
@@ -1515,17 +1514,16 @@ test_that("route_non_specified_flows() works", {
                -847,
                tolerance = 0.001)
   
-  expect_equal(test %>%
-                 dplyr::filter(
-                   Country == "B",
-                   Flow.aggregation.point == "Transformation processes",
-                   Flow == "Oil refineries",
-                   Product == "Brown coal (if no detail)"
-                 ) %>%
-                 dplyr::select(E.dot) %>%
-                 dplyr::pull(),
-               (623-620.6897+67),
-               tolerance = 0.001)
+  test %>%
+    dplyr::filter(
+      Country == "B",
+      Flow.aggregation.point == "Transformation processes",
+      Flow == "Oil refineries",
+      Product == "Brown coal (if no detail)"
+    ) %>%
+    dplyr::select(E.dot) %>%
+    dplyr::pull() |> 
+    expect_equal(623-620.6897+67, tolerance = 0.001)
   
   first_version_test <- AB_data %>%
     IEATools::specify_primary_production() %>%
