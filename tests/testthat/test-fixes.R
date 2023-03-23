@@ -1,5 +1,5 @@
 
-test_that("Fixing GHA PSB works as expected", {
+test_that("fix_GHA_psb() works as expected", {
   # Load some example IEA data
   tidy_example <- load_tidy_iea_df() |> 
     # Focus on Ghana only
