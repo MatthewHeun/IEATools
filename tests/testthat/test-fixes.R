@@ -185,13 +185,13 @@ test_that("Fixing GHA Industry Electricity works as expected", {
   expect_equal(tidy_example |> 
                  dplyr::filter(!!as.name(iea_cols$flow) == "Industry not elsewhere specified", 
                                !!as.name(iea_cols$product) == "Electricity") |> 
-                 magrittr::extract2(iea_cols$e_dot), c(21.9261, 370.2494))
+                 magrittr::extract2(iea_cols$e_dot), c(918.002, 15501.6019))
   # Verify that there are no Mining and quarrying, Non-ferrous metals, or Textiles and leather values for 2000
   expect_equal(tidy_example |> 
                 dplyr::filter(!!as.name(iea_cols$flow) %in% c("Mining and quarrying",
                                                               "Non-ferrous metals",
                                                               "Textile and leather")) |> 
-                 magrittr::extract2(iea_cols$e_dot), c(16.681, 169.6475, 1.4617))
+                 magrittr::extract2(iea_cols$e_dot), c(698.4001, 7102.8015, 61.1985))
   
   # Fix and check
   # 
@@ -204,25 +204,25 @@ test_that("Fixing GHA Industry Electricity works as expected", {
                  # However, the second number (from 2000) does change and is smaller,
                  # because we are now specifying much more of Industry Electricity consumption.
                  # See that we have picked up its new value.
-                 magrittr::extract2(iea_cols$e_dot), c(21.9261, 103.715909))
+                 magrittr::extract2(iea_cols$e_dot), c(918.002, 4342.377677))
   
   # Check that Mining and quarrying now has a value for the year 2000.
   expect_equal(fixed_tidy_example |> 
                  dplyr::filter(!!as.name(iea_cols$flow) == "Mining and quarrying") |> 
                  magrittr::extract2(iea_cols$e_dot), 
-               c(16.681, 45.4316853))
+               c(698.400108, 1902.13380014))
   
   # Check that Non-ferrous metals has a value for the year 2000.
   expect_equal(fixed_tidy_example |> 
                  dplyr::filter(!!as.name(iea_cols$flow) == "Non-ferrous metals") |> 
                  magrittr::extract2(iea_cols$e_dot), 
-               c(169.6475, 218.8306105))
+               c(7102.80153, 9162.00000041))
   
   # Check that Textiles and leather has a value for the year 2000.
   expect_equal(fixed_tidy_example |> 
                  dplyr::filter(!!as.name(iea_cols$flow) == "Textile and leather") |> 
                  magrittr::extract2(iea_cols$e_dot), 
-               c(1.4617, 2.271195185))
+               c(61.1985, 95.09040001))
   
   # Ensure that data are still in balance
   orig <- tidy_example |> 
