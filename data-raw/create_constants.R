@@ -10,7 +10,7 @@ library(IEATools)
 # Define the valid IEA release years for which this package will work
 # 
 
-valid_iea_release_years <- c(2018, 2019, 2020, 2021, 2022)
+valid_iea_release_years <- c(2022)
 usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 
 
@@ -466,19 +466,7 @@ usethis::use_data(manufacturing_flows, overwrite = TRUE)
 
 industry_flows <- list(mining_and_quarrying = "Mining and quarrying", 
                        construction = "Construction", 
-                       # "Iron and steel",
-                       # "Chemical and petrochemical", 
-                       # "Non-ferrous metals",
-                       # "Non-metallic minerals",
-                       # "Transport equipment", 
-                       # "Machinery", 
-                       # "Food and tobacco",
-                       # # 2018
-                       # "Paper, pulp and print",
-                       # #2019
-                       # "Paper, pulp and printing",
-                       # "Wood and wood products",
-                       # "Textile and leather",
+                       manufacturing = "Manufacturing",
                        manufacturing_flows,
                        # 2018
                        non_specified_industry = "Non-specified (industry)", 
@@ -538,6 +526,27 @@ non_energy_flows <- list(non_energy_use_industry_transformation_energy = "Non-en
 usethis::use_data(non_energy_flows, overwrite = TRUE)
 
 
+#
+# Memo: Non-energy use in xxxxxx flows
+# 
+
+memo_non_energy_flows <- list(memo_non_energy_use_in_industry = "Memo: Non-energy use in industry", 
+                              memo_non_energy_use_in_construction = "Memo: Non-energy use in construction", 
+                              memo_non_energy_use_in_mining_quarrying = "Memo: Non-energy use in mining and quarrying",
+                              memo_non_energy_use_in_iron_steel = "Memo: Non-energy use in iron and steel",
+                              memo_non_energy_use_in_chemical_petrochemical = "Memo: Non-energy use in chemical/petrochemical",
+                              memo_non_energy_use_in_non_ferrous_metals = "Memo: Non-energy use in non-ferrous metals",
+                              memo_non_energy_use_in_non_metallic_minerals = "Memo: Non-energy use in non-metallic minerals",
+                              memo_non_energy_use_in_transport_equipment = "Memo: Non-energy use in transport equipment",
+                              memo_non_energy_use_in_machinery = "Memo: Non-energy use in machinery",
+                              memo_non_energy_use_in_food_beverages_tobacco = "Memo: Non-energy use in food/beverages/tobacco",
+                              memo_non_energy_use_in_paper_pulp_printing = "Memo: Non-energy use in paper/pulp and printing",
+                              memo_non_energy_use_in_wood_and_wood_products = "Memo: Non-energy use in wood and wood products",
+                              memo_non_energy_use_in_textiles_leather = "Memo: Non-energy use in textiles and leather",
+                              memo_non_energy_use_in_industry_not_elsewhere_specified = "Memo: Non-energy use in industry not elsewhere specified")
+usethis::use_data(memo_non_energy_flows, overwrite = TRUE)
+
+
 # 
 # Aggregations
 # 
@@ -568,13 +577,13 @@ aggregate_cols <- list(aggregate_primary = "EX.p",
 usethis::use_data(aggregate_cols, overwrite = TRUE)
 
 
-memo_aggregation_flow_prefixes = list(memo = "Memo: ", 
-                                      electricity_output_GWh = "Electricity output (GWh)", 
-                                      heat_output = "Heat output")
+memo_aggregation_flow_prefixes <- list(memo = "Memo: ", 
+                                       electricity_output_GWh = "Electricity output (GWh)", 
+                                       heat_output = "Heat output")
 usethis::use_data(memo_aggregation_flow_prefixes, overwrite = TRUE)
 
-memo_aggregation_product_prefixes = list(memo = "Memo: ", 
-                                         total = "Total")
+memo_aggregation_product_prefixes <- list(memo = "Memo: ", 
+                                          total = "Total")
 usethis::use_data(memo_aggregation_product_prefixes, overwrite = TRUE)
 
 
@@ -776,7 +785,8 @@ fd_sectors <- c(eiou_flows,
                 industry_net_flows,
                 transport_domestic_flows,
                 other_flows, 
-                non_energy_flows)
+                non_energy_flows, 
+                gsub(memo_aggregation_flow_prefixes$memo, "", memo_non_energy_flows))
 usethis::use_data(fd_sectors, overwrite = TRUE)
 
 

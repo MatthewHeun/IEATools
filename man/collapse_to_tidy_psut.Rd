@@ -6,6 +6,7 @@
 \usage{
 collapse_to_tidy_psut(
   .tidy_iea_df,
+  matrix.class = c("matrix", "Matrix"),
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   flow = IEATools::iea_cols$flow,
@@ -23,6 +24,9 @@ collapse_to_tidy_psut(
 }
 \arguments{
 \item{.tidy_iea_df}{a data frame containing \code{matnames} and several other columns}
+
+\item{matrix.class}{The type of matrix to be created, one of "matrix" or "Matrix".
+Default is "matrix".}
 
 \item{ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
 

@@ -23,10 +23,6 @@ Nick Johnstone (IEA Chief Statistician) and Matthew Kuperus Heun (IEATools devel
 on Monday, 3 June 2019.
 }
 \examples{
-sample_iea_data_path()     # Assumes 2021
-sample_iea_data_path(2021) # Same
-# Retrieves path for sample IEA extended energy balances data for previous years
-sample_iea_data_path(2020) 
-sample_iea_data_path(2019) 
-sample_iea_data_path(2018) 
+sample_iea_data_path()     # Assumes 2022
+sample_iea_data_path(2022) # Same
 }

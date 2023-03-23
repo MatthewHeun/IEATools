@@ -22,21 +22,23 @@
 #'                             A template for this table should have been created by `fu_allocation_table()` and 
 #'                             `write_fu_allocation_table()`.
 #'                             This object can also be a tidy data frame with year data gathered into a Year column.
+#' @param matrix.class The type of matrix to be created, one of "matrix" or "Matrix".
+#'                     Default is "matrix".
 #' @param ledger_side,flow_aggregation_point,e_dot,unit,year See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
 #' @param quantity,machine,ef_product,eu_product,destination,e_dot_perc,maximum_values,C_eiou,C_Y See `IEATools::template_cols`.
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
 #' @param product,industry See `IEATools::row_col_types`.
-#' @param notation the notation used for this template. See `RCLabels::notation_vec()`. Default is `RCLabels::arrow_notation`.
-#' @param tol the allowable amount by which a row sum in a `C` matrix can be different from 1. Default is 1e-6.
-#' @param .should_be_1_vector a temporary column created internally for error checking (and not returned unless there is an error). 
+#' @param notation The notation used for this template. See `RCLabels::notation_vec()`. Default is `RCLabels::arrow_notation`.
+#' @param tol The allowable amount by which a row sum in a `C` matrix can be different from 1. Default is 1e-6.
+#' @param .should_be_1_vector A temporary column created internally for error checking (and not returned unless there is an error). 
 #'                            This column should contain 1 vectors (i.e., vectors filled with 1's).
-#' @param .is_1 a temporary column created internally (and not returned unless there is an error)
+#' @param .is_1 A temporary column created internally (and not returned unless there is an error)
 #'              that contains `TRUE` or `FALSE` depending on whether a rowsum was 1.
-#' @param .all_1 a temporary column created internally (and not returned unless there is an error)
+#' @param .all_1 A temporary column created internally (and not returned unless there is an error)
 #'               that tells whether a 1-vector was created by rowsums.
 #'
-#' @return a wide-by-matrices data frame with metadata columns (and year) along with columns for 
+#' @return A wide-by-matrices data frame with metadata columns (and year) along with columns for 
 #'         `C_eiou` and `C_Y` matrices.
 #'         If not all rows of a C matrix sum to 1, 
 #'         a warning is emitted, and
@@ -48,6 +50,9 @@
 #' load_fu_allocation_data() %>% 
 #'   form_C_mats()
 form_C_mats <- function(.fu_allocation_table, 
+                        
+                        # Class of output matrices
+                        matrix.class = c("matrix", "Matrix"),
                         
                         ledger_side = IEATools::iea_cols$ledger_side,
                         flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -88,6 +93,8 @@ form_C_mats <- function(.fu_allocation_table,
                         .should_be_1_vector = ".should_be_1_vector", 
                         .is_1 = ".is_1", 
                         .all_1 = ".all_1") {
+  
+  matrix.class <- match.arg(matrix.class)
   
   cleaned <- .fu_allocation_table %>% 
     # Eliminate rows titled e_dot or e_dot_perc. These are just helper rows for the analyst.
@@ -167,7 +174,8 @@ form_C_mats <- function(.fu_allocation_table,
     dplyr::group_by(!!!group_cols) %>% 
     matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
                                    rownames = rownames, colnames = colnames, 
-                                   rowtypes = rowtypes, coltypes = coltypes)
+                                   rowtypes = rowtypes, coltypes = coltypes, 
+                                   matrix.class = matrix.class)
   
   # Check that all rows sum to 1, but only if we had some rows to begin with!
   if (nrow(.fu_allocation_table) > 0) {
@@ -207,8 +215,20 @@ form_C_mats <- function(.fu_allocation_table,
 
   # If we passed the test, we can return the out data frame without the verification columns, 
   # after we pivot wider.
-  out %>% 
+  out <- out %>% 
     tidyr::pivot_wider(names_from = matnames, values_from = matvals)
+  
+  # If the outgoing data frame has no rows, 
+  # we will not have columns generated from matnames,
+  # so generate them here.
+  if (nrow(out) == 0) {
+    out <- out |> 
+      dplyr::mutate(
+        "{C_eiou}" := list(),
+        "{C_Y}" := list()
+      )
+  }
+  return(out)
 }
 
 
@@ -241,6 +261,8 @@ form_C_mats <- function(.fu_allocation_table,
 #' @param .eta_fu_table a final-to-useful efficiency table read by `load_eta_fu_allocation_data()`.
 #'                      A template for this table should have been created by `eta_fu_table()` and 
 #'                      `write_eta_fu_table()`.
+#' @param matrix.class The type of matrix to be created, one of "matrix" or "Matrix".
+#'                     Default is "matrix".
 #' @param unit,year See `IEATools::iea_cols`.
 #' @param quantity,machine,eu_product,e_dot_machine,e_dot_machine_perc,maximum_values,eta_fu,phi_u,phi See `IEATools::template_cols`.
 #' @param matnames,matvals,rownames,colnames,rowtypes,coltypes See `IEATools::mat_meta_cols`.
@@ -259,6 +281,8 @@ form_C_mats <- function(.fu_allocation_table,
 #' load_eta_fu_data() %>% 
 #'   form_eta_fu_phi_u_vecs()
 form_eta_fu_phi_u_vecs <- function(.eta_fu_table, 
+                                   
+                                   matrix.class = c("matrix", "Matrix"),
                                    
                                    unit = IEATools::iea_cols$unit,
                                    year = IEATools::iea_cols$year,
@@ -286,6 +310,8 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    arrow_note = RCLabels::arrow_notation, 
                                    from_note = RCLabels::from_notation, 
                                    .id = ".id") {
+  
+  matrix.class <- match.arg(matrix.class)
   
   cleaned <- .eta_fu_table %>% 
     # Eliminate rows titled e_dot_machine or e_dot_machine_perc. These are just helper rows for the analyst.
@@ -403,7 +429,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
   # Set the grouping columns for later.
   group_cols <- matsindf::everything_except(prepped, matvals, rownames, colnames, rowtypes, coltypes)
   
-  prepped %>% 
+  out <- prepped %>% 
     dplyr::mutate(
       "{rownames}" := dplyr::case_when(
         # For the phi_u rows, we want to keep only the product in the name.
@@ -427,9 +453,22 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     dplyr::group_by(!!!group_cols) %>% 
     matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
                                    rownames = rownames, colnames = colnames, 
-                                   rowtypes = rowtypes, coltypes = coltypes) %>% 
+                                   rowtypes = rowtypes, coltypes = coltypes, 
+                                   matrix.class = matrix.class) %>% 
     # pivot wider to the sutmats format
     tidyr::pivot_wider(names_from = matnames, values_from = matvals)
+  
+  # If the outgoing data frame has no rows, 
+  # we will not have columns generated from matnames,
+  # so generate them here.
+  if (nrow(out) == 0) {
+    out <- out |> 
+      dplyr::mutate(
+        "{eta_fu}" := list(),
+        "{phi_u}" := list()
+      )
+  }
+  return(out)
 }
 
 
@@ -468,6 +507,9 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' An energy balance check is performed on the useful matrices. 
 #' If the energy balance check fails, a warning is emitted and 
 #' additional diagnostic information will appear in the output: `.err` and `.e_bal_ok`.
+#' 
+#' If `.sutdata` is a data frame with no rows or a list of length `0`, 
+#' `NULL` is returned.
 #' 
 #' @param .sutdata A wide-by-matrices data frame of PSUT matrices that represent an energy conversion chain.
 #'                 Each row of `.sutdata` should contain the matrices that represent one energy conversion chain.
@@ -551,7 +593,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'   head()
 extend_to_useful <- function(.sutdata = NULL, 
                              clean_up_df = TRUE, 
-                             tol = 1e-3,
+                             tol = 0.1,
                              
                              R = IEATools::psut_cols$R, 
                              U_feed = IEATools::psut_cols$U_feed,
@@ -605,6 +647,30 @@ extend_to_useful <- function(.sutdata = NULL,
   
   extend_func <- function(eta_fu_vector, Y_mat, C_Y_mat, U_feed_mat, V_mat, C_eiou_mat, U_eiou_mat, R_mat) {
     
+    # Check for the case when all of the incoming values are of length 0.
+    # This can occur when the incoming data frame has no rows.
+    # In that event, return a list with numeric()s and the correct names.
+    if (length(eta_fu_vector) == 0 & length(Y_mat) == 0 & length(C_Y_mat) == 0 & length(U_feed_mat) == 0 & 
+        length(V_mat) == 0 & length(C_eiou_mat) == 0 & length(U_eiou_mat) == 0 & length(R_mat) == 0) {
+      out <- list(numeric(), 
+                  numeric(), 
+                  numeric(),
+                  numeric(), 
+                  numeric(), 
+                  numeric(), 
+                  numeric(), 
+                  logical()) |> 
+        magrittr::set_names(c(U_feed_useful_name, 
+                              U_eiou_useful_name, 
+                              U_useful_name, 
+                              r_eiou_useful_name, 
+                              V_useful_name, 
+                              Y_useful_name, 
+                              .err, 
+                              .e_bal_ok))
+      return(out)
+    }
+    
     # Industries to retain from Y_f to Y_u. 
     # These industries are not allocated to f-u machines, nor are they tracked for useful energy.
     Y_keep_inds <- c(interface_ind, losses, stat_diffs)
@@ -619,7 +685,7 @@ extend_to_useful <- function(.sutdata = NULL,
                                          from = list(arrow_note), 
                                          to = list(from_note), 
                                          flip = list(TRUE))
-
+    
     # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
     # We take each of these in turn, adjusting the energy conversion chain to account for the fact that 
     # useful energy is now the last stage.
@@ -640,7 +706,7 @@ extend_to_useful <- function(.sutdata = NULL,
     # so we must retain them in the Y matrix.
     Y_keep_mat <- matsbyname::select_cols_byname(Y_mat, 
                                                  retain_pattern = RCLabels::make_or_pattern(Y_keep_inds, 
-                                                                                         pattern_type = "leading"))
+                                                                                            pattern_type = "leading"))
     Y_useful_mat <- matsbyname::sum_byname(Y_keep_mat, res_Y[[.add_to_dest]])
     
     # Now check to see if we have any EIOU. 
@@ -675,11 +741,11 @@ extend_to_useful <- function(.sutdata = NULL,
       matsbyname::difference_byname(U_useful_mat) %>%             # (R + V)^T - U
       matsbyname::difference_byname(Y_useful_mat) %>%             # (R + V)^T - U - Y
       matsbyname::rowsums_byname()
-      
+    
     .ebal_ok <- .err_vec %>%
       matsbyname::iszero_byname(tol = tol) %>% 
       as.logical()
-
+    
     # Return a named list, as required by matsindf_apply()
     out <- list(U_feed_useful_mat, 
                 U_eiou_useful_mat, 
@@ -708,7 +774,7 @@ extend_to_useful <- function(.sutdata = NULL,
     }
     return(out)
   }
-
+  
   out <- matsindf::matsindf_apply(.sutdata, FUN = extend_func,
                                   eta_fu_vector = eta_fu, 
                                   Y_mat = Y, 

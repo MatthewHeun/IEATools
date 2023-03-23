@@ -239,9 +239,9 @@ complete_fu_allocation_table <- function(fu_allocation_table,
                             missing_rows[[year]],
                             missing_rows[[flow_aggregation_point]],
                             missing_rows[[destination]],
-                            missing_rows[[ef_product]], sep = ", ", collapse = "; ")
-    err_msg <- paste0("Didn't complete FU Allocation table for the following final energy flows: ", missing_combos, 
-                     ". Please check the FU allocation table for typos or misspellings.")
+                            missing_rows[[ef_product]], sep = ", ", collapse = ";\n")
+    err_msg <- paste0("Didn't complete FU Allocation table for the following final energy flows:\n", missing_combos, 
+                     ".\nPlease check the FU allocation table for typos or misspellings.")
     stop(err_msg)
   }
   
@@ -595,8 +595,14 @@ complete_eta_fu_table <- function(eta_fu_table,
     # we're being asked to complete an efficiency table 
     # for a combination of country and year for which no IEA data exists.
     # In this event, just return an empty eta_fu_table.
-    return(eta_fu_table %>% 
-             magrittr::extract(c(), ))
+    out <- eta_fu_table |> 
+      magrittr::extract(c(), ) |> 
+      dplyr::mutate(
+        # Add an empty column that is typically added
+        # when we have an fu_allocation_table with more than 0 rows.
+        "{eta_fu_source}" := character()
+      )
+    return(out)
   }
   
   # Also tidy the exemplar tables.

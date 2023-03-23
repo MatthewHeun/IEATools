@@ -4,16 +4,53 @@ output: html_document
 ---
 
 
-* Eliminated all warnings from `tidyselect` about 
+* Functions now treat a zero-row incoming data frame
+  much better, returning a zero-row data frame 
+  with columns of same type as would have been produced 
+  if the incoming data frame had at least one row.
+* `IEATools::fd_sectors` now contains specific
+  "Non-energy use in <<industry>>" strings
+  to support the option to specify Non-energy use flows
+  when possible.
+* Fixed a bug where 
+  "Stock changes [of Gas/diesel oil excl. biofuels]"
+  became
+  "Stock changes [of Gas/diesel oil excl]", because
+  the `notation` argument was not being set properly
+  in a call to `RCLabels::get_pref_suff()`
+  when extracting prefixes.
+
+
+# IEATools 0.1.64 (2023-03-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7714342.svg)](https://doi.org/10.5281/zenodo.7714342)
+
+* New boolean argument `specify_non_energy_flows` 
+  on `load_tidy_iea_df()` enables specifying Non-energy use flows 
+  via the new `specify_non_energy_use()` function where possible.
+  For now, the default is `FALSE` to maintain backward compatibility
+  (i.e., not specifying Non-energy use flows).
+* New function `specify_non_energy_use()` uses "Memo: Non-energy use in <<specific industry>>"
+  where possible.
+* `augment_iea_df()` now adds `Flow.aggregation.point`s
+  for all aggregation flows that will (eventually) be removed.
+  This change will enable future specification 
+  of "Non-energy use in xxxxx" flows
+  with "Memo: Non-energy use in xxxxx" where possible.
+* Added capability to use `Matrix` objects with 
+  `prep_psut()`, `form_C_mats()`, `form_eta_fu_phi_u_vecs()`,
+  `extract_S_units_from_tidy()`, and `collapse_to_tidy_psut()`.
+  This change enables sparse matrices to save memory and disk space.
+* Eliminated all warnings from the `tidyselect` package about 
   deprecated functionality. 
-  The package builds cleanly again!
-* New argument on `add_psut_matnames()` switches between 
+  The package builds and tests cleanly again!
+* New argument on `add_psut_matnames()` (`R_includes_all_exogenous_flows`)
+  switches between 
   (a) including all exogenous flows 
   ("Resources", "Imports", "Statistical differences", and
   "Stock changes") in the **R**
   matrix (`TRUE`) and 
   (b) placing only Resource flows
   in the **R** matrix (`FALSE`).
+  Default is `TRUE`.
 * Added "Main activity producer electricity plants" to the list of `eiou_flows`.
   We route "Own use in electricity, CHP and heat plants" to 
   "Main activity producer electricity plants", 
@@ -22,8 +59,8 @@ output: html_document
 * "Liquefaction (LNG) / regasification plants" EIOU flow now directed to
   the "Natural gas extraction" industry.
 * New 4-letter abbreviations for non-standard ISO country codes.
-* A few new tests for new features.
-    * Now up to 1119 tests, all passing.
+* New tests for new features.
+    * Now up to 1371 tests, all passing.
     * Test coverage remains at 100 %.
 
 

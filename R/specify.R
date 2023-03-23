@@ -260,11 +260,11 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' Specify interface industries
 #' 
 #' An interface industry is one that moves energy carriers into or out of a country.
-#' When `Flow` is any of the interface industries, we need to be more specific.
-#' If we don't separate these `Flow`s by `Product`, we run into trouble with
-#' upstream swims (e.g., all `Product`s are produced even if only one is needed) and
+#' When `flow` is any of the interface industries, we need to be more specific.
+#' If we don't separate these `flow`s by `product`, we run into trouble with
+#' upstream swims (e.g., all `product`s are produced even if only one is needed) and
 #' embodied energy calculations (many types of energy are embodied, even if only one should be).
-#' This function adds a suffix `[of Product]` to each of these interface industries.
+#' This function adds a suffix "\[of Product\]" to each of these interface industries.
 #' 
 #' Note that "Production" also needs to be specified, 
 #' but that is accomplished in the `specify_primary_production()` and
@@ -276,11 +276,16 @@ specify_production_to_resources <- function(.tidy_iea_df,
 #' @param .tidy_iea_df A tidy data frame containing IEA extended energy balance data.
 #' @param flow The name of the flow column in `.tidy_iea_df`.  Default is "`Flow`".
 #' @param int_industries A string vector of industries involved in exchanges with other countries,
-#'        bunkers, or stock changes. 
-#'        Default is c(`IEATools::interface_industries`, IEATools::tpes_flows\["resources"\],
-#'        manufacture = "Manufacture").
-#' @param product The name of the product column in `.tidy_iea_df`.  Default is "`Product`".
-#' @param notation A list of specification notations. Default is `RCLabels::of_notation`.
+#'                       bunkers, or stock changes. 
+#'                       Default is `c(IEATools::interface_industries, IEATools::tpes_flows$resources, manufacture = "Manufacture")`.
+#' @param product The name of the product column in `.tidy_iea_df`. 
+#'                Default is "`Product`".
+#' @param flow_notation The notation for the `flow` column. 
+#'                      Default is `RCLabels::of_notation`.
+#' @param product_notation The notation for the `product` column.
+#'                         Default is `RCLabels::bracket_notation`, meaning that 
+#'                         any type of "X \[from Resources\]" or "X \[to Y\]" 
+#'                         will be parsed correctly for its prefix.
 #'
 #' @return A modified version of `.tidy_iea_df` with specified interface industries.
 #' 
@@ -292,27 +297,26 @@ specify_production_to_resources <- function(.tidy_iea_df,
 specify_interface_industries <- function(.tidy_iea_df,
                                          flow = IEATools::iea_cols$flow, 
                                          int_industries = c(IEATools::interface_industries,
-                                                            IEATools::tpes_flows["resources"],
+                                                            IEATools::tpes_flows$resources,
                                                             manufacture = "Manufacture"),
                                          product = IEATools::iea_cols$product, 
-                                         notation = RCLabels::of_notation){
-  # .tidy_iea_df %>%
-  #   dplyr::mutate(
-  #     "{flow}" := dplyr::case_when(
-  #       .data[[flow]] %in% int_industries ~ RCLabels::paste_pref_suff(pref = .data[[flow]], suff = .data[[product]], notation = notation),
-  #       TRUE ~ .data[[flow]]
-  #     )
-  #   )
-    
+                                         flow_notation = RCLabels::of_notation, 
+                                         product_notation = RCLabels::bracket_notation){
   # Find the rows where flow is an interface industry.
   int_ind_rows <- .tidy_iea_df %>% 
     dplyr::filter(.data[[flow]] %in% int_industries)
   # Specify those rows
   int_ind_rows_specified <- int_ind_rows %>% 
     dplyr::mutate(
-      "{flow}" := RCLabels::paste_pref_suff(pref = .data[[flow]], suff = RCLabels::get_pref_suff(.data[[product]], which = "pref") , notation = notation)
+      "{flow}" := RCLabels::paste_pref_suff(pref = .data[[flow]], 
+                                            suff = RCLabels::get_pref_suff(.data[[product]],
+                                                                           which = "pref",
+                                                                           notation = product_notation),
+                                            notation = flow_notation), 
+      "{flow}" := as.character(.data[[flow]])
     )
-  out <- .tidy_iea_df %>% 
+  
+  .tidy_iea_df %>% 
     # Subtract the interface industry rows from the incoming data frame
     dplyr::filter(!(.data[[flow]] %in% int_industries)) %>% 
     # Add back the specified rows
@@ -323,7 +327,7 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' Specify destinations for energy industry own use flows into transformation processes 
 #' 
 #' The extended energy balance data from the IEA includes 
-#' Energy industry own use (EIOU) for many transformation processes.
+#' "Energy industry own use" (EIOU) for many transformation processes.
 #' Unfortunately, in some cases
 #' the EIOU flows into industries that aren't included in transformation processes.
 #' For example, "Electricity" is consumed by 
@@ -346,14 +350,14 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' we now have two rows of electricity EIOU into "Main activity producer electricity plants".
 #' To avoid double rows, all like rows are summed before returning.
 #'
-#' @param .tidy_iea_df an IEA data frame whose columns have been renamed by [rename_iea_df_cols()]
+#' @param .tidy_iea_df An IEA data frame whose columns have been renamed by `rename_iea_df_cols()`.
 #' @param split_own_use_elect_chp_heat_using_shares_of Indicates whether the input or outputs to
 #'                                                     Main activity producer plants should be use for
 #'                                                     splitting the Own use in electricity, chp and heat plants
 #'                                                     EIOU flow. Default is "input".
-#' @param route_non_specified_eiou Boolean stating whether non-specified EIOU flows should be routed to existing industries
+#' @param route_non_specified_eiou Boolean stating whether non-specified EIOU flows should be routed to existing industries.
 #'                                 Default is TRUE.
-#' @param route_non_specified_tp Boolean stating whether non-specified transformation processes flows should be routed to existing industries
+#' @param route_non_specified_tp Boolean stating whether non-specified transformation processes flows should be routed to existing industries.
 #'                               Default is TRUE.
 #' @param flow_aggregation_point The name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
 #' @param eiou A string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".

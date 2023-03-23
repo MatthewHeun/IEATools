@@ -166,7 +166,7 @@ test_that("complete_fu_allocation_table() works with an empty tidy fu table", {
                                             # Give 2 exemplars so that we stress test the loop.
                                             exemplar_fu_allocation_tables = list(fu_table_ZAF, fu_table_ZAF), 
                                             tidy_specified_iea_data = tidy_specified_iea_data), 
-               "Didn't complete FU Allocation table for the following final energy flows: GHA, 1971, Industry, Non-ferrous metals, Electricity;")
+               "Didn't complete FU Allocation table for the following final energy flows:\nGHA, 1971, Industry, Non-ferrous metals, Electricity;")
 })
   
   
@@ -271,7 +271,7 @@ test_that("complete_fu_allocation_table() works with 2 exemplars", {
                                             country_to_complete = "GHA",
                                             exemplar_fu_allocation_tables = fu_table_ZAF, 
                                             tidy_specified_iea_data = tidy_specified_iea_data), 
-               "Didn't complete FU Allocation table for the following final energy flows: GHA, 1971, Other, Residential, Primary solid biofuels; GHA, 2000, Other, Residential, Primary solid biofuels. Please check the FU allocation table for typos or misspellings.")
+               "Didn't complete FU Allocation table for the following final energy flows:\nGHA, 1971, Other, Residential, Primary solid biofuels;\nGHA, 2000, Other, Residential, Primary solid biofuels.\nPlease check the FU allocation table for typos or misspellings.")
 })
 
 
@@ -477,8 +477,11 @@ test_that("complete_eta_fu_table() returns an empty data frame when the fu_alloc
   fu_allocation_table <- load_fu_allocation_data() %>% 
     tidy_fu_allocation_table()
   fu_allocation_table_GHA <- fu_allocation_table[c(), ]
-  result <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA, exemplar_eta_fu_tables = eta_fu_table_ZAF, fu_allocation_table = fu_allocation_table_GHA)
+  result <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA, 
+                                  exemplar_eta_fu_tables = eta_fu_table_ZAF, 
+                                  fu_allocation_table = fu_allocation_table_GHA)
   expect_equal(nrow(result), 0)
+  expect_true(IEATools::template_cols$eta_fu_source %in% names(result))
 })
 
 
@@ -536,3 +539,4 @@ test_that("complete_eta_fu_table() works when we have more allocation data than 
   expect_true(! is.null(result))
   expect_equal(nrow(result), 58)
 })
+

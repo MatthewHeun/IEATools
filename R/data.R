@@ -7,8 +7,7 @@
 #' 
 #' @format A numeric vector with `r length(valid_iea_release_years)` entries.
 #' \describe{
-#' \item{2018}{The year 2018}
-#' \item{2019}{The year 2019}
+#' \item{2022}{The year 2022}
 #' }
 #' @examples
 #' valid_iea_release_years
@@ -693,6 +692,7 @@
 #' @format A string vector with `r length(industry_flows)` entries.
 #' \describe{
 #' \item{construction}{The string identifier for the construction industry.}
+#' \item{manufacturing}{The string identifier for the aggregation category of manufacturing industries industry.}
 #' \item{iron_and_steel}{The string identifier for the iron and steel industry.}
 #' \item{chemical_and_petrochemical}{The string identifier for the chemical and petrochemical industry.}
 #' \item{non_ferrous_metals}{The string identifier for the non-ferrous metals industry.}
@@ -806,12 +806,41 @@
 #' @format A string vector with `r length(non_energy_flows)` entries.
 #' \describe{
 #' \item{non_energy_use_industry_transformation_energy}{The string identifier for the Non-energy use industry/transformation/energy sector.}
+#' \item{memo_non_energy_use_industry}{The string identifier for the Non-energy use industry/transformation/energy sector. This is an aggregation for other "Memo: Non-energy use in ..." flows.}
 #' \item{non_energy_use_in_transport}{The string identifier for the Non-energy use in transport sector.}
 #' \item{non_energy_use_in_other}{The string identifier for the Non energy use in other sector.}
 #' }
 #' @examples
 #' non_energy_flows
 "non_energy_flows"
+
+
+#' Memo Non-energy flows
+#'
+#' A string vector containing names of `Memo: Non-energy use in ...` `Flow`s 
+#' in the IEA extended energy balances database.
+#' These flows are not always specified for a given country.
+#' 
+#' @format A string vector with `r length(memo_non_energy_flows)` entries.
+#' \describe{
+#' \item{memo_non_energy_use_in_industry}{The string identifier for the "Memo: Non-energy use in industry" sector.}
+#' \item{memo_non_energy_use_in_constructon}{The string identifier for the "Memo: Non-energy use in construction" sector.}
+#' \item{memo_non_energy_use_in_mining_quarrying}{The string identifier for the "Memo: Non-energy use in mining and quarrying" sector.}
+#' \item{memo_non_energy_use_in_iron_steel}{The string identifier for the "Memo: Non-energy use in iron and steel" sector.}
+#' \item{memo_non_energy_use_in_chemical_petrochemical}{The string identifier for the "Memo: Non-energy use in chemical/petrochemical" sector.}
+#' \item{memo_non_energy_use_in_non_ferrous_metals}{The string identifier for the "Memo: Non-energy use in non-ferrous metals" sector.}
+#' \item{memo_non_energy_use_in_non_metallic_minerals}{The string identifier for the "Memo: Non-energy use in non-metallic minerals" sector.}
+#' \item{memo_non_energy_use_in_transport_equipment}{The string identifier for the "Memo: Non-energy use in transport equipment" sector.}
+#' \item{memo_non_energy_use_in_machinery}{The string identifier for the "Memo: Non-energy use in machinery" sector.}
+#' \item{memo_non_energy_use_in_food_beverages_tobacco}{The string identifier for the "Memo: Non-energy use in food/beverages/tobacco" sector.}
+#' \item{memo_non_energy_use_in_paper_pulp_printing}{The string identifier for the "Memo: Non-energy use in paper/pulp and printing" sector.}
+#' \item{memo_non_energy_use_in_wood_and_wood_products}{The string identifier for the "Memo: Non-energy use in wood and wood products" sector.}
+#' \item{memo_non_energy_use_in_textiles_leather}{The string identifier for the "Memo: Non-energy use in textiles and leather" sector.}
+#' \item{memo_non_energy_use_in_industry_not_elsewhere_specified}{The string identifier for the "Memo: Non-energy use in industry not elsewhere specified" sector.}
+#' }
+#' @examples
+#' non_energy_flows
+"memo_non_energy_flows"
 
 
 #' Main activity producer plants
@@ -1101,12 +1130,14 @@
 #'
 #' A string vector containing final demand sectors used for calculating Total Final Consumption (TFC)
 #' 
-#' @format A string list with `r length(fd_sectors)`
+#' @format A string list with `r length(fd_sectors)`, comprised of the following vectors of strings:
 #' \describe{
 #' \item{eiou_flows}{The string vector identifying energy industry own use flows.}
 #' \item{industry_net_flows}{The string vector identifying non-eiou (net) Industry flows.}
 #' \item{transport_domestic_flows}{The string vector identifying domestic transport flows.}
 #' \item{other_flows}{The string vector identifying Other flows.}
+#' \item{non_energy_flows}{The string vector of Non-energy flows.}
+#' \item{memo_non_energy_flows}{The string vector `memo_non_energy_flows` with leading "Memo: " stripped away.}
 #' }
 #' 
 #' @examples

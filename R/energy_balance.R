@@ -92,11 +92,15 @@ calc_tidy_iea_df_balances <- function(.tidy_iea_df,
     dplyr::group_by(!!!grouping_names)
   SupplySum <- Tidy %>%
     dplyr::filter(.data[[ledger_side]] == supply) %>%
-    dplyr::summarise("{supply_sum}" := sum(.data[[e_dot]]))
+    dplyr::summarise(
+      "{supply_sum}" := sum(.data[[e_dot]])
+    )
   # Calculate the consumption sum on a per-group basis
   ConsumptionSum <- Tidy %>%
     dplyr::filter(.data[[ledger_side]] == consumption | .data[[ledger_side]] == balancing) %>%
-    dplyr::summarise("{consumption_sum}" := sum(.data[[e_dot]]))
+    dplyr::summarise(
+      "{consumption_sum}" := sum(.data[[e_dot]])
+    )
   # Return the difference between supply and consumption
   dplyr::full_join(SupplySum, ConsumptionSum, by = grouping_strings) %>% 
     dplyr::mutate(
@@ -152,7 +156,7 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' Fix IEA energy balances
 #' 
 #' IEA extended energy balance data are sometimes not quite balanced.  
-#' In fact, supply and consumption are often wrong by a few ktoe
+#' In fact, supply and consumption are often wrong by a few ktoe or TJ
 #' for any given Product in a Country in a Year.
 #' This function ensures that the balance is perfect
 #' by adjusting the `Statistical differences` flow
@@ -179,7 +183,7 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' `.tidy_iea_df` is returned unmodified (i.e., with no rows).
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
-#' @param max_fix the maximum energy balance that will be fixed without giving an error. Default is 5.
+#' @param max_fix the maximum energy balance that will be fixed without giving an error. Default is `1`.
 #' @param remove_zeroes a logical telling whether to remove `0`s after balancing. Default is `TRUE`.
 #' @param ledger_side,flow_aggregation_point,country,year,flow,product,e_dot See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
@@ -219,7 +223,7 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' balanced %>% 
 #'   tidy_iea_df_balanced()
 fix_tidy_iea_df_balances <- function(.tidy_iea_df,
-                                     max_fix = 6,
+                                     max_fix = 1,
                                      remove_zeroes = TRUE,
                                      # Input columns and values
                                      country = IEATools::iea_cols$country,
@@ -265,7 +269,7 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
                                 err_too_big[[product]], 
                                 err_too_big[[.err]], sep = ", ", collapse = "; ")
     # Give as much good debugging information as possible.
-    stop(paste0("In fix_tidy_iea_df_balances(), maximum energy balance error is ", max_err, 
+    stop(paste0("In fix_tidy_iea_df_balances(), largest energy balance error is ", max_err, 
                 ". Maximum fixable error is ", max_fix, ". The following combinations of Country, Year, and Product have errors that exceed the maximum allowable error: ", 
                 err_too_big_combos))
   }

@@ -295,7 +295,7 @@ test_that("remove_suffix_specifications() works as expected", {
 })
 
 
-test_that("new tests for specify_interface_industries() work as expected",{
+test_that("new tests for specify_interface_industries() work as expected", {
   
   # First, check that specification specifies Resources and Manufacture flows
   tidy_GHA_ZAF_df <- load_tidy_iea_df() %>%
@@ -344,4 +344,31 @@ test_that("new tests for specify_interface_industries() work as expected",{
     dplyr::filter(Flow.aggregation.point == "Total primary energy supply" & stringr::str_detect(Flow, "Industry not elsewhere specified")) %>% 
     nrow() %>% 
     expect_equal(0)
+})
+
+
+test_that("specify_all() avoids truncating at '.'", {
+  tidy_GHA_ZAF_df <- load_tidy_iea_df() %>%
+    specify_all()
+
+  # On 16 Mar 2023, this test was returning 0 rows, because
+  # specify_all() was cutting off at the ".", yielding 
+  # "Stock changes [of Gas/diesel oil excl]".
+  # This test verifies that the problem was fixed.
+  tidy_GHA_ZAF_df |> 
+    dplyr::filter(.data[[IEATools::iea_cols$flow]] == "Stock changes [of Gas/diesel oil excl. biofuels]") |> 
+    nrow() |> 
+    expect_equal(1)
+
+  # Also check Imports
+  tidy_GHA_ZAF_df |> 
+    dplyr::filter(.data[[IEATools::iea_cols$flow]] == "Imports [of Gas/diesel oil excl. biofuels]") |> 
+    nrow() |> 
+    expect_equal(2)
+
+  # Also check Exports
+  tidy_GHA_ZAF_df |> 
+    dplyr::filter(.data[[IEATools::iea_cols$flow]] == "Exports [of Gas/diesel oil excl. biofuels]") |> 
+    nrow() |> 
+    expect_equal(2)
 })

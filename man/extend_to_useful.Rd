@@ -7,7 +7,7 @@
 extend_to_useful(
   .sutdata = NULL,
   clean_up_df = TRUE,
-  tol = 0.001,
+  tol = 0.1,
   R = IEATools::psut_cols$R,
   U_feed = IEATools::psut_cols$U_feed,
   U_eiou = IEATools::psut_cols$U_eiou,
@@ -160,6 +160,9 @@ appended to the column name.
 An energy balance check is performed on the useful matrices.
 If the energy balance check fails, a warning is emitted and
 additional diagnostic information will appear in the output: \code{.err} and \code{.e_bal_ok}.
+
+If \code{.sutdata} is a data frame with no rows or a list of length \code{0},
+\code{NULL} is returned.
 }
 \examples{
 C_data <- load_fu_allocation_data() \%>\% 

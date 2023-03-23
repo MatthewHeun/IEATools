@@ -1,8 +1,8 @@
 Package: IEATools
 Type: Package
 Title: Tools for Working with International Energy Agency Data
-Version: 0.1.63
-Date: 2022-04-01
+Version: 0.1.64
+Date: 2023-03-09
 Authors@R: c(person(given = "Matthew", family = "Heun", role = c("aut", "cre"),
                     email = "matthew.heun@me.com"),
              person(given = "Emmanuel", family = "Aramendia", role = "aut"),
@@ -14,7 +14,7 @@ License: MIT + file LICENSE
 Language: en-US
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 Depends: R (>= 2.10)
 Imports:

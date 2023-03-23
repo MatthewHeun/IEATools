@@ -22,17 +22,17 @@ specify_tp_eiou(
 )
 }
 \arguments{
-\item{.tidy_iea_df}{an IEA data frame whose columns have been renamed by \code{\link[=rename_iea_df_cols]{rename_iea_df_cols()}}}
+\item{.tidy_iea_df}{An IEA data frame whose columns have been renamed by \code{rename_iea_df_cols()}.}
 
 \item{split_own_use_elect_chp_heat_using_shares_of}{Indicates whether the input or outputs to
 Main activity producer plants should be use for
 splitting the Own use in electricity, chp and heat plants
 EIOU flow. Default is "input".}
 
-\item{route_non_specified_eiou}{Boolean stating whether non-specified EIOU flows should be routed to existing industries
+\item{route_non_specified_eiou}{Boolean stating whether non-specified EIOU flows should be routed to existing industries.
 Default is TRUE.}
 
-\item{route_non_specified_tp}{Boolean stating whether non-specified transformation processes flows should be routed to existing industries
+\item{route_non_specified_tp}{Boolean stating whether non-specified transformation processes flows should be routed to existing industries.
 Default is TRUE.}
 
 \item{flow_aggregation_point}{The name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
@@ -60,7 +60,7 @@ A modified version of \code{.tidy_iea_df}.
 }
 \description{
 The extended energy balance data from the IEA includes
-Energy industry own use (EIOU) for many transformation processes.
+"Energy industry own use" (EIOU) for many transformation processes.
 Unfortunately, in some cases
 the EIOU flows into industries that aren't included in transformation processes.
 For example, "Electricity" is consumed by
