@@ -85,17 +85,17 @@ test_that("fix_GHA_psb() works as expected", {
   fixed_1991_PSB |> 
     dplyr::filter(Flow == "Production") |> 
     magrittr::extract2("E.dot") |> 
-    expect_equal(4025)
+    expect_equal(168518.7)
   # Charcoal plants
   fixed_1991_PSB |> 
     dplyr::filter(Flow == "Charcoal production plants") |> 
     magrittr::extract2("E.dot") |> 
-    expect_equal(-1189)
+    expect_equal(-49781.052)
   # Residential
   fixed_1991_PSB |> 
     dplyr::filter(Flow == "Residential") |> 
     magrittr::extract2("E.dot") |> 
-    expect_equal(2514)
+    expect_equal(105256.152)
   # Agriculture/forestry (nothing!)
   fixed_1991_PSB |> 
     dplyr::filter(Flow == "Agriculture/forestry") |> 
@@ -106,7 +106,7 @@ test_that("fix_GHA_psb() works as expected", {
   fixed_1991_PSB |> 
     dplyr::filter(Flow == "Industry not elsewhere specified") |> 
     magrittr::extract2("E.dot") |> 
-    expect_equal(322)
+    expect_equal(13481.496)
   # Commercial and public services
   fixed_1991_PSB |> 
     dplyr::filter(Flow == "Commercial and public services") |> 
@@ -122,32 +122,32 @@ test_that("fix_GHA_psb() works as expected", {
   fixed_1992_PSB |> 
     dplyr::filter(Flow == "Production") |> 
     magrittr::extract2("E.dot") |> 
-    expect_equal(4110)
+    expect_equal(172077.48)
   # Charcoal plants
   fixed_1992_PSB |>
     dplyr::filter(Flow == "Charcoal production plants") |> 
     magrittr::extract2("E.dot") |> 
-    expect_equal(-1209)
+    expect_equal(-50618.412)
   # Residential
   fixed_1992_PSB |> 
     dplyr::filter(Flow == "Residential") |>
     magrittr::extract2("E.dot") |> 
-    expect_equal(2544)
+    expect_equal(106512.192)
   # Agriculture/forestry (These data are actually coming from 2000, and there is no replacement in the 1992 fixed table, so we have something here.)
   fixed_1992_PSB |>
     dplyr::filter(Flow == "Agriculture/forestry") |>
     magrittr::extract2("E.dot") |> 
-    expect_equal(2.7945)
+    expect_equal(117.0001)
   # Industry
   fixed_1992_PSB |>
     dplyr::filter(Flow == "Industry not elsewhere specified") |> 
     magrittr::extract2("E.dot") |>
-    expect_equal(357)
+    expect_equal(14946.876)
   # Commercial and public services (These data are actually coming from 2000, and there is no replacement in the 1992 fixed table, so we have something here.)
   fixed_1992_PSB |>
     dplyr::filter(Flow == "Commercial and public services") |>
     magrittr::extract2("E.dot") |> 
-    expect_equal(86.7011)
+    expect_equal(3630.0017)
 
   # Ensure that we haven't added any rows to the data frame
   expect_equal(nrow(fixed_tidy), nrow(tidy_example))
