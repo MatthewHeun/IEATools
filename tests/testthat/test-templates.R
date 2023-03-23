@@ -255,6 +255,7 @@ test_that("eta_fu_template() works with tidy fu allocation data", {
   expect_true(is.numeric(Eta_fu_template_2019[["2000"]]))
 })
 
+
 test_that("eta_fu_template() works with fidy data from the default year", {
   tidy_specified_iea_data <- load_tidy_iea_df() %>% 
     specify_all()
