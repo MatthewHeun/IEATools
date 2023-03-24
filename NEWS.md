@@ -4,6 +4,11 @@ output: html_document
 ---
 
 
+* Now using terajoules (TJ) as the preferred unit for all IEA
+  extended energy balance data.
+* Dropped support for 2018--2020 IEA extended energy balance data.
+* Now using the 2022 release of IEA extended energy balance data
+  by default.
 * Functions now treat a zero-row incoming data frame
   much better, returning a zero-row data frame 
   with columns of same type as would have been produced 

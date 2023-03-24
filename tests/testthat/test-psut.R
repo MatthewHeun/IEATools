@@ -4,7 +4,7 @@ test_that("extract_S_units_from_tidy() works as expected", {
 
   for (i in nrow(S_units)) {
     su <- S_units$S_units[[i]]
-    expect_true(all(su[ , "ktoe"] == 1))
+    expect_true(all(su[ , "TJ"] == 1))
   }
 })
 
@@ -16,7 +16,7 @@ test_that("extract_S_units_from_tidy() works with Matrix objects", {
   for (i in nrow(S_units)) {
     su <- S_units$S_units[[i]]
     expect_true(matsbyname::is.Matrix(su))
-    expect_true(all(su[ , "ktoe"] == 1))
+    expect_true(all(su[ , "TJ"] == 1))
   }
 })
 

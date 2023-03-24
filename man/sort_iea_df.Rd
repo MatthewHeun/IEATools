@@ -87,10 +87,10 @@ there is a \code{year} column present or
 }
 \details{
 Sorting is accomplished (by default) using
-the constants \code{countries}, \code{methods},
+the values of the arguments \code{countries}, \code{methods},
 \code{energy_type}, \code{last_stage}, \code{year} (if present),
-\code{ledger_side}, \code{fap_flows},
-\code{product},
+\code{ledger_side}, \code{fap_flows}, and
+\code{product}
 (in that order of precedence).
 
 Years are sorted if the \code{year} column is present (a tidy data frame).

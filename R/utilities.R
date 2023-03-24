@@ -428,11 +428,11 @@ prod_tp_eiou_energy_carriers <- function(file_path = sample_iea_data_path(),
 #' sample_iea_data_path()     # Assumes 2022
 #' sample_iea_data_path(2022) # Same
 sample_iea_data_path <- function(version = 2022) {
-  if (version >= 2022) {
-    return(file.path("extdata", paste0("GH-ZA-TJ-Extended-Energy-Balances-sample-", version, ".csv")) %>%
+  if (version >= 2021) {
+    return(file.path("extdata", paste0("GH-ZA-TJ-Extended-Energy-Balances-sample-", version, ".csv")) |> 
              system.file(package = "IEATools"))
   }
-  stop("Only release years after 2022 are supported in sample_iea_data_path()")
+  stop("Only versions 2021 and later are supported in sample_iea_data_path()")
 }
 
 
@@ -454,11 +454,11 @@ sample_iea_data_path <- function(version = 2022) {
 #' sample_fu_allocation_table_path(2019) 
 #' sample_fu_allocation_table_path(2018) 
 sample_fu_allocation_table_path <- function(version = 2022) {
-  if (version == 2022) {
-    return(file.path("extdata", "GH-ZA-Allocation-sample-2022.xlsx") %>% 
+  if (version >= 2021) {
+    return(file.path("extdata", paste0("GH-ZA-Allocation-sample-", version, ".xlsx")) |>  
              system.file(package = "IEATools"))
   }
-  stop("Only 2022 is supported in sample_fu_allocation_table_path()")
+  stop("Only versions 2021 and later are supported in sample_fu_allocation_table_path()")
 }
 
 
@@ -476,11 +476,11 @@ sample_fu_allocation_table_path <- function(version = 2022) {
 #' sample_eta_fu_table_path()     # Assumes 2022
 #' sample_eta_fu_table_path(2022) # Same
 sample_eta_fu_table_path <- function(version = 2022) {
-  if (version == 2022) {
-    return(file.path("extdata", "GH-ZA-Efficiency-sample-2022.xlsx") %>% 
+  if (version >= 2021) {
+    return(file.path("extdata", paste0("GH-ZA-Efficiency-sample-", version, ".xlsx")) |> 
              system.file(package = "IEATools"))
   }
-  stop("Only 2022 is supported in sample_eta_fu_table_path()")
+  stop("Only versions 2021 and later are supported in sample_eta_fu_table_path()")
 }
 
 
@@ -492,10 +492,10 @@ sample_eta_fu_table_path <- function(version = 2022) {
 #' (b) wide where year columns are spread to the right.
 #' 
 #' Sorting is accomplished (by default) using 
-#' the constants `countries`, `methods`, 
+#' the values of the arguments `countries`, `methods`, 
 #' `energy_type`, `last_stage`, `year` (if present),
-#' `ledger_side`, `fap_flows`, 
-#' `product`,
+#' `ledger_side`, `fap_flows`, and
+#' `product`
 #' (in that order of precedence).
 #' 
 #' Years are sorted if the `year` column is present (a tidy data frame).

@@ -144,7 +144,7 @@ test_that("iea_file_OK() works", {
     }
     # Delete file if it exists
     if (file.exists(tf)) {
-      file.remove(tf)
+      res <- file.remove(tf)
     }
   }
 })
