@@ -1247,7 +1247,7 @@ test_that("route_non_specified_flows() works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df()
+    IEATools::load_tidy_iea_df(unit_val = "ktoe")
   
   test <- AB_data %>%
     IEATools::specify_primary_production() %>%
