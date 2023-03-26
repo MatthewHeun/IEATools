@@ -1203,6 +1203,8 @@ tidy_iea_df <- function(.iea_df,
 #' See examples for two ways to achieve the same result.
 #' 
 #' @param .iea_file The path of the file to be loaded. Default loads example data bundled with the package via [sample_iea_data_path()].
+#' @param unit_val The units for this file. 
+#'                 Default is "TJ".
 #' @param remove_zeroes A logical indicating whether data points with the value `0` are to be removed from the output. 
 #'                      This argument is passed to `tidy_iea_df()`. 
 #'                      Default is `TRUE`.
@@ -1239,6 +1241,7 @@ tidy_iea_df <- function(.iea_df,
 #' # simple and complicated should be exactly the same
 #' all(simple == complicated)
 load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(), 
+                             unit_val = "TJ", 
                              remove_zeroes = TRUE, 
                              specify_non_energy_flows = FALSE,
                              override_df = IEATools::override_iso_codes_df,
@@ -1250,7 +1253,7 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
     rename_iea_df_cols() |> 
     clean_iea_whitespace() |> 
     use_iso_countries(override_df = override_df, country = country, pfu_code = pfu_code, iea_name = iea_name) |> 
-    augment_iea_df()
+    augment_iea_df(unit_val = unit_val)
   if (specify_non_energy_flows) {
     out <- out |> 
       specify_non_energy_use()
