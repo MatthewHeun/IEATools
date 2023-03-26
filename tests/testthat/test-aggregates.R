@@ -43,14 +43,25 @@ test_that("Loading regional aggregation table works as intended", {
 # So there is only one aggregation region as output in this test.
 test_that("Aggregating South Africa and Ghana works as intended", {
   
-  tidy_GHA_ZAF_df <- load_tidy_iea_df() %>% 
+  tidy_GHA_ZAF_df_2021 <- sample_iea_data_path(version = 2021) |> 
+    load_tidy_iea_df() |> 
+    specify_all()
+  
+  tidy_GHA_ZAF_df <- sample_iea_data_path() |> 
+    load_tidy_iea_df() |> 
     specify_all()
   
   ### 0. Checking that the aggregation works with the default aggregation table (iea -> exiobase; 2019 iea data)
-  default_aggregation_2019 <- tidy_GHA_ZAF_df %>% 
+  default_aggregation_2021 <- tidy_GHA_ZAF_df_2021 %>% 
     aggregate_regions()
   
-  expect_equal(default_aggregation_2019 %>% nrow(), 428)
+  expect_equal(default_aggregation_2021 %>% nrow(), 428)
+  
+  default_aggregation <- tidy_GHA_ZAF_df %>% 
+    aggregate_regions()
+  
+  # Added a row for imports of Charcoal
+  expect_equal(default_aggregation %>% nrow(), 429)
   
   ### 1. First, checking that it works well when net_trade flag is FALSE.
   
