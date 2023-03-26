@@ -6,6 +6,7 @@
 \usage{
 load_tidy_iea_df(
   .iea_file = sample_iea_data_path(),
+  unit_val = "TJ",
   remove_zeroes = TRUE,
   specify_non_energy_flows = FALSE,
   override_df = IEATools::override_iso_codes_df,
@@ -16,6 +17,9 @@ load_tidy_iea_df(
 }
 \arguments{
 \item{.iea_file}{The path of the file to be loaded. Default loads example data bundled with the package via \code{\link[=sample_iea_data_path]{sample_iea_data_path()}}.}
+
+\item{unit_val}{The units for this file.
+Default is "TJ".}
 
 \item{remove_zeroes}{A logical indicating whether data points with the value \code{0} are to be removed from the output.
 This argument is passed to \code{tidy_iea_df()}.
