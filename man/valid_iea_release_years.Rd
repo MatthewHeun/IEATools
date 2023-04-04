@@ -5,7 +5,7 @@
 \alias{valid_iea_release_years}
 \title{IEA release years supported by this package}
 \format{
-A numeric vector with 1 entries.
+A numeric vector with 2 entries.
 \describe{
 \item{2022}{The year 2022}
 }
