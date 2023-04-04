@@ -58,7 +58,7 @@ there are no resources.
 Thus, we can replace the missing \strong{R} matrix with a \strong{0} matrix with a generic
 "Natural resources" row and the same products as the rows of the \strong{Y} matrix.
 
-Similarly, missing values for \strong{U}, \strong{U_feed}, \strong{U_EIOU}, or \strong{r_EIOU} can be replaced by a \code{0} matrix
+Similarly, missing values for \strong{U}, \strong{U_feed}, \strong{U_EIOU}, or \strong{r_EIOU} can be replaced by a \strong{0} matrix
 with row and column names same as a transposed \strong{V} matrix when it exists.
 If neither \strong{U} nor \strong{V} exist, the \strong{R} matrix can supply row and column names.
 }
