@@ -509,7 +509,8 @@ test_that("prep_psut() correctly makes columns of U and r_EIOU matrices with Mat
   # Verify that we made Matrix objects everywhere
   for (j in 6:ncol(psut_with_test_cols)) {
     for (i in 1:nrow(psut_with_test_cols)) {
-      expect_true(matsbyname::is.Matrix(psut_with_test_cols[[i, j]]))
+      print(paste("i =", i, "j = ", j))
+      expect_true(matsbyname::is.Matrix(psut_with_test_cols[i, j]))
     }
   }
   
