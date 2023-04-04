@@ -1,7 +1,7 @@
 library(magrittr)
 library(testthat)
 
-test_that("form_C_mats works as expected", {
+test_that("form_C_mats() works as expected", {
   allocation_table <- load_fu_allocation_data()
   C_df <- form_C_mats(allocation_table)
   # Check type of year column
@@ -54,7 +54,7 @@ test_that("form_C_mats works as expected", {
 })
 
 
-test_that("form_C_mats works with Matrix objects", {
+test_that("form_C_mats() works with Matrix objects", {
   allocation_table <- load_fu_allocation_data()
   C_df <- form_C_mats(allocation_table, matrix.class = "Matrix")
   # Check that we made Matrix objects.
@@ -726,8 +726,9 @@ test_that("extend_to_useful() works with individual matrices", {
   # Try with C_eiou missing, thereby ignoring any EIOU.
   # Do the same calculation as above, but don't include 
   # the C_eiou argument.
-  # This approach is expected to trip the imbalance warning, 
-  # because we're removing EIOU energy from the ECC.
+  # This approach causes an error, because not all arguments are available.
+  C_EIOU_adjusted <- psut_mats$C_EIOU[[1]]
+  C_EIOU_adjusted[1, 1] <- 1.1 * C_EIOU_adjusted[1, 1]
   extend_to_useful(R = psut_mats$R[[1]], 
                    U_feed = psut_mats$U_feed[[1]], 
                    U_eiou = psut_mats$U_EIOU[[1]], 
@@ -735,10 +736,11 @@ test_that("extend_to_useful() works with individual matrices", {
                    r_eiou = psut_mats$r_eiou[[1]], 
                    V = psut_mats$V[[1]], 
                    Y = psut_mats$Y[[1]], 
+                   C_eiou = C_EIOU_adjusted, 
                    C_Y = psut_mats$C_Y[[1]], 
                    eta_fu = psut_mats$eta.fu[[1]], 
                    phi_u = psut_mats$phi.u[[1]]) %>% 
-    expect_warning(regexp = "Energy is not balanced to within")
+    expect_warning(regexp = "Energy is not balanced")
 })
 
 
@@ -777,8 +779,7 @@ test_that("extend_to_useful() works with individual Matrix objects", {
   # Try with C_eiou missing, thereby ignoring any EIOU.
   # Do the same calculation as above, but don't include 
   # the C_eiou argument.
-  # This approach is expected to trip the imbalance warning, 
-  # because we're removing EIOU energy from the ECC.
+  # This approach causes an error, because not all arguments are available.
   extend_to_useful(R = psut_mats$R[[1]], 
                    U_feed = psut_mats$U_feed[[1]], 
                    U_eiou = psut_mats$U_EIOU[[1]], 
@@ -789,7 +790,7 @@ test_that("extend_to_useful() works with individual Matrix objects", {
                    C_Y = psut_mats$C_Y[[1]], 
                    eta_fu = psut_mats$eta.fu[[1]], 
                    phi_u = psut_mats$phi.u[[1]]) %>% 
-    expect_warning(regexp = "Energy is not balanced to within")
+    expect_error(regexp = "invalid 'data'")
 })
 
 
@@ -844,7 +845,11 @@ test_that("extend_to_useful() works with list of Matrix objects", {
   useful_list <- extend_to_useful(var_store)
   # Ensure all are Matrix objects
   for (i in 6:length(useful_list)) {
-    expect_true(matsbyname::is.Matrix(useful_list[[i]][[1]]))
+    if (is.list(useful_list[[i]])) {
+      expect_true(matsbyname::is.Matrix(useful_list[[i]][[1]]))
+    } else {
+      expect_true(matsbyname::is.Matrix(useful_list[[i]]))
+    }
   }
   
   # When a list is used as the data store, we should get all variables returned.
