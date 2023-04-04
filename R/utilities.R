@@ -428,7 +428,7 @@ prod_tp_eiou_energy_carriers <- function(file_path = sample_iea_data_path(),
 #' sample_iea_data_path()     # Assumes 2022
 #' sample_iea_data_path(2022) # Same
 sample_iea_data_path <- function(version = 2022) {
-  if (version >= 2021) {
+  if (version %in% IEATools::valid_iea_release_years) {
     return(file.path("extdata", paste0("GH-ZA-TJ-Extended-Energy-Balances-sample-", version, ".csv")) |> 
              system.file(package = "IEATools"))
   }
@@ -454,7 +454,7 @@ sample_iea_data_path <- function(version = 2022) {
 #' sample_fu_allocation_table_path(2019) 
 #' sample_fu_allocation_table_path(2018) 
 sample_fu_allocation_table_path <- function(version = 2022) {
-  if (version >= 2021) {
+  if (version %in% IEATools::valid_iea_release_years) {
     return(file.path("extdata", paste0("GH-ZA-Allocation-sample-", version, ".xlsx")) |>  
              system.file(package = "IEATools"))
   }
@@ -476,7 +476,7 @@ sample_fu_allocation_table_path <- function(version = 2022) {
 #' sample_eta_fu_table_path()     # Assumes 2022
 #' sample_eta_fu_table_path(2022) # Same
 sample_eta_fu_table_path <- function(version = 2022) {
-  if (version >= 2021) {
+  if (version %in% IEATools::valid_iea_release_years) {
     return(file.path("extdata", paste0("GH-ZA-Efficiency-sample-", version, ".xlsx")) |> 
              system.file(package = "IEATools"))
   }
