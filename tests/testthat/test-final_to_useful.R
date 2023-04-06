@@ -304,7 +304,7 @@ test_that("extend_to_useful() works as expected", {
   
   with_useful <- psut_mats %>% 
     extend_to_useful()
-  with_useful <- clean_and_pivot_useful_df(with_useful, psut_mats)
+  with_useful <- stack_final_useful_df(with_useful, psut_mats)
   
   # Check some of the values  
   
@@ -507,7 +507,7 @@ test_that("extend_to_useful() works with Matrix objects", {
   
   with_useful <- psut_mats %>% 
     extend_to_useful()
-  with_useful <- clean_and_pivot_useful_df(with_useful, psut_mats)
+  with_useful <- stack_final_useful_df(with_useful, psut_mats)
     
   
   # Check some of the values  
@@ -720,6 +720,7 @@ test_that("extend_to_useful() works with individual matrices", {
                                   C_Y = psut_mats$C_Y[[1]], 
                                   eta_fu = psut_mats$eta.fu[[1]], 
                                   phi_u = psut_mats$phi.u[[1]])
+
   # Ensure that expected matrices are included.
   # There should be no more matrices than these.
   expect_equal(names(useful_mats), 
@@ -865,62 +866,6 @@ test_that("extend_to_useful() works with list of Matrix objects", {
 })
 
 
-test_that("extend_to_useful() works as expected when clean_up_df = FALSE", {
-  C_data <- load_fu_allocation_data() %>% 
-    form_C_mats()
-  eta_fu_data <- load_eta_fu_data() %>% 
-    form_eta_fu_phi_u_vecs()
-  m_cols <- eta_fu_data %>% 
-    IEATools::meta_cols(return_names = TRUE,
-                        years_to_keep = IEATools::iea_cols$year,
-                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
-  psut_mats <- load_tidy_iea_df() %>% 
-    specify_all() %>% 
-    prep_psut() %>% 
-    dplyr::full_join(C_data, by = m_cols) %>% 
-    dplyr::full_join(eta_fu_data, by = m_cols)
-  
-  with_useful <- psut_mats %>% 
-    extend_to_useful(clean_up_df = FALSE)
-  
-  # Check column names. We should get a lot of "_Useful"s here.
-  expect_equal(names(with_useful), 
-               c("Country", "Method", "Energy.type", "Last.stage", "Year",
-                 "Y", "S_units", "R", "U", "U_feed",
-                 "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
-                 "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
-})
-
-
-test_that("extend_to_useful() works as expected when clean_up_df = FALSE with Matrix objects", {
-  C_data <- load_fu_allocation_data() |>  
-    form_C_mats(matrix.class = "Matrix")
-  eta_fu_data <- load_eta_fu_data() |> 
-    form_eta_fu_phi_u_vecs(matrix.class = "Matrix")
-  m_cols <- eta_fu_data |> 
-    IEATools::meta_cols(return_names = TRUE,
-                        years_to_keep = IEATools::iea_cols$year,
-                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
-  psut_mats <- load_tidy_iea_df() |> 
-    specify_all() |> 
-    prep_psut(matrix.class = "Matrix") |> 
-    dplyr::full_join(C_data, by = m_cols) |> 
-    dplyr::full_join(eta_fu_data, by = m_cols)
-  
-  with_useful <- psut_mats %>% 
-    extend_to_useful(clean_up_df = FALSE)
-  
-  # Check column names. We should get a lot of "_Useful"s here.
-  expect_equal(names(with_useful), 
-               c("Country", "Method", "Energy.type", "Last.stage", "Year",
-                 "Y", "S_units", "R", "U", "U_feed",
-                 "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
-                 "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
-})
-
-
 test_that("extend_to_useful() works with empty lists", {
   C_data <- load_fu_allocation_data() |> 
     form_C_mats(matrix.class = "Matrix")
@@ -975,16 +920,10 @@ test_that("extend_to_useful() returns works with empty data frames", {
   
   expect_equal(nrow(with_useful), 0)
   
-  expect_setequal(names(with_useful), c("Country", "Method", "Energy.type", "Last.stage", "Year", "Y", "S_units", 
-                                        "R", "U", "U_feed", "U_EIOU", "r_EIOU", "V"))
-  
-  # Try without cleaning up
-  with_useful_no_cleanup <- psut_mats %>% 
-    extend_to_useful(clean_up_df = FALSE)
-  expect_equal(names(with_useful_no_cleanup), 
-               c("Country", "Method", "Energy.type", "Last.stage", "Year",
-                 "Y", "S_units", "R", "U", "U_feed",
-                 "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
-                 "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+  expect_setequal(names(with_useful), 
+                  c("Country", "Method", "Energy.type", "Last.stage", "Year",
+                    "Y", "S_units", "R", "U", "U_feed",
+                    "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
+                    "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                    "r_EIOU_Useful", "V_Useful", "Y_Useful"))
 })

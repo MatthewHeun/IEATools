@@ -651,21 +651,21 @@ extend_to_useful <- function(.sutdata = NULL,
     # lists of matrices in a data frame.
     if (length(eta_fu_vector) == 0 & length(Y_mat) == 0 & length(C_Y_mat) == 0 & length(U_feed_mat) == 0 &
         length(V_mat) == 0 & length(C_eiou_mat) == 0 & length(U_eiou_mat) == 0 & length(R_mat) == 0) {
-      if (clean_up_df) {
-        out <- list(list(), list(), list(), list(), list()) |>
-          magrittr::set_names(c(U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name))
-      } else {
-        out <- list(list(), list(), list(), list(), list(), list()) |>
-          magrittr::set_names(paste0(U_feed, .sep, useful),
-                              paste0(U_eiou, .sep, useful),
-                              paste0(U, .sep, useful),
-                              paste0(r_eiou, .sep, useful),
-                              paste0(V, .sep, useful),
-                              paste0(Y, .sep, useful))
-      }
+      out <- list(list(), 
+                  list(), 
+                  list(),
+                  list(), 
+                  list(), 
+                  list()) %>% 
+        magrittr::set_names(c(U_feed_useful_name, 
+                              U_eiou_useful_name, 
+                              U_useful_name, 
+                              r_eiou_useful_name, 
+                              V_useful_name, 
+                              Y_useful_name))
       return(out)
     }
-    
+
     # Industries to retain from Y_f to Y_u. 
     # These industries are not allocated to f-u machines, nor are they tracked for useful energy.
     Y_keep_inds <- c(interface_ind, losses, stat_diffs)
