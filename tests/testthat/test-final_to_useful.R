@@ -938,17 +938,18 @@ test_that("extend_to_useful() works with empty lists", {
 
   useful_list <- extend_to_useful(var_store)
   
-  expect_equal(names(useful_list), c("Country", "Method", "Energy.type", "Last.stage", "Year", 
-                                     "Y", "S_units", "R", "U", "U_feed", "U_EIOU", "r_EIOU", 
-                                     "V", "C_EIOU", "C_Y", "eta.fu", "phi.u", "U_feed_Useful", 
-                                     "U_EIOU_Useful", "U_Useful",
-                                     "r_EIOU_Useful", "V_Useful", "Y_Useful", ".err", ".e_bal_ok"))
+  expect_equal(names(useful_list), 
+               c("Country", "Method", "Energy.type", "Last.stage", "Year",
+                 "Y", "S_units", "R", "U", "U_feed",
+                 "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
+                 "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
   
   expect_true(all(sapply(useful_list, length) == 0))
 })
 
 
-test_that("extend_to_useful() returns NULL with empty data frames", {
+test_that("extend_to_useful() returns works with empty data frames", {
   C_data <- load_fu_allocation_data() %>% 
     form_C_mats(matrix.class = "Matrix")
   eta_fu_data <- load_eta_fu_data() %>% 
@@ -973,4 +974,14 @@ test_that("extend_to_useful() returns NULL with empty data frames", {
   
   expect_setequal(names(with_useful), c("Country", "Method", "Energy.type", "Last.stage", "Year", "Y", "S_units", 
                                         "R", "U", "U_feed", "U_EIOU", "r_EIOU", "V"))
+  
+  # Try without cleaning up
+  with_useful_no_cleanup <- psut_mats %>% 
+    extend_to_useful(clean_up_df = FALSE)
+  expect_equal(names(with_useful_no_cleanup), 
+               c("Country", "Method", "Energy.type", "Last.stage", "Year",
+                 "Y", "S_units", "R", "U", "U_feed",
+                 "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
+                 "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
 })
