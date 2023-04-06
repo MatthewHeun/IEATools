@@ -934,12 +934,17 @@ test_that("extend_to_useful() works with empty lists", {
     dplyr::full_join(eta_fu_data, by = m_cols)
   
   # Make a list out of the first row of matrices
-  var_store <- as.list(psut_mats[1, ])
-  var_store <- var_store[0]
-  
+  var_store <- as.list(psut_mats[0, ])
+
   useful_list <- extend_to_useful(var_store)
   
-  expect_null(useful_list)
+  expect_equal(names(useful_list), c("Country", "Method", "Energy.type", "Last.stage", "Year", 
+                                     "Y", "S_units", "R", "U", "U_feed", "U_EIOU", "r_EIOU", 
+                                     "V", "C_EIOU", "C_Y", "eta.fu", "phi.u", "U_feed_Useful", 
+                                     "U_EIOU_Useful", "U_Useful",
+                                     "r_EIOU_Useful", "V_Useful", "Y_Useful", ".err", ".e_bal_ok"))
+  
+  expect_true(all(sapply(useful_list, length) == 0))
 })
 
 
