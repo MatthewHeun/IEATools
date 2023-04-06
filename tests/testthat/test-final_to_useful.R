@@ -790,7 +790,7 @@ test_that("extend_to_useful() works with individual Matrix objects", {
                    C_Y = psut_mats$C_Y[[1]], 
                    eta_fu = psut_mats$eta.fu[[1]], 
                    phi_u = psut_mats$phi.u[[1]]) %>% 
-    expect_error(regexp = "invalid 'data'")
+    expect_error(regexp = "In matsindf::matsindf_apply\\(\\), the following named arguments to FUN were found neither in .dat, nor in ..., nor in defaults to FUN: C_eiou_mat")
 })
 
 
