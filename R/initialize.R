@@ -442,9 +442,9 @@ rename_iea_df_cols <- function(.iea_df,
 #' extra whitespace characters are found at the beginning or end of `Flow` and `Product` strings.
 #' This function removes all leading and trailing whitespece.
 #'
-#' @param .iea_df a data frame containing `Flow` and `Product` columns
-#' @param flow the name of the flow column in `iea_df`. Default is "`Flow`".
-#' @param product the name of the product columns in `iea_df`. Default is "`Product`".
+#' @param .iea_df A data frame containing `Flow` and `Product` columns.
+#' @param flow The name of the flow column in `iea_df`. Default is "`Flow`".
+#' @param product The name of the product columns in `iea_df`. Default is "`Product`".
 #'
 #' @return `.iea_df` with leading and trailing whitespace removed from `Flow` and `Product` column strings
 #' 
