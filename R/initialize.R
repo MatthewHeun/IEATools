@@ -428,9 +428,6 @@ rename_iea_df_cols <- function(.iea_df,
                                flow = "FLOW", new_flow = "Flow", 
                                product = "PRODUCT", new_product = "Product"){
   .iea_df %>% 
-    # dplyr::rename(!!new_country := !!country,
-    #               !!new_flow := flow,
-    #               !!new_product := product)
     dplyr::rename(
       "{new_country}" := dplyr::all_of(country),
       "{new_flow}" := dplyr::all_of(flow),
