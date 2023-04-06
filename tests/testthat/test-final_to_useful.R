@@ -304,7 +304,8 @@ test_that("extend_to_useful() works as expected", {
   
   with_useful <- psut_mats %>% 
     extend_to_useful()
-
+  with_useful <- clean_and_pivot_useful_df(with_useful, psut_mats)
+  
   # Check some of the values  
   
   # Allocation of ZAF EIOU electricity for lighting and mechanical drive in 2000
@@ -506,7 +507,7 @@ test_that("extend_to_useful() works with Matrix objects", {
   
   with_useful <- psut_mats %>% 
     extend_to_useful()
-  with_useful <- clean_and_pivot_useful_df(psut_mats, with_useful)
+  with_useful <- clean_and_pivot_useful_df(with_useful, psut_mats)
     
   
   # Check some of the values  

@@ -739,19 +739,10 @@ default_aggregation_region_table_path <- function(version = 2019) {
 #' After a call to `extend_to_useful()`,
 #' the resulting data frame is not in a great shape.
 #' This function gathers (via `tidyr::pivot_longer()`)
-#' and keeps only the useful data.
+#' and stacks the useful data beneath the final data.
 #'
-#' @param .sutdata A wide-by-matrices data frame of PSUT matrices that represent an energy conversion chain.
-#'                 Each row of `.sutdata` should contain the matrices that represent one energy conversion chain.
-#'                 Matrices should be in columns identified by their names.
-#'                 The last stage of these ECCs should be final (not useful).
-#'                 `.sutdata` is likely the result of calling (in sequence)
-#'                 `load_tidy_iea_df()`, `specify_all()`, and `prep_psut()`.
-#'                 `.sutdata` should also include columns of matrices `C_Y`, `C_eiou`, and `eta_fu`,
-#'                 probably created by functions `form_C_mats()` and `form_eta_fu_phi_u_vecs()`.
-#'                 `.sutdata` can also be a named list of matrices that forms a store of variables.
-#'                 Default is `NULL` to enable use of single matrices, too.
 #' @param .useful_df A data frame created by `extend_to_useful()`.
+#' @param .sutdata The original input to `extend_to_useful()`.
 #' @param last_stage See `IEATools::iea_cols$last_stage`. 
 #' @param .sep A separator between matrix names and `final` or `useful` indicators. Default is "_".
 #' @param final,useful See `IEATools::last_stages`.
@@ -767,23 +758,23 @@ default_aggregation_region_table_path <- function(version = 2019) {
 #' @export
 #'
 #' @examples
-clean_and_pivot_useful_df <- function(.sutdata = NULL,
-                                      .useful_df, 
-                                      last_stage = IEATools::iea_cols$last_stage,
-                                      useful = IEATools::last_stages$useful, 
-                                      .sep = "_", 
-                                      
-                                      C_eiou = IEATools::template_cols$C_eiou,
-                                      C_Y = IEATools::template_cols$C_Y, 
-                                      eta_fu = IEATools::template_cols$eta_fu,
-                                      phi_u = IEATools::template_cols$phi_u,
-                                      
-                                      U_feed_name = IEATools::psut_cols$U_feed,
-                                      U_eiou_name = IEATools::psut_cols$U_eiou,
-                                      U_name = IEATools::psut_cols$U,
-                                      r_eiou_name = IEATools::psut_cols$r_eiou,
-                                      V_name = IEATools::psut_cols$V, 
-                                      Y_name = IEATools::psut_cols$Y) {
+stack_final_useful_df <- function(.useful_df, 
+                                  .sutdata,
+                                  last_stage = IEATools::iea_cols$last_stage,
+                                  useful = IEATools::last_stages$useful, 
+                                  .sep = "_", 
+                                  
+                                  C_eiou = IEATools::template_cols$C_eiou,
+                                  C_Y = IEATools::template_cols$C_Y, 
+                                  eta_fu = IEATools::template_cols$eta_fu,
+                                  phi_u = IEATools::template_cols$phi_u,
+                                  
+                                  U_feed_name = IEATools::psut_cols$U_feed,
+                                  U_eiou_name = IEATools::psut_cols$U_eiou,
+                                  U_name = IEATools::psut_cols$U,
+                                  r_eiou_name = IEATools::psut_cols$r_eiou,
+                                  V_name = IEATools::psut_cols$V, 
+                                  Y_name = IEATools::psut_cols$Y) {
     # Build a data frame with metadata columns and columns that end in sep+useful.
     # That data frame should be able to be added to the bottom of the incoming data frame.
     cols_to_keep <- .useful_df %>%
