@@ -732,3 +732,82 @@ default_aggregation_region_table_path <- function(version = 2019) {
   stop("Only 2019, and 2020 are supported in default_aggregation_region_table_path()")
 }
 # EAR - 29/09/2020
+
+
+#' Clean and pivot useful data frame
+#' 
+#' After a call to `extend_to_useful()`,
+#' the resulting data frame is not in a great shape.
+#' This function gathers (via `tidyr::pivot_longer()`)
+#' and keeps only the useful data.
+#'
+#' @param .sutdata A wide-by-matrices data frame of PSUT matrices that represent an energy conversion chain.
+#'                 Each row of `.sutdata` should contain the matrices that represent one energy conversion chain.
+#'                 Matrices should be in columns identified by their names.
+#'                 The last stage of these ECCs should be final (not useful).
+#'                 `.sutdata` is likely the result of calling (in sequence)
+#'                 `load_tidy_iea_df()`, `specify_all()`, and `prep_psut()`.
+#'                 `.sutdata` should also include columns of matrices `C_Y`, `C_eiou`, and `eta_fu`,
+#'                 probably created by functions `form_C_mats()` and `form_eta_fu_phi_u_vecs()`.
+#'                 `.sutdata` can also be a named list of matrices that forms a store of variables.
+#'                 Default is `NULL` to enable use of single matrices, too.
+#' @param .useful_df A data frame created by `extend_to_useful()`.
+#' @param last_stage See `IEATools::iea_cols$last_stage`. 
+#' @param .sep A separator between matrix names and `final` or `useful` indicators. Default is "_".
+#' @param final,useful See `IEATools::last_stages`.
+#' @param U_eiou_name,U_feed_name,U_name,r_eiou_name,V_name,Y_name See `IEATools::psut_cols`. 
+#'        Distinct from `U_feed`,`U_eiou`, `U`, `r_eiou`, `V`, and `Y` (which can be matrices or strings), 
+#'        these variables determine the names of these matrices on output.
+#'        Default values are taken from `IEATools::psut_cols`. 
+#'        Note that `.sep` and `useful` are appended to the strings in `U_eiou_name` ... `Y_name` 
+#'        to form the output names. 
+#'        
+#' @return A nicer form of useful energy and exergy data.
+#' 
+#' @export
+#'
+#' @examples
+clean_and_pivot_useful_df <- function(.sutdata = NULL,
+                                      .useful_df, 
+                                      last_stage = IEATools::iea_cols$last_stage,
+                                      useful = IEATools::last_stages$useful, 
+                                      .sep = "_", 
+                                      
+                                      C_eiou = IEATools::template_cols$C_eiou,
+                                      C_Y = IEATools::template_cols$C_Y, 
+                                      eta_fu = IEATools::template_cols$eta_fu,
+                                      phi_u = IEATools::template_cols$phi_u,
+                                      
+                                      U_feed_name = IEATools::psut_cols$U_feed,
+                                      U_eiou_name = IEATools::psut_cols$U_eiou,
+                                      U_name = IEATools::psut_cols$U,
+                                      r_eiou_name = IEATools::psut_cols$r_eiou,
+                                      V_name = IEATools::psut_cols$V, 
+                                      Y_name = IEATools::psut_cols$Y) {
+    # Build a data frame with metadata columns and columns that end in sep+useful.
+    # That data frame should be able to be added to the bottom of the incoming data frame.
+    cols_to_keep <- .useful_df %>%
+      matsindf::everything_except(U_feed_name, U_eiou_name, U_name,
+                                  r_eiou_name, V_name, Y_name, .symbols = FALSE)
+    # We'll need to strip suffixes off column names.
+    suff_to_remove <- paste0(.sep, useful)
+    useful_df <- .useful_df %>%
+      dplyr::select(dplyr::all_of(cols_to_keep)) %>%
+      # Change the Last.stage column to Useful
+      dplyr::mutate(
+        "{last_stage}" := useful
+      ) %>%
+      # Strip sep_useful from end of any column names.
+      # Hint obtained from https://stackoverflow.com/questions/45960269/removing-suffix-from-column-names-using-rename-all
+      dplyr::rename_with(~ gsub(paste0(suff_to_remove, "$"), "", .x))
+    # Bind the final and useful data frames together.
+    out <- dplyr::bind_rows(.sutdata, useful_df) %>%
+      # Trim away unneeded columns
+      dplyr::mutate(
+        "{C_eiou}" := NULL,
+        "{C_Y}" := NULL,
+        "{eta_fu}" := NULL,
+        "{phi_u}" := NULL
+      )
+    return(out)
+}

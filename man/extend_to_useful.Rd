@@ -6,7 +6,6 @@
 \usage{
 extend_to_useful(
   .sutdata = NULL,
-  clean_up_df = TRUE,
   tol = 0.1,
   R = IEATools::psut_cols$R,
   U_feed = IEATools::psut_cols$U_feed,
@@ -55,10 +54,6 @@ The last stage of these ECCs should be final (not useful).
 probably created by functions \code{form_C_mats()} and \code{form_eta_fu_phi_u_vecs()}.
 \code{.sutdata} can also be a named list of matrices that forms a store of variables.
 Default is \code{NULL} to enable use of single matrices, too.}
-
-\item{clean_up_df}{When \code{.sutdata} is a data frame, tells whether to \code{tidyr::pivot_longer()} the result
-and remove no-longer-needed input columns \code{C_eiou}, \code{C_Y}, \code{eta_fu}, and \code{phi_u}.
-Default is \code{TRUE}.}
 
 \item{tol}{The allowable error in energy balances for the outgoing matrices (last stage useful).
 Default is \code{1e-3}.}

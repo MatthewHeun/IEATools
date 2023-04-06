@@ -506,6 +506,8 @@ test_that("extend_to_useful() works with Matrix objects", {
   
   with_useful <- psut_mats %>% 
     extend_to_useful()
+  with_useful <- clean_and_pivot_useful_df(psut_mats, with_useful)
+    
   
   # Check some of the values  
   

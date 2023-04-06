@@ -521,9 +521,6 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                 probably created by functions `form_C_mats()` and `form_eta_fu_phi_u_vecs()`.
 #'                 `.sutdata` can also be a named list of matrices that forms a store of variables.
 #'                 Default is `NULL` to enable use of single matrices, too.
-#' @param clean_up_df When `.sutdata` is a data frame, tells whether to `tidyr::pivot_longer()` the result
-#'                    and remove no-longer-needed input columns `C_eiou`, `C_Y`, `eta_fu`, and `phi_u`.
-#'                    Default is `TRUE`.
 #' @param tol The allowable error in energy balances for the outgoing matrices (last stage useful). 
 #'            Default is `1e-3`.
 #' @param last_stage See `IEATools::iea_cols$last_stage`. 
@@ -592,7 +589,6 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'   extend_to_useful() %>% 
 #'   head()
 extend_to_useful <- function(.sutdata = NULL, 
-                             clean_up_df = TRUE, 
                              tol = 0.1,
                              
                              R = IEATools::psut_cols$R, 
@@ -653,22 +649,22 @@ extend_to_useful <- function(.sutdata = NULL,
     # and the correct names.
     # Lists are required, because these will be bound (potentially) with other
     # lists of matrices in a data frame.
-    # if (length(eta_fu_vector) == 0 & length(Y_mat) == 0 & length(C_Y_mat) == 0 & length(U_feed_mat) == 0 & 
-    #     length(V_mat) == 0 & length(C_eiou_mat) == 0 & length(U_eiou_mat) == 0 & length(R_mat) == 0) {
-    #   if (clean_up_df) {
-    #     out <- list(list(), list(), list(), list(), list()) |> 
-    #       magrittr::set_names(c(U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name))
-    #   } else {
-    #     out <- list(list(), list(), list(), list(), list(), list()) |> 
-    #       magrittr::set_names(paste0(U_feed, .sep, useful), 
-    #                           paste0(U_eiou, .sep, useful), 
-    #                           paste0(U, .sep, useful), 
-    #                           paste0(r_eiou, .sep, useful), 
-    #                           paste0(V, .sep, useful), 
-    #                           paste0(Y, .sep, useful))
-    #   }
-    #   return(out)
-    # }
+    if (length(eta_fu_vector) == 0 & length(Y_mat) == 0 & length(C_Y_mat) == 0 & length(U_feed_mat) == 0 &
+        length(V_mat) == 0 & length(C_eiou_mat) == 0 & length(U_eiou_mat) == 0 & length(R_mat) == 0) {
+      if (clean_up_df) {
+        out <- list(list(), list(), list(), list(), list()) |>
+          magrittr::set_names(c(U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name))
+      } else {
+        out <- list(list(), list(), list(), list(), list(), list()) |>
+          magrittr::set_names(paste0(U_feed, .sep, useful),
+                              paste0(U_eiou, .sep, useful),
+                              paste0(U, .sep, useful),
+                              paste0(r_eiou, .sep, useful),
+                              paste0(V, .sep, useful),
+                              paste0(Y, .sep, useful))
+      }
+      return(out)
+    }
     
     # Industries to retain from Y_f to Y_u. 
     # These industries are not allocated to f-u machines, nor are they tracked for useful energy.
@@ -785,34 +781,33 @@ extend_to_useful <- function(.sutdata = NULL,
                                   R_mat = R)
   
   # Gather (tidyr::pivot_longer) the outgoing data frame, if requested.
-  if (is.data.frame(out) & clean_up_df) {
-    # Build a data frame with metadata columns and columns that end in sep+useful.
-    # That data frame should be able to be added to the bottom of the incoming data frame.
-    cols_to_keep <- out %>% 
-      matsindf::everything_except(U_feed_name, U_eiou_name, U_name,
-                                  r_eiou_name, V_name, Y_name, .symbols = FALSE)
-    # We'll need to strip suffixes off column names.
-    suff_to_remove <- paste0(.sep, useful)
-    useful_df <- out %>% 
-      # dplyr::select(cols_to_keep) %>% 
-      dplyr::select(dplyr::all_of(cols_to_keep)) %>% 
-      # Change the Last.stage column to Useful
-      dplyr::mutate(
-        "{last_stage}" := useful
-      ) %>% 
-      # Strip sep_useful from end of any column names. 
-      # Hint obtained from https://stackoverflow.com/questions/45960269/removing-suffix-from-column-names-using-rename-all
-      dplyr::rename_with(~ gsub(paste0(suff_to_remove, "$"), "", .x))
-    # Bind the final and useful data frames together.
-    out <- dplyr::bind_rows(.sutdata, useful_df) %>% 
-      # Trim away unneeded columns
-      dplyr::mutate(
-        "{C_eiou}" := NULL, 
-        "{C_Y}" := NULL, 
-        "{eta_fu}" := NULL, 
-        "{phi_u}" := NULL
-      )
-  }
+  # if (is.data.frame(out) & clean_up_df) {
+  #   # Build a data frame with metadata columns and columns that end in sep+useful.
+  #   # That data frame should be able to be added to the bottom of the incoming data frame.
+  #   cols_to_keep <- out %>% 
+  #     matsindf::everything_except(U_feed_name, U_eiou_name, U_name,
+  #                                 r_eiou_name, V_name, Y_name, .symbols = FALSE)
+  #   # We'll need to strip suffixes off column names.
+  #   suff_to_remove <- paste0(.sep, useful)
+  #   useful_df <- out %>% 
+  #     dplyr::select(dplyr::all_of(cols_to_keep)) %>% 
+  #     # Change the Last.stage column to Useful
+  #     dplyr::mutate(
+  #       "{last_stage}" := useful
+  #     ) %>% 
+  #     # Strip sep_useful from end of any column names. 
+  #     # Hint obtained from https://stackoverflow.com/questions/45960269/removing-suffix-from-column-names-using-rename-all
+  #     dplyr::rename_with(~ gsub(paste0(suff_to_remove, "$"), "", .x))
+  #   # Bind the final and useful data frames together.
+  #   out <- dplyr::bind_rows(.sutdata, useful_df) %>% 
+  #     # Trim away unneeded columns
+  #     dplyr::mutate(
+  #       "{C_eiou}" := NULL, 
+  #       "{C_Y}" := NULL, 
+  #       "{eta_fu}" := NULL, 
+  #       "{phi_u}" := NULL
+  #     )
+  # }
   
   return(out)
 }
