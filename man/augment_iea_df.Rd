@@ -6,18 +6,18 @@
 \usage{
 augment_iea_df(
   .iea_df,
-  country = "Country",
-  ledger_side = "Ledger.side",
-  flow_aggregation_point = "Flow.aggregation.point",
-  flow = "Flow",
-  product = "Product",
-  energy_type = "Energy.type",
+  country = IEATools::iea_cols$country,
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  flow = IEATools::iea_cols$flow,
+  product = IEATools::iea_cols$product,
+  energy_type = IEATools::iea_cols$energy_type,
   energy_type_val = "E",
-  method = "Method",
+  method = IEATools::iea_cols$method,
   method_val = "PCM",
-  last_stage = "Last.stage",
+  last_stage = IEATools::iea_cols$last_stage,
   last_stage_val = "Final",
-  unit = "Unit",
+  unit = IEATools::iea_cols$unit,
   unit_val = "TJ",
   supply = "Supply",
   consumption = "Consumption",
@@ -59,33 +59,47 @@ augment_iea_df(
 \arguments{
 \item{.iea_df}{A data frame produced by the \code{iea_df()} function.}
 
-\item{country}{The name of the country column in \code{.iea_df}. Default is "Country".}
+\item{country}{The name of the country column in \code{.iea_df}.
+Default is \code{IEATools::iea_cols$country}.}
 
-\item{ledger_side}{The name of the ledger side column to be added to \code{.iea_df}. Default is "Ledger.side".}
+\item{ledger_side}{The name of the ledger side column to be added to \code{.iea_df}.
+Default is \code{IEATools::iea_cols$ledger_side}.}
 
-\item{flow_aggregation_point}{The name of the flow aggregation point column to be added to \code{.iea_df}. Default is "Flow.aggregation.point".}
+\item{flow_aggregation_point}{The name of the flow aggregation point column to be added to \code{.iea_df}.
+Default is \code{IEATools::iea_cols$flow_aggregation_point}.}
 
-\item{flow}{The name of the flow column in \code{.iea_df}.  Default is "Flow".}
+\item{flow}{The name of the flow column in \code{.iea_df}.
+Default is \code{IEATools::iea_cols$flow}.}
 
-\item{product}{The name of the product column in \code{.iea_df}.  Default is "Product".}
+\item{product}{The name of the product column in \code{.iea_df}.
+Default is \code{IEATools::iea_cols$product}.}
 
-\item{energy_type}{The name of the energy type column to be added to \code{.iea_df}. Default is "Energy.type.}
+\item{energy_type}{The name of the energy type column to be added to \code{.iea_df}.
+Default is \code{IEATools::iea_cols$energy_type}.}
 
-\item{energy_type_val}{The value to put in the \code{energy_type} column. Default is "E".}
+\item{energy_type_val}{The value to put in the \code{energy_type} column.
+Default is "E".}
 
-\item{method}{The name of the method column to be added to \code{.iea_df}. Default is "Method".}
+\item{method}{The name of the method column to be added to \code{.iea_df}.
+Default is \code{IEATools::iea_cols$method}.}
 
-\item{method_val}{The value to put in the \code{method} column. Default is "PCM" (Physical Content Method, which is used by the IEA).}
+\item{method_val}{The value to put in the \code{method} column.
+Default is "PCM" (Physical Content Method, which is used by the IEA).}
 
-\item{last_stage}{The name of the last stage column to be added to \code{.iea_df}. Default is "Last.stage".}
+\item{last_stage}{The name of the last stage column to be added to \code{.iea_df}.
+Default is \code{IEATools::iea_cols$last_stage}.}
 
-\item{last_stage_val}{The value to put in the \code{last_stage} column. Default is "Final" (which is the last stage supplied by the IEA).}
+\item{last_stage_val}{The value to put in the \code{last_stage} column.
+Default is "Final" (which is the last stage supplied by the IEA).}
 
-\item{unit}{The name of the unit column to be added to \code{.iea_df}. Default is "Unit".}
+\item{unit}{The name of the unit column to be added to \code{.iea_df}.
+Default is \code{IEATools::iea_cols$unit}.}
 
-\item{unit_val}{The value to put in the \code{unit} column. Default is "TJ" for terajoule.}
+\item{unit_val}{The value to put in the \code{unit} column.
+Default is "TJ" for terajoule.}
 
-\item{supply}{The string that identifies supply \code{Ledger.side}. Default is "Supply".}
+\item{supply}{The string that identifies supply ledger side.
+Default is \code{IEATools::iea_cols$ledger_side}.}
 
 \item{consumption}{The string that identifies consumption \code{Ledger.side}. Default is "Consumption".}
 

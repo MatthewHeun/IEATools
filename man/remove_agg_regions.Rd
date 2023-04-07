@@ -13,9 +13,11 @@ remove_agg_regions(
 \arguments{
 \item{.iea_df}{The IEA data frame from which you want to remove aggregation regions.}
 
-\item{country}{The name of the Country column in \code{.iea_df}.}
+\item{country}{The name of the Country column in \code{.iea_df}.
+Default is \code{IEATools::iea_cols$country}.}
 
-\item{agg_regions}{A list of aggregation regions in the \code{country} column of \code{.iea_df}.}
+\item{agg_regions}{A list of aggregation regions in the \code{country} column of \code{.iea_df}.
+Default is \code{IEATools::aggregation_regions}.}
 }
 \value{
 A version of \code{.iea_df} with aggregation regions removed.
