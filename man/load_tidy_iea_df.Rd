@@ -44,7 +44,7 @@ A tidy, augmented data frame of IEA extended energy balance data.
 }
 \description{
 Loads an IEA extended energy balance data file in \code{.csv} format from disk and converts to a tidy format.
-This function bundles several others:
+This function bundles several others and relies mostly on default values for arguments:
 \enumerate{
 \item \code{iea_df()},
 \item \code{rename_iea_df_cols()},

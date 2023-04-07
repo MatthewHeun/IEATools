@@ -4,7 +4,11 @@
 \alias{clean_iea_whitespace}
 \title{Clean whitespace from Flow and Product strings}
 \usage{
-clean_iea_whitespace(.iea_df, flow = "Flow", product = "Product")
+clean_iea_whitespace(
+  .iea_df,
+  flow = IEATools::iea_cols$flow,
+  product = IEATools::iea_cols$product
+)
 }
 \arguments{
 \item{.iea_df}{A data frame containing \code{Flow} and \code{Product} columns.}
