@@ -738,7 +738,7 @@ extend_to_useful <- function(.sutdata = NULL,
     .err_vec <- matsbyname::sum_byname(R_mat, V_useful_mat) %>%   # R + V
       matsbyname::transpose_byname() %>%                          # (R + V)^T
       matsbyname::difference_byname(U_useful_mat) %>%             # (R + V)^T - U
-      matsbyname::difference_byname(Y_useful_mat) %>%             # (R + V)^T - U - Y
+      matsbyname::difference_byname(Y_useful_mat) %>%             # (R + V)^T - (U + Y)
       matsbyname::rowsums_byname()
     
     .ebal_ok <- .err_vec %>%

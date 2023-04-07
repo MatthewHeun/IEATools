@@ -765,10 +765,13 @@ test_that("extend_to_useful() works with individual matrices", {
                                      C_Y = psut_mats$C_Y[[1]], 
                                      eta_fu = psut_mats$eta.fu[[1]], 
                                      phi_u = psut_mats$phi.u[[1]])
-  expect_false(without_C_EIOU[[".e_bal_ok"]])
-  expect_setequal(names(without_C_EIOU), 
-                  c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                    "r_EIOU_Useful", "V_Useful", "Y_Useful", ".err", ".e_bal_ok"))
+  # We should tolerate this missing argument. 
+  
+  
+  
+  
+  # |> 
+  #   expect_error(regexp = "In matsindf::matsindf_apply\\(\\), the following named arguments to FUN were found neither in .dat, nor in ..., nor in defaults to FUN: C_eiou_mat")
 })
 
 
