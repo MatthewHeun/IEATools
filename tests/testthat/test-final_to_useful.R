@@ -516,8 +516,7 @@ test_that("extend_to_useful() works with Matrix objects", {
   with_useful <- psut_mats %>% 
     extend_to_useful()
   with_useful <- stack_final_useful_df(with_useful, psut_mats)
-    
-  
+
   # Check some of the values  
   
   # Allocation of ZAF EIOU electricity for lighting and mechanical drive in 2000
@@ -731,14 +730,12 @@ test_that("extend_to_useful() works with individual matrices", {
 
   # Ensure that expected matrices are included.
   # There should be no more matrices than these.
-  expect_equal(names(useful_mats), 
-               c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+  expect_setequal(names(useful_mats), 
+                  c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                    "r_EIOU_Useful", "V_Useful", "Y_Useful"))
   
-  # Try with C_eiou missing, thereby ignoring any EIOU.
-  # Do the same calculation as above, but don't include 
-  # the C_eiou argument.
-  # This approach causes an error, because not all arguments are available.
+  # Try with an adjusted value of C_EIOU.
+  # This will cause energy imbalance.
   C_EIOU_adjusted <- psut_mats$C_EIOU[[1]]
   C_EIOU_adjusted[1, 1] <- 1.1 * C_EIOU_adjusted[1, 1]
   extend_to_useful(R = psut_mats$R[[1]], 
@@ -753,6 +750,25 @@ test_that("extend_to_useful() works with individual matrices", {
                    eta_fu = psut_mats$eta.fu[[1]], 
                    phi_u = psut_mats$phi.u[[1]]) %>% 
     expect_warning(regexp = "Energy is not balanced")
+  
+  # Try with C_eiou missing, thereby ignoring any EIOU.
+  # Do the same calculation as above, but don't include 
+  # the C_eiou argument.
+  # This approach causes an error, because not all arguments are available.
+  without_C_EIOU <- extend_to_useful(R = psut_mats$R[[1]], 
+                                     U_feed = psut_mats$U_feed[[1]], 
+                                     U_eiou = psut_mats$U_EIOU[[1]], 
+                                     U = psut_mats$U[[1]], 
+                                     r_eiou = psut_mats$r_eiou[[1]], 
+                                     V = psut_mats$V[[1]], 
+                                     Y = psut_mats$Y[[1]], 
+                                     C_Y = psut_mats$C_Y[[1]], 
+                                     eta_fu = psut_mats$eta.fu[[1]], 
+                                     phi_u = psut_mats$phi.u[[1]])
+  expect_false(without_C_EIOU[[".e_bal_ok"]])
+  expect_setequal(names(without_C_EIOU), 
+                  c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                    "r_EIOU_Useful", "V_Useful", "Y_Useful", ".err", ".e_bal_ok"))
 })
 
 

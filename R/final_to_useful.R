@@ -642,6 +642,9 @@ extend_to_useful <- function(.sutdata = NULL,
   V_useful_name <- paste0(V_name, .sep, useful)
   Y_useful_name <- paste0(Y_name, .sep, useful)
   
+  # C_eiou_mat does not need to be specified.
+  # Note that the default value for the C_eiou_mat argument is NULL,
+  # so that we can tolerate not specifying it.
   extend_func <- function(eta_fu_vector, Y_mat, C_Y_mat, U_feed_mat, V_mat, C_eiou_mat, U_eiou_mat, R_mat) {
     
     # Check for the case when all of the incoming values are of length 0.
