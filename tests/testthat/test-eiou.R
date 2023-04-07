@@ -1570,6 +1570,52 @@ test_that("route_non_specified_flows() works", {
 })
 
 
+test_that("isolated test works", {
+  
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe")
+  
+  test <- AB_data %>%
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat(split_using_shares_of = "output") %>%
+    add_nuclear_industry() %>%
+    tibble::add_row(
+      Country = "B",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Transformation processes",
+      Flow = "Oil refineries",
+      Product = "Brown coal (if no detail)",
+      Unit = "ktoe",
+      E.dot = 67
+    ) %>%
+    route_non_specified_flows()
+  
+  
+
+  test %>%
+    dplyr::filter(
+      Country == "B",
+      Flow.aggregation.point == "Transformation processes",
+      Flow == "Main activity producer electricity plants",
+      Product == "Brown coal (if no detail)"
+    ) %>%
+    dplyr::select(E.dot) %>%
+    dplyr::pull() |> 
+    expect_equal(623, tolerance = 0.001)
+  
+  
+})
+
+
 test_that("specify_all() function keeps balance",{
   
   # First with default dataset
