@@ -221,6 +221,7 @@ with the `extend_to_useful()` function.
 ```{r}
 psut_mats_useful <- psut_mats_final %>% 
   extend_to_useful()
+psut_mats_useful <- stack_final_useful_df(psut_mats_useful, psut_mats_final)
 glimpse(psut_mats_useful)
 ```
 

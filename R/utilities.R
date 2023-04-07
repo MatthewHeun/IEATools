@@ -447,12 +447,10 @@ sample_iea_data_path <- function(version = 2022) {
 #' @export
 #'
 #' @examples
-#' sample_fu_allocation_table_path()     # Assumes 2021
-#' sample_fu_allocation_table_path(2021) # Same
+#' sample_fu_allocation_table_path()     # Assumes 2022
+#' sample_fu_allocation_table_path(2022) # Same
 #' # Returns path for sample allocation table appropriate for other IEA data releases
-#' sample_fu_allocation_table_path(2020) 
-#' sample_fu_allocation_table_path(2019) 
-#' sample_fu_allocation_table_path(2018) 
+#' sample_fu_allocation_table_path(2021) 
 sample_fu_allocation_table_path <- function(version = 2022) {
   if (version %in% IEATools::valid_iea_release_years) {
     return(file.path("extdata", paste0("GH-ZA-Allocation-sample-", version, ".xlsx")) |>  
@@ -732,73 +730,3 @@ default_aggregation_region_table_path <- function(version = 2019) {
   stop("Only 2019, and 2020 are supported in default_aggregation_region_table_path()")
 }
 # EAR - 29/09/2020
-
-
-#' Clean and pivot useful data frame
-#' 
-#' After a call to `extend_to_useful()`,
-#' the resulting data frame is not in a great shape.
-#' This function gathers (via `tidyr::pivot_longer()`)
-#' and stacks the useful data beneath the final data.
-#'
-#' @param .useful_df A data frame created by `extend_to_useful()`.
-#' @param .sutdata The original input to `extend_to_useful()`.
-#' @param last_stage See `IEATools::iea_cols$last_stage`. 
-#' @param .sep A separator between matrix names and `final` or `useful` indicators. Default is "_".
-#' @param final,useful See `IEATools::last_stages`.
-#' @param U_eiou_name,U_feed_name,U_name,r_eiou_name,V_name,Y_name See `IEATools::psut_cols`. 
-#'        Distinct from `U_feed`,`U_eiou`, `U`, `r_eiou`, `V`, and `Y` (which can be matrices or strings), 
-#'        these variables determine the names of these matrices on output.
-#'        Default values are taken from `IEATools::psut_cols`. 
-#'        Note that `.sep` and `useful` are appended to the strings in `U_eiou_name` ... `Y_name` 
-#'        to form the output names. 
-#'        
-#' @return A nicer form of useful energy and exergy data.
-#' 
-#' @export
-#'
-#' @examples
-stack_final_useful_df <- function(.useful_df, 
-                                  .sutdata,
-                                  last_stage = IEATools::iea_cols$last_stage,
-                                  useful = IEATools::last_stages$useful, 
-                                  .sep = "_", 
-                                  
-                                  C_eiou = IEATools::template_cols$C_eiou,
-                                  C_Y = IEATools::template_cols$C_Y, 
-                                  eta_fu = IEATools::template_cols$eta_fu,
-                                  phi_u = IEATools::template_cols$phi_u,
-                                  
-                                  U_feed_name = IEATools::psut_cols$U_feed,
-                                  U_eiou_name = IEATools::psut_cols$U_eiou,
-                                  U_name = IEATools::psut_cols$U,
-                                  r_eiou_name = IEATools::psut_cols$r_eiou,
-                                  V_name = IEATools::psut_cols$V, 
-                                  Y_name = IEATools::psut_cols$Y) {
-    # Build a data frame with metadata columns and columns that end in sep+useful.
-    # That data frame should be able to be added to the bottom of the incoming data frame.
-    cols_to_keep <- .useful_df %>%
-      matsindf::everything_except(U_feed_name, U_eiou_name, U_name,
-                                  r_eiou_name, V_name, Y_name, .symbols = FALSE)
-    # We'll need to strip suffixes off column names.
-    suff_to_remove <- paste0(.sep, useful)
-    useful_df <- .useful_df %>%
-      dplyr::select(dplyr::all_of(cols_to_keep)) %>%
-      # Change the Last.stage column to Useful
-      dplyr::mutate(
-        "{last_stage}" := useful
-      ) %>%
-      # Strip sep_useful from end of any column names.
-      # Hint obtained from https://stackoverflow.com/questions/45960269/removing-suffix-from-column-names-using-rename-all
-      dplyr::rename_with(~ gsub(paste0(suff_to_remove, "$"), "", .x))
-    # Bind the final and useful data frames together.
-    out <- dplyr::bind_rows(.sutdata, useful_df) %>%
-      # Trim away unneeded columns
-      dplyr::mutate(
-        "{C_eiou}" := NULL,
-        "{C_Y}" := NULL,
-        "{eta_fu}" := NULL,
-        "{phi_u}" := NULL
-      )
-    return(out)
-}
