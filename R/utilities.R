@@ -447,12 +447,10 @@ sample_iea_data_path <- function(version = 2022) {
 #' @export
 #'
 #' @examples
-#' sample_fu_allocation_table_path()     # Assumes 2021
-#' sample_fu_allocation_table_path(2021) # Same
+#' sample_fu_allocation_table_path()     # Assumes 2022
+#' sample_fu_allocation_table_path(2022) # Same
 #' # Returns path for sample allocation table appropriate for other IEA data releases
-#' sample_fu_allocation_table_path(2020) 
-#' sample_fu_allocation_table_path(2019) 
-#' sample_fu_allocation_table_path(2018) 
+#' sample_fu_allocation_table_path(2021) 
 sample_fu_allocation_table_path <- function(version = 2022) {
   if (version %in% IEATools::valid_iea_release_years) {
     return(file.path("extdata", paste0("GH-ZA-Allocation-sample-", version, ".xlsx")) |>  

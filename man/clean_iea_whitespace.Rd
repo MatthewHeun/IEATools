@@ -7,11 +7,11 @@
 clean_iea_whitespace(.iea_df, flow = "Flow", product = "Product")
 }
 \arguments{
-\item{.iea_df}{a data frame containing \code{Flow} and \code{Product} columns}
+\item{.iea_df}{A data frame containing \code{Flow} and \code{Product} columns.}
 
-\item{flow}{the name of the flow column in \code{iea_df}. Default is "\code{Flow}".}
+\item{flow}{The name of the flow column in \code{iea_df}. Default is "\code{Flow}".}
 
-\item{product}{the name of the product columns in \code{iea_df}. Default is "\code{Product}".}
+\item{product}{The name of the product columns in \code{iea_df}. Default is "\code{Product}".}
 }
 \value{
 \code{.iea_df} with leading and trailing whitespace removed from \code{Flow} and \code{Product} column strings
