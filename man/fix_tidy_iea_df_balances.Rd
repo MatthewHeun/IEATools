@@ -45,7 +45,7 @@ the data for each product are in perfect energy balance.
 }
 \description{
 IEA extended energy balance data are sometimes not quite balanced.
-In fact, supply and consumption are often wrong by a few ktoe
+In fact, supply and consumption are often wrong by a few ktoe or TJ
 for any given Product in a Country in a Year.
 This function ensures that the balance is perfect
 by adjusting the \verb{Statistical differences} flow
