@@ -1,5 +1,13 @@
-library(magrittr)
-library(testthat)
+
+test_that("form_C_mats() works with 0-row input", {
+  allocation_table <- load_fu_allocation_data()
+  allocation_table <- allocation_table[0, ]
+  res <- form_C_mats(allocation_table)
+  expect_equal(nrow(res), 0)
+  expect_setequal(names(res), c(IEATools::iea_cols$country, IEATools::iea_cols$method, IEATools::iea_cols$energy_type, IEATools::iea_cols$last_stage, IEATools::iea_cols$year, 
+                                IEATools::template_cols$C_eiou, IEATools::template_cols$C_Y))
+})
+
 
 test_that("form_C_mats() works as expected", {
   allocation_table <- load_fu_allocation_data()
