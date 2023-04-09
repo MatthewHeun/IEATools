@@ -754,7 +754,8 @@ test_that("extend_to_useful() works with individual matrices", {
   # Try with C_eiou missing, thereby ignoring any EIOU.
   # Do the same calculation as above, but don't include 
   # the C_eiou argument.
-  # This approach causes an error, because not all arguments are available.
+  # This approach should run through the calculations OK, but
+  # cause an energy imbalance error when checked.
   without_C_EIOU <- extend_to_useful(R = psut_mats$R[[1]], 
                                      U_feed = psut_mats$U_feed[[1]], 
                                      U_eiou = psut_mats$U_EIOU[[1]], 
@@ -764,14 +765,8 @@ test_that("extend_to_useful() works with individual matrices", {
                                      Y = psut_mats$Y[[1]], 
                                      C_Y = psut_mats$C_Y[[1]], 
                                      eta_fu = psut_mats$eta.fu[[1]], 
-                                     phi_u = psut_mats$phi.u[[1]])
-  # We should tolerate the missing C_eiou argument. 
-  
-  
-  
-  
-  # |> 
-  #   expect_error(regexp = "In matsindf::matsindf_apply\\(\\), the following named arguments to FUN were found neither in .dat, nor in ..., nor in defaults to FUN: C_eiou_mat")
+                                     phi_u = psut_mats$phi.u[[1]]) |> 
+    expect_warning(regexp = "Energy is not balanced")
 })
 
 
@@ -810,7 +805,8 @@ test_that("extend_to_useful() works with individual Matrix objects", {
   # Try with C_eiou missing, thereby ignoring any EIOU.
   # Do the same calculation as above, but don't include 
   # the C_eiou argument.
-  # This approach causes an error, because not all arguments are available.
+  # This approach should run through the calculations OK, but
+  # cause an energy imbalance error when checked.
   extend_to_useful(R = psut_mats$R[[1]], 
                    U_feed = psut_mats$U_feed[[1]], 
                    U_eiou = psut_mats$U_EIOU[[1]], 
@@ -821,7 +817,7 @@ test_that("extend_to_useful() works with individual Matrix objects", {
                    C_Y = psut_mats$C_Y[[1]], 
                    eta_fu = psut_mats$eta.fu[[1]], 
                    phi_u = psut_mats$phi.u[[1]]) %>% 
-    expect_error(regexp = "In matsindf::matsindf_apply\\(\\), the following named arguments to FUN were found neither in .dat, nor in ..., nor in defaults to FUN: C_eiou_mat")
+    expect_warning(regexp = "Energy is not balanced")
 })
 
 
@@ -913,12 +909,12 @@ test_that("extend_to_useful() works with empty lists", {
 
   useful_list <- extend_to_useful(var_store)
   
-  expect_equal(names(useful_list), 
-               c("Country", "Method", "Energy.type", "Last.stage", "Year",
-                 "Y", "S_units", "R", "U", "U_feed",
-                 "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
-                 "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+  expect_setequal(names(useful_list), 
+                  c("Country", "Method", "Energy.type", "Last.stage", "Year",
+                    "Y", "S_units", "R", "U", "U_feed",
+                    "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
+                    "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                    "r_EIOU_Useful", "V_Useful", "Y_Useful"))
   
   expect_true(all(sapply(useful_list, length) == 0))
 })
