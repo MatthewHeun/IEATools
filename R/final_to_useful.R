@@ -645,7 +645,8 @@ extend_to_useful <- function(.sutdata = NULL,
   # C_eiou_mat does not need to be specified.
   # Note that the default value for the C_eiou_mat argument is NULL,
   # so that we can tolerate not specifying it.
-  extend_func <- function(eta_fu_vector, Y_mat, C_Y_mat, U_feed_mat, V_mat, C_eiou_mat, U_eiou_mat, R_mat) {
+  extend_func <- function(eta_fu_vector = NULL, Y_mat = NULL, C_Y_mat = NULL, U_feed_mat = NULL, 
+                          V_mat = NULL, C_eiou_mat = NULL, U_eiou_mat = NULL, R_mat = NULL) {
     
     # Check for the case when all of the incoming values are of length 0.
     # This can occur when the incoming data frame has no rows.
@@ -712,9 +713,6 @@ extend_to_useful <- function(.sutdata = NULL,
     # If so, make further adjustments to the matrices.
     # If not, no big deal. 
     # We can live with the matrices calculated above.
-    if (missing(C_eiou_mat)) {
-      C_eiou_mat <- NULL
-    }
     if (!is.null(C_eiou_mat)) {
       # We have some EIOU. Calculate modifications to matrices accounting for the EIOU portion of the ECC.
       res_eiou <- extend_to_useful_helper(dest_mat = U_eiou_mat, C_mat = C_eiou_mat, eta_fu_vec = eta_fu_vector, 
