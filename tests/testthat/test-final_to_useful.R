@@ -765,7 +765,7 @@ test_that("extend_to_useful() works with individual matrices", {
                                      C_Y = psut_mats$C_Y[[1]], 
                                      eta_fu = psut_mats$eta.fu[[1]], 
                                      phi_u = psut_mats$phi.u[[1]])
-  # We should tolerate this missing argument. 
+  # We should tolerate the missing C_eiou argument. 
   
   
   
