@@ -4,17 +4,17 @@
 #' Create allocation matrices (`C`) from an allocation table
 #' 
 #' This function uses information in a filled allocation template (created by `write_fu_allocation_template()`)
-#' to create allocation matrices (`C`). 
+#' to create allocation matrices (**C**). 
 #' 
-#' rownames of the `C` matrices are taken from the `Ef.product` and `Destination` columns of `.fu_allocation_table`
+#' rownames of the **C** matrices are taken from the `Ef.product` and `Destination` columns of `.fu_allocation_table`
 #' and have the form "`Ef.product` `r RCLabels::arrow_notation[["pref_end"]]` `Destination`".
-#' colnames of the `C` matrices are taken from the `Machine` and `Eu.product` columns of `.fu_allocation_table`
+#' colnames of the **C** matrices are taken from the `Machine` and `Eu.product` columns of `.fu_allocation_table`
 #' and have the form "machine `r RCLabels::arrow_notation[["pref_end"]]` useful energy form".
 #' 
-#' `C` matrices are created for both energy industry own use
-#' and final demand (`C_eiou` and `C_Y`, respectively).
+#' **C** matrices are created for both energy industry own use
+#' and final demand (**C_eiou** and **C_Y**, respectively).
 #' 
-#' Rows of the output `C` matrices should sum to 1.  
+#' Rows of the output **C** matrices should sum to 1.  
 #' If there is a problem, a data frame that shows the errors is returned.
 #' Such errors probably indicate the FU template was not filled correctly.
 #'
@@ -39,7 +39,7 @@
 #'               that tells whether a 1-vector was created by rowsums.
 #'
 #' @return A wide-by-matrices data frame with metadata columns (and year) along with columns for 
-#'         `C_eiou` and `C_Y` matrices.
+#'         **C_eiou** and **C_Y** matrices.
 #'         If not all rows of a C matrix sum to 1, 
 #'         a warning is emitted, and
 #'         a data frame is returned which shows the errors.
@@ -642,9 +642,6 @@ extend_to_useful <- function(.sutdata = NULL,
   V_useful_name <- paste0(V_name, .sep, useful)
   Y_useful_name <- paste0(Y_name, .sep, useful)
   
-  # C_eiou_mat does not need to be specified.
-  # Note that the default value for the C_eiou_mat argument is NULL,
-  # so that we can tolerate not specifying it.
   extend_func <- function(eta_fu_vector = NULL, Y_mat = NULL, C_Y_mat = NULL, U_feed_mat = NULL, 
                           V_mat = NULL, C_eiou_mat = NULL, U_eiou_mat = NULL, R_mat = NULL) {
     
