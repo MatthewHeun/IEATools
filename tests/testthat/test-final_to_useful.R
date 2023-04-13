@@ -892,7 +892,7 @@ test_that("extend_to_useful() works with list of Matrix objects", {
 test_that("extend_to_useful() works with empty lists", {
   C_data <- load_fu_allocation_data() |> 
     form_C_mats(matrix.class = "Matrix")
-  eta_fu_data <- load_eta_fu_data() %>% 
+  eta_fu_data <- load_eta_fu_data() |>  
     form_eta_fu_phi_u_vecs(matrix.class = "Matrix")
   m_cols <- eta_fu_data %>% 
     IEATools::meta_cols(return_names = TRUE,
