@@ -1218,8 +1218,9 @@ tidy_iea_df <- function(.iea_df,
 #' 4. `use_iso_countries()`,
 #' 5. `augment_iea_df()`,
 #' 6. `specify_non_energy_use()` (optionally), 
-#' 7. `remove_agg_memo_flows()`, and 
-#' 8. `tidy_iea_df()`.
+#' 7. `fix_GHA_industry_electricity() |> fix_GHA_psb() |> fix_COL_electricity_generation()` (optionally),
+#' 8. `remove_agg_memo_flows()`, and 
+#' 9. `tidy_iea_df()`.
 #' 
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.

@@ -56,6 +56,7 @@ This function bundles several others and relies mostly on default values for arg
 \item \code{use_iso_countries()},
 \item \code{augment_iea_df()},
 \item \code{specify_non_energy_use()} (optionally),
+\item \code{fix_GHA_industry_electricity() |> fix_GHA_psb() |> fix_COL_electricity_generation()} (optionally),
 \item \code{remove_agg_memo_flows()}, and
 \item \code{tidy_iea_df()}.
 }
