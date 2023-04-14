@@ -9,7 +9,7 @@ load_tidy_iea_df(
   unit_val = "TJ",
   remove_zeroes = TRUE,
   specify_non_energy_flows = FALSE,
-  apply_fixes = TRUE,
+  apply_fixes = FALSE,
   override_df = IEATools::override_iso_codes_df,
   country = IEATools::iea_cols$country,
   pfu_code = IEATools::country_concordance_cols$pfu_code,
@@ -29,7 +29,10 @@ Default is \code{TRUE}.}
 \item{specify_non_energy_flows}{A logical indicating whether "Non-energy use in xxxxx" Flows
 should be specified by "Memo: Non-energy use in <\if{html}{\out{<specific industry>}}>"
 entries in the IEA data.
-Default is \code{TRUE}.}
+Default is \code{FALSE}.}
+
+\item{apply_fixes}{A logical indicating whether fixes should be applied to IEA data.
+Default is \code{FALSE}.}
 
 \item{override_df}{A data frame containing columns \code{pfu_code} and \code{iea_name} that provides 3-letter country codes. See \code{IEATools::use_iso_countries()}.
 Default is \code{IEATools::override_iso_codes_df}.}

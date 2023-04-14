@@ -1233,7 +1233,9 @@ tidy_iea_df <- function(.iea_df,
 #' @param specify_non_energy_flows A logical indicating whether "Non-energy use in xxxxx" Flows
 #'                                 should be specified by "Memo: Non-energy use in <<specific industry>>"
 #'                                 entries in the IEA data. 
-#'                                 Default is `TRUE`.
+#'                                 Default is `FALSE`.
+#' @param apply_fixes A logical indicating whether fixes should be applied to IEA data.
+#'                    Default is `FALSE`.
 #' @param override_df A data frame containing columns `pfu_code` and `iea_name` that provides 3-letter country codes. See `IEATools::use_iso_countries()`.
 #'                    Default is `IEATools::override_iso_codes_df`.
 #' @param country The name of the country column in the data frames. See `IEATools::iea_cols$country`.
@@ -1266,7 +1268,7 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
                              unit_val = "TJ", 
                              remove_zeroes = TRUE, 
                              specify_non_energy_flows = FALSE,
-                             apply_fixes = TRUE,
+                             apply_fixes = FALSE,
                              override_df = IEATools::override_iso_codes_df,
                              country = IEATools::iea_cols$country, 
                              pfu_code = IEATools::country_concordance_cols$pfu_code,
