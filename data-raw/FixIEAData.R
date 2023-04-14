@@ -35,7 +35,7 @@ Fixed_GHA_PSB <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "GHA-PSB.x
     !!as.name(iea_cols$year) := as.numeric(!!as.name(iea_cols$year))
   )
 
-usethis::use_data(Fixed_GHA_PSB, internal = TRUE, overwrite = TRUE)
+usethis::use_data(Fixed_GHA_PSB, overwrite = TRUE)
 
 
 
@@ -63,10 +63,12 @@ Fixed_GHA_Industry_Electricity <- openxlsx::read.xlsx(xlsxFile = file.path("data
 # Use these data frames as internal objects in the package.
 # These objects are stored in R/sysdata.rda and can be accessed by
 # Fixed_GHA_PSB, for example.
-usethis::use_data(Fixed_GHA_Industry_Electricity, internal = TRUE, overwrite = TRUE)
+usethis::use_data(Fixed_GHA_Industry_Electricity, overwrite = TRUE)
 
 
 # COL's electricity production changed in the 2022 release of the IEA data.
+# In the 2022 release, COL is out of balance for 1971--1977 as a result.
+# Further, the imbalance extends to the World as a whole.
 # This object is the correct data (obtained from the 2021 release).
 # The function fix_COL_electricity_generation() makes use of these data.
 Fixed_COL_Electricity_Generation <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedCOLElect.xlsx"), 
@@ -76,4 +78,4 @@ Fixed_COL_Electricity_Generation <- openxlsx::read.xlsx(xlsxFile = file.path("da
     !!as.name(iea_cols$year) := as.numeric(!!as.name(iea_cols$year))
   )
 
-usethis::use_data(Fixed_COL_Electricity_Generation, internal = TRUE, overwrite = TRUE)
+usethis::use_data(Fixed_COL_Electricity_Generation, overwrite = TRUE)
