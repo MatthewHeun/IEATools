@@ -244,3 +244,48 @@ test_that("Fixing GHA Industry Electricity works as expected", {
   expect_equal(new, orig)
 })
 
+
+test_that("load_tidy_iea_df(apply_fixes = TRUE) works as expected", {
+  # Try without fixes first
+  unfixed <- load_tidy_iea_df(apply_fixes = FALSE)
+  # Ensure no changes occur.
+  # There is no COL data in unfixed.
+  unfixed_COL <- unfixed |>
+    fix_COL_electricity_generation()
+  expect_equal(unfixed_COL, unfixed)
+  
+  # Try same with GHA. This should fix the year 2000 only.
+  fixed_GHA <- unfixed |> 
+    fix_GHA_psb() |> 
+    fix_GHA_industry_electricity()
+  # Check Industry Electricity
+  fixed_GHA |>
+    dplyr::filter(Country == "GHA", Year == 2000, Flow == "Mining and quarrying") |> 
+    dplyr::pull("E.dot") |> 
+    expect_equal(1902.1338)
+  fixed_GHA |>
+    dplyr::filter(Country == "GHA", Year == 2000, Flow == "Non-ferrous metals") |> 
+    dplyr::pull("E.dot") |> 
+    expect_equal(9162.000002)
+  fixed_GHA |>
+    dplyr::filter(Country == "GHA", Year == 2000, Flow == "Textile and leather") |> 
+    dplyr::pull("E.dot") |> 
+    expect_equal(95.09040001)
+  fixed_GHA |>
+    dplyr::filter(Country == "GHA", Year == 2000, Flow == "Industry not elsewhere specified", 
+                  Product == "Electricity") |> 
+    dplyr::pull("E.dot") |> 
+    expect_equal(4342.377677)
+  # Check PSB production.  No changes should occur, because 
+  # all GHA PSB fixes occur in years 1991 -- 1999.
+  unfixed |>
+    dplyr::filter(Country == "GHA", Year == 2000, Flow == "Production", 
+                  Product == "Primary solid biofuels") |> 
+    dplyr::pull("E.dot") |> 
+    expect_equal(162909)
+  fixed_GHA |>
+    dplyr::filter(Country == "GHA", Year == 2000, Flow == "Production", 
+                  Product == "Primary solid biofuels") |> 
+    dplyr::pull("E.dot") |> 
+    expect_equal(162909)
+})

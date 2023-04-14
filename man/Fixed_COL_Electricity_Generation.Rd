@@ -14,7 +14,7 @@ Fixed_COL_Electricity_Generation
 Colombia's electricity production changed in the 2022 release of the IEA data.
 In the 2022 release, COL is out of balance for 1971--1977 as a result.
 Further, the imbalance extends to the World as a whole.
-This object contains the correct data (obtained from the 2021 release).
+This object contains the (presumably) correct data (obtained from the 2021 release).
 The function \code{\link[=fix_COL_electricity_generation]{fix_COL_electricity_generation()}} makes use of these data.
 }
 \examples{
