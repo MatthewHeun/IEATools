@@ -93,7 +93,7 @@ fix_GHA_psb <- function(.tidy_iea_df,
 #' @param .tidy_iea_df a tidy IEA data frame produced by [load_tidy_iea_df()]
 #' @param country,year,e_dot See `IEATools::iea_cols`.
 #'
-#' @return `.tidy_iea_df` with improved Ghana Industry Electricity, if warranted
+#' @return `.tidy_iea_df` with improved Ghana Industry Electricity, if warranted.
 #' 
 #' @export
 #' 
@@ -144,7 +144,68 @@ fix_GHA_industry_electricity <- function(.tidy_iea_df,
 }
 
 
+#' Improve COL electricity generation in the IEA's WEEB.
+#' 
+#' The 2022 release of the IEA's WEEB data
+#' is different from the 2021 release of the IEA's WEEB data
+#' in terms of Colombia's Electricity generation.
+#' For example:
+#' - 2021 release: 
+#'     - Main activity producer electricity plants 34196.4008 TJ
+#'     - Autoproducer electricity plants: 2671.1993 TJ
+#' - 2022 release: 
+#'     - Main activity producer electricity plants 31467.5994 TJ
+#'     - Autoproducer electricity plants: 899.9987 TJ
+#' Similar differences appear in all years 1971 - 1977. 
+#' From 1978 onward, the 2021 and 2022 releases agree.
+#' Note that this change leads to overall energy imbalance 
+#' for Colombia 1971-1977 and World 1971-1977.
+#' This function reverts to the values from the 2021 release of the IEA WEEB.
+#'
+#' @param .tidy_iea_df a tidy IEA data frame produced by [load_tidy_iea_df()]
+#' @param country,year,e_dot See `IEATools::iea_cols`.
+#'
+#' @return `.tidy_iea_df` with improved Ghana Industry Electricity, if warranted
+#' 
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' example_tidy_iea_df <- load_tidy_iea_df() %>% 
+#'   filter(Country == "GHA") |> 
+#'   dplyr::mutate(
+#'     # Pretend the GHA is COL.
+#'     Country = "COL"
+#'   )
+#' example_tidy_iea_df
+#' fixed <- example_tidy_iea_df %>% 
+#'   fix_COL_electricity_generation()
+#' # Compare changed values
+#' example_tidy_iea_df %>% 
+#'   filter(Flow %in% c("Main activity producer electricity plants",
+#'                       "Autoproducer electricity plants"), 
+#'          Product == "Electricity") %>% 
+#'   select("Year", "Flow", "E.dot", "Unit")
+#' fixed %>% 
+#'   filter(Flow %in% c("Main activity producer electricity plants",
+#'                       "Autoproducer electricity plants"), 
+#'          Product == "Electricity") %>% 
+#'   select("Year", "Flow", "E.dot", "Unit")
+fix_COL_electricity_generation <- function(.tidy_iea_df,
+                                           country = IEATools::iea_cols$country,
+                                           year = IEATools::iea_cols$year,
+                                           e_dot = IEATools::iea_cols$e_dot) {
+  do_fix(.tidy_iea_df, replacement = Fixed_COL_Electricity_Generation,
+         country = country, year = year, e_dot = e_dot)
+}
+
+
 fix_HND_fuels <- function(.iea_df) {
+  
+}
+
+
+fix_JPN_psp <- function(.iea_df) {
   
 }
 
@@ -177,3 +238,6 @@ do_fix <- function(.tidy_iea_df,
                   .data[[country]] %in% countries_present)
   replace_join(.tidy_iea_df, data_to_join, replace_col = e_dot)
 }
+
+
+

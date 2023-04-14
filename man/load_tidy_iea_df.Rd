@@ -9,6 +9,7 @@ load_tidy_iea_df(
   unit_val = "TJ",
   remove_zeroes = TRUE,
   specify_non_energy_flows = FALSE,
+  apply_fixes = TRUE,
   override_df = IEATools::override_iso_codes_df,
   country = IEATools::iea_cols$country,
   pfu_code = IEATools::country_concordance_cols$pfu_code,

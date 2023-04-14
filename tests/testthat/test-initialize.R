@@ -1183,5 +1183,3 @@ test_that("load_tidy_iea_df() OK when spreading by years after", {
     expect_true("2000" %in% names(year_spread))
   }
 })
-
-

@@ -243,3 +243,4 @@ test_that("Fixing GHA Industry Electricity works as expected", {
     sum()
   expect_equal(new, orig)
 })
+

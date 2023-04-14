@@ -1266,6 +1266,7 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
                              unit_val = "TJ", 
                              remove_zeroes = TRUE, 
                              specify_non_energy_flows = FALSE,
+                             apply_fixes = TRUE,
                              override_df = IEATools::override_iso_codes_df,
                              country = IEATools::iea_cols$country, 
                              pfu_code = IEATools::country_concordance_cols$pfu_code,
@@ -1279,6 +1280,12 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
   if (specify_non_energy_flows) {
     out <- out |> 
       specify_non_energy_use()
+  }
+  if (apply_fixes) {
+    out <- out |> 
+      fix_GHA_industry_electricity() |> 
+      fix_GHA_psb() |> 
+      fix_COL_electricity_generation()
   }
   out |>  
     remove_agg_memo_flows() |> 
