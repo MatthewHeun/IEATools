@@ -1,7 +1,7 @@
 
 test_that("fix_GHA_psb() works as expected", {
   # Load some example IEA data
-  tidy_example <- load_tidy_iea_df() |> 
+  tidy_example <- load_tidy_iea_df(apply_fixes = FALSE) |> 
     # Focus on Ghana only
     dplyr::filter(Country == "GHA") |> 
     # Ghana has PSB for 1971 and 2000.  Let's pretend that 1971 is 1991 and 2000 is 1992
@@ -156,7 +156,7 @@ test_that("fix_GHA_psb() works as expected", {
 
 test_that("IEA data lacking Ghana is not fixed for PSBs", {
   # Load some example IEA data
-  tidy_example <- load_tidy_iea_df() |> 
+  tidy_example <- load_tidy_iea_df(apply_fixes = FALSE) |> 
     # Exclude Ghana
     dplyr::filter(Country != "GHA") |> 
     # Ghana has PSB for 1971 and 2000.  Let's pretend that 1971 is 1991 and 2000 is 1992
@@ -177,7 +177,7 @@ test_that("IEA data lacking Ghana is not fixed for PSBs", {
 
 
 test_that("Fixing GHA Industry Electricity works as expected", {
-  tidy_example <- load_tidy_iea_df() |> 
+  tidy_example <- load_tidy_iea_df(apply_fixes = FALSE) |> 
     # Focus on Ghana only
     dplyr::filter(Country == "GHA")
     
@@ -288,4 +288,33 @@ test_that("load_tidy_iea_df(apply_fixes = TRUE) works as expected", {
                   Product == "Primary solid biofuels") |> 
     dplyr::pull("E.dot") |> 
     expect_equal(162909)
+})
+
+
+test_that("do_fix() works with wide-by-year data", {
+  unfixed <- load_tidy_iea_df(apply_fixes = FALSE) |> 
+    dplyr::filter(Country == "GHA", Energy.type == "E", Last.stage == "Final")
+  # Check that GHA industry electricity is not fixed, i.e., that there is 
+  # no Mining and quarrying in 2000.
+  unfixed |> 
+    dplyr::filter(Country == "GHA", Year == 2000, Flow == "Mining and quarrying") |> 
+    nrow() |> 
+    expect_equal(0)
+  
+  # Make the data frame wide.
+  unfixed_wide <- unfixed |> 
+    tidyr::pivot_wider(names_from = "Year", values_from = "E.dot")
+  # Send to the fix function
+  fixed_wide <- fix_GHA_industry_electricity(unfixed_wide)
+  # We should get back a wide data frame with year columns.
+  expect_equal(year_cols(fixed_wide, return_names = TRUE), c("1971", "2000"))
+  # Ensure we have the expected values, i.e., there is Electricity consumption
+  # by Mining and quarrying.
+  fixed_long <- fixed_wide |> 
+    tidyr::pivot_longer(cols = dplyr::all_of(year_cols(fixed_wide)), 
+                        names_to = "Year", values_to = "E.dot")
+  fixed_long |> 
+    dplyr::filter(Country == "GHA", Year == 2000, Flow == "Mining and quarrying") |> 
+    dplyr::pull("E.dot") |> 
+    expect_equal(1902.1338)
 })

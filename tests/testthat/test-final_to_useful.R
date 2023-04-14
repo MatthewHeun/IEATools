@@ -304,7 +304,7 @@ test_that("extend_to_useful() works as expected", {
     IEATools::meta_cols(return_names = TRUE,
                         years_to_keep = IEATools::iea_cols$year,
                         not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
-  psut_mats <- load_tidy_iea_df() %>% 
+  psut_mats <- load_tidy_iea_df(apply_fixes = FALSE) %>% 
     specify_all() %>% 
     prep_psut() %>% 
     dplyr::full_join(C_data, by = m_cols) %>% 
@@ -507,7 +507,7 @@ test_that("extend_to_useful() works with Matrix objects", {
     IEATools::meta_cols(return_names = TRUE,
                         years_to_keep = IEATools::iea_cols$year,
                         not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
-  psut_mats <- load_tidy_iea_df() %>% 
+  psut_mats <- load_tidy_iea_df(apply_fixes = FALSE) %>% 
     specify_all() %>% 
     prep_psut(matrix.class = "Matrix") %>% 
     dplyr::full_join(C_data, by = m_cols) %>% 

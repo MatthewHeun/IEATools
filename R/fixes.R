@@ -60,7 +60,7 @@ fix_GHA_psb <- function(.tidy_iea_df,
                         country = IEATools::iea_cols$country, 
                         year = IEATools::iea_cols$year, 
                         e_dot = IEATools::iea_cols$e_dot){
-  do_fix(.tidy_iea_df, replacement = Fixed_GHA_PSB, 
+  do_fix(.tidy_iea_df, replacement = IEATools::Fixed_GHA_PSB, 
          country = country, year = year, e_dot = e_dot)
 }
 
@@ -139,7 +139,7 @@ fix_GHA_industry_electricity <- function(.tidy_iea_df,
                                          country = IEATools::iea_cols$country,
                                          year = IEATools::iea_cols$year,
                                          e_dot = IEATools::iea_cols$e_dot) {
-  do_fix(.tidy_iea_df, replacement = Fixed_GHA_Industry_Electricity,
+  do_fix(.tidy_iea_df, replacement = IEATools::Fixed_GHA_Industry_Electricity,
          country = country, year = year, e_dot = e_dot)
 }
 
@@ -195,7 +195,7 @@ fix_COL_electricity_generation <- function(.tidy_iea_df,
                                            country = IEATools::iea_cols$country,
                                            year = IEATools::iea_cols$year,
                                            e_dot = IEATools::iea_cols$e_dot) {
-  do_fix(.tidy_iea_df, replacement = Fixed_COL_Electricity_Generation,
+  do_fix(.tidy_iea_df, replacement = IEATools::Fixed_COL_Electricity_Generation,
          country = country, year = year, e_dot = e_dot)
 }
 
@@ -216,11 +216,11 @@ fix_JPN_psp <- function(.iea_df) {
 #' given a replacement data frame. 
 #' It makes use of the `replace_join()` function internally.
 #'
-#' @param .tidy_iea_df the tidy IEA data frame to be fixed
-#' @param replacement a data frame containing the data that fixes the IEA data
-#' @param country the name of the country column in `.tidy_iea_df` and `replacement`
-#' @param year the name of the year column in `.tidy_iea_df` and `replacement`
-#' @param e_dot the name of the energy flow rate column in `.tidy_iea_df` and `replacement`
+#' @param .tidy_iea_df The tidy IEA data frame to be fixed.
+#' @param replacement A data frame containing the data that fixes the IEA data.
+#' @param country The name of the country column in `.tidy_iea_df` and `replacement`.
+#' @param year The name of the year column in `.tidy_iea_df` and `replacement`.
+#' @param e_dot The name of the energy flow rate column in `.tidy_iea_df` and `replacement`.
 #'
 #' @return a modified version of `.tidy_iea_df` with `replacement` included, if warranted
 do_fix <- function(.tidy_iea_df, 
@@ -228,6 +228,17 @@ do_fix <- function(.tidy_iea_df,
                    country,
                    year,
                    e_dot) {
+  # Check to see if we are wide by years.
+  wide_by_years <- !(year %in% colnames(.tidy_iea_df))
+  if (wide_by_years) {
+    # Pivot to pull all years into a column
+    yr_cols <- year_cols(.tidy_iea_df)
+    .tidy_iea_df <- .tidy_iea_df |> 
+      tidyr::pivot_longer(cols = dplyr::all_of(yr_cols), names_to = year, values_to = e_dot) |> 
+      dplyr::mutate(
+        "{year}" := as.numeric(.data[[year]])
+      )
+  }
   # Figure out the years present in the .tidy_iea_df
   years_present <- .tidy_iea_df[[year]] %>% unique()
   countries_present <- .tidy_iea_df[[country]] %>% unique()
@@ -236,7 +247,13 @@ do_fix <- function(.tidy_iea_df,
   data_to_join <- replacement %>% 
     dplyr::filter(.data[[year]] %in% years_present, 
                   .data[[country]] %in% countries_present)
-  replace_join(.tidy_iea_df, data_to_join, replace_col = e_dot)
+  out <- replace_join(.tidy_iea_df, data_to_join, replace_col = e_dot)
+  if (wide_by_years) {
+    # Pivot wider to deliver data in same format as received
+    out <- out |> 
+      tidyr::pivot_wider(names_from = dplyr::all_of(year), values_from = dplyr::all_of(e_dot))
+  }
+  return(out)
 }
 
 

@@ -1094,9 +1094,10 @@ test_that("trimming white space works", {
 
 test_that("load_tidy_iea_df() works as expected", {
   # Try for all valid years.
+  # This one doesn't do any special stuff.
   for (yr in IEATools::valid_iea_release_years) {
     simple <- sample_iea_data_path(yr) |> 
-      load_tidy_iea_df(specify_non_energy_flows = FALSE)
+      load_tidy_iea_df(specify_non_energy_flows = FALSE, apply_fixes = FALSE)
     complicated <- sample_iea_data_path(yr) |> 
       iea_df() |>
       rename_iea_df_cols() |> 
@@ -1107,9 +1108,10 @@ test_that("load_tidy_iea_df() works as expected", {
       tidy_iea_df()
     expect_equal(simple, complicated)
   }
+  # This one specifies non-energy flows and applies fixes.
   for (yr in IEATools::valid_iea_release_years) {
     simple <- sample_iea_data_path(yr) |> 
-      load_tidy_iea_df(specify_non_energy_flows = TRUE)
+      load_tidy_iea_df(specify_non_energy_flows = TRUE, apply_fixes = TRUE)
     complicated <- sample_iea_data_path(yr) |> 
       iea_df() |>
       rename_iea_df_cols() |> 
@@ -1117,6 +1119,9 @@ test_that("load_tidy_iea_df() works as expected", {
       use_iso_countries() |> 
       augment_iea_df() |> 
       specify_non_energy_use() |> 
+      fix_GHA_industry_electricity() |> 
+      fix_GHA_psb() |> 
+      fix_COL_electricity_generation() |> 
       remove_agg_memo_flows() |> 
       tidy_iea_df()
     expect_equal(simple, complicated)
