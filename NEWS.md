@@ -4,6 +4,8 @@ output: html_document
 ---
 
 
+* No longer fixing Ghana's industrial consumption of electricity data,
+  because details are now available in the IEA's WEEB data.
 * Now using terajoules (TJ) as the preferred unit for all IEA
   extended energy balance data.
 * Dropped support for 2018--2020 IEA extended energy balance data.

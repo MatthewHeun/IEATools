@@ -65,6 +65,9 @@ fix_GHA_psb <- function(.tidy_iea_df,
 }
 
 
+# We no longer need to fix the GHA industry electricity, because
+# these data are now available in the IEA's WEEB.
+
 #' Improve IEA Ghana Industry Electricity data from 1974 through 2017
 #' 
 #' Ghana's Industry Electricity data are specified for 
@@ -135,13 +138,13 @@ fix_GHA_psb <- function(.tidy_iea_df,
 #'                      "Industry not elsewhere specified")) %>% 
 #'   select(E.dot) %>% 
 #'   sum()
-fix_GHA_industry_electricity <- function(.tidy_iea_df, 
-                                         country = IEATools::iea_cols$country,
-                                         year = IEATools::iea_cols$year,
-                                         e_dot = IEATools::iea_cols$e_dot) {
-  do_fix(.tidy_iea_df, replacement = IEATools::Fixed_GHA_Industry_Electricity,
-         country = country, year = year, e_dot = e_dot)
-}
+# fix_GHA_industry_electricity <- function(.tidy_iea_df, 
+#                                          country = IEATools::iea_cols$country,
+#                                          year = IEATools::iea_cols$year,
+#                                          e_dot = IEATools::iea_cols$e_dot) {
+#   do_fix(.tidy_iea_df, replacement = IEATools::Fixed_GHA_Industry_Electricity,
+#          country = country, year = year, e_dot = e_dot)
+# }
 
 
 #' Improve COL electricity generation in the IEA's WEEB.
