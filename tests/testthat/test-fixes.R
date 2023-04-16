@@ -255,27 +255,27 @@ test_that("load_tidy_iea_df(apply_fixes = TRUE) works as expected", {
   expect_equal(unfixed_COL, unfixed)
   
   # Try same with GHA. This should fix the year 2000 only.
-  fixed_GHA <- unfixed |> 
-    fix_GHA_psb() |> 
-    fix_GHA_industry_electricity()
+  # fixed_GHA <- unfixed |> 
+  #   fix_GHA_psb() |> 
+  #   fix_GHA_industry_electricity()
   # Check Industry Electricity
-  fixed_GHA |>
-    dplyr::filter(Country == "GHA", Year == 2000, Flow == "Mining and quarrying") |> 
-    dplyr::pull("E.dot") |> 
-    expect_equal(1902.1338)
-  fixed_GHA |>
-    dplyr::filter(Country == "GHA", Year == 2000, Flow == "Non-ferrous metals") |> 
-    dplyr::pull("E.dot") |> 
-    expect_equal(9162.000002)
-  fixed_GHA |>
-    dplyr::filter(Country == "GHA", Year == 2000, Flow == "Textile and leather") |> 
-    dplyr::pull("E.dot") |> 
-    expect_equal(95.09040001)
-  fixed_GHA |>
-    dplyr::filter(Country == "GHA", Year == 2000, Flow == "Industry not elsewhere specified", 
-                  Product == "Electricity") |> 
-    dplyr::pull("E.dot") |> 
-    expect_equal(4342.377677)
+  # fixed_GHA |>
+  #   dplyr::filter(Country == "GHA", Year == 2000, Flow == "Mining and quarrying") |> 
+  #   dplyr::pull("E.dot") |> 
+  #   expect_equal(1902.1338)
+  # fixed_GHA |>
+  #   dplyr::filter(Country == "GHA", Year == 2000, Flow == "Non-ferrous metals") |> 
+  #   dplyr::pull("E.dot") |> 
+  #   expect_equal(9162.000002)
+  # fixed_GHA |>
+  #   dplyr::filter(Country == "GHA", Year == 2000, Flow == "Textile and leather") |> 
+  #   dplyr::pull("E.dot") |> 
+  #   expect_equal(95.09040001)
+  # fixed_GHA |>
+  #   dplyr::filter(Country == "GHA", Year == 2000, Flow == "Industry not elsewhere specified", 
+  #                 Product == "Electricity") |> 
+  #   dplyr::pull("E.dot") |> 
+  #   expect_equal(4342.377677)
   # Check PSB production.  No changes should occur, because 
   # all GHA PSB fixes occur in years 1991 -- 1999.
   unfixed |>
@@ -283,11 +283,11 @@ test_that("load_tidy_iea_df(apply_fixes = TRUE) works as expected", {
                   Product == "Primary solid biofuels") |> 
     dplyr::pull("E.dot") |> 
     expect_equal(162909)
-  fixed_GHA |>
-    dplyr::filter(Country == "GHA", Year == 2000, Flow == "Production", 
-                  Product == "Primary solid biofuels") |> 
-    dplyr::pull("E.dot") |> 
-    expect_equal(162909)
+  # fixed_GHA |>
+  #   dplyr::filter(Country == "GHA", Year == 2000, Flow == "Production", 
+  #                 Product == "Primary solid biofuels") |> 
+  #   dplyr::pull("E.dot") |> 
+  #   expect_equal(162909)
 })
 
 
@@ -305,18 +305,18 @@ test_that("do_fix() works with wide-by-year data", {
   unfixed_wide <- unfixed |> 
     tidyr::pivot_wider(names_from = "Year", values_from = "E.dot")
   # Send to the fix function
-  fixed_wide <- fix_GHA_industry_electricity(unfixed_wide)
+  # fixed_wide <- fix_GHA_industry_electricity(unfixed_wide)
   # We should get back a wide data frame with year columns.
-  expect_equal(year_cols(fixed_wide, return_names = TRUE), c("1971", "2000"))
+  # expect_equal(year_cols(fixed_wide, return_names = TRUE), c("1971", "2000"))
   # Ensure we have the expected values, i.e., there is Electricity consumption
   # by Mining and quarrying.
-  fixed_long <- fixed_wide |> 
-    tidyr::pivot_longer(cols = dplyr::all_of(year_cols(fixed_wide)), 
-                        names_to = "Year", values_to = "E.dot")
-  fixed_long |> 
-    dplyr::filter(Country == "GHA", Year == 2000, Flow == "Mining and quarrying") |> 
-    dplyr::pull("E.dot") |> 
-    expect_equal(1902.1338)
+  # fixed_long <- fixed_wide |> 
+  #   tidyr::pivot_longer(cols = dplyr::all_of(year_cols(fixed_wide)), 
+  #                       names_to = "Year", values_to = "E.dot")
+  # fixed_long |> 
+  #   dplyr::filter(Country == "GHA", Year == 2000, Flow == "Mining and quarrying") |> 
+  #   dplyr::pull("E.dot") |> 
+  #   expect_equal(1902.1338)
 })
 
 

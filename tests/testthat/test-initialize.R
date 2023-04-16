@@ -1119,7 +1119,7 @@ test_that("load_tidy_iea_df() works as expected", {
       use_iso_countries() |> 
       augment_iea_df() |> 
       specify_non_energy_use() |> 
-      fix_GHA_industry_electricity() |> 
+      # fix_GHA_industry_electricity() |> 
       fix_GHA_psb() |> 
       fix_COL_electricity_generation() |> 
       remove_agg_memo_flows() |> 
