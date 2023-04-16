@@ -219,7 +219,8 @@ test_that("eta_fu_template() works as expected for 2022 data", {
 test_that("eta_fu_template() works with tidy fu allocation data for 2021", {
   tidy_specified_iea_data <- load_tidy_iea_df(system.file(file.path("extdata", 
                                                                     "GH-ZA-ktoe-Extended-Energy-Balances-sample-2021.csv"),
-                                                          package = "IEATools")) %>% 
+                                                          package = "IEATools"), 
+                                              apply_fixes = FALSE) %>% 
     specify_all()
   Eta_fu_template_2021 <- load_fu_allocation_data(sample_fu_allocation_table_path(2021)) %>% 
     tidy_fu_allocation_table() %>% 
@@ -242,7 +243,7 @@ test_that("eta_fu_template() works with tidy fu allocation data for 2021", {
 
 
 test_that("eta_fu_template() works with fidy data from the default year", {
-  tidy_specified_iea_data <- load_tidy_iea_df() %>% 
+  tidy_specified_iea_data <- load_tidy_iea_df(apply_fixes = FALSE) %>% 
     specify_all()
   Eta_fu_template <- load_fu_allocation_data(sample_fu_allocation_table_path()) %>% 
     tidy_fu_allocation_table() %>% 

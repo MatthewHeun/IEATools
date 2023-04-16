@@ -12,7 +12,7 @@ library(magrittr)
 library(tidyselect)
 
 year_pattern <- "^-?\\d+$"
-  
+
 # Ghana's Primary solid biofuels data show a very large and dramatic decline from 1999 to 2000.
 # This decline is due to new survey data being used for the 2000 data.  
 # When we look at the PSB data on a per-capita basis, it is clear that 
@@ -25,15 +25,18 @@ year_pattern <- "^-?\\d+$"
 # We read the data here and gather it.
 # Then, we make it available for use internally to the package.
 # The function fix_GHA_psb() makes use of these data.
-Fixed_GHA_PSB <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "GHA-PSB.xlsx"), sheet = "FixedGHPSB") %>% 
-  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = iea_cols$year, values_to = iea_cols$e_dot) %>% 
+Fixed_GHA_PSB <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "GHA-PSB.xlsx"), sheet = "FixedGHPSB") |> 
+  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = iea_cols$year, values_to = iea_cols$e_dot) |> 
   dplyr::filter(
     # Eliminate rows that have 0 energy.
     !!as.name(iea_cols$e_dot) != 0
-  ) %>% 
+  ) |> 
   dplyr::mutate(
     !!as.name(iea_cols$year) := as.numeric(!!as.name(iea_cols$year))
   )
+
+usethis::use_data(Fixed_GHA_PSB, overwrite = TRUE)
+
 
 
 # Ghana's Industry Electricity data have specifics for 
@@ -47,12 +50,12 @@ Fixed_GHA_PSB <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "GHA-PSB.x
 # We read the file here and make it available for use internally to the packjage.
 # The function fix_GHA_industry_electricity() makes use of these data.
 Fixed_GHA_Industry_Electricity <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "GHA-IndustryElectricity.xlsx"), 
-                                                                           sheet = "FixedGHAIndustryElectricity") %>% 
-  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = iea_cols$year, values_to = iea_cols$e_dot) %>% 
+                                                                           sheet = "FixedGHAIndustryElectricity") |> 
+  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = iea_cols$year, values_to = iea_cols$e_dot) |> 
   dplyr::filter(
     # Eliminate rows that have 0 energy.
     !!as.name(iea_cols$e_dot) != 0, 
-  ) %>% 
+  ) |> 
   dplyr::mutate(
     !!as.name(iea_cols$year) := as.numeric(!!as.name(iea_cols$year))
   )
@@ -60,7 +63,19 @@ Fixed_GHA_Industry_Electricity <- openxlsx::read.xlsx(xlsxFile = file.path("data
 # Use these data frames as internal objects in the package.
 # These objects are stored in R/sysdata.rda and can be accessed by
 # Fixed_GHA_PSB, for example.
-usethis::use_data(Fixed_GHA_PSB, Fixed_GHA_Industry_Electricity, internal = TRUE, overwrite = TRUE)
+usethis::use_data(Fixed_GHA_Industry_Electricity, overwrite = TRUE)
 
 
+# COL's electricity production changed in the 2022 release of the IEA data.
+# In the 2022 release, COL is out of balance for 1971--1977 as a result.
+# Further, the imbalance extends to the World as a whole.
+# This object is the correct data (obtained from the 2021 release).
+# The function fix_COL_electricity_generation() makes use of these data.
+Fixed_COL_Electricity_Generation <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedCOLElect.xlsx"), 
+                                                        sheet = "COL-Elect-2021-release") |> 
+  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = iea_cols$year, values_to = iea_cols$e_dot) |> 
+  dplyr::mutate(
+    !!as.name(iea_cols$year) := as.numeric(!!as.name(iea_cols$year))
+  )
 
+usethis::use_data(Fixed_COL_Electricity_Generation, overwrite = TRUE)

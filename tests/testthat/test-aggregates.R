@@ -44,11 +44,11 @@ test_that("Loading regional aggregation table works as intended", {
 test_that("Aggregating South Africa and Ghana works as intended", {
   
   tidy_GHA_ZAF_df_2021 <- sample_iea_data_path(version = 2021) |> 
-    load_tidy_iea_df() |> 
+    load_tidy_iea_df(apply_fixes = FALSE) |> 
     specify_all()
   
   tidy_GHA_ZAF_df <- sample_iea_data_path() |> 
-    load_tidy_iea_df() |> 
+    load_tidy_iea_df(apply_fixes = FALSE) |> 
     specify_all()
   
   ### 0. Checking that the aggregation works with the default aggregation table (iea -> exiobase; 2019 iea data)

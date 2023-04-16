@@ -17,7 +17,7 @@ fix_GHA_industry_electricity(
 \item{country, year, e_dot}{See \code{IEATools::iea_cols}.}
 }
 \value{
-\code{.tidy_iea_df} with improved Ghana Industry Electricity, if warranted
+\code{.tidy_iea_df} with improved Ghana Industry Electricity, if warranted.
 }
 \description{
 Ghana's Industry Electricity data are specified for

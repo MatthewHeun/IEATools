@@ -7,15 +7,15 @@
 do_fix(.tidy_iea_df, replacement, country, year, e_dot)
 }
 \arguments{
-\item{.tidy_iea_df}{the tidy IEA data frame to be fixed}
+\item{.tidy_iea_df}{The tidy IEA data frame to be fixed.}
 
-\item{replacement}{a data frame containing the data that fixes the IEA data}
+\item{replacement}{A data frame containing the data that fixes the IEA data.}
 
-\item{country}{the name of the country column in \code{.tidy_iea_df} and \code{replacement}}
+\item{country}{The name of the country column in \code{.tidy_iea_df} and \code{replacement}.}
 
-\item{year}{the name of the year column in \code{.tidy_iea_df} and \code{replacement}}
+\item{year}{The name of the year column in \code{.tidy_iea_df} and \code{replacement}.}
 
-\item{e_dot}{the name of the energy flow rate column in \code{.tidy_iea_df} and \code{replacement}}
+\item{e_dot}{The name of the energy flow rate column in \code{.tidy_iea_df} and \code{replacement}.}
 }
 \value{
 a modified version of \code{.tidy_iea_df} with \code{replacement} included, if warranted

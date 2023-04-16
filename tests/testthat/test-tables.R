@@ -53,7 +53,7 @@ test_that("complete_fu_allocation_table works as expected", {
     expect_gt(0)
   
   # Get the IEA data for GHA and ZAF and specify it.
-  tidy_specified_iea_data <- load_tidy_iea_df() %>% 
+  tidy_specified_iea_data <- load_tidy_iea_df(apply_fixes = FALSE) %>% 
     specify_all()
   
   # Now send the data into complete_fu_allocation_table()
@@ -120,7 +120,7 @@ test_that("complete_fu_allocation_table() works with a tidy incomplete fu table"
     dplyr::filter(Country == "ZAF")
 
   # Get the IEA data for GHA and ZAF and specify it.
-  tidy_specified_iea_data <- load_tidy_iea_df() %>% 
+  tidy_specified_iea_data <- load_tidy_iea_df(apply_fixes = FALSE) %>% 
     specify_all()
   
   # Now send the data into complete_fu_allocation_table()
@@ -276,7 +276,7 @@ test_that("complete_fu_allocation_table() works with 2 exemplars", {
 
 
 test_that("fu_allocation_table_completed() works as expected", {
-  iea_data <- load_tidy_iea_df() %>% 
+  iea_data <- load_tidy_iea_df(apply_fixes = FALSE) %>% 
     specify_all()
   fu_allocations <- load_fu_allocation_data()
   expect_true(fu_allocation_table_completed(fu_allocations, iea_data))

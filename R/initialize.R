@@ -1218,8 +1218,9 @@ tidy_iea_df <- function(.iea_df,
 #' 4. `use_iso_countries()`,
 #' 5. `augment_iea_df()`,
 #' 6. `specify_non_energy_use()` (optionally), 
-#' 7. `remove_agg_memo_flows()`, and 
-#' 8. `tidy_iea_df()`.
+#' 7. `fix_GHA_industry_electricity() |> fix_GHA_psb() |> fix_COL_electricity_generation()` (optionally),
+#' 8. `remove_agg_memo_flows()`, and 
+#' 9. `tidy_iea_df()`.
 #' 
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
@@ -1233,7 +1234,9 @@ tidy_iea_df <- function(.iea_df,
 #' @param specify_non_energy_flows A logical indicating whether "Non-energy use in xxxxx" Flows
 #'                                 should be specified by "Memo: Non-energy use in <<specific industry>>"
 #'                                 entries in the IEA data. 
-#'                                 Default is `TRUE`.
+#'                                 Default is `FALSE`.
+#' @param apply_fixes A logical indicating whether fixes should be applied to IEA data.
+#'                    Default is `FALSE`.
 #' @param override_df A data frame containing columns `pfu_code` and `iea_name` that provides 3-letter country codes. See `IEATools::use_iso_countries()`.
 #'                    Default is `IEATools::override_iso_codes_df`.
 #' @param country The name of the country column in the data frames. See `IEATools::iea_cols$country`.
@@ -1266,6 +1269,7 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
                              unit_val = "TJ", 
                              remove_zeroes = TRUE, 
                              specify_non_energy_flows = FALSE,
+                             apply_fixes = FALSE,
                              override_df = IEATools::override_iso_codes_df,
                              country = IEATools::iea_cols$country, 
                              pfu_code = IEATools::country_concordance_cols$pfu_code,
@@ -1279,6 +1283,12 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
   if (specify_non_energy_flows) {
     out <- out |> 
       specify_non_energy_use()
+  }
+  if (apply_fixes) {
+    out <- out |> 
+      fix_GHA_industry_electricity() |> 
+      fix_GHA_psb() |> 
+      fix_COL_electricity_generation()
   }
   out |>  
     remove_agg_memo_flows() |> 
