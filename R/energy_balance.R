@@ -267,10 +267,10 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
     err_too_big_combos <- paste(err_too_big[[country]], 
                                 err_too_big[[year]], 
                                 err_too_big[[product]], 
-                                err_too_big[[.err]], sep = ", ", collapse = "; ")
+                                err_too_big[[.err]], sep = ", ", collapse = ";\n")
     # Give as much good debugging information as possible.
     stop(paste0("In fix_tidy_iea_df_balances(), largest energy balance error is ", max_err, 
-                ". Maximum fixable error is ", max_fix, ". The following combinations of Country, Year, and Product have errors that exceed the maximum allowable error: ", 
+                ".\nMaximum fixable error is ", max_fix, ".\nThe following combinations of Country, Year, and Product have errors that exceed the maximum allowable error:\n", 
                 err_too_big_combos))
   }
 

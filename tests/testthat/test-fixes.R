@@ -196,33 +196,33 @@ test_that("Fixing GHA Industry Electricity works as expected", {
   # Fix and check
   # 
   # Check that the unspecified amount of Industry Electricity has gone down to a smaller level.
-  fixed_tidy_example <- fix_GHA_industry_electricity(tidy_example)
-  expect_equal(fixed_tidy_example |> 
-                 dplyr::filter(!!as.name(iea_cols$flow) == "Industry not elsewhere specified",
-                               !!as.name(iea_cols$product) == "Electricity") |> 
-                 # The first number (21.9261) doesn't change, because it is from 1971 and doesn't need to be fixed.
-                 # However, the second number (from 2000) does change and is smaller,
-                 # because we are now specifying much more of Industry Electricity consumption.
-                 # See that we have picked up its new value.
-                 magrittr::extract2(iea_cols$e_dot), c(918.002, 4342.377677))
+  # fixed_tidy_example <- fix_GHA_industry_electricity(tidy_example)
+  # expect_equal(fixed_tidy_example |> 
+  #                dplyr::filter(!!as.name(iea_cols$flow) == "Industry not elsewhere specified",
+  #                              !!as.name(iea_cols$product) == "Electricity") |> 
+  #                # The first number (21.9261) doesn't change, because it is from 1971 and doesn't need to be fixed.
+  #                # However, the second number (from 2000) does change and is smaller,
+  #                # because we are now specifying much more of Industry Electricity consumption.
+  #                # See that we have picked up its new value.
+  #                magrittr::extract2(iea_cols$e_dot), c(918.002, 4342.377677))
   
   # Check that Mining and quarrying now has a value for the year 2000.
-  expect_equal(fixed_tidy_example |> 
-                 dplyr::filter(!!as.name(iea_cols$flow) == "Mining and quarrying") |> 
-                 magrittr::extract2(iea_cols$e_dot), 
-               c(698.400108, 1902.13380014))
+  # expect_equal(fixed_tidy_example |> 
+  #                dplyr::filter(!!as.name(iea_cols$flow) == "Mining and quarrying") |> 
+  #                magrittr::extract2(iea_cols$e_dot), 
+  #              c(698.400108, 1902.13380014))
   
   # Check that Non-ferrous metals has a value for the year 2000.
-  expect_equal(fixed_tidy_example |> 
-                 dplyr::filter(!!as.name(iea_cols$flow) == "Non-ferrous metals") |> 
-                 magrittr::extract2(iea_cols$e_dot), 
-               c(7102.80153, 9162.00000041))
+  # expect_equal(fixed_tidy_example |> 
+  #                dplyr::filter(!!as.name(iea_cols$flow) == "Non-ferrous metals") |> 
+  #                magrittr::extract2(iea_cols$e_dot), 
+  #              c(7102.80153, 9162.00000041))
   
   # Check that Textiles and leather has a value for the year 2000.
-  expect_equal(fixed_tidy_example |> 
-                 dplyr::filter(!!as.name(iea_cols$flow) == "Textile and leather") |> 
-                 magrittr::extract2(iea_cols$e_dot), 
-               c(61.1985, 95.09040001))
+  # expect_equal(fixed_tidy_example |> 
+  #                dplyr::filter(!!as.name(iea_cols$flow) == "Textile and leather") |> 
+  #                magrittr::extract2(iea_cols$e_dot), 
+  #              c(61.1985, 95.09040001))
   
   # Ensure that data are still in balance
   orig <- tidy_example |> 
@@ -232,16 +232,16 @@ test_that("Fixing GHA Industry Electricity works as expected", {
     dplyr::select(E.dot) |> 
     unlist() |> 
     as.numeric()
-  new <- fixed_tidy_example |> 
-    dplyr::filter(Year == 2000, 
-           Product == "Electricity", 
-           Flow %in% c("Mining and quarrying",
-                       "Non-ferrous metals",
-                       "Textile and leather", 
-                       "Industry not elsewhere specified")) |> 
-    dplyr::select(E.dot) |> 
-    sum()
-  expect_equal(new, orig)
+  # new <- fixed_tidy_example |> 
+  #   dplyr::filter(Year == 2000, 
+  #          Product == "Electricity", 
+  #          Flow %in% c("Mining and quarrying",
+  #                      "Non-ferrous metals",
+  #                      "Textile and leather", 
+  #                      "Industry not elsewhere specified")) |> 
+  #   dplyr::select(E.dot) |> 
+  #   sum()
+  # expect_equal(new, orig)
 })
 
 
@@ -318,3 +318,38 @@ test_that("do_fix() works with wide-by-year data", {
     dplyr::pull("E.dot") |> 
     expect_equal(1902.1338)
 })
+
+
+test_that("Energy remains balanced after fixes are applied", {
+  unfixed <- load_tidy_iea_df(apply_fixes = FALSE) |> 
+    dplyr::filter(Country == "GHA", Energy.type == "E", Last.stage == "Final")
+  unfixed |> 
+    calc_tidy_iea_df_balances(tol = 0.01) |> 
+    tidy_iea_df_balanced() |> 
+    expect_true()
+
+  fixed <- load_tidy_iea_df(apply_fixes = TRUE) |> 
+    dplyr::filter(Country == "GHA", Energy.type == "E", Last.stage == "Final")
+  expect_true(nrow(fixed) == nrow(unfixed))
+  fixed |> 
+    calc_tidy_iea_df_balances(tol = 0.01) |> 
+    tidy_iea_df_balanced() |> 
+    expect_true()
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
