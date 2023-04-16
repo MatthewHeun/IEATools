@@ -24,6 +24,9 @@ output: html_document
   the `notation` argument was not being set properly
   in a call to `RCLabels::get_pref_suff()`
   when extracting prefixes.
+* New tests for new features.
+    * Now up to 1371 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # IEATools 0.1.64 (2023-03-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7714342.svg)](https://doi.org/10.5281/zenodo.7714342)
