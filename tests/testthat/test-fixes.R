@@ -251,7 +251,7 @@ test_that("load_tidy_iea_df(apply_fixes = TRUE) works as expected", {
   # Ensure no changes occur.
   # There is no COL data in unfixed.
   unfixed_COL <- unfixed |>
-    fix_COL_electricity_generation()
+    fix_COL_WRLD_electricity()
   expect_equal(unfixed_COL, unfixed)
   
   # Try same with GHA. This should fix the year 2000 only.

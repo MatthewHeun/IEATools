@@ -1208,15 +1208,14 @@
 #' Fixed Colombia Electricty generation 1971--1977
 #'
 #' Colombia's electricity production changed in the 2022 release of the IEA data.
-#' In the 2022 release, COL is out of balance for 1971--1977 as a result.
-#' Further, the imbalance extends to the World as a whole.
+#' In the 2022 release, COL and WRLD are out of balance for 1971--1977 as a result.
 #' This object contains the (presumably) correct data (obtained from the 2021 release).
-#' The function [fix_COL_electricity_generation()] makes use of these data.
+#' The function [fix_COL_WRLD_electricity()] makes use of these data.
 #' 
 #' @format A data frame with `r ncol(Fixed_GHA_Industry_Electricity)` columns.
 #' 
 #' @examples
-#' Fixed_COL_Electricity_Generation
-"Fixed_COL_Electricity_Generation"
+#' Fixed_COL_WRLD_Electricity
+"Fixed_COL_WRLD_Electricity"
 
 

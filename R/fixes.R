@@ -164,6 +164,11 @@ fix_GHA_psb <- function(.tidy_iea_df,
 #' Note that this change leads to overall energy imbalance 
 #' for Colombia 1971-1977 and World 1971-1977.
 #' This function reverts to the values from the 2021 release of the IEA WEEB.
+#' 
+#' Similarly, World Electricity is different 2021 release to 2022 release.
+#' The 2022 data are unbalanced for 1971 --> 1977.
+#' This function reverts to the value from the 2021 release of the IEA WEEB 
+#' for World Electricity in 1971--1977.
 #'
 #' @param .tidy_iea_df a tidy IEA data frame produced by [load_tidy_iea_df()]
 #' @param country,year,e_dot See `IEATools::iea_cols`.
@@ -182,7 +187,7 @@ fix_GHA_psb <- function(.tidy_iea_df,
 #'   )
 #' example_tidy_iea_df
 #' fixed <- example_tidy_iea_df %>% 
-#'   fix_COL_electricity_generation()
+#'   fix_COL_WRLD_electricity()
 #' # Compare changed values
 #' example_tidy_iea_df %>% 
 #'   filter(Flow %in% c("Main activity producer electricity plants",
@@ -194,10 +199,10 @@ fix_GHA_psb <- function(.tidy_iea_df,
 #'                       "Autoproducer electricity plants"), 
 #'          Product == "Electricity") %>% 
 #'   select("Year", "Flow", "E.dot", "Unit")
-fix_COL_electricity_generation <- function(.tidy_iea_df,
-                                           country = IEATools::iea_cols$country,
-                                           year = IEATools::iea_cols$year,
-                                           e_dot = IEATools::iea_cols$e_dot) {
+fix_COL_WRLD_electricity <- function(.tidy_iea_df,
+                                     country = IEATools::iea_cols$country,
+                                     year = IEATools::iea_cols$year,
+                                     e_dot = IEATools::iea_cols$e_dot) {
   do_fix(.tidy_iea_df, replacement = IEATools::Fixed_COL_Electricity_Generation,
          country = country, year = year, e_dot = e_dot)
 }

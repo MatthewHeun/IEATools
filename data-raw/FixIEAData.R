@@ -71,11 +71,11 @@ usethis::use_data(Fixed_GHA_Industry_Electricity, overwrite = TRUE)
 # Further, the imbalance extends to the World as a whole.
 # This object is the correct data (obtained from the 2021 release).
 # The function fix_COL_electricity_generation() makes use of these data.
-Fixed_COL_Electricity_Generation <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedCOLElect.xlsx"), 
-                                                        sheet = "COL-Elect-2021-release") |> 
+Fixed_COL_WRLD_Electricity <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedCOLWRLDElect.xlsx"), 
+                                                  sheet = "COL-WRLD-Elect-2021-release") |> 
   tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = iea_cols$year, values_to = iea_cols$e_dot) |> 
   dplyr::mutate(
     !!as.name(iea_cols$year) := as.numeric(!!as.name(iea_cols$year))
   )
 
-usethis::use_data(Fixed_COL_Electricity_Generation, overwrite = TRUE)
+usethis::use_data(Fixed_COL_WRLD_Electricity, overwrite = TRUE)

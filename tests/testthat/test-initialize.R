@@ -1121,7 +1121,7 @@ test_that("load_tidy_iea_df() works as expected", {
       specify_non_energy_use() |> 
       # fix_GHA_industry_electricity() |> 
       fix_GHA_psb() |> 
-      fix_COL_electricity_generation() |> 
+      fix_COL_WRLD_electricity() |> 
       remove_agg_memo_flows() |> 
       tidy_iea_df()
     expect_equal(simple, complicated)
