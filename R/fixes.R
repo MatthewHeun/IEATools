@@ -203,7 +203,7 @@ fix_COL_WRLD_electricity <- function(.tidy_iea_df,
                                      country = IEATools::iea_cols$country,
                                      year = IEATools::iea_cols$year,
                                      e_dot = IEATools::iea_cols$e_dot) {
-  do_fix(.tidy_iea_df, replacement = IEATools::Fixed_COL_Electricity_Generation,
+  do_fix(.tidy_iea_df, replacement = IEATools::Fixed_COL_WRLD_Electricity,
          country = country, year = year, e_dot = e_dot)
 }
 
