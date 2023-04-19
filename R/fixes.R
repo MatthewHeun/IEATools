@@ -250,8 +250,8 @@ do_fix <- function(.tidy_iea_df,
   # Figure out the years present in the .tidy_iea_df
   years_present <- .tidy_iea_df[[year]] %>% unique()
   countries_present <- .tidy_iea_df[[country]] %>% unique()
-  # The internal data that contains the updated Ghana Industry Electricity data
-  # can be accessed with Fixed_GHA_Industry_Electricity.
+  # Filter the replacement data to restrict to countries and years
+  # present in .tidy_iea_df.
   data_to_join <- replacement %>% 
     dplyr::filter(.data[[year]] %in% years_present, 
                   .data[[country]] %in% countries_present)
