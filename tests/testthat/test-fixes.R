@@ -338,6 +338,32 @@ test_that("Energy remains balanced after fixes are applied", {
 })
 
 
+test_that("applying fixes results in balanced energy flows", {
+  # Don't run this test on CRAN or in continuous integration workflows.
+  skip_on_cran()
+  skip_on_ci()
+  skip_on_os("windows")
+  for (yr in IEATools::valid_iea_release_years) {
+    # All IEA data  
+    # iea <- "~/Dropbox/Fellowship 1960-2015 PFU database/IEA extended energy balance data/IEA 2022 energy balance data/IEA Extended Energy Balances 2022 (TJ).csv" |>
+    # Only WRLD (faster!)
+    iea <- paste0("~/Dropbox/Fellowship 1960-2015 PFU database/IEA extended energy balance data/IEA ", 
+                  yr, " energy balance data/IEA Extended Energy Balances ", 
+                  yr, " (TJ) World.csv") |>
+      IEATools::load_tidy_iea_df(apply_fixes = TRUE) |> 
+      # Ignore unbalanced "countries"
+      dplyr::filter(Year <= yr - 2, !(.data[[IEATools::iea_cols$country]] %in% 
+                                        c("Memo: Americas (UN)", 
+                                          "Memo: IEA and Accession/Association countries", 
+                                          "Memo: OECD Total", 
+                                          "OECD Americas")))
+    iea |> 
+      calc_tidy_iea_df_balances(tol = 6) |> 
+      tidy_iea_df_balanced() |> 
+      expect_true()
+  }
+})
+
 
 
 
