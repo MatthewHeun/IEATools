@@ -298,10 +298,10 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
         dplyr::select(dplyr::all_of(c(flow_aggregation_point, destination))) %>% 
         unique()
       problem_combos <- paste(problem_rows[[flow_aggregation_point]], 
-                              problem_rows[[destination]], sep = ", ", collapse = "; ")
+                              problem_rows[[destination]], sep = ", ", collapse = ";\n ")
       
       stop(paste("In arrange_iea_fu_allocation_template(),", 
-                 "the following combinations of Flow and Destination are unknown and can't be sorted:",
+                 "the following combinations of Flow and Destination are unknown and can't be sorted:\n",
                  problem_combos))
     }
     
@@ -310,10 +310,10 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
       problem_rows <- na_ef_product %>% 
         dplyr::select(dplyr::all_of(ef_product)) %>% 
         unique()
-      problem_products <- paste(problem_rows[[ef_product]], sep = ", ", collapse = "; ")
+      problem_products <- paste(problem_rows[[ef_product]], sep = ", ", collapse = ";\n ")
       
       stop(paste("In arrange_iea_fu_allocation_template(),", 
-                 "the following final energy products are unknown and can't be sorted:",
+                 "the following final energy products are unknown and can't be sorted:\n",
                  problem_products))
     }
 

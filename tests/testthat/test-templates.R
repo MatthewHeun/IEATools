@@ -68,7 +68,7 @@ test_that("fu_allocation_tempate() gives expected error message for unknown flow
   
   expect_error(df %>% 
     fu_allocation_template() %>% 
-    arrange_iea_fu_allocation_template(), "and can't be sorted: bad_aggregation_point, Industry not elsewhere specified")
+    arrange_iea_fu_allocation_template(), "and can't be sorted:\\n bad_aggregation_point, Industry not elsewhere specified")
 })
 
 
@@ -81,7 +81,7 @@ test_that("fu_allocation_tempate() gives expected error message for unknown prod
   
   expect_error(df %>% 
                  fu_allocation_template() %>% 
-                 arrange_iea_fu_allocation_template(), "and can't be sorted: bad_product")
+                 arrange_iea_fu_allocation_template(), "and can't be sorted:\\n bad_product")
 })
 
 
