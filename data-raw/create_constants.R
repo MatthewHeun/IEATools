@@ -741,19 +741,19 @@ fap_flows <- load_tidy_iea_df(remove_zeroes = FALSE) %>%
   # Insert several specific non-energy use flows.
   # These flows are used when we specify Non-energy use flows by industry (where available).
   insert_after(after = "Non-energy use_Non-energy use industry/transformation/energy",
-               values = c("Non_energy use_Non-energy use in construction",
-                          "Non_energy use_Non-energy use in mining and quarrying",
-                          "Non_energy use_Non-energy use in iron and steel",
-                          "Non_energy use_Non-energy use in chemical/petrochemical",
-                          "Non_energy use_Non-energy use in non-ferrous metals",
-                          "Non_energy use_Non-energy use in non-metallic minerals",
-                          "Non_energy use_Non-energy use in transport equipment",
-                          "Non_energy use_Non-energy use in machinery",
-                          "Non_energy use_Non-energy use in food/beverages/tobacco",
-                          "Non_energy use_Non-energy use in paper/pulp and printing",
-                          "Non_energy use_Non-energy use in wood and wood products",
-                          "Non_energy use_Non-energy use in textiles and leather",
-                          "Non_energy use_Non-energy use in industry not elsewhere specified"))
+               values = c("Non-energy use_Non-energy use in construction",
+                          "Non-energy use_Non-energy use in mining and quarrying",
+                          "Non-energy use_Non-energy use in iron and steel",
+                          "Non-energy use_Non-energy use in chemical/petrochemical",
+                          "Non-energy use_Non-energy use in non-ferrous metals",
+                          "Non-energy use_Non-energy use in non-metallic minerals",
+                          "Non-energy use_Non-energy use in transport equipment",
+                          "Non-energy use_Non-energy use in machinery",
+                          "Non-energy use_Non-energy use in food/beverages/tobacco",
+                          "Non-energy use_Non-energy use in paper/pulp and printing",
+                          "Non-energy use_Non-energy use in wood and wood products",
+                          "Non-energy use_Non-energy use in textiles and leather",
+                          "Non-energy use_Non-energy use in industry not elsewhere specified"))
 usethis::use_data(fap_flows, overwrite = TRUE)
 
 
