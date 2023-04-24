@@ -4,6 +4,13 @@ output: html_document
 ---
 
 
+* Added new values to `IEATools::fap_flows`
+  to accommodate detailed "Non-energy use in xxxx"
+  flows.
+* Fixing IEA 2022 release Electricity data for Colombia 1971--1977.
+  The IEA acknowledged energy balance errors in those years.
+  The fix is to use 2021 release data for 1971--1977
+  for both Colombia and World.
 * No longer fixing Ghana's industrial consumption of electricity data,
   because details are now available in the IEA's WEEB data.
 * Now using terajoules (TJ) as the preferred unit for all IEA
