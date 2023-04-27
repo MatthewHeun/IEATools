@@ -410,11 +410,11 @@ iea_df <- function(.iea_file = NULL,
 #'
 #' @param .iea_df a data frame produced by [iea_df()]
 #' @param country the original name for the country column. (Default is `COUNTRY`.)
-#' @param new_country the new name for the country column. (Default is `Country`.)
+#' @param new_country the new name for the country column. (Default is `IEATools::iea_cols$country`.)
 #' @param flow the original name for the flow column. (Default is `FLOW`.)
-#' @param new_flow the new name for the flow column. (Default is `Flow`.)
+#' @param new_flow the new name for the flow column. (Default is `IEATools::iea_cols$flow`.)
 #' @param product the original name for the product column. (Default is `PRODUCT`.)
-#' @param new_product the new name for the product column. (Default is `Product`.)
+#' @param new_product the new name for the product column. (Default is `IEATools::iea_cols$product`.)
 #'
 #' @return `.iea_df` with renamed columns
 #' 
@@ -424,13 +424,10 @@ iea_df <- function(.iea_file = NULL,
 #' iea_df(text = ",,TIME,1960,1961\nCOUNTRY,FLOW,PRODUCT\nWorld,Production,Hard coal,42,43") %>% 
 #'   rename_iea_df_cols()
 rename_iea_df_cols <- function(.iea_df, 
-                               country = "COUNTRY", new_country = "Country", 
-                               flow = "FLOW", new_flow = "Flow", 
-                               product = "PRODUCT", new_product = "Product"){
+                               country = "COUNTRY", new_country = IEATools::iea_cols$country, 
+                               flow = "FLOW", new_flow = IEATools::iea_cols$flow, 
+                               product = "PRODUCT", new_product = IEATools::iea_cols$product){
   .iea_df %>% 
-    # dplyr::rename(!!new_country := !!country,
-    #               !!new_flow := flow,
-    #               !!new_product := product)
     dplyr::rename(
       "{new_country}" := dplyr::all_of(country),
       "{new_flow}" := dplyr::all_of(flow),
@@ -445,9 +442,9 @@ rename_iea_df_cols <- function(.iea_df,
 #' extra whitespace characters are found at the beginning or end of `Flow` and `Product` strings.
 #' This function removes all leading and trailing whitespece.
 #'
-#' @param .iea_df a data frame containing `Flow` and `Product` columns
-#' @param flow the name of the flow column in `iea_df`. Default is "`Flow`".
-#' @param product the name of the product columns in `iea_df`. Default is "`Product`".
+#' @param .iea_df A data frame containing `Flow` and `Product` columns.
+#' @param flow The name of the flow column in `iea_df`. Default is "`Flow`".
+#' @param product The name of the product columns in `iea_df`. Default is "`Product`".
 #'
 #' @return `.iea_df` with leading and trailing whitespace removed from `Flow` and `Product` column strings
 #' 
@@ -457,8 +454,8 @@ rename_iea_df_cols <- function(.iea_df,
 #' data.frame(Flow = "  a flow   ", Product = "   a product   ", stringsAsFactors = FALSE) %>% 
 #'   clean_iea_whitespace()
 clean_iea_whitespace <- function(.iea_df, 
-                                 flow = "Flow", 
-                                 product = "Product"){
+                                 flow = IEATools::iea_cols$flow,
+                                 product = IEATools::iea_cols$product){
   .iea_df %>% 
     dplyr::mutate(
       # These regular expression patterns match any number (+) of whitespace characters (\\s) at the beginning of the strings (^).
@@ -490,7 +487,8 @@ clean_iea_whitespace <- function(.iea_df,
 #' @param .iea_df A data frame containing a `country` column.
 #' @param override_df A data frame containing columns named `pfu_code` and `iea_name`.
 #'                    Default is `IEATools::overide_iso_codes_df`.
-#' @param country The name of the country column in `.iea_df`. Default is "Country".
+#' @param country The name of the country column in `.iea_df`. 
+#'                Default is `IEATools::iea_cols$country`.
 #' @param pfu_code,iea_name See `IEATools::countryconcordance_cols`.
 #' @param override_suffix A suffix added to override columns. 
 #'                        Default is "...override".
@@ -568,7 +566,9 @@ use_iso_countries <- function(.iea_df,
 #'
 #' @param .iea_df The IEA data frame from which you want to remove aggregation regions.
 #' @param country The name of the Country column in `.iea_df`.
+#'                Default is `IEATools::iea_cols$country`.
 #' @param agg_regions A list of aggregation regions in the `country` column of `.iea_df`.
+#'                    Default is `IEATools::aggregation_regions`.
 #'
 #' @return A version of `.iea_df` with aggregation regions removed.
 #' 
@@ -617,7 +617,7 @@ remove_agg_regions <- function(.iea_df,
 #' An `Energy.type` column is added with the value of `energy_type_val`. 
 #' (Default is `E`, for energy, as opposed to `X`, which would be exergy.)
 #' A `Unit` column is added with the value of `unit_val`.
-#' (Default is `ktoe`, although any string can be specified in `unit_val`.)
+#' (Default is "TJ", although any string can be specified in `unit_val`.)
 #' 
 #' Note that this function decides where to divide `Supply` from `Consumption`. 
 #' To do so, it first looks for rows in which `Flow` is "Losses".
@@ -628,20 +628,34 @@ remove_agg_regions <- function(.iea_df,
 #' an error is generated.
 #'
 #' @param .iea_df A data frame produced by the `iea_df()` function.
-#' @param country The name of the country column in `.iea_df`. Default is "Country".
-#' @param ledger_side The name of the ledger side column to be added to `.iea_df`. Default is "Ledger.side".
-#' @param flow_aggregation_point The name of the flow aggregation point column to be added to `.iea_df`. Default is "Flow.aggregation.point".
-#' @param flow The name of the flow column in `.iea_df`.  Default is "Flow".
-#' @param product The name of the product column in `.iea_df`.  Default is "Product".
-#' @param energy_type The name of the energy type column to be added to `.iea_df`. Default is "Energy.type.
-#' @param energy_type_val The value to put in the `energy_type` column. Default is "E".
-#' @param method The name of the method column to be added to `.iea_df`. Default is "Method".
-#' @param method_val The value to put in the `method` column. Default is "PCM" (Physical Content Method, which is used by the IEA).
-#' @param last_stage The name of the last stage column to be added to `.iea_df`. Default is "Last.stage".
-#' @param last_stage_val The value to put in the `last_stage` column. Default is "Final" (which is the last stage supplied by the IEA).
-#' @param unit The name of the unit column to be added to `.iea_df`. Default is "Unit".
-#' @param unit_val The value to put in the `unit` column. Default is "`ktoe`" for kilotons of oil equivalent.
-#' @param supply The string that identifies supply `Ledger.side`. Default is "Supply".
+#' @param country The name of the country column in `.iea_df`. 
+#'                Default is `IEATools::iea_cols$country`.
+#' @param ledger_side The name of the ledger side column to be added to `.iea_df`. 
+#'                    Default is `IEATools::iea_cols$ledger_side`.
+#' @param flow_aggregation_point The name of the flow aggregation point column to be added to `.iea_df`. 
+#'                               Default is `IEATools::iea_cols$flow_aggregation_point`.
+#' @param flow The name of the flow column in `.iea_df`.  
+#'             Default is `IEATools::iea_cols$flow`.
+#' @param product The name of the product column in `.iea_df`.  
+#'                Default is `IEATools::iea_cols$product`.
+#' @param energy_type The name of the energy type column to be added to `.iea_df`. 
+#'                    Default is `IEATools::iea_cols$energy_type`.
+#' @param energy_type_val The value to put in the `energy_type` column. 
+#'                        Default is "E".
+#' @param method The name of the method column to be added to `.iea_df`. 
+#'               Default is `IEATools::iea_cols$method`.
+#' @param method_val The value to put in the `method` column. 
+#'                   Default is "PCM" (Physical Content Method, which is used by the IEA).
+#' @param last_stage The name of the last stage column to be added to `.iea_df`. 
+#'                   Default is `IEATools::iea_cols$last_stage`.
+#' @param last_stage_val The value to put in the `last_stage` column. 
+#'                       Default is "Final" (which is the last stage supplied by the IEA).
+#' @param unit The name of the unit column to be added to `.iea_df`. 
+#'             Default is `IEATools::iea_cols$unit`.
+#' @param unit_val The value to put in the `unit` column. 
+#'                 Default is "TJ" for terajoule.
+#' @param supply The string that identifies supply ledger side. 
+#'               Default is `IEATools::iea_cols$ledger_side`.
 #' @param consumption The string that identifies consumption `Ledger.side`. Default is "Consumption".
 #' @param tpes The string that identifies total primary energy supply `Flow.aggregation.point`. Default is "Total primary energy supply".
 #' @param tpes_flows A vector of strings that give flows that are aggregated to `Total primary energy supply`. 
@@ -699,15 +713,15 @@ remove_agg_regions <- function(.iea_df,
 #'   rename_iea_df_cols() %>% 
 #'   augment_iea_df()
 augment_iea_df <- function(.iea_df, 
-                           country = "Country", 
-                           ledger_side = "Ledger.side", 
-                           flow_aggregation_point = "Flow.aggregation.point", 
-                           flow = "Flow", 
-                           product = "Product",
-                           energy_type = "Energy.type", energy_type_val = "E",
-                           method = "Method", method_val = "PCM",
-                           last_stage = "Last.stage", last_stage_val = "Final",
-                           unit = "Unit", unit_val = "ktoe",
+                           country = IEATools::iea_cols$country, 
+                           ledger_side = IEATools::iea_cols$ledger_side, 
+                           flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point, 
+                           flow = IEATools::iea_cols$flow, 
+                           product = IEATools::iea_cols$product,
+                           energy_type = IEATools::iea_cols$energy_type, energy_type_val = "E",
+                           method = IEATools::iea_cols$method, method_val = "PCM",
+                           last_stage = IEATools::iea_cols$last_stage, last_stage_val = "Final",
+                           unit = IEATools::iea_cols$unit, unit_val = "TJ",
                            supply = "Supply", 
                            consumption = "Consumption",
                            tpes = IEATools::tfc_compare_flows$total_primary_energy_supply, 
@@ -867,13 +881,18 @@ augment_iea_df <- function(.iea_df,
 #' This function strips all leading and trailing spaces in the `Flow` and `Product` columns.
 #'
 #' @param .iea_df A data frame of IEA data.
-#' @param flow The name of the flow column in `iea_df`. Default is "`Flow`".
-#' @param product The name of the product columns in `iea_df`. Default is "`Product`".
+#' @param flow The name of the flow column in `iea_df`. 
+#'             Default is `IEATools::iea_cols$flow`.
+#' @param product The name of the product columns in `iea_df`. 
+#'                Default is `IEATools::iea_cols$product`.
 #' @param agg_flows A vector of strings identifying `Flow`s that are aggregations.
+#'                  Default is `IEATools::aggregation_flows`.
 #' @param memo_flow_prefixes A vector of string prefixes for flow memo rows in `.iea_df`.
+#'                           Default is `IEATools::memo_aggregation_flow_prefixes`.
 #' @param memo_product_prefixes A string prefix for product memo rows in `.iea_df`.
+#'                              Default is `IEATools::memo_aggregation_product_prefixes`.
 #'
-#' @return `.iea_df` without its aggregation rows
+#' @return `.iea_df` without its aggregation rows.
 #' 
 #' @export
 #'
@@ -974,9 +993,12 @@ specify_non_energy_use <- function(.iea_df,
                                    flow = IEATools::iea_cols$flow, 
                                    product = IEATools::iea_cols$product,
                                    non_energy_use = IEATools::aggregation_flows$non_energy_use,
-                                   non_energy_flows_industry_transformation_energy = IEATools::non_energy_flows$non_energy_use_industry_transformation_energy,
+                                   non_energy_flows_industry_transformation_energy = 
+                                     IEATools::non_energy_flows[[
+                                       "non_energy_use_industry_transformation_energy"]],
                                    memo_non_energy_use_in_industry_not_elsewhere_specified = 
-                                     IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry_not_elsewhere_specified,
+                                     IEATools::memo_non_energy_flows[[
+                                       "memo_non_energy_use_in_industry_not_elsewhere_specified"]],
                                    non_energy_use_in_industry_not_elsewhere_specified = sub(pattern = paste0("^", memo), replacement = "", memo_non_energy_use_in_industry_not_elsewhere_specified),
                                    memo = IEATools::memo_aggregation_flow_prefixes$memo,
                                    memo_non_energy_flows_industry = IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry,
@@ -1189,27 +1211,32 @@ tidy_iea_df <- function(.iea_df,
 #' Load IEA extended energy balance data into tidy format
 #' 
 #' Loads an IEA extended energy balance data file in `.csv` format from disk and converts to a tidy format.
-#' This function bundles several others:
+#' This function bundles several others and relies mostly on default values for arguments:
 #' 1. `iea_df()`, 
 #' 2. `rename_iea_df_cols()`,  
 #' 3. `clean_iea_whitespace()`,
 #' 4. `use_iso_countries()`,
 #' 5. `augment_iea_df()`,
 #' 6. `specify_non_energy_use()` (optionally), 
-#' 7. `remove_agg_memo_flows()`, and 
-#' 8. `tidy_iea_df()`.
+#' 7. `fix_GHA_industry_electricity() |> fix_GHA_psb() |> fix_COL_electricity_generation()` (optionally),
+#' 8. `remove_agg_memo_flows()`, and 
+#' 9. `tidy_iea_df()`.
 #' 
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
 #' 
 #' @param .iea_file The path of the file to be loaded. Default loads example data bundled with the package via [sample_iea_data_path()].
+#' @param unit_val The units for this file. 
+#'                 Default is "TJ".
 #' @param remove_zeroes A logical indicating whether data points with the value `0` are to be removed from the output. 
 #'                      This argument is passed to `tidy_iea_df()`. 
 #'                      Default is `TRUE`.
 #' @param specify_non_energy_flows A logical indicating whether "Non-energy use in xxxxx" Flows
 #'                                 should be specified by "Memo: Non-energy use in <<specific industry>>"
 #'                                 entries in the IEA data. 
-#'                                 Default is `TRUE`.
+#'                                 Default is `FALSE`.
+#' @param apply_fixes A logical indicating whether fixes should be applied to IEA data.
+#'                    Default is `FALSE`.
 #' @param override_df A data frame containing columns `pfu_code` and `iea_name` that provides 3-letter country codes. See `IEATools::use_iso_countries()`.
 #'                    Default is `IEATools::override_iso_codes_df`.
 #' @param country The name of the country column in the data frames. See `IEATools::iea_cols$country`.
@@ -1239,8 +1266,10 @@ tidy_iea_df <- function(.iea_df,
 #' # simple and complicated should be exactly the same
 #' all(simple == complicated)
 load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(), 
+                             unit_val = "TJ", 
                              remove_zeroes = TRUE, 
                              specify_non_energy_flows = FALSE,
+                             apply_fixes = FALSE,
                              override_df = IEATools::override_iso_codes_df,
                              country = IEATools::iea_cols$country, 
                              pfu_code = IEATools::country_concordance_cols$pfu_code,
@@ -1250,10 +1279,18 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
     rename_iea_df_cols() |> 
     clean_iea_whitespace() |> 
     use_iso_countries(override_df = override_df, country = country, pfu_code = pfu_code, iea_name = iea_name) |> 
-    augment_iea_df()
+    augment_iea_df(unit_val = unit_val)
   if (specify_non_energy_flows) {
     out <- out |> 
       specify_non_energy_use()
+  }
+  if (apply_fixes) {
+    out <- out |> 
+      # We no longer need to fix GHA's industry electricity, 
+      # because details are now available in the IEA's WEEB.
+      # fix_GHA_industry_electricity() |> 
+      fix_GHA_psb() |> 
+      fix_COL_WRLD_electricity()
   }
   out |>  
     remove_agg_memo_flows() |> 

@@ -4,6 +4,20 @@ output: html_document
 ---
 
 
+* Added new values to `IEATools::fap_flows`
+  to accommodate detailed "Non-energy use in xxxxx"
+  flows.
+* Fixing IEA 2022 release Electricity data for Colombia 1971--1977.
+  The IEA acknowledged energy balance errors in those years.
+  The fix is to use 2021 release data for 1971--1977
+  for both Colombia and World.
+* No longer fixing Ghana's industrial consumption of electricity data,
+  because details are now available in the IEA's WEEB data.
+* Now using terajoules (TJ) as the preferred unit for all IEA
+  extended energy balance data.
+* Dropped support for 2018--2020 IEA extended energy balance data.
+* Now using the 2022 release of IEA extended energy balance data
+  by default.
 * Functions now treat a zero-row incoming data frame
   much better, returning a zero-row data frame 
   with columns of same type as would have been produced 
@@ -19,6 +33,9 @@ output: html_document
   the `notation` argument was not being set properly
   in a call to `RCLabels::get_pref_suff()`
   when extracting prefixes.
+* Simplifications reduced the number of tests.
+    * Now up to 1216 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # IEATools 0.1.64 (2023-03-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7714342.svg)](https://doi.org/10.5281/zenodo.7714342)

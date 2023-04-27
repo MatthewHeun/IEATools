@@ -119,7 +119,8 @@ test_that("iea_file_OK() works", {
     
     # Read the file as text and use the text argument.
     conn <- file(f, open = "rt") # open file connection
-    f_text <- conn |> readLines()
+    f_text <- conn |> 
+      readLines()
     expect_true(iea_file_OK(text = f_text))
     close(conn)
     
@@ -143,7 +144,7 @@ test_that("iea_file_OK() works", {
     }
     # Delete file if it exists
     if (file.exists(tf)) {
-      file.remove(tf)
+      res <- file.remove(tf)
     }
   }
 })
@@ -389,27 +390,27 @@ test_that("augment_iea_df() works", {
   expect_false(any(IEADF_augmented |> dplyr::select(-Flow.aggregation.point) == ".."))
   expect_false(any(IEADF_augmented |> dplyr::select(-Flow.aggregation.point) == "x"))
   
-  # As of 2019, the IEA no longer tags flows with "(transf.)", "(transformation)", or "(energy)".  
-  # So these tests must be applied only to 2018 data.
-  IEADF_unaugmented_2018 <- sample_iea_data_path(2018) |> 
-    iea_df() |> 
-    rename_iea_df_cols()
-  IEADF_augmented_2018 <- IEADF_unaugmented_2018 |> 
-    augment_iea_df()
-  
-  # Check that the original has flows that end in "(transf.)"
-  expect_true(nrow(IEADF_unaugmented_2018 |> dplyr::filter(endsWith(Flow, "(transf.)"))) > 0)
-  # Check that the original has flows that end in "(transformation)"
-  expect_true(nrow(IEADF_unaugmented_2018 |> dplyr::filter(endsWith(Flow, "(transformation)"))) > 0)
-  # Check that the original has flows that end in "(energy)"
-  expect_true(nrow(IEADF_unaugmented_2018 |> dplyr::filter(endsWith(Flow, "(energy)"))) > 0)
-
-  # Check that all "(transf.)" have been removed from the Flow column
-  expect_equal(nrow(IEADF_augmented_2018 |> dplyr::filter(endsWith(Flow, "(transf.)"))), 0)
-  # Check that all "(transformation)" have been removed from the Flow column
-  expect_equal(nrow(IEADF_augmented_2018 |> dplyr::filter(endsWith(Flow, "(transformation)"))), 0)
-  # Check that all "(energy)" have been removed from the Flow column
-  expect_equal(nrow(IEADF_augmented_2018 |> dplyr::filter(endsWith(Flow, "(energy)"))), 0)
+  # # As of 2019, the IEA no longer tags flows with "(transf.)", "(transformation)", or "(energy)".  
+  # # So these tests must be applied only to 2018 data.
+  # IEADF_unaugmented_2018 <- sample_iea_data_path(2018) |> 
+  #   iea_df() |> 
+  #   rename_iea_df_cols()
+  # IEADF_augmented_2018 <- IEADF_unaugmented_2018 |> 
+  #   augment_iea_df()
+  # 
+  # # Check that the original has flows that end in "(transf.)"
+  # expect_true(nrow(IEADF_unaugmented_2018 |> dplyr::filter(endsWith(Flow, "(transf.)"))) > 0)
+  # # Check that the original has flows that end in "(transformation)"
+  # expect_true(nrow(IEADF_unaugmented_2018 |> dplyr::filter(endsWith(Flow, "(transformation)"))) > 0)
+  # # Check that the original has flows that end in "(energy)"
+  # expect_true(nrow(IEADF_unaugmented_2018 |> dplyr::filter(endsWith(Flow, "(energy)"))) > 0)
+  # 
+  # # Check that all "(transf.)" have been removed from the Flow column
+  # expect_equal(nrow(IEADF_augmented_2018 |> dplyr::filter(endsWith(Flow, "(transf.)"))), 0)
+  # # Check that all "(transformation)" have been removed from the Flow column
+  # expect_equal(nrow(IEADF_augmented_2018 |> dplyr::filter(endsWith(Flow, "(transformation)"))), 0)
+  # # Check that all "(energy)" have been removed from the Flow column
+  # expect_equal(nrow(IEADF_augmented_2018 |> dplyr::filter(endsWith(Flow, "(energy)"))), 0)
   
   # Try a bogus data frame with extra spaces before the suffix.
   simple_with_tfc_df_2 <- iea_df(text = paste0(",,TIME,1960,1961\n",
@@ -499,7 +500,7 @@ test_that("specify_non_energy_use() works for Ghana 1971 and 2000", {
   df |> 
     remove_agg_memo_flows() |> 
     tidy_iea_df() |> 
-    calc_tidy_iea_df_balances(tol = 1e-3) |> 
+    calc_tidy_iea_df_balances(tol = 0.01) |> 
     tidy_iea_df_balanced() |> 
     expect_true()
   
@@ -520,7 +521,7 @@ test_that("specify_non_energy_use() works for Ghana 1971 and 2000", {
   specified |> 
     remove_agg_memo_flows() |> 
     tidy_iea_df() |> 
-    calc_tidy_iea_df_balances(tol = 1e-3) |> 
+    calc_tidy_iea_df_balances(tol = 0.01) |> 
     tidy_iea_df_balanced() |> 
     expect_true()
 })
@@ -550,7 +551,7 @@ test_that("specify_non_energy_use() works for South Africa 1971 and 2000", {
   df |> 
     remove_agg_memo_flows() |> 
     tidy_iea_df() |> 
-    calc_tidy_iea_df_balances(tol = 1e-3) |> 
+    calc_tidy_iea_df_balances(tol = 0.04) |> 
     tidy_iea_df_balanced() |> 
     expect_true()
   
@@ -577,7 +578,7 @@ test_that("specify_non_energy_use() works for South Africa 1971 and 2000", {
   specified |> 
     remove_agg_memo_flows() |> 
     tidy_iea_df() |> 
-    calc_tidy_iea_df_balances(tol = 1e-3) |> 
+    calc_tidy_iea_df_balances(tol = 0.04) |> 
     tidy_iea_df_balanced() |> 
     expect_true()
 })
@@ -594,7 +595,7 @@ test_that("specify_non_energy_use() works as expected", {
   df |> 
     remove_agg_memo_flows() |> 
     tidy_iea_df() |> 
-    calc_tidy_iea_df_balances(tol = 1e-3) |> 
+    calc_tidy_iea_df_balances(tol = 0.04) |> 
     tidy_iea_df_balanced() |> 
     expect_true()
   
@@ -607,7 +608,7 @@ test_that("specify_non_energy_use() works as expected", {
   neu_rows |> 
     dplyr::filter(.data[[IEATools::iea_cols$product]] == "Hard coal (if no detail)") |> 
     magrittr::extract2("1971") |> 
-    expect_equal(747.9545)
+    expect_equal(31315.36)
   neu_rows |> 
     dplyr::filter(.data[[IEATools::iea_cols$product]] == "Other bituminous coal") |> 
     magrittr::extract2("1971") |> 
@@ -619,7 +620,7 @@ test_that("specify_non_energy_use() works as expected", {
   neu_rows |> 
     dplyr::filter(.data[[IEATools::iea_cols$product]] == "Other bituminous coal") |> 
     magrittr::extract2("2000") |> 
-    expect_equal(5284.6856)
+    expect_equal(221259.22)
   
   # Specify the data and see that it has moved.
   specified <- df |> 
@@ -629,7 +630,7 @@ test_that("specify_non_energy_use() works as expected", {
   specified |> 
     remove_agg_memo_flows() |> 
     tidy_iea_df() |> 
-    calc_tidy_iea_df_balances(tol = 1e-3) |> 
+    calc_tidy_iea_df_balances(tol = 0.04) |> 
     tidy_iea_df_balanced() |> 
     expect_true()
   
@@ -666,7 +667,7 @@ test_that("specify_non_energy_use() works as expected", {
   specified_neu_rows |> 
     dplyr::filter(.data[[IEATools::iea_cols$product]] == "Hard coal (if no detail)") |> 
     magrittr::extract2("1971") |> 
-    expect_equal(747.9545)
+    expect_equal(31315.36)
   specified_neu_rows |> 
     dplyr::filter(.data[[IEATools::iea_cols$product]] == "Other bituminous coal") |> 
     magrittr::extract2("1971") |> 
@@ -678,7 +679,7 @@ test_that("specify_non_energy_use() works as expected", {
   specified_neu_rows |> 
     dplyr::filter(.data[[IEATools::iea_cols$product]] == "Other bituminous coal") |> 
     magrittr::extract2("2000") |> 
-    expect_equal(5284.6856)
+    expect_equal(221259.22)
 })
 
 
@@ -704,7 +705,7 @@ test_that("specify_non_energy_use() gives matrices we expect", {
     magrittr::extract2("Y") |> 
     magrittr::extract2(1) |> 
     magrittr::extract("Hard coal (if no detail)", "Non-energy use in chemical/petrochemical") |> 
-    expect_equal(747.9545)
+    expect_equal(31315.36)
 
   # Check that the Other bituminous coal from 2000 goes where it belongs.
   res |> 
@@ -713,7 +714,7 @@ test_that("specify_non_energy_use() gives matrices we expect", {
     magrittr::extract2("Y") |> 
     magrittr::extract2(1) |> 
     magrittr::extract("Other bituminous coal", "Non-energy use in chemical/petrochemical") |> 
-    expect_equal(5284.6856)
+    expect_equal(221259.22)
 
   # Check that Non-energy use industry/transformation/energy is NOT present
   res |> 
@@ -738,35 +739,35 @@ test_that("specify_non_energy_use() gives matrices we expect", {
     magrittr::extract2("Y") |> 
     magrittr::extract2(1) |>
     magrittr::extract("Bitumen", "Non-energy use industry/transformation/energy") |> 
-    expect_equal(184.4368)
+    expect_equal(7722)
   res |> 
     dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF", 
                   .data[[IEATools::iea_cols$year]] == 2000) |> 
     magrittr::extract2("Y") |> 
     magrittr::extract2(1) |> 
     magrittr::extract("Bitumen", "Non-energy use industry/transformation/energy") |> 
-    expect_equal(214.2448)
+    expect_equal(8970)
   res |> 
     dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF", 
                   .data[[IEATools::iea_cols$year]] == 2000) |> 
     magrittr::extract2("Y") |> 
     magrittr::extract2(1) |> 
     magrittr::extract("Lubricants", "Non-energy use industry/transformation/energy") |> 
-    expect_equal(79.2491)
+    expect_equal(3318)
   res |> 
     dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF", 
                   .data[[IEATools::iea_cols$year]] == 2000) |> 
     magrittr::extract2("Y") |> 
     magrittr::extract2(1) |> 
     magrittr::extract("Paraffin waxes", "Non-energy use industry/transformation/energy") |> 
-    expect_equal(6.6877)
+    expect_equal(280)
   res |> 
     dplyr::filter(.data[[IEATools::iea_cols$country]] == "ZAF", 
                   .data[[IEATools::iea_cols$year]] == 2000) |> 
     magrittr::extract2("Y") |> 
     magrittr::extract2(1) |> 
     magrittr::extract("White spirit & SBP", "Non-energy use industry/transformation/energy") |> 
-    expect_equal(70.0350)
+    expect_equal(2932.23)
 })
 
 
@@ -828,7 +829,7 @@ test_that("specify_non_energy_use() works for South African Hard coal in 1971", 
   
   # Full join to see differences
   res <- dplyr::full_join(df, neu_specified_df, by = c("Country", "Method", "Energy.type", "Last.stage", "Unit", "Ledger.side", 
-                                                "Flow", "Flow.aggregation.point", "Product")) |>
+                                                       "Flow", "Flow.aggregation.point", "Product")) |>
     dplyr::filter(.data[[IEATools::iea_cols$flow_aggregation_point]] %in% c("Non-energy use", "Memo: Non-energy use in industry"))
   # Check that the right flows are present in res
   res |> 
@@ -868,7 +869,7 @@ test_that("specify_non_energy_use() re-balances data when there is an imbalance 
     "{IEATools::iea_cols$method}" := "PCM", 
     "{IEATools::iea_cols$energy_type}" := "E", 
     "{IEATools::iea_cols$last_stage}" := "Final", 
-    "{IEATools::iea_cols$unit}" := "ktoe", 
+    "{IEATools::iea_cols$unit}" := "TJ", 
     "{IEATools::iea_cols$ledger_side}" := c(rep("Supply", times = 5), rep("Consumption", 3)),
     "{IEATools::iea_cols$flow_aggregation_point}" :=
       c("Total primary energy supply", 
@@ -1066,8 +1067,8 @@ test_that("load_tidy_iea_df() works as expected", {
                                        "Flow", "Product", "Unit", "E.dot"))
     # This is a energy exclusive data frame
     expect_true(all(iea_tidy_df$Energy.type == "E"))
-    # This is a completely ktoe data frame
-    expect_true(all(iea_tidy_df$Unit == "ktoe"))
+    # This is a completely TJ data frame
+    expect_true(all(iea_tidy_df$Unit == "TJ"))
     # Ledger.side can be only Supply or Consumption
     expect_true(all(iea_tidy_df$Ledger.side %in% c("Supply", "Consumption")))
   }
@@ -1093,9 +1094,10 @@ test_that("trimming white space works", {
 
 test_that("load_tidy_iea_df() works as expected", {
   # Try for all valid years.
+  # This one doesn't do any special stuff.
   for (yr in IEATools::valid_iea_release_years) {
     simple <- sample_iea_data_path(yr) |> 
-      load_tidy_iea_df(specify_non_energy_flows = FALSE)
+      load_tidy_iea_df(specify_non_energy_flows = FALSE, apply_fixes = FALSE)
     complicated <- sample_iea_data_path(yr) |> 
       iea_df() |>
       rename_iea_df_cols() |> 
@@ -1106,9 +1108,10 @@ test_that("load_tidy_iea_df() works as expected", {
       tidy_iea_df()
     expect_equal(simple, complicated)
   }
+  # This one specifies non-energy flows and applies fixes.
   for (yr in IEATools::valid_iea_release_years) {
     simple <- sample_iea_data_path(yr) |> 
-      load_tidy_iea_df(specify_non_energy_flows = TRUE)
+      load_tidy_iea_df(specify_non_energy_flows = TRUE, apply_fixes = TRUE)
     complicated <- sample_iea_data_path(yr) |> 
       iea_df() |>
       rename_iea_df_cols() |> 
@@ -1116,6 +1119,9 @@ test_that("load_tidy_iea_df() works as expected", {
       use_iso_countries() |> 
       augment_iea_df() |> 
       specify_non_energy_use() |> 
+      # fix_GHA_industry_electricity() |> 
+      fix_GHA_psb() |> 
+      fix_COL_WRLD_electricity() |> 
       remove_agg_memo_flows() |> 
       tidy_iea_df()
     expect_equal(simple, complicated)
@@ -1124,25 +1130,25 @@ test_that("load_tidy_iea_df() works as expected", {
 
 
 test_that("load_tidy_iea_df() gives expected values", {
-  iea_df <- sample_iea_data_path(version = 2021) |> 
+  iea_df <- sample_iea_data_path(version = 2022) |> 
     load_tidy_iea_df(specify_non_energy_flows = TRUE)
   # Try some values
   expect_equal(iea_df |> 
                  dplyr::filter(Country == "ZAF", Year == 1971, Product == "Fuel oil", 
                                Flow == "Oil refineries", Flow.aggregation.point == "Transformation processes") |> 
                  magrittr::extract2("E.dot"), 
-               4515.6349)
+               189060.6)
   
   expect_equal(iea_df |> 
                  dplyr::filter(Country == "GHA", Year == 1971, Product == "Crude oil", 
                                Flow == "Imports") |> 
                  magrittr::extract2("E.dot"), 
-               916.2081)
+               38359.8, tolerance = 0.003)
 
   expect_equal(iea_df |> 
                  dplyr::filter(Country == "ZAF", Year == 1971, Product == "Bitumen", Flow == "Transfers") |> 
                  magrittr::extract2("E.dot"), 
-               2.7945)
+               117)
 })
 
 
@@ -1182,5 +1188,3 @@ test_that("load_tidy_iea_df() OK when spreading by years after", {
     expect_true("2000" %in% names(year_spread))
   }
 })
-
-

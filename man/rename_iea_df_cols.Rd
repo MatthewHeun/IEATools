@@ -7,11 +7,11 @@
 rename_iea_df_cols(
   .iea_df,
   country = "COUNTRY",
-  new_country = "Country",
+  new_country = IEATools::iea_cols$country,
   flow = "FLOW",
-  new_flow = "Flow",
+  new_flow = IEATools::iea_cols$flow,
   product = "PRODUCT",
-  new_product = "Product"
+  new_product = IEATools::iea_cols$product
 )
 }
 \arguments{
@@ -19,15 +19,15 @@ rename_iea_df_cols(
 
 \item{country}{the original name for the country column. (Default is \code{COUNTRY}.)}
 
-\item{new_country}{the new name for the country column. (Default is \code{Country}.)}
+\item{new_country}{the new name for the country column. (Default is \code{IEATools::iea_cols$country}.)}
 
 \item{flow}{the original name for the flow column. (Default is \code{FLOW}.)}
 
-\item{new_flow}{the new name for the flow column. (Default is \code{Flow}.)}
+\item{new_flow}{the new name for the flow column. (Default is \code{IEATools::iea_cols$flow}.)}
 
 \item{product}{the original name for the product column. (Default is \code{PRODUCT}.)}
 
-\item{new_product}{the new name for the product column. (Default is \code{Product}.)}
+\item{new_product}{the new name for the product column. (Default is \code{IEATools::iea_cols$product}.)}
 }
 \value{
 \code{.iea_df} with renamed columns

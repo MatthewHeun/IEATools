@@ -66,24 +66,24 @@
 #'   calc_tidy_iea_df_balances()
 #' head(Ebal, 5)
 calc_tidy_iea_df_balances <- function(.tidy_iea_df, 
-                            # Input column names
-                            ledger_side = IEATools::iea_cols$ledger_side,
-                            flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
-                            flow = IEATools::iea_cols$flow,
-                            product = IEATools::iea_cols$product,
-                            e_dot = IEATools::iea_cols$e_dot,
-                            unit = IEATools::iea_cols$unit,
-                            supply = IEATools::ledger_sides$supply,
-                            consumption = IEATools::ledger_sides$consumption,
-                            matnames = IEATools::mat_meta_cols$matnames,
-                            balancing = "balancing",
-                            # Output column names
-                            supply_sum = "supply_sum",
-                            consumption_sum = "consumption_sum",
-                            supply_minus_consumption = "supply_minus_consumption", 
-                            balance_OK = "balance_OK", 
-                            err = "err",
-                            tol = 1e-6){
+                                      # Input column names
+                                      ledger_side = IEATools::iea_cols$ledger_side,
+                                      flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                      flow = IEATools::iea_cols$flow,
+                                      product = IEATools::iea_cols$product,
+                                      e_dot = IEATools::iea_cols$e_dot,
+                                      unit = IEATools::iea_cols$unit,
+                                      supply = IEATools::ledger_sides$supply,
+                                      consumption = IEATools::ledger_sides$consumption,
+                                      matnames = IEATools::mat_meta_cols$matnames,
+                                      balancing = "balancing",
+                                      # Output column names
+                                      supply_sum = "supply_sum",
+                                      consumption_sum = "consumption_sum",
+                                      supply_minus_consumption = "supply_minus_consumption", 
+                                      balance_OK = "balance_OK", 
+                                      err = "err",
+                                      tol = 1e-6){
   # Calculate sums on a per-group basis
   grouping_names <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot, matnames)
   grouping_strings <- matsindf::everything_except(.tidy_iea_df, ledger_side, flow_aggregation_point, flow, e_dot, matnames, .symbols = FALSE)
@@ -173,7 +173,7 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' Internally, this function calls [calc_tidy_iea_df_balances()]
 #' and adjusts the value of the `statistical_differences` column to compensate for any imbalances that are present.
 #' 
-#' If energy balance for any product is greater than `max_fix` (default 5), 
+#' If energy balance for any product is greater than `max_fix` (default 1), 
 #' an error will be emitted, and execution will halt.
 #' This behavior is intended to identify any places where there are gross energy imbalances
 #' that should be investigated prior to further analysis.
@@ -183,7 +183,7 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' `.tidy_iea_df` is returned unmodified (i.e., with no rows).
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
-#' @param max_fix the maximum energy balance that will be fixed without giving an error. Default is 5.
+#' @param max_fix the maximum energy balance that will be fixed without giving an error. Default is `1`.
 #' @param remove_zeroes a logical telling whether to remove `0`s after balancing. Default is `TRUE`.
 #' @param ledger_side,flow_aggregation_point,country,year,flow,product,e_dot See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
@@ -223,7 +223,7 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' balanced %>% 
 #'   tidy_iea_df_balanced()
 fix_tidy_iea_df_balances <- function(.tidy_iea_df,
-                                     max_fix = 6,
+                                     max_fix = 1,
                                      remove_zeroes = TRUE,
                                      # Input columns and values
                                      country = IEATools::iea_cols$country,
@@ -267,10 +267,10 @@ fix_tidy_iea_df_balances <- function(.tidy_iea_df,
     err_too_big_combos <- paste(err_too_big[[country]], 
                                 err_too_big[[year]], 
                                 err_too_big[[product]], 
-                                err_too_big[[.err]], sep = ", ", collapse = "; ")
+                                err_too_big[[.err]], sep = ", ", collapse = ";\n")
     # Give as much good debugging information as possible.
     stop(paste0("In fix_tidy_iea_df_balances(), largest energy balance error is ", max_err, 
-                ". Maximum fixable error is ", max_fix, ". The following combinations of Country, Year, and Product have errors that exceed the maximum allowable error: ", 
+                ".\nMaximum fixable error is ", max_fix, ".\nThe following combinations of Country, Year, and Product have errors that exceed the maximum allowable error:\n", 
                 err_too_big_combos))
   }
 

@@ -19,7 +19,8 @@ use_iso_countries(
 \item{override_df}{A data frame containing columns named \code{pfu_code} and \code{iea_name}.
 Default is \code{IEATools::overide_iso_codes_df}.}
 
-\item{country}{The name of the country column in \code{.iea_df}. Default is "Country".}
+\item{country}{The name of the country column in \code{.iea_df}.
+Default is \code{IEATools::iea_cols$country}.}
 
 \item{pfu_code, iea_name}{See \code{IEATools::countryconcordance_cols}.}
 

@@ -9,7 +9,7 @@ test_that("specify_tp_eiou() works as expected for Own use in electricity, CHP a
                      Flow.aggregation.point = c("Energy industry own use", "nothing"),
                      Flow = c("Own use in electricity, CHP and heat plants", "Own use in electricity, CHP and heat plants"), 
                      Ledger.side = c("Supply", "Supply"),
-                     Unit = c("ktoe", "ktoe"),
+                     Unit = c("TJ", "TJ"),
                      Product = c("Brown coal", "Crude oil"),
                      E.dot = c(-10, -10),
                      stringsAsFactors = FALSE)
@@ -33,7 +33,7 @@ test_that("specify_tp_eiou() works as expected for pumped storage plants", {
                      Flow = c("Pumped storage plants", "Pumped storage plants"), 
                      Ledger.side = c("Supply", "Supply"),
                      Product = c("Brown coal", "Crude oil"),
-                     Unit = c("ktoe", "ktoe"),
+                     Unit = c("TJ", "TJ"),
                      E.dot = c(-20, -20),
                      stringsAsFactors = FALSE)
   EIOU_fixed <- specify_tp_eiou(EIOU)
@@ -63,7 +63,7 @@ test_that("route_pumped_storage() no longer discriminates +/-", {
                               "Main activity producer electricity plants", "Pumped storage plants"), 
                      Ledger.side = c("Supply", "Supply", "Supply", "Supply"),
                      Product = c("Electricity", "Electricity", "Electricity", "Electricity"),
-                     Unit = c("ktoe", "ktoe"),
+                     Unit = c("TJ", "TJ"),
                      E.dot = c(-20, -2, -21, 3),
                      stringsAsFactors = FALSE)
   # Call the function that should negate the energy flows.
@@ -220,7 +220,7 @@ test_that("route_pumped_storage() works", {
 test_that("split_oil_gas_extraction_eiou() works", {
   
   # Test with GHA/ZAF data
-  tidy_GHA_ZAF_df <- load_tidy_iea_df() %>% 
+  tidy_GHA_ZAF_df <- load_tidy_iea_df() |>  
     specify_all()
   
   expect_equal(
@@ -228,7 +228,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
       dplyr::filter(Flow.aggregation.point == "Energy industry own use") %>% 
       dplyr::filter(Flow == "Oil extraction") %>% 
       magrittr::extract2("E.dot"),
-    -0.0347,
+    -1.450736,
     tolerance = 0.01
   )
   
@@ -237,7 +237,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
       dplyr::filter(Flow.aggregation.point == "Energy industry own use") %>% 
       dplyr::filter(Flow == "Natural gas extraction") %>% 
       magrittr::extract2("E.dot"),
-    -0.0513,
+    -2.149264,
     tolerance = 0.01
   )
   
@@ -769,7 +769,7 @@ test_that("add_nuclear_industry() works", {
                     Flow.aggregation.point = "Transformation processes",
                     Flow = "Main activity producer CHP plants",
                     Product = "Heat",
-                    Unit = "ktoe",
+                    Unit = "TJ",
                     E.dot = 30) %>%
     IEATools::specify_primary_production() %>%
     IEATools::specify_production_to_resources() %>%
@@ -1050,7 +1050,7 @@ test_that("route_non_specified_tp() works", {
       Flow.aggregation.point = "Transformation processes",
       Flow = "Oil refineries",
       Product = "Brown coal (if no detail)",
-      Unit = "ktoe",
+      Unit = "TJ",
       E.dot = 67
     ) %>%
     route_non_specified_tp()
@@ -1242,13 +1242,12 @@ test_that("route_non_specified_tp() works", {
 })
 
 
-
 test_that("route_non_specified_flows() works", {
   
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df()
+    IEATools::load_tidy_iea_df(unit_val = "ktoe")
   
   test <- AB_data %>%
     IEATools::specify_primary_production() %>%
@@ -1492,17 +1491,16 @@ test_that("route_non_specified_flows() works", {
                -400,
                tolerance = 0.001)
   
-  expect_equal(test %>%
-                 dplyr::filter(
-                   Country == "B",
-                   Flow.aggregation.point == "Transformation processes",
-                   Flow == "Main activity producer electricity plants",
-                   Product == "Brown coal (if no detail)"
-                 ) %>%
-                 dplyr::select(E.dot) %>%
-                 dplyr::pull(),
-               620.6897,
-               tolerance = 0.001)
+  test %>%
+    dplyr::filter(
+      Country == "B",
+      Flow.aggregation.point == "Transformation processes",
+      Flow == "Main activity producer electricity plants",
+      Product == "Brown coal (if no detail)"
+    ) %>%
+    dplyr::select(E.dot) %>%
+    dplyr::pull() |> 
+    expect_equal(620.6897, tolerance = 0.001)
   
   expect_equal(test %>%
                  dplyr::filter(
@@ -1516,17 +1514,16 @@ test_that("route_non_specified_flows() works", {
                -847,
                tolerance = 0.001)
   
-  expect_equal(test %>%
-                 dplyr::filter(
-                   Country == "B",
-                   Flow.aggregation.point == "Transformation processes",
-                   Flow == "Oil refineries",
-                   Product == "Brown coal (if no detail)"
-                 ) %>%
-                 dplyr::select(E.dot) %>%
-                 dplyr::pull(),
-               (623-620.6897+67),
-               tolerance = 0.001)
+  test %>%
+    dplyr::filter(
+      Country == "B",
+      Flow.aggregation.point == "Transformation processes",
+      Flow == "Oil refineries",
+      Product == "Brown coal (if no detail)"
+    ) %>%
+    dplyr::select(E.dot) %>%
+    dplyr::pull() |> 
+    expect_equal(623-620.6897+67, tolerance = 0.001)
   
   first_version_test <- AB_data %>%
     IEATools::specify_primary_production() %>%

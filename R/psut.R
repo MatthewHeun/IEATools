@@ -402,7 +402,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' Thus, we can replace the missing **R** matrix with a **0** matrix with a generic
 #' "Natural resources" row and the same products as the rows of the **Y** matrix.
 #' 
-#' Similarly, missing values for **U**, **U_feed**, **U_EIOU**, or **r_EIOU** can be replaced by a `0` matrix
+#' Similarly, missing values for **U**, **U_feed**, **U_EIOU**, or **r_EIOU** can be replaced by a **0** matrix
 #' with row and column names same as a transposed **V** matrix when it exists.
 #' If neither **U** nor **V** exist, the **R** matrix can supply row and column names.
 #'
@@ -446,7 +446,7 @@ replace_null_RUV <- function(.sutmats = NULL,
                              .R_temp_name = ".R_temp", 
                              .U_temp_name = ".U_temp", 
                              .U_feed_temp_name = ".U_feed_temp", 
-                             .U_eiou_temp_name = ".U_eEIOU_temp", 
+                             .U_eiou_temp_name = ".U_EIOU_temp", 
                              .r_eiou_temp_name = ".r_EIOU_temp",
                              .V_temp_name = ".V_temp", 
                              R_name = IEATools::psut_cols$R, 

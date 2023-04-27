@@ -1,7 +1,15 @@
-library(magrittr)
-library(testthat)
 
-test_that("form_C_mats works as expected", {
+test_that("form_C_mats() works with 0-row input", {
+  allocation_table <- load_fu_allocation_data()
+  allocation_table <- allocation_table[0, ]
+  res <- form_C_mats(allocation_table)
+  expect_equal(nrow(res), 0)
+  expect_setequal(names(res), c(IEATools::iea_cols$country, IEATools::iea_cols$method, IEATools::iea_cols$energy_type, IEATools::iea_cols$last_stage, IEATools::iea_cols$year, 
+                                IEATools::template_cols$C_eiou, IEATools::template_cols$C_Y))
+})
+
+
+test_that("form_C_mats() works as expected", {
   allocation_table <- load_fu_allocation_data()
   C_df <- form_C_mats(allocation_table)
   # Check type of year column
@@ -54,7 +62,7 @@ test_that("form_C_mats works as expected", {
 })
 
 
-test_that("form_C_mats works with Matrix objects", {
+test_that("form_C_mats() works with Matrix objects", {
   allocation_table <- load_fu_allocation_data()
   C_df <- form_C_mats(allocation_table, matrix.class = "Matrix")
   # Check that we made Matrix objects.
@@ -296,7 +304,7 @@ test_that("extend_to_useful() works as expected", {
     IEATools::meta_cols(return_names = TRUE,
                         years_to_keep = IEATools::iea_cols$year,
                         not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
-  psut_mats <- load_tidy_iea_df() %>% 
+  psut_mats <- load_tidy_iea_df(apply_fixes = FALSE) %>% 
     specify_all() %>% 
     prep_psut() %>% 
     dplyr::full_join(C_data, by = m_cols) %>% 
@@ -304,7 +312,8 @@ test_that("extend_to_useful() works as expected", {
   
   with_useful <- psut_mats %>% 
     extend_to_useful()
-
+  with_useful <- stack_final_useful_df(with_useful, psut_mats)
+  
   # Check some of the values  
   
   # Allocation of ZAF EIOU electricity for lighting and mechanical drive in 2000
@@ -498,7 +507,7 @@ test_that("extend_to_useful() works with Matrix objects", {
     IEATools::meta_cols(return_names = TRUE,
                         years_to_keep = IEATools::iea_cols$year,
                         not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
-  psut_mats <- load_tidy_iea_df() %>% 
+  psut_mats <- load_tidy_iea_df(apply_fixes = FALSE) %>% 
     specify_all() %>% 
     prep_psut(matrix.class = "Matrix") %>% 
     dplyr::full_join(C_data, by = m_cols) %>% 
@@ -506,7 +515,8 @@ test_that("extend_to_useful() works with Matrix objects", {
   
   with_useful <- psut_mats %>% 
     extend_to_useful()
-  
+  with_useful <- stack_final_useful_df(with_useful, psut_mats)
+
   # Check some of the values  
   
   # Allocation of ZAF EIOU electricity for lighting and mechanical drive in 2000
@@ -717,17 +727,17 @@ test_that("extend_to_useful() works with individual matrices", {
                                   C_Y = psut_mats$C_Y[[1]], 
                                   eta_fu = psut_mats$eta.fu[[1]], 
                                   phi_u = psut_mats$phi.u[[1]])
+
   # Ensure that expected matrices are included.
   # There should be no more matrices than these.
-  expect_equal(names(useful_mats), 
-               c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+  expect_setequal(names(useful_mats), 
+                  c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                    "r_EIOU_Useful", "V_Useful", "Y_Useful"))
   
-  # Try with C_eiou missing, thereby ignoring any EIOU.
-  # Do the same calculation as above, but don't include 
-  # the C_eiou argument.
-  # This approach is expected to trip the imbalance warning, 
-  # because we're removing EIOU energy from the ECC.
+  # Try with an adjusted value of C_EIOU.
+  # This will cause energy imbalance.
+  C_EIOU_adjusted <- psut_mats$C_EIOU[[1]]
+  C_EIOU_adjusted[1, 1] <- 1.1 * C_EIOU_adjusted[1, 1]
   extend_to_useful(R = psut_mats$R[[1]], 
                    U_feed = psut_mats$U_feed[[1]], 
                    U_eiou = psut_mats$U_EIOU[[1]], 
@@ -735,10 +745,28 @@ test_that("extend_to_useful() works with individual matrices", {
                    r_eiou = psut_mats$r_eiou[[1]], 
                    V = psut_mats$V[[1]], 
                    Y = psut_mats$Y[[1]], 
+                   C_eiou = C_EIOU_adjusted, 
                    C_Y = psut_mats$C_Y[[1]], 
                    eta_fu = psut_mats$eta.fu[[1]], 
                    phi_u = psut_mats$phi.u[[1]]) %>% 
-    expect_warning(regexp = "Energy is not balanced to within")
+    expect_warning(regexp = "Energy is not balanced")
+  
+  # Try with C_eiou missing, thereby ignoring any EIOU.
+  # Do the same calculation as above, but don't include 
+  # the C_eiou argument.
+  # This approach should run through the calculations OK, but
+  # cause an energy imbalance error when checked.
+  without_C_EIOU <- extend_to_useful(R = psut_mats$R[[1]], 
+                                     U_feed = psut_mats$U_feed[[1]], 
+                                     U_eiou = psut_mats$U_EIOU[[1]], 
+                                     U = psut_mats$U[[1]], 
+                                     r_eiou = psut_mats$r_eiou[[1]], 
+                                     V = psut_mats$V[[1]], 
+                                     Y = psut_mats$Y[[1]], 
+                                     C_Y = psut_mats$C_Y[[1]], 
+                                     eta_fu = psut_mats$eta.fu[[1]], 
+                                     phi_u = psut_mats$phi.u[[1]]) |> 
+    expect_warning(regexp = "Energy is not balanced")
 })
 
 
@@ -777,8 +805,8 @@ test_that("extend_to_useful() works with individual Matrix objects", {
   # Try with C_eiou missing, thereby ignoring any EIOU.
   # Do the same calculation as above, but don't include 
   # the C_eiou argument.
-  # This approach is expected to trip the imbalance warning, 
-  # because we're removing EIOU energy from the ECC.
+  # This approach should run through the calculations OK, but
+  # cause an energy imbalance error when checked.
   extend_to_useful(R = psut_mats$R[[1]], 
                    U_feed = psut_mats$U_feed[[1]], 
                    U_eiou = psut_mats$U_EIOU[[1]], 
@@ -789,7 +817,7 @@ test_that("extend_to_useful() works with individual Matrix objects", {
                    C_Y = psut_mats$C_Y[[1]], 
                    eta_fu = psut_mats$eta.fu[[1]], 
                    phi_u = psut_mats$phi.u[[1]]) %>% 
-    expect_warning(regexp = "Energy is not balanced to within")
+    expect_warning(regexp = "Energy is not balanced")
 })
 
 
@@ -844,7 +872,11 @@ test_that("extend_to_useful() works with list of Matrix objects", {
   useful_list <- extend_to_useful(var_store)
   # Ensure all are Matrix objects
   for (i in 6:length(useful_list)) {
-    expect_true(matsbyname::is.Matrix(useful_list[[i]][[1]]))
+    if (is.list(useful_list[[i]])) {
+      expect_true(matsbyname::is.Matrix(useful_list[[i]][[1]]))
+    } else {
+      expect_true(matsbyname::is.Matrix(useful_list[[i]]))
+    }
   }
   
   # When a list is used as the data store, we should get all variables returned.
@@ -857,66 +889,10 @@ test_that("extend_to_useful() works with list of Matrix objects", {
 })
 
 
-test_that("extend_to_useful() works as expected when clean_up_df = FALSE", {
-  C_data <- load_fu_allocation_data() %>% 
-    form_C_mats()
-  eta_fu_data <- load_eta_fu_data() %>% 
-    form_eta_fu_phi_u_vecs()
-  m_cols <- eta_fu_data %>% 
-    IEATools::meta_cols(return_names = TRUE,
-                        years_to_keep = IEATools::iea_cols$year,
-                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
-  psut_mats <- load_tidy_iea_df() %>% 
-    specify_all() %>% 
-    prep_psut() %>% 
-    dplyr::full_join(C_data, by = m_cols) %>% 
-    dplyr::full_join(eta_fu_data, by = m_cols)
-  
-  with_useful <- psut_mats %>% 
-    extend_to_useful(clean_up_df = FALSE)
-  
-  # Check column names. We should get a lot of "_Useful"s here.
-  expect_equal(names(with_useful), 
-               c("Country", "Method", "Energy.type", "Last.stage", "Year",
-                 "Y", "S_units", "R", "U", "U_feed",
-                 "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
-                 "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
-})
-
-
-test_that("extend_to_useful() works as expected when clean_up_df = FALSE with Matrix objects", {
-  C_data <- load_fu_allocation_data() %>% 
-    form_C_mats(matrix.class = "Matrix")
-  eta_fu_data <- load_eta_fu_data() %>% 
-    form_eta_fu_phi_u_vecs(matrix.class = "Matrix")
-  m_cols <- eta_fu_data %>% 
-    IEATools::meta_cols(return_names = TRUE,
-                        years_to_keep = IEATools::iea_cols$year,
-                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
-  psut_mats <- load_tidy_iea_df() %>% 
-    specify_all() %>% 
-    prep_psut(matrix.class = "Matrix") %>% 
-    dplyr::full_join(C_data, by = m_cols) %>% 
-    dplyr::full_join(eta_fu_data, by = m_cols)
-  
-  with_useful <- psut_mats %>% 
-    extend_to_useful(clean_up_df = FALSE)
-  
-  # Check column names. We should get a lot of "_Useful"s here.
-  expect_equal(names(with_useful), 
-               c("Country", "Method", "Energy.type", "Last.stage", "Year",
-                 "Y", "S_units", "R", "U", "U_feed",
-                 "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
-                 "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
-})
-
-
 test_that("extend_to_useful() works with empty lists", {
-  C_data <- load_fu_allocation_data() %>% 
+  C_data <- load_fu_allocation_data() |> 
     form_C_mats(matrix.class = "Matrix")
-  eta_fu_data <- load_eta_fu_data() %>% 
+  eta_fu_data <- load_eta_fu_data() |>  
     form_eta_fu_phi_u_vecs(matrix.class = "Matrix")
   m_cols <- eta_fu_data %>% 
     IEATools::meta_cols(return_names = TRUE,
@@ -929,16 +905,22 @@ test_that("extend_to_useful() works with empty lists", {
     dplyr::full_join(eta_fu_data, by = m_cols)
   
   # Make a list out of the first row of matrices
-  var_store <- as.list(psut_mats[1, ])
-  var_store <- var_store[0]
-  
+  var_store <- as.list(psut_mats[0, ])
+
   useful_list <- extend_to_useful(var_store)
   
-  expect_null(useful_list)
+  expect_setequal(names(useful_list), 
+                  c("Country", "Method", "Energy.type", "Last.stage", "Year",
+                    "Y", "S_units", "R", "U", "U_feed",
+                    "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
+                    "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                    "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+  
+  expect_true(all(sapply(useful_list, length) == 0))
 })
 
 
-test_that("extend_to_useful() returns NULL with empty data frames", {
+test_that("extend_to_useful() returns works with empty data frames", {
   C_data <- load_fu_allocation_data() %>% 
     form_C_mats(matrix.class = "Matrix")
   eta_fu_data <- load_eta_fu_data() %>% 
@@ -959,5 +941,12 @@ test_that("extend_to_useful() returns NULL with empty data frames", {
   with_useful <- psut_mats %>% 
     extend_to_useful()
   
-  expect_null(with_useful)
+  expect_equal(nrow(with_useful), 0)
+  
+  expect_setequal(names(with_useful), 
+                  c("Country", "Method", "Energy.type", "Last.stage", "Year",
+                    "Y", "S_units", "R", "U", "U_feed",
+                    "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
+                    "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                    "r_EIOU_Useful", "V_Useful", "Y_Useful"))
 })

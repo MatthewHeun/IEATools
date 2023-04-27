@@ -6,8 +6,10 @@
 \usage{
 load_tidy_iea_df(
   .iea_file = sample_iea_data_path(),
+  unit_val = "TJ",
   remove_zeroes = TRUE,
   specify_non_energy_flows = FALSE,
+  apply_fixes = FALSE,
   override_df = IEATools::override_iso_codes_df,
   country = IEATools::iea_cols$country,
   pfu_code = IEATools::country_concordance_cols$pfu_code,
@@ -17,6 +19,9 @@ load_tidy_iea_df(
 \arguments{
 \item{.iea_file}{The path of the file to be loaded. Default loads example data bundled with the package via \code{\link[=sample_iea_data_path]{sample_iea_data_path()}}.}
 
+\item{unit_val}{The units for this file.
+Default is "TJ".}
+
 \item{remove_zeroes}{A logical indicating whether data points with the value \code{0} are to be removed from the output.
 This argument is passed to \code{tidy_iea_df()}.
 Default is \code{TRUE}.}
@@ -24,7 +29,10 @@ Default is \code{TRUE}.}
 \item{specify_non_energy_flows}{A logical indicating whether "Non-energy use in xxxxx" Flows
 should be specified by "Memo: Non-energy use in <\if{html}{\out{<specific industry>}}>"
 entries in the IEA data.
-Default is \code{TRUE}.}
+Default is \code{FALSE}.}
+
+\item{apply_fixes}{A logical indicating whether fixes should be applied to IEA data.
+Default is \code{FALSE}.}
 
 \item{override_df}{A data frame containing columns \code{pfu_code} and \code{iea_name} that provides 3-letter country codes. See \code{IEATools::use_iso_countries()}.
 Default is \code{IEATools::override_iso_codes_df}.}
@@ -40,7 +48,7 @@ A tidy, augmented data frame of IEA extended energy balance data.
 }
 \description{
 Loads an IEA extended energy balance data file in \code{.csv} format from disk and converts to a tidy format.
-This function bundles several others:
+This function bundles several others and relies mostly on default values for arguments:
 \enumerate{
 \item \code{iea_df()},
 \item \code{rename_iea_df_cols()},
@@ -48,6 +56,7 @@ This function bundles several others:
 \item \code{use_iso_countries()},
 \item \code{augment_iea_df()},
 \item \code{specify_non_energy_use()} (optionally),
+\item \code{fix_GHA_industry_electricity() |> fix_GHA_psb() |> fix_COL_electricity_generation()} (optionally),
 \item \code{remove_agg_memo_flows()}, and
 \item \code{tidy_iea_df()}.
 }
