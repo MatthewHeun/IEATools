@@ -4,7 +4,7 @@ output: html_document
 ---
 
 
-# IEATools 0.1.65 (2023-04-27)
+# IEATools 0.1.65 (2023-04-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7872573.svg)](https://doi.org/10.5281/zenodo.7872573)
 
 * Added new values to `IEATools::fap_flows`
   to accommodate detailed "Non-energy use in xxxxx"
