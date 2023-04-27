@@ -6,7 +6,7 @@
 \usage{
 fix_tidy_iea_df_balances(
   .tidy_iea_df,
-  max_fix = 6,
+  max_fix = 1,
   remove_zeroes = TRUE,
   country = IEATools::iea_cols$country,
   year = IEATools::iea_cols$year,
@@ -25,7 +25,7 @@ fix_tidy_iea_df_balances(
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
 
-\item{max_fix}{the maximum energy balance that will be fixed without giving an error. Default is 5.}
+\item{max_fix}{the maximum energy balance that will be fixed without giving an error. Default is \code{1}.}
 
 \item{remove_zeroes}{a logical telling whether to remove \code{0}s after balancing. Default is \code{TRUE}.}
 
@@ -45,7 +45,7 @@ the data for each product are in perfect energy balance.
 }
 \description{
 IEA extended energy balance data are sometimes not quite balanced.
-In fact, supply and consumption are often wrong by a few ktoe
+In fact, supply and consumption are often wrong by a few ktoe or TJ
 for any given Product in a Country in a Year.
 This function ensures that the balance is perfect
 by adjusting the \verb{Statistical differences} flow
@@ -63,7 +63,7 @@ Grouping should \emph{not} be done on the \code{flow_aggregation_point}, \code{F
 Internally, this function calls \code{\link[=calc_tidy_iea_df_balances]{calc_tidy_iea_df_balances()}}
 and adjusts the value of the \code{statistical_differences} column to compensate for any imbalances that are present.
 
-If energy balance for any product is greater than \code{max_fix} (default 5),
+If energy balance for any product is greater than \code{max_fix} (default 1),
 an error will be emitted, and execution will halt.
 This behavior is intended to identify any places where there are gross energy imbalances
 that should be investigated prior to further analysis.

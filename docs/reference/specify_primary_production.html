@@ -8,7 +8,7 @@ but there are no Coal mines that produce coal.
 Rather, the generic Production industry produces coal.
 This function solves that problem by
 replacing the generic Production industry with
-specific industries."><title>Specify primary production industries — specify_primary_production • IEATools</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Specify primary production industries — specify_primary_production"><meta property="og:description" content="The IEA extended energy balances include
+specific industries."><title>Specify primary production industries — specify_primary_production • IEATools</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Specify primary production industries — specify_primary_production"><meta property="og:description" content="The IEA extended energy balances include
 some Flows that identify Energy industry own use (EIOU),
 the consumption of energy by energy-producing industries.
 But some primary production industries that receive EIOU do not produce anything.
@@ -28,7 +28,7 @@ specific industries."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.63</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.65</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,91 +85,128 @@ specific industries.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">specify_primary_production</span><span class="op">(</span>
-  <span class="va">.tidy_iea_df</span>,
-  ledger_side <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">ledger_side</span>,
-  flow_aggregation_point <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">flow_aggregation_point</span>,
-  flow <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">flow</span>,
-  product <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">product</span>,
-  e_dot <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">e_dot</span>,
-  list_primary_coal_products <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="primary_coal_products.html">primary_coal_products</a></span>,
-  list_primary_oil_products <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="primary_oil_products.html">primary_oil_products</a></span>,
-  list_primary_gas_products <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="primary_gas_products.html">primary_gas_products</a></span>,
-  production <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="tpes_flows.html">tpes_flows</a></span><span class="op">$</span><span class="va">production</span>,
-  coal_mines <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="industry_flows.html">industry_flows</a></span><span class="op">$</span><span class="va">coal_mines</span>,
-  oil_extraction <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="industry_flows.html">industry_flows</a></span><span class="op">$</span><span class="va">oil_extraction</span>,
-  gas_extraction <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="industry_flows.html">industry_flows</a></span><span class="op">$</span><span class="va">natural_gas_extraction</span>,
-  liquefaction_regas <span class="op">=</span> <span class="st">"Liquefaction (LNG) / regasification plants"</span>,
-  liquefaction_regas_reassign <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="industry_flows.html">industry_flows</a></span><span class="op">$</span><span class="va">oil_and_gas_extraction</span>,
-  transformation_processes <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="aggregation_flows.html">aggregation_flows</a></span><span class="op">$</span><span class="va">transformation_processes</span>,
-  resources <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="tpes_flows.html">tpes_flows</a></span><span class="op">$</span><span class="va">resources</span>,
-  resource_products_notation <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/from_notation.html" class="external-link">from_notation</a></span>,
-  resources_flow_notation <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/of_notation.html" class="external-link">of_notation</a></span>,
-  manufacture <span class="op">=</span> <span class="st">"Manufacture"</span>,
-  manufacture_flow_notation <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/of_notation.html" class="external-link">of_notation</a></span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">specify_primary_production</span><span class="op">(</span></span>
+<span>  <span class="va">.tidy_iea_df</span>,</span>
+<span>  ledger_side <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">ledger_side</span>,</span>
+<span>  flow_aggregation_point <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">flow_aggregation_point</span>,</span>
+<span>  flow <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">flow</span>,</span>
+<span>  product <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">product</span>,</span>
+<span>  e_dot <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">e_dot</span>,</span>
+<span>  list_primary_coal_products <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="primary_coal_products.html">primary_coal_products</a></span>,</span>
+<span>  list_primary_oil_products <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="primary_oil_products.html">primary_oil_products</a></span>,</span>
+<span>  list_primary_gas_products <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="primary_gas_products.html">primary_gas_products</a></span>,</span>
+<span>  production <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="tpes_flows.html">tpes_flows</a></span><span class="op">$</span><span class="va">production</span>,</span>
+<span>  coal_mines <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="industry_flows.html">industry_flows</a></span><span class="op">$</span><span class="va">coal_mines</span>,</span>
+<span>  oil_extraction <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="industry_flows.html">industry_flows</a></span><span class="op">$</span><span class="va">oil_extraction</span>,</span>
+<span>  gas_extraction <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="industry_flows.html">industry_flows</a></span><span class="op">$</span><span class="va">natural_gas_extraction</span>,</span>
+<span>  liquefaction_regas <span class="op">=</span> <span class="st">"Liquefaction (LNG) / regasification plants"</span>,</span>
+<span>  liquefaction_regas_reassign <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="industry_flows.html">industry_flows</a></span><span class="op">$</span><span class="va">natural_gas_extraction</span>,</span>
+<span>  transformation_processes <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="aggregation_flows.html">aggregation_flows</a></span><span class="op">$</span><span class="va">transformation_processes</span>,</span>
+<span>  resources <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="tpes_flows.html">tpes_flows</a></span><span class="op">$</span><span class="va">resources</span>,</span>
+<span>  resource_products_notation <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/from_notation.html" class="external-link">from_notation</a></span>,</span>
+<span>  resources_flow_notation <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/of_notation.html" class="external-link">of_notation</a></span>,</span>
+<span>  manufacture <span class="op">=</span> <span class="st">"Manufacture"</span>,</span>
+<span>  manufacture_flow_notation <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/of_notation.html" class="external-link">of_notation</a></span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>.tidy_iea_df</dt>
 <dd><p>An IEA data frame whose columns have been renamed by <code><a href="rename_iea_df_cols.html">rename_iea_df_cols()</a></code>.</p></dd>
+
+
 <dt>ledger_side, flow, product, flow_aggregation_point</dt>
 <dd><p>See <code><a href="iea_cols.html">IEATools::iea_cols</a></code>.</p></dd>
+
+
 <dt>e_dot</dt>
 <dd><p>The name of the energy column in <code>.tidy_iea_df</code>. Default is "<code>E.dot</code>".</p></dd>
+
+
 <dt>list_primary_coal_products</dt>
 <dd><p>The list of primary coal products for which the production industry needs to be changed.
 Default is <code><a href="primary_coal_products.html">IEATools::primary_coal_products</a></code>.</p></dd>
+
+
 <dt>list_primary_oil_products</dt>
 <dd><p>The list of primary oil products for which the production industry needs to be changed.
 Default is <code><a href="primary_oil_products.html">IEATools::primary_oil_products</a></code>.</p></dd>
+
+
 <dt>list_primary_gas_products</dt>
 <dd><p>The list of primary gas products for which the production industry needs to be changed.
 Default is <code><a href="primary_gas_products.html">IEATools::primary_gas_products</a></code>.</p></dd>
+
+
 <dt>production</dt>
 <dd><p>A string identifying production in the flow column. Default is "<code>Production</code>".</p></dd>
+
+
 <dt>coal_mines</dt>
 <dd><p>The name of the new industry that produces primary coal products.
 Default is <code>IEATools::industry_flows$coal_mines</code>.</p></dd>
+
+
 <dt>oil_extraction</dt>
 <dd><p>The name of the new industry that produces primary oil and gas products.
 Default is <code>IEATools::industry_flows$oil_extraction</code>.</p></dd>
+
+
 <dt>gas_extraction</dt>
 <dd><p>The name of the new industry that produces primary oil and gas products.
 Default is <code>IEATools::industry_flows$natural_gas_extraction</code>.</p></dd>
+
+
 <dt>liquefaction_regas</dt>
 <dd><p>A string identifying liquefaction and regasification plants.
 Default is "Liquefaction (LNG) / regasification plants".</p></dd>
+
+
 <dt>liquefaction_regas_reassign</dt>
 <dd><p>A string identifying the industry to which EIOU into <code>liquefaction_regas</code> will be reassigned.
-Default is "Oil and gas extraction".</p></dd>
+Default is "Natural gas extraction".</p></dd>
+
+
 <dt>transformation_processes</dt>
 <dd><p>A string identifying transformation processes in the flow column of <code>.tidy_iea_df</code>.
 Default is "Transformation processes".</p></dd>
+
+
 <dt>resources</dt>
 <dd><p>A string identifying resource industries to be added to <code>.tidy_iea_df</code>.
 Default is "<code>Resources</code>".</p></dd>
+
+
 <dt>resource_products_notation</dt>
 <dd><p>The notation to be used for defining products coming from the new resource industries.
 E.g., the Crude oil product will be called "Crude oil [from Resources]".
 Default is <code><a href="https://rdrr.io/pkg/RCLabels/man/from_notation.html" class="external-link">RCLabels::from_notation</a></code>.</p></dd>
+
+
 <dt>resources_flow_notation</dt>
 <dd><p>The notation to be used for defining the new resource industries.
 E.g., the Crude oil resource will be called "Resources [of Crude oil]".
 Default is <code><a href="https://rdrr.io/pkg/RCLabels/man/of_notation.html" class="external-link">RCLabels::of_notation</a></code>.</p></dd>
+
+
 <dt>manufacture</dt>
 <dd><p>The name of the industries that convert resource-products \(inputs\) into actual products \(outputs\),
 when a corresponding a corresponding industry does not exist by default in IEA data.
 Default is "Manufacture".</p></dd>
+
+
 <dt>manufacture_flow_notation</dt>
 <dd><p>The notation to be used for the newly created manufacture industries
 \(each manufacturing industry is specified\) by the product it manufactures.
 Default is <code><a href="https://rdrr.io/pkg/RCLabels/man/of_notation.html" class="external-link">RCLabels::of_notation</a></code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A <code>.tidy_iea_df</code> with adjusted production information for primary energy
+    
+
+<p>A <code>.tidy_iea_df</code> with adjusted production information for primary energy
 for both coal and coal products and oil and gas extraction</p>
     </div>
     <div class="section level2">
@@ -190,39 +227,40 @@ and <code>Manufacture [of Product]</code> for all other products.</p></li>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>
-<span class="r-in">  <span class="fu">specify_primary_production</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>
-<span class="r-in">  <span class="fu"><a href="add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>
-<span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Flow</span> <span class="op">==</span> <span class="st">"Coal mines"</span> <span class="op">|</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Resources"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>
-<span class="r-in">  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">Method</span>, <span class="op">-</span><span class="va">Last.stage</span>, <span class="op">-</span><span class="va">Ledger.side</span>, <span class="op">-</span><span class="va">Unit</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="load_tidy_iea_df.html">load_tidy_iea_df</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu">specify_primary_production</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Flow</span> <span class="op">==</span> <span class="st">"Coal mines"</span> <span class="op">|</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Resources"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">Method</span>, <span class="op">-</span><span class="va">Last.stage</span>, <span class="op">-</span><span class="va">Ledger.side</span>, <span class="op">-</span><span class="va">Unit</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 23 × 8</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Energy.type  Year Flow.aggregation.po… Flow  Product   E.dot matnames</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> GHA     E            <span style="text-decoration: underline;">1</span>971 Total primary energ… Reso… Hydro …  2.50<span style="color: #949494;">e</span>2 R       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> GHA     E            <span style="text-decoration: underline;">1</span>971 Total primary energ… Reso… Primar…  2.09<span style="color: #949494;">e</span>3 R       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> GHA     E            <span style="text-decoration: underline;">2</span>000 Total primary energ… Reso… Hydro …  5.68<span style="color: #949494;">e</span>2 R       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> GHA     E            <span style="text-decoration: underline;">2</span>000 Total primary energ… Reso… Primar…  3.89<span style="color: #949494;">e</span>3 R       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ZAF     E            <span style="text-decoration: underline;">1</span>971 Energy industry own… Coal… Electr… -<span style="color: #BB0000;">5.24</span><span style="color: #949494;">e</span>1 U_EIOU  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ZAF     E            <span style="text-decoration: underline;">1</span>971 Total primary energ… Reso… Hard c…  3.31<span style="color: #949494;">e</span>4 R       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ZAF     E            <span style="text-decoration: underline;">1</span>971 Total primary energ… Reso… Hydro …  9.63<span style="color: #949494;">e</span>0 R       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ZAF     E            <span style="text-decoration: underline;">1</span>971 Total primary energ… Reso… Primar…  4.70<span style="color: #949494;">e</span>3 R       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ZAF     E            <span style="text-decoration: underline;">1</span>971 Transformation proc… Coal… Hard c…  3.31<span style="color: #949494;">e</span>4 V       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ZAF     E            <span style="text-decoration: underline;">1</span>971 Transformation proc… Coal… Hard c… -<span style="color: #BB0000;">3.31</span><span style="color: #949494;">e</span>4 U_feed  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 13 more rows</span></span>
-<span class="r-in"><span class="co"># EIOU by "Liquefaction (LNG) / regasification plants" is reassigned to "Oil and gas extraction"</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span class="r-in">  Flow.aggregation.point <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Energy industry own use"</span><span class="op">)</span>,</span>
-<span class="r-in">  Flow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Liquefaction (LNG) / regasification plants"</span><span class="op">)</span>, </span>
-<span class="r-in">  Product <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Natural gas"</span><span class="op">)</span>,</span>
-<span class="r-in">  E.dot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">42</span><span class="op">)</span>, </span>
-<span class="r-in">  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span class="r-in"><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>
-<span class="r-in">  <span class="fu">specify_primary_production</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Energy.type  Year Flow.aggregation.point      Flow    Product   E.dot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> GHA     E            <span style="text-decoration: underline;">1</span>971 Total primary energy supply Resour… Hydro …  1.05<span style="color: #949494;">e</span>4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> GHA     E            <span style="text-decoration: underline;">1</span>971 Total primary energy supply Resour… Primar…  8.74<span style="color: #949494;">e</span>4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> GHA     E            <span style="text-decoration: underline;">2</span>000 Total primary energy supply Resour… Hydro …  2.38<span style="color: #949494;">e</span>4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> GHA     E            <span style="text-decoration: underline;">2</span>000 Total primary energy supply Resour… Primar…  1.63<span style="color: #949494;">e</span>5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ZAF     E            <span style="text-decoration: underline;">1</span>971 Energy industry own use     Coal m… Electr… -<span style="color: #BB0000;">2.19</span><span style="color: #949494;">e</span>3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ZAF     E            <span style="text-decoration: underline;">1</span>971 Total primary energy supply Resour… Hard c…  1.38<span style="color: #949494;">e</span>6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ZAF     E            <span style="text-decoration: underline;">1</span>971 Total primary energy supply Resour… Hydro …  4.03<span style="color: #949494;">e</span>2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ZAF     E            <span style="text-decoration: underline;">1</span>971 Total primary energy supply Resour… Primar…  1.97<span style="color: #949494;">e</span>5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ZAF     E            <span style="text-decoration: underline;">1</span>971 Transformation processes    Coal m… Hard c…  1.38<span style="color: #949494;">e</span>6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ZAF     E            <span style="text-decoration: underline;">1</span>971 Transformation processes    Coal m… Hard c… -<span style="color: #BB0000;">1.38</span><span style="color: #949494;">e</span>6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 13 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: matnames &lt;chr&gt;</span></span>
+<span class="r-in"><span><span class="co"># EIOU by "Liquefaction (LNG) / regasification plants" is reassigned to "Oil and gas extraction"</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  Flow.aggregation.point <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Energy industry own use"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  Flow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Liquefaction (LNG) / regasification plants"</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>  Product <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Natural gas"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  E.dot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">42</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu">specify_primary_production</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Flow.aggregation.point  Flow                   Product     E.dot</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Energy industry own use Oil and gas extraction Natural gas   -<span style="color: #BB0000;">42</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Energy industry own use Natural gas extraction Natural gas   -<span style="color: #BB0000;">42</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -234,7 +272,7 @@ and <code>Manufacture [of Product]</code> for all other products.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
     </footer></div>

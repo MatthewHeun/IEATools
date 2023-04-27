@@ -17,7 +17,7 @@ replace_null_RUV(
   .R_temp_name = ".R_temp",
   .U_temp_name = ".U_temp",
   .U_feed_temp_name = ".U_feed_temp",
-  .U_eiou_temp_name = ".U_eEIOU_temp",
+  .U_eiou_temp_name = ".U_EIOU_temp",
   .r_eiou_temp_name = ".r_EIOU_temp",
   .V_temp_name = ".V_temp",
   R_name = IEATools::psut_cols$R,
@@ -58,7 +58,7 @@ there are no resources.
 Thus, we can replace the missing \strong{R} matrix with a \strong{0} matrix with a generic
 "Natural resources" row and the same products as the rows of the \strong{Y} matrix.
 
-Similarly, missing values for \strong{U}, \strong{U_feed}, \strong{U_EIOU}, or \strong{r_EIOU} can be replaced by a \code{0} matrix
+Similarly, missing values for \strong{U}, \strong{U_feed}, \strong{U_EIOU}, or \strong{r_EIOU} can be replaced by a \strong{0} matrix
 with row and column names same as a transposed \strong{V} matrix when it exists.
 If neither \strong{U} nor \strong{V} exist, the \strong{R} matrix can supply row and column names.
 }

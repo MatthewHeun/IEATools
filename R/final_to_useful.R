@@ -4,17 +4,17 @@
 #' Create allocation matrices (`C`) from an allocation table
 #' 
 #' This function uses information in a filled allocation template (created by `write_fu_allocation_template()`)
-#' to create allocation matrices (`C`). 
+#' to create allocation matrices (**C**). 
 #' 
-#' rownames of the `C` matrices are taken from the `Ef.product` and `Destination` columns of `.fu_allocation_table`
+#' rownames of the **C** matrices are taken from the `Ef.product` and `Destination` columns of `.fu_allocation_table`
 #' and have the form "`Ef.product` `r RCLabels::arrow_notation[["pref_end"]]` `Destination`".
-#' colnames of the `C` matrices are taken from the `Machine` and `Eu.product` columns of `.fu_allocation_table`
+#' colnames of the **C** matrices are taken from the `Machine` and `Eu.product` columns of `.fu_allocation_table`
 #' and have the form "machine `r RCLabels::arrow_notation[["pref_end"]]` useful energy form".
 #' 
-#' `C` matrices are created for both energy industry own use
-#' and final demand (`C_eiou` and `C_Y`, respectively).
+#' **C** matrices are created for both energy industry own use
+#' and final demand (**C_eiou** and **C_Y**, respectively).
 #' 
-#' Rows of the output `C` matrices should sum to 1.  
+#' Rows of the output **C** matrices should sum to 1.  
 #' If there is a problem, a data frame that shows the errors is returned.
 #' Such errors probably indicate the FU template was not filled correctly.
 #'
@@ -39,7 +39,7 @@
 #'               that tells whether a 1-vector was created by rowsums.
 #'
 #' @return A wide-by-matrices data frame with metadata columns (and year) along with columns for 
-#'         `C_eiou` and `C_Y` matrices.
+#'         **C_eiou** and **C_Y** matrices.
 #'         If not all rows of a C matrix sum to 1, 
 #'         a warning is emitted, and
 #'         a data frame is returned which shows the errors.
@@ -215,8 +215,20 @@ form_C_mats <- function(.fu_allocation_table,
 
   # If we passed the test, we can return the out data frame without the verification columns, 
   # after we pivot wider.
-  out %>% 
+  out <- out %>% 
     tidyr::pivot_wider(names_from = matnames, values_from = matvals)
+  
+  # If the outgoing data frame has no rows, 
+  # we will not have columns generated from matnames,
+  # so generate them here.
+  if (nrow(out) == 0) {
+    out <- out |> 
+      dplyr::mutate(
+        "{C_eiou}" := list(),
+        "{C_Y}" := list()
+      )
+  }
+  return(out)
 }
 
 
@@ -417,7 +429,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
   # Set the grouping columns for later.
   group_cols <- matsindf::everything_except(prepped, matvals, rownames, colnames, rowtypes, coltypes)
   
-  prepped %>% 
+  out <- prepped %>% 
     dplyr::mutate(
       "{rownames}" := dplyr::case_when(
         # For the phi_u rows, we want to keep only the product in the name.
@@ -445,6 +457,18 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    matrix.class = matrix.class) %>% 
     # pivot wider to the sutmats format
     tidyr::pivot_wider(names_from = matnames, values_from = matvals)
+  
+  # If the outgoing data frame has no rows, 
+  # we will not have columns generated from matnames,
+  # so generate them here.
+  if (nrow(out) == 0) {
+    out <- out |> 
+      dplyr::mutate(
+        "{eta_fu}" := list(),
+        "{phi_u}" := list()
+      )
+  }
+  return(out)
 }
 
 
@@ -484,6 +508,9 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' If the energy balance check fails, a warning is emitted and 
 #' additional diagnostic information will appear in the output: `.err` and `.e_bal_ok`.
 #' 
+#' If `.sutdata` is a data frame with no rows or a list of length `0`, 
+#' `NULL` is returned.
+#' 
 #' @param .sutdata A wide-by-matrices data frame of PSUT matrices that represent an energy conversion chain.
 #'                 Each row of `.sutdata` should contain the matrices that represent one energy conversion chain.
 #'                 Matrices should be in columns identified by their names.
@@ -494,9 +521,6 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                 probably created by functions `form_C_mats()` and `form_eta_fu_phi_u_vecs()`.
 #'                 `.sutdata` can also be a named list of matrices that forms a store of variables.
 #'                 Default is `NULL` to enable use of single matrices, too.
-#' @param clean_up_df When `.sutdata` is a data frame, tells whether to `tidyr::pivot_longer()` the result
-#'                    and remove no-longer-needed input columns `C_eiou`, `C_Y`, `eta_fu`, and `phi_u`.
-#'                    Default is `TRUE`.
 #' @param tol The allowable error in energy balances for the outgoing matrices (last stage useful). 
 #'            Default is `1e-3`.
 #' @param last_stage See `IEATools::iea_cols$last_stage`. 
@@ -551,22 +575,22 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'   form_C_mats()
 #' eta_fu_data <- load_eta_fu_data() %>% 
 #'   form_eta_fu_phi_u_vecs()
-#'   m_cols <- eta_fu_data %>% 
-#'     IEATools::meta_cols(return_names = TRUE,
-#'                         years_to_keep = IEATools::iea_cols$year,
-#'                         not_meta = c(IEATools::template_cols$eta_fu,
-#'                                      IEATools::template_cols$phi_u))
+#' m_cols <- eta_fu_data %>% 
+#'   IEATools::meta_cols(return_names = TRUE,
+#'                       years_to_keep = IEATools::iea_cols$year,
+#'                       not_meta = c(IEATools::template_cols$eta_fu,
+#'                                    IEATools::template_cols$phi_u))
 #' psut_mats <- load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
-#'   prep_psut() %>% 
+#'   prep_psut()
+#' extended_to_useful <- psut_mats |> 
 #'   dplyr::full_join(C_data, by = m_cols) %>% 
-#'   dplyr::full_join(eta_fu_data, by = m_cols)
-#' psut_mats %>% 
-#'   extend_to_useful() %>% 
+#'   dplyr::full_join(eta_fu_data, by = m_cols) |> 
+#'   extend_to_useful()
+#' extended_to_useful %>% 
 #'   head()
 extend_to_useful <- function(.sutdata = NULL, 
-                             clean_up_df = TRUE, 
-                             tol = 1e-3,
+                             tol = 0.1,
                              
                              R = IEATools::psut_cols$R, 
                              U_feed = IEATools::psut_cols$U_feed,
@@ -618,8 +642,32 @@ extend_to_useful <- function(.sutdata = NULL,
   V_useful_name <- paste0(V_name, .sep, useful)
   Y_useful_name <- paste0(Y_name, .sep, useful)
   
-  extend_func <- function(eta_fu_vector, Y_mat, C_Y_mat, U_feed_mat, V_mat, C_eiou_mat, U_eiou_mat, R_mat) {
+  extend_func <- function(eta_fu_vector = NULL, Y_mat = NULL, C_Y_mat = NULL, U_feed_mat = NULL, 
+                          V_mat = NULL, C_eiou_mat = NULL, U_eiou_mat = NULL, R_mat = NULL) {
     
+    # Check for the case when all of the incoming values are of length 0.
+    # This can occur when the incoming data frame has no rows.
+    # In that event, return a list with empty list()s and numeric()s
+    # and the correct names.
+    # Lists are required, because these will be bound (potentially) with other
+    # lists of matrices in a data frame.
+    if (length(eta_fu_vector) == 0 & length(Y_mat) == 0 & length(C_Y_mat) == 0 & length(U_feed_mat) == 0 &
+        length(V_mat) == 0 & length(C_eiou_mat) == 0 & length(U_eiou_mat) == 0 & length(R_mat) == 0) {
+      out <- list(list(), 
+                  list(), 
+                  list(),
+                  list(), 
+                  list(), 
+                  list()) %>% 
+        magrittr::set_names(c(U_feed_useful_name, 
+                              U_eiou_useful_name, 
+                              U_useful_name, 
+                              r_eiou_useful_name, 
+                              V_useful_name, 
+                              Y_useful_name))
+      return(out)
+    }
+
     # Industries to retain from Y_f to Y_u. 
     # These industries are not allocated to f-u machines, nor are they tracked for useful energy.
     Y_keep_inds <- c(interface_ind, losses, stat_diffs)
@@ -634,7 +682,7 @@ extend_to_useful <- function(.sutdata = NULL,
                                          from = list(arrow_note), 
                                          to = list(from_note), 
                                          flip = list(TRUE))
-
+    
     # There are two destinations for final energy: final demand (the Y matrix) and EIOU (the U_EIOU matrix)
     # We take each of these in turn, adjusting the energy conversion chain to account for the fact that 
     # useful energy is now the last stage.
@@ -655,16 +703,13 @@ extend_to_useful <- function(.sutdata = NULL,
     # so we must retain them in the Y matrix.
     Y_keep_mat <- matsbyname::select_cols_byname(Y_mat, 
                                                  retain_pattern = RCLabels::make_or_pattern(Y_keep_inds, 
-                                                                                         pattern_type = "leading"))
+                                                                                            pattern_type = "leading"))
     Y_useful_mat <- matsbyname::sum_byname(Y_keep_mat, res_Y[[.add_to_dest]])
     
     # Now check to see if we have any EIOU. 
     # If so, make further adjustments to the matrices.
     # If not, no big deal. 
     # We can live with the matrices calculated above.
-    if (missing(C_eiou_mat)) {
-      C_eiou_mat <- NULL
-    }
     if (!is.null(C_eiou_mat)) {
       # We have some EIOU. Calculate modifications to matrices accounting for the EIOU portion of the ECC.
       res_eiou <- extend_to_useful_helper(dest_mat = U_eiou_mat, C_mat = C_eiou_mat, eta_fu_vec = eta_fu_vector, 
@@ -688,13 +733,13 @@ extend_to_useful <- function(.sutdata = NULL,
     .err_vec <- matsbyname::sum_byname(R_mat, V_useful_mat) %>%   # R + V
       matsbyname::transpose_byname() %>%                          # (R + V)^T
       matsbyname::difference_byname(U_useful_mat) %>%             # (R + V)^T - U
-      matsbyname::difference_byname(Y_useful_mat) %>%             # (R + V)^T - U - Y
+      matsbyname::difference_byname(Y_useful_mat) %>%             # (R + V)^T - (U + Y)
       matsbyname::rowsums_byname()
-      
+    
     .ebal_ok <- .err_vec %>%
       matsbyname::iszero_byname(tol = tol) %>% 
       as.logical()
-
+    
     # Return a named list, as required by matsindf_apply()
     out <- list(U_feed_useful_mat, 
                 U_eiou_useful_mat, 
@@ -723,7 +768,7 @@ extend_to_useful <- function(.sutdata = NULL,
     }
     return(out)
   }
-
+  
   out <- matsindf::matsindf_apply(.sutdata, FUN = extend_func,
                                   eta_fu_vector = eta_fu, 
                                   Y_mat = Y, 
@@ -733,37 +778,6 @@ extend_to_useful <- function(.sutdata = NULL,
                                   C_eiou_mat = C_eiou, 
                                   U_eiou_mat = U_eiou, 
                                   R_mat = R)
-  
-  # Gather (tidyr::pivot_longer) the outgoing data frame, if requested.
-  if (is.data.frame(out) & clean_up_df) {
-    # Build a data frame with metadata columns and columns that end in sep+useful.
-    # That data frame should be able to be added to the bottom of the incoming data frame.
-    cols_to_keep <- out %>% 
-      matsindf::everything_except(U_feed_name, U_eiou_name, U_name,
-                                  r_eiou_name, V_name, Y_name, .symbols = FALSE)
-    # We'll need to strip suffixes off column names.
-    suff_to_remove <- paste0(.sep, useful)
-    useful_df <- out %>% 
-      # dplyr::select(cols_to_keep) %>% 
-      dplyr::select(dplyr::all_of(cols_to_keep)) %>% 
-      # Change the Last.stage column to Useful
-      dplyr::mutate(
-        "{last_stage}" := useful
-      ) %>% 
-      # Strip sep_useful from end of any column names. 
-      # Hint obtained from https://stackoverflow.com/questions/45960269/removing-suffix-from-column-names-using-rename-all
-      dplyr::rename_with(~ gsub(paste0(suff_to_remove, "$"), "", .x))
-    # Bind the final and useful data frames together.
-    out <- dplyr::bind_rows(.sutdata, useful_df) %>% 
-      # Trim away unneeded columns
-      dplyr::mutate(
-        "{C_eiou}" := NULL, 
-        "{C_Y}" := NULL, 
-        "{eta_fu}" := NULL, 
-        "{phi_u}" := NULL
-      )
-  }
-  
   return(out)
 }
 
@@ -879,3 +893,92 @@ extend_to_useful_helper <- function(.sutdata = NULL,
   matsindf::matsindf_apply(.sutdata, FUN = helper_func, dest_m = dest_mat, C_m = C_mat, eta_fu_v = eta_fu_vec)
 }
 
+
+#' Clean and pivot useful data frame
+#' 
+#' After a call to `extend_to_useful()`,
+#' the resulting data frame is not in a great shape.
+#' This function gathers (via `tidyr::pivot_longer()`)
+#' and stacks the useful data beneath the final data.
+#'
+#' @param .useful_df A data frame created by `extend_to_useful()`.
+#' @param .sutdata The original input to `extend_to_useful()`.
+#' @param last_stage See `IEATools::iea_cols$last_stage`. 
+#' @param .sep A separator between matrix names and `final` or `useful` indicators. Default is "_".
+#' @param C_eiou,C_Y,eta_fu,phi_u See `IEATools::template_cols`. 
+#'        These should be strings (if `.sutdata` is a data frame or a list)
+#'        or individual matrices (if `.sutdata` is `NULL`).
+#' @param useful See `IEATools::last_stages`.
+#' @param U_eiou_name,U_feed_name,U_name,r_eiou_name,V_name,Y_name See `IEATools::psut_cols`. 
+#'        Distinct from `U_feed`,`U_eiou`, `U`, `r_eiou`, `V`, and `Y` (which can be matrices or strings), 
+#'        these variables determine the names of these matrices on output.
+#'        Default values are taken from `IEATools::psut_cols`. 
+#'        Note that `.sep` and `useful` are appended to the strings in `U_eiou_name` ... `Y_name` 
+#'        to form the output names. 
+#'        
+#' @return A nicer form of useful energy and exergy data.
+#' 
+#' @export
+#'
+#' @examples
+#' C_data <- load_fu_allocation_data() %>% 
+#'   form_C_mats()
+#' eta_fu_data <- load_eta_fu_data() %>% 
+#'   form_eta_fu_phi_u_vecs()
+#' m_cols <- eta_fu_data %>% 
+#'   IEATools::meta_cols(return_names = TRUE,
+#'                       years_to_keep = IEATools::iea_cols$year,
+#'                       not_meta = c(IEATools::template_cols$eta_fu,
+#'                                    IEATools::template_cols$phi_u))
+#' psut_mats <- load_tidy_iea_df() %>% 
+#'   specify_all() %>% 
+#'   prep_psut()
+#' extended_to_useful <- psut_mats |> 
+#'   dplyr::full_join(C_data, by = m_cols) %>% 
+#'   dplyr::full_join(eta_fu_data, by = m_cols) |> 
+#'   extend_to_useful()
+#' stack_final_useful_df(extended_to_useful, psut_mats)
+stack_final_useful_df <- function(.useful_df, 
+                                  .sutdata,
+                                  last_stage = IEATools::iea_cols$last_stage,
+                                  useful = IEATools::last_stages$useful, 
+                                  .sep = "_", 
+                                  
+                                  C_eiou = IEATools::template_cols$C_eiou,
+                                  C_Y = IEATools::template_cols$C_Y, 
+                                  eta_fu = IEATools::template_cols$eta_fu,
+                                  phi_u = IEATools::template_cols$phi_u,
+                                  
+                                  U_feed_name = IEATools::psut_cols$U_feed,
+                                  U_eiou_name = IEATools::psut_cols$U_eiou,
+                                  U_name = IEATools::psut_cols$U,
+                                  r_eiou_name = IEATools::psut_cols$r_eiou,
+                                  V_name = IEATools::psut_cols$V, 
+                                  Y_name = IEATools::psut_cols$Y) {
+  # Build a data frame with metadata columns and columns that end in sep+useful.
+  # That data frame should be able to be added to the bottom of the incoming data frame.
+  cols_to_keep <- .useful_df %>%
+    matsindf::everything_except(U_feed_name, U_eiou_name, U_name,
+                                r_eiou_name, V_name, Y_name, .symbols = FALSE)
+  # We'll need to strip suffixes off column names.
+  suff_to_remove <- paste0(.sep, useful)
+  useful_df <- .useful_df %>%
+    dplyr::select(dplyr::all_of(cols_to_keep)) %>%
+    # Change the Last.stage column to Useful
+    dplyr::mutate(
+      "{last_stage}" := useful
+    ) %>%
+    # Strip sep_useful from end of any column names.
+    # Hint obtained from https://stackoverflow.com/questions/45960269/removing-suffix-from-column-names-using-rename-all
+    dplyr::rename_with(~ gsub(paste0(suff_to_remove, "$"), "", .x))
+  # Bind the final and useful data frames together.
+  out <- dplyr::bind_rows(.sutdata, useful_df) %>%
+    # Trim away unneeded columns
+    dplyr::mutate(
+      "{C_eiou}" := NULL,
+      "{C_Y}" := NULL,
+      "{eta_fu}" := NULL,
+      "{phi_u}" := NULL
+    )
+  return(out)
+}

@@ -258,7 +258,9 @@ split_oil_gas_extraction_eiou <- function(.tidy_iea_df,
       # The new policy in dplyr is to warn about multiple rows being created.
       # Creating multiple rows is the desired behavior here.
       # Setting multiple = "all" eliminates the warning.
-      multiple = "all"
+      # multiple = "all"
+      # The latest approach by dplyr to solve this problem involves the relationahip argument
+      relationship = "many-to-many"
     ) %>% 
     dplyr::mutate(
       "{.share}" := tidyr::replace_na(.data[[.share]], 1)

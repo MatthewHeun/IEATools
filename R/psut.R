@@ -402,7 +402,7 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' Thus, we can replace the missing **R** matrix with a **0** matrix with a generic
 #' "Natural resources" row and the same products as the rows of the **Y** matrix.
 #' 
-#' Similarly, missing values for **U**, **U_feed**, **U_EIOU**, or **r_EIOU** can be replaced by a `0` matrix
+#' Similarly, missing values for **U**, **U_feed**, **U_EIOU**, or **r_EIOU** can be replaced by a **0** matrix
 #' with row and column names same as a transposed **V** matrix when it exists.
 #' If neither **U** nor **V** exist, the **R** matrix can supply row and column names.
 #'
@@ -446,7 +446,7 @@ replace_null_RUV <- function(.sutmats = NULL,
                              .R_temp_name = ".R_temp", 
                              .U_temp_name = ".U_temp", 
                              .U_feed_temp_name = ".U_feed_temp", 
-                             .U_eiou_temp_name = ".U_eEIOU_temp", 
+                             .U_eiou_temp_name = ".U_EIOU_temp", 
                              .r_eiou_temp_name = ".r_EIOU_temp",
                              .V_temp_name = ".V_temp", 
                              R_name = IEATools::psut_cols$R, 
@@ -651,18 +651,16 @@ prep_psut <- function(.tidy_iea_df,
                               return_names = TRUE, 
                               not_meta = c(ledger_side, flow_aggregation_point, flow, product, e_dot, unit))
     out <- .tidy_iea_df %>% 
-      # dplyr::select(!!!meta_columns, !!year)
       dplyr::select(dplyr::all_of(c(meta_columns, year)))
     # Make a tibble with no rows for the remainder of the columns, 
     # R, U_eiou, U_feed, V, Y, S_units (6 in total)
     # Use 1.1 for the value so that columns are created as double type columns.
-    mats_cols <- as.list(rep(1.1, 7)) %>% 
-      magrittr::set_names(c(R, U_eiou, U_feed, V, Y, s_units, B)) %>% 
-      as.data.frame()
-    # Eliminate the row in the data frame
-    zero_length_mats_cols <- mats_cols[0, ]
+    mats_cols <- data.frame(rep(list(double()), 8)) |> 
+      magrittr::set_names(c(R, U, U_eiou, U_feed, r_eiou, V, Y, s_units)) |> 
+      tibble::as_tibble() |> 
+      dplyr::mutate(dplyr::across(dplyr::any_of(c(R, U, U_eiou, U_feed, r_eiou,V, Y, s_units)), as.list))
     # Join to out
-    return(dplyr::bind_cols(out, zero_length_mats_cols))
+    return(dplyr::bind_cols(out, mats_cols))
   } 
   
   # We actually have some rows in .tidy_iea_df, so work with them
@@ -696,7 +694,7 @@ prep_psut <- function(.tidy_iea_df,
   # In other cases (BEN, GIB, MUS, NAM), the U_feed is present, but
   # U_EIOU matrices are missing.
   # So we check for the presence of U_feed or U_EIOU, as appropriate,
-  #  before creating the U or r_eiou matrices.
+  # before creating the U or r_eiou matrices.
   # ---Matthew Kuperus Heun, 9 Nov 2021
   if (U_feed %in% names(CollapsedSpread) & !(U_eiou %in% names(CollapsedSpread))) {
     # With no U_eiou matrix, we simply set U equal to U_feed

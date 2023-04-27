@@ -18,9 +18,9 @@ specify_non_energy_use(
   product = IEATools::iea_cols$product,
   non_energy_use = IEATools::aggregation_flows$non_energy_use,
   non_energy_flows_industry_transformation_energy =
-    IEATools::non_energy_flows$non_energy_use_industry_transformation_energy,
+    IEATools::non_energy_flows[["non_energy_use_industry_transformation_energy"]],
   memo_non_energy_use_in_industry_not_elsewhere_specified =
-    IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry_not_elsewhere_specified,
+    IEATools::memo_non_energy_flows[["memo_non_energy_use_in_industry_not_elsewhere_specified"]],
   non_energy_use_in_industry_not_elsewhere_specified = sub(pattern = paste0("^", memo),
     replacement = "", memo_non_energy_use_in_industry_not_elsewhere_specified),
   memo = IEATools::memo_aggregation_flow_prefixes$memo,

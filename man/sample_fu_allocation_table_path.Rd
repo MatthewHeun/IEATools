@@ -4,7 +4,7 @@
 \alias{sample_fu_allocation_table_path}
 \title{The path to a filled final-to-useful allocation table}
 \usage{
-sample_fu_allocation_table_path(version = 2021)
+sample_fu_allocation_table_path(version = 2022)
 }
 \arguments{
 \item{version}{the desired version (expressed as the year of IEA data release) of
@@ -18,10 +18,8 @@ the path to a final-to-useful allocation table
 The path to a filled final-to-useful allocation table
 }
 \examples{
-sample_fu_allocation_table_path()     # Assumes 2021
-sample_fu_allocation_table_path(2021) # Same
+sample_fu_allocation_table_path()     # Assumes 2022
+sample_fu_allocation_table_path(2022) # Same
 # Returns path for sample allocation table appropriate for other IEA data releases
-sample_fu_allocation_table_path(2020) 
-sample_fu_allocation_table_path(2019) 
-sample_fu_allocation_table_path(2018) 
+sample_fu_allocation_table_path(2021) 
 }

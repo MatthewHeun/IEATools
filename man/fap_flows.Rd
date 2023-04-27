@@ -5,7 +5,7 @@
 \alias{fap_flows}
 \title{IEA order for combined flow aggregation point and flow}
 \format{
-A string list with 90
+A string list with 103
 }
 \usage{
 fap_flows

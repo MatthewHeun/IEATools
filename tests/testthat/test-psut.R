@@ -4,7 +4,7 @@ test_that("extract_S_units_from_tidy() works as expected", {
 
   for (i in nrow(S_units)) {
     su <- S_units$S_units[[i]]
-    expect_true(all(su[ , "ktoe"] == 1))
+    expect_true(all(su[ , "TJ"] == 1))
   }
 })
 
@@ -16,7 +16,7 @@ test_that("extract_S_units_from_tidy() works with Matrix objects", {
   for (i in nrow(S_units)) {
     su <- S_units$S_units[[i]]
     expect_true(matsbyname::is.Matrix(su))
-    expect_true(all(su[ , "ktoe"] == 1))
+    expect_true(all(su[ , "TJ"] == 1))
   }
 })
 
@@ -472,7 +472,7 @@ test_that("prep_psut() works as expected with empty .tidy_iea_df", {
                      IEATools::iea_cols$energy_type,
                      IEATools::iea_cols$last_stage,
                      IEATools::iea_cols$year,
-                     "R", "U_EIOU", "U_feed", "V", "Y", "S_units", "B")) {
+                     "R", "U", "U_EIOU", "U_feed", "V", "Y", "S_units")) {
     expect_true(col_name %in% cn)
   }
   expect_equal(nrow(zero_psut), 0)
@@ -509,7 +509,7 @@ test_that("prep_psut() correctly makes columns of U and r_EIOU matrices with Mat
   # Verify that we made Matrix objects everywhere
   for (j in 6:ncol(psut_with_test_cols)) {
     for (i in 1:nrow(psut_with_test_cols)) {
-      expect_true(matsbyname::is.Matrix(psut_with_test_cols[[i, j]]))
+      expect_true(matsbyname::is.Matrix(psut_with_test_cols[[i, j]][[1]]))
     }
   }
   

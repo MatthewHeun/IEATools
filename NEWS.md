@@ -4,7 +4,43 @@ output: html_document
 ---
 
 
-# IEATools 0.1.64 (2023-03-09)
+# IEATools 0.1.65 (2023-04-27)
+
+* Added new values to `IEATools::fap_flows`
+  to accommodate detailed "Non-energy use in xxxxx"
+  flows.
+* Fixing IEA 2022 release Electricity data for Colombia 1971--1977.
+  The IEA acknowledged energy balance errors in those years.
+  The fix is to use 2021 release data for 1971--1977
+  for both Colombia and World.
+* No longer fixing Ghana's industrial consumption of electricity data,
+  because details are now available in the IEA's WEEB data.
+* Now using terajoules (TJ) as the preferred unit for all IEA
+  extended energy balance data.
+* Dropped support for 2018--2020 IEA extended energy balance data.
+* Now using the 2022 release of IEA extended energy balance data
+  by default.
+* Functions now treat a zero-row incoming data frame
+  much better, returning a zero-row data frame 
+  with columns of same type as would have been produced 
+  if the incoming data frame had at least one row.
+* `IEATools::fd_sectors` now contains specific
+  "Non-energy use in <<industry>>" strings
+  to support the option to specify Non-energy use flows
+  when possible.
+* Fixed a bug where 
+  "Stock changes [of Gas/diesel oil excl. biofuels]"
+  became
+  "Stock changes [of Gas/diesel oil excl]", because
+  the `notation` argument was not being set properly
+  in a call to `RCLabels::get_pref_suff()`
+  when extracting prefixes.
+* Simplifications reduced the number of tests.
+    * Now up to 1216 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# IEATools 0.1.64 (2023-03-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7714342.svg)](https://doi.org/10.5281/zenodo.7714342)
 
 * New boolean argument `specify_non_energy_flows` 
   on `load_tidy_iea_df()` enables specifying Non-energy use flows 

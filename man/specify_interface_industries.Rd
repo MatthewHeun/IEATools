@@ -7,10 +7,11 @@
 specify_interface_industries(
   .tidy_iea_df,
   flow = IEATools::iea_cols$flow,
-  int_industries = c(IEATools::interface_industries, IEATools::tpes_flows["resources"],
+  int_industries = c(IEATools::interface_industries, IEATools::tpes_flows$resources,
     manufacture = "Manufacture"),
   product = IEATools::iea_cols$product,
-  notation = RCLabels::of_notation
+  flow_notation = RCLabels::of_notation,
+  product_notation = RCLabels::bracket_notation
 )
 }
 \arguments{
@@ -20,23 +21,29 @@ specify_interface_industries(
 
 \item{int_industries}{A string vector of industries involved in exchanges with other countries,
 bunkers, or stock changes.
-Default is c(\code{IEATools::interface_industries}, IEATools::tpes_flows["resources"],
-manufacture = "Manufacture").}
+Default is \code{c(IEATools::interface_industries, IEATools::tpes_flows$resources, manufacture = "Manufacture")}.}
 
-\item{product}{The name of the product column in \code{.tidy_iea_df}.  Default is "\code{Product}".}
+\item{product}{The name of the product column in \code{.tidy_iea_df}.
+Default is "\code{Product}".}
 
-\item{notation}{A list of specification notations. Default is \code{RCLabels::of_notation}.}
+\item{flow_notation}{The notation for the \code{flow} column.
+Default is \code{RCLabels::of_notation}.}
+
+\item{product_notation}{The notation for the \code{product} column.
+Default is \code{RCLabels::bracket_notation}, meaning that
+any type of "X [from Resources]" or "X [to Y]"
+will be parsed correctly for its prefix.}
 }
 \value{
 A modified version of \code{.tidy_iea_df} with specified interface industries.
 }
 \description{
 An interface industry is one that moves energy carriers into or out of a country.
-When \code{Flow} is any of the interface industries, we need to be more specific.
-If we don't separate these \code{Flow}s by \code{Product}, we run into trouble with
-upstream swims (e.g., all \code{Product}s are produced even if only one is needed) and
+When \code{flow} is any of the interface industries, we need to be more specific.
+If we don't separate these \code{flow}s by \code{product}, we run into trouble with
+upstream swims (e.g., all \code{product}s are produced even if only one is needed) and
 embodied energy calculations (many types of energy are embodied, even if only one should be).
-This function adds a suffix \verb{[of Product]} to each of these interface industries.
+This function adds a suffix "[of Product]" to each of these interface industries.
 }
 \details{
 Note that "Production" also needs to be specified,

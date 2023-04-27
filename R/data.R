@@ -7,8 +7,7 @@
 #' 
 #' @format A numeric vector with `r length(valid_iea_release_years)` entries.
 #' \describe{
-#' \item{2018}{The year 2018}
-#' \item{2019}{The year 2019}
+#' \item{2022}{The year 2022}
 #' }
 #' @examples
 #' valid_iea_release_years
@@ -1131,12 +1130,14 @@
 #'
 #' A string vector containing final demand sectors used for calculating Total Final Consumption (TFC)
 #' 
-#' @format A string list with `r length(fd_sectors)`
+#' @format A string list with `r length(fd_sectors)`, comprised of the following vectors of strings:
 #' \describe{
 #' \item{eiou_flows}{The string vector identifying energy industry own use flows.}
 #' \item{industry_net_flows}{The string vector identifying non-eiou (net) Industry flows.}
 #' \item{transport_domestic_flows}{The string vector identifying domestic transport flows.}
 #' \item{other_flows}{The string vector identifying Other flows.}
+#' \item{non_energy_flows}{The string vector of Non-energy flows.}
+#' \item{memo_non_energy_flows}{The string vector `memo_non_energy_flows` with leading "Memo: " stripped away.}
 #' }
 #' 
 #' @examples
@@ -1163,5 +1164,58 @@
 #' phi_constants_names
 "phi_constants_names"
 
+
+#' Fixed Ghana Primary solid biofuels data
+#'
+#' Ghana's Primary solid biofuels data show a very large and dramatic decline from 1999 to 2000
+#' in IEA WEEB data.
+#' This decline is due to new survey data being used for the 2000 data.  
+#' When we look at the PSB data on a per-capita basis, it is clear that 
+#' a near-constant PSB/capita value was used to extrapolate per-capita usage in the late 1990s.
+#' When new survey data became available for the 2000 reporting year, 
+#' the per-capita consumption of PSB obviously changed.  
+#' Our approach to this problem is to smooth out the really big peak in PSB consumption 
+#' by reducing the per-capita consumption of PSB, starting in 1991.
+#' This data frame contains the "fixed" data.
+#' The function [fix_GHA_psb()] makes use of these data.
+#' 
+#' @format A data frame with `r ncol(Fixed_GHA_PSB)` columns.
+#' 
+#' @examples
+#' Fixed_GHA_PSB
+"Fixed_GHA_PSB"
+
+
+#' Fixed Ghana Industry Electricity data
+#'
+#' Ghana's Industry Electricity data have specifics for 
+#' Mining and quarrying,
+#' Non-ferrous metals, and
+#' Textile and leather
+#' for the years 1971--1973 only.
+#' However, data to bring more specificity to Industry Electricity consumption 
+#' are available from the Ghana Grid Corporation (GridCo) and the Volta River Authority (VRA).
+#' These data have been compiled into this object.
+#' The function fix_GHA_industry_electricity() makes use of these data.
+#' 
+#' @format A data frame with `r ncol(Fixed_GHA_Industry_Electricity)` columns.
+#' 
+#' @examples
+#' Fixed_GHA_Industry_Electricity
+"Fixed_GHA_Industry_Electricity"
+
+
+#' Fixed Colombia Electricity generation 1971--1977
+#'
+#' Colombia's electricity production changed in the 2022 release of the IEA data.
+#' In the 2022 release, COL and WRLD are out of balance for 1971--1977 as a result.
+#' This object contains the (presumably) correct data (obtained from the 2021 release).
+#' The function [fix_COL_WRLD_electricity()] makes use of these data.
+#' 
+#' @format A data frame with `r ncol(Fixed_GHA_Industry_Electricity)` columns.
+#' 
+#' @examples
+#' Fixed_COL_WRLD_Electricity
+"Fixed_COL_WRLD_Electricity"
 
 
