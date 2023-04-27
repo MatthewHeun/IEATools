@@ -1205,7 +1205,7 @@
 "Fixed_GHA_Industry_Electricity"
 
 
-#' Fixed Colombia Electricty generation 1971--1977
+#' Fixed Colombia Electricity generation 1971--1977
 #'
 #' Colombia's electricity production changed in the 2022 release of the IEA data.
 #' In the 2022 release, COL and WRLD are out of balance for 1971--1977 as a result.

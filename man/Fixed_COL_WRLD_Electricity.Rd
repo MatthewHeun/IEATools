@@ -3,7 +3,7 @@
 \docType{data}
 \name{Fixed_COL_WRLD_Electricity}
 \alias{Fixed_COL_WRLD_Electricity}
-\title{Fixed Colombia Electricty generation 1971--1977}
+\title{Fixed Colombia Electricity generation 1971--1977}
 \format{
 A data frame with 11 columns.
 }

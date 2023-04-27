@@ -2,7 +2,7 @@
 % Please edit documentation in R/fixes.R
 \name{fix_COL_WRLD_electricity}
 \alias{fix_COL_WRLD_electricity}
-\title{Improve IEA Ghana Industry Electricity data from 1974 through 2017}
+\title{Improve COL electricity generation in the IEA's WEEB.}
 \usage{
 fix_COL_WRLD_electricity(
   .tidy_iea_df,
@@ -17,96 +17,38 @@ fix_COL_WRLD_electricity(
 \item{country, year, e_dot}{See \code{IEATools::iea_cols}.}
 }
 \value{
-\code{.tidy_iea_df} with improved Ghana Industry Electricity, if warranted.
-
 \code{.tidy_iea_df} with improved Ghana Industry Electricity, if warranted
 }
 \description{
-Ghana's Industry Electricity data are specified for
-Mining and quarrying,
-Non-ferrous metals, and
-Textiles and leather
-for the year 1971--1973 only.
-However, data are available from
-the Ghana Grid Company (GridCo) and
-the Volta River Authority
-that fill most remaining years to 2017.
-The details to fill the extra years are in the object \code{Fixed_GHA_Industry_Electricity}.
-This function applies the fixes to years that are available in \code{.tidy_iea_data}.
-}
-\details{
-See the Supplemental information to
-M. K. Heun and P. E. Brockway.
-Meeting 2030 primary energy and economic growth goals: Mission impossible?
-Applied Energy, 251(112697):1–24, May 2019
-for additional details.
-
-If \code{.tidy_iea_df} does not contain data from Ghana for the years in question,
-no fixing is performed, and \code{.tidy_iea_df} is returned unmodified.
-
-Also see the file named "GHA-IndustryElectricity.xlsx" for the actual calculations.
-}
-\examples{
-library(dplyr)
-example_tidy_iea_df <- load_tidy_iea_df() \%>\% 
-  filter(Country == "GHA")
-example_tidy_iea_df
-fixed <- example_tidy_iea_df \%>\% 
-  fix_GHA_industry_electricity()
-# Compare changed values
-example_tidy_iea_df \%>\% 
-  filter(Flow \%in\% c("Mining and quarrying",
-                     "Non-ferrous metals",
-                     "Textile and leather", 
-                     "Industry not elsewhere specified"), 
-         Product == "Electricity") \%>\% 
-  select("Year", "Flow", "E.dot", "Unit")
-fixed \%>\% 
-  filter(Flow \%in\% c("Mining and quarrying",
-                     "Non-ferrous metals",
-                     "Textile and leather", 
-                     "Industry not elsewhere specified"), 
-         Product == "Electricity") \%>\% 
-  select("Year", "Flow", "E.dot", "Unit")
-# Show that new data are still in balance
-example_tidy_iea_df \%>\% 
-  filter(Year == 2000, 
-         Product == "Electricity", 
-         Flow == "Industry not elsewhere specified") \%>\% 
-  select(E.dot) \%>\% 
-  as.numeric()
-fixed \%>\% 
-  filter(Year == 2000, 
-         Product == "Electricity", 
-         Flow \%in\% c("Mining and quarrying",
-                     "Non-ferrous metals",
-                     "Textile and leather", 
-                     "Industry not elsewhere specified")) \%>\% 
-  select(E.dot) \%>\% 
-  sum()
-Improve COL electricity generation in the IEA's WEEB.
-
 The 2022 release of the IEA's WEEB data
 is different from the 2021 release of the IEA's WEEB data
 in terms of Colombia's Electricity generation.
 For example:
-- 2021 release: 
-    - Main activity producer electricity plants 34196.4008 TJ
-    - Autoproducer electricity plants: 2671.1993 TJ
-- 2022 release: 
-    - Main activity producer electricity plants 31467.5994 TJ
-    - Autoproducer electricity plants: 899.9987 TJ
-Similar differences appear in all years 1971 - 1977. 
+\itemize{
+\item 2021 release:
+\itemize{
+\item Main activity producer electricity plants 34196.4008 TJ
+\item Autoproducer electricity plants: 2671.1993 TJ
+}
+\item 2022 release:
+\itemize{
+\item Main activity producer electricity plants 31467.5994 TJ
+\item Autoproducer electricity plants: 899.9987 TJ
+Similar differences appear in all years 1971 - 1977.
 From 1978 onward, the 2021 and 2022 releases agree.
-Note that this change leads to overall energy imbalance 
+Note that this change leads to overall energy imbalance
 for Colombia 1971-1977 and World 1971-1977.
 This function reverts to the values from the 2021 release of the IEA WEEB.
-
+}
+}
+}
+\details{
 Similarly, World Electricity is different 2021 release to 2022 release.
 The 2022 data are unbalanced for 1971 --> 1977.
-This function reverts to the value from the 2021 release of the IEA WEEB 
+This function reverts to the value from the 2021 release of the IEA WEEB
 for World Electricity in 1971--1977.
-
+}
+\examples{
 library(dplyr)
 example_tidy_iea_df <- load_tidy_iea_df() \%>\% 
   filter(Country == "GHA") |> 

@@ -5,7 +5,7 @@ output: html_document
 
 
 * Added new values to `IEATools::fap_flows`
-  to accommodate detailed "Non-energy use in xxxx"
+  to accommodate detailed "Non-energy use in xxxxx"
   flows.
 * Fixing IEA 2022 release Electricity data for Colombia 1971--1977.
   The IEA acknowledged energy balance errors in those years.
@@ -34,7 +34,7 @@ output: html_document
   in a call to `RCLabels::get_pref_suff()`
   when extracting prefixes.
 * Simplifications reduced the number of tests.
-    * Now up to 1213 tests, all passing.
+    * Now up to 1216 tests, all passing.
     * Test coverage remains at 100 %.
 
 
