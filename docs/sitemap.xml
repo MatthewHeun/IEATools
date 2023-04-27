@@ -37,6 +37,15 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
+    <loc>/reference/Fixed_COL_WRLD_Electricity.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Fixed_GHA_Industry_Electricity.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Fixed_GHA_PSB.html</loc>
+  </url>
+  <url>
     <loc>/reference/add_nuclear_industry.html</loc>
   </url>
   <url>
@@ -172,6 +181,9 @@
     <loc>/reference/find_transformation_start.html</loc>
   </url>
   <url>
+    <loc>/reference/fix_COL_WRLD_electricity.html</loc>
+  </url>
+  <url>
     <loc>/reference/fix_GHA_industry_electricity.html</loc>
   </url>
   <url>
@@ -260,6 +272,9 @@
   </url>
   <url>
     <loc>/reference/memo_aggregation_product_prefixes.html</loc>
+  </url>
+  <url>
+    <loc>/reference/memo_non_energy_flows.html</loc>
   </url>
   <url>
     <loc>/reference/meta_cols.html</loc>
@@ -358,6 +373,9 @@
     <loc>/reference/replace_join.html</loc>
   </url>
   <url>
+    <loc>/reference/replace_null_RUV.html</loc>
+  </url>
+  <url>
     <loc>/reference/replace_null_UR.html</loc>
   </url>
   <url>
@@ -415,6 +433,9 @@
     <loc>/reference/specify_interface_industries.html</loc>
   </url>
   <url>
+    <loc>/reference/specify_non_energy_use.html</loc>
+  </url>
+  <url>
     <loc>/reference/specify_notation.html</loc>
   </url>
   <url>
@@ -428,6 +449,9 @@
   </url>
   <url>
     <loc>/reference/split_oil_gas_extraction_eiou.html</loc>
+  </url>
+  <url>
+    <loc>/reference/stack_final_useful_df.html</loc>
   </url>
   <url>
     <loc>/reference/starts_with_any_of.html</loc>
