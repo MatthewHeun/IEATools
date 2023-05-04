@@ -4,6 +4,14 @@ output: html_document
 ---
 
 
+# IEATools 0.1.66 (2023-05-03)
+
+* Move to latest version of GitHub test coverage workflow.
+* No new tests.
+    * Still at 1216 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
 # IEATools 0.1.65 (2023-04-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7872573.svg)](https://doi.org/10.5281/zenodo.7872573)
 
 * Added new values to `IEATools::fap_flows`
