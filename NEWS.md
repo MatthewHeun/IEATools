@@ -4,7 +4,7 @@ output: html_document
 ---
 
 
-# IEATools 0.1.66 (2023-05-03)
+# IEATools 0.1.66 (2023-05-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7894179.svg)](https://doi.org/10.5281/zenodo.7894179)
 
 * Move to latest version of GitHub test coverage workflow.
 * No new tests.
