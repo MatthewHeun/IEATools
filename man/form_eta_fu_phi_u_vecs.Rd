@@ -6,7 +6,7 @@
 \usage{
 form_eta_fu_phi_u_vecs(
   .eta_fu_table,
-  matrix.class = c("matrix", "Matrix"),
+  matrix_class = c("matrix", "Matrix"),
   unit = IEATools::iea_cols$unit,
   year = IEATools::iea_cols$year,
   quantity = IEATools::template_cols$quantity,
@@ -36,7 +36,7 @@ form_eta_fu_phi_u_vecs(
 A template for this table should have been created by \code{eta_fu_table()} and
 \code{write_eta_fu_table()}.}
 
-\item{matrix.class}{The type of matrix to be created, one of "matrix" or "Matrix".
+\item{matrix_class}{The type of matrix to be created, one of "matrix" or "Matrix".
 Default is "matrix".}
 
 \item{unit, year}{See \code{IEATools::iea_cols}.}
