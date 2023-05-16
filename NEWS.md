@@ -3,9 +3,13 @@ title: "Release notes for `IEATools`"
 output: html_document
 ---
 
+# IEATools 0.1.67 (2023-05-16)
 
+* Update website.
 * Renamed `matrix.class` argument to `matrix_class`.
-
+* No new tests.
+    * Still at 1216 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # IEATools 0.1.66 (2023-05-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7894179.svg)](https://doi.org/10.5281/zenodo.7894179)
