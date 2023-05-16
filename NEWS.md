@@ -4,6 +4,9 @@ output: html_document
 ---
 
 
+* Renamed `matrix.class` argument to `matrix_class`.
+
+
 
 # IEATools 0.1.66 (2023-05-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7894179.svg)](https://doi.org/10.5281/zenodo.7894179)
 
