@@ -22,7 +22,7 @@
 #'                             A template for this table should have been created by `fu_allocation_table()` and 
 #'                             `write_fu_allocation_table()`.
 #'                             This object can also be a tidy data frame with year data gathered into a Year column.
-#' @param matrix.class The type of matrix to be created, one of "matrix" or "Matrix".
+#' @param matrix_class The type of matrix to be created, one of "matrix" or "Matrix".
 #'                     Default is "matrix".
 #' @param ledger_side,flow_aggregation_point,e_dot,unit,year See `IEATools::iea_cols`.
 #' @param supply,consumption See `IEATools::ledger_sides`.
@@ -52,7 +52,7 @@
 form_C_mats <- function(.fu_allocation_table, 
                         
                         # Class of output matrices
-                        matrix.class = c("matrix", "Matrix"),
+                        matrix_class = c("matrix", "Matrix"),
                         
                         ledger_side = IEATools::iea_cols$ledger_side,
                         flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -94,7 +94,7 @@ form_C_mats <- function(.fu_allocation_table,
                         .is_1 = ".is_1", 
                         .all_1 = ".all_1") {
   
-  matrix.class <- match.arg(matrix.class)
+  matrix_class <- match.arg(matrix_class)
   
   cleaned <- .fu_allocation_table %>% 
     # Eliminate rows titled e_dot or e_dot_perc. These are just helper rows for the analyst.
@@ -175,7 +175,7 @@ form_C_mats <- function(.fu_allocation_table,
     matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
                                    rownames = rownames, colnames = colnames, 
                                    rowtypes = rowtypes, coltypes = coltypes, 
-                                   matrix.class = matrix.class)
+                                   matrix_class = matrix_class)
   
   # Check that all rows sum to 1, but only if we had some rows to begin with!
   if (nrow(.fu_allocation_table) > 0) {
@@ -261,7 +261,7 @@ form_C_mats <- function(.fu_allocation_table,
 #' @param .eta_fu_table a final-to-useful efficiency table read by `load_eta_fu_allocation_data()`.
 #'                      A template for this table should have been created by `eta_fu_table()` and 
 #'                      `write_eta_fu_table()`.
-#' @param matrix.class The type of matrix to be created, one of "matrix" or "Matrix".
+#' @param matrix_class The type of matrix to be created, one of "matrix" or "Matrix".
 #'                     Default is "matrix".
 #' @param unit,year See `IEATools::iea_cols`.
 #' @param quantity,machine,eu_product,e_dot_machine,e_dot_machine_perc,maximum_values,eta_fu,phi_u,phi See `IEATools::template_cols`.
@@ -282,7 +282,7 @@ form_C_mats <- function(.fu_allocation_table,
 #'   form_eta_fu_phi_u_vecs()
 form_eta_fu_phi_u_vecs <- function(.eta_fu_table, 
                                    
-                                   matrix.class = c("matrix", "Matrix"),
+                                   matrix_class = c("matrix", "Matrix"),
                                    
                                    unit = IEATools::iea_cols$unit,
                                    year = IEATools::iea_cols$year,
@@ -311,7 +311,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
                                    from_note = RCLabels::from_notation, 
                                    .id = ".id") {
   
-  matrix.class <- match.arg(matrix.class)
+  matrix_class <- match.arg(matrix_class)
   
   cleaned <- .eta_fu_table %>% 
     # Eliminate rows titled e_dot_machine or e_dot_machine_perc. These are just helper rows for the analyst.
@@ -454,7 +454,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
     matsindf::collapse_to_matrices(matnames = matnames, matvals  = matvals, 
                                    rownames = rownames, colnames = colnames, 
                                    rowtypes = rowtypes, coltypes = coltypes, 
-                                   matrix.class = matrix.class) %>% 
+                                   matrix_class = matrix_class) %>% 
     # pivot wider to the sutmats format
     tidyr::pivot_wider(names_from = matnames, values_from = matvals)
   

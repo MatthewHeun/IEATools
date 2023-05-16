@@ -6,7 +6,7 @@
 \usage{
 form_C_mats(
   .fu_allocation_table,
-  matrix.class = c("matrix", "Matrix"),
+  matrix_class = c("matrix", "Matrix"),
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   e_dot = IEATools::iea_cols$e_dot,
@@ -44,7 +44,7 @@ A template for this table should have been created by \code{fu_allocation_table(
 \code{write_fu_allocation_table()}.
 This object can also be a tidy data frame with year data gathered into a Year column.}
 
-\item{matrix.class}{The type of matrix to be created, one of "matrix" or "Matrix".
+\item{matrix_class}{The type of matrix to be created, one of "matrix" or "Matrix".
 Default is "matrix".}
 
 \item{ledger_side, flow_aggregation_point, e_dot, unit, year}{See \code{IEATools::iea_cols}.}
