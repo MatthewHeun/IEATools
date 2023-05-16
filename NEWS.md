@@ -3,7 +3,7 @@ title: "Release notes for `IEATools`"
 output: html_document
 ---
 
-# IEATools 0.1.67 (2023-05-16)
+# IEATools 0.1.67 (2023-05-16) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7942864.svg)](https://doi.org/10.5281/zenodo.7942864)
 
 * Update website.
 * Renamed `matrix.class` argument to `matrix_class`.
