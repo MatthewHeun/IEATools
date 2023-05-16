@@ -11,7 +11,7 @@ test_that("extract_S_units_from_tidy() works as expected", {
 
 test_that("extract_S_units_from_tidy() works with Matrix objects", {
   S_units <- load_tidy_iea_df() %>% 
-    extract_S_units_from_tidy(matrix.class = "Matrix")
+    extract_S_units_from_tidy(matrix_class = "Matrix")
   
   for (i in nrow(S_units)) {
     su <- S_units$S_units[[i]]
@@ -346,7 +346,7 @@ test_that("collapse_to_psut() works with Matrix objects", {
       matnames = psut_cols$B
     ) %>% 
     add_row_col_meta() %>% 
-    collapse_to_tidy_psut(matrix.class = "Matrix")
+    collapse_to_tidy_psut(matrix_class = "Matrix")
   expect_equal(nrow(With_mats), 21)
   # Ensure that all values in the matrices (excluding B) are positive.
   With_mats %>%
@@ -414,7 +414,7 @@ test_that("prep_psut() works as expected", {
 test_that("prep_psut() works with Matrix objects", {
   Simple <- load_tidy_iea_df() %>% 
     specify_all() %>% 
-    prep_psut(matrix.class = "Matrix") %>% 
+    prep_psut(matrix_class = "Matrix") %>% 
     tidyr::pivot_longer(cols = c("R", "U", "U_EIOU", "U_feed", "r_EIOU", "V", "Y", "S_units"),
                         names_to = "matnames", values_to = "matvals") %>% 
     dplyr::rename(matval_simple = matvals)
@@ -425,12 +425,12 @@ test_that("prep_psut() works with Matrix objects", {
                c("Country", "Method", "Energy.type", "Last.stage", "Year", "matnames", "matval_simple"))
   S_units <- load_tidy_iea_df() %>% 
     specify_all() %>% 
-    extract_S_units_from_tidy(matrix.class = "Matrix")
+    extract_S_units_from_tidy(matrix_class = "Matrix")
   Complicated <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     add_psut_matnames() %>% 
     add_row_col_meta() %>% 
-    collapse_to_tidy_psut(matrix.class = "Matrix") %>% 
+    collapse_to_tidy_psut(matrix_class = "Matrix") %>% 
     tidyr::spread(key = matnames, value = matvals) %>%
     dplyr::mutate(
       U = matsbyname::sum_byname(U_feed, U_EIOU), 
@@ -498,7 +498,7 @@ test_that("prep_psut() correctly makes columns of U and r_EIOU matrices", {
 test_that("prep_psut() correctly makes columns of U and r_EIOU matrices with Matrix objects", {
   psut <- load_tidy_iea_df() %>% 
     specify_all() %>% 
-    prep_psut(matrix.class = "Matrix")
+    prep_psut(matrix_class = "Matrix")
   
   psut_with_test_cols <- psut %>% 
     dplyr::mutate(
@@ -579,7 +579,7 @@ test_that("replace_null_RUV() works correctly with missing R and U and Matrix ob
   # R, U, U_feed, and U_EIOU in 1971 for GHA.
   psut <- load_tidy_iea_df() %>% 
     specify_all() %>% 
-    prep_psut(matrix.class = "Matrix") %>% 
+    prep_psut(matrix_class = "Matrix") %>% 
     tidyr::pivot_longer(cols = c("R", "U", "U_EIOU", "U_feed", "r_EIOU", "V", "Y", "S_units"), names_to = "matnames", values_to = "matvals") %>% 
     dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "R")) %>% 
     dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U")) %>% 
@@ -659,7 +659,7 @@ test_that("replace_null_RUV() works correctly with missing U and V with Matrix o
   # U and V in 1971 for GHA.
   psut <- load_tidy_iea_df() %>% 
     specify_all() %>% 
-    prep_psut(matrix.class = "Matrix") %>% 
+    prep_psut(matrix_class = "Matrix") %>% 
     tidyr::pivot_longer(cols = dplyr::any_of(c("R", "U_EIOU", "U_feed", "U", "r_EIOU", "V", "Y", "S_units")), names_to = "matnames", values_to = "matvals") %>% 
     dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U")) %>% 
     dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "V")) %>% 
@@ -734,7 +734,7 @@ test_that("prep_psut() correctly works with Balancing flows and Matrix objects",
       E.dot = c(100, -100),
       matnames = c(psut_cols$B, psut_cols$B)
     ) %>%
-    prep_psut(matrix.class = "Matrix")
+    prep_psut(matrix_class = "Matrix")
   
   expect_true(
     all(c("R", "V", "U_feed", "U_EIOU", "Y", "S_units", "B") %in% colnames(PSUT_flows_with_Balancing))
@@ -774,7 +774,7 @@ test_that("prep_psut() works when there is no energy industry own use with Matri
     specify_all() %>% 
     # Eliminate energy industry own use, so we do not get a U_EIOU matrix.
     dplyr::filter(.data[[IEATools::iea_cols$flow_aggregation_point]] != IEATools::tfc_compare_flows$energy_industry_own_use) %>% 
-    prep_psut(matrix.class = "Matrix")
+    prep_psut(matrix_class = "Matrix")
   # In this case, the U_EIOU matrix should be 0.
   for (i in 1:nrow(psut)) {
     expect_true(psut$U_EIOU[[i]] %>% matsbyname::iszero_byname())

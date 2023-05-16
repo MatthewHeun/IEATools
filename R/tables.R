@@ -798,12 +798,12 @@ complete_eta_fu_table <- function(eta_fu_table,
                             missing_rows[[year]],
                             missing_rows[[machine]],
                             missing_rows[[quantity]],
-                            missing_rows[[eu_product]], sep = ", ", collapse = "; ")
+                            missing_rows[[eu_product]], sep = ", ", collapse = ";\n")
     quantities <- paste(which_quantity, collapse = " and ")
     err_msg <- paste0("Didn't assign ", 
                       quantities, 
-                      " when completing the eta_fu table for the following combinations of country, year, machine, and eu_product: ", missing_combos, 
-                      ". Please check the FU allocation table and eta FU table for typos or misspellings.")
+                      " when completing the eta_fu table for the following combinations of country, year, machine, and eu_product:\n", missing_combos, 
+                      ".\nPlease check the FU allocation table and eta FU table for typos or misspellings.")
     stop(err_msg)
   }
   

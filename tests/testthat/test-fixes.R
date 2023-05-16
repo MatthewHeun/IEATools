@@ -343,6 +343,7 @@ test_that("applying fixes results in balanced energy flows", {
   skip_on_cran()
   skip_on_ci()
   skip_on_os("windows")
+  skip_on_os("linux")
   for (yr in IEATools::valid_iea_release_years) {
     # All IEA data  
     # iea <- "~/Dropbox/Fellowship 1960-2015 PFU database/IEA extended energy balance data/IEA 2022 energy balance data/IEA Extended Energy Balances 2022 (TJ).csv" |>

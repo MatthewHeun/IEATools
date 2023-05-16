@@ -6,7 +6,7 @@
 \usage{
 extract_S_units_from_tidy(
   .tidy_iea_df,
-  matrix.class = c("matrix", "Matrix"),
+  matrix_class = c("matrix", "Matrix"),
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   flow = IEATools::iea_cols$flow,
@@ -25,7 +25,7 @@ extract_S_units_from_tidy(
 \arguments{
 \item{.tidy_iea_df}{the tidy data frame from which a unit summation \code{S_units} matrix is to be formed.}
 
-\item{matrix.class}{The type of matrix to be created, one of "matrix" or "Matrix".
+\item{matrix_class}{The type of matrix to be created, one of "matrix" or "Matrix".
 Default is "matrix".}
 
 \item{ledger_side, flow_aggregation_point, flow, product, e_dot, unit, matnames}{See \code{IEATools::iea_cols}.}

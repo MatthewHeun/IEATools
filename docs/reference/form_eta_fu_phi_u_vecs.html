@@ -22,7 +22,7 @@ phi_u: a vector of useful exergy-to-useful energy ratios.
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.66</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.67</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,7 +75,7 @@ The two vectors are:</p><ul><li><p><code>eta_fu</code>: a vector of final-to-use
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">form_eta_fu_phi_u_vecs</span><span class="op">(</span></span>
 <span>  <span class="va">.eta_fu_table</span>,</span>
-<span>  matrix.class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"matrix"</span>, <span class="st">"Matrix"</span><span class="op">)</span>,</span>
+<span>  matrix_class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"matrix"</span>, <span class="st">"Matrix"</span><span class="op">)</span>,</span>
 <span>  unit <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">unit</span>,</span>
 <span>  year <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">year</span>,</span>
 <span>  quantity <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="template_cols.html">template_cols</a></span><span class="op">$</span><span class="va">quantity</span>,</span>
@@ -109,7 +109,7 @@ A template for this table should have been created by <code>eta_fu_table()</code
 <code>write_eta_fu_table()</code>.</p></dd>
 
 
-<dt>matrix.class</dt>
+<dt>matrix_class</dt>
 <dd><p>The type of matrix to be created, one of "matrix" or "Matrix".
 Default is "matrix".</p></dd>
 
