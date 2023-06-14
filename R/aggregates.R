@@ -193,38 +193,42 @@ read_aggregation_region_table <- function(file_path = default_aggregation_region
 #' and/or net exports or by keeping gross imports and exports.
 #' 
 #' @param .tidy_iea_df The `.tidy_iea_df` data frame that needs to be aggregated by regions. The `.tidy_iea_df` is likely
-#' to have been obtained with the `load_tidy_iea_df()` function.
+#'                     to have been obtained with the `load_tidy_iea_df()` function.
 #' @param aggregation_table An aggregation table that routes the IEA regions (`iea_regions` column) to destination regions
-#' (`destination_regions` column). The aggregation table can be built manually 
-#' or loaded from an Excel file with the `read_aggregation_region_table()` function.
-#' Default is the 2019 IEA to Exiobase aggregation table, as provided by the `read_aggregation_region_table()` function.
+#'                          (`destination_regions` column). The aggregation table can be built manually 
+#'                          or loaded from an Excel file with the `read_aggregation_region_table()` function.
+#'                          Default is the 2019 IEA to Exiobase aggregation table, as provided by the `read_aggregation_region_table()` function.
 #' @param net_trade The boolean that defines whether imports and exports by aggregation region should be converted 
-#' into net imports / exports or not. Default is `FALSE`.
+#'                  into net imports / exports or not. Default is `FALSE`.
 #' @param destination_regions The name of the `destination_regions` in the `aggregation_table` data frame.
-#' Default is "Destination_regions".
+#'                            Default is "Destination_regions".
 #' @param iea_regions The name of the `iea_regions` in the `aggregation_table` data frame.
-#' Default is "IEA_regions".
+#'                    Default is "IEA_regions".
 #' @param imports The name of the `imports` flow in the `.tidy_iea_df`. 
-#' Default is `IEATools::interface_industries$imports`.
+#'                Default is `IEATools::interface_industries$imports`.
 #' @param exports The name of the `exports` flow in the `.tidy_iea_df`. 
-#' Default is `IEATools::interface_industries$exports`.
+#'                Default is `IEATools::interface_industries$exports`.
 #' @param country The name of the `country` column in the `.tidy_iea_df`.
-#' Default is `IEATools::iea_cols$country`.
+#'                Default is `IEATools::iea_cols$country`.
 #' @param e_dot The name of the `e_dot` column in the `.tidy_iea_df`.
-#' Default is `IEATools::iea_cols$e_dot`.
+#'              Default is `IEATools::iea_cols$e_dot`.
 #' @param flow The name of the `flow` column in the `.tidy_iea_df`.
-#' Default is `IEATools::iea_cols$flow`.
+#'             Default is `IEATools::iea_cols$flow`.
 #' @param product The name of the `product` column in the `.tidy_iea_df`.
-#' Default is `IEATools::iea_cols$product`.
+#'                Default is `IEATools::iea_cols$product`.
 #' @param year The name of the `year` column in the `.tidy_iea_df`.
-#' Default is `IEATools::iea_cols$year`.
+#'             Default is `IEATools::iea_cols$year`.
 #' @param ledger_side The name of the `ledger_side` column in the `.tidy_iea_df`.
-#' Default is `IEATools::iea_cols$ledger_side`.
+#'                    Default is `IEATools::iea_cols$ledger_side`.
 #' @param flow_aggregation_point The name of the `flow_aggregation_point` column in the `.tidy_iea_df`.
-#' Default is `IEATools::iea_cols$flow_aggregation_point`.
+#'                               Default is `IEATools::iea_cols$flow_aggregation_point`.
+#' @param etwmb,etwab The string identifiers for exports to world marine and aviation bunkers.
+#'                    These exports are _out_ of a country and into the "WMBK" or "WABK" countries.
+#'                    Defaults are `IEATools::tpes_flows$exports_to_world_marine_bunkers` and 
+#'                    `IEATools::tpes_flows$exports_to_world_aviation_bunkers`.
 #' @param .net_imports The name of the `.net_import` variable, that is only used internally to the function. Not returned.
-#' Default is "Net_Imports". It is suggested that this parameter is only used in the particular case that there is a column
-#' or a flow named "Net_Imports" in the `.tidy_iea_df` input data frame.
+#'                     Default is "Net_Imports". It is suggested that this parameter is only used in the particular case that there is a column
+#'                     or a flow named "Net_Imports" in the `.tidy_iea_df` input data frame.
 #' 
 #' @return A `.tidy_iea_df` that contains the data of the input `.tidy_iea_df` aggregated by regions as specified in the user-defined
 #' country aggregation table provided.
@@ -256,6 +260,8 @@ aggregate_regions <- function(.tidy_iea_df,
                               ledger_side = IEATools::iea_cols$ledger_side,
                               flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                               product = IEATools::iea_cols$product,
+                              etwmb = IEATools::tpes_flows$exports_to_world_marine_bunkers,
+                              etwab = IEATools::tpes_flows$exports_to_world_aviation_bunkers, 
                               .net_imports = "Net_Imports"){
   
   iea_code_regions <- aggregation_table[[country]]
@@ -286,8 +292,8 @@ aggregate_regions <- function(.tidy_iea_df,
     
     net_trade_flows <- aggregated_tidy_iea_df %>%
       dplyr::filter(stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports)) %>%
-      dplyr::filter(! (stringr::str_detect(.data[[flow]], IEATools::tpes_flows$exports_to_world_marine_bunkers) |
-                         stringr::str_detect(.data[[flow]], IEATools::tpes_flows$exports_to_world_aviation_bunkers))) %>%
+      dplyr::filter(! (stringr::str_detect(.data[[flow]], etwmb) |
+                         stringr::str_detect(.data[[flow]], etwab))) %>%
       remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>%
       # tidyr::pivot_wider(names_from = .data[[flow]], values_from = .data[[e_dot]]) %>%
       tidyr::pivot_wider(names_from = dplyr::all_of(flow), values_from = dplyr::all_of(e_dot)) %>%
@@ -310,8 +316,8 @@ aggregate_regions <- function(.tidy_iea_df,
     
     aggregated_tidy_iea_df <- aggregated_tidy_iea_df %>%
       dplyr::filter(! (stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports)) |
-                      stringr::str_detect(.data[[flow]], IEATools::tpes_flows$exports_to_world_aviation_bunkers) |
-                      stringr::str_detect(.data[[flow]], IEATools::tpes_flows$exports_to_world_marine_bunkers)) %>%
+                      stringr::str_detect(.data[[flow]], etwab) |
+                      stringr::str_detect(.data[[flow]], etwmb)) %>%
       dplyr::bind_rows(net_trade_flows) %>%
       dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
     }
