@@ -19,6 +19,8 @@ aggregate_regions(
   ledger_side = IEATools::iea_cols$ledger_side,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   product = IEATools::iea_cols$product,
+  etwmb = IEATools::tpes_flows$exports_to_world_marine_bunkers,
+  etwab = IEATools::tpes_flows$exports_to_world_aviation_bunkers,
   .net_imports = "Net_Imports"
 )
 }
@@ -66,6 +68,11 @@ Default is \code{IEATools::iea_cols$flow_aggregation_point}.}
 
 \item{product}{The name of the \code{product} column in the \code{.tidy_iea_df}.
 Default is \code{IEATools::iea_cols$product}.}
+
+\item{etwmb, etwab}{The string identifiers for exports to world marine and aviation bunkers.
+These exports are \emph{out} of a country and into the "WMBK" or "WABK" countries.
+Defaults are \code{IEATools::tpes_flows$exports_to_world_marine_bunkers} and
+\code{IEATools::tpes_flows$exports_to_world_aviation_bunkers}.}
 
 \item{.net_imports}{The name of the \code{.net_import} variable, that is only used internally to the function. Not returned.
 Default is "Net_Imports". It is suggested that this parameter is only used in the particular case that there is a column

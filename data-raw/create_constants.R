@@ -501,6 +501,7 @@ transport_flows <- list(domestic_navigation = "Domestic navigation",
                         transport_not_elsewhere_specified = "Transport not elsewhere specified")
 usethis::use_data(transport_flows, overwrite = TRUE)
 
+
 # A constant containing domestic transport flows. This constant is the same as 
 # transport flows except it does not contain "World marine bunkers" or
 # "World aviation bunkers"
