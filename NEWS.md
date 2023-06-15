@@ -3,6 +3,11 @@ title: "Release notes for `IEATools`"
 output: html_document
 ---
 
+
+* Moved some internal constants to function arguments (`etwmb` and `etwab`)
+  in `aggregate_regions()`.
+
+
 # IEATools 0.1.67 (2023-05-16) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7942864.svg)](https://doi.org/10.5281/zenodo.7942864)
 
 * Update website.
