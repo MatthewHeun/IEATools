@@ -3,7 +3,7 @@
 \docType{data}
 \name{all_stages}
 \alias{all_stages}
-\title{All energy stages}
+\title{All energy conversion chain stages}
 \format{
 A string list with 4
 \describe{

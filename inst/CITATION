@@ -17,9 +17,9 @@ bibentry(
                          comment = c(ORCID = "0000-0001-9260-7827"))),
   year        = "2023",
   note        = "R package version 0.1.67",
-  url         = "https://matthewheun.github.io/IEATools/",
+  url         = "https://doi.org/10.5281/zenodo.5086371",
   textVersion = paste("Matthew Kuperus Heun, Emmanuel Aramendia, Zeke Marshall (2023).",
                       "IEATools: Tools for munging and manipulating IEA extended energy balance data.",
                       "R package version 0.1.67.", 
-                      "https://matthewheun.github.io/IEATools/")
+                      "https://doi.org/10.5281/zenodo.5086371")
 )

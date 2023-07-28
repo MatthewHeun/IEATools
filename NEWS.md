@@ -4,6 +4,11 @@ output: html_document
 ---
 
 
+Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zenodo.5086371), 
+which always resolves to the latest release.
+
+
+* Zenodo DOI now used in references.
 * Moved some internal constants to function arguments (`etwmb` and `etwab`)
   in `aggregate_regions()`.
 
