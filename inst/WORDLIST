@@ -108,6 +108,7 @@ pre
 psutcols
 RCLabels
 RoP
+Rmd
 rankine
 readme
 regasification
@@ -147,7 +148,9 @@ vectorized
 Ver
 VRA
 WAB
+WABK
 WEEB
+WMBK
 WMB
 WRLD
 whitespece
@@ -157,3 +160,5 @@ xlsx
 xxxxx
 ZA
 ZAF
+Zenodo
+zenodo
