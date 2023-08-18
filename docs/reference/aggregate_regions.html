@@ -16,7 +16,7 @@ and/or net exports or by keeping gross imports and exports."><!-- mathjax --><sc
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.67</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.68</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,6 +82,8 @@ and/or net exports or by keeping gross imports and exports.</p>
 <span>  ledger_side <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">ledger_side</span>,</span>
 <span>  flow_aggregation_point <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">flow_aggregation_point</span>,</span>
 <span>  product <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="iea_cols.html">iea_cols</a></span><span class="op">$</span><span class="va">product</span>,</span>
+<span>  etwmb <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="tpes_flows.html">tpes_flows</a></span><span class="op">$</span><span class="va">exports_to_world_marine_bunkers</span>,</span>
+<span>  etwab <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="tpes_flows.html">tpes_flows</a></span><span class="op">$</span><span class="va">exports_to_world_aviation_bunkers</span>,</span>
 <span>  .net_imports <span class="op">=</span> <span class="st">"Net_Imports"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -158,6 +160,13 @@ Default is <code>IEATools::iea_cols$flow_aggregation_point</code>.</p></dd>
 <dt>product</dt>
 <dd><p>The name of the <code>product</code> column in the <code>.tidy_iea_df</code>.
 Default is <code>IEATools::iea_cols$product</code>.</p></dd>
+
+
+<dt>etwmb, etwab</dt>
+<dd><p>The string identifiers for exports to world marine and aviation bunkers.
+These exports are <em>out</em> of a country and into the "WMBK" or "WABK" countries.
+Defaults are <code>IEATools::tpes_flows$exports_to_world_marine_bunkers</code> and
+<code>IEATools::tpes_flows$exports_to_world_aviation_bunkers</code>.</p></dd>
 
 
 <dt>.net_imports</dt>
