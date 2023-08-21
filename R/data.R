@@ -1037,7 +1037,7 @@
 "energy_types"
 
 
-#' All energy stages
+#' All energy conversion chain stages
 #'
 #' A string list containing options for the all stages of energy conversion chain analysis.
 #' 

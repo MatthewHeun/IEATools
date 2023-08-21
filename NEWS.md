@@ -4,8 +4,19 @@ output: html_document
 ---
 
 
+Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zenodo.5086371), 
+which always resolves to the latest release.
+
+
+# IEATools 0.1.68 (2023-08-18) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8264201.svg)](https://doi.org/10.5281/zenodo.8264201)
+
+* Added note about permission to use IEA data to README.Rmd file.
+* Zenodo DOI now used in references.
 * Moved some internal constants to function arguments (`etwmb` and `etwab`)
   in `aggregate_regions()`.
+* No new tests.
+    * Still at 1216 tests, all passing.
+    * Test coverage remains at 100 %.
 
 
 # IEATools 0.1.67 (2023-05-16) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7942864.svg)](https://doi.org/10.5281/zenodo.7942864)

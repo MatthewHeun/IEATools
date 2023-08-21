@@ -40,6 +40,10 @@ devtools::install_github("MatthewHeun/IEATools", build_vignettes = TRUE)
 The functions in this package were used in [Heun et al.
 (2018)](https://doi.org/10.1016/j.apenergy.2018.05.109).
 
+Permission to distribute IEA extended energy balance data for two years
+and two countries was obtained by Matthew Kuperus Heun from Nick
+Johnstone of the IEA during a phone call at 11 AM on Mon, 3 June 2019.
+
 ## More Information
 
 Find more information, including vignettes and function documentation,
