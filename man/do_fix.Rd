@@ -18,7 +18,7 @@ do_fix(.tidy_iea_df, replacement, country, year, e_dot)
 \item{e_dot}{The name of the energy flow rate column in \code{.tidy_iea_df} and \code{replacement}.}
 }
 \value{
-a modified version of \code{.tidy_iea_df} with \code{replacement} included, if warranted
+A modified version of \code{.tidy_iea_df} with \code{replacement} included, if warranted.
 }
 \description{
 This is an internal convenience function that performs fixes on IEA data

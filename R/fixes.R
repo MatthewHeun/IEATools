@@ -126,6 +126,19 @@ fix_COL_WRLD_electricity <- function(.tidy_iea_df,
 }
 
 
+
+
+
+
+
+fix_OAMR_Cpp <- function(.tidy_iea_df,
+                         country = IEATools::iea_cols$country,
+                         year = IEATools::iea_cols$year,
+                         e_dot = IEATools::iea_cols$e_dot) {
+  do_fix(.tidy_iea_df, replacement = IEATools::Fixed_OAMR_Cpp,
+         country = country, year = year, e_dot = e_dot)
+}
+
 fix_HND_fuels <- function(.iea_df) {
   
 }
