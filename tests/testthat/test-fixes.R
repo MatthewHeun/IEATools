@@ -285,7 +285,7 @@ test_that("fix_OAMR_Cpp() works as expected", {
   
   # Check fixed values
   fixed <- example_tidy_iea_df |> 
-    fix_OAMR_Cpp() |> 
+    fix_OAMR_cpp() |> 
     dplyr::filter(Flow %in% c("Production",
                               "Charcoal production plants"), 
                   Product %in% c("Charcoal", "Primary solid biofuels")) |> 

@@ -85,12 +85,12 @@ usethis::use_data(Fixed_COL_WRLD_Electricity, overwrite = TRUE)
 # but no Primary solid biofuels are consumed to 
 # create the Charcoal. 
 # This data frame contains data to fix that problem.
-# This data frame is used by the function fix_OAMR_Cpp().
-Fixed_OAMR_Cpp <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedOAMRCharcoalProductionPlants.xlsx"), 
+# This data frame is used by the function fix_OAMR_cpp().
+Fixed_OAMR_cpp <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedOAMRCharcoalProductionPlants.xlsx"), 
                                       sheet = "Fixed") |> 
   tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = IEATools::iea_cols$year, values_to = IEATools::iea_cols$e_dot) |> 
   dplyr::mutate(
     "{IEATools::iea_cols$year}" := as.numeric(.data[[IEATools::iea_cols$year]])
   )
 
-usethis::use_data(Fixed_OAMR_Cpp, overwrite = TRUE)
+usethis::use_data(Fixed_OAMR_cpp, overwrite = TRUE)

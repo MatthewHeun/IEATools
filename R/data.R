@@ -1231,12 +1231,12 @@
 #' Primary solid biofuels production is boosted accordingly.
 #' The efficiency of Charcoal production plants in 2011
 #' was used to create the filled data.
-#' The function `fix_OAMR_Cpp()` makes use of these data.
+#' The function `fix_OAMR_cpp()` makes use of these data.
 #' 
-#' @format A data frame with `r ncol(Fixed_OAMR_Cpp)` columns.
+#' @format A data frame with `r ncol(Fixed_OAMR_cpp)` columns.
 #' 
 #' @examples
-#' Fixed_OAMR_Cpp
-"Fixed_OAMR_Cpp"
+#' Fixed_OAMR_cpp
+"Fixed_OAMR_cpp"
 
 

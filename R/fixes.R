@@ -126,11 +126,6 @@ fix_COL_WRLD_electricity <- function(.tidy_iea_df,
 }
 
 
-
-
-
-
-
 #' Fix IEA data fir Other non-OECD Americas Charcoal production plants
 #' 
 #' Other Non-OECD Americas has several years (1971--2010)
@@ -143,7 +138,7 @@ fix_COL_WRLD_electricity <- function(.tidy_iea_df,
 #' Primary solid biofuels production is boosted accordingly.
 #' The efficiency of Charcoal production plants in 2011
 #' was used to create the filled data.
-#' This function uses data in the `IEATools::Fixed_OAMR_Cpp` 
+#' This function uses data in the `IEATools::Fixed_OAMR_cpp` 
 #' data frame. 
 #'
 #' @param .tidy_iea_df a tidy IEA data frame produced by [load_tidy_iea_df()]
@@ -163,7 +158,7 @@ fix_COL_WRLD_electricity <- function(.tidy_iea_df,
 #'   )
 #' example_tidy_iea_df
 #' fixed <- example_tidy_iea_df |> 
-#'   fix_OAMR_Cpp()
+#'   fix_OAMR_cpp()
 #' # Compare changed values
 #' example_tidy_iea_df |> 
 #'   dplyr::filter(Flow %in% c("Transformation processes",
@@ -175,13 +170,14 @@ fix_COL_WRLD_electricity <- function(.tidy_iea_df,
 #'                             "Charcoal production plants"), 
 #'          Product %in% c("Charcoal", "Primary solid biofuels")) |> 
 #'   dplyr::select("Year", "Flow", "E.dot", "Unit")
-fix_OAMR_Cpp <- function(.tidy_iea_df,
+fix_OAMR_cpp <- function(.tidy_iea_df,
                          country = IEATools::iea_cols$country,
                          year = IEATools::iea_cols$year,
                          e_dot = IEATools::iea_cols$e_dot) {
-  do_fix(.tidy_iea_df, replacement = IEATools::Fixed_OAMR_Cpp,
+  do_fix(.tidy_iea_df, replacement = IEATools::Fixed_OAMR_cpp,
          country = country, year = year, e_dot = e_dot)
 }
+
 
 fix_HND_fuels <- function(.iea_df) {
   
