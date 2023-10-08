@@ -148,7 +148,7 @@ fix_JPN_psp <- function(.iea_df) {
 #' @param year The name of the year column in `.tidy_iea_df` and `replacement`.
 #' @param e_dot The name of the energy flow rate column in `.tidy_iea_df` and `replacement`.
 #'
-#' @return a modified version of `.tidy_iea_df` with `replacement` included, if warranted
+#' @return A modified version of `.tidy_iea_df` with `replacement` included, if warranted.
 do_fix <- function(.tidy_iea_df, 
                    replacement, 
                    country,
