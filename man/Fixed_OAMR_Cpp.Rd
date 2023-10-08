@@ -11,13 +11,16 @@ A data frame with 11 columns.
 Fixed_OAMR_Cpp
 }
 \description{
-Other Non-OECD Americas has several years where Charcoal is produced
+Other Non-OECD Americas has several years (1971--2010)
+in which Charcoal is produced
 but no Primary solid biofuels are consumed to
 create the Charcoal.
 This object contains (presumably) correct data.
 In particular, Charcoal production plants
-now consume Primary solid biofuels, and
+now consume Primary solid biofuels in all years, and
 Primary solid biofuels production is boosted accordingly.
+The efficiency of Charcoal production plants in 2011
+was used to create the filled data.
 The function \code{fix_OAMR_Cpp()} makes use of these data.
 }
 \examples{
