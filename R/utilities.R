@@ -611,7 +611,7 @@ sort_iea_df <- function(.iea_df,
 #' `full_join` with replacement
 #' 
 #' Perform a modified `dplyr::full_join()` on `x` and `y`, 
-#' returning all columns from `c`, 
+#' returning all columns from `x`, 
 #' non-matching rows from `x`,
 #' and all rows from `y`.
 #' Essentially `replace_join()` replaces matching rows in `x` with corresponding rows from `y`

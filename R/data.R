@@ -1177,7 +1177,7 @@
 #' Our approach to this problem is to smooth out the really big peak in PSB consumption 
 #' by reducing the per-capita consumption of PSB, starting in 1991.
 #' This data frame contains the "fixed" data.
-#' The function [fix_GHA_psb()] makes use of these data.
+#' The function `fix_GHA_psb()` makes use of these data.
 #' 
 #' @format A data frame with `r ncol(Fixed_GHA_PSB)` columns.
 #' 
@@ -1196,7 +1196,7 @@
 #' However, data to bring more specificity to Industry Electricity consumption 
 #' are available from the Ghana Grid Corporation (GridCo) and the Volta River Authority (VRA).
 #' These data have been compiled into this object.
-#' The function fix_GHA_industry_electricity() makes use of these data.
+#' The function `fix_GHA_industry_electricity()` makes use of these data.
 #' 
 #' @format A data frame with `r ncol(Fixed_GHA_Industry_Electricity)` columns.
 #' 
@@ -1210,12 +1210,33 @@
 #' Colombia's electricity production changed in the 2022 release of the IEA data.
 #' In the 2022 release, COL and WRLD are out of balance for 1971--1977 as a result.
 #' This object contains the (presumably) correct data (obtained from the 2021 release).
-#' The function [fix_COL_WRLD_electricity()] makes use of these data.
+#' The function `fix_COL_WRLD_electricity()` makes use of these data.
 #' 
-#' @format A data frame with `r ncol(Fixed_GHA_Industry_Electricity)` columns.
+#' @format A data frame with `r ncol(Fixed_COL_WRLD_Electricity)` columns.
 #' 
 #' @examples
 #' Fixed_COL_WRLD_Electricity
 "Fixed_COL_WRLD_Electricity"
+
+
+#' Fixed Other non-OECD Americas Charcoal production 1971--2010
+#'
+#' Other Non-OECD Americas has several years (1971--2010)
+#' in which Charcoal is produced 
+#' but no Primary solid biofuels are consumed to 
+#' create the Charcoal. 
+#' This object contains (presumably) correct data.
+#' In particular, Charcoal production plants
+#' now consume Primary solid biofuels in all years, and 
+#' Primary solid biofuels production is boosted accordingly.
+#' The efficiency of Charcoal production plants in 2011
+#' was used to create the filled data.
+#' The function `fix_OAMR_cpp()` makes use of these data.
+#' 
+#' @format A data frame with `r ncol(Fixed_OAMR_cpp)` columns.
+#' 
+#' @examples
+#' Fixed_OAMR_cpp
+"Fixed_OAMR_cpp"
 
 

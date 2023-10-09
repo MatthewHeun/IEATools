@@ -38,7 +38,8 @@ Imports:
 Suggests:
     covr,
     knitr,
-    testthat,
+    purrr,
     rmarkdown,
+    testthat,
     spelling
 VignetteBuilder: knitr

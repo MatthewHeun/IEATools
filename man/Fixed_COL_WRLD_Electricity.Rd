@@ -14,7 +14,7 @@ Fixed_COL_WRLD_Electricity
 Colombia's electricity production changed in the 2022 release of the IEA data.
 In the 2022 release, COL and WRLD are out of balance for 1971--1977 as a result.
 This object contains the (presumably) correct data (obtained from the 2021 release).
-The function \code{\link[=fix_COL_WRLD_electricity]{fix_COL_WRLD_electricity()}} makes use of these data.
+The function \code{fix_COL_WRLD_electricity()} makes use of these data.
 }
 \examples{
 Fixed_COL_WRLD_Electricity

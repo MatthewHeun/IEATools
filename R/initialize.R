@@ -1290,7 +1290,8 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
       # because details are now available in the IEA's WEEB.
       # fix_GHA_industry_electricity() |> 
       fix_GHA_psb() |> 
-      fix_COL_WRLD_electricity()
+      fix_COL_WRLD_electricity() |> 
+      fix_OAMR_cpp()
   }
   out |>  
     remove_agg_memo_flows() |> 

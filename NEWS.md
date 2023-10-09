@@ -8,6 +8,14 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Added a fix for Other non-OECD Americas Charcoal production plants.
+  For many years (1971--2010), they produced Charcoal
+  without consuming any energy (Primary solid biofuels is typical).
+  The fixed data both
+  (a) has Charcoal production plants consume Primary solid biofuels and
+  (b) boost production of Primary solid biofuels accordingly.
+
+
 # IEATools 0.1.68 (2023-08-18) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8264201.svg)](https://doi.org/10.5281/zenodo.8264201)
 
 * Added note about permission to use IEA data to README.Rmd file.
