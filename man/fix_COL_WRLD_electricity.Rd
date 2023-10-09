@@ -12,7 +12,7 @@ fix_COL_WRLD_electricity(
 )
 }
 \arguments{
-\item{.tidy_iea_df}{a tidy IEA data frame produced by \code{\link[=load_tidy_iea_df]{load_tidy_iea_df()}}}
+\item{.tidy_iea_df}{A tidy IEA data frame produced by \code{load_tidy_iea_df()}.}
 
 \item{country, year, e_dot}{See \code{IEATools::iea_cols}.}
 }
@@ -53,7 +53,7 @@ library(dplyr)
 example_tidy_iea_df <- load_tidy_iea_df() \%>\% 
   dplyr::filter(Country == "GHA") |> 
   dplyr::mutate(
-    # Pretend the GHA is COL.
+    # Pretend that GHA is COL.
     Country = "COL"
   )
 example_tidy_iea_df

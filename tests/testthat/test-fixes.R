@@ -245,11 +245,11 @@ test_that("Fixing GHA Industry Electricity works as expected", {
 })
 
 
-test_that("fix_OAMR_Cpp() works as expected", {
+test_that("fix_OAMR_cpp() works as expected", {
   example_tidy_iea_df <- load_tidy_iea_df() |> 
     dplyr::filter(Country == "GHA") |> 
     dplyr::mutate(
-      # Pretend the GHA is Other non-OECD Americas.
+      # Pretend that GHA is Other non-OECD Americas.
       Country = "OAMR"
     )
   # Check original values
@@ -315,6 +315,57 @@ test_that("fix_OAMR_Cpp() works as expected", {
     dplyr::filter(Year == 2000, Flow == "Charcoal production plants", Product == "Charcoal") |> 
     purrr::pluck("E.dot", 1) |> 
     expect_equal(646.8, tolerance = 0.001)
+})
+
+
+test_that("fix_OAMR_gw() works as expected", {
+  example_tidy_iea_df <- load_tidy_iea_df() |> 
+    dplyr::filter(Country == "ZAF", Year == 1971) |> 
+    dplyr::mutate(
+      # Pretend that ZAF is Other non-OECD Americas.
+      Country = "OAMR"
+    )
+  # Check original values
+  orig <- example_tidy_iea_df |> 
+    dplyr::filter(Flow %in% c("Production",
+                              "Gas works"), 
+                  Product %in% c("Natural gas", "Gas works gas")) |> 
+    dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
+  orig |> 
+    dplyr::filter(Year == 1971, Flow == "Production") |> 
+    purrr::pluck("E.dot", 1) |> 
+    # There is no Production here.
+    expect_null()
+  orig |> 
+    dplyr::filter(Flow == "Gas works", Product == "Gas works gas") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(5797, tolerance = 0.001)
+  orig |> 
+    dplyr::filter(Flow == "Gas works", Product == "Natural gas") |> 
+    purrr::pluck("E.dot", 1) |> 
+    # There is no consumption of Natural gas by Gas works.
+    expect_null()
+
+  # Check fixed values
+  fixed <- example_tidy_iea_df |> 
+    fix_OAMR_gw() |> 
+    dplyr::filter(Flow %in% c("Production",
+                              "Gas works"), 
+                  Product %in% c("Gas works gas", "Natural gas")) |> 
+    dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
+  
+  fixed |> 
+    dplyr::filter(Flow == "Production") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(210.3834233)
+  fixed |> 
+    dplyr::filter(Flow == "Gas works", Product == "Natural gas") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(-105.0834233)
+  fixed |> 
+    dplyr::filter(Flow == "Gas works", Product == "Gas works gas") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(82.8)
 })
 
 

@@ -88,7 +88,7 @@ fix_GHA_psb <- function(.tidy_iea_df,
 #' This function reverts to the value from the 2021 release of the IEA WEEB 
 #' for World Electricity in 1971--1977.
 #'
-#' @param .tidy_iea_df a tidy IEA data frame produced by [load_tidy_iea_df()]
+#' @param .tidy_iea_df A tidy IEA data frame produced by `load_tidy_iea_df()`.
 #' @param country,year,e_dot See `IEATools::iea_cols`.
 #'
 #' @return `.tidy_iea_df` with improved Ghana Industry Electricity, if warranted.
@@ -100,7 +100,7 @@ fix_GHA_psb <- function(.tidy_iea_df,
 #' example_tidy_iea_df <- load_tidy_iea_df() %>% 
 #'   dplyr::filter(Country == "GHA") |> 
 #'   dplyr::mutate(
-#'     # Pretend the GHA is COL.
+#'     # Pretend that GHA is COL.
 #'     Country = "COL"
 #'   )
 #' example_tidy_iea_df
@@ -126,14 +126,15 @@ fix_COL_WRLD_electricity <- function(.tidy_iea_df,
 }
 
 
-#' Fix IEA data fir Other non-OECD Americas Charcoal production plants
+#' Fix IEA data for Other non-OECD Americas Charcoal production plants
 #' 
 #' Other Non-OECD Americas has several years (1971--2010)
 #' in which Charcoal is produced 
 #' but no Primary solid biofuels are consumed to 
 #' create the Charcoal. 
-#' This object contains (presumably) correct data.
-#' In particular, Charcoal production plants
+#' This function corrects that problem.
+#' In particular, after calling this function, 
+#' Charcoal production plants
 #' now consume Primary solid biofuels in all years, and 
 #' Primary solid biofuels production is boosted accordingly.
 #' The efficiency of Charcoal production plants in 2011
@@ -153,7 +154,7 @@ fix_COL_WRLD_electricity <- function(.tidy_iea_df,
 #' example_tidy_iea_df <- load_tidy_iea_df() |> 
 #'   dplyr::filter(Country == "GHA") |> 
 #'   dplyr::mutate(
-#'     # Pretend the GHA is Other non-OECD Americas.
+#'     # Pretend that GHA is Other non-OECD Americas.
 #'     Country = "OAMR"
 #'   )
 #' example_tidy_iea_df
@@ -161,20 +162,74 @@ fix_COL_WRLD_electricity <- function(.tidy_iea_df,
 #'   fix_OAMR_cpp()
 #' # Compare changed values
 #' example_tidy_iea_df |> 
-#'   dplyr::filter(Flow %in% c("Transformation processes",
+#'   dplyr::filter(Flow %in% c("Production",
 #'                             "Charcoal production plants"), 
-#'          Product %in% c("Charcoal", "Primary solid biofuels")) |> 
-#'   dplyr::select("Year", "Flow", "E.dot", "Unit")
+#'                 Product %in% c("Charcoal", "Primary solid biofuels")) |> 
+#'   dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
 #' fixed %>% 
-#'   dplyr::filter(Flow %in% c("Transformation processes",
+#'   dplyr::filter(Flow %in% c("Production",
 #'                             "Charcoal production plants"), 
-#'          Product %in% c("Charcoal", "Primary solid biofuels")) |> 
-#'   dplyr::select("Year", "Flow", "E.dot", "Unit")
+#'                 Product %in% c("Charcoal", "Primary solid biofuels")) |> 
+#'   dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
 fix_OAMR_cpp <- function(.tidy_iea_df,
                          country = IEATools::iea_cols$country,
                          year = IEATools::iea_cols$year,
                          e_dot = IEATools::iea_cols$e_dot) {
   do_fix(.tidy_iea_df, replacement = IEATools::Fixed_OAMR_cpp,
+         country = country, year = year, e_dot = e_dot)
+}
+
+
+#' Fix IEA data for Other non-OECD Americas Gas works plants
+#' 
+#' Other Non-OECD Americas has several years (1971--1976)
+#' in which Gas works gas is produced 
+#' but no feedstocks are consumed to 
+#' create the Gas works gas. 
+#' This function corrects that problem.
+#' In particular, after calling this function, 
+#' Gas works
+#' will consume Natural gas in all years, and 
+#' Natural gas production is boosted accordingly.
+#' The efficiency of World Gas works plants plants in 1971-1976
+#' was used to create the filled data.
+#' This function uses data in the `IEATools::Fixed_OAMR_gw` 
+#' data frame. 
+#'
+#' @param .tidy_iea_df A tidy IEA data frame produced by `load_tidy_iea_df()`.
+#' @param country,year,e_dot See `IEATools::iea_cols`.
+#'
+#' @return `.tidy_iea_df` with improved Other non-OECD Americas Charcoal production plants.
+#'
+#' @export
+#'
+#' @examples
+#' library(dplyr)
+#' example_tidy_iea_df <- load_tidy_iea_df() |> 
+#'   dplyr::filter(Country == "ZAF", Year == 1971) |> 
+#'   dplyr::mutate(
+#'     # Pretend that ZAF is Other non-OECD Americas.
+#'     Country = "OAMR"
+#'   )
+#' example_tidy_iea_df
+#' fixed <- example_tidy_iea_df |> 
+#'   fix_OAMR_gw()
+#' # Compare changed values
+#' example_tidy_iea_df |> 
+#'   dplyr::filter(Flow %in% c("Production",
+#'                             "Gas works"), 
+#'          Product %in% c("Gas works gas", "Natural gas")) |> 
+#'   dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
+#' fixed %>% 
+#'   dplyr::filter(Flow %in% c("Production",
+#'                             "Gas works"), 
+#'          Product %in% c("Gas works gas", "Natural gas")) |> 
+#'   dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
+fix_OAMR_gw <- function(.tidy_iea_df,
+                        country = IEATools::iea_cols$country,
+                        year = IEATools::iea_cols$year,
+                        e_dot = IEATools::iea_cols$e_dot) {
+  do_fix(.tidy_iea_df, replacement = IEATools::Fixed_OAMR_gw,
          country = country, year = year, e_dot = e_dot)
 }
 
