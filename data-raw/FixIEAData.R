@@ -94,3 +94,21 @@ Fixed_OAMR_cpp <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedOAM
   )
 
 usethis::use_data(Fixed_OAMR_cpp, overwrite = TRUE)
+
+
+
+# Other Non-OECD Americas has several years (1971-1976)
+# where Gas works gas is produced 
+# but no feedstock is consumed to 
+# create the Gas works gas. 
+# This data frame contains data to fix that problem.
+# This data frame is used by the function fix_OAMR_gw().
+
+Fixed_OAMR_gw <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedOAMRGasWorks.xlsx"), 
+                                     sheet = "Fixed") |> 
+  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = IEATools::iea_cols$year, values_to = IEATools::iea_cols$e_dot) |> 
+  dplyr::mutate(
+    "{IEATools::iea_cols$year}" := as.numeric(.data[[IEATools::iea_cols$year]])
+  )
+
+usethis::use_data(Fixed_OAMR_gw, overwrite = TRUE)
