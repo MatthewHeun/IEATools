@@ -199,7 +199,7 @@ fix_OAMR_cpp <- function(.tidy_iea_df,
 #' @param .tidy_iea_df A tidy IEA data frame produced by `load_tidy_iea_df()`.
 #' @param country,year,e_dot See `IEATools::iea_cols`.
 #'
-#' @return `.tidy_iea_df` with improved Other non-OECD Americas Charcoal production plants.
+#' @return `.tidy_iea_df` with improved Other non-OECD Americas Gas works.
 #'
 #' @export
 #'

@@ -8,6 +8,10 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Added a fix for Other non-OECD Americas Gas works.
+  For a few years (1971--1976), Other non-OECD Americas Gas works
+  plants consume no feedstock. 
+  Fixed data are now included by default.
 * Added a fix for Other non-OECD Americas Charcoal production plants.
   For many years (1971--2010), they produced Charcoal
   without consuming any energy (Primary solid biofuels is typical).
