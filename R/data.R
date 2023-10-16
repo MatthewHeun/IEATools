@@ -1240,3 +1240,25 @@
 "Fixed_OAMR_cpp"
 
 
+#' Fixed Other non-OECD Americas Gas works 1971--1976
+#'
+#' Other Non-OECD Americas has several years (1971--1976)
+#' in which Gas works gas is produced 
+#' but no feedstock consumed to 
+#' create the Gas works gas. 
+#' This object contains (presumably) correct data.
+#' In particular, Gas works
+#' now consume Natural gas in all years, and 
+#' Natural gas production is boosted accordingly.
+#' The efficiency of World Gas works plants in 1971--1976
+#' was used to create the filled data.
+#' The function `fix_OAMR_gw()` makes use of these data.
+#' 
+#' @format A data frame with `r ncol(Fixed_OAMR_gw)` columns.
+#' 
+#' @examples
+#' Fixed_OAMR_gw
+"Fixed_OAMR_gw"
+
+
+
