@@ -8,6 +8,26 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+
+* The constant `nonenergy_use` is now aligned with IEA definitions for 
+  Non-energy use products. 
+  Specifically, now only
+  "Additives/blending components",
+  "Bitumen",
+  "Lubricants",
+  "Naphtha",
+  "Paraffin waxes",
+  "Refinery feedstocks", and
+  "White spirit & SBP"
+  are Non-energy use Products.
+  "Coal tar",
+  "Crude/NGL/feedstocks (if no detail)",
+  "Crude oil",
+  "Natural gas liquids",
+  "Oil shale and oil sands",
+  "Other hydrocarbons", and
+  "Other oil products"
+  were formerly included in the constant but have now been removed.
 * Added a fix for Other non-OECD Americas Gas works.
   For a few years (1971--1976), Other non-OECD Americas Gas works
   plants consume no feedstock. 

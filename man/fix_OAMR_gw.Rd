@@ -17,7 +17,7 @@ fix_OAMR_gw(
 \item{country, year, e_dot}{See \code{IEATools::iea_cols}.}
 }
 \value{
-\code{.tidy_iea_df} with improved Other non-OECD Americas Charcoal production plants.
+\code{.tidy_iea_df} with improved Other non-OECD Americas Gas works.
 }
 \description{
 Other Non-OECD Americas has several years (1971--1976)

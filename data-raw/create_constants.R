@@ -316,10 +316,10 @@ nonenergy_products <- list(additives_blending_components = "Additives/blending c
                            paraffin_waxes = "Paraffin waxes",
                            refinery_feedstocks = "Refinery feedstocks",
                            white_spirit_and_sbp = "White spirit & SBP"
-                           # The following products were removed the 
-                           # nonenergy_products constant on 3 Nov 2023
+                           # The following products were removed from the 
+                           # nonenergy_products constant by MKH on 3 Nov 2023
                            # after extensive discussion among
-                           # Paul, Emmanuel, and Matt.
+                           # PB, EA, and MKH.
                            # The decision was made to follow the IEA directly.
                            # The IEA does not consider the following products
                            # to be NEU, so we do the same.
