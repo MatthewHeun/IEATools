@@ -2,7 +2,7 @@
 % Please edit documentation in R/fixes.R
 \name{fix_OAMR_cpp}
 \alias{fix_OAMR_cpp}
-\title{Fix IEA data fir Other non-OECD Americas Charcoal production plants}
+\title{Fix IEA data for Other non-OECD Americas Charcoal production plants}
 \usage{
 fix_OAMR_cpp(
   .tidy_iea_df,
@@ -24,8 +24,9 @@ Other Non-OECD Americas has several years (1971--2010)
 in which Charcoal is produced
 but no Primary solid biofuels are consumed to
 create the Charcoal.
-This object contains (presumably) correct data.
-In particular, Charcoal production plants
+This function corrects that problem.
+In particular, after calling this function,
+Charcoal production plants
 now consume Primary solid biofuels in all years, and
 Primary solid biofuels production is boosted accordingly.
 The efficiency of Charcoal production plants in 2011
@@ -38,7 +39,7 @@ library(dplyr)
 example_tidy_iea_df <- load_tidy_iea_df() |> 
   dplyr::filter(Country == "GHA") |> 
   dplyr::mutate(
-    # Pretend the GHA is Other non-OECD Americas.
+    # Pretend that GHA is Other non-OECD Americas.
     Country = "OAMR"
   )
 example_tidy_iea_df
@@ -46,13 +47,13 @@ fixed <- example_tidy_iea_df |>
   fix_OAMR_cpp()
 # Compare changed values
 example_tidy_iea_df |> 
-  dplyr::filter(Flow \%in\% c("Transformation processes",
+  dplyr::filter(Flow \%in\% c("Production",
                             "Charcoal production plants"), 
-         Product \%in\% c("Charcoal", "Primary solid biofuels")) |> 
-  dplyr::select("Year", "Flow", "E.dot", "Unit")
+                Product \%in\% c("Charcoal", "Primary solid biofuels")) |> 
+  dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
 fixed \%>\% 
-  dplyr::filter(Flow \%in\% c("Transformation processes",
+  dplyr::filter(Flow \%in\% c("Production",
                             "Charcoal production plants"), 
-         Product \%in\% c("Charcoal", "Primary solid biofuels")) |> 
-  dplyr::select("Year", "Flow", "E.dot", "Unit")
+                Product \%in\% c("Charcoal", "Primary solid biofuels")) |> 
+  dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
 }
