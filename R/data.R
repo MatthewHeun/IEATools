@@ -483,23 +483,14 @@
 #' materials such as "Lubricants". 
 #' This list also includes products classified as "Crude, NGL, refinery 
 #' feedstocks" in the IEA World Extended Energy Balances 2021 documentation such 
-#' as "Additives/blending components". These non-energy products occur in 
-#' the "Non-energy use..." sectors of the IEA's extended energy balances 
-#' correctly, and also TFC sectors such as "Residential" incorrectly.
+#' as "Additives/blending components".
 #' 
 #' @format A string vector with `r length(nonenergy_products)` entries.
 #' \describe{
 #' \item{additives_blending_components}{The string identifier for Additives/blending components.}
 #' \item{bitumen}{The string identifier for Bitumen.}
-#' \item{coal_tar}{The string identifier for Coal tar.}
-#' \item{crude_ngl_feedstocks_if_no_detail}{The string identifier for Crude/NGL/feedstocks (if no detail).}
-#' \item{crude_oil}{The string identifier for Crude oil.}
 #' \item{lubricants}{The string identifier for Lubricants.}
 #' \item{naphtha}{The string identifier for Naphtha.}
-#' \item{natural_gas_liquids}{The string identifier for Natural gas liquids.}
-#' \item{oil_shale_and_oil_sands}{The string identifier for Oil shale and oil sands.}
-#' \item{other_hydrocarbons}{The string identifier for Other hydrocarbons.}
-#' \item{other_oil_products}{The string identifier for Other oil products.}
 #' \item{paraffin_waxes}{The string identifier for Paraffin waxes.}
 #' \item{refinery_feedstocks}{The string identifier for Refinery feedstocks.}
 #' \item{white_spirit_and_sbp}{The string identifier for White spirit & SBP.}
