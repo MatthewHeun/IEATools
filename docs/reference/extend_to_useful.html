@@ -14,7 +14,7 @@ to useful energy/exergy as the last stage of an energy conversion chain."><!-- m
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.68</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.69</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -239,14 +239,12 @@ Note that output matrices are appended to the original list supplied to <code>.s
 <code>R</code>, <code>U_feed</code>, <code>U_eiou</code>, <code>U</code>, <code>r_eiou</code>, <code>V</code>, <code>Y</code>, <code>C_eiou</code>, <code>C_Y</code>, <code>eta_fu</code>, and <code>phi_u</code>
 should all be strings (as the default)
 identifying which columns in <code>.sutdata</code> should be used for each matrix.
-Output is determined by argument <code>clean_up_df</code>.
-When <code>clean_up_df = TRUE</code> (the default), output will contain a <code>last_stage</code> column with either <code>final</code> or <code>useful</code> indicated.
-When <code>clean_up_df = FALSE</code>, output will contain an unmodified <code>last_stage</code> column,
-probably containing "Final" in all rows.
-Columns containing versions of matrices where last stage is "Useful" will have <code>sep</code> and <code>useful</code>
-appended to the column name.
-<code>clean_up_df = FALSE</code> is probably not what is desired and can lead to confusion.
-<code>clean_up_df = TRUE</code> (the default) is recommended.</p>
+Output is a data frame with additional columns with names
+appended with <code>paste0(.sep, useful)</code>.</p>
+<p>If final and useful versions of matrices are
+desired to be stacked (<code>rbind</code>ed),
+call <code><a href="stack_final_useful_df.html">stack_final_useful_df()</a></code> subsequent to calling
+<code>extend_to_useful()</code>.</p>
 <p>An energy balance check is performed on the useful matrices.
 If the energy balance check fails, a warning is emitted and
 additional diagnostic information will appear in the output: <code>.err</code> and <code>.e_bal_ok</code>.</p>
