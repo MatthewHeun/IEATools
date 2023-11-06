@@ -234,6 +234,14 @@ fix_OAMR_gw <- function(.tidy_iea_df,
 }
 
 
+fix_AUS_bfg <- function(.tidy_iea_df, 
+                        country = IEATools::iea_cols$country,
+                        year = IEATools::iea_cols$year,
+                        e_dot = IEATools::iea_cols$e_dot) {
+  
+}
+
+
 fix_HND_fuels <- function(.iea_df) {
   
 }
