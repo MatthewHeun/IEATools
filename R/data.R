@@ -483,23 +483,14 @@
 #' materials such as "Lubricants". 
 #' This list also includes products classified as "Crude, NGL, refinery 
 #' feedstocks" in the IEA World Extended Energy Balances 2021 documentation such 
-#' as "Additives/blending components". These non-energy products occur in 
-#' the "Non-energy use..." sectors of the IEA's extended energy balances 
-#' correctly, and also TFC sectors such as "Residential" incorrectly.
+#' as "Additives/blending components".
 #' 
 #' @format A string vector with `r length(nonenergy_products)` entries.
 #' \describe{
 #' \item{additives_blending_components}{The string identifier for Additives/blending components.}
 #' \item{bitumen}{The string identifier for Bitumen.}
-#' \item{coal_tar}{The string identifier for Coal tar.}
-#' \item{crude_ngl_feedstocks_if_no_detail}{The string identifier for Crude/NGL/feedstocks (if no detail).}
-#' \item{crude_oil}{The string identifier for Crude oil.}
 #' \item{lubricants}{The string identifier for Lubricants.}
 #' \item{naphtha}{The string identifier for Naphtha.}
-#' \item{natural_gas_liquids}{The string identifier for Natural gas liquids.}
-#' \item{oil_shale_and_oil_sands}{The string identifier for Oil shale and oil sands.}
-#' \item{other_hydrocarbons}{The string identifier for Other hydrocarbons.}
-#' \item{other_oil_products}{The string identifier for Other oil products.}
 #' \item{paraffin_waxes}{The string identifier for Paraffin waxes.}
 #' \item{refinery_feedstocks}{The string identifier for Refinery feedstocks.}
 #' \item{white_spirit_and_sbp}{The string identifier for White spirit & SBP.}
@@ -1177,7 +1168,7 @@
 #' Our approach to this problem is to smooth out the really big peak in PSB consumption 
 #' by reducing the per-capita consumption of PSB, starting in 1991.
 #' This data frame contains the "fixed" data.
-#' The function [fix_GHA_psb()] makes use of these data.
+#' The function `fix_GHA_psb()` makes use of these data.
 #' 
 #' @format A data frame with `r ncol(Fixed_GHA_PSB)` columns.
 #' 
@@ -1196,7 +1187,7 @@
 #' However, data to bring more specificity to Industry Electricity consumption 
 #' are available from the Ghana Grid Corporation (GridCo) and the Volta River Authority (VRA).
 #' These data have been compiled into this object.
-#' The function fix_GHA_industry_electricity() makes use of these data.
+#' The function `fix_GHA_industry_electricity()` makes use of these data.
 #' 
 #' @format A data frame with `r ncol(Fixed_GHA_Industry_Electricity)` columns.
 #' 
@@ -1210,12 +1201,55 @@
 #' Colombia's electricity production changed in the 2022 release of the IEA data.
 #' In the 2022 release, COL and WRLD are out of balance for 1971--1977 as a result.
 #' This object contains the (presumably) correct data (obtained from the 2021 release).
-#' The function [fix_COL_WRLD_electricity()] makes use of these data.
+#' The function `fix_COL_WRLD_electricity()` makes use of these data.
 #' 
-#' @format A data frame with `r ncol(Fixed_GHA_Industry_Electricity)` columns.
+#' @format A data frame with `r ncol(Fixed_COL_WRLD_Electricity)` columns.
 #' 
 #' @examples
 #' Fixed_COL_WRLD_Electricity
 "Fixed_COL_WRLD_Electricity"
+
+
+#' Fixed Other non-OECD Americas Charcoal production 1971--2010
+#'
+#' Other Non-OECD Americas has several years (1971--2010)
+#' in which Charcoal is produced 
+#' but no Primary solid biofuels are consumed to 
+#' create the Charcoal. 
+#' This object contains (presumably) correct data.
+#' In particular, Charcoal production plants
+#' now consume Primary solid biofuels in all years, and 
+#' Primary solid biofuels production is boosted accordingly.
+#' The efficiency of Charcoal production plants in 2011
+#' was used to create the filled data.
+#' The function `fix_OAMR_cpp()` makes use of these data.
+#' 
+#' @format A data frame with `r ncol(Fixed_OAMR_cpp)` columns.
+#' 
+#' @examples
+#' Fixed_OAMR_cpp
+"Fixed_OAMR_cpp"
+
+
+#' Fixed Other non-OECD Americas Gas works 1971--1976
+#'
+#' Other Non-OECD Americas has several years (1971--1976)
+#' in which Gas works gas is produced 
+#' but no feedstock consumed to 
+#' create the Gas works gas. 
+#' This object contains (presumably) correct data.
+#' In particular, Gas works
+#' now consume Natural gas in all years, and 
+#' Natural gas production is boosted accordingly.
+#' The efficiency of World Gas works plants in 1971--1976
+#' was used to create the filled data.
+#' The function `fix_OAMR_gw()` makes use of these data.
+#' 
+#' @format A data frame with `r ncol(Fixed_OAMR_gw)` columns.
+#' 
+#' @examples
+#' Fixed_OAMR_gw
+"Fixed_OAMR_gw"
+
 
 

@@ -12,12 +12,12 @@ fix_COL_WRLD_electricity(
 )
 }
 \arguments{
-\item{.tidy_iea_df}{a tidy IEA data frame produced by \code{\link[=load_tidy_iea_df]{load_tidy_iea_df()}}}
+\item{.tidy_iea_df}{A tidy IEA data frame produced by \code{load_tidy_iea_df()}.}
 
 \item{country, year, e_dot}{See \code{IEATools::iea_cols}.}
 }
 \value{
-\code{.tidy_iea_df} with improved Ghana Industry Electricity, if warranted
+\code{.tidy_iea_df} with improved Ghana Industry Electricity, if warranted.
 }
 \description{
 The 2022 release of the IEA's WEEB data
@@ -51,9 +51,9 @@ for World Electricity in 1971--1977.
 \examples{
 library(dplyr)
 example_tidy_iea_df <- load_tidy_iea_df() \%>\% 
-  filter(Country == "GHA") |> 
+  dplyr::filter(Country == "GHA") |> 
   dplyr::mutate(
-    # Pretend the GHA is COL.
+    # Pretend that GHA is COL.
     Country = "COL"
   )
 example_tidy_iea_df
@@ -61,13 +61,13 @@ fixed <- example_tidy_iea_df \%>\%
   fix_COL_WRLD_electricity()
 # Compare changed values
 example_tidy_iea_df \%>\% 
-  filter(Flow \%in\% c("Main activity producer electricity plants",
-                      "Autoproducer electricity plants"), 
+  dplyr::filter(Flow \%in\% c("Main activity producer electricity plants",
+                            "Autoproducer electricity plants"), 
          Product == "Electricity") \%>\% 
-  select("Year", "Flow", "E.dot", "Unit")
+  dplyr::select("Year", "Flow", "E.dot", "Unit")
 fixed \%>\% 
-  filter(Flow \%in\% c("Main activity producer electricity plants",
+  dplyr::filter(Flow \%in\% c("Main activity producer electricity plants",
                       "Autoproducer electricity plants"), 
-         Product == "Electricity") \%>\% 
-  select("Year", "Flow", "E.dot", "Unit")
+                Product == "Electricity") \%>\% 
+  dplyr::select("Year", "Flow", "E.dot", "Unit")
 }

@@ -1,8 +1,8 @@
 Package: IEATools
 Type: Package
 Title: Tools for Working with International Energy Agency Data
-Version: 0.1.68
-Date: 2023-08-18
+Version: 0.1.69
+Date: 2023-11-03
 Authors@R: c(person(given = "Matthew", family = "Heun", role = c("aut", "cre"),
                     email = "matthew.heun@me.com"),
              person(given = "Emmanuel", family = "Aramendia", role = "aut"),
@@ -38,7 +38,8 @@ Imports:
 Suggests:
     covr,
     knitr,
-    testthat,
+    purrr,
     rmarkdown,
+    testthat,
     spelling
 VignetteBuilder: knitr

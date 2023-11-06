@@ -26,13 +26,13 @@ year_pattern <- "^-?\\d+$"
 # Then, we make it available for use internally to the package.
 # The function fix_GHA_psb() makes use of these data.
 Fixed_GHA_PSB <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "GHA-PSB.xlsx"), sheet = "FixedGHPSB") |> 
-  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = iea_cols$year, values_to = iea_cols$e_dot) |> 
+  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = IEATools::iea_cols$year, values_to = IEATools::iea_cols$e_dot) |> 
   dplyr::filter(
     # Eliminate rows that have 0 energy.
-    !!as.name(iea_cols$e_dot) != 0
+    !!as.name(IEATools::iea_cols$e_dot) != 0
   ) |> 
   dplyr::mutate(
-    !!as.name(iea_cols$year) := as.numeric(!!as.name(iea_cols$year))
+    !!as.name(IEATools::iea_cols$year) := as.numeric(!!as.name(IEATools::iea_cols$year))
   )
 
 usethis::use_data(Fixed_GHA_PSB, overwrite = TRUE)
@@ -51,13 +51,13 @@ usethis::use_data(Fixed_GHA_PSB, overwrite = TRUE)
 # The function fix_GHA_industry_electricity() makes use of these data.
 Fixed_GHA_Industry_Electricity <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "GHA-IndustryElectricity.xlsx"), 
                                                                            sheet = "FixedGHAIndustryElectricity") |> 
-  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = iea_cols$year, values_to = iea_cols$e_dot) |> 
+  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = IEATools::iea_cols$year, values_to = IEATools::iea_cols$e_dot) |> 
   dplyr::filter(
     # Eliminate rows that have 0 energy.
-    !!as.name(iea_cols$e_dot) != 0, 
+    !!as.name(IEATools::iea_cols$e_dot) != 0, 
   ) |> 
   dplyr::mutate(
-    !!as.name(iea_cols$year) := as.numeric(!!as.name(iea_cols$year))
+    !!as.name(IEATools::iea_cols$year) := as.numeric(!!as.name(IEATools::iea_cols$year))
   )
 
 # Use these data frames as internal objects in the package.
@@ -73,9 +73,42 @@ usethis::use_data(Fixed_GHA_Industry_Electricity, overwrite = TRUE)
 # The function fix_COL_electricity_generation() makes use of these data.
 Fixed_COL_WRLD_Electricity <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedCOLWRLDElect.xlsx"), 
                                                   sheet = "COL-WRLD-Elect-2021-release") |> 
-  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = iea_cols$year, values_to = iea_cols$e_dot) |> 
+  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = IEATools::iea_cols$year, values_to = IEATools::iea_cols$e_dot) |> 
   dplyr::mutate(
-    !!as.name(iea_cols$year) := as.numeric(!!as.name(iea_cols$year))
+    !!as.name(IEATools::iea_cols$year) := as.numeric(!!as.name(IEATools::iea_cols$year))
   )
 
 usethis::use_data(Fixed_COL_WRLD_Electricity, overwrite = TRUE)
+
+
+# Other Non-OECD Americas has several years where Charcoal is produced 
+# but no Primary solid biofuels are consumed to 
+# create the Charcoal. 
+# This data frame contains data to fix that problem.
+# This data frame is used by the function fix_OAMR_cpp().
+Fixed_OAMR_cpp <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedOAMRCharcoalProductionPlants.xlsx"), 
+                                      sheet = "Fixed") |> 
+  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = IEATools::iea_cols$year, values_to = IEATools::iea_cols$e_dot) |> 
+  dplyr::mutate(
+    "{IEATools::iea_cols$year}" := as.numeric(.data[[IEATools::iea_cols$year]])
+  )
+
+usethis::use_data(Fixed_OAMR_cpp, overwrite = TRUE)
+
+
+
+# Other Non-OECD Americas has several years (1971-1976)
+# where Gas works gas is produced 
+# but no feedstock is consumed to 
+# create the Gas works gas. 
+# This data frame contains data to fix that problem.
+# This data frame is used by the function fix_OAMR_gw().
+
+Fixed_OAMR_gw <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedOAMRGasWorks.xlsx"), 
+                                     sheet = "Fixed") |> 
+  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = IEATools::iea_cols$year, values_to = IEATools::iea_cols$e_dot) |> 
+  dplyr::mutate(
+    "{IEATools::iea_cols$year}" := as.numeric(.data[[IEATools::iea_cols$year]])
+  )
+
+usethis::use_data(Fixed_OAMR_gw, overwrite = TRUE)

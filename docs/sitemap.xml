@@ -46,6 +46,12 @@
     <loc>/reference/Fixed_GHA_PSB.html</loc>
   </url>
   <url>
+    <loc>/reference/Fixed_OAMR_cpp.html</loc>
+  </url>
+  <url>
+    <loc>/reference/Fixed_OAMR_gw.html</loc>
+  </url>
+  <url>
     <loc>/reference/add_nuclear_industry.html</loc>
   </url>
   <url>
@@ -188,6 +194,12 @@
   </url>
   <url>
     <loc>/reference/fix_GHA_psb.html</loc>
+  </url>
+  <url>
+    <loc>/reference/fix_OAMR_cpp.html</loc>
+  </url>
+  <url>
+    <loc>/reference/fix_OAMR_gw.html</loc>
   </url>
   <url>
     <loc>/reference/fix_tidy_iea_df_balances.html</loc>

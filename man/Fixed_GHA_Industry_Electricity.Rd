@@ -19,7 +19,7 @@ for the years 1971--1973 only.
 However, data to bring more specificity to Industry Electricity consumption
 are available from the Ghana Grid Corporation (GridCo) and the Volta River Authority (VRA).
 These data have been compiled into this object.
-The function fix_GHA_industry_electricity() makes use of these data.
+The function \code{fix_GHA_industry_electricity()} makes use of these data.
 }
 \examples{
 Fixed_GHA_Industry_Electricity

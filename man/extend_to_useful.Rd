@@ -143,14 +143,13 @@ If \code{.sutdata} is a data frame, arguments
 \code{R}, \code{U_feed}, \code{U_eiou}, \code{U}, \code{r_eiou}, \code{V}, \code{Y}, \code{C_eiou}, \code{C_Y}, \code{eta_fu}, and \code{phi_u}
 should all be strings (as the default)
 identifying which columns in \code{.sutdata} should be used for each matrix.
-Output is determined by argument \code{clean_up_df}.
-When \code{clean_up_df = TRUE} (the default), output will contain a \code{last_stage} column with either \code{final} or \code{useful} indicated.
-When \code{clean_up_df = FALSE}, output will contain an unmodified \code{last_stage} column,
-probably containing "Final" in all rows.
-Columns containing versions of matrices where last stage is "Useful" will have \code{sep} and \code{useful}
-appended to the column name.
-\code{clean_up_df = FALSE} is probably not what is desired and can lead to confusion.
-\code{clean_up_df = TRUE} (the default) is recommended.
+Output is a data frame with additional columns with names
+appended with \code{paste0(.sep, useful)}.
+
+If final and useful versions of matrices are
+desired to be stacked (\code{rbind}ed),
+call \code{stack_final_useful_df()} subsequent to calling
+\code{extend_to_useful()}.
 
 An energy balance check is performed on the useful matrices.
 If the energy balance check fails, a warning is emitted and

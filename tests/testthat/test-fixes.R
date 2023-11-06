@@ -245,6 +245,130 @@ test_that("Fixing GHA Industry Electricity works as expected", {
 })
 
 
+test_that("fix_OAMR_cpp() works as expected", {
+  example_tidy_iea_df <- load_tidy_iea_df() |> 
+    dplyr::filter(Country == "GHA") |> 
+    dplyr::mutate(
+      # Pretend that GHA is Other non-OECD Americas.
+      Country = "OAMR"
+    )
+  # Check original values
+  orig <- example_tidy_iea_df |> 
+    dplyr::filter(Flow %in% c("Production",
+                              "Charcoal production plants"), 
+                  Product %in% c("Charcoal", "Primary solid biofuels")) |> 
+    dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
+  orig |> 
+    dplyr::filter(Year == 1971, Flow == "Production") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(87400, tolerance = 0.01)
+  orig |> 
+    dplyr::filter(Year == 2000, Flow == "Production") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(162909)
+  orig |> 
+    dplyr::filter(Year == 1971, Flow == "Charcoal production plants", Product == "Primary solid biofuels") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(-20000, tolerance = 0.001)
+  orig |> 
+    dplyr::filter(Year == 2000, Flow == "Charcoal production plants", Product == "Primary solid biofuels") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(-45804, tolerance = 0.001)
+  orig |> 
+    dplyr::filter(Year == 1971, Flow == "Charcoal production plants", Product == "Charcoal") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(4990, tolerance = 0.001)
+  orig |> 
+    dplyr::filter(Year == 2000, Flow == "Charcoal production plants", Product == "Charcoal") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(21683, tolerance = 0.001)
+  
+  # Check fixed values
+  fixed <- example_tidy_iea_df |> 
+    fix_OAMR_cpp() |> 
+    dplyr::filter(Flow %in% c("Production",
+                              "Charcoal production plants"), 
+                  Product %in% c("Charcoal", "Primary solid biofuels")) |> 
+    dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
+  
+  fixed |> 
+    dplyr::filter(Year == 1971, Flow == "Production") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(11843.81818)
+  fixed |> 
+    dplyr::filter(Year == 2000, Flow == "Production") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(10193.63636)
+  fixed |> 
+    dplyr::filter(Year == 1971, Flow == "Charcoal production plants", Product == "Primary solid biofuels") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(-236.8181818, tolerance = 0.001)
+  fixed |> 
+    dplyr::filter(Year == 2000, Flow == "Charcoal production plants", Product == "Primary solid biofuels") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(-994.6363636, tolerance = 0.001)
+  fixed |> 
+    dplyr::filter(Year == 1971, Flow == "Charcoal production plants", Product == "Charcoal") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(154, tolerance = 0.001)
+  fixed |> 
+    dplyr::filter(Year == 2000, Flow == "Charcoal production plants", Product == "Charcoal") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(646.8, tolerance = 0.001)
+})
+
+
+test_that("fix_OAMR_gw() works as expected", {
+  example_tidy_iea_df <- load_tidy_iea_df() |> 
+    dplyr::filter(Country == "ZAF", Year == 1971) |> 
+    dplyr::mutate(
+      # Pretend that ZAF is Other non-OECD Americas.
+      Country = "OAMR"
+    )
+  # Check original values
+  orig <- example_tidy_iea_df |> 
+    dplyr::filter(Flow %in% c("Production",
+                              "Gas works"), 
+                  Product %in% c("Natural gas", "Gas works gas")) |> 
+    dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
+  orig |> 
+    dplyr::filter(Year == 1971, Flow == "Production") |> 
+    purrr::pluck("E.dot", 1) |> 
+    # There is no Production here.
+    expect_null()
+  orig |> 
+    dplyr::filter(Flow == "Gas works", Product == "Gas works gas") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(5797, tolerance = 0.001)
+  orig |> 
+    dplyr::filter(Flow == "Gas works", Product == "Natural gas") |> 
+    purrr::pluck("E.dot", 1) |> 
+    # There is no consumption of Natural gas by Gas works.
+    expect_null()
+
+  # Check fixed values
+  fixed <- example_tidy_iea_df |> 
+    fix_OAMR_gw() |> 
+    dplyr::filter(Flow %in% c("Production",
+                              "Gas works"), 
+                  Product %in% c("Gas works gas", "Natural gas")) |> 
+    dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
+  
+  fixed |> 
+    dplyr::filter(Flow == "Production") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(210.3834233)
+  fixed |> 
+    dplyr::filter(Flow == "Gas works", Product == "Natural gas") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(-105.0834233)
+  fixed |> 
+    dplyr::filter(Flow == "Gas works", Product == "Gas works gas") |> 
+    purrr::pluck("E.dot", 1) |> 
+    expect_equal(82.8)
+})
+
+
 test_that("load_tidy_iea_df(apply_fixes = TRUE) works as expected", {
   # Try without fixes first
   unfixed <- load_tidy_iea_df(apply_fixes = FALSE)

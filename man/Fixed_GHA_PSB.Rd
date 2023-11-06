@@ -21,7 +21,7 @@ the per-capita consumption of PSB obviously changed.
 Our approach to this problem is to smooth out the really big peak in PSB consumption
 by reducing the per-capita consumption of PSB, starting in 1991.
 This data frame contains the "fixed" data.
-The function \code{\link[=fix_GHA_psb]{fix_GHA_psb()}} makes use of these data.
+The function \code{fix_GHA_psb()} makes use of these data.
 }
 \examples{
 Fixed_GHA_PSB

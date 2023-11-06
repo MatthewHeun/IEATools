@@ -52,6 +52,8 @@ After a call to \code{extend_to_useful()},
 the resulting data frame is not in a great shape.
 This function gathers (via \code{tidyr::pivot_longer()})
 and stacks the useful data beneath the final data.
+A \code{last_stage} column is added to discriminate between
+final and useful versions of matrices.
 }
 \examples{
 C_data <- load_fu_allocation_data() \%>\% 

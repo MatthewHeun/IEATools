@@ -43,7 +43,7 @@ a copy of \code{x} in which matching \code{by} rows are replaced by matched rows
 }
 \description{
 Perform a modified \code{dplyr::full_join()} on \code{x} and \code{y},
-returning all columns from \code{c},
+returning all columns from \code{x},
 non-matching rows from \code{x},
 and all rows from \code{y}.
 Essentially \code{replace_join()} replaces matching rows in \code{x} with corresponding rows from \code{y}

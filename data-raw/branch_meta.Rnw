@@ -1,0 +1,54 @@
+---
+title: "Branches for `PFUDatabase`"
+author: "Matthew Kuperus Heun"
+date: "`r Sys.Date()`"
+output: html_document
+---
+  
+  
+## Purpose
+  
+This file (data-raw/branch_meta.Rmd) describes branches in this repository.
+It will help us keep track of what we are doing and why.
+The file lives in the `data-raw` directory, so it is not part of the package.
+
+Information in this file supports my code development strategy,
+which can be found in my
+[github repository](https://github.com/MatthewHeun/DevelopmentStrategies).
+
+
+## Branches
+
+### master
+
+The primary branch of the repository.
+
+### develop
+
+The branch into which new features are merged.
+
+### Feature branches
+
+Use this template to describe feature branches.
+
+#### Branch name
+
+* Purpose: 
+* Next step:
+* Branched from:
+* Author:
+* Date: 
+  
+  
+  
+
+#### fix_cpp
+
+* Purpose: Fix Charcoal production plants for Other Americas (OAMR)
+           that produce Charcoal without consuming PSBs. 
+           This problem occurs in 1971-2010.
+* Next step: Write code to take advantage of the "fixing" framework 
+             to solve this problem.
+* Branched from: develop
+* Author: Matthew Kuperus Heun
+* Date: 8 Oct 2023

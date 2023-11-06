@@ -8,7 +8,43 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-# IEATools 0.1.68 (2023-08-18)
+# IEATools 0.1.69 (2023-11-03)
+
+* The constant `nonenergy_use` is now aligned with IEA definitions for 
+  Non-energy use products. 
+  Specifically, now only
+  "Additives/blending components",
+  "Bitumen",
+  "Lubricants",
+  "Naphtha",
+  "Paraffin waxes",
+  "Refinery feedstocks", and
+  "White spirit & SBP"
+  are Non-energy use Products.
+  "Coal tar",
+  "Crude/NGL/feedstocks (if no detail)",
+  "Crude oil",
+  "Natural gas liquids",
+  "Oil shale and oil sands",
+  "Other hydrocarbons", and
+  "Other oil products"
+  were formerly included in the constant but have now been removed.
+* Added a fix for Other non-OECD Americas Gas works.
+  For a few years (1971--1976), Other non-OECD Americas Gas works
+  plants consume no feedstock. 
+  Fixed data are now included by default.
+* Added a fix for Other non-OECD Americas Charcoal production plants.
+  For many years (1971--2010), they produced Charcoal
+  without consuming any energy (Primary solid biofuels is typical).
+  The fixed data both
+  (a) has Charcoal production plants consume Primary solid biofuels and
+  (b) boosts production of Primary solid biofuels accordingly.
+* New tests for new features.
+    * Now up to 1236 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# IEATools 0.1.68 (2023-08-18) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8264201.svg)](https://doi.org/10.5281/zenodo.8264201)
 
 * Added note about permission to use IEA data to README.Rmd file.
 * Zenodo DOI now used in references.

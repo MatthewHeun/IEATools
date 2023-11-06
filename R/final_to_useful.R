@@ -495,14 +495,13 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' `R`, `U_feed`, `U_eiou`, `U`, `r_eiou`, `V`, `Y`, `C_eiou`, `C_Y`, `eta_fu`, and `phi_u` 
 #' should all be strings (as the default)
 #' identifying which columns in `.sutdata` should be used for each matrix.
-#' Output is determined by argument `clean_up_df`. 
-#' When `clean_up_df = TRUE` (the default), output will contain a `last_stage` column with either `final` or `useful` indicated.
-#' When `clean_up_df = FALSE`, output will contain an unmodified `last_stage` column, 
-#' probably containing "Final" in all rows.
-#' Columns containing versions of matrices where last stage is "Useful" will have `sep` and `useful` 
-#' appended to the column name.
-#' `clean_up_df = FALSE` is probably not what is desired and can lead to confusion.
-#' `clean_up_df = TRUE` (the default) is recommended.
+#' Output is a data frame with additional columns with names
+#' appended with `paste0(.sep, useful)`.
+#' 
+#' If final and useful versions of matrices are 
+#' desired to be stacked (`rbind`ed), 
+#' call `stack_final_useful_df()` subsequent to calling
+#' `extend_to_useful()`.
 #' 
 #' An energy balance check is performed on the useful matrices. 
 #' If the energy balance check fails, a warning is emitted and 
@@ -900,6 +899,8 @@ extend_to_useful_helper <- function(.sutdata = NULL,
 #' the resulting data frame is not in a great shape.
 #' This function gathers (via `tidyr::pivot_longer()`)
 #' and stacks the useful data beneath the final data.
+#' A `last_stage` column is added to discriminate between
+#' final and useful versions of matrices.
 #'
 #' @param .useful_df A data frame created by `extend_to_useful()`.
 #' @param .sutdata The original input to `extend_to_useful()`.

@@ -311,18 +311,28 @@ usethis::use_data(electricity_products, overwrite = TRUE)
 
 nonenergy_products <- list(additives_blending_components = "Additives/blending components",
                            bitumen = "Bitumen",
-                           coal_tar = "Coal tar",
-                           crude_ngl_feedstocks_if_no_detail = "Crude/NGL/feedstocks (if no detail)",
-                           crude_oil = "Crude oil",
                            lubricants = "Lubricants",
                            naphtha = "Naphtha",
-                           natural_gas_liquids = "Natural gas liquids",
-                           oil_shale_and_oil_sands = "Oil shale and oil sands",
-                           other_hydrocarbons = "Other hydrocarbons",
-                           other_oil_products = "Other oil products",
                            paraffin_waxes = "Paraffin waxes",
                            refinery_feedstocks = "Refinery feedstocks",
                            white_spirit_and_sbp = "White spirit & SBP"
+                           # The following products were removed from the 
+                           # nonenergy_products constant by MKH on 3 Nov 2023
+                           # after extensive discussion among
+                           # PB, EA, and MKH.
+                           # The decision was made to follow the IEA directly.
+                           # The IEA does not consider the following products
+                           # to be NEU, so we do the same.
+                           # We will now be allocating these products correctly
+                           # in Country-specific (and WRLD) allocation
+                           # spreadsheets.
+                           # coal_tar = "Coal tar",
+                           # crude_ngl_feedstocks_if_no_detail = "Crude/NGL/feedstocks (if no detail)",
+                           # crude_oil = "Crude oil",
+                           # natural_gas_liquids = "Natural gas liquids",
+                           # oil_shale_and_oil_sands = "Oil shale and oil sands",
+                           # other_hydrocarbons = "Other hydrocarbons",
+                           # other_oil_products = "Other oil products"
                            )
 usethis::use_data(nonenergy_products, overwrite = TRUE)
 
