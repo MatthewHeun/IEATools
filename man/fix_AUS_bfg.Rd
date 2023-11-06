@@ -39,3 +39,15 @@ consumes Blast furnace gas, according to the IEA's assumed efficiency
 of 40\%.
 This function makes use of the \code{Fixed_AUS_bfg} data frame.
 }
+\examples{
+load_tidy_iea_df() |>
+  dplyr::filter(Country == "ZAF", Year == 1971) |> 
+  dplyr::mutate(
+    # Pretend that ZAF is Australia.
+    Country = "AUS", 
+    # And that 1971 is 2013
+    Year = 2013
+  ) |> 
+  # This will change Blast furnace gas.
+  fix_AUS_bfg()
+}

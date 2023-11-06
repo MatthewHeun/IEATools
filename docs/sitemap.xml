@@ -37,6 +37,9 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
+    <loc>/reference/Fixed_AUS_bfg.html</loc>
+  </url>
+  <url>
     <loc>/reference/Fixed_COL_WRLD_Electricity.html</loc>
   </url>
   <url>
@@ -185,6 +188,9 @@
   </url>
   <url>
     <loc>/reference/find_transformation_start.html</loc>
+  </url>
+  <url>
+    <loc>/reference/fix_AUS_bfg.html</loc>
   </url>
   <url>
     <loc>/reference/fix_COL_WRLD_electricity.html</loc>
