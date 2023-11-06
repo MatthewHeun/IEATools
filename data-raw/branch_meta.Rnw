@@ -42,13 +42,3 @@ Use this template to describe feature branches.
   
   
 
-#### fix_cpp
-
-* Purpose: Fix Charcoal production plants for Other Americas (OAMR)
-           that produce Charcoal without consuming PSBs. 
-           This problem occurs in 1971-2010.
-* Next step: Write code to take advantage of the "fixing" framework 
-             to solve this problem.
-* Branched from: develop
-* Author: Matthew Kuperus Heun
-* Date: 8 Oct 2023
