@@ -1292,7 +1292,8 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
       fix_GHA_psb() |> 
       fix_COL_WRLD_electricity() |> 
       fix_OAMR_cpp() |> 
-      fix_OAMR_gw()
+      fix_OAMR_gw() |> 
+      fix_AUS_bfg()
   }
   out |>  
     remove_agg_memo_flows() |> 

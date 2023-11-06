@@ -34,11 +34,23 @@ Use this template to describe feature branches.
 #### Branch name
 
 * Purpose: 
-* Next step:
 * Branched from:
+* Next step:
 * Author:
 * Date: 
   
   
   
+
+#### fix_swim
+
+* Purpose: To apply a specification for situations where
+           an industry makes a product all of which it consumes 
+           exclusively with EIOU.
+           In this situation, calculating the IO matrices results
+           in a singular matrix.
+* Next step: Merge back into develop when successful.
+* Branched from: develop
+* Author: MKH
+* Date: 6 Nov 2023
 

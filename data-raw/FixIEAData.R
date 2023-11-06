@@ -112,3 +112,13 @@ Fixed_OAMR_gw <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedOAMR
   )
 
 usethis::use_data(Fixed_OAMR_gw, overwrite = TRUE)
+
+
+Fixed_AUS_bfg <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedAUSbgf.xlsx"), 
+                                     sheet = "Fixed") |> 
+  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = IEATools::iea_cols$year, values_to = IEATools::iea_cols$e_dot) |> 
+  dplyr::mutate(
+    "{IEATools::iea_cols$year}" := as.numeric(.data[[IEATools::iea_cols$year]])
+  )
+
+usethis::use_data(Fixed_AUS_bfg, overwrite = TRUE)
