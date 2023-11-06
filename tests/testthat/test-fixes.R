@@ -369,6 +369,55 @@ test_that("fix_OAMR_gw() works as expected", {
 })
 
 
+test_that("fix_AUS_bfg() works as expected", {
+  # Try when the country doesn't match. 
+  # No changes should occur.
+  fixed_but_no_fix <- load_tidy_iea_df() |>
+    dplyr::filter(Country == "ZAF", Year == 1971) |> 
+    fix_AUS_bfg()
+  
+  fixed_but_no_fix |> 
+    dplyr::filter(Product == "Blast furnace gas", 
+                  Flow.aggregation.point == "Energy industry own use") |> 
+    nrow() |> 
+    expect_equal(0)
+  fixed_but_no_fix |> 
+    dplyr::filter(Product == "Blast furnace gas", 
+                  Flow.aggregation.point == "Transformation processes") |> 
+    magrittr::extract2("E.dot") |> 
+    expect_equal(34575)
+  fixed_but_no_fix |> 
+    dplyr::filter(Product == "Blast furnace gas", 
+                  Flow.aggregation.point == "Industry") |> 
+    magrittr::extract2("E.dot") |> 
+    expect_equal(34575)
+  
+  # Now try when changes should occur
+  example_tidy_iea_df <- load_tidy_iea_df() |>
+    dplyr::filter(Country == "ZAF", Year == 1971) |> 
+    dplyr::mutate(
+      # Pretend that ZAF is Australia.
+      Country = "AUS", 
+      # And that 1971 is 2013
+      Year = 2013
+    )
+  # Pass through fix_AUS_bfg() to make sure the fix is applied
+  fixed <- example_tidy_iea_df |> 
+    fix_AUS_bfg()
+  fixed |> 
+    dplyr::filter(Product == "Blast furnace gas", 
+                  Flow.aggregation.point == "Energy industry own use") |> 
+    magrittr::extract2("E.dot") |> 
+    expect_equal(-11324.99922)
+  
+  fixed |> 
+    dplyr::filter(Product == "Blast furnace gas", 
+                  Flow == "Iron and steel") |> 
+    magrittr::extract2("E.dot") |> 
+    expect_equal(7549.99948)
+})
+
+
 test_that("load_tidy_iea_df(apply_fixes = TRUE) works as expected", {
   # Try without fixes first
   unfixed <- load_tidy_iea_df(apply_fixes = FALSE)
@@ -472,8 +521,8 @@ test_that("applying fixes results in balanced energy flows", {
     # All IEA data  
     # iea <- "~/Dropbox/Fellowship 1960-2015 PFU database/IEA extended energy balance data/IEA 2022 energy balance data/IEA Extended Energy Balances 2022 (TJ).csv" |>
     # Only WRLD (faster!)
-    iea <- paste0("~/Dropbox/Fellowship 1960-2015 PFU database/IEA extended energy balance data/IEA ", 
-                  yr, " energy balance data/IEA Extended Energy Balances ", 
+    iea <- paste0("~/Dropbox/Fellowship 1960-2015 PFU database/IEA extended energy balance data/IEA ",
+                  yr, " energy balance data/IEA Extended Energy Balances ",
                   yr, " (TJ) World.csv") |>
       IEATools::load_tidy_iea_df(apply_fixes = TRUE) |> 
       # Ignore unbalanced "countries"
@@ -488,19 +537,3 @@ test_that("applying fixes results in balanced energy flows", {
       expect_true()
   }
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

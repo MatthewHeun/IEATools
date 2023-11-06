@@ -234,11 +234,40 @@ fix_OAMR_gw <- function(.tidy_iea_df,
 }
 
 
+#' Fix Australia Blast furnace gas for 2010--2020
+#'
+#' Australia's Blast furnaces have an undesirable characteristic 
+#' that leads to singular matrices:
+#' From 2013 onward, the production of Blast furnace gas by Blast furnaces
+#' is consumed only by Blast furnaces.
+#' No other industry or energy production machine consumes
+#' Blast furnace gas.
+#' In fact, the problem is deeper, 
+#' starting in 2010, the Iron and steel industry consumes no Blast furnace gas,
+#' in apparent contradiction to the IEA's own policies for reporting 
+#' Blast furnace gas consumption.
+#' This function fixes the Blast furnace gas data for Australia
+#' for the 2010--2020 timeframe.
+#' 
+#' The fix involves ensuring that the Iron and steel industry always
+#' consumes Blast furnace gas, according to the IEA's assumed efficiency 
+#' of 40%.
+#' This function makes use of the `Fixed_AUS_bfg` data frame.
+#' 
+#' @param .tidy_iea_df IEA data frame produced by `load_tidy_iea_df()`.
+#' @param country,year,e_dot See `IEATools::iea_cols`.
+#'
+#' @return `.tidy_iea_df` with improved Australia Blast furnace gas.
+#'
+#' @export
+#'
+#' @examples
 fix_AUS_bfg <- function(.tidy_iea_df, 
                         country = IEATools::iea_cols$country,
                         year = IEATools::iea_cols$year,
                         e_dot = IEATools::iea_cols$e_dot) {
-  
+  do_fix(.tidy_iea_df, replacement = IEATools::Fixed_AUS_bfg,
+         country = country, year = year, e_dot = e_dot)
 }
 
 
