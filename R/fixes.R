@@ -262,6 +262,16 @@ fix_OAMR_gw <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' load_tidy_iea_df() |>
+#'   dplyr::filter(Country == "ZAF", Year == 1971) |> 
+#'   dplyr::mutate(
+#'     # Pretend that ZAF is Australia.
+#'     Country = "AUS", 
+#'     # And that 1971 is 2013
+#'     Year = 2013
+#'   ) |> 
+#'   # This will change Blast furnace gas.
+#'   fix_AUS_bfg()
 fix_AUS_bfg <- function(.tidy_iea_df, 
                         country = IEATools::iea_cols$country,
                         year = IEATools::iea_cols$year,
