@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.68</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.69</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,21 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.68" id="ieatools-0168-2023-08-18">IEATools 0.1.68 (2023-08-18)<a class="anchor" aria-label="anchor" href="#ieatools-0168-2023-08-18"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.69" id="ieatools-0169-2023-11-03">IEATools 0.1.69 (2023-11-03)<a class="anchor" aria-label="anchor" href="#ieatools-0169-2023-11-03"></a></h2>
+<ul><li>The constant <code>nonenergy_use</code> is now aligned with IEA definitions for Non-energy use products. Specifically, now only “Additives/blending components”, “Bitumen”, “Lubricants”, “Naphtha”, “Paraffin waxes”, “Refinery feedstocks”, and “White spirit &amp; SBP” are Non-energy use Products. “Coal tar”, “Crude/NGL/feedstocks (if no detail)”, “Crude oil”, “Natural gas liquids”, “Oil shale and oil sands”, “Other hydrocarbons”, and “Other oil products” were formerly included in the constant but have now been removed.</li>
+<li>Added a fix for Other non-OECD Americas Gas works. For a few years (1971–1976), Other non-OECD Americas Gas works plants consume no feedstock. Fixed data are now included by default.</li>
+<li>Added a fix for Other non-OECD Americas Charcoal production plants. For many years (1971–2010), they produced Charcoal without consuming any energy (Primary solid biofuels is typical). The fixed data both
+<ol style="list-style-type: lower-alpha"><li>has Charcoal production plants consume Primary solid biofuels and</li>
+<li>boosts production of Primary solid biofuels accordingly.</li>
+</ol></li>
+<li>New tests for new features.
+<ul><li>Now up to 1236 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.68" id="ieatools-0168-2023-08-18-doi">IEATools 0.1.68 (2023-08-18) <a href="https://doi.org/10.5281/zenodo.8264201" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.8264201.svg" alt="DOI"></a>
+<a class="anchor" aria-label="anchor" href="#ieatools-0168-2023-08-18-doi"></a></h2>
 <ul><li>Added note about permission to use IEA data to README.Rmd file.</li>
 <li>Zenodo DOI now used in references.</li>
 <li>Moved some internal constants to function arguments (<code>etwmb</code> and <code>etwab</code>) in <code><a href="../reference/aggregate_regions.html">aggregate_regions()</a></code>.</li>
