@@ -8,7 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-# IEATools 0.1.69 (2023-11-03)
+# IEATools 0.1.69 (2023-11-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10075549.svg)](https://doi.org/10.5281/zenodo.10075549)
 
 * The constant `nonenergy_use` is now aligned with IEA definitions for 
   Non-energy use products. 
