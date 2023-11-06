@@ -8,6 +8,8 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+# IEATools 0.1.70 (2023-11-06)
+
 * Fix Australia Blast furnace gas.
   Australia's Blast furnaces have an undesirable characteristic 
   that leads to singular matrices:
