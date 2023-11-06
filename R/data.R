@@ -1252,4 +1252,31 @@
 "Fixed_OAMR_gw"
 
 
+#' Fixed Australia Blast furnace gas for 2010--2020
+#'
+#' Australia's Blast furnaces have an undesirable characteristic 
+#' that leads to singular matrices:
+#' From 2013 onward, the production of Blast furnace gas by Blast furnaces
+#' is consumed only by Blast furnaces.
+#' No other industry or energy production machine consumes
+#' Blast furnace gas.
+#' In fact, the problem is deeper, 
+#' starting in 2010, the Iron and steel industry consumes no Blast furnace gas,
+#' in apparent contradiction to the IEA's own policies for reporting 
+#' Blast furnace gas consumption.
+#' This data frame provides the "fixed" Blast furnace gas data for Australia
+#' for the 2010--2020 timeframe.
+#' 
+#' The fix involves ensuring that the Iron and steel industry always
+#' consumes Blast furnace gas, according to the IEA's assumed efficiency 
+#' of 40%.
+#' The function `fix_AUS_bfg()` makes use of these data.
+#' 
+#' @format A data frame with `r ncol(Fixed_AUS_bfg)` columns.
+#' 
+#' @examples
+#' Fixed_AUS_bfg
+"Fixed_AUS_bfg"
+
+
 

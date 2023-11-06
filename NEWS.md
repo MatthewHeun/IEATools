@@ -8,7 +8,27 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-# IEATools 0.1.69 (2023-11-03)
+# IEATools 0.1.70 (2023-11-06)
+
+* Fix Australia Blast furnace gas.
+  Australia's Blast furnaces have an undesirable characteristic 
+  that leads to singular matrices:
+  From 2013 onward, the production of Blast furnace gas by Blast furnaces
+  is consumed only by Blast furnaces.
+  No other industry or energy production machine consumes
+  Blast furnace gas.
+  In fact, the problem is deeper, 
+  starting in 2010, the Iron and steel industry consumes no Blast furnace gas,
+  in apparent contradiction to the IEA's own policies for reporting 
+  Blast furnace gas consumption.
+  `fix_AUS_bfg()` fixes the Blast furnace gas data for Australia
+  for the 2010--2020 timeframe.
+* New tests for new features.
+    * Now up to 1241 tests, all passing.
+    * Test coverage remains at 100 %.
+
+
+# IEATools 0.1.69 (2023-11-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10075549.svg)](https://doi.org/10.5281/zenodo.10075549)
 
 * The constant `nonenergy_use` is now aligned with IEA definitions for 
   Non-energy use products. 

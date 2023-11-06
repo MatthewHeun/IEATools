@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.69</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.70</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,16 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.69" id="ieatools-0169-2023-11-03">IEATools 0.1.69 (2023-11-03)<a class="anchor" aria-label="anchor" href="#ieatools-0169-2023-11-03"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.70" id="ieatools-0170-2023-11-06">IEATools 0.1.70 (2023-11-06)<a class="anchor" aria-label="anchor" href="#ieatools-0170-2023-11-06"></a></h2>
+<ul><li>Fix Australia Blast furnace gas. Australia’s Blast furnaces have an undesirable characteristic that leads to singular matrices: From 2013 onward, the production of Blast furnace gas by Blast furnaces is consumed only by Blast furnaces. No other industry or energy production machine consumes Blast furnace gas. In fact, the problem is deeper, starting in 2010, the Iron and steel industry consumes no Blast furnace gas, in apparent contradiction to the IEA’s own policies for reporting Blast furnace gas consumption. <code><a href="../reference/fix_AUS_bfg.html">fix_AUS_bfg()</a></code> fixes the Blast furnace gas data for Australia for the 2010–2020 timeframe.</li>
+<li>New tests for new features.
+<ul><li>Now up to 1241 tests, all passing.</li>
+<li>Test coverage remains at 100 %.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.69" id="ieatools-0169-2023-11-03-doi">IEATools 0.1.69 (2023-11-03) <a href="https://doi.org/10.5281/zenodo.10075549" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.10075549.svg" alt="DOI"></a>
+<a class="anchor" aria-label="anchor" href="#ieatools-0169-2023-11-03-doi"></a></h2>
 <ul><li>The constant <code>nonenergy_use</code> is now aligned with IEA definitions for Non-energy use products. Specifically, now only “Additives/blending components”, “Bitumen”, “Lubricants”, “Naphtha”, “Paraffin waxes”, “Refinery feedstocks”, and “White spirit &amp; SBP” are Non-energy use Products. “Coal tar”, “Crude/NGL/feedstocks (if no detail)”, “Crude oil”, “Natural gas liquids”, “Oil shale and oil sands”, “Other hydrocarbons”, and “Other oil products” were formerly included in the constant but have now been removed.</li>
 <li>Added a fix for Other non-OECD Americas Gas works. For a few years (1971–1976), Other non-OECD Americas Gas works plants consume no feedstock. Fixed data are now included by default.</li>
 <li>Added a fix for Other non-OECD Americas Charcoal production plants. For many years (1971–2010), they produced Charcoal without consuming any energy (Primary solid biofuels is typical). The fixed data both
