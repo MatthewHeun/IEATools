@@ -8,6 +8,8 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+# IEATools 0.1.71 (2023-12-02)
+
 * Added code of conduct and contributing pages to documentation.
 * No new tests.
     * Still at 1241 tests, all passing.
