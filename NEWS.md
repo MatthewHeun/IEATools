@@ -8,6 +8,14 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+# IEATools 0.1.71 (2023-12-02)
+
+* Added code of conduct and contributing pages to documentation.
+* No new tests.
+    * Still at 1241 tests, all passing.
+    * Test coverage remains at 100%.
+
+
 # IEATools 0.1.70 (2023-11-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10076551.svg)](https://doi.org/10.5281/zenodo.10076551)
 
 * Fix Australia Blast furnace gas.
@@ -25,7 +33,7 @@ which always resolves to the latest release.
   for the 2010--2020 timeframe.
 * New tests for new features.
     * Now up to 1241 tests, all passing.
-    * Test coverage remains at 100 %.
+    * Test coverage remains at 100%.
 
 
 # IEATools 0.1.69 (2023-11-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10075549.svg)](https://doi.org/10.5281/zenodo.10075549)

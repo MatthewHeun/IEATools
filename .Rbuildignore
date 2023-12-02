@@ -10,3 +10,4 @@
 ^_pkgdown\.yml$
 ^pkgdown$
 CITATION.cff
+^LICENSE\.md$
