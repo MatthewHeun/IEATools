@@ -141,7 +141,7 @@ usethis::use_data(Fixed_AUS_bfg, overwrite = TRUE)
 # Final consumption not elsewhere specified Heat 
 # is re-assigning 
 # to specific sectors by the proportion found in 1993 (RUS) and 1994 (EST)
-# for 19990--1992 (RUS) and 1990--1993 (EST).
+# for 1990--1992 (RUS) and 1990--1993 (EST).
 
 Fixed_RUSEST_heat <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedRUSESTHeat19901993.xlsx"), 
                                          sheet = "Fixed") |> 
