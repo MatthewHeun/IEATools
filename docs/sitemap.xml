@@ -64,6 +64,9 @@
     <loc>/reference/Fixed_OAMR_gw.html</loc>
   </url>
   <url>
+    <loc>/reference/Fixed_RUSEST_heat.html</loc>
+  </url>
+  <url>
     <loc>/reference/add_nuclear_industry.html</loc>
   </url>
   <url>
@@ -215,6 +218,9 @@
   </url>
   <url>
     <loc>/reference/fix_OAMR_gw.html</loc>
+  </url>
+  <url>
+    <loc>/reference/fix_RUSEST_heat.html</loc>
   </url>
   <url>
     <loc>/reference/fix_tidy_iea_df_balances.html</loc>
