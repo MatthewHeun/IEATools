@@ -49,7 +49,8 @@ feedstock
 feedstocks
 FFFFFF
 FixedHNFuels
-FLOWs
+FLOW
+FoSUN
 footprinting
 FSU
 Func
@@ -110,6 +111,7 @@ psutcols
 RCLabels
 RoP
 Rmd
+RUS
 rankine
 readme
 regasification
