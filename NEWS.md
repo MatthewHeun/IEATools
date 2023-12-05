@@ -4,6 +4,10 @@ output: html_document
 ---
 
 
+Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zenodo.5086371), 
+which always resolves to the latest release.
+
+
 * Fix RUS and EST Heat.
   The breakup of the Soviet Union (SUN) caused many irregularities
   in the IEA's energy accounting
@@ -28,10 +32,6 @@ output: html_document
 * New tests for new features.
     * Now at 1251 tests, all passing.
     * Test coverage remains at 100%.
-
-
-Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zenodo.5086371), 
-which always resolves to the latest release.
 
 
 # IEATools 0.1.71 (2023-12-02) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10251305.svg)](https://doi.org/10.5281/zenodo.10251305)
