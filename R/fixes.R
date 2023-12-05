@@ -281,6 +281,42 @@ fix_AUS_bfg <- function(.tidy_iea_df,
 }
 
 
+
+#' Fix Russia and Estonia Heat for 1990--1993
+#' 
+#' The breakup of the Soviet Union (SUN) caused many irregularities
+#' in the IEA's energy accounting
+#' for SUN, Russia (RUS), and other former-Soviet states.
+#' In particular, the Flow of Heat is assigned to
+#' "Final consumption not elsewhere specified" for 
+#' 1990--1992 (RUS) and 1990--1993 (EST).
+#' However, for following years, Heat is assigned to specific sectors.
+#' Other FoSUN countries do not exhibit the same problem.
+#' This Heat accounting irregularity
+#' is one of a series of problems that causes a jump 
+#' in final-to-useful efficiencies for Europe and World in the CL-PFU database
+#' in the time period 1989--1990.
+#' This function performs a fix wherein 
+#' Final consumption not elsewhere specified Heat 
+#' is re-assigning 
+#' to specific sectors by the proportion found in 1993 (RUS) and 1994 (EST)
+#' for 1990--1992 (RUS) and 1990--1993 (EST).
+#'
+#' @param .tidy_iea_df IEA data frame produced by `load_tidy_iea_df()`.
+#' @param country,year,e_dot See `IEATools::iea_cols`.
+#'
+#' @return `.tidy_iea_df` with improved RUS and EST Heat in the early 1990s.
+#' 
+#' @export
+fix_RUSEST_heat <- function(.tidy_iea_df, 
+                            country = IEATools::iea_cols$country,
+                            year = IEATools::iea_cols$year,
+                            e_dot = IEATools::iea_cols$e_dot) {
+  do_fix(.tidy_iea_df, replacement = IEATools::Fixed_RUSEST_heat, 
+         country = country, year = year, e_dot = e_dot)
+}
+
+
 fix_HND_fuels <- function(.iea_df) {
   
 }

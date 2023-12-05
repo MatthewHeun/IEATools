@@ -8,7 +8,35 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-# IEATools 0.1.71 (2023-12-02)
+# IEATools 0.1.72 (2023-12-05) 
+
+* Fix RUS and EST Heat.
+  The breakup of the Soviet Union (SUN) caused many irregularities
+  in the IEA's energy accounting
+  for SUN, Russia (RUS), and other former-Soviet states.
+  In particular, the Flow of Heat is assigned to
+  "Final consumption not elsewhere specified" and 
+  "Industry not elsewhere specified" for 
+  1990--1992 (RUS) and 1990--1993 (EST).
+  However, for following years, Heat is assigned to specific sectors.
+  Other FoSUN countries do not exhibit the same problem.
+  This Heat accounting irregularity
+  is one of a series of problems that causes a jump 
+  in final-to-useful efficiencies for Europe and World in the CL-PFU database
+  in the time period 1989--1990.
+  This release includes code to perform a fix wherein 
+  Heat for both
+  Final consumption not elsewhere specified and 
+  Industry not elsewhere specified 
+  is re-assigned
+  to specific sectors by the proportion found in 1993 (RUS) and 1994 (EST)
+  for 1990--1992 (RUS) and 1990--1993 (EST).
+* New tests for new features.
+    * Now at 1251 tests, all passing.
+    * Test coverage remains at 100%.
+
+
+# IEATools 0.1.71 (2023-12-02) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10251305.svg)](https://doi.org/10.5281/zenodo.10251305)
 
 * Added code of conduct and contributing pages to documentation.
 * No new tests.

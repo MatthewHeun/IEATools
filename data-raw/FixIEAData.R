@@ -122,3 +122,32 @@ Fixed_AUS_bfg <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedAUSb
   )
 
 usethis::use_data(Fixed_AUS_bfg, overwrite = TRUE)
+
+
+
+# The breakup of the Soviet Union (SUN) caused many irregularities
+# in the IEA's energy accounting
+# for SUN, Russia (RUS), and other former-Soviet states.
+# In particular, the Flow of Heat is assigned to
+# "Final consumption not elsewhere specified" for 
+# 1990--1992 (RUS) and 1990--1993 (EST).
+# However, for following years, Heat is assigned to specific sectors.
+# Other FoSUN countries do not exhibit the same problem.
+# This Heat accounting irregularity
+# is one of a series of problems that causes a jump 
+# in final-to-useful efficiencies for Europe and World in the CL-PFU database
+# in the time period 1989--1990.
+# This data frame contains the fix, wherein 
+# Final consumption not elsewhere specified Heat 
+# is re-assigned
+# to specific sectors by the proportion found in 1993 (RUS) and 1994 (EST)
+# for 1990--1992 (RUS) and 1990--1993 (EST).
+Fixed_RUSEST_heat <- openxlsx::read.xlsx(xlsxFile = file.path("data-raw", "FixedRUSESTHeat19901993.xlsx"), 
+                                         sheet = "Fixed") |> 
+  tidyr::pivot_longer(cols = tidyselect::matches(year_pattern), names_to = IEATools::iea_cols$year, values_to = IEATools::iea_cols$e_dot) |> 
+  dplyr::mutate(
+    "{IEATools::iea_cols$year}" := as.numeric(.data[[IEATools::iea_cols$year]])
+  )
+
+usethis::use_data(Fixed_RUSEST_heat, overwrite = TRUE)
+
