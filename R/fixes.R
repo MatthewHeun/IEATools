@@ -300,7 +300,7 @@ fix_AUS_bfg <- function(.tidy_iea_df,
 #' Final consumption not elsewhere specified Heat 
 #' is re-assigning 
 #' to specific sectors by the proportion found in 1993 (RUS) and 1994 (EST)
-#' for 19990--1992 (RUS) and 1990--1993 (EST).
+#' for 1990--1992 (RUS) and 1990--1993 (EST).
 #'
 #' @param .tidy_iea_df IEA data frame produced by `load_tidy_iea_df()`.
 #' @param country,year,e_dot See `IEATools::iea_cols`.

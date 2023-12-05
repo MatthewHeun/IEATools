@@ -36,5 +36,5 @@ This function performs a fix wherein
 Final consumption not elsewhere specified Heat
 is re-assigning
 to specific sectors by the proportion found in 1993 (RUS) and 1994 (EST)
-for 19990--1992 (RUS) and 1990--1993 (EST).
+for 1990--1992 (RUS) and 1990--1993 (EST).
 }
