@@ -308,10 +308,10 @@ fix_AUS_bfg <- function(.tidy_iea_df,
 #' @return `.tidy_iea_df` with improved RUS and EST Heat in the early 1990s.
 #' 
 #' @export
-fix_RUSESTHeat <- function(.tidy_iea_df, 
-                           country = IEATools::iea_cols$country,
-                           year = IEATools::iea_cols$year,
-                           e_dot = IEATools::iea_cols$e_dot) {
+fix_RUSEST_heat <- function(.tidy_iea_df, 
+                            country = IEATools::iea_cols$country,
+                            year = IEATools::iea_cols$year,
+                            e_dot = IEATools::iea_cols$e_dot) {
   do_fix(.tidy_iea_df, replacement = IEATools::Fixed_RUSEST_heat, 
          country = country, year = year, e_dot = e_dot)
 }

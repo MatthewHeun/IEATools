@@ -418,6 +418,99 @@ test_that("fix_AUS_bfg() works as expected", {
 })
 
 
+test_that("fix_RUSEST_heat() works as expected", {
+  # First, run through the loading code, just to make sure nothing breaks.
+  # Try when the country doesn't match. 
+  # No changes should occur.
+  iea_data <- load_tidy_iea_df()
+  fixed_but_no_fix <- iea_data |>
+    fix_RUSEST_heat()
+  expect_equal(iea_data, fixed_but_no_fix)
+  
+  # Try a made-up dataset to see that it works.
+  heat_df <- data.frame(Country = c("RUS", "RUS", "RUS", "EST"), 
+                        Method = "PCM",
+                        Energy.type = "E", Last.stage = "Final", 
+                        Year = 1990, Ledger.side = "Consumption", 
+                        Flow.aggregation.point = c("Industry",
+                                                   "Industry", 
+                                                   "Other", 
+                                                   "Industry"),
+                        Flow = c("Industry not elsewhere specified", 
+                                 "Industry not elsewhere specified", 
+                                 "Final consumption not elsewhere specified",
+                                 "Industry not elsewhere specified"), 
+                        Product = c("Heat", "Nothing", "Heat", "Heat"), 
+                        Unit = "TJ", 
+                        E.dot = c(100, 300, 400, 500))
+  res <- heat_df |> 
+    fix_RUSEST_heat()
+  # The "Nothing" row should be unchanged
+  res |> 
+    dplyr::filter(Product == "Nothing") |> 
+    magrittr::extract2("E.dot") |> 
+    expect_equal(300)
+  # The Not elsewhere specified portion of Heat should now be included.
+  res |> 
+    dplyr::filter(Country == "RUS", 
+                  Flow == "Industry not elsewhere specified",
+                  Product == "Heat") |> 
+    magrittr::extract2("E.dot") |> 
+    expect_equal(136140.9526)
+  # Textile and leather should appear, along with several others.
+  res |> 
+    dplyr::filter(Country == "RUS", 
+                  Flow == "Textile and leather",
+                  Product == "Heat") |> 
+    magrittr::extract2("E.dot") |> 
+    expect_equal(143499.5473)
+  # Machinery appears
+  res |> 
+    dplyr::filter(Country == "RUS", 
+                  Flow == "Machinery", 
+                  Product == "Heat") |> 
+    magrittr::extract2("E.dot") |> 
+    expect_equal(951348.5567)
+  # Test one more: Iron and steel
+  res |> 
+    dplyr::filter(Country == "RUS", 
+                  Flow == "Iron and steel",
+                  Product == "Heat") |> 
+    magrittr::extract2("E.dot") |> 
+    expect_equal(398609.0816)
+  
+  # Test that RUS works for Final consumption not elsewhere specified
+  # This should go away
+  res |> 
+    dplyr::filter(Country == "RUS", 
+                  Flow == "Final consumption not elsewhere specified",
+                  Product == "Heat") |> 
+    magrittr::extract2("E.dot") |> 
+    expect_equal(0)
+  # And be replaced by several other categories
+  res |> 
+    dplyr::filter(Country == "RUS", 
+                  Flow == "Agriculture/forestry",
+                  Product == "Heat") |> 
+    magrittr::extract2("E.dot") |> 
+    expect_equal(327003.749)
+  res |> 
+    dplyr::filter(Country == "RUS", 
+                  Flow == "Residential",
+                  Product == "Heat") |> 
+    magrittr::extract2("E.dot") |> 
+    expect_equal(3536023.082)
+  
+  # Also test that Estonia works  
+  res |> 
+    dplyr::filter(Country == "EST", 
+                  Flow == "Paper, pulp and printing",
+                  Product == "Heat") |> 
+    magrittr::extract2("E.dot") |> 
+    expect_equal(185.6134258)
+})
+
+
 test_that("load_tidy_iea_df(apply_fixes = TRUE) works as expected", {
   # Try without fixes first
   unfixed <- load_tidy_iea_df(apply_fixes = FALSE)

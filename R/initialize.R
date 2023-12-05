@@ -1293,7 +1293,8 @@ load_tidy_iea_df <- function(.iea_file = sample_iea_data_path(),
       fix_COL_WRLD_electricity() |> 
       fix_OAMR_cpp() |> 
       fix_OAMR_gw() |> 
-      fix_AUS_bfg()
+      fix_AUS_bfg() |> 
+      fix_RUSEST_heat()
   }
   out |>  
     remove_agg_memo_flows() |> 
