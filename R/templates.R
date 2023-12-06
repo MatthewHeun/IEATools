@@ -668,7 +668,7 @@ check_fu_allocation_data <- function(.fu_allocation_table,
                               erroneous_rows[[ef_product]],
                               erroneous_rows[[machine]],
                               erroneous_rows[[eu_product]], 
-                              erroneous_rows[[destination]], sep = ", ", collapse = "; ")
+                              erroneous_rows[[destination]], sep = ", ", collapse = ";\n")
     err_msg <- paste0(ef_product, " and ", eu_product, " must be identical when ", machine, " is ", 
                       non_energy_machine, ". The following combinations do not meet that criterion: ", 
                       erroneous_combos, ". Please check the FU allocation table for typos or misspellings.")
@@ -695,7 +695,7 @@ check_fu_allocation_data <- function(.fu_allocation_table,
                               erroneous_rows[[machine]],
                               erroneous_rows[[eu_product]], 
                               erroneous_rows[[destination]], 
-                              erroneous_rows[[quantity]], sep = ", ", collapse = "; ")
+                              erroneous_rows[[quantity]], sep = ", ", collapse = ";\n")
     err_msg <- paste0("In the FU Allocations tab, ", 
                       eu_product, " and ", destination, " must be filled when ", quantity, " is non-zero. ", 
                       "The following combinations do not meet that criterion: ", 
