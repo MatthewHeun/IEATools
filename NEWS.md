@@ -8,6 +8,8 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+# IEATools 0.1.73 (2023-12-09)
+
 * Attempt to fix Readme page on GitHub.
 * Better error messages 
   when empty allocations are encountered.
