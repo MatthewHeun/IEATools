@@ -14,7 +14,7 @@ The calculations are identical, so we factor the calculations into this function
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.72</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.73</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,8 +71,8 @@ The calculations are identical, so we factor the calculations into this function
 <span>  <span class="va">eta_fu_vec</span>,</span>
 <span>  product_type <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="row_col_types.html">row_col_types</a></span><span class="op">$</span><span class="va">product</span>,</span>
 <span>  industry_type <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="row_col_types.html">row_col_types</a></span><span class="op">$</span><span class="va">industry</span>,</span>
-<span>  arr_note <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/arrow_notation.html" class="external-link">arrow_notation</a></span>,</span>
-<span>  from_note <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/from_notation.html" class="external-link">from_notation</a></span>,</span>
+<span>  arr_note <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://matthewheun.github.io/RCLabels/reference/arrow_notation.html" class="external-link">arrow_notation</a></span>,</span>
+<span>  from_note <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://matthewheun.github.io/RCLabels/reference/from_notation.html" class="external-link">from_notation</a></span>,</span>
 <span>  add_to_U <span class="op">=</span> <span class="st">"add_to_U"</span>,</span>
 <span>  add_to_V <span class="op">=</span> <span class="st">"add_to_V"</span>,</span>
 <span>  add_to_dest <span class="op">=</span> <span class="st">"add_to_dest"</span></span>
@@ -118,14 +118,14 @@ This argument could also be the string name of such matrices in <code>.sutdata</
 <dd><p>a row and column name notation vector that indicates a <code>source -&gt; destination</code> relationship.
 <code>arr_note</code> is used for the <code>eta_fu</code> matrix, among others.
 See <code>matsbyname::notation_vec()</code>.
-Default is <code><a href="https://rdrr.io/pkg/RCLabels/man/arrow_notation.html" class="external-link">RCLabels::arrow_notation</a></code>.</p></dd>
+Default is <code><a href="https://matthewheun.github.io/RCLabels/reference/arrow_notation.html" class="external-link">RCLabels::arrow_notation</a></code>.</p></dd>
 
 
 <dt>from_note</dt>
 <dd><p>a row and column name notation vector that indicates a <code>destination [from source]</code> relationship.
 <code>from_note</code> is used for the columns of some intermediate matrices.
 See <code>matsbyname::notation_vec()</code>.
-Default is <code><a href="https://rdrr.io/pkg/RCLabels/man/from_notation.html" class="external-link">RCLabels::from_notation</a></code>.</p></dd>
+Default is <code><a href="https://matthewheun.github.io/RCLabels/reference/from_notation.html" class="external-link">RCLabels::from_notation</a></code>.</p></dd>
 
 
 <dt>add_to_U</dt>

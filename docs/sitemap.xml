@@ -1,555 +1,555 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/404.html</loc>
   </url>
   <url>
-    <loc>/CODE_OF_CONDUCT.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/CODE_OF_CONDUCT.html</loc>
   </url>
   <url>
-    <loc>/CONTRIBUTING.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/CONTRIBUTING.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/LICENSE.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/articles/IEATools.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/articles/IEATools.html</loc>
   </url>
   <url>
-    <loc>/articles/final_to_useful.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/articles/final_to_useful.html</loc>
   </url>
   <url>
-    <loc>/articles/fix_iea_data.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/articles/fix_iea_data.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/prep_psut.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/articles/prep_psut.html</loc>
   </url>
   <url>
-    <loc>/articles/psut_names.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/articles/psut_names.html</loc>
   </url>
   <url>
-    <loc>/articles/specify.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/articles/specify.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/index.html</loc>
   </url>
   <url>
-    <loc>/news/index.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/Fixed_AUS_bfg.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/Fixed_AUS_bfg.html</loc>
   </url>
   <url>
-    <loc>/reference/Fixed_COL_WRLD_Electricity.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/Fixed_COL_WRLD_Electricity.html</loc>
   </url>
   <url>
-    <loc>/reference/Fixed_GHA_Industry_Electricity.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/Fixed_GHA_Industry_Electricity.html</loc>
   </url>
   <url>
-    <loc>/reference/Fixed_GHA_PSB.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/Fixed_GHA_PSB.html</loc>
   </url>
   <url>
-    <loc>/reference/Fixed_OAMR_cpp.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/Fixed_OAMR_cpp.html</loc>
   </url>
   <url>
-    <loc>/reference/Fixed_OAMR_gw.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/Fixed_OAMR_gw.html</loc>
   </url>
   <url>
-    <loc>/reference/Fixed_RUSEST_heat.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/Fixed_RUSEST_heat.html</loc>
   </url>
   <url>
-    <loc>/reference/add_nuclear_industry.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/add_nuclear_industry.html</loc>
   </url>
   <url>
-    <loc>/reference/add_psut_matnames.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/add_psut_matnames.html</loc>
   </url>
   <url>
-    <loc>/reference/add_row_col_meta.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/add_row_col_meta.html</loc>
   </url>
   <url>
-    <loc>/reference/adjacent_rownums.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/adjacent_rownums.html</loc>
   </url>
   <url>
-    <loc>/reference/aggregate_cols.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/aggregate_cols.html</loc>
   </url>
   <url>
-    <loc>/reference/aggregate_regions.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/aggregate_regions.html</loc>
   </url>
   <url>
-    <loc>/reference/aggregation_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/aggregation_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/aggregation_regions.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/aggregation_regions.html</loc>
   </url>
   <url>
-    <loc>/reference/all_stages.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/all_stages.html</loc>
   </url>
   <url>
-    <loc>/reference/arrange_iea_fu_allocation_template.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/arrange_iea_fu_allocation_template.html</loc>
   </url>
   <url>
-    <loc>/reference/arrow_notation.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/arrow_notation.html</loc>
   </url>
   <url>
-    <loc>/reference/augment_iea_df.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/augment_iea_df.html</loc>
   </url>
   <url>
-    <loc>/reference/biofuels_and_waste_products.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/biofuels_and_waste_products.html</loc>
   </url>
   <url>
-    <loc>/reference/bracket_notation.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/bracket_notation.html</loc>
   </url>
   <url>
-    <loc>/reference/calc_tidy_iea_df_balances.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/calc_tidy_iea_df_balances.html</loc>
   </url>
   <url>
-    <loc>/reference/carnot_efficiency.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/carnot_efficiency.html</loc>
   </url>
   <url>
-    <loc>/reference/check_fu_allocation_data.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/check_fu_allocation_data.html</loc>
   </url>
   <url>
-    <loc>/reference/clean_iea_whitespace.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/clean_iea_whitespace.html</loc>
   </url>
   <url>
-    <loc>/reference/coal_and_coal_products.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/coal_and_coal_products.html</loc>
   </url>
   <url>
-    <loc>/reference/collapse_to_tidy_psut.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/collapse_to_tidy_psut.html</loc>
   </url>
   <url>
-    <loc>/reference/complete_eta_fu_table.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/complete_eta_fu_table.html</loc>
   </url>
   <url>
-    <loc>/reference/complete_fu_allocation_table.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/complete_fu_allocation_table.html</loc>
   </url>
   <url>
-    <loc>/reference/countries.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/countries.html</loc>
   </url>
   <url>
-    <loc>/reference/country_concordance_cols.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/country_concordance_cols.html</loc>
   </url>
   <url>
-    <loc>/reference/data.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/data.html</loc>
   </url>
   <url>
-    <loc>/reference/default_aggregation_region_table_path.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/default_aggregation_region_table_path.html</loc>
   </url>
   <url>
-    <loc>/reference/despecify_col.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/despecify_col.html</loc>
   </url>
   <url>
-    <loc>/reference/do_fix.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/do_fix.html</loc>
   </url>
   <url>
-    <loc>/reference/eiou_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/eiou_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/electricity_products.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/electricity_products.html</loc>
   </url>
   <url>
-    <loc>/reference/energy_types.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/energy_types.html</loc>
   </url>
   <url>
-    <loc>/reference/eta_fu_table_completed.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/eta_fu_table_completed.html</loc>
   </url>
   <url>
-    <loc>/reference/eta_fu_template.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/eta_fu_template.html</loc>
   </url>
   <url>
-    <loc>/reference/extend_to_useful.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/extend_to_useful.html</loc>
   </url>
   <url>
-    <loc>/reference/extend_to_useful_helper.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/extend_to_useful_helper.html</loc>
   </url>
   <url>
-    <loc>/reference/extract_S_units_from_tidy.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/extract_S_units_from_tidy.html</loc>
   </url>
   <url>
-    <loc>/reference/extract_TK.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/extract_TK.html</loc>
   </url>
   <url>
-    <loc>/reference/fap_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/fap_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/fd_sectors.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/fd_sectors.html</loc>
   </url>
   <url>
-    <loc>/reference/finaldemand_aggregates.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/finaldemand_aggregates.html</loc>
   </url>
   <url>
-    <loc>/reference/find_eiou_end.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/find_eiou_end.html</loc>
   </url>
   <url>
-    <loc>/reference/find_eiou_start.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/find_eiou_start.html</loc>
   </url>
   <url>
-    <loc>/reference/find_supply_consumption_split.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/find_supply_consumption_split.html</loc>
   </url>
   <url>
-    <loc>/reference/find_transformation_end.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/find_transformation_end.html</loc>
   </url>
   <url>
-    <loc>/reference/find_transformation_start.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/find_transformation_start.html</loc>
   </url>
   <url>
-    <loc>/reference/fix_AUS_bfg.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/fix_AUS_bfg.html</loc>
   </url>
   <url>
-    <loc>/reference/fix_COL_WRLD_electricity.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/fix_COL_WRLD_electricity.html</loc>
   </url>
   <url>
-    <loc>/reference/fix_GHA_industry_electricity.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/fix_GHA_industry_electricity.html</loc>
   </url>
   <url>
-    <loc>/reference/fix_GHA_psb.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/fix_GHA_psb.html</loc>
   </url>
   <url>
-    <loc>/reference/fix_OAMR_cpp.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/fix_OAMR_cpp.html</loc>
   </url>
   <url>
-    <loc>/reference/fix_OAMR_gw.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/fix_OAMR_gw.html</loc>
   </url>
   <url>
-    <loc>/reference/fix_RUSEST_heat.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/fix_RUSEST_heat.html</loc>
   </url>
   <url>
-    <loc>/reference/fix_tidy_iea_df_balances.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/fix_tidy_iea_df_balances.html</loc>
   </url>
   <url>
-    <loc>/reference/form_C_mats.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/form_C_mats.html</loc>
   </url>
   <url>
-    <loc>/reference/form_eta_fu_phi_u_vecs.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/form_eta_fu_phi_u_vecs.html</loc>
   </url>
   <url>
-    <loc>/reference/from_notation.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/from_notation.html</loc>
   </url>
   <url>
-    <loc>/reference/fu_allocation_table_completed.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/fu_allocation_table_completed.html</loc>
   </url>
   <url>
-    <loc>/reference/fu_allocation_template.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/fu_allocation_template.html</loc>
   </url>
   <url>
-    <loc>/reference/fu_analysis_file_info.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/fu_analysis_file_info.html</loc>
   </url>
   <url>
-    <loc>/reference/gather_producer_autoproducer.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/gather_producer_autoproducer.html</loc>
   </url>
   <url>
-    <loc>/reference/iea_cols.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/iea_cols.html</loc>
   </url>
   <url>
-    <loc>/reference/iea_df.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/iea_df.html</loc>
   </url>
   <url>
-    <loc>/reference/iea_file_OK.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/iea_file_OK.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/industry_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/industry_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/industry_net_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/industry_net_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/insert_after.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/insert_after.html</loc>
   </url>
   <url>
-    <loc>/reference/interface_industries.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/interface_industries.html</loc>
   </url>
   <url>
-    <loc>/reference/last_stages.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/last_stages.html</loc>
   </url>
   <url>
-    <loc>/reference/ledger_sides.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/ledger_sides.html</loc>
   </url>
   <url>
-    <loc>/reference/load_eta_fu_data.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/load_eta_fu_data.html</loc>
   </url>
   <url>
-    <loc>/reference/load_fu_allocation_data.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/load_fu_allocation_data.html</loc>
   </url>
   <url>
-    <loc>/reference/load_phi_constants_table.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/load_phi_constants_table.html</loc>
   </url>
   <url>
-    <loc>/reference/load_tidy_iea_df.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/load_tidy_iea_df.html</loc>
   </url>
   <url>
-    <loc>/reference/main_act_plants.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/main_act_plants.html</loc>
   </url>
   <url>
-    <loc>/reference/make_C_mats.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/make_C_mats.html</loc>
   </url>
   <url>
-    <loc>/reference/manufacturing_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/manufacturing_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/mat_meta_cols.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/mat_meta_cols.html</loc>
   </url>
   <url>
-    <loc>/reference/memo_aggregation_flow_prefixes.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/memo_aggregation_flow_prefixes.html</loc>
   </url>
   <url>
-    <loc>/reference/memo_aggregation_product_prefixes.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/memo_aggregation_product_prefixes.html</loc>
   </url>
   <url>
-    <loc>/reference/memo_non_energy_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/memo_non_energy_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/meta_cols.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/meta_cols.html</loc>
   </url>
   <url>
-    <loc>/reference/methods.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/methods.html</loc>
   </url>
   <url>
-    <loc>/reference/move_last_stage_to_useful.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/move_last_stage_to_useful.html</loc>
   </url>
   <url>
-    <loc>/reference/move_to_useful_last_stage.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/move_to_useful_last_stage.html</loc>
   </url>
   <url>
-    <loc>/reference/non_energy_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/non_energy_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/non_specified_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/non_specified_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/nonenergy_products.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/nonenergy_products.html</loc>
   </url>
   <url>
-    <loc>/reference/of_notation.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/of_notation.html</loc>
   </url>
   <url>
-    <loc>/reference/oil_and_oil_products.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/oil_and_oil_products.html</loc>
   </url>
   <url>
-    <loc>/reference/other_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/other_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/override_iso_codes_df.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/override_iso_codes_df.html</loc>
   </url>
   <url>
-    <loc>/reference/peat_and_peat_products.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/peat_and_peat_products.html</loc>
   </url>
   <url>
-    <loc>/reference/phi_constants_names.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/phi_constants_names.html</loc>
   </url>
   <url>
-    <loc>/reference/pipe.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/pipe.html</loc>
   </url>
   <url>
-    <loc>/reference/prep_psut.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/prep_psut.html</loc>
   </url>
   <url>
-    <loc>/reference/prim_agg_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/prim_agg_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/primary_aggregates.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/primary_aggregates.html</loc>
   </url>
   <url>
-    <loc>/reference/primary_coal_products.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/primary_coal_products.html</loc>
   </url>
   <url>
-    <loc>/reference/primary_gas_products.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/primary_gas_products.html</loc>
   </url>
   <url>
-    <loc>/reference/primary_oil_products.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/primary_oil_products.html</loc>
   </url>
   <url>
-    <loc>/reference/primary_peat_products.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/primary_peat_products.html</loc>
   </url>
   <url>
-    <loc>/reference/prod_tp_eiou_energy_carriers.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/prod_tp_eiou_energy_carriers.html</loc>
   </url>
   <url>
-    <loc>/reference/products.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/products.html</loc>
   </url>
   <url>
-    <loc>/reference/psut_cols.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/psut_cols.html</loc>
   </url>
   <url>
-    <loc>/reference/quasi-quote-assign.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/quasi-quote-assign.html</loc>
   </url>
   <url>
-    <loc>/reference/read_aggregation_region_table.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/read_aggregation_region_table.html</loc>
   </url>
   <url>
-    <loc>/reference/remove_agg_memo_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/remove_agg_memo_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/remove_agg_regions.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/remove_agg_regions.html</loc>
   </url>
   <url>
-    <loc>/reference/remove_suffix_specifications.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/remove_suffix_specifications.html</loc>
   </url>
   <url>
-    <loc>/reference/rename_iea_df_cols.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/rename_iea_df_cols.html</loc>
   </url>
   <url>
-    <loc>/reference/renewable_products.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/renewable_products.html</loc>
   </url>
   <url>
-    <loc>/reference/replace_join.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/replace_join.html</loc>
   </url>
   <url>
-    <loc>/reference/replace_null_RUV.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/replace_null_RUV.html</loc>
   </url>
   <url>
-    <loc>/reference/replace_null_UR.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/replace_null_UR.html</loc>
   </url>
   <url>
-    <loc>/reference/route_non_specified_eiou.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/route_non_specified_eiou.html</loc>
   </url>
   <url>
-    <loc>/reference/route_non_specified_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/route_non_specified_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/route_non_specified_tp.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/route_non_specified_tp.html</loc>
   </url>
   <url>
-    <loc>/reference/route_own_use_elect_chp_heat.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/route_own_use_elect_chp_heat.html</loc>
   </url>
   <url>
-    <loc>/reference/route_pumped_storage.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/route_pumped_storage.html</loc>
   </url>
   <url>
-    <loc>/reference/row_col_types.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/row_col_types.html</loc>
   </url>
   <url>
-    <loc>/reference/sample_eta_fu_table_path.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/sample_eta_fu_table_path.html</loc>
   </url>
   <url>
-    <loc>/reference/sample_fu_allocation_table_path.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/sample_fu_allocation_table_path.html</loc>
   </url>
   <url>
-    <loc>/reference/sample_iea_data_path.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/sample_iea_data_path.html</loc>
   </url>
   <url>
-    <loc>/reference/sample_phi_constants_path.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/sample_phi_constants_path.html</loc>
   </url>
   <url>
-    <loc>/reference/secondary_coal_products.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/secondary_coal_products.html</loc>
   </url>
   <url>
-    <loc>/reference/secondary_oil_products.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/secondary_oil_products.html</loc>
   </url>
   <url>
-    <loc>/reference/secondary_peat_products.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/secondary_peat_products.html</loc>
   </url>
   <url>
-    <loc>/reference/slurp_iea_to_raw_df.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/slurp_iea_to_raw_df.html</loc>
   </url>
   <url>
-    <loc>/reference/sort_iea_df.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/sort_iea_df.html</loc>
   </url>
   <url>
-    <loc>/reference/specify_all.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/specify_all.html</loc>
   </url>
   <url>
-    <loc>/reference/specify_bunkers.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/specify_bunkers.html</loc>
   </url>
   <url>
-    <loc>/reference/specify_interface_industries.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/specify_interface_industries.html</loc>
   </url>
   <url>
-    <loc>/reference/specify_non_energy_use.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/specify_non_energy_use.html</loc>
   </url>
   <url>
-    <loc>/reference/specify_notation.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/specify_notation.html</loc>
   </url>
   <url>
-    <loc>/reference/specify_primary_production.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/specify_primary_production.html</loc>
   </url>
   <url>
-    <loc>/reference/specify_production_to_resources.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/specify_production_to_resources.html</loc>
   </url>
   <url>
-    <loc>/reference/specify_tp_eiou.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/specify_tp_eiou.html</loc>
   </url>
   <url>
-    <loc>/reference/split_oil_gas_extraction_eiou.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/split_oil_gas_extraction_eiou.html</loc>
   </url>
   <url>
-    <loc>/reference/stack_final_useful_df.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/stack_final_useful_df.html</loc>
   </url>
   <url>
-    <loc>/reference/starts_with_any_of.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/starts_with_any_of.html</loc>
   </url>
   <url>
-    <loc>/reference/sut_meta_cols.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/sut_meta_cols.html</loc>
   </url>
   <url>
-    <loc>/reference/switch-notation-byname.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/switch-notation-byname.html</loc>
   </url>
   <url>
-    <loc>/reference/switch-notation.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/switch-notation.html</loc>
   </url>
   <url>
-    <loc>/reference/template_cols.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/template_cols.html</loc>
   </url>
   <url>
-    <loc>/reference/tfc_compare_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/tfc_compare_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/tfc_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/tfc_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/tidy_eta_fu_table.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/tidy_eta_fu_table.html</loc>
   </url>
   <url>
-    <loc>/reference/tidy_fu_allocation_table.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/tidy_fu_allocation_table.html</loc>
   </url>
   <url>
-    <loc>/reference/tidy_iea_df.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/tidy_iea_df.html</loc>
   </url>
   <url>
-    <loc>/reference/tidy_iea_df_balanced.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/tidy_iea_df_balanced.html</loc>
   </url>
   <url>
-    <loc>/reference/tp_sinks_sources.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/tp_sinks_sources.html</loc>
   </url>
   <url>
-    <loc>/reference/tp_sinks_to_nonenergy.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/tp_sinks_to_nonenergy.html</loc>
   </url>
   <url>
-    <loc>/reference/tpes_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/tpes_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/transformation_processes.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/transformation_processes.html</loc>
   </url>
   <url>
-    <loc>/reference/transport_domestic_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/transport_domestic_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/transport_flows.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/transport_flows.html</loc>
   </url>
   <url>
-    <loc>/reference/use_iso_countries.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/use_iso_countries.html</loc>
   </url>
   <url>
-    <loc>/reference/valid_iea_release_years.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/valid_iea_release_years.html</loc>
   </url>
   <url>
-    <loc>/reference/write_eta_fu_template.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/write_eta_fu_template.html</loc>
   </url>
   <url>
-    <loc>/reference/write_fu_allocation_template.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/write_fu_allocation_template.html</loc>
   </url>
   <url>
-    <loc>/reference/year_cols.html</loc>
+    <loc>https://matthewheun.github.io/IEATools/reference/year_cols.html</loc>
   </url>
 </urlset>
