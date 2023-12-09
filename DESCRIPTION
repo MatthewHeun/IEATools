@@ -43,3 +43,4 @@ Suggests:
     testthat,
     spelling
 VignetteBuilder: knitr
+URL: https://matthewheun.github.io/IEATools/
