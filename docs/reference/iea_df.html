@@ -18,7 +18,7 @@ to load a raw data frame of data."><!-- mathjax --><script src="https://cdnjs.cl
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.72</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.73</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -154,7 +154,7 @@ Data from estimated years are removed from output.</p></dd>
 <p>In the IEA's data, some entries in the "FLOW" column are quoted to avoid creating too many columns.
 For example, "Paper, pulp and printing" is quoted in the raw .csv file:
 "      Paper, pulp and printing".
-Internally, this function uses <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">data.table::fread()</a></code>, which, unfortunately, does not
+Internally, this function uses <code><a href="https://rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">data.table::fread()</a></code>, which, unfortunately, does not
 strip leading and trailing white space from quoted entries.
 So the function uses <code><a href="https://rdrr.io/r/base/trimws.html" class="external-link">base::trimws()</a></code> to finish the job.</p>
 <p>When the IEA includes estimated data for a year,

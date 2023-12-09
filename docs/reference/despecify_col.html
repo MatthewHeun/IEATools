@@ -18,7 +18,7 @@ To enable sorting, this function de-specifies a column in .df.'><!-- mathjax -->
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.72</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.73</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@ To enable sorting, this function de-specifies a column in <code>.df</code>.</p>
 <span>  <span class="va">.df</span>,</span>
 <span>  <span class="va">col</span>,</span>
 <span>  <span class="va">despecified_col</span>,</span>
-<span>  notations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/of_notation.html" class="external-link">of_notation</a></span>, <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/from_notation.html" class="external-link">from_notation</a></span><span class="op">)</span>,</span>
+<span>  notations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://matthewheun.github.io/RCLabels/reference/of_notation.html" class="external-link">of_notation</a></span>, <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://matthewheun.github.io/RCLabels/reference/from_notation.html" class="external-link">from_notation</a></span><span class="op">)</span>,</span>
 <span>  production <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="tpes_flows.html">tpes_flows</a></span><span class="op">$</span><span class="va">production</span>,</span>
 <span>  resources <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="tpes_flows.html">tpes_flows</a></span><span class="op">$</span><span class="va">resources</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -97,7 +97,7 @@ To enable sorting, this function de-specifies a column in <code>.df</code>.</p>
 <dt>notations</dt>
 <dd><p>The notations used for row and column names. See <code>matsbyname::notation_vec()</code>.
 Default is <code>list(RCLabels::of_notation, RCLabels::from_notation)</code>,
-because both <code><a href="https://rdrr.io/pkg/RCLabels/man/of_notation.html" class="external-link">RCLabels::of_notation</a></code> and <code><a href="https://rdrr.io/pkg/RCLabels/man/from_notation.html" class="external-link">RCLabels::from_notation</a></code> can be used in the <code>Flow</code> column
+because both <code><a href="https://matthewheun.github.io/RCLabels/reference/of_notation.html" class="external-link">RCLabels::of_notation</a></code> and <code><a href="https://matthewheun.github.io/RCLabels/reference/from_notation.html" class="external-link">RCLabels::from_notation</a></code> can be used in the <code>Flow</code> column
 of an IEA data frame.</p></dd>
 
 
@@ -126,7 +126,7 @@ of an IEA data frame.</p></dd>
 <span class="r-in"><span>  <span class="fu"><a href="specify_all.html">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu">despecify_col</span><span class="op">(</span>col <span class="op">=</span> <span class="st">"Flow"</span>, despecified_col <span class="op">=</span> <span class="st">"clean_Flow"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="va">Product</span>, <span class="va">E.dot</span>, <span class="va">clean_Flow</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/startsWith.html" class="external-link">endsWith</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/bracket_notation.html" class="external-link">bracket_notation</a></span><span class="op">[[</span><span class="st">"suff_end"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/startsWith.html" class="external-link">endsWith</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://matthewheun.github.io/RCLabels/reference/bracket_notation.html" class="external-link">bracket_notation</a></span><span class="op">[[</span><span class="st">"suff_end"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 102 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Flow                                    Product              E.dot clean_Flow</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>

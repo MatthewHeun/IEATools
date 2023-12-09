@@ -14,7 +14,7 @@ This function performs some validation tests on .iea_file."><!-- mathjax --><scr
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.72</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.73</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -136,7 +136,7 @@ is confirming that every country has the same flow and product rows in the same 
 The approach is to add a per-country row number column to the data frame and delete all the data in year columns.
 Then, the resulting data frame is queried for duplicate row numbers.
 If none are found, the function returns the data frame read from the file.</p>
-<p>Note that <code>.iea_file</code> is read internally with <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">data.table::fread()</a></code> <em>without</em> stripping white space.</p>
+<p>Note that <code>.iea_file</code> is read internally with <code><a href="https://rdatatable.gitlab.io/data.table/reference/fread.html" class="external-link">data.table::fread()</a></code> <em>without</em> stripping white space.</p>
 <p>If <code>.slurped_iea_df</code> is supplied, arguments <code>.iea_file</code> or <code>text</code> are ignored.
 If <code>.slurped_iea_df</code> is absent,
 either <code>.iea_file</code> or <code>text</code> are required, and

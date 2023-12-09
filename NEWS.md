@@ -8,7 +8,18 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-# IEATools 0.1.72 (2023-12-05) 
+# IEATools 0.1.73 (2023-12-09)
+
+* Attempt to fix Readme page on GitHub.
+* Better error messages 
+  when empty allocations are encountered.
+  Now each problem is shown on its own line.
+* No new tests.
+    * Now at 1251 tests, all passing.
+    * Test coverage remains at 100%.
+
+
+# IEATools 0.1.72 (2023-12-05) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10266087.svg)](https://doi.org/10.5281/zenodo.10266087)
 
 * Fix RUS and EST Heat.
   The breakup of the Soviet Union (SUN) caused many irregularities
