@@ -8,6 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Attempt to fix Readme page on GitHub.
 * Better error messages 
   when empty allocations are encountered.
   Now each problem is shown on its own line.
