@@ -14,18 +14,26 @@ coverage](https://codecov.io/gh/MatthewHeun/IEATools/branch/master/graph/badge.s
 
 # IEATools
 
-The `R` package `IEATools` provides tools to interact with data from the
-[International Energy Agency (IEA)](http://www.iea.org).
+## Statement of need
+
+Extended World Energy Balance (EWEB) data from the [International Energy
+Agency (IEA)](http://www.iea.org) (IEA) are indispensible for societal
+energy analysis and societal exergy analysis (SEA). However,
+
+- the EWEB data are not available native in the `R` data frame format;
+- as distributed, the EWEB data are definitely not
+  [tidy](http://vita.had.co.nz/papers/tidy-data.pdf); and
+- the EWEB are not in physical supply-use table (PSUT) format proposed
+  by [Heun, Owen, and Brockway
+  (2018)](https://doi.org/10.1016/j.apenergy.2018.05.109).
+
+`IEATools` provides functions to address the above needs.
 
 ## Installation
 
-<!-- You can install `IEATools` from CRAN with: -->
-<!-- ```{r CRAN-installation, eval = FALSE} -->
-<!-- install.packages("IEATools") -->
-<!-- ``` -->
 <!-- You can install a recent development version of `IEATools` from github with: -->
 
-You can install `IEATools` from github with:
+You can install `IEATools` from GitHub with:
 
 ``` r
 # install devtools if not already installed
