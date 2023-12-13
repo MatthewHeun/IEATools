@@ -30,7 +30,7 @@ knitr::opts_chunk$set(
 
 Extended World Energy Balance (EWEB) data from the
 [International Energy Agency (IEA)](http://www.iea.org) (IEA) 
-are indispensible for societal energy analysis and
+are indispensable for societal energy analysis and
 societal exergy analysis (SEA).
 However, 
 
