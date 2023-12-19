@@ -17,7 +17,7 @@ coverage](https://codecov.io/gh/MatthewHeun/IEATools/branch/master/graph/badge.s
 ## Statement of need
 
 Extended World Energy Balance (EWEB) data from the [International Energy
-Agency (IEA)](http://www.iea.org) (IEA) are indispensible for societal
+Agency (IEA)](http://www.iea.org) (IEA) are indispensable for societal
 energy analysis and societal exergy analysis (SEA). However,
 
 - the EWEB data are not available native in the `R` data frame format;
