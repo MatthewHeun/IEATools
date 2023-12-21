@@ -14,7 +14,7 @@ to useful energy/exergy as the last stage of an energy conversion chain."><!-- m
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.73</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.74</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,8 +86,8 @@ to useful energy/exergy as the last stage of an energy conversion chain.</p>
 <span>  interface_ind <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="interface_industries.html">interface_industries</a></span>,</span>
 <span>  losses <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="tfc_compare_flows.html">tfc_compare_flows</a></span><span class="op">$</span><span class="va">losses</span>,</span>
 <span>  stat_diffs <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="tfc_compare_flows.html">tfc_compare_flows</a></span><span class="op">$</span><span class="va">statistical_differences</span>,</span>
-<span>  arrow_note <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/arrow_notation.html" class="external-link">arrow_notation</a></span>,</span>
-<span>  from_note <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/RCLabels/man/from_notation.html" class="external-link">from_notation</a></span>,</span>
+<span>  arrow_note <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://matthewheun.github.io/RCLabels/reference/arrow_notation.html" class="external-link">arrow_notation</a></span>,</span>
+<span>  from_note <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://matthewheun.github.io/RCLabels/reference/from_notation.html" class="external-link">from_notation</a></span>,</span>
 <span>  .add_to_U_f <span class="op">=</span> <span class="st">".add_to_U_f"</span>,</span>
 <span>  .add_to_U_eiou <span class="op">=</span> <span class="st">".add_to_U_eiou"</span>,</span>
 <span>  .add_to_V_f <span class="op">=</span> <span class="st">".add_to_V_f"</span>,</span>
@@ -162,7 +162,7 @@ or individual matrices (if <code>.sutdata</code> is <code>NULL</code>).</p></dd>
 
 <dt>arrow_note, from_note</dt>
 <dd><p>The row and column notation in the <code>eta_fu</code> vectors.
-See <code><a href="https://rdrr.io/pkg/RCLabels/man/row-col-notation.html" class="external-link">RCLabels::notation_vec()</a></code>. Defaults is <code><a href="https://rdrr.io/pkg/RCLabels/man/arrow_notation.html" class="external-link">RCLabels::arrow_notation</a></code> and <code><a href="https://rdrr.io/pkg/RCLabels/man/from_notation.html" class="external-link">RCLabels::from_notation</a></code>.</p></dd>
+See <code><a href="https://matthewheun.github.io/RCLabels/reference/row-col-notation.html" class="external-link">RCLabels::notation_vec()</a></code>. Defaults is <code><a href="https://matthewheun.github.io/RCLabels/reference/arrow_notation.html" class="external-link">RCLabels::arrow_notation</a></code> and <code><a href="https://matthewheun.github.io/RCLabels/reference/from_notation.html" class="external-link">RCLabels::from_notation</a></code>.</p></dd>
 
 
 <dt>.add_to_U_f</dt>
@@ -226,7 +226,7 @@ columns named for matrices (when <code>gather = TRUE</code>, the default).</p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><code>.sutdata</code> or individual matrices are always assumed to have final energy as its last stage.</p>
-<p>Internally, this function uses <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code> to perform its calculations.
+<p>Internally, this function uses <code><a href="https://matthewheun.github.io/matsindf/reference/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code> to perform its calculations.
 If <code>.sutdata</code> is <code>NULL</code>, and <code>R</code>, <code>U_eiou</code>, <code>U_feed</code>, <code>U</code>, <code>r_eiou</code>, <code>V</code>, and <code>Y</code> are individual matrices,
 the output is a named list of matrices containing new values for
 <strong>U_eiou</strong>, <strong>U_feed</strong>, <strong>U</strong>, <strong>r_eiou</strong>, <strong>V</strong>, and <strong>Y</strong> matrices,

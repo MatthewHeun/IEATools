@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.73</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.74</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,16 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.73" id="ieatools-0173-2023-12-09">IEATools 0.1.73 (2023-12-09)<a class="anchor" aria-label="anchor" href="#ieatools-0173-2023-12-09"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.74" id="ieatools-0174-2023-12-21">IEATools 0.1.74 (2023-12-21)<a class="anchor" aria-label="anchor" href="#ieatools-0174-2023-12-21"></a></h2>
+<ul><li>Added a statement of need to the README file.</li>
+<li>No new tests.
+<ul><li>Now at 1251 tests, all passing.</li>
+<li>Test coverage remains at 100%.</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.73" id="ieatools-0173-2023-12-09-doi">IEATools 0.1.73 (2023-12-09) <a href="https://doi.org/10.5281/zenodo.10327262" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.10327262.svg" alt="DOI"></a>
+<a class="anchor" aria-label="anchor" href="#ieatools-0173-2023-12-09-doi"></a></h2>
 <ul><li>Attempt to fix Readme page on GitHub.</li>
 <li>Better error messages when empty allocations are encountered. Now each problem is shown on its own line.</li>
 <li>No new tests.
@@ -143,7 +152,7 @@
 <li>Functions now treat a zero-row incoming data frame much better, returning a zero-row data frame with columns of same type as would have been produced if the incoming data frame had at least one row.</li>
 <li>
 <code><a href="../reference/fd_sectors.html">IEATools::fd_sectors</a></code> now contains specific “Non-energy use in &lt;<industry>&gt;” strings to support the option to specify Non-energy use flows when possible.</industry></li>
-<li>Fixed a bug where “Stock changes [of Gas/diesel oil excl. biofuels]” became “Stock changes [of Gas/diesel oil excl]”, because the <code>notation</code> argument was not being set properly in a call to <code><a href="https://rdrr.io/pkg/RCLabels/man/row-col-notation.html" class="external-link">RCLabels::get_pref_suff()</a></code> when extracting prefixes.</li>
+<li>Fixed a bug where “Stock changes [of Gas/diesel oil excl. biofuels]” became “Stock changes [of Gas/diesel oil excl]”, because the <code>notation</code> argument was not being set properly in a call to <code><a href="https://matthewheun.github.io/RCLabels/reference/row-col-notation.html" class="external-link">RCLabels::get_pref_suff()</a></code> when extracting prefixes.</li>
 <li>Simplifications reduced the number of tests.
 <ul><li>Now up to 1216 tests, all passing.</li>
 <li>Test coverage remains at 100 %.</li>
@@ -250,8 +259,8 @@
 <h2 class="pkg-version" data-toc-text="0.1.56" id="ieatools-0156-2021-08-18-doi">IEATools 0.1.56 (2021-08-18) <a href="https://doi.org/10.5281/zenodo.5217278" class="external-link"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5217278.svg" alt="DOI"></a>
 <a class="anchor" aria-label="anchor" href="#ieatools-0156-2021-08-18-doi"></a></h2>
 <ul><li>
-<code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code> now robust to cases where there is no EIOU, thanks to now using <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code>.</li>
-<li>Now using <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code> for <code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code>. This change will enable better handling of cases where a country has no EIOU. The first use case will be bunkers.</li>
+<code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code> now robust to cases where there is no EIOU, thanks to now using <code><a href="https://matthewheun.github.io/matsindf/reference/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code>.</li>
+<li>Now using <code><a href="https://matthewheun.github.io/matsindf/reference/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code> for <code><a href="../reference/extend_to_useful.html">extend_to_useful()</a></code>. This change will enable better handling of cases where a country has no EIOU. The first use case will be bunkers.</li>
 <li>No longer cleaning matrices in <code><a href="../reference/extend_to_useful_helper.html">extend_to_useful_helper()</a></code>, because some vectors may be the <code>0</code> vector and be eliminated.</li>
 <li>Added <code>replace_null_UR()</code> function to the workflow in the <code><a href="../reference/prep_psut.html">prep_psut()</a></code> function.</li>
 <li>New function <code>replace_null_UR()</code> replaces missing or <code>NULL</code> <code>R</code>, <code>U_feed</code>, <code>U_EIOU</code>, <code>U</code>, and <code>r_EIOU</code> with <strong>0</strong> matrices with appropriate row and column names. The replacements are built from <strong>Y</strong> and <strong>V</strong> matrices. The need for this functionality arises when the last stage is final energy and imports (<strong>V</strong> matrix) are the only source of an energy carrier that is consumed in final demand (<strong>Y</strong> matrix). In that situation, the <strong>R</strong> and <strong>U</strong> matrices will be missing, and they can be replaced by <strong>0</strong> matrices with the right dimensions.</li>
