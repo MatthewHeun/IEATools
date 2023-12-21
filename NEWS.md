@@ -9,7 +9,7 @@ which always resolves to the latest release.
 
 
 
-# IEATools 0.1.74 (2023-12-21)
+# IEATools 0.1.74 (2023-12-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10420321.svg)](https://doi.org/10.5281/zenodo.10420321)
 
 * Added a statement of need to the README file.
 * No new tests.
