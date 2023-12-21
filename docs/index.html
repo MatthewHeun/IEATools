@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.73</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.74</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,16 +70,22 @@
 <div class="section level1">
 <div class="page-header"><h1 id="ieatools">IEATools<a class="anchor" aria-label="anchor" href="#ieatools"></a>
 </h1></div>
-<p>The <code>R</code> package <code>IEATools</code> provides tools to interact with data from the <a href="http://www.iea.org" class="external-link">International Energy Agency (IEA)</a>.</p>
+<div class="section level2">
+<h2 id="statement-of-need">Statement of need<a class="anchor" aria-label="anchor" href="#statement-of-need"></a>
+</h2>
+<p>Extended World Energy Balance (EWEB) data from the <a href="http://www.iea.org" class="external-link">International Energy Agency (IEA)</a> (IEA) are indispensable for societal energy analysis and societal exergy analysis (SEA). However,</p>
+<ul>
+<li>the EWEB data are not available native in the <code>R</code> data frame format;</li>
+<li>as distributed, the EWEB data are definitely not <a href="http://vita.had.co.nz/papers/tidy-data.pdf" class="external-link">tidy</a>; and</li>
+<li>the EWEB are not in physical supply-use table (PSUT) format proposed by <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">Heun, Owen, and Brockway (2018)</a>.</li>
+</ul>
+<p><code>IEATools</code> provides functions to address the above needs.</p>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<!-- You can install `IEATools` from CRAN with: -->
-<!-- ```{r CRAN-installation, eval = FALSE} -->
-<!-- install.packages("IEATools") -->
-<!-- ``` -->
 <!-- You can install a recent development version of `IEATools` from github with: -->
-<p>You can install <code>IEATools</code> from github with:</p>
+<p>You can install <code>IEATools</code> from GitHub with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install devtools if not already installed</span></span>
 <span><span class="co"># install.packages("devtools")</span></span>

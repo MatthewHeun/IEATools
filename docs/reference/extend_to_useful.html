@@ -14,7 +14,7 @@ to useful energy/exergy as the last stage of an energy conversion chain."><!-- m
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.73</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.74</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -226,7 +226,7 @@ columns named for matrices (when <code>gather = TRUE</code>, the default).</p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><code>.sutdata</code> or individual matrices are always assumed to have final energy as its last stage.</p>
-<p>Internally, this function uses <code><a href="https://rdrr.io/pkg/matsindf/man/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code> to perform its calculations.
+<p>Internally, this function uses <code><a href="https://matthewheun.github.io/matsindf/reference/matsindf_apply.html" class="external-link">matsindf::matsindf_apply()</a></code> to perform its calculations.
 If <code>.sutdata</code> is <code>NULL</code>, and <code>R</code>, <code>U_eiou</code>, <code>U_feed</code>, <code>U</code>, <code>r_eiou</code>, <code>V</code>, and <code>Y</code> are individual matrices,
 the output is a named list of matrices containing new values for
 <strong>U_eiou</strong>, <strong>U_feed</strong>, <strong>U</strong>, <strong>r_eiou</strong>, <strong>V</strong>, and <strong>Y</strong> matrices,
