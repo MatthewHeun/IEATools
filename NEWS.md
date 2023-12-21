@@ -8,7 +8,16 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-# IEATools 0.1.73 (2023-12-09)
+
+# IEATools 0.1.74 (2023-12-21)
+
+* Added a statement of need to the README file.
+* No new tests.
+    * Now at 1251 tests, all passing.
+    * Test coverage remains at 100%.
+
+
+# IEATools 0.1.73 (2023-12-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10327262.svg)](https://doi.org/10.5281/zenodo.10327262)
 
 * Attempt to fix Readme page on GitHub.
 * Better error messages 
