@@ -292,6 +292,16 @@ test_that("extend_to_useful_helper() works as intended", {
     matsbyname::setcoltype(row_col_types$industry)
   
   expect_equal(res$add_to_dest, add_to_Y_expected)
+  
+  ## Now check the detailed fu matrix
+  
+  detailed_fu_mat_expected <- matsbyname::matrixproduct_byname(Y_f_vec_hat_C_Y, eta_fu_hat) |> 
+    matsbyname::clean_byname() |> 
+    # Set row and column types to match other destination matrices.
+    matsbyname::setrowtype(row_col_types$industry) |> 
+    matsbyname::setcoltype(row_col_types$product)
+  
+  expect_equal(res$detailed_fu, detailed_fu_mat_expected)
 })
 
 

@@ -814,10 +814,15 @@ extend_to_useful <- function(.sutdata = NULL,
 #' @param add_to_V a string name for the matrix to be added to a make matrix. Default is "add_to_V".
 #' @param add_to_dest a string name for the matrix to replace some entries previous destination matrix. Default is "repl_dest".
 #'
-#' @return a named list containing three items: 
+#' @return a named list containing four items: 
 #'         `add_to_U_f` (a matrix to be added to a use (`U`) matrix),
-#'         `add_to_V_f` (a matrix to be added to a make (`V`) matrix), and 
-#'         `add_to_dest_mat` (a matrix to replace the destination matrix, typically `Y_f` or `U_eiou`).
+#'         `add_to_V_f` (a matrix to be added to a make (`V`) matrix), 
+#'         `add_to_dest_mat` (a matrix to replace the destination matrix, typically `Y_f` or `U_eiou`), and 
+#'         `detailed_fu` (a matrix that retails all details for 
+#'                        final energy product, 
+#'                        destination sector, 
+#'                        final-to-useful machine, and
+#'                        useful energy product).
 extend_to_useful_helper <- function(.sutdata = NULL, 
                                     # Input matrix names
                                     dest_mat, C_mat, eta_fu_vec, 
@@ -829,7 +834,8 @@ extend_to_useful_helper <- function(.sutdata = NULL,
                                     # Output names
                                     add_to_U = "add_to_U", 
                                     add_to_V = "add_to_V", 
-                                    add_to_dest = "add_to_dest") {
+                                    add_to_dest = "add_to_dest", 
+                                    detailed_fu = "detailed_fu") {
   
   helper_func <- function(dest_m, C_m, eta_fu_v) {
     #### Step 1 on the "Pushing Y to useful" tab in file "Matrix f->u example calcs.xlsx"
@@ -873,20 +879,19 @@ extend_to_useful_helper <- function(.sutdata = NULL,
     
     #### Step 4 on the "Pushing Y to useful" tab in file "Matrix f->U example calcs.xlsx"
     
-    # Calculate replacement for the destination matrix (Y_useful instead of Y_f or U_eiou_useful instead of U_eiou)
-    add_to_dest_mat <- matsbyname::matrixproduct_byname(dest_mat_vec_hat_C, eta_fu_hat) %>%
-      matsbyname::transpose_byname() %>%
-      # aggregate_to_pref_suff_byname() is superseded.
-      # matsbyname::aggregate_to_pref_suff_byname(keep = "suff", margin = 2, notation = arr_note) %>%
-      matsbyname::aggregate_pieces_byname(piece = "suff", margin = 2, notation = arr_note) %>%
-      matsbyname::clean_byname() %>% 
+    detailed_fu_mat <- matsbyname::matrixproduct_byname(dest_mat_vec_hat_C, eta_fu_hat) |> 
+      matsbyname::clean_byname() |> 
       # Set row and column types to match other destination matrices.
-      matsbyname::setrowtype(product_type) %>% 
-      matsbyname::setcoltype(industry_type)
-    
+      matsbyname::setrowtype(industry_type) |> 
+      matsbyname::setcoltype(product_type)
+    # Calculate replacement for the destination matrix (Y_useful instead of Y_f or U_eiou_useful instead of U_eiou)
+    add_to_dest_mat <- detailed_fu_mat |> 
+      matsbyname::transpose_byname() |> 
+      matsbyname::aggregate_pieces_byname(piece = "suff", margin = 2, notation = arr_note)
+
     # Create the outgoing list and set names according to arguments.
-    list(add_to_U_f_mat, add_to_V_f_mat, add_to_dest_mat) %>% 
-      magrittr::set_names(c(add_to_U, add_to_V, add_to_dest))
+    list(add_to_U_f_mat, add_to_V_f_mat, add_to_dest_mat, detailed_fu_mat) %>% 
+      magrittr::set_names(c(add_to_U, add_to_V, add_to_dest, detailed_fu))
   }
   
   matsindf::matsindf_apply(.sutdata, FUN = helper_func, dest_m = dest_mat, C_m = C_mat, eta_fu_v = eta_fu_vec)

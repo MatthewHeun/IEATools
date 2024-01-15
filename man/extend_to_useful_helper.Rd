@@ -15,7 +15,8 @@ extend_to_useful_helper(
   from_note = RCLabels::from_notation,
   add_to_U = "add_to_U",
   add_to_V = "add_to_V",
-  add_to_dest = "add_to_dest"
+  add_to_dest = "add_to_dest",
+  detailed_fu = "detailed_fu"
 )
 }
 \arguments{
@@ -57,10 +58,15 @@ Default is \code{RCLabels::from_notation}.}
 \item{add_to_dest}{a string name for the matrix to replace some entries previous destination matrix. Default is "repl_dest".}
 }
 \value{
-a named list containing three items:
+a named list containing four items:
 \code{add_to_U_f} (a matrix to be added to a use (\code{U}) matrix),
-\code{add_to_V_f} (a matrix to be added to a make (\code{V}) matrix), and
-\code{add_to_dest_mat} (a matrix to replace the destination matrix, typically \code{Y_f} or \code{U_eiou}).
+\code{add_to_V_f} (a matrix to be added to a make (\code{V}) matrix),
+\code{add_to_dest_mat} (a matrix to replace the destination matrix, typically \code{Y_f} or \code{U_eiou}), and
+\code{detailed_fu} (a matrix that retails all details for
+final energy product,
+destination sector,
+final-to-useful machine, and
+useful energy product).
 }
 \description{
 The helper function is needed, because moving from final to useful energy
