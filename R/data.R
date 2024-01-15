@@ -97,8 +97,8 @@
 #' \item{final_demand,Y}{The name of a column in a wide-by-matrices data frame containing final demand (`Y`) matrices.}
 #' \item{s_units}{The name of a column in a wide-by-matrices data frame containing unit summation (`S_units`) matrices.}
 #' \item{matvals}{The name of a column in a tidy data frame containing matrices.}
-#' \item{Y_u_detailed}{The name of a column in a tidy data frame containing detailed **Y_u** matrices that contain the following information: final energy product, destination sector, final-to-useful machine, and useful product.}
-#' \item{U_eiou_u_detailed}{The name of a column in a tidy data frame containing detailed **U_EIOU_u** matrices that contain the following information: final energy product, destination energy industry, final-to-useful machine, and useful product.}
+#' \item{Y_fu_detailed}{The name of a column in a tidy data frame containing detailed **Y_u** matrices that contain the following information: final energy product, destination sector, final-to-useful machine, and useful product.}
+#' \item{U_eiou_fu_detailed}{The name of a column in a tidy data frame containing detailed **U_EIOU_u** matrices that contain the following information: final energy product, destination energy industry, final-to-useful machine, and useful product.}
 #' }
 #' 
 #' @examples

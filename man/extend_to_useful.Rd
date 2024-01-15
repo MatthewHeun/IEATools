@@ -42,8 +42,8 @@ extend_to_useful(
   r_eiou_name = IEATools::psut_cols$r_eiou,
   V_name = IEATools::psut_cols$V,
   Y_name = IEATools::psut_cols$Y,
-  Y_u_detailed_name = IEATools::psut_cols$Y_u_detailed,
-  U_eiou_u_detailed_name = IEATools::psut_cols$U_eiou_u_detailed
+  Y_fu_detailed_name = IEATools::psut_cols$Y_fu_detailed,
+  U_eiou_fu_detailed_name = IEATools::psut_cols$U_eiou_fu_detailed
 )
 }
 \arguments{
@@ -102,7 +102,7 @@ to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".}
 
 \item{.sep}{A separator between matrix names and \code{final} or \code{useful} indicators. Default is "_".}
 
-\item{U_eiou_name, U_feed_name, U_name, r_eiou_name, V_name, Y_name, Y_u_detailed_name, U_eiou_u_detailed_name}{See \code{IEATools::psut_cols}.
+\item{U_eiou_name, U_feed_name, U_name, r_eiou_name, V_name, Y_name, Y_fu_detailed_name, U_eiou_fu_detailed_name}{See \code{IEATools::psut_cols}.
 Distinct from \code{U_feed},\code{U_eiou}, \code{U}, \code{r_eiou}, \code{V}, and \code{Y} (which can be matrices or strings),
 these variables determine the names of these matrices on output.
 Default values are taken from \code{IEATools::psut_cols}.

@@ -743,7 +743,7 @@ test_that("extend_to_useful() works with individual matrices", {
   expect_setequal(names(useful_mats), 
                   c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                     "r_EIOU_Useful", "V_Useful", "Y_Useful", 
-                    "Y_u_detailed", "U_EIOU_u_detailed"))
+                    "Y_fu_detailed", "U_EIOU_fu_detailed"))
   
   # Try with an adjusted value of C_EIOU.
   # This will cause energy imbalance.
@@ -812,7 +812,7 @@ test_that("extend_to_useful() works with individual Matrix objects", {
   expect_equal(names(useful_mats), 
                c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                  "r_EIOU_Useful", "V_Useful", "Y_Useful", 
-                 "Y_u_detailed", "U_EIOU_u_detailed"))
+                 "Y_fu_detailed", "U_EIOU_fu_detailed"))
   
   # Try with C_eiou missing, thereby ignoring any EIOU.
   # Do the same calculation as above, but don't include 
@@ -860,7 +860,7 @@ test_that("extend_to_useful() works with list of matrices", {
                  "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                  "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                  "r_EIOU_Useful", "V_Useful", "Y_Useful", 
-                 "Y_u_detailed", "U_EIOU_u_detailed"))
+                 "Y_fu_detailed", "U_EIOU_fu_detailed"))
 })
 
 
@@ -884,7 +884,7 @@ test_that("extend_to_useful() works with list of Matrix objects", {
   
   useful_list <- extend_to_useful(var_store)
   # Ensure all are Matrix objects
-  for (i in 6:length(useful_list)) {
+  for (i in 8:23) {
     if (is.list(useful_list[[i]])) {
       expect_true(matsbyname::is.Matrix(useful_list[[i]][[1]]))
     } else {
@@ -899,7 +899,7 @@ test_that("extend_to_useful() works with list of Matrix objects", {
                  "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                  "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                  "r_EIOU_Useful", "V_Useful", "Y_Useful", 
-                 "Y_u_detailed", "U_EIOU_u_detailed"))
+                 "Y_fu_detailed", "U_EIOU_fu_detailed"))
 })
 
 
