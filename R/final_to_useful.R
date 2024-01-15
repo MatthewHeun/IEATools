@@ -542,10 +542,11 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                       to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".
 #' @param .add_to_V_f An internal matrix name for a matrix to add to the Y_f matrix. Default is ".add_to_V_f".
 #' @param .add_to_dest An internal matrix name for a matrix that replaces a previous energy destination. Default is ".repl_dest".
+#' @param detailed_fu An internal matrix name for a matrix that contains detailed information about the final-to-useful extension, namely, final energy product, destination sector, final-to-useful machine, and useful energy product.
 #' @param .err An internal matrix name for calculating energy balance errors. Default is ".err".
 #' @param .e_bal_ok An internal column name for assessing whether energy balance is within acceptable tolerances set by the `tol` argument. Default is ".e_bal_OK".
 #' @param .sep A separator between matrix names and `final` or `useful` indicators. Default is "_".
-#' @param U_eiou_name,U_feed_name,U_name,r_eiou_name,V_name,Y_name See `IEATools::psut_cols`. 
+#' @param U_eiou_name,U_feed_name,U_name,r_eiou_name,V_name,Y_name,Y_u_detailed_name,U_eiou_u_detailed_name See `IEATools::psut_cols`. 
 #'        Distinct from `U_feed`,`U_eiou`, `U`, `r_eiou`, `V`, and `Y` (which can be matrices or strings), 
 #'        these variables determine the names of these matrices on output.
 #'        Default values are taken from `IEATools::psut_cols`. 
@@ -622,6 +623,7 @@ extend_to_useful <- function(.sutdata = NULL,
                              .add_to_U_eiou = ".add_to_U_eiou",
                              .add_to_V_f = ".add_to_V_f",
                              .add_to_dest = ".repl_dest",
+                             detailed_fu = "detailed_fu",
                              .err = ".err", 
                              .e_bal_ok = ".e_bal_ok",
                              .sep = "_", 
@@ -631,7 +633,9 @@ extend_to_useful <- function(.sutdata = NULL,
                              U_name = IEATools::psut_cols$U,
                              r_eiou_name = IEATools::psut_cols$r_eiou,
                              V_name = IEATools::psut_cols$V, 
-                             Y_name = IEATools::psut_cols$Y) {
+                             Y_name = IEATools::psut_cols$Y, 
+                             Y_u_detailed_name = IEATools::psut_cols$Y_u_detailed, 
+                             U_eiou_u_detailed_name = IEATools::psut_cols$U_eiou_u_detailed) {
   
   # New names
   U_feed_useful_name <- paste0(U_feed_name, .sep, useful)
@@ -705,6 +709,11 @@ extend_to_useful <- function(.sutdata = NULL,
                                                                                             pattern_type = "leading"))
     Y_useful_mat <- matsbyname::sum_byname(Y_keep_mat, res_Y[[.add_to_dest]])
     
+    # Get the detailed Y_u matrix
+    Y_u_detailed_mat <- res_Y[[detailed_fu]]
+    # Add a NULL U_EIOU_u_detailed matrix
+    U_eiou_u_detailed_mat <- NULL
+    
     # Now check to see if we have any EIOU. 
     # If so, make further adjustments to the matrices.
     # If not, no big deal. 
@@ -720,6 +729,7 @@ extend_to_useful <- function(.sutdata = NULL,
       r_eiou_useful_mat <- matsbyname::quotient_byname(U_eiou_useful_mat, U_useful_mat) %>% 
         matsbyname::replaceNaN_byname(val = 0)
       V_useful_mat <- matsbyname::sum_byname(V_useful_mat, res_eiou[[.add_to_V_f]])
+      U_eiou_u_detailed_mat <- res_eiou[[detailed_fu]]
     }
     
     # Check Product energy balances.
@@ -746,6 +756,8 @@ extend_to_useful <- function(.sutdata = NULL,
                 r_eiou_useful_mat, 
                 V_useful_mat, 
                 Y_useful_mat, 
+                Y_u_detailed_mat, 
+                U_eiou_u_detailed_mat,
                 .err_vec, 
                 .ebal_ok) %>% 
       magrittr::set_names(c(U_feed_useful_name, 
@@ -754,6 +766,8 @@ extend_to_useful <- function(.sutdata = NULL,
                             r_eiou_useful_name, 
                             V_useful_name, 
                             Y_useful_name, 
+                            Y_u_detailed_name, 
+                            U_eiou_u_detailed_name,
                             .err, 
                             .e_bal_ok))
     if (.ebal_ok) {
@@ -813,6 +827,8 @@ extend_to_useful <- function(.sutdata = NULL,
 #' @param add_to_U a string name for the matrix to be added to a use matrix. Default is "add_to_U".
 #' @param add_to_V a string name for the matrix to be added to a make matrix. Default is "add_to_V".
 #' @param add_to_dest a string name for the matrix to replace some entries previous destination matrix. Default is "repl_dest".
+#' @param detailed_fu A string name for the matrix containing detailed information about the final-to-useful extension,
+#'                    namely, final energy product, destination sector, final-to-useful machine, and useful energy product.
 #'
 #' @return a named list containing four items: 
 #'         `add_to_U_f` (a matrix to be added to a use (`U`) matrix),

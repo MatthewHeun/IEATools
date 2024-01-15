@@ -742,7 +742,8 @@ test_that("extend_to_useful() works with individual matrices", {
   # There should be no more matrices than these.
   expect_setequal(names(useful_mats), 
                   c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                    "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+                    "r_EIOU_Useful", "V_Useful", "Y_Useful", 
+                    "Y_u_detailed", "U_EIOU_u_detailed"))
   
   # Try with an adjusted value of C_EIOU.
   # This will cause energy imbalance.
@@ -810,7 +811,8 @@ test_that("extend_to_useful() works with individual Matrix objects", {
   # There should be no more matrices than these.
   expect_equal(names(useful_mats), 
                c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+                 "r_EIOU_Useful", "V_Useful", "Y_Useful", 
+                 "Y_u_detailed", "U_EIOU_u_detailed"))
   
   # Try with C_eiou missing, thereby ignoring any EIOU.
   # Do the same calculation as above, but don't include 
@@ -857,7 +859,8 @@ test_that("extend_to_useful() works with list of matrices", {
                  "Y", "S_units", "R", "U", "U_feed",
                  "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                  "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+                 "r_EIOU_Useful", "V_Useful", "Y_Useful", 
+                 "Y_u_detailed", "U_EIOU_u_detailed"))
 })
 
 
@@ -895,7 +898,8 @@ test_that("extend_to_useful() works with list of Matrix objects", {
                  "Y", "S_units", "R", "U", "U_feed",
                  "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                  "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+                 "r_EIOU_Useful", "V_Useful", "Y_Useful", 
+                 "Y_u_detailed", "U_EIOU_u_detailed"))
 })
 
 

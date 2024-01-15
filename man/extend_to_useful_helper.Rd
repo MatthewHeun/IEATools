@@ -56,6 +56,9 @@ Default is \code{RCLabels::from_notation}.}
 \item{add_to_V}{a string name for the matrix to be added to a make matrix. Default is "add_to_V".}
 
 \item{add_to_dest}{a string name for the matrix to replace some entries previous destination matrix. Default is "repl_dest".}
+
+\item{detailed_fu}{A string name for the matrix containing detailed information about the final-to-useful extension,
+namely, final energy product, destination sector, final-to-useful machine, and useful energy product.}
 }
 \value{
 a named list containing four items:
