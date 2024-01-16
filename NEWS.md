@@ -8,6 +8,16 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* `extend_to_useful_helper()` and `extend_to_useful()`
+  now return additional matrices, namely
+  `Y_fu_detailed` and `U_EIOU_fu_detailed`.
+  These new matrices provide detailed information about the 
+  process of extending to the useful stage:
+  the final energy product,
+  the destination sector,
+  the useful energy product, and
+  the final-to-useful machine.
+
 
 # IEATools 0.1.74 (2023-12-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10420321.svg)](https://doi.org/10.5281/zenodo.10420321)
 
