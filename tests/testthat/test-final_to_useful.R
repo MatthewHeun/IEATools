@@ -509,6 +509,30 @@ test_that("extend_to_useful() works as expected", {
       is_zero = matsbyname::iszero_byname(should_be_zero)
     )
   expect_true(all(unlist(r_EIOU_check$is_zero)))
+  
+  # Check that we have detailed matrices
+  # None of the rows where last stage is final should have a matrix.
+  with_useful |> 
+    dplyr::filter(Last.stage == "Final") |> 
+    magrittr::extract2("Y_fu_detailed") |> 
+    sapply(FUN = is.null) |> 
+    all() |> 
+    expect_true()
+  with_useful |> 
+    dplyr::filter(Last.stage == "Final") |> 
+    magrittr::extract2("U_EIOU_fu_detailed") |> 
+    sapply(FUN = is.null) |> 
+    all() |> 
+    expect_true()
+
+  # But where Last.stage is useful, we will have matrices
+  Y_fu_detailed_example <- with_useful |> 
+    dplyr::filter(Last.stage == "Useful") |> 
+    magrittr::extract2("Y_fu_detailed") |> 
+    magrittr::extract2(1) |> 
+    matsbyname::select_cols_byname(retain_pattern = "^Light [from Electric lights]$") |>
+    matsbyname::select_rows_byname(retain_pattern = "^Electricity -> Non-ferrous metals$") |> 
+    expect_equal(994.392210)
 })
 
 
