@@ -729,7 +729,7 @@ extend_to_useful <- function(.sutdata = NULL,
       r_eiou_useful_mat <- matsbyname::quotient_byname(U_eiou_useful_mat, U_useful_mat) %>% 
         matsbyname::replaceNaN_byname(val = 0)
       V_useful_mat <- matsbyname::sum_byname(V_useful_mat, res_eiou[[.add_to_V_f]])
-      U_eiou_u_detailed_mat <- res_eiou[[detailed_fu]]
+      U_eiou_fu_detailed_mat <- res_eiou[[detailed_fu]]
     }
     
     # Check Product energy balances.
