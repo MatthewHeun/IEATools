@@ -906,7 +906,7 @@ extend_to_useful_helper <- function(.sutdata = NULL,
       # We're meant to pick up the suffix as the rowtype here, but the rowtype is likely a 
       # single string, which will result in an empty string ("") 
       # for the rowtype after aggregating to the suffix.
-      # So set the rowtype manually.
+      # So set the rowtype (and coltype) manually.
       matsbyname::setrowtype(industry_type) |> 
       matsbyname::setcoltype(product_type) |> 
       # Now transpose to get the desired output
