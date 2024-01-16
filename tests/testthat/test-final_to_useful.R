@@ -298,8 +298,12 @@ test_that("extend_to_useful_helper() works as intended", {
   detailed_fu_mat_expected <- matsbyname::matrixproduct_byname(Y_f_vec_hat_C_Y, eta_fu_hat) |> 
     matsbyname::clean_byname() |> 
     # Set row and column types to match other destination matrices.
-    matsbyname::setrowtype(RCLabels::paste_pref_suff(pref = row_col_types$product, suff = row_col_types$industry, notation = RCLabels::arrow_notation)) |> 
-    matsbyname::setcoltype(RCLabels::paste_pref_suff(pref = row_col_types$product, suff = row_col_types$industry, notation = RCLabels::from_notation))
+    matsbyname::setrowtype(RCLabels::paste_pref_suff(pref = row_col_types$product, 
+                                                     suff = row_col_types$industry,
+                                                     notation = RCLabels::arrow_notation)) |> 
+    matsbyname::setcoltype(RCLabels::paste_pref_suff(pref = row_col_types$product, 
+                                                     suff = row_col_types$industry, 
+                                                     notation = RCLabels::from_notation))
   
   expect_equal(res$detailed_fu, detailed_fu_mat_expected)
 })
