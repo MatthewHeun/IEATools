@@ -868,7 +868,7 @@ extend_to_useful_helper <- function(.sutdata = NULL,
       matsbyname::matrixproduct_byname(C_m)
     
     eta_fu_hat <- matsbyname::hatize_byname(eta_fu_v, keep = "rownames") %>% 
-      # Swap column names from arrow notation to paren notation
+      # Swap column names from arrow notation to from notation
       matsbyname::switch_notation_byname(margin = 2, from = arr_note, to = from_note, flip = TRUE)
     
     #### Step 2 on the "Pushing Y to useful" tab in file "Matrix f->u example calcs.xlsx"
@@ -898,12 +898,19 @@ extend_to_useful_helper <- function(.sutdata = NULL,
     detailed_fu_mat <- matsbyname::matrixproduct_byname(dest_mat_vec_hat_C, eta_fu_hat) |> 
       matsbyname::clean_byname() |> 
       # Set row and column types to match other destination matrices.
-      matsbyname::setrowtype(industry_type) |> 
-      matsbyname::setcoltype(product_type)
+      matsbyname::setrowtype(RCLabels::paste_pref_suff(pref = product_type, suff = industry_type, notation = arr_note)) |> 
+      matsbyname::setcoltype(RCLabels::paste_pref_suff(pref = product_type, suff = industry_type, notation = from_note))
     # Calculate replacement for the destination matrix (Y_useful instead of Y_f or U_eiou_useful instead of U_eiou)
     add_to_dest_mat <- detailed_fu_mat |> 
-      matsbyname::transpose_byname() |> 
-      matsbyname::aggregate_pieces_byname(piece = "suff", margin = 2, notation = arr_note)
+      matsbyname::aggregate_pieces_byname(piece = "suff", margin = 1, notation = arr_note) |> 
+      # We're meant to pick up the suffix as the rowtype here, but the rowtype is likely a 
+      # single string, which will result in an empty string ("") 
+      # for the rowtype after aggregating to the suffix.
+      # So set the rowtype manually.
+      matsbyname::setrowtype(industry_type) |> 
+      matsbyname::setcoltype(product_type) |> 
+      # Now transpose to get the desired output
+      matsbyname::transpose_byname()
 
     # Create the outgoing list and set names according to arguments.
     list(add_to_U_f_mat, add_to_V_f_mat, add_to_dest_mat, detailed_fu_mat) %>% 
