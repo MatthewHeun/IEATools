@@ -107,8 +107,8 @@ psut_cols <- list(resources = "R",
                   B = "B",
                   s_units = "S_units", 
                   matvals = "matvals", 
-                  Y_fu_detailed = "Y_fu_detailed", 
-                  U_eiou_fu_detailed = "U_EIOU_fu_detailed")
+                  Y_fu_details = "Y_fu_details", 
+                  U_eiou_fu_details = "U_EIOU_fu_details")
 usethis::use_data(psut_cols, overwrite = TRUE)
 
 

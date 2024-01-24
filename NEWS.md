@@ -10,7 +10,7 @@ which always resolves to the latest release.
 
 * `extend_to_useful_helper()` and `extend_to_useful()`
   now return additional matrices, namely
-  `Y_fu_detailed` and `U_EIOU_fu_detailed`.
+  `Y_fu_details` and `U_EIOU_fu_details`.
   These new matrices provide detailed information about the 
   process of extending to the useful stage:
   the final energy product,

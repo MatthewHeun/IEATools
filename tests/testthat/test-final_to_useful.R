@@ -293,9 +293,9 @@ test_that("extend_to_useful_helper() works as intended", {
   
   expect_equal(res$add_to_dest, add_to_Y_expected)
   
-  ## Now check the detailed fu matrix
+  ## Now check the details fu matrix
   
-  detailed_fu_mat_expected <- matsbyname::matrixproduct_byname(Y_f_vec_hat_C_Y, eta_fu_hat) |> 
+  details_fu_mat_expected <- matsbyname::matrixproduct_byname(Y_f_vec_hat_C_Y, eta_fu_hat) |> 
     matsbyname::clean_byname() |> 
     # Set row and column types to match other destination matrices.
     matsbyname::setrowtype(RCLabels::paste_pref_suff(pref = row_col_types$product, 
@@ -305,7 +305,7 @@ test_that("extend_to_useful_helper() works as intended", {
                                                      suff = row_col_types$industry, 
                                                      notation = RCLabels::from_notation))
   
-  expect_equal(res$detailed_fu, detailed_fu_mat_expected)
+  expect_equal(res$details_fu, details_fu_mat_expected)
 })
 
 
@@ -510,35 +510,35 @@ test_that("extend_to_useful() works as expected", {
     )
   expect_true(all(unlist(r_EIOU_check$is_zero)))
   
-  # Check that we have detailed matrices
+  # Check that we have details matrices
   # None of the rows where last stage is final should have a matrix.
   with_useful |> 
     dplyr::filter(Last.stage == "Final") |> 
-    magrittr::extract2("Y_fu_detailed") |> 
+    magrittr::extract2("Y_fu_details") |> 
     sapply(FUN = is.null) |> 
     all() |> 
     expect_true()
   with_useful |> 
     dplyr::filter(Last.stage == "Final") |> 
-    magrittr::extract2("U_EIOU_fu_detailed") |> 
+    magrittr::extract2("U_EIOU_fu_details") |> 
     sapply(FUN = is.null) |> 
     all() |> 
     expect_true()
 
   # But where Last.stage is useful, we will have matrices
   # Test a couple values to make sure everything is working.
-  Y_fu_detailed_example <- with_useful |> 
+  Y_fu_details_example <- with_useful |> 
     dplyr::filter(Last.stage == "Useful") |> 
-    magrittr::extract2("Y_fu_detailed") |> 
+    magrittr::extract2("Y_fu_details") |> 
     magrittr::extract2(1) |> 
     matsbyname::select_cols_byname(retain_pattern = "Light [from Electric lights]", fixed = TRUE) |>
     matsbyname::select_rows_byname(retain_pattern = "Electricity -> Non-ferrous metals") |> 
     magrittr::extract(1, 1) |> 
     expect_equal(994.392210)
   
-  U_EIOU_fu_detailed_example <- with_useful |> 
+  U_EIOU_fu_details_example <- with_useful |> 
     dplyr::filter(Last.stage == "Useful") |> 
-    magrittr::extract2("U_EIOU_fu_detailed") |> 
+    magrittr::extract2("U_EIOU_fu_details") |> 
     magrittr::extract2(4) |> 
     matsbyname::select_cols_byname(retain_pattern = "MD [from Electric motors]", fixed = TRUE) |>
     matsbyname::select_rows_byname(retain_pattern = "Electricity -> Oil refineries") |> 
@@ -748,35 +748,35 @@ test_that("extend_to_useful() works with Matrix objects", {
     )
   expect_true(all(unlist(r_EIOU_check$is_zero)))
   
-  # Check that we have detailed matrices
+  # Check that we have details matrices
   # None of the rows where last stage is final should have a matrix.
   with_useful |> 
     dplyr::filter(Last.stage == "Final") |> 
-    magrittr::extract2("Y_fu_detailed") |> 
+    magrittr::extract2("Y_fu_details") |> 
     sapply(FUN = is.null) |> 
     all() |> 
     expect_true()
   with_useful |> 
     dplyr::filter(Last.stage == "Final") |> 
-    magrittr::extract2("U_EIOU_fu_detailed") |> 
+    magrittr::extract2("U_EIOU_fu_details") |> 
     sapply(FUN = is.null) |> 
     all() |> 
     expect_true()
   
   # But where Last.stage is useful, we will have matrices
   # Test a couple values to make sure everything is working.
-  Y_fu_detailed_example <- with_useful |> 
+  Y_fu_details_example <- with_useful |> 
     dplyr::filter(Last.stage == "Useful") |> 
-    magrittr::extract2("Y_fu_detailed") |> 
+    magrittr::extract2("Y_fu_details") |> 
     magrittr::extract2(1) |> 
     matsbyname::select_cols_byname(retain_pattern = "Light [from Electric lights]", fixed = TRUE) |>
     matsbyname::select_rows_byname(retain_pattern = "Electricity -> Non-ferrous metals") |> 
     magrittr::extract(1, 1) |> 
     expect_equal(994.392210)
   
-  U_EIOU_fu_detailed_example <- with_useful |> 
+  U_EIOU_fu_details_example <- with_useful |> 
     dplyr::filter(Last.stage == "Useful") |> 
-    magrittr::extract2("U_EIOU_fu_detailed") |> 
+    magrittr::extract2("U_EIOU_fu_details") |> 
     magrittr::extract2(4) |> 
     matsbyname::select_cols_byname(retain_pattern = "MD [from Electric motors]", fixed = TRUE) |>
     matsbyname::select_rows_byname(retain_pattern = "Electricity -> Oil refineries") |> 
@@ -817,7 +817,7 @@ test_that("extend_to_useful() works with individual matrices", {
   expect_setequal(names(useful_mats), 
                   c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                     "r_EIOU_Useful", "V_Useful", "Y_Useful", 
-                    "Y_fu_detailed", "U_EIOU_fu_detailed"))
+                    "Y_fu_details", "U_EIOU_fu_details"))
   
   # Try with an adjusted value of C_EIOU.
   # This will cause energy imbalance.
@@ -886,7 +886,7 @@ test_that("extend_to_useful() works with individual Matrix objects", {
   expect_equal(names(useful_mats), 
                c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                  "r_EIOU_Useful", "V_Useful", "Y_Useful", 
-                 "Y_fu_detailed", "U_EIOU_fu_detailed"))
+                 "Y_fu_details", "U_EIOU_fu_details"))
   
   # Try with C_eiou missing, thereby ignoring any EIOU.
   # Do the same calculation as above, but don't include 
@@ -934,7 +934,7 @@ test_that("extend_to_useful() works with list of matrices", {
                  "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                  "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                  "r_EIOU_Useful", "V_Useful", "Y_Useful", 
-                 "Y_fu_detailed", "U_EIOU_fu_detailed"))
+                 "Y_fu_details", "U_EIOU_fu_details"))
 })
 
 
@@ -973,7 +973,7 @@ test_that("extend_to_useful() works with list of Matrix objects", {
                  "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                  "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                  "r_EIOU_Useful", "V_Useful", "Y_Useful", 
-                 "Y_fu_detailed", "U_EIOU_fu_detailed"))
+                 "Y_fu_details", "U_EIOU_fu_details"))
 })
 
 

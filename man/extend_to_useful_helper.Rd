@@ -16,7 +16,7 @@ extend_to_useful_helper(
   add_to_U = "add_to_U",
   add_to_V = "add_to_V",
   add_to_dest = "add_to_dest",
-  detailed_fu = "detailed_fu"
+  details_fu = "details_fu"
 )
 }
 \arguments{
@@ -57,7 +57,7 @@ Default is \code{RCLabels::from_notation}.}
 
 \item{add_to_dest}{a string name for the matrix to replace some entries previous destination matrix. Default is "repl_dest".}
 
-\item{detailed_fu}{A string name for the matrix containing detailed information about the final-to-useful extension,
+\item{details_fu}{A string name for the matrix containing detailed information about the final-to-useful extension,
 namely, final energy product, destination sector, final-to-useful machine, and useful energy product.}
 }
 \value{
@@ -65,7 +65,7 @@ a named list containing four items:
 \code{add_to_U_f} (a matrix to be added to a use (\code{U}) matrix),
 \code{add_to_V_f} (a matrix to be added to a make (\code{V}) matrix),
 \code{add_to_dest_mat} (a matrix to replace the destination matrix, typically \code{Y_f} or \code{U_eiou}), and
-\code{detailed_fu} (a matrix that retails all details for
+\code{details_fu} (a matrix that retails all details for
 final energy product,
 destination sector,
 final-to-useful machine, and
