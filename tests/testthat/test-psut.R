@@ -751,15 +751,26 @@ test_that("prep_psut() correctly works with Balancing flows and Matrix objects",
     all(c("R", "V", "U_feed", "U_EIOU", "Y", "S_units", "B") %in% colnames(PSUT_flows_with_Balancing))
   )
   
-  balancing_expected_value <- matrix(nrow = 2, ncol = 2,
-                                     c(0, 100, -100, 0))
+  a <- PSUT_flows_with_Balancing %>%
+    dplyr::select(B) %>%
+    dplyr::pull() %>%
+    dplyr::first()
   
-  expect_true(
-    all(balancing_expected_value == (PSUT_flows_with_Balancing %>%
-                                       dplyr::select(B) %>% 
-                                       dplyr::pull() %>% 
-                                       dplyr::first())
-    ))
+  balancing_expected_value <- matrix(nrow = 2, ncol = 2,
+                                     c(0, 100, -100, 0)) |> 
+    matsbyname::setcolnames_byname(c("Non-ferrous metals", "Stock changes [of Crude oil]")) |> 
+    matsbyname::setrownames_byname(c("Crude oil", "Electricity")) |> 
+    matsbyname::setcoltype("Industry") |> 
+    matsbyname::setrowtype("Product")
+  
+  expect_true(matsbyname::equal_byname(a, balancing_expected_value))
+  
+  # expect_true(
+  #   all(balancing_expected_value == (PSUT_flows_with_Balancing %>%
+  #                                      dplyr::select(B) %>% 
+  #                                      dplyr::pull() %>% 
+  #                                      dplyr::first())
+  #   ))
 })
 
 
