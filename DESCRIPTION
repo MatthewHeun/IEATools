@@ -44,7 +44,7 @@ Suggests:
     knitr,
     purrr,
     rmarkdown,
-    testthat,
+    testthat (>= 3.0.0)
     spelling
 VignetteBuilder: knitr
 URL: https://matthewheun.github.io/IEATools/
