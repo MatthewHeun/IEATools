@@ -131,10 +131,10 @@ test_that("despecify_col work as expected", {
 
 test_that("tp_sinks_sources() works as expected", {
   # Check when type is neither "sinks" nor "sources"
-  expect_error(load_tidy_iea_df() %>% 
-                 specify_all() %>% 
-                 tp_sinks_sources(type = "bogus"), 
-               msg = "'arg' should be one of ")
+  load_tidy_iea_df() %>% 
+    specify_all() %>% 
+    tp_sinks_sources(type = "bogus") |> 
+    expect_error()
   # Try to send an ungrouped data frame into the function. Should give 0 rows.
   expect_equal(load_tidy_iea_df() %>% 
                  specify_primary_production() %>% 

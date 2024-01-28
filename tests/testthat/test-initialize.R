@@ -1014,7 +1014,7 @@ test_that("remove_agg_regions() works as expected", {
   result <- tibble::tibble(Year = 1900 + 1:(n_regions+1), Country = unlist(c("Spain", IEATools::aggregation_regions))) |>
     remove_agg_regions()
   expect_equal(result$Year, 1901)
-  expect_equivalent(result[["Country"]], "Spain")
+  expect_equal(unname(result[["Country"]]), "Spain")
   
   # Ensure that Greenland and Palestinian Authority are retained.
   tibble::tibble(Year = c(1967, 1990, 2020), Country = c("Memo: Greenland", "Memo: Palestinian Authority", "World")) |> 

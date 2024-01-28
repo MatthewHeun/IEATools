@@ -136,9 +136,9 @@ test_that("form_eta_fu_phi_u_vecs() works as expected", {
   
   phi_ZAR_2000 <- eta_fu_phi_u_df$phi.u[[4]]  
   expect_equal(phi_ZAR_2000[["MD", 1]], 1)
-  expect_equal(phi_ZAR_2000[["LTH.20.C", 1]], 0.01677008)
+  expect_equal(phi_ZAR_2000[["LTH.20.C", 1]], 0.0167700821734027)
   expect_equal(phi_ZAR_2000[["HTH.600.C", 1]], 0.65853519)
-  expect_equal(phi_ZAR_2000[["Light", 1]], 0.18301611)
+  expect_equal(phi_ZAR_2000[["Light", 1]], 0.1830161054172770)
 
   # Check row and column types
   for (i in 1:nrow(eta_fu_phi_u_df)) {
@@ -497,8 +497,13 @@ test_that("extend_to_useful() works as expected", {
   # Check that a warning is emitted when the energy balance check fails.
   # The default 2019 psut_mats (before fixing energy balance) has a slight energy balance mismatch.
   # This test sets the tolerance especially tight to force an energy balance failure.
-  expect_warning(with_useful_warn <- psut_mats %>% 
-                   extend_to_useful(tol = 1e-10))
+  (with_useful_warn <- psut_mats %>% 
+    extend_to_useful(tol = 1e-10)) |> 
+    # We receive 4 warnings, one for each row of the table.
+    expect_warning("Energy is not balanced") |> 
+    expect_warning("Energy is not balanced") |> 
+    expect_warning("Energy is not balanced") |> 
+    expect_warning("Energy is not balanced")
   
   # Verify that we have correct r_EIOU matrices for the useful stage.
   r_EIOU_check <- with_useful %>% 
@@ -735,9 +740,14 @@ test_that("extend_to_useful() works with Matrix objects", {
   # Check that a warning is emitted when the energy balance check fails.
   # The default 2019 psut_mats (before fixing energy balance) has a slight energy balance mismatch.
   # This test sets the tolerance especially tight to force an energy balance failure.
-  expect_warning(with_useful_warn <- psut_mats %>% 
-                   extend_to_useful(tol = 1e-10))
-  
+  (with_useful_warn <- psut_mats %>% 
+    extend_to_useful(tol = 1e-10)) |> 
+    # Four warnings, one for each row of the psut_mats data frame.
+    expect_warning("Energy is not balanced") |> 
+    expect_warning("Energy is not balanced") |> 
+    expect_warning("Energy is not balanced") |> 
+    expect_warning("Energy is not balanced")
+    
   # Verify that we have correct r_EIOU matrices for the useful stage.
   r_EIOU_check <- with_useful %>% 
     dplyr::mutate(
