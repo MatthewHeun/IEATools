@@ -319,7 +319,7 @@ test_that("replace_join() works as expected", {
   # Try with incorrect by argument. 
   # replace_col is in by argument
   expect_error(replace_join(DFA, DFB, replace_col = "y", by = c("x", "y")),
-               msg = "replace_col must not be in the by argument to replace_join")
+               "replace_col must not be in the by argument to replace_join")
   
   # But the default by argument ensures that replace_col is not in the by argument.
   expect_equal(replace_join(DFA, DFB, replace_col = "y"),
@@ -350,7 +350,7 @@ test_that("replace_join() works as expected", {
   
   # Try when replace_col is in by.  That isn't allowed.
   expect_error(replace_join(DFA, DFB, replace_col = "y", by = c("x", "y")), 
-               msg = "replace_col must not be in by argument to replace_join")
+               "replace_col must not be in the by argument to replace_join")
   
   # Try with multiple matching rows
   DFD <- tibble::tribble(~x, ~y,
@@ -372,7 +372,7 @@ test_that("replace_join() works as expected", {
                          1, "A", 
                          2, "B") %>% dplyr::mutate(x = factor(x))
   expect_error(replace_join(DFE, DFB, replace_col = "y"), 
-               msg = "Columns should not contain factors in arguments to replace_join")
+               "Columns should not contain factors in arguments to replace_join")
   
   # Try with multiple columns in the by argument
   DFF <- tibble::tribble(~x, ~y, ~z,

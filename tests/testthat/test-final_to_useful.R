@@ -136,9 +136,9 @@ test_that("form_eta_fu_phi_u_vecs() works as expected", {
   
   phi_ZAR_2000 <- eta_fu_phi_u_df$phi.u[[4]]  
   expect_equal(phi_ZAR_2000[["MD", 1]], 1)
-  expect_equal(phi_ZAR_2000[["LTH.20.C", 1]], 0.01677008)
+  expect_equal(phi_ZAR_2000[["LTH.20.C", 1]], 0.0167700821734027)
   expect_equal(phi_ZAR_2000[["HTH.600.C", 1]], 0.65853519)
-  expect_equal(phi_ZAR_2000[["Light", 1]], 0.18301611)
+  expect_equal(phi_ZAR_2000[["Light", 1]], 0.1830161054172770)
 
   # Check row and column types
   for (i in 1:nrow(eta_fu_phi_u_df)) {
@@ -292,6 +292,20 @@ test_that("extend_to_useful_helper() works as intended", {
     matsbyname::setcoltype(row_col_types$industry)
   
   expect_equal(res$add_to_dest, add_to_Y_expected)
+  
+  ## Now check the details fu matrix
+  
+  details_fu_mat_expected <- matsbyname::matrixproduct_byname(Y_f_vec_hat_C_Y, eta_fu_hat) |> 
+    matsbyname::clean_byname() |> 
+    # Set row and column types to match other destination matrices.
+    matsbyname::setrowtype(RCLabels::paste_pref_suff(pref = row_col_types$product, 
+                                                     suff = row_col_types$industry,
+                                                     notation = RCLabels::arrow_notation)) |> 
+    matsbyname::setcoltype(RCLabels::paste_pref_suff(pref = row_col_types$product, 
+                                                     suff = row_col_types$industry, 
+                                                     notation = RCLabels::from_notation))
+  
+  expect_equal(res$details_fu, details_fu_mat_expected)
 })
 
 
@@ -483,8 +497,13 @@ test_that("extend_to_useful() works as expected", {
   # Check that a warning is emitted when the energy balance check fails.
   # The default 2019 psut_mats (before fixing energy balance) has a slight energy balance mismatch.
   # This test sets the tolerance especially tight to force an energy balance failure.
-  expect_warning(with_useful_warn <- psut_mats %>% 
-                   extend_to_useful(tol = 1e-10))
+  (with_useful_warn <- psut_mats %>% 
+    extend_to_useful(tol = 1e-10)) |> 
+    # We receive 4 warnings, one for each row of the table.
+    expect_warning("Energy is not balanced") |> 
+    expect_warning("Energy is not balanced") |> 
+    expect_warning("Energy is not balanced") |> 
+    expect_warning("Energy is not balanced")
   
   # Verify that we have correct r_EIOU matrices for the useful stage.
   r_EIOU_check <- with_useful %>% 
@@ -495,6 +514,41 @@ test_that("extend_to_useful() works as expected", {
       is_zero = matsbyname::iszero_byname(should_be_zero)
     )
   expect_true(all(unlist(r_EIOU_check$is_zero)))
+  
+  # Check that we have details matrices
+  # None of the rows where last stage is final should have a matrix.
+  with_useful |> 
+    dplyr::filter(Last.stage == "Final") |> 
+    magrittr::extract2("Y_fu_details") |> 
+    sapply(FUN = is.null) |> 
+    all() |> 
+    expect_true()
+  with_useful |> 
+    dplyr::filter(Last.stage == "Final") |> 
+    magrittr::extract2("U_EIOU_fu_details") |> 
+    sapply(FUN = is.null) |> 
+    all() |> 
+    expect_true()
+
+  # But where Last.stage is useful, we will have matrices
+  # Test a couple values to make sure everything is working.
+  Y_fu_details_example <- with_useful |> 
+    dplyr::filter(Last.stage == "Useful") |> 
+    magrittr::extract2("Y_fu_details") |> 
+    magrittr::extract2(1) |> 
+    matsbyname::select_cols_byname(retain_pattern = "Light [from Electric lights]", fixed = TRUE) |>
+    matsbyname::select_rows_byname(retain_pattern = "Electricity -> Non-ferrous metals") |> 
+    magrittr::extract(1, 1) |> 
+    expect_equal(994.392210)
+  
+  U_EIOU_fu_details_example <- with_useful |> 
+    dplyr::filter(Last.stage == "Useful") |> 
+    magrittr::extract2("U_EIOU_fu_details") |> 
+    magrittr::extract2(4) |> 
+    matsbyname::select_cols_byname(retain_pattern = "MD [from Electric motors]", fixed = TRUE) |>
+    matsbyname::select_rows_byname(retain_pattern = "Electricity -> Oil refineries") |> 
+    magrittr::extract(1, 1) |> 
+    expect_equal(32250.355200)
 })
 
 
@@ -686,9 +740,14 @@ test_that("extend_to_useful() works with Matrix objects", {
   # Check that a warning is emitted when the energy balance check fails.
   # The default 2019 psut_mats (before fixing energy balance) has a slight energy balance mismatch.
   # This test sets the tolerance especially tight to force an energy balance failure.
-  expect_warning(with_useful_warn <- psut_mats %>% 
-                   extend_to_useful(tol = 1e-10))
-  
+  (with_useful_warn <- psut_mats %>% 
+    extend_to_useful(tol = 1e-10)) |> 
+    # Four warnings, one for each row of the psut_mats data frame.
+    expect_warning("Energy is not balanced") |> 
+    expect_warning("Energy is not balanced") |> 
+    expect_warning("Energy is not balanced") |> 
+    expect_warning("Energy is not balanced")
+    
   # Verify that we have correct r_EIOU matrices for the useful stage.
   r_EIOU_check <- with_useful %>% 
     dplyr::mutate(
@@ -698,6 +757,41 @@ test_that("extend_to_useful() works with Matrix objects", {
       is_zero = matsbyname::iszero_byname(should_be_zero)
     )
   expect_true(all(unlist(r_EIOU_check$is_zero)))
+  
+  # Check that we have details matrices
+  # None of the rows where last stage is final should have a matrix.
+  with_useful |> 
+    dplyr::filter(Last.stage == "Final") |> 
+    magrittr::extract2("Y_fu_details") |> 
+    sapply(FUN = is.null) |> 
+    all() |> 
+    expect_true()
+  with_useful |> 
+    dplyr::filter(Last.stage == "Final") |> 
+    magrittr::extract2("U_EIOU_fu_details") |> 
+    sapply(FUN = is.null) |> 
+    all() |> 
+    expect_true()
+  
+  # But where Last.stage is useful, we will have matrices
+  # Test a couple values to make sure everything is working.
+  Y_fu_details_example <- with_useful |> 
+    dplyr::filter(Last.stage == "Useful") |> 
+    magrittr::extract2("Y_fu_details") |> 
+    magrittr::extract2(1) |> 
+    matsbyname::select_cols_byname(retain_pattern = "Light [from Electric lights]", fixed = TRUE) |>
+    matsbyname::select_rows_byname(retain_pattern = "Electricity -> Non-ferrous metals") |> 
+    magrittr::extract(1, 1) |> 
+    expect_equal(994.392210)
+  
+  U_EIOU_fu_details_example <- with_useful |> 
+    dplyr::filter(Last.stage == "Useful") |> 
+    magrittr::extract2("U_EIOU_fu_details") |> 
+    magrittr::extract2(4) |> 
+    matsbyname::select_cols_byname(retain_pattern = "MD [from Electric motors]", fixed = TRUE) |>
+    matsbyname::select_rows_byname(retain_pattern = "Electricity -> Oil refineries") |> 
+    magrittr::extract(1, 1) |> 
+    expect_equal(32250.355200)
 })
 
 
@@ -732,7 +826,8 @@ test_that("extend_to_useful() works with individual matrices", {
   # There should be no more matrices than these.
   expect_setequal(names(useful_mats), 
                   c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                    "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+                    "r_EIOU_Useful", "V_Useful", "Y_Useful", 
+                    "Y_fu_details", "U_EIOU_fu_details"))
   
   # Try with an adjusted value of C_EIOU.
   # This will cause energy imbalance.
@@ -800,7 +895,8 @@ test_that("extend_to_useful() works with individual Matrix objects", {
   # There should be no more matrices than these.
   expect_equal(names(useful_mats), 
                c("U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+                 "r_EIOU_Useful", "V_Useful", "Y_Useful", 
+                 "Y_fu_details", "U_EIOU_fu_details"))
   
   # Try with C_eiou missing, thereby ignoring any EIOU.
   # Do the same calculation as above, but don't include 
@@ -847,7 +943,8 @@ test_that("extend_to_useful() works with list of matrices", {
                  "Y", "S_units", "R", "U", "U_feed",
                  "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                  "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+                 "r_EIOU_Useful", "V_Useful", "Y_Useful", 
+                 "Y_fu_details", "U_EIOU_fu_details"))
 })
 
 
@@ -871,7 +968,7 @@ test_that("extend_to_useful() works with list of Matrix objects", {
   
   useful_list <- extend_to_useful(var_store)
   # Ensure all are Matrix objects
-  for (i in 6:length(useful_list)) {
+  for (i in 8:23) {
     if (is.list(useful_list[[i]])) {
       expect_true(matsbyname::is.Matrix(useful_list[[i]][[1]]))
     } else {
@@ -885,7 +982,8 @@ test_that("extend_to_useful() works with list of Matrix objects", {
                  "Y", "S_units", "R", "U", "U_feed",
                  "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                  "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
-                 "r_EIOU_Useful", "V_Useful", "Y_Useful"))
+                 "r_EIOU_Useful", "V_Useful", "Y_Useful", 
+                 "Y_fu_details", "U_EIOU_fu_details"))
 })
 
 

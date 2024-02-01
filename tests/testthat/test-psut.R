@@ -707,7 +707,7 @@ test_that("prep_psut() correctly works with Balancing flows", {
    dplyr::select(B) %>%
    dplyr::pull() %>%
    dplyr::first()
-  
+
   balancing_expected_value <- matrix(nrow = 2, ncol = 2,
                                   c(0, 100, -100, 0)) |> 
     matsbyname::setcolnames_byname(c("Non-ferrous metals", "Stock changes [of Crude oil]")) |> 
