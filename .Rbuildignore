@@ -9,5 +9,5 @@
 ^\.github$
 ^_pkgdown\.yml$
 ^pkgdown$
-CITATION.cff
+^CITATION.cff$
 ^LICENSE\.md$

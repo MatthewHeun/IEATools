@@ -258,8 +258,8 @@ test_that("eta_fu_template() works with tidy data from the default year", {
   
   eu_products <- Eta_fu_template$Eu.product %>% unique() %>% as.character()
   # Check that the order is as expected.
-  expect_equivalent(eu_products, c("MD", "Light", "HTH.600.C", "MTH.200.C", "MTH.100.C", 
-                                   "NEU", "LTH.20.C"))
+  expect_equal(eu_products, c("MD", "Light", "HTH.600.C", "MTH.200.C", "MTH.100.C", 
+                              "NEU", "LTH.20.C"))
   # Check the class of the year columns. They should be numeric.
   expect_true(is.numeric(Eta_fu_template[["1971"]]))
   expect_true(is.numeric(Eta_fu_template[["2000"]]))
@@ -277,9 +277,9 @@ test_that("write_eta_fu_template() works as expected for 2021 data", {
   # Read the tab back in.
   Template.reread <- openxlsx::read.xlsx(f, sheet = IEATools::fu_analysis_file_info$eta_fu_tab_name)
   # Check that it was read back correctly.
-  # Use expect_equivalent instead of expect_equal to ignore attributes 
+  # Use expect_equal with ignore_attr = TRUE to ignore attributes 
   # (in this case levels) that are different after reading back in.
-  expect_equivalent(Template.reread, Eta_fu_template_2021)
+  expect_equal(Template.reread, Eta_fu_template_2021, ignore_attr = TRUE)
   expect_equal(Template.reread$Machine[[9]], "Diesel trucks")
   expect_equal(Template.reread$Machine[[261]], "Kerosene stoves")
   expect_equal(as.character(Template.reread$Quantity[[9]]), "E.dot_machine")
@@ -317,9 +317,9 @@ test_that("write_eta_fu_template() works as expected for 2021 data", {
   # Read the tab back in.
   Template_2021.reread2 <- openxlsx::read.xlsx(f, sheet = IEATools::fu_analysis_file_info$eta_fu_tab_name)
   # Check that it was read back correctly.
-  # Use expect_equivalent instead of expect_equal to ignore attributes 
+  # Use expect_equal with ignore_attr = TRUE to ignore attributes 
   # (in this case levels) that are different after reading back in.
-  expect_equivalent(Template_2021.reread2, Eta_fu_template_2021_2)
+  expect_equal(Template_2021.reread2, Eta_fu_template_2021_2, ignore_attr = TRUE)
   expect_equal(Template_2021.reread2$Machine[[9]], "Automobiles")
   expect_equal(Template_2021.reread2$Machine[[261]], "Oil furnaces")
   expect_equal(as.character(Template_2021.reread2$Quantity[[9]]), "E.dot_machine")
@@ -372,9 +372,9 @@ test_that("write_eta_fu_template() works as expected for 2022 data", {
   # Read the tab back in.
   Template.reread <- openxlsx::read.xlsx(f, sheet = IEATools::fu_analysis_file_info$eta_fu_tab_name)
   # Check that it was read back correctly.
-  # Use expect_equivalent instead of expect_equal to ignore attributes 
+  # Use expect_equal with ignore_attr = TRUE to ignore attributes 
   # (in this case levels) that are different after reading back in.
-  expect_equivalent(Template.reread, Eta_fu_template_2022)
+  expect_equal(Template.reread, Eta_fu_template_2022, ignore_attr = TRUE)
   expect_equal(Template.reread$Machine[[9]], "Diesel trucks")
   expect_equal(Template.reread$Machine[[254]], "Wood furnaces")
   expect_equal(as.character(Template.reread$Quantity[[9]]), "E.dot_machine")
@@ -395,9 +395,9 @@ test_that("write_eta_fu_template() works as expected for 2022 data", {
   # Read the tab back in.
   Template_2022.reread2 <- openxlsx::read.xlsx(f, sheet = IEATools::fu_analysis_file_info$eta_fu_tab_name)
   # Check that it was read back correctly.
-  # Use expect_equivalent instead of expect_equal to ignore attributes 
+  # Use expect_equal with ignore_attr = TRUE to ignore attributes 
   # (in this case levels) that are different after reading back in.
-  expect_equivalent(Template_2022.reread2, Eta_fu_template_2022_2)
+  expect_equal(Template_2022.reread2, Eta_fu_template_2022_2, ignore_attr = TRUE)
   expect_equal(Template_2022.reread2$Machine[[9]], "Automobiles")
   expect_equal(Template_2022.reread2$Machine[[102]], "Non-energy consumption")
   expect_equal(as.character(Template_2022.reread2$Quantity[[9]]), "E.dot_machine")
@@ -421,9 +421,9 @@ test_that("write_eta_fu_template() works as expected for default year", {
   # Read the tab back in.
   Template.reread <- openxlsx::read.xlsx(f, sheet = IEATools::fu_analysis_file_info$eta_fu_tab_name)
   # Check that it was read back correctly.
-  # Use expect_equivalent instead of expect_equal to ignore attributes 
+  # Use expect_equal with ignore_attr = TRUE to ignore attributes 
   # (in this case levels) that are different after reading back in.
-  expect_equivalent(Template.reread, Eta_fu_template_default)
+  expect_equal(Template.reread, Eta_fu_template_default, ignore_attr = TRUE)
   expect_equal(Template.reread$Machine[[9]], "Diesel trucks")
   expect_equal(Template.reread$Machine[[254]], "Wood furnaces")
   expect_equal(as.character(Template.reread$Quantity[[9]]), "E.dot_machine")
@@ -444,9 +444,9 @@ test_that("write_eta_fu_template() works as expected for default year", {
   # Read the tab back in.
   Template_default.reread2 <- openxlsx::read.xlsx(f, sheet = IEATools::fu_analysis_file_info$eta_fu_tab_name)
   # Check that it was read back correctly.
-  # Use expect_equivalent instead of expect_equal to ignore attributes 
+  # Use expect_equal with ignore_attr = TRUE to ignore attributes 
   # (in this case levels) that are different after reading back in.
-  expect_equivalent(Template_default.reread2, Eta_fu_template_default_2)
+  expect_equal(Template_default.reread2, Eta_fu_template_default_2, ignore_attr = TRUE)
   expect_equal(Template_default.reread2$Machine[[9]], "Automobiles")
   expect_equal(Template_default.reread2$Machine[[102]], "Non-energy consumption")
   expect_equal(as.character(Template_default.reread2$Quantity[[9]]), "E.dot_machine")

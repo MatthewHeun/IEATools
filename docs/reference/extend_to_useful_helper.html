@@ -14,7 +14,7 @@ The calculations are identical, so we factor the calculations into this function
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.74</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.75</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,7 +75,8 @@ The calculations are identical, so we factor the calculations into this function
 <span>  from_note <span class="op">=</span> <span class="fu">RCLabels</span><span class="fu">::</span><span class="va"><a href="https://matthewheun.github.io/RCLabels/reference/from_notation.html" class="external-link">from_notation</a></span>,</span>
 <span>  add_to_U <span class="op">=</span> <span class="st">"add_to_U"</span>,</span>
 <span>  add_to_V <span class="op">=</span> <span class="st">"add_to_V"</span>,</span>
-<span>  add_to_dest <span class="op">=</span> <span class="st">"add_to_dest"</span></span>
+<span>  add_to_dest <span class="op">=</span> <span class="st">"add_to_dest"</span>,</span>
+<span>  details_fu <span class="op">=</span> <span class="st">"details_fu"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -139,15 +140,25 @@ Default is <code><a href="https://matthewheun.github.io/RCLabels/reference/from_
 <dt>add_to_dest</dt>
 <dd><p>a string name for the matrix to replace some entries previous destination matrix. Default is "repl_dest".</p></dd>
 
+
+<dt>details_fu</dt>
+<dd><p>A string name for the matrix containing detailed information about the final-to-useful extension,
+namely, final energy product, destination sector, final-to-useful machine, and useful energy product.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>a named list containing three items:
+<p>a named list containing four items:
 <code>add_to_U_f</code> (a matrix to be added to a use (<code>U</code>) matrix),
-<code>add_to_V_f</code> (a matrix to be added to a make (<code>V</code>) matrix), and
-<code>add_to_dest_mat</code> (a matrix to replace the destination matrix, typically <code>Y_f</code> or <code>U_eiou</code>).</p>
+<code>add_to_V_f</code> (a matrix to be added to a make (<code>V</code>) matrix),
+<code>add_to_dest_mat</code> (a matrix to replace the destination matrix, typically <code>Y_f</code> or <code>U_eiou</code>), and
+<code>details_fu</code> (a matrix that retails all details for
+final energy product,
+destination sector,
+final-to-useful machine, and
+useful energy product).</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -155,7 +166,7 @@ Default is <code><a href="https://matthewheun.github.io/RCLabels/reference/from_
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Matthew Heun, Emmanuel Aramendia, Zeke Marshall.</p>
+  <p></p><p>Developed by Matthew Kuperus Heun, Emmanuel Aramendia, Zeke Marshall.</p>
 </div>
 
 <div class="pkgdown-footer-right">

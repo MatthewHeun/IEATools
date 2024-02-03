@@ -32,6 +32,7 @@ extend_to_useful(
   .add_to_U_eiou = ".add_to_U_eiou",
   .add_to_V_f = ".add_to_V_f",
   .add_to_dest = ".repl_dest",
+  details_fu = "details_fu",
   .err = ".err",
   .e_bal_ok = ".e_bal_ok",
   .sep = "_",
@@ -40,7 +41,9 @@ extend_to_useful(
   U_name = IEATools::psut_cols$U,
   r_eiou_name = IEATools::psut_cols$r_eiou,
   V_name = IEATools::psut_cols$V,
-  Y_name = IEATools::psut_cols$Y
+  Y_name = IEATools::psut_cols$Y,
+  Y_fu_details_name = IEATools::psut_cols$Y_fu_details,
+  U_eiou_fu_details_name = IEATools::psut_cols$U_eiou_fu_details
 )
 }
 \arguments{
@@ -91,13 +94,15 @@ to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".}
 
 \item{.add_to_dest}{An internal matrix name for a matrix that replaces a previous energy destination. Default is ".repl_dest".}
 
+\item{details_fu}{An internal matrix name for a matrix that contains detailed information about the final-to-useful extension, namely, final energy product, destination sector, final-to-useful machine, and useful energy product.}
+
 \item{.err}{An internal matrix name for calculating energy balance errors. Default is ".err".}
 
 \item{.e_bal_ok}{An internal column name for assessing whether energy balance is within acceptable tolerances set by the \code{tol} argument. Default is ".e_bal_OK".}
 
 \item{.sep}{A separator between matrix names and \code{final} or \code{useful} indicators. Default is "_".}
 
-\item{U_eiou_name, U_feed_name, U_name, r_eiou_name, V_name, Y_name}{See \code{IEATools::psut_cols}.
+\item{U_eiou_name, U_feed_name, U_name, r_eiou_name, V_name, Y_name, Y_fu_details_name, U_eiou_fu_details_name}{See \code{IEATools::psut_cols}.
 Distinct from \code{U_feed},\code{U_eiou}, \code{U}, \code{r_eiou}, \code{V}, and \code{Y} (which can be matrices or strings),
 these variables determine the names of these matrices on output.
 Default values are taken from \code{IEATools::psut_cols}.

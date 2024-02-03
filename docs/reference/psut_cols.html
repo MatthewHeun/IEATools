@@ -14,7 +14,7 @@ throughout the IEATools package."><!-- mathjax --><script src="https://cdnjs.clo
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.74</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.75</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +69,7 @@ throughout the <code>IEATools</code> package.</p>
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A string list with 14 entries.</p><dl><dt>resources,R</dt>
+    <p>A string list with 16 entries.</p><dl><dt>resources,R</dt>
 <dd><p>The name of a column in a wide-by-matrices data frame containing resource (<code>R</code>) matrices.</p></dd>
 
 <dt>U_feed</dt>
@@ -95,6 +95,12 @@ throughout the <code>IEATools</code> package.</p>
 
 <dt>matvals</dt>
 <dd><p>The name of a column in a tidy data frame containing matrices.</p></dd>
+
+<dt>Y_fu_details</dt>
+<dd><p>The name of a column in a tidy data frame containing detailed <strong>Y_u</strong> matrices that contain the following information: final energy product, destination sector, final-to-useful machine, and useful product.</p></dd>
+
+<dt>U_eiou_fu_details</dt>
+<dd><p>The name of a column in a tidy data frame containing detailed <strong>U_EIOU_u</strong> matrices that contain the following information: final energy product, destination energy industry, final-to-useful machine, and useful product.</p></dd>
 
 
 </dl></div>
@@ -150,6 +156,12 @@ E.g., both <code>resources</code> and <code>R</code> point to the "R" column nam
 <span class="r-out co"><span class="r-pr">#&gt;</span> $matvals</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "matvals"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $Y_fu_details</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Y_fu_details"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $U_eiou_fu_details</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "U_EIOU_fu_details"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -157,7 +169,7 @@ E.g., both <code>resources</code> and <code>R</code> point to the "R" column nam
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Matthew Heun, Emmanuel Aramendia, Zeke Marshall.</p>
+  <p></p><p>Developed by Matthew Kuperus Heun, Emmanuel Aramendia, Zeke Marshall.</p>
 </div>
 
 <div class="pkgdown-footer-right">
