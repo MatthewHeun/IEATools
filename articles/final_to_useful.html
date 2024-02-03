@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.74</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.75</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,7 +75,7 @@
                         <h4 data-toc-skip class="author">Matthew Kuperus
 Heun</h4>
             
-            <h4 data-toc-skip class="date">2023-12-21</h4>
+            <h4 data-toc-skip class="date">2024-02-03</h4>
       
       
       <div class="d-none name"><code>final_to_useful.Rmd</code></div>
@@ -354,20 +354,22 @@ useful stage with the <code><a href="../reference/extend_to_useful.html">extend_
 <span><span class="va">psut_mats_useful</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stack_final_useful_df.html">stack_final_useful_df</a></span><span class="op">(</span><span class="va">psut_mats_useful</span>, <span class="va">psut_mats_final</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">psut_mats_useful</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 8</span></span>
-<span><span class="co">#&gt; Columns: 13</span></span>
-<span><span class="co">#&gt; $ Country     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GHA", "GHA", "ZAF", "ZAF", "GHA", "GHA", "ZAF", "ZAF"</span></span>
-<span><span class="co">#&gt; $ Method      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"</span></span>
-<span><span class="co">#&gt; $ Energy.type <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E", "E", "E", "E", "E", "E", "E", "E"</span></span>
-<span><span class="co">#&gt; $ Last.stage  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final", "Final", "Final", "Final", "Useful", "Useful", "U…</span></span>
-<span><span class="co">#&gt; $ Year        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1971, 2000, 1971, 2000, 1971, 2000, 1971, 2000</span></span>
-<span><span class="co">#&gt; $ Y           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 21]&gt;&gt;, &lt;&lt;matrix[13 x 20]&gt;&gt;, &lt;&lt;matrix[18 x 26…</span></span>
-<span><span class="co">#&gt; $ S_units     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[16 x 1]&gt;&gt;, &lt;&lt;matrix[18 x 1]&gt;&gt;, &lt;&lt;matrix[24 x 1]&gt;&gt;…</span></span>
-<span><span class="co">#&gt; $ R           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 8]&gt;&gt;, &lt;&lt;matrix[13 x 12]&gt;&gt;, &lt;&lt;matrix[6 x 6]&gt;&gt;,…</span></span>
-<span><span class="co">#&gt; $ U           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[8 x 5]&gt;&gt;, &lt;&lt;matrix[7 x 5]&gt;&gt;, &lt;&lt;matrix[11 x 11]&gt;&gt;,…</span></span>
-<span><span class="co">#&gt; $ U_feed      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[6 x 5]&gt;&gt;, &lt;&lt;matrix[5 x 5]&gt;&gt;, &lt;&lt;matrix[9 x 11]&gt;&gt;,…</span></span>
-<span><span class="co">#&gt; $ U_EIOU      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, …</span></span>
-<span><span class="co">#&gt; $ r_EIOU      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[8 x 5]&gt;&gt;, &lt;&lt;matrix[7 x 5]&gt;&gt;, &lt;&lt;matrix[11 x 11]&gt;&gt;…</span></span>
-<span><span class="co">#&gt; $ V           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[5 x 11]&gt;&gt;, &lt;&lt;matrix[5 x 11]&gt;&gt;, &lt;&lt;matrix[11 x 20]…</span></span></code></pre></div>
+<span><span class="co">#&gt; Columns: 15</span></span>
+<span><span class="co">#&gt; $ Country           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GHA", "GHA", "ZAF", "ZAF", "GHA", "GHA", "ZAF", "ZA…</span></span>
+<span><span class="co">#&gt; $ Method            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PC…</span></span>
+<span><span class="co">#&gt; $ Energy.type       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E", "E", "E", "E", "E", "E", "E", "E"</span></span>
+<span><span class="co">#&gt; $ Last.stage        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final", "Final", "Final", "Final", "Useful", "Usefu…</span></span>
+<span><span class="co">#&gt; $ Year              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1971, 2000, 1971, 2000, 1971, 2000, 1971, 2000</span></span>
+<span><span class="co">#&gt; $ Y                 <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 21]&gt;&gt;, &lt;&lt;matrix[13 x 20]&gt;&gt;, &lt;&lt;matrix[1…</span></span>
+<span><span class="co">#&gt; $ S_units           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[16 x 1]&gt;&gt;, &lt;&lt;matrix[18 x 1]&gt;&gt;, &lt;&lt;matrix[24 …</span></span>
+<span><span class="co">#&gt; $ R                 <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[9 x 8]&gt;&gt;, &lt;&lt;matrix[13 x 12]&gt;&gt;, &lt;&lt;matrix[6 …</span></span>
+<span><span class="co">#&gt; $ U                 <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[8 x 5]&gt;&gt;, &lt;&lt;matrix[7 x 5]&gt;&gt;, &lt;&lt;matrix[11 x…</span></span>
+<span><span class="co">#&gt; $ U_feed            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[6 x 5]&gt;&gt;, &lt;&lt;matrix[5 x 5]&gt;&gt;, &lt;&lt;matrix[9 x …</span></span>
+<span><span class="co">#&gt; $ U_EIOU            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x 2]&gt;&gt;, &lt;&lt;matrix[2 x …</span></span>
+<span><span class="co">#&gt; $ r_EIOU            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[8 x 5]&gt;&gt;, &lt;&lt;matrix[7 x 5]&gt;&gt;, &lt;&lt;matrix[11 x…</span></span>
+<span><span class="co">#&gt; $ V                 <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[5 x 11]&gt;&gt;, &lt;&lt;matrix[5 x 11]&gt;&gt;, &lt;&lt;matrix[11…</span></span>
+<span><span class="co">#&gt; $ Y_fu_details      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;NULL&gt;, &lt;NULL&gt;, &lt;NULL&gt;, &lt;NULL&gt;, &lt;&lt;matrix[23 x 21]&gt;&gt;…</span></span>
+<span><span class="co">#&gt; $ U_EIOU_fu_details <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;NULL&gt;, &lt;NULL&gt;, &lt;NULL&gt;, &lt;NULL&gt;, &lt;&lt;matrix[2 x 3]&gt;&gt;, …</span></span></code></pre></div>
 <p>Notice that several additional rows have been created in the data
 frame. The additional rows contain versions of ECC matrices wherein the
 last stage of the ECC is useful energy. Extending to the useful stage
@@ -456,7 +458,7 @@ stage of an energy conversion chain is aided by several functions in the
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Matthew Heun, Emmanuel Aramendia, Zeke Marshall.</p>
+<p>Developed by Matthew Kuperus Heun, Emmanuel Aramendia, Zeke Marshall.</p>
 </div>
 
 <div class="pkgdown-footer-right">
