@@ -14,7 +14,7 @@ to useful energy/exergy as the last stage of an energy conversion chain."><!-- m
     
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.74</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.75</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,6 +92,7 @@ to useful energy/exergy as the last stage of an energy conversion chain.</p>
 <span>  .add_to_U_eiou <span class="op">=</span> <span class="st">".add_to_U_eiou"</span>,</span>
 <span>  .add_to_V_f <span class="op">=</span> <span class="st">".add_to_V_f"</span>,</span>
 <span>  .add_to_dest <span class="op">=</span> <span class="st">".repl_dest"</span>,</span>
+<span>  details_fu <span class="op">=</span> <span class="st">"details_fu"</span>,</span>
 <span>  .err <span class="op">=</span> <span class="st">".err"</span>,</span>
 <span>  .e_bal_ok <span class="op">=</span> <span class="st">".e_bal_ok"</span>,</span>
 <span>  .sep <span class="op">=</span> <span class="st">"_"</span>,</span>
@@ -100,7 +101,9 @@ to useful energy/exergy as the last stage of an energy conversion chain.</p>
 <span>  U_name <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U</span>,</span>
 <span>  r_eiou_name <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">r_eiou</span>,</span>
 <span>  V_name <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">V</span>,</span>
-<span>  Y_name <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">Y</span></span>
+<span>  Y_name <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">Y</span>,</span>
+<span>  Y_fu_details_name <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">Y_fu_details</span>,</span>
+<span>  U_eiou_fu_details_name <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="psut_cols.html">psut_cols</a></span><span class="op">$</span><span class="va">U_eiou_fu_details</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -183,6 +186,10 @@ to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".</p></
 <dd><p>An internal matrix name for a matrix that replaces a previous energy destination. Default is ".repl_dest".</p></dd>
 
 
+<dt>details_fu</dt>
+<dd><p>An internal matrix name for a matrix that contains detailed information about the final-to-useful extension, namely, final energy product, destination sector, final-to-useful machine, and useful energy product.</p></dd>
+
+
 <dt>.err</dt>
 <dd><p>An internal matrix name for calculating energy balance errors. Default is ".err".</p></dd>
 
@@ -195,7 +202,7 @@ to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".</p></
 <dd><p>A separator between matrix names and <code>final</code> or <code>useful</code> indicators. Default is "_".</p></dd>
 
 
-<dt>U_eiou_name, U_feed_name, U_name, r_eiou_name, V_name, Y_name</dt>
+<dt>U_eiou_name, U_feed_name, U_name, r_eiou_name, V_name, Y_name, Y_fu_details_name, U_eiou_fu_details_name</dt>
 <dd><p>See <code><a href="psut_cols.html">IEATools::psut_cols</a></code>.
 Distinct from <code>U_feed</code>,<code>U_eiou</code>, <code>U</code>, <code>r_eiou</code>, <code>V</code>, and <code>Y</code> (which can be matrices or strings),
 these variables determine the names of these matrices on output.
@@ -272,17 +279,18 @@ additional diagnostic information will appear in the output: <code>.err</code> a
 <span class="r-in"><span>  <span class="fu">extend_to_useful</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">extended_to_useful</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 23</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 25</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Country Method Energy.type Last.stage  Year Y               S_units  R       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> GHA     PCM    E           Final       <span style="text-decoration: underline;">1</span>971 <span style="color: #949494;">&lt;dbl [12 × 21]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> GHA     PCM    E           Final       <span style="text-decoration: underline;">2</span>000 <span style="color: #949494;">&lt;dbl [13 × 20]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> ZAF     PCM    E           Final       <span style="text-decoration: underline;">1</span>971 <span style="color: #949494;">&lt;dbl [18 × 26]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> ZAF     PCM    E           Final       <span style="text-decoration: underline;">2</span>000 <span style="color: #949494;">&lt;dbl [21 × 43]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span> <span style="color: #949494;">&lt;dbl[…]&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: U &lt;list&gt;, U_feed &lt;list&gt;, U_EIOU &lt;list&gt;, r_EIOU &lt;list&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 17 more variables: U &lt;list&gt;, U_feed &lt;list&gt;, U_EIOU &lt;list&gt;, r_EIOU &lt;list&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   V &lt;list&gt;, C_EIOU &lt;list&gt;, C_Y &lt;list&gt;, eta.fu &lt;list&gt;, phi.u &lt;list&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   U_feed_Useful &lt;list&gt;, U_EIOU_Useful &lt;list&gt;, U_Useful &lt;list&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   r_EIOU_Useful &lt;list&gt;, V_Useful &lt;list&gt;, Y_Useful &lt;list&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   r_EIOU_Useful &lt;list&gt;, V_Useful &lt;list&gt;, Y_Useful &lt;list&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Y_fu_details &lt;list&gt;, U_EIOU_fu_details &lt;list&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -290,7 +298,7 @@ additional diagnostic information will appear in the output: <code>.err</code> a
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Matthew Heun, Emmanuel Aramendia, Zeke Marshall.</p>
+  <p></p><p>Developed by Matthew Kuperus Heun, Emmanuel Aramendia, Zeke Marshall.</p>
 </div>
 
 <div class="pkgdown-footer-right">
