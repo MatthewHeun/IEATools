@@ -8,6 +8,8 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+## IEATools 0.1.75 (2024-02-03)
+
 * `extend_to_useful_helper()` and `extend_to_useful()`
   now return additional matrices, namely
   `Y_fu_details` and `U_EIOU_fu_details`.
@@ -17,9 +19,12 @@ which always resolves to the latest release.
   the destination sector,
   the useful energy product, and
   the final-to-useful machine.
+* New tests for new features.
+    * Now at 1264 tests, all passing.
+    * Test coverage remains at 100%.
 
 
-# IEATools 0.1.74 (2023-12-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10420321.svg)](https://doi.org/10.5281/zenodo.10420321)
+## IEATools 0.1.74 (2023-12-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10420321.svg)](https://doi.org/10.5281/zenodo.10420321)
 
 * Added a statement of need to the README file.
 * No new tests.
@@ -27,7 +32,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# IEATools 0.1.73 (2023-12-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10327262.svg)](https://doi.org/10.5281/zenodo.10327262)
+## IEATools 0.1.73 (2023-12-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10327262.svg)](https://doi.org/10.5281/zenodo.10327262)
 
 * Attempt to fix Readme page on GitHub.
 * Better error messages 
@@ -38,7 +43,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# IEATools 0.1.72 (2023-12-05) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10266087.svg)](https://doi.org/10.5281/zenodo.10266087)
+## IEATools 0.1.72 (2023-12-05) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10266087.svg)](https://doi.org/10.5281/zenodo.10266087)
 
 * Fix RUS and EST Heat.
   The breakup of the Soviet Union (SUN) caused many irregularities
@@ -66,7 +71,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# IEATools 0.1.71 (2023-12-02) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10251305.svg)](https://doi.org/10.5281/zenodo.10251305)
+## IEATools 0.1.71 (2023-12-02) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10251305.svg)](https://doi.org/10.5281/zenodo.10251305)
 
 * Added code of conduct and contributing pages to documentation.
 * No new tests.
@@ -74,7 +79,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# IEATools 0.1.70 (2023-11-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10076551.svg)](https://doi.org/10.5281/zenodo.10076551)
+## IEATools 0.1.70 (2023-11-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10076551.svg)](https://doi.org/10.5281/zenodo.10076551)
 
 * Fix Australia Blast furnace gas.
   Australia's Blast furnaces have an undesirable characteristic 
@@ -94,7 +99,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100%.
 
 
-# IEATools 0.1.69 (2023-11-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10075549.svg)](https://doi.org/10.5281/zenodo.10075549)
+## IEATools 0.1.69 (2023-11-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10075549.svg)](https://doi.org/10.5281/zenodo.10075549)
 
 * The constant `nonenergy_use` is now aligned with IEA definitions for 
   Non-energy use products. 
@@ -130,7 +135,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.68 (2023-08-18) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8264201.svg)](https://doi.org/10.5281/zenodo.8264201)
+## IEATools 0.1.68 (2023-08-18) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8264201.svg)](https://doi.org/10.5281/zenodo.8264201)
 
 * Added note about permission to use IEA data to README.Rmd file.
 * Zenodo DOI now used in references.
@@ -141,7 +146,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.67 (2023-05-16) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7942864.svg)](https://doi.org/10.5281/zenodo.7942864)
+## IEATools 0.1.67 (2023-05-16) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7942864.svg)](https://doi.org/10.5281/zenodo.7942864)
 
 * Update website.
 * Renamed `matrix.class` argument to `matrix_class`.
@@ -150,7 +155,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.66 (2023-05-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7894179.svg)](https://doi.org/10.5281/zenodo.7894179)
+## IEATools 0.1.66 (2023-05-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7894179.svg)](https://doi.org/10.5281/zenodo.7894179)
 
 * Move to latest version of GitHub test coverage workflow.
 * No new tests.
@@ -158,7 +163,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.65 (2023-04-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7872573.svg)](https://doi.org/10.5281/zenodo.7872573)
+## IEATools 0.1.65 (2023-04-27) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7872573.svg)](https://doi.org/10.5281/zenodo.7872573)
 
 * Added new values to `IEATools::fap_flows`
   to accommodate detailed "Non-energy use in xxxxx"
@@ -194,7 +199,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.64 (2023-03-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7714342.svg)](https://doi.org/10.5281/zenodo.7714342)
+## IEATools 0.1.64 (2023-03-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7714342.svg)](https://doi.org/10.5281/zenodo.7714342)
 
 * New boolean argument `specify_non_energy_flows` 
   on `load_tidy_iea_df()` enables specifying Non-energy use flows 
@@ -237,7 +242,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.63 (2022-04-01) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6407190.svg)](https://doi.org/10.5281/zenodo.6407190)
+## IEATools 0.1.63 (2022-04-01) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6407190.svg)](https://doi.org/10.5281/zenodo.6407190)
 
 * Added `non_energy_flows` to `fd_sectors` 
   to conform to IEA approach to calculating final energy.
@@ -268,7 +273,7 @@ which always resolves to the latest release.
   would fail in the workflow.
 
 
-# IEATools 0.1.62 (2021-10-12) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5565349.svg)](https://doi.org/10.5281/zenodo.5565349)
+## IEATools 0.1.62 (2021-10-12) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5565349.svg)](https://doi.org/10.5281/zenodo.5565349)
 
 * `form_eta_fu_phi_u_vecs()` now gives only the product name 
   as the row name of the phi vectors, but
@@ -296,7 +301,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.61 (2021-09-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5566416.svg)](https://doi.org/10.5281/zenodo.5566416)
+## IEATools 0.1.61 (2021-09-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5566416.svg)](https://doi.org/10.5281/zenodo.5566416)
 
 * Added descriptive error messages when unknown `Flow.aggregation.point`, 
   `Flow`, or `Product` are encountered in `arrange_iea_fu_allocation_template()`.
@@ -308,7 +313,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.60 (2021-09-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5476175.svg)](https://doi.org/10.5281/zenodo.5476175)
+## IEATools 0.1.60 (2021-09-06) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5476175.svg)](https://doi.org/10.5281/zenodo.5476175)
 
 * No longer discriminating by sign when summing EIOU after 
   routing Pumped storage plants and 
@@ -325,7 +330,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.59 (2021-08-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5228303.svg)](https://doi.org/10.5281/zenodo.5228303)
+## IEATools 0.1.59 (2021-08-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5228303.svg)](https://doi.org/10.5281/zenodo.5228303)
 
 * `load_tidy_iea_df()` has new arguments which are passed to `use_iso_coutries()`, 
   thereby exposing the new functionality of `use_iso_coutries()` to `load_tidy_iea_df()`.
@@ -340,13 +345,13 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.58 (2021-08-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226527.svg)](https://doi.org/10.5281/zenodo.5226527)
+## IEATools 0.1.58 (2021-08-20) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5226527.svg)](https://doi.org/10.5281/zenodo.5226527)
 
 * Changed "Epsilon" matrix name to "Balancing".
   The old name was causing issues in `ECCTools`.
   
 
-# IEATools 0.1.57 (2021-08-19) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5222003.svg)](https://doi.org/10.5281/zenodo.5222003)
+## IEATools 0.1.57 (2021-08-19) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5222003.svg)](https://doi.org/10.5281/zenodo.5222003)
 
 * Fixed a bug where missing EIOU was not properly detected.
   It could be missing or `NULL`, but `NULL` was not detected.
@@ -355,7 +360,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.56 (2021-08-18) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5217278.svg)](https://doi.org/10.5281/zenodo.5217278)
+## IEATools 0.1.56 (2021-08-18) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5217278.svg)](https://doi.org/10.5281/zenodo.5217278)
 
 * `extend_to_useful()` now robust to cases where there is no EIOU,
   thanks to now using `matsindf::matsindf_apply()`.
@@ -387,7 +392,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.55 (2021-07-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5119070.svg)](https://doi.org/10.5281/zenodo.5119070)
+## IEATools 0.1.55 (2021-07-21) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5119070.svg)](https://doi.org/10.5281/zenodo.5119070)
 
 * Modifications to code and tests
   to accommodate World marine bunkers and World aviation bunkers being their own country.
@@ -396,7 +401,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.54 (2021-07-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5086372.svg)](https://doi.org/10.5281/zenodo.5086372)
+## IEATools 0.1.54 (2021-07-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5086372.svg)](https://doi.org/10.5281/zenodo.5086372)
 
 * Modifications to enable per-machine
   final-to-useful efficiency data.
@@ -405,7 +410,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.53 (2021-06-08)
+## IEATools 0.1.53 (2021-06-08)
 
 * The "Oil and gas extraction" activity is split in "Oil extraction",
   which extracts oil products, and "Natural gas extraction", which extracts natural gas.
@@ -414,7 +419,7 @@ which always resolves to the latest release.
   "Oil extraction" and for the "Natural gas extraction" activities.
 
 
-# IEATools 0.1.52 (2021-05-07)
+## IEATools 0.1.52 (2021-05-07)
 
 * Deleted an efficiency for LPG stoves in Ghana in 1971
   that should not have been in the GH-ZA-Efficiency-sample-2019.xlsx file.
@@ -425,7 +430,7 @@ which always resolves to the latest release.
   and transforms them into actual Products.
 
 
-# IEATools 0.1.51 (2021-04-11)
+## IEATools 0.1.51 (2021-04-11)
 
 * Transition away from Travis to GitHub actions for continuous integration testing.
 * No new tests.
@@ -433,7 +438,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.50 (2021-03-31)
+## IEATools 0.1.50 (2021-03-31)
 
 * Now more robust support for tidy (instead of wide-by-year) format efficiency data.
 * Now more arguments are passed from top-level functions to lower-level functions,
@@ -444,18 +449,18 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.49 (2021-03-17)
+## IEATools 0.1.49 (2021-03-17)
 
 * New constants: `industry_net_flows`, `transport_domestic_flows`, `fd_sectors`, `eiou_flows`, and `prim_agg_flows`
 * Improving documentation of constants.
 
 
-# IEATools 0.1.48 (2021-02-18)
+## IEATools 0.1.48 (2021-02-18)
 
 * Minor issue fixed regarding the `coal_and_coal_products` constant.
 
 
-# IEATools 0.1.47 (2021-02-16)
+## IEATools 0.1.47 (2021-02-16)
 
 * New `specify_all()` function coded, so that it now splits non-specified
   industries, splits the IEA "Own use in electricity, CHP and heat plants"
@@ -473,7 +478,7 @@ which always resolves to the latest release.
   has a `matnames` column.
 
 
-# IEATools 0.1.46 (2021-02-01)
+## IEATools 0.1.46 (2021-02-01)
 
 * `calc_tidy_iea_df_balances` function updated
   so that it also accounts for balancing flows 
@@ -495,13 +500,13 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.45 (2020-12-28)
+## IEATools 0.1.45 (2020-12-28)
 
 * Bug in `aggregate_regions()` hotfixed.
 * Still 661 tests, coverage remains at 100%.
 
 
-# IEATools 0.1.44 (2020-12-08)
+## IEATools 0.1.44 (2020-12-08)
 
 * Moved `primary_aggregates_IEA()` and `finaldemand_aggregates_IEA()` 
   from the `Recca` package to `IEATools`.
@@ -514,7 +519,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.43 (2020-12-05)
+## IEATools 0.1.43 (2020-12-05)
 
 * `extend_to_useful()` now creates `r_EIOU` matrices
 * New tests for the new feature.
@@ -522,7 +527,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.42 (2020-11-30)
+## IEATools 0.1.42 (2020-11-30)
 
 * `prep_psut()` now creates `r_EIOU` matrices
 * New tests for the new feature.
@@ -530,14 +535,14 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.41 (2020-11-25)
+## IEATools 0.1.41 (2020-11-25)
 
 * Cleaned up (removed) unused arguments to `final_to_useful()`.
 * Still at 656 tests, all passing.
 * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.40 (2020-11-23)
+## IEATools 0.1.40 (2020-11-23)
 
 * Now setting row name of column sums in `extend_to_useful_helper()`
   to get around a bug that occurs when a 1x1 matrix is column summed.
@@ -550,7 +555,7 @@ which always resolves to the latest release.
 * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.39 (2020-11-19)
+## IEATools 0.1.39 (2020-11-19)
 
 * Fixed a dormant bug in `form_eta_fu_phi_u_vecs()` exposed by new code.
 * `form_eta_fu_phi_u_vecs()` now accepts tidy data frames on input.
@@ -561,7 +566,7 @@ which always resolves to the latest release.
 * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.38 (2020-11-19)
+## IEATools 0.1.38 (2020-11-19)
 
 * `prep_psut()` now returns a column for the `U` matrix 
   in addition to `U_feed` and `U_EIOU` columns.
@@ -572,7 +577,7 @@ which always resolves to the latest release.
 * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.37 (2020-10-07)
+## IEATools 0.1.37 (2020-10-07)
 
 * New `aggregate_regions()` function that enables regional aggregation
   of a `.tidy_iea_df` based on a user-defined aggregation table.
@@ -583,7 +588,7 @@ which always resolves to the latest release.
 * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.36 (2020-09-10)
+## IEATools 0.1.36 (2020-09-10)
 
 * Fixed bug where missing eta_fu info caused failure.
   Needed to allow for an empty `eta_fu_table` in `complete_eta_fu_table()`.
@@ -592,7 +597,7 @@ which always resolves to the latest release.
     * Test coverage remains at 100 %.
 
 
-# IEATools 0.1.35 (2020-08-26)
+## IEATools 0.1.35 (2020-08-26)
 
 * First version that works with full SEAPSUT workflow.
 * Removed an erroneous check for
@@ -603,12 +608,12 @@ which always resolves to the latest release.
 * Added spell checking to build process.
 
 
-# IEATools 0.1.34 (2020-08-19)
+## IEATools 0.1.34 (2020-08-19)
 
 * Updated documentation.
 
 
-# IEATools 0.1.33 (2020-08-17)
+## IEATools 0.1.33 (2020-08-17)
 
 * New tests for new features and old bugs.
     * Now at 634 tests, all passing.
@@ -620,7 +625,7 @@ which always resolves to the latest release.
 * Fixed bugs with completion code.
 
 
-# IEATools 0.1.32 (2020-08-13)
+## IEATools 0.1.32 (2020-08-13)
 
 * `eta_fu_template()` now accepts tidy data frames.
 * New tests for new features and old bugs.
@@ -630,7 +635,7 @@ which always resolves to the latest release.
   entries are identical when `Machine` is `Non-energy`.
 
 
-# IEATools 0.1.31 (2020-07-29)
+## IEATools 0.1.31 (2020-07-29)
 
 * Adjusted tests for errors instead of warnings.
     * Now at 610 tests, all passing.
@@ -640,7 +645,7 @@ which always resolves to the latest release.
 * Warnings are now errors with *much* more descriptive information.
 
 
-# IEATools 0.1.30 (2020-07-24)
+## IEATools 0.1.30 (2020-07-24)
 
 * New tests for new features and old bugs.
     * Now up to 611 tests, all passing.
@@ -655,7 +660,7 @@ which always resolves to the latest release.
   enable elimination of duplicated code in several places.
 
 
-# IEATools 0.1.29 (2020-07-21)
+## IEATools 0.1.29 (2020-07-21)
 
 * New tests for new features and old bugs.
     * Now up to 606 tests, all passing.
@@ -673,14 +678,14 @@ which always resolves to the latest release.
 * Added constant `IEATools::fu_analysis_file_info`.
 
 
-# IEATools 0.1.28 (2020-07-02)
+## IEATools 0.1.28 (2020-07-02)
 
 * "Memo: Greenland", "Memo: Palestinian Authority", and "Memo: Uganda"
   are no longer included in constant `IEATools::aggregation_regions`, 
   because these regions are _not_ aggregations.
 
 
-# IEATools 0.1.27 (2020-06-29)
+## IEATools 0.1.27 (2020-06-29)
 
 * New tests for new features.
     * Now up to 567 tests, all passing.
@@ -689,7 +694,7 @@ which always resolves to the latest release.
   that removes known aggregation regions from an IEA extended energy balances data frame.
 
 
-# IEATools 0.1.26 (2020-06-27)
+## IEATools 0.1.26 (2020-06-27)
 
 * New tests for new features.
     * Now up to 561 tests, all passing.
@@ -703,12 +708,12 @@ which always resolves to the latest release.
 * Non-energy use no longer excluded when generating FU Allocation templates.
 
 
-# IEATools 0.1.25 (2020-06-19)
+## IEATools 0.1.25 (2020-06-19)
 
 * "CHN" is now a synonym for "People's Republic of China".
 
 
-# IEATools 0.1.24 (2020-06-17)
+## IEATools 0.1.24 (2020-06-17)
 
 * Fixed a bug where "China (P.R. of China and Hong Kong, China)" 
   was not being coded to "CHN" in `use_iso_countries()`.
@@ -719,7 +724,7 @@ which always resolves to the latest release.
   Another option would be to code it as "CHNHKG".
 
 
-# IEATools 0.1.23 (2020-06-17)
+## IEATools 0.1.23 (2020-06-17)
 
 * Fixed issue #5 from the PFU-Database repository.
   The issue involved `IEATools::eta_fu_template()`.
@@ -727,13 +732,13 @@ which always resolves to the latest release.
   duplicate "KE" products in `eu_product_sort_order`.
   
 
-# IEATools 0.1.22 (2020-06-10)
+## IEATools 0.1.22 (2020-06-10)
 
 * Fixed a bug in `despecify_col()`.
   `resources` and `production` were not correctly using the `tpes_flows` object.
 
 
-# IEATools 0.1.21 (2020-05-14)
+## IEATools 0.1.21 (2020-05-14)
 
 * Bug fixes in `extend_to_useful()`. 
   Importantly, an energy balance check is now performed 
@@ -741,7 +746,7 @@ which always resolves to the latest release.
   a warning is emitted if the energy balance check fails.
 
 
-# IEATools 0.1.20 (2020-05-01)
+## IEATools 0.1.20 (2020-05-01)
 
 * Added additional tests for bug fixes and new features.
     * Now up to 500 tests, all passing.
@@ -768,7 +773,7 @@ which always resolves to the latest release.
   `paren_to_arrow()`, `arrow_to_paren()`, and `switch_notation()`.
 
 
-# IEATools 0.1.19 (2020-04-01)
+## IEATools 0.1.19 (2020-04-01)
 
 * New function `form_eta_fu_phi_u_vecs()` which 
   creates column vectors of final-to-useful efficiencies (eta_fu)
@@ -779,14 +784,14 @@ which always resolves to the latest release.
   Code coverage is back up to 100 % for testing.
 
 
-# IEATools 0.1.18 (2020-03-31)
+## IEATools 0.1.18 (2020-03-31)
 
 * New function `form_C_mats()` which makes a data frame of C matrices 
   (a.k.a. final-to-useful allocation matrices) and metadata 
   from an FU Allocation table.
 
 
-# IEATools 0.1.17 (2020-03-25)
+## IEATools 0.1.17 (2020-03-25)
 
 * Added several new member objects to standard names across the package:
     + `industry_flows`
@@ -800,7 +805,7 @@ which always resolves to the latest release.
   Thus, "LTC.15.C" is now accepted and parses correctly.
 
 
-# IEATools 0.1.16 (2020-03-24)
+## IEATools 0.1.16 (2020-03-24)
 
 * Now up to 444 tests, which all pass.
 * `iea_file_OK()` now works on the 2018 IEA extended energy balance data.
@@ -816,7 +821,7 @@ which always resolves to the latest release.
 * Added names to all constants for easier programming.
 
 
-# IEATools 0.1.15 (2020-03-16)
+## IEATools 0.1.15 (2020-03-16)
 
 * Now up to 429 tests!
 * Added a `fix_iea_data` vignette.  See [Fixes for IEA Data](https://matthewheun.github.io/IEATools/articles/fix_iea_data.html).
@@ -841,7 +846,7 @@ which always resolves to the latest release.
   in the years 1991--1999.
 
 
-# IEATools 0.1.14 (2020-03-11)
+## IEATools 0.1.14 (2020-03-11)
 
 * Fixed an issue with argument names: overwrite --> overwrite_file. 
   The change was made in the `IEATools` package develop branch
@@ -854,7 +859,7 @@ which always resolves to the latest release.
   This capability is in development and not yet working.
 
 
-# IEATools 0.1.13 (2020-03-08)
+## IEATools 0.1.13 (2020-03-08)
 
 * Added template tests for both 2018 and 2019.
 * Added new sample allocation and F-->U efficiency tables
@@ -900,7 +905,7 @@ which always resolves to the latest release.
   to protect commas.
 
 
-# IEATools 0.1.12 (2020-02-26)
+## IEATools 0.1.12 (2020-02-26)
 
 * `iea_df()` now reads files with a clean header line.
 * Improved documentation on the energy balance functions, 
@@ -908,13 +913,13 @@ which always resolves to the latest release.
   where clarifying examples are now provided.
 
 
-# IEATools 0.1.11 (2020-02-14)
+## IEATools 0.1.11 (2020-02-14)
 
 * `iea_df()` now deletes columns that end with `estimated_year`, whose default value is "E".
   This feature allows us to process IEA data files with column names such as "2014E".
 
 
-# IEATools 0.1.10 (2020-01-22)
+## IEATools 0.1.10 (2020-01-22)
 
 * Integrated with [codecov.io](http://www.codecov.io) by adding `codecov.yml` file to repository.
 * Integrated with Travis by adding `.travis.yml` file to repository.
@@ -925,12 +930,12 @@ which always resolves to the latest release.
   And by adjusting the regex strings in `extract_TK()`.
 
 
-# IEATools 0.1.9 (2020-01-15)
+## IEATools 0.1.9 (2020-01-15)
 
 * Added GitHub Pages website.
 
 
-# IEATools 0.1.8 (2019-07-24)
+## IEATools 0.1.8 (2019-07-24)
 
 * Efficiency template now includes energy flows into final-to-useful machines for each year,
   indicating to analysts which years need no efficiency or exergy-to-energy ratio.
@@ -941,7 +946,7 @@ which always resolves to the latest release.
   Default is "useful_energy_type".
   
 
-# IEATools 0.1.7 (2019-04-18)
+## IEATools 0.1.7 (2019-04-18)
 
 * Allocation template now sorting rows in IEA order.
 * All specified primary flows now consumed somewhere in the ECC.
@@ -961,7 +966,7 @@ which always resolves to the latest release.
   inputs and outputs were netted together.
 
 
-# IEATools 0.1.6 (2019-04-06)
+## IEATools 0.1.6 (2019-04-06)
 
 * Updated all three vignettes to reflect the new functions and demonstrate their use.
 * New function `augment_iea_df()` now removes ` (energy)`, ` (transf.)`, and ` (transformation)` suffixes 
@@ -981,31 +986,31 @@ which always resolves to the latest release.
 * Added function to create an S_units matrix from tidy data.
 
 
-# IEAData 0.1.5 (2018-08-10)
+## IEAData 0.1.5 (2018-08-10)
 
 * Trying again. Doesn't seem like data were pushed to GitHub.
 
 
-# IEAData 0.1.4 (2018-08-10)
+## IEAData 0.1.4 (2018-08-10)
 
 * Now includes "World" as a country.
 
 
-# IEAData 0.1.3 (2018-07-29)
+## IEAData 0.1.3 (2018-07-29)
 
 * New version of FixedHNFuels.tsv file from Noah Ver Beek.
 
 
-# IEAData 0.1.2 (2018-07-27)
+## IEAData 0.1.2 (2018-07-27)
 
 * Fixed bug in which data are replaced for Honduras.
 
 
-# IEAData 0.1.1 (2018-07-27)
+## IEAData 0.1.1 (2018-07-27)
 
 * Added fixes for Honduras data from Noah Ver Beek.
 
 
-# IEAData 0.1.0 (2018-05-25)
+## IEAData 0.1.0 (2018-05-25)
 
 * Initial release.
