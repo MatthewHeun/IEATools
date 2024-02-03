@@ -8,6 +8,8 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+# IEATools 0.1.74 (2024-02-03)
+
 * `extend_to_useful_helper()` and `extend_to_useful()`
   now return additional matrices, namely
   `Y_fu_details` and `U_EIOU_fu_details`.
