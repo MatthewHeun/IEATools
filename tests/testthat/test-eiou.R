@@ -71,7 +71,7 @@ test_that("route_pumped_storage() no longer discriminates +/-", {
   expect_equal(nrow(routed), 2)
   expect_equal(routed$FlowAggregationPoint, c("Energy industry own use", "Energy industry own use"))
   expect_equal(routed$Flow, c("Main activity producer electricity plants", "Main activity producer electricity plants"))
-  expect_equal(routed$E.dot, c(-22, -18))
+  expect_equal(routed$Edot, c(-22, -18))
 })
 
 

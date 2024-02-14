@@ -8,6 +8,13 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+
+* Change names of columns to avoid PostgreSQL 
+  database conflicts. 
+  PostgreSQL doesn't like column names containing "."
+  because "." is the separator for "schema.table".
+
+
 ## IEATools 0.1.75 (2024-02-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10613604.svg)](https://doi.org/10.5281/zenodo.10613604)
 
 * `extend_to_useful_helper()` and `extend_to_useful()`

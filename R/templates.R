@@ -1106,7 +1106,7 @@ eta_fu_template <- function(.fu_allocations,
 #' @param overwrite_file a logical telling whether to overwrite a file, if it already exists. Default is `FALSE`.
 #' @param overwrite_fu_eta_tab a logical telling whether to overwrite the final-to-useful efficiency tab, if it already exists. Default is `FALSE`.
 #' @param eta_fu the name of the final-to-useful efficiency rows in `.eta_fu_template`. Default is "eta.fu".
-#' @param e_dot_machine a string identifying energy flow into final-to-useful machines. Default is "E.dot_machine".
+#' @param e_dot_machine a string identifying energy flow into final-to-useful machines. Default is "Edot_machine".
 #' @param e_dot_machine_perc a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine \[%\]".
 #' @param maximum_values a string identifying the maximum values column in the outgoing template. Default is "Maximum.values".
 #' @param header_row_font_color a hex string representing the font color for the header row in the Excel file that is written by this function.

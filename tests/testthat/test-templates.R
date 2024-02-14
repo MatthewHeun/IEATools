@@ -155,7 +155,7 @@ test_that("eta_fu_template() works as expected for 2021 data", {
     eta_fu_template()
   expect_equal(Eta_fu_template_2021$Machine[[1]], "Automobiles")
   expect_equal(Eta_fu_template_2021$Machine[[nrow(Eta_fu_template_2021)]], "Non-energy consumption")
-  expect_equal(as.character(Eta_fu_template_2021$Quantity[[1]]), "E.dot_machine")
+  expect_equal(as.character(Eta_fu_template_2021$Quantity[[1]]), "Edot_machine")
   expect_equal(as.character(Eta_fu_template_2021$Quantity[[nrow(Eta_fu_template_2021)]]), "phi.u")
   
   eu_products <- Eta_fu_template_2021$Eu.product %>% unique() %>% as.character()
@@ -170,7 +170,7 @@ test_that("eta_fu_template() works as expected for 2021 data", {
     eta_fu_template(sort_by = "importance")
   expect_equal(Eta_fu_template_2021_2$Machine[[1]], "Wood cookstoves")
   expect_equal(Eta_fu_template_2021_2$Machine[[nrow(Eta_fu_template_2021_2)]], "Gas heaters")
-  expect_equal(as.character(Eta_fu_template_2021_2$Quantity[[1]]), "E.dot_machine")
+  expect_equal(as.character(Eta_fu_template_2021_2$Quantity[[1]]), "Edot_machine")
   expect_equal(as.character(Eta_fu_template_2021_2$Quantity[[nrow(Eta_fu_template_2021_2)]]), "phi.u")
   
   eu_products2 <- Eta_fu_template_2021_2$Eu.product %>% unique() %>% as.character()
@@ -189,7 +189,7 @@ test_that("eta_fu_template() works as expected for 2022 data", {
     eta_fu_template()
   expect_equal(Eta_fu_template_2022$Machine[[1]], "Automobiles")
   expect_equal(Eta_fu_template_2022$Machine[[nrow(Eta_fu_template_2022)]], "Non-energy consumption")
-  expect_equal(as.character(Eta_fu_template_2022$Quantity[[1]]), "E.dot_machine")
+  expect_equal(as.character(Eta_fu_template_2022$Quantity[[1]]), "Edot_machine")
   expect_equal(as.character(Eta_fu_template_2022$Quantity[[nrow(Eta_fu_template_2022)]]), "phi.u")
   
   eu_products <- Eta_fu_template_2022$Eu.product %>% unique() %>% as.character()
@@ -204,7 +204,7 @@ test_that("eta_fu_template() works as expected for 2022 data", {
     eta_fu_template(sort_by = "importance")
   expect_equal(Eta_fu_template_2022_2$Machine[[1]], "Wood cookstoves")
   expect_equal(Eta_fu_template_2022_2$Machine[[nrow(Eta_fu_template_2022_2)]], "Gas heaters")
-  expect_equal(as.character(Eta_fu_template_2022_2$Quantity[[1]]), "E.dot_machine")
+  expect_equal(as.character(Eta_fu_template_2022_2$Quantity[[1]]), "Edot_machine")
   expect_equal(as.character(Eta_fu_template_2022_2$Quantity[[nrow(Eta_fu_template_2022_2)]]), "phi.u")
   
   eu_products2 <- Eta_fu_template_2022_2$Eu.product %>% unique() %>% as.character()
@@ -230,7 +230,7 @@ test_that("eta_fu_template() works with tidy fu allocation data for 2021", {
   # These tests are same as the tests in the previous test function.
   expect_equal(Eta_fu_template_2021$Machine[[1]], "Automobiles")
   expect_equal(Eta_fu_template_2021$Machine[[nrow(Eta_fu_template_2021)]], "Non-energy consumption")
-  expect_equal(as.character(Eta_fu_template_2021$Quantity[[1]]), "E.dot_machine")
+  expect_equal(as.character(Eta_fu_template_2021$Quantity[[1]]), "Edot_machine")
   expect_equal(as.character(Eta_fu_template_2021$Quantity[[nrow(Eta_fu_template_2021)]]), "phi.u")
   
   eu_products <- Eta_fu_template_2021$Eu.product %>% unique() %>% as.character()
@@ -253,7 +253,7 @@ test_that("eta_fu_template() works with tidy data from the default year", {
   # These tests are same as the tests in the previous test function.
   expect_equal(Eta_fu_template$Machine[[1]], "Automobiles")
   expect_equal(Eta_fu_template$Machine[[nrow(Eta_fu_template)]], "Non-energy consumption")
-  expect_equal(as.character(Eta_fu_template$Quantity[[1]]), "E.dot_machine")
+  expect_equal(as.character(Eta_fu_template$Quantity[[1]]), "Edot_machine")
   expect_equal(as.character(Eta_fu_template$Quantity[[nrow(Eta_fu_template)]]), "phi.u")
   
   eu_products <- Eta_fu_template$Eu.product %>% unique() %>% as.character()
@@ -282,8 +282,8 @@ test_that("write_eta_fu_template() works as expected for 2021 data", {
   expect_equal(Template.reread, Eta_fu_template_2021, ignore_attr = TRUE)
   expect_equal(Template.reread$Machine[[9]], "Diesel trucks")
   expect_equal(Template.reread$Machine[[261]], "Kerosene stoves")
-  expect_equal(as.character(Template.reread$Quantity[[9]]), "E.dot_machine")
-  expect_equal(as.character(Template.reread$Quantity[[262]]), "E.dot_machine [%]")
+  expect_equal(as.character(Template.reread$Quantity[[9]]), "Edot_machine")
+  expect_equal(as.character(Template.reread$Quantity[[262]]), "Edot_machine [%]")
   
   # Now try to write it again.
   expect_true(file.exists(f))
@@ -322,8 +322,8 @@ test_that("write_eta_fu_template() works as expected for 2021 data", {
   expect_equal(Template_2021.reread2, Eta_fu_template_2021_2, ignore_attr = TRUE)
   expect_equal(Template_2021.reread2$Machine[[9]], "Automobiles")
   expect_equal(Template_2021.reread2$Machine[[261]], "Oil furnaces")
-  expect_equal(as.character(Template_2021.reread2$Quantity[[9]]), "E.dot_machine")
-  expect_equal(as.character(Template_2021.reread2$Quantity[[262]]), "E.dot_machine [%]")
+  expect_equal(as.character(Template_2021.reread2$Quantity[[9]]), "Edot_machine")
+  expect_equal(as.character(Template_2021.reread2$Quantity[[262]]), "Edot_machine [%]")
   
   # Now try to write it again. 
   expect_true(file.exists(f))
@@ -377,8 +377,8 @@ test_that("write_eta_fu_template() works as expected for 2022 data", {
   expect_equal(Template.reread, Eta_fu_template_2022, ignore_attr = TRUE)
   expect_equal(Template.reread$Machine[[9]], "Diesel trucks")
   expect_equal(Template.reread$Machine[[254]], "Wood furnaces")
-  expect_equal(as.character(Template.reread$Quantity[[9]]), "E.dot_machine")
-  expect_equal(as.character(Template.reread$Quantity[[254]]), "E.dot_machine [%]")
+  expect_equal(as.character(Template.reread$Quantity[[9]]), "Edot_machine")
+  expect_equal(as.character(Template.reread$Quantity[[254]]), "Edot_machine [%]")
   
   # Clean up
   if (file.exists(f)) {
@@ -400,8 +400,8 @@ test_that("write_eta_fu_template() works as expected for 2022 data", {
   expect_equal(Template_2022.reread2, Eta_fu_template_2022_2, ignore_attr = TRUE)
   expect_equal(Template_2022.reread2$Machine[[9]], "Automobiles")
   expect_equal(Template_2022.reread2$Machine[[102]], "Non-energy consumption")
-  expect_equal(as.character(Template_2022.reread2$Quantity[[9]]), "E.dot_machine")
-  expect_equal(as.character(Template_2022.reread2$Quantity[[102]]), "E.dot_machine [%]")
+  expect_equal(as.character(Template_2022.reread2$Quantity[[9]]), "Edot_machine")
+  expect_equal(as.character(Template_2022.reread2$Quantity[[102]]), "Edot_machine [%]")
   
   # Clean up
   if (file.exists(f)) {
@@ -426,8 +426,8 @@ test_that("write_eta_fu_template() works as expected for default year", {
   expect_equal(Template.reread, Eta_fu_template_default, ignore_attr = TRUE)
   expect_equal(Template.reread$Machine[[9]], "Diesel trucks")
   expect_equal(Template.reread$Machine[[254]], "Wood furnaces")
-  expect_equal(as.character(Template.reread$Quantity[[9]]), "E.dot_machine")
-  expect_equal(as.character(Template.reread$Quantity[[254]]), "E.dot_machine [%]")
+  expect_equal(as.character(Template.reread$Quantity[[9]]), "Edot_machine")
+  expect_equal(as.character(Template.reread$Quantity[[254]]), "Edot_machine [%]")
   
   # Clean up
   if (file.exists(f)) {
@@ -449,8 +449,8 @@ test_that("write_eta_fu_template() works as expected for default year", {
   expect_equal(Template_default.reread2, Eta_fu_template_default_2, ignore_attr = TRUE)
   expect_equal(Template_default.reread2$Machine[[9]], "Automobiles")
   expect_equal(Template_default.reread2$Machine[[102]], "Non-energy consumption")
-  expect_equal(as.character(Template_default.reread2$Quantity[[9]]), "E.dot_machine")
-  expect_equal(as.character(Template_default.reread2$Quantity[[102]]), "E.dot_machine [%]")
+  expect_equal(as.character(Template_default.reread2$Quantity[[9]]), "Edot_machine")
+  expect_equal(as.character(Template_default.reread2$Quantity[[102]]), "Edot_machine [%]")
   
   # Clean up
   if (file.exists(f)) {

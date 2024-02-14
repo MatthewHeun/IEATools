@@ -153,7 +153,7 @@ Specific_primary_production %>%
   as.data.frame()
 Specific_primary_production %>%
   filter(FlowAggregationPoint == "Energy industry own use" ) %>%
-  select(Country, Year, Flow, Product, E.dot, matnames) %>%
+  select(Country, Year, Flow, Product, Edot, matnames) %>%
   as.data.frame()
 ```
 
@@ -343,8 +343,8 @@ on the value of the `type` argument.
 # The included data sets to not have any transformation process sinks or sources.
 # Demonstrate with a made-up data set.
 data.frame(Flow = c("Automobiles", "Automobiles", "Furnaces"),
-                   E.dot = c(-1, 1, 2),
-                   stringsAsFactors = FALSE) %>%
+           Edot = c(-1, 1, 2),
+           stringsAsFactors = FALSE) %>%
   dplyr::mutate(
     Country = "A country",
     FlowAggregationPoint = "Transformation processes",
@@ -377,7 +377,7 @@ DF <- data.frame(
   Flow = c("Automobiles", "Automobiles", "Furnaces",
            "Non-energy use industry/transformation/energy"),
   Product = c("Petrol", "MD", "Coal", "Coal"),
-  E.dot = c(-1, 1, -2, 8),
+  Edot = c(-1, 1, -2, 8),
   stringsAsFactors = FALSE
 ) %>%
   mutate(

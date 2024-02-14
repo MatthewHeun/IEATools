@@ -43,7 +43,7 @@ write_eta_fu_template(
 
 \item{eta_fu}{the name of the final-to-useful efficiency rows in \code{.eta_fu_template}. Default is "eta.fu".}
 
-\item{e_dot_machine}{a string identifying energy flow into final-to-useful machines. Default is "E.dot_machine".}
+\item{e_dot_machine}{a string identifying energy flow into final-to-useful machines. Default is "Edot_machine".}
 
 \item{e_dot_machine_perc}{a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine [\%]".}
 

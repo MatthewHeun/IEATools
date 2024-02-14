@@ -38,6 +38,6 @@ library(dplyr)
 load_tidy_iea_df() \%>\% 
   specify_all() \%>\% 
   remove_suffix_specifications(col = "Flow", unsuffixed_col = "clean_Flow") \%>\% 
-  select(Flow, Product, E.dot, clean_Flow) \%>\% 
+  select(Flow, Product, Edot, clean_Flow) \%>\% 
   filter(endsWith(Flow, RCLabels::bracket_notation[["suff_end"]]))
 }

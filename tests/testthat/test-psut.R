@@ -35,24 +35,24 @@ test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_fl
   # Exports
   expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Exports")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
   # International marine bunkers
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   # International aviation bunkers
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   # Stock changes
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   # Transformation processes
-  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Transformation processes") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Transformation processes") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Transformation processes") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Transformation processes") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   # EIOU
-  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Energy industry own use") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_EIOU") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Energy industry own use") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_EIOU") %>% all())
   # Consumption
   expect_true(With_matnames %>% dplyr::filter(startsWith(LedgerSide, "Consumption")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
   # Transfers
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   
   With_matnames <- load_tidy_iea_df() %>% 
     specify_all() %>% 
@@ -110,24 +110,24 @@ test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_fl
   # Exports
   expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Exports")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
   # International marine bunkers
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
   # International aviation bunkers
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
   # Stock changes
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
   # Transformation processes
-  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Transformation processes") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Transformation processes") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Transformation processes") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Transformation processes") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   # EIOU
-  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Energy industry own use") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_EIOU") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Energy industry own use") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_EIOU") %>% all())
   # Consumption
   expect_true(With_matnames %>% dplyr::filter(startsWith(LedgerSide, "Consumption")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
   # Transfers
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
 })
 
 
