@@ -556,7 +556,7 @@ tp_sinks_sources <- function(.tidy_iea_df,
 #' @examples
 #' library(dplyr)
 #' DF <- data.frame(
-#'   Ledger.side = c("Supply", "Supply", "Supply", "Consumption"),
+#'   LedgerSide = c("Supply", "Supply", "Supply", "Consumption"),
 #'   Flow.aggregation.point = c("Transformation processes", 
 #'                              "Transformation processes", 
 #'                              "Transformation processes", 
@@ -578,7 +578,7 @@ tp_sinks_sources <- function(.tidy_iea_df,
 #' DF %>% 
 #'   tp_sinks_to_nonenergy()
 tp_sinks_to_nonenergy <- function(.tidy_iea_df, 
-                                  ledger_side = "Ledger.side",
+                                  ledger_side = "LedgerSide",
                                   consumption = "Consumption",
                                   flow_aggregation_point = "Flow.aggregation.point",
                                   non_energy_flow_agg_point = "Non-energy use",

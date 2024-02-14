@@ -7,7 +7,7 @@
 arrange_iea_fu_allocation_template(
   .fu_allocation_template,
   rowcol = c("both", "row", "col"),
-  ledger_side = "Ledger.side",
+  ledger_side = "LedgerSide",
   flow_aggregation_point = "Flow.aggregation.point",
   ef_product = "Ef.product",
   machine = "Machine",
@@ -28,7 +28,7 @@ arrange_iea_fu_allocation_template(
 \item{rowcol}{one of "both", "row", or "col" to indicate whether rows, columns, or both should be arranged.
 Default is "both".}
 
-\item{ledger_side}{the ledger side column in \code{.fu_allocation_template}. Default is "Ledger.side".}
+\item{ledger_side}{the ledger side column in \code{.fu_allocation_template}. Default is "LedgerSide".}
 
 \item{flow_aggregation_point}{the flow aggregation point column in \code{.fu_allocation_template}. Default is "Flow.aggregation.point".}
 

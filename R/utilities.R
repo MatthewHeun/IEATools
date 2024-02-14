@@ -508,7 +508,7 @@ sample_eta_fu_table_path <- function(version = 2022) {
 #' @param energy_type the name of the energy type column in `.tidy_iea_df`. Default is "EnergyType".
 #' @param last_stage the name of the last stage column in `.tidy_iea_df`. Default is "LastStage".
 #' @param year the name of the year column in `.tidy_iea_df`. Default is "Year".
-#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "Ledger.side".
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "LedgerSide".
 #' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
 #' @param flow the name of the flow column in `.tidy_iea_df`. Default is "Flow".
 #' @param sep a separator between the flow aggregation point column and the flow column. Used when uniting those two columns internally. Default is "_".

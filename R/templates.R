@@ -18,7 +18,7 @@
 #' @param last_stage the name of the last stage column. Default is "LastStage".
 #' @param final the string identifier for final energy (as `Last.stage`). Default is "Final".
 #' @param year the name of the year column. Default is "Year".
-#' @param ledger_side the name of the ledger side column. Default is "Ledger.side".
+#' @param ledger_side the name of the ledger side column. Default is "LedgerSide".
 #' @param consumption the string identifier for the consumption side of the ledger. Default is "Consumption".
 #' @param flow_aggregation_point the name of the flow aggregation point column. Default is "Flow.aggregation.point".
 #' @param eiou the string identifier for energy industry own use in `flow_aggregation_point`. Default is "Energy industry own use".
@@ -61,7 +61,7 @@ fu_allocation_template <- function(.tidy_iea_df,
                                    last_stage = "LastStage",
                                    final = "Final",
                                    year = "Year",
-                                   ledger_side = "Ledger.side",
+                                   ledger_side = "LedgerSide",
                                    consumption = "Consumption",
                                    flow_aggregation_point = "Flow.aggregation.point", 
                                    eiou = "Energy industry own use", 
@@ -210,7 +210,7 @@ fu_allocation_template <- function(.tidy_iea_df,
 #' @param .fu_allocation_template the final-to-useful allocation template created by `fu_allocation_template()`
 #' @param rowcol one of "both", "row", or "col" to indicate whether rows, columns, or both should be arranged.
 #'        Default is "both". 
-#' @param ledger_side the ledger side column in `.fu_allocation_template`. Default is "Ledger.side".
+#' @param ledger_side the ledger side column in `.fu_allocation_template`. Default is "LedgerSide".
 #' @param flow_aggregation_point the flow aggregation point column in `.fu_allocation_template`. Default is "Flow.aggregation.point".
 #' @param ef_product the name of the final energy column in `.fu_allocation_template`. Default is "Ef.product".
 #' @param machine the name of the machine column in `.fu_allocation_template`. Default is "Machine".
@@ -241,7 +241,7 @@ fu_allocation_template <- function(.tidy_iea_df,
 #'   arrange_iea_fu_allocation_template()
 arrange_iea_fu_allocation_template <- function(.fu_allocation_template, 
                                                rowcol = c("both", "row", "col"),
-                                               ledger_side = "Ledger.side", 
+                                               ledger_side = "LedgerSide", 
                                                flow_aggregation_point = "Flow.aggregation.point",
                                                ef_product = "Ef.product",
                                                machine = "Machine",
@@ -373,7 +373,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #' @param path the file path into which the blank template file will be written. 
 #'        Include both folder and file name. 
 #'        If not present, the ".xlsx" extension is added.
-#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "Ledger.side".
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "LedgerSide".
 #' @param consumption the string identifier for consumption in the `ledger_side` column.  Default is "Consumption".
 #' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
 #' @param eiou the string identifier for energy industry own use in the `flow_aggregation_point` column. Default is "Energy industry own use".

@@ -6,7 +6,7 @@
 \usage{
 tp_sinks_to_nonenergy(
   .tidy_iea_df,
-  ledger_side = "Ledger.side",
+  ledger_side = "LedgerSide",
   consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point",
   non_energy_flow_agg_point = "Non-energy use",
@@ -54,7 +54,7 @@ as \code{non_energy_flow}, by default "Non-energy use in industry/transformation
 \examples{
 library(dplyr)
 DF <- data.frame(
-  Ledger.side = c("Supply", "Supply", "Supply", "Consumption"),
+  LedgerSide = c("Supply", "Supply", "Supply", "Consumption"),
   Flow.aggregation.point = c("Transformation processes", 
                              "Transformation processes", 
                              "Transformation processes", 

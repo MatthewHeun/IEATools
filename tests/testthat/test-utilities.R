@@ -264,7 +264,7 @@ test_that("sorting a tidy IEA data frame works as expected", {
   # Test that we got a good result.
   # First row should have Ghana first
   expect_equal(sorted_wide$Country[[1]], "GHA")
-  expect_equal(sorted_wide$Ledger.side[[1]], "Supply")
+  expect_equal(sorted_wide$LedgerSide[[1]], "Supply")
   expect_equal(sorted_wide$Product[[1]], "Primary solid biofuels")
   # Last row is South Africa
   num_rows <- nrow(sorted_wide)

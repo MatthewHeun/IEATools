@@ -49,7 +49,7 @@ test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_fl
   # EIOU
   expect_true(With_matnames %>% dplyr::filter(startsWith(Flow.aggregation.point, "Energy industry own use") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_EIOU") %>% all())
   # Consumption
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Ledger.side, "Consumption")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(LedgerSide, "Consumption")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
   # Transfers
   expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
   expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
@@ -63,7 +63,7 @@ test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_fl
       EnergyType = c("E", "E"),
       LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
+      LedgerSide = c("Consumption", "Supply"),
       Flow.aggregation.point = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
@@ -84,7 +84,7 @@ test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_fl
       EnergyType = c("E", "E"),
       LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
+      LedgerSide = c("Consumption", "Supply"),
       Flow.aggregation.point = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
@@ -124,7 +124,7 @@ test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_fl
   # EIOU
   expect_true(With_matnames %>% dplyr::filter(startsWith(Flow.aggregation.point, "Energy industry own use") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_EIOU") %>% all())
   # Consumption
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Ledger.side, "Consumption")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(LedgerSide, "Consumption")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
   # Transfers
   expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
   expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
@@ -141,7 +141,7 @@ test_that("add_row_col_meta() works as expected", {
       EnergyType = c("E", "E"),
       LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
+      LedgerSide = c("Consumption", "Supply"),
       Flow.aggregation.point = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
@@ -205,7 +205,7 @@ test_that("add_row_col_meta() works as expected", {
       EnergyType = c("E", "E"),
       LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
+      LedgerSide = c("Consumption", "Supply"),
       Flow.aggregation.point = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
@@ -229,7 +229,7 @@ test_that("add_row_col_meta() works as expected", {
       EnergyType = c("E", "E"),
       LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
+      LedgerSide = c("Consumption", "Supply"),
       Flow.aggregation.point = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
@@ -303,7 +303,7 @@ test_that("collapse_to_psut() works expected", {
       EnergyType = c("E", "E"),
       LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
+      LedgerSide = c("Consumption", "Supply"),
       Flow.aggregation.point = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
@@ -337,7 +337,7 @@ test_that("collapse_to_psut() works with Matrix objects", {
       EnergyType = c("E", "E"),
       LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
+      LedgerSide = c("Consumption", "Supply"),
       Flow.aggregation.point = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
@@ -689,7 +689,7 @@ test_that("prep_psut() correctly works with Balancing flows", {
       EnergyType = c("E", "E"),
       LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
+      LedgerSide = c("Consumption", "Supply"),
       Flow.aggregation.point = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
@@ -737,7 +737,7 @@ test_that("prep_psut() correctly works with Balancing flows and Matrix objects",
       EnergyType = c("E", "E"),
       LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
+      LedgerSide = c("Consumption", "Supply"),
       Flow.aggregation.point = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),

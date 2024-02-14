@@ -83,9 +83,9 @@ NewCoalProductionRowsTo1977 <- AllIEAData1 %>%
   spread(key = Product, value = E.ktoe) %>%
   # Join the CTL gross consumption data to the production data.
   # Doing so makes accessible the amounts by which we need to adjust Hard coal (if no detail) production.
-  left_join(IEAZACoalLiquefactionDataTo2000 %>% select(Country, Year, Ledger.side, 
+  left_join(IEAZACoalLiquefactionDataTo2000 %>% select(Country, Year, LedgerSide, 
                                                        `Transformation processes+Other bituminous coal`),
-            by = c("Country", "Year", "Ledger.side")
+            by = c("Country", "Year", "LedgerSide")
   ) %>%
   mutate(
     # Reduce Hard coal production by the amount of Other bituminous coal consumption in CTL plants.
@@ -321,7 +321,7 @@ FixedGHPSB <- read.delim(file = file.path("data-raw", "FixedGHPSB.tsv"),
 AllIEAData3 <- AllIEAData2 %>% 
   # Remove rows from AllIEAData that are to be replaced by FixedGHIndustryElectricity
   filter(!(Country == "GH" & 
-             Ledger.side == "Consumption" & 
+             LedgerSide == "Consumption" & 
              Flow.aggregation.point == "Industry" & 
              Product == "Electricity")) %>% 
   # Replace them
@@ -387,7 +387,7 @@ AllIEAData4 <- AllIEAData3 %>%
     # Data is inconsistent due to the emergence of non-specified industry in 1998
     # and commercial and public services in 2000
     !((Country == "HN" &
-         Ledger.side == "Consumption" &
+         LedgerSide == "Consumption" &
          Flow %in% c("Agriculture/forestry",
                      "Commercial and public services",
                      "Non-specified (industry)",
@@ -398,7 +398,7 @@ AllIEAData4 <- AllIEAData3 %>%
         # These rows will be reallocated to smooth out some changes and
         # redistribute Non-specified (other)
         (Country == "HN" &
-           Ledger.side == "Consumption" &
+           LedgerSide == "Consumption" &
            Flow %in% c("Agriculture/forestry",
                        "Autoproducer electricity plants",
                        "Commercial and public services",
@@ -407,7 +407,7 @@ AllIEAData4 <- AllIEAData3 %>%
            Product == "Gas/diesel oil excl. biofuels") |
         # Remove Fuel oil rows to eliminate Non-specified (other)
         (Country == "HN" &
-           Ledger.side == "Consumption" &
+           LedgerSide == "Consumption" &
            Flow %in% c("Agriculture/forestry",
                        "Commercial and public services",
                        "Non-specified (industry)",
@@ -434,7 +434,7 @@ AllIEAData4 <- AllIEAData3 %>%
 IEAStatDiffs <- AllIEAData4 %>%
   filter(Flow == "Statistical differences") %>%
   mutate(
-    Ledger.side = NULL,
+    LedgerSide = NULL,
     Flow.aggregation.point = NULL,
     Flow = NULL,
     Source = "IEA"
@@ -445,7 +445,7 @@ IEAStatDiffs <- AllIEAData4 %>%
 
 MyStatDiffs <- AllIEAData4 %>%
   filter(!Flow == "Statistical differences") %>% 
-  group_by(Country, Ledger.side, Product, Year) %>% 
+  group_by(Country, LedgerSide, Product, Year) %>% 
   summarise(E.ktoe = sum(E.ktoe)) %>% 
   spread(key = Ledger.side, value = E.ktoe, fill = 0) %>% 
   mutate(
@@ -460,7 +460,7 @@ NewStatDiffs <- bind_rows(MyStatDiffs, IEAStatDiffs) %>%
   mutate(
     # DeltaStatDiffs should be added to the IEA's Statistical differences to perfectly balance the table.
     DeltaStatDiffs = Actual - IEA,
-    Ledger.side = "Supply", 
+    LedgerSide = "Supply", 
     Flow.aggregation.point = "TFC compare",
     Flow = "Statistical differences"
   ) %>% 
@@ -474,7 +474,7 @@ AllIEAData5 <- AllIEAData4 %>%
 
 # Verify that the new Statistical differences bring all Products into perfect balance.
 VerifyStatDiffs <- AllIEAData5 %>%
-  group_by(Country, Ledger.side, Product, Year) %>%
+  group_by(Country, LedgerSide, Product, Year) %>%
   summarise(E.ktoe = sum(E.ktoe)) %>%
   spread(key = Ledger.side, value = E.ktoe, fill = 0) %>%
   mutate(

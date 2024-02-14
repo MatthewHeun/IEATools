@@ -431,7 +431,7 @@ test_that("fix_RUSEST_heat() works as expected", {
   heat_df <- data.frame(Country = c("RUS", "RUS", "RUS", "EST"), 
                         Method = "PCM",
                         EnergyType = "E", LastStage = "Final", 
-                        Year = 1990, Ledger.side = "Consumption", 
+                        Year = 1990, LedgerSide = "Consumption", 
                         Flow.aggregation.point = c("Industry",
                                                    "Industry", 
                                                    "Other", 

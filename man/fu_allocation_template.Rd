@@ -11,7 +11,7 @@ fu_allocation_template(
   last_stage = "LastStage",
   final = "Final",
   year = "Year",
-  ledger_side = "Ledger.side",
+  ledger_side = "LedgerSide",
   consumption = "Consumption",
   flow_aggregation_point = "Flow.aggregation.point",
   eiou = "Energy industry own use",
@@ -50,7 +50,7 @@ fu_allocation_template(
 
 \item{year}{the name of the year column. Default is "Year".}
 
-\item{ledger_side}{the name of the ledger side column. Default is "Ledger.side".}
+\item{ledger_side}{the name of the ledger side column. Default is "LedgerSide".}
 
 \item{consumption}{the string identifier for the consumption side of the ledger. Default is "Consumption".}
 

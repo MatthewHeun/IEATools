@@ -37,7 +37,7 @@ write_fu_allocation_template(
 Include both folder and file name.
 If not present, the ".xlsx" extension is added.}
 
-\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "Ledger.side".}
+\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "LedgerSide".}
 
 \item{consumption}{the string identifier for consumption in the \code{ledger_side} column.  Default is "Consumption".}
 

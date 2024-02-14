@@ -194,7 +194,7 @@ test_that('tp_sinks_sources(type = "sources") works as expected', {
 test_that("tp_sinks_to_nonenergy works as expected", {
   # Make a simple data frame to test this function.
   Tidy <- data.frame(
-    Ledger.side = c("Supply", "Supply", "Supply", "Consumption"),
+    LedgerSide = c("Supply", "Supply", "Supply", "Consumption"),
     Flow.aggregation.point = c("Transformation processes", "Transformation processes", "Transformation processes", "Non-energy use"), 
     Flow = c("Automobiles", "Automobiles", "Furnaces", "Non-energy use industry/transformation/energy"),
     Product = c("Petrol", "MD", "Coal", "Coal"),
@@ -336,7 +336,7 @@ test_that("new tests for specify_interface_industries() work as expected", {
   
   # Checking it does not end up as part of the supply
   res %>% 
-    dplyr::filter(Ledger.side == "Supply" & stringr::str_detect(Flow, "Industry not elsewhere specified")) %>% 
+    dplyr::filter(LedgerSide == "Supply" & stringr::str_detect(Flow, "Industry not elsewhere specified")) %>% 
     nrow() %>% 
     expect_equal(0)
   
