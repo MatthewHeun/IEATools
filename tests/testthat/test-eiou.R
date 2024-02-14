@@ -6,7 +6,7 @@ test_that("specify_tp_eiou() works as expected for Own use in electricity, CHP a
                      EnergyType = c("E", "E"),
                      LastStage = c("Final", "Final"),
                      Year = c(2000, 2000),
-                     Flow.aggregation.point = c("Energy industry own use", "nothing"),
+                     FlowAggregationPoint = c("Energy industry own use", "nothing"),
                      Flow = c("Own use in electricity, CHP and heat plants", "Own use in electricity, CHP and heat plants"), 
                      LedgerSide = c("Supply", "Supply"),
                      Unit = c("TJ", "TJ"),
@@ -29,7 +29,7 @@ test_that("specify_tp_eiou() works as expected for pumped storage plants", {
                      EnergyType = c("E", "E"),
                      LastStage = c("Final", "Final"),
                      Year = c(2000, 2000),
-                     Flow.aggregation.point = c("Energy industry own use", "Nothing"),
+                     FlowAggregationPoint = c("Energy industry own use", "Nothing"),
                      Flow = c("Pumped storage plants", "Pumped storage plants"), 
                      LedgerSide = c("Supply", "Supply"),
                      Product = c("Brown coal", "Crude oil"),
@@ -55,7 +55,7 @@ test_that("route_pumped_storage() no longer discriminates +/-", {
                      EnergyType = c("E", "E", "E", "E"),
                      LastStage = c("Final", "Final", "Final", "Final"),
                      Year = c(2000, 2000, 2001, 2001),
-                     Flow.aggregation.point = c("Energy industry own use",  
+                     FlowAggregationPoint = c("Energy industry own use",  
                                                 "Energy industry own use",  
                                                 "Energy industry own use", 
                                                 "Energy industry own use"),
@@ -69,7 +69,7 @@ test_that("route_pumped_storage() no longer discriminates +/-", {
   # Call the function that should negate the energy flows.
   routed <- route_pumped_storage(EIOU)
   expect_equal(nrow(routed), 2)
-  expect_equal(routed$Flow.aggregation.point, c("Energy industry own use", "Energy industry own use"))
+  expect_equal(routed$FlowAggregationPoint, c("Energy industry own use", "Energy industry own use"))
   expect_equal(routed$Flow, c("Main activity producer electricity plants", "Main activity producer electricity plants"))
   expect_equal(routed$E.dot, c(-22, -18))
 })
@@ -82,7 +82,7 @@ test_that("specify_tp_eiou() works for sample data", {
   # Also, Flow.aggregation.point is not found. Need to do more to the data frame before calling specify_tp_eiou().
   specified <- load_tidy_iea_df() %>% 
     specify_tp_eiou() %>% 
-    dplyr::filter(Flow.aggregation.point == "Energy industry own use", Flow == "Main activity producer electricity plants")
+    dplyr::filter(FlowAggregationPoint == "Energy industry own use", Flow == "Main activity producer electricity plants")
   expect_equal(nrow(specified), 4)
 })
 
@@ -110,7 +110,7 @@ test_that("gather_producer_autoproducer() works", {
   expect_equal(main_activity_flows %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
@@ -121,7 +121,7 @@ test_that("gather_producer_autoproducer() works", {
   expect_equal(main_activity_flows %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
@@ -132,7 +132,7 @@ test_that("gather_producer_autoproducer() works", {
   expect_equal(main_activity_flows %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
@@ -143,7 +143,7 @@ test_that("gather_producer_autoproducer() works", {
   expect_equal(main_activity_flows %>%
                  dplyr::filter(
                    Country == "B",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer heat plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
@@ -194,7 +194,7 @@ test_that("route_pumped_storage() works", {
   former_pumped_storage <- test %>%
     dplyr::filter(Flow == "Main activity producer electricity plants",
                   stringr::str_detect(Product, "Hard coal"),
-                  Flow.aggregation.point == "Energy industry own use",
+                  FlowAggregationPoint == "Energy industry own use",
                   Country == "A")
   
   expect_equal(former_pumped_storage %>%
@@ -225,7 +225,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   
   expect_equal(
     tidy_GHA_ZAF_df %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use") %>% 
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use") %>% 
       dplyr::filter(Flow == "Oil extraction") %>% 
       magrittr::extract2("E.dot"),
     -1.450736,
@@ -234,7 +234,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   
   expect_equal(
     tidy_GHA_ZAF_df %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use") %>% 
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use") %>% 
       dplyr::filter(Flow == "Natural gas extraction") %>% 
       magrittr::extract2("E.dot"),
     -2.149264,
@@ -257,7 +257,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   # Testing oil extraction
   expect_equal(
     test %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Flow == "Oil extraction",
                     Product == "Electricity") %>% 
       magrittr::extract2("E.dot"),
@@ -265,7 +265,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   )
   expect_equal(
     test %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Flow == "Oil extraction",
                     Product == "Heat") %>% 
       magrittr::extract2("E.dot"),
@@ -273,7 +273,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   )
   expect_equal(
     test %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Flow == "Oil extraction",
                     Product == "Motor gasoline excl. biofuels") %>% 
       magrittr::extract2("E.dot"),
@@ -283,7 +283,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   # Testing nat gas extraction
   expect_equal(
     test %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Flow == "Natural gas extraction",
                     Product == "Electricity") %>% 
       magrittr::extract2("E.dot"),
@@ -291,7 +291,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   )
   expect_equal(
     test %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Flow == "Natural gas extraction",
                     Product == "Heat") %>% 
       magrittr::extract2("E.dot"),
@@ -299,7 +299,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   )
   expect_equal(
     test %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Flow == "Natural gas extraction",
                     Product == "Motor gasoline excl. biofuels") %>% 
       magrittr::extract2("E.dot"),
@@ -336,7 +336,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   # Testing oil extraction
   expect_equal(
     res %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Year == 2018,
                     Flow == "Oil extraction",
                     Product == "Electricity") %>% 
@@ -345,7 +345,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   )
   expect_equal(
     res %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Year == 2018,
                     Flow == "Oil extraction",
                     Product == "Heat") %>% 
@@ -354,7 +354,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   )
   expect_equal(
     res %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Year == 2018,
                     Flow == "Oil extraction",
                     Product == "Motor gasoline excl. biofuels") %>% 
@@ -365,7 +365,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   # Testing nat gas extraction
   expect_equal(
     res %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Year == 2018,
                     Flow == "Natural gas extraction",
                     Product == "Electricity") %>% 
@@ -374,7 +374,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   )
   expect_equal(
     res %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Year == 2018,
                     Flow == "Natural gas extraction",
                     Product == "Heat") %>% 
@@ -383,7 +383,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   )
   expect_equal(
     res %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Year == 2018,
                     Flow == "Natural gas extraction",
                     Product == "Motor gasoline excl. biofuels") %>% 
@@ -394,7 +394,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   # Testing for 2019, inverted results
   expect_equal(
     res %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Year == 2019,
                     Flow == "Natural gas extraction",
                     Product == "Electricity") %>% 
@@ -403,7 +403,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   )
   expect_equal(
     res %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Year == 2019,
                     Flow == "Natural gas extraction",
                     Product == "Heat") %>% 
@@ -412,7 +412,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   )
   expect_equal(
     res %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Year == 2019,
                     Flow == "Natural gas extraction",
                     Product == "Motor gasoline excl. biofuels") %>% 
@@ -423,7 +423,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   # Testing nat gas extraction
   expect_equal(
     res %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Year == 2019,
                     Flow == "Oil extraction",
                     Product == "Electricity") %>% 
@@ -432,7 +432,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   )
   expect_equal(
     res %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Year == 2019,
                     Flow == "Oil extraction",
                     Product == "Heat") %>% 
@@ -441,7 +441,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
   )
   expect_equal(
     res %>% 
-      dplyr::filter(Flow.aggregation.point == "Energy industry own use",
+      dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Year == 2019,
                     Flow == "Oil extraction",
                     Product == "Motor gasoline excl. biofuels") %>% 
@@ -511,14 +511,14 @@ test_that("route_own_use_elect_chp_heat() works", {
     route_own_use_elect_chp_heat(split_using_shares_of = "output")
   
   main_activity_eiou <- test %>%
-    dplyr::filter(stringr::str_detect(Flow, "Main activity"), Country == "A", Flow.aggregation.point == "Energy industry own use")
+    dplyr::filter(stringr::str_detect(Flow, "Main activity"), Country == "A", FlowAggregationPoint == "Energy industry own use")
   
   expect_equal(length(main_activity_eiou$Country), 9)
   
   expect_equal(main_activity_eiou %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Energy industry own use",
+                   FlowAggregationPoint == "Energy industry own use",
                    Flow == "Main activity producer CHP plants",
                    Product == "Anthracite") %>%
                  dplyr::select(E.dot) %>%
@@ -529,7 +529,7 @@ test_that("route_own_use_elect_chp_heat() works", {
   expect_equal(main_activity_eiou %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Energy industry own use",
+                   FlowAggregationPoint == "Energy industry own use",
                    Flow == "Main activity producer CHP plants",
                    Product == "Electricity") %>%
                  dplyr::select(E.dot) %>%
@@ -540,7 +540,7 @@ test_that("route_own_use_elect_chp_heat() works", {
   expect_equal(main_activity_eiou %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Energy industry own use",
+                   FlowAggregationPoint == "Energy industry own use",
                    Flow == "Main activity producer electricity plants",
                    Product == "Electricity") %>%
                  dplyr::select(E.dot) %>%
@@ -551,7 +551,7 @@ test_that("route_own_use_elect_chp_heat() works", {
   expect_equal(main_activity_eiou %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Energy industry own use",
+                   FlowAggregationPoint == "Energy industry own use",
                    Flow == "Main activity producer electricity plants",
                    Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -562,7 +562,7 @@ test_that("route_own_use_elect_chp_heat() works", {
   expect_equal(main_activity_eiou %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Energy industry own use",
+                   FlowAggregationPoint == "Energy industry own use",
                    Flow == "Main activity producer heat plants",
                    Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -610,7 +610,7 @@ test_that("route_own_use_elect_chp_heat() works", {
   fourth_test %>% 
     dplyr::filter(Country == "B",
                   Product == "Electricity",
-                  Flow.aggregation.point == "Energy industry own use",
+                  FlowAggregationPoint == "Energy industry own use",
                   Flow == "Main activity producer heat plants") %>% 
     magrittr::extract2("E.dot") %>% 
     expect_equal(-15.65137,
@@ -619,7 +619,7 @@ test_that("route_own_use_elect_chp_heat() works", {
   fourth_test %>% 
     dplyr::filter(Country == "B",
                   Product == "Natural gas",
-                  Flow.aggregation.point == "Energy industry own use",
+                  FlowAggregationPoint == "Energy industry own use",
                   Flow == "Main activity producer heat plants") %>% 
     magrittr::extract2("E.dot") %>% 
     expect_equal(-52.17123,
@@ -628,7 +628,7 @@ test_that("route_own_use_elect_chp_heat() works", {
   fourth_test %>% 
     dplyr::filter(Country == "B",
                   Product == "Blast furnace gas",
-                  Flow.aggregation.point == "Energy industry own use",
+                  FlowAggregationPoint == "Energy industry own use",
                   Flow == "Main activity producer CHP plants") %>% 
     magrittr::extract2("E.dot") %>% 
     expect_equal(-6.159532,
@@ -638,7 +638,7 @@ test_that("route_own_use_elect_chp_heat() works", {
   fourth_test %>% 
     dplyr::filter(Country == "A",
                   Product == "Electricity",
-                  Flow.aggregation.point == "Energy industry own use",
+                  FlowAggregationPoint == "Energy industry own use",
                   Flow == "Main activity producer CHP plants") %>% 
     magrittr::extract2("E.dot") %>% 
     expect_equal(-1.648352,
@@ -647,7 +647,7 @@ test_that("route_own_use_elect_chp_heat() works", {
   fourth_test %>% 
     dplyr::filter(Country == "A",
                   Product == "Electricity",
-                  Flow.aggregation.point == "Energy industry own use",
+                  FlowAggregationPoint == "Energy industry own use",
                   Flow == "Main activity producer heat plants") %>% 
     magrittr::extract2("E.dot") %>% 
     expect_equal(-1.318681,
@@ -723,7 +723,7 @@ test_that("add_nuclear_industry() works", {
   # Some tests on actual values of elec & CHP plants
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Transformation processes",
+                               FlowAggregationPoint == "Transformation processes",
                                Flow == "Main activity producer electricity plants",
                                Product == "Electricity") %>%
                  dplyr::select(E.dot) %>%
@@ -732,7 +732,7 @@ test_that("add_nuclear_industry() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Transformation processes",
+                               FlowAggregationPoint == "Transformation processes",
                                Flow == "Main activity producer CHP plants",
                                Product == "Electricity") %>%
                  dplyr::select(E.dot) %>%
@@ -742,7 +742,7 @@ test_that("add_nuclear_industry() works", {
   # Some tests on actual values of nuclear industry flows
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Transformation processes",
+                               FlowAggregationPoint == "Transformation processes",
                                Flow == "Nuclear industry",
                                Product == "Electricity") %>%
                  dplyr::select(E.dot) %>%
@@ -751,7 +751,7 @@ test_that("add_nuclear_industry() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Transformation processes",
+                               FlowAggregationPoint == "Transformation processes",
                                Flow == "Nuclear industry",
                                Product == "Nuclear") %>%
                  dplyr::select(E.dot) %>%
@@ -766,7 +766,7 @@ test_that("add_nuclear_industry() works", {
                     LastStage = "Final",
                     Year = 2018,
                     LedgerSide = "Supply",
-                    Flow.aggregation.point = "Transformation processes",
+                    FlowAggregationPoint = "Transformation processes",
                     Flow = "Main activity producer CHP plants",
                     Product = "Heat",
                     Unit = "TJ",
@@ -797,7 +797,7 @@ test_that("add_nuclear_industry() works", {
   # Some tests on actual values of elec & CHP plants
   expect_equal(second_test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Transformation processes",
+                               FlowAggregationPoint == "Transformation processes",
                                Flow == "Main activity producer electricity plants",
                                Product == "Electricity") %>%
                  dplyr::select(E.dot) %>%
@@ -806,7 +806,7 @@ test_that("add_nuclear_industry() works", {
   
   expect_equal(second_test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Transformation processes",
+                               FlowAggregationPoint == "Transformation processes",
                                Flow == "Main activity producer CHP plants",
                                Product == "Electricity") %>%
                  dplyr::select(E.dot) %>%
@@ -815,7 +815,7 @@ test_that("add_nuclear_industry() works", {
   
   expect_equal(second_test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Transformation processes",
+                               FlowAggregationPoint == "Transformation processes",
                                Flow == "Main activity producer CHP plants",
                                Product == "Heat") %>%
                  dplyr::select(E.dot) %>%
@@ -825,7 +825,7 @@ test_that("add_nuclear_industry() works", {
   # Some tests on actual values of nuclear industry flows
   expect_equal(second_test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Transformation processes",
+                               FlowAggregationPoint == "Transformation processes",
                                Flow == "Nuclear industry",
                                Product == "Electricity") %>%
                  dplyr::select(E.dot) %>%
@@ -834,7 +834,7 @@ test_that("add_nuclear_industry() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Transformation processes",
+                               FlowAggregationPoint == "Transformation processes",
                                Flow == "Nuclear industry",
                                Product == "Nuclear") %>%
                  dplyr::select(E.dot) %>%
@@ -843,7 +843,7 @@ test_that("add_nuclear_industry() works", {
   
   expect_equal(second_test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Transformation processes",
+                               FlowAggregationPoint == "Transformation processes",
                                Flow == "Nuclear industry",
                                Product == "Heat") %>%
                  dplyr::select(E.dot) %>%
@@ -888,7 +888,7 @@ test_that("route_non_specified_eiou() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Blast furnaces",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -898,7 +898,7 @@ test_that("route_non_specified_eiou() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Coal mines",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -908,7 +908,7 @@ test_that("route_non_specified_eiou() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer electricity plants",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -918,7 +918,7 @@ test_that("route_non_specified_eiou() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer CHP plants",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -928,7 +928,7 @@ test_that("route_non_specified_eiou() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Oil refineries",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -942,7 +942,7 @@ test_that("route_non_specified_eiou() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "B",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Blast furnaces",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -952,7 +952,7 @@ test_that("route_non_specified_eiou() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "B",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Blast furnaces",
                                Product == "Brown coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -962,7 +962,7 @@ test_that("route_non_specified_eiou() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "B",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Coke ovens",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -972,7 +972,7 @@ test_that("route_non_specified_eiou() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "B",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer electricity plants",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -982,7 +982,7 @@ test_that("route_non_specified_eiou() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "B",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer heat plants",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -998,11 +998,11 @@ test_that("route_non_specified_eiou() works", {
     route_pumped_storage() %>%
     route_own_use_elect_chp_heat(split_using_shares_of = "output") %>%
     add_nuclear_industry() %>%
-    dplyr::filter(! (Flow.aggregation.point == "Energy industry own use" & Flow != "Non-specified")) %>%
+    dplyr::filter(! (FlowAggregationPoint == "Energy industry own use" & Flow != "Non-specified")) %>%
     route_non_specified_eiou()
   
   expect_equal(second_test %>%
-                 dplyr::filter(Flow.aggregation.point == "Energy industry own use") %>%
+                 dplyr::filter(FlowAggregationPoint == "Energy industry own use") %>%
                  dplyr::select(Flow) %>%
                  dplyr::pull(),
                c("Non-specified", "Non-specified", "Non-specified"))
@@ -1019,7 +1019,7 @@ test_that("route_non_specified_eiou() works", {
     route_non_specified_eiou()
   
   res %>% 
-    dplyr::filter(stringr::str_detect(Flow, "Non-specified") & Flow.aggregation.point == "Ennergy industry own use") %>% 
+    dplyr::filter(stringr::str_detect(Flow, "Non-specified") & FlowAggregationPoint == "Ennergy industry own use") %>% 
     nrow() %>% 
     expect_equal(0)
 })
@@ -1047,7 +1047,7 @@ test_that("route_non_specified_tp() works", {
       LastStage = "Final",
       Year = 2018,
       LedgerSide = "Supply",
-      Flow.aggregation.point = "Transformation processes",
+      FlowAggregationPoint = "Transformation processes",
       Flow = "Oil refineries",
       Product = "Brown coal (if no detail)",
       Unit = "TJ",
@@ -1060,7 +1060,7 @@ test_that("route_non_specified_tp() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
@@ -1072,7 +1072,7 @@ test_that("route_non_specified_tp() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
@@ -1084,7 +1084,7 @@ test_that("route_non_specified_tp() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer heat plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
@@ -1097,7 +1097,7 @@ test_that("route_non_specified_tp() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "B",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer heat plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
@@ -1109,7 +1109,7 @@ test_that("route_non_specified_tp() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "B",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
@@ -1123,7 +1123,7 @@ test_that("route_non_specified_tp() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
@@ -1135,7 +1135,7 @@ test_that("route_non_specified_tp() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
@@ -1147,7 +1147,7 @@ test_that("route_non_specified_tp() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer heat plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
@@ -1161,7 +1161,7 @@ test_that("route_non_specified_tp() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "B",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
@@ -1173,7 +1173,7 @@ test_that("route_non_specified_tp() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "B",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
@@ -1185,7 +1185,7 @@ test_that("route_non_specified_tp() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "B",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer heat plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
@@ -1197,7 +1197,7 @@ test_that("route_non_specified_tp() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "B",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Oil refineries",
                    Product == "Brown coal (if no detail)"
                  ) %>%
@@ -1215,11 +1215,11 @@ test_that("route_non_specified_tp() works", {
     route_own_use_elect_chp_heat(split_using_shares_of = "output") %>%
     add_nuclear_industry() %>%
     route_non_specified_eiou() %>%
-    dplyr::filter(! (Flow.aggregation.point == "Transformation processes" & Flow != "Non-specified")) %>%
+    dplyr::filter(! (FlowAggregationPoint == "Transformation processes" & Flow != "Non-specified")) %>%
     route_non_specified_tp()
   
   expect_equal(second_test %>%
-                 dplyr::filter(Flow.aggregation.point == "Transformation processes") %>%
+                 dplyr::filter(FlowAggregationPoint == "Transformation processes") %>%
                  dplyr::select(Flow) %>%
                  dplyr::pull(),
                c("Non-specified", "Non-specified", "Non-specified", "Non-specified"))
@@ -1236,7 +1236,7 @@ test_that("route_non_specified_tp() works", {
     route_non_specified_tp()
   
   res %>% 
-    dplyr::filter(stringr::str_detect(Flow, "Non-specified") & Flow.aggregation.point == "Transformation processes") %>% 
+    dplyr::filter(stringr::str_detect(Flow, "Non-specified") & FlowAggregationPoint == "Transformation processes") %>% 
     nrow() %>% 
     expect_equal(0)
 })
@@ -1263,7 +1263,7 @@ test_that("route_non_specified_flows() works", {
       LastStage = "Final",
       Year = 2018,
       LedgerSide = "Supply",
-      Flow.aggregation.point = "Transformation processes",
+      FlowAggregationPoint = "Transformation processes",
       Flow = "Oil refineries",
       Product = "Brown coal (if no detail)",
       Unit = "ktoe",
@@ -1275,7 +1275,7 @@ test_that("route_non_specified_flows() works", {
   # Country A
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Blast furnaces",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -1285,7 +1285,7 @@ test_that("route_non_specified_flows() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Coal mines",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -1295,7 +1295,7 @@ test_that("route_non_specified_flows() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer electricity plants",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -1305,7 +1305,7 @@ test_that("route_non_specified_flows() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer CHP plants",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -1315,7 +1315,7 @@ test_that("route_non_specified_flows() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Oil refineries",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -1327,7 +1327,7 @@ test_that("route_non_specified_flows() works", {
   # Country B
   expect_equal(test %>%
                  dplyr::filter(Country == "B",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Blast furnaces",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -1337,7 +1337,7 @@ test_that("route_non_specified_flows() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "B",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Blast furnaces",
                                Product == "Brown coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -1347,7 +1347,7 @@ test_that("route_non_specified_flows() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "B",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Coke ovens",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -1357,7 +1357,7 @@ test_that("route_non_specified_flows() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "B",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer electricity plants",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -1367,7 +1367,7 @@ test_that("route_non_specified_flows() works", {
   
   expect_equal(test %>%
                  dplyr::filter(Country == "B",
-                               Flow.aggregation.point == "Energy industry own use",
+                               FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer heat plants",
                                Product == "Hard coal (if no detail)") %>%
                  dplyr::select(E.dot) %>%
@@ -1381,7 +1381,7 @@ test_that("route_non_specified_flows() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
@@ -1393,7 +1393,7 @@ test_that("route_non_specified_flows() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
@@ -1405,7 +1405,7 @@ test_that("route_non_specified_flows() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer heat plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
@@ -1418,7 +1418,7 @@ test_that("route_non_specified_flows() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "B",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer heat plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
@@ -1430,7 +1430,7 @@ test_that("route_non_specified_flows() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "B",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
@@ -1444,7 +1444,7 @@ test_that("route_non_specified_flows() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
@@ -1456,7 +1456,7 @@ test_that("route_non_specified_flows() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer electricity plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
@@ -1468,7 +1468,7 @@ test_that("route_non_specified_flows() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "A",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer heat plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
@@ -1482,7 +1482,7 @@ test_that("route_non_specified_flows() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "B",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer CHP plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
@@ -1494,7 +1494,7 @@ test_that("route_non_specified_flows() works", {
   test %>%
     dplyr::filter(
       Country == "B",
-      Flow.aggregation.point == "Transformation processes",
+      FlowAggregationPoint == "Transformation processes",
       Flow == "Main activity producer electricity plants",
       Product == "Brown coal (if no detail)"
     ) %>%
@@ -1505,7 +1505,7 @@ test_that("route_non_specified_flows() works", {
   expect_equal(test %>%
                  dplyr::filter(
                    Country == "B",
-                   Flow.aggregation.point == "Transformation processes",
+                   FlowAggregationPoint == "Transformation processes",
                    Flow == "Main activity producer heat plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
@@ -1517,7 +1517,7 @@ test_that("route_non_specified_flows() works", {
   test %>%
     dplyr::filter(
       Country == "B",
-      Flow.aggregation.point == "Transformation processes",
+      FlowAggregationPoint == "Transformation processes",
       Flow == "Oil refineries",
       Product == "Brown coal (if no detail)"
     ) %>%
@@ -1564,7 +1564,7 @@ test_that("route_non_specified_flows() works", {
     route_non_specified_tp()
   
   res %>% 
-    dplyr::filter(stringr::str_detect(Flow, "Non-specified") & (Flow.aggregation.point %in% c("Transformation processes", "Energy industry own use"))) %>% 
+    dplyr::filter(stringr::str_detect(Flow, "Non-specified") & (FlowAggregationPoint %in% c("Transformation processes", "Energy industry own use"))) %>% 
     nrow() %>% 
     expect_equal(0)
 })

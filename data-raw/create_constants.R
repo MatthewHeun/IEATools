@@ -24,7 +24,7 @@ iea_cols <- list(country = "Country",
                  last_stage = "LastStage", 
                  year = "Year",
                  ledger_side = "LedgerSide", 
-                 flow_aggregation_point = "Flow.aggregation.point", 
+                 flow_aggregation_point = "FlowAggregationPoint", 
                  flow = "Flow", 
                  product = "Product", 
                  unit = "Unit", 
@@ -715,8 +715,8 @@ usethis::use_data(ledger_sides, overwrite = TRUE)
 # In the first step, we use the data frame created from load_tidy_iea_df,
 # creating a united column from Flow.aggregation.point and Flow.
 fap_flows <- load_tidy_iea_df(remove_zeroes = FALSE) %>% 
-  tidyr::unite(col = Flow.aggregation.point_Flow, Flow.aggregation.point, Flow, sep = "_", remove = TRUE) %>% 
-  dplyr::select(Flow.aggregation.point_Flow) %>% 
+  tidyr::unite(col = Flow.aggregation.point_Flow, FlowAggregationPoint, Flow, sep = "_", remove = TRUE) %>% 
+  dplyr::select(FlowAggregationPoint_Flow) %>% 
   unique() %>% 
   unlist() %>% 
   unname() %>% 

@@ -96,7 +96,7 @@ fu_table <- load_fu_allocation_data()
 # Allocations for Residential consumption of PSBs will be picked up from the exemplar, South Africa.
 fu_table_GHA <- fu_table \%>\% 
   dplyr::filter(Country == "GHA") \%>\% 
-  dplyr::filter(!(Flow.aggregation.point == IEATools::tfc_flows$other & 
+  dplyr::filter(!(FlowAggregationPoint == IEATools::tfc_flows$other & 
                     Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
                     Destination == IEATools::other_flows$residential))
 # Make the exemplar, South Africa.
@@ -105,7 +105,7 @@ fu_table_ZAF <- fu_table \%>\%
 # The South African data have Residential PSB consumption, 
 # which will be used to complete the Ghanaian FU Allocation table.
 fu_table_ZAF \%>\% 
-  dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other & 
+  dplyr::filter(FlowAggregationPoint == IEATools::tfc_flows$other & 
                   Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
                   Destination == IEATools::other_flows$residential) \%>\% 
   dplyr::select(!c(Method, EnergyType, LastStage, Flow.aggregation.point))
@@ -119,7 +119,7 @@ completed <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA,
                                           tidy_specified_iea_data = tidy_specified_iea_data)
 # Note that the C_source column shows that these data have been taken from South Africa.
 completed \%>\% 
-  dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other & 
+  dplyr::filter(FlowAggregationPoint == IEATools::tfc_flows$other & 
                   Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
                   Destination == IEATools::other_flows$residential) \%>\% 
   dplyr::select(!c(Method, EnergyType, LastStage, Flow.aggregation.point))

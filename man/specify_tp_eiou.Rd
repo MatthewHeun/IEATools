@@ -9,16 +9,17 @@ specify_tp_eiou(
   split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
   route_non_specified_eiou = TRUE,
   route_non_specified_tp = TRUE,
-  flow_aggregation_point = "Flow.aggregation.point",
-  eiou = "Energy industry own use",
-  transformation_processes = "Transformation processes",
-  flow = "Flow",
-  own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
-  pumped_storage = "Pumped storage plants",
-  nuclear_industry = "Nuclear industry",
-  e_dot = "E.dot",
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+  transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
+  flow = IEATools::iea_cols$flow,
+  own_use_elect_chp_heat = IEATools::eiou_flows$own_use_elect_chp_heat_plants,
+  pumped_storage = IEATools::eiou_flows$pumped_storage_plants,
+  nuclear_industry = IEATools::eiou_flows$nuclear_industry,
+  e_dot = IEATools::iea_cols$e_dot,
   negzeropos = ".negzeropos",
-  main_act_producer_elect = "Main activity producer electricity plants"
+  main_act_producer_elect =
+    IEATools::eiou_flows$main_activity_producer_electricity_plants
 )
 }
 \arguments{
@@ -35,7 +36,7 @@ Default is TRUE.}
 \item{route_non_specified_tp}{Boolean stating whether non-specified transformation processes flows should be routed to existing industries.
 Default is TRUE.}
 
-\item{flow_aggregation_point}{The name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
+\item{flow_aggregation_point}{The name of the flow aggregation point column in \code{.tidy_iea_df}. Default is FlowAggregationPoint.}
 
 \item{eiou}{A string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".}
 
@@ -90,6 +91,6 @@ To avoid double rows, all like rows are summed before returning.
 library(dplyr)
 load_tidy_iea_df() \%>\% 
   specify_tp_eiou() \%>\% 
-  filter(Flow.aggregation.point == "Energy industry own use" & 
+  filter(FlowAggregationPoint == "Energy industry own use" & 
            Flow == "Main activity producer electricity plants")
 }

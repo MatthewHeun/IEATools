@@ -7,17 +7,17 @@
 arrange_iea_fu_allocation_template(
   .fu_allocation_template,
   rowcol = c("both", "row", "col"),
-  ledger_side = "LedgerSide",
-  flow_aggregation_point = "Flow.aggregation.point",
-  ef_product = "Ef.product",
-  machine = "Machine",
-  eu_product = "Eu.product",
-  destination = "Destination",
-  unit = "Unit",
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  ef_product = IEATools::template_cols$ef_product,
+  machine = IEATools::template_cols$machine,
+  eu_product = IEATools::template_cols$eu_product,
+  destination = IEATools::template_cols$destination,
+  unit = IEATools::iea_cols$unit,
   fap_dest_order = IEATools::fap_flows,
   ef_product_order = IEATools::products,
-  quantity = "Quantity",
-  maximum_values = "Maximum.values",
+  quantity = IEATools::template_cols$quantity,
+  maximum_values = IEATools::template_cols$maximum_values,
   .temp_sort = ".fap_flow",
   .clean_ef_product = ".clean_Ef_product"
 )
@@ -30,7 +30,7 @@ Default is "both".}
 
 \item{ledger_side}{the ledger side column in \code{.fu_allocation_template}. Default is "LedgerSide".}
 
-\item{flow_aggregation_point}{the flow aggregation point column in \code{.fu_allocation_template}. Default is "Flow.aggregation.point".}
+\item{flow_aggregation_point}{the flow aggregation point column in \code{.fu_allocation_template}. Default is FlowAggregationPoint.}
 
 \item{ef_product}{the name of the final energy column in \code{.fu_allocation_template}. Default is "Ef.product".}
 

@@ -269,7 +269,7 @@ test_that("sorting a tidy IEA data frame works as expected", {
   # Last row is South Africa
   num_rows <- nrow(sorted_wide)
   expect_equal(sorted_wide$Country[[num_rows]], "ZAF")
-  expect_equal(sorted_wide$Flow.aggregation.point[[num_rows]], "Non-energy use")
+  expect_equal(sorted_wide$FlowAggregationPoint[[num_rows]], "Non-energy use")
   expect_equal(sorted_wide$Product[[num_rows]], "Paraffin waxes")
 })
 

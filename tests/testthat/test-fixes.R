@@ -378,17 +378,17 @@ test_that("fix_AUS_bfg() works as expected", {
   
   fixed_but_no_fix |> 
     dplyr::filter(Product == "Blast furnace gas", 
-                  Flow.aggregation.point == "Energy industry own use") |> 
+                  FlowAggregationPoint == "Energy industry own use") |> 
     nrow() |> 
     expect_equal(0)
   fixed_but_no_fix |> 
     dplyr::filter(Product == "Blast furnace gas", 
-                  Flow.aggregation.point == "Transformation processes") |> 
+                  FlowAggregationPoint == "Transformation processes") |> 
     magrittr::extract2("E.dot") |> 
     expect_equal(34575)
   fixed_but_no_fix |> 
     dplyr::filter(Product == "Blast furnace gas", 
-                  Flow.aggregation.point == "Industry") |> 
+                  FlowAggregationPoint == "Industry") |> 
     magrittr::extract2("E.dot") |> 
     expect_equal(34575)
   
@@ -406,7 +406,7 @@ test_that("fix_AUS_bfg() works as expected", {
     fix_AUS_bfg()
   fixed |> 
     dplyr::filter(Product == "Blast furnace gas", 
-                  Flow.aggregation.point == "Energy industry own use") |> 
+                  FlowAggregationPoint == "Energy industry own use") |> 
     magrittr::extract2("E.dot") |> 
     expect_equal(-11324.99922)
   
@@ -432,7 +432,7 @@ test_that("fix_RUSEST_heat() works as expected", {
                         Method = "PCM",
                         EnergyType = "E", LastStage = "Final", 
                         Year = 1990, LedgerSide = "Consumption", 
-                        Flow.aggregation.point = c("Industry",
+                        FlowAggregationPoint = c("Industry",
                                                    "Industry", 
                                                    "Other", 
                                                    "Industry"),

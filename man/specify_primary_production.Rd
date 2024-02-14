@@ -18,7 +18,7 @@ specify_primary_production(
   coal_mines = IEATools::industry_flows$coal_mines,
   oil_extraction = IEATools::industry_flows$oil_extraction,
   gas_extraction = IEATools::industry_flows$natural_gas_extraction,
-  liquefaction_regas = "Liquefaction (LNG) / regasification plants",
+  liquefaction_regas = IEATools::eiou_flows$liquefaction_regasification_plants,
   liquefaction_regas_reassign = IEATools::industry_flows$natural_gas_extraction,
   transformation_processes = IEATools::aggregation_flows$transformation_processes,
   resources = IEATools::tpes_flows$resources,
@@ -127,7 +127,7 @@ load_tidy_iea_df() \%>\%
   select(-Method, -LastStage, -LedgerSide, -Unit)
 # EIOU by "Liquefaction (LNG) / regasification plants" is reassigned to "Oil and gas extraction"
 data.frame(
-  Flow.aggregation.point = c("Energy industry own use"),
+  FlowAggregationPoint = c("Energy industry own use"),
   Flow = c("Liquefaction (LNG) / regasification plants"), 
   Product = c("Natural gas"),
   E.dot = c(-42), 

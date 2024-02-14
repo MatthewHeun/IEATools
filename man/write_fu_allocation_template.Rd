@@ -41,7 +41,7 @@ If not present, the ".xlsx" extension is added.}
 
 \item{consumption}{the string identifier for consumption in the \code{ledger_side} column.  Default is "Consumption".}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is FlowAggregationPoint.}
 
 \item{eiou}{the string identifier for energy industry own use in the \code{flow_aggregation_point} column. Default is "Energy industry own use".}
 

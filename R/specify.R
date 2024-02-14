@@ -80,7 +80,7 @@
 #'   select(-Method, -LastStage, -LedgerSide, -Unit)
 #' # EIOU by "Liquefaction (LNG) / regasification plants" is reassigned to "Oil and gas extraction"
 #' data.frame(
-#'   Flow.aggregation.point = c("Energy industry own use"),
+#'   FlowAggregationPoint = c("Energy industry own use"),
 #'   Flow = c("Liquefaction (LNG) / regasification plants"), 
 #'   Product = c("Natural gas"),
 #'   E.dot = c(-42), 
@@ -100,7 +100,7 @@ specify_primary_production <- function(.tidy_iea_df,
                                        coal_mines = IEATools::industry_flows$coal_mines,
                                        oil_extraction = IEATools::industry_flows$oil_extraction,
                                        gas_extraction = IEATools::industry_flows$natural_gas_extraction,
-                                       liquefaction_regas = "Liquefaction (LNG) / regasification plants",
+                                       liquefaction_regas = IEATools::eiou_flows$liquefaction_regasification_plants,
                                        liquefaction_regas_reassign = IEATools::industry_flows$natural_gas_extraction,
                                        transformation_processes = IEATools::aggregation_flows$transformation_processes,
                                        resources = IEATools::tpes_flows$resources,
@@ -359,7 +359,7 @@ specify_interface_industries <- function(.tidy_iea_df,
 #'                                 Default is TRUE.
 #' @param route_non_specified_tp Boolean stating whether non-specified transformation processes flows should be routed to existing industries.
 #'                               Default is TRUE.
-#' @param flow_aggregation_point The name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
+#' @param flow_aggregation_point The name of the flow aggregation point column in `.tidy_iea_df`. Default is FlowAggregationPoint.
 #' @param eiou A string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".
 #' @param transformation_processes A string identifying transformation processes in the flow aggregation point column. Default is "Transformation processes".
 #' @param flow The name of the flow column in `.tidy_iea_df`. Default is "Flow".
@@ -378,24 +378,24 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' library(dplyr)
 #' load_tidy_iea_df() %>% 
 #'   specify_tp_eiou() %>% 
-#'   filter(Flow.aggregation.point == "Energy industry own use" & 
+#'   filter(FlowAggregationPoint == "Energy industry own use" & 
 #'            Flow == "Main activity producer electricity plants")
 specify_tp_eiou <- function(.tidy_iea_df,
                             split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
                             route_non_specified_eiou = TRUE,
                             route_non_specified_tp = TRUE,
-                            flow_aggregation_point = "Flow.aggregation.point",
-                            eiou = "Energy industry own use",
-                            transformation_processes = "Transformation processes",
-                            flow = "Flow", 
+                            flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                            eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+                            transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
+                            flow = IEATools::iea_cols$flow, 
                             # Industries that receive EIOU but are not in Transformation processes
-                            own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
-                            pumped_storage = "Pumped storage plants",
-                            nuclear_industry = "Nuclear industry",
-                            e_dot = "E.dot",
+                            own_use_elect_chp_heat = IEATools::eiou_flows$own_use_elect_chp_heat_plants,
+                            pumped_storage = IEATools::eiou_flows$pumped_storage_plants,
+                            nuclear_industry = IEATools::eiou_flows$nuclear_industry,
+                            e_dot = IEATools::iea_cols$e_dot,
                             negzeropos = ".negzeropos",
                             # Places where the EIOU will be reassigned
-                            main_act_producer_elect = "Main activity producer electricity plants"){
+                            main_act_producer_elect = IEATools::eiou_flows$main_activity_producer_electricity_plants){
   .tidy_iea_df %>% 
     matsindf::verify_cols_missing(negzeropos)
   
@@ -498,12 +498,12 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #'   tp_sinks_sources(type = "sources")
 tp_sinks_sources <- function(.tidy_iea_df, 
                              type = c("sinks", "sources"),
-                             flow_aggregation_point = "Flow.aggregation.point",
-                             transformation_processes = "Transformation processes",
-                             eiou = "Energy industry own use",
-                             flow = "Flow", 
-                             product = "Product",
-                             e_dot = "E.dot"){
+                             flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                             transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
+                             eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+                             flow = IEATools::iea_cols$flow, 
+                             product = IEATools::iea_cols$product,
+                             e_dot = IEATools::iea_cols$e_dot){
   type <- match.arg(type)
   grouping_vars <- matsindf::everything_except(.tidy_iea_df, flow_aggregation_point, flow, product, e_dot)
   use_rows <- .tidy_iea_df %>% 
@@ -557,7 +557,7 @@ tp_sinks_sources <- function(.tidy_iea_df,
 #' library(dplyr)
 #' DF <- data.frame(
 #'   LedgerSide = c("Supply", "Supply", "Supply", "Consumption"),
-#'   Flow.aggregation.point = c("Transformation processes", 
+#'   FlowAggregationPoint = c("Transformation processes", 
 #'                              "Transformation processes", 
 #'                              "Transformation processes", 
 #'                              "Non-energy use"), 
@@ -578,17 +578,16 @@ tp_sinks_sources <- function(.tidy_iea_df,
 #' DF %>% 
 #'   tp_sinks_to_nonenergy()
 tp_sinks_to_nonenergy <- function(.tidy_iea_df, 
-                                  ledger_side = "LedgerSide",
-                                  consumption = "Consumption",
-                                  flow_aggregation_point = "Flow.aggregation.point",
-                                  non_energy_flow_agg_point = "Non-energy use",
-                                  transformation_processes = "Transformation processes",
-                                  eiou = "Energy industry own use",
-                                  flow = "Flow", 
-                                  non_energy_flow = "Non-energy use industry/transformation/energy",
-                                  product = "Product",
-                                  e_dot = "E.dot"){
-                                  # grouping_vars = c("Method", "LastStage", "Country", "Year", "EnergyType")){
+                                  ledger_side = IEATools::iea_cols$ledger_side,
+                                  consumption = IEATools::ledger_sides$consumption,
+                                  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                  non_energy_flow_agg_point = IEATools::tfc_flows$non_energy_use,
+                                  transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
+                                  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+                                  flow = IEATools::iea_cols$flow, 
+                                  non_energy_flow = IEATools::non_energy_flows$non_energy_use_industry_transformation_energy,
+                                  product = IEATools::iea_cols$product,
+                                  e_dot = IEATools::iea_cols$e_dot){
   # First step is to find all Transformation process sinks.
   # These items need to removed from the IEAData data frame, eventually.
   Sinks <- .tidy_iea_df %>% 

@@ -20,7 +20,7 @@
 #' @param year the name of the year column. Default is "Year".
 #' @param ledger_side the name of the ledger side column. Default is "LedgerSide".
 #' @param consumption the string identifier for the consumption side of the ledger. Default is "Consumption".
-#' @param flow_aggregation_point the name of the flow aggregation point column. Default is "Flow.aggregation.point".
+#' @param flow_aggregation_point the name of the flow aggregation point column. Default is FlowAggregationPoint.
 #' @param eiou the string identifier for energy industry own use in `flow_aggregation_point`. Default is "Energy industry own use".
 #' @param non_energy_use string identifier for non-energy use in `flow_aggregation_point`. Default is "Non-energy use".
 #' @param tfc the string identifier for total final consumption. Default is "Total final consumption".
@@ -56,33 +56,33 @@
 #'   specify_all() %>% 
 #'   fu_allocation_template()
 fu_allocation_template <- function(.tidy_iea_df,
-                                   energy_type = "EnergyType",
-                                   energy = "E",
-                                   last_stage = "LastStage",
-                                   final = "Final",
-                                   year = "Year",
-                                   ledger_side = "LedgerSide",
-                                   consumption = "Consumption",
-                                   flow_aggregation_point = "Flow.aggregation.point", 
-                                   eiou = "Energy industry own use", 
-                                   non_energy_use = "Non-energy use",
-                                   tfc = "Total final consumption",
-                                   tpes = "Total primary energy supply",
-                                   flow = "Flow", 
-                                   product = "Product",
-                                   destination = "Destination",
-                                   quantity = "Quantity",
-                                   e_dot = "E.dot",
+                                   energy_type = IEATools::iea_cols$energy_type,
+                                   energy = IEATools::energy_types$e,
+                                   last_stage = IEATools::iea_cols$last_stage,
+                                   final = IEATools::all_stages$final,
+                                   year = IEATools::iea_cols$year,
+                                   ledger_side = IEATools::iea_cols$ledger_side,
+                                   consumption = IEATools::ledger_sides$consumption,
+                                   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point, 
+                                   eiou = IEATools::tfc_compare_flows$energy_industry_own_use, 
+                                   non_energy_use = IEATools::tfc_flows$non_energy_use,
+                                   tfc = IEATools::aggregation_flows$total_final_consumption,
+                                   tpes = IEATools::tfc_compare_flows$total_primary_energy_supply,
+                                   flow = IEATools::iea_cols$flow, 
+                                   product = IEATools::iea_cols$product,
+                                   destination = IEATools::template_cols$destination,
+                                   quantity = IEATools::template_cols$quantity,
+                                   e_dot = IEATools::iea_cols$e_dot,
                                    e_dot_total = paste0(e_dot, ".total"),
                                    perc_unit_string = "[%]",
                                    e_dot_perc = paste(e_dot, perc_unit_string),
-                                   maximum_values = "Maximum.values",
+                                   maximum_values = IEATools::template_cols$maximum_values,
                                    year_for_maximum_values = 0,
-                                   ef_product = "Ef.product",
+                                   ef_product = IEATools::template_cols$ef_product,
                                    allocation_var = "C_",
                                    n_allocation_rows = 4,
-                                   machine = "Machine",
-                                   eu_product = "Eu.product",
+                                   machine = IEATools::template_cols$machine,
+                                   eu_product = IEATools::template_cols$eu_product,
                                    arrange = TRUE,
                                    .value = ".value"){
   matsindf::verify_cols_missing(.tidy_iea_df, .value)
@@ -211,7 +211,7 @@ fu_allocation_template <- function(.tidy_iea_df,
 #' @param rowcol one of "both", "row", or "col" to indicate whether rows, columns, or both should be arranged.
 #'        Default is "both". 
 #' @param ledger_side the ledger side column in `.fu_allocation_template`. Default is "LedgerSide".
-#' @param flow_aggregation_point the flow aggregation point column in `.fu_allocation_template`. Default is "Flow.aggregation.point".
+#' @param flow_aggregation_point the flow aggregation point column in `.fu_allocation_template`. Default is FlowAggregationPoint.
 #' @param ef_product the name of the final energy column in `.fu_allocation_template`. Default is "Ef.product".
 #' @param machine the name of the machine column in `.fu_allocation_template`. Default is "Machine".
 #' @param eu_product the name of the useful energy product column in `.fu_allocation_template`. Default is "Eu.product".
@@ -241,17 +241,17 @@ fu_allocation_template <- function(.tidy_iea_df,
 #'   arrange_iea_fu_allocation_template()
 arrange_iea_fu_allocation_template <- function(.fu_allocation_template, 
                                                rowcol = c("both", "row", "col"),
-                                               ledger_side = "LedgerSide", 
-                                               flow_aggregation_point = "Flow.aggregation.point",
-                                               ef_product = "Ef.product",
-                                               machine = "Machine",
-                                               eu_product = "Eu.product",
-                                               destination = "Destination",
-                                               unit = "Unit",
+                                               ledger_side = IEATools::iea_cols$ledger_side, 
+                                               flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                               ef_product = IEATools::template_cols$ef_product,
+                                               machine = IEATools::template_cols$machine,
+                                               eu_product = IEATools::template_cols$eu_product,
+                                               destination = IEATools::template_cols$destination,
+                                               unit = IEATools::iea_cols$unit,
                                                fap_dest_order = IEATools::fap_flows,
                                                ef_product_order = IEATools::products, 
-                                               quantity = "Quantity",
-                                               maximum_values = "Maximum.values", 
+                                               quantity = IEATools::template_cols$quantity,
+                                               maximum_values = IEATools::template_cols$maximum_values, 
                                                .temp_sort = ".fap_flow", 
                                                .clean_ef_product = ".clean_Ef_product"){
   rowcol <- match.arg(rowcol)
@@ -375,7 +375,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #'        If not present, the ".xlsx" extension is added.
 #' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "LedgerSide".
 #' @param consumption the string identifier for consumption in the `ledger_side` column.  Default is "Consumption".
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is FlowAggregationPoint.
 #' @param eiou the string identifier for energy industry own use in the `flow_aggregation_point` column. Default is "Energy industry own use".
 #' @param fu_allocations_tab_name the name of the tab on which the template will be written. Default is "FU Allocations".
 #' @param machine the name of the machine column in output. Default is "Machine"

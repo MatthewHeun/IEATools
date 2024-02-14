@@ -6,33 +6,33 @@
 \usage{
 fu_allocation_template(
   .tidy_iea_df,
-  energy_type = "EnergyType",
-  energy = "E",
-  last_stage = "LastStage",
-  final = "Final",
-  year = "Year",
-  ledger_side = "LedgerSide",
-  consumption = "Consumption",
-  flow_aggregation_point = "Flow.aggregation.point",
-  eiou = "Energy industry own use",
-  non_energy_use = "Non-energy use",
-  tfc = "Total final consumption",
-  tpes = "Total primary energy supply",
-  flow = "Flow",
-  product = "Product",
-  destination = "Destination",
-  quantity = "Quantity",
-  e_dot = "E.dot",
+  energy_type = IEATools::iea_cols$energy_type,
+  energy = IEATools::energy_types$e,
+  last_stage = IEATools::iea_cols$last_stage,
+  final = IEATools::all_stages$final,
+  year = IEATools::iea_cols$year,
+  ledger_side = IEATools::iea_cols$ledger_side,
+  consumption = IEATools::ledger_sides$consumption,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+  non_energy_use = IEATools::tfc_flows$non_energy_use,
+  tfc = IEATools::aggregation_flows$total_final_consumption,
+  tpes = IEATools::tfc_compare_flows$total_primary_energy_supply,
+  flow = IEATools::iea_cols$flow,
+  product = IEATools::iea_cols$product,
+  destination = IEATools::template_cols$destination,
+  quantity = IEATools::template_cols$quantity,
+  e_dot = IEATools::iea_cols$e_dot,
   e_dot_total = paste0(e_dot, ".total"),
   perc_unit_string = "[\%]",
   e_dot_perc = paste(e_dot, perc_unit_string),
-  maximum_values = "Maximum.values",
+  maximum_values = IEATools::template_cols$maximum_values,
   year_for_maximum_values = 0,
-  ef_product = "Ef.product",
+  ef_product = IEATools::template_cols$ef_product,
   allocation_var = "C_",
   n_allocation_rows = 4,
-  machine = "Machine",
-  eu_product = "Eu.product",
+  machine = IEATools::template_cols$machine,
+  eu_product = IEATools::template_cols$eu_product,
   arrange = TRUE,
   .value = ".value"
 )
@@ -54,7 +54,7 @@ fu_allocation_template(
 
 \item{consumption}{the string identifier for the consumption side of the ledger. Default is "Consumption".}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column. Default is "Flow.aggregation.point".}
+\item{flow_aggregation_point}{the name of the flow aggregation point column. Default is FlowAggregationPoint.}
 
 \item{eiou}{the string identifier for energy industry own use in \code{flow_aggregation_point}. Default is "Energy industry own use".}
 

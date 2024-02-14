@@ -46,7 +46,7 @@ sort_iea_df(
 
 \item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "LedgerSide".}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is FlowAggregationPoint.}
 
 \item{flow}{the name of the flow column in \code{.tidy_iea_df}. Default is "Flow".}
 

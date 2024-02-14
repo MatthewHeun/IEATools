@@ -6,16 +6,17 @@
 \usage{
 tp_sinks_to_nonenergy(
   .tidy_iea_df,
-  ledger_side = "LedgerSide",
-  consumption = "Consumption",
-  flow_aggregation_point = "Flow.aggregation.point",
-  non_energy_flow_agg_point = "Non-energy use",
-  transformation_processes = "Transformation processes",
-  eiou = "Energy industry own use",
-  flow = "Flow",
-  non_energy_flow = "Non-energy use industry/transformation/energy",
-  product = "Product",
-  e_dot = "E.dot"
+  ledger_side = IEATools::iea_cols$ledger_side,
+  consumption = IEATools::ledger_sides$consumption,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  non_energy_flow_agg_point = IEATools::tfc_flows$non_energy_use,
+  transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
+  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+  flow = IEATools::iea_cols$flow,
+  non_energy_flow =
+    IEATools::non_energy_flows$non_energy_use_industry_transformation_energy,
+  product = IEATools::iea_cols$product,
+  e_dot = IEATools::iea_cols$e_dot
 )
 }
 \arguments{
@@ -55,7 +56,7 @@ as \code{non_energy_flow}, by default "Non-energy use in industry/transformation
 library(dplyr)
 DF <- data.frame(
   LedgerSide = c("Supply", "Supply", "Supply", "Consumption"),
-  Flow.aggregation.point = c("Transformation processes", 
+  FlowAggregationPoint = c("Transformation processes", 
                              "Transformation processes", 
                              "Transformation processes", 
                              "Non-energy use"), 

@@ -1,12 +1,12 @@
 # This function tests final-to-useful allocation templates
 # created from the default data set, filled or not.
 check_fu_allocation_template <- function(.DF){
-  expect_equal(.DF$Flow.aggregation.point[[1]], "Energy industry own use")
+  expect_equal(.DF$FlowAggregationPoint[[1]], "Energy industry own use")
   expect_equal(.DF$Ef.product[[1]], "Refinery gas")
   expect_equal(.DF$Destination[[1]], "Oil refineries")
   expect_equal(.DF$Quantity[[1]], "E.dot")
   last_row <- nrow(.DF)
-  expect_equal(.DF$Flow.aggregation.point[[last_row]], "Non-energy use")
+  expect_equal(.DF$FlowAggregationPoint[[last_row]], "Non-energy use")
   expect_equal(.DF$Ef.product[[last_row]], "Paraffin waxes")
   expect_equal(.DF$Destination[[last_row]], "Non-energy use industry/transformation/energy")
   expect_equal(.DF$Quantity[[last_row]], "C_4 [%]")
@@ -51,11 +51,11 @@ test_that("fu_allocation_template() works as expected", {
   check_fu_allocation_template(Allocation_template)
 
   # Check columns
-  expected_colorder <- c("Country", "Method", "EnergyType", "LastStage", "LedgerSide", "Flow.aggregation.point", "Unit",
+  expected_colorder <- c("Country", "Method", "EnergyType", "LastStage", "LedgerSide", "FlowAggregationPoint", "Unit",
                          "Ef.product", "Machine", "Eu.product", "Destination", 
                          "Quantity", "Maximum.values", "1971", "2000")
   expect_equal(names(Allocation_template), expected_colorder)
-  expect_true(all(Allocation_template$LedgerSide == "Consumption" | Allocation_template$Flow.aggregation.point == "Energy industry own use"))
+  expect_true(all(Allocation_template$LedgerSide == "Consumption" | Allocation_template$FlowAggregationPoint == "Energy industry own use"))
 })
 
 
@@ -104,7 +104,7 @@ test_that("write_fu_allocation_template() works as expected", {
   # Check the tabs to make sure they're the same
   Expected_allocations <- FU_allocation_template
   Joined <- dplyr::full_join(Allocations, Expected_allocations, by = c("Country", "Method", "EnergyType", 
-                                                                       "LastStage", "LedgerSide", "Flow.aggregation.point", 
+                                                                       "LastStage", "LedgerSide", "FlowAggregationPoint", 
                                                                        "Unit", "Ef.product", "Machine", 
                                                                        "Eu.product", "Destination", "Quantity")) %>% 
     dplyr::mutate(
@@ -475,14 +475,14 @@ test_that("check_fu_allocation_data() works as expected", {
   
   # Make a bogus fu_allocation data frame that should fail and make sure it fails
   # in the situation where Ef.product and Eu.product are not same when Machine is Non-energy.
-  fu_allocation_bad <- tibble::tribble(~Country, ~Flow.aggregation.point, ~Ef.product, ~Machine, ~Eu.product, ~Destination, 
+  fu_allocation_bad <- tibble::tribble(~Country, ~FlowAggregationPoint, ~Ef.product, ~Machine, ~Eu.product, ~Destination, 
                                        "Wakanda", "Consumption", "Bitumen", "Non-energy", "Bituman", "Road")
   expect_error(check_fu_allocation_data(fu_allocation_bad), 
                "Ef.product and Eu.product must be identical when Machine is Non-energy. The following combinations do not meet that criterion:\nWakanda, Consumption, Bitumen, Non-energy, Bituman, Road. Please check the FU allocation table for typos or misspellings.")
   
   # Make a bogus fu_allocation data frame that should fail and make sure it fails
   # in the situation where .values is not NA.
-  fu_allocation_bad2 <- tibble::tribble(~Country, ~Year, ~Flow.aggregation.point, ~Ef.product, ~Machine, ~Eu.product, ~Destination, ~Quantity, ~.values,
+  fu_allocation_bad2 <- tibble::tribble(~Country, ~Year, ~FlowAggregationPoint, ~Ef.product, ~Machine, ~Eu.product, ~Destination, ~Quantity, ~.values,
                                         "Wakanda", 2020, "Consumption", "Electricity", NA_character_, "MD", "Industry", "C_1 [%]", "25.0")
   expect_error(check_fu_allocation_data(fu_allocation_bad2), "In the FU Allocations tab, Eu.product and Destination must be filled when Quantity is non-zero. The following combinations do not meet that criterion:\nWakanda, 2020, Consumption, Electricity, NA, MD, Industry, C_1")
 })

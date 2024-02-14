@@ -7,12 +7,12 @@
 tp_sinks_sources(
   .tidy_iea_df,
   type = c("sinks", "sources"),
-  flow_aggregation_point = "Flow.aggregation.point",
-  transformation_processes = "Transformation processes",
-  eiou = "Energy industry own use",
-  flow = "Flow",
-  product = "Product",
-  e_dot = "E.dot"
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
+  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+  flow = IEATools::iea_cols$flow,
+  product = IEATools::iea_cols$product,
+  e_dot = IEATools::iea_cols$e_dot
 )
 }
 \arguments{

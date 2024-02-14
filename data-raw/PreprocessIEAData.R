@@ -97,7 +97,7 @@ IEAData1 <- lapply(
 # Manipulate raw data
 #
 IEAData2 <- IEAData1 %>%
-  gather(Year, E.ktoe, -c(Country, LedgerSide, Flow, Flow.aggregation.point, Product))
+  gather(Year, E.ktoe, -c(Country, LedgerSide, Flow, FlowAggregationPoint, Product))
 
 IEAData3 <- IEAData2 %>%
   # Remove missing values to reduce memory footprint
@@ -159,7 +159,7 @@ AllIEAData <- IEAData4 %>%
   # Orders rows same as the original downloaded IEA data.
   # Orders the columns in a reasonable manner
   # Also, drops the Name of the country. 
-  select(Country, LedgerSide, Flow.aggregation.point, Flow, Product, Year, E.ktoe)
+  select(Country, LedgerSide, FlowAggregationPoint, Flow, Product, Year, E.ktoe)
 
 #
 # Clean up the environment

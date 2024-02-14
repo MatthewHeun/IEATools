@@ -357,7 +357,7 @@ test_that("augment_iea_df() works", {
     rename_iea_df_cols() |> 
     augment_iea_df()
   expect_equal(simple_with_tfc_df$LedgerSide |> unique(), c("Supply", "Consumption"))
-  expect_equal(simple_with_tfc_df$Flow.aggregation.point, c("Total primary energy supply",
+  expect_equal(simple_with_tfc_df$FlowAggregationPoint, c("Total primary energy supply",
                                                             "TFC compare", 
                                                             "Transformation processes", 
                                                             "Transformation processes", 
@@ -376,19 +376,19 @@ test_that("augment_iea_df() works", {
   expect_equal(clses$LastStage, "character")  
   expect_equal(clses$Country, "character")  
   expect_equal(clses$LedgerSide, "character")  
-  expect_equal(clses$Flow.aggregation.point, "character")  
+  expect_equal(clses$FlowAggregationPoint, "character")  
   expect_equal(clses$EnergyType, "character")
   expect_equal(clses$Unit, "character")
   expect_equal(clses$Flow, "character")  
   expect_equal(clses$Product, "character")  
-  clses[c("Method", "LastStage", "LedgerSide", "Flow.aggregation.point", "Country", "EnergyType", "Unit", "Flow", "Product")] <- NULL
+  clses[c("Method", "LastStage", "LedgerSide", "FlowAggregationPoint", "Country", "EnergyType", "Unit", "Flow", "Product")] <- NULL
   expect_true(all(clses == "numeric"))
   # Ensure that there are no remaining .. or x.
   # This test fails if there are any NA items.
   # We know that NA items appear in the Flow.aggregation.point column.
   # So delete that column first.
-  expect_false(any(IEADF_augmented |> dplyr::select(-Flow.aggregation.point) == ".."))
-  expect_false(any(IEADF_augmented |> dplyr::select(-Flow.aggregation.point) == "x"))
+  expect_false(any(IEADF_augmented |> dplyr::select(-FlowAggregationPoint) == ".."))
+  expect_false(any(IEADF_augmented |> dplyr::select(-FlowAggregationPoint) == "x"))
   
   # # As of 2019, the IEA no longer tags flows with "(transf.)", "(transformation)", or "(energy)".  
   # # So these tests must be applied only to 2018 data.
@@ -829,7 +829,7 @@ test_that("specify_non_energy_use() works for South African Hard coal in 1971", 
   
   # Full join to see differences
   res <- dplyr::full_join(df, neu_specified_df, by = c("Country", "Method", "EnergyType", "LastStage", "Unit", "LedgerSide", 
-                                                       "Flow", "Flow.aggregation.point", "Product")) |>
+                                                       "Flow", "FlowAggregationPoint", "Product")) |>
     dplyr::filter(.data[[IEATools::iea_cols$flow_aggregation_point]] %in% c("Non-energy use", "Memo: Non-energy use in industry"))
   # Check that the right flows are present in res
   res |> 
@@ -1063,7 +1063,7 @@ test_that("load_tidy_iea_df() works as expected", {
     iea_tidy_df <- sample_iea_data_path(yr) |> 
       load_tidy_iea_df(specify_non_energy_flows = TRUE)
     # Verify column names and order
-    expect_equal(names(iea_tidy_df), c("Country", "Method", "EnergyType", "LastStage", "Year", "LedgerSide", "Flow.aggregation.point", 
+    expect_equal(names(iea_tidy_df), c("Country", "Method", "EnergyType", "LastStage", "Year", "LedgerSide", "FlowAggregationPoint", 
                                        "Flow", "Product", "Unit", "E.dot"))
     # This is a energy exclusive data frame
     expect_true(all(iea_tidy_df$EnergyType == "E"))
@@ -1135,7 +1135,7 @@ test_that("load_tidy_iea_df() gives expected values", {
   # Try some values
   expect_equal(iea_df |> 
                  dplyr::filter(Country == "ZAF", Year == 1971, Product == "Fuel oil", 
-                               Flow == "Oil refineries", Flow.aggregation.point == "Transformation processes") |> 
+                               Flow == "Oil refineries", FlowAggregationPoint == "Transformation processes") |> 
                  magrittr::extract2("E.dot"), 
                189060.6)
   
@@ -1170,7 +1170,7 @@ test_that("load_tidy_iea_df() fills every Flow.aggregation.point", {
   # Verify that's indeed the case.
   for (year in IEATools::valid_iea_release_years) {
     load_tidy_iea_df(sample_iea_data_path(year)) |> 
-      magrittr::extract2("Flow.aggregation.point") |> 
+      magrittr::extract2("FlowAggregationPoint") |> 
       is.na() |> 
       any() |> 
       expect_false()

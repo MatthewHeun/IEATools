@@ -109,7 +109,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #' # Allocations for Residential consumption of PSBs will be picked up from the exemplar, South Africa.
 #' fu_table_GHA <- fu_table %>% 
 #'   dplyr::filter(Country == "GHA") %>% 
-#'   dplyr::filter(!(Flow.aggregation.point == IEATools::tfc_flows$other & 
+#'   dplyr::filter(!(FlowAggregationPoint == IEATools::tfc_flows$other & 
 #'                     Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
 #'                     Destination == IEATools::other_flows$residential))
 #' # Make the exemplar, South Africa.
@@ -118,7 +118,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #' # The South African data have Residential PSB consumption, 
 #' # which will be used to complete the Ghanaian FU Allocation table.
 #' fu_table_ZAF %>% 
-#'   dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other & 
+#'   dplyr::filter(FlowAggregationPoint == IEATools::tfc_flows$other & 
 #'                   Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
 #'                   Destination == IEATools::other_flows$residential) %>% 
 #'   dplyr::select(!c(Method, EnergyType, LastStage, Flow.aggregation.point))
@@ -132,7 +132,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #'                                           tidy_specified_iea_data = tidy_specified_iea_data)
 #' # Note that the C_source column shows that these data have been taken from South Africa.
 #' completed %>% 
-#'   dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other & 
+#'   dplyr::filter(FlowAggregationPoint == IEATools::tfc_flows$other & 
 #'                   Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
 #'                   Destination == IEATools::other_flows$residential) %>% 
 #'   dplyr::select(!c(Method, EnergyType, LastStage, Flow.aggregation.point))
@@ -667,7 +667,7 @@ complete_eta_fu_table <- function(eta_fu_table,
   # fu_allocation_table may come in with C_1 [%] etc. in the quantity column.
   # But it really needs eta.fu or phi.u, as required by the which_quantity argument.
   # for each unique combination of columns from 
-  # Country, Year, Method, EnergyType, LastStage, Flow.aggregation.point, 
+  # Country, Year, Method, EnergyType, LastStage, FlowAggregationPoint, 
   # Destination, Ef.product, Machine, and Eu.product.
   # Note that "quantities" here refers to eta_fu or phi_u.
   machines_that_need_quantities <- lapply(X = which_quantity, FUN = function(q){
