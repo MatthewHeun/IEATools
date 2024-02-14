@@ -506,7 +506,7 @@ sample_eta_fu_table_path <- function(version = 2022) {
 #' @param country the name of the country column in `.tidy_iea_df`. Default is "Country".
 #' @param method the name of the method column in `.tidy_iea_df`. Default is "Method".
 #' @param energy_type the name of the energy type column in `.tidy_iea_df`. Default is "EnergyType".
-#' @param last_stage the name of the last stage column in `.tidy_iea_df`. Default is "Last.stage".
+#' @param last_stage the name of the last stage column in `.tidy_iea_df`. Default is "LastStage".
 #' @param year the name of the year column in `.tidy_iea_df`. Default is "Year".
 #' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "Ledger.side".
 #' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".

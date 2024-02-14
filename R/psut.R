@@ -600,14 +600,14 @@ replace_null_RUV <- function(.sutmats = NULL,
 #'   collapse_to_tidy_psut() %>% 
 #'   spread(key = matnames, value = matvals) %>% 
 #'   replace_null_RUV() %>% 
-#'   full_join(S_units, by = c("Method", "EnergyType", "Last.stage", 
+#'   full_join(S_units, by = c("Method", "EnergyType", "LastStage", 
 #'                             "Country", "Year")) %>% 
 #'   gather(key = matnames, value = matvals, R, U_EIOU, U_feed, 
 #'                                         V, Y, S_units) %>% 
 #'   rename(matval_complicated = matvals)
 #' # Simple and Complicated are same.
 #' full_join(Simple, Complicated, by = c("Method", "EnergyType", 
-#'                                       "Last.stage", "Country", 
+#'                                       "LastStage", "Country", 
 #'                                       "Year", "matnames")) %>% 
 #'   dplyr::mutate(
 #'     same = matsbyname::equal_byname(matval_simple, matval_complicated)

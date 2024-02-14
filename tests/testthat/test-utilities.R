@@ -248,7 +248,7 @@ test_that("sorting a tidy IEA data frame works as expected", {
   sorted <- sort_iea_df(unsorted)
   # Bug: The Last.stage column has NA values
   # Make sure Last.stage has no NA values in it.
-  expect_false(any(is.na(sorted$Last.stage)))
+  expect_false(any(is.na(sorted$LastStage)))
   # Look at the first row
   expect_equal(sorted$Country[[1]], "GHA")
   expect_equal(sorted$Product[[1]], "Primary solid biofuels")

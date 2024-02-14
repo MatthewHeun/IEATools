@@ -8,7 +8,7 @@ fu_allocation_template(
   .tidy_iea_df,
   energy_type = "EnergyType",
   energy = "E",
-  last_stage = "Last.stage",
+  last_stage = "LastStage",
   final = "Final",
   year = "Year",
   ledger_side = "Ledger.side",
@@ -44,7 +44,7 @@ fu_allocation_template(
 
 \item{energy}{the string identifier for energy (as opposed to exergy) in the \code{energy_type} column. Default is "\code{E}".}
 
-\item{last_stage}{the name of the last stage column. Default is "Last.stage".}
+\item{last_stage}{the name of the last stage column. Default is "LastStage".}
 
 \item{final}{the string identifier for final energy (as \code{Last.stage}). Default is "Final".}
 

@@ -373,7 +373,7 @@ test_that("augment_iea_df() works", {
   # Check column types
   clses <- lapply(IEADF_augmented, class)
   expect_equal(clses$Method, "character")  
-  expect_equal(clses$Last.stage, "character")  
+  expect_equal(clses$LastStage, "character")  
   expect_equal(clses$Country, "character")  
   expect_equal(clses$Ledger.side, "character")  
   expect_equal(clses$Flow.aggregation.point, "character")  
@@ -381,7 +381,7 @@ test_that("augment_iea_df() works", {
   expect_equal(clses$Unit, "character")
   expect_equal(clses$Flow, "character")  
   expect_equal(clses$Product, "character")  
-  clses[c("Method", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Country", "EnergyType", "Unit", "Flow", "Product")] <- NULL
+  clses[c("Method", "LastStage", "Ledger.side", "Flow.aggregation.point", "Country", "EnergyType", "Unit", "Flow", "Product")] <- NULL
   expect_true(all(clses == "numeric"))
   # Ensure that there are no remaining .. or x.
   # This test fails if there are any NA items.
@@ -828,7 +828,7 @@ test_that("specify_non_energy_use() works for South African Hard coal in 1971", 
     specify_non_energy_use()
   
   # Full join to see differences
-  res <- dplyr::full_join(df, neu_specified_df, by = c("Country", "Method", "EnergyType", "Last.stage", "Unit", "Ledger.side", 
+  res <- dplyr::full_join(df, neu_specified_df, by = c("Country", "Method", "EnergyType", "LastStage", "Unit", "Ledger.side", 
                                                        "Flow", "Flow.aggregation.point", "Product")) |>
     dplyr::filter(.data[[IEATools::iea_cols$flow_aggregation_point]] %in% c("Non-energy use", "Memo: Non-energy use in industry"))
   # Check that the right flows are present in res
@@ -1063,7 +1063,7 @@ test_that("load_tidy_iea_df() works as expected", {
     iea_tidy_df <- sample_iea_data_path(yr) |> 
       load_tidy_iea_df(specify_non_energy_flows = TRUE)
     # Verify column names and order
-    expect_equal(names(iea_tidy_df), c("Country", "Method", "EnergyType", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", 
+    expect_equal(names(iea_tidy_df), c("Country", "Method", "EnergyType", "LastStage", "Year", "Ledger.side", "Flow.aggregation.point", 
                                        "Flow", "Product", "Unit", "E.dot"))
     # This is a energy exclusive data frame
     expect_true(all(iea_tidy_df$EnergyType == "E"))

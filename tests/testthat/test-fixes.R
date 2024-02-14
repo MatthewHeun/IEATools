@@ -430,7 +430,7 @@ test_that("fix_RUSEST_heat() works as expected", {
   # Try a made-up dataset to see that it works.
   heat_df <- data.frame(Country = c("RUS", "RUS", "RUS", "EST"), 
                         Method = "PCM",
-                        EnergyType = "E", Last.stage = "Final", 
+                        EnergyType = "E", LastStage = "Final", 
                         Year = 1990, Ledger.side = "Consumption", 
                         Flow.aggregation.point = c("Industry",
                                                    "Industry", 
@@ -559,7 +559,7 @@ test_that("load_tidy_iea_df(apply_fixes = TRUE) works as expected", {
 
 test_that("do_fix() works with wide-by-year data", {
   unfixed <- load_tidy_iea_df(apply_fixes = FALSE) |> 
-    dplyr::filter(Country == "GHA", EnergyType == "E", Last.stage == "Final")
+    dplyr::filter(Country == "GHA", EnergyType == "E", LastStage == "Final")
   # Check that GHA industry electricity is not fixed, i.e., that there is 
   # no Mining and quarrying in 2000.
   unfixed |> 
@@ -588,14 +588,14 @@ test_that("do_fix() works with wide-by-year data", {
 
 test_that("Energy remains balanced after fixes are applied", {
   unfixed <- load_tidy_iea_df(apply_fixes = FALSE) |> 
-    dplyr::filter(Country == "GHA", EnergyType == "E", Last.stage == "Final")
+    dplyr::filter(Country == "GHA", EnergyType == "E", LastStage == "Final")
   unfixed |> 
     calc_tidy_iea_df_balances(tol = 0.01) |> 
     tidy_iea_df_balanced() |> 
     expect_true()
 
   fixed <- load_tidy_iea_df(apply_fixes = TRUE) |> 
-    dplyr::filter(Country == "GHA", EnergyType == "E", Last.stage == "Final")
+    dplyr::filter(Country == "GHA", EnergyType == "E", LastStage == "Final")
   expect_true(nrow(fixed) == nrow(unfixed))
   fixed |> 
     calc_tidy_iea_df_balances(tol = 0.01) |> 

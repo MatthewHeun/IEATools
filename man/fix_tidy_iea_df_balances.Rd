@@ -78,7 +78,7 @@ library(dplyr)
 # Remember that grouping should _not_ be done on
 # the `flow_aggregation_point`, `Flow`, or `ledger_side` columns.
 grouped_iea_df <- load_tidy_iea_df() \%>\% 
-  group_by(Country, Method, EnergyType, Last.stage, Year, Product)
+  group_by(Country, Method, EnergyType, LastStage, Year, Product)
 # unbalanced will not be balanced, because the IEA data are not in perfect balance.
 # Because we have grouped by key variables, 
 # `calc_tidy_iea_df_balances` provides energy balances 

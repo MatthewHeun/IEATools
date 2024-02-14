@@ -40,7 +40,7 @@ sort_iea_df(
 
 \item{energy_type}{the name of the energy type column in \code{.tidy_iea_df}. Default is "EnergyType".}
 
-\item{last_stage}{the name of the last stage column in \code{.tidy_iea_df}. Default is "Last.stage".}
+\item{last_stage}{the name of the last stage column in \code{.tidy_iea_df}. Default is "LastStage".}
 
 \item{year}{the name of the year column in \code{.tidy_iea_df}. Default is "Year".}
 

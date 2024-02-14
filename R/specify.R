@@ -569,7 +569,7 @@ tp_sinks_sources <- function(.tidy_iea_df,
 #' ) %>% 
 #'   mutate(
 #'     Method = "PCM", 
-#'     Last.stage = "Final",
+#'     LastStage = "Final",
 #'     EnergyType = "E",
 #'     Country = "Bogus",
 #'     Year = 1971
@@ -588,7 +588,7 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
                                   non_energy_flow = "Non-energy use industry/transformation/energy",
                                   product = "Product",
                                   e_dot = "E.dot"){
-                                  # grouping_vars = c("Method", "Last.stage", "Country", "Year", "EnergyType")){
+                                  # grouping_vars = c("Method", "LastStage", "Country", "Year", "EnergyType")){
   # First step is to find all Transformation process sinks.
   # These items need to removed from the IEAData data frame, eventually.
   Sinks <- .tidy_iea_df %>% 

@@ -67,7 +67,7 @@ DF <- data.frame(
 ) \%>\% 
   mutate(
     Method = "PCM", 
-    Last.stage = "Final",
+    LastStage = "Final",
     EnergyType = "E",
     Country = "Bogus",
     Year = 1971

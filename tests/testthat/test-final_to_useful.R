@@ -366,13 +366,13 @@ test_that("extend_to_useful() works as expected", {
   expected_md_into_mines <- expected_elect_into_motors_in_mines * eta_motors
 
   actual_light_into_mines <- with_useful %>% 
-    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
+    dplyr::filter(Country == "ZAF", LastStage == "Useful", Year == 2000) %>% 
     magrittr::extract2("U_EIOU") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Light [from Electric lights]", "Coal mines")
   
   actual_md_into_mines <- with_useful %>% 
-    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
+    dplyr::filter(Country == "ZAF", LastStage == "Useful", Year == 2000) %>% 
     magrittr::extract2("U_EIOU") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("MD [from Electric motors]", "Coal mines")
@@ -407,7 +407,7 @@ test_that("extend_to_useful() works as expected", {
   expected_200C_into_chem <- expected_OBC_into_heaters_in_chem * eta_heaters
   
   actual_200C_into_chem <- with_useful %>% 
-    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
+    dplyr::filter(Country == "ZAF", LastStage == "Useful", Year == 2000) %>% 
     magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("MTH.200.C [from Electric heaters]", "Chemical and petrochemical")
@@ -436,7 +436,7 @@ test_that("extend_to_useful() works as expected", {
   expected_light_into_chem <- expected_OBC_light_into_chem + expected_Elect_light_into_chem
   
   actual_light_into_chem <- with_useful %>% 
-    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
+    dplyr::filter(Country == "ZAF", LastStage == "Useful", Year == 2000) %>% 
     magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Light [from Electric lights]", "Chemical and petrochemical")
@@ -480,13 +480,13 @@ test_that("extend_to_useful() works as expected", {
   expected_light_into_NFM <- expected_elect_into_lights_in_NFM * eta_lights
   
   actual_md_into_NFM <- with_useful %>% 
-    dplyr::filter(Country == "GHA", Last.stage == "Useful", Year == 1971) %>% 
+    dplyr::filter(Country == "GHA", LastStage == "Useful", Year == 1971) %>% 
     magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("MD [from Electric motors]", "Non-ferrous metals")
   
   actual_light_into_NFM <- with_useful %>% 
-    dplyr::filter(Country == "GHA", Last.stage == "Useful", Year == 1971) %>% 
+    dplyr::filter(Country == "GHA", LastStage == "Useful", Year == 1971) %>% 
     magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Light [from Electric lights]", "Non-ferrous metals")
@@ -518,13 +518,13 @@ test_that("extend_to_useful() works as expected", {
   # Check that we have details matrices
   # None of the rows where last stage is final should have a matrix.
   with_useful |> 
-    dplyr::filter(Last.stage == "Final") |> 
+    dplyr::filter(LastStage == "Final") |> 
     magrittr::extract2("Y_fu_details") |> 
     sapply(FUN = is.null) |> 
     all() |> 
     expect_true()
   with_useful |> 
-    dplyr::filter(Last.stage == "Final") |> 
+    dplyr::filter(LastStage == "Final") |> 
     magrittr::extract2("U_EIOU_fu_details") |> 
     sapply(FUN = is.null) |> 
     all() |> 
@@ -533,7 +533,7 @@ test_that("extend_to_useful() works as expected", {
   # But where Last.stage is useful, we will have matrices
   # Test a couple values to make sure everything is working.
   Y_fu_details_example <- with_useful |> 
-    dplyr::filter(Last.stage == "Useful") |> 
+    dplyr::filter(LastStage == "Useful") |> 
     magrittr::extract2("Y_fu_details") |> 
     magrittr::extract2(1) |> 
     matsbyname::select_cols_byname(retain_pattern = "Light [from Electric lights]", fixed = TRUE) |>
@@ -542,7 +542,7 @@ test_that("extend_to_useful() works as expected", {
     expect_equal(994.392210)
   
   U_EIOU_fu_details_example <- with_useful |> 
-    dplyr::filter(Last.stage == "Useful") |> 
+    dplyr::filter(LastStage == "Useful") |> 
     magrittr::extract2("U_EIOU_fu_details") |> 
     magrittr::extract2(4) |> 
     matsbyname::select_cols_byname(retain_pattern = "MD [from Electric motors]", fixed = TRUE) |>
@@ -609,13 +609,13 @@ test_that("extend_to_useful() works with Matrix objects", {
   expected_md_into_mines <- expected_elect_into_motors_in_mines * eta_motors
   
   actual_light_into_mines <- with_useful %>% 
-    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
+    dplyr::filter(Country == "ZAF", LastStage == "Useful", Year == 2000) %>% 
     magrittr::extract2("U_EIOU") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Light [from Electric lights]", "Coal mines")
   
   actual_md_into_mines <- with_useful %>% 
-    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
+    dplyr::filter(Country == "ZAF", LastStage == "Useful", Year == 2000) %>% 
     magrittr::extract2("U_EIOU") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("MD [from Electric motors]", "Coal mines")
@@ -650,7 +650,7 @@ test_that("extend_to_useful() works with Matrix objects", {
   expected_200C_into_chem <- expected_OBC_into_heaters_in_chem * eta_heaters
   
   actual_200C_into_chem <- with_useful %>% 
-    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
+    dplyr::filter(Country == "ZAF", LastStage == "Useful", Year == 2000) %>% 
     magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("MTH.200.C [from Electric heaters]", "Chemical and petrochemical")
@@ -679,7 +679,7 @@ test_that("extend_to_useful() works with Matrix objects", {
   expected_light_into_chem <- expected_OBC_light_into_chem + expected_Elect_light_into_chem
   
   actual_light_into_chem <- with_useful %>% 
-    dplyr::filter(Country == "ZAF", Last.stage == "Useful", Year == 2000) %>% 
+    dplyr::filter(Country == "ZAF", LastStage == "Useful", Year == 2000) %>% 
     magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Light [from Electric lights]", "Chemical and petrochemical")
@@ -723,13 +723,13 @@ test_that("extend_to_useful() works with Matrix objects", {
   expected_light_into_NFM <- expected_elect_into_lights_in_NFM * eta_lights
   
   actual_md_into_NFM <- with_useful %>% 
-    dplyr::filter(Country == "GHA", Last.stage == "Useful", Year == 1971) %>% 
+    dplyr::filter(Country == "GHA", LastStage == "Useful", Year == 1971) %>% 
     magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("MD [from Electric motors]", "Non-ferrous metals")
   
   actual_light_into_NFM <- with_useful %>% 
-    dplyr::filter(Country == "GHA", Last.stage == "Useful", Year == 1971) %>% 
+    dplyr::filter(Country == "GHA", LastStage == "Useful", Year == 1971) %>% 
     magrittr::extract2("Y") %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Light [from Electric lights]", "Non-ferrous metals")
@@ -761,13 +761,13 @@ test_that("extend_to_useful() works with Matrix objects", {
   # Check that we have details matrices
   # None of the rows where last stage is final should have a matrix.
   with_useful |> 
-    dplyr::filter(Last.stage == "Final") |> 
+    dplyr::filter(LastStage == "Final") |> 
     magrittr::extract2("Y_fu_details") |> 
     sapply(FUN = is.null) |> 
     all() |> 
     expect_true()
   with_useful |> 
-    dplyr::filter(Last.stage == "Final") |> 
+    dplyr::filter(LastStage == "Final") |> 
     magrittr::extract2("U_EIOU_fu_details") |> 
     sapply(FUN = is.null) |> 
     all() |> 
@@ -776,7 +776,7 @@ test_that("extend_to_useful() works with Matrix objects", {
   # But where Last.stage is useful, we will have matrices
   # Test a couple values to make sure everything is working.
   Y_fu_details_example <- with_useful |> 
-    dplyr::filter(Last.stage == "Useful") |> 
+    dplyr::filter(LastStage == "Useful") |> 
     magrittr::extract2("Y_fu_details") |> 
     magrittr::extract2(1) |> 
     matsbyname::select_cols_byname(retain_pattern = "Light [from Electric lights]", fixed = TRUE) |>
@@ -785,7 +785,7 @@ test_that("extend_to_useful() works with Matrix objects", {
     expect_equal(994.392210)
   
   U_EIOU_fu_details_example <- with_useful |> 
-    dplyr::filter(Last.stage == "Useful") |> 
+    dplyr::filter(LastStage == "Useful") |> 
     magrittr::extract2("U_EIOU_fu_details") |> 
     magrittr::extract2(4) |> 
     matsbyname::select_cols_byname(retain_pattern = "MD [from Electric motors]", fixed = TRUE) |>
@@ -939,7 +939,7 @@ test_that("extend_to_useful() works with list of matrices", {
   
   # When a list is used as the data store, we should get all variables returned.
   expect_equal(names(useful_list), 
-               c("Country", "Method", "EnergyType", "Last.stage", "Year",
+               c("Country", "Method", "EnergyType", "LastStage", "Year",
                  "Y", "S_units", "R", "U", "U_feed",
                  "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                  "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
@@ -978,7 +978,7 @@ test_that("extend_to_useful() works with list of Matrix objects", {
   
   # When a list is used as the data store, we should get all variables returned.
   expect_equal(names(useful_list), 
-               c("Country", "Method", "EnergyType", "Last.stage", "Year",
+               c("Country", "Method", "EnergyType", "LastStage", "Year",
                  "Y", "S_units", "R", "U", "U_feed",
                  "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                  "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
@@ -1008,7 +1008,7 @@ test_that("extend_to_useful() works with empty lists", {
   useful_list <- extend_to_useful(var_store)
   
   expect_setequal(names(useful_list), 
-                  c("Country", "Method", "EnergyType", "Last.stage", "Year",
+                  c("Country", "Method", "EnergyType", "LastStage", "Year",
                     "Y", "S_units", "R", "U", "U_feed",
                     "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                     "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
@@ -1042,7 +1042,7 @@ test_that("extend_to_useful() returns works with empty data frames", {
   expect_equal(nrow(with_useful), 0)
   
   expect_setequal(names(with_useful), 
-                  c("Country", "Method", "EnergyType", "Last.stage", "Year",
+                  c("Country", "Method", "EnergyType", "LastStage", "Year",
                     "Y", "S_units", "R", "U", "U_feed",
                     "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                     "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 

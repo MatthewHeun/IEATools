@@ -106,7 +106,7 @@ test_that("Aggregating South Africa and Ghana works as intended", {
                     stringr::str_detect(Flow, IEATools::tpes_flows$exports_to_world_aviation_bunkers) |
                     stringr::str_detect(Flow, IEATools::tpes_flows$exports_to_world_marine_bunkers)) %>%
     #specify_interface_industries() %>% 
-    dplyr::group_by(Method, Last.stage, EnergyType, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
+    dplyr::group_by(Method, LastStage, EnergyType, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot), .groups = "drop") %>% 
     dplyr::mutate(
       Country = "GHAZAF"
@@ -117,7 +117,7 @@ test_that("Aggregating South Africa and Ghana works as intended", {
     dplyr::filter(stringr::str_detect(Flow, IEATools::interface_industries$imports) | stringr::str_detect(Flow, IEATools::interface_industries$exports)) %>%
     dplyr::filter(! (stringr::str_detect(Flow, IEATools::tpes_flows$exports_to_world_marine_bunkers) |
                        stringr::str_detect(Flow, IEATools::tpes_flows$exports_to_world_aviation_bunkers))) %>%
-    dplyr::group_by(Method, EnergyType, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
+    dplyr::group_by(Method, EnergyType, LastStage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot), .groups = "drop") %>%
     remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>%
     tidyr::pivot_wider(names_from = Flow, values_from = E.dot.aggregated) %>% 
@@ -144,7 +144,7 @@ test_that("Aggregating South Africa and Ghana works as intended", {
   manual_aggregation <- dplyr::bind_rows(manual_aggregation_excl_ie, manual_aggregation_ie)
   
   comparing <- aggregated_regions %>%
-    dplyr::full_join(manual_aggregation, by = c("Country", "Method", "EnergyType", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", "Flow", "Product", "Unit")) %>%
+    dplyr::full_join(manual_aggregation, by = c("Country", "Method", "EnergyType", "LastStage", "Year", "Ledger.side", "Flow.aggregation.point", "Flow", "Product", "Unit")) %>%
     dplyr::mutate(
       is_equal = E.dot.aggregated == E.dot
     )
@@ -238,7 +238,7 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
         Country == "Emmanuel Great Country" ~ "GHA_EGC"
       )
     ) %>%
-    dplyr::group_by(Country, Method, EnergyType, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
+    dplyr::group_by(Country, Method, EnergyType, LastStage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot), .groups = "drop")
   
   manual_aggregation_ie <- tidy_GHA_ZAF_EGC_MGC_df %>%
@@ -253,7 +253,7 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
         Country == "Emmanuel Great Country" ~ "GHA_EGC"
       )
     ) %>%
-    dplyr::group_by(Country, Method, EnergyType, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
+    dplyr::group_by(Country, Method, EnergyType, LastStage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit) %>%
     dplyr::summarise(E.dot.aggregated = sum(E.dot), 
                      .groups = "drop") %>%
     dplyr::mutate(
@@ -285,7 +285,7 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
   
   comparing <- aggregated_regions %>%
     dplyr::full_join(manual_aggregation, 
-                     by = dplyr::join_by(Country, Method, EnergyType, Last.stage, Year,
+                     by = dplyr::join_by(Country, Method, EnergyType, LastStage, Year,
                                          Ledger.side, Flow.aggregation.point, Flow, Product, Unit)) %>%
     dplyr::mutate(
       difference = E.dot.aggregated - E.dot

@@ -15,7 +15,7 @@
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
 #' @param energy_type the name of the energy type column. Default is "EnergyType".
 #' @param energy the string identifier for energy (as opposed to exergy) in the `energy_type` column. Default is "`E`".
-#' @param last_stage the name of the last stage column. Default is "Last.stage".
+#' @param last_stage the name of the last stage column. Default is "LastStage".
 #' @param final the string identifier for final energy (as `Last.stage`). Default is "Final".
 #' @param year the name of the year column. Default is "Year".
 #' @param ledger_side the name of the ledger side column. Default is "Ledger.side".
@@ -58,7 +58,7 @@
 fu_allocation_template <- function(.tidy_iea_df,
                                    energy_type = "EnergyType",
                                    energy = "E",
-                                   last_stage = "Last.stage",
+                                   last_stage = "LastStage",
                                    final = "Final",
                                    year = "Year",
                                    ledger_side = "Ledger.side",
