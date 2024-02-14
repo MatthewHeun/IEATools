@@ -121,7 +121,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #'   dplyr::filter(FlowAggregationPoint == IEATools::tfc_flows$other & 
 #'                   Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
 #'                   Destination == IEATools::other_flows$residential) %>% 
-#'   dplyr::select(!c(Method, EnergyType, LastStage, Flow.aggregation.point))
+#'   dplyr::select(!c(Method, EnergyType, LastStage, FlowAggregationPoint))
 #' # Get the IEA data for GHA and ZAF and specify it.
 #' tidy_specified_iea_data <- load_tidy_iea_df() %>% 
 #'   specify_all()
@@ -135,7 +135,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #'   dplyr::filter(FlowAggregationPoint == IEATools::tfc_flows$other & 
 #'                   Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
 #'                   Destination == IEATools::other_flows$residential) %>% 
-#'   dplyr::select(!c(Method, EnergyType, LastStage, Flow.aggregation.point))
+#'   dplyr::select(!c(Method, EnergyType, LastStage, FlowAggregationPoint))
 complete_fu_allocation_table <- function(fu_allocation_table, 
                                          country_to_complete,
                                          exemplar_fu_allocation_tables, 

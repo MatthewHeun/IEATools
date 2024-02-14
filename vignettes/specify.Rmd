@@ -49,7 +49,7 @@ library(dplyr)
 library(IEATools)
 library(magrittr)
 EIOU_flows <- load_tidy_iea_df() %>%
-  filter(Flow.aggregation.point == "Energy industry own use")
+  filter(FlowAggregationPoint == "Energy industry own use")
 EIOU_flows %>%
   select(Country, Year, Flow, Product)
 ```
@@ -68,9 +68,9 @@ in the IEA data. (The suffix `(energy)` indicates EIOU.) Rather, coal
 
 ```{r}
 load_tidy_iea_df() %>%
-  filter(Flow.aggregation.point == "Total primary energy supply",
+  filter(FlowAggregationPoint == "Total primary energy supply",
          Product %in% coal_and_coal_products) %>%
-  select(Country, Flow.aggregation.point, Flow, Product) %>%
+  select(Country, FlowAggregationPoint, Flow, Product) %>%
   unique()
 ```
 
@@ -152,7 +152,7 @@ Specific_primary_production %>%
   filter(Flow %in% c("Coal mines", "Oil and gas extraction")) %>%
   as.data.frame()
 Specific_primary_production %>%
-  filter(Flow.aggregation.point == "Energy industry own use" ) %>%
+  filter(FlowAggregationPoint == "Energy industry own use" ) %>%
   select(Country, Year, Flow, Product, E.dot, matnames) %>%
   as.data.frame()
 ```
@@ -347,7 +347,7 @@ data.frame(Flow = c("Automobiles", "Automobiles", "Furnaces"),
                    stringsAsFactors = FALSE) %>%
   dplyr::mutate(
     Country = "A country",
-    Flow.aggregation.point = "Transformation processes",
+    FlowAggregationPoint = "Transformation processes",
     Product = "A product"
   ) %>%
   # Automobiles both consume and produce energy,
@@ -370,10 +370,10 @@ internally to identify transformation process sinks.
 ```{r}
 DF <- data.frame(
   Ledger.side = c("Supply", "Supply", "Supply", "Consumption"),
-  Flow.aggregation.point = c("Transformation processes",
-                             "Transformation processes",
-                             "Transformation processes",
-                             "Non-energy use"),
+  FlowAggregationPoint = c("Transformation processes",
+                           "Transformation processes",
+                           "Transformation processes",
+                           "Non-energy use"),
   Flow = c("Automobiles", "Automobiles", "Furnaces",
            "Non-energy use industry/transformation/energy"),
   Product = c("Petrol", "MD", "Coal", "Coal"),
