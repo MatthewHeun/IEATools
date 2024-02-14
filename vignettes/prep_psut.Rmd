@@ -151,14 +151,14 @@ Complicated <- load_tidy_iea_df() %>%
   add_row_col_meta() %>% 
   collapse_to_tidy_psut() %>% 
   spread(key = matnames, value = matvals) %>% 
-  full_join(S_units, by = c("Method", "Energy.type", "Last.stage", 
+  full_join(S_units, by = c("Method", "EnergyType", "LastStage", 
                             "Country", "Year")) %>% 
   gather(key = matnames, value = matvals, R, U_EIOU, U_feed, 
          V, Y, S_units)
 # Simple and Complicated are same.
 full_join(Simple %>% rename(matval_simple = matvals), 
           Complicated %>% rename(matval_complicated = matvals), 
-          by = c("Method", "Energy.type", "Last.stage", "Country", "Year", "matnames")) %>% 
+          by = c("Method", "EnergyType", "LastStage", "Country", "Year", "matnames")) %>% 
   dplyr::mutate(
     same = matsbyname::equal_byname(matval_simple, matval_complicated)
   ) %>% 

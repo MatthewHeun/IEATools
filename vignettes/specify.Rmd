@@ -139,7 +139,7 @@ Specific_primary_production <- load_tidy_iea_df() %>%
   add_psut_matnames()
 Specific_primary_production %>%
   filter(Flow %in% c("Resources (Coal)", "Resources (Oil and natural gas)")) %>%
-  select(-Method, -Last.stage, -Energy.type, -Ledger.side, -Unit) %>%
+  select(-Method, -LastStage, -EnergyType, -LedgerSide, -Unit) %>%
   as.data.frame()
 ```
 
@@ -382,8 +382,8 @@ DF <- data.frame(
 ) %>%
   mutate(
     Method = "PCM",
-    Last.stage = "Final",
-    Energy.type = "E",
+    LastStage = "Final",
+    EnergyType = "E",
     Country = "Bogus",
     Year = 1971
   )

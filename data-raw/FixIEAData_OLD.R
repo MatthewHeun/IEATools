@@ -122,7 +122,7 @@ NewCTLRowsTo2000 <- IEAZACoalLiquefactionDataTo2000 %>%
     `Energy industry own use+Other hydrocarbons` = -0.5 * `Transformation processes+Other hydrocarbons`,
     `Transformation processes+Other hydrocarbons` = 0.5 * `Transformation processes+Other hydrocarbons`
   ) %>%
-  gather(key = `Flow.aggregation.point+Product`, value = E.ktoe, -Country, -Ledger.side, -Flow, -Year) %>%
+  gather(key = `Flow.aggregation.point+Product`, value = E.ktoe, -Country, -LedgerSide, -Flow, -Year) %>%
   separate(col = `Flow.aggregation.point+Product`, into = c("Flow.aggregation.point", "Product"), sep = "[+]")
 
 # Second, work on CTL data for 2001 and following
@@ -150,7 +150,7 @@ mutate(
   `Energy industry own use+Other bituminous coal` = `Energy industry own use+Other bituminous coal` 
   - `Energy industry own use+Other hydrocarbons`
 ) %>% 
-  gather(key = `Flow.aggregation.point+Product`, value = E.ktoe, -Country, -Ledger.side, -Flow, -Year) %>%
+  gather(key = `Flow.aggregation.point+Product`, value = E.ktoe, -Country, -LedgerSide, -Flow, -Year) %>%
   separate(col = `Flow.aggregation.point+Product`, into = c("Flow.aggregation.point", "Product"), sep = "[+]")
 
 
@@ -285,7 +285,7 @@ rm(IEAZACoalLiquefactionDataTo2000, IEAZACoalLiquefactionDataFrom2001,
 # Data are in ktoe.
 FixedGHIndustryElectricity <- read.delim(file = file.path("data-raw", "FixedGHIndustryElectricity.tsv"), 
                                          check.names = FALSE, stringsAsFactors = FALSE) %>% 
-  gather(key = Year, value = E.ktoe, -Country, -Ledger.side, -Flow.aggregation.point, -Flow, -Product ) %>% 
+  gather(key = Year, value = E.ktoe, -Country, -LedgerSide, -Flow.aggregation.point, -Flow, -Product ) %>% 
   filter(
     # Eliminate rows that have 0 energy.
     E.ktoe != 0

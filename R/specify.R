@@ -77,7 +77,7 @@
 #'   specify_primary_production() %>% 
 #'   add_psut_matnames() %>% 
 #'   dplyr::filter(Flow == "Coal mines" | stringr::str_detect(Flow, "Resources")) %>% 
-#'   select(-Method, -Last.stage, -Ledger.side, -Unit)
+#'   select(-Method, -LastStage, -LedgerSide, -Unit)
 #' # EIOU by "Liquefaction (LNG) / regasification plants" is reassigned to "Oil and gas extraction"
 #' data.frame(
 #'   Flow.aggregation.point = c("Energy industry own use"),

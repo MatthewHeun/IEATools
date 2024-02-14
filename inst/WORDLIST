@@ -20,6 +20,7 @@ EIA
 EIOU
 EWEB
 Ef
+EnergyType
 Exiobase
 FFFFFF
 FLOWs
@@ -44,6 +45,8 @@ Johnstone
 KE
 Kuperus
 LTC
+LastStage
+LedgerSide
 MTH
 Mtoe
 NGL
