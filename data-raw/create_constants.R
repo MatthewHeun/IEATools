@@ -715,7 +715,7 @@ usethis::use_data(ledger_sides, overwrite = TRUE)
 # In the first step, we use the data frame created from load_tidy_iea_df,
 # creating a united column from Flow.aggregation.point and Flow.
 fap_flows <- load_tidy_iea_df(remove_zeroes = FALSE) %>% 
-  tidyr::unite(col = Flow.aggregation.point_Flow, FlowAggregationPoint, Flow, sep = "_", remove = TRUE) %>% 
+  tidyr::unite(col = FlowAggregationPoint_Flow, FlowAggregationPoint, Flow, sep = "_", remove = TRUE) %>% 
   dplyr::select(FlowAggregationPoint_Flow) %>% 
   unique() %>% 
   unlist() %>% 
