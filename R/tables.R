@@ -121,7 +121,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #'   dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other & 
 #'                   Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
 #'                   Destination == IEATools::other_flows$residential) %>% 
-#'   dplyr::select(!c(Method, Energy.type, Last.stage, Flow.aggregation.point))
+#'   dplyr::select(!c(Method, EnergyType, Last.stage, Flow.aggregation.point))
 #' # Get the IEA data for GHA and ZAF and specify it.
 #' tidy_specified_iea_data <- load_tidy_iea_df() %>% 
 #'   specify_all()
@@ -135,7 +135,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #'   dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other & 
 #'                   Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
 #'                   Destination == IEATools::other_flows$residential) %>% 
-#'   dplyr::select(!c(Method, Energy.type, Last.stage, Flow.aggregation.point))
+#'   dplyr::select(!c(Method, EnergyType, Last.stage, Flow.aggregation.point))
 complete_fu_allocation_table <- function(fu_allocation_table, 
                                          country_to_complete,
                                          exemplar_fu_allocation_tables, 
@@ -667,7 +667,7 @@ complete_eta_fu_table <- function(eta_fu_table,
   # fu_allocation_table may come in with C_1 [%] etc. in the quantity column.
   # But it really needs eta.fu or phi.u, as required by the which_quantity argument.
   # for each unique combination of columns from 
-  # Country, Year, Method, Energy.type, Last.stage, Flow.aggregation.point, 
+  # Country, Year, Method, EnergyType, Last.stage, Flow.aggregation.point, 
   # Destination, Ef.product, Machine, and Eu.product.
   # Note that "quantities" here refers to eta_fu or phi_u.
   machines_that_need_quantities <- lapply(X = which_quantity, FUN = function(q){

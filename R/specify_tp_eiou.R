@@ -397,12 +397,12 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
   split_using_shares_of <- match.arg(split_using_shares_of)
   
   # The function check whether one of the three main activity elect, heat, and/or chp exists in the TP - supply,
-  # for each (Country, Method, Energy.type, Last.stage, Year)
+  # for each (Country, Method, EnergyType, Last.stage, Year)
   # If not, then it routes "Own use in electricity, CHP and heat plants" to "Main activity producer electricity plants".
   # If one of the three main activities elect, heat, and/or CHP EXISTS as a supplying transformation process,
   # Then it ascribes ... 
   
-  # Returns all the combinations of (Country, Method, Energy.type, Last.stage, Year) present in the .tidy_iea_df
+  # Returns all the combinations of (Country, Method, EnergyType, Last.stage, Year) present in the .tidy_iea_df
   df_observations_included_tidy_iea_df <- .tidy_iea_df %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
     dplyr::summarise(
@@ -439,7 +439,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
       )
   }
   
-  # Find out which observations (Country, Method, Energy.type, Last.stage, Year) are NOT in the total computed
+  # Find out which observations (Country, Method, EnergyType, Last.stage, Year) are NOT in the total computed
   list_not_included_total_main_activity <- df_observations_included_tidy_iea_df %>%
     dplyr::anti_join(total_main_activity, by = c({country}, {method}, {energy_type}, {last_stage}, {year})) %>%
     # tidyr::unite(col = "ID", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%

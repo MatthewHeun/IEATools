@@ -38,7 +38,7 @@ sort_iea_df(
 
 \item{method}{the name of the method column in \code{.tidy_iea_df}. Default is "Method".}
 
-\item{energy_type}{the name of the energy type column in \code{.tidy_iea_df}. Default is "Energy.type".}
+\item{energy_type}{the name of the energy type column in \code{.tidy_iea_df}. Default is "EnergyType".}
 
 \item{last_stage}{the name of the last stage column in \code{.tidy_iea_df}. Default is "Last.stage".}
 

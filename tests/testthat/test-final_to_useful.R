@@ -939,7 +939,7 @@ test_that("extend_to_useful() works with list of matrices", {
   
   # When a list is used as the data store, we should get all variables returned.
   expect_equal(names(useful_list), 
-               c("Country", "Method", "Energy.type", "Last.stage", "Year",
+               c("Country", "Method", "EnergyType", "Last.stage", "Year",
                  "Y", "S_units", "R", "U", "U_feed",
                  "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                  "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
@@ -978,7 +978,7 @@ test_that("extend_to_useful() works with list of Matrix objects", {
   
   # When a list is used as the data store, we should get all variables returned.
   expect_equal(names(useful_list), 
-               c("Country", "Method", "Energy.type", "Last.stage", "Year",
+               c("Country", "Method", "EnergyType", "Last.stage", "Year",
                  "Y", "S_units", "R", "U", "U_feed",
                  "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                  "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
@@ -1008,7 +1008,7 @@ test_that("extend_to_useful() works with empty lists", {
   useful_list <- extend_to_useful(var_store)
   
   expect_setequal(names(useful_list), 
-                  c("Country", "Method", "Energy.type", "Last.stage", "Year",
+                  c("Country", "Method", "EnergyType", "Last.stage", "Year",
                     "Y", "S_units", "R", "U", "U_feed",
                     "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                     "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
@@ -1042,7 +1042,7 @@ test_that("extend_to_useful() returns works with empty data frames", {
   expect_equal(nrow(with_useful), 0)
   
   expect_setequal(names(with_useful), 
-                  c("Country", "Method", "Energy.type", "Last.stage", "Year",
+                  c("Country", "Method", "EnergyType", "Last.stage", "Year",
                     "Y", "S_units", "R", "U", "U_feed",
                     "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
                     "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 

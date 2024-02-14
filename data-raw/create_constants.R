@@ -20,7 +20,7 @@ usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 
 iea_cols <- list(country = "Country",
                  method = "Method", 
-                 energy_type = "Energy.type", 
+                 energy_type = "EnergyType", 
                  last_stage = "Last.stage", 
                  year = "Year",
                  ledger_side = "Ledger.side", 

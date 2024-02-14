@@ -614,7 +614,7 @@ remove_agg_regions <- function(.iea_df,
 #' so they are deleted.
 #' 
 #' The third problem this function solves is that energy type and units are not specified in IEA data.
-#' An `Energy.type` column is added with the value of `energy_type_val`. 
+#' An `EnergyType` column is added with the value of `energy_type_val`. 
 #' (Default is `E`, for energy, as opposed to `X`, which would be exergy.)
 #' A `Unit` column is added with the value of `unit_val`.
 #' (Default is "TJ", although any string can be specified in `unit_val`.)

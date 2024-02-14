@@ -73,7 +73,7 @@ The set difference is the list of transformation sinks or sources, respectively.
 it returns a summary containing grouping variables and industries that are transformation sinks or sources.
 So be sure to specify (or accept defaults for)
 the \code{grouping_vars} argument.
-Typical grouping variables are \code{Method}, \code{Last.stage}, \code{Country}, \code{Year}, \code{Energy.type}.
+Typical grouping variables are \code{Method}, \code{Last.stage}, \code{Country}, \code{Year}, \code{EnergyType}.
 Don't group on \code{Flow.aggregation.point}, because energy from different aggregation points
 (\verb{Energy industry own use} and \verb{Transformation processes}) flows into each machine.
 Don't group on \code{Flow}, \code{Product}, or \code{E.dot}, either.

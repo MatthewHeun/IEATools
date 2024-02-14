@@ -3,7 +3,7 @@ test_that("specify_tp_eiou() works as expected for Own use in electricity, CHP a
   # Make a bogus data frame
   EIOU <- data.frame(Country = c("US", "US"), 
                      Method = c("PCM", "PCM"),
-                     Energy.type = c("E", "E"),
+                     EnergyType = c("E", "E"),
                      Last.stage = c("Final", "Final"),
                      Year = c(2000, 2000),
                      Flow.aggregation.point = c("Energy industry own use", "nothing"),
@@ -26,7 +26,7 @@ test_that("specify_tp_eiou() works as expected for pumped storage plants", {
   # Make a bogus data frame
   EIOU <- data.frame(Country = c("US", "US"), 
                      Method = c("PCM", "PCM"),
-                     Energy.type = c("E", "E"),
+                     EnergyType = c("E", "E"),
                      Last.stage = c("Final", "Final"),
                      Year = c(2000, 2000),
                      Flow.aggregation.point = c("Energy industry own use", "Nothing"),
@@ -52,7 +52,7 @@ test_that("route_pumped_storage() no longer discriminates +/-", {
   # Make a bogus data frame.
   EIOU <- data.frame(Country = c("JPN", "JPN", "JPN", "JPN"), 
                      Method = c("PCM", "PCM", "PCM", "PCM"),
-                     Energy.type = c("E", "E", "E", "E"),
+                     EnergyType = c("E", "E", "E", "E"),
                      Last.stage = c("Final", "Final", "Final", "Final"),
                      Year = c(2000, 2000, 2001, 2001),
                      Flow.aggregation.point = c("Energy industry own use",  
@@ -762,7 +762,7 @@ test_that("add_nuclear_industry() works", {
   second_test <- AB_data %>%
     tibble::add_row(Country = "A",
                     Method = "PCM",
-                    Energy.type = "E",
+                    EnergyType = "E",
                     Last.stage = "Final",
                     Year = 2018,
                     Ledger.side = "Supply",
@@ -1043,7 +1043,7 @@ test_that("route_non_specified_tp() works", {
     tibble::add_row(
       Country = "B",
       Method = "PCM",
-      Energy.type = "E",
+      EnergyType = "E",
       Last.stage = "Final",
       Year = 2018,
       Ledger.side = "Supply",
@@ -1259,7 +1259,7 @@ test_that("route_non_specified_flows() works", {
     tibble::add_row(
       Country = "B",
       Method = "PCM",
-      Energy.type = "E",
+      EnergyType = "E",
       Last.stage = "Final",
       Year = 2018,
       Ledger.side = "Supply",

@@ -49,7 +49,7 @@ Unit summation matrices have products in rows and units in columns, with
 }
 \details{
 \code{.tidy_iea_df} should be grouped as needed, typically on
-\code{Country}, \code{Year}, \code{Energy.type}, \code{Last.stage}, etc., but
+\code{Country}, \code{Year}, \code{EnergyType}, \code{Last.stage}, etc., but
 \emph{not} on \code{Unit}, \code{Flow} or \code{Product}.
 \code{.tidy_iea_df} is typically obtained from \code{tidy_iea_df()}.
 }

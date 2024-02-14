@@ -51,7 +51,7 @@ test_that("fu_allocation_template() works as expected", {
   check_fu_allocation_template(Allocation_template)
 
   # Check columns
-  expected_colorder <- c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit",
+  expected_colorder <- c("Country", "Method", "EnergyType", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Unit",
                          "Ef.product", "Machine", "Eu.product", "Destination", 
                          "Quantity", "Maximum.values", "1971", "2000")
   expect_equal(names(Allocation_template), expected_colorder)
@@ -103,7 +103,7 @@ test_that("write_fu_allocation_template() works as expected", {
     )
   # Check the tabs to make sure they're the same
   Expected_allocations <- FU_allocation_template
-  Joined <- dplyr::full_join(Allocations, Expected_allocations, by = c("Country", "Method", "Energy.type", 
+  Joined <- dplyr::full_join(Allocations, Expected_allocations, by = c("Country", "Method", "EnergyType", 
                                                                        "Last.stage", "Ledger.side", "Flow.aggregation.point", 
                                                                        "Unit", "Ef.product", "Machine", 
                                                                        "Eu.product", "Destination", "Quantity")) %>% 

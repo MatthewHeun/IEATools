@@ -108,7 +108,7 @@ fu_table_ZAF \%>\%
   dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other & 
                   Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
                   Destination == IEATools::other_flows$residential) \%>\% 
-  dplyr::select(!c(Method, Energy.type, Last.stage, Flow.aggregation.point))
+  dplyr::select(!c(Method, EnergyType, Last.stage, Flow.aggregation.point))
 # Get the IEA data for GHA and ZAF and specify it.
 tidy_specified_iea_data <- load_tidy_iea_df() \%>\% 
   specify_all()
@@ -122,5 +122,5 @@ completed \%>\%
   dplyr::filter(Flow.aggregation.point == IEATools::tfc_flows$other & 
                   Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
                   Destination == IEATools::other_flows$residential) \%>\% 
-  dplyr::select(!c(Method, Energy.type, Last.stage, Flow.aggregation.point))
+  dplyr::select(!c(Method, EnergyType, Last.stage, Flow.aggregation.point))
 }

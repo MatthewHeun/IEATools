@@ -6,7 +6,7 @@
 \usage{
 fu_allocation_template(
   .tidy_iea_df,
-  energy_type = "Energy.type",
+  energy_type = "EnergyType",
   energy = "E",
   last_stage = "Last.stage",
   final = "Final",
@@ -40,7 +40,7 @@ fu_allocation_template(
 \arguments{
 \item{.tidy_iea_df}{a tidy data frame containing IEA extended energy balance data}
 
-\item{energy_type}{the name of the energy type column. Default is "Energy.type".}
+\item{energy_type}{the name of the energy type column. Default is "EnergyType".}
 
 \item{energy}{the string identifier for energy (as opposed to exergy) in the \code{energy_type} column. Default is "\code{E}".}
 

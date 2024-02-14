@@ -505,7 +505,7 @@ sample_eta_fu_table_path <- function(version = 2022) {
 #' @param col_names a list of column names in IEA data frames. Default is `IEATools::iea_cols`.
 #' @param country the name of the country column in `.tidy_iea_df`. Default is "Country".
 #' @param method the name of the method column in `.tidy_iea_df`. Default is "Method".
-#' @param energy_type the name of the energy type column in `.tidy_iea_df`. Default is "Energy.type".
+#' @param energy_type the name of the energy type column in `.tidy_iea_df`. Default is "EnergyType".
 #' @param last_stage the name of the last stage column in `.tidy_iea_df`. Default is "Last.stage".
 #' @param year the name of the year column in `.tidy_iea_df`. Default is "Year".
 #' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "Ledger.side".

@@ -13,7 +13,7 @@
 #' Non-energy use is removed from `.tidy_iea_df` before creating the template.
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
-#' @param energy_type the name of the energy type column. Default is "Energy.type".
+#' @param energy_type the name of the energy type column. Default is "EnergyType".
 #' @param energy the string identifier for energy (as opposed to exergy) in the `energy_type` column. Default is "`E`".
 #' @param last_stage the name of the last stage column. Default is "Last.stage".
 #' @param final the string identifier for final energy (as `Last.stage`). Default is "Final".
@@ -56,7 +56,7 @@
 #'   specify_all() %>% 
 #'   fu_allocation_template()
 fu_allocation_template <- function(.tidy_iea_df,
-                                   energy_type = "Energy.type",
+                                   energy_type = "EnergyType",
                                    energy = "E",
                                    last_stage = "Last.stage",
                                    final = "Final",

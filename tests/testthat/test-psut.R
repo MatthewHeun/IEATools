@@ -60,7 +60,7 @@ test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_fl
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
+      EnergyType = c("E", "E"),
       Last.stage = c("Final", "Final"),
       Year = c(1971, 1971),
       Ledger.side = c("Consumption", "Supply"),
@@ -81,7 +81,7 @@ test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_fl
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
+      EnergyType = c("E", "E"),
       Last.stage = c("Final", "Final"),
       Year = c(1971, 1971),
       Ledger.side = c("Consumption", "Supply"),
@@ -138,7 +138,7 @@ test_that("add_row_col_meta() works as expected", {
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
+      EnergyType = c("E", "E"),
       Last.stage = c("Final", "Final"),
       Year = c(1971, 1971),
       Ledger.side = c("Consumption", "Supply"),
@@ -202,7 +202,7 @@ test_that("add_row_col_meta() works as expected", {
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
+      EnergyType = c("E", "E"),
       Last.stage = c("Final", "Final"),
       Year = c(1971, 1971),
       Ledger.side = c("Consumption", "Supply"),
@@ -226,7 +226,7 @@ test_that("add_row_col_meta() works as expected", {
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
+      EnergyType = c("E", "E"),
       Last.stage = c("Final", "Final"),
       Year = c(1971, 1971),
       Ledger.side = c("Consumption", "Supply"),
@@ -300,7 +300,7 @@ test_that("collapse_to_psut() works expected", {
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
+      EnergyType = c("E", "E"),
       Last.stage = c("Final", "Final"),
       Year = c(1971, 1971),
       Ledger.side = c("Consumption", "Supply"),
@@ -334,7 +334,7 @@ test_that("collapse_to_psut() works with Matrix objects", {
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
+      EnergyType = c("E", "E"),
       Last.stage = c("Final", "Final"),
       Year = c(1971, 1971),
       Ledger.side = c("Consumption", "Supply"),
@@ -373,7 +373,7 @@ test_that("prep_psut() works as expected", {
                         names_to = "matnames", values_to = "matvals") %>% 
     dplyr::rename(matval_simple = matvals)
   expect_equal(names(Simple), 
-               c("Country", "Method", "Energy.type", "Last.stage", "Year", "matnames", "matval_simple"))
+               c("Country", "Method", "EnergyType", "Last.stage", "Year", "matnames", "matval_simple"))
   S_units <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     extract_S_units_from_tidy()
@@ -388,11 +388,11 @@ test_that("prep_psut() works as expected", {
       r_EIOU = matsbyname::quotient_byname(U_EIOU, U) %>% 
         matsbyname::replaceNaN_byname(0)
     ) %>%
-    dplyr::full_join(S_units, by = c("Country", "Method", "Energy.type", "Last.stage", "Year")) %>% 
+    dplyr::full_join(S_units, by = c("Country", "Method", "EnergyType", "Last.stage", "Year")) %>% 
     tidyr::gather(key = matnames, value = matvals, R, U, U_EIOU, U_feed, r_EIOU, V, Y, S_units) %>% 
     dplyr::rename(matval_complicated = matvals)
   # Simple and Complicated ought to be the same.
-  dplyr::full_join(Simple, Complicated, by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "matnames")) %>% 
+  dplyr::full_join(Simple, Complicated, by = c("Country", "Method", "EnergyType", "Last.stage", "Year", "matnames")) %>% 
     dplyr::mutate(
       same = matsbyname::equal_byname(matval_simple, matval_complicated)
     ) %>%
@@ -422,7 +422,7 @@ test_that("prep_psut() works with Matrix objects", {
     expect_true(matsbyname::is.Matrix(Simple$matval_simple[[i]]))
   }
   expect_equal(names(Simple), 
-               c("Country", "Method", "Energy.type", "Last.stage", "Year", "matnames", "matval_simple"))
+               c("Country", "Method", "EnergyType", "Last.stage", "Year", "matnames", "matval_simple"))
   S_units <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     extract_S_units_from_tidy(matrix_class = "Matrix")
@@ -437,11 +437,11 @@ test_that("prep_psut() works with Matrix objects", {
       r_EIOU = matsbyname::quotient_byname(U_EIOU, U) %>% 
         matsbyname::replaceNaN_byname(0)
     ) %>%
-    dplyr::full_join(S_units, by = c("Country", "Method", "Energy.type", "Last.stage", "Year")) %>% 
+    dplyr::full_join(S_units, by = c("Country", "Method", "EnergyType", "Last.stage", "Year")) %>% 
     tidyr::gather(key = matnames, value = matvals, R, U, U_EIOU, U_feed, r_EIOU, V, Y, S_units) %>% 
     dplyr::rename(matval_complicated = matvals)
   # Simple and Complicated ought to be the same.
-  dplyr::full_join(Simple, Complicated, by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "matnames")) %>% 
+  dplyr::full_join(Simple, Complicated, by = c("Country", "Method", "EnergyType", "Last.stage", "Year", "matnames")) %>% 
     dplyr::mutate(
       same = matsbyname::equal_byname(matval_simple, matval_complicated)
     ) %>%
@@ -686,7 +686,7 @@ test_that("prep_psut() correctly works with Balancing flows", {
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
+      EnergyType = c("E", "E"),
       Last.stage = c("Final", "Final"),
       Year = c(1971, 1971),
       Ledger.side = c("Consumption", "Supply"),
@@ -734,7 +734,7 @@ test_that("prep_psut() correctly works with Balancing flows and Matrix objects",
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
+      EnergyType = c("E", "E"),
       Last.stage = c("Final", "Final"),
       Year = c(1971, 1971),
       Ledger.side = c("Consumption", "Supply"),

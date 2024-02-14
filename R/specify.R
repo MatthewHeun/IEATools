@@ -394,7 +394,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
                             nuclear_industry = "Nuclear industry",
                             e_dot = "E.dot",
                             negzeropos = ".negzeropos",
-                            # Places where the EIOU will e reassigned
+                            # Places where the EIOU will be reassigned
                             main_act_producer_elect = "Main activity producer electricity plants"){
   .tidy_iea_df %>% 
     matsindf::verify_cols_missing(negzeropos)
@@ -451,7 +451,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #' it returns a summary containing grouping variables and industries that are transformation sinks or sources.
 #' So be sure to specify (or accept defaults for) 
 #' the `grouping_vars` argument.
-#' Typical grouping variables are `Method`, `Last.stage`, `Country`, `Year`, `Energy.type`.
+#' Typical grouping variables are `Method`, `Last.stage`, `Country`, `Year`, `EnergyType`.
 #' Don't group on `Flow.aggregation.point`, because energy from different aggregation points
 #' (`Energy industry own use` and `Transformation processes`) flows into each machine.
 #' Don't group on `Flow`, `Product`, or `E.dot`, either.
@@ -570,7 +570,7 @@ tp_sinks_sources <- function(.tidy_iea_df,
 #'   mutate(
 #'     Method = "PCM", 
 #'     Last.stage = "Final",
-#'     Energy.type = "E",
+#'     EnergyType = "E",
 #'     Country = "Bogus",
 #'     Year = 1971
 #'   )
@@ -588,7 +588,7 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
                                   non_energy_flow = "Non-energy use industry/transformation/energy",
                                   product = "Product",
                                   e_dot = "E.dot"){
-                                  # grouping_vars = c("Method", "Last.stage", "Country", "Year", "Energy.type")){
+                                  # grouping_vars = c("Method", "Last.stage", "Country", "Year", "EnergyType")){
   # First step is to find all Transformation process sinks.
   # These items need to removed from the IEAData data frame, eventually.
   Sinks <- .tidy_iea_df %>% 

@@ -203,7 +203,7 @@ test_that("tp_sinks_to_nonenergy works as expected", {
     dplyr::mutate(
       Method = "PCM", 
       Last.stage = "Final",
-      Energy.type = "E",
+      EnergyType = "E",
       Country = "Bogus",
       Year = 1971
     )

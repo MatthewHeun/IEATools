@@ -203,7 +203,7 @@ the need for the "(energy)" and "(transf.)" suffixes is eliminated,
 so they are deleted.
 
 The third problem this function solves is that energy type and units are not specified in IEA data.
-An \code{Energy.type} column is added with the value of \code{energy_type_val}.
+An \code{EnergyType} column is added with the value of \code{energy_type_val}.
 (Default is \code{E}, for energy, as opposed to \code{X}, which would be exergy.)
 A \code{Unit} column is added with the value of \code{unit_val}.
 (Default is "TJ", although any string can be specified in \code{unit_val}.)
