@@ -50,7 +50,7 @@ Default is TRUE.}
 
 \item{nuclear_industry}{A string identifying nuclear plants in the flow column. Default is "Nuclear industry".}
 
-\item{e_dot}{The name of the energy flow column in \code{.tidy_iea_df}. Default is "E.dot".}
+\item{e_dot}{The name of the energy flow column in \code{.tidy_iea_df}. Default is "Edot".}
 
 \item{negzeropos}{The name of a temporary column created in \code{.tidy_iea_df}. Default is ".negzeropos".}
 

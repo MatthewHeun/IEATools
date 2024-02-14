@@ -72,7 +72,7 @@ fu_allocation_template(
 
 \item{quantity}{the name of the quantity column. Default is "Quantity".}
 
-\item{e_dot}{the name of the energy flow rate column. Default is "E.dot".}
+\item{e_dot}{the name of the energy flow rate column. Default is "Edot".}
 
 \item{e_dot_total}{the string identifier for total energy. Default is "E.dot.total".}
 

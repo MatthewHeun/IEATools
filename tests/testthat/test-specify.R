@@ -19,7 +19,7 @@ test_that("production is converted to resources correctly", {
     FlowAggregationPoint = c("Energy industry own use"),
     Flow = c("Liquefaction (LNG) / regasification plants"), 
     Product = c("Natural gas"),
-    E.dot = c(-42)
+    Edot = c(-42)
   ) %>% 
     specify_primary_production()
   # Expect that Flow has been reassigned.
@@ -152,7 +152,7 @@ test_that("tp_sinks_sources() works as expected", {
   # Try with a simple, made-up data set
   Tidy <- data.frame(FlowAggregationPoint = c("Transformation processes", "Transformation processes", "Transformation processes"), 
                      Flow = c("Automobiles", "Automobiles", "Furnaces"),
-                     E.dot = c(-1, 1, -2), 
+                     Edot = c(-1, 1, -2), 
                      stringsAsFactors = FALSE) %>% 
     dplyr::mutate(
       Country = "Bogus",
@@ -179,7 +179,7 @@ test_that('tp_sinks_sources(type = "sources") works as expected', {
   # Try with a simple, made-up data set
   Tidy <- data.frame(FlowAggregationPoint = c("Transformation processes", "Transformation processes", "Transformation processes"), 
                      Flow = c("Automobiles", "Automobiles", "Furnaces"),
-                     E.dot = c(-1, 1, 2), 
+                     Edot = c(-1, 1, 2), 
                      stringsAsFactors = FALSE) %>% 
     dplyr::mutate(
       Country = "Bogus",
@@ -198,7 +198,7 @@ test_that("tp_sinks_to_nonenergy works as expected", {
     FlowAggregationPoint = c("Transformation processes", "Transformation processes", "Transformation processes", "Non-energy use"), 
     Flow = c("Automobiles", "Automobiles", "Furnaces", "Non-energy use industry/transformation/energy"),
     Product = c("Petrol", "MD", "Coal", "Coal"),
-    E.dot = c(-1, 1, -2, 8), 
+    Edot = c(-1, 1, -2, 8), 
     stringsAsFactors = FALSE) %>% 
     dplyr::mutate(
       Method = "PCM", 
@@ -212,10 +212,10 @@ test_that("tp_sinks_to_nonenergy works as expected", {
   # We expect that the original 4 rows are now down to 3.
   expect_equal(nrow(Result), 3)
   # Check that the sink energy was correctly added to existing Non-energy use.
-  expect_equal(Result %>% dplyr::filter(FlowAggregationPoint == "Non-energy use") %>% magrittr::extract2("E.dot"), 10)
+  expect_equal(Result %>% dplyr::filter(FlowAggregationPoint == "Non-energy use") %>% magrittr::extract2("Edot"), 10)
   # Check that the original rows are unchanged
-  expect_equal(Result %>% dplyr::filter(Flow == "Automobiles", Product == "Petrol") %>% magrittr::extract2("E.dot"), -1)
-  expect_equal(Result %>% dplyr::filter(Flow == "Automobiles", Product == "MD") %>% magrittr::extract2("E.dot"), 1)
+  expect_equal(Result %>% dplyr::filter(Flow == "Automobiles", Product == "Petrol") %>% magrittr::extract2("Edot"), -1)
+  expect_equal(Result %>% dplyr::filter(Flow == "Automobiles", Product == "MD") %>% magrittr::extract2("Edot"), 1)
 })
 
 
@@ -226,14 +226,14 @@ test_that("spreading by years works as expected at each step of specify_all()", 
   Tidy <- load_tidy_iea_df()
   Year_spread_1 <- Tidy %>% 
     specify_primary_production() %>% 
-    tidyr::spread(key = Year, value = E.dot)
+    tidyr::spread(key = Year, value = Edot)
   expect_true("1971" %in% names(Year_spread_1))
   expect_true("2000" %in% names(Year_spread_1))
   
   Year_spread_2 <- Tidy %>% 
     specify_primary_production() %>% 
     specify_production_to_resources() %>% 
-    tidyr::spread(key = Year, value = E.dot)
+    tidyr::spread(key = Year, value = Edot)
   expect_true("1971" %in% names(Year_spread_2))
   expect_true("2000" %in% names(Year_spread_2))
   
@@ -241,7 +241,7 @@ test_that("spreading by years works as expected at each step of specify_all()", 
     specify_primary_production() %>% 
     specify_production_to_resources() %>% 
     specify_tp_eiou() %>% 
-    tidyr::spread(key = Year, value = E.dot)
+    tidyr::spread(key = Year, value = Edot)
   expect_true("1971" %in% names(Year_spread_3))
   expect_true("2000" %in% names(Year_spread_3))
   
@@ -250,7 +250,7 @@ test_that("spreading by years works as expected at each step of specify_all()", 
     specify_production_to_resources() %>% 
     specify_tp_eiou() %>% 
     specify_interface_industries() %>% 
-    tidyr::spread(key = Year, value = E.dot)
+    tidyr::spread(key = Year, value = Edot)
   expect_true("1971" %in% names(Year_spread_4))
   expect_true("2000" %in% names(Year_spread_4))
   
@@ -260,7 +260,7 @@ test_that("spreading by years works as expected at each step of specify_all()", 
     specify_tp_eiou() %>% 
     specify_interface_industries() %>% 
     tp_sinks_to_nonenergy() %>% 
-    tidyr::spread(key = Year, value = E.dot)
+    tidyr::spread(key = Year, value = Edot)
   expect_true("1971" %in% names(Year_spread_5))
   expect_true("2000" %in% names(Year_spread_5))
 })
@@ -270,7 +270,7 @@ test_that("remove_suffix_specifications() works as expected", {
   cleaned <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     remove_suffix_specifications(col = "Flow", unsuffixed_col = "clean_Flow") %>% 
-    dplyr::select(Flow, Product, E.dot, clean_Flow) %>% 
+    dplyr::select(Flow, Product, Edot, clean_Flow) %>% 
     dplyr::filter(endsWith(Flow, RCLabels::bracket_notation[["suff_end"]]))
   
   tested <- cleaned %>% 
@@ -287,7 +287,7 @@ test_that("remove_suffix_specifications() works as expected", {
   cleaned_2 <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     remove_suffix_specifications(col = "Flow", unsuffixed_col = "Flow") %>% 
-    dplyr::select(Flow, Product, E.dot) %>%
+    dplyr::select(Flow, Product, Edot) %>%
     dplyr::filter(endsWith(Flow, RCLabels::bracket_notation[["suff_end"]])) %>%
     nrow() %>%
     # We should have no rows remaining that end with the bracket notation suffix.
@@ -372,3 +372,4 @@ test_that("specify_all() avoids truncating at '.'", {
     nrow() |> 
     expect_equal(2)
 })
+

@@ -52,10 +52,10 @@
 #' # Compare production of Primary solid biofuels in 1991
 #' example_tidy_iea_df %>% 
 #'   filter(Year == 1991, Flow == "Production") %>% 
-#'   select("E.dot", "Unit")
+#'   select("Edot", "Unit")
 #' fixed %>% 
 #'   filter(Year == 1991, Flow == "Production") %>% 
-#'   select("E.dot", "Unit")
+#'   select("Edot", "Unit")
 fix_GHA_psb <- function(.tidy_iea_df,
                         country = IEATools::iea_cols$country, 
                         year = IEATools::iea_cols$year, 
@@ -111,12 +111,12 @@ fix_GHA_psb <- function(.tidy_iea_df,
 #'   dplyr::filter(Flow %in% c("Main activity producer electricity plants",
 #'                             "Autoproducer electricity plants"), 
 #'          Product == "Electricity") %>% 
-#'   dplyr::select("Year", "Flow", "E.dot", "Unit")
+#'   dplyr::select("Year", "Flow", "Edot", "Unit")
 #' fixed %>% 
 #'   dplyr::filter(Flow %in% c("Main activity producer electricity plants",
 #'                       "Autoproducer electricity plants"), 
 #'                 Product == "Electricity") %>% 
-#'   dplyr::select("Year", "Flow", "E.dot", "Unit")
+#'   dplyr::select("Year", "Flow", "Edot", "Unit")
 fix_COL_WRLD_electricity <- function(.tidy_iea_df,
                                      country = IEATools::iea_cols$country,
                                      year = IEATools::iea_cols$year,
@@ -165,12 +165,12 @@ fix_COL_WRLD_electricity <- function(.tidy_iea_df,
 #'   dplyr::filter(Flow %in% c("Production",
 #'                             "Charcoal production plants"), 
 #'                 Product %in% c("Charcoal", "Primary solid biofuels")) |> 
-#'   dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
+#'   dplyr::select("Year", "Flow", "Product", "Edot", "Unit")
 #' fixed %>% 
 #'   dplyr::filter(Flow %in% c("Production",
 #'                             "Charcoal production plants"), 
 #'                 Product %in% c("Charcoal", "Primary solid biofuels")) |> 
-#'   dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
+#'   dplyr::select("Year", "Flow", "Product", "Edot", "Unit")
 fix_OAMR_cpp <- function(.tidy_iea_df,
                          country = IEATools::iea_cols$country,
                          year = IEATools::iea_cols$year,
@@ -219,12 +219,12 @@ fix_OAMR_cpp <- function(.tidy_iea_df,
 #'   dplyr::filter(Flow %in% c("Production",
 #'                             "Gas works"), 
 #'          Product %in% c("Gas works gas", "Natural gas")) |> 
-#'   dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
+#'   dplyr::select("Year", "Flow", "Product", "Edot", "Unit")
 #' fixed %>% 
 #'   dplyr::filter(Flow %in% c("Production",
 #'                             "Gas works"), 
 #'          Product %in% c("Gas works gas", "Natural gas")) |> 
-#'   dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
+#'   dplyr::select("Year", "Flow", "Product", "Edot", "Unit")
 fix_OAMR_gw <- function(.tidy_iea_df,
                         country = IEATools::iea_cols$country,
                         year = IEATools::iea_cols$year,

@@ -11,7 +11,7 @@ test_that("specify_tp_eiou() works as expected for Own use in electricity, CHP a
                      LedgerSide = c("Supply", "Supply"),
                      Unit = c("TJ", "TJ"),
                      Product = c("Brown coal", "Crude oil"),
-                     E.dot = c(-10, -10),
+                     Edot = c(-10, -10),
                      stringsAsFactors = FALSE)
   
   EIOU_fixed <- specify_tp_eiou(EIOU)
@@ -34,7 +34,7 @@ test_that("specify_tp_eiou() works as expected for pumped storage plants", {
                      LedgerSide = c("Supply", "Supply"),
                      Product = c("Brown coal", "Crude oil"),
                      Unit = c("TJ", "TJ"),
-                     E.dot = c(-20, -20),
+                     Edot = c(-20, -20),
                      stringsAsFactors = FALSE)
   EIOU_fixed <- specify_tp_eiou(EIOU)
   # The first row is expected to change, because its Product is "Electricity"
@@ -64,7 +64,7 @@ test_that("route_pumped_storage() no longer discriminates +/-", {
                      LedgerSide = c("Supply", "Supply", "Supply", "Supply"),
                      Product = c("Electricity", "Electricity", "Electricity", "Electricity"),
                      Unit = c("TJ", "TJ"),
-                     E.dot = c(-20, -2, -21, 3),
+                     Edot = c(-20, -2, -21, 3),
                      stringsAsFactors = FALSE)
   # Call the function that should negate the energy flows.
   routed <- route_pumped_storage(EIOU)
@@ -105,7 +105,7 @@ test_that("gather_producer_autoproducer() works", {
   main_activity_flows <- test %>%
     dplyr::filter(stringr::str_detect(Flow, "Main activity"))
   
-  expect_equal(length(main_activity_flows[["E.dot"]]), 26)
+  expect_equal(length(main_activity_flows[["Edot"]]), 26)
   
   expect_equal(main_activity_flows %>%
                  dplyr::filter(
@@ -114,7 +114,7 @@ test_that("gather_producer_autoproducer() works", {
                    Flow == "Main activity producer CHP plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -90)
   
@@ -125,7 +125,7 @@ test_that("gather_producer_autoproducer() works", {
                    Flow == "Main activity producer CHP plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                160)
   
@@ -136,7 +136,7 @@ test_that("gather_producer_autoproducer() works", {
                    Flow == "Main activity producer electricity plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                100)
   
@@ -147,7 +147,7 @@ test_that("gather_producer_autoproducer() works", {
                    Flow == "Main activity producer heat plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -847)
   
@@ -198,7 +198,7 @@ test_that("route_pumped_storage() works", {
                   Country == "A")
   
   expect_equal(former_pumped_storage %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -299)
   
@@ -227,7 +227,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
     tidy_GHA_ZAF_df %>% 
       dplyr::filter(FlowAggregationPoint == "Energy industry own use") %>% 
       dplyr::filter(Flow == "Oil extraction") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -1.450736,
     tolerance = 0.01
   )
@@ -236,7 +236,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
     tidy_GHA_ZAF_df %>% 
       dplyr::filter(FlowAggregationPoint == "Energy industry own use") %>% 
       dplyr::filter(Flow == "Natural gas extraction") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -2.149264,
     tolerance = 0.01
   )
@@ -260,7 +260,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
       dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Flow == "Oil extraction",
                     Product == "Electricity") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -136
   )
   expect_equal(
@@ -268,7 +268,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
       dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Flow == "Oil extraction",
                     Product == "Heat") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -68
   )
   expect_equal(
@@ -276,7 +276,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
       dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Flow == "Oil extraction",
                     Product == "Motor gasoline excl. biofuels") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -34
   )
   
@@ -286,7 +286,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
       dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Flow == "Natural gas extraction",
                     Product == "Electricity") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -64
   )
   expect_equal(
@@ -294,7 +294,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
       dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Flow == "Natural gas extraction",
                     Product == "Heat") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -32
   )
   expect_equal(
@@ -302,7 +302,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
       dplyr::filter(FlowAggregationPoint == "Energy industry own use",
                     Flow == "Natural gas extraction",
                     Product == "Motor gasoline excl. biofuels") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -16
   )
   
@@ -340,7 +340,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
                     Year == 2018,
                     Flow == "Oil extraction",
                     Product == "Electricity") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -136
   )
   expect_equal(
@@ -349,7 +349,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
                     Year == 2018,
                     Flow == "Oil extraction",
                     Product == "Heat") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -68
   )
   expect_equal(
@@ -358,7 +358,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
                     Year == 2018,
                     Flow == "Oil extraction",
                     Product == "Motor gasoline excl. biofuels") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -34
   )
   
@@ -369,7 +369,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
                     Year == 2018,
                     Flow == "Natural gas extraction",
                     Product == "Electricity") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -64
   )
   expect_equal(
@@ -378,7 +378,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
                     Year == 2018,
                     Flow == "Natural gas extraction",
                     Product == "Heat") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -32
   )
   expect_equal(
@@ -387,7 +387,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
                     Year == 2018,
                     Flow == "Natural gas extraction",
                     Product == "Motor gasoline excl. biofuels") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -16
   )
 
@@ -398,7 +398,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
                     Year == 2019,
                     Flow == "Natural gas extraction",
                     Product == "Electricity") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -136
   )
   expect_equal(
@@ -407,7 +407,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
                     Year == 2019,
                     Flow == "Natural gas extraction",
                     Product == "Heat") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -68
   )
   expect_equal(
@@ -416,7 +416,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
                     Year == 2019,
                     Flow == "Natural gas extraction",
                     Product == "Motor gasoline excl. biofuels") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -34
   )
   
@@ -427,7 +427,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
                     Year == 2019,
                     Flow == "Oil extraction",
                     Product == "Electricity") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -64
   )
   expect_equal(
@@ -436,7 +436,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
                     Year == 2019,
                     Flow == "Oil extraction",
                     Product == "Heat") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -32
   )
   expect_equal(
@@ -445,7 +445,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
                     Year == 2019,
                     Flow == "Oil extraction",
                     Product == "Motor gasoline excl. biofuels") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -16
   )
   
@@ -473,7 +473,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
       dplyr::filter(Year == 2021,
                     Flow == "Oil and gas extraction",
                     Product == "Electricity") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -200
     )
   expect_equal(
@@ -481,7 +481,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
       dplyr::filter(Year == 2021,
                     Flow == "Oil and gas extraction",
                     Product == "Heat") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -100
   )
   expect_equal(
@@ -489,7 +489,7 @@ test_that("split_oil_gas_extraction_eiou() works", {
       dplyr::filter(Year == 2021,
                     Flow == "Oil and gas extraction",
                     Product == "Motor gasoline excl. biofuels") %>% 
-      magrittr::extract2("E.dot"),
+      magrittr::extract2("Edot"),
     -50
   )
 })
@@ -521,7 +521,7 @@ test_that("route_own_use_elect_chp_heat() works", {
                    FlowAggregationPoint == "Energy industry own use",
                    Flow == "Main activity producer CHP plants",
                    Product == "Anthracite") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -5.82,
                tolerance = 0.0001)
@@ -532,7 +532,7 @@ test_that("route_own_use_elect_chp_heat() works", {
                    FlowAggregationPoint == "Energy industry own use",
                    Flow == "Main activity producer CHP plants",
                    Product == "Electricity") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -3.492,
                tolerance = 0.0001)
@@ -543,7 +543,7 @@ test_that("route_own_use_elect_chp_heat() works", {
                    FlowAggregationPoint == "Energy industry own use",
                    Flow == "Main activity producer electricity plants",
                    Product == "Electricity") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -55.5555,
                tolerance = 0.0001)
@@ -554,7 +554,7 @@ test_that("route_own_use_elect_chp_heat() works", {
                    FlowAggregationPoint == "Energy industry own use",
                    Flow == "Main activity producer electricity plants",
                    Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -947.1481,
                tolerance = 0.0001)
@@ -565,7 +565,7 @@ test_that("route_own_use_elect_chp_heat() works", {
                    FlowAggregationPoint == "Energy industry own use",
                    Flow == "Main activity producer heat plants",
                    Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -11.1111,
                tolerance = 0.0001)
@@ -612,7 +612,7 @@ test_that("route_own_use_elect_chp_heat() works", {
                   Product == "Electricity",
                   FlowAggregationPoint == "Energy industry own use",
                   Flow == "Main activity producer heat plants") %>% 
-    magrittr::extract2("E.dot") %>% 
+    magrittr::extract2("Edot") %>% 
     expect_equal(-15.65137,
                  tolerance = 0.001)
   
@@ -621,7 +621,7 @@ test_that("route_own_use_elect_chp_heat() works", {
                   Product == "Natural gas",
                   FlowAggregationPoint == "Energy industry own use",
                   Flow == "Main activity producer heat plants") %>% 
-    magrittr::extract2("E.dot") %>% 
+    magrittr::extract2("Edot") %>% 
     expect_equal(-52.17123,
                  tolerance = 0.001)
   
@@ -630,7 +630,7 @@ test_that("route_own_use_elect_chp_heat() works", {
                   Product == "Blast furnace gas",
                   FlowAggregationPoint == "Energy industry own use",
                   Flow == "Main activity producer CHP plants") %>% 
-    magrittr::extract2("E.dot") %>% 
+    magrittr::extract2("Edot") %>% 
     expect_equal(-6.159532,
                  tolerance = 0.001)
   
@@ -640,7 +640,7 @@ test_that("route_own_use_elect_chp_heat() works", {
                   Product == "Electricity",
                   FlowAggregationPoint == "Energy industry own use",
                   Flow == "Main activity producer CHP plants") %>% 
-    magrittr::extract2("E.dot") %>% 
+    magrittr::extract2("Edot") %>% 
     expect_equal(-1.648352,
                  tolerance = 0.001)
   
@@ -649,7 +649,7 @@ test_that("route_own_use_elect_chp_heat() works", {
                   Product == "Electricity",
                   FlowAggregationPoint == "Energy industry own use",
                   Flow == "Main activity producer heat plants") %>% 
-    magrittr::extract2("E.dot") %>% 
+    magrittr::extract2("Edot") %>% 
     expect_equal(-1.318681,
                  tolerance = 0.001)
   
@@ -705,7 +705,7 @@ test_that("add_nuclear_industry() works", {
     add_nuclear_industry()
   
   # One test on total length
-  expect_equal(length(test[["E.dot"]]), 140)
+  expect_equal(length(test[["Edot"]]), 140)
   
   # One test on length of nuclear industry flows
   expect_equal(test %>%
@@ -726,7 +726,7 @@ test_that("add_nuclear_industry() works", {
                                FlowAggregationPoint == "Transformation processes",
                                Flow == "Main activity producer electricity plants",
                                Product == "Electricity") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                3163.7)
   
@@ -735,7 +735,7 @@ test_that("add_nuclear_industry() works", {
                                FlowAggregationPoint == "Transformation processes",
                                Flow == "Main activity producer CHP plants",
                                Product == "Electricity") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                56.7)
   
@@ -745,7 +745,7 @@ test_that("add_nuclear_industry() works", {
                                FlowAggregationPoint == "Transformation processes",
                                Flow == "Nuclear industry",
                                Product == "Electricity") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                39.6)
   
@@ -754,7 +754,7 @@ test_that("add_nuclear_industry() works", {
                                FlowAggregationPoint == "Transformation processes",
                                Flow == "Nuclear industry",
                                Product == "Nuclear") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -120)
   
@@ -770,7 +770,7 @@ test_that("add_nuclear_industry() works", {
                     Flow = "Main activity producer CHP plants",
                     Product = "Heat",
                     Unit = "TJ",
-                    E.dot = 30) %>%
+                    Edot = 30) %>%
     IEATools::specify_primary_production() %>%
     IEATools::specify_production_to_resources() %>%
     gather_producer_autoproducer() %>%
@@ -779,7 +779,7 @@ test_that("add_nuclear_industry() works", {
     add_nuclear_industry()
   
   # One test on total length
-  expect_equal(length(second_test[["E.dot"]]), 142)
+  expect_equal(length(second_test[["Edot"]]), 142)
   
   # One test on length of nuclear industry flows
   expect_equal(second_test %>%
@@ -800,7 +800,7 @@ test_that("add_nuclear_industry() works", {
                                FlowAggregationPoint == "Transformation processes",
                                Flow == "Main activity producer electricity plants",
                                Product == "Electricity") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                3163.7)
   
@@ -809,7 +809,7 @@ test_that("add_nuclear_industry() works", {
                                FlowAggregationPoint == "Transformation processes",
                                Flow == "Main activity producer CHP plants",
                                Product == "Electricity") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                57.8)
   
@@ -818,7 +818,7 @@ test_that("add_nuclear_industry() works", {
                                FlowAggregationPoint == "Transformation processes",
                                Flow == "Main activity producer CHP plants",
                                Product == "Heat") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                28.9)
   
@@ -828,7 +828,7 @@ test_that("add_nuclear_industry() works", {
                                FlowAggregationPoint == "Transformation processes",
                                Flow == "Nuclear industry",
                                Product == "Electricity") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                38.5)
   
@@ -837,7 +837,7 @@ test_that("add_nuclear_industry() works", {
                                FlowAggregationPoint == "Transformation processes",
                                Flow == "Nuclear industry",
                                Product == "Nuclear") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -120)
   
@@ -846,7 +846,7 @@ test_that("add_nuclear_industry() works", {
                                FlowAggregationPoint == "Transformation processes",
                                Flow == "Nuclear industry",
                                Product == "Heat") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                1.1)
   
@@ -891,7 +891,7 @@ test_that("route_non_specified_eiou() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Blast furnaces",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -3.3299,
                tolerance = 0.001)
@@ -901,7 +901,7 @@ test_that("route_non_specified_eiou() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Coal mines",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -4.7571,
                tolerance = 0.001)
@@ -911,7 +911,7 @@ test_that("route_non_specified_eiou() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer electricity plants",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                (-947.148148 - 104.2088),
                tolerance = 0.001)
@@ -921,7 +921,7 @@ test_that("route_non_specified_eiou() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer CHP plants",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                (-40.740741 - 4.7621),
                tolerance = 0.001)
@@ -931,7 +931,7 @@ test_that("route_non_specified_eiou() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Oil refineries",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -28.54263,
                tolerance = 0.001)
@@ -945,7 +945,7 @@ test_that("route_non_specified_eiou() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Blast furnaces",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -23.9795,
                tolerance = 0.001)
@@ -955,7 +955,7 @@ test_that("route_non_specified_eiou() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Blast furnaces",
                                Product == "Brown coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -24.0816,
                tolerance = 0.001)
@@ -965,7 +965,7 @@ test_that("route_non_specified_eiou() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Coke ovens",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -53.95407,
                tolerance = 0.001)
@@ -975,7 +975,7 @@ test_that("route_non_specified_eiou() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer electricity plants",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                (-50.4712 - 259.846827),
                tolerance = 0.001)
@@ -985,7 +985,7 @@ test_that("route_non_specified_eiou() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer heat plants",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                (-18.75406 - 96.553611),
                tolerance = 0.001)
@@ -1051,7 +1051,7 @@ test_that("route_non_specified_tp() works", {
       Flow = "Oil refineries",
       Product = "Brown coal (if no detail)",
       Unit = "TJ",
-      E.dot = 67
+      Edot = 67
     ) %>%
     route_non_specified_tp()
   
@@ -1064,7 +1064,7 @@ test_that("route_non_specified_tp() works", {
                    Flow == "Main activity producer CHP plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                217.1429,
                tolerance = 0.001)
@@ -1076,7 +1076,7 @@ test_that("route_non_specified_tp() works", {
                    Flow == "Main activity producer electricity plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                135.7143,
                tolerance = 0.001)
@@ -1088,7 +1088,7 @@ test_that("route_non_specified_tp() works", {
                    Flow == "Main activity producer heat plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                27.14286,
                tolerance = 0.001)
@@ -1101,7 +1101,7 @@ test_that("route_non_specified_tp() works", {
                    Flow == "Main activity producer heat plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                668,
                tolerance = 0.001)
@@ -1113,7 +1113,7 @@ test_that("route_non_specified_tp() works", {
                    Flow == "Main activity producer electricity plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -330,
                tolerance = 0.001)
@@ -1127,7 +1127,7 @@ test_that("route_non_specified_tp() works", {
                    Flow == "Main activity producer CHP plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -218.5714,
                tolerance = 0.001)
@@ -1139,7 +1139,7 @@ test_that("route_non_specified_tp() works", {
                    Flow == "Main activity producer electricity plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -121.4286,
                tolerance = 0.001)
@@ -1151,7 +1151,7 @@ test_that("route_non_specified_tp() works", {
                    Flow == "Main activity producer heat plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                40,
                tolerance = 0.001)
@@ -1165,7 +1165,7 @@ test_that("route_non_specified_tp() works", {
                    Flow == "Main activity producer CHP plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -400,
                tolerance = 0.001)
@@ -1177,7 +1177,7 @@ test_that("route_non_specified_tp() works", {
                    Flow == "Main activity producer electricity plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                620.6897,
                tolerance = 0.001)
@@ -1189,7 +1189,7 @@ test_that("route_non_specified_tp() works", {
                    Flow == "Main activity producer heat plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -847,
                tolerance = 0.001)
@@ -1201,7 +1201,7 @@ test_that("route_non_specified_tp() works", {
                    Flow == "Oil refineries",
                    Product == "Brown coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                (623-620.6897+67),
                tolerance = 0.001)
@@ -1267,7 +1267,7 @@ test_that("route_non_specified_flows() works", {
       Flow = "Oil refineries",
       Product = "Brown coal (if no detail)",
       Unit = "ktoe",
-      E.dot = 67
+      Edot = 67
     ) %>%
     route_non_specified_flows()
   
@@ -1278,7 +1278,7 @@ test_that("route_non_specified_flows() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Blast furnaces",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -3.3299,
                tolerance = 0.001)
@@ -1288,7 +1288,7 @@ test_that("route_non_specified_flows() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Coal mines",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -4.7571,
                tolerance = 0.001)
@@ -1298,7 +1298,7 @@ test_that("route_non_specified_flows() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer electricity plants",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                (-947.148148 - 104.2088),
                tolerance = 0.001)
@@ -1308,7 +1308,7 @@ test_that("route_non_specified_flows() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer CHP plants",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                (-40.740741 - 4.7621),
                tolerance = 0.001)
@@ -1318,7 +1318,7 @@ test_that("route_non_specified_flows() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Oil refineries",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -28.54263,
                tolerance = 0.001)
@@ -1330,7 +1330,7 @@ test_that("route_non_specified_flows() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Blast furnaces",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -23.9795,
                tolerance = 0.001)
@@ -1340,7 +1340,7 @@ test_that("route_non_specified_flows() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Blast furnaces",
                                Product == "Brown coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -24.0816,
                tolerance = 0.001)
@@ -1350,7 +1350,7 @@ test_that("route_non_specified_flows() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Coke ovens",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -53.95407,
                tolerance = 0.001)
@@ -1360,7 +1360,7 @@ test_that("route_non_specified_flows() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer electricity plants",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                (-50.4712 - 259.846827),
                tolerance = 0.001)
@@ -1370,7 +1370,7 @@ test_that("route_non_specified_flows() works", {
                                FlowAggregationPoint == "Energy industry own use",
                                Flow == "Main activity producer heat plants",
                                Product == "Hard coal (if no detail)") %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                (-18.75406 - 96.553611),
                tolerance = 0.001)
@@ -1385,7 +1385,7 @@ test_that("route_non_specified_flows() works", {
                    Flow == "Main activity producer CHP plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                217.1429,
                tolerance = 0.001)
@@ -1397,7 +1397,7 @@ test_that("route_non_specified_flows() works", {
                    Flow == "Main activity producer electricity plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                135.7143,
                tolerance = 0.001)
@@ -1409,7 +1409,7 @@ test_that("route_non_specified_flows() works", {
                    Flow == "Main activity producer heat plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                27.14286,
                tolerance = 0.001)
@@ -1422,7 +1422,7 @@ test_that("route_non_specified_flows() works", {
                    Flow == "Main activity producer heat plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                668,
                tolerance = 0.001)
@@ -1434,7 +1434,7 @@ test_that("route_non_specified_flows() works", {
                    Flow == "Main activity producer electricity plants",
                    Product == "Hard coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -330,
                tolerance = 0.001)
@@ -1448,7 +1448,7 @@ test_that("route_non_specified_flows() works", {
                    Flow == "Main activity producer CHP plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -218.5714,
                tolerance = 0.001)
@@ -1460,7 +1460,7 @@ test_that("route_non_specified_flows() works", {
                    Flow == "Main activity producer electricity plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -121.4286,
                tolerance = 0.001)
@@ -1472,7 +1472,7 @@ test_that("route_non_specified_flows() works", {
                    Flow == "Main activity producer heat plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                40,
                tolerance = 0.001)
@@ -1486,7 +1486,7 @@ test_that("route_non_specified_flows() works", {
                    Flow == "Main activity producer CHP plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -400,
                tolerance = 0.001)
@@ -1498,7 +1498,7 @@ test_that("route_non_specified_flows() works", {
       Flow == "Main activity producer electricity plants",
       Product == "Brown coal (if no detail)"
     ) %>%
-    dplyr::select(E.dot) %>%
+    dplyr::select(Edot) %>%
     dplyr::pull() |> 
     expect_equal(620.6897, tolerance = 0.001)
   
@@ -1509,7 +1509,7 @@ test_that("route_non_specified_flows() works", {
                    Flow == "Main activity producer heat plants",
                    Product == "Brown coal (if no detail)"
                  ) %>%
-                 dplyr::select(E.dot) %>%
+                 dplyr::select(Edot) %>%
                  dplyr::pull(),
                -847,
                tolerance = 0.001)
@@ -1521,7 +1521,7 @@ test_that("route_non_specified_flows() works", {
       Flow == "Oil refineries",
       Product == "Brown coal (if no detail)"
     ) %>%
-    dplyr::select(E.dot) %>%
+    dplyr::select(Edot) %>%
     dplyr::pull() |> 
     expect_equal(623-620.6897+67, tolerance = 0.001)
   

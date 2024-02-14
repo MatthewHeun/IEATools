@@ -29,7 +29,7 @@
 #' @param product the name of the product column. Default is "Product".
 #' @param destination the name for the destination column. Default is "Destination".
 #' @param quantity the name of the quantity column. Default is "Quantity".
-#' @param e_dot the name of the energy flow rate column. Default is "E.dot".
+#' @param e_dot the name of the energy flow rate column. Default is "Edot".
 #' @param e_dot_total the string identifier for total energy. Default is "E.dot.total".
 #' @param perc_unit_string the string used to indicate percentages. Default is "`[%]`".
 #' @param e_dot_perc the string identifier for energy percentage. Default is "E.dot.perc".
@@ -382,7 +382,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #' @param eu_product the name of the useful energy product column in output. Default is "Eu.product".
 #' @param quantity the name of the quantity column to be created on output. Default is "Quantity".
 #' @param e_dot the name of the energy flow rate column in `.tidy_iea_df` and the name of the energy flow rate rows to be included in the Excel file that is written by this function.
-#'        Default is "E.dot".
+#'        Default is "Edot".
 #' @param e_dot_perc the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
 #'        Default is "E.dot.perc".
 #' @param maximum_values the name of the maximum values column in output. Default is "Maximum.values".

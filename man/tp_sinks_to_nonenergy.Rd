@@ -63,7 +63,7 @@ DF <- data.frame(
   Flow = c("Automobiles", "Automobiles", "Furnaces", 
            "Non-energy use industry/transformation/energy"),
   Product = c("Petrol", "MD", "Coal", "Coal"),
-  E.dot = c(-1, 1, -2, 8), 
+  Edot = c(-1, 1, -2, 8), 
   stringsAsFactors = FALSE
 ) \%>\% 
   mutate(

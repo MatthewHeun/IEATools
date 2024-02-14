@@ -79,14 +79,14 @@ test_that("Aggregating South Africa and Ghana works as intended", {
   
   manual_aggregation <- tidy_GHA_ZAF_df %>%
     dplyr::group_by(Year, LedgerSide, FlowAggregationPoint, Flow, Product, Unit) %>% 
-    dplyr::summarise(E.dot.aggregated = sum(E.dot), .groups = "drop")
+    dplyr::summarise(Edot.aggregated = sum(Edot), .groups = "drop")
   
   # Testing that all rows are perfectly equal and that there are the same number of rows
   comparing <- aggregated_regions %>%
     dplyr::full_join(manual_aggregation, 
                      by = dplyr::join_by(Year, LedgerSide, FlowAggregationPoint, Flow, Product, Unit)) %>% 
     dplyr::mutate(
-      is_equal = E.dot.aggregated == E.dot
+      is_equal = Edot.aggregated == Edot
     )
   
   expect_true(all(comparing$is_equal))
@@ -107,7 +107,7 @@ test_that("Aggregating South Africa and Ghana works as intended", {
                     stringr::str_detect(Flow, IEATools::tpes_flows$exports_to_world_marine_bunkers)) %>%
     #specify_interface_industries() %>% 
     dplyr::group_by(Method, LastStage, EnergyType, Year, LedgerSide, FlowAggregationPoint, Flow, Product, Unit) %>%
-    dplyr::summarise(E.dot.aggregated = sum(E.dot), .groups = "drop") %>% 
+    dplyr::summarise(Edot.aggregated = sum(Edot), .groups = "drop") %>% 
     dplyr::mutate(
       Country = "GHAZAF"
     )
@@ -118,24 +118,24 @@ test_that("Aggregating South Africa and Ghana works as intended", {
     dplyr::filter(! (stringr::str_detect(Flow, IEATools::tpes_flows$exports_to_world_marine_bunkers) |
                        stringr::str_detect(Flow, IEATools::tpes_flows$exports_to_world_aviation_bunkers))) %>%
     dplyr::group_by(Method, EnergyType, LastStage, Year, LedgerSide, FlowAggregationPoint, Flow, Product, Unit) %>%
-    dplyr::summarise(E.dot.aggregated = sum(E.dot), .groups = "drop") %>%
+    dplyr::summarise(Edot.aggregated = sum(Edot), .groups = "drop") %>%
     remove_suffix_specifications(col = IEATools::iea_cols$flow, unsuffixed_col = IEATools::iea_cols$flow) %>%
-    tidyr::pivot_wider(names_from = Flow, values_from = E.dot.aggregated) %>% 
+    tidyr::pivot_wider(names_from = Flow, values_from = Edot.aggregated) %>% 
     dplyr::mutate(
       Imports = tidyr::replace_na(Imports, 0),
       Exports = tidyr::replace_na(Exports, 0),
       Net_Imports = Imports + Exports
     ) %>%
     dplyr::select(-c("Imports", "Exports")) %>%
-    tidyr::pivot_longer(cols = Net_Imports, names_to = "Flow", values_to = "E.dot.aggregated") %>%
+    tidyr::pivot_longer(cols = Net_Imports, names_to = "Flow", values_to = "Edot.aggregated") %>%
     dplyr::mutate(
       Flow = dplyr::case_when(
-        E.dot.aggregated > 0 ~ "Imports",
-        E.dot.aggregated < 0 ~ "Exports",
-        E.dot.aggregated == 0 ~ "Net_Imports"
+        Edot.aggregated > 0 ~ "Imports",
+        Edot.aggregated < 0 ~ "Exports",
+        Edot.aggregated == 0 ~ "Net_Imports"
       )
     ) %>%
-    dplyr::filter(E.dot.aggregated != 0) %>% 
+    dplyr::filter(Edot.aggregated != 0) %>% 
     specify_interface_industries() %>% 
     dplyr::mutate(
       Country = "GHAZAF"
@@ -146,7 +146,7 @@ test_that("Aggregating South Africa and Ghana works as intended", {
   comparing <- aggregated_regions %>%
     dplyr::full_join(manual_aggregation, by = c("Country", "Method", "EnergyType", "LastStage", "Year", "LedgerSide", "FlowAggregationPoint", "Flow", "Product", "Unit")) %>%
     dplyr::mutate(
-      is_equal = E.dot.aggregated == E.dot
+      is_equal = Edot.aggregated == Edot
     )
 
   # Testing that all rows are perfectly equal and that there are the same number of rows
@@ -201,13 +201,13 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
       )
     ) %>%
     dplyr::group_by(Country, Year, LedgerSide, FlowAggregationPoint, Flow, Product) %>%
-    dplyr::summarise(E.dot.aggregated = sum(E.dot), .groups = "drop")
+    dplyr::summarise(Edot.aggregated = sum(Edot), .groups = "drop")
   
   comparing <- aggregated_regions %>%
     dplyr::full_join(manual_aggregation, 
                      by = dplyr::join_by(Country, Year, LedgerSide, FlowAggregationPoint, Flow, Product)) %>%
     dplyr::mutate(
-      difference = E.dot.aggregated - E.dot
+      difference = Edot.aggregated - Edot
     )
   
   # Testing that all rows are perfectly equal and that there are the same number of rows
@@ -239,7 +239,7 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
       )
     ) %>%
     dplyr::group_by(Country, Method, EnergyType, LastStage, Year, LedgerSide, FlowAggregationPoint, Flow, Product, Unit) %>%
-    dplyr::summarise(E.dot.aggregated = sum(E.dot), .groups = "drop")
+    dplyr::summarise(Edot.aggregated = sum(Edot), .groups = "drop")
   
   manual_aggregation_ie <- tidy_GHA_ZAF_EGC_MGC_df %>%
     dplyr::filter(stringr::str_detect(Flow, IEATools::interface_industries$imports) | stringr::str_detect(Flow, IEATools::interface_industries$exports)) %>%
@@ -254,7 +254,7 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
       )
     ) %>%
     dplyr::group_by(Country, Method, EnergyType, LastStage, Year, LedgerSide, FlowAggregationPoint, Flow, Product, Unit) %>%
-    dplyr::summarise(E.dot.aggregated = sum(E.dot), 
+    dplyr::summarise(Edot.aggregated = sum(Edot), 
                      .groups = "drop") %>%
     dplyr::mutate(
       Flow = dplyr::case_when(
@@ -263,22 +263,22 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
         TRUE ~ Flow
       )
     ) %>% 
-    tidyr::pivot_wider(names_from = Flow, values_from = E.dot.aggregated) %>%
+    tidyr::pivot_wider(names_from = Flow, values_from = Edot.aggregated) %>%
     dplyr::mutate(
       Imports = tidyr::replace_na(Imports, 0),
       Exports = tidyr::replace_na(Exports, 0),
       Net_Imports = Imports + Exports
     ) %>%
     dplyr::select(-c("Imports", "Exports")) %>%
-    tidyr::pivot_longer(cols = Net_Imports, names_to = "Flow", values_to = "E.dot.aggregated") %>%
+    tidyr::pivot_longer(cols = Net_Imports, names_to = "Flow", values_to = "Edot.aggregated") %>%
     dplyr::mutate(
       Flow = dplyr::case_when(
-        E.dot.aggregated > 0 ~ "Imports",
-        E.dot.aggregated < 0 ~ "Exports",
-        E.dot.aggregated == 0 ~ "Net_Imports"
+        Edot.aggregated > 0 ~ "Imports",
+        Edot.aggregated < 0 ~ "Exports",
+        Edot.aggregated == 0 ~ "Net_Imports"
       )
     ) %>%
-    dplyr::filter(E.dot.aggregated != 0) %>% 
+    dplyr::filter(Edot.aggregated != 0) %>% 
     specify_interface_industries()
     
   manual_aggregation <- dplyr::bind_rows(manual_aggregation_excl_ie, manual_aggregation_ie)
@@ -288,7 +288,7 @@ test_that("Aggregating ZAF and MGC, and GHA and EGC, works as intended", {
                      by = dplyr::join_by(Country, Method, EnergyType, LastStage, Year,
                                          LedgerSide, FlowAggregationPoint, Flow, Product, Unit)) %>%
     dplyr::mutate(
-      difference = E.dot.aggregated - E.dot
+      difference = Edot.aggregated - Edot
     )
   
   # Testing that all rows are perfectly equal and that there are the same number of rows
@@ -317,7 +317,7 @@ test_that("primary_aggregates() works as expected", {
                     .data[[IEATools::iea_cols$energy_type]], 
                     .data[[IEATools::iea_cols$last_stage]], 
                     .data[[IEATools::iea_cols$year]]) %>% 
-    dplyr::summarise(EX.p = sum(.data[["E.dot"]]), .groups = "drop")
+    dplyr::summarise(EX.p = sum(.data[["Edot"]]), .groups = "drop")
   
   expect_equal(result, expected)
 })
@@ -337,7 +337,7 @@ test_that("finaldemand_aggregates() works as expected", {
                     .data[[IEATools::iea_cols$year]]) %>% 
     dplyr::summarise(
       # Net energy
-      EX.fd_net = sum(E.dot), 
+      EX.fd_net = sum(Edot), 
       .groups = "drop"
     )
   
@@ -350,7 +350,7 @@ test_that("finaldemand_aggregates() works as expected", {
                     .data[[IEATools::iea_cols$year]]) %>% 
     dplyr::summarise(
       # Net energy
-      eiou = abs(sum(E.dot)), 
+      eiou = abs(sum(Edot)), 
       .groups = "drop"
     )
   

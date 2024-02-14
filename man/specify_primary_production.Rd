@@ -130,7 +130,7 @@ data.frame(
   FlowAggregationPoint = c("Energy industry own use"),
   Flow = c("Liquefaction (LNG) / regasification plants"), 
   Product = c("Natural gas"),
-  E.dot = c(-42), 
+  Edot = c(-42), 
   stringsAsFactors = FALSE
 ) \%>\% 
   specify_primary_production()

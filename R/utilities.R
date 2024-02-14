@@ -103,7 +103,7 @@ year_cols <- function(.df, year_pattern = "^-?\\d+$", year = IEATools::iea_cols$
 #' @export
 #'
 #' @examples
-#' DF <- data.frame(E.dot = 2020, a = c(1, 2), `1967` = c(3, 4), `-42` = c(5, 6), check.names = FALSE)
+#' DF <- data.frame(Edot = 2020, a = c(1, 2), `1967` = c(3, 4), `-42` = c(5, 6), check.names = FALSE)
 #' DF %>% meta_cols()
 #' DF %>% meta_cols(return_names = TRUE)
 meta_cols <- function(.df, 
@@ -339,7 +339,7 @@ carnot_efficiency <- function(heat_types, T_0 = 298.15){
 #' @param eiou The string indicating the energy industry own use flow. Default is "Energy industry own use".
 #' @param stage The string indicating the stage for the analysis. One of `production`, `transformation_processes`, or `eiou`. 
 #'              Default is `production`.
-#' @param e_dot The energy flow rate column in `iea_df`.  Default is "E.dot".
+#' @param e_dot The energy flow rate column in `iea_df`.  Default is "Edot".
 #' @param flow The flow column in `iea_df`. Default is "Flow".
 #' @param product The product column in `iea_df`.  Default is "Product".
 #'

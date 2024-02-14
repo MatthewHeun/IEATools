@@ -37,7 +37,7 @@ One of "Consumption" or "Supply". Default is "Consumption".}
 \item{stage}{The string indicating the stage for the analysis. One of \code{production}, \code{transformation_processes}, or \code{eiou}.
 Default is \code{production}.}
 
-\item{e_dot}{The energy flow rate column in \code{iea_df}.  Default is "E.dot".}
+\item{e_dot}{The energy flow rate column in \code{iea_df}.  Default is "Edot".}
 
 \item{flow}{The flow column in \code{iea_df}. Default is "Flow".}
 

@@ -50,10 +50,10 @@ example_tidy_iea_df |>
   dplyr::filter(Flow \%in\% c("Production",
                             "Gas works"), 
          Product \%in\% c("Gas works gas", "Natural gas")) |> 
-  dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
+  dplyr::select("Year", "Flow", "Product", "Edot", "Unit")
 fixed \%>\% 
   dplyr::filter(Flow \%in\% c("Production",
                             "Gas works"), 
          Product \%in\% c("Gas works gas", "Natural gas")) |> 
-  dplyr::select("Year", "Flow", "Product", "E.dot", "Unit")
+  dplyr::select("Year", "Flow", "Product", "Edot", "Unit")
 }

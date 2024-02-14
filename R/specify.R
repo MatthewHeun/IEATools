@@ -83,7 +83,7 @@
 #'   FlowAggregationPoint = c("Energy industry own use"),
 #'   Flow = c("Liquefaction (LNG) / regasification plants"), 
 #'   Product = c("Natural gas"),
-#'   E.dot = c(-42), 
+#'   Edot = c(-42), 
 #'   stringsAsFactors = FALSE
 #' ) %>% 
 #'   specify_primary_production()
@@ -366,7 +366,7 @@ specify_interface_industries <- function(.tidy_iea_df,
 #' @param own_use_elect_chp_heat A string identifying own use in electricity, CHP and heat plants in the flow column. Default is "Own use in electricity, CHP and heat plants".
 #' @param pumped_storage A string identifying pumped storage plants in the flow column. Default is "Pumped storage plants".
 #' @param nuclear_industry A string identifying nuclear plants in the flow column. Default is "Nuclear industry".
-#' @param e_dot The name of the energy flow column in `.tidy_iea_df`. Default is "E.dot".
+#' @param e_dot The name of the energy flow column in `.tidy_iea_df`. Default is "Edot".
 #' @param negzeropos The name of a temporary column created in `.tidy_iea_df`. Default is ".negzeropos".
 #' @param main_act_producer_elect A string identifying main activity producer electricity plants. Default is "Main activity producer electricity plants".
 #'
@@ -564,7 +564,7 @@ tp_sinks_sources <- function(.tidy_iea_df,
 #'   Flow = c("Automobiles", "Automobiles", "Furnaces", 
 #'            "Non-energy use industry/transformation/energy"),
 #'   Product = c("Petrol", "MD", "Coal", "Coal"),
-#'   E.dot = c(-1, 1, -2, 8), 
+#'   Edot = c(-1, 1, -2, 8), 
 #'   stringsAsFactors = FALSE
 #' ) %>% 
 #'   mutate(
@@ -730,7 +730,7 @@ specify_all <- function(.tidy_iea_df,
 #' load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
 #'   despecify_col(col = "Flow", despecified_col = "clean_Flow") %>% 
-#'   select(Flow, Product, E.dot, clean_Flow) %>% 
+#'   select(Flow, Product, Edot, clean_Flow) %>% 
 #'   filter(endsWith(Flow, RCLabels::bracket_notation[["suff_end"]]))
 despecify_col <- function(.df, col, despecified_col, 
                           notations = list(RCLabels::of_notation, RCLabels::from_notation),
@@ -777,7 +777,7 @@ despecify_col <- function(.df, col, despecified_col,
 #' load_tidy_iea_df() %>% 
 #'   specify_all() %>% 
 #'   remove_suffix_specifications(col = "Flow", unsuffixed_col = "clean_Flow") %>% 
-#'   select(Flow, Product, E.dot, clean_Flow) %>% 
+#'   select(Flow, Product, Edot, clean_Flow) %>% 
 #'   filter(endsWith(Flow, RCLabels::bracket_notation[["suff_end"]]))
 remove_suffix_specifications <- function(.df, col, unsuffixed_col, 
                                          notations = list(RCLabels::of_notation, RCLabels::from_notation)){

@@ -47,9 +47,9 @@ test_that("use_iso_countries() works with more columns in override", {
     dplyr::mutate(bogus_col = "bogus information")
   res <- iea_df |> 
     use_iso_countries(override_df = override) |> 
-    tidyr::pivot_longer(cols = c("2000", "2001"), names_to = "Year", values_to = "E.dot")
+    tidyr::pivot_longer(cols = c("2000", "2001"), names_to = "Year", values_to = "Edot")
   
-  expect_equal(names(res), c("Country", "Year", "E.dot"))
+  expect_equal(names(res), c("Country", "Year", "Edot"))
 })
 
 
@@ -1064,7 +1064,7 @@ test_that("load_tidy_iea_df() works as expected", {
       load_tidy_iea_df(specify_non_energy_flows = TRUE)
     # Verify column names and order
     expect_equal(names(iea_tidy_df), c("Country", "Method", "EnergyType", "LastStage", "Year", "LedgerSide", "FlowAggregationPoint", 
-                                       "Flow", "Product", "Unit", "E.dot"))
+                                       "Flow", "Product", "Unit", "Edot"))
     # This is a energy exclusive data frame
     expect_true(all(iea_tidy_df$EnergyType == "E"))
     # This is a completely TJ data frame
@@ -1136,18 +1136,18 @@ test_that("load_tidy_iea_df() gives expected values", {
   expect_equal(iea_df |> 
                  dplyr::filter(Country == "ZAF", Year == 1971, Product == "Fuel oil", 
                                Flow == "Oil refineries", FlowAggregationPoint == "Transformation processes") |> 
-                 magrittr::extract2("E.dot"), 
+                 magrittr::extract2("Edot"), 
                189060.6)
   
   expect_equal(iea_df |> 
                  dplyr::filter(Country == "GHA", Year == 1971, Product == "Crude oil", 
                                Flow == "Imports") |> 
-                 magrittr::extract2("E.dot"), 
+                 magrittr::extract2("Edot"), 
                38359.8, tolerance = 0.003)
 
   expect_equal(iea_df |> 
                  dplyr::filter(Country == "ZAF", Year == 1971, Product == "Bitumen", Flow == "Transfers") |> 
-                 magrittr::extract2("E.dot"), 
+                 magrittr::extract2("Edot"), 
                117)
 })
 
@@ -1183,7 +1183,7 @@ test_that("load_tidy_iea_df() OK when spreading by years after", {
   # Without correct specification, keys will not be unique.
   for (year in IEATools::valid_iea_release_years) {
     year_spread <- load_tidy_iea_df(sample_iea_data_path(year)) |> 
-      tidyr::spread(key = Year, value = E.dot)
+      tidyr::spread(key = Year, value = Edot)
     expect_true("1971" %in% names(year_spread))
     expect_true("2000" %in% names(year_spread))
   }

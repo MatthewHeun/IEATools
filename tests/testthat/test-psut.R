@@ -68,7 +68,7 @@ test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_fl
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = psut_cols$B
     ) %>% 
     add_psut_matnames()
@@ -89,7 +89,7 @@ test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_fl
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = psut_cols$B)
   
   expect_true(all(With_matnames == With_matnames_2))
@@ -146,7 +146,7 @@ test_that("add_row_col_meta() works as expected", {
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = psut_cols$B
     ) %>% 
     add_row_col_meta()
@@ -210,7 +210,7 @@ test_that("add_row_col_meta() works as expected", {
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = psut_cols$B
     ) %>% 
     tibble::add_column(
@@ -234,7 +234,7 @@ test_that("add_row_col_meta() works as expected", {
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = psut_cols$B
     ) %>% 
     tibble::add_column(
@@ -308,7 +308,7 @@ test_that("collapse_to_psut() works expected", {
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = psut_cols$B
     ) %>% 
     add_row_col_meta() %>% 
@@ -342,7 +342,7 @@ test_that("collapse_to_psut() works with Matrix objects", {
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = psut_cols$B
     ) %>% 
     add_row_col_meta() %>% 
@@ -694,7 +694,7 @@ test_that("prep_psut() correctly works with Balancing flows", {
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = c(psut_cols$B, psut_cols$B)
     ) %>% 
     prep_psut()
@@ -742,7 +742,7 @@ test_that("prep_psut() correctly works with Balancing flows and Matrix objects",
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = c(psut_cols$B, psut_cols$B)
     ) %>%
     prep_psut(matrix_class = "Matrix")

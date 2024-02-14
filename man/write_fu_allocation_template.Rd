@@ -54,7 +54,7 @@ If not present, the ".xlsx" extension is added.}
 \item{quantity}{the name of the quantity column to be created on output. Default is "Quantity".}
 
 \item{e_dot}{the name of the energy flow rate column in \code{.tidy_iea_df} and the name of the energy flow rate rows to be included in the Excel file that is written by this function.
-Default is "E.dot".}
+Default is "Edot".}
 
 \item{e_dot_perc}{the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
 Default is "E.dot.perc".}

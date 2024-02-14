@@ -81,7 +81,7 @@ gather_producer_autoproducer <- function(.tidy_iea_df,
       )
     ) %>%
     # Now sum similar rows using summarise.
-    # Group by everything except the energy flow rate column, "E.dot".
+    # Group by everything except the energy flow rate column, "Edot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
@@ -159,7 +159,7 @@ route_pumped_storage <- function(.tidy_iea_df,
       )
     ) %>%
     # Now sum similar rows using summarise.
-    # Group by everything except the energy flow rate column, "E.dot".
+    # Group by everything except the energy flow rate column, "Edot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
@@ -557,7 +557,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
     
     
     # Now sum similar rows using summarise.
-    # Group by everything except the energy flow rate column, "E.dot".
+    # Group by everything except the energy flow rate column, "Edot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
@@ -764,7 +764,7 @@ add_nuclear_industry <- function(.tidy_iea_df,
     
     
     # Now sum similar rows using summarise.
-    # Group by everything except the energy flow rate column, "E.dot".
+    # Group by everything except the energy flow rate column, "Edot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
@@ -1024,7 +1024,7 @@ route_non_specified_eiou <- function(.tidy_iea_df,
     
     
     # Now sum similar rows using summarise.
-    # Group by everything except the energy flow rate column, "E.dot".
+    # Group by everything except the energy flow rate column, "Edot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
@@ -1292,7 +1292,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
     dplyr::bind_rows(routed_nonspec_tp) %>%
     #Aggregating. We need to add a pos/neg/null column to add up differently positive and negative values, otherwise we'd only get NET flows.
     # Now sum similar rows using summarise.
-    # Group by everything except the energy flow rate column, "E.dot".
+    # Group by everything except the energy flow rate column, "Edot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])

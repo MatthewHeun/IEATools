@@ -4,7 +4,7 @@ check_fu_allocation_template <- function(.DF){
   expect_equal(.DF$FlowAggregationPoint[[1]], "Energy industry own use")
   expect_equal(.DF$Ef.product[[1]], "Refinery gas")
   expect_equal(.DF$Destination[[1]], "Oil refineries")
-  expect_equal(.DF$Quantity[[1]], "E.dot")
+  expect_equal(.DF$Quantity[[1]], "Edot")
   last_row <- nrow(.DF)
   expect_equal(.DF$FlowAggregationPoint[[last_row]], "Non-energy use")
   expect_equal(.DF$Ef.product[[last_row]], "Paraffin waxes")
