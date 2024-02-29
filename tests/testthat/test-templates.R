@@ -52,7 +52,7 @@ test_that("fu_allocation_template() works as expected", {
 
   # Check columns
   expected_colorder <- c("Country", "Method", "EnergyType", "LastStage", "LedgerSide", "FlowAggregationPoint", "Unit",
-                         "Ef.product", "Machine", "Eu.product", "Destination", 
+                         "Ef.product", "Machine", "EuProduct", "Destination", 
                          "Quantity", "Maximum.values", "1971", "2000")
   expect_equal(names(Allocation_template), expected_colorder)
   expect_true(all(Allocation_template$LedgerSide == "Consumption" | Allocation_template$FlowAggregationPoint == "Energy industry own use"))
@@ -106,7 +106,7 @@ test_that("write_fu_allocation_template() works as expected", {
   Joined <- dplyr::full_join(Allocations, Expected_allocations, by = c("Country", "Method", "EnergyType", 
                                                                        "LastStage", "LedgerSide", "FlowAggregationPoint", 
                                                                        "Unit", "Ef.product", "Machine", 
-                                                                       "Eu.product", "Destination", "Quantity")) %>% 
+                                                                       "EuProduct", "Destination", "Quantity")) %>% 
     dplyr::mutate(
       Maximum.values.diff = Maximum.values.reread - Maximum.values,
       `1971_diff` = `1971.reread` - `1971`,
@@ -158,7 +158,9 @@ test_that("eta_fu_template() works as expected for 2021 data", {
   expect_equal(as.character(Eta_fu_template_2021$Quantity[[1]]), "Edot_machine")
   expect_equal(as.character(Eta_fu_template_2021$Quantity[[nrow(Eta_fu_template_2021)]]), "phi.u")
   
-  eu_products <- Eta_fu_template_2021$Eu.product %>% unique() %>% as.character()
+  eu_products <- Eta_fu_template_2021[[IEATools::template_cols$eu_product]] |> 
+    unique() |> 
+    as.character()
   # Check that the order is as expected.
   expect_setequal(eu_products, c("MD", "Light", "HTH.600.C", "MTH.200.C", "MTH.100.C", "NEU", "LTH.20.C"))
   # Check the class of the year columns. They should be numeric.
@@ -173,7 +175,9 @@ test_that("eta_fu_template() works as expected for 2021 data", {
   expect_equal(as.character(Eta_fu_template_2021_2$Quantity[[1]]), "Edot_machine")
   expect_equal(as.character(Eta_fu_template_2021_2$Quantity[[nrow(Eta_fu_template_2021_2)]]), "phi.u")
   
-  eu_products2 <- Eta_fu_template_2021_2$Eu.product %>% unique() %>% as.character()
+  eu_products2 <- Eta_fu_template_2021_2[[IEATools::template_cols$eu_product]] |> 
+    unique() |> 
+    as.character()
   # Check that the order is as expected.
   expect_setequal(eu_products2, c("MTH.100.C", "MTH.200.C", "MD", "HTH.600.C", "Light", "LTH.20.C", "NEU"))
   # Check the class of the year columns. They should be numeric.
@@ -192,7 +196,9 @@ test_that("eta_fu_template() works as expected for 2022 data", {
   expect_equal(as.character(Eta_fu_template_2022$Quantity[[1]]), "Edot_machine")
   expect_equal(as.character(Eta_fu_template_2022$Quantity[[nrow(Eta_fu_template_2022)]]), "phi.u")
   
-  eu_products <- Eta_fu_template_2022$Eu.product %>% unique() %>% as.character()
+  eu_products <- Eta_fu_template_2022[[IEATools::template_cols$eu_product]] |> 
+    unique() |> 
+    as.character()
   # Check that the order is as expected.
   expect_setequal(eu_products, c("MD", "Light", "HTH.600.C", "MTH.200.C", "MTH.100.C", "NEU", "LTH.20.C"))
   # Check the class of the year columns. They should be numeric.
@@ -207,7 +213,9 @@ test_that("eta_fu_template() works as expected for 2022 data", {
   expect_equal(as.character(Eta_fu_template_2022_2$Quantity[[1]]), "Edot_machine")
   expect_equal(as.character(Eta_fu_template_2022_2$Quantity[[nrow(Eta_fu_template_2022_2)]]), "phi.u")
   
-  eu_products2 <- Eta_fu_template_2022_2$Eu.product %>% unique() %>% as.character()
+  eu_products2 <- Eta_fu_template_2022_2[[IEATools::template_cols$eu_product]] |> 
+    unique() |> 
+    as.character()
   # Check that the order is as expected.
   expect_setequal(eu_products2, c("MTH.100.C", "MTH.200.C", "MD", "Light", "HTH.600.C", "NEU", "LTH.20.C"))
   # Check the class of the year columns. They should be numeric.
@@ -233,7 +241,9 @@ test_that("eta_fu_template() works with tidy fu allocation data for 2021", {
   expect_equal(as.character(Eta_fu_template_2021$Quantity[[1]]), "Edot_machine")
   expect_equal(as.character(Eta_fu_template_2021$Quantity[[nrow(Eta_fu_template_2021)]]), "phi.u")
   
-  eu_products <- Eta_fu_template_2021$Eu.product %>% unique() %>% as.character()
+  eu_products <- Eta_fu_template_2021[[IEATools::template_cols$eu_product]] |> 
+    unique() |> 
+    as.character()
   # Check that the order is as expected.
   expect_setequal(eu_products, c("MD", "Light", "HTH.600.C", "MTH.200.C", "MTH.100.C", "LTH.20.C", "NEU"))
   # Check the class of the year columns. They should be numeric.
@@ -256,7 +266,9 @@ test_that("eta_fu_template() works with tidy data from the default year", {
   expect_equal(as.character(Eta_fu_template$Quantity[[1]]), "Edot_machine")
   expect_equal(as.character(Eta_fu_template$Quantity[[nrow(Eta_fu_template)]]), "phi.u")
   
-  eu_products <- Eta_fu_template$Eu.product %>% unique() %>% as.character()
+  eu_products <- Eta_fu_template[[IEATools::template_cols$eu_product]] |> 
+    unique() |> 
+    as.character()
   # Check that the order is as expected.
   expect_equal(eu_products, c("MD", "Light", "HTH.600.C", "MTH.200.C", "MTH.100.C", 
                               "NEU", "LTH.20.C"))
@@ -475,15 +487,15 @@ test_that("check_fu_allocation_data() works as expected", {
   
   # Make a bogus fu_allocation data frame that should fail and make sure it fails
   # in the situation where Ef.product and Eu.product are not same when Machine is Non-energy.
-  fu_allocation_bad <- tibble::tribble(~Country, ~FlowAggregationPoint, ~Ef.product, ~Machine, ~Eu.product, ~Destination, 
+  fu_allocation_bad <- tibble::tribble(~Country, ~FlowAggregationPoint, ~Ef.product, ~Machine, ~EuProduct, ~Destination, 
                                        "Wakanda", "Consumption", "Bitumen", "Non-energy", "Bituman", "Road")
   expect_error(check_fu_allocation_data(fu_allocation_bad), 
-               "Ef.product and Eu.product must be identical when Machine is Non-energy. The following combinations do not meet that criterion:\nWakanda, Consumption, Bitumen, Non-energy, Bituman, Road. Please check the FU allocation table for typos or misspellings.")
+               "Ef.product and EuProduct must be identical when Machine is Non-energy. The following combinations do not meet that criterion:\nWakanda, Consumption, Bitumen, Non-energy, Bituman, Road. Please check the FU allocation table for typos or misspellings.")
   
   # Make a bogus fu_allocation data frame that should fail and make sure it fails
   # in the situation where .values is not NA.
-  fu_allocation_bad2 <- tibble::tribble(~Country, ~Year, ~FlowAggregationPoint, ~Ef.product, ~Machine, ~Eu.product, ~Destination, ~Quantity, ~.values,
+  fu_allocation_bad2 <- tibble::tribble(~Country, ~Year, ~FlowAggregationPoint, ~Ef.product, ~Machine, ~EuProduct, ~Destination, ~Quantity, ~.values,
                                         "Wakanda", 2020, "Consumption", "Electricity", NA_character_, "MD", "Industry", "C_1 [%]", "25.0")
-  expect_error(check_fu_allocation_data(fu_allocation_bad2), "In the FU Allocations tab, Eu.product and Destination must be filled when Quantity is non-zero. The following combinations do not meet that criterion:\nWakanda, 2020, Consumption, Electricity, NA, MD, Industry, C_1")
+  expect_error(check_fu_allocation_data(fu_allocation_bad2), "In the FU Allocations tab, EuProduct and Destination must be filled when Quantity is non-zero. The following combinations do not meet that criterion:\nWakanda, 2020, Consumption, Electricity, NA, MD, Industry, C_1")
 })
 

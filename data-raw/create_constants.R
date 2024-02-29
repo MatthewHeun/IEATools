@@ -118,7 +118,7 @@ usethis::use_data(psut_cols, overwrite = TRUE)
 
 template_cols <- list(ef_product = "Ef.product",
                       machine = "Machine",
-                      eu_product = "Eu.product",
+                      eu_product = "EuProduct",
                       destination = "Destination",
                       quantity = "Quantity",
                       maximum_values = "Maximum.values",
