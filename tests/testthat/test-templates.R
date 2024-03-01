@@ -494,7 +494,7 @@ test_that("check_fu_allocation_data() works as expected", {
   
   # Make a bogus fu_allocation data frame that should fail and make sure it fails
   # in the situation where .values is not NA.
-  fu_allocation_bad2 <- tibble::tribble(~Country, ~Year, ~FlowAggregationPoint, ~Ef.product, ~Machine, ~EuProduct, ~Destination, ~Quantity, ~.values,
+  fu_allocation_bad2 <- tibble::tribble(~Country, ~Year, ~FlowAggregationPoint, ~Ef.product, ~Machine, ~EuProduct, ~Destination, ~Quantity, ~Value,
                                         "Wakanda", 2020, "Consumption", "Electricity", NA_character_, "MD", "Industry", "C_1 [%]", "25.0")
   expect_error(check_fu_allocation_data(fu_allocation_bad2), "In the FU Allocations tab, EuProduct and Destination must be filled when Quantity is non-zero. The following combinations do not meet that criterion:\nWakanda, 2020, Consumption, Electricity, NA, MD, Industry, C_1")
 })
