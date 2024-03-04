@@ -110,7 +110,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #' fu_table_GHA <- fu_table %>% 
 #'   dplyr::filter(Country == "GHA") %>% 
 #'   dplyr::filter(!(FlowAggregationPoint == IEATools::tfc_flows$other & 
-#'                     Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
+#'                     EfProduct == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
 #'                     Destination == IEATools::other_flows$residential))
 #' # Make the exemplar, South Africa.
 #' fu_table_ZAF <- fu_table %>% 
@@ -119,7 +119,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #' # which will be used to complete the Ghanaian FU Allocation table.
 #' fu_table_ZAF %>% 
 #'   dplyr::filter(FlowAggregationPoint == IEATools::tfc_flows$other & 
-#'                   Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
+#'                   EfProduct == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
 #'                   Destination == IEATools::other_flows$residential) %>% 
 #'   dplyr::select(!c(Method, EnergyType, LastStage, FlowAggregationPoint))
 #' # Get the IEA data for GHA and ZAF and specify it.
@@ -133,7 +133,7 @@ tidy_fu_allocation_table <- function(.fu_allocation_table,
 #' # Note that the C_source column shows that these data have been taken from South Africa.
 #' completed %>% 
 #'   dplyr::filter(FlowAggregationPoint == IEATools::tfc_flows$other & 
-#'                   Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
+#'                   EfProduct == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
 #'                   Destination == IEATools::other_flows$residential) %>% 
 #'   dplyr::select(!c(Method, EnergyType, LastStage, FlowAggregationPoint))
 complete_fu_allocation_table <- function(fu_allocation_table, 
@@ -364,7 +364,7 @@ fu_allocation_table_completed <- function(fu_allocation_table = NULL,
   # Accept a non-tidy fu_allocation_table if it arrives.
   fu_allocation_table <- tidy_fu_allocation_table(fu_allocation_table)
 
-  # Eliminate the quantity, Machine, and Eu.product columns and summarize.
+  # Eliminate the quantity, Machine, and EuProduct columns and summarize.
   # We should get all 1's.
   # If not, throw an error.
   allocation_sums <- fu_allocation_table %>% 
@@ -668,7 +668,7 @@ complete_eta_fu_table <- function(eta_fu_table,
   # But it really needs eta.fu or phi.u, as required by the which_quantity argument.
   # for each unique combination of columns from 
   # Country, Year, Method, EnergyType, LastStage, FlowAggregationPoint, 
-  # Destination, Ef.product, Machine, and Eu.product.
+  # Destination, EfProduct, Machine, and EuProduct.
   # Note that "quantities" here refers to eta_fu or phi_u.
   machines_that_need_quantities <- lapply(X = which_quantity, FUN = function(q){
     fu_allocation_table %>% 
@@ -876,7 +876,7 @@ eta_fu_table_completed <- function(eta_fu_table = NULL,
     machines_that_need_quantities <- lapply(X = which_quantity, FUN = function(q){
       machines_that_need_quantities %>% 
         # Eliminate columns (if they exist) that contain unnecessary metadata
-        # associated with unique Country-Year-machine-EU.product combinations.
+        # associated with unique Country-Year-machine-EuProduct combinations.
         # These columns will interfere with the anti_join below.
         dplyr::mutate(
           "{method}" := NULL,

@@ -116,7 +116,7 @@ usethis::use_data(psut_cols, overwrite = TRUE)
 # Give names of columns in FU allocation and eta_fu templates
 # 
 
-template_cols <- list(ef_product = "Ef.product",
+template_cols <- list(ef_product = "EfProduct",
                       machine = "Machine",
                       eu_product = "EuProduct",
                       destination = "Destination",

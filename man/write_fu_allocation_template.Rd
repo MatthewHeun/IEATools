@@ -49,7 +49,7 @@ If not present, the ".xlsx" extension is added.}
 
 \item{machine}{the name of the machine column in output. Default is "Machine"}
 
-\item{eu_product}{the name of the useful energy product column in output. Default is "Eu.product".}
+\item{eu_product}{the name of the useful energy product column in output. Default is "EuProduct".}
 
 \item{quantity}{the name of the quantity column to be created on output. Default is "Quantity".}
 

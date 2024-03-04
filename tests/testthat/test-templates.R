@@ -2,12 +2,12 @@
 # created from the default data set, filled or not.
 check_fu_allocation_template <- function(.DF){
   expect_equal(.DF$FlowAggregationPoint[[1]], "Energy industry own use")
-  expect_equal(.DF$Ef.product[[1]], "Refinery gas")
+  expect_equal(.DF$EfProduct[[1]], "Refinery gas")
   expect_equal(.DF$Destination[[1]], "Oil refineries")
   expect_equal(.DF$Quantity[[1]], "Edot")
   last_row <- nrow(.DF)
   expect_equal(.DF$FlowAggregationPoint[[last_row]], "Non-energy use")
-  expect_equal(.DF$Ef.product[[last_row]], "Paraffin waxes")
+  expect_equal(.DF$EfProduct[[last_row]], "Paraffin waxes")
   expect_equal(.DF$Destination[[last_row]], "Non-energy use industry/transformation/energy")
   expect_equal(.DF$Quantity[[last_row]], "C_4 [%]")
 }
@@ -52,7 +52,7 @@ test_that("fu_allocation_template() works as expected", {
 
   # Check columns
   expected_colorder <- c("Country", "Method", "EnergyType", "LastStage", "LedgerSide", "FlowAggregationPoint", "Unit",
-                         "Ef.product", "Machine", "EuProduct", "Destination", 
+                         "EfProduct", "Machine", "EuProduct", "Destination", 
                          "Quantity", "Maximum.values", "1971", "2000")
   expect_equal(names(Allocation_template), expected_colorder)
   expect_true(all(Allocation_template$LedgerSide == "Consumption" | Allocation_template$FlowAggregationPoint == "Energy industry own use"))
@@ -105,7 +105,7 @@ test_that("write_fu_allocation_template() works as expected", {
   Expected_allocations <- FU_allocation_template
   Joined <- dplyr::full_join(Allocations, Expected_allocations, by = c("Country", "Method", "EnergyType", 
                                                                        "LastStage", "LedgerSide", "FlowAggregationPoint", 
-                                                                       "Unit", "Ef.product", "Machine", 
+                                                                       "Unit", "EfProduct", "Machine", 
                                                                        "EuProduct", "Destination", "Quantity")) %>% 
     dplyr::mutate(
       Maximum.values.diff = Maximum.values.reread - Maximum.values,
@@ -150,7 +150,7 @@ test_that("load_fu_allocation_data() works as expected", {
 
 test_that("eta_fu_template() works as expected for 2021 data", {
   # Try for 2021 data
-  # Use the default sorting (by Eu.product)
+  # Use the default sorting (by EuProduct)
   Eta_fu_template_2021 <- load_fu_allocation_data(sample_fu_allocation_table_path(2021)) %>% 
     eta_fu_template()
   expect_equal(Eta_fu_template_2021$Machine[[1]], "Automobiles")
@@ -188,7 +188,7 @@ test_that("eta_fu_template() works as expected for 2021 data", {
 
 test_that("eta_fu_template() works as expected for 2022 data", {
   # Try for 2022 data
-  # Use the default sorting (by Eu.product)
+  # Use the default sorting (by EuProduct)
   Eta_fu_template_2022 <- load_fu_allocation_data(sample_fu_allocation_table_path(2022)) %>% 
     eta_fu_template()
   expect_equal(Eta_fu_template_2022$Machine[[1]], "Automobiles")
@@ -486,15 +486,15 @@ test_that("check_fu_allocation_data() works as expected", {
   expect_true(load_fu_allocation_data() %>% check_fu_allocation_data())
   
   # Make a bogus fu_allocation data frame that should fail and make sure it fails
-  # in the situation where Ef.product and Eu.product are not same when Machine is Non-energy.
-  fu_allocation_bad <- tibble::tribble(~Country, ~FlowAggregationPoint, ~Ef.product, ~Machine, ~EuProduct, ~Destination, 
+  # in the situation where EfProduct and EuProduct are not same when Machine is Non-energy.
+  fu_allocation_bad <- tibble::tribble(~Country, ~FlowAggregationPoint, ~EfProduct, ~Machine, ~EuProduct, ~Destination, 
                                        "Wakanda", "Consumption", "Bitumen", "Non-energy", "Bituman", "Road")
   expect_error(check_fu_allocation_data(fu_allocation_bad), 
-               "Ef.product and EuProduct must be identical when Machine is Non-energy. The following combinations do not meet that criterion:\nWakanda, Consumption, Bitumen, Non-energy, Bituman, Road. Please check the FU allocation table for typos or misspellings.")
+               "EfProduct and EuProduct must be identical when Machine is Non-energy. The following combinations do not meet that criterion:\nWakanda, Consumption, Bitumen, Non-energy, Bituman, Road. Please check the FU allocation table for typos or misspellings.")
   
   # Make a bogus fu_allocation data frame that should fail and make sure it fails
   # in the situation where .values is not NA.
-  fu_allocation_bad2 <- tibble::tribble(~Country, ~Year, ~FlowAggregationPoint, ~Ef.product, ~Machine, ~EuProduct, ~Destination, ~Quantity, ~Value,
+  fu_allocation_bad2 <- tibble::tribble(~Country, ~Year, ~FlowAggregationPoint, ~EfProduct, ~Machine, ~EuProduct, ~Destination, ~Quantity, ~Value,
                                         "Wakanda", 2020, "Consumption", "Electricity", NA_character_, "MD", "Industry", "C_1 [%]", "25.0")
   expect_error(check_fu_allocation_data(fu_allocation_bad2), "In the FU Allocations tab, EuProduct and Destination must be filled when Quantity is non-zero. The following combinations do not meet that criterion:\nWakanda, 2020, Consumption, Electricity, NA, MD, Industry, C_1")
 })

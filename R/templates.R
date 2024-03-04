@@ -200,9 +200,9 @@ fu_allocation_template <- function(.tidy_iea_df,
 #' When sorting columns, the order of energy flows through the energy conversion chain is considered. 
 #' The column order is:
 #' * metadata columns,
-#' * final energy product (`Ef.product`). 
+#' * final energy product (`EfProduct`). 
 #' * Machine (the final-to-useful transformation process),
-#' * useful energy product (`Eu.product`),
+#' * useful energy product (`EuProduct`),
 #' * destination where the useful energy now flows,
 #' * years (in columns), and 
 #' * allocations (C_x rows).
@@ -212,13 +212,13 @@ fu_allocation_template <- function(.tidy_iea_df,
 #'        Default is "both". 
 #' @param ledger_side the ledger side column in `.fu_allocation_template`. Default is "LedgerSide".
 #' @param flow_aggregation_point the flow aggregation point column in `.fu_allocation_template`. Default is FlowAggregationPoint.
-#' @param ef_product the name of the final energy column in `.fu_allocation_template`. Default is "Ef.product".
+#' @param ef_product the name of the final energy column in `.fu_allocation_template`. Default is `IEATools::template_cols$ef_product`.
 #' @param machine the name of the machine column in `.fu_allocation_template`. Default is "Machine".
-#' @param eu_product the name of the useful energy product column in `.fu_allocation_template`. Default is "Eu.product".
+#' @param eu_product the name of the useful energy product column in `.fu_allocation_template`. Default is `IEATools::template_cols$eu_product`.
 #' @param destination the name of the destination column in `.fu_allocation_template`. Default is "Destination".
 #' @param unit the name of the unit in `.fu_allocation_template`. Default is "Unit".
 #' @param fap_dest_order the desired order for the combination of `flow_aggregation_point` and `destination` columns. Default is `IEATools::fap_flow_iea_order`.
-#' @param ef_product_order the desired order for final energy products in `.fu_allocation_template`. Default is "Ef.product".
+#' @param ef_product_order the desired order for final energy products in `.fu_allocation_template`. Default is `IEATools::products`.
 #' @param quantity the name of the quantity column in `.fu_allocation_template`. Default is "Quantity".
 #' @param maximum_values the name of the maximum value column `.fu_allocation_template`. Default is "Unit".
 #' @param .temp_sort the name of a temporary column to be added to `.fu_allocation_template`. 
@@ -270,7 +270,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
       matsindf::everything_except(c(year_colnames, machine_and_product_columns, ef_product))
     # Adjust the columns in preparation for sorting.
     out <- out %>% 
-      # De-specify the Ef.product column so it can be sorted.
+      # De-specify the EfProduct column so it can be sorted.
       despecify_col(col = ef_product, despecified_col = .clean_ef_product) %>% 
       # Create a united Flow.aggregation.point_Flow column.
       tidyr::unite(col = !!as.name(.temp_sort), !!as.name(flow_aggregation_point), !!as.name(destination), sep = "_", remove = FALSE)
@@ -379,7 +379,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #' @param eiou the string identifier for energy industry own use in the `flow_aggregation_point` column. Default is "Energy industry own use".
 #' @param fu_allocations_tab_name the name of the tab on which the template will be written. Default is "FU Allocations".
 #' @param machine the name of the machine column in output. Default is "Machine"
-#' @param eu_product the name of the useful energy product column in output. Default is "Eu.product".
+#' @param eu_product the name of the useful energy product column in output. Default is "EuProduct".
 #' @param quantity the name of the quantity column to be created on output. Default is "Quantity".
 #' @param e_dot the name of the energy flow rate column in `.tidy_iea_df` and the name of the energy flow rate rows to be included in the Excel file that is written by this function.
 #'        Default is "Edot".
@@ -569,7 +569,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
 #' A filled example can be loaded with the default value of `path`.
 #' 
 #' Note that any machine named `non_energy_machine` is required to have 
-#' identical values for `Ef.product` and `Eu.product`.
+#' identical values for `ef_product` and `eu_product`.
 #' Violations of this requirement cause errors to be thrown.
 #'
 #' @param path The path from which final-to-useful allocation data will be loaded. Default is the path to allocation data supplied with this package.
@@ -652,7 +652,7 @@ check_fu_allocation_data <- function(.fu_allocation_table,
                                      quantity = IEATools::template_cols$quantity,
                                      .values = IEATools::template_cols$.values,
                                      non_energy_machine = "Non-energy") {
-  # When "Non-energy" is the Machine, Ef.product and Eu.product should be identical.
+  # When "Non-energy" is the Machine, EfProduct and EuProduct should be identical.
   # It is an easy mistake that isn't true.
   # So check for that problem.
   errs <- .fu_allocation_table %>%
@@ -675,12 +675,12 @@ check_fu_allocation_data <- function(.fu_allocation_table,
     stop(err_msg)
   }
   # When filling a final-to-useful allocation template, 
-  # the analyst forgets to fill some Machines and Eu.products. 
+  # the analyst forgets to fill some Machines and EuProducts. 
   # Check for those situations and provide a helpful error message.
   # To check for these situations, we need to first tidy the FU allocations table
   tidy_fu <- .fu_allocation_table %>% 
     tidy_fu_allocation_table()
-  # Now check for any cases where one or both of the Machine or Eu.product column is NA 
+  # Now check for any cases where one or both of the Machine or EuProduct column is NA 
   # while the .values column is not NA.
   errs <- tidy_fu %>% 
     dplyr::filter((is.na(.data[[machine]]) | is.na(.data[[eu_product]])) & !is.na(.data[[.values]]))
@@ -853,7 +853,7 @@ eta_fu_template <- function(.fu_allocations,
     # The following modifications to tidy_specified_iea_data are needed.
     # * filter to contain only Consumption and EIOU
     # * rename E.dot --> E.dot_dest
-    # * rename Product --> Ef.product
+    # * rename Product --> EfProduct
     # * rename Flow --> Destination
     e_dot_info <- tidy_specified_iea_data %>% 
       dplyr::filter(.data[[country]] %in% countries) %>% 
@@ -933,7 +933,7 @@ eta_fu_template <- function(.fu_allocations,
     dplyr::mutate(
       # Calculate the energy flow into each f-->u machine
       # for each row of the table
-      # (each combination of Ef.product and Machine.
+      # (each combination of EfProduct and Machine.
       "{e_dot_machine}" := .data[[c_ratio]] * .data[[e_dot_dest]]
     ) %>% 
     # Group by the metadata columns, year, the Machine column, and the eu_product column, because we want to calculate the 
@@ -1005,7 +1005,7 @@ eta_fu_template <- function(.fu_allocations,
       ) %>% 
       magrittr::extract2(.row_order)
   } else if (sort_by == "useful_energy_type") {
-    # We need to create a list of all the Eu.products.
+    # We need to create a list of all the EuProducts.
     eu_prods <- input_energy[[eu_product]] %>% unique()
     # Then find all the ones that are heat useful energy, identified by the 2nd and third characters being "TH".
     heat_prods <- eu_prods[which(substring(eu_prods, 2) %>% startsWith(heat))]
@@ -1017,7 +1017,7 @@ eta_fu_template <- function(.fu_allocations,
     heat_prods_sorted <- heat_prods[sorted_heat_indices]
     # There may be useful products that we don't know about. Put those at the end, sorted in alphabetical order..
     leftover_eu_prods <- sort(setdiff(eu_prods, c(md, ke, light, heat_prods)))
-    # Now compile the order of Eu.products for this data frame.
+    # Now compile the order of EuProducts for this data frame.
     eu_product_sort_order <- c(md, ke, light, heat_prods_sorted, leftover_eu_prods)
     # Sort the Maxima data frame to get the order we want.
     row_order <- Maxima %>% 

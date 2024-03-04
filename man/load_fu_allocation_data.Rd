@@ -42,7 +42,7 @@ generated using \code{fu_allocation_template()} and \code{write_fu_allocation_te
 A filled example can be loaded with the default value of \code{path}.
 
 Note that any machine named \code{non_energy_machine} is required to have
-identical values for \code{Ef.product} and \code{Eu.product}.
+identical values for \code{ef_product} and \code{eu_product}.
 Violations of this requirement cause errors to be thrown.
 }
 \examples{

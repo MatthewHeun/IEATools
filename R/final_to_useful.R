@@ -6,9 +6,9 @@
 #' This function uses information in a filled allocation template (created by `write_fu_allocation_template()`)
 #' to create allocation matrices (**C**). 
 #' 
-#' rownames of the **C** matrices are taken from the `Ef.product` and `Destination` columns of `.fu_allocation_table`
-#' and have the form "`Ef.product` `r RCLabels::arrow_notation[["pref_end"]]` `Destination`".
-#' colnames of the **C** matrices are taken from the `Machine` and `Eu.product` columns of `.fu_allocation_table`
+#' rownames of the **C** matrices are taken from the `EfProduct` and `Destination` columns of `.fu_allocation_table`
+#' and have the form "`EfProduct` `r RCLabels::arrow_notation[["pref_end"]]` `Destination`".
+#' colnames of the **C** matrices are taken from the `Machine` and `EuProduct` columns of `.fu_allocation_table`
 #' and have the form "machine `r RCLabels::arrow_notation[["pref_end"]]` useful energy form".
 #' 
 #' **C** matrices are created for both energy industry own use
@@ -150,9 +150,9 @@ form_C_mats <- function(.fu_allocation_table,
   prepped <- gathered %>% 
     # Create row and column names.
     dplyr::mutate(
-      # Row names come from Ef.product -> Destination for both C_Y and C_EIOU.
+      # Row names come from EfProduct -> Destination for both C_Y and C_EIOU.
       "{rownames}" := RCLabels::paste_pref_suff(pref = .data[[ef_product]], suff = .data[[destination]], notation = notation),
-      # Column names come from Machine -> Eu.product for both C_Y and C_EIOU.
+      # Column names come from Machine -> EuProduct for both C_Y and C_EIOU.
       "{colnames}" := RCLabels::paste_pref_suff(pref = .data[[machine]], suff = .data[[eu_product]], notation = notation),
       # Row types are Product -> Industry
       # "{rowtypes}" := product,

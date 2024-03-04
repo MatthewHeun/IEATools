@@ -182,7 +182,7 @@ test_that("extend_to_useful_helper() works as intended", {
     matsbyname::setrowtype(IEATools::row_col_types$product) %>% 
     matsbyname::setcoltype(IEATools::row_col_types$industry)
   
-  Allocation_Table <- tibble::tribble(~Destination, ~Ef.product, ~Machine, ~Eu.product, ~C, 
+  Allocation_Table <- tibble::tribble(~Destination, ~EfProduct, ~Machine, ~EuProduct, ~C, 
                                       "Residential", "Elect", "Lights", "Light", 0.5,
                                       "Residential", "Elect", "Water heaters", "MTH", 0.5,
                                       "Construction", "Elect", "Elect motors", "MD", 0.25, 
@@ -193,7 +193,7 @@ test_that("extend_to_useful_helper() works as intended", {
                                       "Construction", "Petrol", "Autos", "MD", 0.6,
                                       "Construction", "Petrol", "Furnace", "LTH", 0.4)
   
-  Efficiency_Table <- tibble::tribble(~Machine, ~Eu.product, ~eta.fu,
+  Efficiency_Table <- tibble::tribble(~Machine, ~EuProduct, ~etafu,
                                       "Lights", "Light", 0.45,
                                       "Water heaters", "MTH", 0.9,
                                       "Elect motors", "MD", 0.95,
@@ -208,15 +208,15 @@ test_that("extend_to_useful_helper() works as intended", {
   
   C_Y <- Allocation_Table %>% 
     dplyr::mutate(
-      rownames = RCLabels::paste_pref_suff(pref = Ef.product, suff = Destination, notation = RCLabels::arrow_notation), 
-      colnames = RCLabels::paste_pref_suff(pref = Machine, suff = Eu.product, notation = RCLabels::arrow_notation), 
+      rownames = RCLabels::paste_pref_suff(pref = EfProduct, suff = Destination, notation = RCLabels::arrow_notation), 
+      colnames = RCLabels::paste_pref_suff(pref = Machine, suff = EuProduct, notation = RCLabels::arrow_notation), 
       rowtypes = RCLabels::paste_pref_suff(pref = row_col_types$product, suff = row_col_types$industry, notation = RCLabels::arrow_notation),
       coltypes = RCLabels::paste_pref_suff(pref = row_col_types$industry, suff = row_col_types$product, notation = RCLabels::arrow_notation),
       matnames = "C_Y", 
       Destination = NULL, 
-      Ef.product = NULL, 
+      EfProduct = NULL, 
       Machine = NULL, 
-      Eu.product = NULL
+      EuProduct = NULL
     ) %>%
     dplyr::rename(
       matvals = C
@@ -228,13 +228,13 @@ test_that("extend_to_useful_helper() works as intended", {
   
   eta.fu_rownames <- Efficiency_Table %>% 
     dplyr::mutate(
-      rownames = RCLabels::paste_pref_suff(pref = Machine, suff = Eu.product, notation = RCLabels::arrow_notation)
+      rownames = RCLabels::paste_pref_suff(pref = Machine, suff = EuProduct, notation = RCLabels::arrow_notation)
     ) %>% 
     magrittr::extract2("rownames")
   
   eta_fu <- Efficiency_Table %>% 
-    magrittr::extract2("eta.fu") %>% 
-    matrix(ncol = 1, dimnames = list(eta.fu_rownames, "eta.fu")) %>% 
+    magrittr::extract2("etafu") %>% 
+    matrix(ncol = 1, dimnames = list(eta.fu_rownames, "etafu")) %>% 
     matsbyname::setrowtype(RCLabels::paste_pref_suff(pref = row_col_types$industry, 
                                                        suff = row_col_types$product, 
                                                        notation = RCLabels::arrow_notation))
@@ -257,7 +257,7 @@ test_that("extend_to_useful_helper() works as intended", {
   
   expect_equal(eta_fu_hat[["Engines -> MD", "MD [from Engines]"]], 
                Efficiency_Table %>% dplyr::filter(Machine == "Engines") %>% 
-                 magrittr::extract2("eta.fu"))
+                 magrittr::extract2("etafu"))
   
   
   ## Step 2

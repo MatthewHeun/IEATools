@@ -97,7 +97,7 @@ fu_table <- load_fu_allocation_data()
 fu_table_GHA <- fu_table \%>\% 
   dplyr::filter(Country == "GHA") \%>\% 
   dplyr::filter(!(FlowAggregationPoint == IEATools::tfc_flows$other & 
-                    Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
+                    EfProduct == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
                     Destination == IEATools::other_flows$residential))
 # Make the exemplar, South Africa.
 fu_table_ZAF <- fu_table \%>\% 
@@ -106,7 +106,7 @@ fu_table_ZAF <- fu_table \%>\%
 # which will be used to complete the Ghanaian FU Allocation table.
 fu_table_ZAF \%>\% 
   dplyr::filter(FlowAggregationPoint == IEATools::tfc_flows$other & 
-                  Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
+                  EfProduct == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
                   Destination == IEATools::other_flows$residential) \%>\% 
   dplyr::select(!c(Method, EnergyType, LastStage, FlowAggregationPoint))
 # Get the IEA data for GHA and ZAF and specify it.
@@ -120,7 +120,7 @@ completed <- complete_fu_allocation_table(fu_allocation_table = fu_table_GHA,
 # Note that the C_source column shows that these data have been taken from South Africa.
 completed \%>\% 
   dplyr::filter(FlowAggregationPoint == IEATools::tfc_flows$other & 
-                  Ef.product == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
+                  EfProduct == IEATools::biofuels_and_waste_products$primary_solid_biofuels & 
                   Destination == IEATools::other_flows$residential) \%>\% 
   dplyr::select(!c(Method, EnergyType, LastStage, FlowAggregationPoint))
 }
