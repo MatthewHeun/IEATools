@@ -373,19 +373,19 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #' @param path the file path into which the blank template file will be written. 
 #'        Include both folder and file name. 
 #'        If not present, the ".xlsx" extension is added.
-#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "LedgerSide".
-#' @param consumption the string identifier for consumption in the `ledger_side` column.  Default is "Consumption".
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is FlowAggregationPoint.
-#' @param eiou the string identifier for energy industry own use in the `flow_aggregation_point` column. Default is "Energy industry own use".
-#' @param fu_allocations_tab_name the name of the tab on which the template will be written. Default is "FU Allocations".
-#' @param machine the name of the machine column in output. Default is "Machine"
-#' @param eu_product the name of the useful energy product column in output. Default is "EuProduct".
-#' @param quantity the name of the quantity column to be created on output. Default is "Quantity".
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is `IEATools::iea_cols$ledger_side`.
+#' @param consumption the string identifier for consumption in the `ledger_side` column.  Default is `IEATools::ledger_sides$consumption`.
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is `IEATools::iea_cols$flow_aggregation_point`.
+#' @param eiou the string identifier for energy industry own use in the `flow_aggregation_point` column. Default is `IEATools::tfc_compare_flows$energy_industry_own_use`.
+#' @param fu_allocations_tab_name the name of the tab on which the template will be written. Default is `IEATools::fu_analysis_file_info$fu_allocation_tab_name`.
+#' @param machine the name of the machine column in output. Default is `IEATools::template_cols$machine`.
+#' @param eu_product the name of the useful energy product column in output. Default is `IEATools::template_cols$eu_product`.
+#' @param quantity the name of the quantity column to be created on output. Default is `IEATools::template_cols$quantity`.
 #' @param e_dot the name of the energy flow rate column in `.tidy_iea_df` and the name of the energy flow rate rows to be included in the Excel file that is written by this function.
 #'        Default is "Edot".
 #' @param e_dot_perc the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
 #'        Default is "E.dot.perc".
-#' @param maximum_values the name of the maximum values column in output. Default is "Maximum.values".
+#' @param maximum_values the name of the maximum values column in output. Default is `IEATools::template_cols$maximum_values`.
 #' @param header_row_font_color a hex string representing the font color for the header row in the Excel file that is written by this function.
 #'        Default is "#FFFFFF", white.
 #' @param header_row_shading_color a hex string representing the shading color for the header row in the Excel file that is written by this function.
@@ -495,7 +495,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
   openxlsx::addStyle(fu_wb, fu_allocations_tab_name, style = energy_row_style_eiou, rows = union(e_dot_rows_eiou, e_dot_perc_rows_eiou), cols = 1:ncol(.fu_allocation_template), gridExpand = TRUE)
   
   # Apply shading for cells that don't need to be filled
-  # First, tackle the cells in the Maximum.values column.
+  # First, tackle the cells in the MaximumValues column.
   dont_fill_style <- openxlsx::createStyle(fgFill = dont_fill_shading_color)
   openxlsx::addStyle(fu_wb, fu_allocations_tab_name, style = dont_fill_style, rows = c_rows_indices, cols = max_values_col_index, gridExpand = TRUE)
   # Now work on the year columns. 
@@ -1108,7 +1108,7 @@ eta_fu_template <- function(.fu_allocations,
 #' @param eta_fu the name of the final-to-useful efficiency rows in `.eta_fu_template`. Default is "eta.fu".
 #' @param e_dot_machine a string identifying energy flow into final-to-useful machines. Default is "Edot_machine".
 #' @param e_dot_machine_perc a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine \[%\]".
-#' @param maximum_values a string identifying the maximum values column in the outgoing template. Default is "Maximum.values".
+#' @param maximum_values a string identifying the maximum values column in the outgoing template. Default is `IEATools::template_cols$maximum_values`.
 #' @param header_row_font_color a hex string representing the font color for the header row in the Excel file that is written by this function.
 #'        Default is "#FFFFFF", white.
 #' @param header_row_shading_color a hex string representing the shading color for the header row in the Excel file that is written by this function.

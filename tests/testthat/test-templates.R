@@ -53,7 +53,7 @@ test_that("fu_allocation_template() works as expected", {
   # Check columns
   expected_colorder <- c("Country", "Method", "EnergyType", "LastStage", "LedgerSide", "FlowAggregationPoint", "Unit",
                          "EfProduct", "Machine", "EuProduct", "Destination", 
-                         "Quantity", "Maximum.values", "1971", "2000")
+                         "Quantity", "MaximumValues", "1971", "2000")
   expect_equal(names(Allocation_template), expected_colorder)
   expect_true(all(Allocation_template$LedgerSide == "Consumption" | Allocation_template$FlowAggregationPoint == "Energy industry own use"))
 })
@@ -97,7 +97,7 @@ test_that("write_fu_allocation_template() works as expected", {
   # Now read the tabs back in
   Allocations <- openxlsx::read.xlsx(f, sheet = IEATools::fu_analysis_file_info$fu_allocation_tab_name) %>% 
     dplyr::rename(
-      Maximum.values.reread = Maximum.values,
+      MaximumValues.reread = MaximumValues,
       `1971.reread` = `1971`,
       `2000.reread` = `2000`
     )
@@ -108,14 +108,14 @@ test_that("write_fu_allocation_template() works as expected", {
                                                                        "Unit", "EfProduct", "Machine", 
                                                                        "EuProduct", "Destination", "Quantity")) %>% 
     dplyr::mutate(
-      Maximum.values.diff = Maximum.values.reread - Maximum.values,
+      MaximumValues.diff = MaximumValues.reread - MaximumValues,
       `1971_diff` = `1971.reread` - `1971`,
       `2000_diff` = `2000.reread` - `2000`, 
-      Maximum.values.OK = abs(Maximum.values.diff) < 1e-6,
+      MaximumValues.OK = abs(MaximumValues.diff) < 1e-6,
       `1971_diff_OK` = abs(`1971_diff`) < 1e-6,
       `2000_diff_OK` = abs(`2000_diff`) < 1e-6
     )
-  expect_true(all(Joined$Maximum.values.OK == TRUE |  is.na(Joined$Maximum.values.OK)))
+  expect_true(all(Joined$MaximumValues.OK == TRUE |  is.na(Joined$MaximumValues.OK)))
   expect_true(all(Joined$`1971_diff_OK` == TRUE |  is.na(Joined$`1971_diff_OK`)))
   expect_true(all(Joined$`2000_diff_OK` == TRUE |  is.na(Joined$`2000_diff_OK`)))
   
