@@ -220,7 +220,8 @@ complete_fu_allocation_table <- function(fu_allocation_table,
     fu_allocation_table <- fu_allocation_table %>% 
       dplyr::bind_rows(exemplar_rows_to_use)
     # Check to see if we have allocated everything
-    done <- fu_allocation_table_completed(fu_allocation_table, iea_rows_that_must_be_allocated)
+    done <- fu_allocation_table_completed(fu_allocation_table = fu_allocation_table, 
+                                          specified_iea_data = iea_rows_that_must_be_allocated)
     if (done) {
       break
     }
