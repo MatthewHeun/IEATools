@@ -122,19 +122,19 @@ test_that("form_eta_fu_phi_u_vecs() works as expected", {
   efficiency_table <- load_eta_fu_data()
   eta_fu_phi_u_df <- form_eta_fu_phi_u_vecs(efficiency_table)
   # Check type of year column
-  expect_true(is.numeric(eta_fu_phi_u_df$Year))
+  expect_true(is.numeric(eta_fu_phi_u_df[[IEATools::iea_cols$year]]))
   # Check that the Unit column is missing.  It has no meaning for allocations.
   expect_true(is.null(eta_fu_phi_u_df[[IEATools::iea_cols$unit]]))
 
   # Check some values
-  eta_GHA_1971 <- eta_fu_phi_u_df$eta.fu[[1]]
+  eta_GHA_1971 <- eta_fu_phi_u_df[[IEATools::template_cols$eta_fu]][[1]]
   expect_equal(eta_GHA_1971[["Irons -> MTH.200.C", 1]], 0.85)
   expect_equal(eta_GHA_1971[["Trucks -> MD", 1]], 0.30)
   expect_equal(eta_GHA_1971[["Fans -> MD", 1]], 0.10)
   expect_equal(eta_GHA_1971[["Boat engines -> MD", 1]], 0.30)
   
   
-  phi_ZAR_2000 <- eta_fu_phi_u_df$phi.u[[4]]  
+  phi_ZAR_2000 <- eta_fu_phi_u_df[[IEATools::template_cols$phi_u]][[4]]  
   expect_equal(phi_ZAR_2000[["MD", 1]], 1)
   expect_equal(phi_ZAR_2000[["LTH.20.C", 1]], 0.0167700821734027)
   expect_equal(phi_ZAR_2000[["HTH.600.C", 1]], 0.65853519)
@@ -142,12 +142,12 @@ test_that("form_eta_fu_phi_u_vecs() works as expected", {
 
   # Check row and column types
   for (i in 1:nrow(eta_fu_phi_u_df)) {
-    expect_equal(matsbyname::rowtype(eta_fu_phi_u_df$eta.fu[[i]]), "Industry -> Product")
-    expect_equal(matsbyname::coltype(eta_fu_phi_u_df$eta.fu[[i]]), "eta.fu")
+    expect_equal(matsbyname::rowtype(eta_fu_phi_u_df[[IEATools::template_cols$eta_fu]][[i]]), "Industry -> Product")
+    expect_equal(matsbyname::coltype(eta_fu_phi_u_df[[IEATools::template_cols$eta_fu]][[i]]), IEATools::template_cols$eta_fu)
   }
   for (i in 1:nrow(eta_fu_phi_u_df)) {
-    expect_equal(matsbyname::rowtype(eta_fu_phi_u_df$phi.u[[i]]), "Product")
-    expect_equal(matsbyname::coltype(eta_fu_phi_u_df$phi.u[[i]]), "phi")
+    expect_equal(matsbyname::rowtype(eta_fu_phi_u_df[[IEATools::template_cols$phi_u]][[i]]), "Product")
+    expect_equal(matsbyname::coltype(eta_fu_phi_u_df[[IEATools::template_cols$phi_u]][[i]]), "phi")
   }
 })
 
@@ -352,13 +352,13 @@ test_that("extend_to_useful() works as expected", {
   
   eta_lights <- eta_fu_data %>% 
     dplyr::filter(Country == "ZAF", Year == 2000) %>% 
-    magrittr::extract2("eta.fu") %>% 
+    magrittr::extract2(IEATools::template_cols$eta_fu) %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric lights -> Light", 1)
   
   eta_motors <- eta_fu_data %>% 
     dplyr::filter(Country == "ZAF", Year == 2000) %>% 
-    magrittr::extract2("eta.fu") %>% 
+    magrittr::extract2(IEATools::template_cols$eta_fu) %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric motors -> MD", 1)
   
@@ -400,7 +400,7 @@ test_that("extend_to_useful() works as expected", {
 
   eta_heaters <- eta_fu_data %>% 
     dplyr::filter(Country == "ZAF", Year == 2000) %>% 
-    magrittr::extract2("eta.fu") %>% 
+    magrittr::extract2(IEATools::template_cols$eta_fu) %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric heaters -> MTH.200.C", 1)
 
@@ -465,13 +465,13 @@ test_that("extend_to_useful() works as expected", {
   
   eta_motors <- eta_fu_data %>% 
     dplyr::filter(Country == "GHA", Year == 1971) %>% 
-    magrittr::extract2("eta.fu") %>% 
+    magrittr::extract2(IEATools::template_cols$eta_fu) %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric motors -> MD", 1)
 
   eta_lights <- eta_fu_data %>% 
     dplyr::filter(Country == "GHA", Year == 1971) %>% 
-    magrittr::extract2("eta.fu") %>% 
+    magrittr::extract2(IEATools::template_cols$eta_fu) %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric lights -> Light", 1)
   
@@ -595,13 +595,13 @@ test_that("extend_to_useful() works with Matrix objects", {
   
   eta_lights <- eta_fu_data %>% 
     dplyr::filter(Country == "ZAF", Year == 2000) %>% 
-    magrittr::extract2("eta.fu") %>% 
+    magrittr::extract2(IEATools::template_cols$eta_fu) %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric lights -> Light", 1)
   
   eta_motors <- eta_fu_data %>% 
     dplyr::filter(Country == "ZAF", Year == 2000) %>% 
-    magrittr::extract2("eta.fu") %>% 
+    magrittr::extract2(IEATools::template_cols$eta_fu) %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric motors -> MD", 1)
   
@@ -643,7 +643,7 @@ test_that("extend_to_useful() works with Matrix objects", {
   
   eta_heaters <- eta_fu_data %>% 
     dplyr::filter(Country == "ZAF", Year == 2000) %>% 
-    magrittr::extract2("eta.fu") %>% 
+    magrittr::extract2(IEATools::template_cols$eta_fu) %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric heaters -> MTH.200.C", 1)
   
@@ -708,13 +708,13 @@ test_that("extend_to_useful() works with Matrix objects", {
   
   eta_motors <- eta_fu_data %>% 
     dplyr::filter(Country == "GHA", Year == 1971) %>% 
-    magrittr::extract2("eta.fu") %>% 
+    magrittr::extract2(IEATools::template_cols$eta_fu) %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric motors -> MD", 1)
   
   eta_lights <- eta_fu_data %>% 
     dplyr::filter(Country == "GHA", Year == 1971) %>% 
-    magrittr::extract2("eta.fu") %>% 
+    magrittr::extract2(IEATools::template_cols$eta_fu) %>% 
     magrittr::extract2(1) %>% 
     magrittr::extract("Electric lights -> Light", 1)
   
@@ -819,8 +819,8 @@ test_that("extend_to_useful() works with individual matrices", {
                                   Y = psut_mats$Y[[1]], 
                                   C_eiou = psut_mats$C_EIOU[[1]], 
                                   C_Y = psut_mats$C_Y[[1]], 
-                                  eta_fu = psut_mats$eta.fu[[1]], 
-                                  phi_u = psut_mats$phi.u[[1]])
+                                  eta_fu = psut_mats[[IEATools::template_cols$eta_fu]][[1]], 
+                                  phi_u = psut_mats[[IEATools::template_cols$phi_u]][[1]])
 
   # Ensure that expected matrices are included.
   # There should be no more matrices than these.
@@ -842,8 +842,8 @@ test_that("extend_to_useful() works with individual matrices", {
                    Y = psut_mats$Y[[1]], 
                    C_eiou = C_EIOU_adjusted, 
                    C_Y = psut_mats$C_Y[[1]], 
-                   eta_fu = psut_mats$eta.fu[[1]], 
-                   phi_u = psut_mats$phi.u[[1]]) %>% 
+                   eta_fu = psut_mats[[IEATools::template_cols$eta_fu]][[1]], 
+                   phi_u = psut_mats[[IEATools::template_cols$phi_u]][[1]]) %>% 
     expect_warning(regexp = "Energy is not balanced")
   
   # Try with C_eiou missing, thereby ignoring any EIOU.
@@ -859,8 +859,8 @@ test_that("extend_to_useful() works with individual matrices", {
                                      V = psut_mats$V[[1]], 
                                      Y = psut_mats$Y[[1]], 
                                      C_Y = psut_mats$C_Y[[1]], 
-                                     eta_fu = psut_mats$eta.fu[[1]], 
-                                     phi_u = psut_mats$phi.u[[1]]) |> 
+                                     eta_fu = psut_mats[[IEATools::template_cols$eta_fu]][[1]], 
+                                     phi_u = psut_mats[[IEATools::template_cols$phi_u]][[1]]) |> 
     expect_warning(regexp = "Energy is not balanced")
 })
 
@@ -889,8 +889,8 @@ test_that("extend_to_useful() works with individual Matrix objects", {
                                   Y = psut_mats$Y[[1]], 
                                   C_eiou = psut_mats$C_EIOU[[1]], 
                                   C_Y = psut_mats$C_Y[[1]], 
-                                  eta_fu = psut_mats$eta.fu[[1]], 
-                                  phi_u = psut_mats$phi.u[[1]])
+                                  eta_fu = psut_mats[[IEATools::template_cols$eta_fu]][[1]], 
+                                  phi_u = psut_mats[[IEATools::template_cols$phi_u]][[1]])
   # Ensure that expected matrices are included.
   # There should be no more matrices than these.
   expect_equal(names(useful_mats), 
@@ -911,8 +911,8 @@ test_that("extend_to_useful() works with individual Matrix objects", {
                    V = psut_mats$V[[1]], 
                    Y = psut_mats$Y[[1]], 
                    C_Y = psut_mats$C_Y[[1]], 
-                   eta_fu = psut_mats$eta.fu[[1]], 
-                   phi_u = psut_mats$phi.u[[1]]) %>% 
+                   eta_fu = psut_mats[[IEATools::template_cols$eta_fu]][[1]], 
+                   phi_u = psut_mats[[IEATools::template_cols$phi_u]][[1]]) %>% 
     expect_warning(regexp = "Energy is not balanced")
 })
 
@@ -942,7 +942,7 @@ test_that("extend_to_useful() works with list of matrices", {
                c("Country", "Method", "EnergyType", "LastStage", "Year",
                  "Y", "S_units", "R", "U", "U_feed",
                  "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
-                 "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                 IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u, "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                  "r_EIOU_Useful", "V_Useful", "Y_Useful", 
                  "Y_fu_details", "U_EIOU_fu_details"))
 })
@@ -981,7 +981,7 @@ test_that("extend_to_useful() works with list of Matrix objects", {
                c("Country", "Method", "EnergyType", "LastStage", "Year",
                  "Y", "S_units", "R", "U", "U_feed",
                  "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
-                 "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                 IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u, "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                  "r_EIOU_Useful", "V_Useful", "Y_Useful", 
                  "Y_fu_details", "U_EIOU_fu_details"))
 })
@@ -1011,7 +1011,7 @@ test_that("extend_to_useful() works with empty lists", {
                   c("Country", "Method", "EnergyType", "LastStage", "Year",
                     "Y", "S_units", "R", "U", "U_feed",
                     "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
-                    "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                    IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u, "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                     "r_EIOU_Useful", "V_Useful", "Y_Useful"))
   
   expect_true(all(sapply(useful_list, length) == 0))
@@ -1045,6 +1045,6 @@ test_that("extend_to_useful() returns works with empty data frames", {
                   c("Country", "Method", "EnergyType", "LastStage", "Year",
                     "Y", "S_units", "R", "U", "U_feed",
                     "U_EIOU", "r_EIOU", "V", "C_EIOU", "C_Y",
-                    "eta.fu", "phi.u", "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
+                    IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u, "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                     "r_EIOU_Useful", "V_Useful", "Y_Useful"))
 })

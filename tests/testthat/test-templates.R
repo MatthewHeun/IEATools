@@ -156,7 +156,7 @@ test_that("eta_fu_template() works as expected for 2021 data", {
   expect_equal(Eta_fu_template_2021$Machine[[1]], "Automobiles")
   expect_equal(Eta_fu_template_2021$Machine[[nrow(Eta_fu_template_2021)]], "Non-energy consumption")
   expect_equal(as.character(Eta_fu_template_2021$Quantity[[1]]), "Edot_machine")
-  expect_equal(as.character(Eta_fu_template_2021$Quantity[[nrow(Eta_fu_template_2021)]]), "phi.u")
+  expect_equal(as.character(Eta_fu_template_2021$Quantity[[nrow(Eta_fu_template_2021)]]), IEATools::template_cols$phi_u)
   
   eu_products <- Eta_fu_template_2021[[IEATools::template_cols$eu_product]] |> 
     unique() |> 
@@ -173,7 +173,7 @@ test_that("eta_fu_template() works as expected for 2021 data", {
   expect_equal(Eta_fu_template_2021_2$Machine[[1]], "Wood cookstoves")
   expect_equal(Eta_fu_template_2021_2$Machine[[nrow(Eta_fu_template_2021_2)]], "Gas heaters")
   expect_equal(as.character(Eta_fu_template_2021_2$Quantity[[1]]), "Edot_machine")
-  expect_equal(as.character(Eta_fu_template_2021_2$Quantity[[nrow(Eta_fu_template_2021_2)]]), "phi.u")
+  expect_equal(as.character(Eta_fu_template_2021_2$Quantity[[nrow(Eta_fu_template_2021_2)]]), IEATools::template_cols$phi_u)
   
   eu_products2 <- Eta_fu_template_2021_2[[IEATools::template_cols$eu_product]] |> 
     unique() |> 
@@ -194,7 +194,7 @@ test_that("eta_fu_template() works as expected for 2022 data", {
   expect_equal(Eta_fu_template_2022$Machine[[1]], "Automobiles")
   expect_equal(Eta_fu_template_2022$Machine[[nrow(Eta_fu_template_2022)]], "Non-energy consumption")
   expect_equal(as.character(Eta_fu_template_2022$Quantity[[1]]), "Edot_machine")
-  expect_equal(as.character(Eta_fu_template_2022$Quantity[[nrow(Eta_fu_template_2022)]]), "phi.u")
+  expect_equal(as.character(Eta_fu_template_2022$Quantity[[nrow(Eta_fu_template_2022)]]), IEATools::template_cols$phi_u)
   
   eu_products <- Eta_fu_template_2022[[IEATools::template_cols$eu_product]] |> 
     unique() |> 
@@ -211,7 +211,7 @@ test_that("eta_fu_template() works as expected for 2022 data", {
   expect_equal(Eta_fu_template_2022_2$Machine[[1]], "Wood cookstoves")
   expect_equal(Eta_fu_template_2022_2$Machine[[nrow(Eta_fu_template_2022_2)]], "Gas heaters")
   expect_equal(as.character(Eta_fu_template_2022_2$Quantity[[1]]), "Edot_machine")
-  expect_equal(as.character(Eta_fu_template_2022_2$Quantity[[nrow(Eta_fu_template_2022_2)]]), "phi.u")
+  expect_equal(as.character(Eta_fu_template_2022_2$Quantity[[nrow(Eta_fu_template_2022_2)]]), IEATools::template_cols$phi_u)
   
   eu_products2 <- Eta_fu_template_2022_2[[IEATools::template_cols$eu_product]] |> 
     unique() |> 
@@ -239,7 +239,7 @@ test_that("eta_fu_template() works with tidy fu allocation data for 2021", {
   expect_equal(Eta_fu_template_2021$Machine[[1]], "Automobiles")
   expect_equal(Eta_fu_template_2021$Machine[[nrow(Eta_fu_template_2021)]], "Non-energy consumption")
   expect_equal(as.character(Eta_fu_template_2021$Quantity[[1]]), "Edot_machine")
-  expect_equal(as.character(Eta_fu_template_2021$Quantity[[nrow(Eta_fu_template_2021)]]), "phi.u")
+  expect_equal(as.character(Eta_fu_template_2021$Quantity[[nrow(Eta_fu_template_2021)]]), IEATools::template_cols$phi_u)
   
   eu_products <- Eta_fu_template_2021[[IEATools::template_cols$eu_product]] |> 
     unique() |> 
@@ -264,7 +264,7 @@ test_that("eta_fu_template() works with tidy data from the default year", {
   expect_equal(Eta_fu_template$Machine[[1]], "Automobiles")
   expect_equal(Eta_fu_template$Machine[[nrow(Eta_fu_template)]], "Non-energy consumption")
   expect_equal(as.character(Eta_fu_template$Quantity[[1]]), "Edot_machine")
-  expect_equal(as.character(Eta_fu_template$Quantity[[nrow(Eta_fu_template)]]), "phi.u")
+  expect_equal(as.character(Eta_fu_template$Quantity[[nrow(Eta_fu_template)]]), IEATools::template_cols$phi_u)
   
   eu_products <- Eta_fu_template[[IEATools::template_cols$eu_product]] |> 
     unique() |> 

@@ -41,7 +41,7 @@ write_eta_fu_template(
 
 \item{overwrite_fu_eta_tab}{a logical telling whether to overwrite the final-to-useful efficiency tab, if it already exists. Default is \code{FALSE}.}
 
-\item{eta_fu}{the name of the final-to-useful efficiency rows in \code{.eta_fu_template}. Default is "eta.fu".}
+\item{eta_fu}{the name of the final-to-useful efficiency rows in \code{.eta_fu_template}. Default is IEATools::template_cols$eta_fu.}
 
 \item{e_dot_machine}{a string identifying energy flow into final-to-useful machines. Default is "Edot_machine".}
 

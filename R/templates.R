@@ -1105,7 +1105,7 @@ eta_fu_template <- function(.fu_allocations,
 #' @param eta_fu_tab_name the name of the final-to-useful efficiency tab. Default is "`r IEATools::fu_analysis_file_info$eta_fu_tab_name`".
 #' @param overwrite_file a logical telling whether to overwrite a file, if it already exists. Default is `FALSE`.
 #' @param overwrite_fu_eta_tab a logical telling whether to overwrite the final-to-useful efficiency tab, if it already exists. Default is `FALSE`.
-#' @param eta_fu the name of the final-to-useful efficiency rows in `.eta_fu_template`. Default is "eta.fu".
+#' @param eta_fu the name of the final-to-useful efficiency rows in `.eta_fu_template`. Default is IEATools::template_cols$eta_fu.
 #' @param e_dot_machine a string identifying energy flow into final-to-useful machines. Default is "Edot_machine".
 #' @param e_dot_machine_perc a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine \[%\]".
 #' @param maximum_values a string identifying the maximum values column in the outgoing template. Default is `IEATools::template_cols$maximum_values`.
