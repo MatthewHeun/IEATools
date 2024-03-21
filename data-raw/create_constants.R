@@ -826,8 +826,8 @@ usethis::use_data(fd_sectors, overwrite = TRUE)
 phi_constants_names <- list(phi_constants_tab_name = "phi_constants",
                             product_colname = "Product",
                             phi_colname = "phi", 
-                            phi_source_colname = "phi.source",
-                            is_useful_colname = "is.useful")
+                            phi_source_colname = "PhiSource",
+                            is_useful_colname = "IsUseful")
 usethis::use_data(phi_constants_names, overwrite = TRUE)
 
 

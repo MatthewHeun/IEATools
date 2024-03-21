@@ -1149,8 +1149,8 @@
 #' \item{phi_constants_names}{The string name of the tab in the Excel file containing the constant phi values table.}
 #' \item{product_colname}{The string name of the energy product column in the constant phi values table.}
 #' \item{phi_colname}{The string name of the constant phi value column in the constant phi values table.}
-#' \item{is_useful_colname}{The string name of the is.useful column in the constant phi values table.}
-#' \item{phi_source_colname}{The string name of the phi.source column in the completed phi values table.}
+#' \item{is_useful_colname}{The string name of the IsUseful column in the constant phi values table.}
+#' \item{phi_source_colname}{The string name of the PhiSource column in the completed phi values table.}
 #' }
 #'
 #' @examples
