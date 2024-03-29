@@ -133,12 +133,12 @@ template_cols <- list(ef_product = "EfProduct",
                       e_dot_machine_perc = paste0(IEATools::iea_cols$e_dot, "_machine", " [%]"), 
                       e_dot_machine_max_perc = paste0(IEATools::iea_cols$e_dot, "_machine", "_max [%]"),
                       eta_fu = "etafu",
-                      phi_pf = "phi.pf",
+                      phi_pf = "phipf",
                       phi_u = "phiu", 
                       phi = "phi",
                       c_source = "CSource", 
                       eta_fu_source = "etafuSource",
-                      phi_source = "phi.source",
+                      phi_source = "PhiSource",
                       .values = "Value")
 usethis::use_data(template_cols, overwrite = TRUE)
 
