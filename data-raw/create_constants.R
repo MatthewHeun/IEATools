@@ -161,7 +161,8 @@ row_col_types <- list(industry = "Industry",
                       resource = "Industry",
                       sector = "Industry",
                       product = "Product", 
-                      unit = "Unit")
+                      unit = "Unit", 
+                      other = "Other")
 usethis::use_data(row_col_types, overwrite = TRUE)
 
 

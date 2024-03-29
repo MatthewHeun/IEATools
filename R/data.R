@@ -181,6 +181,7 @@
 #' \item{sector}{The type of entity that absorbs final demand.}
 #' \item{product}{The inputs and outputs of industries.}
 #' \item{unit}{Units of physical measurement such as ktoe or TJ.}
+#' \item{other}{Used for, e.g., the 1-dimension of a vector.}
 #' }
 #' 
 #' @examples
