@@ -19,10 +19,13 @@ iea_df(
 )
 }
 \arguments{
-\item{.iea_file}{a string containing the path to a .csv file of extended energy balances from the IEA.
+\item{.iea_file}{A string containing the path to a .csv file of extended energy balances from the IEA.
+Can be a vector of file paths, in which case
+each file is loaded sequentially and stacked together
+with \code{\link[dplyr:bind_rows]{dplyr::bind_rows()}}.
 Default is the path to a sample IEA file provided in this package.}
 
-\item{text}{a character string that can be parsed as IEA extended energy balances.
+\item{text}{A character string that can be parsed as IEA extended energy balances.
 (This argument is useful for testing.)}
 
 \item{expected_1st_line_start}{the expected start of the first line of \code{iea_file}. Default is ",,TIME".}
@@ -108,6 +111,8 @@ The data frame returned from this function is not ready to be used in R,
 because rows are not unique.
 To further prepare the data frame for use, call \code{\link[=augment_iea_df]{augment_iea_df()}},
 passing the output of this function to the \code{.iea_df} argument of \code{\link[=augment_iea_df]{augment_iea_df()}}.
+
+This function is vectorized over \code{.iea_file}.
 }
 \examples{
 # Original file format

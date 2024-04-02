@@ -168,87 +168,6 @@ slurp_iea_to_raw_df <- function(.iea_file = NULL,
     return(IEAData_withheader)
   }) |> 
     dplyr::bind_rows()
-    
-
-  
-  # lapply(conns, FUN = function(this_conn) {
-  #   # Check if the first line has the simple format
-  #   first_two_lines <- this_conn |> 
-  #     readLines(n = 2)
-  #   close(this_conn)
-  #   assertthat::assert_that(length(first_two_lines) == 2, msg = "couldn't read 2 lines in iea_df")
-  #   # first_line <- first_two_lines[[1]]
-  #   # second_line <- first_two_lines[[2]]
-  #   # Eliminate any quotes that are present
-  #   first_line <- gsub(pattern = '\\"', replacement = "", x = first_two_lines[[1]])
-  #   second_line <- gsub(pattern = '\\"', replacement = "", x = first_two_lines[[2]])
-  #   # Ensure that we have an expected format for the first line or two in first_two_lines.
-  #   assertthat::assert_that(first_line %>% startsWith(expected_simple_start) | 
-  #                             (first_line %>% startsWith(expected_1st_line_start) & second_line %>% startsWith(expected_2nd_line_start)), 
-  #                           msg = paste0(".iea_file must start with ",
-  #                                        "first line: '", expected_simple_start, "', ",
-  #                                        "or ",
-  #                                        "first line: '", expected_1st_line_start, "' and ",
-  #                                        "second line: '", expected_2nd_line_start, "'.  ",
-  #                                        "Instead, found ",
-  #                                        "first line: '", first_line, "', ",
-  #                                        "second line: '", second_line, "'."))
-  #   if (first_line %>% startsWith(expected_simple_start)) {
-  #     # We have the simple start to the file, so we can assume a one-line header.
-  #     if (!is.null(.iea_file)) {
-  #       IEAData_withheader <- data.table::fread(file = .iea_file, header = TRUE, sep = ",")
-  #     } else {
-  #       IEAData_withheader <- data.table::fread(text = text, header = TRUE, sep = ",")
-  #     }
-  #   } else if (first_line %>% startsWith(expected_1st_line_start) & 
-  #              second_line %>% startsWith(expected_2nd_line_start)) {
-  #     # We have the complicated start to the file, so go through some additional work to apply the proper header
-  #     # to the file.
-  #     if (second_line %>% endsWith(",")) {
-  #       # The file may have been opened in Excel and resaved.
-  #       # When that occurs, many commas are appended to the 2nd line.
-  #       # Strip out these commas before proceeding further.
-  #       # The pattern ,*$ means "match any number (*) of commas (,) at the end of the line ($)".
-  #       second_line <- sub(pattern = ",*$", replacement = "", second_line)
-  #     }
-  #     if (!is.null(.iea_file)) {
-  #       # Slurp the file. This slurping ignores the header, which we know are the first 2 lines.
-  #       # Note that I'm using data.table::fread at the recommendation of
-  #       # https://statcompute.wordpress.com/2014/02/11/efficiency-of-importing-large-csv-files-in-r/
-  #       # which indicates this function is significantly faster than other options.
-  #       IEAData_noheader <- data.table::fread(file = .iea_file, header = FALSE, sep = ",", skip = 2, encoding = "Latin-1")
-  #     } else {
-  #       IEAData_noheader <- data.table::fread(text = text, header = FALSE, sep = ",", skip = 2, encoding = "Latin-1")
-  #     }
-  #     # At this point, the IEAData_noheader data frame has default (meaningless) column names, V1, V2, V3, ...
-  #     # Create column names from the header lines that we read previously.
-  #     # The code here should be robust to adding more years through time,
-  #     # because it simply replaces the first 3 items of the first line
-  #     # with appropriate values from the 2nd line.
-  #     cnames <- gsub(pattern = expected_1st_line_start, replacement = expected_2nd_line_start, first_line) %>%
-  #       strsplit(",") %>%
-  #       unlist()
-  #     IEAData_withheader <- IEAData_noheader %>%
-  #       magrittr::set_names(cnames)
-  #   }
-  #   # Convert the country column to pure ASCII, if desired.
-  #   if (ensure_ascii_countries) {
-  #     IEAData_withheader <- IEAData_withheader %>%
-  #       dplyr::mutate(
-  #         # This hint is from
-  #         # https://stackoverflow.com/questions/39148759/remove-accents-from-a-dataframe-column-in-r
-  #         # COUNTRY = stringi::stri_trans_general(COUNTRY,id = "Latin-ASCII")
-  #         # iconv is much faster than stringi.
-  #         # First, convert from latin1 to ascii. 
-  #         "{country}" := iconv(.data[[country]], from = "latin1", to = "ASCII//TRANSLIT"), 
-  #         # However, this results in "^o" for o with circumflex as in Côte d'Ivoire.
-  #         # So replace those strings with simple "o"
-  #         "{country}" := gsub(.data[[country]], pattern = "\\^o", replacement = "o")
-  #       )
-  #   }
-  #   return(IEAData_withheader)
-  # }) |> 
-  #   dplyr::bind_rows()
 }
 
 
@@ -272,7 +191,12 @@ slurp_iea_to_raw_df <- function(.iea_file = NULL,
 #' the helper function `slurp_iea_to_raw_df()` is called internally 
 #' to load a raw data frame of data.
 #'
-#' @param .iea_file the path to the raw IEA data file for which quality assurance is desired
+#' This function is vectorized over `.iea_file`.
+#'
+#' @param .iea_file The path to the raw IEA data file for which quality assurance is desired. 
+#'                  Can be a vector of file paths, in which case
+#'                  each file is loaded sequentially and stacked together
+#'                  with [dplyr::bind_rows()].
 #' @param text a string containing text to be parsed as an IEA file.
 #' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is ",,TIME".
 #' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "COUNTRY,FLOW,PRODUCT".
@@ -407,9 +331,14 @@ iea_file_OK <- function(.iea_file = NULL,
 #' To further prepare the data frame for use, call [augment_iea_df()],
 #' passing the output of this function to the `.iea_df` argument of [augment_iea_df()].
 #'
-#' @param .iea_file a string containing the path to a .csv file of extended energy balances from the IEA.
-#'        Default is the path to a sample IEA file provided in this package.
-#' @param text a character string that can be parsed as IEA extended energy balances. 
+#' This function is vectorized over `.iea_file`.
+#'
+#' @param .iea_file A string containing the path to a .csv file of extended energy balances from the IEA.
+#'                  Can be a vector of file paths, in which case
+#'                  each file is loaded sequentially and stacked together
+#'                  with [dplyr::bind_rows()].
+#'                  Default is the path to a sample IEA file provided in this package.
+#' @param text A character string that can be parsed as IEA extended energy balances. 
 #'        (This argument is useful for testing.)
 #' @param expected_1st_line_start the expected start of the first line of `iea_file`. Default is ",,TIME".
 #' @param expected_2nd_line_start the expected start of the second line of `iea_file`. Default is "COUNTRY,FLOW,PRODUCT".
