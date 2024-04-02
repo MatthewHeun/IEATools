@@ -27,12 +27,12 @@ country_concordance_file <- file.path(onedrive_root,
 country_concordance_tab <- "country_concordance_table"
 country_concordance <- country_concordance_file |> 
   readxl::read_excel(sheet = country_concordance_tab) |> 
-  dplyr::select(IEA.name.accented, PFU.code)
+  dplyr::select(IEA.name, PFU.code)
   
 # Read the IEA data file
 iea_df <- iea_file |> 
   IEATools::slurp_iea_to_raw_df() |> 
-  dplyr::left_join(country_concordance, by = dplyr::join_by(COUNTRY == IEA.name.accented)) |> 
+  dplyr::left_join(country_concordance, by = dplyr::join_by(COUNTRY == IEA.name)) |> 
   dplyr::filter(!is.na(PFU.code)) |> 
   dplyr::group_by(PFU.code) |> 
   dplyr::group_walk(.f = function(this_grp, this_key) {
