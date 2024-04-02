@@ -39,6 +39,19 @@ test_that("use_iso_countries() works with override", {
 })
 
 
+test_that("slurp_iea_to_raw_df() works with a vector of file paths", {
+  for (yr in IEATools::valid_iea_release_years) {
+    IEAData <- sample_iea_data_path(yr) |> 
+      slurp_iea_to_raw_df()
+    expected_nrows <- nrow(IEAData)
+    iea_data_paths <- c(sample_iea_data_path(yr), sample_iea_data_path(yr))
+    IEAData2 <- iea_data_paths |> 
+      slurp_iea_to_raw_df()
+    expect_equal(nrow(IEAData2), 2*expected_nrows)
+  }
+})
+
+
 test_that("use_iso_countries() works with more columns in override", {
   iea_df <- tibble::tribble(~Country, ~`2000`, ~`2001`,
                             "People's Republic of China", 42, 43,
@@ -118,11 +131,10 @@ test_that("iea_file_OK() works", {
     expect_true(iea_file_OK(.slurped_iea_df = df))
     
     # Read the file as text and use the text argument.
-    conn <- file(f, open = "rt") # open file connection
-    f_text <- conn |> 
-      readLines()
-    expect_true(iea_file_OK(text = f_text))
+    conn <- f |> file(open = "rt") # open file connection
+    f_text <- conn |> readLines()
     close(conn)
+    expect_true(iea_file_OK(text = f_text))
     
     # Mess with the file and expect an error, because rows are no longer identical from one country to another.
     # f1 <- data.table::fread(file = f, header = TRUE, strip.white = FALSE, sep = ",")
