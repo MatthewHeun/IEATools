@@ -8,16 +8,16 @@ iea_year <- 2022
 onedrive_root <- file.path("~", 
                            "OneDrive - University of Leeds", 
                            "Fellowship 1960-2015 PFU database research")
-# The path to the IEA data
-iea_file <- file.path(onedrive_root,
-                      "IEA extended energy balance data", 
-                      paste("IEA", iea_year, "energy balance data"),
-                      paste("IEA Extended Energy Balances", iea_year, "(TJ).csv"))
-# Set the folder into which all country files will be saved
+
+# Set the folder into which all country files will be saved,
+# which is nearly the same name as the IEA data file below.
 country_folder <- file.path(onedrive_root, 
                             "IEA extended energy balance data", 
                             paste("IEA", iea_year, "energy balance data"), 
                             paste("IEA Extended Energy Balances", iea_year, "(TJ)"))
+# The path to the IEA data
+iea_file <- paste0(country_folder, ".csv")
+
 
 # Read the country concordance file
 country_concordance_file <- file.path(onedrive_root, 
@@ -31,9 +31,18 @@ country_concordance <- country_concordance_file |>
   
 # Read the IEA data file
 iea_df <- iea_file |> 
-  IEATools::slurp_iea_to_raw_df() |> 
+  IEATools::slurp_iea_to_raw_df()
+
+known_countries <- iea_df |> 
   dplyr::left_join(country_concordance, by = dplyr::join_by(COUNTRY == IEA.name)) |> 
-  dplyr::filter(!is.na(PFU.code)) |> 
+  dplyr::filter(!is.na(PFU.code))
+
+# List the UN countries we don't pick up
+print("Countries not picked up:")
+setdiff(unique(iea_df$COUNTRY), unique(known_countries$COUNTRY))
+
+# Save the country files
+known_countries |> 
   dplyr::group_by(PFU.code) |> 
   dplyr::group_walk(.f = function(this_grp, this_key) {
     pfu_code <- this_key$PFU.code[[1]]
