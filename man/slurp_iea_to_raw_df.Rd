@@ -15,9 +15,15 @@ slurp_iea_to_raw_df(
 )
 }
 \arguments{
-\item{.iea_file}{The path to the raw IEA data file for which quality assurance is desired}
+\item{.iea_file}{The path to the raw IEA data file for which quality assurance is desired.
+Can be a vector of file paths, in which case
+each file is loaded sequentially and stacked together
+with \code{\link[dplyr:bind_rows]{dplyr::bind_rows()}}.}
 
-\item{text}{A string containing text to be parsed as an IEA file.}
+\item{text}{A string containing text to be parsed as an IEA file.
+Can be a vector of text strings, in which case
+each string is processed sequentially and stacked to gether
+with \code{\link[dplyr:bind_rows]{dplyr::bind_rows()}}.}
 
 \item{expected_1st_line_start}{The expected start of the first line of \code{iea_file}. Default is ",,TIME".}
 
@@ -71,6 +77,8 @@ with lots of memory, because the file is very large.
 \item Change to the unit (ktoe or TJ) desired.
 \item Save the results in .csv format. (Saving may take a while.)
 }
+
+This function is vectorized over \code{.iea_file}.
 }
 \examples{
 # 2018 and earlier file format

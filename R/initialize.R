@@ -29,9 +29,17 @@
 #' 2. Arrange the columns in the following order: "COUNTRY", "FLOW", "PRODUCT", followed by years.
 #' 3. Change to the unit (ktoe or TJ) desired.
 #' 4. Save the results in .csv format. (Saving may take a while.)
+#' 
+#' This function is vectorized over `.iea_file`.
 #'
-#' @param .iea_file The path to the raw IEA data file for which quality assurance is desired
+#' @param .iea_file The path to the raw IEA data file for which quality assurance is desired.
+#'                  Can be a vector of file paths, in which case
+#'                  each file is loaded sequentially and stacked together
+#'                  with [dplyr::bind_rows()].
 #' @param text A string containing text to be parsed as an IEA file.
+#'             Can be a vector of text strings, in which case
+#'             each string is processed sequentially and stacked to gether
+#'             with [dplyr::bind_rows()].
 #' @param expected_1st_line_start The expected start of the first line of `iea_file`. Default is ",,TIME".
 #' @param country The name of the country column. 
 #'                Default is "COUNTRY".
@@ -71,86 +79,176 @@ slurp_iea_to_raw_df <- function(.iea_file = NULL,
   assertthat::assert_that(xor(!is.null(.iea_file), !is.null(text)), 
                           msg = "need to supply only one of .iea_file or text arguments to iea_df")
   if (!is.null(.iea_file)) {
-    conn <- file(.iea_file, open = "rt") # open file connection
+    conns <- lapply(.iea_file, FUN = function(this_iea_file) {
+      file(this_iea_file, open = "rt") # open file connection
+    })
+    text <- rep_len("", length(.iea_file))
   } else {
     # text has been provided, probably for testing purposes.
-    conn <- textConnection(text)
+    conns <- list(textConnection(text))
+    text <- list(text)
+    .iea_file <- list(NULL)
   }
   
-  # Check if the first line has the simple format
-  first_two_lines <- conn %>% readLines(n = 2)
-  close(conn)
-  assertthat::assert_that(length(first_two_lines) == 2, msg = "couldn't read 2 lines in iea_df")
-  # first_line <- first_two_lines[[1]]
-  # second_line <- first_two_lines[[2]]
-  # Eliminate any quotes that are present
-  first_line <- gsub(pattern = '\\"', replacement = "", x = first_two_lines[[1]])
-  second_line <- gsub(pattern = '\\"', replacement = "", x = first_two_lines[[2]])
-  # Ensure that we have an expected format for the first line or two in first_two_lines.
-  assertthat::assert_that(first_line %>% startsWith(expected_simple_start) | 
-                            (first_line %>% startsWith(expected_1st_line_start) & second_line %>% startsWith(expected_2nd_line_start)), 
-                          msg = paste0(".iea_file must start with ",
-                                       "first line: '", expected_simple_start, "', ",
-                                       "or ",
-                                       "first line: '", expected_1st_line_start, "' and ",
-                                       "second line: '", expected_2nd_line_start, "'.  ",
-                                       "Instead, found ",
-                                       "first line: '", first_line, "', ",
-                                       "second line: '", second_line, "'."))
-  if (first_line %>% startsWith(expected_simple_start)) {
-    # We have the simple start to the file, so we can assume a one-line header.
-    if (!is.null(.iea_file)) {
-      IEAData_withheader <- data.table::fread(file = .iea_file, header = TRUE, sep = ",")
-    } else {
-      IEAData_withheader <- data.table::fread(text = text, header = TRUE, sep = ",")
+  Map(conns, .iea_file, text, f = function(this_conn, this_iea_file, this_text) {
+    # Check if the first line has the simple format
+    first_two_lines <- this_conn |> 
+      readLines(n = 2)
+    close(this_conn)
+    assertthat::assert_that(length(first_two_lines) == 2, msg = "couldn't read 2 lines in iea_df")
+    # first_line <- first_two_lines[[1]]
+    # second_line <- first_two_lines[[2]]
+    # Eliminate any quotes that are present
+    first_line <- gsub(pattern = '\\"', replacement = "", x = first_two_lines[[1]])
+    second_line <- gsub(pattern = '\\"', replacement = "", x = first_two_lines[[2]])
+    # Ensure that we have an expected format for the first line or two in first_two_lines.
+    assertthat::assert_that(first_line %>% startsWith(expected_simple_start) | 
+                              (first_line %>% startsWith(expected_1st_line_start) & second_line %>% startsWith(expected_2nd_line_start)), 
+                            msg = paste0(".iea_file must start with ",
+                                         "first line: '", expected_simple_start, "', ",
+                                         "or ",
+                                         "first line: '", expected_1st_line_start, "' and ",
+                                         "second line: '", expected_2nd_line_start, "'.  ",
+                                         "Instead, found ",
+                                         "first line: '", first_line, "', ",
+                                         "second line: '", second_line, "'."))
+    if (first_line %>% startsWith(expected_simple_start)) {
+      # We have the simple start to the file, so we can assume a one-line header.
+      if (!is.null(this_iea_file)) {
+        IEAData_withheader <- data.table::fread(file = this_iea_file, header = TRUE, sep = ",")
+      } else {
+        IEAData_withheader <- data.table::fread(text = this_text, header = TRUE, sep = ",")
+      }
+    } else if (first_line %>% startsWith(expected_1st_line_start) & 
+               second_line %>% startsWith(expected_2nd_line_start)) {
+      # We have the complicated start to the file, so go through some additional work to apply the proper header
+      # to the file.
+      if (second_line %>% endsWith(",")) {
+        # The file may have been opened in Excel and resaved.
+        # When that occurs, many commas are appended to the 2nd line.
+        # Strip out these commas before proceeding further.
+        # The pattern ,*$ means "match any number (*) of commas (,) at the end of the line ($)".
+        second_line <- sub(pattern = ",*$", replacement = "", second_line)
+      }
+      if (!is.null(this_iea_file)) {
+        # Slurp the file. This slurping ignores the header, which we know are the first 2 lines.
+        # Note that I'm using data.table::fread at the recommendation of
+        # https://statcompute.wordpress.com/2014/02/11/efficiency-of-importing-large-csv-files-in-r/
+        # which indicates this function is significantly faster than other options.
+        IEAData_noheader <- data.table::fread(file = this_iea_file, header = FALSE, sep = ",", skip = 2, encoding = "Latin-1")
+      } else {
+        IEAData_noheader <- data.table::fread(text = this_text, header = FALSE, sep = ",", skip = 2, encoding = "Latin-1")
+      }
+      # At this point, the IEAData_noheader data frame has default (meaningless) column names, V1, V2, V3, ...
+      # Create column names from the header lines that we read previously.
+      # The code here should be robust to adding more years through time,
+      # because it simply replaces the first 3 items of the first line
+      # with appropriate values from the 2nd line.
+      cnames <- gsub(pattern = expected_1st_line_start, replacement = expected_2nd_line_start, first_line) %>%
+        strsplit(",") %>%
+        unlist()
+      IEAData_withheader <- IEAData_noheader %>%
+        magrittr::set_names(cnames)
     }
-  } else if (first_line %>% startsWith(expected_1st_line_start) & 
-             second_line %>% startsWith(expected_2nd_line_start)) {
-    # We have the complicated start to the file, so go through some additional work to apply the proper header
-    # to the file.
-    if (second_line %>% endsWith(",")) {
-      # The file may have been opened in Excel and resaved.
-      # When that occurs, many commas are appended to the 2nd line.
-      # Strip out these commas before proceeding further.
-      # The pattern ,*$ means "match any number (*) of commas (,) at the end of the line ($)".
-      second_line <- sub(pattern = ",*$", replacement = "", second_line)
+    # Convert the country column to pure ASCII, if desired.
+    if (ensure_ascii_countries) {
+      IEAData_withheader <- IEAData_withheader %>%
+        dplyr::mutate(
+          # This hint is from
+          # https://stackoverflow.com/questions/39148759/remove-accents-from-a-dataframe-column-in-r
+          # COUNTRY = stringi::stri_trans_general(COUNTRY,id = "Latin-ASCII")
+          # iconv is much faster than stringi.
+          # First, convert from latin1 to ascii. 
+          "{country}" := iconv(.data[[country]], from = "latin1", to = "ASCII//TRANSLIT"), 
+          # However, this results in "^o" for o with circumflex as in Côte d'Ivoire.
+          # So replace those strings with simple "o"
+          "{country}" := gsub(.data[[country]], pattern = "\\^o", replacement = "o")
+        )
     }
-    if (!is.null(.iea_file)) {
-      # Slurp the file. This slurping ignores the header, which we know are the first 2 lines.
-      # Note that I'm using data.table::fread at the recommendation of
-      # https://statcompute.wordpress.com/2014/02/11/efficiency-of-importing-large-csv-files-in-r/
-      # which indicates this function is significantly faster than other options.
-      IEAData_noheader <- data.table::fread(file = .iea_file, header = FALSE, sep = ",", skip = 2, encoding = "Latin-1")
-    } else {
-      IEAData_noheader <- data.table::fread(text = text, header = FALSE, sep = ",", skip = 2, encoding = "Latin-1")
-    }
-    # At this point, the IEAData_noheader data frame has default (meaningless) column names, V1, V2, V3, ...
-    # Create column names from the header lines that we read previously.
-    # The code here should be robust to adding more years through time,
-    # because it simply replaces the first 3 items of the first line
-    # with appropriate values from the 2nd line.
-    cnames <- gsub(pattern = expected_1st_line_start, replacement = expected_2nd_line_start, first_line) %>%
-      strsplit(",") %>%
-      unlist()
-    IEAData_withheader <- IEAData_noheader %>%
-      magrittr::set_names(cnames)
-  }
-  # Convert the country column to pure ASCII, if desired.
-  if (ensure_ascii_countries) {
-    IEAData_withheader <- IEAData_withheader %>%
-      dplyr::mutate(
-        # This hint is from
-        # https://stackoverflow.com/questions/39148759/remove-accents-from-a-dataframe-column-in-r
-        # COUNTRY = stringi::stri_trans_general(COUNTRY,id = "Latin-ASCII")
-        # iconv is much faster than stringi.
-        # First, convert from latin1 to ascii. 
-        "{country}" := iconv(.data[[country]], from = "latin1", to = "ASCII//TRANSLIT"), 
-        # However, this results in "^o" for o with circumflex as in Côte d'Ivoire.
-        # So replace those strings with simple "o"
-        "{country}" := gsub(.data[[country]], pattern = "\\^o", replacement = "o")
-      )
-  }
-  return(IEAData_withheader)
+    return(IEAData_withheader)
+  }) |> 
+    dplyr::bind_rows()
+    
+
+  
+  # lapply(conns, FUN = function(this_conn) {
+  #   # Check if the first line has the simple format
+  #   first_two_lines <- this_conn |> 
+  #     readLines(n = 2)
+  #   close(this_conn)
+  #   assertthat::assert_that(length(first_two_lines) == 2, msg = "couldn't read 2 lines in iea_df")
+  #   # first_line <- first_two_lines[[1]]
+  #   # second_line <- first_two_lines[[2]]
+  #   # Eliminate any quotes that are present
+  #   first_line <- gsub(pattern = '\\"', replacement = "", x = first_two_lines[[1]])
+  #   second_line <- gsub(pattern = '\\"', replacement = "", x = first_two_lines[[2]])
+  #   # Ensure that we have an expected format for the first line or two in first_two_lines.
+  #   assertthat::assert_that(first_line %>% startsWith(expected_simple_start) | 
+  #                             (first_line %>% startsWith(expected_1st_line_start) & second_line %>% startsWith(expected_2nd_line_start)), 
+  #                           msg = paste0(".iea_file must start with ",
+  #                                        "first line: '", expected_simple_start, "', ",
+  #                                        "or ",
+  #                                        "first line: '", expected_1st_line_start, "' and ",
+  #                                        "second line: '", expected_2nd_line_start, "'.  ",
+  #                                        "Instead, found ",
+  #                                        "first line: '", first_line, "', ",
+  #                                        "second line: '", second_line, "'."))
+  #   if (first_line %>% startsWith(expected_simple_start)) {
+  #     # We have the simple start to the file, so we can assume a one-line header.
+  #     if (!is.null(.iea_file)) {
+  #       IEAData_withheader <- data.table::fread(file = .iea_file, header = TRUE, sep = ",")
+  #     } else {
+  #       IEAData_withheader <- data.table::fread(text = text, header = TRUE, sep = ",")
+  #     }
+  #   } else if (first_line %>% startsWith(expected_1st_line_start) & 
+  #              second_line %>% startsWith(expected_2nd_line_start)) {
+  #     # We have the complicated start to the file, so go through some additional work to apply the proper header
+  #     # to the file.
+  #     if (second_line %>% endsWith(",")) {
+  #       # The file may have been opened in Excel and resaved.
+  #       # When that occurs, many commas are appended to the 2nd line.
+  #       # Strip out these commas before proceeding further.
+  #       # The pattern ,*$ means "match any number (*) of commas (,) at the end of the line ($)".
+  #       second_line <- sub(pattern = ",*$", replacement = "", second_line)
+  #     }
+  #     if (!is.null(.iea_file)) {
+  #       # Slurp the file. This slurping ignores the header, which we know are the first 2 lines.
+  #       # Note that I'm using data.table::fread at the recommendation of
+  #       # https://statcompute.wordpress.com/2014/02/11/efficiency-of-importing-large-csv-files-in-r/
+  #       # which indicates this function is significantly faster than other options.
+  #       IEAData_noheader <- data.table::fread(file = .iea_file, header = FALSE, sep = ",", skip = 2, encoding = "Latin-1")
+  #     } else {
+  #       IEAData_noheader <- data.table::fread(text = text, header = FALSE, sep = ",", skip = 2, encoding = "Latin-1")
+  #     }
+  #     # At this point, the IEAData_noheader data frame has default (meaningless) column names, V1, V2, V3, ...
+  #     # Create column names from the header lines that we read previously.
+  #     # The code here should be robust to adding more years through time,
+  #     # because it simply replaces the first 3 items of the first line
+  #     # with appropriate values from the 2nd line.
+  #     cnames <- gsub(pattern = expected_1st_line_start, replacement = expected_2nd_line_start, first_line) %>%
+  #       strsplit(",") %>%
+  #       unlist()
+  #     IEAData_withheader <- IEAData_noheader %>%
+  #       magrittr::set_names(cnames)
+  #   }
+  #   # Convert the country column to pure ASCII, if desired.
+  #   if (ensure_ascii_countries) {
+  #     IEAData_withheader <- IEAData_withheader %>%
+  #       dplyr::mutate(
+  #         # This hint is from
+  #         # https://stackoverflow.com/questions/39148759/remove-accents-from-a-dataframe-column-in-r
+  #         # COUNTRY = stringi::stri_trans_general(COUNTRY,id = "Latin-ASCII")
+  #         # iconv is much faster than stringi.
+  #         # First, convert from latin1 to ascii. 
+  #         "{country}" := iconv(.data[[country]], from = "latin1", to = "ASCII//TRANSLIT"), 
+  #         # However, this results in "^o" for o with circumflex as in Côte d'Ivoire.
+  #         # So replace those strings with simple "o"
+  #         "{country}" := gsub(.data[[country]], pattern = "\\^o", replacement = "o")
+  #       )
+  #   }
+  #   return(IEAData_withheader)
+  # }) |> 
+  #   dplyr::bind_rows()
 }
 
 
@@ -169,11 +267,10 @@ slurp_iea_to_raw_df <- function(.iea_file = NULL,
 #' Note that `.iea_file` is read internally with [data.table::fread()] *without* stripping white space.
 #' 
 #' If `.slurped_iea_df` is supplied, arguments `.iea_file` or `text` are ignored. 
-#' If `.slurped_iea_df` is absent, 
+#' If `.slurped_iea_df` is `NULL` (the default), 
 #' either `.iea_file` or `text` are required, and 
 #' the helper function `slurp_iea_to_raw_df()` is called internally 
 #' to load a raw data frame of data.
-
 #'
 #' @param .iea_file the path to the raw IEA data file for which quality assurance is desired
 #' @param text a string containing text to be parsed as an IEA file.
@@ -183,7 +280,7 @@ slurp_iea_to_raw_df <- function(.iea_file = NULL,
 #'        Note that `expected_simple_start` is sometimes encountered in data supplied by the IEA.
 #'        Furthermore, `expected_simple_start` could be the format of the file when somebody "helpfully" fiddles with 
 #'        the raw data from the IEA.
-#' @param .slurped_iea_df a data frame created by `slurp_iea_to_raw_df()`
+#' @param .slurped_iea_df a data frame created by [slurp_iea_to_raw_df()]
 #' @param country the name of the country column. Default is "COUNTRY".
 #' @param flow the name of the flow column. Default is "FLOW".
 #' @param product the name of the product column. Default is "PRODUCT".
@@ -656,40 +753,65 @@ remove_agg_regions <- function(.iea_df,
 #'                 Default is "TJ" for terajoule.
 #' @param supply The string that identifies supply ledger side. 
 #'               Default is `IEATools::iea_cols$ledger_side`.
-#' @param consumption The string that identifies consumption `Ledger.side`. Default is "Consumption".
-#' @param tpes The string that identifies total primary energy supply `Flow.aggregation.point`. Default is "Total primary energy supply".
+#' @param consumption The string that identifies consumption `Ledger.side`. 
+#'                    Default is "Consumption".
+#' @param tpes The string that identifies total primary energy supply `Flow.aggregation.point`. 
+#'             Default is "Total primary energy supply".
 #' @param tpes_flows A vector of strings that give flows that are aggregated to `Total primary energy supply`. 
-#' @param tfc_compare A string that identifies the `TFC compare` flow aggregation point. Default is "TFC compare".
+#' @param tfc_compare A string that identifies the `TFC compare` flow aggregation point. 
+#'                    Default is "TFC compare".
 #' @param tfc_compare_flows A vector of strings that give `Flow`s that are aggregated to `TFC compare`.
-#' @param transfers = A string that identifies transfers in the flow column. Default is "Transfers".
-#' @param statistical_differences A string that identifies statistical differences in flow column. Default is "Statistical differences".
-#' @param losses The string that indicates losses in the `Flow` column. Default is "Losses".
-#' @param transformation_processes The string that indicates transformation processes in the `Flow` column. Default is "Transformation processes".
-#' @param tp_flows_suffix The suffix for transformation processes in the `Flow` column. Default is "(transf.)".
-#' @param nstp_flows_suffix The suffix for non-specified transformation processes in the `Flow` column. Default is "(transformation)".
-#' @param mapep The string that identifies main activity producer electricity plants in the `Flow` column. Default is "Main activity producer electricity plants".
-#' @param eiou The string that identifies energy industry own use in the `Flow` column. Default is "Energy industry own use".
-#' @param eiou_flows_suffix The suffix for energy industry own use in the `Flow` column. Default is "(energy)".
-#' @param coal_mines The string that identifies coal mines in the `Flow` column. Default is "Coal mines".
-#' @param non_specified The string that identifies non-specified flows in the `Flow` column. Default is "Non-specified".
-#' @param tfc The string that identifies total final consumption in the `Flow` column. Default is "Total final consumption".
+#' @param transfers = A string that identifies transfers in the flow column. 
+#'                    Default is "Transfers".
+#' @param statistical_differences A string that identifies statistical differences in flow column. 
+#'                                Default is "Statistical differences".
+#' @param losses The string that indicates losses in the `Flow` column. 
+#'               Default is "Losses".
+#' @param transformation_processes The string that indicates transformation processes in the `Flow` column. 
+#'                                 Default is "Transformation processes".
+#' @param tp_flows_suffix The suffix for transformation processes in the `Flow` column. 
+#'                        Default is "(transf.)".
+#' @param nstp_flows_suffix The suffix for non-specified transformation processes in the `Flow` column. 
+#'                          Default is "(transformation)".
+#' @param mapep The string that identifies main activity producer electricity plants in the `Flow` column. 
+#'              Default is "Main activity producer electricity plants".
+#' @param eiou The string that identifies energy industry own use in the `Flow` column.
+#'             Default is "Energy industry own use".
+#' @param eiou_flows_suffix The suffix for energy industry own use in the `Flow` column. 
+#'                          Default is "(energy)".
+#' @param coal_mines The string that identifies coal mines in the `Flow` column. 
+#'                   Default is "Coal mines".
+#' @param non_specified The string that identifies non-specified flows in the `Flow` column. 
+#'                      Default is "Non-specified".
+#' @param tfc The string that identifies total final consumption in the `Flow` column. 
+#'            Default is "Total final consumption".
 #' @param tfc_flows A vector of strings that give total final consumption in the `Flow` column.
-#' @param industry A string that names the industry `Flow.aggregation.point`. Default is "Industry".
+#' @param industry A string that names the industry `Flow.aggregation.point`. 
+#'                 Default is "Industry".
 #' @param industry_flows A vector of strings representing `Flow`s to be aggregated in the `Industry` `Flow.aggregation.point`. 
-#' @param iron_and_steel A string that identifies the iron and steel industry. Default is "Iron and steel".
-#' @param mining_and_quarrying A string that identifies the mining and quarrying industry. Default is "Mining and quarrying".
-#' @param transport A string that names the transport `Flow.aggregation.point`. Default is "Transport".
+#' @param iron_and_steel A string that identifies the iron and steel industry. 
+#'                       Default is "Iron and steel".
+#' @param mining_and_quarrying A string that identifies the mining and quarrying industry.
+#'                             Default is "Mining and quarrying".
+#' @param transport A string that names the transport `Flow.aggregation.point`.
+#'                  Default is "Transport".
 #' @param transport_flows A vector of strings representing `Flow`s to be aggregated in the `Transport` `Flow.aggregation.point`. 
-#' @param other A string that names the other `Flow.aggregation.point`. Default is "Other".
+#' @param other A string that names the other `Flow.aggregation.point`. 
+#'              Default is "Other".
 #' @param other_flows A vector of strings representing `Flow`s to be aggregated in the `Other` `Flow.aggregation.point`. 
-#' @param non_energy A string that names the non-energy `Flow.aggregation.point`. Default is "Non-energy use".
+#' @param non_energy A string that names the non-energy `Flow.aggregation.point`. 
+#'                   Default is "Non-energy use".
 #' @param non_energy_flows A list of `Flow`s to be aggregated to the `Non-energy use` `Flow.aggregation.point`. 
 #' @param memo_non_energy_flows A list of `Flow`s to be aggregated to "Memo: Non-energy use in industry". 
 #'                              Default is `IEATools::memo_non_energy_flows`.
-#' @param electricity_output A string that names the electricity output `Flow`. Default is "Electricity output (GWh)". 
-#' @param electricity_output_flows_prefix A string prefix for `Flow`s to be aggregated in electricity output. Default is "Electricity output (GWh)-".
-#' @param heat_output A string that names the heat output `Flow`. Default is "Heat output". 
-#' @param heat_output_flows_prefix A string prefix for `Flow`s to be aggregated in heat output. Default is "Heat output-".
+#' @param electricity_output A string that names the electricity output `Flow`. 
+#'                           Default is "Electricity output (GWh)". 
+#' @param electricity_output_flows_prefix A string prefix for `Flow`s to be aggregated in electricity output. 
+#'                                        Default is "Electricity output (GWh)-".
+#' @param heat_output A string that names the heat output `Flow`. 
+#'                    Default is "Heat output". 
+#' @param heat_output_flows_prefix A string prefix for `Flow`s to be aggregated in heat output. 
+#'                                 Default is "Heat output-".
 #' @param .rownum The name of a column created (and destroyed) internally by this function. 
 #'                The `.rownum` column temporarily holds row numbers for internal calculations.
 #'                The `.rownum` column is deleted before returning. 
