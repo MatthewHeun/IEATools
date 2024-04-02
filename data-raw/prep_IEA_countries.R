@@ -1,5 +1,6 @@
 # This script reads an IEA data file and splits it into
 # several data files, one for each country.
+# This process should normally be done only once.
 # MKH --2024-04-01
 
 iea_year <- 2022
