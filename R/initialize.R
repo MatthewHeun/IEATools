@@ -1278,7 +1278,9 @@ tidy_iea_df <- function(.iea_df,
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
 #' 
-#' @param .iea_file The path of the file to be loaded. Default loads example data bundled with the package via [sample_iea_data_path()].
+#' @param .iea_file The path of the file to be loaded.
+#'                  Can be a vector of files to be loaded.
+#'                  Default loads example data bundled with the package via [sample_iea_data_path()].
 #' @param unit_val The units for this file. 
 #'                 Default is "TJ".
 #' @param remove_zeroes A logical indicating whether data points with the value `0` are to be removed from the output. 
