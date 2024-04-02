@@ -18,7 +18,10 @@ iea_file_OK(
 )
 }
 \arguments{
-\item{.iea_file}{the path to the raw IEA data file for which quality assurance is desired}
+\item{.iea_file}{The path to the raw IEA data file for which quality assurance is desired.
+Can be a vector of file paths, in which case
+each file is loaded sequentially and stacked together
+with \code{\link[dplyr:bind_rows]{dplyr::bind_rows()}}.}
 
 \item{text}{a string containing text to be parsed as an IEA file.}
 
@@ -63,6 +66,8 @@ If \code{.slurped_iea_df} is \code{NULL} (the default),
 either \code{.iea_file} or \code{text} are required, and
 the helper function \code{slurp_iea_to_raw_df()} is called internally
 to load a raw data frame of data.
+
+This function is vectorized over \code{.iea_file}.
 }
 \examples{
 library(magrittr)
