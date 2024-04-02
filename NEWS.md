@@ -8,6 +8,11 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* The `.iea_file` argument to `slurp_iea_to_raw_df()`
+  is now vectorized, which will enable sending 
+  a vector of country IEA data files in `.iea_file`.
+
+
 ## IEATools 0.1.75 (2024-02-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10613604.svg)](https://doi.org/10.5281/zenodo.10613604)
 
 * `extend_to_useful_helper()` and `extend_to_useful()`
