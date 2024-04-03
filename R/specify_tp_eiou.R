@@ -819,8 +819,8 @@ add_nuclear_industry <- function(.tidy_iea_df,
 #' @param geothermal_plants,hydro_plants,solar_pv_plants,solar_th_plants,oceanic_plants,wind_power_plants Names of renewable industries added. See `IEATools::renewable_industries`.
 #' @param negzeropos The name of a temporary column added to the data frame.
 #'                   Default is ".negzeropos".
-#' @param share_elect_output_From_Func A temporary column added to the data frame.
-#'                                     Default is ".share_elect_output_From_Func".
+#' @param ratio_elec_to_heat A temporary column added to the data frame.
+#'                                     Default is ".ratio_elec_to_heat".
 #'
 #' @return Returns a .tidy_iea_df with renewable electricity and heat from geothermal, hydropower, solar thermal, solar photovoltaic, wind power, and oceanic power specified.
 #' @export
@@ -873,7 +873,7 @@ specify_renewable_plants <- function(.tidy_iea_df,
                                      wind_power_plants = IEATools::renewable_industries$wind_power_plants,
                                      # Strings identifying temporary column names
                                      negzeropos = ".negzeropos",
-                                     share_elect_output_From_Func = "share_elect_output_From_Func"){
+                                     ratio_elec_to_heat = ".ratio_elec_to_heat"){
   
   # Check if renewable energy should be specified. If yes, then the code carries on.
   if (isFALSE(specify_renewable_energy)){
@@ -925,25 +925,53 @@ specify_renewable_plants <- function(.tidy_iea_df,
       "{wind}_{electricity}" := -.data[[wind]] * ratio_other_renewable_elec,
     ) |> 
     # Defining renewable electricity and heat for products with potential joint production
-    # NOT SURE ABOUT THIS BELOW...!
     dplyr::mutate(
-      # Share of electricity output (1 for elec plants, 0 for heat plants, something else for CHP plants)
-      "{share_elect_output_From_Func}" := .data[[electricity]] / (.data[[electricity]] + .data[[heat]]),
-      # Specifying elec flows
-      "{geothermal}_{electricity}" := -(.data[[geothermal]] * .data[[share_elect_output_From_Func]] * ratio_geothermal_heat / (1 + .data[[share_elect_output_From_Func]] * (ratio_geothermal_heat - ratio_geothermal_elec))),
-      "{solar_th}_{electricity}" := -(.data[[solar_th]] * .data[[share_elect_output_From_Func]] * ratio_solar_th_heat / (1 + .data[[share_elect_output_From_Func]] * (ratio_solar_th_heat - ratio_solar_th_elec))),
-      # Specifying heat flows
-      "{geothermal}_{heat}" := -(.data[[geothermal]] * (1 - .data[[share_elect_output_From_Func]] * ratio_geothermal_heat / (1 + .data[[share_elect_output_From_Func]] * (ratio_geothermal_heat - ratio_geothermal_elec)))),
-      "{solar_th}_{heat}" := -(.data[[solar_th]] * (1 - .data[[share_elect_output_From_Func]] * ratio_solar_th_heat / (1 + .data[[share_elect_output_From_Func]] * (ratio_solar_th_heat - ratio_solar_th_elec)))),
+      "{ratio_elec_to_heat}" := .data[[electricity]] / .data[[heat]],
+      "{geothermal}_{electricity}" := dplyr::case_match(
+        .data[[ratio_elec_to_heat]],
+        Inf ~ -(.data[[geothermal]] * ratio_geothermal_elec),
+        0 ~ 0,
+        .default = -(.data[[geothermal]]) / (1 + ratio_geothermal_elec/(ratio_geothermal_heat * .data[[ratio_elec_to_heat]])) * ratio_geothermal_elec
+      ),
+      "{geothermal}_{heat}" := dplyr::case_match(
+        .data[[ratio_elec_to_heat]],
+        Inf ~ 0,
+        0 ~ -.data[[geothermal]] * ratio_geothermal_heat,
+        .default = -(.data[[geothermal]]) / (1 + ratio_geothermal_heat/ratio_geothermal_elec*.data[[ratio_elec_to_heat]]) * ratio_geothermal_heat
+      ),
+      "{solar_th}_{electricity}" := dplyr::case_match(
+        .data[[ratio_elec_to_heat]],
+        Inf ~ -(.data[[solar_th]] * ratio_solar_th_elec),
+        0 ~ 0,
+        .default = -(.data[[solar_th]]) / (1 + ratio_solar_th_elec/(ratio_solar_th_heat * .data[[ratio_elec_to_heat]])) * ratio_solar_th_elec
+      ),
+      "{solar_th}_{heat}" := dplyr::case_match(
+        .data[[ratio_elec_to_heat]],
+        Inf ~ 0,
+        0 ~ -.data[[solar_th]] * ratio_solar_th_heat,
+        .default = -(.data[[solar_th]]) / (1 + ratio_solar_th_heat/ratio_solar_th_elec*.data[[ratio_elec_to_heat]]) * ratio_solar_th_heat
+      ),
     ) |> 
+    # To remove probably
+    # dplyr::mutate(
+    #   # Share of electricity output (1 for elec plants, 0 for heat plants, something else for CHP plants)
+    #   "{share_elect_output_From_Func}" := .data[[electricity]] / (.data[[electricity]] + .data[[heat]]),
+    #   # Specifying elec flows
+    #   "{geothermal}_{electricity}" := -(.data[[geothermal]] * .data[[share_elect_output_From_Func]] * ratio_geothermal_heat / (ratio_geothermal_elec * (1 - .data[[share_elect_output_From_Func]]) + .data[[share_elect_output_From_Func]] * ratio_geothermal_heat)),
+    #   "{solar_th}_{electricity}" := -(.data[[solar_th]] * .data[[share_elect_output_From_Func]] * ratio_solar_th_heat / (ratio_solar_th_heat * (1 - .data[[share_elect_output_From_Func]]) + .data[[share_elect_output_From_Func]] * ratio_solar_th_heat)),
+    #   # Specifying heat flows
+    #   "{geothermal}_{heat}" := -(.data[[geothermal]] * (1 - ratio_geothermal_heat / (ratio_geothermal_elec * (1 - .data[[share_elect_output_From_Func]]) + .data[[share_elect_output_From_Func]] * ratio_geothermal_heat))),
+    #   "{solar_th}_{heat}" := -(.data[[solar_th]] * (1 - .data[[share_elect_output_From_Func]] * ratio_solar_th_heat / (ratio_solar_th_heat * (1 - .data[[share_elect_output_From_Func]]) + .data[[share_elect_output_From_Func]] * ratio_solar_th_heat))),
+    # ) |> 
     # Subtracting specified electricity and heat flows from existing plants output
     dplyr::mutate(
       "{electricity}" := .data[[electricity]] - (.data[[glue::glue("{hydro}_{electricity}")]] + .data[[glue::glue("{solar_pv}_{electricity}")]] + .data[[glue::glue("{oceanic}_{electricity}")]] + 
                                                    .data[[glue::glue("{wind}_{electricity}")]] + .data[[glue::glue("{geothermal}_{electricity}")]] + .data[[glue::glue("{solar_th}_{electricity}")]]),
       "{heat}" := .data[[heat]] - (.data[[glue::glue("{geothermal}_{heat}")]] + .data[[glue::glue("{solar_th}_{heat}")]])
     ) |> 
-    # Removing columns if needed
-    dplyr::select(-dplyr::any_of(share_elect_output_From_Func)) %>%
+    # Removing columns if needed - TO REMOVE PROBABLY
+    #dplyr::select(-dplyr::any_of(share_elect_output_From_Func)) %>%
+    dplyr::select(-dplyr::any_of(ratio_elec_to_heat)) %>%
     # Back to tidy, long format
     tidyr::pivot_longer(cols = -c({country}, {method}, {energy_type}, {last_stage}, {year}, {ledger_side}, {flow_aggregation_point}, {flow}, {unit}), 
                         values_to = {e_dot}, names_to = {product}) |> 
