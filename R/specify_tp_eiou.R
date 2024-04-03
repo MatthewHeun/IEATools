@@ -684,7 +684,7 @@ add_nuclear_industry <- function(.tidy_iea_df,
                                  autoproducer_elect = IEATools::main_act_plants$autoprod_elect_plants,
                                  autoproducer_chp = IEATools::transformation_processes$autoproducer_CHP_plants,
                                  nuclear = "Nuclear",
-                                 electricity = "Electricity",
+                                 electricity = IEATools::electricity_products$electricity,
                                  heat = "Heat",
                                  # Strings identifying temporary column names
                                  negzeropos = ".negzeropos",
@@ -710,9 +710,10 @@ add_nuclear_industry <- function(.tidy_iea_df,
     # dplyr::select(-tidyselect::any_of({e_dot})) 
     dplyr::select(-tidyselect::any_of(e_dot)) 
   
-  
+  # Select names of wide data frame just built, so we can add missing products as additional columns
   names_intermediary_modified_flows <- names(intermediary_modified_flows)
   
+  # Modify selected flows
   modified_flows <- intermediary_modified_flows %>% 
     tibble::add_column(!!products_tibble[! names(products_tibble) %in% names_intermediary_modified_flows]) %>%
     dplyr::mutate(
@@ -739,7 +740,7 @@ add_nuclear_industry <- function(.tidy_iea_df,
       "{product}" := stringr::str_remove(.data[[product]], stringr::str_c("_", nuclear))
     )
   
-  
+  # Builds output data frame by filtering out input data frame (take out modified flows), and collating modified data.
   to_return <- .tidy_iea_df %>%
     dplyr::filter(
       ! (.data[[flow_aggregation_point]] == transformation_processes &
@@ -749,9 +750,6 @@ add_nuclear_industry <- function(.tidy_iea_df,
     dplyr::bind_rows(
       modified_flows
     ) %>%
-    
-    
-    
     dplyr::mutate(
       "{negzeropos}" := dplyr::case_when(
         .data[[e_dot]] < 0 ~ "neg",
@@ -759,30 +757,246 @@ add_nuclear_industry <- function(.tidy_iea_df,
         .data[[e_dot]] > 0 ~ "pos"
       )
     ) %>%
-    
-    
-    
-    
     # Now sum similar rows using summarise.
     # Group by everything except the energy flow rate column, "E.dot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) %>%
-    
-    
-    
     dplyr::mutate(
       #Eliminate the column we added.
       "{negzeropos}" := NULL
     ) %>%
-    
-    
-    
     dplyr::ungroup()
   
   return(to_return)
 }
+
+
+
+
+#' Specifies renewable electricity and heat
+#'
+#' Write documentation.
+#'
+#' Write details if needed.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
+#' @param specify_renewable_energy A boolean indicating whether renewable energy should be specified or not.
+#'                                 Default is TRUE.
+#' @param flow_aggregation_point,flow,e_dot,product,method,ledger_side,last_stage,energy_type,country,year,unit See `IEATools::iea_cols`.
+#' @param transformation_processes A string identifying the transformation processes in the `flow_aggregation_point` column in the `.tidy_iea_df`.
+#'                                 Default is `IEATools::aggregation_flows$transformation_processes`.
+#' @param main_act_producer_elect A string identifying "Main activity producer electricity plants" in the `flow` column of the `.tidy_iea_df`.
+#'                                Default is `IEATools::main_act_plants$main_act_prod_elect_plants`.
+#' @param main_act_producer_chp A string identifying "Main activity producer CHP plants" in the `flow` column of the `.tidy_iea_df`.
+#'                              Default is `IEATools::main_act_plants$main_act_prod_chp_plants`.
+#' @param main_act_producer_heat A string identifying "Main activity producer heat plants" in the `flow` column of the `.tidy_iea_df`.
+#'                              Default is `IEATools::main_act_plants$main_act_prod_heat_plants`.
+#' @param autoproducer_elect A string identifying "Autoproducer electricity plants" in the `flow` column of the `.tidy_iea_df`.
+#'                           Default is `IEATools::main_act_plants$autoprod_elect_plants`.
+#' @param autoproducer_chp A string identifying "Autoproducer CHP plants" in the `flow` column of the `.tidy_iea_df`.
+#'                         Default is `IEATools::transformation_processes$autoproducer_CHP_plants`.
+#' @param autoproducer_heat A string identifying "Autoproducer CHP plants" in the `flow` column of the `.tidy_iea_df`.
+#'                         Default is `IEATools::transformation_processes$autoprod_heat_plants`.
+#' @param geothermal 
+#' @param hydro 
+#' @param solar_pv 
+#' @param solar_th 
+#' @param oceanic 
+#' @param wind 
+#' @param electricity 
+#' @param heat 
+#' @param ratio_solar_th_elec 
+#' @param ratio_solar_th_heat 
+#' @param ratio_geothermal_elec 
+#' @param ratio_geothermal_heat 
+#' @param ratio_other_renewable_elec 
+#' @param geothermal_plants 
+#' @param hydro_plants 
+#' @param solar_pv_plants 
+#' @param solar_th_plants 
+#' @param oceanic_plants 
+#' @param wind_power_plants 
+#' @param negzeropos The name of a temporary column added to the data frame.
+#'                   Default is ".negzeropos".
+#' @param share_elect_output_From_Func A temporary column added to the data frame.
+#'                                     Default is ".share_elect_output_From_Func".
+#'
+#' @return
+#' @export
+#'
+#' @examples
+specify_renewable_plants <- function(.tidy_iea_df,
+                                     specify_renewable_energy = TRUE,
+                                     # Column names
+                                     flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                     flow = IEATools::iea_cols$flow,
+                                     e_dot = IEATools::iea_cols$e_dot,
+                                     product = IEATools::iea_cols$product,
+                                     method = IEATools::iea_cols$method,
+                                     ledger_side = IEATools::iea_cols$ledger_side,
+                                     last_stage = IEATools::iea_cols$last_stage,
+                                     energy_type = IEATools::iea_cols$energy_type,
+                                     country = IEATools::iea_cols$country,
+                                     year = IEATools::iea_cols$year,
+                                     unit = IEATools::iea_cols$unit,
+                                     # Strings identifying flows, ledger sides, flow aggregation points, and products
+                                     transformation_processes = IEATools::aggregation_flows$transformation_processes,
+                                     main_act_producer_elect = IEATools::main_act_plants$main_act_prod_elect_plants,
+                                     main_act_producer_chp = IEATools::main_act_plants$main_act_prod_chp_plants,
+                                     main_act_producer_heat = IEATools::main_act_plants$main_act_prod_heat_plants,
+                                     autoproducer_elect = IEATools::main_act_plants$autoprod_elect_plants,
+                                     autoproducer_chp = IEATools::transformation_processes$autoproducer_CHP_plants,
+                                     autoproducer_heat = IEATools::main_act_plants$autoprod_heat_plants,
+                                     # Input products
+                                     geothermal = IEATools::renewable_products$geothermal,
+                                     hydro = IEATools::renewable_products$hydro,
+                                     solar_pv = IEATools::renewable_products$solar_photovoltaics,
+                                     solar_th = IEATools::renewable_products$solar_thermal,
+                                     oceanic = IEATools::renewable_products$tide_wave_and_ocean,
+                                     wind = IEATools::renewable_products$wind,
+                                     # Output products
+                                     electricity = IEATools::electricity_products$electricity,
+                                     heat = "Heat",
+                                     # Ratios to final to primary energy
+                                     ratio_solar_th_elec = 0.33,
+                                     ratio_solar_th_heat = 1,
+                                     ratio_geothermal_elec = 0.1,
+                                     ratio_geothermal_heat = 0.5,
+                                     ratio_other_renewable_elec = 1,
+                                     # New industry names
+                                     geothermal_plants = IEATools::renewable_industries$geothermal_plants,
+                                     hydro_plants = IEATools::renewable_industries$hydro_plants,
+                                     solar_pv_plants = IEATools::renewable_industries$solar_pv_plants,
+                                     solar_th_plants = IEATools::renewable_industries$solar_th_plants,
+                                     oceanic_plants = IEATools::renewable_industries$oceanic_plants,
+                                     wind_power_plants = IEATools::renewable_industries$wind_power_plants,
+                                     # Strings identifying temporary column names
+                                     negzeropos = ".negzeropos",
+                                     share_elect_output_From_Func = "share_elect_output_From_Func"){
+  
+  # Check if renewable energy should be specified. If yes, then the code carries on.
+  if (isFALSE(specify_renewable_energy)){
+    return(.tidy_iea_df)
+  }
+  
+  # Tibble of products of interest
+  products_tibble <- tibble::tibble("{geothermal}" := NA,
+                                    "{hydro}" := NA,
+                                    "{solar_pv}" := NA,
+                                    "{solar_th}" := NA,
+                                    "{oceanic}" := NA,
+                                    "{wind}" := NA,
+                                    "{electricity}" := NA,
+                                    "{heat}" := NA)
+  
+  # Potentially move to using the IEATools constant, if "Other sources" are removed
+  renewable_products <- c(geothermal, hydro, solar_pv, solar_th, oceanic, wind)
+  
+  # Relevant products
+  relevant_products <- c(geothermal, hydro, solar_pv, solar_th, oceanic, wind, electricity, heat)
+  
+  # (1) Here we select only the flows that we are going to modify, and pivot them to wide format for modification
+  selected_io_flows <- .tidy_iea_df %>%
+    dplyr::filter(
+      .data[[flow_aggregation_point]] == transformation_processes &
+        ((.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(renewable_products, electricity)) |
+           (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(renewable_products, electricity, heat)) |
+           (.data[[flow]] %in% c(main_act_producer_heat, autoproducer_heat) & .data[[product]] %in% c(renewable_products, heat)))
+    ) %>%
+    # tidyr::pivot_wider(names_from = .data[[product]], values_from = .data[[e_dot]]) %>%
+    tidyr::pivot_wider(names_from = dplyr::all_of(product), values_from = dplyr::all_of(e_dot)) %>%
+    # dplyr::select(-tidyselect::any_of({e_dot}))
+    dplyr::select(-tidyselect::any_of(e_dot))
+  
+  # (2.a) Select names of wide data frame just built, so we can add missing products as additional columns
+  names_selected_io_flows <- names(selected_io_flows)
+  
+  # (2.b) Modify selected flows
+  modified_flows <- selected_io_flows %>% 
+    tibble::add_column(!!products_tibble[! names(products_tibble) %in% names_selected_io_flows]) %>%
+    # Replacing NAs by zeros in all columns
+    dplyr::mutate(across(tidyselect::all_of(relevant_products), ~tidyr::replace_na(.x, 0))) |> 
+    # Defining renewable electricity for products for which all inputs deliver electricity
+    dplyr::mutate(
+      "{hydro}_{electricity}" := -.data[[hydro]] * ratio_other_renewable_elec,
+      "{solar_pv}_{electricity}" := -.data[[solar_pv]] * ratio_other_renewable_elec,
+      "{oceanic}_{electricity}" := -.data[[oceanic]] * ratio_other_renewable_elec,
+      "{wind}_{electricity}" := -.data[[wind]] * ratio_other_renewable_elec,
+    ) |> 
+    # Defining renewable electricity and heat for products with potential joint production
+    # NOT SURE ABOUT THIS BELOW...!
+    dplyr::mutate(
+      # Share of electricity output (1 for elec plants, 0 for heat plants, something else for CHP plants)
+      "{share_elect_output_From_Func}" := .data[[electricity]] / (.data[[electricity]] + .data[[heat]]),
+      # Specifying elec flows
+      "{geothermal}_{electricity}" := -(.data[[geothermal]] * .data[[share_elect_output_From_Func]] * ratio_geothermal_heat / (1 + .data[[share_elect_output_From_Func]] * (ratio_geothermal_heat - ratio_geothermal_elec))),
+      "{solar_th}_{electricity}" := -(.data[[solar_th]] * .data[[share_elect_output_From_Func]] * ratio_solar_th_heat / (1 + .data[[share_elect_output_From_Func]] * (ratio_solar_th_heat - ratio_solar_th_elec))),
+      # Specifying heat flows
+      "{geothermal}_{heat}" := -(.data[[geothermal]] * (1 - .data[[share_elect_output_From_Func]] * ratio_geothermal_heat / (1 + .data[[share_elect_output_From_Func]] * (ratio_geothermal_heat - ratio_geothermal_elec)))),
+      "{solar_th}_{heat}" := -(.data[[solar_th]] * (1 - .data[[share_elect_output_From_Func]] * ratio_solar_th_heat / (1 + .data[[share_elect_output_From_Func]] * (ratio_solar_th_heat - ratio_solar_th_elec)))),
+    ) |> 
+    # Subtracting specified electricity and heat flows from existing plants output
+    dplyr::mutate(
+      "{electricity}" := .data[[electricity]] - (.data[[glue::glue("{hydro}_{electricity}")]] + .data[[glue::glue("{solar_pv}_{electricity}")]] + .data[[glue::glue("{oceanic}_{electricity}")]] + 
+                                                   .data[[glue::glue("{wind}_{electricity}")]] + .data[[glue::glue("{geothermal}_{electricity}")]] + .data[[glue::glue("{solar_th}_{electricity}")]]),
+      "{heat}" := .data[[heat]] - (.data[[glue::glue("{geothermal}_{heat}")]] + .data[[glue::glue("{solar_th}_{heat}")]])
+    ) |> 
+    # Removing columns if needed
+    dplyr::select(-dplyr::any_of(share_elect_output_From_Func)) %>%
+    # Back to tidy, long format
+    tidyr::pivot_longer(cols = -c({country}, {method}, {energy_type}, {last_stage}, {year}, {ledger_side}, {flow_aggregation_point}, {flow}, {unit}), 
+                        values_to = {e_dot}, names_to = {product}) |> 
+    dplyr::filter(.data[[e_dot]] != 0) %>%
+    # Adjusting product and flow names:
+    dplyr::mutate(
+      "{flow}" := dplyr::case_when(
+        stringr::str_detect(.data[[product]], geothermal) ~ IEATools::renewable_industries$geothermal_plants,
+        stringr::str_detect(.data[[product]], hydro) ~ IEATools::renewable_industries$hydro_plants,
+        stringr::str_detect(.data[[product]], solar_pv) ~ IEATools::renewable_industries$solar_pv_plants,
+        stringr::str_detect(.data[[product]], solar_th) ~ IEATools::renewable_industries$solar_th_plants,
+        stringr::str_detect(.data[[product]], oceanic) ~ IEATools::renewable_industries$oceanic_plants,
+        stringr::str_detect(.data[[product]], wind) ~ IEATools::renewable_industries$wind_power_plants,
+        TRUE ~ .data[[flow]]
+      ),
+      "{product}" := stringr::str_remove(.data[[product]], ".*_")
+    )
+  
+  # (3) Builds output data frame by filtering out input data frame (take out modified flows), and collating modified data.
+  to_return <- .tidy_iea_df %>%
+    # Inverse of the condition that was filtered in "modified_flows"
+    dplyr::filter(
+      .data[[flow_aggregation_point]] == transformation_processes &
+        ((.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(renewable_products, electricity)) |
+           (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(renewable_products, electricity, heat)) |
+           (.data[[flow]] %in% c(main_act_producer_heat, autoproducer_heat) & .data[[product]] %in% c(renewable_products, heat)))
+    ) %>%
+    dplyr::bind_rows(
+      modified_flows
+    ) %>%
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    # Now sum similar rows using summarise.
+    # Group by everything except the energy flow rate column, "E.dot".
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::mutate(
+      #Eliminate the column we added.
+      "{negzeropos}" := NULL
+    ) %>%
+    dplyr::ungroup()
+  
+  return(to_return)
+}
+
 
 
 

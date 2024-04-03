@@ -359,6 +359,8 @@ specify_interface_industries <- function(.tidy_iea_df,
 #'                                 Default is TRUE.
 #' @param route_non_specified_tp Boolean stating whether non-specified transformation processes flows should be routed to existing industries.
 #'                               Default is TRUE.
+#' @param specify_renewable_energy Boolean stating whether renewable energy industries should be specified or not.
+#'                                 Default is TRUE.
 #' @param flow_aggregation_point The name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
 #' @param eiou A string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".
 #' @param transformation_processes A string identifying transformation processes in the flow aggregation point column. Default is "Transformation processes".
@@ -384,6 +386,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
                             split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
                             route_non_specified_eiou = TRUE,
                             route_non_specified_tp = TRUE,
+                            specify_renewable_plants = TRUE,
                             flow_aggregation_point = "Flow.aggregation.point",
                             eiou = "Energy industry own use",
                             transformation_processes = "Transformation processes",
@@ -409,6 +412,9 @@ specify_tp_eiou <- function(.tidy_iea_df,
       split_using_shares_of = split_own_use_elect_chp_heat_using_shares_of
     ) %>% 
     add_nuclear_industry() %>% 
+    specify_renewable_plants(
+      specify_renewable_plants = specify_renewable_plants
+    ) %>% 
     route_non_specified_flows(
       route_non_specified_eiou = route_non_specified_eiou,
       route_non_specified_tp = route_non_specified_tp
