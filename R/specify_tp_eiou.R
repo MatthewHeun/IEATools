@@ -773,13 +773,15 @@ add_nuclear_industry <- function(.tidy_iea_df,
 }
 
 
-
-
 #' Specifies renewable electricity and heat
 #'
-#' Write documentation.
+#' This function specifies hydropower, geothermal, solar photovoltaic, solar thermal, oceanic, and wind power industries.
 #'
-#' Write details if needed.
+#' The primary energy use of hydro, geothermal, solar photovoltaic, solar thermal, oceanic, and wind power energy by main activity and autoproducer plants are used
+#' to create new renewable industries that produce electricity and heat (heat only in the case of geothermal and solar thermal). The physical content method is used
+#' to derive the electricity produced by renewable industries, except in the case of geothermal and solar thermal, for which the IEA uses other factors in its balances.
+#' In the case of CHP plants (which can be relevant for geothermal and solar thermal), the output of the new renewable industry follows the same heat vs electricity
+#' breakdown as the main industry from which it is derived.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
 #' @param specify_renewable_energy A boolean indicating whether renewable energy should be specified or not.
@@ -799,31 +801,28 @@ add_nuclear_industry <- function(.tidy_iea_df,
 #'                         Default is `IEATools::transformation_processes$autoproducer_CHP_plants`.
 #' @param autoproducer_heat A string identifying "Autoproducer CHP plants" in the `flow` column of the `.tidy_iea_df`.
 #'                         Default is `IEATools::transformation_processes$autoprod_heat_plants`.
-#' @param geothermal 
-#' @param hydro 
-#' @param solar_pv 
-#' @param solar_th 
-#' @param oceanic 
-#' @param wind 
-#' @param electricity 
-#' @param heat 
-#' @param ratio_solar_th_elec 
-#' @param ratio_solar_th_heat 
-#' @param ratio_geothermal_elec 
-#' @param ratio_geothermal_heat 
-#' @param ratio_other_renewable_elec 
-#' @param geothermal_plants 
-#' @param hydro_plants 
-#' @param solar_pv_plants 
-#' @param solar_th_plants 
-#' @param oceanic_plants 
-#' @param wind_power_plants 
+#' @param geothermal,hydro,solar_pv,solar_th,oceanic,wind Renewable energy product names. See `IEATools::renewable_products`.
+#' @param electricity The name of the electricity product.
+#'                    Default is `IEATools::electricity_products$electricity`.
+#' @param heat The name of the heat product.
+#'             Default is "Heat".
+#' @param ratio_solar_th_elec The ratio of primary energy to electricity to use for solar thermal.
+#'                            Default is 0.33 as this is the value assumed in the IEA's energy balances.
+#' @param ratio_solar_th_heat The ratio of primary energy to heat to use for solar thermal.
+#'                            Default is 1 as this is the value assumed in the IEA's energy balances.
+#' @param ratio_geothermal_elec The ratio of primary energy to electricity to use for geothermal.
+#'                              Default is 0.1 as this is the value assumed in the IEA's energy balances.
+#' @param ratio_geothermal_heat The ratio of primary energy to heat to use for geothermal.
+#'                              Default is 0.5 as this is the value assumed in the IEA's energy balances.
+#' @param ratio_other_renewable_elec The ratio of primary energy to electricity to use for hydropower, solar photovoltaic, oceanic and wind power.
+#'                                   Default is 1 as this is the value assumed in the IEA's energy balances.
+#' @param geothermal_plants,hydro_plants,solar_pv_plants,solar_th_plants,oceanic_plants,wind_power_plants Names of renewable industries added. See `IEATools::renewable_industries`.
 #' @param negzeropos The name of a temporary column added to the data frame.
 #'                   Default is ".negzeropos".
 #' @param share_elect_output_From_Func A temporary column added to the data frame.
 #'                                     Default is ".share_elect_output_From_Func".
 #'
-#' @return
+#' @return Returns a .tidy_iea_df with renewable electricity and heat from geothermal, hydropower, solar thermal, solar photovoltaic, wind power, and oceanic power specified.
 #' @export
 #'
 #' @examples
