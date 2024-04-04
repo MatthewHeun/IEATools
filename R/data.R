@@ -1311,4 +1311,20 @@
 "Fixed_RUSEST_heat"
 
 
-
+#' Renewable energy industries names
+#'
+#' A string list containing the names of renewable industries added with the `specify_renewable_plants()` function.
+#'
+#' @format A string list with `r length(phi_constants_names)` entries.
+#' \describe{
+#' \item{geothermal_plants}{The string name of geothermal plants.}
+#' \item{hydro_plants}{The string name of hydropower plants.}
+#' \item{solar_pv_plants}{The string name of solar photovoltaics plants.}
+#' \item{solar_th_plants}{The string name of solar thermal plants.}
+#' \item{oceanic_plants}{The string name of oceanic power plants.}
+#' \item{wind_power_plants}{The string name of wind power plants.}
+#' }
+#'
+#' @examples
+#' renewable_industries
+"renewable_industries"

@@ -831,3 +831,14 @@ phi_constants_names <- list(phi_constants_tab_name = "phi_constants",
 usethis::use_data(phi_constants_names, overwrite = TRUE)
 
 
+# 
+# Renewable energy industries
+# 
+
+renewable_industries <- list(geothermal_plants = "Geothermal plants",
+                             hydro_plants = "Hydropower plants",
+                             solar_pv_plants = "Solar photovoltaic plants",
+                             solar_th_plants = "Solar thermal plants",
+                             oceanic_plants = "Oceanic power plants",
+                             wind_power_plants = "Wind power plants")
+usethis::use_data(renewable_industries, overwrite = TRUE)

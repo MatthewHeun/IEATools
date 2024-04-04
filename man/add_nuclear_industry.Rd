@@ -25,7 +25,7 @@ add_nuclear_industry(
   autoproducer_elect = IEATools::main_act_plants$autoprod_elect_plants,
   autoproducer_chp = IEATools::transformation_processes$autoproducer_CHP_plants,
   nuclear = "Nuclear",
-  electricity = "Electricity",
+  electricity = IEATools::electricity_products$electricity,
   heat = "Heat",
   negzeropos = ".negzeropos",
   share_elect_output_From_Func = ".share_elect_output_From_Func",
