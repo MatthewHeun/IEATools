@@ -1645,3 +1645,21 @@ test_that("specify_all() can also not split the non-specified flows", {
 })
 
 
+
+test_that("specify_renewable_plants() works", {
+
+  
+  
+    
+})
+
+
+
+
+
+
+
+
+
+
+

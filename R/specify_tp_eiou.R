@@ -784,8 +784,8 @@ add_nuclear_industry <- function(.tidy_iea_df,
 #' breakdown as the main industry from which it is derived.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
-#' @param specify_renewable_energy A boolean indicating whether renewable energy should be specified or not.
-#'                                 Default is TRUE.
+#' @param specify_renewable_plants A boolean indicating whether renewable energy plants should be specified or not.
+#'                                 Default is FALSE.
 #' @param flow_aggregation_point,flow,e_dot,product,method,ledger_side,last_stage,energy_type,country,year,unit See `IEATools::iea_cols`.
 #' @param transformation_processes A string identifying the transformation processes in the `flow_aggregation_point` column in the `.tidy_iea_df`.
 #'                                 Default is `IEATools::aggregation_flows$transformation_processes`.
@@ -827,7 +827,7 @@ add_nuclear_industry <- function(.tidy_iea_df,
 #'
 #' @examples
 specify_renewable_plants <- function(.tidy_iea_df,
-                                     specify_renewable_energy = TRUE,
+                                     specify_renewable_plants = FALSE,
                                      # Column names
                                      flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                      flow = IEATools::iea_cols$flow,
