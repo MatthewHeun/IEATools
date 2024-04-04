@@ -121,3 +121,8 @@ to derive the electricity produced by renewable industries, except in the case o
 In the case of CHP plants (which can be relevant for geothermal and solar thermal), the output of the new renewable industry follows the same heat vs electricity
 breakdown as the main industry from which it is derived.
 }
+\examples{
+library(dplyr)
+load_tidy_iea_df() \%>\% 
+  specify_renewable_plants()
+}

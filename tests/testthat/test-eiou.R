@@ -209,12 +209,35 @@ test_that("route_pumped_storage() works", {
     gather_producer_autoproducer() %>%
     route_pumped_storage()
   
-  expect_equal(
-    res %>% 
-      dplyr::filter(Flow == "Pumped storage plants") %>% nrow(),
-    0)
+  expect_equal(res %>% dplyr::filter(Flow == "Pumped storage plants") %>% nrow(), 0)
+  
+  # Third, with AB data but adding hydro and specifying renewable energy industries
+  # Adding renewable energy flows
+  AB_data_renewable_flows <- AB_data |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+      Flow = "Main activity producer electricity plants", Product = IEATools::renewable_products$hydro, Unit = "TJ", E.dot = -1000) |> 
+    tibble::add_row(
+      Country = "B", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Energy industry own use", 
+      Flow = "Pumped storage plants", Product = "Electricity", Unit = "TJ", E.dot = -150)
     
+  res2 <- AB_data_renewable_flows |> 
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage(specify_renewable_plants = TRUE)
+  
+  res2 |> 
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == IEATools::renewable_industries$hydro_plants, Product == "Hard coal (if no detail)") |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-299)
+  
+  res2 |> 
+    dplyr::filter(Country == "B", Flow.aggregation.point == "Energy industry own use", Flow == IEATools::main_act_plants$main_act_prod_elect_plants, Product == "Electricity") |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-150)
 })
+
 
 
 test_that("split_oil_gas_extraction_eiou() works", {

@@ -6,20 +6,35 @@
 \usage{
 route_pumped_storage(
   .tidy_iea_df,
+  specify_renewable_plants = FALSE,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  country = IEATools::iea_cols$country,
+  method = IEATools::iea_cols$method,
+  energy_type = IEATools::iea_cols$energy_type,
+  year = IEATools::iea_cols$year,
+  last_stage = IEATools::iea_cols$last_stage,
+  unit = IEATools::iea_cols$unit,
   flow = IEATools::iea_cols$flow,
   e_dot = IEATools::iea_cols$e_dot,
+  product = IEATools::iea_cols$product,
   eiou = IEATools::aggregation_flows$energy_industry_own_use,
   pumped_storage = IEATools::eiou_flows$pumped_storage_plants,
   main_act_producer_elect = IEATools::main_act_plants$main_act_prod_elect_plants,
+  hydro_plants = IEATools::renewable_industries$hydro_plants,
+  hydro = IEATools::renewable_products$hydro,
   negzeropos = ".negzeropos"
 )
 }
 \arguments{
 \item{.tidy_iea_df}{The \code{.tidy_iea_df} which flows need to be specified.}
 
+\item{specify_renewable_plants}{A boolean indicating whether renewable energy plants should be specified or not.
+Default is FALSE.}
+
 \item{flow_aggregation_point}{The name of the flow aggregation point column in the \code{.tidy_iea_df}.
 Default is \code{IEATools::iea_cols$flow_aggregation_point}.}
+
+\item{country, method, energy_type, last_stage, unit, year, product}{See \code{IEATools::iea_cols}.}
 
 \item{flow}{The name of the flow column in the \code{.tidy_iea_df}.
 Default is \code{IEATools::iea_cols$flow}.}
@@ -35,6 +50,12 @@ Default is \code{IEATools::eiou_flows$pumped_storage_plants}.}
 
 \item{main_act_producer_elect}{A string identifying "Main activity producer electricity plants" in the \code{flow} column of the \code{.tidy_iea_df}.
 Default is \code{IEATools::main_act_plants$main_act_prod_elect_plants}.}
+
+\item{hydro_plants}{The name of the newly created hydropower industry.
+Default is \code{IEATools::renewable_industries$hydro_plants}.}
+
+\item{hydro}{The name of the "Hydro" product.
+Default is \code{IEATools::renewable_products$hydro}.}
 
 \item{negzeropos}{The name of a temporary column created in \code{.tidy_iea_df}.
 Default is ".negzeropos".}

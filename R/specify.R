@@ -406,7 +406,9 @@ specify_tp_eiou <- function(.tidy_iea_df,
   
   .tidy_iea_df %>% 
     gather_producer_autoproducer() %>% 
-    route_pumped_storage() %>% 
+    route_pumped_storage(
+      specify_renewable_plants = specify_renewable_plants
+    ) %>% 
     split_oil_gas_extraction_eiou() %>% 
     route_own_use_elect_chp_heat(
       split_using_shares_of = split_own_use_elect_chp_heat_using_shares_of
