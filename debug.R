@@ -38,6 +38,7 @@ res <- partially_specified_data |>
 
 .tidy_iea_df <- .tidy_iea_df |> filter(Country == "WRLD" & Year > 1990)
 
+# Tibble of products of interest
 products_tibble <- tibble::tibble("{geothermal}" := NA,
                                   "{hydro}" := NA,
                                   "{solar_pv}" := NA,
@@ -82,36 +83,34 @@ modified_flows <- selected_io_flows %>%
     "{wind}_{electricity}" := -.data[[wind]] * ratio_other_renewable_elec,
   ) |> 
   # Defining renewable electricity and heat for products with potential joint production
-  # NOT SURE ABOUT THIS BELOW...!
-  
   dplyr::mutate(
     "{ratio_elec_to_heat}" := .data[[electricity]] / .data[[heat]],
     "{geothermal}_{electricity}" := dplyr::case_match(
       .data[[ratio_elec_to_heat]],
       Inf ~ -(.data[[geothermal]] * ratio_geothermal_elec),
       0 ~ 0,
-      .default = -(.data[[geothermal]]) / (1 + ratio_geothermal_elec/(ratio_geothermal_heat * .data[[ratio_elec_to_heat]])) * ratio_geothermal_elec
+      .default = 1 / (1 + ratio_geothermal_elec/(ratio_geothermal_heat * .data[[ratio_elec_to_heat]])) * ratio_geothermal_elec
     ),
     "{geothermal}_{heat}" := dplyr::case_match(
       .data[[ratio_elec_to_heat]],
       Inf ~ 0,
       0 ~ -.data[[geothermal]] * ratio_geothermal_heat,
-      .default = -(.data[[geothermal]]) / (1 + ratio_geothermal_heat/ratio_geothermal_elec*.data[[ratio_elec_to_heat]]) * ratio_geothermal_heat
+      .default = 1 / (1 + ratio_geothermal_heat/ratio_geothermal_elec*.data[[ratio_elec_to_heat]]) * ratio_geothermal_heat
     ),
     "{solar_th}_{electricity}" := dplyr::case_match(
       .data[[ratio_elec_to_heat]],
       Inf ~ -(.data[[solar_th]] * ratio_solar_th_elec),
       0 ~ 0,
-      .default = -(.data[[solar_th]]) / (1 + ratio_solar_th_elec/(ratio_solar_th_heat * .data[[ratio_elec_to_heat]])) * ratio_solar_th_elec
+      .default = 1 / (1 + ratio_solar_th_elec/(ratio_solar_th_heat * .data[[ratio_elec_to_heat]])) * ratio_solar_th_elec
     ),
     "{solar_th}_{heat}" := dplyr::case_match(
       .data[[ratio_elec_to_heat]],
       Inf ~ 0,
       0 ~ -.data[[solar_th]] * ratio_solar_th_heat,
-      .default = -(.data[[solar_th]]) / (1 + ratio_solar_th_heat/ratio_solar_th_elec*.data[[ratio_elec_to_heat]]) * ratio_solar_th_heat
+      .default = 1 / (1 + ratio_solar_th_heat/ratio_solar_th_elec*.data[[ratio_elec_to_heat]]) * ratio_solar_th_heat
     ),
-  ) |> 
-  glimpse()
+  ) |>
+  print()
   
   
   # To remove probably
@@ -161,6 +160,8 @@ to_return <- .tidy_iea_df %>%
          (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(renewable_products, electricity, heat)) |
          (.data[[flow]] %in% c(main_act_producer_heat, autoproducer_heat) & .data[[product]] %in% c(renewable_products, heat)))
   ) %>%
+  glimpse()
+  
   dplyr::bind_rows(
     modified_flows
   ) %>%

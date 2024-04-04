@@ -876,7 +876,7 @@ specify_renewable_plants <- function(.tidy_iea_df,
                                      ratio_elec_to_heat = ".ratio_elec_to_heat"){
   
   # Check if renewable energy should be specified. If yes, then the code carries on.
-  if (isFALSE(specify_renewable_energy)){
+  if (isFALSE(specify_renewable_plants)){
     return(.tidy_iea_df)
   }
   
@@ -994,10 +994,10 @@ specify_renewable_plants <- function(.tidy_iea_df,
   to_return <- .tidy_iea_df %>%
     # Inverse of the condition that was filtered in "modified_flows"
     dplyr::filter(
-      .data[[flow_aggregation_point]] == transformation_processes &
+      ! (.data[[flow_aggregation_point]] == transformation_processes &
         ((.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(renewable_products, electricity)) |
            (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(renewable_products, electricity, heat)) |
-           (.data[[flow]] %in% c(main_act_producer_heat, autoproducer_heat) & .data[[product]] %in% c(renewable_products, heat)))
+           (.data[[flow]] %in% c(main_act_producer_heat, autoproducer_heat) & .data[[product]] %in% c(renewable_products, heat))))
     ) %>%
     dplyr::bind_rows(
       modified_flows

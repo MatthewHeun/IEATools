@@ -1648,18 +1648,156 @@ test_that("specify_all() can also not split the non-specified flows", {
 
 test_that("specify_renewable_plants() works", {
 
+  # Now with A-B country example.
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
   
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+  
+  AB_data %>% 
+    tidy_iea_df_balanced()
+  
+  # Adding renewable energy flows
+  AB_data_renewable_flows <- AB_data |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+      Flow = "Main activity producer electricity plants", Product = IEATools::renewable_products$solar_photovoltaics, Unit = "TJ", E.dot = -10) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+      Flow = "Main activity producer electricity plants", Product = IEATools::renewable_products$wind, Unit = "TJ", E.dot = -15) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+      Flow = "Autoproducer electricity plants", Product = IEATools::renewable_products$tide_wave_and_ocean, Unit = "TJ", E.dot = -2) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+      Flow = "Autoproducer electricity plants", Product = IEATools::renewable_products$hydro, Unit = "TJ", E.dot = -20) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+      Flow = "Main activity producer electricity plants", Product = IEATools::renewable_products$geothermal, Unit = "TJ", E.dot = -20) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+      Flow = "Main activity producer electricity plants", Product = IEATools::renewable_products$solar_thermal, Unit = "TJ", E.dot = -20) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+      Flow = "Main activity producer CHP plants", Product = IEATools::renewable_products$geothermal, Unit = "TJ", E.dot = -10) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+      Flow = "Autoproducer CHP plants", Product = IEATools::renewable_products$solar_thermal, Unit = "TJ", E.dot = -5) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+      Flow = "Main activity producer heat plants", Product = IEATools::renewable_products$geothermal, Unit = "TJ", E.dot = -8) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+      Flow = "Autoproducer heat plants", Product = IEATools::renewable_products$solar_thermal, Unit = "TJ", E.dot = -10) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+      Flow = "Main activity producer heat plants", Product = "Heat", Unit = "TJ", E.dot = 100) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+      Flow = "Autoproducer CHP plants", Product = "Heat", Unit = "TJ", E.dot = 80)
+  
+  
+  # First, test that by default nothing gets specified
+  AB_data_specified_default <- AB_data_renewable_flows %>% 
+    specify_all()
+  
+  AB_data_specified_default |> dplyr::filter(Flow %in% IEATools::renewable_industries) |> nrow() |> 
+    testthat::expect_equal(0)
+  
+  # Second, specify renewable energy flows
+  AB_data_specified_renewables <- AB_data_renewable_flows %>% 
+    specify_all(specify_renewable_plants = TRUE)
+  
+  AB_data_prespecified <- AB_data_renewable_flows %>% 
+    dplyr::filter(Product != "Nuclear") |> 
+    specify_primary_production() |> 
+    gather_producer_autoproducer() %>% 
+    route_pumped_storage() %>% 
+    split_oil_gas_extraction_eiou() %>% 
+    route_own_use_elect_chp_heat() %>% 
+    add_nuclear_industry()
+  
+  AB_data_specified_renewables <- AB_data_prespecified |> 
+    specify_renewable_plants(specify_renewable_plants = TRUE)
+    
+
+  # (1) Checking renewable energy plants
+  # (1.a) Geothermal
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$geothermal_plants, Product == IEATools::renewable_products$geothermal) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-38)
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$geothermal_plants, Product == IEATools::electricity_products$electricity) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(2.789474, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$geothermal_plants, Product == "Heat") |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(5.052632, tolerance = 1e-4)
+  
+  # (1.b) Solar thermal
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$solar_th_plants, Product == IEATools::renewable_products$solar_thermal) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-35)
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$solar_th_plants, Product == IEATools::electricity_products$electricity) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(7.745834, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$solar_th_plants, Product == "Heat") |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(11.52778, tolerance = 1e-4)
+  
+  # (1.c) Hydro
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$hydro_plants, Product == IEATools::renewable_products$hydro) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-20)
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$hydro_plants, Product == IEATools::electricity_products$electricity) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(20)
+  
+  # (1.d) Wind
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$wind_power_plants, Product == IEATools::renewable_products$wind) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-15)
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$wind_power_plants, Product == IEATools::electricity_products$electricity) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(15)
+  
+  # (1.e) Solar PV
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$solar_pv_plants, Product == IEATools::renewable_products$solar_photovoltaics) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-10)
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$solar_pv_plants, Product == IEATools::electricity_products$electricity) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(10)
+  
+  # (1.f) Oceanic
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$oceanic_plants, Product == IEATools::renewable_products$tide_wave_and_ocean) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-2)
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$oceanic_plants, Product == IEATools::electricity_products$electricity) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(2)
   
     
+  # Checking Main activity electricity producer plants
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::main_act_plants$main_act_prod_elect_plants, Product == IEATools::electricity_products$electricity, 
+                                                Flow.aggregation.point == IEATools::tfc_compare_flows$transformation_processes) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(3200-(20+15+10+2+2+20*0.33))
+  
+  # Checking Main activity CHP producer plants
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::main_act_plants$main_act_prod_chp_plants, Product == IEATools::electricity_products$electricity,
+                                                Flow.aggregation.point == IEATools::tfc_compare_flows$transformation_processes) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(60-(1.145834+0.789474), tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::main_act_plants$main_act_prod_chp_plants, Product == "Heat") |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(80-(1.52778+1.052632), tolerance = 1e-4)
+  
+  # Checking Main activity heat producer plants
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::main_act_plants$main_act_prod_heat_plants, Product == "Heat") |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(100-(4+10))
+  
+  # Checking no autoproducers lefts
+  AB_data_specified_renewables |> dplyr::filter(Flow %in% c(IEATools::main_act_plants$autoprod_chp_plants, IEATools::main_act_plants$autoprod_heat_plants, IEATools::main_act_plants$autoprod_elect_plants)) |> 
+    nrow() |> testthat::expect_equal(0)
 })
-
-
-
-
-
-
-
-
-
-
-
