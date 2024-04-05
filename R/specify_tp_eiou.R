@@ -942,7 +942,7 @@ specify_renewable_plants <- function(.tidy_iea_df,
                                      # Output products
                                      electricity = IEATools::electricity_products$electricity,
                                      heat = "Heat",
-                                     # Ratios to final to primary energy
+                                     # Ratios of final to primary energy
                                      ratio_solar_th_elec = 0.33,
                                      ratio_solar_th_heat = 1,
                                      ratio_geothermal_elec = 0.1,
