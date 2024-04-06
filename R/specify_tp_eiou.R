@@ -1106,8 +1106,8 @@ specify_renewable_plants <- function(.tidy_iea_df,
 #' @param .tidy_iea_df The `.tidy__iea_df` for which an electricity grid industry should be added.
 #' @param specify_grid A boolean stating whether an electricity grid industry should be created or not.
 #'                     Default is FALSE.
-#' @param pattern_to_remove The pattern to remove from supplying flows. Typically, used, to remove "\[of electricity\]" from Import flows.
-#'                          Default is... TO UPDATE..
+#' @param supplying_industry_notation Notation to use to specify the electricity supplying industry.
+#'                                    Default is `RCLabels::of_notation`.
 #' @param flow_aggregation_point,flow,e_dot,product,method,ledger_side,last_stage,energy_type,country,year,unit See `IEATools::iea_cols`.
 #' @param losses The name of the "Losses" flows in the input data frame.
 #'               Default is `IEATools::tfc_compare_flows$losses`.
@@ -1127,8 +1127,9 @@ specify_renewable_plants <- function(.tidy_iea_df,
 #' load_tidy_iea_df() %>% 
 #'   specify_electricity_grid()
 specify_electricity_grid <- function(.tidy_iea_df,
-                                     specify_grid = FALSE,
-                                     pattern_to_remove = "\\[.*\\]", # to change
+                                     specify_electricity_grid = FALSE,
+                                     supplying_industry_notation = RCLabels::of_notation,
+                                     # IEA col names
                                      country = IEATools::iea_cols$country,
                                      method = IEATools::iea_cols$method,
                                      energy_type = IEATools::iea_cols$energy_type,
@@ -1151,7 +1152,7 @@ specify_electricity_grid <- function(.tidy_iea_df,
   # maybe change pattern_to_remove to RCLabels::of_notation$suff_start
   
   # Check if electricity grid should be specified. If yes, then the code carries on.
-  if (isFALSE(specify_grid)){
+  if (isFALSE(specify_electricity_grid)){
     return(.tidy_iea_df)
   }
   
@@ -1165,8 +1166,13 @@ specify_electricity_grid <- function(.tidy_iea_df,
   
   # (3) Modify production flows
   modified_production_flows <- selected_production_flows |> 
+    # Change this with RCLabels!!
     dplyr::mutate(
-      "{product}" := stringr::str_c(.data[[product]], " [from", stringr::str_remove(.data[[flow]], pattern_to_remove), "]")
+      "{product}" := stringr::str_c(.data[[product]], 
+                                    supplying_industry_notation[["suff_start"]], 
+                                    .data[[flow]], 
+                                    supplying_industry_notation[["suff_end"]],
+                                    sep = "")
     )
   
   # (4) Adding inputs to grid industry

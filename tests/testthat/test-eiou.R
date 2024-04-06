@@ -1830,27 +1830,66 @@ test_that("specify_electricity_grid() works", {
 
   # Now with A-B country example.
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
-  
+
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
-  
-  AB_data %>% 
+
+  AB_data %>%
     tidy_iea_df_balanced()
-  
+
   # Adding renewable energy flows
-  AB_expanded
-  
+  # AB_expanded <- AB_data |> 
+  #   tibble::add_row(
+  #     Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+  #     Flow = "Main activity producer electricity plants", Product = IEATools::renewable_products$solar_photovoltaics, Unit = "TJ", E.dot = -10) |> 
+  #   tibble::add_row(
+  #     Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+  #     Flow = "Main activity producer electricity plants", Product = IEATools::renewable_products$wind, Unit = "TJ", E.dot = -15) |> 
+  #   tibble::add_row(
+  #     Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+  #     Flow = "Autoproducer electricity plants", Product = IEATools::renewable_products$tide_wave_and_ocean, Unit = "TJ", E.dot = -2) |> 
+  #   tibble::add_row(
+  #     Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+  #     Flow = "Autoproducer electricity plants", Product = IEATools::renewable_products$hydro, Unit = "TJ", E.dot = -20) |> 
+  #   tibble::add_row(
+  #     Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+  #     Flow = "Main activity producer electricity plants", Product = IEATools::renewable_products$geothermal, Unit = "TJ", E.dot = -20) |> 
+  #   tibble::add_row(
+  #     Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+  #     Flow = "Main activity producer electricity plants", Product = IEATools::renewable_products$solar_thermal, Unit = "TJ", E.dot = -20) |> 
+  #   tibble::add_row(
+  #     Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+  #     Flow = "Main activity producer CHP plants", Product = IEATools::renewable_products$geothermal, Unit = "TJ", E.dot = -10) |> 
+  #   tibble::add_row(
+  #     Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+  #     Flow = "Autoproducer CHP plants", Product = IEATools::renewable_products$solar_thermal, Unit = "TJ", E.dot = -5) |> 
+  #   tibble::add_row(
+  #     Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes", 
+  #     Flow = "Main activity producer heat plants", Product = IEATools::renewable_products$geothermal, Unit = "TJ", E.dot = -8)
+    
+
   # First, test that by default nothing gets specified
-  AB_data_specified_default <- AB_expanded %>% 
+  AB_data_specified_default <- AB_expanded %>%
     specify_all()
-  
-  AB_data_specified_default |> dplyr::filter(Flow %in% IEATools::renewable_industries) |> nrow() |> 
+
+  AB_data_specified_default |> dplyr::filter(Flow %in% IEATools::grid_industries) |> nrow() |>
     testthat::expect_equal(0)
-  
-  
+
+
   # Second, test specification of electricity grid
-  AB_grid_specified
+  AB_data_prespecified <- AB_expanded %>% 
+    dplyr::filter(Product != "Nuclear") |> #??
+    specify_primary_production() |> 
+    gather_producer_autoproducer() %>% 
+    route_pumped_storage() %>% 
+    split_oil_gas_extraction_eiou() %>% 
+    route_own_use_elect_chp_heat() %>% 
+    add_nuclear_industry()
   
+  AB_data_specified_grid <- AB_data_prespecified |> 
+    specify_electricity_grid(specify_grid = TRUE)
+  
+  # Testing this
   
 })
 

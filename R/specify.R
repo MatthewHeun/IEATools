@@ -361,6 +361,8 @@ specify_interface_industries <- function(.tidy_iea_df,
 #'                               Default is TRUE.
 #' @param specify_renewable_plants Boolean stating whether renewable energy industries should be specified or not.
 #'                                 Default is FALSE.
+#' @param specify_electricity_grid Boolean stating whether an electricity grid industry should be specified or not.
+#'                                 Default is FALSE.
 #' @param flow_aggregation_point The name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
 #' @param eiou A string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".
 #' @param transformation_processes A string identifying transformation processes in the flow aggregation point column. Default is "Transformation processes".
@@ -387,6 +389,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
                             route_non_specified_eiou = TRUE,
                             route_non_specified_tp = TRUE,
                             specify_renewable_plants = FALSE,
+                            specify_electricity_grid = FALSE,
                             flow_aggregation_point = "Flow.aggregation.point",
                             eiou = "Energy industry own use",
                             transformation_processes = "Transformation processes",
@@ -399,28 +402,31 @@ specify_tp_eiou <- function(.tidy_iea_df,
                             negzeropos = ".negzeropos",
                             # Places where the EIOU will e reassigned
                             main_act_producer_elect = "Main activity producer electricity plants"){
-  .tidy_iea_df %>% 
+  .tidy_iea_df |> 
     matsindf::verify_cols_missing(negzeropos)
   
   split_own_use_elect_chp_heat_using_shares_of <- match.arg(split_own_use_elect_chp_heat_using_shares_of)
   
-  .tidy_iea_df %>% 
+  .tidy_iea_df |> 
     gather_producer_autoproducer() %>% 
     route_pumped_storage(
       specify_renewable_plants = specify_renewable_plants
-    ) %>% 
+    ) |> 
     split_oil_gas_extraction_eiou() %>% 
     route_own_use_elect_chp_heat(
       split_using_shares_of = split_own_use_elect_chp_heat_using_shares_of
-    ) %>% 
+    ) |> 
     add_nuclear_industry() %>% 
     specify_renewable_plants(
       specify_renewable_plants = specify_renewable_plants
-    ) %>% 
+    ) |> 
     route_non_specified_flows(
       route_non_specified_eiou = route_non_specified_eiou,
       route_non_specified_tp = route_non_specified_tp
-    ) 
+    ) |> 
+    specify_electricity_grid(
+      specify_electricity_grid = specify_electricity_grid
+    )
 }
 
 
@@ -671,6 +677,8 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #'                               Default is TRUE.
 #' @param specify_renewable_plants A boolean indicating whether renewable energy plants should be specified or not.
 #'                                 Default is FALSE.
+#' @param specify_electricity_grid Boolean stating whether an electricity grid industry should be specified or not.
+#'                                 Default is FALSE.
 #'
 #' @return An enhanced and corrected version of `.tidy_iea_df` 
 #'         That is ready for physical supply-use table (PSUT) analysis.
@@ -692,7 +700,8 @@ specify_all <- function(.tidy_iea_df,
                         split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
                         route_non_specified_eiou = TRUE,
                         route_non_specified_tp = TRUE,
-                        specify_renewable_plants = FALSE){
+                        specify_renewable_plants = FALSE,
+                        specify_electricity_grid = FALSE){
   
   split_own_use_elect_chp_heat_using_shares_of <- match.arg(split_own_use_elect_chp_heat_using_shares_of)
   
@@ -703,7 +712,8 @@ specify_all <- function(.tidy_iea_df,
       split_own_use_elect_chp_heat_using_shares_of = split_own_use_elect_chp_heat_using_shares_of,
       route_non_specified_eiou = route_non_specified_eiou,
       route_non_specified_tp = route_non_specified_tp,
-      specify_renewable_plants = specify_renewable_plants
+      specify_renewable_plants = specify_renewable_plants,
+      specify_electricity_grid = specify_electricity_grid
     ) %>% 
     specify_bunkers() %>%
     specify_interface_industries() %>% 
