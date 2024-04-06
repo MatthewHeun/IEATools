@@ -5,7 +5,7 @@
 \alias{renewable_industries}
 \title{Renewable energy industries names}
 \format{
-A string list with 5 entries.
+A string list with 6 entries.
 \describe{
 \item{geothermal_plants}{The string name of geothermal plants.}
 \item{hydro_plants}{The string name of hydropower plants.}

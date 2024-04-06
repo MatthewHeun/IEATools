@@ -1824,3 +1824,37 @@ test_that("specify_renewable_plants() works", {
   AB_data_specified_renewables |> dplyr::filter(Flow %in% c(IEATools::main_act_plants$autoprod_chp_plants, IEATools::main_act_plants$autoprod_heat_plants, IEATools::main_act_plants$autoprod_elect_plants)) |> 
     nrow() |> testthat::expect_equal(0)
 })
+
+
+test_that("specify_electricity_grid() works", {
+
+  # Now with A-B country example.
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+  
+  AB_data %>% 
+    tidy_iea_df_balanced()
+  
+  # Adding renewable energy flows
+  AB_expanded
+  
+  # First, test that by default nothing gets specified
+  AB_data_specified_default <- AB_expanded %>% 
+    specify_all()
+  
+  AB_data_specified_default |> dplyr::filter(Flow %in% IEATools::renewable_industries) |> nrow() |> 
+    testthat::expect_equal(0)
+  
+  
+  # Second, test specification of electricity grid
+  AB_grid_specified
+  
+  
+})
+
+
+
+
+

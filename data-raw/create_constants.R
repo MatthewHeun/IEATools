@@ -842,3 +842,14 @@ renewable_industries <- list(geothermal_plants = "Geothermal plants",
                              oceanic_plants = "Oceanic power plants",
                              wind_power_plants = "Wind power plants")
 usethis::use_data(renewable_industries, overwrite = TRUE)
+
+
+# 
+# Grid industries
+# 
+
+grid_industries <- list(electricity_grid = "Electricity grid")
+
+usethis::use_data(grid_industries, overwrite = TRUE)
+
+

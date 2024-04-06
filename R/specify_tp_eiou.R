@@ -1097,6 +1097,128 @@ specify_renewable_plants <- function(.tidy_iea_df,
 }
 
 
+#' Specifies electricity grid
+#' 
+#' Adds an electricity grid industry that takes as input all electricity produced by any industry,
+#' which is now specified by producing industry (e.g., "Electricity \[from Wind power plants\]"),
+#' and converts it into Electricity.
+#'
+#' @param .tidy_iea_df The `.tidy__iea_df` for which an electricity grid industry should be added.
+#' @param specify_grid A boolean stating whether an electricity grid industry should be created or not.
+#'                     Default is FALSE.
+#' @param pattern_to_remove The pattern to remove from supplying flows. Typically, used, to remove "\[of electricity\]" from Import flows.
+#'                          Default is... TO UPDATE..
+#' @param flow_aggregation_point,flow,e_dot,product,method,ledger_side,last_stage,energy_type,country,year,unit See `IEATools::iea_cols`.
+#' @param losses The name of the "Losses" flows in the input data frame.
+#'               Default is `IEATools::tfc_compare_flows$losses`.
+#' @param grid_industry The name of the electricity grid industry to be added.
+#'                      Default is `IEATools::grid_industries$electricity_grid`.
+#' @param supply The name of the supply ledger side.
+#'               Default is `IEATools::ledger_sides$supply`.
+#' @param transformation_processes The name of transformation processes in the flow aggregation point column.
+#'                                 Default is `IEATools::tfc_compare_flows$transformation_processes`.
+#' @param negzeropos The name of a temporary column added to the data frame.
+#'                   Default is ".negzeropos".
+#'
+#' @return The `.tidy__iea_df` to which an electricity grid industry has been added.
+#' @export
+#'
+#' @examples
+#' load_tidy_iea_df() %>% 
+#'   specify_electricity_grid()
+specify_electricity_grid <- function(.tidy_iea_df,
+                                     specify_grid = FALSE,
+                                     pattern_to_remove = "\\[.*\\]", # to change
+                                     country = IEATools::iea_cols$country,
+                                     method = IEATools::iea_cols$method,
+                                     energy_type = IEATools::iea_cols$energy_type,
+                                     last_stage = IEATools::iea_cols$last_stage,
+                                     year = IEATools::iea_cols$year,
+                                     ledger_side = IEATools::iea_cols$ledger_side,
+                                     flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                     flow = IEATools::iea_cols$flow,
+                                     product = IEATools::iea_cols$product,
+                                     unit = IEATools::iea_cols$unit,
+                                     e_dot = IEATools::iea_cols$e_dot,
+                                     # Constants
+                                     losses = IEATools::tfc_compare_flows$losses,
+                                     grid_industry = IEATools::grid_industries$electricity_grid,
+                                     supply = IEATools::ledger_sides$supply,
+                                     transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
+                                     # Strings identifying temporary column names
+                                     negzeropos = ".negzeropos"){
+  
+  # maybe change pattern_to_remove to RCLabels::of_notation$suff_start
+  
+  # Check if electricity grid should be specified. If yes, then the code carries on.
+  if (isFALSE(specify_grid)){
+    return(.tidy_iea_df)
+  }
+  
+  # (1) Select production flows
+  selected_production_flows <- .tidy_iea_df |> 
+    dplyr::filter(.data[[ledger_side]] == supply & .data[[e_dot]] > 0)
+  
+  # (2) Select losses flows
+  selected_losses_flows <- .tidy_iea_df |> 
+    dplyr::filter(.data[[flow]] == losses)
+  
+  # (3) Modify production flows
+  modified_production_flows <- selected_production_flows |> 
+    dplyr::mutate(
+      "{product}" := stringr::str_c(.data[[product]], " [from", stringr::str_remove(.data[[flow]], pattern_to_remove), "]")
+    )
+  
+  # (4) Adding inputs to grid industry
+  added_inputs_to_grid <- modified_production_flows |> 
+    dplyr::mutate(
+      "{flow}" := grid_industry,
+      "{e_dot}" := - .data[[e_dot]]
+    )
+  
+  # (5) Adding supply of the grid industry
+  added_supply_by_grid <- selected_production_flows |> 
+    dplyr::bind_rows(selected_losses_flows) |> 
+    dplyr::group_by(tidyselect::all_of(c(country, method, energy_type, last_stage, year, product, unit))) |> 
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) |> 
+    dplyr::mutate(
+      "{flow_aggregation_point}" := transformation_processes,
+      "{ledger_side}" := supply,
+      "{flow}" := grid_industry,
+    )
+  
+  # (5) Bind data frame and get ready to return values
+  to_return <- .tidy_iea_df |> 
+    dplyr::filter(! (.data[[ledger_side]] == supply & .data[[e_dot]] > 0)) |> 
+    dplyr::filter(.data[[flow]] != losses) |> 
+    dplyr::bind_rows(
+      modified_production_flows,
+      added_inputs_to_grid,
+      added_supply_by_grid
+    ) |> 
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    # Now sum similar rows using summarise.
+    # Group by everything except the energy flow rate column, "E.dot".
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::mutate(
+      #Eliminate the column we added.
+      "{negzeropos}" := NULL
+    ) %>%
+    dplyr::ungroup()
+    
+  return(to_return)
+}
 
 
 #' Routes non specified flows
