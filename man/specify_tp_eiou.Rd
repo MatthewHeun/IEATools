@@ -11,6 +11,8 @@ specify_tp_eiou(
   route_non_specified_tp = TRUE,
   specify_renewable_plants = FALSE,
   specify_electricity_grid = FALSE,
+  ascribe_eiou_to_renewable_plants = FALSE,
+  ascribe_eiou_to_nuclear = FALSE,
   flow_aggregation_point = "Flow.aggregation.point",
   eiou = "Energy industry own use",
   transformation_processes = "Transformation processes",
@@ -42,6 +44,12 @@ Default is FALSE.}
 
 \item{specify_electricity_grid}{Boolean stating whether an electricity grid industry should be specified or not.
 Default is FALSE.}
+
+\item{ascribe_eiou_to_renewable_plants}{A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
+should be ascribed to the new renewable industries. Default is FALSE.}
+
+\item{ascribe_eiou_to_nuclear}{A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
+should be ascribed to the new nuclear industry. Default is FALSE.}
 
 \item{flow_aggregation_point}{The name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
 

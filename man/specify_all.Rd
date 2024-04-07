@@ -32,6 +32,12 @@ Default is FALSE.}
 
 \item{specify_electricity_grid}{Boolean stating whether an electricity grid industry should be specified or not.
 Default is FALSE.}
+
+\item{ascribe_eiou_to_renewable_plants}{A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
+should be ascribed to the new renewable industries. Default is FALSE.}
+
+\item{ascribe_eiou_to_nuclear}{A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
+should be ascribed to the new nuclear industry. Default is FALSE.}
 }
 \value{
 An enhanced and corrected version of \code{.tidy_iea_df}

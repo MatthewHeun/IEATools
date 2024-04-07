@@ -7,6 +7,7 @@
 specify_renewable_plants(
   .tidy_iea_df,
   specify_renewable_plants = FALSE,
+  ascribe_eiou_to_renewable_plants = FALSE,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   flow = IEATools::iea_cols$flow,
   e_dot = IEATools::iea_cols$e_dot,
@@ -53,6 +54,9 @@ specify_renewable_plants(
 
 \item{specify_renewable_plants}{A boolean indicating whether renewable energy plants should be specified or not.
 Default is FALSE.}
+
+\item{ascribe_eiou_to_renewable_plants}{A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
+should be ascribed to the new renewable industries. Default is FALSE.}
 
 \item{flow_aggregation_point, flow, e_dot, product, method, ledger_side, last_stage, energy_type, country, year, unit}{See \code{IEATools::iea_cols}.}
 

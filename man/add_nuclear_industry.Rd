@@ -6,6 +6,7 @@
 \usage{
 add_nuclear_industry(
   .tidy_iea_df,
+  ascribe_eiou_to_nuclear = FALSE,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   flow = IEATools::iea_cols$flow,
   e_dot = IEATools::iea_cols$e_dot,
@@ -36,6 +37,9 @@ add_nuclear_industry(
 }
 \arguments{
 \item{.tidy_iea_df}{The \code{.tidy_iea_df} which flows need to be specified.}
+
+\item{ascribe_eiou_to_nuclear}{A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
+should be ascribed to the new nuclear industry. Default is FALSE.}
 
 \item{flow_aggregation_point}{The name of the flow aggregation point column in the \code{.tidy_iea_df}.
 Default is \code{IEATools::iea_cols$flow_aggregation_point}.}

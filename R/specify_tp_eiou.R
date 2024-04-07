@@ -682,6 +682,8 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
 #'  * the output ascribed to nuclear plants is subtracted from Main activity producer electricity and heat plants.
 #' 
 #' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
+#' @param ascribe_eiou_to_nuclear A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
+#'                                should be ascribed to the new nuclear industry. Default is FALSE.
 #' @param flow_aggregation_point The name of the flow aggregation point column in the `.tidy_iea_df`.
 #'                               Default is `IEATools::iea_cols$flow_aggregation_point`.
 #' @param flow The name of the flow column in the `.tidy_iea_df`.
@@ -744,6 +746,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
 #' load_tidy_iea_df() %>% 
 #'   add_nuclear_industry()
 add_nuclear_industry <- function(.tidy_iea_df,
+                                 ascribe_eiou_to_nuclear = FALSE,
                                  # Column names
                                  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                  flow = IEATools::iea_cols$flow,
@@ -789,7 +792,7 @@ add_nuclear_industry <- function(.tidy_iea_df,
     # tidyr::pivot_wider(names_from = .data[[product]], values_from = .data[[e_dot]]) %>%
     tidyr::pivot_wider(names_from = dplyr::all_of(product), values_from = dplyr::all_of(e_dot)) %>%
     # dplyr::select(-tidyselect::any_of({e_dot})) 
-    dplyr::select(-tidyselect::any_of(e_dot)) 
+    dplyr::select(-tidyselect::any_of(e_dot))
   
   # Select names of wide data frame just built, so we can add missing products as additional columns
   names_intermediary_modified_flows <- names(intermediary_modified_flows)
@@ -867,6 +870,8 @@ add_nuclear_industry <- function(.tidy_iea_df,
 #' @param .tidy_iea_df The `.tidy_iea_df` which flows need to be specified.
 #' @param specify_renewable_plants A boolean indicating whether renewable energy plants should be specified or not.
 #'                                 Default is FALSE.
+#' @param ascribe_eiou_to_renewable_plants A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
+#'                                         should be ascribed to the new renewable industries. Default is FALSE.
 #' @param flow_aggregation_point,flow,e_dot,product,method,ledger_side,last_stage,energy_type,country,year,unit See `IEATools::iea_cols`.
 #' @param transformation_processes A string identifying the transformation processes in the `flow_aggregation_point` column in the `.tidy_iea_df`.
 #'                                 Default is `IEATools::aggregation_flows$transformation_processes`.
@@ -912,6 +917,7 @@ add_nuclear_industry <- function(.tidy_iea_df,
 #'   specify_renewable_plants()
 specify_renewable_plants <- function(.tidy_iea_df,
                                      specify_renewable_plants = FALSE,
+                                     ascribe_eiou_to_renewable_plants = FALSE,
                                      # Column names
                                      flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                      flow = IEATools::iea_cols$flow,
@@ -1104,10 +1110,10 @@ specify_renewable_plants <- function(.tidy_iea_df,
 #' and converts it into Electricity.
 #'
 #' @param .tidy_iea_df The `.tidy__iea_df` for which an electricity grid industry should be added.
-#' @param specify_grid A boolean stating whether an electricity grid industry should be created or not.
+#' @param specify_electricity_grid A boolean stating whether an electricity grid industry should be created or not.
 #'                     Default is FALSE.
 #' @param supplying_industry_notation Notation to use to specify the electricity supplying industry.
-#'                                    Default is `RCLabels::of_notation`.
+#'                                    Default is `RCLabels::from_notation`.
 #' @param flow_aggregation_point,flow,e_dot,product,method,ledger_side,last_stage,energy_type,country,year,unit See `IEATools::iea_cols`.
 #' @param losses The name of the "Losses" flows in the input data frame.
 #'               Default is `IEATools::tfc_compare_flows$losses`.
@@ -1117,6 +1123,8 @@ specify_renewable_plants <- function(.tidy_iea_df,
 #'               Default is `IEATools::ledger_sides$supply`.
 #' @param transformation_processes The name of transformation processes in the flow aggregation point column.
 #'                                 Default is `IEATools::tfc_compare_flows$transformation_processes`.
+#' @param electricity The name of the product name for "Electricity".
+#'                    Default is `IEATools::electricity_products$electricity`.
 #' @param negzeropos The name of a temporary column added to the data frame.
 #'                   Default is ".negzeropos".
 #'
@@ -1128,7 +1136,7 @@ specify_renewable_plants <- function(.tidy_iea_df,
 #'   specify_electricity_grid()
 specify_electricity_grid <- function(.tidy_iea_df,
                                      specify_electricity_grid = FALSE,
-                                     supplying_industry_notation = RCLabels::of_notation,
+                                     supplying_industry_notation = RCLabels::from_notation,
                                      # IEA col names
                                      country = IEATools::iea_cols$country,
                                      method = IEATools::iea_cols$method,
@@ -1146,6 +1154,7 @@ specify_electricity_grid <- function(.tidy_iea_df,
                                      grid_industry = IEATools::grid_industries$electricity_grid,
                                      supply = IEATools::ledger_sides$supply,
                                      transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
+                                     electricity = IEATools::electricity_products$electricity,
                                      # Strings identifying temporary column names
                                      negzeropos = ".negzeropos"){
   
@@ -1158,11 +1167,11 @@ specify_electricity_grid <- function(.tidy_iea_df,
   
   # (1) Select production flows
   selected_production_flows <- .tidy_iea_df |> 
-    dplyr::filter(.data[[ledger_side]] == supply & .data[[e_dot]] > 0)
+    dplyr::filter(.data[[ledger_side]] == supply & .data[[e_dot]] > 0 & .data[[product]] == electricity)
   
   # (2) Select losses flows
   selected_losses_flows <- .tidy_iea_df |> 
-    dplyr::filter(.data[[flow]] == losses)
+    dplyr::filter(.data[[flow]] == losses & .data[[product]] == electricity)
   
   # (3) Modify production flows
   modified_production_flows <- selected_production_flows |> 
@@ -1185,7 +1194,7 @@ specify_electricity_grid <- function(.tidy_iea_df,
   # (5) Adding supply of the grid industry
   added_supply_by_grid <- selected_production_flows |> 
     dplyr::bind_rows(selected_losses_flows) |> 
-    dplyr::group_by(tidyselect::all_of(c(country, method, energy_type, last_stage, year, product, unit))) |> 
+    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[unit]]) |> 
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) |> 
@@ -1197,8 +1206,8 @@ specify_electricity_grid <- function(.tidy_iea_df,
   
   # (5) Bind data frame and get ready to return values
   to_return <- .tidy_iea_df |> 
-    dplyr::filter(! (.data[[ledger_side]] == supply & .data[[e_dot]] > 0)) |> 
-    dplyr::filter(.data[[flow]] != losses) |> 
+    dplyr::filter(! (.data[[ledger_side]] == supply & .data[[e_dot]] > 0 & .data[[product]] == electricity)) |> 
+    dplyr::filter(! (.data[[flow]] == losses & .data[[product]] == electricity)) |> 
     dplyr::bind_rows(
       modified_production_flows,
       added_inputs_to_grid,

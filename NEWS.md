@@ -8,6 +8,12 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Argument added to `add_nuclear_industry()` to ascribe some EIOU 
+  to the nuclear industry according to its output share.
+* New `specify_renewable_plants()` function 
+  to specify renewable energy plants.
+* New `specify_electricity_grid()` function 
+  to add an electricity grid.
 * The `.iea_file` argument to `slurp_iea_to_raw_df()`
   is now vectorized, which will enable sending 
   a vector of country IEA data files in `.iea_file`.

@@ -7,7 +7,7 @@
 specify_electricity_grid(
   .tidy_iea_df,
   specify_electricity_grid = FALSE,
-  supplying_industry_notation = RCLabels::of_notation,
+  supplying_industry_notation = RCLabels::from_notation,
   country = IEATools::iea_cols$country,
   method = IEATools::iea_cols$method,
   energy_type = IEATools::iea_cols$energy_type,
@@ -23,14 +23,18 @@ specify_electricity_grid(
   grid_industry = IEATools::grid_industries$electricity_grid,
   supply = IEATools::ledger_sides$supply,
   transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
+  electricity = IEATools::electricity_products$electricity,
   negzeropos = ".negzeropos"
 )
 }
 \arguments{
 \item{.tidy_iea_df}{The \code{.tidy__iea_df} for which an electricity grid industry should be added.}
 
+\item{specify_electricity_grid}{A boolean stating whether an electricity grid industry should be created or not.
+Default is FALSE.}
+
 \item{supplying_industry_notation}{Notation to use to specify the electricity supplying industry.
-Default is \code{RCLabels::of_notation}.}
+Default is \code{RCLabels::from_notation}.}
 
 \item{flow_aggregation_point, flow, e_dot, product, method, ledger_side, last_stage, energy_type, country, year, unit}{See \code{IEATools::iea_cols}.}
 
@@ -46,11 +50,11 @@ Default is \code{IEATools::ledger_sides$supply}.}
 \item{transformation_processes}{The name of transformation processes in the flow aggregation point column.
 Default is \code{IEATools::tfc_compare_flows$transformation_processes}.}
 
+\item{electricity}{The name of the product name for "Electricity".
+Default is \code{IEATools::electricity_products$electricity}.}
+
 \item{negzeropos}{The name of a temporary column added to the data frame.
 Default is ".negzeropos".}
-
-\item{specify_grid}{A boolean stating whether an electricity grid industry should be created or not.
-Default is FALSE.}
 }
 \value{
 The \code{.tidy__iea_df} to which an electricity grid industry has been added.
