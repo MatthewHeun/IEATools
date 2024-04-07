@@ -478,6 +478,34 @@
 "electricity_products"
 
 
+#' Heat products
+#'
+#' A string vector containing names of products classified by the IEA as heat products.
+#' 
+#' @format A string vector with `r length(heat_products)` entries.
+#' \describe{
+#' \item{heat}{The string identifier for Heat.}
+#' }
+#' 
+#' @examples
+#' heat_products
+"heat_products"
+
+
+#' Nuclear products
+#'
+#' A string vector containing names of products classified by the IEA as nuclear products.
+#' 
+#' @format A string vector with `r length(nuclear_products)` entries.
+#' \describe{
+#' \item{nuclear}{The string identifier for Nuclear}
+#' }
+#' 
+#' @examples
+#' nuclear_products
+"nuclear_products"
+
+
 #' Non-energy products
 #'
 #' A string vector containing names of products classified as "Non-energy" by

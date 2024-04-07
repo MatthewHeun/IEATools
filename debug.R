@@ -38,57 +38,113 @@ res <- partially_specified_data |>
 
 # THE ODD THING TO CHECK IS WHY SOLAR THERMAL ONLY APPEARS AS EIOU AT GLOBAL LEVEL IN CHP PLANTS. THIS DOESNT MAKE SENSE.
 
-.tidy_iea_df <- .tidy_iea_df |> filter(Country == "WRLD" & Year > 1990)
+products_tibble <- tibble::tibble("{nuclear}" := NA,
+                                  "{electricity}" := NA,
+                                  "{heat}" := NA)
 
-# (1) Select production flows
-selected_production_flows <- .tidy_iea_df |> 
-  dplyr::filter(.data[[ledger_side]] == supply & .data[[e_dot]] > 0 & .data[[product]] == electricity)
+# Here we keep only the flows that we are going to modify:
+intermediary_modified_flows <- .tidy_iea_df %>%
+  dplyr::filter(
+    .data[[flow_aggregation_point]] == transformation_processes &
+      ((.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(nuclear, electricity)) |
+         (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(nuclear, electricity, heat)))
+  ) %>%
+  # tidyr::pivot_wider(names_from = .data[[product]], values_from = .data[[e_dot]]) %>%
+  tidyr::pivot_wider(names_from = dplyr::all_of(product), values_from = dplyr::all_of(e_dot)) %>%
+  # dplyr::select(-tidyselect::any_of({e_dot})) 
+  dplyr::select(-tidyselect::any_of(e_dot))
 
-# (2) Select losses flows
-selected_losses_flows <- .tidy_iea_df |> 
-  dplyr::filter(.data[[flow]] == losses & .data[[product]] == electricity)
+# Select names of wide data frame just built, so we can add missing products as additional columns
+names_intermediary_modified_flows <- names(intermediary_modified_flows)
 
-# (3) Modify production flows
-modified_production_flows <- selected_production_flows |> 
-  # Change this with RCLabels!!
+# Modify selected flows
+# (a) Temporary df to help specifying EIOU flows after
+temp <- intermediary_modified_flows %>% 
+  tibble::add_column(!!products_tibble[! names(products_tibble) %in% names_intermediary_modified_flows]) %>%
   dplyr::mutate(
-    "{product}" := stringr::str_c(.data[[product]], 
-                                  supplying_industry_notation[["suff_start"]], 
-                                  .data[[flow]], 
-                                  supplying_industry_notation[["suff_end"]],
-                                  sep = "")
+    "{nuclear}" := tidyr::replace_na(.data[[nuclear]], 0),
+    "{electricity}" := tidyr::replace_na(.data[[electricity]], 0),
+    "{heat}" := tidyr::replace_na(.data[[heat]], 0)
+  ) %>% 
+  dplyr::mutate(
+    "{share_elect_output_From_Func}" := .data[[electricity]] / (.data[[electricity]] + .data[[heat]]),
+    "{electricity}" := .data[[electricity]] + (.data[[nuclear]] * ratio_output_to_nuclear_fuel) * .data[[share_elect_output_From_Func]],
+    "{heat}" := .data[[heat]] + (.data[[nuclear]] * ratio_output_to_nuclear_fuel) * (1 - .data[[share_elect_output_From_Func]]),
+    "{electricity}_{nuclear}" := - .data[[nuclear]] * ratio_output_to_nuclear_fuel * .data[[share_elect_output_From_Func]],
+    "{heat}_{nuclear}" := - .data[[nuclear]] * ratio_output_to_nuclear_fuel * (1 - .data[[share_elect_output_From_Func]])
   )
 
-# (4) Adding inputs to grid industry
-added_inputs_to_grid <- modified_production_flows |> 
+# Then modified input/output flows for nuclear and elec/heat/chp plants
+modified_flows <- temp |> 
+  dplyr::select(-dplyr::any_of(share_elect_output_From_Func)) %>%
+  tidyr::pivot_longer(cols = c({electricity}, {heat}, {nuclear}, glue::glue("{electricity}_{nuclear}"), glue::glue("{heat}_{nuclear}")), values_to = {e_dot}, names_to = {product}) %>%
+  dplyr::filter(.data[[e_dot]] != 0) %>%
   dplyr::mutate(
-    "{flow}" := grid_industry,
-    "{e_dot}" := - .data[[e_dot]]
+    "{flow}" := dplyr::case_when(
+      stringr::str_detect(.data[[product]], nuclear) ~ nuclear_industry,
+      TRUE ~ .data[[flow]]
+    ),
+    "{product}" := stringr::str_remove(.data[[product]], stringr::str_c("_", nuclear))
   )
 
-# (5) Adding supply of the grid industry
-added_supply_by_grid <- selected_production_flows |> 
-  dplyr::bind_rows(selected_losses_flows) |> 
-  dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[unit]]) |> 
-  #dplyr::group_by(tidyselect::all_of(c(country, method, energy_type, last_stage, year, product, unit))) |> 
-  dplyr::summarise(
-    "{e_dot}" := sum(.data[[e_dot]])
-  ) |> 
-  dplyr::mutate(
-    "{flow_aggregation_point}" := transformation_processes,
-    "{ledger_side}" := supply,
-    "{flow}" := grid_industry,
-  )
+# Dealing with EIOU flows
+eiou_elec_heat_CHP_plants <- .tidy_iea_df |> 
+  dplyr::filter(.data[[flow]] == own_use_elect_chp_heat & .data[[flow_aggregation_point]] == eiou)
 
-# (5) Bind data frame and get ready to return values
-to_return <- .tidy_iea_df |> 
-  dplyr::filter(! (.data[[ledger_side]] == supply & .data[[e_dot]] > 0 & .data[[product]] == electricity)) |> 
-  dplyr::filter(! (.data[[flow]] == losses & .data[[product]] == electricity)) |> 
+# First case, we don't do anything
+if (isFALSE(ascribe_eiou_to_nuclear)){
+  modified_flows <- modified_flows |> 
+    dplyr::bind_rows(eiou_elec_heat_CHP_plants)
+  # Second case, we determine the share of the output supplied by nuclear plants,
+  # and ascribe the corresponding EIOU to nuclear plants
+} else if(isTRUE(ascribe_eiou_to_nuclear)){
+  
+  # Share nuclear output
+  share_nuclear_output_df <- temp |> 
+    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]]) |> 
+    dplyr::summarise(dplyr::across(tidyselect::any_of(c(electricity, heat, nuclear, glue::glue("{electricity}_{nuclear}"), glue::glue("{heat}_{nuclear}"))), sum)) |> 
+    dplyr::mutate(
+      "{share_nuclear_output}" := (.data[[glue::glue("{electricity}_{nuclear}")]] + .data[[glue::glue("{heat}_{nuclear}")]])/(.data[[electricity]] + .data[[heat]] + .data[[glue::glue("{electricity}_{nuclear}")]]  + .data[[glue::glue("{heat}_{nuclear}")]])
+    ) |>
+    dplyr::select(-tidyselect::any_of(c(share_elect_output_From_Func, electricity, heat, nuclear, glue::glue("{electricity}_{nuclear}"), glue::glue("{heat}_{nuclear}"), ledger_side, flow_aggregation_point, flow, product)))
+  
+  # Definining nuclear EIOU
+  nuclear_eiou <- eiou_elec_heat_CHP_plants |> 
+    dplyr::left_join(share_nuclear_output_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit})) |> 
+    dplyr::mutate(
+      "{e_dot}" := .data[[e_dot]] * .data[[share_nuclear_output]],
+      "{flow}" := nuclear_industry
+    ) |> 
+    dplyr::select(-tidyselect::any_of(c(share_nuclear_output)))
+  
+  # Defining elec/CHP/heat plants total EIOU
+  elec_chp_heat_plants_eiou <- eiou_elec_heat_CHP_plants |> 
+    dplyr::left_join(share_nuclear_output_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit})) |> 
+    dplyr::mutate(
+      "{e_dot}" := .data[[e_dot]] * (1 - .data[[share_nuclear_output]]),
+      "{flow}" := own_use_elect_chp_heat
+    ) |> 
+    dplyr::select(-tidyselect::any_of(c(share_nuclear_output)))
+  
+  # Adding modified EIOU flows to modified flows
+  modified_flows <- modified_flows |> 
+    dplyr::bind_rows(
+      elec_chp_heat_plants_eiou,
+      nuclear_eiou
+    )
+}
+
+# Builds output data frame by filtering out input data frame (take out modified flows), and collating modified data.
+to_return <- .tidy_iea_df %>%
+  dplyr::filter(
+    ! (.data[[flow_aggregation_point]] == transformation_processes &
+         ((.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(nuclear, electricity)) |
+            (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(nuclear, electricity, heat))))
+  ) %>%
+  dplyr::filter(! (.data[[flow]] == own_use_elect_chp_heat & .data[[flow_aggregation_point]] == eiou)) |> 
   dplyr::bind_rows(
-    modified_production_flows,
-    added_inputs_to_grid,
-    added_supply_by_grid
-  ) |> 
+    modified_flows
+  ) %>%
   dplyr::mutate(
     "{negzeropos}" := dplyr::case_when(
       .data[[e_dot]] < 0 ~ "neg",

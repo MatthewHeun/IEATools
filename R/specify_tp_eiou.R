@@ -720,20 +720,20 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
 #'                           Default is `IEATools::main_act_plants$autoprod_elect_plants`.
 #' @param autoproducer_chp A string identifying "Autoproducer CHP plants" in the `flow` column of the `.tidy_iea_df`.
 #'                         Default is `IEATools::transformation_processes$autoproducer_CHP_plants`.
+#' @param own_use_elect_chp_heat A string identifying "Own use in electricity, CHP and heat plants" in the `flow` column of the `.tidy_iea_df`.
+#'                               Default is `IEATools::eiou_flows$own_use_elect_chp_heat_plants`.
 #' @param nuclear A string identifying the "Nuclear" product in the `product` column of the `tidy_iea_df`.
 #'                Default is "Nuclear".
 #' @param electricity A string identifying the "Electricity" product in the `product` column of the `tidy_iea_df`.
-#'                    Default is "Electricity".
+#'                    Default is `IEATools::electricity_products$electricity`.
 #' @param heat A string identifying the "Heat" product in the `product` column of the `tidy_iea_df`.
-#'             Default is "Heat".
+#'             Default is `IEATools::heat_products$heat`.
 #' @param negzeropos The name of a temporary column added to the data frame.
 #'                   Default is ".negzeropos".
-#' @param share_elect_output_From_Func A temporary column added to the data frame.
+#' @param share_elect_output_From_Func The name of a temporary column added to the data frame.
 #'                                     Default is ".share_elect_output_From_Func".
-#' @param Electricity_Nuclear A temporary column and product name added to the data frame, which identifies the production of electricity by nuclear plants.
-#'                            Default is "Electricity_Nuclear".
-#' @param Heat_Nuclear A temporary column and product name added to the data frame, which identifies the production of heat by nuclear plants.
-#'                     Default is "Heat_Nuclear".
+#' @param share_nuclear_output The name of a temporary column added to the data frame.
+#'                             Default is ".share_nuclear_output". 
 #' @param ratio_output_to_nuclear_fuel A parameter that describes the correspondance between input of nuclear fuel and output of electricity and/or heat.
 #'                                     The IEA World Energy Extended Balances state that the value adopted in the balances is 0.33, which is therefore
 #'                                     the default value of the parameter.
@@ -767,14 +767,14 @@ add_nuclear_industry <- function(.tidy_iea_df,
                                  main_act_producer_chp = IEATools::main_act_plants$main_act_prod_chp_plants,
                                  autoproducer_elect = IEATools::main_act_plants$autoprod_elect_plants,
                                  autoproducer_chp = IEATools::transformation_processes$autoproducer_CHP_plants,
-                                 nuclear = "Nuclear",
+                                 own_use_elect_chp_heat = IEATools::eiou_flows$own_use_elect_chp_heat_plants,
+                                 nuclear = IEATools::nuclear_products$nuclear,
                                  electricity = IEATools::electricity_products$electricity,
-                                 heat = "Heat",
+                                 heat = IEATools::heat_products$heat,
                                  # Strings identifying temporary column names
                                  negzeropos = ".negzeropos",
                                  share_elect_output_From_Func = ".share_elect_output_From_Func",
-                                 Electricity_Nuclear = "Electricity_Nuclear",
-                                 Heat_Nuclear = "Heat_Nuclear",
+                                 share_nuclear_output = ".share_nuclear_output",
                                  # Constant
                                  ratio_output_to_nuclear_fuel = 0.33){
   
@@ -798,7 +798,8 @@ add_nuclear_industry <- function(.tidy_iea_df,
   names_intermediary_modified_flows <- names(intermediary_modified_flows)
   
   # Modify selected flows
-  modified_flows <- intermediary_modified_flows %>% 
+  # (a) Temporary df to help specifying EIOU flows after
+  temp <- intermediary_modified_flows %>% 
     tibble::add_column(!!products_tibble[! names(products_tibble) %in% names_intermediary_modified_flows]) %>%
     dplyr::mutate(
       "{nuclear}" := tidyr::replace_na(.data[[nuclear]], 0),
@@ -809,12 +810,14 @@ add_nuclear_industry <- function(.tidy_iea_df,
       "{share_elect_output_From_Func}" := .data[[electricity]] / (.data[[electricity]] + .data[[heat]]),
       "{electricity}" := .data[[electricity]] + (.data[[nuclear]] * ratio_output_to_nuclear_fuel) * .data[[share_elect_output_From_Func]],
       "{heat}" := .data[[heat]] + (.data[[nuclear]] * ratio_output_to_nuclear_fuel) * (1 - .data[[share_elect_output_From_Func]]),
-      "{Electricity_Nuclear}" := - .data[[nuclear]] * ratio_output_to_nuclear_fuel * .data[[share_elect_output_From_Func]],
-      "{Heat_Nuclear}" := - .data[[nuclear]] * ratio_output_to_nuclear_fuel * (1 - .data[[share_elect_output_From_Func]])
-    ) %>%
-    # dplyr::select(-.data[[share_elect_output_From_Func]]) %>%
+      "{electricity}_{nuclear}" := - .data[[nuclear]] * ratio_output_to_nuclear_fuel * .data[[share_elect_output_From_Func]],
+      "{heat}_{nuclear}" := - .data[[nuclear]] * ratio_output_to_nuclear_fuel * (1 - .data[[share_elect_output_From_Func]])
+    )
+  
+  # Then modified input/output flows for nuclear and elec/heat/chp plants
+  modified_flows <- temp |> 
     dplyr::select(-dplyr::any_of(share_elect_output_From_Func)) %>%
-    tidyr::pivot_longer(cols = c({electricity}, {heat}, {nuclear}, {Electricity_Nuclear}, {Heat_Nuclear}), values_to = {e_dot}, names_to = {product}) %>%
+    tidyr::pivot_longer(cols = c({electricity}, {heat}, {nuclear}, glue::glue("{electricity}_{nuclear}"), glue::glue("{heat}_{nuclear}")), values_to = {e_dot}, names_to = {product}) %>%
     dplyr::filter(.data[[e_dot]] != 0) %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
@@ -824,6 +827,53 @@ add_nuclear_industry <- function(.tidy_iea_df,
       "{product}" := stringr::str_remove(.data[[product]], stringr::str_c("_", nuclear))
     )
   
+  # Dealing with EIOU flows
+  eiou_elec_heat_CHP_plants <- .tidy_iea_df |> 
+    dplyr::filter(.data[[flow]] == own_use_elect_chp_heat & .data[[flow_aggregation_point]] == eiou)
+  
+  # First case, we don't do anything
+  if (isFALSE(ascribe_eiou_to_nuclear)){
+    modified_flows <- modified_flows |> 
+      dplyr::bind_rows(eiou_elec_heat_CHP_plants)
+  # Second case, we determine the share of the output supplied by nuclear plants,
+  # and ascribe the corresponding EIOU to nuclear plants
+  } else if(isTRUE(ascribe_eiou_to_nuclear)){
+    
+    # Share nuclear output
+    share_nuclear_output_df <- temp |> 
+      dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]]) |> 
+      dplyr::summarise(dplyr::across(tidyselect::any_of(c(electricity, heat, nuclear, glue::glue("{electricity}_{nuclear}"), glue::glue("{heat}_{nuclear}"))), sum)) |> 
+      dplyr::mutate(
+        "{share_nuclear_output}" := (.data[[glue::glue("{electricity}_{nuclear}")]] + .data[[glue::glue("{heat}_{nuclear}")]])/(.data[[electricity]] + .data[[heat]] + .data[[glue::glue("{electricity}_{nuclear}")]]  + .data[[glue::glue("{heat}_{nuclear}")]])
+      ) |>
+      dplyr::select(-tidyselect::any_of(c(share_elect_output_From_Func, electricity, heat, nuclear, glue::glue("{electricity}_{nuclear}"), glue::glue("{heat}_{nuclear}"), ledger_side, flow_aggregation_point, flow, product)))
+    
+    # Definining nuclear EIOU
+    nuclear_eiou <- eiou_elec_heat_CHP_plants |> 
+      dplyr::left_join(share_nuclear_output_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit})) |> 
+      dplyr::mutate(
+        "{e_dot}" := .data[[e_dot]] * .data[[share_nuclear_output]],
+        "{flow}" := nuclear_industry
+      ) |> 
+      dplyr::select(-tidyselect::any_of(c(share_nuclear_output)))
+    
+    # Defining elec/CHP/heat plants total EIOU
+    elec_chp_heat_plants_eiou <- eiou_elec_heat_CHP_plants |> 
+      dplyr::left_join(share_nuclear_output_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit})) |> 
+      dplyr::mutate(
+        "{e_dot}" := .data[[e_dot]] * (1 - .data[[share_nuclear_output]]),
+        "{flow}" := own_use_elect_chp_heat
+      ) |> 
+      dplyr::select(-tidyselect::any_of(c(share_nuclear_output)))
+    
+    # Adding modified EIOU flows to modified flows
+    modified_flows <- modified_flows |> 
+      dplyr::bind_rows(
+        elec_chp_heat_plants_eiou,
+        nuclear_eiou
+      )
+  }
+  
   # Builds output data frame by filtering out input data frame (take out modified flows), and collating modified data.
   to_return <- .tidy_iea_df %>%
     dplyr::filter(
@@ -831,6 +881,7 @@ add_nuclear_industry <- function(.tidy_iea_df,
            ((.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(nuclear, electricity)) |
               (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(nuclear, electricity, heat))))
     ) %>%
+    dplyr::filter(! (.data[[flow]] == own_use_elect_chp_heat & .data[[flow_aggregation_point]] == eiou)) |> 
     dplyr::bind_rows(
       modified_flows
     ) %>%
@@ -891,7 +942,7 @@ add_nuclear_industry <- function(.tidy_iea_df,
 #' @param electricity The name of the electricity product.
 #'                    Default is `IEATools::electricity_products$electricity`.
 #' @param heat The name of the heat product.
-#'             Default is "Heat".
+#'             Default is `IEATools::heat_products$heat`.
 #' @param ratio_solar_th_elec The ratio of primary energy to electricity to use for solar thermal.
 #'                            Default is 0.33 as this is the value assumed in the IEA's energy balances.
 #' @param ratio_solar_th_heat The ratio of primary energy to heat to use for solar thermal.
@@ -947,7 +998,7 @@ specify_renewable_plants <- function(.tidy_iea_df,
                                      wind = IEATools::renewable_products$wind,
                                      # Output products
                                      electricity = IEATools::electricity_products$electricity,
-                                     heat = "Heat",
+                                     heat = IEATools::heat_products$heat,
                                      # Ratios of final to primary energy
                                      ratio_solar_th_elec = 0.33,
                                      ratio_solar_th_heat = 1,

@@ -25,13 +25,13 @@ add_nuclear_industry(
   main_act_producer_chp = IEATools::main_act_plants$main_act_prod_chp_plants,
   autoproducer_elect = IEATools::main_act_plants$autoprod_elect_plants,
   autoproducer_chp = IEATools::transformation_processes$autoproducer_CHP_plants,
-  nuclear = "Nuclear",
+  own_use_elect_chp_heat = IEATools::eiou_flows$own_use_elect_chp_heat_plants,
+  nuclear = IEATools::nuclear_products$nuclear,
   electricity = IEATools::electricity_products$electricity,
-  heat = "Heat",
+  heat = IEATools::heat_products$heat,
   negzeropos = ".negzeropos",
   share_elect_output_From_Func = ".share_elect_output_From_Func",
-  Electricity_Nuclear = "Electricity_Nuclear",
-  Heat_Nuclear = "Heat_Nuclear",
+  share_nuclear_output = ".share_nuclear_output",
   ratio_output_to_nuclear_fuel = 0.33
 )
 }
@@ -95,26 +95,26 @@ Default is \code{IEATools::main_act_plants$autoprod_elect_plants}.}
 \item{autoproducer_chp}{A string identifying "Autoproducer CHP plants" in the \code{flow} column of the \code{.tidy_iea_df}.
 Default is \code{IEATools::transformation_processes$autoproducer_CHP_plants}.}
 
+\item{own_use_elect_chp_heat}{A string identifying "Own use in electricity, CHP and heat plants" in the \code{flow} column of the \code{.tidy_iea_df}.
+Default is \code{IEATools::eiou_flows$own_use_elect_chp_heat_plants}.}
+
 \item{nuclear}{A string identifying the "Nuclear" product in the \code{product} column of the \code{tidy_iea_df}.
 Default is "Nuclear".}
 
 \item{electricity}{A string identifying the "Electricity" product in the \code{product} column of the \code{tidy_iea_df}.
-Default is "Electricity".}
+Default is \code{IEATools::electricity_products$electricity}.}
 
 \item{heat}{A string identifying the "Heat" product in the \code{product} column of the \code{tidy_iea_df}.
-Default is "Heat".}
+Default is \code{IEATools::heat_products$heat}.}
 
 \item{negzeropos}{The name of a temporary column added to the data frame.
 Default is ".negzeropos".}
 
-\item{share_elect_output_From_Func}{A temporary column added to the data frame.
+\item{share_elect_output_From_Func}{The name of a temporary column added to the data frame.
 Default is ".share_elect_output_From_Func".}
 
-\item{Electricity_Nuclear}{A temporary column and product name added to the data frame, which identifies the production of electricity by nuclear plants.
-Default is "Electricity_Nuclear".}
-
-\item{Heat_Nuclear}{A temporary column and product name added to the data frame, which identifies the production of heat by nuclear plants.
-Default is "Heat_Nuclear".}
+\item{share_nuclear_output}{The name of a temporary column added to the data frame.
+Default is ".share_nuclear_output".}
 
 \item{ratio_output_to_nuclear_fuel}{A parameter that describes the correspondance between input of nuclear fuel and output of electricity and/or heat.
 The IEA World Energy Extended Balances state that the value adopted in the balances is 0.33, which is therefore

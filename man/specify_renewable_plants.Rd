@@ -33,7 +33,7 @@ specify_renewable_plants(
   oceanic = IEATools::renewable_products$tide_wave_and_ocean,
   wind = IEATools::renewable_products$wind,
   electricity = IEATools::electricity_products$electricity,
-  heat = "Heat",
+  heat = IEATools::heat_products$heat,
   ratio_solar_th_elec = 0.33,
   ratio_solar_th_heat = 1,
   ratio_geothermal_elec = 0.1,
@@ -87,7 +87,7 @@ Default is \code{IEATools::transformation_processes$autoprod_heat_plants}.}
 Default is \code{IEATools::electricity_products$electricity}.}
 
 \item{heat}{The name of the heat product.
-Default is "Heat".}
+Default is \code{IEATools::heat_products$heat}.}
 
 \item{ratio_solar_th_elec}{The ratio of primary energy to electricity to use for solar thermal.
 Default is 0.33 as this is the value assumed in the IEA's energy balances.}

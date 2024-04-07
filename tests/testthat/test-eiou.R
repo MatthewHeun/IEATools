@@ -724,8 +724,8 @@ test_that("add_nuclear_industry() works", {
     IEATools::specify_production_to_resources() %>%
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
-    route_own_use_elect_chp_heat(split_using_shares_of = "output") %>%
-    add_nuclear_industry()
+    add_nuclear_industry() %>%
+    route_own_use_elect_chp_heat(split_using_shares_of = "output")
   
   # One test on total length
   expect_equal(length(test[["E.dot"]]), 140)
@@ -752,6 +752,15 @@ test_that("add_nuclear_industry() works", {
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                3163.7)
+  
+  expect_equal(test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Main activity producer CHP plants",
+                               Product == "Hard coal (if no detail)") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               160)
   
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
@@ -798,8 +807,8 @@ test_that("add_nuclear_industry() works", {
     IEATools::specify_production_to_resources() %>%
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
-    route_own_use_elect_chp_heat(split_using_shares_of = "output") %>%
-    add_nuclear_industry()
+    add_nuclear_industry() %>%
+    route_own_use_elect_chp_heat(split_using_shares_of = "output")
   
   # One test on total length
   expect_equal(length(second_test[["E.dot"]]), 142)
@@ -873,14 +882,115 @@ test_that("add_nuclear_industry() works", {
                  dplyr::pull(),
                1.1)
   
+  # Third test, splitting EIOU too this time, with a heat flow too
+  third_test <- AB_data %>%
+    tibble::add_row(Country = "A",
+                    Method = "PCM",
+                    Energy.type = "E",
+                    Last.stage = "Final",
+                    Year = 2018,
+                    Ledger.side = "Supply",
+                    Flow.aggregation.point = "Transformation processes",
+                    Flow = "Main activity producer CHP plants",
+                    Product = "Heat",
+                    Unit = "TJ",
+                    E.dot = 30) %>%
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    add_nuclear_industry(ascribe_eiou_to_nuclear = TRUE)
+  
+  expect_equal(third_test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Main activity producer electricity plants",
+                               Product == "Electricity") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               3163.7)
+  
+  expect_equal(test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Main activity producer CHP plants",
+                               Product == "Hard coal (if no detail)") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               160)
+  
+  expect_equal(third_test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Main activity producer CHP plants",
+                               Product == "Electricity") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               57.8)
+  
+  expect_equal(third_test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Main activity producer CHP plants",
+                               Product == "Heat") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               28.9)
+  
+  # Some tests on actual values of nuclear industry flows
+  expect_equal(third_test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Nuclear industry",
+                               Product == "Electricity") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               38.5)
+  
+  expect_equal(third_test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Nuclear industry",
+                               Product == "Nuclear") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -120)
+  
+  expect_equal(third_test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Nuclear industry",
+                               Product == "Heat") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               1.1)
+  
+  # But also some tests on the EIOU of nuclear and CHP/elec plants!
+  # Nuclear industry
+  third_test |> dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Nuclear industry", Product == "Hard coal (if no detail)") |> magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-8.425532, tolerance = 1e-4)
+  third_test |> dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Nuclear industry", Product == "Anthracite") |> magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-1.203647, tolerance = 1e-4)
+  third_test |> dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Nuclear industry", Product == "Electricity") |> magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-0.7221884, tolerance = 1e-4)
+  
+  # Own use in elec, chp and heat plants
+  third_test |> dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Own use in electricity, CHP and heat plants", Product == "Hard coal (if no detail)") |> magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-691.5745, tolerance = 1e-4)
+  third_test |> dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Own use in electricity, CHP and heat plants", Product == "Anthracite") |> magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-98.79635, tolerance = 1e-4)
+  third_test |> dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Own use in electricity, CHP and heat plants", Product == "Electricity") |> magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-59.27781, tolerance = 1e-4)
+  
+  
   # Now with default IEA data
   res <- load_tidy_iea_df() %>% 
     IEATools::specify_primary_production() %>%
     IEATools::specify_production_to_resources() %>%
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
-    route_own_use_elect_chp_heat() %>%
-    add_nuclear_industry()
+    add_nuclear_industry() %>%
+    route_own_use_elect_chp_heat()
   
   res %>% 
     dplyr::filter(stringr::str_detect(Flow, "Nuclear")) %>% 

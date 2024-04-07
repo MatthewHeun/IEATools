@@ -714,7 +714,9 @@ specify_all <- function(.tidy_iea_df,
                         route_non_specified_eiou = TRUE,
                         route_non_specified_tp = TRUE,
                         specify_renewable_plants = FALSE,
-                        specify_electricity_grid = FALSE){
+                        specify_electricity_grid = FALSE,
+                        ascribe_eiou_to_renewable_plants = FALSE,
+                        ascribe_eiou_to_nuclear = FALSE){
   
   split_own_use_elect_chp_heat_using_shares_of <- match.arg(split_own_use_elect_chp_heat_using_shares_of)
   

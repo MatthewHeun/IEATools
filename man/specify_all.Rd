@@ -10,7 +10,9 @@ specify_all(
   route_non_specified_eiou = TRUE,
   route_non_specified_tp = TRUE,
   specify_renewable_plants = FALSE,
-  specify_electricity_grid = FALSE
+  specify_electricity_grid = FALSE,
+  ascribe_eiou_to_renewable_plants = FALSE,
+  ascribe_eiou_to_nuclear = FALSE
 )
 }
 \arguments{
