@@ -1856,49 +1856,44 @@ test_that("specify_renewable_plants() works", {
 
   # (1) Checking renewable energy plants
   # (1.a) Geothermal
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$geothermal_plants, Product == IEATools::renewable_products$geothermal) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$geothermal_plants, Product == IEATools::renewable_products$geothermal) |> 
     magrittr::extract2("E.dot") |> 
     testthat::expect_equal(-38)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$geothermal_plants, Product == IEATools::electricity_products$electricity, Flow.aggregation.point == IEATools::tfc_compare_flows$transformation_processes) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$geothermal_plants, Product == IEATools::electricity_products$electricity, Flow.aggregation.point == IEATools::tfc_compare_flows$transformation_processes) |> 
     magrittr::extract2("E.dot") |> 
     testthat::expect_equal(2.789474, tolerance = 1e-4)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$geothermal_plants, Product == "Heat") |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$geothermal_plants, Product == "Heat") |> 
     magrittr::extract2("E.dot") |> 
     testthat::expect_equal(5.052632, tolerance = 1e-4)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$geothermal_plants, Product == IEATools::electricity_products$electricity, Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$geothermal_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal()
-  # not quite!
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$hydro_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    testthat::expect_equal(-100*0.0022796818, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$geothermal_plants, Product == "Electricity", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-100*0.005494505)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$hydro_plants, Product == "Electricity", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    testthat::expect_equal(-60*0.0022796818, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$geothermal_plants, Product == "Hard coal (if no detail)", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-60*0.005494505)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$hydro_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
-    magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-700*0.005494505)
+    testthat::expect_equal(-700*0.0022796818, tolerance = 1e-4)
   
   # (1.b) Solar thermal
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$solar_th_plants, Product == IEATools::renewable_products$solar_thermal) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_th_plants, Product == IEATools::renewable_products$solar_thermal) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-35)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$solar_th_plants, Product == IEATools::electricity_products$electricity, Flow.aggregation.point == IEATools::tfc_compare_flows$transformation_processes) |> 
+    testthat::expect_equal(-35, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_th_plants, Product == IEATools::electricity_products$electricity, Flow.aggregation.point == IEATools::tfc_compare_flows$transformation_processes) |> 
     magrittr::extract2("E.dot") |> 
     testthat::expect_equal(7.745834, tolerance = 1e-4)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$solar_th_plants, Product == "Heat") |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_th_plants, Product == "Heat") |> 
     magrittr::extract2("E.dot") |> 
     testthat::expect_equal(11.52778, tolerance = 1e-4)
-  # not quite!
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$hydro_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_th_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-100*0.005494505)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$hydro_plants, Product == "Electricity", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    testthat::expect_equal(-100*0.0056027939, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_th_plants, Product == "Electricity", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-60*0.005494505)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$hydro_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    testthat::expect_equal(-60*0.0056027939, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_th_plants, Product == "Hard coal (if no detail)", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-700*0.005494505)
+    testthat::expect_equal(-700*0.0056027939, tolerance = 1e-4)
   
   # (1.c) Hydro
   AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$hydro_plants, Product == IEATools::renewable_products$hydro) |> 
@@ -1907,70 +1902,79 @@ test_that("specify_renewable_plants() works", {
   AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$hydro_plants, Product == IEATools::electricity_products$electricity, Flow.aggregation.point == IEATools::tfc_compare_flows$transformation_processes) |> 
     magrittr::extract2("E.dot") |> 
     testthat::expect_equal(20)
-  # not quite!
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$hydro_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$hydro_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-100*0.005494505)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$hydro_plants, Product == "Electricity", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    testthat::expect_equal(-100*0.005813953, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$hydro_plants, Product == "Electricity", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-60*0.005494505)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$hydro_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    testthat::expect_equal(-60*0.005813953, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$hydro_plants, Product == "Hard coal (if no detail)", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-700*0.005494505)
+    testthat::expect_equal(-700*0.005813953, tolerance = 1e-4)
   
   # (1.d) Wind
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$wind_power_plants, Product == IEATools::renewable_products$wind) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$wind_power_plants, Product == IEATools::renewable_products$wind) |> 
     magrittr::extract2("E.dot") |> 
     testthat::expect_equal(-15)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$wind_power_plants, Product == IEATools::electricity_products$electricity, Flow.aggregation.point == IEATools::tfc_compare_flows$transformation_processes) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$wind_power_plants, Product == IEATools::electricity_products$electricity, Flow.aggregation.point == IEATools::tfc_compare_flows$transformation_processes) |> 
     magrittr::extract2("E.dot") |> 
     testthat::expect_equal(15)
   # not quite!
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$wind_power_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$wind_power_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
     testthat::expect_equal(-100*0.005494505)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$wind_power_plants, Product == "Electricity", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$wind_power_plants, Product == "Electricity", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
     testthat::expect_equal(-60*0.005494505)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$wind_power_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$wind_power_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
     testthat::expect_equal(-700*0.005494505)
   
   # (1.e) Solar PV
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$solar_pv_plants, Product == IEATools::renewable_products$solar_photovoltaics) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_pv_plants, Product == IEATools::renewable_products$solar_photovoltaics) |> 
     magrittr::extract2("E.dot") |> 
     testthat::expect_equal(-10)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$solar_pv_plants, Product == IEATools::electricity_products$electricity, Flow.aggregation.point == IEATools::tfc_compare_flows$transformation_processes) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_pv_plants, Product == IEATools::electricity_products$electricity, Flow.aggregation.point == IEATools::tfc_compare_flows$transformation_processes) |> 
     magrittr::extract2("E.dot") |> 
     testthat::expect_equal(10)
   # not quite!
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$solar_pv_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_pv_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-100*0.005494505)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$solar_pv_plants, Product == "Electricity", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    testthat::expect_equal(-100*0.002906977, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_pv_plants, Product == "Electricity", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-60*0.005494505)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$solar_pv_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    testthat::expect_equal(-60*0.002906977, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_pv_plants, Product == "Hard coal (if no detail)", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-700*0.005494505)
+    testthat::expect_equal(-700*0.002906977, tolerance = 1e-4)
   
   # (1.f) Oceanic
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$oceanic_plants, Product == IEATools::renewable_products$tide_wave_and_ocean) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$oceanic_plants, Product == IEATools::renewable_products$tide_wave_and_ocean) |> 
     magrittr::extract2("E.dot") |> 
     testthat::expect_equal(-2)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$oceanic_plants, Product == IEATools::electricity_products$electricity, Flow.aggregation.point == IEATools::tfc_compare_flows$transformation_processes) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$oceanic_plants, Product == IEATools::electricity_products$electricity, Flow.aggregation.point == IEATools::tfc_compare_flows$transformation_processes) |> 
     magrittr::extract2("E.dot") |> 
     testthat::expect_equal(2)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$oceanic_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$oceanic_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-100*0.005494505)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$oceanic_plants, Product == "Electricity", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    testthat::expect_equal(-100*0.0005813953, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$oceanic_plants, Product == "Electricity", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-60*0.005494505)
-  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$oceanic_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    testthat::expect_equal(-60*0.0005813953, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$oceanic_plants, Product == "Hard coal (if no detail)", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
     magrittr::extract2("E.dot") |> 
-    testthat::expect_equal(-700*0.005494505)
+    testthat::expect_equal(-700*0.0005813953, tolerance = 1e-4)
   
+  # (1.g) Own use in electricity, CHP and heat plants
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::eiou_flows$own_use_elect_chp_heat_plants, Product == "Anthracite", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-100+(0.02267931*100), tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::eiou_flows$own_use_elect_chp_heat_plants, Product == "Electricity", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-60+(0.02267931*60), tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::eiou_flows$own_use_elect_chp_heat_plants, Product == "Hard coal (if no detail)", Flow.aggregation.point == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("E.dot") |> 
+    testthat::expect_equal(-700+(700*0.02267931), tolerance = 1e-4)
     
   # Checking Main activity electricity producer plants
   AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::main_act_plants$main_act_prod_elect_plants, Product == IEATools::electricity_products$electricity, 

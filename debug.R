@@ -233,3 +233,37 @@ to_return <- .tidy_iea_df %>%
     "{negzeropos}" := NULL
   ) %>%
   dplyr::ungroup()
+
+
+
+
+
+
+
+share_renewable_output_df <- temp |> 
+  dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]]) |> 
+  dplyr::summarise(dplyr::across(tidyselect::any_of(products_of_interest), sum)) |> 
+  dplyr::mutate(
+    "{.share}_{geothermal_plants}" := (.data[[glue::glue("{geothermal}_{electricity}")]] + .data[[glue::glue("{geothermal}_{heat}")]])/(.data[[electricity]] + .data[[heat]]),
+    "{.share}_{hydro_plants}" := (.data[[glue::glue("{hydro}_{electricity}")]])/(.data[[electricity]] + .data[[heat]]),
+    "{.share}_{solar_pv_plants}" := (.data[[glue::glue("{solar_pv}_{electricity}")]])/(.data[[electricity]] + .data[[heat]]),
+    "{.share}_{solar_th_plants}" := (.data[[glue::glue("{solar_th}_{electricity}")]] + .data[[glue::glue("{solar_th}_{heat}")]])/(.data[[electricity]] + .data[[heat]]),
+    "{.share}_{oceanic_plants}" := (.data[[glue::glue("{oceanic}_{electricity}")]])/(.data[[electricity]] + .data[[heat]]),
+    "{.share}_{wind_power_plants}" := (.data[[glue::glue("{wind}_{electricity}")]])/(.data[[electricity]] + .data[[heat]]),
+  ) |>
+  dplyr::select(-tidyselect::any_of(c(ratio_elec_to_heat, products_of_interest, ledger_side, flow_aggregation_point, flow, product)))
+
+
+renewable_industry_eiou <- eiou_elec_heat_CHP_plants |> 
+  dplyr::left_join(share_renewable_output_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit})) |> 
+  tidyr::pivot_longer(cols = tidyselect::any_of(shares_of_interest), names_to = .share_industry, values_to = .share) |> 
+  
+  
+  
+  dplyr::mutate(
+    "{e_dot}" := .data[[e_dot]] * .data[[.share]],
+    "{flow}" := stringr::str_extract(.data[[.share_industry]], "_.*") |> 
+      stringr::str_remove("_")
+  ) |> 
+  dplyr::select(-tidyselect::any_of(c(.share, .share_industry)))
+
