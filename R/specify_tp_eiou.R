@@ -958,6 +958,10 @@ add_nuclear_industry <- function(.tidy_iea_df,
 #'                   Default is ".negzeropos".
 #' @param ratio_elec_to_heat A temporary column added to the data frame.
 #'                                     Default is ".ratio_elec_to_heat".
+#' @param .share_industry The name of a temporary column added to specify the renewable industry 
+#'                        for which the share of output is calculated. Default is ".share_industry".
+#' @param .share The name of a temporary column where the share of output is calculated for each renewable industry.
+#'               Default is ".share".
 #'
 #' @return Returns a .tidy_iea_df with renewable electricity and heat from geothermal, hydropower, solar thermal, solar photovoltaic, wind power, and oceanic power specified.
 #' @export
@@ -1014,7 +1018,9 @@ specify_renewable_plants <- function(.tidy_iea_df,
                                      wind_power_plants = IEATools::renewable_industries$wind_power_plants,
                                      # Strings identifying temporary column names
                                      negzeropos = ".negzeropos",
-                                     ratio_elec_to_heat = ".ratio_elec_to_heat"){
+                                     ratio_elec_to_heat = ".ratio_elec_to_heat",
+                                     .share_industry = ".share_industry",
+                                     .share = ".share"){
   
   # Check if renewable energy should be specified. If yes, then the code carries on.
   if (isFALSE(specify_renewable_plants)){
@@ -1054,7 +1060,8 @@ specify_renewable_plants <- function(.tidy_iea_df,
   names_selected_io_flows <- names(selected_io_flows)
   
   # (2.b) Modify selected flows
-  modified_flows <- selected_io_flows %>% 
+  # (i) Temporary df to help specifying EIOU flows after
+  temp <- selected_io_flows %>% 
     tibble::add_column(!!products_tibble[! names(products_tibble) %in% names_selected_io_flows]) %>%
     # Replacing NAs by zeros in all columns
     dplyr::mutate(dplyr::across(tidyselect::all_of(relevant_products), ~tidyr::replace_na(.x, 0))) |> 
@@ -1092,8 +1099,10 @@ specify_renewable_plants <- function(.tidy_iea_df,
         0 ~ -.data[[solar_th]] * ratio_solar_th_heat,
         .default = -(.data[[solar_th]]) / (1 + ratio_solar_th_heat/ratio_solar_th_elec*.data[[ratio_elec_to_heat]]) * ratio_solar_th_heat
       ),
-    ) |> 
-    # Subtracting specified electricity and heat flows from existing plants output
+    )
+  
+  # (ii) Subtracting specified electricity and heat flows from existing plants output; specifying product output
+  modified_flows <-  temp |> 
     dplyr::mutate(
       "{electricity}" := .data[[electricity]] - (.data[[glue::glue("{hydro}_{electricity}")]] + .data[[glue::glue("{solar_pv}_{electricity}")]] + .data[[glue::glue("{oceanic}_{electricity}")]] + 
                                                    .data[[glue::glue("{wind}_{electricity}")]] + .data[[glue::glue("{geothermal}_{electricity}")]] + .data[[glue::glue("{solar_th}_{electricity}")]]),
@@ -1119,7 +1128,68 @@ specify_renewable_plants <- function(.tidy_iea_df,
       "{product}" := stringr::str_remove(.data[[product]], ".*_")
     )
   
-  # (3) Builds output data frame by filtering out input data frame (take out modified flows), and collating modified data.
+  # (3) Dealing with EIOU flows
+  eiou_elec_heat_CHP_plants <- .tidy_iea_df |> 
+    dplyr::filter(.data[[flow]] == own_use_elect_chp_heat & .data[[flow_aggregation_point]] == eiou)
+  
+  # (i) First case, we don't do anything
+  if (isFALSE(ascribe_eiou_to_renewable_plants)){
+    modified_flows <- modified_flows |> 
+      dplyr::bind_rows(eiou_elec_heat_CHP_plants)
+    # (ii) Second case, we determine the share of the output supplied by each renewable energy industry,
+    # and ascribe the corresponding EIOU to each renewable energy industry
+  } else if(isTRUE(ascribe_eiou_to_renewable_plants)){
+    
+    # Defining a vector of products of interest
+    products_of_interest <- c(electricity, heat, geothermal, hydro, solar_pv, solar_th, oceanic, wind,
+                              glue::glue("{hydro}_{electricity}"), glue::glue("{solar_pv}_{electricity}"), glue::glue("{oceanic}_{electricity}"), glue::glue("{wind}_{electricity}"),
+                              glue::glue("{geothermal}_{electricity}"), glue::glue("{geothermal}_{heat}"), glue::glue("{solar_th}_{electricity}"), glue::glue("{solar_th}_{heat}"))
+    
+    # Share each renewable energy plant to total elec/chp/heat plants output
+    # THIS HERE IS NOT DONE YET
+    share_renewable_output_df <- temp |> 
+      dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]]) |> 
+      dplyr::summarise(dplyr::across(tidyselect::any_of(products_of_interest), sum)) |> 
+      dplyr::mutate(
+        "{share_{geothermal_plants}}" := (.data[[glue::glue("{geothermal}_{electricity}")]] + .data[[glue::glue("{geothermal}_{heat}")]])/(.data[[electricity]] + .data[[heat]]),
+        "{share_{hydro_plants}}" := (.data[[glue::glue("{hydro}_{electricity}")]])/(.data[[electricity]] + .data[[heat]]),
+        "{share_{solar_pv_plants}}" := (.data[[glue::glue("{hydro}_{solar_pv}")]])/(.data[[electricity]] + .data[[heat]]),
+        "{share_{solar_th_plants}}" := (.data[[glue::glue("{solar_th}_{electricity}")]] + .data[[glue::glue("{solar_th}_{heat}")]])/(.data[[electricity]] + .data[[heat]]),
+        "{share_{oceanic_plants}}" := (.data[[glue::glue("{hydro}_{oceanic}")]])/(.data[[electricity]] + .data[[heat]]),
+        "{share_{wind_power_plants}}" := (.data[[glue::glue("{hydro}_{wind}")]])/(.data[[electricity]] + .data[[heat]]),
+      ) |>
+      dplyr::select(-tidyselect::any_of(c(ratio_elec_to_heat, products_of_interest, ledger_side, flow_aggregation_point, flow, product)))
+    
+    # Defining renewable industry EIOU
+    renewable_industry_eiou <- eiou_elec_heat_CHP_plants |> 
+      dplyr::left_join(share_renewable_output_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit})) |> 
+      tidyr::pivot_longer(cols = tidyselect::any_of(shares_of_interest), names_to = .share_industry, values_to = .share) |> 
+      dplyr::mutate(
+        "{e_dot}" := .data[[e_dot]] * .data[[.share]],
+        "{flow}" := stringr::str_extract(.data[[.share_industry]], "_.*") |> 
+          stringr::str_remove("_")
+      ) |> 
+      dplyr::select(-tidyselect::any_of(c(.share, .share_industry)))
+    
+    # Defining elec/CHP/heat plants total EIOU
+    elec_chp_heat_plants_eiou <- eiou_elec_heat_CHP_plants |> 
+      dplyr::left_join(share_nuclear_output_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit})) |> 
+      dplyr::mutate(
+        "{e_dot}" := .data[[e_dot]] * (1 - (.data[[glue::glue("{share}_{geothermal_plants}")]]+.data[[glue::glue("{share}_{hydro_plants}")]]+.data[[glue::glue("{share}_{solar_pv_plants}")]]
+                                            +.data[[glue::glue("{share}_{solar_th_plants}")]]+.data[[glue::glue("{share}_{oceanic_plants}")]]+.data[[glue::glue("{share}_{wind_power_plants}")]])),
+        "{flow}" := own_use_elect_chp_heat
+      ) |> 
+      dplyr::select(-dplyr::starts_with(share))
+    
+    # Adding modified EIOU flows to modified flows
+    modified_flows <- modified_flows |> 
+      dplyr::bind_rows(
+        elec_chp_heat_plants_eiou,
+        renewable_industry_eiou
+      )
+  }
+  
+  # (4) Builds output data frame by filtering out input data frame (take out modified flows), and collating modified data.
   to_return <- .tidy_iea_df %>%
     # Inverse of the condition that was filtered in "modified_flows"
     dplyr::filter(
@@ -1128,6 +1198,7 @@ specify_renewable_plants <- function(.tidy_iea_df,
            (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(renewable_products, electricity, heat)) |
            (.data[[flow]] %in% c(main_act_producer_heat, autoproducer_heat) & .data[[product]] %in% c(renewable_products, heat))))
     ) %>%
+    dplyr::filter(! (.data[[flow]] == own_use_elect_chp_heat & .data[[flow_aggregation_point]] == eiou)) |> 
     dplyr::bind_rows(
       modified_flows
     ) %>%

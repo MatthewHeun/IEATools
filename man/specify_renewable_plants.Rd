@@ -46,7 +46,9 @@ specify_renewable_plants(
   oceanic_plants = IEATools::renewable_industries$oceanic_plants,
   wind_power_plants = IEATools::renewable_industries$wind_power_plants,
   negzeropos = ".negzeropos",
-  ratio_elec_to_heat = ".ratio_elec_to_heat"
+  ratio_elec_to_heat = ".ratio_elec_to_heat",
+  .share_industry = ".share_industry",
+  .share = ".share"
 )
 }
 \arguments{
@@ -111,6 +113,12 @@ Default is ".negzeropos".}
 
 \item{ratio_elec_to_heat}{A temporary column added to the data frame.
 Default is ".ratio_elec_to_heat".}
+
+\item{.share_industry}{The name of a temporary column added to specify the renewable industry
+for which the share of output is calculated. Default is ".share_industry".}
+
+\item{.share}{The name of a temporary column where the share of output is calculated for each renewable industry.
+Default is ".share".}
 }
 \value{
 Returns a .tidy_iea_df with renewable electricity and heat from geothermal, hydropower, solar thermal, solar photovoltaic, wind power, and oceanic power specified.
