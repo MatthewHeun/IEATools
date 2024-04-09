@@ -19,6 +19,7 @@ specify_renewable_plants(
   country = IEATools::iea_cols$country,
   year = IEATools::iea_cols$year,
   unit = IEATools::iea_cols$unit,
+  eiou = IEATools::aggregation_flows$energy_industry_own_use,
   transformation_processes = IEATools::aggregation_flows$transformation_processes,
   main_act_producer_elect = IEATools::main_act_plants$main_act_prod_elect_plants,
   main_act_producer_chp = IEATools::main_act_plants$main_act_prod_chp_plants,
@@ -26,6 +27,7 @@ specify_renewable_plants(
   autoproducer_elect = IEATools::main_act_plants$autoprod_elect_plants,
   autoproducer_chp = IEATools::transformation_processes$autoproducer_CHP_plants,
   autoproducer_heat = IEATools::main_act_plants$autoprod_heat_plants,
+  own_use_elect_chp_heat = IEATools::eiou_flows$own_use_elect_chp_heat_plants,
   geothermal = IEATools::renewable_products$geothermal,
   hydro = IEATools::renewable_products$hydro,
   solar_pv = IEATools::renewable_products$solar_photovoltaics,
@@ -62,6 +64,9 @@ should be ascribed to the new renewable industries. Default is FALSE.}
 
 \item{flow_aggregation_point, flow, e_dot, product, method, ledger_side, last_stage, energy_type, country, year, unit}{See \code{IEATools::iea_cols}.}
 
+\item{eiou}{A string identifying the energy industry own use in the \code{flow_aggregation_point} column in the \code{.tidy_iea_df}.
+Default is \code{IEATools::aggregation_flows$energy_industry_own_use}.}
+
 \item{transformation_processes}{A string identifying the transformation processes in the \code{flow_aggregation_point} column in the \code{.tidy_iea_df}.
 Default is \code{IEATools::aggregation_flows$transformation_processes}.}
 
@@ -82,6 +87,9 @@ Default is \code{IEATools::transformation_processes$autoproducer_CHP_plants}.}
 
 \item{autoproducer_heat}{A string identifying "Autoproducer CHP plants" in the \code{flow} column of the \code{.tidy_iea_df}.
 Default is \code{IEATools::transformation_processes$autoprod_heat_plants}.}
+
+\item{own_use_elect_chp_heat}{A string identifying the "Own use in electricity, CHP and heat plants" EIOU flow in the \code{.tidy_iea_df}.
+Default is \code{IEATools::eiou_flows$own_use_elect_chp_heat_plants}.}
 
 \item{geothermal, hydro, solar_pv, solar_th, oceanic, wind}{Renewable energy product names. See \code{IEATools::renewable_products}.}
 
