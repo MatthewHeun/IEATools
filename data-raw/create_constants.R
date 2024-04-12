@@ -307,6 +307,23 @@ usethis::use_data(biofuels_and_waste_products, overwrite = TRUE)
 electricity_products <- list(electricity = "Electricity")
 usethis::use_data(electricity_products, overwrite = TRUE)
 
+
+#
+# Heat
+# 
+
+heat_products <- list(heat = "Heat")
+usethis::use_data(heat_products, overwrite = TRUE)
+
+
+#
+# Nuclear products
+# 
+
+nuclear_products <- list(nuclear = "Nuclear")
+usethis::use_data(nuclear_products, overwrite = TRUE)
+
+
 #
 # Non-energy
 # 
@@ -842,3 +859,14 @@ renewable_industries <- list(geothermal_plants = "Geothermal plants",
                              oceanic_plants = "Oceanic power plants",
                              wind_power_plants = "Wind power plants")
 usethis::use_data(renewable_industries, overwrite = TRUE)
+
+
+# 
+# Grid industries
+# 
+
+grid_industries <- list(electricity_grid = "Electricity grid")
+
+usethis::use_data(grid_industries, overwrite = TRUE)
+
+

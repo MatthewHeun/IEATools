@@ -7,6 +7,7 @@
 specify_renewable_plants(
   .tidy_iea_df,
   specify_renewable_plants = FALSE,
+  ascribe_eiou_to_renewable_plants = FALSE,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   flow = IEATools::iea_cols$flow,
   e_dot = IEATools::iea_cols$e_dot,
@@ -18,6 +19,7 @@ specify_renewable_plants(
   country = IEATools::iea_cols$country,
   year = IEATools::iea_cols$year,
   unit = IEATools::iea_cols$unit,
+  eiou = IEATools::aggregation_flows$energy_industry_own_use,
   transformation_processes = IEATools::aggregation_flows$transformation_processes,
   main_act_producer_elect = IEATools::main_act_plants$main_act_prod_elect_plants,
   main_act_producer_chp = IEATools::main_act_plants$main_act_prod_chp_plants,
@@ -25,6 +27,7 @@ specify_renewable_plants(
   autoproducer_elect = IEATools::main_act_plants$autoprod_elect_plants,
   autoproducer_chp = IEATools::transformation_processes$autoproducer_CHP_plants,
   autoproducer_heat = IEATools::main_act_plants$autoprod_heat_plants,
+  own_use_elect_chp_heat = IEATools::eiou_flows$own_use_elect_chp_heat_plants,
   geothermal = IEATools::renewable_products$geothermal,
   hydro = IEATools::renewable_products$hydro,
   solar_pv = IEATools::renewable_products$solar_photovoltaics,
@@ -32,7 +35,7 @@ specify_renewable_plants(
   oceanic = IEATools::renewable_products$tide_wave_and_ocean,
   wind = IEATools::renewable_products$wind,
   electricity = IEATools::electricity_products$electricity,
-  heat = "Heat",
+  heat = IEATools::heat_products$heat,
   ratio_solar_th_elec = 0.33,
   ratio_solar_th_heat = 1,
   ratio_geothermal_elec = 0.1,
@@ -45,7 +48,9 @@ specify_renewable_plants(
   oceanic_plants = IEATools::renewable_industries$oceanic_plants,
   wind_power_plants = IEATools::renewable_industries$wind_power_plants,
   negzeropos = ".negzeropos",
-  ratio_elec_to_heat = ".ratio_elec_to_heat"
+  ratio_elec_to_heat = ".ratio_elec_to_heat",
+  .share_industry = ".share_industry",
+  .share = ".share"
 )
 }
 \arguments{
@@ -54,7 +59,13 @@ specify_renewable_plants(
 \item{specify_renewable_plants}{A boolean indicating whether renewable energy plants should be specified or not.
 Default is FALSE.}
 
+\item{ascribe_eiou_to_renewable_plants}{A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
+should be ascribed to the new renewable industries. Default is FALSE.}
+
 \item{flow_aggregation_point, flow, e_dot, product, method, ledger_side, last_stage, energy_type, country, year, unit}{See \code{IEATools::iea_cols}.}
+
+\item{eiou}{A string identifying the energy industry own use in the \code{flow_aggregation_point} column in the \code{.tidy_iea_df}.
+Default is \code{IEATools::aggregation_flows$energy_industry_own_use}.}
 
 \item{transformation_processes}{A string identifying the transformation processes in the \code{flow_aggregation_point} column in the \code{.tidy_iea_df}.
 Default is \code{IEATools::aggregation_flows$transformation_processes}.}
@@ -77,13 +88,16 @@ Default is \code{IEATools::transformation_processes$autoproducer_CHP_plants}.}
 \item{autoproducer_heat}{A string identifying "Autoproducer CHP plants" in the \code{flow} column of the \code{.tidy_iea_df}.
 Default is \code{IEATools::transformation_processes$autoprod_heat_plants}.}
 
+\item{own_use_elect_chp_heat}{A string identifying the "Own use in electricity, CHP and heat plants" EIOU flow in the \code{.tidy_iea_df}.
+Default is \code{IEATools::eiou_flows$own_use_elect_chp_heat_plants}.}
+
 \item{geothermal, hydro, solar_pv, solar_th, oceanic, wind}{Renewable energy product names. See \code{IEATools::renewable_products}.}
 
 \item{electricity}{The name of the electricity product.
 Default is \code{IEATools::electricity_products$electricity}.}
 
 \item{heat}{The name of the heat product.
-Default is "Heat".}
+Default is \code{IEATools::heat_products$heat}.}
 
 \item{ratio_solar_th_elec}{The ratio of primary energy to electricity to use for solar thermal.
 Default is 0.33 as this is the value assumed in the IEA's energy balances.}
@@ -107,6 +121,12 @@ Default is ".negzeropos".}
 
 \item{ratio_elec_to_heat}{A temporary column added to the data frame.
 Default is ".ratio_elec_to_heat".}
+
+\item{.share_industry}{The name of a temporary column added to specify the renewable industry
+for which the share of output is calculated. Default is ".share_industry".}
+
+\item{.share}{The name of a temporary column where the share of output is calculated for each renewable industry.
+Default is ".share".}
 }
 \value{
 Returns a .tidy_iea_df with renewable electricity and heat from geothermal, hydropower, solar thermal, solar photovoltaic, wind power, and oceanic power specified.

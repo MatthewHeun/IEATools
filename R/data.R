@@ -478,6 +478,34 @@
 "electricity_products"
 
 
+#' Heat products
+#'
+#' A string vector containing names of products classified by the IEA as heat products.
+#' 
+#' @format A string vector with `r length(heat_products)` entries.
+#' \describe{
+#' \item{heat}{The string identifier for Heat.}
+#' }
+#' 
+#' @examples
+#' heat_products
+"heat_products"
+
+
+#' Nuclear products
+#'
+#' A string vector containing names of products classified by the IEA as nuclear products.
+#' 
+#' @format A string vector with `r length(nuclear_products)` entries.
+#' \describe{
+#' \item{nuclear}{The string identifier for Nuclear}
+#' }
+#' 
+#' @examples
+#' nuclear_products
+"nuclear_products"
+
+
 #' Non-energy products
 #'
 #' A string vector containing names of products classified as "Non-energy" by
@@ -1315,7 +1343,7 @@
 #'
 #' A string list containing the names of renewable industries added with the `specify_renewable_plants()` function.
 #'
-#' @format A string list with `r length(phi_constants_names)` entries.
+#' @format A string list with `r length(renewable_industries)` entries.
 #' \describe{
 #' \item{geothermal_plants}{The string name of geothermal plants.}
 #' \item{hydro_plants}{The string name of hydropower plants.}
@@ -1328,3 +1356,17 @@
 #' @examples
 #' renewable_industries
 "renewable_industries"
+
+
+#' Grid industries names
+#'
+#' A string list containing the names of the grid industries that can be added.
+#'
+#' @format A string list with `r length(grid_industries)` entries.
+#' \describe{
+#' \item{electricity_grid}{The string name of the electricity grid industry.}
+#' }
+#'
+#' @examples
+#' grid_industries
+"grid_industries"
