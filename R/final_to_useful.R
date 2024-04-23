@@ -712,7 +712,8 @@ extend_to_useful <- function(.sutdata = NULL,
     # Get the detail Y_u matrix
     Y_fu_details_mat <- res_Y[[details_fu]]
     # Add a NULL U_EIOU_u_details matrix
-    U_eiou_fu_details_mat <- NULL
+    # U_eiou_fu_details_mat <- NULL
+    U_eiou_fu_details_mat <- matsbyname::hadamardproduct_byname(U_useful_mat, 0)
     
     # Now check to see if we have any EIOU. 
     # If so, make further adjustments to the matrices.
