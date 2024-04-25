@@ -586,8 +586,8 @@ usethis::use_data(aggregation_flows, overwrite = TRUE)
 aggregate_cols <- list(aggregate_primary = "EXp",
                        aggregate_final = "EXf",
                        aggregate_useful = "EXu",
-                       net_aggregate_demand = "EX.fd_net",
-                       gross_aggregate_demand = "EX.fd_gross")
+                       net_aggregate_demand = "EXfdnet",
+                       gross_aggregate_demand = "EXfdgross")
 usethis::use_data(aggregate_cols, overwrite = TRUE)
 
 

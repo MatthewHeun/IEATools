@@ -337,7 +337,7 @@ test_that("finaldemand_aggregates() works as expected", {
                     .data[[IEATools::iea_cols$year]]) %>% 
     dplyr::summarise(
       # Net energy
-      EX.fd_net = sum(Edot), 
+      EXfdnet = sum(Edot), 
       .groups = "drop"
     )
   
