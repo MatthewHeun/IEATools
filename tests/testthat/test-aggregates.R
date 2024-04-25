@@ -317,7 +317,7 @@ test_that("primary_aggregates() works as expected", {
                     .data[[IEATools::iea_cols$energy_type]], 
                     .data[[IEATools::iea_cols$last_stage]], 
                     .data[[IEATools::iea_cols$year]]) %>% 
-    dplyr::summarise(EX.p = sum(.data[["Edot"]]), .groups = "drop")
+    dplyr::summarise(EXp = sum(.data[["Edot"]]), .groups = "drop")
   
   expect_equal(result, expected)
 })
