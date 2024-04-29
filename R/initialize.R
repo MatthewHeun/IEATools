@@ -38,7 +38,7 @@
 #'                  with [dplyr::bind_rows()].
 #' @param text A string containing text to be parsed as an IEA file.
 #'             Can be a vector of text strings, in which case
-#'             each string is processed sequentially and stacked to gether
+#'             each string is processed sequentially and stacked together
 #'             with [dplyr::bind_rows()].
 #' @param expected_1st_line_start The expected start of the first line of `iea_file`. Default is ",,TIME".
 #' @param country The name of the country column. 
