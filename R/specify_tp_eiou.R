@@ -1306,7 +1306,6 @@ specify_electricity_grid <- function(.tidy_iea_df,
   
   # (3) Modify production flows
   modified_production_flows <- selected_production_flows |> 
-    # Change this with RCLabels!!
     dplyr::mutate(
       "{product}" := stringr::str_c(.data[[product]], 
                                     supplying_industry_notation[["suff_start"]], 
@@ -1365,6 +1364,158 @@ specify_electricity_grid <- function(.tidy_iea_df,
     
   return(to_return)
 }
+
+
+
+
+
+#' Specifies distribution industries
+#' 
+#' Adds an electricity grid industry that takes as input all electricity produced by any industry,
+#' which is now specified by producing industry (e.g., "Electricity \[from Wind power plants\]"),
+#' and converts it into Electricity.
+#'
+#' @param .tidy_iea_df The `.tidy__iea_df` for which an electricity grid industry should be added.
+#' @param specify_distribution_industries A boolean stating whether distribution industries should be added or not.
+#'                                        Default is FALSE.
+#' @param supplying_industry_notation Notation to use to specify the supplying industries.
+#'                                    Default is `RCLabels::from_notation`.
+#' @param distribution_industry_notation Notation to use to specify the distribution industries.
+#'                                       Default is `RCLabels::of_notation`.
+#' @param flow_aggregation_point,flow,e_dot,product,method,ledger_side,last_stage,energy_type,country,year,unit See `IEATools::iea_cols`.
+#' @param losses The name of the "Losses" flows in the input data frame.
+#'               Default is `IEATools::tfc_compare_flows$losses`.
+#' @param distribution_industry The name of the distribution industries to be added.
+#'                              Default is `IEATools::distribution_industry`.
+#' @param supply The name of the supply ledger side.
+#'               Default is `IEATools::ledger_sides$supply`.
+#' @param transformation_processes The name of transformation processes in the flow aggregation point column.
+#'                                 Default is `IEATools::tfc_compare_flows$transformation_processes`.
+#' @param negzeropos The name of a temporary column added to the data frame.
+#'                   Default is ".negzeropos".
+#'
+#' @return The `.tidy__iea_df` to which distribution industries have been added.
+#' @export
+#'
+#' @examples
+#' load_tidy_iea_df() %>% 
+#'   specify_distribution_losses()
+specify_distribution_losses <- function(.tidy_iea_df,
+                                        specify_distribution_industries = FALSE,
+                                        supplying_industry_notation = RCLabels::from_notation,
+                                        distribution_industry_notation = RCLabels::of_notation,
+                                        # IEA col names
+                                        country = IEATools::iea_cols$country,
+                                        method = IEATools::iea_cols$method,
+                                        energy_type = IEATools::iea_cols$energy_type,
+                                        last_stage = IEATools::iea_cols$last_stage,
+                                        year = IEATools::iea_cols$year,
+                                        ledger_side = IEATools::iea_cols$ledger_side,
+                                        flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                        flow = IEATools::iea_cols$flow,
+                                        product = IEATools::iea_cols$product,
+                                        unit = IEATools::iea_cols$unit,
+                                        e_dot = IEATools::iea_cols$e_dot,
+                                        # Constants
+                                        losses = IEATools::tfc_compare_flows$losses,
+                                        distribution_industry = IEATools::distribution_industry,
+                                        supply = IEATools::ledger_sides$supply,
+                                        transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
+                                        electricity = IEATools::electricity_products$electricity,
+                                        # Strings identifying temporary column names
+                                        negzeropos = ".negzeropos"){
+  
+  # Check if electricity grid should be specified. If yes, then the code carries on.
+  if (isFALSE(specify_distribution_industries)){
+    return(.tidy_iea_df)
+  }
+  
+  # (1) Select losses flows
+  selected_losses_flows <- .tidy_iea_df |> 
+    dplyr::filter(.data[[flow]] == losses)
+  
+  # (2) Pick up observations (Country, Year, Product + other metadata) IDs where losses occur
+  losses_observations_list <- selected_losses_flows |> 
+    tidyr::expand(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]])
+  
+  # (3) Select production flows
+  selected_production_flows <- .tidy_iea_df |> 
+    dplyr::inner_join(losses_observations_list, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) |> 
+    dplyr::filter(.data[[ledger_side]] == supply & .data[[e_dot]] > 0)
+  
+  # (4) All selected flows
+  all_selected_flows <- dplyr::bind_rows(selected_losses_flows, selected_production_flows)
+  
+  # (5) Modify production flows
+  modified_production_flows <- selected_production_flows |> 
+    dplyr::mutate(
+      "{product}" := stringr::str_c(.data[[product]], 
+                                    supplying_industry_notation[["suff_start"]], 
+                                    .data[[flow]],
+                                    supplying_industry_notation[["suff_end"]],
+                                    sep = "")
+    )
+  
+  # (6) Adding inputs to distribution industries
+  inputs_to_distribution_industries <- modified_production_flows |> 
+    dplyr::mutate(
+      "{flow}" := stringr::str_c(distribution_industry,
+                                 distribution_industry_notation[["suff_start"]],
+                                 .data[[product]],
+                                 distribution_industry_notation[["suff_end"]]),
+      "{e_dot}" := - .data[[e_dot]]
+    )
+  
+  
+  # (7) Adding supply of the new distribution industries
+  supply_by_distribution_industries <- selected_production_flows |> 
+    dplyr::bind_rows(selected_losses_flows) |> 
+    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[unit]]) |> 
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) |> 
+    dplyr::mutate(
+      "{flow_aggregation_point}" := transformation_processes,
+      "{ledger_side}" := supply,
+      "{flow}" := stringr::str_c(distribution_industry,
+                                 distribution_industry_notation[["suff_start"]],
+                                 .data[[product]],
+                                 distribution_industry_notation[["suff_end"]]),
+    )
+  
+  # (8) Bind data frame and get ready to return values
+  to_return <- .tidy_iea_df |> 
+    # THIS HERE NEEDS TO BE MODIFIED, ACTUALLY:
+    # dplyr::filter(! (.data[[ledger_side]] == supply & .data[[e_dot]] > 0)) |> 
+    # dplyr::filter(! (.data[[flow]] == losses)) |> 
+    dplyr::anti_join(all_selected_flows, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {ledger_side}, {flow_aggregation_point}, {flow}, {unit}, {e_dot})) |> 
+    dplyr::bind_rows(
+      modified_production_flows,
+      inputs_to_distribution_industries,
+      supply_by_distribution_industries
+    ) |> 
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    # Now sum similar rows using summarise.
+    # Group by everything except the energy flow rate column, "E.dot".
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::mutate(
+      #Eliminate the column we added.
+      "{negzeropos}" := NULL
+    ) %>%
+    dplyr::ungroup()
+  
+  return(to_return)
+} 
+
 
 
 #' Routes non specified flows

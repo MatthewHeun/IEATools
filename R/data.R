@@ -1370,3 +1370,17 @@
 #' @examples
 #' grid_industries
 "grid_industries"
+
+
+#' Distribution industry name
+#'
+#' A character string containing the name of the distribution industry
+#'
+#' @format A character string
+#' \describe{
+#' A character string containing the name of the distribution industry
+#' }
+#'
+#' @examples
+#' distribution_industry
+"distribution_industry"

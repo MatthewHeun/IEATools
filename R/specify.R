@@ -363,6 +363,8 @@ specify_interface_industries <- function(.tidy_iea_df,
 #'                                 Default is FALSE.
 #' @param specify_electricity_grid Boolean stating whether an electricity grid industry should be specified or not.
 #'                                 Default is FALSE.
+#' @param specify_distribution_industries Boolean stating whether distribution industries should be specified or not.
+#'                                        Default is FALSE.
 #' @param ascribe_eiou_to_renewable_plants A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
 #'                                         should be ascribed to the new renewable industries. Default is FALSE.
 #' @param ascribe_eiou_to_nuclear A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
@@ -394,6 +396,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
                             route_non_specified_tp = TRUE,
                             specify_renewable_plants = FALSE,
                             specify_electricity_grid = FALSE,
+                            specify_distribution_industries = FALSE,
                             ascribe_eiou_to_renewable_plants = FALSE,
                             ascribe_eiou_to_nuclear = FALSE,
                             flow_aggregation_point = "Flow.aggregation.point",
@@ -435,6 +438,9 @@ specify_tp_eiou <- function(.tidy_iea_df,
     ) |> 
     specify_electricity_grid(
       specify_electricity_grid = specify_electricity_grid
+    ) |> 
+    specify_distribution_losses(
+      specify_distribution_industries = specify_distribution_industries
     )
 }
 
@@ -688,6 +694,8 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #'                                 Default is FALSE.
 #' @param specify_electricity_grid Boolean stating whether an electricity grid industry should be specified or not.
 #'                                 Default is FALSE.
+#' @param specify_distribution_industries Boolean stating whether distribution industries should be specified or not.
+#'                                        Default is FALSE.
 #' @param ascribe_eiou_to_renewable_plants A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
 #'                                         should be ascribed to the new renewable industries. Default is FALSE.
 #' @param ascribe_eiou_to_nuclear A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
@@ -715,6 +723,7 @@ specify_all <- function(.tidy_iea_df,
                         route_non_specified_tp = TRUE,
                         specify_renewable_plants = FALSE,
                         specify_electricity_grid = FALSE,
+                        specify_distribution_industries = FALSE,
                         ascribe_eiou_to_renewable_plants = FALSE,
                         ascribe_eiou_to_nuclear = FALSE){
   
@@ -729,6 +738,7 @@ specify_all <- function(.tidy_iea_df,
       route_non_specified_tp = route_non_specified_tp,
       specify_renewable_plants = specify_renewable_plants,
       specify_electricity_grid = specify_electricity_grid,
+      specify_distribution_industries = specify_distribution_industries,
       ascribe_eiou_to_renewable_plants = ascribe_eiou_to_renewable_plants,
       ascribe_eiou_to_nuclear = ascribe_eiou_to_nuclear,
     ) %>% 

@@ -870,3 +870,10 @@ grid_industries <- list(electricity_grid = "Electricity grid")
 usethis::use_data(grid_industries, overwrite = TRUE)
 
 
+# 
+# Distribution industries
+# 
+
+distribution_industry <- "Distribution"
+
+usethis::use_data(distribution_industry, overwrite = TRUE)
