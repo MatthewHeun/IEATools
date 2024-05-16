@@ -11,6 +11,7 @@ specify_tp_eiou(
   route_non_specified_tp = TRUE,
   specify_renewable_plants = FALSE,
   specify_electricity_grid = FALSE,
+  specify_distribution_industries = FALSE,
   ascribe_eiou_to_renewable_plants = FALSE,
   ascribe_eiou_to_nuclear = FALSE,
   flow_aggregation_point = "Flow.aggregation.point",
@@ -43,6 +44,9 @@ Default is TRUE.}
 Default is FALSE.}
 
 \item{specify_electricity_grid}{Boolean stating whether an electricity grid industry should be specified or not.
+Default is FALSE.}
+
+\item{specify_distribution_industries}{Boolean stating whether distribution industries should be specified or not.
 Default is FALSE.}
 
 \item{ascribe_eiou_to_renewable_plants}{A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants

@@ -1421,7 +1421,6 @@ specify_distribution_losses <- function(.tidy_iea_df,
                                         distribution_industry = IEATools::distribution_industry,
                                         supply = IEATools::ledger_sides$supply,
                                         transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
-                                        electricity = IEATools::electricity_products$electricity,
                                         # Strings identifying temporary column names
                                         negzeropos = ".negzeropos"){
   
@@ -1461,7 +1460,7 @@ specify_distribution_losses <- function(.tidy_iea_df,
     dplyr::mutate(
       "{flow}" := stringr::str_c(distribution_industry,
                                  distribution_industry_notation[["suff_start"]],
-                                 .data[[product]],
+                                 RCLabels::get_pref_suff(.data[[product]], which = "pref", notation = supplying_industry_notation),
                                  distribution_industry_notation[["suff_end"]]),
       "{e_dot}" := - .data[[e_dot]]
     )
