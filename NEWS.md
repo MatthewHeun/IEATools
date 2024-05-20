@@ -8,6 +8,9 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* New `specify_distribution_losses()` function
+  to specify distribution industries, within which transportation and
+  distribution losses occur.
 * Argument added to `add_nuclear_industry()` to ascribe some EIOU 
   to the nuclear industry according to its output share.
 * New `specify_renewable_plants()` function 

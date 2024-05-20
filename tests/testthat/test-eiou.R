@@ -2024,7 +2024,7 @@ test_that("specify_renewable_plants() works", {
 })
 
 
-test_that("specify_electricity_grid() works", {
+test_that("specify_distribution_losses() works", {
 
   # Now with A-B country example.
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
@@ -2035,6 +2035,146 @@ test_that("specify_electricity_grid() works", {
   AB_data %>%
     tidy_iea_df_balanced()
 
+  # Adding renewable energy flows
+  AB_expanded <- AB_data %>%
+    # Electricity (for grid industry)
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes",
+      Flow = IEATools::renewable_industries$wind_power_plants, Product = IEATools::electricity_products$electricity, Unit = "TJ", E.dot = 14) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes",
+      Flow = "Imports", Product = IEATools::electricity_products$electricity, Unit = "TJ", E.dot = 23) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = "Transformation processes",
+      Flow = "Exports", Product = IEATools::electricity_products$electricity, Unit = "TJ", E.dot = -11) %>% 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = tfc_compare_flows$losses,
+      Flow = "Losses", Product = IEATools::electricity_products$electricity, Unit = "TJ", E.dot = -38) %>% 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = tpes_flows$stock_changes,
+      Flow = "Stock changes", Product = IEATools::electricity_products$electricity, Unit = "TJ", E.dot = 3) %>% 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = tfc_compare_flows$statistical_differences,
+      Flow = "Statistical differences", Product = IEATools::electricity_products$electricity, Unit = "TJ", E.dot = 4) %>% 
+    # Natural gas
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = tfc_compare_flows$losses,
+      Flow = "Losses", Product = IEATools::primary_gas_products$natural_gas, Unit = "TJ", E.dot = -15) %>% 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = tfc_compare_flows$statistical_differences,
+      Flow = "Statistical differences", Product = IEATools::primary_gas_products$natural_gas, Unit = "TJ", E.dot = 15) %>% 
+    # Heat
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = tfc_compare_flows$losses,
+      Flow = "Losses", Product = "Heat", Unit = "TJ", E.dot = -3) %>% 
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = tfc_compare_flows$statistical_differences,
+      Flow = "Statistical differences", Product = "Heat", Unit = "TJ", E.dot = 3) %>% 
+    # Blast furnace gas
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = tfc_compare_flows$losses,
+      Flow = "Losses", Product = IEATools::coal_and_coal_products$blast_furnace_gas, Unit = "TJ", E.dot = -60) #%>% 
+    # tibble::add_row(
+    #   Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = tfc_compare_flows$statistical_differences,
+    #   Flow = "Statistical differences", Product = IEATools::coal_and_coal_products$blast_furnace_gas, Unit = "TJ", E.dot = 60)
+
+  # First, test that by default nothing gets specified
+  AB_data_specified_default <- AB_expanded %>%
+    specify_all()
+
+  AB_data_specified_default %>% dplyr::filter(
+    Flow %in% IEATools::grid_industries | stringr::str_detect(Flow, IEATools::distribution_industry)
+  ) %>% nrow() %>% testthat::expect_equal(0)
+
+  # Second, test specification of both electricity grid and distribution industries
+  AB_data_prespecified <- AB_expanded %>% 
+    dplyr::filter(Product != "Nuclear") %>% #??
+    specify_primary_production() %>% 
+    gather_producer_autoproducer() %>% 
+    route_pumped_storage() %>% 
+    split_oil_gas_extraction_eiou() %>% 
+    route_own_use_elect_chp_heat()
+  
+  AB_data_specified_distribution <- AB_data_prespecified %>% 
+    specify_electricity_grid(specify_electricity_grid = TRUE) %>% 
+    specify_distribution_losses(specify_distribution_industries = TRUE)
+  
+  # Testing this:
+  # (a) No losses flow remaining
+  AB_data_specified_distribution %>% 
+    dplyr::filter(stringr::str_detect(Product, "Losses")) %>% nrow() %>% testthat::expect_equal(0)
+  
+  # (b) Total amount of electricity supplied by electricity grid
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == IEATools::grid_industries$electricity_grid, E.dot > 0) %>% magrittr::extract2("E.dot") %>% testthat::expect_equal(3266)
+  
+  # (c) Input to grid from wind power and main activity producer electricity plants
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == IEATools::grid_industries$electricity_grid, Product == "Electricity [from Wind power plants]") %>% magrittr::extract2("E.dot") %>% testthat::expect_equal(-14)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == IEATools::grid_industries$electricity_grid, Product == "Electricity [from Main activity producer electricity plants]") %>% magrittr::extract2("E.dot") %>% testthat::expect_equal(-3200)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == IEATools::grid_industries$electricity_grid, Product == "Electricity [from Statistical differences]") %>% magrittr::extract2("E.dot") %>% testthat::expect_equal(-4)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == IEATools::grid_industries$electricity_grid, Product == "Electricity [from Stock changes]") %>% magrittr::extract2("E.dot") %>% testthat::expect_equal(-3)
+  
+  # (d) Electricity product name supplied by each power industry
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$wind_power_plants, Product == "Electricity [from Wind power plants]") %>% magrittr::extract2("E.dot") %>% testthat::expect_equal(14)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == IEATools::main_act_plants$main_act_prod_elect_plants, Product == "Electricity [from Main activity producer electricity plants]") %>% magrittr::extract2("E.dot") %>% testthat::expect_equal(3200)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == "Stock changes", Product == "Electricity [from Stock changes]") %>% magrittr::extract2("E.dot") %>% testthat::expect_equal(3)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == "Statistical differences", Product == "Electricity [from Statistical differences]") %>% magrittr::extract2("E.dot") %>% testthat::expect_equal(4)
+  
+  # (e) Check natural gas
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == stringr::str_c(IEATools::distribution_industry, " [of Natural gas]"), Product == IEATools::primary_gas_products$natural_gas) %>% 
+    magrittr::extract2("E.dot") %>% testthat::expect_equal(4100)#-15
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == stringr::str_c(IEATools::distribution_industry, " [of Natural gas]"), Product == "Natural gas [from Oil refineries]") %>% 
+    magrittr::extract2("E.dot") %>% testthat::expect_equal(-100)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == "Oil refineries", Product == "Natural gas [from Oil refineries]") %>% 
+    magrittr::extract2("E.dot") %>% testthat::expect_equal(100)
+  
+  # (f) Check heat
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == stringr::str_c(IEATools::distribution_industry, " [of Heat]"), Product == "Heat") %>% 
+    magrittr::extract2("E.dot") %>% testthat::expect_equal(250)#-3
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == stringr::str_c(IEATools::distribution_industry, " [of Heat]"), Product == "Heat [from Oil refineries]") %>% 
+    magrittr::extract2("E.dot") %>% testthat::expect_equal(-50)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == "Oil refineries", Product == "Heat [from Oil refineries]") %>% 
+    magrittr::extract2("E.dot") %>% testthat::expect_equal(50)
+  
+  # (g) Check blast furnace gases
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == stringr::str_c(IEATools::distribution_industry, " [of Blast furnace gas]"), Product == IEATools::coal_and_coal_products$blast_furnace_gas) %>% 
+    magrittr::extract2("E.dot") %>% testthat::expect_equal(850-60)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == stringr::str_c(IEATools::distribution_industry, " [of Blast furnace gas]"), Product == "Blast furnace gas [from Blast furnaces]") %>% 
+    magrittr::extract2("E.dot") %>% testthat::expect_equal(-850)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == "Blast furnaces", Product == "Blast furnace gas [from Blast furnaces]") %>% 
+    magrittr::extract2("E.dot") %>% testthat::expect_equal(850)
+})
+
+
+
+test_that("specify_electricity_grid() works", {
+  
+  # Now with A-B country example.
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+  
+  AB_data %>%
+    tidy_iea_df_balanced()
+  
   # Adding renewable energy flows
   AB_expanded <- AB_data |>
     tibble::add_row(
@@ -2055,14 +2195,14 @@ test_that("specify_electricity_grid() works", {
     tibble::add_row(
       Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Flow.aggregation.point = tfc_compare_flows$statistical_differences,
       Flow = "Statistical differences", Product = IEATools::electricity_products$electricity, Unit = "TJ", E.dot = 4)
-
+  
   # First, test that by default nothing gets specified
   AB_data_specified_default <- AB_expanded %>%
     specify_all()
-
+  
   AB_data_specified_default |> dplyr::filter(Flow %in% IEATools::grid_industries) |> nrow() |>
     testthat::expect_equal(0)
-
+  
   # Second, test specification of electricity grid
   AB_data_prespecified <- AB_expanded %>% 
     dplyr::filter(Product != "Nuclear") |> #??
@@ -2104,3 +2244,5 @@ test_that("specify_electricity_grid() works", {
   AB_data_specified_grid |> 
     dplyr::filter(Country == "A", Flow == "Statistical differences", Product == "Electricity [from Statistical differences]") |> magrittr::extract2("E.dot") |> testthat::expect_equal(4)
 })
+
+
