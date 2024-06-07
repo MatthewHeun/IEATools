@@ -2033,7 +2033,7 @@ test_that("specify_distribution_losses() works", {
     IEATools::load_tidy_iea_df()
 
   AB_data %>%
-    tidy_iea_df_balanced()
+    IEATools::tidy_iea_df_balanced()
 
   # Adding renewable energy flows
   AB_expanded <- AB_data %>%
@@ -2098,6 +2098,15 @@ test_that("specify_distribution_losses() works", {
   AB_data_specified_distribution <- AB_data_prespecified %>% 
     specify_electricity_grid(specify_electricity_grid = TRUE) %>% 
     specify_distribution_losses(specify_distribution_industries = TRUE)
+  
+  # Test number of different industries
+  AB_data_specified_distribution |> 
+    dplyr::filter(
+      stringr::str_detect(Flow, IEATools::distribution_industry)
+    ) |> 
+    tidyr::expand(tidyr::nesting(Country, Flow)) |> 
+    nrow() |> expect_equal(3)
+  
   
   # Testing this:
   # (a) No losses flow remaining
