@@ -74,11 +74,11 @@ fu_allocation_template(
 
 \item{e_dot}{the name of the energy flow rate column. Default is "Edot".}
 
-\item{e_dot_total}{the string identifier for total energy. Default is "E.dot.total".}
+\item{e_dot_total}{the string identifier for total energy. Default is "Edot.total".}
 
 \item{perc_unit_string}{the string used to indicate percentages. Default is "\verb{[\%]}".}
 
-\item{e_dot_perc}{the string identifier for energy percentage. Default is "E.dot.perc".}
+\item{e_dot_perc}{the string identifier for energy percentage. Default is "Edot.perc".}
 
 \item{maximum_values}{the name for the maximum energy values column. Default is "Maximum values".}
 

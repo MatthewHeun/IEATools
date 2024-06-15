@@ -79,7 +79,7 @@ test_that("specify_tp_eiou() works for sample data", {
   # This test is failing, because the (energy) suffix is still present in the Flow for Own use in electricity, CHP and heat plants
   # and the function assumes it has been stripped away. 
   # Solution: strip away "(energy)" and "(transf.)" during processing of these data.
-  # Also, Flow.aggregation.point is not found. Need to do more to the data frame before calling specify_tp_eiou().
+  # Also, FlowAggregationPoint is not found. Need to do more to the data frame before calling specify_tp_eiou().
   specified <- load_tidy_iea_df() %>% 
     specify_tp_eiou() %>% 
     dplyr::filter(FlowAggregationPoint == "Energy industry own use", Flow == "Main activity producer electricity plants")
@@ -209,12 +209,40 @@ test_that("route_pumped_storage() works", {
     gather_producer_autoproducer() %>%
     route_pumped_storage()
   
-  expect_equal(
-    res %>% 
-      dplyr::filter(Flow == "Pumped storage plants") %>% nrow(),
-    0)
+  expect_equal(res %>% dplyr::filter(Flow == "Pumped storage plants") %>% nrow(), 0)
+  
+  # Third, with AB data but adding hydro and specifying renewable energy industries
+  # Adding renewable energy flows
+  AB_data_renewable_flows <- AB_data |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes", 
+      Flow = "Main activity producer electricity plants", Product = IEATools::renewable_products$hydro, Unit = "TJ", Edot = -1000) |> 
+    tibble::add_row(
+      Country = "B", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Energy industry own use", 
+      Flow = "Pumped storage plants", Product = "Electricity", Unit = "TJ", Edot = -150)
     
+  res2 <- AB_data_renewable_flows |> 
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage(specify_renewable_plants = TRUE)
+  
+  res2 |> 
+    dplyr::filter(Country == "A", FlowAggregationPoint == "Energy industry own use",
+                  Flow == IEATools::renewable_industries$hydro_plants,
+                  Product == "Hard coal (if no detail)") |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-299)
+  
+  res2 |> 
+    dplyr::filter(Country == "B", 
+                  FlowAggregationPoint == "Energy industry own use",
+                  Flow == IEATools::main_act_plants$main_act_prod_elect_plants, 
+                  Product == "Electricity") |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-150)
 })
+
 
 
 test_that("split_oil_gas_extraction_eiou() works", {
@@ -701,8 +729,8 @@ test_that("add_nuclear_industry() works", {
     IEATools::specify_production_to_resources() %>%
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
-    route_own_use_elect_chp_heat(split_using_shares_of = "output") %>%
-    add_nuclear_industry()
+    add_nuclear_industry() %>%
+    route_own_use_elect_chp_heat(split_using_shares_of = "output")
   
   # One test on total length
   expect_equal(length(test[["Edot"]]), 140)
@@ -729,6 +757,15 @@ test_that("add_nuclear_industry() works", {
                  dplyr::select(Edot) %>%
                  dplyr::pull(),
                3163.7)
+  
+  expect_equal(test %>%
+                 dplyr::filter(Country == "A",
+                               FlowAggregationPoint == "Transformation processes",
+                               Flow == "Main activity producer CHP plants",
+                               Product == "Hard coal (if no detail)") %>%
+                 dplyr::select(Edot) %>%
+                 dplyr::pull(),
+               160)
   
   expect_equal(test %>%
                  dplyr::filter(Country == "A",
@@ -775,8 +812,8 @@ test_that("add_nuclear_industry() works", {
     IEATools::specify_production_to_resources() %>%
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
-    route_own_use_elect_chp_heat(split_using_shares_of = "output") %>%
-    add_nuclear_industry()
+    add_nuclear_industry() %>%
+    route_own_use_elect_chp_heat(split_using_shares_of = "output")
   
   # One test on total length
   expect_equal(length(second_test[["Edot"]]), 142)
@@ -850,14 +887,115 @@ test_that("add_nuclear_industry() works", {
                  dplyr::pull(),
                1.1)
   
+  # Third test, splitting EIOU too this time, with a heat flow too
+  third_test <- AB_data %>%
+    tibble::add_row(Country = "A",
+                    Method = "PCM",
+                    EnergyType = "E",
+                    LastStage = "Final",
+                    Year = 2018,
+                    LedgerSide = "Supply",
+                    FlowAggregationPoint = "Transformation processes",
+                    Flow = "Main activity producer CHP plants",
+                    Product = "Heat",
+                    Unit = "TJ",
+                    Edot = 30) %>%
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    add_nuclear_industry(ascribe_eiou_to_nuclear = TRUE)
+  
+  expect_equal(third_test %>%
+                 dplyr::filter(Country == "A",
+                               FlowAggregationPoint == "Transformation processes",
+                               Flow == "Main activity producer electricity plants",
+                               Product == "Electricity") %>%
+                 dplyr::select(Edot) %>%
+                 dplyr::pull(),
+               3163.7)
+  
+  expect_equal(test %>%
+                 dplyr::filter(Country == "A",
+                               FlowAggregationPoint == "Transformation processes",
+                               Flow == "Main activity producer CHP plants",
+                               Product == "Hard coal (if no detail)") %>%
+                 dplyr::select(Edot) %>%
+                 dplyr::pull(),
+               160)
+  
+  expect_equal(third_test %>%
+                 dplyr::filter(Country == "A",
+                               FlowAggregationPoint == "Transformation processes",
+                               Flow == "Main activity producer CHP plants",
+                               Product == "Electricity") %>%
+                 dplyr::select(Edot) %>%
+                 dplyr::pull(),
+               57.8)
+  
+  expect_equal(third_test %>%
+                 dplyr::filter(Country == "A",
+                               FlowAggregationPoint == "Transformation processes",
+                               Flow == "Main activity producer CHP plants",
+                               Product == "Heat") %>%
+                 dplyr::select(Edot) %>%
+                 dplyr::pull(),
+               28.9)
+  
+  # Some tests on actual values of nuclear industry flows
+  expect_equal(third_test %>%
+                 dplyr::filter(Country == "A",
+                               FlowAggregationPoint == "Transformation processes",
+                               Flow == "Nuclear industry",
+                               Product == "Electricity") %>%
+                 dplyr::select(Edot) %>%
+                 dplyr::pull(),
+               38.5)
+  
+  expect_equal(third_test %>%
+                 dplyr::filter(Country == "A",
+                               FlowAggregationPoint == "Transformation processes",
+                               Flow == "Nuclear industry",
+                               Product == "Nuclear") %>%
+                 dplyr::select(Edot) %>%
+                 dplyr::pull(),
+               -120)
+  
+  expect_equal(third_test %>%
+                 dplyr::filter(Country == "A",
+                               FlowAggregationPoint == "Transformation processes",
+                               Flow == "Nuclear industry",
+                               Product == "Heat") %>%
+                 dplyr::select(Edot) %>%
+                 dplyr::pull(),
+               1.1)
+  
+  # But also some tests on the EIOU of nuclear and CHP/elec plants!
+  # Nuclear industry
+  third_test |> dplyr::filter(Country == "A", FlowAggregationPoint == "Energy industry own use", Flow == "Nuclear industry", Product == "Hard coal (if no detail)") |> magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-8.425532, tolerance = 1e-4)
+  third_test |> dplyr::filter(Country == "A", FlowAggregationPoint == "Energy industry own use", Flow == "Nuclear industry", Product == "Anthracite") |> magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-1.203647, tolerance = 1e-4)
+  third_test |> dplyr::filter(Country == "A", FlowAggregationPoint == "Energy industry own use", Flow == "Nuclear industry", Product == "Electricity") |> magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-0.7221884, tolerance = 1e-4)
+  
+  # Own use in elec, chp and heat plants
+  third_test |> dplyr::filter(Country == "A", FlowAggregationPoint == "Energy industry own use", Flow == "Own use in electricity, CHP and heat plants", Product == "Hard coal (if no detail)") |> magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-691.5745, tolerance = 1e-4)
+  third_test |> dplyr::filter(Country == "A", FlowAggregationPoint == "Energy industry own use", Flow == "Own use in electricity, CHP and heat plants", Product == "Anthracite") |> magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-98.79635, tolerance = 1e-4)
+  third_test |> dplyr::filter(Country == "A", FlowAggregationPoint == "Energy industry own use", Flow == "Own use in electricity, CHP and heat plants", Product == "Electricity") |> magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-59.27781, tolerance = 1e-4)
+  
+  
   # Now with default IEA data
   res <- load_tidy_iea_df() %>% 
     IEATools::specify_primary_production() %>%
     IEATools::specify_production_to_resources() %>%
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
-    route_own_use_elect_chp_heat() %>%
-    add_nuclear_industry()
+    add_nuclear_industry() %>%
+    route_own_use_elect_chp_heat()
   
   res %>% 
     dplyr::filter(stringr::str_detect(Flow, "Nuclear")) %>% 
@@ -1642,6 +1780,483 @@ test_that("specify_all() can also not split the non-specified flows", {
   expect_true(
     all(first_test == second_test)
   )
+})
+
+
+
+test_that("specify_renewable_plants() works", {
+
+  # Now with A-B country example.
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+  
+  AB_data %>% 
+    tidy_iea_df_balanced()
+  
+  # Adding renewable energy flows
+  AB_data_renewable_flows <- AB_data |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes", 
+      Flow = "Main activity producer electricity plants", Product = IEATools::renewable_products$solar_photovoltaics, Unit = "TJ", Edot = -10) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes", 
+      Flow = "Main activity producer electricity plants", Product = IEATools::renewable_products$wind, Unit = "TJ", Edot = -15) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes", 
+      Flow = "Autoproducer electricity plants", Product = IEATools::renewable_products$tide_wave_and_ocean, Unit = "TJ", Edot = -2) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes", 
+      Flow = "Autoproducer electricity plants", Product = IEATools::renewable_products$hydro, Unit = "TJ", Edot = -20) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes", 
+      Flow = "Main activity producer electricity plants", Product = IEATools::renewable_products$geothermal, Unit = "TJ", Edot = -20) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes", 
+      Flow = "Main activity producer electricity plants", Product = IEATools::renewable_products$solar_thermal, Unit = "TJ", Edot = -20) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes", 
+      Flow = "Main activity producer CHP plants", Product = IEATools::renewable_products$geothermal, Unit = "TJ", Edot = -10) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes", 
+      Flow = "Autoproducer CHP plants", Product = IEATools::renewable_products$solar_thermal, Unit = "TJ", Edot = -5) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes", 
+      Flow = "Main activity producer heat plants", Product = IEATools::renewable_products$geothermal, Unit = "TJ", Edot = -8) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes", 
+      Flow = "Autoproducer heat plants", Product = IEATools::renewable_products$solar_thermal, Unit = "TJ", Edot = -10) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes", 
+      Flow = "Main activity producer heat plants", Product = "Heat", Unit = "TJ", Edot = 100) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes", 
+      Flow = "Autoproducer CHP plants", Product = "Heat", Unit = "TJ", Edot = 80) #|> 
+    # tibble::add_row(
+    #   Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Energy industry own use", 
+    #   Flow = "Own use in electricity, CHP and heat plants", Product = "Heat", Unit = "TJ", Edot = -100)
+  
+  
+  # First, test that by default nothing gets specified
+  AB_data_specified_default <- AB_data_renewable_flows %>% 
+    specify_all()
+  
+  AB_data_specified_default |> dplyr::filter(Flow %in% IEATools::renewable_industries) |> nrow() |> 
+    testthat::expect_equal(0)
+  
+  # Second, specify renewable energy flows
+  AB_data_prespecified <- AB_data_renewable_flows %>% 
+    dplyr::filter(Product != "Nuclear") |> 
+    specify_primary_production() |> 
+    gather_producer_autoproducer() %>% 
+    route_pumped_storage() %>% 
+    split_oil_gas_extraction_eiou() %>% 
+    add_nuclear_industry()
+  
+  AB_data_specified_renewables <- AB_data_prespecified |> 
+    specify_renewable_plants(specify_renewable_plants = TRUE,
+                             ascribe_eiou_to_renewable_plants = TRUE)
+    
+
+  # (1) Checking renewable energy plants
+  # (1.a) Geothermal
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$geothermal_plants, Product == IEATools::renewable_products$geothermal) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-38)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$geothermal_plants, Product == IEATools::electricity_products$electricity, FlowAggregationPoint == IEATools::tfc_compare_flows$transformation_processes) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(2.789474, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$geothermal_plants, Product == "Heat") |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(5.052632, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$geothermal_plants, Product == "Anthracite", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-100*0.0022796818, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$geothermal_plants, Product == "Electricity", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-60*0.0022796818, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$geothermal_plants, Product == "Hard coal (if no detail)", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-700*0.0022796818, tolerance = 1e-4)
+  
+  # (1.b) Solar thermal
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_th_plants, Product == IEATools::renewable_products$solar_thermal) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-35, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_th_plants, Product == IEATools::electricity_products$electricity, FlowAggregationPoint == IEATools::tfc_compare_flows$transformation_processes) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(7.745834, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_th_plants, Product == "Heat") |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(11.52778, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_th_plants, Product == "Anthracite", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-100*0.0056027939, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_th_plants, Product == "Electricity", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-60*0.0056027939, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_th_plants, Product == "Hard coal (if no detail)", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-700*0.0056027939, tolerance = 1e-4)
+  
+  # (1.c) Hydro
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$hydro_plants, Product == IEATools::renewable_products$hydro) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-20)
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::renewable_industries$hydro_plants, Product == IEATools::electricity_products$electricity, FlowAggregationPoint == IEATools::tfc_compare_flows$transformation_processes) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(20)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$hydro_plants, Product == "Anthracite", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-100*0.005813953, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$hydro_plants, Product == "Electricity", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-60*0.005813953, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$hydro_plants, Product == "Hard coal (if no detail)", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-700*0.005813953, tolerance = 1e-4)
+  
+  # (1.d) Wind
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$wind_power_plants, Product == IEATools::renewable_products$wind) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-15)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$wind_power_plants, Product == IEATools::electricity_products$electricity, FlowAggregationPoint == IEATools::tfc_compare_flows$transformation_processes) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(15)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$wind_power_plants, Product == "Anthracite", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-100*0.004360465, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$wind_power_plants, Product == "Electricity", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-60*0.004360465, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$wind_power_plants, Product == "Hard coal (if no detail)", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-700*0.004360465, tolerance = 1e-4)
+  
+  # (1.e) Solar PV
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_pv_plants, Product == IEATools::renewable_products$solar_photovoltaics) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-10)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_pv_plants, Product == IEATools::electricity_products$electricity, FlowAggregationPoint == IEATools::tfc_compare_flows$transformation_processes) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(10)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_pv_plants, Product == "Anthracite", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-100*0.002906977, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_pv_plants, Product == "Electricity", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-60*0.002906977, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$solar_pv_plants, Product == "Hard coal (if no detail)", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-700*0.002906977, tolerance = 1e-4)
+  
+  # (1.f) Oceanic
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$oceanic_plants, Product == IEATools::renewable_products$tide_wave_and_ocean) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-2)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$oceanic_plants, Product == IEATools::electricity_products$electricity, FlowAggregationPoint == IEATools::tfc_compare_flows$transformation_processes) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(2)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$oceanic_plants, Product == "Anthracite", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-100*0.0005813953, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$oceanic_plants, Product == "Electricity", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-60*0.0005813953, tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$oceanic_plants, Product == "Hard coal (if no detail)", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-700*0.0005813953, tolerance = 1e-4)
+  
+  # (1.g) Own use in electricity, CHP and heat plants
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::eiou_flows$own_use_elect_chp_heat_plants, Product == "Anthracite", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-100+(0.02154527*100), tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::eiou_flows$own_use_elect_chp_heat_plants, Product == "Electricity", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-60+(0.02154527*60), tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::eiou_flows$own_use_elect_chp_heat_plants, Product == "Hard coal (if no detail)", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-700+(700*0.02154527), tolerance = 1e-4)
+    
+  # Checking Main activity electricity producer plants
+  AB_data_specified_renewables |> dplyr::filter(Country == "A", Flow == IEATools::main_act_plants$main_act_prod_elect_plants, Product == IEATools::electricity_products$electricity, 
+                                                FlowAggregationPoint == IEATools::tfc_compare_flows$transformation_processes) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(3200-(20+15+10+2+2+20*0.33))
+  
+  # Checking Main activity CHP producer plants
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::main_act_plants$main_act_prod_chp_plants, Product == IEATools::electricity_products$electricity,
+                                                FlowAggregationPoint == IEATools::tfc_compare_flows$transformation_processes) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(60-(1.145834+0.789474), tolerance = 1e-4)
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::main_act_plants$main_act_prod_chp_plants, Product == "Heat") |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(80-(1.52778+1.052632), tolerance = 1e-4)
+  
+  # Checking Main activity heat producer plants
+  AB_data_specified_renewables |> dplyr::filter(Flow == IEATools::main_act_plants$main_act_prod_heat_plants, Product == "Heat") |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(100-(4+10))
+  
+  # Checking no autoproducers lefts
+  AB_data_specified_renewables |> dplyr::filter(Flow %in% c(IEATools::main_act_plants$autoprod_chp_plants, IEATools::main_act_plants$autoprod_heat_plants, IEATools::main_act_plants$autoprod_elect_plants)) |> 
+    nrow() |> testthat::expect_equal(0)
+  
+  
+  # Last, checking without ascribing EIOU
+  res3 <- AB_data_prespecified |> 
+    specify_renewable_plants(specify_renewable_plants = TRUE,
+                             ascribe_eiou_to_renewable_plants = FALSE)
+  
+  # Checking geothermal only
+  # Geothermal
+  res3 |> dplyr::filter(Flow == IEATools::renewable_industries$geothermal_plants, Product == IEATools::renewable_products$geothermal) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-38)
+  res3 |> dplyr::filter(Flow == IEATools::renewable_industries$geothermal_plants, Product == IEATools::electricity_products$electricity, FlowAggregationPoint == IEATools::tfc_compare_flows$transformation_processes) |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(2.789474, tolerance = 1e-4)
+  res3 |> dplyr::filter(Flow == IEATools::renewable_industries$geothermal_plants, Product == "Heat") |> 
+    magrittr::extract2("Edot") |> 
+    testthat::expect_equal(5.052632, tolerance = 1e-4)
+  res3 |> dplyr::filter(Flow %in% IEATools::renewable_industries) |>
+    dplyr::filter(Product == "Anthracite", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> nrow() |> 
+    testthat::expect_equal(0)
+  res3 |> dplyr::filter(Flow == IEATools::eiou_flows$own_use_elect_chp_heat_plants) |>
+    dplyr::filter(Product == "Anthracite", FlowAggregationPoint == IEATools::tfc_compare_flows$energy_industry_own_use) |> magrittr::extract2("Edot") |> 
+    testthat::expect_equal(-100)
+})
+
+
+test_that("specify_distribution_losses() works", {
+
+  # Now with A-B country example.
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+
+  AB_data %>%
+    IEATools::tidy_iea_df_balanced()
+
+  # Adding renewable energy flows
+  AB_expanded <- AB_data %>%
+    # Electricity (for grid industry)
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes",
+      Flow = IEATools::renewable_industries$wind_power_plants, Product = IEATools::electricity_products$electricity, Unit = "TJ", Edot = 14) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes",
+      Flow = "Imports", Product = IEATools::electricity_products$electricity, Unit = "TJ", Edot = 23) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes",
+      Flow = "Exports", Product = IEATools::electricity_products$electricity, Unit = "TJ", Edot = -11) %>% 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = tfc_compare_flows$losses,
+      Flow = "Losses", Product = IEATools::electricity_products$electricity, Unit = "TJ", Edot = -38) %>% 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = tpes_flows$stock_changes,
+      Flow = "Stock changes", Product = IEATools::electricity_products$electricity, Unit = "TJ", Edot = 3) %>% 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = tfc_compare_flows$statistical_differences,
+      Flow = "Statistical differences", Product = IEATools::electricity_products$electricity, Unit = "TJ", Edot = 4) %>% 
+    # Natural gas
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = tfc_compare_flows$losses,
+      Flow = "Losses", Product = IEATools::primary_gas_products$natural_gas, Unit = "TJ", Edot = -15) %>% 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = tfc_compare_flows$statistical_differences,
+      Flow = "Statistical differences", Product = IEATools::primary_gas_products$natural_gas, Unit = "TJ", Edot = 15) %>% 
+    # Heat
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = tfc_compare_flows$losses,
+      Flow = "Losses", Product = "Heat", Unit = "TJ", Edot = -3) %>% 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = tfc_compare_flows$statistical_differences,
+      Flow = "Statistical differences", Product = "Heat", Unit = "TJ", Edot = 3) %>% 
+    # Blast furnace gas
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = tfc_compare_flows$losses,
+      Flow = "Losses", Product = IEATools::coal_and_coal_products$blast_furnace_gas, Unit = "TJ", Edot = -60) #%>% 
+    # tibble::add_row(
+    #   Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = tfc_compare_flows$statistical_differences,
+    #   Flow = "Statistical differences", Product = IEATools::coal_and_coal_products$blast_furnace_gas, Unit = "TJ", Edot = 60)
+
+  # First, test that by default nothing gets specified
+  AB_data_specified_default <- AB_expanded %>%
+    specify_all()
+
+  AB_data_specified_default %>% dplyr::filter(
+    Flow %in% IEATools::grid_industries | stringr::str_detect(Flow, IEATools::distribution_industry)
+  ) %>% nrow() %>% testthat::expect_equal(0)
+
+  # Second, test specification of both electricity grid and distribution industries
+  AB_data_prespecified <- AB_expanded %>% 
+    dplyr::filter(Product != "Nuclear") %>% #??
+    specify_primary_production() %>% 
+    gather_producer_autoproducer() %>% 
+    route_pumped_storage() %>% 
+    split_oil_gas_extraction_eiou() %>% 
+    route_own_use_elect_chp_heat()
+  
+  AB_data_specified_distribution <- AB_data_prespecified %>% 
+    specify_electricity_grid(specify_electricity_grid = TRUE) %>% 
+    specify_distribution_losses(specify_distribution_industries = TRUE)
+  
+  # Test number of different industries
+  AB_data_specified_distribution |> 
+    dplyr::filter(
+      stringr::str_detect(Flow, IEATools::distribution_industry)
+    ) |> 
+    tidyr::expand(tidyr::nesting(Country, Flow)) |> 
+    nrow() |> expect_equal(3)
+  
+  
+  # Testing this:
+  # (a) No losses flow remaining
+  AB_data_specified_distribution %>% 
+    dplyr::filter(stringr::str_detect(Product, "Losses")) %>% nrow() %>% testthat::expect_equal(0)
+  
+  # (b) Total amount of electricity supplied by electricity grid
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == IEATools::grid_industries$electricity_grid, Edot > 0) %>% magrittr::extract2("Edot") %>% testthat::expect_equal(3266)
+  
+  # (c) Input to grid from wind power and main activity producer electricity plants
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == IEATools::grid_industries$electricity_grid, Product == "Electricity [from Wind power plants]") %>% magrittr::extract2("Edot") %>% testthat::expect_equal(-14)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == IEATools::grid_industries$electricity_grid, Product == "Electricity [from Main activity producer electricity plants]") %>% magrittr::extract2("Edot") %>% testthat::expect_equal(-3200)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == IEATools::grid_industries$electricity_grid, Product == "Electricity [from Statistical differences]") %>% magrittr::extract2("Edot") %>% testthat::expect_equal(-4)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == IEATools::grid_industries$electricity_grid, Product == "Electricity [from Stock changes]") %>% magrittr::extract2("Edot") %>% testthat::expect_equal(-3)
+  
+  # (d) Electricity product name supplied by each power industry
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$wind_power_plants, Product == "Electricity [from Wind power plants]") %>% magrittr::extract2("Edot") %>% testthat::expect_equal(14)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == IEATools::main_act_plants$main_act_prod_elect_plants, Product == "Electricity [from Main activity producer electricity plants]") %>% magrittr::extract2("Edot") %>% testthat::expect_equal(3200)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == "Stock changes", Product == "Electricity [from Stock changes]") %>% magrittr::extract2("Edot") %>% testthat::expect_equal(3)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == "Statistical differences", Product == "Electricity [from Statistical differences]") %>% magrittr::extract2("Edot") %>% testthat::expect_equal(4)
+  
+  # (e) Check natural gas
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == stringr::str_c(IEATools::distribution_industry, " [of Natural gas]"), Product == IEATools::primary_gas_products$natural_gas) %>% 
+    magrittr::extract2("Edot") %>% testthat::expect_equal(4100)#-15
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == stringr::str_c(IEATools::distribution_industry, " [of Natural gas]"), Product == "Natural gas [from Oil refineries]") %>% 
+    magrittr::extract2("Edot") %>% testthat::expect_equal(-100)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == "Oil refineries", Product == "Natural gas [from Oil refineries]") %>% 
+    magrittr::extract2("Edot") %>% testthat::expect_equal(100)
+  
+  # (f) Check heat
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == stringr::str_c(IEATools::distribution_industry, " [of Heat]"), Product == "Heat") %>% 
+    magrittr::extract2("Edot") %>% testthat::expect_equal(250)#-3
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == stringr::str_c(IEATools::distribution_industry, " [of Heat]"), Product == "Heat [from Oil refineries]") %>% 
+    magrittr::extract2("Edot") %>% testthat::expect_equal(-50)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == "Oil refineries", Product == "Heat [from Oil refineries]") %>% 
+    magrittr::extract2("Edot") %>% testthat::expect_equal(50)
+  
+  # (g) Check blast furnace gases
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == stringr::str_c(IEATools::distribution_industry, " [of Blast furnace gas]"), Product == IEATools::coal_and_coal_products$blast_furnace_gas) %>% 
+    magrittr::extract2("Edot") %>% testthat::expect_equal(850-60)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == stringr::str_c(IEATools::distribution_industry, " [of Blast furnace gas]"), Product == "Blast furnace gas [from Blast furnaces]") %>% 
+    magrittr::extract2("Edot") %>% testthat::expect_equal(-850)
+  AB_data_specified_distribution %>% 
+    dplyr::filter(Country == "A", Flow == "Blast furnaces", Product == "Blast furnace gas [from Blast furnaces]") %>% 
+    magrittr::extract2("Edot") %>% testthat::expect_equal(850)
+})
+
+
+
+test_that("specify_electricity_grid() works", {
+  
+  # Now with A-B country example.
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format_testing.csv", package = "IEATools")
+  
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+  
+  AB_data %>%
+    tidy_iea_df_balanced()
+  
+  # Adding renewable energy flows
+  AB_expanded <- AB_data |>
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes",
+      Flow = IEATools::renewable_industries$wind_power_plants, Product = IEATools::electricity_products$electricity, Unit = "TJ", Edot = 14) |>
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes",
+      Flow = "Imports", Product = IEATools::electricity_products$electricity, Unit = "TJ", Edot = 23) |>
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = "Transformation processes",
+      Flow = "Exports", Product = IEATools::electricity_products$electricity, Unit = "TJ", Edot = -11) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = tfc_compare_flows$losses,
+      Flow = "Losses", Product = IEATools::electricity_products$electricity, Unit = "TJ", Edot = -38) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = tpes_flows$stock_changes,
+      Flow = "Stock changes", Product = IEATools::electricity_products$electricity, Unit = "TJ", Edot = 3) |> 
+    tibble::add_row(
+      Country = "A", Method = "PCM", EnergyType = "E", LastStage = "Final", Year = 2018, LedgerSide = "Supply", FlowAggregationPoint = tfc_compare_flows$statistical_differences,
+      Flow = "Statistical differences", Product = IEATools::electricity_products$electricity, Unit = "TJ", Edot = 4)
+  
+  # First, test that by default nothing gets specified
+  AB_data_specified_default <- AB_expanded %>%
+    specify_all()
+  
+  AB_data_specified_default |> dplyr::filter(Flow %in% IEATools::grid_industries) |> nrow() |>
+    testthat::expect_equal(0)
+  
+  # Second, test specification of electricity grid
+  AB_data_prespecified <- AB_expanded %>% 
+    dplyr::filter(Product != "Nuclear") |> #??
+    specify_primary_production() |> 
+    gather_producer_autoproducer() %>% 
+    route_pumped_storage() %>% 
+    split_oil_gas_extraction_eiou() %>% 
+    route_own_use_elect_chp_heat()
+  
+  AB_data_specified_grid <- AB_data_prespecified |> 
+    specify_electricity_grid(specify_electricity_grid = TRUE)
+  
+  # Testing this:
+  # (a) No losses flow remaining
+  AB_data_specified_grid |> 
+    dplyr::filter(stringr::str_detect(Product, "Losses")) |> nrow() |> testthat::expect_equal(0)
+  
+  # (b) Total amount of electricity supplied by electricity grid
+  AB_data_specified_grid |> 
+    dplyr::filter(Country == "A", Flow == IEATools::grid_industries$electricity_grid, Edot > 0) |> magrittr::extract2("Edot") |> testthat::expect_equal(3266)
+  
+  # (c) Input to grid from wind power and main activity producer electricity plants
+  AB_data_specified_grid |> 
+    dplyr::filter(Country == "A", Flow == IEATools::grid_industries$electricity_grid, Product == "Electricity [from Wind power plants]") |> magrittr::extract2("Edot") |> testthat::expect_equal(-14)
+  AB_data_specified_grid |> 
+    dplyr::filter(Country == "A", Flow == IEATools::grid_industries$electricity_grid, Product == "Electricity [from Main activity producer electricity plants]") |> magrittr::extract2("Edot") |> testthat::expect_equal(-3200)
+  AB_data_specified_grid |> 
+    dplyr::filter(Country == "A", Flow == IEATools::grid_industries$electricity_grid, Product == "Electricity [from Statistical differences]") |> magrittr::extract2("Edot") |> testthat::expect_equal(-4)
+  AB_data_specified_grid |> 
+    dplyr::filter(Country == "A", Flow == IEATools::grid_industries$electricity_grid, Product == "Electricity [from Stock changes]") |> magrittr::extract2("Edot") |> testthat::expect_equal(-3)
+  
+  # (d) Electricity product name supplied by each power industry
+  AB_data_specified_grid |> 
+    dplyr::filter(Country == "A", Flow == IEATools::renewable_industries$wind_power_plants, Product == "Electricity [from Wind power plants]") |> magrittr::extract2("Edot") |> testthat::expect_equal(14)
+  AB_data_specified_grid |> 
+    dplyr::filter(Country == "A", Flow == IEATools::main_act_plants$main_act_prod_elect_plants, Product == "Electricity [from Main activity producer electricity plants]") |> magrittr::extract2("Edot") |> testthat::expect_equal(3200)
+  AB_data_specified_grid |> 
+    dplyr::filter(Country == "A", Flow == "Stock changes", Product == "Electricity [from Stock changes]") |> magrittr::extract2("Edot") |> testthat::expect_equal(3)
+  AB_data_specified_grid |> 
+    dplyr::filter(Country == "A", Flow == "Statistical differences", Product == "Electricity [from Statistical differences]") |> magrittr::extract2("Edot") |> testthat::expect_equal(4)
 })
 
 

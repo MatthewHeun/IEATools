@@ -30,7 +30,7 @@ tp_sinks_sources(
 
 \item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "\code{Product}".}
 
-\item{e_dot}{the name of the energy rate column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
+\item{e_dot}{the name of the energy rate column in \code{.tidy_iea_df}. Default is "\code{Edot}".}
 }
 \value{
 The \code{grouping_vars} and the \code{flow} column,
@@ -62,9 +62,9 @@ but cannot see any associated primary energy carriers.
 
 Transformation sinks and sources are identified by the following algorithm:
 \enumerate{
-\item Identify (per group in \code{.tidy_iea_df}) all \verb{Transformation processes} that consume energy (negative value for \code{E.dot}).
+\item Identify (per group in \code{.tidy_iea_df}) all \verb{Transformation processes} that consume energy (negative value for \code{Edot}).
 Energy consumption can be for the transformation process itself or for Energy industry own use.
-\item Identify (per group in \code{.tidy_iea_df}) all \verb{Transformation processes} that produce energy (positive value for \code{E.dot}).
+\item Identify (per group in \code{.tidy_iea_df}) all \verb{Transformation processes} that produce energy (positive value for \code{Edot}).
 \item Take the set difference between the two (consumers less producers for sinks and producers less consumers for sources).
 The set difference is the list of transformation sinks or sources, respectively.
 }
@@ -76,7 +76,7 @@ the \code{grouping_vars} argument.
 Typical grouping variables are \code{Method}, \code{Last.stage}, \code{Country}, \code{Year}, \code{EnergyType}.
 Don't group on \code{Flow.aggregation.point}, because energy from different aggregation points
 (\verb{Energy industry own use} and \verb{Transformation processes}) flows into each machine.
-Don't group on \code{Flow}, \code{Product}, or \code{E.dot}, either.
+Don't group on \code{Flow}, \code{Product}, or \code{Edot}, either.
 If groups are not set,
 \code{flow}s will be analyzed together, possibly leading to missed transformation sinks or sources.
 

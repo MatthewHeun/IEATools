@@ -40,7 +40,7 @@
 #' @param resources A string identifying resource industries to be added to `.tidy_iea_df`. 
 #'                  Default is "`Resources`".
 #' @param production A string identifying production in the flow column. Default is "`Production`".
-#' @param e_dot The name of the energy column in `.tidy_iea_df`. Default is "`E.dot`".
+#' @param e_dot The name of the energy column in `.tidy_iea_df`. Default is "`Edot`".
 #' @param list_primary_coal_products The list of primary coal products for which the production industry needs to be changed.
 #'                                   Default is `IEATools::primary_coal_products`.
 #' @param list_primary_oil_products The list of primary oil products for which the production industry needs to be changed.
@@ -359,7 +359,17 @@ specify_interface_industries <- function(.tidy_iea_df,
 #'                                 Default is TRUE.
 #' @param route_non_specified_tp Boolean stating whether non-specified transformation processes flows should be routed to existing industries.
 #'                               Default is TRUE.
-#' @param flow_aggregation_point The name of the flow aggregation point column in `.tidy_iea_df`. Default is FlowAggregationPoint.
+#' @param specify_renewable_plants Boolean stating whether renewable energy industries should be specified or not.
+#'                                 Default is FALSE.
+#' @param specify_electricity_grid Boolean stating whether an electricity grid industry should be specified or not.
+#'                                 Default is FALSE.
+#' @param specify_distribution_industries Boolean stating whether distribution industries should be specified or not.
+#'                                        Default is FALSE.
+#' @param ascribe_eiou_to_renewable_plants A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
+#'                                         should be ascribed to the new renewable industries. Default is FALSE.
+#' @param ascribe_eiou_to_nuclear A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
+#'                                should be ascribed to the new nuclear industry. Default is FALSE.
+#' @param flow_aggregation_point The name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
 #' @param eiou A string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".
 #' @param transformation_processes A string identifying transformation processes in the flow aggregation point column. Default is "Transformation processes".
 #' @param flow The name of the flow column in `.tidy_iea_df`. Default is "Flow".
@@ -384,6 +394,11 @@ specify_tp_eiou <- function(.tidy_iea_df,
                             split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
                             route_non_specified_eiou = TRUE,
                             route_non_specified_tp = TRUE,
+                            specify_renewable_plants = FALSE,
+                            specify_electricity_grid = FALSE,
+                            specify_distribution_industries = FALSE,
+                            ascribe_eiou_to_renewable_plants = FALSE,
+                            ascribe_eiou_to_nuclear = FALSE,
                             flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                             eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
                             transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
@@ -396,23 +411,37 @@ specify_tp_eiou <- function(.tidy_iea_df,
                             negzeropos = ".negzeropos",
                             # Places where the EIOU will be reassigned
                             main_act_producer_elect = IEATools::eiou_flows$main_activity_producer_electricity_plants){
-  .tidy_iea_df %>% 
+  .tidy_iea_df |> 
     matsindf::verify_cols_missing(negzeropos)
   
   split_own_use_elect_chp_heat_using_shares_of <- match.arg(split_own_use_elect_chp_heat_using_shares_of)
   
-  .tidy_iea_df %>% 
+  .tidy_iea_df |> 
     gather_producer_autoproducer() %>% 
-    route_pumped_storage() %>% 
+    route_pumped_storage(
+      specify_renewable_plants = specify_renewable_plants
+    ) |> 
     split_oil_gas_extraction_eiou() %>% 
+    add_nuclear_industry(
+      ascribe_eiou_to_nuclear = ascribe_eiou_to_nuclear
+    ) %>% 
+    specify_renewable_plants(
+      specify_renewable_plants = specify_renewable_plants,
+      ascribe_eiou_to_renewable_plants = ascribe_eiou_to_renewable_plants
+    ) |> 
     route_own_use_elect_chp_heat(
       split_using_shares_of = split_own_use_elect_chp_heat_using_shares_of
-    ) %>% 
-    add_nuclear_industry() %>% 
+    ) |> 
     route_non_specified_flows(
       route_non_specified_eiou = route_non_specified_eiou,
       route_non_specified_tp = route_non_specified_tp
-    ) 
+    ) |> 
+    specify_electricity_grid(
+      specify_electricity_grid = specify_electricity_grid
+    ) |> 
+    specify_distribution_losses(
+      specify_distribution_industries = specify_distribution_industries
+    )
 }
 
 
@@ -441,9 +470,9 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #' 
 #' Transformation sinks and sources are identified by the following algorithm:
 #' 
-#' 1. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that consume energy (negative value for `E.dot`).
+#' 1. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that consume energy (negative value for `Edot`).
 #'    Energy consumption can be for the transformation process itself or for Energy industry own use.
-#' 2. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that produce energy (positive value for `E.dot`).
+#' 2. Identify (per group in `.tidy_iea_df`) all `Transformation processes` that produce energy (positive value for `Edot`).
 #' 3. Take the set difference between the two (consumers less producers for sinks and producers less consumers for sources). 
 #'    The set difference is the list of transformation sinks or sources, respectively.
 #' 
@@ -454,7 +483,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #' Typical grouping variables are `Method`, `Last.stage`, `Country`, `Year`, `EnergyType`.
 #' Don't group on `Flow.aggregation.point`, because energy from different aggregation points
 #' (`Energy industry own use` and `Transformation processes`) flows into each machine.
-#' Don't group on `Flow`, `Product`, or `E.dot`, either.
+#' Don't group on `Flow`, `Product`, or `Edot`, either.
 #' If groups are not set, 
 #' `flow`s will be analyzed together, possibly leading to missed transformation sinks or sources.
 #' 
@@ -476,7 +505,7 @@ specify_tp_eiou <- function(.tidy_iea_df,
 #' @param eiou a string that identifies energy industry own use in the `flow_aggregation_point` column. Default is "`Energy industry own use`".
 #' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
 #' @param product the name of the product column in `.tidy_iea_df`. Default is "`Product`".
-#' @param e_dot the name of the energy rate column in `.tidy_iea_df`. Default is "`E.dot`".
+#' @param e_dot the name of the energy rate column in `.tidy_iea_df`. Default is "`Edot`".
 #'
 #' @return The `grouping_vars` and the `flow` column, 
 #'         with one row for each industry that is a transformation sink or source.
@@ -547,7 +576,7 @@ tp_sinks_sources <- function(.tidy_iea_df,
 #' @param flow the name of the flow column in `.tidy_iea_df`. Default is "`Flow`".
 #' @param non_energy_flow a sting identifying non-energy flows. Default is "`Non-energy use industry/transformation/energy`".
 #' @param product the name of the product column in `.tidy_iea_df`. Default is "`Product`".
-#' @param e_dot the name of the energy rate column in `.tidy_iea_df`. Default is "`E.dot`".
+#' @param e_dot the name of the energy rate column in `.tidy_iea_df`. Default is "`Edot`".
 #'
 #' @return `.tidy_iea_df` with energy sunk in Transformation processes sinks reassigned to Non-energy use
 #' 
@@ -627,7 +656,7 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
   # This has the effect of adding the new Non-energy use to any existing non-energy use
   # in the same group.
   SummarizedNonenergy <- Nonenergy %>% 
-    # Group by all columns except for E.dot
+    # Group by all columns except for Edot
     matsindf::group_by_everything_except(e_dot) %>% 
     dplyr::summarise(!!as.name(e_dot) := sum(!!as.name(e_dot))) %>%
     dplyr::ungroup()
@@ -660,6 +689,16 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #'                                 Default is TRUE.
 #' @param route_non_specified_tp Boolean stating whether non-specified transformation processes flows should be routed to existing industries
 #'                               Default is TRUE.
+#' @param specify_renewable_plants A boolean indicating whether renewable energy plants should be specified or not.
+#'                                 Default is FALSE.
+#' @param specify_electricity_grid Boolean stating whether an electricity grid industry should be specified or not.
+#'                                 Default is FALSE.
+#' @param specify_distribution_industries Boolean stating whether distribution industries should be specified or not.
+#'                                        Default is FALSE.
+#' @param ascribe_eiou_to_renewable_plants A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
+#'                                         should be ascribed to the new renewable industries. Default is FALSE.
+#' @param ascribe_eiou_to_nuclear A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
+#'                                should be ascribed to the new nuclear industry. Default is FALSE.
 #'
 #' @return An enhanced and corrected version of `.tidy_iea_df` 
 #'         That is ready for physical supply-use table (PSUT) analysis.
@@ -680,7 +719,12 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 specify_all <- function(.tidy_iea_df,
                         split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
                         route_non_specified_eiou = TRUE,
-                        route_non_specified_tp = TRUE){
+                        route_non_specified_tp = TRUE,
+                        specify_renewable_plants = FALSE,
+                        specify_electricity_grid = FALSE,
+                        specify_distribution_industries = FALSE,
+                        ascribe_eiou_to_renewable_plants = FALSE,
+                        ascribe_eiou_to_nuclear = FALSE){
   
   split_own_use_elect_chp_heat_using_shares_of <- match.arg(split_own_use_elect_chp_heat_using_shares_of)
   
@@ -690,7 +734,12 @@ specify_all <- function(.tidy_iea_df,
     specify_tp_eiou(
       split_own_use_elect_chp_heat_using_shares_of = split_own_use_elect_chp_heat_using_shares_of,
       route_non_specified_eiou = route_non_specified_eiou,
-      route_non_specified_tp = route_non_specified_tp
+      route_non_specified_tp = route_non_specified_tp,
+      specify_renewable_plants = specify_renewable_plants,
+      specify_electricity_grid = specify_electricity_grid,
+      specify_distribution_industries = specify_distribution_industries,
+      ascribe_eiou_to_renewable_plants = ascribe_eiou_to_renewable_plants,
+      ascribe_eiou_to_nuclear = ascribe_eiou_to_nuclear,
     ) %>% 
     specify_bunkers() %>%
     specify_interface_industries() %>% 

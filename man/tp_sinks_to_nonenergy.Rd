@@ -40,7 +40,7 @@ tp_sinks_to_nonenergy(
 
 \item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "\code{Product}".}
 
-\item{e_dot}{the name of the energy rate column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
+\item{e_dot}{the name of the energy rate column in \code{.tidy_iea_df}. Default is "\code{Edot}".}
 }
 \value{
 \code{.tidy_iea_df} with energy sunk in Transformation processes sinks reassigned to Non-energy use

@@ -57,7 +57,7 @@ If not present, the ".xlsx" extension is added.}
 Default is "Edot".}
 
 \item{e_dot_perc}{the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
-Default is "E.dot.perc".}
+Default is "Edot.perc".}
 
 \item{maximum_values}{the name of the maximum values column in output. Default is \code{IEATools::template_cols$maximum_values}.}
 

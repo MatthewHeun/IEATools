@@ -310,11 +310,11 @@ algorithm:
 
 1.  Identify (per group in `.tidy_iea_df`) all
     `Transformation processes` that consume energy (negative value for
-    `E.dot`). Energy consumption can be for the transformation process
+    `Edot`). Energy consumption can be for the transformation process
     itself or for Energy industry own use.
 2.  Identify (per group in `.tidy_iea_df`) all
     `Transformation processes` that produce energy (positive value for
-    `E.dot`).
+    `Edot`).
 3.  Take the set difference between the two (consumers less producers
     for sinks and producers less consumers for sources). The set
     difference is the list of transformation sinks or sources,

@@ -33,7 +33,7 @@ specify_primary_production(
 
 \item{ledger_side, flow, product, flow_aggregation_point}{See \code{IEATools::iea_cols}.}
 
-\item{e_dot}{The name of the energy column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
+\item{e_dot}{The name of the energy column in \code{.tidy_iea_df}. Default is "\code{Edot}".}
 
 \item{list_primary_coal_products}{The list of primary coal products for which the production industry needs to be changed.
 Default is \code{IEATools::primary_coal_products}.}

@@ -12,6 +12,15 @@ which always resolves to the latest release.
   database conflicts. 
   PostgreSQL doesn't like column names containing "."
   because "." is the separator for "schema.table".
+* New `specify_distribution_losses()` function
+  to specify distribution industries, within which transportation and
+  distribution losses occur.
+* Argument added to `add_nuclear_industry()` to ascribe some EIOU 
+  to the nuclear industry according to its output share.
+* New `specify_renewable_plants()` function 
+  to specify renewable energy plants.
+* New `specify_electricity_grid()` function 
+  to add an electricity grid.
 * The `.iea_file` argument to `slurp_iea_to_raw_df()`
   is now vectorized, which will enable sending 
   a vector of country IEA data files in `.iea_file`.

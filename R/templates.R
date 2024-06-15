@@ -30,9 +30,9 @@
 #' @param destination the name for the destination column. Default is "Destination".
 #' @param quantity the name of the quantity column. Default is "Quantity".
 #' @param e_dot the name of the energy flow rate column. Default is "Edot".
-#' @param e_dot_total the string identifier for total energy. Default is "E.dot.total".
+#' @param e_dot_total the string identifier for total energy. Default is "Edot.total".
 #' @param perc_unit_string the string used to indicate percentages. Default is "`[%]`".
-#' @param e_dot_perc the string identifier for energy percentage. Default is "E.dot.perc".
+#' @param e_dot_perc the string identifier for energy percentage. Default is "Edot.perc".
 #' @param maximum_values the name for the maximum energy values column. Default is "Maximum values".
 #' @param year_for_maximum_values an integer for the first year (in which maximum values will be stored before renaming the column to `maximum_values`). 
 #'        Default is `0`.
@@ -384,7 +384,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #' @param e_dot the name of the energy flow rate column in `.tidy_iea_df` and the name of the energy flow rate rows to be included in the Excel file that is written by this function.
 #'        Default is "Edot".
 #' @param e_dot_perc the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
-#'        Default is "E.dot.perc".
+#'        Default is "Edot.perc".
 #' @param maximum_values the name of the maximum values column in output. Default is `IEATools::template_cols$maximum_values`.
 #' @param header_row_font_color a hex string representing the font color for the header row in the Excel file that is written by this function.
 #'        Default is "#FFFFFF", white.
@@ -499,7 +499,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
   dont_fill_style <- openxlsx::createStyle(fgFill = dont_fill_shading_color)
   openxlsx::addStyle(fu_wb, fu_allocations_tab_name, style = dont_fill_style, rows = c_rows_indices, cols = max_values_col_index, gridExpand = TRUE)
   # Now work on the year columns. 
-  # Find all the E.dot rows
+  # Find all the Edot rows
   for (yr_index in 1:length(year_cols_indices)) {
     col_index <- year_cols_indices[[yr_index]]
     col_name <- year_cols_names[[yr_index]]
@@ -852,7 +852,7 @@ eta_fu_template <- function(.fu_allocations,
     # So we create e_dot_info from tidy_specified_iea_data.
     # The following modifications to tidy_specified_iea_data are needed.
     # * filter to contain only Consumption and EIOU
-    # * rename E.dot --> E.dot_dest
+    # * rename Edot --> Edot_dest
     # * rename Product --> EfProduct
     # * rename Flow --> Destination
     e_dot_info <- tidy_specified_iea_data %>% 
@@ -889,7 +889,7 @@ eta_fu_template <- function(.fu_allocations,
 
     # To create the e_dot_machine_max_perc column, 
     # we need to calculate the energy flowing into each f-->u machine.
-    # The first step is to isolate the E.dot rows
+    # The first step is to isolate the Edot rows
     e_dot_info <- .fu_allocations %>%
       dplyr::filter(!!as.name(quantity) == e_dot) %>%
       # dplyr::select(-maximum_values, -machine, -eu_product, -quantity) %>%
@@ -924,7 +924,7 @@ eta_fu_template <- function(.fu_allocations,
       "{c_ratio}" := dplyr::all_of(c_perc)
     )
   
-  # Now we join the E.dot and C values and calculate the energy flowing into each final-to-useful machine
+  # Now we join the Edot and C values and calculate the energy flowing into each final-to-useful machine
   input_energy <- dplyr::full_join(c_info, e_dot_info, 
                                    by = matsindf::everything_except(c_info, machine, eu_product, c_ratio, .symbols = FALSE)) %>% 
     # There may be cases where the analyst has filled a C value, but there is no corresponding e_dot_dest value.
@@ -1107,7 +1107,7 @@ eta_fu_template <- function(.fu_allocations,
 #' @param overwrite_fu_eta_tab a logical telling whether to overwrite the final-to-useful efficiency tab, if it already exists. Default is `FALSE`.
 #' @param eta_fu the name of the final-to-useful efficiency rows in `.eta_fu_template`. Default is IEATools::template_cols$eta_fu.
 #' @param e_dot_machine a string identifying energy flow into final-to-useful machines. Default is "Edot_machine".
-#' @param e_dot_machine_perc a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine \[%\]".
+#' @param e_dot_machine_perc a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "Edot_machine \[%\]".
 #' @param maximum_values a string identifying the maximum values column in the outgoing template. Default is `IEATools::template_cols$maximum_values`.
 #' @param header_row_font_color a hex string representing the font color for the header row in the Excel file that is written by this function.
 #'        Default is "#FFFFFF", white.
@@ -1132,7 +1132,7 @@ eta_fu_template <- function(.fu_allocations,
 #' @param blank_shading_color a hex string representing the shading color for blank cells in the `maximum_values` column.
 #'        Default is "#808080".
 #' @param quantity the name of the quantity column in `.eta_fu_template`. Default is "Quantity".
-#' @param e_dot_machine_max_perc the name of the rows that give maximum percentages. Default is "E.dot_machine_max \[%\]".
+#' @param e_dot_machine_max_perc the name of the rows that give maximum percentages. Default is "Edot_machine_max \[%\]".
 #' @param .rownum the name of a temporary column containing row numbers. Default is ".rownum". 
 #'
 #' @return the `path` argument
@@ -1219,7 +1219,7 @@ write_eta_fu_template <- function(.eta_fu_template,
   # Identify the maximum_values column.
   maximum_values_col_index <- min(year_cols_indices) - 1
   
-  # Add percentage formatting to the E.dot_machine [%] rows
+  # Add percentage formatting to the Edot_machine [%] rows
   e_dot_perc_style <- openxlsx::createStyle(numFmt = "PERCENTAGE")
   openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = e_dot_perc_style, 
                      rows = e_dot_machine_perc_row_indices, cols = c(maximum_values_col_index, year_cols_indices), gridExpand = TRUE)

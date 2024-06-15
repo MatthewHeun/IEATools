@@ -308,6 +308,23 @@ usethis::use_data(biofuels_and_waste_products, overwrite = TRUE)
 electricity_products <- list(electricity = "Electricity")
 usethis::use_data(electricity_products, overwrite = TRUE)
 
+
+#
+# Heat
+# 
+
+heat_products <- list(heat = "Heat")
+usethis::use_data(heat_products, overwrite = TRUE)
+
+
+#
+# Nuclear products
+# 
+
+nuclear_products <- list(nuclear = "Nuclear")
+usethis::use_data(nuclear_products, overwrite = TRUE)
+
+
 #
 # Non-energy
 # 
@@ -832,3 +849,32 @@ phi_constants_names <- list(phi_constants_tab_name = "phi_constants",
 usethis::use_data(phi_constants_names, overwrite = TRUE)
 
 
+# 
+# Renewable energy industries
+# 
+
+renewable_industries <- list(geothermal_plants = "Geothermal plants",
+                             hydro_plants = "Hydropower plants",
+                             solar_pv_plants = "Solar photovoltaic plants",
+                             solar_th_plants = "Solar thermal plants",
+                             oceanic_plants = "Oceanic power plants",
+                             wind_power_plants = "Wind power plants")
+usethis::use_data(renewable_industries, overwrite = TRUE)
+
+
+# 
+# Grid industries
+# 
+
+grid_industries <- list(electricity_grid = "Electricity grid")
+
+usethis::use_data(grid_industries, overwrite = TRUE)
+
+
+# 
+# Distribution industries
+# 
+
+distribution_industry <- "Distribution"
+
+usethis::use_data(distribution_industry, overwrite = TRUE)

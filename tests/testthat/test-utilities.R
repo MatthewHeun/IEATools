@@ -35,7 +35,7 @@ test_that("year_cols() works as expected", {
 
 test_that("meta_cols() works as expected", {
   DF <- data.frame(Edot = -42, a = c(1, 2), `1967` = c(3, 4), `-42` = c(5, 6), check.names = FALSE)
-  expect_equal(meta_cols(DF, return_names = TRUE), "a")  # Because E.dot is excluded by default.
+  expect_equal(meta_cols(DF, return_names = TRUE), "a")  # Because Edot is excluded by default.
   
   expect_equal(meta_cols(DF), 2)
   expect_equal(meta_cols(DF, not_meta = "a"), 1)
