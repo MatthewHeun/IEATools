@@ -9,7 +9,11 @@ specify_tp_eiou(
   split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
   route_non_specified_eiou = TRUE,
   route_non_specified_tp = TRUE,
-<<<<<<< HEAD
+  specify_renewable_plants = FALSE,
+  specify_electricity_grid = FALSE,
+  specify_distribution_industries = FALSE,
+  ascribe_eiou_to_renewable_plants = FALSE,
+  ascribe_eiou_to_nuclear = FALSE,
   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
   eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
   transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
@@ -18,21 +22,6 @@ specify_tp_eiou(
   pumped_storage = IEATools::eiou_flows$pumped_storage_plants,
   nuclear_industry = IEATools::eiou_flows$nuclear_industry,
   e_dot = IEATools::iea_cols$e_dot,
-=======
-  specify_renewable_plants = FALSE,
-  specify_electricity_grid = FALSE,
-  specify_distribution_industries = FALSE,
-  ascribe_eiou_to_renewable_plants = FALSE,
-  ascribe_eiou_to_nuclear = FALSE,
-  flow_aggregation_point = "Flow.aggregation.point",
-  eiou = "Energy industry own use",
-  transformation_processes = "Transformation processes",
-  flow = "Flow",
-  own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
-  pumped_storage = "Pumped storage plants",
-  nuclear_industry = "Nuclear industry",
-  e_dot = "Edot",
->>>>>>> develop
   negzeropos = ".negzeropos",
   main_act_producer_elect =
     IEATools::eiou_flows$main_activity_producer_electricity_plants
@@ -52,9 +41,6 @@ Default is TRUE.}
 \item{route_non_specified_tp}{Boolean stating whether non-specified transformation processes flows should be routed to existing industries.
 Default is TRUE.}
 
-<<<<<<< HEAD
-\item{flow_aggregation_point}{The name of the flow aggregation point column in \code{.tidy_iea_df}. Default is FlowAggregationPoint.}
-=======
 \item{specify_renewable_plants}{Boolean stating whether renewable energy industries should be specified or not.
 Default is FALSE.}
 
@@ -71,7 +57,6 @@ should be ascribed to the new renewable industries. Default is FALSE.}
 should be ascribed to the new nuclear industry. Default is FALSE.}
 
 \item{flow_aggregation_point}{The name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
->>>>>>> develop
 
 \item{eiou}{A string identifying energy industry own use in the flow aggregation point column. Default is "Energy industry own use".}
 
