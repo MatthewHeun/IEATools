@@ -61,8 +61,8 @@ fixed <- example_tidy_iea_df \%>\%
 # Compare production of Primary solid biofuels in 1991
 example_tidy_iea_df \%>\% 
   filter(Year == 1991, Flow == "Production") \%>\% 
-  select("E.dot", "Unit")
+  select("Edot", "Unit")
 fixed \%>\% 
   filter(Year == 1991, Flow == "Production") \%>\% 
-  select("E.dot", "Unit")
+  select("Edot", "Unit")
 }

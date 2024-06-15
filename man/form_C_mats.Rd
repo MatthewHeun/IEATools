@@ -82,9 +82,9 @@ This function uses information in a filled allocation template (created by \code
 to create allocation matrices (\strong{C}).
 }
 \details{
-rownames of the \strong{C} matrices are taken from the \code{Ef.product} and \code{Destination} columns of \code{.fu_allocation_table}
-and have the form "\code{Ef.product}  ->  \code{Destination}".
-colnames of the \strong{C} matrices are taken from the \code{Machine} and \code{Eu.product} columns of \code{.fu_allocation_table}
+rownames of the \strong{C} matrices are taken from the \code{EfProduct} and \code{Destination} columns of \code{.fu_allocation_table}
+and have the form "\code{EfProduct}  ->  \code{Destination}".
+colnames of the \strong{C} matrices are taken from the \code{Machine} and \code{EuProduct} columns of \code{.fu_allocation_table}
 and have the form "machine  ->  useful energy form".
 
 \strong{C} matrices are created for both energy industry own use

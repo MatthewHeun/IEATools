@@ -16,7 +16,7 @@ A string list with 24 entries
 \item{C_eiou}{The name of the EIOU allocation rows in final-to-useful templates.}
 \item{C_Y}{The name of the final demand allocation rows in final-to-useful templates.}
 \item{C_perc}{The name of the percentage allocation rows in final-to-useful templates.}
-\item{e_dot_max}{The name of the maximum E.dot column in final-to-useful templates.}
+\item{e_dot_max}{The name of the maximum Edot column in final-to-useful templates.}
 \item{e_dot_dest}{The name of the column representing the destination for energy flows in final-to-useful templates.}
 \item{e_dot_perc}{The name of the energy flow percentage column in final-to-useful templates.}
 \item{e_dot_machine}{The name of the column representing energy flow into a machine in final-to-useful templates.}

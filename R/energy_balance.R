@@ -8,7 +8,7 @@
 #' before calling this function.
 #' Grouping should _definitely_ be done on the `Product` column.
 #' Typically, grouping is also done on 
-#' `Country`, `Method`, `Year`, `Energy.type`, `Last.stage`, etc. columns.
+#' `Country`, `Method`, `Year`, `EnergyType`, `Last.stage`, etc. columns.
 #' Grouping should _not_ be done on the `Ledger.side` column or the `Flow` column.
 #' To test whether all balances are OK, 
 #' use the `tidy_iea_df_balanced()` function.
@@ -167,7 +167,7 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' The `Product` column should definitely be included in `grouping_vars`, 
 #' but any other grouping level is fine. 
 #' Typically, grouping should be done by 
-#' `Country`, `Year`, `Energy.type`, `Last.stage`, `Product`, etc. columns.
+#' `Country`, `Year`, `EnergyType`, `Last.stage`, `Product`, etc. columns.
 #' Grouping should _not_ be done on the `flow_aggregation_point`, `Flow`, or `ledger_side` columns.
 #' 
 #' Internally, this function calls [calc_tidy_iea_df_balances()]
@@ -202,7 +202,7 @@ tidy_iea_df_balanced <- function(.tidy_iea_df_balances,
 #' # Remember that grouping should _not_ be done on
 #' # the `flow_aggregation_point`, `Flow`, or `ledger_side` columns.
 #' grouped_iea_df <- load_tidy_iea_df() %>% 
-#'   group_by(Country, Method, Energy.type, Last.stage, Year, Product)
+#'   group_by(Country, Method, EnergyType, LastStage, Year, Product)
 #' # unbalanced will not be balanced, because the IEA data are not in perfect balance.
 #' # Because we have grouped by key variables, 
 #' # `calc_tidy_iea_df_balances` provides energy balances 

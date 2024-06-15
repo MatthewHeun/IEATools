@@ -17,7 +17,9 @@ load_tidy_iea_df(
 )
 }
 \arguments{
-\item{.iea_file}{The path of the file to be loaded. Default loads example data bundled with the package via \code{\link[=sample_iea_data_path]{sample_iea_data_path()}}.}
+\item{.iea_file}{The path of the file to be loaded.
+Can be a vector of files to be loaded.
+Default loads example data bundled with the package via \code{\link[=sample_iea_data_path]{sample_iea_data_path()}}.}
 
 \item{unit_val}{The units for this file.
 Default is "TJ".}

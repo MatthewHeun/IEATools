@@ -35,24 +35,24 @@ test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_fl
   # Exports
   expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Exports")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
   # International marine bunkers
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   # International aviation bunkers
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   # Stock changes
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   # Transformation processes
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow.aggregation.point, "Transformation processes") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow.aggregation.point, "Transformation processes") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Transformation processes") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Transformation processes") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   # EIOU
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow.aggregation.point, "Energy industry own use") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_EIOU") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Energy industry own use") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_EIOU") %>% all())
   # Consumption
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Ledger.side, "Consumption")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(LedgerSide, "Consumption")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
   # Transfers
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   
   With_matnames <- load_tidy_iea_df() %>% 
     specify_all() %>% 
@@ -60,15 +60,15 @@ test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_fl
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
-      Last.stage = c("Final", "Final"),
+      EnergyType = c("E", "E"),
+      LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
-      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      LedgerSide = c("Consumption", "Supply"),
+      FlowAggregationPoint = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = psut_cols$B
     ) %>% 
     add_psut_matnames()
@@ -81,15 +81,15 @@ test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_fl
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
-      Last.stage = c("Final", "Final"),
+      EnergyType = c("E", "E"),
+      LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
-      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      LedgerSide = c("Consumption", "Supply"),
+      FlowAggregationPoint = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = psut_cols$B)
   
   expect_true(all(With_matnames == With_matnames_2))
@@ -110,24 +110,24 @@ test_that("add_psut_matnames() works as expected for R_includes_all_exogenous_fl
   # Exports
   expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Exports")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
   # International marine bunkers
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International marine bunkers") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
   # International aviation bunkers
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "International aviation bunkers") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
   # Stock changes
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Stock changes") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("R") %>% all())
   # Transformation processes
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow.aggregation.point, "Transformation processes") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow.aggregation.point, "Transformation processes") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Transformation processes") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Transformation processes") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
   # EIOU
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow.aggregation.point, "Energy industry own use") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_EIOU") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(FlowAggregationPoint, "Energy industry own use") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_EIOU") %>% all())
   # Consumption
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Ledger.side, "Consumption")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(LedgerSide, "Consumption")) %>% magrittr::extract2("matnames") %>% magrittr::equals("Y") %>% all())
   # Transfers
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
-  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & E.dot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & Edot < 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("U_feed") %>% all())
+  expect_true(With_matnames %>% dplyr::filter(startsWith(Flow, "Transfers") & Edot > 0) %>% magrittr::extract2("matnames") %>% magrittr::equals("V") %>% all())
 })
 
 
@@ -138,15 +138,15 @@ test_that("add_row_col_meta() works as expected", {
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
-      Last.stage = c("Final", "Final"),
+      EnergyType = c("E", "E"),
+      LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
-      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      LedgerSide = c("Consumption", "Supply"),
+      FlowAggregationPoint = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = psut_cols$B
     ) %>% 
     add_row_col_meta()
@@ -202,15 +202,15 @@ test_that("add_row_col_meta() works as expected", {
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
-      Last.stage = c("Final", "Final"),
+      EnergyType = c("E", "E"),
+      LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
-      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      LedgerSide = c("Consumption", "Supply"),
+      FlowAggregationPoint = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = psut_cols$B
     ) %>% 
     tibble::add_column(
@@ -226,15 +226,15 @@ test_that("add_row_col_meta() works as expected", {
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
-      Last.stage = c("Final", "Final"),
+      EnergyType = c("E", "E"),
+      LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
-      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      LedgerSide = c("Consumption", "Supply"),
+      FlowAggregationPoint = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = psut_cols$B
     ) %>% 
     tibble::add_column(
@@ -300,15 +300,15 @@ test_that("collapse_to_psut() works expected", {
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
-      Last.stage = c("Final", "Final"),
+      EnergyType = c("E", "E"),
+      LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
-      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      LedgerSide = c("Consumption", "Supply"),
+      FlowAggregationPoint = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = psut_cols$B
     ) %>% 
     add_row_col_meta() %>% 
@@ -334,15 +334,15 @@ test_that("collapse_to_psut() works with Matrix objects", {
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
-      Last.stage = c("Final", "Final"),
+      EnergyType = c("E", "E"),
+      LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
-      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      LedgerSide = c("Consumption", "Supply"),
+      FlowAggregationPoint = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = psut_cols$B
     ) %>% 
     add_row_col_meta() %>% 
@@ -373,7 +373,7 @@ test_that("prep_psut() works as expected", {
                         names_to = "matnames", values_to = "matvals") %>% 
     dplyr::rename(matval_simple = matvals)
   expect_equal(names(Simple), 
-               c("Country", "Method", "Energy.type", "Last.stage", "Year", "matnames", "matval_simple"))
+               c("Country", "Method", "EnergyType", "LastStage", "Year", "matnames", "matval_simple"))
   S_units <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     extract_S_units_from_tidy()
@@ -388,11 +388,11 @@ test_that("prep_psut() works as expected", {
       r_EIOU = matsbyname::quotient_byname(U_EIOU, U) %>% 
         matsbyname::replaceNaN_byname(0)
     ) %>%
-    dplyr::full_join(S_units, by = c("Country", "Method", "Energy.type", "Last.stage", "Year")) %>% 
+    dplyr::full_join(S_units, by = c("Country", "Method", "EnergyType", "LastStage", "Year")) %>% 
     tidyr::gather(key = matnames, value = matvals, R, U, U_EIOU, U_feed, r_EIOU, V, Y, S_units) %>% 
     dplyr::rename(matval_complicated = matvals)
   # Simple and Complicated ought to be the same.
-  dplyr::full_join(Simple, Complicated, by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "matnames")) %>% 
+  dplyr::full_join(Simple, Complicated, by = c("Country", "Method", "EnergyType", "LastStage", "Year", "matnames")) %>% 
     dplyr::mutate(
       same = matsbyname::equal_byname(matval_simple, matval_complicated)
     ) %>%
@@ -422,7 +422,7 @@ test_that("prep_psut() works with Matrix objects", {
     expect_true(matsbyname::is.Matrix(Simple$matval_simple[[i]]))
   }
   expect_equal(names(Simple), 
-               c("Country", "Method", "Energy.type", "Last.stage", "Year", "matnames", "matval_simple"))
+               c("Country", "Method", "EnergyType", "LastStage", "Year", "matnames", "matval_simple"))
   S_units <- load_tidy_iea_df() %>% 
     specify_all() %>% 
     extract_S_units_from_tidy(matrix_class = "Matrix")
@@ -437,11 +437,11 @@ test_that("prep_psut() works with Matrix objects", {
       r_EIOU = matsbyname::quotient_byname(U_EIOU, U) %>% 
         matsbyname::replaceNaN_byname(0)
     ) %>%
-    dplyr::full_join(S_units, by = c("Country", "Method", "Energy.type", "Last.stage", "Year")) %>% 
+    dplyr::full_join(S_units, by = c("Country", "Method", "EnergyType", "LastStage", "Year")) %>% 
     tidyr::gather(key = matnames, value = matvals, R, U, U_EIOU, U_feed, r_EIOU, V, Y, S_units) %>% 
     dplyr::rename(matval_complicated = matvals)
   # Simple and Complicated ought to be the same.
-  dplyr::full_join(Simple, Complicated, by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "matnames")) %>% 
+  dplyr::full_join(Simple, Complicated, by = c("Country", "Method", "EnergyType", "LastStage", "Year", "matnames")) %>% 
     dplyr::mutate(
       same = matsbyname::equal_byname(matval_simple, matval_complicated)
     ) %>%
@@ -686,15 +686,15 @@ test_that("prep_psut() correctly works with Balancing flows", {
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
-      Last.stage = c("Final", "Final"),
+      EnergyType = c("E", "E"),
+      LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
-      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      LedgerSide = c("Consumption", "Supply"),
+      FlowAggregationPoint = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = c(psut_cols$B, psut_cols$B)
     ) %>% 
     prep_psut()
@@ -734,15 +734,15 @@ test_that("prep_psut() correctly works with Balancing flows and Matrix objects",
     tibble::add_row(
       Country = c("GHA", "GHA"),
       Method = c("PCM", "PCM"),
-      Energy.type = c("E", "E"),
-      Last.stage = c("Final", "Final"),
+      EnergyType = c("E", "E"),
+      LastStage = c("Final", "Final"),
       Year = c(1971, 1971),
-      Ledger.side = c("Consumption", "Supply"),
-      Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+      LedgerSide = c("Consumption", "Supply"),
+      FlowAggregationPoint = c("Industry", "Total primary energy supply"),
       Flow = c("Non-ferrous metals", "Stock changes [of Crude oil]"),
       Product = c("Electricity", "Crude oil"),
       Unit = c("ktoe", "ktoe"),
-      E.dot = c(100, -100),
+      Edot = c(100, -100),
       matnames = c(psut_cols$B, psut_cols$B)
     ) %>%
     prep_psut(matrix_class = "Matrix")

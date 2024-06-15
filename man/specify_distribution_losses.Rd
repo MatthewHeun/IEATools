@@ -60,7 +60,7 @@ Default is ".negzeropos".}
 The \code{.tidy__iea_df} to which distribution industries have been added.
 }
 \description{
-For each product where losses are reported, creates a distribution industrym which
+For each product where losses are reported, creates a distribution industry which
 is specified by product (e.g., "Distribution [of Heat]"),
 and converts a product from a specific origin (e.g., "Heat [from Oil refineries]")
 into the final demand product (e.g., "Heat").

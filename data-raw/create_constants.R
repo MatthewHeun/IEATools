@@ -20,15 +20,15 @@ usethis::use_data(valid_iea_release_years, overwrite = TRUE)
 
 iea_cols <- list(country = "Country",
                  method = "Method", 
-                 energy_type = "Energy.type", 
-                 last_stage = "Last.stage", 
+                 energy_type = "EnergyType", 
+                 last_stage = "LastStage", 
                  year = "Year",
-                 ledger_side = "Ledger.side", 
-                 flow_aggregation_point = "Flow.aggregation.point", 
+                 ledger_side = "LedgerSide", 
+                 flow_aggregation_point = "FlowAggregationPoint", 
                  flow = "Flow", 
                  product = "Product", 
                  unit = "Unit", 
-                 e_dot = "E.dot")
+                 e_dot = "Edot")
 usethis::use_data(iea_cols, overwrite = TRUE)
 
 
@@ -116,30 +116,30 @@ usethis::use_data(psut_cols, overwrite = TRUE)
 # Give names of columns in FU allocation and eta_fu templates
 # 
 
-template_cols <- list(ef_product = "Ef.product",
+template_cols <- list(ef_product = "EfProduct",
                       machine = "Machine",
-                      eu_product = "Eu.product",
+                      eu_product = "EuProduct",
                       destination = "Destination",
                       quantity = "Quantity",
-                      maximum_values = "Maximum.values",
+                      maximum_values = "MaximumValues",
                       C_eiou = "C_EIOU",
                       C_Y = "C_Y",
                       C_perc = "C.perc [%]",
-                      e_dot_max = "E.dot_max",
-                      e_dot_perc = "E.dot [%]",
-                      e_dot_dest = "E.dot_dest",
-                      e_dot_machine = "E.dot_machine",
-                      e_dot_machine_tot = "E.dot_machine_tot",
-                      e_dot_machine_perc = "E.dot_machine [%]", 
-                      e_dot_machine_max_perc = "E.dot_machine_max [%]",
-                      eta_fu = "eta.fu",
-                      phi_pf = "phi.pf",
-                      phi_u = "phi.u", 
+                      e_dot_max = paste0(IEATools::iea_cols$e_dot, "_max"),
+                      e_dot_perc = paste0(IEATools::iea_cols$e_dot, " [%]"),
+                      e_dot_dest = paste0(IEATools::iea_cols$e_dot, "_dest"),
+                      e_dot_machine = paste0(IEATools::iea_cols$e_dot, "_machine"),
+                      e_dot_machine_tot = paste0(IEATools::iea_cols$e_dot, "_machine", "_tot"),
+                      e_dot_machine_perc = paste0(IEATools::iea_cols$e_dot, "_machine", " [%]"), 
+                      e_dot_machine_max_perc = paste0(IEATools::iea_cols$e_dot, "_machine", "_max [%]"),
+                      eta_fu = "etafu",
+                      phi_pf = "phipf",
+                      phi_u = "phiu", 
                       phi = "phi",
-                      c_source = "C.source", 
-                      eta_fu_source = "eta.fu.source",
-                      phi_source = "phi.source",
-                      .values = ".values")
+                      c_source = "CSource", 
+                      eta_fu_source = "etafuSource",
+                      phi_source = "PhiSource",
+                      .values = "Value")
 usethis::use_data(template_cols, overwrite = TRUE)
 
 
@@ -161,7 +161,8 @@ row_col_types <- list(industry = "Industry",
                       resource = "Industry",
                       sector = "Industry",
                       product = "Product", 
-                      unit = "Unit")
+                      unit = "Unit", 
+                      other = "Other")
 usethis::use_data(row_col_types, overwrite = TRUE)
 
 
@@ -599,11 +600,11 @@ usethis::use_data(aggregation_flows, overwrite = TRUE)
 #
 # Default names for columns in aggregate data frames
 #
-aggregate_cols <- list(aggregate_primary = "EX.p",
-                       aggregate_final = "EX.f",
-                       aggregate_useful = "EX.u",
-                       net_aggregate_demand = "EX.fd_net",
-                       gross_aggregate_demand = "EX.fd_gross")
+aggregate_cols <- list(aggregate_primary = "EXp",
+                       aggregate_final = "EXf",
+                       aggregate_useful = "EXu",
+                       net_aggregate_demand = "EXfdnet",
+                       gross_aggregate_demand = "EXfdgross")
 usethis::use_data(aggregate_cols, overwrite = TRUE)
 
 
@@ -732,8 +733,8 @@ usethis::use_data(ledger_sides, overwrite = TRUE)
 # In the first step, we use the data frame created from load_tidy_iea_df,
 # creating a united column from Flow.aggregation.point and Flow.
 fap_flows <- load_tidy_iea_df(remove_zeroes = FALSE) %>% 
-  tidyr::unite(col = Flow.aggregation.point_Flow, Flow.aggregation.point, Flow, sep = "_", remove = TRUE) %>% 
-  dplyr::select(Flow.aggregation.point_Flow) %>% 
+  tidyr::unite(col = FlowAggregationPoint_Flow, FlowAggregationPoint, Flow, sep = "_", remove = TRUE) %>% 
+  dplyr::select(FlowAggregationPoint_Flow) %>% 
   unique() %>% 
   unlist() %>% 
   unname() %>% 
@@ -843,8 +844,8 @@ usethis::use_data(fd_sectors, overwrite = TRUE)
 phi_constants_names <- list(phi_constants_tab_name = "phi_constants",
                             product_colname = "Product",
                             phi_colname = "phi", 
-                            phi_source_colname = "phi.source",
-                            is_useful_colname = "is.useful")
+                            phi_source_colname = "PhiSource",
+                            is_useful_colname = "IsUseful")
 usethis::use_data(phi_constants_names, overwrite = TRUE)
 
 

@@ -37,29 +37,29 @@ write_fu_allocation_template(
 Include both folder and file name.
 If not present, the ".xlsx" extension is added.}
 
-\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is "Ledger.side".}
+\item{ledger_side}{the name of the ledger side column in \code{.tidy_iea_df}. Default is \code{IEATools::iea_cols$ledger_side}.}
 
-\item{consumption}{the string identifier for consumption in the \code{ledger_side} column.  Default is "Consumption".}
+\item{consumption}{the string identifier for consumption in the \code{ledger_side} column.  Default is \code{IEATools::ledger_sides$consumption}.}
 
-\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is "Flow.aggregation.point".}
+\item{flow_aggregation_point}{the name of the flow aggregation point column in \code{.tidy_iea_df}. Default is \code{IEATools::iea_cols$flow_aggregation_point}.}
 
-\item{eiou}{the string identifier for energy industry own use in the \code{flow_aggregation_point} column. Default is "Energy industry own use".}
+\item{eiou}{the string identifier for energy industry own use in the \code{flow_aggregation_point} column. Default is \code{IEATools::tfc_compare_flows$energy_industry_own_use}.}
 
-\item{fu_allocations_tab_name}{the name of the tab on which the template will be written. Default is "FU Allocations".}
+\item{fu_allocations_tab_name}{the name of the tab on which the template will be written. Default is \code{IEATools::fu_analysis_file_info$fu_allocation_tab_name}.}
 
-\item{machine}{the name of the machine column in output. Default is "Machine"}
+\item{machine}{the name of the machine column in output. Default is \code{IEATools::template_cols$machine}.}
 
-\item{eu_product}{the name of the useful energy product column in output. Default is "Eu.product".}
+\item{eu_product}{the name of the useful energy product column in output. Default is \code{IEATools::template_cols$eu_product}.}
 
-\item{quantity}{the name of the quantity column to be created on output. Default is "Quantity".}
+\item{quantity}{the name of the quantity column to be created on output. Default is \code{IEATools::template_cols$quantity}.}
 
 \item{e_dot}{the name of the energy flow rate column in \code{.tidy_iea_df} and the name of the energy flow rate rows to be included in the Excel file that is written by this function.
-Default is "E.dot".}
+Default is "Edot".}
 
 \item{e_dot_perc}{the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
-Default is "E.dot.perc".}
+Default is "Edot.perc".}
 
-\item{maximum_values}{the name of the maximum values column in output. Default is "Maximum.values".}
+\item{maximum_values}{the name of the maximum values column in output. Default is \code{IEATools::template_cols$maximum_values}.}
 
 \item{header_row_font_color}{a hex string representing the font color for the header row in the Excel file that is written by this function.
 Default is "#FFFFFF", white.}

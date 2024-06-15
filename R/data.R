@@ -127,7 +127,7 @@
 #' \item{C_eiou}{The name of the EIOU allocation rows in final-to-useful templates.}
 #' \item{C_Y}{The name of the final demand allocation rows in final-to-useful templates.}
 #' \item{C_perc}{The name of the percentage allocation rows in final-to-useful templates.}
-#' \item{e_dot_max}{The name of the maximum E.dot column in final-to-useful templates.}
+#' \item{e_dot_max}{The name of the maximum Edot column in final-to-useful templates.}
 #' \item{e_dot_dest}{The name of the column representing the destination for energy flows in final-to-useful templates.}
 #' \item{e_dot_perc}{The name of the energy flow percentage column in final-to-useful templates.}
 #' \item{e_dot_machine}{The name of the column representing energy flow into a machine in final-to-useful templates.}
@@ -181,6 +181,7 @@
 #' \item{sector}{The type of entity that absorbs final demand.}
 #' \item{product}{The inputs and outputs of industries.}
 #' \item{unit}{Units of physical measurement such as ktoe or TJ.}
+#' \item{other}{Used for, e.g., the 1-dimension of a vector.}
 #' }
 #' 
 #' @examples
@@ -1177,8 +1178,8 @@
 #' \item{phi_constants_names}{The string name of the tab in the Excel file containing the constant phi values table.}
 #' \item{product_colname}{The string name of the energy product column in the constant phi values table.}
 #' \item{phi_colname}{The string name of the constant phi value column in the constant phi values table.}
-#' \item{is_useful_colname}{The string name of the is.useful column in the constant phi values table.}
-#' \item{phi_source_colname}{The string name of the phi.source column in the completed phi values table.}
+#' \item{is_useful_colname}{The string name of the IsUseful column in the constant phi values table.}
+#' \item{phi_source_colname}{The string name of the PhiSource column in the completed phi values table.}
 #' }
 #'
 #' @examples

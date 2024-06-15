@@ -81,7 +81,7 @@ gather_producer_autoproducer <- function(.tidy_iea_df,
       )
     ) %>%
     # Now sum similar rows using summarise.
-    # Group by everything except the energy flow rate column, "E.dot".
+    # Group by everything except the energy flow rate column, "Edot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
@@ -185,7 +185,7 @@ route_pumped_storage <- function(.tidy_iea_df,
       #   )
       # ) %>%
       # Now sum similar rows using summarise.
-      # Group by everything except the energy flow rate column, "E.dot".
+      # Group by everything except the energy flow rate column, "Edot".
       matsindf::group_by_everything_except(e_dot) %>%
       dplyr::summarise(
         "{e_dot}" := sum(.data[[e_dot]])
@@ -212,6 +212,16 @@ route_pumped_storage <- function(.tidy_iea_df,
           TRUE ~ .data[[flow]]
         )
       )
+# <<<<<<< HEAD
+#     ) %>%
+#     # Now sum similar rows using summarise.
+#     # Group by everything except the energy flow rate column, "Edot".
+#     matsindf::group_by_everything_except(e_dot) %>%
+#     dplyr::summarise(
+#       "{e_dot}" := sum(.data[[e_dot]])
+#     ) %>%
+#     dplyr::ungroup()
+# =======
     
     # Routing pumped hydro to Main activity producer electricity plants for remaining observations
     routed_to_elec_plants <- .tidy_iea_df |> 
@@ -234,7 +244,7 @@ route_pumped_storage <- function(.tidy_iea_df,
       #   )
       # ) %>%
       # Now sum similar rows using summarise.
-      # Group by everything except the energy flow rate column, "E.dot".
+      # Group by everything except the energy flow rate column, "Edot".
       matsindf::group_by_everything_except(e_dot) %>%
       dplyr::summarise(
         "{e_dot}" := sum(.data[[e_dot]])
@@ -246,6 +256,7 @@ route_pumped_storage <- function(.tidy_iea_df,
       dplyr::ungroup()
   }
   return(routed_phs)
+# >>>>>>> develop
 }
 
 
@@ -478,12 +489,12 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
   split_using_shares_of <- match.arg(split_using_shares_of)
   
   # The function check whether one of the three main activity elect, heat, and/or chp exists in the TP - supply,
-  # for each (Country, Method, Energy.type, Last.stage, Year)
+  # for each (Country, Method, EnergyType, LastStage, Year)
   # If not, then it routes "Own use in electricity, CHP and heat plants" to "Main activity producer electricity plants".
   # If one of the three main activities elect, heat, and/or CHP EXISTS as a supplying transformation process,
   # Then it ascribes ... 
   
-  # Returns all the combinations of (Country, Method, Energy.type, Last.stage, Year) present in the .tidy_iea_df
+  # Returns all the combinations of (Country, Method, EnergyType, LastStage, Year) present in the .tidy_iea_df
   df_observations_included_tidy_iea_df <- .tidy_iea_df %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
     dplyr::summarise(
@@ -520,7 +531,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
       )
   }
   
-  # Find out which observations (Country, Method, Energy.type, Last.stage, Year) are NOT in the total computed
+  # Find out which observations (Country, Method, EnergyType, LastStage, Year) are NOT in the total computed
   list_not_included_total_main_activity <- df_observations_included_tidy_iea_df %>%
     dplyr::anti_join(total_main_activity, by = c({country}, {method}, {energy_type}, {last_stage}, {year})) %>%
     # tidyr::unite(col = "ID", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
@@ -638,7 +649,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
     
     
     # Now sum similar rows using summarise.
-    # Group by everything except the energy flow rate column, "E.dot".
+    # Group by everything except the energy flow rate column, "Edot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
@@ -893,7 +904,7 @@ add_nuclear_industry <- function(.tidy_iea_df,
       )
     ) %>%
     # Now sum similar rows using summarise.
-    # Group by everything except the energy flow rate column, "E.dot".
+    # Group by everything except the energy flow rate column, "Edot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
@@ -910,7 +921,7 @@ add_nuclear_industry <- function(.tidy_iea_df,
 
 #' Specifies renewable electricity and heat
 #'
-#' This function specifies hydropower, geothermal, solar photovoltaic, solar thermal, oceanic, and wind power industries.
+#' This function specifies hydro, geothermal, solar photovoltaic, solar thermal, oceanic, and wind power industries.
 #'
 #' The primary energy use of hydro, geothermal, solar photovoltaic, solar thermal, oceanic, and wind power energy by main activity and autoproducer plants are used
 #' to create new renewable industries that produce electricity and heat (heat only in the case of geothermal and solar thermal). The physical content method is used
@@ -955,7 +966,7 @@ add_nuclear_industry <- function(.tidy_iea_df,
 #'                              Default is 0.1 as this is the value assumed in the IEA's energy balances.
 #' @param ratio_geothermal_heat The ratio of primary energy to heat to use for geothermal.
 #'                              Default is 0.5 as this is the value assumed in the IEA's energy balances.
-#' @param ratio_other_renewable_elec The ratio of primary energy to electricity to use for hydropower, solar photovoltaic, oceanic and wind power.
+#' @param ratio_other_renewable_elec The ratio of primary energy to electricity to use for hydro, solar photovoltaic, oceanic, and wind power.
 #'                                   Default is 1 as this is the value assumed in the IEA's energy balances.
 #' @param geothermal_plants,hydro_plants,solar_pv_plants,solar_th_plants,oceanic_plants,wind_power_plants Names of renewable industries added. See `IEATools::renewable_industries`.
 #' @param negzeropos The name of a temporary column added to the data frame.
@@ -967,7 +978,7 @@ add_nuclear_industry <- function(.tidy_iea_df,
 #' @param .share The name of a temporary column where the share of output is calculated for each renewable industry.
 #'               Default is ".share".
 #'
-#' @return Returns a .tidy_iea_df with renewable electricity and heat from geothermal, hydropower, solar thermal, solar photovoltaic, wind power, and oceanic power specified.
+#' @return Returns a .tidy_iea_df with renewable electricity and heat from geothermal, hydro, solar thermal, solar photovoltaic, wind, and oceanic power specified.
 #' @export
 #'
 #' @examples
@@ -1219,7 +1230,7 @@ specify_renewable_plants <- function(.tidy_iea_df,
       )
     ) %>%
     # Now sum similar rows using summarise.
-    # Group by everything except the energy flow rate column, "E.dot".
+    # Group by everything except the energy flow rate column, "Edot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
@@ -1351,7 +1362,7 @@ specify_electricity_grid <- function(.tidy_iea_df,
       )
     ) %>%
     # Now sum similar rows using summarise.
-    # Group by everything except the energy flow rate column, "E.dot".
+    # Group by everything except the energy flow rate column, "Edot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
@@ -1371,7 +1382,7 @@ specify_electricity_grid <- function(.tidy_iea_df,
 
 #' Specifies distribution industries
 #' 
-#' For each product where losses are reported, creates a distribution industrym which
+#' For each product where losses are reported, creates a distribution industry which
 #' is specified by product (e.g., "Distribution \[of Heat\]"),
 #' and converts a product from a specific origin (e.g., "Heat \[from Oil refineries\]")
 #' into the final demand product (e.g., "Heat").
@@ -1502,7 +1513,7 @@ specify_distribution_losses <- function(.tidy_iea_df,
       )
     ) %>%
     # Now sum similar rows using summarise.
-    # Group by everything except the energy flow rate column, "E.dot".
+    # Group by everything except the energy flow rate column, "Edot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
@@ -1756,7 +1767,7 @@ route_non_specified_eiou <- function(.tidy_iea_df,
     
     
     # Now sum similar rows using summarise.
-    # Group by everything except the energy flow rate column, "E.dot".
+    # Group by everything except the energy flow rate column, "Edot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
@@ -2024,7 +2035,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
     dplyr::bind_rows(routed_nonspec_tp) %>%
     #Aggregating. We need to add a pos/neg/null column to add up differently positive and negative values, otherwise we'd only get NET flows.
     # Now sum similar rows using summarise.
-    # Group by everything except the energy flow rate column, "E.dot".
+    # Group by everything except the energy flow rate column, "Edot".
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])

@@ -34,24 +34,24 @@ test_that("year_cols() works as expected", {
 
 
 test_that("meta_cols() works as expected", {
-  DF <- data.frame(E.dot = -42, a = c(1, 2), `1967` = c(3, 4), `-42` = c(5, 6), check.names = FALSE)
-  expect_equal(meta_cols(DF, return_names = TRUE), "a")  # Because E.dot is excluded by default.
+  DF <- data.frame(Edot = -42, a = c(1, 2), `1967` = c(3, 4), `-42` = c(5, 6), check.names = FALSE)
+  expect_equal(meta_cols(DF, return_names = TRUE), "a")  # Because Edot is excluded by default.
   
   expect_equal(meta_cols(DF), 2)
   expect_equal(meta_cols(DF, not_meta = "a"), 1)
   expect_equal(meta_cols(DF, not_meta = 2), 1)
   expect_equal(meta_cols(DF, not_meta = NULL), c(1, 2))
-  expect_equal(meta_cols(DF, not_meta = "E.dot"), 2)
-  expect_equal(meta_cols(DF, not_meta = "E.dot", return_names = TRUE), "a")
+  expect_equal(meta_cols(DF, not_meta = "Edot"), 2)
+  expect_equal(meta_cols(DF, not_meta = "Edot", return_names = TRUE), "a")
   expect_equal(meta_cols(DF, not_meta = "a"), 1)
-  expect_equal(meta_cols(DF, not_meta = c("E.dot", "a")), c(0)[-1]) # Returns an empty vector
+  expect_equal(meta_cols(DF, not_meta = c("Edot", "a")), c(0)[-1]) # Returns an empty vector
   expect_equal(meta_cols(DF, not_meta = c(1,2)), c(0)[-1]) # Returns an empty vector
   expect_equal(meta_cols(DF, not_meta = c(1,2), return_names = TRUE), c("bogus")[-1]) # Returns an empty vector
   
   expect_equal(meta_cols(DF, years_to_keep = 1967), c(2, 3))
   expect_equal(meta_cols(DF, years_to_keep = 1967, return_names = TRUE), c("a", "1967"))
 
-  expect_equal(meta_cols(DF, not_meta = "a", years_to_keep = 1967, return_names = TRUE), c("E.dot", "1967"))
+  expect_equal(meta_cols(DF, not_meta = "a", years_to_keep = 1967, return_names = TRUE), c("Edot", "1967"))
 })
 
 
@@ -248,7 +248,7 @@ test_that("sorting a tidy IEA data frame works as expected", {
   sorted <- sort_iea_df(unsorted)
   # Bug: The Last.stage column has NA values
   # Make sure Last.stage has no NA values in it.
-  expect_false(any(is.na(sorted$Last.stage)))
+  expect_false(any(is.na(sorted$LastStage)))
   # Look at the first row
   expect_equal(sorted$Country[[1]], "GHA")
   expect_equal(sorted$Product[[1]], "Primary solid biofuels")
@@ -258,18 +258,18 @@ test_that("sorting a tidy IEA data frame works as expected", {
   
   # Try with a wide data frame, one that spreads years to the right.
   unsorted_wide <- tidy %>% 
-    tidyr::pivot_wider(names_from = Year, values_from = E.dot)
+    tidyr::pivot_wider(names_from = Year, values_from = Edot)
   # The wide data frame is not sorted correctly. Sort it.
   sorted_wide <- sort_iea_df(unsorted_wide)
   # Test that we got a good result.
   # First row should have Ghana first
   expect_equal(sorted_wide$Country[[1]], "GHA")
-  expect_equal(sorted_wide$Ledger.side[[1]], "Supply")
+  expect_equal(sorted_wide$LedgerSide[[1]], "Supply")
   expect_equal(sorted_wide$Product[[1]], "Primary solid biofuels")
   # Last row is South Africa
   num_rows <- nrow(sorted_wide)
   expect_equal(sorted_wide$Country[[num_rows]], "ZAF")
-  expect_equal(sorted_wide$Flow.aggregation.point[[num_rows]], "Non-energy use")
+  expect_equal(sorted_wide$FlowAggregationPoint[[num_rows]], "Non-energy use")
   expect_equal(sorted_wide$Product[[num_rows]], "Paraffin waxes")
 })
 

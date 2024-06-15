@@ -7,17 +7,17 @@
 arrange_iea_fu_allocation_template(
   .fu_allocation_template,
   rowcol = c("both", "row", "col"),
-  ledger_side = "Ledger.side",
-  flow_aggregation_point = "Flow.aggregation.point",
-  ef_product = "Ef.product",
-  machine = "Machine",
-  eu_product = "Eu.product",
-  destination = "Destination",
-  unit = "Unit",
+  ledger_side = IEATools::iea_cols$ledger_side,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  ef_product = IEATools::template_cols$ef_product,
+  machine = IEATools::template_cols$machine,
+  eu_product = IEATools::template_cols$eu_product,
+  destination = IEATools::template_cols$destination,
+  unit = IEATools::iea_cols$unit,
   fap_dest_order = IEATools::fap_flows,
   ef_product_order = IEATools::products,
-  quantity = "Quantity",
-  maximum_values = "Maximum.values",
+  quantity = IEATools::template_cols$quantity,
+  maximum_values = IEATools::template_cols$maximum_values,
   .temp_sort = ".fap_flow",
   .clean_ef_product = ".clean_Ef_product"
 )
@@ -28,15 +28,15 @@ arrange_iea_fu_allocation_template(
 \item{rowcol}{one of "both", "row", or "col" to indicate whether rows, columns, or both should be arranged.
 Default is "both".}
 
-\item{ledger_side}{the ledger side column in \code{.fu_allocation_template}. Default is "Ledger.side".}
+\item{ledger_side}{the ledger side column in \code{.fu_allocation_template}. Default is "LedgerSide".}
 
-\item{flow_aggregation_point}{the flow aggregation point column in \code{.fu_allocation_template}. Default is "Flow.aggregation.point".}
+\item{flow_aggregation_point}{the flow aggregation point column in \code{.fu_allocation_template}. Default is FlowAggregationPoint.}
 
-\item{ef_product}{the name of the final energy column in \code{.fu_allocation_template}. Default is "Ef.product".}
+\item{ef_product}{the name of the final energy column in \code{.fu_allocation_template}. Default is \code{IEATools::template_cols$ef_product}.}
 
 \item{machine}{the name of the machine column in \code{.fu_allocation_template}. Default is "Machine".}
 
-\item{eu_product}{the name of the useful energy product column in \code{.fu_allocation_template}. Default is "Eu.product".}
+\item{eu_product}{the name of the useful energy product column in \code{.fu_allocation_template}. Default is \code{IEATools::template_cols$eu_product}.}
 
 \item{destination}{the name of the destination column in \code{.fu_allocation_template}. Default is "Destination".}
 
@@ -44,7 +44,7 @@ Default is "both".}
 
 \item{fap_dest_order}{the desired order for the combination of \code{flow_aggregation_point} and \code{destination} columns. Default is \code{IEATools::fap_flow_iea_order}.}
 
-\item{ef_product_order}{the desired order for final energy products in \code{.fu_allocation_template}. Default is "Ef.product".}
+\item{ef_product_order}{the desired order for final energy products in \code{.fu_allocation_template}. Default is \code{IEATools::products}.}
 
 \item{quantity}{the name of the quantity column in \code{.fu_allocation_template}. Default is "Quantity".}
 
@@ -79,9 +79,9 @@ When sorting columns, the order of energy flows through the energy conversion ch
 The column order is:
 \itemize{
 \item metadata columns,
-\item final energy product (\code{Ef.product}).
+\item final energy product (\code{EfProduct}).
 \item Machine (the final-to-useful transformation process),
-\item useful energy product (\code{Eu.product}),
+\item useful energy product (\code{EuProduct}),
 \item destination where the useful energy now flows,
 \item years (in columns), and
 \item allocations (C_x rows).

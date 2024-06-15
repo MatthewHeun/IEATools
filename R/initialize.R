@@ -38,7 +38,7 @@
 #'                  with [dplyr::bind_rows()].
 #' @param text A string containing text to be parsed as an IEA file.
 #'             Can be a vector of text strings, in which case
-#'             each string is processed sequentially and stacked to gether
+#'             each string is processed sequentially and stacked together
 #'             with [dplyr::bind_rows()].
 #' @param expected_1st_line_start The expected start of the first line of `iea_file`. Default is ",,TIME".
 #' @param country The name of the country column. 
@@ -640,7 +640,7 @@ remove_agg_regions <- function(.iea_df,
 #' so they are deleted.
 #' 
 #' The third problem this function solves is that energy type and units are not specified in IEA data.
-#' An `Energy.type` column is added with the value of `energy_type_val`. 
+#' An `EnergyType` column is added with the value of `energy_type_val`. 
 #' (Default is `E`, for energy, as opposed to `X`, which would be exergy.)
 #' A `Unit` column is added with the value of `unit_val`.
 #' (Default is "TJ", although any string can be specified in `unit_val`.)
@@ -1169,7 +1169,9 @@ specify_non_energy_use <- function(.iea_df,
     # Add the replacement rows.
     dplyr::bind_rows(to_add) |> 
     # Finally, pivot wider to return.
-    tidyr::pivot_wider(values_from = .values, names_from = dplyr::all_of(year), values_fill = 0)
+    tidyr::pivot_wider(values_from = dplyr::all_of(.values),
+                       names_from = dplyr::all_of(year),
+                       values_fill = 0)
 }
 
 
@@ -1276,7 +1278,9 @@ tidy_iea_df <- function(.iea_df,
 #' Each bundled function is called in turn using default arguments.
 #' See examples for two ways to achieve the same result.
 #' 
-#' @param .iea_file The path of the file to be loaded. Default loads example data bundled with the package via [sample_iea_data_path()].
+#' @param .iea_file The path of the file to be loaded.
+#'                  Can be a vector of files to be loaded.
+#'                  Default loads example data bundled with the package via [sample_iea_data_path()].
 #' @param unit_val The units for this file. 
 #'                 Default is "TJ".
 #' @param remove_zeroes A logical indicating whether data points with the value `0` are to be removed from the output. 

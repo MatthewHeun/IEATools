@@ -49,7 +49,7 @@ library(dplyr)
 library(IEATools)
 library(magrittr)
 EIOU_flows <- load_tidy_iea_df() %>%
-  filter(Flow.aggregation.point == "Energy industry own use")
+  filter(FlowAggregationPoint == "Energy industry own use")
 EIOU_flows %>%
   select(Country, Year, Flow, Product)
 ```
@@ -68,9 +68,9 @@ in the IEA data. (The suffix `(energy)` indicates EIOU.) Rather, coal
 
 ```{r}
 load_tidy_iea_df() %>%
-  filter(Flow.aggregation.point == "Total primary energy supply",
+  filter(FlowAggregationPoint == "Total primary energy supply",
          Product %in% coal_and_coal_products) %>%
-  select(Country, Flow.aggregation.point, Flow, Product) %>%
+  select(Country, FlowAggregationPoint, Flow, Product) %>%
   unique()
 ```
 
@@ -139,7 +139,7 @@ Specific_primary_production <- load_tidy_iea_df() %>%
   add_psut_matnames()
 Specific_primary_production %>%
   filter(Flow %in% c("Resources (Coal)", "Resources (Oil and natural gas)")) %>%
-  select(-Method, -Last.stage, -Energy.type, -Ledger.side, -Unit) %>%
+  select(-Method, -LastStage, -EnergyType, -LedgerSide, -Unit) %>%
   as.data.frame()
 ```
 
@@ -152,8 +152,8 @@ Specific_primary_production %>%
   filter(Flow %in% c("Coal mines", "Oil and gas extraction")) %>%
   as.data.frame()
 Specific_primary_production %>%
-  filter(Flow.aggregation.point == "Energy industry own use" ) %>%
-  select(Country, Year, Flow, Product, E.dot, matnames) %>%
+  filter(FlowAggregationPoint == "Energy industry own use" ) %>%
+  select(Country, Year, Flow, Product, Edot, matnames) %>%
   as.data.frame()
 ```
 
@@ -310,11 +310,11 @@ algorithm:
 
 1.  Identify (per group in `.tidy_iea_df`) all
     `Transformation processes` that consume energy (negative value for
-    `E.dot`). Energy consumption can be for the transformation process
+    `Edot`). Energy consumption can be for the transformation process
     itself or for Energy industry own use.
 2.  Identify (per group in `.tidy_iea_df`) all
     `Transformation processes` that produce energy (positive value for
-    `E.dot`).
+    `Edot`).
 3.  Take the set difference between the two (consumers less producers
     for sinks and producers less consumers for sources). The set
     difference is the list of transformation sinks or sources,
@@ -343,11 +343,11 @@ on the value of the `type` argument.
 # The included data sets to not have any transformation process sinks or sources.
 # Demonstrate with a made-up data set.
 data.frame(Flow = c("Automobiles", "Automobiles", "Furnaces"),
-                   E.dot = c(-1, 1, 2),
-                   stringsAsFactors = FALSE) %>%
+           Edot = c(-1, 1, 2),
+           stringsAsFactors = FALSE) %>%
   dplyr::mutate(
     Country = "A country",
-    Flow.aggregation.point = "Transformation processes",
+    FlowAggregationPoint = "Transformation processes",
     Product = "A product"
   ) %>%
   # Automobiles both consume and produce energy,
@@ -370,20 +370,20 @@ internally to identify transformation process sinks.
 ```{r}
 DF <- data.frame(
   Ledger.side = c("Supply", "Supply", "Supply", "Consumption"),
-  Flow.aggregation.point = c("Transformation processes",
-                             "Transformation processes",
-                             "Transformation processes",
-                             "Non-energy use"),
+  FlowAggregationPoint = c("Transformation processes",
+                           "Transformation processes",
+                           "Transformation processes",
+                           "Non-energy use"),
   Flow = c("Automobiles", "Automobiles", "Furnaces",
            "Non-energy use industry/transformation/energy"),
   Product = c("Petrol", "MD", "Coal", "Coal"),
-  E.dot = c(-1, 1, -2, 8),
+  Edot = c(-1, 1, -2, 8),
   stringsAsFactors = FALSE
 ) %>%
   mutate(
     Method = "PCM",
-    Last.stage = "Final",
-    Energy.type = "E",
+    LastStage = "Final",
+    EnergyType = "E",
     Country = "Bogus",
     Year = 1971
   )

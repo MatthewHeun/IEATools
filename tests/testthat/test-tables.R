@@ -452,7 +452,7 @@ test_that("complete_eta_fu_table works as expected", {
   completed2 <- complete_eta_fu_table(eta_fu_table = eta_fu_table_GHA_incomplete,
                                       exemplar_eta_fu_tables = list(eta_fu_table_ZAF, eta_fu_table_ZAF), 
                                       fu_allocation_table = fu_allocation_table_GHA, 
-                                      which_quantity = "eta.fu")
+                                      which_quantity = IEATools::template_cols$eta_fu)
   # Check that completed2 has obtained both Automobiles and Irons from ZAF.
   completed2 %>% 
     dplyr::filter(.data[[IEATools::template_cols$eta_fu_source]] == "ZAF", 

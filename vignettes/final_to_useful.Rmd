@@ -106,7 +106,7 @@ Note that later processing will parse the heat categories for their temperature,
 * `U` is the temperature unit, one of `C`, `F`, `R`, or `K` for degrees Celsius, degrees Fahrenheit, 
   rankine, or kelvin, respectively.
 
-The `C` rows representation allocations of `E.dot` energy to final-to-useful machines for each year of available IEA data.
+The `C` rows representation allocations of `Edot` energy to final-to-useful machines for each year of available IEA data.
 Three allocation rows (`C_1 [%]`, `C_2 [%]`, and `C_3 [%]`) are provided for each combination 
 of `Flow.aggregation.point`, `Ef.product`, and `Destination`.
 Not all `C_i [%]` rows need to be filled,
@@ -153,7 +153,7 @@ embedded in the `*TH.nnn.U` useful exergy string).
 
 The `Maximum.values` column provides an indication of which `Destination`s receive more energy than others,
 allowing the analyst to focus more attention on larger energy flows, as desired.
-The `E.dot_machine` and `E.dot_machine [%]` rows indicate energy flows and percentages
+The `Edot_machine` and `Edot_machine [%]` rows indicate energy flows and percentages
 into each final-to-useful machine in each year.
 
 After allocations and efficiencies are specified (by completing the templates),

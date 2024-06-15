@@ -103,7 +103,7 @@ year_cols <- function(.df, year_pattern = "^-?\\d+$", year = IEATools::iea_cols$
 #' @export
 #'
 #' @examples
-#' DF <- data.frame(E.dot = 2020, a = c(1, 2), `1967` = c(3, 4), `-42` = c(5, 6), check.names = FALSE)
+#' DF <- data.frame(Edot = 2020, a = c(1, 2), `1967` = c(3, 4), `-42` = c(5, 6), check.names = FALSE)
 #' DF %>% meta_cols()
 #' DF %>% meta_cols(return_names = TRUE)
 meta_cols <- function(.df, 
@@ -333,13 +333,13 @@ carnot_efficiency <- function(heat_types, T_0 = 298.15){
 #' @param iea_df A data frame containing IEA data. Default is `IEATools::load_tidy_iea_df(file_path)`.
 #' @param side Refers to the "Consumption" or "Supply" side of Production, Transformation processes, or Energy industry own use. 
 #'             One of "Consumption" or "Supply". Default is "Consumption".
-#' @param flow_aggregation_point The flow aggregation point column in `iea_df`. Default is "Flow.aggregation.point".
+#' @param flow_aggregation_point The flow aggregation point column in `iea_df`. Default is FlowAggregationPoint.
 #' @param production The string indicating the production flow. Default is "Production".
 #' @param transformation_processes The string indicating the transformation process stage. Default is "Transformation processes".
 #' @param eiou The string indicating the energy industry own use flow. Default is "Energy industry own use".
 #' @param stage The string indicating the stage for the analysis. One of `production`, `transformation_processes`, or `eiou`. 
 #'              Default is `production`.
-#' @param e_dot The energy flow rate column in `iea_df`.  Default is "E.dot".
+#' @param e_dot The energy flow rate column in `iea_df`.  Default is "Edot".
 #' @param flow The flow column in `iea_df`. Default is "Flow".
 #' @param product The product column in `iea_df`.  Default is "Product".
 #'
@@ -351,15 +351,16 @@ carnot_efficiency <- function(heat_types, T_0 = 298.15){
 #' prod_tp_eiou_energy_carriers()
 prod_tp_eiou_energy_carriers <- function(file_path = sample_iea_data_path(), 
                                          iea_df = IEATools::load_tidy_iea_df(file_path), 
-                                         side = c("Consumption", "Supply"),
-                                         flow_aggregation_point = "Flow.aggregation.point", 
-                                         production = "Production", 
-                                         transformation_processes = "Transformation processes", 
-                                         eiou = "Energy industry own use",
+                                         side = c(IEATools::ledger_sides$consumption, 
+                                                  IEATools::ledger_sides$supply),
+                                         flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point, 
+                                         production = IEATools::tpes_flows$production, 
+                                         transformation_processes = IEATools::tfc_compare_flows$transformation_processes, 
+                                         eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
                                          stage = c(production, transformation_processes, eiou),
-                                         e_dot = "E.dot", 
-                                         flow = "Flow", 
-                                         product = "Product"){
+                                         e_dot = IEATools::iea_cols$e_dot, 
+                                         flow = IEATools::iea_cols$flow, 
+                                         product = IEATools::iea_cols$product){
   stage <- match.arg(stage)
   side <- match.arg(side)
   # First step is to focus on Supply or Consumption based on the side argument
@@ -505,11 +506,11 @@ sample_eta_fu_table_path <- function(version = 2022) {
 #' @param col_names a list of column names in IEA data frames. Default is `IEATools::iea_cols`.
 #' @param country the name of the country column in `.tidy_iea_df`. Default is "Country".
 #' @param method the name of the method column in `.tidy_iea_df`. Default is "Method".
-#' @param energy_type the name of the energy type column in `.tidy_iea_df`. Default is "Energy.type".
-#' @param last_stage the name of the last stage column in `.tidy_iea_df`. Default is "Last.stage".
+#' @param energy_type the name of the energy type column in `.tidy_iea_df`. Default is "EnergyType".
+#' @param last_stage the name of the last stage column in `.tidy_iea_df`. Default is "LastStage".
 #' @param year the name of the year column in `.tidy_iea_df`. Default is "Year".
-#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "Ledger.side".
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "LedgerSide".
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is FlowAggregationPoint.
 #' @param flow the name of the flow column in `.tidy_iea_df`. Default is "Flow".
 #' @param sep a separator between the flow aggregation point column and the flow column. Used when uniting those two columns internally. Default is "_".
 #' @param fap_flow the name of the united flow aggregation point and flow column to be created internally in `.tidy_iea_df`. Default is "Flow.aggregation.point_Flow".

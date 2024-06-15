@@ -8,6 +8,10 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Change names of columns to avoid PostgreSQL 
+  database conflicts. 
+  PostgreSQL doesn't like column names containing "."
+  because "." is the separator for "schema.table".
 * New `specify_distribution_losses()` function
   to specify distribution industries, within which transportation and
   distribution losses occur.
@@ -20,6 +24,10 @@ which always resolves to the latest release.
 * The `.iea_file` argument to `slurp_iea_to_raw_df()`
   is now vectorized, which will enable sending 
   a vector of country IEA data files in `.iea_file`.
+* Fixed several tests for new column names and added 
+  a couple new tests for new features.
+    * Now at 1266 tests, all passing.
+    * Test coverage remains at 100%.
 
 
 ## IEATools 0.1.75 (2024-02-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10613604.svg)](https://doi.org/10.5281/zenodo.10613604)

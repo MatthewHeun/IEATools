@@ -13,14 +13,14 @@
 #' Non-energy use is removed from `.tidy_iea_df` before creating the template.
 #'
 #' @param .tidy_iea_df a tidy data frame containing IEA extended energy balance data
-#' @param energy_type the name of the energy type column. Default is "Energy.type".
+#' @param energy_type the name of the energy type column. Default is "EnergyType".
 #' @param energy the string identifier for energy (as opposed to exergy) in the `energy_type` column. Default is "`E`".
-#' @param last_stage the name of the last stage column. Default is "Last.stage".
+#' @param last_stage the name of the last stage column. Default is "LastStage".
 #' @param final the string identifier for final energy (as `Last.stage`). Default is "Final".
 #' @param year the name of the year column. Default is "Year".
-#' @param ledger_side the name of the ledger side column. Default is "Ledger.side".
+#' @param ledger_side the name of the ledger side column. Default is "LedgerSide".
 #' @param consumption the string identifier for the consumption side of the ledger. Default is "Consumption".
-#' @param flow_aggregation_point the name of the flow aggregation point column. Default is "Flow.aggregation.point".
+#' @param flow_aggregation_point the name of the flow aggregation point column. Default is FlowAggregationPoint.
 #' @param eiou the string identifier for energy industry own use in `flow_aggregation_point`. Default is "Energy industry own use".
 #' @param non_energy_use string identifier for non-energy use in `flow_aggregation_point`. Default is "Non-energy use".
 #' @param tfc the string identifier for total final consumption. Default is "Total final consumption".
@@ -29,10 +29,10 @@
 #' @param product the name of the product column. Default is "Product".
 #' @param destination the name for the destination column. Default is "Destination".
 #' @param quantity the name of the quantity column. Default is "Quantity".
-#' @param e_dot the name of the energy flow rate column. Default is "E.dot".
-#' @param e_dot_total the string identifier for total energy. Default is "E.dot.total".
+#' @param e_dot the name of the energy flow rate column. Default is "Edot".
+#' @param e_dot_total the string identifier for total energy. Default is "Edot.total".
 #' @param perc_unit_string the string used to indicate percentages. Default is "`[%]`".
-#' @param e_dot_perc the string identifier for energy percentage. Default is "E.dot.perc".
+#' @param e_dot_perc the string identifier for energy percentage. Default is "Edot.perc".
 #' @param maximum_values the name for the maximum energy values column. Default is "Maximum values".
 #' @param year_for_maximum_values an integer for the first year (in which maximum values will be stored before renaming the column to `maximum_values`). 
 #'        Default is `0`.
@@ -56,33 +56,33 @@
 #'   specify_all() %>% 
 #'   fu_allocation_template()
 fu_allocation_template <- function(.tidy_iea_df,
-                                   energy_type = "Energy.type",
-                                   energy = "E",
-                                   last_stage = "Last.stage",
-                                   final = "Final",
-                                   year = "Year",
-                                   ledger_side = "Ledger.side",
-                                   consumption = "Consumption",
-                                   flow_aggregation_point = "Flow.aggregation.point", 
-                                   eiou = "Energy industry own use", 
-                                   non_energy_use = "Non-energy use",
-                                   tfc = "Total final consumption",
-                                   tpes = "Total primary energy supply",
-                                   flow = "Flow", 
-                                   product = "Product",
-                                   destination = "Destination",
-                                   quantity = "Quantity",
-                                   e_dot = "E.dot",
+                                   energy_type = IEATools::iea_cols$energy_type,
+                                   energy = IEATools::energy_types$e,
+                                   last_stage = IEATools::iea_cols$last_stage,
+                                   final = IEATools::all_stages$final,
+                                   year = IEATools::iea_cols$year,
+                                   ledger_side = IEATools::iea_cols$ledger_side,
+                                   consumption = IEATools::ledger_sides$consumption,
+                                   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point, 
+                                   eiou = IEATools::tfc_compare_flows$energy_industry_own_use, 
+                                   non_energy_use = IEATools::tfc_flows$non_energy_use,
+                                   tfc = IEATools::aggregation_flows$total_final_consumption,
+                                   tpes = IEATools::tfc_compare_flows$total_primary_energy_supply,
+                                   flow = IEATools::iea_cols$flow, 
+                                   product = IEATools::iea_cols$product,
+                                   destination = IEATools::template_cols$destination,
+                                   quantity = IEATools::template_cols$quantity,
+                                   e_dot = IEATools::iea_cols$e_dot,
                                    e_dot_total = paste0(e_dot, ".total"),
                                    perc_unit_string = "[%]",
                                    e_dot_perc = paste(e_dot, perc_unit_string),
-                                   maximum_values = "Maximum.values",
+                                   maximum_values = IEATools::template_cols$maximum_values,
                                    year_for_maximum_values = 0,
-                                   ef_product = "Ef.product",
+                                   ef_product = IEATools::template_cols$ef_product,
                                    allocation_var = "C_",
                                    n_allocation_rows = 4,
-                                   machine = "Machine",
-                                   eu_product = "Eu.product",
+                                   machine = IEATools::template_cols$machine,
+                                   eu_product = IEATools::template_cols$eu_product,
                                    arrange = TRUE,
                                    .value = ".value"){
   matsindf::verify_cols_missing(.tidy_iea_df, .value)
@@ -200,9 +200,9 @@ fu_allocation_template <- function(.tidy_iea_df,
 #' When sorting columns, the order of energy flows through the energy conversion chain is considered. 
 #' The column order is:
 #' * metadata columns,
-#' * final energy product (`Ef.product`). 
+#' * final energy product (`EfProduct`). 
 #' * Machine (the final-to-useful transformation process),
-#' * useful energy product (`Eu.product`),
+#' * useful energy product (`EuProduct`),
 #' * destination where the useful energy now flows,
 #' * years (in columns), and 
 #' * allocations (C_x rows).
@@ -210,15 +210,15 @@ fu_allocation_template <- function(.tidy_iea_df,
 #' @param .fu_allocation_template the final-to-useful allocation template created by `fu_allocation_template()`
 #' @param rowcol one of "both", "row", or "col" to indicate whether rows, columns, or both should be arranged.
 #'        Default is "both". 
-#' @param ledger_side the ledger side column in `.fu_allocation_template`. Default is "Ledger.side".
-#' @param flow_aggregation_point the flow aggregation point column in `.fu_allocation_template`. Default is "Flow.aggregation.point".
-#' @param ef_product the name of the final energy column in `.fu_allocation_template`. Default is "Ef.product".
+#' @param ledger_side the ledger side column in `.fu_allocation_template`. Default is "LedgerSide".
+#' @param flow_aggregation_point the flow aggregation point column in `.fu_allocation_template`. Default is FlowAggregationPoint.
+#' @param ef_product the name of the final energy column in `.fu_allocation_template`. Default is `IEATools::template_cols$ef_product`.
 #' @param machine the name of the machine column in `.fu_allocation_template`. Default is "Machine".
-#' @param eu_product the name of the useful energy product column in `.fu_allocation_template`. Default is "Eu.product".
+#' @param eu_product the name of the useful energy product column in `.fu_allocation_template`. Default is `IEATools::template_cols$eu_product`.
 #' @param destination the name of the destination column in `.fu_allocation_template`. Default is "Destination".
 #' @param unit the name of the unit in `.fu_allocation_template`. Default is "Unit".
 #' @param fap_dest_order the desired order for the combination of `flow_aggregation_point` and `destination` columns. Default is `IEATools::fap_flow_iea_order`.
-#' @param ef_product_order the desired order for final energy products in `.fu_allocation_template`. Default is "Ef.product".
+#' @param ef_product_order the desired order for final energy products in `.fu_allocation_template`. Default is `IEATools::products`.
 #' @param quantity the name of the quantity column in `.fu_allocation_template`. Default is "Quantity".
 #' @param maximum_values the name of the maximum value column `.fu_allocation_template`. Default is "Unit".
 #' @param .temp_sort the name of a temporary column to be added to `.fu_allocation_template`. 
@@ -241,17 +241,17 @@ fu_allocation_template <- function(.tidy_iea_df,
 #'   arrange_iea_fu_allocation_template()
 arrange_iea_fu_allocation_template <- function(.fu_allocation_template, 
                                                rowcol = c("both", "row", "col"),
-                                               ledger_side = "Ledger.side", 
-                                               flow_aggregation_point = "Flow.aggregation.point",
-                                               ef_product = "Ef.product",
-                                               machine = "Machine",
-                                               eu_product = "Eu.product",
-                                               destination = "Destination",
-                                               unit = "Unit",
+                                               ledger_side = IEATools::iea_cols$ledger_side, 
+                                               flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                               ef_product = IEATools::template_cols$ef_product,
+                                               machine = IEATools::template_cols$machine,
+                                               eu_product = IEATools::template_cols$eu_product,
+                                               destination = IEATools::template_cols$destination,
+                                               unit = IEATools::iea_cols$unit,
                                                fap_dest_order = IEATools::fap_flows,
                                                ef_product_order = IEATools::products, 
-                                               quantity = "Quantity",
-                                               maximum_values = "Maximum.values", 
+                                               quantity = IEATools::template_cols$quantity,
+                                               maximum_values = IEATools::template_cols$maximum_values, 
                                                .temp_sort = ".fap_flow", 
                                                .clean_ef_product = ".clean_Ef_product"){
   rowcol <- match.arg(rowcol)
@@ -270,7 +270,7 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
       matsindf::everything_except(c(year_colnames, machine_and_product_columns, ef_product))
     # Adjust the columns in preparation for sorting.
     out <- out %>% 
-      # De-specify the Ef.product column so it can be sorted.
+      # De-specify the EfProduct column so it can be sorted.
       despecify_col(col = ef_product, despecified_col = .clean_ef_product) %>% 
       # Create a united Flow.aggregation.point_Flow column.
       tidyr::unite(col = !!as.name(.temp_sort), !!as.name(flow_aggregation_point), !!as.name(destination), sep = "_", remove = FALSE)
@@ -373,19 +373,19 @@ arrange_iea_fu_allocation_template <- function(.fu_allocation_template,
 #' @param path the file path into which the blank template file will be written. 
 #'        Include both folder and file name. 
 #'        If not present, the ".xlsx" extension is added.
-#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is "Ledger.side".
-#' @param consumption the string identifier for consumption in the `ledger_side` column.  Default is "Consumption".
-#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is "Flow.aggregation.point".
-#' @param eiou the string identifier for energy industry own use in the `flow_aggregation_point` column. Default is "Energy industry own use".
-#' @param fu_allocations_tab_name the name of the tab on which the template will be written. Default is "FU Allocations".
-#' @param machine the name of the machine column in output. Default is "Machine"
-#' @param eu_product the name of the useful energy product column in output. Default is "Eu.product".
-#' @param quantity the name of the quantity column to be created on output. Default is "Quantity".
+#' @param ledger_side the name of the ledger side column in `.tidy_iea_df`. Default is `IEATools::iea_cols$ledger_side`.
+#' @param consumption the string identifier for consumption in the `ledger_side` column.  Default is `IEATools::ledger_sides$consumption`.
+#' @param flow_aggregation_point the name of the flow aggregation point column in `.tidy_iea_df`. Default is `IEATools::iea_cols$flow_aggregation_point`.
+#' @param eiou the string identifier for energy industry own use in the `flow_aggregation_point` column. Default is `IEATools::tfc_compare_flows$energy_industry_own_use`.
+#' @param fu_allocations_tab_name the name of the tab on which the template will be written. Default is `IEATools::fu_analysis_file_info$fu_allocation_tab_name`.
+#' @param machine the name of the machine column in output. Default is `IEATools::template_cols$machine`.
+#' @param eu_product the name of the useful energy product column in output. Default is `IEATools::template_cols$eu_product`.
+#' @param quantity the name of the quantity column to be created on output. Default is `IEATools::template_cols$quantity`.
 #' @param e_dot the name of the energy flow rate column in `.tidy_iea_df` and the name of the energy flow rate rows to be included in the Excel file that is written by this function.
-#'        Default is "E.dot".
+#'        Default is "Edot".
 #' @param e_dot_perc the name of the energy flow rate percentage row to be included in the Excel file that is written by this function.
-#'        Default is "E.dot.perc".
-#' @param maximum_values the name of the maximum values column in output. Default is "Maximum.values".
+#'        Default is "Edot.perc".
+#' @param maximum_values the name of the maximum values column in output. Default is `IEATools::template_cols$maximum_values`.
 #' @param header_row_font_color a hex string representing the font color for the header row in the Excel file that is written by this function.
 #'        Default is "#FFFFFF", white.
 #' @param header_row_shading_color a hex string representing the shading color for the header row in the Excel file that is written by this function.
@@ -495,11 +495,11 @@ write_fu_allocation_template <- function(.fu_allocation_template,
   openxlsx::addStyle(fu_wb, fu_allocations_tab_name, style = energy_row_style_eiou, rows = union(e_dot_rows_eiou, e_dot_perc_rows_eiou), cols = 1:ncol(.fu_allocation_template), gridExpand = TRUE)
   
   # Apply shading for cells that don't need to be filled
-  # First, tackle the cells in the Maximum.values column.
+  # First, tackle the cells in the MaximumValues column.
   dont_fill_style <- openxlsx::createStyle(fgFill = dont_fill_shading_color)
   openxlsx::addStyle(fu_wb, fu_allocations_tab_name, style = dont_fill_style, rows = c_rows_indices, cols = max_values_col_index, gridExpand = TRUE)
   # Now work on the year columns. 
-  # Find all the E.dot rows
+  # Find all the Edot rows
   for (yr_index in 1:length(year_cols_indices)) {
     col_index <- year_cols_indices[[yr_index]]
     col_name <- year_cols_names[[yr_index]]
@@ -569,7 +569,7 @@ write_fu_allocation_template <- function(.fu_allocation_template,
 #' A filled example can be loaded with the default value of `path`.
 #' 
 #' Note that any machine named `non_energy_machine` is required to have 
-#' identical values for `Ef.product` and `Eu.product`.
+#' identical values for `ef_product` and `eu_product`.
 #' Violations of this requirement cause errors to be thrown.
 #'
 #' @param path The path from which final-to-useful allocation data will be loaded. Default is the path to allocation data supplied with this package.
@@ -652,7 +652,7 @@ check_fu_allocation_data <- function(.fu_allocation_table,
                                      quantity = IEATools::template_cols$quantity,
                                      .values = IEATools::template_cols$.values,
                                      non_energy_machine = "Non-energy") {
-  # When "Non-energy" is the Machine, Ef.product and Eu.product should be identical.
+  # When "Non-energy" is the Machine, EfProduct and EuProduct should be identical.
   # It is an easy mistake that isn't true.
   # So check for that problem.
   errs <- .fu_allocation_table %>%
@@ -675,12 +675,12 @@ check_fu_allocation_data <- function(.fu_allocation_table,
     stop(err_msg)
   }
   # When filling a final-to-useful allocation template, 
-  # the analyst forgets to fill some Machines and Eu.products. 
+  # the analyst forgets to fill some Machines and EuProducts. 
   # Check for those situations and provide a helpful error message.
   # To check for these situations, we need to first tidy the FU allocations table
   tidy_fu <- .fu_allocation_table %>% 
     tidy_fu_allocation_table()
-  # Now check for any cases where one or both of the Machine or Eu.product column is NA 
+  # Now check for any cases where one or both of the Machine or EuProduct column is NA 
   # while the .values column is not NA.
   errs <- tidy_fu %>% 
     dplyr::filter((is.na(.data[[machine]]) | is.na(.data[[eu_product]])) & !is.na(.data[[.values]]))
@@ -852,8 +852,8 @@ eta_fu_template <- function(.fu_allocations,
     # So we create e_dot_info from tidy_specified_iea_data.
     # The following modifications to tidy_specified_iea_data are needed.
     # * filter to contain only Consumption and EIOU
-    # * rename E.dot --> E.dot_dest
-    # * rename Product --> Ef.product
+    # * rename Edot --> Edot_dest
+    # * rename Product --> EfProduct
     # * rename Flow --> Destination
     e_dot_info <- tidy_specified_iea_data %>% 
       dplyr::filter(.data[[country]] %in% countries) %>% 
@@ -889,7 +889,7 @@ eta_fu_template <- function(.fu_allocations,
 
     # To create the e_dot_machine_max_perc column, 
     # we need to calculate the energy flowing into each f-->u machine.
-    # The first step is to isolate the E.dot rows
+    # The first step is to isolate the Edot rows
     e_dot_info <- .fu_allocations %>%
       dplyr::filter(!!as.name(quantity) == e_dot) %>%
       # dplyr::select(-maximum_values, -machine, -eu_product, -quantity) %>%
@@ -924,7 +924,7 @@ eta_fu_template <- function(.fu_allocations,
       "{c_ratio}" := dplyr::all_of(c_perc)
     )
   
-  # Now we join the E.dot and C values and calculate the energy flowing into each final-to-useful machine
+  # Now we join the Edot and C values and calculate the energy flowing into each final-to-useful machine
   input_energy <- dplyr::full_join(c_info, e_dot_info, 
                                    by = matsindf::everything_except(c_info, machine, eu_product, c_ratio, .symbols = FALSE)) %>% 
     # There may be cases where the analyst has filled a C value, but there is no corresponding e_dot_dest value.
@@ -933,7 +933,7 @@ eta_fu_template <- function(.fu_allocations,
     dplyr::mutate(
       # Calculate the energy flow into each f-->u machine
       # for each row of the table
-      # (each combination of Ef.product and Machine.
+      # (each combination of EfProduct and Machine.
       "{e_dot_machine}" := .data[[c_ratio]] * .data[[e_dot_dest]]
     ) %>% 
     # Group by the metadata columns, year, the Machine column, and the eu_product column, because we want to calculate the 
@@ -1005,7 +1005,7 @@ eta_fu_template <- function(.fu_allocations,
       ) %>% 
       magrittr::extract2(.row_order)
   } else if (sort_by == "useful_energy_type") {
-    # We need to create a list of all the Eu.products.
+    # We need to create a list of all the EuProducts.
     eu_prods <- input_energy[[eu_product]] %>% unique()
     # Then find all the ones that are heat useful energy, identified by the 2nd and third characters being "TH".
     heat_prods <- eu_prods[which(substring(eu_prods, 2) %>% startsWith(heat))]
@@ -1017,7 +1017,7 @@ eta_fu_template <- function(.fu_allocations,
     heat_prods_sorted <- heat_prods[sorted_heat_indices]
     # There may be useful products that we don't know about. Put those at the end, sorted in alphabetical order..
     leftover_eu_prods <- sort(setdiff(eu_prods, c(md, ke, light, heat_prods)))
-    # Now compile the order of Eu.products for this data frame.
+    # Now compile the order of EuProducts for this data frame.
     eu_product_sort_order <- c(md, ke, light, heat_prods_sorted, leftover_eu_prods)
     # Sort the Maxima data frame to get the order we want.
     row_order <- Maxima %>% 
@@ -1105,10 +1105,10 @@ eta_fu_template <- function(.fu_allocations,
 #' @param eta_fu_tab_name the name of the final-to-useful efficiency tab. Default is "`r IEATools::fu_analysis_file_info$eta_fu_tab_name`".
 #' @param overwrite_file a logical telling whether to overwrite a file, if it already exists. Default is `FALSE`.
 #' @param overwrite_fu_eta_tab a logical telling whether to overwrite the final-to-useful efficiency tab, if it already exists. Default is `FALSE`.
-#' @param eta_fu the name of the final-to-useful efficiency rows in `.eta_fu_template`. Default is "eta.fu".
-#' @param e_dot_machine a string identifying energy flow into final-to-useful machines. Default is "E.dot_machine".
-#' @param e_dot_machine_perc a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine \[%\]".
-#' @param maximum_values a string identifying the maximum values column in the outgoing template. Default is "Maximum.values".
+#' @param eta_fu the name of the final-to-useful efficiency rows in `.eta_fu_template`. Default is IEATools::template_cols$eta_fu.
+#' @param e_dot_machine a string identifying energy flow into final-to-useful machines. Default is "Edot_machine".
+#' @param e_dot_machine_perc a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "Edot_machine \[%\]".
+#' @param maximum_values a string identifying the maximum values column in the outgoing template. Default is `IEATools::template_cols$maximum_values`.
 #' @param header_row_font_color a hex string representing the font color for the header row in the Excel file that is written by this function.
 #'        Default is "#FFFFFF", white.
 #' @param header_row_shading_color a hex string representing the shading color for the header row in the Excel file that is written by this function.
@@ -1132,7 +1132,7 @@ eta_fu_template <- function(.fu_allocations,
 #' @param blank_shading_color a hex string representing the shading color for blank cells in the `maximum_values` column.
 #'        Default is "#808080".
 #' @param quantity the name of the quantity column in `.eta_fu_template`. Default is "Quantity".
-#' @param e_dot_machine_max_perc the name of the rows that give maximum percentages. Default is "E.dot_machine_max \[%\]".
+#' @param e_dot_machine_max_perc the name of the rows that give maximum percentages. Default is "Edot_machine_max \[%\]".
 #' @param .rownum the name of a temporary column containing row numbers. Default is ".rownum". 
 #'
 #' @return the `path` argument
@@ -1219,7 +1219,7 @@ write_eta_fu_template <- function(.eta_fu_template,
   # Identify the maximum_values column.
   maximum_values_col_index <- min(year_cols_indices) - 1
   
-  # Add percentage formatting to the E.dot_machine [%] rows
+  # Add percentage formatting to the Edot_machine [%] rows
   e_dot_perc_style <- openxlsx::createStyle(numFmt = "PERCENTAGE")
   openxlsx::addStyle(eta_wb, eta_fu_tab_name, style = e_dot_perc_style, 
                      rows = e_dot_machine_perc_row_indices, cols = c(maximum_values_col_index, year_cols_indices), gridExpand = TRUE)

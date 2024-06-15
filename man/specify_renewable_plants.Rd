@@ -111,7 +111,7 @@ Default is 0.1 as this is the value assumed in the IEA's energy balances.}
 \item{ratio_geothermal_heat}{The ratio of primary energy to heat to use for geothermal.
 Default is 0.5 as this is the value assumed in the IEA's energy balances.}
 
-\item{ratio_other_renewable_elec}{The ratio of primary energy to electricity to use for hydropower, solar photovoltaic, oceanic and wind power.
+\item{ratio_other_renewable_elec}{The ratio of primary energy to electricity to use for hydro, solar photovoltaic, oceanic, and wind power.
 Default is 1 as this is the value assumed in the IEA's energy balances.}
 
 \item{geothermal_plants, hydro_plants, solar_pv_plants, solar_th_plants, oceanic_plants, wind_power_plants}{Names of renewable industries added. See \code{IEATools::renewable_industries}.}
@@ -129,10 +129,10 @@ for which the share of output is calculated. Default is ".share_industry".}
 Default is ".share".}
 }
 \value{
-Returns a .tidy_iea_df with renewable electricity and heat from geothermal, hydropower, solar thermal, solar photovoltaic, wind power, and oceanic power specified.
+Returns a .tidy_iea_df with renewable electricity and heat from geothermal, hydro, solar thermal, solar photovoltaic, wind, and oceanic power specified.
 }
 \description{
-This function specifies hydropower, geothermal, solar photovoltaic, solar thermal, oceanic, and wind power industries.
+This function specifies hydro, geothermal, solar photovoltaic, solar thermal, oceanic, and wind power industries.
 }
 \details{
 The primary energy use of hydro, geothermal, solar photovoltaic, solar thermal, oceanic, and wind power energy by main activity and autoproducer plants are used

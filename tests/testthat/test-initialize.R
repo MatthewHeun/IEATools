@@ -60,9 +60,9 @@ test_that("use_iso_countries() works with more columns in override", {
     dplyr::mutate(bogus_col = "bogus information")
   res <- iea_df |> 
     use_iso_countries(override_df = override) |> 
-    tidyr::pivot_longer(cols = c("2000", "2001"), names_to = "Year", values_to = "E.dot")
+    tidyr::pivot_longer(cols = c("2000", "2001"), names_to = "Year", values_to = "Edot")
   
-  expect_equal(names(res), c("Country", "Year", "E.dot"))
+  expect_equal(names(res), c("Country", "Year", "Edot"))
 })
 
 
@@ -368,8 +368,8 @@ test_that("augment_iea_df() works", {
                                              "World,Iron and steel,Hard coal (if no detail),5,6\n")) |> 
     rename_iea_df_cols() |> 
     augment_iea_df()
-  expect_equal(simple_with_tfc_df$Ledger.side |> unique(), c("Supply", "Consumption"))
-  expect_equal(simple_with_tfc_df$Flow.aggregation.point, c("Total primary energy supply",
+  expect_equal(simple_with_tfc_df$LedgerSide |> unique(), c("Supply", "Consumption"))
+  expect_equal(simple_with_tfc_df$FlowAggregationPoint, c("Total primary energy supply",
                                                             "TFC compare", 
                                                             "Transformation processes", 
                                                             "Transformation processes", 
@@ -385,22 +385,22 @@ test_that("augment_iea_df() works", {
   # Check column types
   clses <- lapply(IEADF_augmented, class)
   expect_equal(clses$Method, "character")  
-  expect_equal(clses$Last.stage, "character")  
+  expect_equal(clses$LastStage, "character")  
   expect_equal(clses$Country, "character")  
-  expect_equal(clses$Ledger.side, "character")  
-  expect_equal(clses$Flow.aggregation.point, "character")  
-  expect_equal(clses$Energy.type, "character")
+  expect_equal(clses$LedgerSide, "character")  
+  expect_equal(clses$FlowAggregationPoint, "character")  
+  expect_equal(clses$EnergyType, "character")
   expect_equal(clses$Unit, "character")
   expect_equal(clses$Flow, "character")  
   expect_equal(clses$Product, "character")  
-  clses[c("Method", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Country", "Energy.type", "Unit", "Flow", "Product")] <- NULL
+  clses[c("Method", "LastStage", "LedgerSide", "FlowAggregationPoint", "Country", "EnergyType", "Unit", "Flow", "Product")] <- NULL
   expect_true(all(clses == "numeric"))
   # Ensure that there are no remaining .. or x.
   # This test fails if there are any NA items.
   # We know that NA items appear in the Flow.aggregation.point column.
   # So delete that column first.
-  expect_false(any(IEADF_augmented |> dplyr::select(-Flow.aggregation.point) == ".."))
-  expect_false(any(IEADF_augmented |> dplyr::select(-Flow.aggregation.point) == "x"))
+  expect_false(any(IEADF_augmented |> dplyr::select(-FlowAggregationPoint) == ".."))
+  expect_false(any(IEADF_augmented |> dplyr::select(-FlowAggregationPoint) == "x"))
   
   # # As of 2019, the IEA no longer tags flows with "(transf.)", "(transformation)", or "(energy)".  
   # # So these tests must be applied only to 2018 data.
@@ -840,8 +840,8 @@ test_that("specify_non_energy_use() works for South African Hard coal in 1971", 
     specify_non_energy_use()
   
   # Full join to see differences
-  res <- dplyr::full_join(df, neu_specified_df, by = c("Country", "Method", "Energy.type", "Last.stage", "Unit", "Ledger.side", 
-                                                       "Flow", "Flow.aggregation.point", "Product")) |>
+  res <- dplyr::full_join(df, neu_specified_df, by = c("Country", "Method", "EnergyType", "LastStage", "Unit", "LedgerSide", 
+                                                       "Flow", "FlowAggregationPoint", "Product")) |>
     dplyr::filter(.data[[IEATools::iea_cols$flow_aggregation_point]] %in% c("Non-energy use", "Memo: Non-energy use in industry"))
   # Check that the right flows are present in res
   res |> 
@@ -1075,14 +1075,14 @@ test_that("load_tidy_iea_df() works as expected", {
     iea_tidy_df <- sample_iea_data_path(yr) |> 
       load_tidy_iea_df(specify_non_energy_flows = TRUE)
     # Verify column names and order
-    expect_equal(names(iea_tidy_df), c("Country", "Method", "Energy.type", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", 
-                                       "Flow", "Product", "Unit", "E.dot"))
+    expect_equal(names(iea_tidy_df), c("Country", "Method", "EnergyType", "LastStage", "Year", "LedgerSide", "FlowAggregationPoint", 
+                                       "Flow", "Product", "Unit", "Edot"))
     # This is a energy exclusive data frame
-    expect_true(all(iea_tidy_df$Energy.type == "E"))
+    expect_true(all(iea_tidy_df$EnergyType == "E"))
     # This is a completely TJ data frame
     expect_true(all(iea_tidy_df$Unit == "TJ"))
     # Ledger.side can be only Supply or Consumption
-    expect_true(all(iea_tidy_df$Ledger.side %in% c("Supply", "Consumption")))
+    expect_true(all(iea_tidy_df$LedgerSide %in% c("Supply", "Consumption")))
   }
 })
 
@@ -1147,19 +1147,19 @@ test_that("load_tidy_iea_df() gives expected values", {
   # Try some values
   expect_equal(iea_df |> 
                  dplyr::filter(Country == "ZAF", Year == 1971, Product == "Fuel oil", 
-                               Flow == "Oil refineries", Flow.aggregation.point == "Transformation processes") |> 
-                 magrittr::extract2("E.dot"), 
+                               Flow == "Oil refineries", FlowAggregationPoint == "Transformation processes") |> 
+                 magrittr::extract2("Edot"), 
                189060.6)
   
   expect_equal(iea_df |> 
                  dplyr::filter(Country == "GHA", Year == 1971, Product == "Crude oil", 
                                Flow == "Imports") |> 
-                 magrittr::extract2("E.dot"), 
+                 magrittr::extract2("Edot"), 
                38359.8, tolerance = 0.003)
 
   expect_equal(iea_df |> 
                  dplyr::filter(Country == "ZAF", Year == 1971, Product == "Bitumen", Flow == "Transfers") |> 
-                 magrittr::extract2("E.dot"), 
+                 magrittr::extract2("Edot"), 
                117)
 })
 
@@ -1170,7 +1170,7 @@ test_that("Ledger.side is added by augmentation", {
   for (year in IEATools::valid_iea_release_years) {
     DF <- load_tidy_iea_df(sample_iea_data_path(year))
     expect_false(DF |> 
-                   magrittr::extract2("Ledger.side") |> 
+                   magrittr::extract2("LedgerSide") |> 
                    is.na() |> 
                    any())
   }
@@ -1182,7 +1182,7 @@ test_that("load_tidy_iea_df() fills every Flow.aggregation.point", {
   # Verify that's indeed the case.
   for (year in IEATools::valid_iea_release_years) {
     load_tidy_iea_df(sample_iea_data_path(year)) |> 
-      magrittr::extract2("Flow.aggregation.point") |> 
+      magrittr::extract2("FlowAggregationPoint") |> 
       is.na() |> 
       any() |> 
       expect_false()
@@ -1195,7 +1195,7 @@ test_that("load_tidy_iea_df() OK when spreading by years after", {
   # Without correct specification, keys will not be unique.
   for (year in IEATools::valid_iea_release_years) {
     year_spread <- load_tidy_iea_df(sample_iea_data_path(year)) |> 
-      tidyr::spread(key = Year, value = E.dot)
+      tidyr::spread(key = Year, value = Edot)
     expect_true("1971" %in% names(year_spread))
     expect_true("2000" %in% names(year_spread))
   }

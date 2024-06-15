@@ -22,7 +22,7 @@ with \code{\link[dplyr:bind_rows]{dplyr::bind_rows()}}.}
 
 \item{text}{A string containing text to be parsed as an IEA file.
 Can be a vector of text strings, in which case
-each string is processed sequentially and stacked to gether
+each string is processed sequentially and stacked together
 with \code{\link[dplyr:bind_rows]{dplyr::bind_rows()}}.}
 
 \item{expected_1st_line_start}{The expected start of the first line of \code{iea_file}. Default is ",,TIME".}
