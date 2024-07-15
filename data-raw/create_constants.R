@@ -878,3 +878,15 @@ usethis::use_data(grid_industries, overwrite = TRUE)
 distribution_industry <- "Distribution"
 
 usethis::use_data(distribution_industry, overwrite = TRUE)
+
+
+
+# 
+# Electricity and heat output rows
+# 
+
+elec_heat_output <- list(electricity_output_prefix = "Electricity output (GWh)-", 
+                         heat_output_prefix = "Heat output-", 
+                         output_machine_delimiter = "-")
+
+usethis::use_data(elec_heat_output, overwrite = TRUE)
