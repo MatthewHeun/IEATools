@@ -11,21 +11,21 @@
 #' @export
 #'
 #' @examples
-electricity_heat_output <- function(.iea_file = NULL, 
-                                    electricity_output_prefix = IEATools::elec_heat_output$electricity_output_prefix, 
-                                    heat_output_prefix = IEATools::elec_heat_output$heat_output_prefix,
-                                    country = IEATools::iea_cols$country,
-                                    year = IEATools::iea_cols$year,
-                                    flow = IEATools::iea_cols$flow, 
-                                    product = IEATools::iea_cols$product,
-                                    e_dot = IEATools::iea_cols$e_dot,
-                                    input_colname = IEATools::elec_heat_output$input_product,
-                                    output_colname = IEATools::elec_heat_output$output_product, 
-                                    machine_colname = IEATools::template_cols$machine, 
-                                    output_machine_delimiter = IEATools::elec_heat_output$output_machine_delimiter, 
-                                    total = IEATools::memo_aggregation_product_prefixes$total, 
-                                    memo = IEATools::memo_aggregation_flow_prefixes$memo) {
-
+load_electricity_heat_output <- function(.iea_file = NULL, 
+                                         electricity_output_prefix = IEATools::elec_heat_output$electricity_output_prefix, 
+                                         heat_output_prefix = IEATools::elec_heat_output$heat_output_prefix,
+                                         country = IEATools::iea_cols$country,
+                                         year = IEATools::iea_cols$year,
+                                         flow = IEATools::iea_cols$flow, 
+                                         product = IEATools::iea_cols$product,
+                                         e_dot = IEATools::iea_cols$e_dot,
+                                         input_colname = IEATools::elec_heat_output$input_product,
+                                         output_colname = IEATools::elec_heat_output$output_product, 
+                                         machine_colname = IEATools::template_cols$machine, 
+                                         output_machine_delimiter = IEATools::elec_heat_output$output_machine_delimiter, 
+                                         total = IEATools::memo_aggregation_product_prefixes$total, 
+                                         memo = IEATools::memo_aggregation_flow_prefixes$memo) {
+  
   iea_data <- .iea_file |>
     iea_df() |> 
     rename_iea_df_cols() |> 
@@ -40,20 +40,8 @@ electricity_heat_output <- function(.iea_file = NULL,
     dplyr::mutate(
       # Capitalize first letter of machine name.
       "{machine_colname}" := stringr::str_to_sentence(.data[[machine_colname]]), 
-      # Select the first word, either "Electricity" or "Heat"
-      # "{output_colname}" := 
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+      # Select only the first word in the output column, either "Electricity" or "Heat"
+      "{output_colname}" := stringr::word(.data[[output_colname]], 1)
     ) |> 
     dplyr::rename(
       "{input_colname}" := .data[[product]]
