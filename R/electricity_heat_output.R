@@ -46,7 +46,7 @@ load_electricity_heat_output <- function(.iea_file = NULL,
       "{output_colname}" := stringr::word(.data[[output_colname]], 1) 
     ) |> 
     dplyr::rename(
-      "{input_colname}" := .data[[product]]
+      "{input_colname}" := dplyr::all_of(product)
     ) |> 
     tidyr::pivot_longer(cols = !dplyr::all_of(c(country, output_colname, machine_colname, input_colname)),
                         names_to = year,
