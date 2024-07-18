@@ -16,6 +16,8 @@ load_electricity_heat_output(
   input_colname = IEATools::elec_heat_output$input_product,
   output_colname = IEATools::elec_heat_output$output_product,
   machine_colname = IEATools::template_cols$machine,
+  unit_colname = IEATools::iea_cols$unit,
+  unit = "TJ",
   output_machine_delimiter = IEATools::elec_heat_output$output_machine_delimiter,
   total = IEATools::memo_aggregation_product_prefixes$total,
   memo = IEATools::memo_aggregation_flow_prefixes$memo
