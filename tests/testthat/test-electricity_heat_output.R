@@ -1,7 +1,8 @@
 test_that("electricity_heat_output() works as expected", {
-  # Check an original (GWhr) values.
-  GWhr_check <- 2909
-  sample_iea_data_path() |> 
+  GWhr_check <- 2909 # for Electricity
+
+  # Check an original (GWhr) electricity value.
+  orig_iea_data <- sample_iea_data_path() |> 
     iea_df() |> 
     tibble::as_tibble() |> 
     rename_iea_df_cols() |> 
@@ -9,7 +10,9 @@ test_that("electricity_heat_output() works as expected", {
     use_iso_countries() |> 
     tidyr::pivot_longer(cols = c(`1971`, `2000`),
                         names_to = IEATools::iea_cols$year,
-                        values_to = IEATools::iea_cols$e_dot) |> 
+                        values_to = IEATools::iea_cols$e_dot)
+  
+  orig_iea_data |> 
     dplyr::filter(.data[[IEATools::iea_cols$country]] == "GHA", 
                   .data[[IEATools::iea_cols$year]] == 1971,
                   startsWith(.data[[IEATools::iea_cols$flow]], 
