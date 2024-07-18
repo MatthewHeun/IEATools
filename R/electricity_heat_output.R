@@ -19,26 +19,50 @@ electricity_heat_output <- function(.iea_file = NULL,
                                     flow = IEATools::iea_cols$flow, 
                                     product = IEATools::iea_cols$product,
                                     e_dot = IEATools::iea_cols$e_dot,
-                                    output_colname = template_cols$ef_product, 
+                                    input_colname = IEATools::elec_heat_output$input_product,
+                                    output_colname = IEATools::elec_heat_output$output_product, 
                                     machine_colname = IEATools::template_cols$machine, 
-                                    output_machine_delimiter = IEATools::elec_heat_output$output_machine_delimiter) {
+                                    output_machine_delimiter = IEATools::elec_heat_output$output_machine_delimiter, 
+                                    total = IEATools::memo_aggregation_product_prefixes$total, 
+                                    memo = IEATools::memo_aggregation_flow_prefixes$memo) {
 
   iea_data <- .iea_file |>
     iea_df() |> 
     rename_iea_df_cols() |> 
     clean_iea_whitespace() |> 
     use_iso_countries()
-  elec_heat_data <- dplyr::filter(iea_data, 
-                                  grepl(electricity_output_prefix, iea_data[[flow]], fixed = TRUE) | 
-                                    grepl(heat_output_prefix, iea_data[[flow]], fixed = TRUE)) |> 
+  elec_heat_data <- iea_data |> 
+    dplyr::filter((startsWith(.data[[flow]], electricity_output_prefix) | 
+                     startsWith(.data[[flow]], heat_output_prefix)), 
+                  .data[[product]] != total, 
+                  !startsWith(.data[[product]], memo)) |> 
     tidyr::separate_wider_delim(dplyr::all_of(flow), delim = "-", names = c(output_colname, machine_colname)) |> 
     dplyr::mutate(
-      "{machine_colname}" := stringr::str_to_sentence(.data[[machine_colname]])
+      # Capitalize first letter of machine name.
+      "{machine_colname}" := stringr::str_to_sentence(.data[[machine_colname]]), 
+      # Select the first word, either "Electricity" or "Heat"
+      # "{output_colname}" := 
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
     ) |> 
-    tidyr::pivot_longer(cols = !dplyr::any_of(c(country, output_colname, machine_colname, product)),
+    dplyr::rename(
+      "{input_colname}" := .data[[product]]
+    ) |> 
+    tidyr::pivot_longer(cols = !dplyr::any_of(c(country, output_colname, machine_colname, input_colname)),
                         names_to = year,
                         values_to = e_dot) |> 
-    dplyr::filter(.data[[e_dot]] != 0)
+    dplyr::filter(.data[[e_dot]] != 0) |> 
+    dplyr::select(dplyr::all_of(c(country, year, input_colname, machine_colname, output_colname, e_dot)))
   
     
   return(elec_heat_data)

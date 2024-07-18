@@ -887,6 +887,8 @@ usethis::use_data(distribution_industry, overwrite = TRUE)
 
 elec_heat_output <- list(electricity_output_prefix = "Electricity output (GWh)-", 
                          heat_output_prefix = "Heat output-", 
-                         output_machine_delimiter = "-")
+                         output_machine_delimiter = "-", 
+                         input_product = "InputProduct", 
+                         output_product = "OutputProduct")
 
 usethis::use_data(elec_heat_output, overwrite = TRUE)

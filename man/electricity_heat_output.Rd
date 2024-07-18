@@ -13,9 +13,12 @@ electricity_heat_output(
   flow = IEATools::iea_cols$flow,
   product = IEATools::iea_cols$product,
   e_dot = IEATools::iea_cols$e_dot,
-  output_colname = template_cols$ef_product,
+  input_colname = IEATools::elec_heat_output$input_product,
+  output_colname = IEATools::elec_heat_output$output_product,
   machine_colname = IEATools::template_cols$machine,
-  output_machine_delimiter = IEATools::elec_heat_output$output_machine_delimiter
+  output_machine_delimiter = IEATools::elec_heat_output$output_machine_delimiter,
+  total = IEATools::memo_aggregation_product_prefixes$total,
+  memo = IEATools::memo_aggregation_flow_prefixes$memo
 )
 }
 \arguments{
