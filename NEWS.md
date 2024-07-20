@@ -9,7 +9,7 @@ which always resolves to the latest release.
 
 
 * New function `load_electricity_heat_output()`
-  that creates a data frame of IEA electricity and heat output
+  creates a data frame of IEA electricity and heat output
   information.
 * Change names of columns to avoid PostgreSQL 
   database conflicts. 
