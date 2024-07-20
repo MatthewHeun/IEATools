@@ -8,6 +8,9 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* New function `load_electricity_heat_output()`
+  that creates a data frame of IEA electricity and heat output
+  information.
 * Change names of columns to avoid PostgreSQL 
   database conflicts. 
   PostgreSQL doesn't like column names containing "."
