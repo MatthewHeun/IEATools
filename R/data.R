@@ -1385,3 +1385,22 @@
 #' @examples
 #' distribution_industry
 "distribution_industry"
+
+
+#' Electricity and heat output names
+#'
+#' A character vector containing the prefixes for 
+#' electricity and heat outputs.
+#'
+#' @format A character string
+#' \describe{
+#' \item{electricity_output_prefix}{The string prefix for electricity output.}
+#' \item{heat_output_prefix}{The string prefix for heat output.}
+#' \item{output_machine_delimiter}{The string delimiter between output energy flow and the machine name.}
+#' \item{input_product}{The name of the input product column.}
+#' \item{output_machine_delimiter}{The name of the output product column.}
+#' }
+#'
+#' @examples
+#' elec_heat_output
+"elec_heat_output"
