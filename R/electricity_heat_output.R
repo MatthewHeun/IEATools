@@ -57,8 +57,12 @@ load_electricity_heat_output <- function(.iea_file = NULL,
       "{e_dot}" := .data[[e_dot]] * 3.6, 
       "{unit_colname}" := unit
     ) |> 
+    dplyr::mutate(
+      # Fix a couple weirdnesses in the data
+      "{year}" := as.numeric(.data[[year]]),
+      "{machine_colname}" := stringr::str_replace(.data[[machine_colname]], "chp", "CHP")
+    ) |> 
     dplyr::select(dplyr::all_of(c(country, year, input_colname, machine_colname, output_colname, e_dot, unit_colname)))
   
-    
   return(elec_heat_data)
 }
