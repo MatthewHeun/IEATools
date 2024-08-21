@@ -5,12 +5,22 @@
 #'                                  Default is `IEATools::elec_heat_output$electricity_output_prefix`.
 #' @param heat_output_prefix The prefix for heat output rows.
 #'                           Default is `IEATools::elec_heat_output$heat_output_prefix`.
+#' @param country,year,flow,product,e_dot,unit_colname See `IEATools::iea_cols`.
+#' @param input_colname,output_colname,output_machine_delimiter See `IEATools::elec_heat_output`.
+#' @param machine_colname See `IEATools::template_cols`.
+#' @param unit The desired output unit. Default is "TJ". Best not to change this.
+#' @param electricity A string that defines electricity output. 
+#'                    Default is "Electricity".
+#' @param total See `IEATools::memo_aggregation_product_prefixes`.
+#' @param memo See `IEATools::memo_aggregation_flow_prefixes`.
 #'
 #' @return A data frame of electricity and heat output data.
 #'
 #' @export
 #'
 #' @examples
+#' sample_iea_data_path() |> 
+#'   load_electricity_heat_output()
 load_electricity_heat_output <- function(.iea_file = NULL, 
                                          electricity_output_prefix = IEATools::elec_heat_output$electricity_output_prefix, 
                                          heat_output_prefix = IEATools::elec_heat_output$heat_output_prefix,
@@ -24,6 +34,7 @@ load_electricity_heat_output <- function(.iea_file = NULL,
                                          machine_colname = IEATools::template_cols$machine, 
                                          unit_colname = IEATools::iea_cols$unit,
                                          unit = "TJ",
+                                         electricity = "Electricity", 
                                          output_machine_delimiter = IEATools::elec_heat_output$output_machine_delimiter, 
                                          total = IEATools::memo_aggregation_product_prefixes$total, 
                                          memo = IEATools::memo_aggregation_flow_prefixes$memo) {
@@ -43,7 +54,9 @@ load_electricity_heat_output <- function(.iea_file = NULL,
       # Capitalize first letter of machine name.
       "{machine_colname}" := stringr::str_to_sentence(.data[[machine_colname]]), 
       # Select only the first word in the output column, either "Electricity" or "Heat"
-      "{output_colname}" := stringr::word(.data[[output_colname]], 1) 
+      "{output_colname}" := stringr::word(.data[[output_colname]], 1),
+      # Fix chp
+      "{machine_colname}" := stringr::str_replace(.data[[machine_colname]], "chp", "CHP")
     ) |> 
     dplyr::rename(
       "{input_colname}" := dplyr::all_of(product)
@@ -53,15 +66,19 @@ load_electricity_heat_output <- function(.iea_file = NULL,
                         values_to = e_dot) |> 
     dplyr::filter(.data[[e_dot]] != 0) |> 
     dplyr::mutate(
-      # Convert GWhr to TJ
-      "{e_dot}" := .data[[e_dot]] * 3.6, 
-      "{unit_colname}" := unit
+      # Convert GWh to TJ for electricity only.
+      "{e_dot}" := dplyr::case_when(
+        # Convert for electricity only.
+        .data[[output_colname]] == electricity ~ .data[[e_dot]] * 3.6, 
+        # Heat is already in TJ.
+        TRUE ~ .data[[e_dot]]
+      ),
+      # Set the unit string.
+      "{unit_colname}" := unit, 
+      # Year should be numeric
+      "{year}" := as.numeric(.data[[year]])
     ) |> 
-    dplyr::mutate(
-      # Fix a couple weirdnesses in the data
-      "{year}" := as.numeric(.data[[year]]),
-      "{machine_colname}" := stringr::str_replace(.data[[machine_colname]], "chp", "CHP")
-    ) |> 
+    # Update the order of columns.
     dplyr::select(dplyr::all_of(c(country, year, input_colname, machine_colname, output_colname, e_dot, unit_colname)))
   
   return(elec_heat_data)

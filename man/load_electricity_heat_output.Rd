@@ -18,6 +18,7 @@ load_electricity_heat_output(
   machine_colname = IEATools::template_cols$machine,
   unit_colname = IEATools::iea_cols$unit,
   unit = "TJ",
+  electricity = "Electricity",
   output_machine_delimiter = IEATools::elec_heat_output$output_machine_delimiter,
   total = IEATools::memo_aggregation_product_prefixes$total,
   memo = IEATools::memo_aggregation_flow_prefixes$memo
@@ -31,10 +32,29 @@ Default is \code{IEATools::elec_heat_output$electricity_output_prefix}.}
 
 \item{heat_output_prefix}{The prefix for heat output rows.
 Default is \code{IEATools::elec_heat_output$heat_output_prefix}.}
+
+\item{country, year, flow, product, e_dot, unit_colname}{See \code{IEATools::iea_cols}.}
+
+\item{input_colname, output_colname, output_machine_delimiter}{See \code{IEATools::elec_heat_output}.}
+
+\item{machine_colname}{See \code{IEATools::template_cols}.}
+
+\item{unit}{The desired output unit. Default is "TJ". Best not to change this.}
+
+\item{electricity}{A string that defines electricity output.
+Default is "Electricity".}
+
+\item{total}{See \code{IEATools::memo_aggregation_product_prefixes}.}
+
+\item{memo}{See \code{IEATools::memo_aggregation_flow_prefixes}.}
 }
 \value{
 A data frame of electricity and heat output data.
 }
 \description{
 Extract a data frame of electricity and heat output information
+}
+\examples{
+sample_iea_data_path() |> 
+  load_electricity_heat_output()
 }
