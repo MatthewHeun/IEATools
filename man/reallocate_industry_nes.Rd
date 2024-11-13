@@ -15,7 +15,7 @@ reallocate_industry_nes(
 }
 \arguments{
 \item{.sutmats}{A data frame of PSUT matrices,
-most likely the reult of \code{\link[=prep_psut]{prep_psut()}}.}
+most likely the result of \code{\link[=prep_psut]{prep_psut()}}.}
 
 \item{industry_nes}{A vector of industry names (columns in the \strong{Y} matrix)
 that indicate unspecified industries.
