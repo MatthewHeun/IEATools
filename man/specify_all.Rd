@@ -8,7 +8,12 @@ specify_all(
   .tidy_iea_df,
   split_own_use_elect_chp_heat_using_shares_of = c("input", "output"),
   route_non_specified_eiou = TRUE,
-  route_non_specified_tp = TRUE
+  route_non_specified_tp = TRUE,
+  specify_renewable_plants = FALSE,
+  specify_electricity_grid = FALSE,
+  specify_distribution_industries = FALSE,
+  ascribe_eiou_to_renewable_plants = FALSE,
+  ascribe_eiou_to_nuclear = FALSE
 )
 }
 \arguments{
@@ -24,6 +29,21 @@ Default is TRUE.}
 
 \item{route_non_specified_tp}{Boolean stating whether non-specified transformation processes flows should be routed to existing industries
 Default is TRUE.}
+
+\item{specify_renewable_plants}{A boolean indicating whether renewable energy plants should be specified or not.
+Default is FALSE.}
+
+\item{specify_electricity_grid}{Boolean stating whether an electricity grid industry should be specified or not.
+Default is FALSE.}
+
+\item{specify_distribution_industries}{Boolean stating whether distribution industries should be specified or not.
+Default is FALSE.}
+
+\item{ascribe_eiou_to_renewable_plants}{A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
+should be ascribed to the new renewable industries. Default is FALSE.}
+
+\item{ascribe_eiou_to_nuclear}{A boolean defining whether a fraction of the EIOU of electricity, CHP and heat plants
+should be ascribed to the new nuclear industry. Default is FALSE.}
 }
 \value{
 An enhanced and corrected version of \code{.tidy_iea_df}

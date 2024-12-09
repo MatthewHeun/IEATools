@@ -127,7 +127,7 @@
 #' \item{C_eiou}{The name of the EIOU allocation rows in final-to-useful templates.}
 #' \item{C_Y}{The name of the final demand allocation rows in final-to-useful templates.}
 #' \item{C_perc}{The name of the percentage allocation rows in final-to-useful templates.}
-#' \item{e_dot_max}{The name of the maximum E.dot column in final-to-useful templates.}
+#' \item{e_dot_max}{The name of the maximum Edot column in final-to-useful templates.}
 #' \item{e_dot_dest}{The name of the column representing the destination for energy flows in final-to-useful templates.}
 #' \item{e_dot_perc}{The name of the energy flow percentage column in final-to-useful templates.}
 #' \item{e_dot_machine}{The name of the column representing energy flow into a machine in final-to-useful templates.}
@@ -181,6 +181,7 @@
 #' \item{sector}{The type of entity that absorbs final demand.}
 #' \item{product}{The inputs and outputs of industries.}
 #' \item{unit}{Units of physical measurement such as ktoe or TJ.}
+#' \item{other}{Used for, e.g., the 1-dimension of a vector.}
 #' }
 #' 
 #' @examples
@@ -476,6 +477,34 @@
 #' @examples
 #' electricity_products
 "electricity_products"
+
+
+#' Heat products
+#'
+#' A string vector containing names of products classified by the IEA as heat products.
+#' 
+#' @format A string vector with `r length(heat_products)` entries.
+#' \describe{
+#' \item{heat}{The string identifier for Heat.}
+#' }
+#' 
+#' @examples
+#' heat_products
+"heat_products"
+
+
+#' Nuclear products
+#'
+#' A string vector containing names of products classified by the IEA as nuclear products.
+#' 
+#' @format A string vector with `r length(nuclear_products)` entries.
+#' \describe{
+#' \item{nuclear}{The string identifier for Nuclear}
+#' }
+#' 
+#' @examples
+#' nuclear_products
+"nuclear_products"
 
 
 #' Non-energy products
@@ -1149,8 +1178,8 @@
 #' \item{phi_constants_names}{The string name of the tab in the Excel file containing the constant phi values table.}
 #' \item{product_colname}{The string name of the energy product column in the constant phi values table.}
 #' \item{phi_colname}{The string name of the constant phi value column in the constant phi values table.}
-#' \item{is_useful_colname}{The string name of the is.useful column in the constant phi values table.}
-#' \item{phi_source_colname}{The string name of the phi.source column in the completed phi values table.}
+#' \item{is_useful_colname}{The string name of the IsUseful column in the constant phi values table.}
+#' \item{phi_source_colname}{The string name of the PhiSource column in the completed phi values table.}
 #' }
 #'
 #' @examples
@@ -1311,4 +1340,67 @@
 "Fixed_RUSEST_heat"
 
 
+#' Renewable energy industries names
+#'
+#' A string list containing the names of renewable industries added with the `specify_renewable_plants()` function.
+#'
+#' @format A string list with `r length(renewable_industries)` entries.
+#' \describe{
+#' \item{geothermal_plants}{The string name of geothermal plants.}
+#' \item{hydro_plants}{The string name of hydropower plants.}
+#' \item{solar_pv_plants}{The string name of solar photovoltaics plants.}
+#' \item{solar_th_plants}{The string name of solar thermal plants.}
+#' \item{oceanic_plants}{The string name of oceanic power plants.}
+#' \item{wind_power_plants}{The string name of wind power plants.}
+#' }
+#'
+#' @examples
+#' renewable_industries
+"renewable_industries"
 
+
+#' Grid industries names
+#'
+#' A string list containing the names of the grid industries that can be added.
+#'
+#' @format A string list with `r length(grid_industries)` entries.
+#' \describe{
+#' \item{electricity_grid}{The string name of the electricity grid industry.}
+#' }
+#'
+#' @examples
+#' grid_industries
+"grid_industries"
+
+
+#' Distribution industry name
+#'
+#' A character string containing the name of the distribution industry
+#'
+#' @format A character string
+#' \describe{
+#' A character string containing the name of the distribution industry
+#' }
+#'
+#' @examples
+#' distribution_industry
+"distribution_industry"
+
+
+#' Electricity and heat output names
+#'
+#' A character vector containing the prefixes for 
+#' electricity and heat outputs.
+#'
+#' @format A character string
+#' \describe{
+#' \item{electricity_output_prefix}{The string prefix for electricity output.}
+#' \item{heat_output_prefix}{The string prefix for heat output.}
+#' \item{output_machine_delimiter}{The string delimiter between output energy flow and the machine name.}
+#' \item{input_product}{The name of the input product column.}
+#' \item{output_machine_delimiter}{The name of the output product column.}
+#' }
+#'
+#' @examples
+#' elec_heat_output
+"elec_heat_output"

@@ -41,13 +41,13 @@ write_eta_fu_template(
 
 \item{overwrite_fu_eta_tab}{a logical telling whether to overwrite the final-to-useful efficiency tab, if it already exists. Default is \code{FALSE}.}
 
-\item{eta_fu}{the name of the final-to-useful efficiency rows in \code{.eta_fu_template}. Default is "eta.fu".}
+\item{eta_fu}{the name of the final-to-useful efficiency rows in \code{.eta_fu_template}. Default is IEATools::template_cols$eta_fu.}
 
-\item{e_dot_machine}{a string identifying energy flow into final-to-useful machines. Default is "E.dot_machine".}
+\item{e_dot_machine}{a string identifying energy flow into final-to-useful machines. Default is "Edot_machine".}
 
-\item{e_dot_machine_perc}{a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "E.dot_machine [\%]".}
+\item{e_dot_machine_perc}{a string identifying percentage of total final energy flowing into final-to-useful machines. Default is "Edot_machine [\%]".}
 
-\item{maximum_values}{a string identifying the maximum values column in the outgoing template. Default is "Maximum.values".}
+\item{maximum_values}{a string identifying the maximum values column in the outgoing template. Default is \code{IEATools::template_cols$maximum_values}.}
 
 \item{header_row_font_color}{a hex string representing the font color for the header row in the Excel file that is written by this function.
 Default is "#FFFFFF", white.}
@@ -84,7 +84,7 @@ Default is "#808080".}
 
 \item{quantity}{the name of the quantity column in \code{.eta_fu_template}. Default is "Quantity".}
 
-\item{e_dot_machine_max_perc}{the name of the rows that give maximum percentages. Default is "E.dot_machine_max [\%]".}
+\item{e_dot_machine_max_perc}{the name of the rows that give maximum percentages. Default is "Edot_machine_max [\%]".}
 
 \item{.rownum}{the name of a temporary column containing row numbers. Default is ".rownum".}
 }

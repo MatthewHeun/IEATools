@@ -322,20 +322,20 @@ The `sort_iea_df()` function can return a data frame to IEA sort order.
 
 ```{r}
   Tidy_IEA_df <- load_tidy_iea_df()
-  Tidy_IEA_df %>% dplyr::select(Year, Flow, Product, E.dot)
+  Tidy_IEA_df %>% dplyr::select(Year, Flow, Product, Edot)
   # Move the first row to the bottom to put everything out of order
   Unsorted <- Tidy_IEA_df[-1, ] %>% dplyr::bind_rows(Tidy_IEA_df[1, ])
-  Unsorted %>% dplyr::select(Year, Flow, Product, E.dot)
+  Unsorted %>% dplyr::select(Year, Flow, Product, Edot)
   # Now sort it to put everything right again
   Sorted <- sort_iea_df(Unsorted)
-  Sorted %>% dplyr::select(Year, Flow, Product, E.dot)
+  Sorted %>% dplyr::select(Year, Flow, Product, Edot)
 ```
 
 `sort_iea_df()` also works with wide data frames in which years are spread to the right.
 
 ```{r}
   # Pivoting the data results in unconventional ordering
-  Unsorted_wide <- Tidy_IEA_df %>% tidyr::pivot_wider(names_from = Year, values_from = E.dot)
+  Unsorted_wide <- Tidy_IEA_df %>% tidyr::pivot_wider(names_from = Year, values_from = Edot)
   Unsorted_wide %>% dplyr::select(Flow, Product, `1971`, `2000`)
   # The wide data frame is not sorted correctly. Sort it.
   Sorted_wide <- sort_iea_df(Unsorted_wide)

@@ -7,15 +7,15 @@
 prod_tp_eiou_energy_carriers(
   file_path = sample_iea_data_path(),
   iea_df = IEATools::load_tidy_iea_df(file_path),
-  side = c("Consumption", "Supply"),
-  flow_aggregation_point = "Flow.aggregation.point",
-  production = "Production",
-  transformation_processes = "Transformation processes",
-  eiou = "Energy industry own use",
+  side = c(IEATools::ledger_sides$consumption, IEATools::ledger_sides$supply),
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  production = IEATools::tpes_flows$production,
+  transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
+  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
   stage = c(production, transformation_processes, eiou),
-  e_dot = "E.dot",
-  flow = "Flow",
-  product = "Product"
+  e_dot = IEATools::iea_cols$e_dot,
+  flow = IEATools::iea_cols$flow,
+  product = IEATools::iea_cols$product
 )
 }
 \arguments{
@@ -26,7 +26,7 @@ prod_tp_eiou_energy_carriers(
 \item{side}{Refers to the "Consumption" or "Supply" side of Production, Transformation processes, or Energy industry own use.
 One of "Consumption" or "Supply". Default is "Consumption".}
 
-\item{flow_aggregation_point}{The flow aggregation point column in \code{iea_df}. Default is "Flow.aggregation.point".}
+\item{flow_aggregation_point}{The flow aggregation point column in \code{iea_df}. Default is FlowAggregationPoint.}
 
 \item{production}{The string indicating the production flow. Default is "Production".}
 
@@ -37,7 +37,7 @@ One of "Consumption" or "Supply". Default is "Consumption".}
 \item{stage}{The string indicating the stage for the analysis. One of \code{production}, \code{transformation_processes}, or \code{eiou}.
 Default is \code{production}.}
 
-\item{e_dot}{The energy flow rate column in \code{iea_df}.  Default is "E.dot".}
+\item{e_dot}{The energy flow rate column in \code{iea_df}.  Default is "Edot".}
 
 \item{flow}{The flow column in \code{iea_df}. Default is "Flow".}
 

@@ -5,13 +5,14 @@
 \alias{row_col_types}
 \title{PSUT matrix row and column types}
 \format{
-A string list with 5 entries.
+A string list with 6 entries.
 \describe{
 \item{resource}{The type of entity that provides raw resources.}
 \item{industry}{The type of entity that receives inputs and makes outputs.}
 \item{sector}{The type of entity that absorbs final demand.}
 \item{product}{The inputs and outputs of industries.}
 \item{unit}{Units of physical measurement such as ktoe or TJ.}
+\item{other}{Used for, e.g., the 1-dimension of a vector.}
 }
 }
 \usage{

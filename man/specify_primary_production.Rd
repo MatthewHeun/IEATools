@@ -18,7 +18,7 @@ specify_primary_production(
   coal_mines = IEATools::industry_flows$coal_mines,
   oil_extraction = IEATools::industry_flows$oil_extraction,
   gas_extraction = IEATools::industry_flows$natural_gas_extraction,
-  liquefaction_regas = "Liquefaction (LNG) / regasification plants",
+  liquefaction_regas = IEATools::eiou_flows$liquefaction_regasification_plants,
   liquefaction_regas_reassign = IEATools::industry_flows$natural_gas_extraction,
   transformation_processes = IEATools::aggregation_flows$transformation_processes,
   resources = IEATools::tpes_flows$resources,
@@ -33,7 +33,7 @@ specify_primary_production(
 
 \item{ledger_side, flow, product, flow_aggregation_point}{See \code{IEATools::iea_cols}.}
 
-\item{e_dot}{The name of the energy column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
+\item{e_dot}{The name of the energy column in \code{.tidy_iea_df}. Default is "\code{Edot}".}
 
 \item{list_primary_coal_products}{The list of primary coal products for which the production industry needs to be changed.
 Default is \code{IEATools::primary_coal_products}.}
@@ -124,13 +124,13 @@ load_tidy_iea_df() \%>\%
   specify_primary_production() \%>\% 
   add_psut_matnames() \%>\% 
   dplyr::filter(Flow == "Coal mines" | stringr::str_detect(Flow, "Resources")) \%>\% 
-  select(-Method, -Last.stage, -Ledger.side, -Unit)
+  select(-Method, -LastStage, -LedgerSide, -Unit)
 # EIOU by "Liquefaction (LNG) / regasification plants" is reassigned to "Oil and gas extraction"
 data.frame(
-  Flow.aggregation.point = c("Energy industry own use"),
+  FlowAggregationPoint = c("Energy industry own use"),
   Flow = c("Liquefaction (LNG) / regasification plants"), 
   Product = c("Natural gas"),
-  E.dot = c(-42), 
+  Edot = c(-42), 
   stringsAsFactors = FALSE
 ) \%>\% 
   specify_primary_production()

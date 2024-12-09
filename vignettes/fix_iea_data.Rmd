@@ -72,7 +72,7 @@ example_tidy_iea_df <- load_tidy_iea_df() %>%
   ) 
 example_tidy_iea_df %>% 
   dplyr::filter(Product == "Primary solid biofuels") %>% 
-  dplyr::select(Year, Flow.aggregation.point, Flow, E.dot, Unit)
+  dplyr::select(Year, FlowAggregationPoint, Flow, Edot, Unit)
 fixed <- example_tidy_iea_df %>% 
   fix_GHA_psb()
 ```
@@ -83,10 +83,10 @@ shows that production rates have changed.
 ```{r}
 example_tidy_iea_df %>% 
   dplyr::filter(Year == 1991, Flow == "Production") %>% 
-  dplyr::select("E.dot", "Unit")
+  dplyr::select("Edot", "Unit")
 fixed %>% 
   dplyr::filter(Year == 1991, Flow == "Production") %>% 
-  dplyr::select("E.dot", "Unit")
+  dplyr::select("Edot", "Unit")
 ```
 
 The private object `Fixed_GHA_PSB` contains the replacement Primary solid biofuels data.

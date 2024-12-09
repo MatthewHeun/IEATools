@@ -6,16 +6,17 @@
 \usage{
 tp_sinks_to_nonenergy(
   .tidy_iea_df,
-  ledger_side = "Ledger.side",
-  consumption = "Consumption",
-  flow_aggregation_point = "Flow.aggregation.point",
-  non_energy_flow_agg_point = "Non-energy use",
-  transformation_processes = "Transformation processes",
-  eiou = "Energy industry own use",
-  flow = "Flow",
-  non_energy_flow = "Non-energy use industry/transformation/energy",
-  product = "Product",
-  e_dot = "E.dot"
+  ledger_side = IEATools::iea_cols$ledger_side,
+  consumption = IEATools::ledger_sides$consumption,
+  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+  non_energy_flow_agg_point = IEATools::tfc_flows$non_energy_use,
+  transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
+  eiou = IEATools::tfc_compare_flows$energy_industry_own_use,
+  flow = IEATools::iea_cols$flow,
+  non_energy_flow =
+    IEATools::non_energy_flows$non_energy_use_industry_transformation_energy,
+  product = IEATools::iea_cols$product,
+  e_dot = IEATools::iea_cols$e_dot
 )
 }
 \arguments{
@@ -39,7 +40,7 @@ tp_sinks_to_nonenergy(
 
 \item{product}{the name of the product column in \code{.tidy_iea_df}. Default is "\code{Product}".}
 
-\item{e_dot}{the name of the energy rate column in \code{.tidy_iea_df}. Default is "\code{E.dot}".}
+\item{e_dot}{the name of the energy rate column in \code{.tidy_iea_df}. Default is "\code{Edot}".}
 }
 \value{
 \code{.tidy_iea_df} with energy sunk in Transformation processes sinks reassigned to Non-energy use
@@ -54,21 +55,21 @@ as \code{non_energy_flow}, by default "Non-energy use in industry/transformation
 \examples{
 library(dplyr)
 DF <- data.frame(
-  Ledger.side = c("Supply", "Supply", "Supply", "Consumption"),
-  Flow.aggregation.point = c("Transformation processes", 
+  LedgerSide = c("Supply", "Supply", "Supply", "Consumption"),
+  FlowAggregationPoint = c("Transformation processes", 
                              "Transformation processes", 
                              "Transformation processes", 
                              "Non-energy use"), 
   Flow = c("Automobiles", "Automobiles", "Furnaces", 
            "Non-energy use industry/transformation/energy"),
   Product = c("Petrol", "MD", "Coal", "Coal"),
-  E.dot = c(-1, 1, -2, 8), 
+  Edot = c(-1, 1, -2, 8), 
   stringsAsFactors = FALSE
 ) \%>\% 
   mutate(
     Method = "PCM", 
-    Last.stage = "Final",
-    Energy.type = "E",
+    LastStage = "Final",
+    EnergyType = "E",
     Country = "Bogus",
     Year = 1971
   )

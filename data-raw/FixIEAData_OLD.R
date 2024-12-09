@@ -71,7 +71,7 @@ IEAZACoalLiquefactionDataTo2000 <- AllIEAData1 %>%
                               from = c("Hard coal (if no detail)"),
                               to   = c("Other bituminous coal"))
   ) %>%
-  unite(col = `Flow.aggregation.point+Product`, Flow.aggregation.point, Product, sep = "+") %>%
+  unite(col = `Flow.aggregation.point+Product`, FlowAggregationPoint, Product, sep = "+") %>%
   spread(key = `Flow.aggregation.point+Product`, value = E.ktoe)
 
 # Need to adjust coal production 1997 and prior for the new information that we'll calculate below
@@ -83,9 +83,9 @@ NewCoalProductionRowsTo1977 <- AllIEAData1 %>%
   spread(key = Product, value = E.ktoe) %>%
   # Join the CTL gross consumption data to the production data.
   # Doing so makes accessible the amounts by which we need to adjust Hard coal (if no detail) production.
-  left_join(IEAZACoalLiquefactionDataTo2000 %>% select(Country, Year, Ledger.side, 
+  left_join(IEAZACoalLiquefactionDataTo2000 %>% select(Country, Year, LedgerSide, 
                                                        `Transformation processes+Other bituminous coal`),
-            by = c("Country", "Year", "Ledger.side")
+            by = c("Country", "Year", "LedgerSide")
   ) %>%
   mutate(
     # Reduce Hard coal production by the amount of Other bituminous coal consumption in CTL plants.
@@ -122,13 +122,13 @@ NewCTLRowsTo2000 <- IEAZACoalLiquefactionDataTo2000 %>%
     `Energy industry own use+Other hydrocarbons` = -0.5 * `Transformation processes+Other hydrocarbons`,
     `Transformation processes+Other hydrocarbons` = 0.5 * `Transformation processes+Other hydrocarbons`
   ) %>%
-  gather(key = `Flow.aggregation.point+Product`, value = E.ktoe, -Country, -Ledger.side, -Flow, -Year) %>%
-  separate(col = `Flow.aggregation.point+Product`, into = c("Flow.aggregation.point", "Product"), sep = "[+]")
+  gather(key = `Flow.aggregation.point+Product`, value = E.ktoe, -Country, -LedgerSide, -Flow, -Year) %>%
+  separate(col = `Flow.aggregation.point+Product`, into = c(FlowAggregationPoint, "Product"), sep = "[+]")
 
 # Second, work on CTL data for 2001 and following
 IEAZACoalLiquefactionDataFrom2001 <- AllIEAData1 %>%
   filter(Country == "ZA", Year >= 2001, Flow == "Coal liquefaction plants") %>%
-  unite(col = `Flow.aggregation.point+Product`, Flow.aggregation.point, Product, sep = "+") %>%
+  unite(col = `Flow.aggregation.point+Product`, FlowAggregationPoint, Product, sep = "+") %>%
   spread(key = `Flow.aggregation.point+Product`, value = E.ktoe)
 
 # Calculate new information for years 2001 and following
@@ -150,8 +150,8 @@ mutate(
   `Energy industry own use+Other bituminous coal` = `Energy industry own use+Other bituminous coal` 
   - `Energy industry own use+Other hydrocarbons`
 ) %>% 
-  gather(key = `Flow.aggregation.point+Product`, value = E.ktoe, -Country, -Ledger.side, -Flow, -Year) %>%
-  separate(col = `Flow.aggregation.point+Product`, into = c("Flow.aggregation.point", "Product"), sep = "[+]")
+  gather(key = `Flow.aggregation.point+Product`, value = E.ktoe, -Country, -LedgerSide, -Flow, -Year) %>%
+  separate(col = `Flow.aggregation.point+Product`, into = c(FlowAggregationPoint, "Product"), sep = "[+]")
 
 
 
@@ -195,13 +195,13 @@ rm(IEAZACoalLiquefactionDataTo2000, IEAZACoalLiquefactionDataFrom2001,
 # AllIEAData_prior_to_fix %>%
 #   filter(Country == "ZA" & Flow == "Coal liquefaction plants") %>%
 #   mutate(
-#     Flow.aggregation.point = plyr::mapvalues(Flow.aggregation.point,
+#     FlowAggregationPoint = plyr::mapvalues(FlowAggregationPoint,
 #                                              from = c("Transformation processes", "Energy industry own use"),
 #                                              to = c("TP", "EIOU")),
 #     Product = plyr::mapvalues(Product,
 #                               from = c("Other bituminous coal", "Hard coal (if no detail)", "Other hydrocarbons"),
 #                               to = c("Other bit. coal", "Hard coal", "OHC (output)")),
-#     agg.product = paste(Flow.aggregation.point, "+", Product)
+#     agg.product = paste(FlowAggregationPoint, "+", Product)
 #   ) %>%
 #   area_graph_over_under(
 #     y_variable = "E.ktoe",
@@ -219,13 +219,13 @@ rm(IEAZACoalLiquefactionDataTo2000, IEAZACoalLiquefactionDataFrom2001,
 # AllIEAData2 %>%
 #   filter(Country == "ZA" & Flow == "Coal liquefaction plants") %>% 
 #   mutate(
-#     Flow.aggregation.point = plyr::mapvalues(Flow.aggregation.point,
+#     FlowAggregationPoint = plyr::mapvalues(FlowAggregationPoint,
 #                                              from = c("Transformation processes", "Energy industry own use"),
 #                                              to = c("TP", "EIOU")),
 #     Product = plyr::mapvalues(Product,
 #                               from = c("Other bituminous coal", "Other hydrocarbons"),
 #                               to = c("Other bit. coal", "OHC (output)")),
-#     agg.product = paste(Flow.aggregation.point, "+", Product)
+#     agg.product = paste(FlowAggregationPoint, "+", Product)
 #   ) %>%
 #   area_graph_over_under(
 #     y_variable = "E.ktoe",
@@ -285,7 +285,7 @@ rm(IEAZACoalLiquefactionDataTo2000, IEAZACoalLiquefactionDataFrom2001,
 # Data are in ktoe.
 FixedGHIndustryElectricity <- read.delim(file = file.path("data-raw", "FixedGHIndustryElectricity.tsv"), 
                                          check.names = FALSE, stringsAsFactors = FALSE) %>% 
-  gather(key = Year, value = E.ktoe, -Country, -Ledger.side, -Flow.aggregation.point, -Flow, -Product ) %>% 
+  gather(key = Year, value = E.ktoe, -Country, -LedgerSide, -FlowAggregationPoint, -Flow, -Product ) %>% 
   filter(
     # Eliminate rows that have 0 energy.
     E.ktoe != 0
@@ -321,8 +321,8 @@ FixedGHPSB <- read.delim(file = file.path("data-raw", "FixedGHPSB.tsv"),
 AllIEAData3 <- AllIEAData2 %>% 
   # Remove rows from AllIEAData that are to be replaced by FixedGHIndustryElectricity
   filter(!(Country == "GH" & 
-             Ledger.side == "Consumption" & 
-             Flow.aggregation.point == "Industry" & 
+             LedgerSide == "Consumption" & 
+             FlowAggregationPoint == "Industry" & 
              Product == "Electricity")) %>% 
   # Replace them
   bind_rows(FixedGHIndustryElectricity) %>% 
@@ -337,7 +337,7 @@ AllIEAData3 <- AllIEAData2 %>%
 #
 # # Graph of GH industrial electricity prior to fixing it.
 # AllIEADataPriorToFix %>%
-#   filter(Country == "GH" & Flow.aggregation.point == "Industry" & Product == "Electricity") %>%
+#   filter(Country == "GH" & FlowAggregationPoint == "Industry" & Product == "Electricity") %>%
 #   area_graph(
 #     y_variable = "E.ktoe",
 #     ylab = "Primary Energy [ktoe]",
@@ -352,7 +352,7 @@ AllIEAData3 <- AllIEAData2 %>%
 # 
 # # Graph of GH industrial electricity after fixing it.
 # AllIEAData3 %>%
-#   filter(Country == "GH" & Flow.aggregation.point == "Industry" & Product == "Electricity") %>%
+#   filter(Country == "GH" & FlowAggregationPoint == "Industry" & Product == "Electricity") %>%
 #   area_graph(
 #     y_variable = "E.ktoe",
 #     ylab = "Primary Energy [ktoe]",
@@ -387,7 +387,7 @@ AllIEAData4 <- AllIEAData3 %>%
     # Data is inconsistent due to the emergence of non-specified industry in 1998
     # and commercial and public services in 2000
     !((Country == "HN" &
-         Ledger.side == "Consumption" &
+         LedgerSide == "Consumption" &
          Flow %in% c("Agriculture/forestry",
                      "Commercial and public services",
                      "Non-specified (industry)",
@@ -398,7 +398,7 @@ AllIEAData4 <- AllIEAData3 %>%
         # These rows will be reallocated to smooth out some changes and
         # redistribute Non-specified (other)
         (Country == "HN" &
-           Ledger.side == "Consumption" &
+           LedgerSide == "Consumption" &
            Flow %in% c("Agriculture/forestry",
                        "Autoproducer electricity plants",
                        "Commercial and public services",
@@ -407,7 +407,7 @@ AllIEAData4 <- AllIEAData3 %>%
            Product == "Gas/diesel oil excl. biofuels") |
         # Remove Fuel oil rows to eliminate Non-specified (other)
         (Country == "HN" &
-           Ledger.side == "Consumption" &
+           LedgerSide == "Consumption" &
            Flow %in% c("Agriculture/forestry",
                        "Commercial and public services",
                        "Non-specified (industry)",
@@ -434,8 +434,8 @@ AllIEAData4 <- AllIEAData3 %>%
 IEAStatDiffs <- AllIEAData4 %>%
   filter(Flow == "Statistical differences") %>%
   mutate(
-    Ledger.side = NULL,
-    Flow.aggregation.point = NULL,
+    LedgerSide = NULL,
+    FlowAggregationPoint = NULL,
     Flow = NULL,
     Source = "IEA"
   ) %>%
@@ -445,7 +445,7 @@ IEAStatDiffs <- AllIEAData4 %>%
 
 MyStatDiffs <- AllIEAData4 %>%
   filter(!Flow == "Statistical differences") %>% 
-  group_by(Country, Ledger.side, Product, Year) %>% 
+  group_by(Country, LedgerSide, Product, Year) %>% 
   summarise(E.ktoe = sum(E.ktoe)) %>% 
   spread(key = Ledger.side, value = E.ktoe, fill = 0) %>% 
   mutate(
@@ -460,8 +460,8 @@ NewStatDiffs <- bind_rows(MyStatDiffs, IEAStatDiffs) %>%
   mutate(
     # DeltaStatDiffs should be added to the IEA's Statistical differences to perfectly balance the table.
     DeltaStatDiffs = Actual - IEA,
-    Ledger.side = "Supply", 
-    Flow.aggregation.point = "TFC compare",
+    LedgerSide = "Supply", 
+    FlowAggregationPoint = "TFC compare",
     Flow = "Statistical differences"
   ) %>% 
   filter(Actual != 0)
@@ -474,7 +474,7 @@ AllIEAData5 <- AllIEAData4 %>%
 
 # Verify that the new Statistical differences bring all Products into perfect balance.
 VerifyStatDiffs <- AllIEAData5 %>%
-  group_by(Country, Ledger.side, Product, Year) %>%
+  group_by(Country, LedgerSide, Product, Year) %>%
   summarise(E.ktoe = sum(E.ktoe)) %>%
   spread(key = Ledger.side, value = E.ktoe, fill = 0) %>%
   mutate(

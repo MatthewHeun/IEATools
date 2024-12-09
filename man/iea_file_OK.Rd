@@ -18,7 +18,10 @@ iea_file_OK(
 )
 }
 \arguments{
-\item{.iea_file}{the path to the raw IEA data file for which quality assurance is desired}
+\item{.iea_file}{The path to the raw IEA data file for which quality assurance is desired.
+Can be a vector of file paths, in which case
+each file is loaded sequentially and stacked together
+with \code{\link[dplyr:bind_rows]{dplyr::bind_rows()}}.}
 
 \item{text}{a string containing text to be parsed as an IEA file.}
 
@@ -31,7 +34,7 @@ Note that \code{expected_simple_start} is sometimes encountered in data supplied
 Furthermore, \code{expected_simple_start} could be the format of the file when somebody "helpfully" fiddles with
 the raw data from the IEA.}
 
-\item{.slurped_iea_df}{a data frame created by \code{slurp_iea_to_raw_df()}}
+\item{.slurped_iea_df}{a data frame created by \code{\link[=slurp_iea_to_raw_df]{slurp_iea_to_raw_df()}}}
 
 \item{country}{the name of the country column. Default is "COUNTRY".}
 
@@ -59,10 +62,12 @@ If none are found, the function returns the data frame read from the file.
 Note that \code{.iea_file} is read internally with \code{\link[data.table:fread]{data.table::fread()}} \emph{without} stripping white space.
 
 If \code{.slurped_iea_df} is supplied, arguments \code{.iea_file} or \code{text} are ignored.
-If \code{.slurped_iea_df} is absent,
+If \code{.slurped_iea_df} is \code{NULL} (the default),
 either \code{.iea_file} or \code{text} are required, and
 the helper function \code{slurp_iea_to_raw_df()} is called internally
 to load a raw data frame of data.
+
+This function is vectorized over \code{.iea_file}.
 }
 \examples{
 library(magrittr)

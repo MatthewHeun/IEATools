@@ -8,7 +8,34 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-## IEATools 0.1.75 (2024-02-03)
+## IEATools 0.1.76 (2024-12-09)
+
+* New function `load_electricity_heat_output()`
+  creates a data frame of IEA electricity and heat output
+  information.
+* Change names of columns to avoid PostgreSQL 
+  database conflicts. 
+  PostgreSQL doesn't like column names containing "."
+  because "." is the separator for "schema.table".
+* New `specify_distribution_losses()` function
+  to specify distribution industries, within which transportation and
+  distribution losses occur.
+* Argument added to `add_nuclear_industry()` to ascribe some EIOU 
+  to the nuclear industry according to its output share.
+* New `specify_renewable_plants()` function 
+  to specify renewable energy plants.
+* New `specify_electricity_grid()` function 
+  to add an electricity grid.
+* The `.iea_file` argument to `slurp_iea_to_raw_df()`
+  is now vectorized, which will enable sending 
+  a vector of country IEA data files in `.iea_file`.
+* Fixed several tests for new column names and added 
+  a couple new tests for new features.
+    * Now at 1365 tests, all passing.
+    * Test coverage remains at 100%.
+
+
+## IEATools 0.1.75 (2024-02-03) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10613604.svg)](https://doi.org/10.5281/zenodo.10613604)
 
 * `extend_to_useful_helper()` and `extend_to_useful()`
   now return additional matrices, namely

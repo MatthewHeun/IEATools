@@ -57,7 +57,7 @@ prior to passing into this function.
 The \code{Product} column should definitely be included in \code{grouping_vars},
 but any other grouping level is fine.
 Typically, grouping should be done by
-\code{Country}, \code{Year}, \code{Energy.type}, \code{Last.stage}, \code{Product}, etc. columns.
+\code{Country}, \code{Year}, \code{EnergyType}, \code{Last.stage}, \code{Product}, etc. columns.
 Grouping should \emph{not} be done on the \code{flow_aggregation_point}, \code{Flow}, or \code{ledger_side} columns.
 
 Internally, this function calls \code{\link[=calc_tidy_iea_df_balances]{calc_tidy_iea_df_balances()}}
@@ -78,7 +78,7 @@ library(dplyr)
 # Remember that grouping should _not_ be done on
 # the `flow_aggregation_point`, `Flow`, or `ledger_side` columns.
 grouped_iea_df <- load_tidy_iea_df() \%>\% 
-  group_by(Country, Method, Energy.type, Last.stage, Year, Product)
+  group_by(Country, Method, EnergyType, LastStage, Year, Product)
 # unbalanced will not be balanced, because the IEA data are not in perfect balance.
 # Because we have grouped by key variables, 
 # `calc_tidy_iea_df_balances` provides energy balances 

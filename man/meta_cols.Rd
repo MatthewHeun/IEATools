@@ -36,7 +36,7 @@ Thus, the default value for \code{not_meta} is \code{IEATools::iea_cols$e_dot}.
 Overriding \code{not_meta} will change the default behavior to exclude different columns.
 }
 \examples{
-DF <- data.frame(E.dot = 2020, a = c(1, 2), `1967` = c(3, 4), `-42` = c(5, 6), check.names = FALSE)
+DF <- data.frame(Edot = 2020, a = c(1, 2), `1967` = c(3, 4), `-42` = c(5, 6), check.names = FALSE)
 DF \%>\% meta_cols()
 DF \%>\% meta_cols(return_names = TRUE)
 }
