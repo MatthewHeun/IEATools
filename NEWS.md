@@ -29,7 +29,7 @@ which always resolves to the latest release.
   a vector of country IEA data files in `.iea_file`.
 * Fixed several tests for new column names and added 
   a couple new tests for new features.
-    * Now at 1266 tests, all passing.
+    * Now at 1365 tests, all passing.
     * Test coverage remains at 100%.
 
 
