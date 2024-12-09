@@ -41,6 +41,7 @@ reallocate_statistical_differences <- function(.sutmats,
                                                U_feed_prime = paste0(U_feed, prime_suffix),
                                                U_eiou_prime = paste0(U_eiou, prime_suffix),
                                                Y_prime = paste0(Y, prime_suffix)) {
+  
   reallocate_func <- function(R_mat, U_feed_mat, U_eiou_mat, V_mat, Y_mat) {
     # Reallocate Stat diffs from the R matrix to the V matrix.
     R_stat_diffs <- R_mat |> 
