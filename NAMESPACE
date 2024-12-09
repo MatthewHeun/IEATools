@@ -54,7 +54,10 @@ export(prep_psut)
 export(primary_aggregates)
 export(prod_tp_eiou_energy_carriers)
 export(read_aggregation_region_table)
+<<<<<<< HEAD
 export(reallocate_statistical_differences)
+=======
+>>>>>>> develop
 export(remove_agg_memo_flows)
 export(remove_agg_regions)
 export(remove_suffix_specifications)

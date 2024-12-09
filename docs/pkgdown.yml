@@ -1,15 +1,14 @@
-pandoc: 3.1.1
-pkgdown: 2.0.7
+pandoc: '3.2'
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
-  IEATools: IEATools.html
   final_to_useful: final_to_useful.html
   fix_iea_data: fix_iea_data.html
+  IEATools: IEATools.html
   prep_psut: prep_psut.html
   psut_names: psut_names.html
   specify: specify.html
-last_built: 2024-02-03T16:02Z
+last_built: 2024-12-09T14:18Z
 urls:
   reference: https://matthewheun.github.io/IEATools/reference
   article: https://matthewheun.github.io/IEATools/articles
-
