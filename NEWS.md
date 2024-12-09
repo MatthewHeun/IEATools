@@ -8,6 +8,8 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+## IEATools 0.1.76 (2024-12-09)
+
 * New function `load_electricity_heat_output()`
   creates a data frame of IEA electricity and heat output
   information.
