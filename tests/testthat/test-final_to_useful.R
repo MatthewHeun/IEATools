@@ -1106,7 +1106,7 @@ test_that("extend_to_useful() works for countries lacking EIOU", {
     expect_equal("Electricity -> Main activity producer electricity plants")
   without_eiou$U_EIOU_fu_details[[1]] |> 
     colnames() |> 
-    expect_equal("MD [from Electric motors]")
+    expect_equal("L [from Industrial electric lamps]")
 })
 
 

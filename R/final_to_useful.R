@@ -546,6 +546,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param .err An internal matrix name for calculating energy balance errors. Default is ".err".
 #' @param .e_bal_ok An internal column name for assessing whether energy balance is within acceptable tolerances set by the `tol` argument. Default is ".e_bal_OK".
 #' @param .sep A separator between matrix names and `final` or `useful` indicators. Default is "_".
+#' @param U_eiou_details_default_rownames,U_eiou_details_default_colnames Default row and column names for the **U_EIOU_fu_details** matrices when there is no EIOU.
 #' @param U_eiou_name,U_feed_name,U_name,r_eiou_name,V_name,Y_name,Y_fu_details_name,U_eiou_fu_details_name See `IEATools::psut_cols`. 
 #'        Distinct from `U_feed`,`U_eiou`, `U`, `r_eiou`, `V`, and `Y` (which can be matrices or strings), 
 #'        these variables determine the names of these matrices on output.
@@ -628,8 +629,14 @@ extend_to_useful <- function(.sutdata = NULL,
                              .e_bal_ok = ".e_bal_ok",
                              .sep = "_", 
                              
-                             U_eiou_details_default_rownames = "Electricity -> Main activity producer electricity plants", 
-                             U_eiou_details_default_colnames = "MD [from Electric motors]",
+                             # U_eiou_details_default_rownames = "Electricity -> Main activity producer electricity plants", 
+                             U_eiou_details_default_rownames = RCLabels::paste_pref_suff(pref = IEATools::electricity_products$electricity, 
+                                                                                         suff = IEATools::transformation_processes$main_activity_producer_electricity_plants, 
+                                                                                         notation = arrow_note),
+                             # U_eiou_details_default_colnames = "L [from Industrial electric lamps]",
+                             U_eiou_details_default_colnames = RCLabels::paste_pref_suff(pref = "L", 
+                                                                                         suff = "Industrial electric lamps", 
+                                                                                         notation = from_note),
 
                              U_feed_name = IEATools::psut_cols$U_feed,
                              U_eiou_name = IEATools::psut_cols$U_eiou,
