@@ -521,7 +521,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #'                 `.sutdata` can also be a named list of matrices that forms a store of variables.
 #'                 Default is `NULL` to enable use of single matrices, too.
 #' @param tol The allowable error in energy balances for the outgoing matrices (last stage useful). 
-#'            Default is `1e-3`.
+#'            Default is `0.1`.
 #' @param last_stage See `IEATools::iea_cols$last_stage`. 
 #' @param final,useful See `IEATools::last_stages`.
 #' @param industry_type,product_type See `IEATools::row_col_types`
@@ -546,6 +546,7 @@ form_eta_fu_phi_u_vecs <- function(.eta_fu_table,
 #' @param .err An internal matrix name for calculating energy balance errors. Default is ".err".
 #' @param .e_bal_ok An internal column name for assessing whether energy balance is within acceptable tolerances set by the `tol` argument. Default is ".e_bal_OK".
 #' @param .sep A separator between matrix names and `final` or `useful` indicators. Default is "_".
+#' @param U_eiou_details_default_rownames,U_eiou_details_default_colnames Default row and column names for the **U_EIOU_fu_details** matrices when there is no EIOU.
 #' @param U_eiou_name,U_feed_name,U_name,r_eiou_name,V_name,Y_name,Y_fu_details_name,U_eiou_fu_details_name See `IEATools::psut_cols`. 
 #'        Distinct from `U_feed`,`U_eiou`, `U`, `r_eiou`, `V`, and `Y` (which can be matrices or strings), 
 #'        these variables determine the names of these matrices on output.
@@ -627,6 +628,15 @@ extend_to_useful <- function(.sutdata = NULL,
                              .err = ".err", 
                              .e_bal_ok = ".e_bal_ok",
                              .sep = "_", 
+                             
+                             # U_eiou_details_default_rownames = "Electricity -> Main activity producer electricity plants", 
+                             U_eiou_details_default_rownames = RCLabels::paste_pref_suff(pref = IEATools::electricity_products$electricity, 
+                                                                                         suff = IEATools::transformation_processes$main_activity_producer_electricity_plants, 
+                                                                                         notation = arrow_note),
+                             # U_eiou_details_default_colnames = "L [from Industrial electric lamps]",
+                             U_eiou_details_default_colnames = RCLabels::paste_pref_suff(pref = "L", 
+                                                                                         suff = "Industrial electric lamps", 
+                                                                                         notation = from_note),
 
                              U_feed_name = IEATools::psut_cols$U_feed,
                              U_eiou_name = IEATools::psut_cols$U_eiou,
@@ -711,15 +721,21 @@ extend_to_useful <- function(.sutdata = NULL,
     
     # Get the detail Y_u matrix
     Y_fu_details_mat <- res_Y[[details_fu]]
-    # Add a NULL U_EIOU_u_details matrix
-    # U_eiou_fu_details_mat <- NULL
-    U_eiou_fu_details_mat <- matsbyname::hadamardproduct_byname(U_useful_mat, 0)
     
     # Now check to see if we have any EIOU. 
     # If so, make further adjustments to the matrices.
     # If not, no big deal. 
     # We can live with the matrices calculated above.
-    if (!is.null(C_eiou_mat)) {
+    if (is.null(C_eiou_mat)) {
+      # We have a NULL C_eiou_mat. 
+      # We need to return something.
+      # So we return a simple zero matrix with row and column names
+      # that make some sense. 
+      # It will, at least, have the correct structure
+      # for row and column names if the default values are used.
+      U_eiou_fu_details_mat <- matrix(0, dimnames = list(U_eiou_details_default_rownames, 
+                                                         U_eiou_details_default_colnames))
+    } else {
       # We have some EIOU. Calculate modifications to matrices accounting for the EIOU portion of the ECC.
       res_eiou <- extend_to_useful_helper(dest_mat = U_eiou_mat, C_mat = C_eiou_mat, eta_fu_vec = eta_fu_vector, 
                                           add_to_U = .add_to_U_eiou, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest)
