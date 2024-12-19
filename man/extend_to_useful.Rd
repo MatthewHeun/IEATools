@@ -36,6 +36,9 @@ extend_to_useful(
   .err = ".err",
   .e_bal_ok = ".e_bal_ok",
   .sep = "_",
+  U_eiou_details_default_rownames =
+    "Electricity -> Main activity producer electricity plants",
+  U_eiou_details_default_colnames = "MD [from Electric motors]",
   U_feed_name = IEATools::psut_cols$U_feed,
   U_eiou_name = IEATools::psut_cols$U_eiou,
   U_name = IEATools::psut_cols$U,
@@ -59,7 +62,7 @@ probably created by functions \code{form_C_mats()} and \code{form_eta_fu_phi_u_v
 Default is \code{NULL} to enable use of single matrices, too.}
 
 \item{tol}{The allowable error in energy balances for the outgoing matrices (last stage useful).
-Default is \code{1e-3}.}
+Default is \code{0.1}.}
 
 \item{R, U_eiou, U_feed, U, r_eiou, V, Y}{See \code{IEATools::psut_cols}.
 These should be strings (if \code{.sutdata} is a data frame or a list)
