@@ -10,18 +10,28 @@
 #' most likely by calling [IEATools::prep_psut()].
 #' 
 #' Statistical differences can be found in either the **R** or **Y** matrix.
-#' Both are reallocated to the **U_EIOU** matrix.
+#' Both are reallocated to the **Y** and **U** matrices in proportion.
 #' The steps are:
 #' 
 #' * Move Statistical differences found in the **R** matrix to the **Y** matrix by subtraction.
-#' * Reallocate Statistical differences in the **Y** matrix to the **U_EIOU** matrix using [matsbyname::reallocate_byname()].
+#' * Reallocate Statistical differences in the **Y** matrix to the **Y** and **U** 
+#'   matrices using [matsbyname::reallocate_byname()].
 #' 
-#' This function calls [matsbyname::reallocate_byname()]
-#' internally to perform the reallocation.
+#' Internally, the **Y** and **U_feed** matrices are added before calling 
+#' [matsbyname::reallocate_byname()].
+#' The matrices are split again prior to returning.
 #'
 #' @param .sutmats A data frame of PSUT matrices, 
 #'                 most likely the result of [IEATools::prep_psut()].
-#' @param stat_diffs 
+#' @param stat_diffs The name of the row in **R** and columns in **U_feed** and **Y**
+#'                   for Statistical differences.
+#'                   Default is `IEATools::tfc_compare_flows$statistical_differences`.
+#' @param R,U_feed,U,V,Y Names of columns of matrices in `.sutmats`.
+#'                            See [IEATools::psut_cols].
+#' @param prime_suffix The string suffix for new versions of matrices with reallocated
+#'                     statistical differences.
+#'                     Default is "_prime".
+#' @param R_prime,U_feed_prime,U_prime
 #'
 #' @return A version of `.sutmats` in which energy consumption by "Statistical differences"
 #'         is reallocated to other Industries in proportion to their energy consumption.
@@ -33,13 +43,13 @@ reallocate_statistical_differences <- function(.sutmats,
                                                stat_diffs = IEATools::tfc_compare_flows$statistical_differences, 
                                                R = IEATools::psut_cols$R, 
                                                U_feed = IEATools::psut_cols$U_feed,
-                                               U_eiou = IEATools::psut_cols$U_eiou,
+                                               U = IEATools::psut_cols$U,
                                                V = IEATools::psut_cols$V,
                                                Y = IEATools::psut_cols$Y, 
                                                prime_suffix = "_prime",
                                                R_prime = paste0(R, prime_suffix),
                                                U_feed_prime = paste0(U_feed, prime_suffix),
-                                               U_eiou_prime = paste0(U_eiou, prime_suffix),
+                                               U_prime = paste0(U, prime_suffix),
                                                Y_prime = paste0(Y, prime_suffix)) {
   
   reallocate_func <- function(R_mat, U_feed_mat, U_eiou_mat, V_mat, Y_mat) {

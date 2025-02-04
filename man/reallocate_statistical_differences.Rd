@@ -9,13 +9,13 @@ reallocate_statistical_differences(
   stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
   R = IEATools::psut_cols$R,
   U_feed = IEATools::psut_cols$U_feed,
-  U_eiou = IEATools::psut_cols$U_eiou,
+  U = IEATools::psut_cols$U,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y,
   prime_suffix = "_prime",
   R_prime = paste0(R, prime_suffix),
   U_feed_prime = paste0(U_feed, prime_suffix),
-  U_eiou_prime = paste0(U_eiou, prime_suffix),
+  U_prime = paste0(U, prime_suffix),
   Y_prime = paste0(Y, prime_suffix)
 )
 }
@@ -23,7 +23,18 @@ reallocate_statistical_differences(
 \item{.sutmats}{A data frame of PSUT matrices,
 most likely the result of \code{\link[=prep_psut]{prep_psut()}}.}
 
-\item{stat_diffs}{}
+\item{stat_diffs}{The name of the row in \strong{R} and columns in \strong{U_feed} and \strong{Y}
+for Statistical differences.
+Default is \code{IEATools::tfc_compare_flows$statistical_differences}.}
+
+\item{R, U_feed, U, V, Y}{Names of columns of matrices in \code{.sutmats}.
+See \link{psut_cols}.}
+
+\item{prime_suffix}{The string suffix for new versions of matrices with reallocated
+statistical differences.
+Default is "_prime".}
+
+\item{R_prime, U_feed_prime, U_prime}{}
 }
 \value{
 A version of \code{.sutmats} in which energy consumption by "Statistical differences"
@@ -40,13 +51,15 @@ most likely by calling \code{\link[=prep_psut]{prep_psut()}}.
 }
 \details{
 Statistical differences can be found in either the \strong{R} or \strong{Y} matrix.
-Both are reallocated to the \strong{U_EIOU} matrix.
+Both are reallocated to the \strong{Y} and \strong{U} matrices in proportion.
 The steps are:
 \itemize{
 \item Move Statistical differences found in the \strong{R} matrix to the \strong{Y} matrix by subtraction.
-\item Reallocate Statistical differences in the \strong{Y} matrix to the \strong{U_EIOU} matrix using \code{\link[matsbyname:reallocate_byname]{matsbyname::reallocate_byname()}}.
+\item Reallocate Statistical differences in the \strong{Y} matrix to the \strong{Y} and \strong{U}
+matrices using \code{\link[matsbyname:reallocate_byname]{matsbyname::reallocate_byname()}}.
 }
 
-This function calls \code{\link[matsbyname:reallocate_byname]{matsbyname::reallocate_byname()}}
-internally to perform the reallocation.
+Internally, the \strong{Y} and \strong{U_feed} matrices are added before calling
+\code{\link[matsbyname:reallocate_byname]{matsbyname::reallocate_byname()}}.
+The matrices are split again prior to returning.
 }
