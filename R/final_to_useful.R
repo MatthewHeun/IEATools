@@ -726,29 +726,30 @@ extend_to_useful <- function(.sutdata = NULL,
     # If so, make further adjustments to the matrices.
     # If not, no big deal. 
     # We can live with the matrices calculated above.
+    
     if (is.null(C_eiou_mat)) {
-      # We have a NULL C_eiou_mat. 
+      # We have a NULL C_eiou_mat.
       # We need to return something.
       # So we return a simple zero matrix with row and column names
-      # that make some sense. 
+      # that make some sense.
       # It will, at least, have the correct structure
       # for row and column names if the default values are used.
-      U_eiou_fu_details_mat <- matrix(0, dimnames = list(U_eiou_details_default_rownames, 
+      U_eiou_fu_details_mat <- matrix(0, dimnames = list(U_eiou_details_default_rownames,
                                                          U_eiou_details_default_colnames))
     } else {
       # We have some EIOU. Calculate modifications to matrices accounting for the EIOU portion of the ECC.
-      res_eiou <- extend_to_useful_helper(dest_mat = U_eiou_mat, C_mat = C_eiou_mat, eta_fu_vec = eta_fu_vector, 
+      res_eiou <- extend_to_useful_helper(dest_mat = U_eiou_mat, C_mat = C_eiou_mat, eta_fu_vec = eta_fu_vector,
                                           add_to_U = .add_to_U_eiou, add_to_V = .add_to_V_f, add_to_dest = .add_to_dest)
-      # Add the modifications to the U_feed, U_eiou, U, 
-      U_feed_useful_mat <- matsbyname::sum_byname(U_feed_useful_mat, res_eiou[[.add_to_U_eiou]]) 
+      # Add the modifications to the U_feed, U_eiou, U,
+      U_feed_useful_mat <- matsbyname::sum_byname(U_feed_useful_mat, res_eiou[[.add_to_U_eiou]])
       U_eiou_useful_mat <- res_eiou[[.add_to_dest]]
       U_useful_mat <- matsbyname::sum_byname(U_feed_useful_mat, U_eiou_useful_mat)
-      r_eiou_useful_mat <- matsbyname::quotient_byname(U_eiou_useful_mat, U_useful_mat) %>% 
+      r_eiou_useful_mat <- matsbyname::quotient_byname(U_eiou_useful_mat, U_useful_mat) %>%
         matsbyname::replaceNaN_byname(val = 0)
       V_useful_mat <- matsbyname::sum_byname(V_useful_mat, res_eiou[[.add_to_V_f]])
       U_eiou_fu_details_mat <- res_eiou[[details_fu]]
     }
-    
+
     # Check Product energy balances.
     # It would be nice to use Recca::verify_SUT_energy_balance() for this purpose.
     # However, IEATools is (by design) independent of Recca.
