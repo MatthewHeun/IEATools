@@ -73,8 +73,36 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
     # Store colnames of U and Y
     colnames_U_mat <- colnames(U_mat)
     colnames_Y_mat <- colnames(Y_mat)
-    
+
+    # Form matrix sums
+    UY_mat <- matsbyname::sum_byname(U_mat, Y_mat) |> 
+      matsbyname::clean_byname()
+    RV_mat <- matsbyname::sum_byname(R_mat, V_mat) |> 
+      matsbyname::clean_byname()
+
     # Find (Y statdiffs rows with no other consumption in U or Y).
+    UY_mat_no_stat_diffs <- UY_mat |> 
+      matsbyname::select_cols_byname(remove_pattern = stat_diffs, fixed = TRUE) |> 
+      # Eliminate zero rows
+      matsbyname::clean_byname(margin = 1)
+    # If the number of rows of UY_mat_no_stat_diffs is less than 
+    # the number of rows of UY_mat, 
+    # we have a situation where at least one statdiffs entry cannot be 
+    # reallocated within the U+Y matrices.  
+    # Find out which ones.
+    rows_to_move_to_R <- setdiff(rownames(UY_mat), rownames(UY_mat_no_stat_diffs))
+    if (length(rows_to_move_to_R) > 0) {
+      # Move these rows to R and reallocate
+      UY_statdiffs_subtract <- UY_mat |> 
+        matsbyname::select_cols_byname(retain_pattern = stat_diffs, fixed = TRUE) |> 
+        matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(rows_to_move_to_R, 
+                                                                                  pattern_type = "exact"))
+      UY_mat <- matsbyname::difference_byname(UY_mat, UY_statdiffs_subtract) |> 
+        matsbyname::clean_byname()
+      RV_mat <- matsbyname::difference_byname(RV_mat, 
+                                              matsbyname::transpose_byname(UY_statdiffs_subtract)) |> 
+        matsbyname::clean_byname()
+    }
     
     
     
