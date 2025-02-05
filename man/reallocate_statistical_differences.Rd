@@ -5,18 +5,23 @@
 \title{Reallocate Statistical differences}
 \usage{
 reallocate_statistical_differences(
-  .sutmats,
+  .sutmats = NULL,
   stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
   R = IEATools::psut_cols$R,
-  U_feed = IEATools::psut_cols$U_feed,
   U = IEATools::psut_cols$U,
+  U_feed = IEATools::psut_cols$U_feed,
+  U_eiou = IEATools::psut_cols$U_eiou,
+  r_eiou = IEATools::psut_cols$r_eiou,
   V = IEATools::psut_cols$V,
   Y = IEATools::psut_cols$Y,
-  prime_suffix = "_prime",
-  R_prime = paste0(R, prime_suffix),
-  U_feed_prime = paste0(U_feed, prime_suffix),
-  U_prime = paste0(U, prime_suffix),
-  Y_prime = paste0(Y, prime_suffix)
+  R_colname = IEATools::psut_cols$R,
+  U_colname = IEATools::psut_cols$U,
+  U_feed_colname = IEATools::psut_cols$U_feed,
+  U_eiou_colname = IEATools::psut_cols$U_eiou,
+  r_eiou_colname = IEATools::psut_cols$r_eiou,
+  V_colname = IEATools::psut_cols$V,
+  Y_colname = IEATools::psut_cols$Y,
+  prime_suffix = "_prime"
 )
 }
 \arguments{

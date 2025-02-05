@@ -30,4 +30,7 @@ test_that("reallocate_statistical_differences() works as expected", {
   
   U_eiou <- matsbyname::hadamardproduct_byname(U, r_eiou)
   U_feed <- matsbyname::difference_byname(U, U_eiou)
+  
+  reallocate_statistical_differences(R = R, U = U, U_feed = U_feed, U_eiou = U_eiou, r_eiou = r_eiou, 
+                                     V = V, Y = Y)
 })

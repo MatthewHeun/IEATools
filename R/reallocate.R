@@ -39,7 +39,7 @@
 #' @export
 #'
 #' @examples
-reallocate_statistical_differences <- function(.sutmats, 
+reallocate_statistical_differences <- function(.sutmats = NULL, 
                                                stat_diffs = IEATools::tfc_compare_flows$statistical_differences, 
                                                R = IEATools::psut_cols$R, 
                                                U = IEATools::psut_cols$U,
