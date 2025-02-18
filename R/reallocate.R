@@ -90,18 +90,19 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
     # we have a situation where at least one statdiffs entry cannot be 
     # reallocated within the U+Y matrices.  
     # Find out which ones.
-    rows_to_move_to_R <- setdiff(rownames(UY_mat), rownames(UY_mat_no_stat_diffs))
-    if (length(rows_to_move_to_R) > 0) {
+    statdiffs_rows_to_move_to_R <- setdiff(rownames(UY_mat), rownames(UY_mat_no_stat_diffs))
+    if (length(statdiffs_rows_to_move_to_R) > 0) {
       # Move these rows to R and reallocate
       UY_statdiffs_subtract <- UY_mat |> 
         matsbyname::select_cols_byname(retain_pattern = stat_diffs, fixed = TRUE) |> 
-        matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(rows_to_move_to_R, 
+        matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(statdiffs_rows_to_move_to_R, 
                                                                                   pattern_type = "exact"))
       UY_mat <- matsbyname::difference_byname(UY_mat, UY_statdiffs_subtract) |> 
         matsbyname::clean_byname()
       RV_mat <- matsbyname::difference_byname(RV_mat, 
                                               matsbyname::transpose_byname(UY_statdiffs_subtract)) |> 
         matsbyname::clean_byname()
+      # Now reallocate only those statdiffs that we just moved.
     }
     
     

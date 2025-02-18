@@ -59,7 +59,7 @@ probably created by functions \code{form_C_mats()} and \code{form_eta_fu_phi_u_v
 Default is \code{NULL} to enable use of single matrices, too.}
 
 \item{tol}{The allowable error in energy balances for the outgoing matrices (last stage useful).
-Default is \code{1e-3}.}
+Default is \code{0.1}.}
 
 \item{R, U_eiou, U_feed, U, r_eiou, V, Y}{See \code{IEATools::psut_cols}.
 These should be strings (if \code{.sutdata} is a data frame or a list)
