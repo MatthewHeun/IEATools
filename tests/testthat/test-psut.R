@@ -633,19 +633,19 @@ test_that("replace_null_RUV() works correctly with missing R and U and Matrix ob
 test_that("replace_null_RUV() works correctly with missing U and V", {
   # Set up so that the psut data frame has missing for
   # U and V in 1971 for GHA.
-  psut <- load_tidy_iea_df() %>% 
-    specify_all() %>% 
-    prep_psut() %>% 
-    tidyr::pivot_longer(cols = dplyr::any_of(c("R", "U_EIOU", "U_feed", "U", "r_EIOU", "V", "Y", "S_units")), names_to = "matnames", values_to = "matvals") %>% 
-    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U")) %>% 
-    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "V")) %>% 
+  psut <- load_tidy_iea_df() |> 
+    specify_all() |> 
+    prep_psut() |> 
+    tidyr::pivot_longer(cols = dplyr::any_of(c("R", "U_EIOU", "U_feed", "U", "r_EIOU", "V", "Y", "S_units")), names_to = "matnames", values_to = "matvals") |> 
+    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U")) |> 
+    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "V")) |>  
     tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
   # Check that replace_null_RUV() works as expected.
-  res <- psut %>% 
+  res <- psut |> 
     replace_null_RUV()
-  expected_V <- psut$R[[1]] %>% 
+  expected_V <- psut$R[[1]] |> 
     matsbyname::hadamardproduct_byname(0)
-  expected_U <- expected_V %>% 
+  expected_U <- expected_V |> 
     matsbyname::transpose_byname()
   # Verify that the missing V matrix has been replaced with the correct 0 matrix.
   expect_equal(res$V[[1]], expected_V)
@@ -676,6 +676,83 @@ test_that("replace_null_RUV() works correctly with missing U and V with Matrix o
   # Verify that the missing U matrix has been replaced with the correct 0 matrix.
   expect_equal(res$U[[1]], expected_U)
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+test_that("replace_null_RUV() adds Manufacture industries", {
+  # Build R and Y matrices
+  R <- matrix(c(200, 0, 
+                0, 10), nrow = 2, ncol = 2, byrow = TRUE, 
+              dimnames = list(c("Imports [of Fuel oil]", 
+                                "Imports [of Aviation gasoline"), 
+                              c("Fuel oil", "Aviation gasoline")))
+  Y <- matrix(c(200, 0, 
+                0, 10), nrow = 2, ncol = 2, byrow = TRUE, 
+              dimnames = list(c( "Fuel oil", "Aviation gasoline"), 
+                              c("International marine bunkers", 
+                                "International aviation bunkers")))
+
+  # Generate U and V matrices
+  res <- replace_null_RUV(R = R, Y = Y)
+  
+  # Check that results are as expected.
+  
+  expectedU <- matrix(c(200, 0, 
+                        0, 10), nrow = 2, ncol = 2, byrow = TRUE, 
+                      dimnames = list(c("Aviation gasoline", "Fuel oil"), 
+                                      c("Manufacture [of Aviation gasoline]", "Manufacture [of Fuel oil]")))
+  expect_equal(res$U, expectedU)
+  
+  expectedUfeed <- expectedU
+  expect_equal(res$U_feed, expectedUfeed)
+  
+  expectedUeiou <- expectedU * 0
+  expect_equal(res$U_EIOU, expectedUeiou)
+  
+  expectedreiou <- expectedUeiou
+  expect_equal(res$r_EIOU, expectedreiou)
+  
+  expectedV <- matrix(c(200, 0, 
+                        0, 10), nrow = 2, ncol = 2, byrow = TRUE, 
+                      dimnames = list(c("Manufacture [of Aviation gasoline", 
+                                        "Manufacture [of Fuel oil]"), 
+                                      c("Aviation gasoline", 
+                                        "Fuel oil")))
+  expect_equal(res$V, expectedV)
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 test_that("prep_psut() correctly works with Balancing flows", {
