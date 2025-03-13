@@ -386,29 +386,25 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 }
 
 
-#' Fill missing **R**, **U**, and **V** matrices
+#' Fill missing **U** and **V** matrices
 #' 
 #' In some cases (e.g., bunkers where `Last.stage` is "final"),
-#' **R**, **U**, **U_feed**, **U_EIOU**, or **V** matrices can be missing, because
-#' imports which appear in the **V** matrix (or **R** matrix) are consumed in final demand (**Y**) matrix, 
+#' **U**, **U_feed**, **U_EIOU**, and **V** matrices can be missing, because
+#' imports (which appear in the **R** matrix) are consumed directly in final demand (**Y**) matrix, 
 #' without any intermediate processing.
 #' When a data frame is pivoted wider by matrices, 
-#' the **R**, **U_feed**, and **U_EIOU** columns will contain `NULL` entries.
+#' the **U_feed**, **U_EIOU**, and **V** columns 
+#' will contain `NULL` entries.
 #' This function fills those `NULL` entries with reasonable defaults.
 #' 
-#' Reasonable defaults arise from the following thought processes.
-#' If all energy is supplied by imports (in the **V** matrix), 
-#' there are no resources. 
-#' Thus, we can replace the missing **R** matrix with a **0** matrix with a generic
-#' "Natural resources" row and the same products as the rows of the **Y** matrix.
-#' 
-#' Similarly, missing values for **U**, **U_feed**, **U_EIOU**, or **r_EIOU** can be replaced by a **0** matrix
-#' with row and column names same as a transposed **V** matrix when it exists.
-#' If neither **U** nor **V** exist, the **R** matrix can supply row and column names.
+#' Reasonable defaults are obtained by introducing one new
+#' industry for each product in the **R** and **Y** matrices.
+#' The new industry is called 
+#' "Manufacture \[of XYZ\]", where "XYZ" is the name of the product.
+#' The new "Manufacture" industries have 100% efficiency.
 #'
 #' @param .sutmats A data frame of metadata columns and matrix name columns
 #' @param R,U_feed,U_eiou,U,r_eiou,Y,V See `IEATools::psutcols`. Default values are names for variables incoming with `.sutmats`. Can be overridden with actual matrices.
-#' @param resources See `IEATools::tpes_flows`. The name of the only row of the output **0** **R** matrix.
 #' @param .R_temp_name,.U_temp_name,.U_feed_temp_name,.U_eiou_temp_name,.r_eiou_temp_name,.V_temp_name Names of temporary variables unused internally to the function.
 #' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name See `IEATools::psutcols`. The final names for matrices in the output.
 #'
@@ -442,7 +438,8 @@ replace_null_RUV <- function(.sutmats = NULL,
                              r_eiou = IEATools::psut_cols$r_eiou,
                              Y = IEATools::psut_cols$Y,
                              V = IEATools::psut_cols$V, 
-                             resources = IEATools::tpes_flows$resources, 
+                             manufacture = IEATools::transformation_processes$manufacture, 
+                             manufacture_notation = RCLabels::of_notation,
                              .R_temp_name = ".R_temp", 
                              .U_temp_name = ".U_temp", 
                              .U_feed_temp_name = ".U_feed_temp", 
@@ -463,7 +460,17 @@ replace_null_RUV <- function(.sutmats = NULL,
     # Strategy is to assign the matrices to a temporary name. 
     # After using matsindf_apply, swap to the actual name.
     # This step is necessary, because matsindf_apply() does not allow renaming columns 
-    # (for good reason!),
+    # (for good reason!).
+    
+    if (is.null(U_mat) & is.null(V_mat)) {
+      # No intermediate processing.
+      # Get product names
+      prod_names <- colnames(R_mat)
+      ind_names <- RCLabels::paste_pref_suff(pref = manufacture, 
+                                             suff = prod_names, 
+                                             notation = manufacture_notation)
+
+    }
     
       
     if (!is.null(V_mat)) {

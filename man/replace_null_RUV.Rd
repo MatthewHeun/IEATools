@@ -2,7 +2,7 @@
 % Please edit documentation in R/psut.R
 \name{replace_null_RUV}
 \alias{replace_null_RUV}
-\title{Fill missing \strong{R}, \strong{U}, and \strong{V} matrices}
+\title{Fill missing \strong{U} and \strong{V} matrices}
 \usage{
 replace_null_RUV(
   .sutmats = NULL,
@@ -13,7 +13,8 @@ replace_null_RUV(
   r_eiou = IEATools::psut_cols$r_eiou,
   Y = IEATools::psut_cols$Y,
   V = IEATools::psut_cols$V,
-  resources = IEATools::tpes_flows$resources,
+  manufacture = IEATools::transformation_processes$manufacture,
+  manufacture_notation = RCLabels::of_notation,
   .R_temp_name = ".R_temp",
   .U_temp_name = ".U_temp",
   .U_feed_temp_name = ".U_feed_temp",
@@ -33,8 +34,6 @@ replace_null_RUV(
 
 \item{R, U_feed, U_eiou, U, r_eiou, Y, V}{See \code{IEATools::psutcols}. Default values are names for variables incoming with \code{.sutmats}. Can be overridden with actual matrices.}
 
-\item{resources}{See \code{IEATools::tpes_flows}. The name of the only row of the output \strong{0} \strong{R} matrix.}
-
 \item{.R_temp_name, .U_temp_name, .U_feed_temp_name, .U_eiou_temp_name, .r_eiou_temp_name, .V_temp_name}{Names of temporary variables unused internally to the function.}
 
 \item{R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name}{See \code{IEATools::psutcols}. The final names for matrices in the output.}
@@ -44,23 +43,20 @@ A version of \code{.sutmats} with \strong{R}, \strong{U}, \strong{U_feed}, \stro
 }
 \description{
 In some cases (e.g., bunkers where \code{Last.stage} is "final"),
-\strong{R}, \strong{U}, \strong{U_feed}, \strong{U_EIOU}, or \strong{V} matrices can be missing, because
-imports which appear in the \strong{V} matrix (or \strong{R} matrix) are consumed in final demand (\strong{Y}) matrix,
+\strong{U}, \strong{U_feed}, \strong{U_EIOU}, and \strong{V} matrices can be missing, because
+imports (which appear in the \strong{R} matrix) are consumed directly in final demand (\strong{Y}) matrix,
 without any intermediate processing.
 When a data frame is pivoted wider by matrices,
-the \strong{R}, \strong{U_feed}, and \strong{U_EIOU} columns will contain \code{NULL} entries.
+the \strong{U_feed}, \strong{U_EIOU}, and \strong{V} columns
+will contain \code{NULL} entries.
 This function fills those \code{NULL} entries with reasonable defaults.
 }
 \details{
-Reasonable defaults arise from the following thought processes.
-If all energy is supplied by imports (in the \strong{V} matrix),
-there are no resources.
-Thus, we can replace the missing \strong{R} matrix with a \strong{0} matrix with a generic
-"Natural resources" row and the same products as the rows of the \strong{Y} matrix.
-
-Similarly, missing values for \strong{U}, \strong{U_feed}, \strong{U_EIOU}, or \strong{r_EIOU} can be replaced by a \strong{0} matrix
-with row and column names same as a transposed \strong{V} matrix when it exists.
-If neither \strong{U} nor \strong{V} exist, the \strong{R} matrix can supply row and column names.
+Reasonable defaults are obtained by introducing one new
+industry for each product in the \strong{R} and \strong{Y} matrices.
+The new industry is called
+"Manufacture [of XYZ]", where "XYZ" is the name of the product.
+The new "Manufacture" industries have 100\% efficiency.
 }
 \examples{
 # Set up a PSUT data frame with NULL for
