@@ -390,10 +390,11 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' 
 #' In some cases (e.g., bunkers where `Last.stage` is "final"),
 #' **U**, **U_feed**, **U_EIOU**, and **V** matrices can be missing, because
-#' imports (which appear in the **R** matrix) are consumed directly in final demand (**Y**) matrix, 
+#' Imports (which appear in the **R** matrix) are consumed directly 
+#' in the final demand (**Y**) matrix, 
 #' without any intermediate processing.
 #' When a data frame is pivoted wider by matrices, 
-#' the **U_feed**, **U_EIOU**, and **V** columns 
+#' the **U_feed**, **U_EIOU**, **r_EIOU**, and **V** columns 
 #' will contain `NULL` entries.
 #' This function fills those `NULL` entries with reasonable defaults.
 #' 
@@ -403,55 +404,62 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #' "Manufacture \[of XYZ\]", where "XYZ" is the name of the product.
 #' The new "Manufacture" industries have 100% efficiency.
 #'
-#' @param .sutmats A data frame of metadata columns and matrix name columns
-#' @param R,U_feed,U_eiou,U,r_eiou,Y,V See `IEATools::psutcols`. Default values are names for variables incoming with `.sutmats`. Can be overridden with actual matrices.
+#' @param .sutmats A data frame of metadata columns and named matrix columns
+#' @param R,U_feed,U_eiou,U,r_eiou,V,Y See `IEATools::psutcols`. 
+#'                                     Default values are names for variables 
+#'                                     incoming with `.sutmats`. 
+#'                                     Can be overridden with actual matrices.
 #' @param .R_temp_name,.U_temp_name,.U_feed_temp_name,.U_eiou_temp_name,.r_eiou_temp_name,.V_temp_name Names of temporary variables unused internally to the function.
-#' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name See `IEATools::psutcols`. The final names for matrices in the output.
+#' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name See `IEATools::psutcols`. 
+#'                                                                 The final names 
+#'                                                                 for matrices in the output.
 #'
-#' @return A version of `.sutmats` with **R**, **U**, **U_feed**, **U_EIOU**, or **V** filled with **0** matrices if they were missing.
+#' @return A version of `.sutmats` 
+#'         with **R**, **U**, **U_feed**, **U_EIOU**, or **V**
+#'         filled with **0** matrices if they were missing.
 #' 
 #' @export
 #'
 #' @examples
 #' # Set up a PSUT data frame with NULL for
-#' # R, U_feed, and U_EIOU in 1971 for GHA.
-#' psut <- load_tidy_iea_df() %>% 
-#'   specify_all() %>% 
-#'   prep_psut() %>% 
-#'   tidyr::pivot_longer(cols = c("R", "U_EIOU", "U_feed", "U", "r_EIOU", "V", "Y", "S_units"),
-#'                       names_to = "matnames", values_to = "matvals") %>% 
-#'   dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "R")) %>% 
-#'   dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_feed")) %>% 
-#'   dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_EIOU")) %>% 
-#'   tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
-#' # Replace the `NULL` matrices in the first row.
-#' res <- psut %>% 
-#'   replace_null_RUV()
-#' res$R[[1]]
-#' res$U_feed[[1]]
-#' res$U_EIOU[[1]]
-replace_null_RUV <- function(.sutmats = NULL,
-                             R = IEATools::psut_cols$R,
-                             U_feed = IEATools::psut_cols$U_feed, 
-                             U_eiou = IEATools::psut_cols$U_eiou,
-                             U = IEATools::psut_cols$U,
-                             r_eiou = IEATools::psut_cols$r_eiou,
-                             Y = IEATools::psut_cols$Y,
-                             V = IEATools::psut_cols$V, 
-                             manufacture = IEATools::transformation_processes$manufacture, 
-                             manufacture_notation = RCLabels::of_notation,
-                             .R_temp_name = ".R_temp", 
-                             .U_temp_name = ".U_temp", 
-                             .U_feed_temp_name = ".U_feed_temp", 
-                             .U_eiou_temp_name = ".U_EIOU_temp", 
-                             .r_eiou_temp_name = ".r_EIOU_temp",
-                             .V_temp_name = ".V_temp", 
-                             R_name = IEATools::psut_cols$R, 
-                             U_name = IEATools::psut_cols$U, 
-                             U_feed_name = IEATools::psut_cols$U_feed, 
-                             U_eiou_name = IEATools::psut_cols$U_eiou, 
-                             r_eiou_name = IEATools::psut_cols$r_eiou, 
-                             V_name = IEATools::psut_cols$V) {
+#' # U_feed, U_EIOU, and V in 1971 for GHA.
+#'   R <- matrix(c(10, 0, 
+#'                 0, 200), nrow = 2, ncol = 2, byrow = TRUE, 
+#'               dimnames = list(c("Imports [of Fuel oil]", 
+#'                                 "Imports [of Aviation gasoline]"), 
+#'                               c("Fuel oil", "Aviation gasoline")))
+#'   Y <- matrix(c(10, 0, 
+#'                 0, 200), nrow = 2, ncol = 2, byrow = TRUE, 
+#'               dimnames = list(c( "Fuel oil", "Aviation gasoline"), 
+#'                               c("International marine bunkers", 
+#'                                 "International aviation bunkers")))
+#' # Replace the missing **U** and **V** matrices.
+#' replace_null_UV(R = R, Y = Y)
+replace_null_UV <- function(.sutmats = NULL,
+                            R = IEATools::psut_cols$R,
+                            U_feed = IEATools::psut_cols$U_feed, 
+                            U_eiou = IEATools::psut_cols$U_eiou,
+                            U = IEATools::psut_cols$U,
+                            r_eiou = IEATools::psut_cols$r_eiou,
+                            V = IEATools::psut_cols$V, 
+                            Y = IEATools::psut_cols$Y,
+                            manufacture = IEATools::transformation_processes$manufacture, 
+                            manufacture_notation = RCLabels::of_notation,
+                            resources_ind_notation = RCLabels::of_notation,
+                            raw_product_notation = RCLabels::from_notation, 
+                            .R_temp_name = ".R_temp", 
+                            .U_temp_name = ".U_temp", 
+                            .U_feed_temp_name = ".U_feed_temp", 
+                            .U_eiou_temp_name = ".U_EIOU_temp", 
+                            .r_eiou_temp_name = ".r_EIOU_temp",
+                            .V_temp_name = ".V_temp", 
+                            R_name = IEATools::psut_cols$R, 
+                            U_name = IEATools::psut_cols$U, 
+                            U_feed_name = IEATools::psut_cols$U_feed, 
+                            U_eiou_name = IEATools::psut_cols$U_eiou, 
+                            r_eiou_name = IEATools::psut_cols$r_eiou, 
+                            V_name = IEATools::psut_cols$V, 
+                            tol = 1e-6) {
   
   # Set default argument values to NULL so that missing and NULL look the same.
   fix_RUV_func <- function(R_mat = NULL,
@@ -464,79 +472,88 @@ replace_null_RUV <- function(.sutmats = NULL,
     
     if (is.null(U_mat) & is.null(V_mat)) {
       # No intermediate processing.
-      # Get product names
-      prod_names <- colnames(R_mat)
-      ind_names <- RCLabels::paste_pref_suff(pref = manufacture, 
-                                             suff = prod_names, 
-                                             notation = manufacture_notation)
-
-    }
-    
       
-    if (!is.null(V_mat)) {
-      # We probably have V and Y matrices.
-      # Need to define new R, U, U_feed, U_EIOU, and r_EIOU matrices.
-      new_R <- Y_mat %>% 
-        matsbyname::transpose_byname() %>% 
-        matsbyname::colsums_byname() %>% 
-        matsbyname::hadamardproduct_byname(0) %>% 
-        matsbyname::setrownames_byname(resources)
-      new_U <- V_mat %>% 
-        matsbyname::transpose_byname() %>% 
-        matsbyname::hadamardproduct_byname(0)
+      # Test that energy is conserved for each product originally
+      R_mat |> 
+        matsbyname::transpose_byname() |> 
+        matsbyname::rowsums_byname(colname = "rowsums") |> 
+        matsbyname::difference_byname(Y_mat |> 
+                                        matsbyname::rowsums_byname(colname = "rowsums")) |> 
+        matsbyname::iszero_byname(tol = tol) |> 
+        assertthat::assert_that(msg = "Energy is not balanced originally in replace_null_UV()")
+      
+      # Get original product and industry names
+      prod_names_orig <- colnames(R_mat)
+      ind_names_orig <- rownames(R_mat)
+
+      # Define new product names
+      new_product_names <- ind_names_orig |> 
+        RCLabels::switch_notation(from = resources_ind_notation, 
+                                  to = raw_product_notation, 
+                                  flip = TRUE)
+      # Define manufacture industries
+      new_manufacture_industries <- RCLabels::paste_pref_suff(pref = manufacture, 
+                                                              suff = prod_names_orig, 
+                                                              notation = manufacture_notation)
+      
+      # Make new R matrix
+      R_new <- R_mat |> 
+        matsbyname::setcolnames_byname(new_product_names)
+      
+      # Make new U matrices
+      U_new <- Y_mat |> 
+        matsbyname::setrownames_byname(new_product_names) |> 
+        matsbyname::setcolnames_byname(new_manufacture_industries)
+      U_feed_new <- U_new
+      U_eiou_new <- matsbyname::hadamardproduct_byname(U_new, 0)
+      r_eiou_new <- U_eiou_new
+      
+      # Make new V matrix
+      V_new <- U_new |> 
+        matsbyname::transpose_byname() |> 
+        matsbyname::setrownames_byname(new_manufacture_industries) |> 
+        matsbyname::setcolnames_byname(prod_names_orig)
+      
+      # Verify that energy is still conserved
+      matsbyname::sum_byname(R_new, V_new) |> 
+        matsbyname::transpose_byname() |> 
+        matsbyname::rowsums_byname(colname = "rowsums") |> 
+        matsbyname::difference_byname(matsbyname::sum_byname(U_new, Y_mat) |> 
+                                        matsbyname::rowsums_byname(colname = "rowsums")) |> 
+        matsbyname::iszero_byname(tol = tol) |> 
+        assertthat::assert_that()
+    } else if (is.null(U_eiou_mat)) {
+      # In this case, there is no EIOU. 
+      # Set a reasonable default for U_EIOU, 
+      # namely a zeroed-out U matrix.
+      R_new <- R_mat
+      U_new <- U_mat
+      U_feed_new <- U_feed_mat
+      U_eiou_new <- matsbyname::hadamardproduct_byname(U_mat, 0)
+      r_eiou_new <- U_eiou_new
+      V_new <- V_mat
     } else {
-      # V_mat is NULL. 
-      # We probably have only R and Y matrices.
-      # Need to define new U, U_feed, U_EIOU, r_EIOU, and V matrices.
-      new_V <- R_mat %>% 
-        matsbyname::hadamardproduct_byname(0)
-      new_U <- new_V %>% 
-        matsbyname::transpose_byname()
+      # Nothing to be done
+      R_new <- R_mat
+      U_new <- U_mat
+      U_feed_new <- U_feed_mat
+      U_eiou_new <- U_eiou_mat
+      r_eiou_new <- r_eiou_mat
+      V_new <- V_mat
     }
 
-    # Whichever matrix is NULL, set to the new value.
-    if (is.null(R_mat)) {
-      .R_temp_mat <- new_R
-    } else {
-      .R_temp_mat <- R_mat
-    }
-    
-    if (is.null(U_mat)) {
-      .U_temp_mat <- new_U
-    } else {
-      .U_temp_mat <- U_mat
-    }
-    
-    if (is.null(U_feed_mat)) {
-      .U_feed_temp_mat <- new_U
-    } else {
-      .U_feed_temp_mat <- U_feed_mat
-    }
-    
-    if (is.null(U_eiou_mat)) {
-      .U_eiou_temp_mat <- new_U
-    } else {
-      .U_eiou_temp_mat <- U_eiou_mat
-    }
-    
-    if (is.null(r_eiou_mat)) {
-      .r_eiou_temp_mat <- new_U
-    } else {
-      .r_eiou_temp_mat <- r_eiou_mat
-    }
-    
-    if (is.null(V_mat)) {
-      .V_temp_mat <- new_V
-    } else {
-      .V_temp_mat <- V_mat
-    }
-    
-    list(.R_temp_mat, .U_temp_mat, .U_feed_temp_mat, .U_eiou_temp_mat, .r_eiou_temp_mat, .V_temp_mat) %>% 
-      magrittr::set_names(c(.R_temp_name, .U_temp_name, .U_feed_temp_name, .U_eiou_temp_name, .r_eiou_temp_name, .V_temp_name))
+    list(R_new, U_new, U_feed_new, U_eiou_new, r_eiou_new, V_new) %>% 
+      magrittr::set_names(c(.R_temp_name, 
+                            .U_temp_name, .U_feed_temp_name, 
+                            .U_eiou_temp_name, .r_eiou_temp_name,
+                            .V_temp_name))
   }
   
-  out <- matsindf::matsindf_apply(.sutmats, FUN = fix_RUV_func, R_mat = R, U_mat = U, U_feed_mat = U_feed, U_eiou_mat = U_eiou, r_eiou_mat = r_eiou,
-                                                                V_mat = V, Y_mat = Y)
+  out <- matsindf::matsindf_apply(.sutmats, FUN = fix_RUV_func, 
+                                  R_mat = R,
+                                  U_mat = U, U_feed_mat = U_feed,
+                                  U_eiou_mat = U_eiou, r_eiou_mat = r_eiou,
+                                  V_mat = V, Y_mat = Y)
   
   # Delete the previous items in a way that will work for both lists and data frames
   out[[R_name]]      <- NULL
@@ -568,7 +585,7 @@ replace_null_RUV <- function(.sutmats = NULL,
 #' 1. `add_psut_matnames()`
 #' 2. `add_row_col_meta()`
 #' 3. `collapse_to_tidy_psut()`
-#' 4. `replace_null_RUV()`
+#' 4. `replace_null_UV()`
 #' 
 #' Furthermore, it extracts `S_units` matrices using `extract_S_units_from_tidy()`
 #' and adds those matrices to the data frame.
@@ -606,7 +623,7 @@ replace_null_RUV <- function(.sutmats = NULL,
 #'   add_row_col_meta() %>% 
 #'   collapse_to_tidy_psut() %>% 
 #'   spread(key = matnames, value = matvals) %>% 
-#'   replace_null_RUV() %>% 
+#'   replace_null_UV() %>% 
 #'   full_join(S_units, by = c("Method", "EnergyType", "LastStage", 
 #'                             "Country", "Year")) %>% 
 #'   gather(key = matnames, value = matvals, R, U_EIOU, U_feed, 
@@ -737,5 +754,5 @@ prep_psut <- function(.tidy_iea_df,
     dplyr::full_join(S_units, by = matsindf::everything_except(CollapsedSpread, matrix_names, .symbols = FALSE)) %>% 
     # Add R and U matrices (0 matrices) if R or any of the U matrices are missing
     # in a row of the data frame.
-    replace_null_RUV(R = R, U_feed = U_feed, U_eiou = U_eiou, r_eiou = r_eiou, U = U, V = V, Y = Y)
+    replace_null_UV(R = R, U_feed = U_feed, U_eiou = U_eiou, r_eiou = r_eiou, U = U, V = V, Y = Y)
 }
