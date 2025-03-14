@@ -590,9 +590,8 @@ test_that("replace_null_UV() correctly adds Manufacture industries", {
   matsbyname::equal_byname(res$V, expectedV) |> 
     expect_true()
   
-  
-  # Check that it works correctly with a data frame
-  res_df <- tibble::tibble(R = list(R, R), Y = list(Y, Y)) |> 
+  # Check that it works correctly in a data frame
+  res_df <- tibble::tibble(R = list(R, R, R), Y = list(Y, Y, Y)) |> 
     replace_null_UV()
   
   for (i in 1:nrow(res_df)) {
@@ -609,27 +608,7 @@ test_that("replace_null_UV() correctly adds Manufacture industries", {
     matsbyname::equal_byname(res_df$V[[i]], expectedV) |> 
       expect_true()
   }
-  
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 test_that("prep_psut() correctly works with Balancing flows", {
