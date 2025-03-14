@@ -524,12 +524,16 @@ test_that("replace_null_UV() correctly adds Manufacture industries", {
                 0, 200), nrow = 2, ncol = 2, byrow = TRUE, 
               dimnames = list(c("Imports [of Fuel oil]", 
                                 "Imports [of Aviation gasoline]"), 
-                              c("Fuel oil", "Aviation gasoline")))
+                              c("Fuel oil", "Aviation gasoline"))) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
   Y <- matrix(c(10, 0, 
                 0, 200), nrow = 2, ncol = 2, byrow = TRUE, 
               dimnames = list(c( "Fuel oil", "Aviation gasoline"), 
                               c("International marine bunkers", 
-                                "International aviation bunkers")))
+                                "International aviation bunkers"))) |> 
+    matsbyname::setrowtype("Product") |> 
+    matsbyname::setcoltype("Industry")
   
   # Test that an error is raised if energy is not conserved originally.
   replace_null_UV(R = R - 1, Y = Y) |> 
@@ -556,7 +560,9 @@ test_that("replace_null_UV() correctly adds Manufacture industries", {
                       dimnames = list(c("Imports [of Aviation gasoline]", 
                                         "Imports [of Fuel oil]"), 
                                       c("Aviation gasoline [from Imports]", 
-                                        "Fuel oil [from Imports]")))
+                                        "Fuel oil [from Imports]"))) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
   matsbyname::equal_byname(res$R, expectedR) |> 
     expect_true()
   
@@ -565,7 +571,9 @@ test_that("replace_null_UV() correctly adds Manufacture industries", {
                       dimnames = list(c("Aviation gasoline [from Imports]",
                                         "Fuel oil [from Imports]"), 
                                       c("Manufacture [of Aviation gasoline]", 
-                                        "Manufacture [of Fuel oil]")))
+                                        "Manufacture [of Fuel oil]"))) |> 
+    matsbyname::setrowtype("Product") |> 
+    matsbyname::setcoltype("Industry")
   matsbyname::equal_byname(res$U, expectedU) |> 
     expect_true()
   
@@ -586,12 +594,23 @@ test_that("replace_null_UV() correctly adds Manufacture industries", {
                       dimnames = list(c("Manufacture [of Aviation gasoline]", 
                                         "Manufacture [of Fuel oil]"), 
                                       c("Aviation gasoline", 
-                                        "Fuel oil")))
+                                        "Fuel oil"))) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
   matsbyname::equal_byname(res$V, expectedV) |> 
     expect_true()
   
   # Check that it works correctly in a data frame
-  res_df <- tibble::tibble(R = list(R, R, R), Y = list(Y, Y, Y)) |> 
+  # and that it works correctly with both
+  # matrix objects (row 1) and 
+  # Matrix objects (row 2).
+  RM <- Matrix::Matrix(R) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
+  YM <- Matrix::Matrix(Y) |> 
+    matsbyname::setrowtype("Product") |> 
+    matsbyname::setcoltype("Industry")
+  res_df <- tibble::tibble(R = list(R, RM), Y = list(Y, YM)) |> 
     replace_null_UV()
   
   for (i in 1:nrow(res_df)) {
@@ -608,6 +627,24 @@ test_that("replace_null_UV() correctly adds Manufacture industries", {
     matsbyname::equal_byname(res_df$V[[i]], expectedV) |> 
       expect_true()
   }
+  # Check that all of the first row are matrix objects
+  res_df |> 
+    dplyr::slice(1) |> 
+    purrr::transpose() |> 
+    purrr::flatten() |> 
+    lapply(is.matrix) |> 
+    unlist() |> 
+    all() |> 
+    expect_true()
+  # Check that all of the 2nd row are Matrix objects
+  res_df |> 
+    dplyr::slice(2) |> 
+    purrr::transpose() |> 
+    purrr::flatten() |> 
+    lapply(matsbyname::is.Matrix) |> 
+    unlist() |> 
+    all() |> 
+    expect_true()
 })
 
 
