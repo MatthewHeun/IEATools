@@ -36,6 +36,12 @@ extend_to_useful(
   .err = ".err",
   .e_bal_ok = ".e_bal_ok",
   .sep = "_",
+  U_eiou_details_default_rownames = RCLabels::paste_pref_suff(pref =
+    IEATools::electricity_products$electricity, suff =
+    IEATools::transformation_processes$main_activity_producer_electricity_plants,
+    notation = arrow_note),
+  U_eiou_details_default_colnames = RCLabels::paste_pref_suff(pref = "L", suff =
+    "Industrial electric lamps", notation = from_note),
   U_feed_name = IEATools::psut_cols$U_feed,
   U_eiou_name = IEATools::psut_cols$U_eiou,
   U_name = IEATools::psut_cols$U,
@@ -101,6 +107,8 @@ to form the useful form of the U_eiou matrix. Default is ".add_to_U_eiou".}
 \item{.e_bal_ok}{An internal column name for assessing whether energy balance is within acceptable tolerances set by the \code{tol} argument. Default is ".e_bal_OK".}
 
 \item{.sep}{A separator between matrix names and \code{final} or \code{useful} indicators. Default is "_".}
+
+\item{U_eiou_details_default_rownames, U_eiou_details_default_colnames}{Default row and column names for the \strong{U_EIOU_fu_details} matrices when there is no EIOU.}
 
 \item{U_eiou_name, U_feed_name, U_name, r_eiou_name, V_name, Y_name, Y_fu_details_name, U_eiou_fu_details_name}{See \code{IEATools::psut_cols}.
 Distinct from \code{U_feed},\code{U_eiou}, \code{U}, \code{r_eiou}, \code{V}, and \code{Y} (which can be matrices or strings),

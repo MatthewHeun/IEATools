@@ -24,7 +24,7 @@ specify_primary_production(
   resources = IEATools::tpes_flows$resources,
   resource_products_notation = RCLabels::from_notation,
   resources_flow_notation = RCLabels::of_notation,
-  manufacture = "Manufacture",
+  manufacture = IEATools::transformation_processes$manufacture,
   manufacture_flow_notation = RCLabels::of_notation
 )
 }
@@ -50,10 +50,10 @@ Default is \code{IEATools::primary_gas_products}.}
 Default is \code{IEATools::industry_flows$coal_mines}.}
 
 \item{oil_extraction}{The name of the new industry that produces primary oil and gas products.
-Default is \code{IEATools::industry_flows$oil_extraction}.}
+Default is \link{industry_flows$oil_extraction}.}
 
 \item{gas_extraction}{The name of the new industry that produces primary oil and gas products.
-Default is \code{IEATools::industry_flows$natural_gas_extraction}.}
+Default is \link{industry_flows$natural_gas_extraction}.}
 
 \item{liquefaction_regas}{A string identifying liquefaction and regasification plants.
 Default is "Liquefaction (LNG) / regasification plants".}
@@ -69,15 +69,15 @@ Default is "\code{Resources}".}
 
 \item{resource_products_notation}{The notation to be used for defining products coming from the new resource industries.
 E.g., the Crude oil product will be called "Crude oil [from Resources]".
-Default is \code{RCLabels::from_notation}.}
+Default is \link[RCLabels:from_notation]{RCLabels::from_notation}.}
 
 \item{resources_flow_notation}{The notation to be used for defining the new resource industries.
 E.g., the Crude oil resource will be called "Resources [of Crude oil]".
-Default is \code{RCLabels::of_notation}.}
+Default is \link[RCLabels:of_notation]{RCLabels::of_notation}.}
 
 \item{manufacture}{The name of the industries that convert resource-products \(inputs\) into actual products \(outputs\),
 when a corresponding a corresponding industry does not exist by default in IEA data.
-Default is "Manufacture".}
+Default is \link{transformation_processes$manufacture}.}
 
 \item{manufacture_flow_notation}{The notation to be used for the newly created manufacture industries
 \(each manufacturing industry is specified\) by the product it manufactures.

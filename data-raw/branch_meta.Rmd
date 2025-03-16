@@ -31,13 +31,14 @@ The branch into which new features are merged.
 
 Use this template to describe feature branches.
 
-#### Branch name
+#### fix_details
 
-* Purpose: 
-* Branched from:
-* Next step:
-* Author:
-* Date: 
+* Purpose: Solve problem where details matrices have wrong structure
+           when a country/year combination has no EIOU.
+* Branched from: develop
+* Next step: Merge back into develop
+* Author: MKH
+* Date: 19 Dec 2024
   
   
   
