@@ -500,19 +500,17 @@ replace_null_UV <- function(.sutmats = NULL,
       R_new <- R_mat |> 
         matsbyname::setcolnames_byname(new_product_names)
       
+      # Make new V matrix
+      V_new <- R_mat |> 
+        matsbyname::setrownames_byname(new_manufacture_industries)
+      
       # Make new U matrices
-      U_new <- Y_mat |> 
-        matsbyname::setrownames_byname(new_product_names) |> 
-        matsbyname::setcolnames_byname(new_manufacture_industries)
+      U_new <- V_new |> 
+        matsbyname::transpose_byname() |> 
+        matsbyname::setrownames_byname(new_product_names)
       U_feed_new <- U_new
       U_eiou_new <- matsbyname::hadamardproduct_byname(U_new, 0)
       r_eiou_new <- U_eiou_new
-      
-      # Make new V matrix
-      V_new <- U_new |> 
-        matsbyname::transpose_byname() |> 
-        matsbyname::setrownames_byname(new_manufacture_industries) |> 
-        matsbyname::setcolnames_byname(prod_names_orig)
       
       # Verify that energy is still conserved
       matsbyname::sum_byname(R_new, V_new) |> 

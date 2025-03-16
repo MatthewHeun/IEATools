@@ -648,6 +648,73 @@ test_that("replace_null_UV() correctly adds Manufacture industries", {
 })
 
 
+test_that("replace_null_UV() works when there is only one Y column", {
+  # Build R and Y matrices
+  R <- matrix(c(10, 0, 
+                0, 200), nrow = 2, ncol = 2, byrow = TRUE, 
+              dimnames = list(c("Imports [of Fuel oil]", 
+                                "Imports [of Hard coal (if no detail)]"), 
+                              c("Fuel oil", "Hard coal (if no detail)"))) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
+  Y <- matrix(c(10,
+                200), nrow = 2, ncol = 1, byrow = TRUE, 
+              dimnames = list(c( "Fuel oil", "Hard coal (if no detail)"), 
+                              c("International marine bunkers"))) |> 
+    matsbyname::setrowtype("Product") |> 
+    matsbyname::setcoltype("Industry")
+  
+  # Generate U and V matrices
+  res <- replace_null_UV(R = R, Y = Y)
+  
+  # Check that results are as expected.
+  expectedR <- matrix(c(200, 0, 
+                        0, 10), nrow = 2, ncol = 2, byrow = TRUE, 
+                      dimnames = list(c("Imports [of Hard coal (if no detail)]", 
+                                        "Imports [of Fuel oil]"), 
+                                      c("Hard coal (if no detail) [from Imports]", 
+                                        "Fuel oil [from Imports]"))) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
+  matsbyname::equal_byname(res$R, expectedR) |> 
+    expect_true()
+  
+  expectedU <- matrix(c(200, 0, 
+                        0, 10), nrow = 2, ncol = 2, byrow = TRUE, 
+                      dimnames = list(c("Hard coal (if no detail) [from Imports]",
+                                        "Fuel oil [from Imports]"), 
+                                      c("Manufacture [of Hard coal (if no detail)]", 
+                                        "Manufacture [of Fuel oil]"))) |> 
+    matsbyname::setrowtype("Product") |> 
+    matsbyname::setcoltype("Industry")
+  matsbyname::equal_byname(res$U, expectedU) |> 
+    expect_true()
+  
+  expectedUfeed <- expectedU
+  matsbyname::equal_byname(res$U_feed, expectedUfeed) |> 
+    expect_true()
+  
+  expectedUeiou <- expectedU * 0
+  matsbyname::equal_byname(res$U_EIOU, expectedUeiou) |> 
+    expect_true()
+  
+  expectedreiou <- expectedUeiou
+  matsbyname::equal_byname(res$r_EIOU, expectedreiou) |> 
+    expect_true()
+  
+  expectedV <- matrix(c(200, 0,
+                        0, 10), nrow = 2, ncol = 2, byrow = TRUE, 
+                      dimnames = list(c("Manufacture [of Hard coal (if no detail)]", 
+                                        "Manufacture [of Fuel oil]"), 
+                                      c("Hard coal (if no detail)", 
+                                        "Fuel oil"))) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
+  matsbyname::equal_byname(res$V, expectedV) |> 
+    expect_true()
+})
+
+
 test_that("prep_psut() correctly works with Balancing flows", {
   
   PSUT_flows_with_Balancing <- load_tidy_iea_df() %>% 
