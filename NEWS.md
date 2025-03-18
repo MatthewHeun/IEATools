@@ -8,6 +8,14 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* `extend_to_useful()` now produces U_eiou_fu_details matrices with the
+  correct row and column name structure when there is no 
+  energy industry own use.
+
+
+
+## IEATools 0.1.76 (2024-12-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14335708.svg)](https://doi.org/10.5281/zenodo.14335708)
+
 * New function `load_electricity_heat_output()`
   creates a data frame of IEA electricity and heat output
   information.
@@ -29,7 +37,7 @@ which always resolves to the latest release.
   a vector of country IEA data files in `.iea_file`.
 * Fixed several tests for new column names and added 
   a couple new tests for new features.
-    * Now at 1266 tests, all passing.
+    * Now at 1365 tests, all passing.
     * Test coverage remains at 100%.
 
 

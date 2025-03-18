@@ -50,18 +50,18 @@
 #' @param coal_mines The name of the new industry that produces primary coal products.
 #'                   Default is `IEATools::industry_flows$coal_mines`.
 #' @param oil_extraction The name of the new industry that produces primary oil and gas products.
-#'                       Default is `IEATools::industry_flows$oil_extraction`.
+#'                       Default is [IEATools::industry_flows$oil_extraction].
 #' @param gas_extraction The name of the new industry that produces primary oil and gas products.
-#'                       Default is `IEATools::industry_flows$natural_gas_extraction`.
+#'                       Default is [IEATools::industry_flows$natural_gas_extraction].
 #' @param resource_products_notation The notation to be used for defining products coming from the new resource industries.
 #'                                   E.g., the Crude oil product will be called "Crude oil \[from Resources\]".
-#'                                   Default is `RCLabels::from_notation`.
+#'                                   Default is [RCLabels::from_notation].
 #' @param resources_flow_notation The notation to be used for defining the new resource industries.
 #'                                E.g., the Crude oil resource will be called "Resources \[of Crude oil\]".
-#'                                Default is `RCLabels::of_notation`.
+#'                                Default is [RCLabels::of_notation].
 #' @param manufacture The name of the industries that convert resource-products \(inputs\) into actual products \(outputs\), 
 #'                    when a corresponding a corresponding industry does not exist by default in IEA data.
-#'                    Default is "Manufacture".
+#'                    Default is [IEATools::transformation_processes$manufacture].
 #' @param manufacture_flow_notation The notation to be used for the newly created manufacture industries 
 #'                                  \(each manufacturing industry is specified\) by the product it manufactures.
 #'                                  Default is `RCLabels::of_notation`.
@@ -106,7 +106,7 @@ specify_primary_production <- function(.tidy_iea_df,
                                        resources = IEATools::tpes_flows$resources,
                                        resource_products_notation = RCLabels::from_notation,
                                        resources_flow_notation = RCLabels::of_notation,
-                                       manufacture = "Manufacture",
+                                       manufacture = IEATools::transformation_processes$manufacture,
                                        manufacture_flow_notation = RCLabels::of_notation){
   
   production_products <- c(list_primary_coal_products, list_primary_oil_products, list_primary_gas_products)
