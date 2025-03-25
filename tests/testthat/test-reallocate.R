@@ -34,8 +34,9 @@ test_that("reallocate_statistical_differences() works as expected", {
     matsbyname::setrowtype("Product") |> matsbyname::setcoltype("Industry")
   
   U_EIOU <- matsbyname::hadamardproduct_byname(U, r_eiou)
-  U_feed <- matsbyname::difference_byname(U, U_eiou)
+  U_feed <- matsbyname::difference_byname(U, U_EIOU)
   
-  reallocate_statistical_differences(R = R, U = U, U_feed = U_feed, U_eiou = U_EIOU, r_eiou = r_eiou, 
+  reallocate_statistical_differences(R = R, 
+                                     U = U, U_feed = U_feed, U_eiou = U_EIOU, r_eiou = r_eiou, 
                                      V = V, Y = Y)
 })

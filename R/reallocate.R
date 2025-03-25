@@ -67,10 +67,10 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
   
   reallocate_func <- function(R_mat, U_mat, U_feed_mat, U_eiou_mat, r_eiou_mat, V_mat, Y_mat) {
 
-    # Store rownames of R and V
+    # Store rownames of R and V (industries)
     rownames_R_mat <- rownames(R_mat)
     rownames_V_mat <- rownames(V_mat)
-    # Store colnames of U and Y
+    # Store colnames of U and Y (industries)
     colnames_U_mat <- colnames(U_mat)
     colnames_Y_mat <- colnames(Y_mat)
 
@@ -92,7 +92,7 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
     # Find out which ones.
     statdiffs_rows_to_move_to_R <- setdiff(rownames(UY_mat), rownames(UY_mat_no_stat_diffs))
     if (length(statdiffs_rows_to_move_to_R) > 0) {
-      # Move these rows to R and reallocate
+      # Move these rows to R and reallocate across R and V
       UY_statdiffs_subtract <- UY_mat |> 
         matsbyname::select_cols_byname(retain_pattern = stat_diffs, fixed = TRUE) |> 
         matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(statdiffs_rows_to_move_to_R, 
@@ -102,7 +102,17 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
       RV_mat <- matsbyname::difference_byname(RV_mat, 
                                               matsbyname::transpose_byname(UY_statdiffs_subtract)) |> 
         matsbyname::clean_byname()
-      # Now reallocate only those statdiffs that we just moved.
+      # Now reallocate only the negative statdiffs that we just moved.
+      RV_mat <- RV_mat |> 
+        matsbyname::reallocate_byname(rownames = stat_diffs, 
+                                      colnames = statdiffs_rows_to_move_to_R, 
+                                      margin = 1)
+      # Split R and V again
+      R_mat <- RV_mat |> 
+        matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(rownames_R_mat, 
+                                                                                  pattern_type = "exact"))
+      V_mat <- RV_mat |> 
+        matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(rownames_V_mat, pattern_type = "exact"))
     }
     
     
