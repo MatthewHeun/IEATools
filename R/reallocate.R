@@ -122,11 +122,13 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
                                       colnames = statdiffs_rows_to_move_to_R, 
                                       margin = 1)
       ## Split R and V again
-      R_mat <- RV_mat |> 
+      R_mat_prime <- RV_mat |> 
         matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(rownames_R_mat, 
-                                                                                  pattern_type = "exact"))
-      V_mat <- RV_mat |> 
-        matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(rownames_V_mat, pattern_type = "exact"))
+                                                                                  pattern_type = "exact")) |> 
+        matsbyname::clean_byname()
+      V_mat_prime <- RV_mat |> 
+        matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(rownames_V_mat, pattern_type = "exact")) |> 
+        matsbyname::clean_byname()
       ## No longer need RV_mat, so NULL it
       RV_mat <- NULL
     }
@@ -134,13 +136,13 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
     # Move remaining R statdiffs to Y by subtraction.
 
     ## Find R statdiffs rows.
-    R_stat_diffs <- R_mat |> 
+    R_stat_diffs <- R_mat_prime |> 
       matsbyname::select_rows_byname(retain_pattern = stat_diffs, fixed = TRUE) |> 
       matsbyname::clean_byname(margin = 2)
 
     if (ncol(R_stat_diffs) > 0) {
       ## Subtract the R_stat_diffs from both R_mat and UY_mat
-      R_mat <- matsbyname::difference_byname(R_mat, R_stat_diffs) |> 
+      R_mat_prime <- matsbyname::difference_byname(R_mat_prime, R_stat_diffs) |> 
         matsbyname::clean_byname()
       UY_mat <- matsbyname::difference_byname(UY_mat, 
                                               matsbyname::transpose_byname(R_stat_diffs))
@@ -149,11 +151,11 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
         matsbyname::reallocate_byname(colnames = stat_diffs, margin = 2)
       
       ## Split U and Y again
-      U_mat <- UY_mat |> 
+      U_mat_prime <- UY_mat |> 
         matsbyname::select_cols_byname(retain_pattern = RCLabels::make_or_pattern(colnames_U_mat, 
                                                                                   pattern_type = "exact")) |> 
         matsbyname::clean_byname()
-      Y_mat <- UY_mat |> 
+      Y_mat_prime <- UY_mat |> 
         matsbyname::select_cols_byname(retain_pattern = RCLabels::make_or_pattern(colnames_Y_mat, 
                                                                                   pattern_type = "exact")) |> 
         matsbyname::clean_byname()
@@ -161,18 +163,17 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
       UY_mat <- NULL
       
       ## Calculate U_eiou = U * r_eiou (Hadamard product)
-      U_eiou_mat <- matsbyname::matrixproduct_byname(U_mat, r_eiou_mat)
+      U_eiou_mat_prime <- matsbyname::hadamardproduct_byname(U_mat_prime, r_eiou_mat) |> 
+        matsbyname::clean_byname()
       ## Calculate U_feed = U - U_eiou
-      U_feed_mat <- matsbyname::difference_byname(U_mat, U_eiou_mat)
+      U_feed_mat_prime <- matsbyname::difference_byname(U_mat_prime, U_eiou_mat_prime) |> 
+        matsbyname::clean_byname()
     }
-    
 
-    
-    
-    
     list(R_mat_prime, U_mat_prime, U_feed_mat_prime, U_eiou_mat_prime, 
          V_mat_prime, Y_mat_prime) |> 
-      magrittr::set_names(c(R_prime, U_prime, U_feed_prime, V_prime, Y_prime))
+      magrittr::set_names(c(R_prime, U_prime, U_feed_prime, U_eiou_prime, 
+                            V_prime, Y_prime))
   }
   matsindf::matsindf_apply(.sutmats, FUN = reallocate_func, 
                            R_mat = R, U_mat = U, U_feed_mat = U_feed, U_eiou_mat = U_eiou, 
