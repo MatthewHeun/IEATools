@@ -68,11 +68,23 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
   reallocate_func <- function(R_mat, U_mat, U_feed_mat, U_eiou_mat, r_eiou_mat, V_mat, Y_mat) {
 
     # Store rownames of R and V (industries)
-    rownames_R_mat <- rownames(R_mat)
-    rownames_V_mat <- rownames(V_mat)
+    # But be sure we eliminate all zero rows first
+    # so that row names are unique between R_mat and V_mat.
+    rownames_R_mat <- R_mat |> 
+      matsbyname::clean_byname(margin = 1) |> 
+      rownames()
+    rownames_V_mat <- V_mat |> 
+      matsbyname::clean_byname(margin = 1) |> 
+      rownames()
     # Store colnames of U and Y (industries)
-    colnames_U_mat <- colnames(U_mat)
-    colnames_Y_mat <- colnames(Y_mat)
+    # But be sure we eliminate all zero cols first
+    # so that row names are unique between U_mat and Y_mat.
+    colnames_U_mat <- U_mat |> 
+      matsbyname::clean_byname(margin = 2) |> 
+      colnames()
+    colnames_Y_mat <- Y_mat |> 
+      matsbyname::clean_byname(margin = 2) |> 
+      colnames()
 
     # Form matrix sums
     UY_mat <- matsbyname::sum_byname(U_mat, Y_mat) |> 
