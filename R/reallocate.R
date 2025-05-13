@@ -159,62 +159,17 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
         matsbyname::clean_byname()
       ## No longer need UY_mat, so NULL it
       UY_mat <- NULL
+      
+      ## Calculate U_eiou = U * r_eiou (Hadamard product)
+      U_eiou_mat <- matsbyname::matrixproduct_byname(U_mat, r_eiou_mat)
+      ## Calculate U_feed = U - U_eiou
+      U_feed_mat <- matsbyname::difference_byname(U_mat, U_eiou_mat)
     }
     
 
-    # Calculate U_eiou = U * r_eiou (Hadamard product)
-    # Calculate U_feed = U - U_eiou
     
     
     
-    
-    
-    
-    
-    # # Reallocate Stat diffs from the R matrix to the V matrix.
-    # R_stat_diffs <- R_mat |> 
-    #   matsbyname::select_rows_byname(retain_pattern = stat_diffs, fixed = TRUE)
-    # 
-    # # If there is no Stat diffs row in R_mat, 
-    # # R_stat_diffs will be NULL.
-    # if (!is.null(R_stat_diffs)) {
-    #   V_mat_prime <- V_mat |> 
-    #     # Add to the V matrix
-    #     matsbyname::sum_byname(R_stat_diffs) |> 
-    #     # Reallocate in proportion to other producers
-    #     matsbyname::reallocate_byname(rowcolnames = stat_diffs, margin = 1)
-    #   
-    #   # Remove from the R matrix
-    #   R_mat_prime <- R_mat |> 
-    #     matsbyname::select_rows_byname(remove_pattern = stat_diffs, fixed = TRUE)
-    # } else {
-    #   R_mat_prime <- R_mat
-    #   V_mat_prime <- V_mat
-    # }
-    # 
-    # 
-    # 
-    # 
-    # 
-    # # Reallocate Stat diffs from the Y matrix to the U_feed matrix.
-    # Y_stat_diffs <- Y_mat |> 
-    #   matsbyname::select_cols_byname(retain_pattern = stat_diffs, fixed = TRUE)  
-    # 
-    # # If there is no Stat diffs column in Y_mat, 
-    # # Y_stat_diffs will be NULL.
-    # if (!is.null(Y_stat_diffs)) {
-    #   U_feed_mat_prime <- U_feed_mat |> 
-    #     # Add to the U_feed matrix
-    #     matsbyname::sum_byname(Y_stat_diffs) |> 
-    #     # Reallocate in proportion to other consumers
-    #     matsbyname::reallocate_byname(rowcolnames = stat_diffs, margin = 2)
-    #   # Remove from Y matrix
-    #   Y_mat_prime <- Y_mat |> 
-    #     matsbyname::select_cols_byname(remove_pattern = stat_diffs, fixed = TRUE)
-    # } else {
-    #   U_feed_mat_prime <- U_feed_mat
-    #   Y_mat_prime <- Y_mat
-    # }
     list(R_mat_prime, U_mat_prime, U_feed_mat_prime, U_eiou_mat_prime, 
          V_mat_prime, Y_mat_prime) |> 
       magrittr::set_names(c(R_prime, U_prime, U_feed_prime, V_prime, Y_prime))
