@@ -92,19 +92,21 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
     RV_mat <- matsbyname::sum_byname(R_mat, V_mat) |> 
       matsbyname::clean_byname()
 
-    # Find (Y statdiffs rows with no other consumption in U or Y).
+    # Move (Y statdiffs rows with no other consumption in U or Y) to R by subtraction.
+    
+    ## Find (Y statdiffs rows with no other consumption in U or Y).
     UY_mat_no_stat_diffs <- UY_mat |> 
       matsbyname::select_cols_byname(remove_pattern = stat_diffs, fixed = TRUE) |> 
       # Eliminate zero rows
       matsbyname::clean_byname(margin = 1)
-    # If the number of rows of UY_mat_no_stat_diffs is less than 
-    # the number of rows of UY_mat, 
-    # we have a situation where at least one statdiffs entry cannot be 
-    # reallocated within the U+Y matrices.  
-    # Find out which ones.
+    ## If the number of rows of UY_mat_no_stat_diffs is less than 
+    ## the number of rows of UY_mat, 
+    ## we have a situation where at least one statdiffs entry cannot be 
+    ## reallocated within the U+Y matrices.  
+    ## Find out which ones.
     statdiffs_rows_to_move_to_R <- setdiff(rownames(UY_mat), rownames(UY_mat_no_stat_diffs))
     if (length(statdiffs_rows_to_move_to_R) > 0) {
-      # Move these rows to R and reallocate across R and V
+      ## Move these rows to R and reallocate across R and V
       UY_statdiffs_subtract <- UY_mat |> 
         matsbyname::select_cols_byname(retain_pattern = stat_diffs, fixed = TRUE) |> 
         matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(statdiffs_rows_to_move_to_R, 
@@ -114,30 +116,19 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
       RV_mat <- matsbyname::difference_byname(RV_mat, 
                                               matsbyname::transpose_byname(UY_statdiffs_subtract)) |> 
         matsbyname::clean_byname()
-      # Now reallocate only the negative statdiffs that we just moved.
+      ## Now reallocate only the negative statdiffs that we just moved.
       RV_mat <- RV_mat |> 
         matsbyname::reallocate_byname(rownames = stat_diffs, 
                                       colnames = statdiffs_rows_to_move_to_R, 
                                       margin = 1)
-      # Split R and V again
+      ## Split R and V again
       R_mat <- RV_mat |> 
         matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(rownames_R_mat, 
                                                                                   pattern_type = "exact"))
       V_mat <- RV_mat |> 
         matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(rownames_V_mat, pattern_type = "exact"))
     }
-    
-    
-    
-    # Move (Y statdiffs rows with no other consumption in U or Y) to R by subtraction.
-    
-    
-    
-    # Sum R and V.
-    # Reallocate negative statdiffs only into R+V.
-    # Split R and V using stored rownames.
-    
-    
+
     # Move remaining R statdiffs to Y by subtraction.
 
         
