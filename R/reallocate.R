@@ -127,16 +127,41 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
                                                                                   pattern_type = "exact"))
       V_mat <- RV_mat |> 
         matsbyname::select_rows_byname(retain_pattern = RCLabels::make_or_pattern(rownames_V_mat, pattern_type = "exact"))
+      ## No longer need RV_mat, so NULL it
+      RV_mat <- NULL
     }
 
     # Move remaining R statdiffs to Y by subtraction.
 
-        
-    # Sum U and Y.
-    # Reallocate stadiffs columns into U+Y.
-    # Split U and Y using stored colnames.
+    ## Find R statdiffs rows.
+    R_stat_diffs <- R_mat |> 
+      matsbyname::select_rows_byname(retain_pattern = stat_diffs, fixed = TRUE) |> 
+      matsbyname::clean_byname(margin = 2)
+
+    if (ncol(R_stat_diffs) > 0) {
+      ## Subtract the R_stat_diffs from both R_mat and UY_mat
+      R_mat <- matsbyname::difference_byname(R_mat, R_stat_diffs) |> 
+        matsbyname::clean_byname()
+      UY_mat <- matsbyname::difference_byname(UY_mat, 
+                                              matsbyname::transpose_byname(R_stat_diffs))
+      ## Reallocate Stat diffs in UY_mat
+      UY_mat <- UY_mat |> 
+        matsbyname::reallocate_byname(colnames = stat_diffs, margin = 2)
+      
+      ## Split U and Y again
+      U_mat <- UY_mat |> 
+        matsbyname::select_cols_byname(retain_pattern = RCLabels::make_or_pattern(colnames_U_mat, 
+                                                                                  pattern_type = "exact")) |> 
+        matsbyname::clean_byname()
+      Y_mat <- UY_mat |> 
+        matsbyname::select_cols_byname(retain_pattern = RCLabels::make_or_pattern(colnames_Y_mat, 
+                                                                                  pattern_type = "exact")) |> 
+        matsbyname::clean_byname()
+      ## No longer need UY_mat, so NULL it
+      UY_mat <- NULL
+    }
     
-    
+
     # Calculate U_eiou = U * r_eiou (Hadamard product)
     # Calculate U_feed = U - U_eiou
     
