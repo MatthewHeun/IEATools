@@ -1,8 +1,8 @@
 Package: IEATools
 Type: Package
 Title: Tools for Working with International Energy Agency Data
-Version: 0.1.76
-Date: 2024-12-09
+Version: 0.1.77
+Date: 2025-05-14
 Authors@R: c(person(given = "Matthew Kuperus", family = "Heun", role = c("aut", "cre"),
                     email = "matthew.heun@me.com", 
                     comment = c(ORCID = "0000-0002-7438-214X")),

@@ -15,11 +15,11 @@ bibentry(
                          family = "Marshall", 
                          role = "aut", 
                          comment = c(ORCID = "0000-0001-9260-7827"))),
-  year        = "2024",
-  note        = "R package version 0.1.76",
+  year        = "2025",
+  note        = "R package version 0.1.77",
   url         = "https://doi.org/10.5281/zenodo.5086371",
-  textVersion = paste("Matthew Kuperus Heun, Emmanuel Aramendia, Zeke Marshall (2024).",
+  textVersion = paste("Matthew Kuperus Heun, Emmanuel Aramendia, Zeke Marshall (2025).",
                       "IEATools: Tools for munging and manipulating IEA extended energy balance data.",
-                      "R package version 0.1.76.", 
+                      "R package version 0.1.77.", 
                       "https://doi.org/10.5281/zenodo.5086371")
 )

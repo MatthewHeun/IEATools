@@ -32,7 +32,7 @@
 #' Energy balance is checked both 
 #' prior to reallocating statistical differences
 #' and after reallocating statistical differences.
-#' Imbalances beyond `tol` cause an error.
+#' Imbalances greater than `tol` cause an error.
 #' 
 #' Note that most functions in `IEATools` operate on 
 #' tabular IEA data. 
