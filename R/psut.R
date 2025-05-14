@@ -409,10 +409,19 @@ collapse_to_tidy_psut <- function(.tidy_iea_df,
 #'                                     Default values are names for variables 
 #'                                     incoming with `.sutmats`. 
 #'                                     Can be overridden with actual matrices.
+#' @param manufacture The string name of the "Manufacture" industry.
+#'                    Default is `IEATools::transformation_processes$manufacture`.
+#' @param manufacture_notation,resources_ind_notation,raw_product_notation Row and column 
+#'                    label notations for the manufacture industry, the resources industry, 
+#'                    and raw material products.
+#'                    Defaults are `RCLabels::of_notation`, `RCLabels::of_notation`, and
+#'                    `RCLabels::from_notation`.
 #' @param .R_temp_name,.U_temp_name,.U_feed_temp_name,.U_eiou_temp_name,.r_eiou_temp_name,.V_temp_name Names of temporary variables unused internally to the function.
 #' @param R_name,U_name,U_feed_name,U_eiou_name,r_eiou_name,V_name See `IEATools::psutcols`. 
 #'                                                                 The final names 
 #'                                                                 for matrices in the output.
+#' @param tol The tolerance for deciding whether energy flows are in balance.
+#'            Default is `1e-6`.
 #'
 #' @return A version of `.sutmats` 
 #'         with **R**, **U**, **U_feed**, **U_EIOU**, or **V**

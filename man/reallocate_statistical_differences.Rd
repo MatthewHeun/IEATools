@@ -32,14 +32,15 @@ most likely the result of \code{\link[=prep_psut]{prep_psut()}}.}
 for Statistical differences.
 Default is \code{IEATools::tfc_compare_flows$statistical_differences}.}
 
-\item{R, U_feed, U, V, Y}{Names of columns of matrices in \code{.sutmats}.
+\item{R, U, U_feed, U_eiou, r_eiou, V, Y}{Matrices or names of columns of matrices in \code{.sutmats}.
+See \link{psut_cols}.}
+
+\item{R_colname, U_colname, U_feed_colname, U_eiou_colname, r_eiou_colname, V_colname, Y_colname}{Names of columns of matrices in \code{.sutmats}.
 See \link{psut_cols}.}
 
 \item{prime_suffix}{The string suffix for new versions of matrices with reallocated
 statistical differences.
 Default is "_prime".}
-
-\item{R_prime, U_feed_prime, U_prime}{}
 }
 \value{
 A version of \code{.sutmats} in which energy consumption by "Statistical differences"

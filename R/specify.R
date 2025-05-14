@@ -38,9 +38,9 @@
 #'                                 Default is "Transformation processes".
 #' @param ledger_side,flow,product,flow_aggregation_point See `IEATools::iea_cols`.
 #' @param resources A string identifying resource industries to be added to `.tidy_iea_df`. 
-#'                  Default is "`Resources`".
+#'                  Default is "Resources".
 #' @param production A string identifying production in the flow column. Default is "`Production`".
-#' @param e_dot The name of the energy column in `.tidy_iea_df`. Default is "`Edot`".
+#' @param e_dot The name of the energy column in `.tidy_iea_df`. Default is "Edot".
 #' @param list_primary_coal_products The list of primary coal products for which the production industry needs to be changed.
 #'                                   Default is `IEATools::primary_coal_products`.
 #' @param list_primary_oil_products The list of primary oil products for which the production industry needs to be changed.
@@ -50,9 +50,9 @@
 #' @param coal_mines The name of the new industry that produces primary coal products.
 #'                   Default is `IEATools::industry_flows$coal_mines`.
 #' @param oil_extraction The name of the new industry that produces primary oil and gas products.
-#'                       Default is [IEATools::industry_flows$oil_extraction].
+#'                       Default is `IEATools::industry_flows$oil_extraction`.
 #' @param gas_extraction The name of the new industry that produces primary oil and gas products.
-#'                       Default is [IEATools::industry_flows$natural_gas_extraction].
+#'                       Default is `IEATools::industry_flows$natural_gas_extraction`.
 #' @param resource_products_notation The notation to be used for defining products coming from the new resource industries.
 #'                                   E.g., the Crude oil product will be called "Crude oil \[from Resources\]".
 #'                                   Default is [RCLabels::from_notation].
@@ -61,10 +61,10 @@
 #'                                Default is [RCLabels::of_notation].
 #' @param manufacture The name of the industries that convert resource-products \(inputs\) into actual products \(outputs\), 
 #'                    when a corresponding a corresponding industry does not exist by default in IEA data.
-#'                    Default is [IEATools::transformation_processes$manufacture].
+#'                    Default is `IEATools::transformation_processes$manufacture`.
 #' @param manufacture_flow_notation The notation to be used for the newly created manufacture industries 
 #'                                  \(each manufacturing industry is specified\) by the product it manufactures.
-#'                                  Default is `RCLabels::of_notation`.
+#'                                  Default is [RCLabels::of_notation].
 #'
 #' @return A `.tidy_iea_df` with adjusted production information for primary energy 
 #'         for both coal and coal products and oil and gas extraction

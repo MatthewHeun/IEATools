@@ -40,11 +40,23 @@ Default values are names for variables
 incoming with \code{.sutmats}.
 Can be overridden with actual matrices.}
 
+\item{manufacture}{The string name of the "Manufacture" industry.
+Default is \code{IEATools::transformation_processes$manufacture}.}
+
+\item{manufacture_notation, resources_ind_notation, raw_product_notation}{Row and column
+label notations for the manufacture industry, the resources industry,
+and raw material products.
+Defaults are \code{RCLabels::of_notation}, \code{RCLabels::of_notation}, and
+\code{RCLabels::from_notation}.}
+
 \item{.R_temp_name, .U_temp_name, .U_feed_temp_name, .U_eiou_temp_name, .r_eiou_temp_name, .V_temp_name}{Names of temporary variables unused internally to the function.}
 
 \item{R_name, U_name, U_feed_name, U_eiou_name, r_eiou_name, V_name}{See \code{IEATools::psutcols}.
 The final names
 for matrices in the output.}
+
+\item{tol}{The tolerance for deciding whether energy flows are in balance.
+Default is \code{1e-6}.}
 }
 \value{
 A version of \code{.sutmats}

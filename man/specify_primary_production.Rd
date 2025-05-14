@@ -33,7 +33,7 @@ specify_primary_production(
 
 \item{ledger_side, flow, product, flow_aggregation_point}{See \code{IEATools::iea_cols}.}
 
-\item{e_dot}{The name of the energy column in \code{.tidy_iea_df}. Default is "\code{Edot}".}
+\item{e_dot}{The name of the energy column in \code{.tidy_iea_df}. Default is "Edot".}
 
 \item{list_primary_coal_products}{The list of primary coal products for which the production industry needs to be changed.
 Default is \code{IEATools::primary_coal_products}.}
@@ -50,10 +50,10 @@ Default is \code{IEATools::primary_gas_products}.}
 Default is \code{IEATools::industry_flows$coal_mines}.}
 
 \item{oil_extraction}{The name of the new industry that produces primary oil and gas products.
-Default is \link{industry_flows$oil_extraction}.}
+Default is \code{IEATools::industry_flows$oil_extraction}.}
 
 \item{gas_extraction}{The name of the new industry that produces primary oil and gas products.
-Default is \link{industry_flows$natural_gas_extraction}.}
+Default is \code{IEATools::industry_flows$natural_gas_extraction}.}
 
 \item{liquefaction_regas}{A string identifying liquefaction and regasification plants.
 Default is "Liquefaction (LNG) / regasification plants".}
@@ -65,7 +65,7 @@ Default is "Natural gas extraction".}
 Default is "Transformation processes".}
 
 \item{resources}{A string identifying resource industries to be added to \code{.tidy_iea_df}.
-Default is "\code{Resources}".}
+Default is "Resources".}
 
 \item{resource_products_notation}{The notation to be used for defining products coming from the new resource industries.
 E.g., the Crude oil product will be called "Crude oil [from Resources]".
@@ -77,11 +77,11 @@ Default is \link[RCLabels:of_notation]{RCLabels::of_notation}.}
 
 \item{manufacture}{The name of the industries that convert resource-products \(inputs\) into actual products \(outputs\),
 when a corresponding a corresponding industry does not exist by default in IEA data.
-Default is \link{transformation_processes$manufacture}.}
+Default is \code{IEATools::transformation_processes$manufacture}.}
 
 \item{manufacture_flow_notation}{The notation to be used for the newly created manufacture industries
 \(each manufacturing industry is specified\) by the product it manufactures.
-Default is \code{RCLabels::of_notation}.}
+Default is \link[RCLabels:of_notation]{RCLabels::of_notation}.}
 }
 \value{
 A \code{.tidy_iea_df} with adjusted production information for primary energy

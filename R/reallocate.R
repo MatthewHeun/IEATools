@@ -26,12 +26,14 @@
 #' @param stat_diffs The name of the row in **R** and columns in **U_feed** and **Y**
 #'                   for Statistical differences.
 #'                   Default is `IEATools::tfc_compare_flows$statistical_differences`.
-#' @param R,U_feed,U,V,Y Names of columns of matrices in `.sutmats`.
-#'                            See [IEATools::psut_cols].
+#' @param R,U,U_feed,U_eiou,r_eiou,V,Y Matrices or names of columns of matrices in `.sutmats`.
+#'                                     See [IEATools::psut_cols].
+#' @param R_colname,U_colname,U_feed_colname,U_eiou_colname,r_eiou_colname,V_colname,Y_colname
+#'                                     Names of columns of matrices in `.sutmats`.
+#'                                     See [IEATools::psut_cols].
 #' @param prime_suffix The string suffix for new versions of matrices with reallocated
 #'                     statistical differences.
 #'                     Default is "_prime".
-#' @param R_prime,U_feed_prime,U_prime
 #'
 #' @return A version of `.sutmats` in which energy consumption by "Statistical differences"
 #'         is reallocated to other Industries in proportion to their energy consumption.
