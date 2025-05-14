@@ -21,7 +21,8 @@ reallocate_statistical_differences(
   r_eiou_colname = IEATools::psut_cols$r_eiou,
   V_colname = IEATools::psut_cols$V,
   Y_colname = IEATools::psut_cols$Y,
-  prime_suffix = "_prime"
+  prime_suffix = "_prime",
+  tol = 1e-06
 )
 }
 \arguments{
@@ -41,6 +42,9 @@ See \link{psut_cols}.}
 \item{prime_suffix}{The string suffix for new versions of matrices with reallocated
 statistical differences.
 Default is "_prime".}
+
+\item{tol}{The tolerance for energy imbalance.
+Default is \code{1e-6}.}
 }
 \value{
 A version of \code{.sutmats} in which energy consumption by "Statistical differences"
@@ -68,6 +72,10 @@ matrices using \code{\link[matsbyname:reallocate_byname]{matsbyname::reallocate_
 Internally, the \strong{Y} and \strong{U_feed} matrices are added before calling
 \code{\link[matsbyname:reallocate_byname]{matsbyname::reallocate_byname()}}.
 The matrices are split again prior to returning.
+
+Energy balance is checked both
+prior to reallocating statistical differences
+and after reallocating statistical differences.
 }
 \examples{
 R <- matrix(c(98, 0, 

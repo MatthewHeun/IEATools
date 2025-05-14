@@ -20,6 +20,10 @@
 #' Internally, the **Y** and **U_feed** matrices are added before calling 
 #' [matsbyname::reallocate_byname()].
 #' The matrices are split again prior to returning.
+#' 
+#' Energy balance is checked both 
+#' prior to reallocating statistical differences
+#' and after reallocating statistical differences.
 #'
 #' @param .sutmats A data frame of PSUT matrices, 
 #'                 most likely the result of [IEATools::prep_psut()].
@@ -34,6 +38,8 @@
 #' @param prime_suffix The string suffix for new versions of matrices with reallocated
 #'                     statistical differences.
 #'                     Default is "_prime".
+#' @param tol The tolerance for energy imbalance.
+#'            Default is `1e-6`.
 #'
 #' @return A version of `.sutmats` in which energy consumption by "Statistical differences"
 #'         is reallocated to other Industries in proportion to their energy consumption.
@@ -103,7 +109,8 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
                                                r_eiou_colname = IEATools::psut_cols$r_eiou,
                                                V_colname = IEATools::psut_cols$V,
                                                Y_colname = IEATools::psut_cols$Y, 
-                                               prime_suffix = "_prime") {
+                                               prime_suffix = "_prime", 
+                                               tol = 1e-6) {
   
   R_prime = paste0(R_colname, prime_suffix)
   U_prime = paste0(U_colname, prime_suffix)
@@ -115,6 +122,15 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
   
   reallocate_func <- function(R_mat, U_mat, U_feed_mat, U_eiou_mat, r_eiou_mat, V_mat, Y_mat) {
 
+    # Verify that energy is conserved initially
+    matsbyname::sum_byname(R_mat, V_mat) |> 
+      matsbyname::transpose_byname() |> 
+      matsbyname::rowsums_byname(colname = "rowsums") |> 
+      matsbyname::difference_byname(matsbyname::sum_byname(U_mat, Y_mat) |> 
+                                      matsbyname::rowsums_byname(colname = "rowsums")) |> 
+      matsbyname::iszero_byname(tol = tol) |> 
+      assertthat::assert_that(msg = "Energy not conserved at the top of reallocate_statistical_differences()")
+    
     # Store rownames of R and V (industries)
     # But be sure we eliminate all zero rows first
     # so that row names are unique between R_mat and V_mat.
@@ -217,6 +233,15 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
       U_feed_mat_prime <- matsbyname::difference_byname(U_mat_prime, U_eiou_mat_prime) |> 
         matsbyname::clean_byname()
     }
+    
+    # Verify that energy is conserved after reallocation
+    matsbyname::sum_byname(R_mat_prime, V_mat_prime) |> 
+      matsbyname::transpose_byname() |> 
+      matsbyname::rowsums_byname(colname = "rowsums") |> 
+      matsbyname::difference_byname(matsbyname::sum_byname(U_mat_prime, Y_mat_prime) |> 
+                                      matsbyname::rowsums_byname(colname = "rowsums")) |> 
+      matsbyname::iszero_byname(tol = tol) |> 
+      assertthat::assert_that(msg = "Energy not conserved after reallocating statistical differences.")
 
     list(R_mat_prime, U_mat_prime, U_feed_mat_prime, U_eiou_mat_prime, 
          V_mat_prime, Y_mat_prime) |> 
