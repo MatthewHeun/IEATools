@@ -13,17 +13,32 @@
 #' Both are reallocated to the **Y** and **U** matrices in proportion.
 #' The steps are:
 #' 
-#' * Move Statistical differences found in the **R** matrix to the **Y** matrix by subtraction.
-#' * Reallocate Statistical differences in the **Y** matrix to the **Y** and **U** 
-#'   matrices using [matsbyname::reallocate_byname()].
+#' 1. For those rows with no other consumption in **U** or **Y**,
+#'    move **Y** Statistical differences to **R**  by subtraction.
+#' 2. Reallocate negative Statistical differences in **R** to 
+#'    **R** and **V** using [matsbyname::reallocate_byname()].
+#' 3. Move remaining (positive) Statistical differences found in 
+#'    **R** to the **Y** matrix by subtraction.
+#' 4. Reallocate Statistical differences in the **Y** matrix to the **Y** and **U** 
+#'    matrices using [matsbyname::reallocate_byname()].
 #' 
-#' Internally, the **Y** and **U_feed** matrices are added before calling 
+#' Internally, the **R** and **V** matrices are added before calling 
 #' [matsbyname::reallocate_byname()].
-#' The matrices are split again prior to returning.
+#' **R** and **V** are split again prior to returning.
+#' Similarly, the **Y** and **U** matrices are added before calling 
+#' [matsbyname::reallocate_byname()].
+#' **Y** and **U** are split again prior to returning.
 #' 
 #' Energy balance is checked both 
 #' prior to reallocating statistical differences
 #' and after reallocating statistical differences.
+#' Imbalances beyond `tol` cause an error.
+#' 
+#' Note that most functions in `IEATools` operate on 
+#' tabular IEA data. 
+#' However, this function assumes IEA data have already been 
+#' converted to matrix (PSUT) format, 
+#' most likely with [IEATools::prep_psut()].
 #'
 #' @param .sutmats A data frame of PSUT matrices, 
 #'                 most likely the result of [IEATools::prep_psut()].

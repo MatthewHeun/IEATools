@@ -8,8 +8,6 @@ Authors@R: c(person(given = "Matthew Kuperus", family = "Heun", role = c("aut", 
                     comment = c(ORCID = "0000-0002-7438-214X")),
              person(given = "Emmanuel", family = "Aramendia", role = "aut"),
              person(given = "Zeke", family = "Marshall", role = "aut"))
-Author: Matthew Heun [aut, cre], Emmanuel Aramendia [aut], Zeke Marshall [aut]
-Maintainer: Matthew  Heun <matthew.heun@me.com>
 Description: Tools for munging and manipulating International Energy Agency extended energy balance data.
 License: MIT + file LICENSE
 Language: en-US

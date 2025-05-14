@@ -63,19 +63,34 @@ most likely by calling \code{\link[=prep_psut]{prep_psut()}}.
 Statistical differences can be found in either the \strong{R} or \strong{Y} matrix.
 Both are reallocated to the \strong{Y} and \strong{U} matrices in proportion.
 The steps are:
-\itemize{
-\item Move Statistical differences found in the \strong{R} matrix to the \strong{Y} matrix by subtraction.
+\enumerate{
+\item For those rows with no other consumption in \strong{U} or \strong{Y},
+move \strong{Y} Statistical differences to \strong{R}  by subtraction.
+\item Reallocate negative Statistical differences in \strong{R} to
+\strong{R} and \strong{V} using \code{\link[matsbyname:reallocate_byname]{matsbyname::reallocate_byname()}}.
+\item Move remaining (positive) Statistical differences found in
+\strong{R} to the \strong{Y} matrix by subtraction.
 \item Reallocate Statistical differences in the \strong{Y} matrix to the \strong{Y} and \strong{U}
 matrices using \code{\link[matsbyname:reallocate_byname]{matsbyname::reallocate_byname()}}.
 }
 
-Internally, the \strong{Y} and \strong{U_feed} matrices are added before calling
+Internally, the \strong{R} and \strong{V} matrices are added before calling
 \code{\link[matsbyname:reallocate_byname]{matsbyname::reallocate_byname()}}.
-The matrices are split again prior to returning.
+\strong{R} and \strong{V} are split again prior to returning.
+Similarly, the \strong{Y} and \strong{U} matrices are added before calling
+\code{\link[matsbyname:reallocate_byname]{matsbyname::reallocate_byname()}}.
+\strong{Y} and \strong{U} are split again prior to returning.
 
 Energy balance is checked both
 prior to reallocating statistical differences
 and after reallocating statistical differences.
+Imbalances beyond \code{tol} cause an error.
+
+Note that most functions in \code{IEATools} operate on
+tabular IEA data.
+However, this function assumes IEA data have already been
+converted to matrix (PSUT) format,
+most likely with \code{\link[=prep_psut]{prep_psut()}}.
 }
 \examples{
 R <- matrix(c(98, 0, 
