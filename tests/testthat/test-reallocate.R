@@ -36,7 +36,18 @@ test_that("reallocate_statistical_differences() works as expected", {
   U_EIOU <- matsbyname::hadamardproduct_byname(U, r_eiou)
   U_feed <- matsbyname::difference_byname(U, U_EIOU)
   
-  reallocate_statistical_differences(R = R, 
-                                     U = U, U_feed = U_feed, U_eiou = U_EIOU, r_eiou = r_eiou, 
-                                     V = V, Y = Y)
+  res <- reallocate_statistical_differences(R = R, 
+                                            U = U, U_feed = U_feed, U_eiou = U_EIOU, r_eiou = r_eiou, 
+                                            V = V, Y = Y)
+  R_expected <- matrix(98, dimnames = list("Resources [of Coal]", "Coal [from Resources]")) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
+  expect_equal(res$R_prime, R_expected)
+  U_expected <- matrix(c(98, 2.5), nrow = 2, 
+                       dimnames = list(c("Coal [from Resources]", "Electricity"), 
+                                       "Mapep")) |> 
+    matsbyname::setrowtype("Product") |> 
+    matsbyname::setcoltype("Industry")
+  expect_equal(res$U_prime, U_expected)
+  
 })
