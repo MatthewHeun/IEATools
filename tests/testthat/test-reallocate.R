@@ -75,7 +75,21 @@ test_that("reallocate_statistical_differences() works as expected", {
   expect_equal(res$U_feed, U_feed_expected)
   
   # Now try in a data frame
+  df <- tibble::tibble(R = list(R, R), 
+                       U = list(U, U), 
+                       V = list(V, V), 
+                       Y = list(Y, Y), 
+                       r_EIOU = list(r_eiou, r_eiou), 
+                       U_EIOU = list(U_EIOU, U_EIOU), 
+                       U_feed = list(U_feed, U_feed))
+  res_df <- df |> 
+    reallocate_statistical_differences()
   
-  
+  expect_equal(res_df$R_prime, list(R_expected, R_expected))
+  expect_equal(res_df$U_prime, list(U_expected, U_expected))
+  expect_equal(res_df$V_prime, list(V_expected, V_expected))
+  expect_equal(res_df$Y_prime, list(Y_expected, Y_expected))
+  expect_equal(res_df$U_EIOU_prime, list(U_eiou_expected, U_eiou_expected))
+  expect_equal(res_df$U_feed_prime, list(U_feed_expected, U_feed_expected))
   
 })
