@@ -14,7 +14,9 @@ which always resolves to the latest release.
 * `extend_to_useful()` now produces U_eiou_fu_details matrices with the
   correct row and column name structure when there is no 
   energy industry own use.
-
+* New tests for new features.
+    * Now at 1385 tests, all passing.
+    * Test coverage remains at 100%.
 
 
 ## IEATools 0.1.76 (2024-12-09) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14335708.svg)](https://doi.org/10.5281/zenodo.14335708)
