@@ -8,6 +8,9 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* New function `reallocate_statistical_differences()` reallocates
+  statistical differences in proportion to the non-zero consumption of each 
+  energy carrier in other industries.
 * `extend_to_useful()` now produces U_eiou_fu_details matrices with the
   correct row and column name structure when there is no 
   energy industry own use.
