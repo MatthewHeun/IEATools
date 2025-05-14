@@ -39,15 +39,43 @@ test_that("reallocate_statistical_differences() works as expected", {
   res <- reallocate_statistical_differences(R = R, 
                                             U = U, U_feed = U_feed, U_eiou = U_EIOU, r_eiou = r_eiou, 
                                             V = V, Y = Y)
+  
   R_expected <- matrix(98, dimnames = list("Resources [of Coal]", "Coal [from Resources]")) |> 
     matsbyname::setrowtype("Industry") |> 
     matsbyname::setcoltype("Product")
   expect_equal(res$R_prime, R_expected)
+  
   U_expected <- matrix(c(98, 2.5), nrow = 2, 
                        dimnames = list(c("Coal [from Resources]", "Electricity"), 
                                        "Mapep")) |> 
     matsbyname::setrowtype("Product") |> 
     matsbyname::setcoltype("Industry")
   expect_equal(res$U_prime, U_expected)
+  
+  V_expected <- matrix(40, dimnames = list("Mapep", "Electricity")) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
+  expect_equal(res$V_prime, V_expected)
+  
+  Y_expected <- matrix(c(25, 12.5), nrow = 1, 
+                       dimnames = list("Electricity", 
+                                       c("Industry 1", "Industry 2"))) |> 
+    matsbyname::setrowtype("Product") |> 
+    matsbyname::setcoltype("Industry")
+  expect_equal(res$Y_prime, Y_expected)
+  
+  U_eiou_expected <- matrix(2.5, dimnames = list("Electricity", "Mapep")) |> 
+    matsbyname::setrowtype("Product") |> 
+    matsbyname::setcoltype("Industry")
+  expect_equal(res$U_EIOU, U_eiou_expected)
+  
+  U_feed_expected <- matrix(98, dimnames = list("Coal [from Resources]", "Mapep")) |> 
+    matsbyname::setrowtype("Product") |> 
+    matsbyname::setcoltype("Industry")
+  expect_equal(res$U_feed, U_feed_expected)
+  
+  # Now try in a data frame
+  
+  
   
 })
