@@ -427,7 +427,8 @@ transformation_processes <- list(main_activity_producer_electricity_plants = "Ma
                                  nuclear_indsutry = "Nuclear industry",
                                  non_specified_transformation = "Non-specified (transformation)",
                                  # 2019
-                                 non_specified_energy = "Non-specified (energy)")
+                                 non_specified_energy = "Non-specified (energy)", 
+                                 manufacture = "Manufacture")
 usethis::use_data(transformation_processes, overwrite = TRUE)
 
 

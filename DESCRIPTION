@@ -1,15 +1,13 @@
 Package: IEATools
 Type: Package
 Title: Tools for Working with International Energy Agency Data
-Version: 0.1.76
-Date: 2024-12-09
+Version: 0.1.77
+Date: 2025-05-14
 Authors@R: c(person(given = "Matthew Kuperus", family = "Heun", role = c("aut", "cre"),
                     email = "matthew.heun@me.com", 
                     comment = c(ORCID = "0000-0002-7438-214X")),
              person(given = "Emmanuel", family = "Aramendia", role = "aut"),
              person(given = "Zeke", family = "Marshall", role = "aut"))
-Author: Matthew Heun [aut, cre], Emmanuel Aramendia [aut], Zeke Marshall [aut]
-Maintainer: Matthew  Heun <matthew.heun@me.com>
 Description: Tools for munging and manipulating International Energy Agency extended energy balance data.
 License: MIT + file LICENSE
 Language: en-US
@@ -17,7 +15,8 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
-Depends: R (>= 2.10)
+Depends: 
+    R (>= 4.1.0)
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 Config/testthat/start-first: psut, final_to_useful, fixes, eiou, initialize, templates, specify, utilities, tables, aggregates, energy_balance
@@ -42,6 +41,7 @@ Imports:
 Suggests:
     covr,
     knitr,
+    Matrix,
     purrr,
     rmarkdown,
     testthat (>= 3.0.0),

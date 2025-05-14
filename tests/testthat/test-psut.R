@@ -518,163 +518,200 @@ test_that("prep_psut() correctly makes columns of U and r_EIOU matrices with Mat
 })
 
 
-test_that("replace_null_RUV() works correctly with missing R and U", {
-  # Set up so that the psut data frame has missing for
-  # R, U, U_feed, and U_EIOU in 1971 for GHA.
-  psut <- load_tidy_iea_df() %>% 
-    specify_all() %>% 
-    prep_psut() %>% 
-    tidyr::pivot_longer(cols = c("R", "U", "U_EIOU", "U_feed", "r_EIOU", "V", "Y", "S_units"), names_to = "matnames", values_to = "matvals") %>% 
-    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "R")) %>% 
-    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U")) %>% 
-    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_feed")) %>% 
-    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_EIOU")) %>% 
-    tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
-  # Check that replace_null_RUV() works as expected.
-  res <- psut %>% 
-    replace_null_RUV()
+test_that("replace_null_UV() correctly adds Manufacture industries", {
+  # Build R and Y matrices
+  R <- matrix(c(10, 0, 
+                0, 200), nrow = 2, ncol = 2, byrow = TRUE, 
+              dimnames = list(c("Imports [of Fuel oil]", 
+                                "Imports [of Aviation gasoline]"), 
+                              c("Fuel oil", "Aviation gasoline"))) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
+  Y <- matrix(c(10, 0, 
+                0, 200), nrow = 2, ncol = 2, byrow = TRUE, 
+              dimnames = list(c( "Fuel oil", "Aviation gasoline"), 
+                              c("International marine bunkers", 
+                                "International aviation bunkers"))) |> 
+    matsbyname::setrowtype("Product") |> 
+    matsbyname::setcoltype("Industry")
   
-  expected_R <- psut$Y[[1]] %>% 
-    matsbyname::transpose_byname() %>% 
-    matsbyname::colsums_byname() %>% 
-    matsbyname::hadamardproduct_byname(0) %>% 
-    matsbyname::setrownames_byname(IEATools::tpes_flows$resources)
-  expected_U <- psut$V[[1]] %>% 
-    matsbyname::transpose_byname() %>% 
-    matsbyname::hadamardproduct_byname(0)
-  # Verify that the NULL R matrix has been replaced with the correct 0 matrix.
-  expect_equal(res$R[[1]], expected_R)
-  # Verify that U_feed and U_EIOU are no longer NULL and is rather that transposed V matrix full of zeroes.
-  expect_equal(res$U[[1]], expected_U)
-  expect_equal(res$U_feed[[1]], expected_U)
-  expect_equal(res$U_EIOU[[1]], expected_U)
-  # We haven't removed the r_EIOU matrices. So those should be same as before
-  expect_equal(res$r_EIOU[[1]], psut$r_EIOU[[1]])
+  # Test that an error is raised if energy is not conserved originally.
+  replace_null_UV(R = R - 1, Y = Y) |> 
+    expect_error("Energy is not balanced originally in replace_null_UV")
   
-  # Test that everything works correctly with a list. 
-  mats_list <- list(U = NULL, r_EIOU = NULL, V = psut$V[[1]], 
-                    Y = psut$Y[[1]], S_units = psut$S_units[[1]], 
-                    R = NULL, U_EIOU = NULL, U_feed = NULL)
-  res_list <- replace_null_RUV(mats_list)
-  expect_equal(res_list$R, expected_R)
-  expect_equal(res_list$U, expected_U)
-  expect_equal(res_list$U_feed, expected_U)
-  expect_equal(res_list$U_EIOU, expected_U)
-  expect_equal(res_list$r_EIOU, expected_U)
-
-  # Test that everything works correctly with individual matrices passed in the ... argument
-  res_indiv <- replace_null_RUV(U = mats_list$U, r_eiou = mats_list$r_EIOU, V = mats_list$V,
-                                Y = mats_list$Y, 
-                                R = mats_list$R, U_eiou = mats_list$U_EIOU, U_feed = mats_list$U_feed)
-  expect_equal(res_indiv$R, expected_R)
-  expect_equal(res_indiv$U_feed, expected_U)
-  expect_equal(res_indiv$U_EIOU, expected_U)
-  expect_equal(res_indiv$U, expected_U)
-  expect_equal(res_indiv$r_EIOU, expected_U)
+  # Check that nothing is changed when U and V are not NULL
+  U_placeholder <- matrix(0)
+  V_placeholder <- matrix(0)
+  res_do_nothing <- replace_null_UV(R = R, 
+                                    U = U_placeholder, U_feed = U_placeholder, 
+                                    U_eiou = U_placeholder, r_eiou = U_placeholder,
+                                    V = V_placeholder, Y = Y)
+  expect_equal(res_do_nothing, 
+               list(R = R, U = U_placeholder, U_feed = U_placeholder, 
+                    U_EIOU = U_placeholder, r_EIOU = U_placeholder,
+                    V = V_placeholder))
+  
+  # Generate U and V matrices
+  res <- replace_null_UV(R = R, Y = Y)
+  
+  # Check that results are as expected.
+  expectedR <- matrix(c(200, 0, 
+                        0, 10), nrow = 2, ncol = 2, byrow = TRUE, 
+                      dimnames = list(c("Imports [of Aviation gasoline]", 
+                                        "Imports [of Fuel oil]"), 
+                                      c("Aviation gasoline [from Imports]", 
+                                        "Fuel oil [from Imports]"))) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
+  matsbyname::equal_byname(res$R, expectedR) |> 
+    expect_true()
+  
+  expectedU <- matrix(c(200, 0, 
+                        0, 10), nrow = 2, ncol = 2, byrow = TRUE, 
+                      dimnames = list(c("Aviation gasoline [from Imports]",
+                                        "Fuel oil [from Imports]"), 
+                                      c("Manufacture [of Aviation gasoline]", 
+                                        "Manufacture [of Fuel oil]"))) |> 
+    matsbyname::setrowtype("Product") |> 
+    matsbyname::setcoltype("Industry")
+  matsbyname::equal_byname(res$U, expectedU) |> 
+    expect_true()
+  
+  expectedUfeed <- expectedU
+  matsbyname::equal_byname(res$U_feed, expectedUfeed) |> 
+    expect_true()
+  
+  expectedUeiou <- expectedU * 0
+  matsbyname::equal_byname(res$U_EIOU, expectedUeiou) |> 
+    expect_true()
+  
+  expectedreiou <- expectedUeiou
+  matsbyname::equal_byname(res$r_EIOU, expectedreiou) |> 
+    expect_true()
+  
+  expectedV <- matrix(c(200, 0,
+                        0, 10), nrow = 2, ncol = 2, byrow = TRUE, 
+                      dimnames = list(c("Manufacture [of Aviation gasoline]", 
+                                        "Manufacture [of Fuel oil]"), 
+                                      c("Aviation gasoline", 
+                                        "Fuel oil"))) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
+  matsbyname::equal_byname(res$V, expectedV) |> 
+    expect_true()
+  
+  # Check that it works correctly in a data frame
+  # and that it works correctly with both
+  # matrix objects (row 1) and 
+  # Matrix objects (row 2).
+  RM <- Matrix::Matrix(R) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
+  YM <- Matrix::Matrix(Y) |> 
+    matsbyname::setrowtype("Product") |> 
+    matsbyname::setcoltype("Industry")
+  res_df <- tibble::tibble(R = list(R, RM), Y = list(Y, YM)) |> 
+    replace_null_UV()
+  
+  for (i in 1:nrow(res_df)) {
+    matsbyname::equal_byname(res_df$R[[i]], expectedR) |> 
+      expect_true()
+    matsbyname::equal_byname(res_df$U[[i]], expectedU) |> 
+      expect_true()
+    matsbyname::equal_byname(res_df$U_feed[[i]], expectedUfeed) |> 
+      expect_true()
+    matsbyname::equal_byname(res_df$U_EIOU[[i]], expectedUeiou) |> 
+      expect_true()
+    matsbyname::equal_byname(res_df$r_EIOU[[i]], expectedreiou) |> 
+      expect_true()
+    matsbyname::equal_byname(res_df$V[[i]], expectedV) |> 
+      expect_true()
+  }
+  # Check that all of the first row are matrix objects
+  res_df |> 
+    dplyr::slice(1) |> 
+    purrr::transpose() |> 
+    purrr::flatten() |> 
+    lapply(is.matrix) |> 
+    unlist() |> 
+    all() |> 
+    expect_true()
+  # Check that all of the 2nd row are Matrix objects
+  res_df |> 
+    dplyr::slice(2) |> 
+    purrr::transpose() |> 
+    purrr::flatten() |> 
+    lapply(matsbyname::is.Matrix) |> 
+    unlist() |> 
+    all() |> 
+    expect_true()
 })
 
 
-test_that("replace_null_RUV() works correctly with missing R and U and Matrix objects", {
-  # Set up so that the psut data frame has missing for
-  # R, U, U_feed, and U_EIOU in 1971 for GHA.
-  psut <- load_tidy_iea_df() %>% 
-    specify_all() %>% 
-    prep_psut(matrix_class = "Matrix") %>% 
-    tidyr::pivot_longer(cols = c("R", "U", "U_EIOU", "U_feed", "r_EIOU", "V", "Y", "S_units"), names_to = "matnames", values_to = "matvals") %>% 
-    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "R")) %>% 
-    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U")) %>% 
-    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_feed")) %>% 
-    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U_EIOU")) %>% 
-    tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
-  # Check that replace_null_RUV() works as expected.
-  res <- psut %>% 
-    replace_null_RUV()
+test_that("replace_null_UV() works when there is only one Y column", {
+  # Build R and Y matrices
+  R <- matrix(c(10, 0, 
+                0, 200), nrow = 2, ncol = 2, byrow = TRUE, 
+              dimnames = list(c("Imports [of Fuel oil]", 
+                                "Imports [of Hard coal (if no detail)]"), 
+                              c("Fuel oil", "Hard coal (if no detail)"))) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
+  Y <- matrix(c(10,
+                200), nrow = 2, ncol = 1, byrow = TRUE, 
+              dimnames = list(c( "Fuel oil", "Hard coal (if no detail)"), 
+                              c("International marine bunkers"))) |> 
+    matsbyname::setrowtype("Product") |> 
+    matsbyname::setcoltype("Industry")
   
-  expected_R <- psut$Y[[1]] %>% 
-    matsbyname::transpose_byname() %>% 
-    matsbyname::colsums_byname() %>% 
-    matsbyname::hadamardproduct_byname(0) %>% 
-    matsbyname::setrownames_byname(IEATools::tpes_flows$resources)
-  expected_U <- psut$V[[1]] %>% 
-    matsbyname::transpose_byname() %>% 
-    matsbyname::hadamardproduct_byname(0)
-  # Verify that the NULL R matrix has been replaced with the correct 0 matrix.
-  expect_equal(res$R[[1]], expected_R)
-  # Verify that U_feed and U_EIOU are no longer NULL and is rather that transposed V matrix full of zeroes.
-  expect_equal(res$U[[1]], expected_U)
-  expect_equal(res$U_feed[[1]], expected_U)
-  expect_equal(res$U_EIOU[[1]], expected_U)
-  # We haven't removed the r_EIOU matrices. So those should be same as before
-  expect_equal(res$r_EIOU[[1]], psut$r_EIOU[[1]])
+  # Generate U and V matrices
+  res <- replace_null_UV(R = R, Y = Y)
   
-  # Test that everything works correctly with a list. 
-  mats_list <- list(U = NULL, r_EIOU = NULL, V = psut$V[[1]], 
-                    Y = psut$Y[[1]], S_units = psut$S_units[[1]], 
-                    R = NULL, U_EIOU = NULL, U_feed = NULL)
-  res_list <- replace_null_RUV(mats_list)
-  expect_equal(res_list$R, expected_R)
-  expect_equal(res_list$U, expected_U)
-  expect_equal(res_list$U_feed, expected_U)
-  expect_equal(res_list$U_EIOU, expected_U)
-  expect_equal(res_list$r_EIOU, expected_U)
+  # Check that results are as expected.
+  expectedR <- matrix(c(200, 0, 
+                        0, 10), nrow = 2, ncol = 2, byrow = TRUE, 
+                      dimnames = list(c("Imports [of Hard coal (if no detail)]", 
+                                        "Imports [of Fuel oil]"), 
+                                      c("Hard coal (if no detail) [from Imports]", 
+                                        "Fuel oil [from Imports]"))) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
+  matsbyname::equal_byname(res$R, expectedR) |> 
+    expect_true()
   
-  # Test that everything works correctly with individual matrices passed in the ... argument
-  res_indiv <- replace_null_RUV(U = mats_list$U, r_eiou = mats_list$r_EIOU, V = mats_list$V,
-                                Y = mats_list$Y, 
-                                R = mats_list$R, U_eiou = mats_list$U_EIOU, U_feed = mats_list$U_feed)
-  expect_equal(res_indiv$R, expected_R)
-  expect_equal(res_indiv$U_feed, expected_U)
-  expect_equal(res_indiv$U_EIOU, expected_U)
-  expect_equal(res_indiv$U, expected_U)
-  expect_equal(res_indiv$r_EIOU, expected_U)
-})
-
-
-test_that("replace_null_RUV() works correctly with missing U and V", {
-  # Set up so that the psut data frame has missing for
-  # U and V in 1971 for GHA.
-  psut <- load_tidy_iea_df() %>% 
-    specify_all() %>% 
-    prep_psut() %>% 
-    tidyr::pivot_longer(cols = dplyr::any_of(c("R", "U_EIOU", "U_feed", "U", "r_EIOU", "V", "Y", "S_units")), names_to = "matnames", values_to = "matvals") %>% 
-    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U")) %>% 
-    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "V")) %>% 
-    tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
-  # Check that replace_null_RUV() works as expected.
-  res <- psut %>% 
-    replace_null_RUV()
-  expected_V <- psut$R[[1]] %>% 
-    matsbyname::hadamardproduct_byname(0)
-  expected_U <- expected_V %>% 
-    matsbyname::transpose_byname()
-  # Verify that the missing V matrix has been replaced with the correct 0 matrix.
-  expect_equal(res$V[[1]], expected_V)
-  # Verify that the missing U matrix has been replaced with the correct 0 matrix.
-  expect_equal(res$U[[1]], expected_U)
-})
-
-
-test_that("replace_null_RUV() works correctly with missing U and V with Matrix objects", {
-  # Set up so that the psut data frame has missing for
-  # U and V in 1971 for GHA.
-  psut <- load_tidy_iea_df() %>% 
-    specify_all() %>% 
-    prep_psut(matrix_class = "Matrix") %>% 
-    tidyr::pivot_longer(cols = dplyr::any_of(c("R", "U_EIOU", "U_feed", "U", "r_EIOU", "V", "Y", "S_units")), names_to = "matnames", values_to = "matvals") %>% 
-    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "U")) %>% 
-    dplyr::filter(!(Country == "GHA" & Year == 1971 & matnames == "V")) %>% 
-    tidyr::pivot_wider(names_from = "matnames", values_from = "matvals")
-  # Check that replace_null_RUV() works as expected.
-  res <- psut %>% 
-    replace_null_RUV()
-  expected_V <- psut$R[[1]] %>% 
-    matsbyname::hadamardproduct_byname(0)
-  expected_U <- expected_V %>% 
-    matsbyname::transpose_byname()
-  # Verify that the missing V matrix has been replaced with the correct 0 matrix.
-  expect_equal(res$V[[1]], expected_V)
-  # Verify that the missing U matrix has been replaced with the correct 0 matrix.
-  expect_equal(res$U[[1]], expected_U)
+  expectedU <- matrix(c(200, 0, 
+                        0, 10), nrow = 2, ncol = 2, byrow = TRUE, 
+                      dimnames = list(c("Hard coal (if no detail) [from Imports]",
+                                        "Fuel oil [from Imports]"), 
+                                      c("Manufacture [of Hard coal (if no detail)]", 
+                                        "Manufacture [of Fuel oil]"))) |> 
+    matsbyname::setrowtype("Product") |> 
+    matsbyname::setcoltype("Industry")
+  matsbyname::equal_byname(res$U, expectedU) |> 
+    expect_true()
+  
+  expectedUfeed <- expectedU
+  matsbyname::equal_byname(res$U_feed, expectedUfeed) |> 
+    expect_true()
+  
+  expectedUeiou <- expectedU * 0
+  matsbyname::equal_byname(res$U_EIOU, expectedUeiou) |> 
+    expect_true()
+  
+  expectedreiou <- expectedUeiou
+  matsbyname::equal_byname(res$r_EIOU, expectedreiou) |> 
+    expect_true()
+  
+  expectedV <- matrix(c(200, 0,
+                        0, 10), nrow = 2, ncol = 2, byrow = TRUE, 
+                      dimnames = list(c("Manufacture [of Hard coal (if no detail)]", 
+                                        "Manufacture [of Fuel oil]"), 
+                                      c("Hard coal (if no detail)", 
+                                        "Fuel oil"))) |> 
+    matsbyname::setrowtype("Industry") |> 
+    matsbyname::setcoltype("Product")
+  matsbyname::equal_byname(res$V, expectedV) |> 
+    expect_true()
 })
 
 
@@ -784,7 +821,8 @@ test_that("prep_psut() works when there is no energy industry own use", {
     prep_psut()
   # In this case, the U_EIOU matrix should be 0.
   for (i in 1:nrow(psut)) {
-    expect_true(psut$U_EIOU[[i]] %>% matsbyname::iszero_byname())
+    expect_true(psut$U_EIOU[[i]] |> matsbyname::iszero_byname())
+    expect_true(psut$r_EIOU[[i]] |> matsbyname::iszero_byname())
   }
 })
 
@@ -799,7 +837,8 @@ test_that("prep_psut() works when there is no energy industry own use with Matri
     prep_psut(matrix_class = "Matrix")
   # In this case, the U_EIOU matrix should be 0.
   for (i in 1:nrow(psut)) {
-    expect_true(psut$U_EIOU[[i]] %>% matsbyname::iszero_byname())
+    expect_true(psut$U_EIOU[[i]] |> matsbyname::iszero_byname())
+    expect_true(psut$r_EIOU[[i]] |> matsbyname::iszero_byname())
   }
 })
 

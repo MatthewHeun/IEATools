@@ -191,7 +191,7 @@ test_that("iea_df() works", {
     IEAtext <- readChar(IEAfile, file.info(IEAfile)$size)
     # Eliminate all series of commas at ends of lines
     # The pattern ,*$ means "match any number (*) of commas (,) at the end of a line ($)".
-    IEAtext <- IEAtext |> gsub(pattern = ",*$", replacement = "", IEAtext)
+    IEAtext <- gsub(pattern = ",*$", replacement = "", IEAtext)
     # Ensure that commas have been removed from the end of a line.
     # The pattern ",$" means "match any commas (,) at the end of a line ($)
     expect_false(grepl(pattern = ",$", x = IEAtext))

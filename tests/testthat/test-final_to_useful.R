@@ -1048,3 +1048,90 @@ test_that("extend_to_useful() returns works with empty data frames", {
                     IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u, "U_feed_Useful", "U_EIOU_Useful", "U_Useful", 
                     "r_EIOU_Useful", "V_Useful", "Y_Useful"))
 })
+
+
+test_that("extend_to_useful() works for countries lacking EIOU", {
+  C_data <- load_fu_allocation_data() |> 
+    form_C_mats()
+  eta_fu_data <- load_eta_fu_data() |> 
+    form_eta_fu_phi_u_vecs()
+  m_cols <- eta_fu_data |> 
+    IEATools::meta_cols(return_names = TRUE,
+                        years_to_keep = IEATools::iea_cols$year,
+                        not_meta = c(IEATools::template_cols$eta_fu, IEATools::template_cols$phi_u))
+  psut_mats <- load_tidy_iea_df(apply_fixes = FALSE) |> 
+    specify_all() |> 
+    prep_psut() |> 
+    dplyr::full_join(C_data, by = m_cols) |> 
+    dplyr::full_join(eta_fu_data, by = m_cols)
+  
+  with_useful <- psut_mats |> 
+    extend_to_useful()
+  
+  with_useful$U_EIOU_fu_details[[1]] |>
+    rownames() |> 
+    expect_equal(c("Electricity -> Main activity producer electricity plants", 
+                   "Refinery gas -> Oil refineries"))
+  with_useful$U_EIOU_fu_details[[1]] |>
+    colnames() |> 
+    expect_equal(c("HTH.600.C [from Industrial furnaces]", 
+                   "Light [from Electric lights]", 
+                   "MD [from Electric motors]"))
+  
+  with_useful$U_EIOU_fu_details[[3]] |>
+    rownames() |> 
+    expect_equal(c("Electricity -> Coal mines", 
+                   "Electricity -> Main activity producer electricity plants", 
+                   "Fuel oil -> Oil refineries"))
+  with_useful$U_EIOU_fu_details[[3]] |>
+    colnames() |> 
+    expect_equal(c("HTH.600.C [from Oil heaters]",
+                   "Light [from Electric lights]",
+                   "MD [from Electric motors]"))
+  
+
+  # Try again with no U_EIOU matrix.
+  without_eiou <- psut_mats |> 
+    dplyr::mutate(
+      U = U_feed, 
+      U_EIOU = list(NULL), 
+      C_EIOU = list(NULL)
+    ) |>
+    # Set the tolerance high, because we are deliberately 
+    # unbalancing the matrices.
+    extend_to_useful(tol = 1e6)
+  
+  without_eiou$U_EIOU_fu_details[[1]] |> 
+    rownames() |> 
+    expect_equal("Electricity -> Main activity producer electricity plants")
+  without_eiou$U_EIOU_fu_details[[1]] |> 
+    colnames() |> 
+    expect_equal("L [from Industrial electric lamps]")
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
