@@ -8,6 +8,8 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+## IEATools 0.1.77 (2024-12-09)
+
 * New function `reallocate_statistical_differences()` reallocates
   statistical differences in proportion to the non-zero consumption of each 
   energy carrier in other industries.
