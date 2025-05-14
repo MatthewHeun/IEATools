@@ -126,6 +126,7 @@
 <url><loc>https://matthewheun.github.io/IEATools/reference/psut_cols.html</loc></url>
 <url><loc>https://matthewheun.github.io/IEATools/reference/quasi-quote-assign.html</loc></url>
 <url><loc>https://matthewheun.github.io/IEATools/reference/read_aggregation_region_table.html</loc></url>
+<url><loc>https://matthewheun.github.io/IEATools/reference/reallocate_statistical_differences.html</loc></url>
 <url><loc>https://matthewheun.github.io/IEATools/reference/remove_agg_memo_flows.html</loc></url>
 <url><loc>https://matthewheun.github.io/IEATools/reference/remove_agg_regions.html</loc></url>
 <url><loc>https://matthewheun.github.io/IEATools/reference/remove_suffix_specifications.html</loc></url>
@@ -133,7 +134,7 @@
 <url><loc>https://matthewheun.github.io/IEATools/reference/renewable_industries.html</loc></url>
 <url><loc>https://matthewheun.github.io/IEATools/reference/renewable_products.html</loc></url>
 <url><loc>https://matthewheun.github.io/IEATools/reference/replace_join.html</loc></url>
-<url><loc>https://matthewheun.github.io/IEATools/reference/replace_null_RUV.html</loc></url>
+<url><loc>https://matthewheun.github.io/IEATools/reference/replace_null_UV.html</loc></url>
 <url><loc>https://matthewheun.github.io/IEATools/reference/route_non_specified_eiou.html</loc></url>
 <url><loc>https://matthewheun.github.io/IEATools/reference/route_non_specified_flows.html</loc></url>
 <url><loc>https://matthewheun.github.io/IEATools/reference/route_non_specified_tp.html</loc></url>
