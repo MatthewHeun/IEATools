@@ -84,7 +84,7 @@ Similarly, the \strong{Y} and \strong{U} matrices are added before calling
 Energy balance is checked both
 prior to reallocating statistical differences
 and after reallocating statistical differences.
-Imbalances beyond \code{tol} cause an error.
+Imbalances greater than \code{tol} cause an error.
 
 Note that most functions in \code{IEATools} operate on
 tabular IEA data.
