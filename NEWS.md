@@ -8,6 +8,9 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Updated test-coverage github action to eliminate errors.
+
+
 ## IEATools 0.1.77 (2025-05-14) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15418274.svg)](https://doi.org/10.5281/zenodo.15418274)
 
 * New function `reallocate_statistical_differences()` reallocates

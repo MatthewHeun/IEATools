@@ -1,11 +1,8 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
- 
+
 # Setup with usethis::use_github_action("test-coverage")
-# Then add
-# github::MatthewHeun/IEATools
-# to extra-packages.
-# Also add scheduled nightly builds.
+# Then add scheduled nightly builds.
 #   schedule:
 #     # Build main daily at 8 AM UTC, 3 AM EST, 4 AM EDT, one hour after nightly builds.
 #     - cron: "0 8 * * *"
