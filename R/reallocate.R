@@ -125,7 +125,9 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
                                                V_colname = IEATools::psut_cols$V,
                                                Y_colname = IEATools::psut_cols$Y, 
                                                prime_suffix = "_prime", 
-                                               tol = 1e-6) {
+                                               tol = 1e-6, 
+                                               country = IEATools::iea_cols$country, 
+                                               year = IEATools::iea_cols$year) {
   
   R_prime = paste0(R_colname, prime_suffix)
   U_prime = paste0(U_colname, prime_suffix)
@@ -145,6 +147,65 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
                                       matsbyname::rowsums_byname(colname = "rowsums")) |> 
       matsbyname::iszero_byname(tol = tol) |> 
       assertthat::assert_that(msg = "Energy not conserved at the top of reallocate_statistical_differences()")
+    
+    # Check if Statistical differences are more than all other consumption combined.
+    # The algorithm uses matsbyname::fractionize_by_name() and column sums to compare
+    # Statistical differences to all other data.
+    # If the Statistical differences value is greater than 0.5, 
+    # Statistical differences are more than all other consumption combined.
+    col_fracs <- Y_mat |> 
+      matsbyname::fractionize_byname(margin = c(1,2)) |> 
+      matsbyname::colsums_byname()
+    if (col_fracs[ , stat_diffs] >= 0.5) {
+      err_msg <- "Statistical differences account for more than half of all consumption."
+      if (!is.null(.sutmats)) {
+        if (country %in% colnames(.sutmats)) {
+          # Find the country name(s)
+          coun_names <- .sutmats[[country]] |> unique()
+          err_msg <- paste0(err_msg, 
+                            " Superset of countries: ", 
+                            paste(coun_names, collapse = ", "), 
+                            ".")
+          
+        }
+        if (year %in% colnames(.sutmats)) {
+          yrs <- .sutmats[[year]] |> unique()
+          err_msg <- paste0(err_msg, 
+                            " Superset of years: ", paste(yrs, collapse = ", "), 
+                            ".")
+          
+        }
+      }
+      warning(err_msg)
+    }
+    
+    # Check if Statistical differences are more than all other exogeneous inputs combined
+    # using the same algorithm as for Y_mat.
+    row_fracs <- R_mat |> 
+      matsbyname::fractionize_byname(margin = c(1,2)) |> 
+      matsbyname::rowsums_byname()
+    if (row_fracs[stat_diffs, ] >= 0.5) {
+      err_msg <- "Statistical differences account for more than half of all exogeneous inputs."
+      if (!is.null(.sutmats)) {
+        if (country %in% colnames(.sutmats)) {
+          # Find the country name(s)
+          coun_names <- .sutmats[[country]] |> unique()
+          err_msg <- paste0(err_msg, 
+                            " Superset of countries: ", 
+                            paste(coun_names, collapse = ", "), 
+                            ".")
+          
+        }
+        if (year %in% colnames(.sutmats)) {
+          yrs <- .sutmats[[year]] |> unique()
+          err_msg <- paste0(err_msg, 
+                            " Superset of years: ", paste(yrs, collapse = ", "), 
+                            ".")
+          
+        }
+      }
+      warning(err_msg)
+    }
     
     # Store rownames of R and V (industries)
     # But be sure we eliminate all zero rows first
@@ -170,7 +231,7 @@ reallocate_statistical_differences <- function(.sutmats = NULL,
       matsbyname::clean_byname()
     RV_mat <- matsbyname::sum_byname(R_mat, V_mat) |> 
       matsbyname::clean_byname()
-
+    
     # Move (Y statdiffs rows with no other consumption in U or Y) to R by subtraction.
     
     ## Find (Y statdiffs rows with no other consumption in U or Y).

@@ -22,7 +22,9 @@ reallocate_statistical_differences(
   V_colname = IEATools::psut_cols$V,
   Y_colname = IEATools::psut_cols$Y,
   prime_suffix = "_prime",
-  tol = 1e-06
+  tol = 1e-06,
+  country = IEATools::iea_cols$country,
+  year = IEATools::iea_cols$year
 )
 }
 \arguments{

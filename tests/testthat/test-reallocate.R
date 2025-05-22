@@ -36,9 +36,13 @@ test_that("reallocate_statistical_differences() works as expected", {
   U_EIOU <- matsbyname::hadamardproduct_byname(U, r_eiou)
   U_feed <- matsbyname::difference_byname(U, U_EIOU)
   
-  res <- reallocate_statistical_differences(R = R, 
-                                            U = U, U_feed = U_feed, U_eiou = U_EIOU, r_eiou = r_eiou, 
-                                            V = V, Y = Y)
+  expect_warning(res <- reallocate_statistical_differences(R = R, 
+                                                           U = U,
+                                                           U_feed = U_feed, 
+                                                           U_eiou = U_EIOU, 
+                                                           r_eiou = r_eiou, 
+                                                           V = V, Y = Y), 
+                 regexp = "Statistical differences account for more than half of all consumption.")
   
   R_expected <- matrix(98, dimnames = list("Resources [of Coal]", "Coal [from Resources]")) |> 
     matsbyname::setrowtype("Industry") |> 
@@ -74,22 +78,28 @@ test_that("reallocate_statistical_differences() works as expected", {
     matsbyname::setcoltype("Industry")
   expect_equal(res$U_feed, U_feed_expected)
   
+  # Try with a 
+  
   # Now try in a data frame
-  df <- tibble::tibble(R = list(R, R), 
+  df <- tibble::tibble(Country = c("GHA", "ZAF"), 
+                       Year = c(1971, 1972),
+                       R = list(R, R), 
                        U = list(U, U), 
                        V = list(V, V), 
                        Y = list(Y, Y), 
                        r_EIOU = list(r_eiou, r_eiou), 
                        U_EIOU = list(U_EIOU, U_EIOU), 
                        U_feed = list(U_feed, U_feed))
-  res_df <- df |> 
-    reallocate_statistical_differences()
   
+  expect_warning(res_df <- reallocate_statistical_differences(df), 
+                 regexp = "Statistical differences account for more than half of all consumption. Superset of countries: GHA, ZAF. Superset of years: 1971, 1972.") |> 
+    # Test for the second warning
+    expect_warning(regexp = "Statistical differences account for more than half of all consumption. Superset of countries: GHA, ZAF. Superset of years: 1971, 1972.")
+
   expect_equal(res_df$R_prime, list(R_expected, R_expected))
   expect_equal(res_df$U_prime, list(U_expected, U_expected))
   expect_equal(res_df$V_prime, list(V_expected, V_expected))
   expect_equal(res_df$Y_prime, list(Y_expected, Y_expected))
   expect_equal(res_df$U_EIOU_prime, list(U_eiou_expected, U_eiou_expected))
   expect_equal(res_df$U_feed_prime, list(U_feed_expected, U_feed_expected))
-  
 })
