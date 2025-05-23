@@ -36,10 +36,10 @@ for Statistical differences.
 Default is \code{IEATools::tfc_compare_flows$statistical_differences}.}
 
 \item{R, U, U_feed, U_eiou, r_eiou, V, Y}{Matrices or names of columns of matrices in \code{.sutmats}.
-See \link{psut_cols}.}
+See \link{psut_cols} for defaults.}
 
 \item{R_colname, U_colname, U_feed_colname, U_eiou_colname, r_eiou_colname, V_colname, Y_colname}{Names of columns of matrices in \code{.sutmats}.
-See \link{psut_cols}.}
+See \link{psut_cols} for defaults.}
 
 \item{prime_suffix}{The string suffix for new versions of matrices with reallocated
 statistical differences.
@@ -47,6 +47,12 @@ Default is "_prime".}
 
 \item{tol}{The tolerance for energy imbalance.
 Default is \code{1e-6}.}
+
+\item{country, year}{Names of the country and year columns in \code{.sutmats}, if it exists.
+Used to identify possible country and years where
+energy imbalances may be occurring,
+but only when those columns exist.
+See \link{iea_cols} for defaults.}
 }
 \value{
 A version of \code{.sutmats} in which energy consumption by "Statistical differences"

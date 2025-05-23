@@ -46,15 +46,20 @@
 #'                   for Statistical differences.
 #'                   Default is `IEATools::tfc_compare_flows$statistical_differences`.
 #' @param R,U,U_feed,U_eiou,r_eiou,V,Y Matrices or names of columns of matrices in `.sutmats`.
-#'                                     See [IEATools::psut_cols].
+#'                                     See [IEATools::psut_cols] for defaults.
 #' @param R_colname,U_colname,U_feed_colname,U_eiou_colname,r_eiou_colname,V_colname,Y_colname
 #'                                     Names of columns of matrices in `.sutmats`.
-#'                                     See [IEATools::psut_cols].
+#'                                     See [IEATools::psut_cols] for defaults.
 #' @param prime_suffix The string suffix for new versions of matrices with reallocated
 #'                     statistical differences.
 #'                     Default is "_prime".
 #' @param tol The tolerance for energy imbalance.
 #'            Default is `1e-6`.
+#' @param country,year Names of the country and year columns in `.sutmats`, if it exists.
+#'                     Used to identify possible country and years where
+#'                     energy imbalances may be occurring,
+#'                     but only when those columns exist.
+#'                     See [IEATools::iea_cols] for defaults.
 #'
 #' @return A version of `.sutmats` in which energy consumption by "Statistical differences"
 #'         is reallocated to other Industries in proportion to their energy consumption.

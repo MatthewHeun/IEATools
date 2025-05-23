@@ -78,7 +78,24 @@ test_that("reallocate_statistical_differences() works as expected", {
     matsbyname::setcoltype("Industry")
   expect_equal(res$U_feed, U_feed_expected)
   
-  # Try with a 
+  # Try with a large Stat diffs in R.
+  # Should get a warning.
+  R_large_stat_diffs <- matrix(c(2, 0, 
+                                 0, 50, 
+                                 98, 0), 
+                               byrow = TRUE, nrow = 3, ncol = 2, 
+                               dimnames = list(c("Resources [of Coal]", "Resources [of Prod C]", "Statistical differences"), 
+                                               c("Coal [from Resources]", "Prod C"))) |> 
+    matsbyname::setrowtype("Industry") |> matsbyname::setcoltype("Product")
+  
+  expect_warning(reallocate_statistical_differences(R = R_large_stat_diffs, 
+                                                    U = U,
+                                                    U_feed = U_feed, 
+                                                    U_eiou = U_EIOU, 
+                                                    r_eiou = r_eiou, 
+                                                    V = V, Y = Y), 
+                 regexp = "Statistical differences account for more than half of all exogeneous inputs.") |> 
+    expect_warning(regexp = "Statistical differences account for more than half of all consumption.")
   
   # Now try in a data frame
   df <- tibble::tibble(Country = c("GHA", "ZAF"), 
