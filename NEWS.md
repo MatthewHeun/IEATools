@@ -8,6 +8,12 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+
+* `reallocate_statistical_differences()` now warns when 
+  Statistical differences are half or more
+  of consumption or exogeneous inputs to an economy. 
+
+
 ## IEATools 0.1.78 (2025-05-17) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15450862.svg)](https://doi.org/10.5281/zenodo.15450862)
 
 * Updated test-coverage github action to eliminate errors.
