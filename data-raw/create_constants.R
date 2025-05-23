@@ -575,7 +575,7 @@ memo_non_energy_flows <- list(memo_non_energy_use_in_industry = "Memo: Non-energ
                               memo_non_energy_use_in_paper_pulp_printing = "Memo: Non-energy use in paper/pulp and printing",
                               memo_non_energy_use_in_wood_and_wood_products = "Memo: Non-energy use in wood and wood products",
                               memo_non_energy_use_in_textiles_leather = "Memo: Non-energy use in textiles and leather",
-                              memo_non_energy_use_in_industry_not_elsewhere_specified = "Memo: Non-energy use in industry not elsewhere specified")
+                              memo_non_energy_use_in_industry_nes = "Memo: Non-energy use in industry not elsewhere specified")
 usethis::use_data(memo_non_energy_flows, overwrite = TRUE)
 
 

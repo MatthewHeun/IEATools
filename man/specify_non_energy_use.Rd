@@ -19,10 +19,10 @@ specify_non_energy_use(
   non_energy_use = IEATools::aggregation_flows$non_energy_use,
   non_energy_flows_industry_transformation_energy =
     IEATools::non_energy_flows[["non_energy_use_industry_transformation_energy"]],
-  memo_non_energy_use_in_industry_not_elsewhere_specified =
-    IEATools::memo_non_energy_flows[["memo_non_energy_use_in_industry_not_elsewhere_specified"]],
-  non_energy_use_in_industry_not_elsewhere_specified = sub(pattern = paste0("^", memo),
-    replacement = "", memo_non_energy_use_in_industry_not_elsewhere_specified),
+  memo_non_energy_use_in_industry_nes =
+    IEATools::memo_non_energy_flows[["memo_non_energy_use_in_industry_nes"]],
+  non_energy_use_in_industry_nes = sub(pattern = paste0("^", memo), replacement = "",
+    memo_non_energy_use_in_industry_nes),
   memo = IEATools::memo_aggregation_flow_prefixes$memo,
   memo_non_energy_flows_industry =
     IEATools::memo_non_energy_flows$memo_non_energy_use_in_industry,
@@ -46,9 +46,9 @@ created by \code{augment_iea_df()}.}
 
 \item{non_energy_flows_industry_transformation_energy}{See \code{IEATools::non_energy_flows}.}
 
-\item{memo_non_energy_use_in_industry_not_elsewhere_specified}{See \code{IEATools::memo_non_energy_flows}.}
+\item{memo_non_energy_use_in_industry_nes}{See \code{IEATools::memo_non_energy_flows}.}
 
-\item{non_energy_use_in_industry_not_elsewhere_specified}{Same as \code{memo_non_energy_use_in_industry_not_elsewhere_specified} without the \code{memo} prefix.}
+\item{non_energy_use_in_industry_nes}{Same as \code{memo_non_energy_use_in_industry_nes} without the \code{memo} prefix.}
 
 \item{memo}{A string prefix for memo flows.
 Default is \code{IEATools::memo_aggregation_flow_prefixes$memo}.}
