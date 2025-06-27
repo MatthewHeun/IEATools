@@ -108,8 +108,10 @@ reassigned to \verb{Oil and gas extraction}.
 which produces \verb{Product [from Resources]}.
 \item For each \code{Production} flow, a manufacturing flow, that takes as input
 the \verb{Product [from Resources]} supplied by the new \verb{Resources [of Product]},
-and that produces the given \code{Product}, is added. The name of the manufacturing industry
-is \verb{Coal mines} for \code{coal_and_coal_products}, \verb{Oil and gas extraction} for \code{oil_and_gas_products},
+and that produces the given \code{Product}, is added.
+The name of the manufacturing industry
+is \verb{Coal mines} for \code{coal_and_coal_products},
+\verb{Oil and gas extraction} for \code{oil_and_gas_products},
 and \verb{Manufacture [of Product]} for all other products.
 }
 
