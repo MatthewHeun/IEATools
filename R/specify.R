@@ -714,6 +714,7 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #' # Complicated
 #' load_tidy_iea_df() %>% 
 #'   specify_primary_production() %>% 
+#'   specify_production_to_resources() %>% 
 #'   specify_tp_eiou() %>% 
 #'   specify_bunkers() %>% 
 #'   specify_interface_industries() %>% 
