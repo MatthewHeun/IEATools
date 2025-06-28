@@ -732,7 +732,7 @@ specify_all <- function(.tidy_iea_df,
   
   .tidy_iea_df %>% 
     specify_primary_production() %>% 
-    #specify_production_to_resources() %>% 
+    specify_production_to_resources() %>% 
     specify_tp_eiou(
       split_own_use_elect_chp_heat_using_shares_of = split_own_use_elect_chp_heat_using_shares_of,
       route_non_specified_eiou = route_non_specified_eiou,
