@@ -8,7 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-
+* `specify_all()` again will `specify_production_to_resources()`.
 * `reallocate_statistical_differences()` now warns when 
   Statistical differences are half or more
   of consumption or exogeneous inputs to an economy. 
