@@ -8,6 +8,10 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+* Move `reallocate_statistical_differences()` to the `Recca` package.
+  It fits better over there. 
+  The purpose of `IEATools` is to get data from the IEA's format
+  into the PSUT framework.
 * `specify_all()` again will `specify_production_to_resources()`.
 * `reallocate_statistical_differences()` now warns when 
   Statistical differences are half or more
