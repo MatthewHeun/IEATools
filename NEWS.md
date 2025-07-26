@@ -8,6 +8,8 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
+## IEATools 0.1.79 (2025-07-25)
+
 * Move `reallocate_statistical_differences()` to the `Recca` package.
   It fits better over there. 
   The purpose of `IEATools` is to get data from the IEA's format
@@ -16,6 +18,9 @@ which always resolves to the latest release.
 * `reallocate_statistical_differences()` now warns when 
   Statistical differences are half or more
   of consumption or exogenous inputs to an economy. 
+* New tests for new features.  Also move several tests to the `Recca` package.
+    * Now at 1373 tests, all passing.
+    * Test coverage remains at 100%.
 
 
 ## IEATools 0.1.78 (2025-05-17) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15450862.svg)](https://doi.org/10.5281/zenodo.15450862)
