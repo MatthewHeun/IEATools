@@ -21,7 +21,7 @@ If there is an imbalance, an attempt is made to adjust the imbalance.'></head><b
 
     <a class="navbar-brand me-2" href="../index.html">IEATools</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.78</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.79</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,10 +83,10 @@ If there is an imbalance, an attempt is made to adjust the imbalance.</specific>
 <span>  non_energy_use <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="aggregation_flows.html">aggregation_flows</a></span><span class="op">$</span><span class="va">non_energy_use</span>,</span>
 <span>  non_energy_flows_industry_transformation_energy <span class="op">=</span></span>
 <span>    <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="non_energy_flows.html">non_energy_flows</a></span><span class="op">[[</span><span class="st">"non_energy_use_industry_transformation_energy"</span><span class="op">]</span><span class="op">]</span>,</span>
-<span>  memo_non_energy_use_in_industry_not_elsewhere_specified <span class="op">=</span></span>
-<span>    <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="memo_non_energy_flows.html">memo_non_energy_flows</a></span><span class="op">[[</span><span class="st">"memo_non_energy_use_in_industry_not_elsewhere_specified"</span><span class="op">]</span><span class="op">]</span>,</span>
-<span>  non_energy_use_in_industry_not_elsewhere_specified <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"^"</span>, <span class="va">memo</span><span class="op">)</span>,</span>
-<span>    replacement <span class="op">=</span> <span class="st">""</span>, <span class="va">memo_non_energy_use_in_industry_not_elsewhere_specified</span><span class="op">)</span>,</span>
+<span>  memo_non_energy_use_in_industry_nes <span class="op">=</span></span>
+<span>    <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="memo_non_energy_flows.html">memo_non_energy_flows</a></span><span class="op">[[</span><span class="st">"memo_non_energy_use_in_industry_nes"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  non_energy_use_in_industry_nes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"^"</span>, <span class="va">memo</span><span class="op">)</span>, replacement <span class="op">=</span> <span class="st">""</span>,</span>
+<span>    <span class="va">memo_non_energy_use_in_industry_nes</span><span class="op">)</span>,</span>
 <span>  memo <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="memo_aggregation_flow_prefixes.html">memo_aggregation_flow_prefixes</a></span><span class="op">$</span><span class="va">memo</span>,</span>
 <span>  memo_non_energy_flows_industry <span class="op">=</span></span>
 <span>    <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="memo_non_energy_flows.html">memo_non_energy_flows</a></span><span class="op">$</span><span class="va">memo_non_energy_use_in_industry</span>,</span>
@@ -122,12 +122,12 @@ created by <code><a href="augment_iea_df.html">augment_iea_df()</a></code>.</p><
 <dd><p>See <code><a href="non_energy_flows.html">IEATools::non_energy_flows</a></code>.</p></dd>
 
 
-<dt id="arg-memo-non-energy-use-in-industry-not-elsewhere-specified">memo_non_energy_use_in_industry_not_elsewhere_specified<a class="anchor" aria-label="anchor" href="#arg-memo-non-energy-use-in-industry-not-elsewhere-specified"></a></dt>
+<dt id="arg-memo-non-energy-use-in-industry-nes">memo_non_energy_use_in_industry_nes<a class="anchor" aria-label="anchor" href="#arg-memo-non-energy-use-in-industry-nes"></a></dt>
 <dd><p>See <code><a href="memo_non_energy_flows.html">IEATools::memo_non_energy_flows</a></code>.</p></dd>
 
 
-<dt id="arg-non-energy-use-in-industry-not-elsewhere-specified">non_energy_use_in_industry_not_elsewhere_specified<a class="anchor" aria-label="anchor" href="#arg-non-energy-use-in-industry-not-elsewhere-specified"></a></dt>
-<dd><p>Same as <code>memo_non_energy_use_in_industry_not_elsewhere_specified</code> without the <code>memo</code> prefix.</p></dd>
+<dt id="arg-non-energy-use-in-industry-nes">non_energy_use_in_industry_nes<a class="anchor" aria-label="anchor" href="#arg-non-energy-use-in-industry-nes"></a></dt>
+<dd><p>Same as <code>memo_non_energy_use_in_industry_nes</code> without the <code>memo</code> prefix.</p></dd>
 
 
 <dt id="arg-memo">memo<a class="anchor" aria-label="anchor" href="#arg-memo"></a></dt>
@@ -231,7 +231,7 @@ using <code><a href="load_tidy_iea_df.html">load_tidy_iea_df()</a></code> is pre
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>
