@@ -8,7 +8,7 @@ Cite all releases with doi [10.5281/zenodo.5086371](https://doi.org/10.5281/zeno
 which always resolves to the latest release.
 
 
-## IEATools 0.1.79 (2025-07-25)
+## IEATools 0.1.79 (2025-07-25) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16428356.svg)](https://doi.org/10.5281/zenodo.16428356)
 
 * Move `reallocate_statistical_differences()` to the `Recca` package.
   It fits better over there. 
