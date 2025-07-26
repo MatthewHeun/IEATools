@@ -20,8 +20,10 @@
 #'    which produces `Product [from Resources]`.
 #' 3. For each `Production` flow, a manufacturing flow, that takes as input
 #'    the `Product [from Resources]` supplied by the new `Resources [of Product]`,
-#'    and that produces the given `Product`, is added. The name of the manufacturing industry
-#'    is `Coal mines` for `coal_and_coal_products`, `Oil and gas extraction` for `oil_and_gas_products`,
+#'    and that produces the given `Product`, is added. 
+#'    The name of the manufacturing industry
+#'    is `Coal mines` for `coal_and_coal_products`,
+#'    `Oil and gas extraction` for `oil_and_gas_products`,
 #'    and `Manufacture [of Product]` for all other products.
 #' 
 #' Users can specify other changes by adjusting the default argument values.
@@ -712,6 +714,7 @@ tp_sinks_to_nonenergy <- function(.tidy_iea_df,
 #' # Complicated
 #' load_tidy_iea_df() %>% 
 #'   specify_primary_production() %>% 
+#'   specify_production_to_resources() %>% 
 #'   specify_tp_eiou() %>% 
 #'   specify_bunkers() %>% 
 #'   specify_interface_industries() %>% 
@@ -730,7 +733,7 @@ specify_all <- function(.tidy_iea_df,
   
   .tidy_iea_df %>% 
     specify_primary_production() %>% 
-    #specify_production_to_resources() %>% 
+    specify_production_to_resources() %>% 
     specify_tp_eiou(
       split_own_use_elect_chp_heat_using_shares_of = split_own_use_elect_chp_heat_using_shares_of,
       route_non_specified_eiou = route_non_specified_eiou,
